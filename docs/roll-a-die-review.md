@@ -5,7 +5,10 @@ Assessment: 2026-11-03. Current scorer: **roll-a-die-v3**.
 The task now uses a coloured, pip-marked die and directly observable pickup,
 release, turnover and rest criteria. A fresh recorded demonstration earns
 **1.0 in 9.10 simulated seconds**. The final camera-matched Dream evaluation earns **0.0** after its full
-60-second allowance; it does not establish a qualifying pickup. Media has not been uploaded and no competition PR is open.
+60-second allowance; it does not establish a qualifying pickup. Final media is
+uploaded as **M-PV3ZXY**, and [submission PR #44](https://github.com/robocurve/benchmark-tasks/pull/44)
+is open. Robocurve received it as **TK-YBZD4Q** at 14:41:54 UTC and reports
+**waiting for review**. This is receipt, not acceptance.
 
 ## Task and purpose
 
@@ -89,13 +92,19 @@ review package. [VALIDATION.json](../tasks/roll-a-die/VALIDATION.json) records
 current measured results and hashes; older blank-cube evidence is explicitly
 historical. The task is more reviewable than v2, but acceptance remains a
 reviewer decision. Importance/novelty, physical fidelity and the strength of
-the game-assistance relevance still matter. Prior board checks found no direct
-dice-roll duplicate; refresh the live board before a submission decision.
+the game-assistance relevance still matter. Immediately before submission,
+the refreshed live board (128 entries: 38 pending and 90 pilot) and 43 public
+PRs showed no direct dice-roll duplicate.
 
-**Remaining submission steps:** approve/upload the final media, obtain its
-media ID, confirm the PR author is registered to T-39, and explicitly authorize
-an upstream PR. The prepared submission branch contains only this task folder.
-No PR is authorized by media preparation or by pushing to the team fork.
+**Submission:** the user explicitly authorized media upload and the PR on
+2026-11-03. Media **M-PV3ZXY** is referenced by `task.json`;
+[PR #44](https://github.com/robocurve/benchmark-tasks/pull/44) contains only the
+21 files under `tasks/roll-a-die/`, received at commit `ba4ac81`. Private
+reference documents, credentials, local artifacts and shared team notes are
+excluded. The ingestion validator's text-length findings were corrected
+before receipt: fidelity is 406/500 characters and scores is 275/300. Detailed
+audit information remains in the task documentation. The task is now held
+unchanged while waiting for review.
 
 Run commands: [task README](../tasks/roll-a-die/README.md). Shared operating
 lessons and overall cost accounting: [TEAM_LEARNINGS.md](../TEAM_LEARNINGS.md).

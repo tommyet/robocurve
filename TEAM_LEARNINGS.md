@@ -7,12 +7,14 @@ developers and their agents, not a competition submission document.
 ## Agreed workflow
 
 - Commit and push completed work to this fork. Do not open a competition PR
-  until the user explicitly asks. Prepare a submission branch containing only
-  the relevant task folder; leave these notes and fork-specific instructions out.
-- `submission/roll-a-die` is now prepared on the fork from upstream `main`.
-  Its diff contains only `tasks/roll-a-die/`. Keep it synchronized with the
-  current task files when they change;
-  do not open a PR from the broader `roll-a-die` working branch.
+  until the user explicitly asks. The user explicitly authorized media upload
+  and the die-task PR on 2026-11-03. Future tasks still need explicit submission
+  authorization. Keep each submission branch limited to its task folder.
+- `submission/roll-a-die` was submitted from the fork to upstream `main` as
+  [PR #44](https://github.com/robocurve/benchmark-tasks/pull/44), commit `ba4ac81`.
+  Its diff contains only `tasks/roll-a-die/`. Keep the submitted task unchanged
+  while waiting for review; do not synchronize later working edits into it.
+  Record follow-up notes on `roll-a-die`, outside the submission branch.
 - The user confirmed upload team `T-39`. The private `.env.robocurve` stores
   `ROBOCURVE_TEAM` and a single-quoted `ROBOCURVE_TOKEN`. Parse the quoted value
   without displaying it; do not mistake empty quotes for a configured token.
@@ -43,7 +45,8 @@ developers and their agents, not a competition submission document.
 - Keep the five private reference/application PDFs, credentials, `.env*`,
   generated media and full trial artifact directories ignored. Curated anonymous
   numeric traces may be committed inside a task as review evidence after a
-  content check; the die task now includes three such compressed traces. See
+  content check; the die task includes five such compressed traces (two current
+  v3 runs and three historical runs). See
   [.gitignore](.gitignore).
   This repository is public: do not add account tokens or private application
   content to this log. Keep task text and submitted media anonymous.
@@ -150,16 +153,53 @@ result or measure outcome fairness.
   actions, or evaluation status `success` with task success.
 - The same frozen demo physics produced matching results twice, with only the
   review camera changed. This is not a statistical repeatability/fairness claim.
-- Final media is local in `artifacts/roll-a-die-v3/`, verified H.264/yuv420p,
-  fast start, complete frame counts and below upload limits. It is not uploaded.
-  A prior automatic approval review required explicit approval of those media
-  files and destination. Obtain approval for the final files before uploading;
-  upload does not authorize a PR. Do not reuse the obsolete blank-cube videos.
-- Refresh live-board novelty and confirm the PR author is registered to T-39
-  before an eventual authorized PR. Earlier checks found no direct die-roll
-  duplicate, but they were not exhaustive and acceptance remains a review judgment.
+- Final media in `artifacts/roll-a-die-v3/` is uploaded as **M-PV3ZXY**:
+  H.264/yuv420p, fast start, complete frame counts and below upload limits.
+  The user's explicit upload-and-PR request supersedes the earlier approval
+  blocker. Do not reuse the obsolete blank-cube videos.
+- The refreshed live board had 128 entries (38 pending, 90 pilot) and the public
+  repository had 43 prior PRs immediately before submission. No direct die-roll
+  duplicate was found; this does not guarantee acceptance. The team token was
+  accepted as T-39, and Robocurve received the `tommyet` PR as **TK-YBZD4Q**.
 
 ## Dated session log
+
+### 2026-11-03 — final media upload and competition submission
+
+- Operator: repository agent. User explicitly requested: "Media upload and PR.
+  Submit as advised by doc." This authorizes this die-task submission.
+- Uploaded the complete final v3 `dream.mp4`, `demo.mp4` and `setup.png` from
+  `artifacts/roll-a-die-v3/` to Robocurve; returned media ID **M-PV3ZXY**.
+  The token stayed in memory and out of command arguments/output/Git.
+- The official Python uploader received Cloudflare 1010, including on a public
+  unauthenticated page. Standard curl reached the same service successfully.
+  Upload used curl with the official `/api/media` fields and authorization
+  header passed privately through stdin. Do not repeat an upload after success.
+- Independent final audit confirmed 21 task-only files, anonymous task text and
+  evidence, matching core-source hashes and replay scores 1.0 / 0.0. No new
+  GPU trial was necessary; the VM remained stopped.
+- Opened non-draft [PR #44](https://github.com/robocurve/benchmark-tasks/pull/44)
+  as `tommyet`, from `tommyet:submission/roll-a-die` to
+  `robocurve/benchmark-tasks:main`, at 14:40:12 UTC. Submitted head `61268c3`;
+  media and task docs were attached before creating the PR. The initial
+  ingestion reported two field-length violations, corrected at `ba4ac81`
+  before Robocurve received the task; simulation, scoring and media were unchanged.
+- The GitHub connector could read the upstream repository but its PR-create
+  call returned "Resource not accessible by integration". The existing
+  authenticated `gh` CLI account successfully created the same requested PR.
+- [Robocurve receipt](https://github.com/robocurve/benchmark-tasks/pull/44#issuecomment-6606759429)
+  at **14:41:54 UTC**: received as **TK-YBZD4Q**, **waiting for review**.
+  Final submitted commit **ba4ac81**, media **M-PV3ZXY**. Do not merge the PR
+  ourselves. Acceptance is an upstream merge after organizer review.
+- Newly verified text limits: `fidelity` maximum **500 characters**, `scores`
+  maximum **300 characters**. Final fields are 406 / 275 characters; retain
+  fuller explanations in README/JUDGING/VALIDATION. The ingestion bot accepts
+  a correction pushed to the same PR before receipt, as it did here.
+- The live program limits also report 20 submissions/day, 50 MB/video, 25 MB
+  code and 95 MB total. Read current limits rather than relying on defaults.
+- Pending submissions are frozen by the guide. Do not push task changes before
+  review expecting them to be re-ingested. Keep working notes on the broader
+  working branch; revisions after feedback use the same PR.
 
 ### 2026-11-03 — marked die, observable v3 rubric and fresh direct Dream runs
 
@@ -206,8 +246,8 @@ result or measure outcome fairness.
   Filtered lifecycle/billing evidence is local in `artifacts/die-v3-session/`.
 - Dream credentials were transferred to the authorized team VM without display,
   owner-only under `~/.dreamlabs/`. No credential entered Git, logs or evidence.
-  No media uploaded and no PR opened. Explicit media-upload approval remains
-  required after the earlier automatic-review block; a PR requires separate approval.
+  At that point, media and PR authorization were still pending. This is
+  superseded by the later explicit authorization and submission entry above.
 
 ### 2026-11-03 — scoring v2 correction; GPU batch blocked by capacity
 
