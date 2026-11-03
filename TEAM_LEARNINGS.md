@@ -9,6 +9,12 @@ developers and their agents, not a competition submission document.
 - Commit and push completed work to this fork. Do not open a competition PR
   until the user explicitly asks. Prepare a submission branch containing only
   the relevant task folder; leave these notes and fork-specific instructions out.
+- The user confirmed upload team `T-39`. The private `.env.robocurve` stores
+  `ROBOCURVE_TEAM` and a single-quoted `ROBOCURVE_TOKEN`. Parse the quoted value
+  without displaying it; do not mistake empty quotes for a configured token.
+- Before eventual submission, complete fresh VM validation and rescore the final
+  demo/Dream evidence with the final scorer. The existing v2 offline rescoring
+  is already complete; it does not replace this remaining validation step.
 - Reuse **one Brev VM**, currently `robocurve-dice`, while working daily.
   Prepare several tasks locally and batch their GPU trials in one session.
   Initially run simulator trials consecutively, rather than starting competing
@@ -127,7 +133,8 @@ determinism has not been tested. No face value is assigned to the blank cube.
   `/data/` environment files and caches survived before assuming warm timings.
 - At the next approved GPU batch, repeat the frozen demonstration and inspect
   sensitivity to small pose/release changes separately from official fixed-layout
-  evaluation. One successful final run is not a reliability estimate.
+  evaluation. Fresh validation and final rescoring are required before submission.
+  One successful final run is not a reliability estimate.
 - November 3 refresh: no direct dice-roll duplicate among 40 live upstream PRs
   or the supplied 119-entry board snapshot. No upstream PR was merged. The
   telescoping-lamp template is illustrative; cable-task PRs #12/#13 are pending,

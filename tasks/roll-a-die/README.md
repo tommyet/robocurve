@@ -233,7 +233,8 @@ provenance; replay ignores those fields and recomputes v2 from measured state.
 Existing recordings show the same measured
 motion. The first full-score time remains 9.30 seconds, so this rescoring does
 not depend on motion that would occur after v2 success termination. A fresh
-repeat trial would add reliability evidence and remains pending GPU capacity.
+validation batch remains pending GPU capacity and is required before submission,
+followed by rescoring the final demo and Dream evidence with the final scorer.
 
 Reproduce all three recorded outcomes from a fresh clone, without Isaac Sim,
 Dream credentials or GPU access (Python and NumPy are sufficient):
