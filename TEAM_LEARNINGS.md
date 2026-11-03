@@ -196,9 +196,14 @@ result or measure outcome fairness.
   render check, two demos, two Dream runs and elapsed preparation time. Use
   session/billing data below for the complete cost; do not add overlapping totals.
 - All requested evidence was downloaded and the GPU was idle before stopping.
-  Stop requested at 14:18:51 UTC; confirmation pending. At 14:23:28 UTC posted
-  credits were $196.06, versus $196.14 at 14:03:38 UTC. Billing lags, so this eight-cent
-  posted change is NOT the cost of the full batch. Preserve the retained VM.
+  Stop requested at 14:18:51 UTC; confirmed STOPPED at 14:24:57 UTC (about
+  six minutes to stop). Start request 13:58:17 to confirmed stop is 26m40s;
+  conservatively charging the full interval at $3.28/hour estimates **$1.46**
+  for this whole batch. This is an elapsed-time estimate, not an invoice, and
+  excludes later retained storage and Dream API charges. At 14:25:50 UTC posted
+  credits were $196.06, versus $196.14 at 14:03:38 UTC. Billing lags, so this
+  eight-cent posted change is NOT the full batch cost. Preserve the retained VM.
+  Filtered lifecycle/billing evidence is local in `artifacts/die-v3-session/`.
 - Dream credentials were transferred to the authorized team VM without display,
   owner-only under `~/.dreamlabs/`. No credential entered Git, logs or evidence.
   No media uploaded and no PR opened. Explicit media-upload approval remains

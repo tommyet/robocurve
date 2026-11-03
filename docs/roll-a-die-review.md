@@ -68,6 +68,13 @@ Both final measured trajectories independently replay to their recorded scores.
 The complete H.264 videos have 183/1,201 frames at 20 Hz, browser fast start,
 and sizes below 50 MB. The setup image is below 10 MB.
 
+The complete development/recording session, including preparation and the
+six-minute shutdown, spans 26m40s from start request to confirmed stop: a
+conservative **$1.46 Brev estimate** at the observed running rate. The VM is
+**STOPPED**. Billing is delayed; this is not an invoice and excludes later
+retained storage and Dream API charges. Reusing the installation avoided the
+previous cold setup.
+
 ## Readiness and acceptance
 
 This revision substantially improves manual judging: faces are identifiable,
