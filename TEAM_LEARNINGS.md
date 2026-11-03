@@ -12,9 +12,11 @@ developers and their agents, not a competition submission document.
 - The user confirmed upload team `T-39`. The private `.env.robocurve` stores
   `ROBOCURVE_TEAM` and a single-quoted `ROBOCURVE_TOKEN`. Parse the quoted value
   without displaying it; do not mistake empty quotes for a configured token.
-- Before eventual submission, complete fresh VM validation and rescore the final
-  demo/Dream evidence with the final scorer. The existing v2 offline rescoring
-  is already complete; it does not replace this remaining validation step.
+- Before eventual submission, rescore the final demo/Dream evidence with the
+  final scorer. This is already complete for the recorded v2 evidence. Fresh
+  GPU repeats are an additional confidence check, not an explicit competition
+  requirement after a scorer-only change. Earlier notes incorrectly elevated
+  them into a mandatory gate; do not repeat that interpretation.
 - Reuse **one Brev VM**, currently `robocurve-dice`, while working daily.
   Prepare several tasks locally and batch their GPU trials in one session.
   Initially run simulator trials consecutively, rather than starting competing
@@ -133,16 +135,22 @@ determinism has not been tested. No face value is assigned to the blank cube.
   `/data/` environment files and caches survived before assuming warm timings.
 - At the next approved GPU batch, repeat the frozen demonstration and inspect
   sensitivity to small pose/release changes separately from official fixed-layout
-  evaluation. Fresh validation and final rescoring are required before submission.
+  evaluation. Final rescoring is required before submission; fresh repetitions add confidence.
   One successful final run is not a reliability estimate.
 - November 3 refresh: no direct dice-roll duplicate among 40 live upstream PRs
   or the supplied 119-entry board snapshot. No upstream PR was merged. The
   telescoping-lamp template is illustrative; cable-task PRs #12/#13 are pending,
   not accepted precedents. The authenticated live board and wider task sets
   still need a final novelty check before a submission decision.
-- Media is prepared locally; `task.json` has no uploaded media ID yet. A private
-  task-board token is needed for upload. This is separate from the Dream key.
-  Upload completion is not permission to open a PR.
+- The T-39 token is saved privately and was verified without displaying it.
+  Media is prepared locally; `task.json` has no uploaded media ID yet. Automatic
+  approval review blocked uploading the three prepared files to the task board
+  because it requires explicit approval of those files and destination. Obtain
+  that approval before retrying; upload completion does not authorize a PR.
+- The remaining substantive review concern is simple-tool scoring: the visual
+  cross-check is documented, but exact telemetry predicates and a blank cube
+  remain difficult to verify from ordinary footage. A GPU rerun alone does not
+  solve this. Do not describe full guideline compliance as established.
 
 ## Dated session log
 

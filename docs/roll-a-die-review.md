@@ -4,7 +4,9 @@ Assessment date: 2026-11-03. Current scorer: `roll-a-die-v2`; original physics r
 
 **Verdict:** the concrete scoring loophole is fixed and the source, test suite,
 reviewer guide and recorded evidence are prepared. **Required media upload is
-still pending the team token**, so the submission package is not yet complete.
+still pending explicit upload approval** (the token is saved), so the submission
+package is not yet complete. The guide's simple-tools scoring criterion also
+remains an unresolved compliance concern.
 The corrected scorer re-evaluates the original measured trajectories; it does
 not claim fresh physics runs. Regional GPU capacity blocked two restart attempts
 for additional repeats. Acceptance remains uncertain, principally because of
@@ -90,9 +92,11 @@ scoring, reproducibility and feasibility; see [AGENTS.md](../AGENTS.md).
 
 To complete the required package, upload the prepared Dream/demo videos and
 setup image and put the returned media ID in `task.json`. The corrected
-simulation scores are supported by recorded-state replay; fresh GPU validation
-and final rescoring are required before submission and have not occurred.
-Refresh the authenticated live-board
+simulation scores are supported by completed recorded-state replay. The guide
+does not require a new GPU run after every scorer-only change; fresh repetitions
+would add confidence. Earlier notes incorrectly made those mandatory. Resolve
+the practical simple-tools judging concern before calling the task fully
+compliant. Refresh the authenticated live-board
 novelty check before any eventual PR. Do not submit without the user's explicit
 instruction.
 

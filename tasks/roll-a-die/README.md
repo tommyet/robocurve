@@ -13,7 +13,9 @@ allowance, with 25 requests in one continuous session and no retries.
 These are recorded physics runs re-evaluated by v2, **not new physics trials**.
 The source scene and policy are unchanged. Two attempted VM restarts for fresh
 repeat trials failed because regional GPU capacity was unavailable. Media upload
-is pending a task-board token. No competition PR is authorized or open.
+is pending. The remaining review concern is whether the visual cross-check
+meets the guide's simple-tools scoring criterion; telemetry validation alone
+does not establish that. No competition PR has been opened.
 See [JUDGING.md](JUDGING.md) for the reviewer packet and
 [VALIDATION.json](VALIDATION.json) for the versioned replay results and hashes.
 
@@ -233,8 +235,9 @@ provenance; replay ignores those fields and recomputes v2 from measured state.
 Existing recordings show the same measured
 motion. The first full-score time remains 9.30 seconds, so this rescoring does
 not depend on motion that would occur after v2 success termination. A fresh
-validation batch remains pending GPU capacity and is required before submission,
-followed by rescoring the final demo and Dream evidence with the final scorer.
+validation batch would add repeatability evidence and remains pending GPU
+capacity. The guide does not explicitly require fresh physics after a scorer-only
+change; rescoring the final recorded evidence is already complete.
 
 Reproduce all three recorded outcomes from a fresh clone, without Isaac Sim,
 Dream credentials or GPU access (Python and NumPy are sufficient):
