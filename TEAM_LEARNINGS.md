@@ -10,14 +10,14 @@ developers and their agents, not a competition submission document.
   until the user explicitly asks. Prepare a submission branch containing only
   the relevant task folder; leave these notes and fork-specific instructions out.
 - `submission/roll-a-die` is now prepared on the fork from upstream `main`.
-  Its diff contains only `tasks/roll-a-die/`, with task contents identical to
-  working-branch commit `16a547f`. Keep it synchronized when task files change;
+  Its diff contains only `tasks/roll-a-die/`. Keep it synchronized with the
+  current task files when they change;
   do not open a PR from the broader `roll-a-die` working branch.
 - The user confirmed upload team `T-39`. The private `.env.robocurve` stores
   `ROBOCURVE_TEAM` and a single-quoted `ROBOCURVE_TOKEN`. Parse the quoted value
   without displaying it; do not mistake empty quotes for a configured token.
 - Before eventual submission, rescore the final demo/Dream evidence with the
-  final scorer. This is already complete for the recorded v2 evidence. Fresh
+  final scorer. This is complete for the final marked v3 demo/Dream evidence. Fresh
   GPU repeats are an additional confidence check, not an explicit competition
   requirement after a scorer-only change. Earlier notes incorrectly elevated
   them into a mandatory gate; do not repeat that interpretation.
@@ -36,8 +36,10 @@ developers and their agents, not a competition submission document.
   without displaying its contents; restrict file access and keep it outside Git,
   logs and artifacts. This approval does not require another confirmation next
   session. Direct Dream access should remove the Mac/SSH bridge dependency;
-  its speed benefit has not yet been measured. No transfer has been made yet;
-  the next restart attempts failed for regional capacity.
+  direct execution is now verified. The key was transferred on November 3
+  into an owner-only credentials file outside Git and logs. The final direct
+  Dream run used one session with no retries; scene/rendering also changed, so
+  its timing is not an isolated transport speed comparison.
 - Keep the five private reference/application PDFs, credentials, `.env*`,
   generated media and full trial artifact directories ignored. Curated anonymous
   numeric traces may be committed inside a task as review evidence after a
@@ -65,9 +67,10 @@ The actual build configuration is VM mode (`environment.build.vm`, with an
 According to [Brev's launchable documentation](https://docs.nvidia.com/brev/concepts/launchables),
 the VM setup script does not automatically rerun on restart. The retained
 installation should therefore be reusable; boot and simulator initialization
-still recur. **A successful restart and cache reuse have not yet been measured.** Two
-restart attempts at 13:08 and 13:11 UTC failed because no GPU capacity was
-available in the existing region. Stopped data remained inaccessible; local
+still recur. **Restart and installation reuse were verified later on November 3.**
+The environment survived and the marked-die demos each took about 44 seconds
+including simulator startup. Two earlier restart attempts at 13:08 and 13:11 UTC
+failed because no GPU capacity was available in the existing region. Stopped data remained inaccessible; local
 backups allowed scoring work to continue. Retaining a disk does not reserve a GPU.
 
 Stopping ends compute charges but retains storage. Deleting ends the instance's
@@ -118,45 +121,88 @@ Use a new artifact directory for every attempt; do not overwrite evidence.
 The scene uses seed 0, no object jitter and a fixed scripted demonstration.
 This establishes a simulated manipulation example, not a random/fair die or a
 measured repeat-success rate. Numerical differences remain possible; exact
-determinism has not been tested. No face value is assigned to the blank cube.
+determinism has not been tested. V3 adds 1–6 pips for tracking faces; it still does not request a particular
+result or measure outcome fairness.
 
-## Open findings and next checks
+## Current findings and next checks
 
-- **Scoring gap fixed in v2 on 2026-11-03:** v1 could reward repeated small
-  rocking. V2 requires at least 90 degrees maximum tilt excursion from the first
-  verified free-flight reference, rather than cumulative rotation. Eleven new
-  adversarial/boundary tests cover rocking, thresholds, complete revolutions,
-  reference poses, pending flight and slow turns; all 46 tests pass (33 scorer, 10 bridge, 3 recorded-evidence replay).
-  Offline replay of the unchanged demo is 1.0 (133.207 degrees max excursion),
-  partial demo 003 is 0.25 and clean Dream is 0.0. Original logs remain intact;
-  `tasks/roll-a-die/VALIDATION.json` identifies these as rescoring, not fresh runs.
-- [JUDGING.md](tasks/roll-a-die/JUDGING.md) now describes the reviewer package,
-  comparisons, exact rubric and ordinary-video/ruler cross-check. Exact
-  acceleration, tiny jaw-clearance thresholds and a blank symmetric cube remain
-  limits of manual verification; better close-up footage is desirable. A
-  documented cross-check does not itself prove exact manual equivalence.
-- Measure the first retained-VM restart and direct-on-VM Dream run. Check that
-  `/data/` environment files and caches survived before assuming warm timings.
-- At the next approved GPU batch, repeat the frozen demonstration and inspect
-  sensitivity to small pose/release changes separately from official fixed-layout
-  evaluation. Final rescoring is required before submission; fresh repetitions add confidence.
-  One successful final run is not a reliability estimate.
-- November 3 refresh: no direct dice-roll duplicate among 40 live upstream PRs
-  or the supplied 119-entry board snapshot. No upstream PR was merged. The
-  telescoping-lamp template is illustrative; cable-task PRs #12/#13 are pending,
-  not accepted precedents. The authenticated live board and wider task sets
-  still need a final novelty check before a submission decision.
-- The T-39 token is saved privately and was verified without displaying it.
-  Media is prepared locally; `task.json` has no uploaded media ID yet. Automatic
-  approval review blocked uploading the three prepared files to the task board
-  because it requires explicit approval of those files and destination. Obtain
-  that approval before retrying; upload completion does not authorize a PR.
-- The remaining substantive review concern is simple-tool scoring: the visual
-  cross-check is documented, but exact telemetry predicates and a blank cube
-  remain difficult to verify from ordinary footage. A GPU rerun alone does not
-  solve this. Do not describe full guideline compliance as established.
+- **V3 is current.** Six coloured pip-marked faces replace the blank cube.
+  Pickup earns 0.25, visible release 0.5, and a post-release marked-face up→down
+  sequence plus one second of rest earns 1.0. Exact thresholds are in the task.
+  This replaces v2 acceleration/clearance predicates with pose/time checks.
+- Final fresh recordings: `die-v3-demo-002` scores 1.0 after 182 actions / 9.10 s;
+  `die-v3-dream-002` scores 0.0 after 1,200 actions / 60 s. All 48 tests pass. Both
+  trajectories are independently rescored and committed anonymously with source
+  hashes in `tasks/roll-a-die/VALIDATION.json`. Prior v2 evidence is historical.
+- The review camera must be above the cube enough to see the upward face.
+  A low oblique view hid cyan 5 in an otherwise passing run. The final raised
+  camera shows cyan 5 up at 7.85 s and opposite red 2 up at 8.00 s, establishing
+  cyan 5 down. Opposite-face evidence is valid because the marked cube is rigid
+  and the face mapping is specified. Preserve the intervening frames.
+- Readability needs real rendering checks, not just score telemetry. The final
+  complete videos combine the 1600×1280 review view with all three policy views.
+  The close-up is not a model input. Visual rulers do not add collision geometry;
+  perspective prevents treating them as universal screen-space measurements.
+- Direct Dream ran successfully on the VM: 25 requests / 25 attempts / 1 session.
+  It returned 380 out-of-range prediction rows, including unused final-chunk rows.
+  Standard execution bounds/step clamps are retained; all 1,200 executed actions
+  pass bounds and step checks. Do not confuse returned predictions with executed
+  actions, or evaluation status `success` with task success.
+- The same frozen demo physics produced matching results twice, with only the
+  review camera changed. This is not a statistical repeatability/fairness claim.
+- Final media is local in `artifacts/roll-a-die-v3/`, verified H.264/yuv420p,
+  fast start, complete frame counts and below upload limits. It is not uploaded.
+  A prior automatic approval review required explicit approval of those media
+  files and destination. Obtain approval for the final files before uploading;
+  upload does not authorize a PR. Do not reuse the obsolete blank-cube videos.
+- Refresh live-board novelty and confirm the PR author is registered to T-39
+  before an eventual authorized PR. Earlier checks found no direct die-roll
+  duplicate, but they were not exhaustive and acceptance remains a review judgment.
 
 ## Dated session log
+
+### 2026-11-03 — marked die, observable v3 rubric and fresh direct Dream runs
+
+- Operator: repository agent; branch `roll-a-die`. User requested coloured
+  faces/markings, the new rubric and fresh demo/Dream recordings. GPU startup
+  succeeded around 13:58 UTC after the earlier regional capacity failures.
+  The retained `/data/` installation survived; no cold installation was needed.
+- Added six coloured faces and black 1–6 pips as non-colliding paint on the same
+  16 mm / 5 g cube. Added a separate review camera and render-only reference rulers.
+  Camera angle needed visual QA: the first low view hid the qualifying upper
+  face, so it was raised and both final videos were recorded on the final setup.
+- V3 uses visible pose/time criteria. The first v3 scripted release was tuned
+  locally for reachable targets and speed limits, then scored 1.0 on the first
+  new physics attempt. Final camera-matched demo002 also scored 1.0 after 182
+  actions / 9.10 simulated seconds, wall 44.457 s. Cyan 5 up at 7.85 s → red 2 up at 8.00 s demonstrates
+  the required inversion; rest is 8.10–9.10 s. Commands never move the die directly.
+- Final direct Dream002 scored 0.0 with no qualifying pickup in 1,200 actions /
+  60 simulated seconds; wall 184.133 s, 25 requests, 25 attempts, 1 session, no retries.
+  Its 380 returned prediction rows beyond bounds include unused tail rows.
+  Inspect's normal bounds clamp/per-step limiter remains enabled. Independent
+  action-log checks found zero range or step-limit violations in executed actions.
+- Final evidence: `artifacts/die-v3-demo-002/`, `artifacts/die-v3-dream-002/`;
+  final media: `artifacts/roll-a-die-v3/`. Full videos contain 183 / 1,201 frames
+  at 20 Hz, H.264/yuv420p with fast start, about 2.93 MB / 14.27 MB. The PNG is 0.67 MB.
+  A separate quarter-speed turnover clip aids learning; the full videos preserve
+  every original frame. Old raw artifacts and validation history remain intact.
+- Final independent rescoring matches 1.0 / 0.0. All 48 tests pass: 35 scorer,
+  10 bridge and 3 recording/source tests. Current core source hashes match both
+  final run snapshots. Two new privacy-checked anonymous compressed traces are
+  committed with `VALIDATION.json`; old evidence is in `VALIDATION-v2.json`.
+- At the observed $3.28/hour rate, the final pair's 228.590 seconds of runner
+  time estimates $0.208, excluding setup/idle/review iterations, shutdown,
+  retained storage and Dream API charges. The complete batch includes one short
+  render check, two demos, two Dream runs and elapsed preparation time. Use
+  session/billing data below for the complete cost; do not add overlapping totals.
+- All requested evidence was downloaded and the GPU was idle before stopping.
+  Stop requested at 14:18:51 UTC; confirmation pending. At 14:23:28 UTC posted
+  credits were $196.06, versus $196.14 at 14:03:38 UTC. Billing lags, so this eight-cent
+  posted change is NOT the cost of the full batch. Preserve the retained VM.
+- Dream credentials were transferred to the authorized team VM without display,
+  owner-only under `~/.dreamlabs/`. No credential entered Git, logs or evidence.
+  No media uploaded and no PR opened. Explicit media-upload approval remains
+  required after the earlier automatic-review block; a PR requires separate approval.
 
 ### 2026-11-03 — scoring v2 correction; GPU batch blocked by capacity
 

@@ -1,116 +1,95 @@
 # Pick up and roll a die — task review
 
-Assessment date: 2026-11-03. Current scorer: `roll-a-die-v2`; original physics recordings from the first task implementation.
+Assessment: 2026-11-03. Current scorer: **roll-a-die-v3**.
 
-**Verdict:** the concrete scoring loophole is fixed and the source, test suite,
-reviewer guide and recorded evidence are prepared. **Required media upload is
-still pending explicit upload approval** (the token is saved), so the submission
-package is not yet complete. The guide's simple-tools scoring criterion also
-remains an unresolved compliance concern.
-The corrected scorer re-evaluates the original measured trajectories; it does
-not claim fresh physics runs. Regional GPU capacity blocked two restart attempts
-for additional repeats. Acceptance remains uncertain, principally because of
-novelty/significance, the blank-cube abstraction and manual auditability. No PR
-has been opened or authorized.
+The task now uses a coloured, pip-marked die and directly observable pickup,
+release, turnover and rest criteria. A fresh recorded demonstration earns
+**1.0 in 9.10 simulated seconds**. The final camera-matched Dream evaluation earns **0.0** after its full
+60-second allowance; it does not establish a qualifying pickup. Media has not been uploaded and no competition PR is open.
 
-## What we built
+## Task and purpose
 
-The robot must pick up a small blue cube, release it so it tumbles like a die,
-and leave it untouched until it stops. The intended application is assisting
-with tabletop games; category: **Societal relevance**.
+The robot picks up a die, releases it so a marked face turns from facing up to
+facing down, then leaves it to settle. Category: **Societal relevance**, as one
+component of helping someone participate in tabletop games. No particular
+number is requested, and randomness or statistical fairness is not tested.
 
 | Item | Specification |
 |---|---|
-| Robot and simulator | Calibrated two-arm YAM station; Isaac Sim 6.1 / Isaac Lab-Arena. |
-| Die surrogate | One blue, unmarked, sharp-edged 16 × 16 × 16 mm cube; mass 5 g. |
-| Table | 1.10 × 1.30 m; surface z = 0.7475 m, centre x = 0.36 m, y = 0. |
-| Initial cube pose | Centre (0.20, 0.16, 0.7555) m; identity orientation. |
-| Trial settings | Fixed layout, seed 0, no object jitter; 20 Hz actions/audit, 240 Hz physics. |
-| Allowance | 1,200 actions / 60 simulated seconds per episode. |
-| Fidelity | Primitive collision/friction defaults; no rounded edges, pips, numbered outcome or calibrated physical-die friction. |
+| Robot/environment | Calibrated two-arm YAM station, Isaac Lab-Arena / Isaac Sim 6.1. |
+| Die | One sharp-edged 16 × 16 × 16 mm cube, 5 g; six coloured faces with 1–6 pips; opposite faces sum to seven. |
+| Initial pose | Centre (0.20, 0.16, 0.7555) m; identity orientation; white 1 up. |
+| Table | 1.10 × 1.30 m, top z=.7475 m, centre x=.36 m/y=0. |
+| Trial | Seed 0; no jitter; 20 Hz control/audit, 240 Hz physics; maximum 1,200 actions / 60 seconds. |
+| Recording | Three original policy views plus a separate 1600 × 1280 close-up and visual rulers; the close-up is not sent to Dream. |
 
-The scorer awards **0.25** for a verified pickup held at least 30 mm above the
-table for 0.20 s; **0.5** for verified release and a maximum tilt excursion of at
-least 90 degrees from the verified free-flight reference; **1.0** for that roll
-followed by one second of stable rest on a face. Cumulative motion is diagnostic
-only: repeated small rocking no longer earns roll credit.
-Falls outside the table bounds or renewed hand proximity after release erase
-credit. Pure vertical-axis spin and rotation while held earn no roll credit.
-Exact speed, clearance and rest predicates are in
-[scoring.py](../tasks/roll-a-die/scoring.py) and
-[task.json](../tasks/roll-a-die/task.json).
+The six face colours and pips are render-only paint on the original collision
+cube. They add no contact geometry, mass or rolling aids. Primitive friction,
+sharp corners and homogeneous mass remain approximations to a physical die.
+The scale guides are visual references, not physical obstacles; perspective
+must be considered when comparing objects outside a ruler's plane.
 
-## What actually happened
+## Scoring and what the demonstration shows
 
-| Evaluation | Result | Simulated time | Runner wall time |
-|---|---|---:|---:|
-| Scripted demo, trial 004 | **1.0** under v2 replay; pickup at 4.60 s, release at 8.00 s, 133.207° maximum tilt excursion, 164.434° cumulative motion and 1.00 s rest. | 9.30 s | 321.206 s, including shader compilation. |
-| Dream-1 clean baseline | **0.0** under v2 replay; no verified pickup; 25 requests in one session, no retries. | 60.00 s | 197.996 s |
+- **0.25:** hold the die's bottom at least 30 mm above the table for 0.20 s.
+- **0.5:** after pickup, release it at least 10 mm above the table with both
+  gripper tool centres at least 50 mm away.
+- **1.0:** after release, one marked face points up within 30°, then the same
+  face points down within 30°, followed by one continuous second of rest.
 
-The demonstration commands only robot joints/gripper; it does not teleport the
-cube. V2 replay preserves both scores and the demo's 9.30-second termination;
-input hashes and results are in [VALIDATION.json](../tasks/roll-a-die/VALIDATION.json).
-Joint speeds stayed within published limits and the videos were visually
-reviewed. All **46 tests passed** (33 scorer, 10 bridge and 3 recorded-evidence checks), including 11 new regression and
-boundary cases. The earlier Dream run suffered repeated session expiry and is
-excluded as the baseline. Development attempts changed the demonstration;
-there is only **one successful run of the final version**, not a measured success
-rate or a real-robot demonstration.
+Rest uses a fixed pose: movement at most 2 mm / 5°, a face within 10° of level,
+bottom within 3 mm of the table, and both tool centres at least 60 mm away.
+Leaving the allowed table area or a tool returning inside 50 mm after release
+erases all credit. Full details are in the [judging guide](../tasks/roll-a-die/JUDGING.md).
+Pure yaw, held rotation and accumulated small rocking cannot earn turnover credit.
 
-At the observed Brev rate, the clean Dream run estimates $0.18 and the final
-demo $0.29, excluding separate Dream API charges. Initial setup and debugging
-are additional. At 12:24 UTC the first-session snapshot had $3.05 posted spend
-and a conservative $4.43 elapsed-time estimate. The later 13:15 snapshot had
-$3.84 total posted spend; billing lag and retained storage prevent assigning
-that difference to the failed restart attempts. These are not settled invoices. See [shared cost notes](../TEAM_LEARNINGS.md).
+Final demonstration `die-v3-demo-002`: pickup at **4.60 s**, release and cyan
+**5 up at 7.85 s**, then red **2 up at 8.00 s**. Since 2 is opposite 5, this is
+visible evidence that 5 points down. Continuous video preserves face identity.
+The die rests from **8.10–9.10 s**, ending with white 1 up. The audit reports
+272.987° cumulative tilt travel, a diagnostic rather than a full-revolution
+claim. The policy commands only robot joints and grippers.
 
-## Is it a roll, and is it random?
+The demo used **182 actions** and **44.457 seconds of VM wall time** (about
+**$0.041** at the observed $3.28/hour rate). A preceding run scored identically,
+but its low camera partly hid the upward face; the final raised view resolves
+that presentation issue. Two matching demonstrations are useful evidence,
+not a statistical reliability study.
 
-**Yes, it demonstrates the simulated robot picking up, freely tumbling and
-settling a die-shaped object.** The 164.434 degrees is accumulated tumble, not a
-complete revolution; net orientation change relative to vertical from release
-to rest was 103.204 degrees. An earlier attempt managed only 30.274 degrees.
+Dream used **184.133 seconds of VM wall time** (about **$0.168**), with 25
+requests in one continuous session and no retries. It returned 380 prediction
+rows outside action bounds, including unused final-chunk rows. Standard execution
+clamps applied; all 1,200 executed Dream actions and all 182 demo actions pass
+position and per-step-limit checks. This is a model result under those shared
+execution limits, not a transport failure. Dream API dollars are not reported.
 
-**Randomness is not tested or deliberately introduced.** With the same initial
-state and scripted motion, we expect similar results, but have not tested exact
-repeatability. Numerical physics differences may occur. The cube has no face
-labels, and no evidence establishes varying outcomes, equal face probabilities
-or fairness. Those would require a separately designed repeated-trial study.
+All **48 tests pass** (35 scorer, 10 bridge, 3 recorded-evidence/source checks).
+Both final measured trajectories independently replay to their recorded scores.
+The complete H.264 videos have 183/1,201 frames at 20 Hz, browser fast start,
+and sizes below 50 MB. The setup image is below 10 MB.
 
-## Acceptance assessment
+## Readiness and acceptance
 
-The competition requires importance, construct validity, simple unambiguous
-scoring, reproducibility and feasibility; see [AGENTS.md](../AGENTS.md).
+This revision substantially improves manual judging: faces are identifiable,
+turnover is visible, and acceleration/angular-velocity estimates are no longer
+part of the rubric. A ruler, paused frames, angle guide and timestamps can
+check the specified events. The scorer still uses tool-centre distance as a
+hand-clearance proxy; visual review must also reject support or contact by
+other robot links. Sampling at 20 Hz can miss faster motion.
 
-| Criterion | Current assessment |
-|---|---|
-| Importance / novelty | Plausible tabletop-assistance relevance. Prior November 3 checks found no direct duplicate; coverage was limited and must be refreshed. A generic small-object toss may be judged insufficiently distinctive. |
-| Construct validity | The recorded motion supports a tumbling release. The claim must remain physical manipulation, without implying random/fair dice play. Physical friction and grip realism remain uncalibrated. |
-| Scoring | **Corrected in v2:** small rocking fails even after accumulating many revolutions of angular travel. A true ≥90° excursion qualifies, including a full revolution returning to the release pose. The exact telemetry checks remain harder to reproduce manually than a simple placement score. |
-| Reproducibility / clarity | Fixed dimensions, pose, seed, versions and numeric logs are strong. [JUDGING.md](../tasks/roll-a-die/JUDGING.md) provides a camera/ruler cross-check and explicitly discloses where ordinary footage cannot resolve exact telemetry predicates. |
-| Feasibility | One full-score simulated demo supports feasibility within the allowance. Repeated success, sensitivity and physical-robot performance remain untested. |
+The source, numeric evidence, complete videos and setup screenshot form the
+review package. [VALIDATION.json](../tasks/roll-a-die/VALIDATION.json) records
+current measured results and hashes; older blank-cube evidence is explicitly
+historical. The task is more reviewable than v2, but acceptance remains a
+reviewer decision. Importance/novelty, physical fidelity and the strength of
+the game-assistance relevance still matter. Prior board checks found no direct
+dice-roll duplicate; refresh the live board before a submission decision.
 
-To complete the required package, upload the prepared Dream/demo videos and
-setup image and put the returned media ID in `task.json`. The corrected
-simulation scores are supported by completed recorded-state replay. The guide
-does not require a new GPU run after every scorer-only change; fresh repetitions
-would add confidence. Earlier notes incorrectly made those mandatory. Resolve
-the practical simple-tools judging concern before calling the task fully
-compliant. Refresh the authenticated live-board
-novelty check before any eventual PR. Do not submit without the user's explicit
-instruction.
+**Remaining submission steps:** approve/upload the final media, obtain its
+media ID, confirm the PR author is registered to T-39, and explicitly authorize
+an upstream PR. The prepared submission branch contains only this task folder.
+No PR is authorized by media preparation or by pushing to the team fork.
 
-Comparable **Societal relevance** tasks are the official
-[telescoping-lamp template](https://github.com/robocurve/benchmark-tasks/blob/main/examples/task.json)
-and pending [cable identification](https://github.com/robocurve/benchmark-tasks/pull/12)
-and [cable uncrossing](https://github.com/robocurve/benchmark-tasks/pull/13)
-submissions. None is an accepted precedent. Reviewers receive the task text,
-setup screenshot, full Dream and demo videos, and source/README; assessment uses
-all five criteria above. [JUDGING.md](../tasks/roll-a-die/JUDGING.md) gives details.
-
-Run commands and full implementation details:
-[task README](../tasks/roll-a-die/README.md). Local, git-ignored evidence:
-`artifacts/die-debug-004/`, `artifacts/die-dream-002/` and final media in
-`artifacts/roll-a-die/`. Those full local folders are not downloaded with a Git
-clone; the three anonymous compressed trajectories in the task
-[`evidence/`](../tasks/roll-a-die/evidence/) directory are included for offline verification.
+Run commands: [task README](../tasks/roll-a-die/README.md). Shared operating
+lessons and overall cost accounting: [TEAM_LEARNINGS.md](../TEAM_LEARNINGS.md).
+Final local media: `artifacts/roll-a-die-v3/` (git-ignored).
