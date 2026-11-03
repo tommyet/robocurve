@@ -1,0 +1,17 @@
+# Local competition reference documents
+/Guide | Robocurve task board.pdf
+/Submit a task | Robocurve task board.pdf
+/simulation-walkthrough.pdf
+/Robocurve Application.docx.pdf
+/Task board 3 Nov | Robocurve task board.pdf
+
+# Local development and generated trial artifacts
+.DS_Store
+._*
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+artifacts/
+run-logs/
