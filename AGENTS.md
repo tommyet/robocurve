@@ -1,5 +1,14 @@
 # Instructions for coding agents
 
+## Team workflow for this fork
+
+Read [TEAM_LEARNINGS.md](TEAM_LEARNINGS.md) before working. Keep it current with
+dated, evidence-backed findings that the other developer and their agent can reuse.
+Commits and pushes to this fork are authorized. **Do not open an upstream pull
+request until the user explicitly asks.** The submission steps below describe the
+competition process; they are not permission to submit. Keep shared team notes
+out of the eventual single-task competition pull request.
+
 You're working in a fork of `robocurve/benchmark-tasks`, the shared repository for the Robocurve Benchmarking
 Program. Teams build simulated robotics tasks and submit each one as a pull request here. Follow this file
 when helping a team build or submit a task. Program details, the full review checklist and the simulation
