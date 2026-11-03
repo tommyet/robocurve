@@ -9,6 +9,10 @@ developers and their agents, not a competition submission document.
 - Commit and push completed work to this fork. Do not open a competition PR
   until the user explicitly asks. Prepare a submission branch containing only
   the relevant task folder; leave these notes and fork-specific instructions out.
+- `submission/roll-a-die` is now prepared on the fork from upstream `main`.
+  Its diff contains only `tasks/roll-a-die/`, with task contents identical to
+  working-branch commit `16a547f`. Keep it synchronized when task files change;
+  do not open a PR from the broader `roll-a-die` working branch.
 - The user confirmed upload team `T-39`. The private `.env.robocurve` stores
   `ROBOCURVE_TEAM` and a single-quoted `ROBOCURVE_TOKEN`. Parse the quoted value
   without displaying it; do not mistake empty quotes for a configured token.
