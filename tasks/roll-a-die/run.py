@@ -13,7 +13,7 @@ from pathlib import Path
 
 import numpy as np
 
-from scoring import RollTracker
+from scoring import RollTracker, SCORE_VERSION
 
 HERE = Path(__file__).resolve().parent
 INSTRUCTION = "Pick up the small blue cube and roll it like a die on the table. Release it so it tumbles freely, then leave it untouched until it stops."
@@ -126,7 +126,7 @@ def main():
         "--max-steps", str(args.max_steps), "--store-frames", "--log-dir", str(args.log_dir),
         "--no-prompt", "--grader", "none",
     ]
-    metadata = {"python": platform.python_version(), "policy": args.policy, "seed": args.seed, "max_steps": args.max_steps, "control_hz": 20, "packages": {}}
+    metadata = {"python": platform.python_version(), "policy": args.policy, "seed": args.seed, "max_steps": args.max_steps, "control_hz": 20, "score_version": SCORE_VERSION, "packages": {}}
     if args.policy == "dream":
         metadata["dream_transport"] = "batched_bridge" if args.dream_server_url else "direct"
     snapshot = args.log_dir / "task-source"

@@ -1,6 +1,7 @@
 """Recompute a die-roll score from the retained motion audit."""
 
 import argparse
+import gzip
 import json
 from pathlib import Path
 
@@ -10,7 +11,9 @@ from scoring import RollTracker
 def replay(path):
     tracker = RollTracker()
     count = 0
-    for line in Path(path).read_text().splitlines():
+    path = Path(path)
+    content = gzip.decompress(path.read_bytes()).decode() if path.suffix == ".gz" else path.read_text()
+    for line in content.splitlines():
         if line.strip():
             tracker.update(json.loads(line))
             count += 1

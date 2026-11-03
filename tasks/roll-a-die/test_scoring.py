@@ -13,7 +13,7 @@ import unittest
 
 import numpy as np
 
-from scoring import EDGE, LIFT_HOLD_S, MIN_TUMBLE, REST_HOLD_S, TABLE_TOP, TABLE_X, RollTracker, rotation
+from scoring import EDGE, LIFT_HOLD_S, MIN_TUMBLE, REST_HOLD_S, SCORE_VERSION, TABLE_TOP, TABLE_X, RollTracker, rotation
 
 
 DT = 0.05
@@ -23,6 +23,15 @@ def quaternion(axis, angle):
     axis = np.asarray(axis, dtype=float)
     axis = axis / np.linalg.norm(axis)
     return np.r_[axis * math.sin(angle / 2), math.cos(angle / 2)]
+
+
+def compose_quaternions(first, second):
+    """Apply the second rotation, then the first (both XYZW)."""
+    first, second = np.asarray(first), np.asarray(second)
+    return np.r_[
+        first[3] * second[:3] + second[3] * first[:3] + np.cross(first[:3], second[:3]),
+        first[3] * second[3] - np.dot(first[:3], second[:3]),
+    ]
 
 
 class Trace:
@@ -119,6 +128,73 @@ class RollScoringTests(unittest.TestCase):
         self.assertAlmostEqual(trace.tracker.tumble, 0.0)
         self.assertEqual(trace.tracker.value, 0.25)
 
+    def test_repeated_small_rocking_cannot_accumulate_roll_credit(self):
+        trace = Trace().pickup().release()
+        for angle in [10, -10] * 20 + [0]:
+            trace.step(clearance=0.04, quat=quaternion((1, 0, 0), math.radians(angle)))
+        trace.rest()
+        self.assertGreater(math.degrees(trace.tracker.tumble), 360)
+        self.assertAlmostEqual(math.degrees(trace.tracker.max_tilt_excursion), 10)
+        self.assertEqual(trace.tracker.value, 0.25)
+        self.assertEqual(trace.tracker.rest_hold, 0.0)
+
+    def test_partial_turn_and_return_cannot_add_up_to_turnover(self):
+        trace = Trace().pickup().release()
+        trace.tumble(angle=math.radians(60))
+        for angle in (40, 20, 0):
+            trace.step(clearance=0.04, quat=quaternion((1, 0, 0), math.radians(angle)))
+        trace.rest()
+        self.assertAlmostEqual(math.degrees(trace.tracker.tumble), 120)
+        self.assertAlmostEqual(math.degrees(trace.tracker.max_tilt_excursion), 60)
+        self.assertEqual(trace.tracker.value, 0.25)
+
+    def test_turnover_threshold_is_ninety_degrees(self):
+        for degrees, expected in ((89.999, 0.25), (90.0, 1.0), (90.001, 1.0)):
+            with self.subTest(degrees=degrees):
+                trace = Trace().pickup().release().tumble(angle=math.radians(degrees)).rest()
+                self.assertAlmostEqual(math.degrees(trace.tracker.max_tilt_excursion), degrees)
+                self.assertEqual(trace.tracker.value, expected)
+
+    def test_full_revolution_earns_credit_even_when_final_pose_matches_release(self):
+        trace = Trace().pickup().release().tumble(angle=2 * math.pi).rest()
+        self.assertAlmostEqual(math.degrees(trace.tracker.tumble), 360)
+        self.assertAlmostEqual(math.degrees(trace.tracker.max_tilt_excursion), 180)
+        np.testing.assert_allclose(rotation(trace.quat), np.eye(3), atol=1e-12)
+        self.assertEqual(trace.tracker.value, 1.0)
+
+    def test_turnover_is_relative_to_free_release_pose_not_original_table_pose(self):
+        trace = Trace().pickup()
+        trace.step(clearance=0.08, hand="closed", quat=quaternion((1, 0, 0), math.pi / 2))
+        trace.release()
+        self.assertAlmostEqual(trace.tracker.max_tilt_excursion, 0.0)
+        for angle in (120, 150, 180):
+            trace.step(clearance=0.04, quat=quaternion((1, 0, 0), math.radians(angle)))
+        trace.rest()
+        self.assertAlmostEqual(math.degrees(trace.tracker.max_tilt_excursion), 90)
+        self.assertEqual(trace.tracker.value, 1.0)
+
+    def test_world_yaw_of_an_already_tilted_cube_does_not_count_as_turnover(self):
+        trace = Trace().pickup()
+        tilted = quaternion((1, 0, 0), math.pi / 4)
+        trace.step(clearance=0.08, hand="closed", quat=tilted)
+        trace.release()
+        for angle in np.linspace(0, 2 * math.pi, 25):
+            trace.step(clearance=0.04, quat=compose_quaternions(quaternion((0, 0, 1), angle), tilted))
+        self.assertAlmostEqual(trace.tracker.tumble, 0.0)
+        self.assertLess(trace.tracker.max_tilt_excursion, 1e-6)
+        self.assertEqual(trace.tracker.value, 0.25)
+
+    def test_slow_turnover_is_not_lost_to_per_sample_telemetry_deadband(self):
+        trace = Trace().pickup().release()
+        for angle in np.arange(0.25, 90.25, 0.25):
+            trace.step(clearance=0.04, quat=quaternion((1, 0, 0), math.radians(angle)))
+        trace.rest()
+        # The legacy cumulative diagnostic suppresses individual changes under
+        # 0.5 degrees, but the scoring criterion measures total pose excursion.
+        self.assertAlmostEqual(trace.tracker.tumble, 0.0)
+        self.assertAlmostEqual(math.degrees(trace.tracker.max_tilt_excursion), 90)
+        self.assertEqual(trace.tracker.value, 1.0)
+
     def test_placing_cube_on_table_does_not_count_as_release_or_roll(self):
         trace = Trace().pickup()
         trace.step(hand="closed")
@@ -133,6 +209,7 @@ class RollScoringTests(unittest.TestCase):
         trace.release().rest()
         self.assertTrue(trace.tracker.released)
         self.assertAlmostEqual(trace.tracker.tumble, 0.0)
+        self.assertAlmostEqual(trace.tracker.max_tilt_excursion, 0.0)
         self.assertEqual(trace.tracker.value, 0.25)
 
     def test_release_transition_itself_cannot_supply_tumble_credit(self):
@@ -142,6 +219,7 @@ class RollScoringTests(unittest.TestCase):
         trace.rest()
         self.assertTrue(trace.tracker.released)
         self.assertAlmostEqual(trace.tracker.tumble, 0.0)
+        self.assertAlmostEqual(trace.tracker.max_tilt_excursion, 0.0)
         self.assertEqual(trace.tracker.value, 0.25)
 
     def test_partial_jaw_opening_confirms_release_during_upward_flight(self):
@@ -174,8 +252,36 @@ class RollScoringTests(unittest.TestCase):
                        closing_axis=(0, 1, 0))
             self.assertEqual(trace.tracker.released, index == 3)
         self.assertAlmostEqual(trace.tracker.tumble, MIN_TUMBLE)
+        self.assertAlmostEqual(trace.tracker.max_tilt_excursion, MIN_TUMBLE)
         trace.rest()
         self.assertEqual(trace.tracker.value, 1.0)
+
+    def test_complete_pending_turnover_survives_return_to_start_before_confirmation(self):
+        trace = Trace().pickup()
+        for index, degrees in enumerate((0, 90, 180, 270, 360)):
+            trace.step(clearance=0.12, quat=quaternion((0, 1, 0), math.radians(degrees)),
+                       lin_vel=(0, 0, 1.4 - index * 9.81 * DT), hand_opening=0.30,
+                       tcp_offset=(0, 0, 0.03 if index == 4 else 0.015),
+                       closing_axis=(0, 1, 0))
+            self.assertEqual(trace.tracker.released, index == 4)
+        self.assertAlmostEqual(math.degrees(trace.tracker.max_tilt_excursion), 180)
+        self.assertAlmostEqual(math.degrees(trace.tracker.tumble), 360)
+        trace.rest()
+        self.assertEqual(trace.tracker.value, 1.0)
+
+    def test_pending_small_rocking_is_not_promoted_to_turnover_on_confirmation(self):
+        trace = Trace().pickup()
+        angles = [0] + [10, -10] * 5 + [0]
+        for index, degrees in enumerate(angles):
+            trace.step(clearance=0.12, quat=quaternion((0, 1, 0), math.radians(degrees)),
+                       lin_vel=(0, 0, 1.4 - index * 9.81 * DT), hand_opening=0.30,
+                       tcp_offset=(0, 0, 0.03 if index == len(angles) - 1 else 0.015),
+                       closing_axis=(0, 1, 0))
+        self.assertTrue(trace.tracker.released)
+        self.assertGreater(trace.tracker.tumble, MIN_TUMBLE)
+        self.assertAlmostEqual(math.degrees(trace.tracker.max_tilt_excursion), 10)
+        trace.rest()
+        self.assertEqual(trace.tracker.value, 0.25)
 
     def test_projected_jaw_clearance_accounts_for_die_width_and_offset(self):
         for quat, offset in (
@@ -198,6 +304,7 @@ class RollScoringTests(unittest.TestCase):
                    tcp_offset=(0, 0, 0.03), closing_axis=(0, 1, 0))
         self.assertTrue(trace.tracker.released)
         self.assertAlmostEqual(trace.tracker.tumble, 0.0)
+        self.assertAlmostEqual(trace.tracker.max_tilt_excursion, 0.0)
         trace.rest()
         self.assertEqual(trace.tracker.value, 0.25)
 
@@ -209,14 +316,36 @@ class RollScoringTests(unittest.TestCase):
                        tcp_offset=(0, 0, 0.015), closing_axis=(0, 1, 0))
         self.assertFalse(trace.tracker.released)
         self.assertAlmostEqual(trace.tracker.pending_tumble, math.pi / 4)
+        self.assertAlmostEqual(trace.tracker.pending_max_tilt_excursion, math.pi / 4)
         trace.step(clearance=0.10, quat=quaternion((0, 1, 0), math.pi / 2),
                    lin_vel=(0, 0, 0.80 - 2 * 9.81 * DT), hand="closed")
         self.assertAlmostEqual(trace.tracker.pending_tumble, 0.0)
+        self.assertAlmostEqual(trace.tracker.pending_max_tilt_excursion, 0.0)
         trace.step(clearance=0.08, quat=quaternion((0, 1, 0), math.pi),
                    lin_vel=(0, 0, 0.80 - 3 * 9.81 * DT), hand_opening=0.28,
                    tcp_offset=(0, 0, 0.03), closing_axis=(0, 1, 0))
         self.assertTrue(trace.tracker.released)
         self.assertAlmostEqual(trace.tracker.tumble, 0.0)
+        self.assertAlmostEqual(trace.tracker.max_tilt_excursion, 0.0)
+
+    def test_nonballistic_interval_resets_pending_turnover_anchor(self):
+        trace = Trace().pickup()
+        for index, degrees in enumerate((0, 45, 90)):
+            trace.step(clearance=0.12, quat=quaternion((0, 1, 0), math.radians(degrees)),
+                       lin_vel=(0, 0, 1.4 - index * 9.81 * DT), hand_opening=0.30,
+                       tcp_offset=(0, 0, 0.015), closing_axis=(0, 1, 0))
+        self.assertAlmostEqual(trace.tracker.pending_max_tilt_excursion, MIN_TUMBLE)
+        trace.step(clearance=0.12, lin_vel=(0, 0, 2.0), hand_opening=0.30,
+                   tcp_offset=(0, 0, 0.015), closing_axis=(0, 1, 0))
+        self.assertIsNone(trace.tracker.pending_up)
+        self.assertAlmostEqual(trace.tracker.pending_max_tilt_excursion, 0.0)
+        trace.step(clearance=0.12, quat=quaternion((0, 1, 0), math.radians(100)),
+                   lin_vel=(0, 0, 2.0 - 9.81 * DT), hand_opening=0.30,
+                   tcp_offset=(0, 0, 0.03), closing_axis=(0, 1, 0))
+        self.assertTrue(trace.tracker.released)
+        self.assertAlmostEqual(math.degrees(trace.tracker.max_tilt_excursion), 10)
+        trace.rest()
+        self.assertEqual(trace.tracker.value, 0.25)
 
     def test_partial_open_upward_yaw_spin_still_gets_no_tumble_credit(self):
         trace = Trace().pickup()
@@ -314,6 +443,15 @@ class RollScoringTests(unittest.TestCase):
         trace.rest()
         self.assertAlmostEqual(trace.tracker.tumble, 0.0)
         self.assertEqual(trace.tracker.value, 0.25)
+
+    def test_summary_distinguishes_versioned_score_from_cumulative_motion(self):
+        trace = Trace().pickup().release().tumble(angle=2 * math.pi).rest()
+        summary = trace.tracker.summary()
+        self.assertEqual(summary["score_version"], SCORE_VERSION)
+        self.assertEqual(summary["score"], 1.0)
+        self.assertAlmostEqual(summary["max_tilt_excursion_degrees"], 180)
+        self.assertAlmostEqual(summary["cumulative_tumble_degrees"], 360)
+        self.assertEqual(summary["tumble_degrees"], summary["cumulative_tumble_degrees"])
 
     def test_nonfinite_time_is_rejected(self):
         for time in (float("nan"), float("inf"), float("-inf")):

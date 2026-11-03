@@ -2,6 +2,10 @@
 
 Inputs are measured object poses and measured gripper states, never action targets.
 The runner writes these inputs to JSONL so a score can be reproduced offline.
+
+Version 2 requires a 90-degree tilt excursion from a verified free-flight pose.
+Cumulative angular travel remains diagnostic only: repeated small rocking cannot
+substitute for a turnover, and a complete revolution need not finish tilted.
 """
 
 from __future__ import annotations
@@ -11,6 +15,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
+SCORE_VERSION = "roll-a-die-v2"
 TABLE_TOP = 0.7475
 EDGE = 0.016
 LIFT_CLEARANCE = 0.03
@@ -21,6 +26,11 @@ TABLE_X = (-0.17, 0.89)
 TABLE_Y = (-0.63, 0.63)
 FINGER_TRAVEL = 0.04695  # metres per finger at normalized opening 1 (YAM linear gripper)
 JAW_CLEARANCE = 0.002    # required empty space between each jaw and the die
+
+
+def tilt_separation(first_up, second_up):
+    """Separation of world-vertical directions in the die's own coordinates."""
+    return math.acos(float(np.clip(np.dot(first_up, second_up), -1.0, 1.0)))
 
 
 def rotation(q):
@@ -69,6 +79,8 @@ class RollTracker:
     lifted: bool = False
     released: bool = False
     tumble: float = 0.0
+    max_tilt_excursion: float = 0.0
+    release_up: np.ndarray | None = None
     invalid: str | None = None
     lift_hold: float = 0.0
     rest_hold: float = 0.0
@@ -80,6 +92,8 @@ class RollTracker:
     last_clear_airborne: bool = False
     pending_tumble: float = 0.0
     pending_start: float | None = None
+    pending_up: np.ndarray | None = None
+    pending_max_tilt_excursion: float = 0.0
     value: float = 0.0
     events: list = field(default_factory=list)
 
@@ -91,7 +105,7 @@ class RollTracker:
             raise ValueError("sample times must increase; reset the tracker for each episode")
         dt = 0.0 if self.last_time is None else t - self.last_time
         if dt > 0.075:
-            raise ValueError("scoring requires at least 20 Hz observations")
+            raise ValueError("scoring expects 20 Hz observations with no gap above 75 ms")
         previous_time = self.last_time
         self.last_time = t
         p = np.asarray(sample["pos"], dtype=float)
@@ -127,7 +141,7 @@ class RollTracker:
             ballistic_interval = abs(acceleration[2] + 9.81) <= 2.5 and np.linalg.norm(acceleration[:2]) <= 3.0
         angle = 0.0
         if self.last_up is not None:
-            angle = math.acos(float(np.clip(np.dot(up, self.last_up), -1.0, 1.0)))
+            angle = tilt_separation(up, self.last_up)
             if angle < math.radians(0.5):
                 angle = 0.0
         newly_released = False
@@ -139,28 +153,42 @@ class RollTracker:
             if clear_airborne and self.last_clear_airborne and ballistic_interval:
                 if self.pending_start is None:
                     self.pending_start = previous_time
+                    self.pending_up = self.last_up.copy()
                 self.pending_tumble += angle
+                self.pending_max_tilt_excursion = max(
+                    self.pending_max_tilt_excursion,
+                    tilt_separation(up, self.pending_up),
+                )
             else:
                 self.pending_tumble = 0.0
                 self.pending_start = None
+                self.pending_up = None
+                self.pending_max_tilt_excursion = 0.0
             if clear_airborne and min(distances) >= 0.022 and ballistic_interval:
                 self.released = True
                 newly_released = True
                 self.tumble += self.pending_tumble
+                self.release_up = (up if self.pending_up is None else self.pending_up).copy()
+                self.max_tilt_excursion = self.pending_max_tilt_excursion
                 self.events.append({
                     "time": t, "event": "release",
                     "credited_from": self.pending_start if self.pending_start is not None else t,
                 })
                 self.pending_tumble = 0.0
                 self.pending_start = None
+                self.pending_up = None
+                self.pending_max_tilt_excursion = 0.0
 
         if self.released:
             if not hands_released or min(distances) < 0.020:
                 self.invalid = "gripper re-entered the die clearance after release"
             if self.last_up is not None and not newly_released:
                 self.tumble += angle
+            self.max_tilt_excursion = max(
+                self.max_tilt_excursion, tilt_separation(up, self.release_up),
+            )
 
-        rolled = self.released and self.tumble + 1e-9 >= MIN_TUMBLE
+        rolled = self.released and self.max_tilt_excursion + 1e-9 >= MIN_TUMBLE
         resting = (
             rolled
             and abs(lo[2] - TABLE_TOP) <= 0.003
@@ -180,7 +208,12 @@ class RollTracker:
 
     def summary(self):
         return {
+            "score_version": SCORE_VERSION,
             "score": self.value, "lifted": self.lifted, "released": self.released,
+            "max_tilt_excursion_degrees": math.degrees(self.max_tilt_excursion),
+            "cumulative_tumble_degrees": math.degrees(self.tumble),
+            # Keep the original telemetry name for older analysis consumers.
+            # It no longer determines whether the roll earns credit.
             "tumble_degrees": math.degrees(self.tumble), "rest_seconds": self.rest_hold,
             "invalid": self.invalid, "events": self.events,
         }

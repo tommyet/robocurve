@@ -1,12 +1,21 @@
 # Pick up and roll a die
 
-Status: locally validated; media upload and submission are pending. The fourth GPU demonstration earned an instrumented
-score of 1.0 after 9.30 seconds of simulation, with 164.434 degrees of measured
-free tumble and one second of continuous rest. Replay matches that score, and
-visual review confirms the cube enters free flight and lands. The clean Dream-1
-baseline scored 0.0 after its full 60-second allowance, using 25 requests in one
-continuous session with no retries. The source, recordings and measured results
-are ready; a task-board media ID is still required before submission.
+Category: **Societal relevance**. Scorer version: **roll-a-die-v2**.
+
+Status: the v2 scoring correction passes 33 scorer tests, 10 bridge tests and
+3 recorded-evidence replay tests.
+Rescoring the retained measured trajectories gives demo **1.0** and Dream **0.0**.
+The demo reaches 133.207 degrees maximum tilt excursion from its verified
+free-flight reference (164.434 degrees cumulative motion) and one second of
+rest, completing at 9.30 simulated seconds. Dream uses its full 60-second
+allowance, with 25 requests in one continuous session and no retries.
+
+These are recorded physics runs re-evaluated by v2, **not new physics trials**.
+The source scene and policy are unchanged. Two attempted VM restarts for fresh
+repeat trials failed because regional GPU capacity was unavailable. Media upload
+is pending a task-board token. No competition PR is authorized or open.
+See [JUDGING.md](JUDGING.md) for the reviewer packet and
+[VALIDATION.json](VALIDATION.json) for the versioned replay results and hashes.
 
 The task uses a 16 mm, 5 g blue blank die surrogate on the calibrated YAM station.
 It tests a small-object grasp followed by an uncontrolled tumbling release. It
@@ -46,12 +55,17 @@ package version numbers alone do not identify an editable checkout.
 | `test_scoring.py` | Exercises the scorer with synthetic valid and invalid trajectories; these tests do not prove physical feasibility. |
 | `test_bridge.py` | Checks observation ordering, retries, real HTTP transport and equivalence with the Dream client's observation window. |
 | `task.json` | Holds the submission description, measured results and uploaded-media references. |
+| `JUDGING.md` | Explains the review criteria, visual audit, limitations and comparison examples. |
+| `VALIDATION.json` | Records v2 replay scores, input hashes and the distinction from fresh physics runs. |
+| `evidence/*.jsonl.gz` | Anonymous measured trajectories, compressed without changing their contents. |
+| `test_replay.py` | Independently checks the retained input hashes and three recorded outcomes. |
 
 ## Walk through one trial
 
 1. Read `task.py` for the object and fixed starting pose, then `scoring.py` for
    the measured conditions. The cube must be picked up, released, tumble at
-   least 90 degrees after verified release, and come to rest on the table.
+   least 90 degrees away from its verified free-flight reference orientation,
+   and come to rest on the table. Repeated small rocking cannot add up to credit.
 2. Run the tests and the offline motion check below. The latter checks reachable
    poses, joint limits and target speeds; it cannot establish that the fingers
    will grip or release the cube in simulation. The full test suite requires
@@ -101,6 +115,10 @@ python tasks/roll-a-die/run.py --policy dream --max-steps 1200 \
   --seed 0 --dream-server-url http://127.0.0.1:8210 \
   --log-dir artifacts/die-dream-new
 ```
+
+With the Dream SDK credential configured securely on the VM, omit
+`--dream-server-url` to use the standard direct Dream integration. The retained
+clean baseline used the bridge; direct-on-VM execution remains untested.
 
 To keep the Dream credential on the operator's computer, run this task's bridge
 there from the repository root and forward the VM's loopback port over SSH.
@@ -153,7 +171,7 @@ estimate.
 |---|---|---:|---:|---:|
 | 001 | Full finger closure produced vibration; pickup was not established. | 0.00 | 72.533 s | $0.066 |
 | 002 | A gentle 15 mm jaw gap enabled pickup; a complete roll was not achieved. | 0.25 | 48.979 s | $0.045 |
-| 003 | Delayed opening produced a valid detected release and 30.274 degrees of measured tumble, below the 90-degree threshold. | 0.25 | 46.005 s | $0.042 |
+| 003 | Delayed opening produced a valid detected release; cumulative motion was 30.274 degrees and v2 maximum excursion is 29.656 degrees, below its 90-degree threshold. | 0.25 | 46.005 s | $0.042 |
 | 004 | Higher upward stroke and rotation about world X produced 164.434 degrees of free tumble and continuous rest. | 1.00 | 321.206 s | $0.293 |
 
 Trial 004 completed after 186 actions, or 9.30 seconds of simulation. Pickup was
@@ -186,6 +204,47 @@ also cost time. Measure actual elapsed time and account usage instead of derivin
 spend from the number of control steps. Stop the Brev instance when finished;
 retained disk storage continues to be billed.
 
+## Scorer v2 and evidence provenance
+
+The original scorer added angular travel after release. That allowed synthetic
+small back-and-forth rocking to accumulate enough credit. V2 requires the
+**maximum tilt excursion from the verified free-flight reference to reach 90
+degrees**. The reference is the first pose of the uninterrupted verified free
+history, or the release-confirmation pose if no earlier interval qualifies.
+Cumulative motion remains a diagnostic; a full revolution can still qualify
+when the cube returns to its starting orientation.
+
+Eleven new regression/boundary tests cover small rocking, partial turns and
+returns, full revolutions, release anchors, yaw, pending free-flight history and
+slow motion. There are 33 scorer, 10 bridge and 3 recorded-evidence tests. Offline
+replay of unchanged historical measurements gives:
+
+| Retained trial | V2 score | Maximum tilt excursion | Cumulative motion |
+|---|---:|---:|---:|
+| Partial demonstration 003 | 0.25 | 29.656° | 30.274° |
+| Full demonstration 004 | 1.00 | 133.207° | 164.434° |
+| Clean Dream baseline 002 | 0.00 | 0° | 0° |
+
+The original logs, scores and runtime files have not been overwritten. Derived
+results and input SHA-256 hashes are recorded in `VALIDATION.json`. Anonymous
+measured trajectories are included in `evidence/`; detailed replay CSVs are local
+artifacts. The gzip files preserve their original v1 `metrics` fields for
+provenance; replay ignores those fields and recomputes v2 from measured state.
+Existing recordings show the same measured
+motion. The first full-score time remains 9.30 seconds, so this rescoring does
+not depend on motion that would occur after v2 success termination. A fresh
+repeat trial would add reliability evidence and remains pending GPU capacity.
+
+Reproduce all three recorded outcomes from a fresh clone, without Isaac Sim,
+Dream credentials or GPU access (Python and NumPy are sufficient):
+
+```bash
+python tasks/roll-a-die/replay.py tasks/roll-a-die/evidence/demo.jsonl.gz
+python tasks/roll-a-die/replay.py tasks/roll-a-die/evidence/dream.jsonl.gz
+python tasks/roll-a-die/replay.py tasks/roll-a-die/evidence/partial-turn.jsonl.gz
+python -m unittest discover -s tasks/roll-a-die -p 'test_replay.py' -v
+```
+
 ## Audit and score
 
 Each run writes the usual Inspect report and frames, plus:
@@ -201,7 +260,8 @@ Each run writes the usual Inspect report and frames, plus:
   this snapshot when replaying a trial after the working scorer changes.
 
 The scorer awards 0 for no verified pickup, 0.25 for pickup, 0.5 for a verified
-release with at least 90 degrees of free tumble, and 1.0 when the rolled cube
+release with a maximum tilt excursion of at least 90 degrees from its verified
+free-flight reference, and 1.0 when the rolled cube
 also rests continuously for one second. Pickup requires the cube's bottom to
 stay at least 30 mm above the table for 0.20 seconds, with a nearby closed hand
 and limited cube speed. Release uses measured jaw clearance, airborne position
@@ -225,9 +285,9 @@ y=[-0.63, 0.63] m, giving 20 mm clearance from the table's horizontal edges.
 A drop below z=0.7325 m is invalid. See `scoring.py` for all numeric predicates.
 The measured TCP/opening predicates are conservative contact proxies, not direct
 contact-force measurements. Inspect the videos as well as the numeric audit
-before claiming a valid demonstration. The scorer and its thresholds have
-remained fixed throughout the physical trials. Preserve them and the scene for
-the final evaluation; record any later changes as a new task version.
+before claiming a valid demonstration. The original scorer remained fixed throughout the recorded physical trials.
+The v2 revision is explicit and preserves historical evidence. Preserve the
+current scorer and scene for future evaluations; version later changes.
 
 ## Media and submission
 
@@ -241,8 +301,8 @@ Remux the final MP4 with `ffmpeg -i input.mp4 -map_metadata -1 -c copy -movflags
 Keep names, usernames, paths and team identity out of the task text and images.
 Use the runner's actual `setup.png` after visually verifying it. A full-score
 scripted demonstration is required if Dream-1 does not earn full score. Trial
-004 has reached the numeric score threshold and passed visual review; completed
-media uploads remain pending.
+004 reaches the v2 threshold when its measured trajectory is replayed; its
+recording passed visual review. Completed media uploads remain pending.
 
 Update `task.json` with measured results, verified fidelity and the media ID
 returned by `tools/upload_media.py`. Submit one task folder in one pull request

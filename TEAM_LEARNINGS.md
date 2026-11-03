@@ -24,9 +24,13 @@ developers and their agents, not a competition submission document.
   without displaying its contents; restrict file access and keep it outside Git,
   logs and artifacts. This approval does not require another confirmation next
   session. Direct Dream access should remove the Mac/SSH bridge dependency;
-  its speed benefit has not yet been measured. No transfer has been made yet.
+  its speed benefit has not yet been measured. No transfer has been made yet;
+  the next restart attempts failed for regional capacity.
 - Keep the five private reference/application PDFs, credentials, `.env*`,
-  generated media and trial artifacts ignored. See [.gitignore](.gitignore).
+  generated media and full trial artifact directories ignored. Curated anonymous
+  numeric traces may be committed inside a task as review evidence after a
+  content check; the die task now includes three such compressed traces. See
+  [.gitignore](.gitignore).
   This repository is public: do not add account tokens or private application
   content to this log. Keep task text and submitted media anonymous.
 
@@ -49,7 +53,10 @@ The actual build configuration is VM mode (`environment.build.vm`, with an
 According to [Brev's launchable documentation](https://docs.nvidia.com/brev/concepts/launchables),
 the VM setup script does not automatically rerun on restart. The retained
 installation should therefore be reusable; boot and simulator initialization
-still recur. **A restart and cache reuse have not yet been measured.**
+still recur. **A successful restart and cache reuse have not yet been measured.** Two
+restart attempts at 13:08 and 13:11 UTC failed because no GPU capacity was
+available in the existing region. Stopped data remained inaccessible; local
+backups allowed scoring work to continue. Retaining a disk does not reserve a GPU.
 
 Stopping ends compute charges but retains storage. Deleting ends the instance's
 charges and removes its data and installation. Copying files locally does not
@@ -86,7 +93,7 @@ assessment is [docs/roll-a-die-review.md](docs/roll-a-die-review.md).
 
 The batched bridge preserves observation order, timestamps, states, prompt and
 the model's frame window. Ten bridge tests, including real HTTP transport and
-comparison with the Dream client, passed. Twenty-two scorer tests also passed.
+comparison with the Dream client, passed. The original version also passed twenty-two scorer tests.
 Tests do not establish physical realism, repeatability or acceptance.
 
 The runner records cube position, quaternion, linear/angular velocity and
@@ -103,31 +110,55 @@ determinism has not been tested. No face value is assigned to the blank cube.
 
 ## Open findings and next checks
 
-- **Scoring gap found on 2026-11-03:** cumulative tilt can reward small repeated
-  rocking. An offline synthetic trace with alternating +10/-10 degree tilts,
-  after valid pickup/release, reaches 120 degrees accumulated rotation and
-  full score after rest. This demonstrates a metric property, not a physically
-  reproduced exploit. The real demo has 103.204 degrees net release-to-rest
-  tilt, so it was not merely that small rocking motion. Before recommending
-  submission, define a meaningful turnover condition and add this counterexample
-  as a regression case. Do not silently change the frozen scorer or relabel old
-  results; version any correction and re-evaluate it.
-- Show how a reviewer could score the motion with ordinary camera footage.
-  Exact acceleration, tiny jaw-clearance thresholds and a blank symmetric cube
-  make the current telemetry audit harder to reproduce with simple tools.
+- **Scoring gap fixed in v2 on 2026-11-03:** v1 could reward repeated small
+  rocking. V2 requires at least 90 degrees maximum tilt excursion from the first
+  verified free-flight reference, rather than cumulative rotation. Eleven new
+  adversarial/boundary tests cover rocking, thresholds, complete revolutions,
+  reference poses, pending flight and slow turns; all 46 tests pass (33 scorer, 10 bridge, 3 recorded-evidence replay).
+  Offline replay of the unchanged demo is 1.0 (133.207 degrees max excursion),
+  partial demo 003 is 0.25 and clean Dream is 0.0. Original logs remain intact;
+  `tasks/roll-a-die/VALIDATION.json` identifies these as rescoring, not fresh runs.
+- [JUDGING.md](tasks/roll-a-die/JUDGING.md) now describes the reviewer package,
+  comparisons, exact rubric and ordinary-video/ruler cross-check. Exact
+  acceleration, tiny jaw-clearance thresholds and a blank symmetric cube remain
+  limits of manual verification; better close-up footage is desirable. A
+  documented cross-check does not itself prove exact manual equivalence.
 - Measure the first retained-VM restart and direct-on-VM Dream run. Check that
   `/data/` environment files and caches survived before assuming warm timings.
 - At the next approved GPU batch, repeat the frozen demonstration and inspect
   sensitivity to small pose/release changes separately from official fixed-layout
   evaluation. One successful final run is not a reliability estimate.
-- Refresh novelty checks against the live task board and relevant public task
-  sets before a submission decision. The November 3 checks found no direct
-  duplicate, but that is neither exhaustive nor permanently current.
+- November 3 refresh: no direct dice-roll duplicate among 40 live upstream PRs
+  or the supplied 119-entry board snapshot. No upstream PR was merged. The
+  telescoping-lamp template is illustrative; cable-task PRs #12/#13 are pending,
+  not accepted precedents. The authenticated live board and wider task sets
+  still need a final novelty check before a submission decision.
 - Media is prepared locally; `task.json` has no uploaded media ID yet. A private
   task-board token is needed for upload. This is separate from the Dream key.
   Upload completion is not permission to open a PR.
 
 ## Dated session log
+
+### 2026-11-03 — scoring v2 correction; GPU batch blocked by capacity
+
+- Operator: repository agent; branch `roll-a-die`. User authorized scoring fixes
+  and everything needed for readiness, while retaining the no-PR instruction.
+- Shared branch fetched; VM confirmed stopped before requesting restart at
+  13:07:55 UTC. Both that attempt and the 13:11 retry failed for regional GPU
+  capacity. The planned two repeated demos and direct Dream run did not execute.
+  VM confirmed STOPPED at 13:15:58 UTC; no key transfer or environment change.
+  Posted credit was $196.16 ($3.84 total spend since the initial $200); billing
+  lag/storage prevent attributing the change to these attempts.
+- Scorer v2 requires a 90-degree maximum excursion from the verified release
+  reference; accumulated rocking no longer earns roll credit. Historical
+  trajectories were independently replayed; no evidence was overwritten.
+  Results/hashes: `artifacts/die-v2-rescore-001/` and task `VALIDATION.json`.
+  Three anonymous compressed trajectories are committed under the task
+  `evidence/` directory so other agents/reviewers can reproduce scores offline;
+  original raw media and local artifacts remain ignored.
+  The demo's first v2 full-score time remains 9.30 s, matching its original
+  termination, so no post-termination motion is needed for the corrected score.
+- Media-token slot remains empty; user is looking for the Robocurve token.
 
 ### 2026-11-03 — first die task and operating agreement
 
