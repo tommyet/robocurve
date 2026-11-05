@@ -164,6 +164,53 @@ result or measure outcome fairness.
 
 ## Dated session log
 
+### 2026-11-04 — four brick tasks submitted (November 5 UTC)
+
+- Operator: repository agent; working branch `duplo-joining-batch`. The user
+  explicitly requested a PR for each of the four tasks after reviewing the
+  completed batch. This authorized the four media uploads and submissions.
+- Refreshed the live guide, upstream `AGENTS.md` and authenticated board.
+  Preflight showed 420 tasks (330 pending, 90 previous-cohort plans), no own
+  submissions in the previous 24 hours, an open window and a 20/day cap.
+  The three earlier DUPLO plans remain. New pending `TK-E4WPXK` attaches a
+  tipper-bed hinge and unloads a cube; no new direct stud/socket retention
+  counterpart was found in the bounded check. External benchmark overlap
+  remains a novelty risk; receiving a task is not acceptance.
+- Tightened setup, context, rubric and judging prose. The guide requires the
+  **exact model instruction**, so it is unchanged and checked against config,
+  runtime and recorded evaluation prompts. Every frozen simulation/scoring
+  source hash matches. All eight final offline replays passed again: demos
+  1.0, Dream 0.0, no invalid evidence. No GPU was started.
+- Used the official uploader's multipart builder with curl transport, following
+  the previously verified workaround for urllib's Cloudflare 403. The token
+  remained in memory and out of arguments, logs and Git. Each task received
+  its own Dream video, full-score demo and `setup-closeup.png`; upload hashes
+  match the validated local files. No successful upload was retried.
+
+| Task | PR | Board ID | Media ID | Submitted head |
+|---|---|---|---|---|
+| Join two 2×2 blocks | [#364](https://github.com/robocurve/benchmark-tasks/pull/364) | `TK-BPUQW9` | `M-FFYNCV` | `f985309` |
+| Join two 1×1 blocks | [#365](https://github.com/robocurve/benchmark-tasks/pull/365) | `TK-UJQEDY` | `M-3W4V6P` | `8b2ae31` |
+| Join a 1×1 block to a 2×2 block | [#366](https://github.com/robocurve/benchmark-tasks/pull/366) | `TK-PSN375` | `M-WMS6EN` | `c35d19d` |
+| Join two 2×2 blocks with two studs overlapping | [#367](https://github.com/robocurve/benchmark-tasks/pull/367) | `TK-4NRFL8` | `M-NDBC5A` | `15c31bf` |
+
+- All four were received without ingestion errors at 01:01:51–01:01:59 UTC
+  on November 5 and are **waiting for review**. The live board confirms our
+  ownership, matching submitted text and all three media links for each.
+- Each PR is non-draft, authored by the registered `tommyet` account, against
+  upstream `main`, with one commit and exactly 30 files under its one task
+  folder. No shared notes, workbench files, private PDFs, credentials or die
+  changes are in those diffs. PR #44 remains unchanged.
+- **Freeze all four submitted branches while pending.** Do not push later
+  working edits into them expecting re-ingestion. Revisions after feedback
+  use the same PR; do not merge the PRs ourselves. Shared notes remain on
+  `duplo-joining-batch`. Local single-task worktrees are under ignored
+  `artifacts/brick-submissions/worktrees/`.
+- Filtered receipts, branch heads, final replay checks, upload hashes and
+  board confirmation are in ignored `artifacts/brick-submissions/`. Preparation
+  commit: `c2763f7`; submitted heads above contain only their own task package.
+  The GPU remains stopped; this submission needed no further simulation.
+
 ### 2026-11-04 — four construction-brick tasks, completed for review
 
 - Operator: repository agent; branch `duplo-joining-batch`. User requested four

@@ -85,3 +85,14 @@ matches and the limits of that check.
 The four submissions were explicitly authorized after review. Each has its own
 media upload and task-only submission branch. The existing die submission is
 unchanged. Submission receipts and PR links are recorded in the team notes.
+
+## Submitted PRs
+
+All four were received by Robocurve on November 5 UTC and are waiting for review.
+
+| Task | PR | Board ID |
+|---|---|---|
+| Join two 2×2 blocks | [#364](https://github.com/robocurve/benchmark-tasks/pull/364) | `TK-BPUQW9` |
+| Join two 1×1 blocks | [#365](https://github.com/robocurve/benchmark-tasks/pull/365) | `TK-UJQEDY` |
+| Join a 1×1 block to a 2×2 block | [#366](https://github.com/robocurve/benchmark-tasks/pull/366) | `TK-PSN375` |
+| Join two 2×2 blocks with two studs overlapping | [#367](https://github.com/robocurve/benchmark-tasks/pull/367) | `TK-4NRFL8` |

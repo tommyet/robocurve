@@ -14,8 +14,8 @@ The [short review](brick-batch-review.md) links all eight local videos.
   every score. The audit checks source hashes, full telemetry, executed action
   limits, complete frame counts and video encoding; the shared scorer passes
   54 unit tests. No result is inferred from a planned controller motion.
-- Full videos and setup images are local; media IDs remain empty because no
-  upload has been requested. Task scores include actual Dream recovery counts.
+- Full videos and setup images are local and uploaded; each task has its own
+  media ID. Task scores include actual Dream recovery counts.
   Fidelity text is within 500 characters and score text is below 300 characters.
 - Task text and curated numeric evidence contain no team identity or private
   paths. Sampled video frames and setup views show no team/account identifiers.
