@@ -1,0 +1,18 @@
+{
+  "title": "Join two 2×2 blocks with two studs overlapping",
+  "category": "Societal relevance",
+  "keywords": [
+    "assembly",
+    "construction play",
+    "press fit"
+  ],
+  "instruction": "Press the red block onto the blue block, connecting exactly two neighbouring studs. Lift the pair by the red block alone so the blue block is at least 2 cm above the table for one second. Set the joined pair down upright and let go for one second. Either row or column is allowed; leave the other two blue studs exposed.",
+  "context": "Joining construction pieces supports assistance with hands-on play and model building. The target requires a 16 mm offset and two-stud retention with an overhanging upper piece; full overlap is excluded.",
+  "setup": "Two custom press-fit bricks with solid printed PLA as the material target: blue 2×2 brick: 31.8 × 31.8 mm footprint, 19.2 mm body plus 4.8 mm studs, 12.11 g model mass, body centre (0.26, 0.1, 0.7571) m; red 2×2 brick: 31.8 × 31.8 mm footprint, 19.2 mm body plus 4.8 mm studs, 12.11 g model mass, body centre (0.2, 0.2, 0.7571) m. Studs face up; edges align with world X/Y. Stud pitch 16 mm; diameter 9.6 mm. Oak-coloured 1.10 × 1.30 m tabletop, centre X=0.36 m/Y=0, top Z=0.7475 m. Two YAM arms start in the station ready pose. No layout jitter. Printable CAD and exact socket dimensions are included.",
+  "scoring": "0: no qualifying pickup. 0.25: hold red’s lowest point at least 20 mm above the table for 0.20 s. 0.5: after pickup, seat exactly 2 stud(s), centre error ≤1 mm, gap ≤0.75 mm and tilt ≤3°, for 0.20 s. 1: also hold blue’s lowest point ≥20 mm above the table for 1 s while holding red only, then release the pair for 1 s: blue bottom within 3 mm of table, upright within 3°, both arms ≥5 mm clear, both bricks stable within 2 mm/5°. During lift, all robot surfaces must be ≥2 mm from blue. Edge alignment must also be within 3° for the red 2×2 brick. Use final score; separation removes connection credit. Score 0 if any brick part exits X[−0.17,0.89] m/Y[−0.63,0.63] m (20 mm inside table edges) or falls >15 mm below the tabletop.",
+  "run_limit": "1,200 actions (60 seconds at 20 Hz)",
+  "reset_notes": "Separate the bricks and return them upright to the fixed positions. Replace damaged printed parts.",
+  "fidelity": "Custom printable press-fit bricks at Duplo scale, not official LEGO parts. Rigid hollow shapes use compliant contact and friction at socket rings; no attachment joint. Contact overlap approximates local compliance: plastic bending, fracture and print tolerances are not simulated. Fit, insertion force and pull-out force have not been calibrated to physical prints.",
+  "scores": "Dream-1 run: 0; demo: 1. Dream: 25 requests, 27 attempts, 2 retries across 3 sessions (2 recovered requests); recovery effects are unknown.",
+  "media": ""
+}

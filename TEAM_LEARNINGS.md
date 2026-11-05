@@ -1,6 +1,6 @@
 # Shared working notes
 
-Last updated: 2026-11-03. Read this before starting work; update it when an
+Last updated: 2026-11-04. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
@@ -127,7 +127,7 @@ measured repeat-success rate. Numerical differences remain possible; exact
 determinism has not been tested. V3 adds 1–6 pips for tracking faces; it still does not request a particular
 result or measure outcome fairness.
 
-## Current findings and next checks
+## Die task findings and next checks
 
 - **V3 is current.** Six coloured pip-marked faces replace the blank cube.
   Pickup earns 0.25, visible release 0.5, and a post-release marked-face up→down
@@ -163,6 +163,150 @@ result or measure outcome fairness.
   accepted as T-39, and Robocurve received the `tommyet` PR as **TK-YBZD4Q**.
 
 ## Dated session log
+
+### 2026-11-04 — four construction-brick tasks, completed for review
+
+- Operator: repository agent; branch `duplo-joining-batch`. User requested four
+  separate joining tasks, complete for review, and approved custom printable
+  single-stud bricks at Duplo scale. This does not authorize new uploads or PRs.
+- Before startup, Brev reported `robocurve-dice` STOPPED. The CLI login had
+  expired; the user's existing Safari session renewed it successfully. Start
+  requested for a batch of contact probes, four robot demos and four Dream runs.
+  Final results and shutdown are recorded below.
+- The original Mumbai `g6e.2xlarge` failed twice with
+  `CAPACITY_UNAVAILABLE`. Resizing the same stopped VM to `g6e.4xlarge`
+  preserved its disk/environment and allowed startup around 23:24 UTC.
+  Both have one L40S GPU; the larger machine adds CPU/RAM. The observed
+  Mumbai catalog rate is $4.329588/hour compute plus approximately $0.05/hour
+  disk, or $4.38/hour while running. Do not use the older $3.28 rate for this
+  session. The cheaper configuration was restored after shutdown (see below).
+- The four task folders contain their own complete runtime/scorer/geometry.
+  `brick_workbench/` maintains shared sources and packages them; it must stay
+  outside eventual single-task submission diffs. The received die task is unchanged.
+- Custom geometry uses hollow compound colliders and compliant socket contact,
+  with no proximity glue or attachment joint. Material coefficients are trial
+  assumptions, not measured Duplo/printed-plastic calibration. The final robot
+  trials below establish simulated feasibility only.
+- The scorer checks geometric seating, then unsupported retention while only
+  the upper brick is held, followed by released rest. All 315 collision meshes
+  of each YAM arm contribute to nine conservative measured-link boxes. A TCP
+  distance alone cannot exclude lower-brick support by a finger or forearm.
+- Read actual rigid roots for scoring. Arena `object_states().pos` is the AABB
+  centroid, which shifts upward when studs are added. Body-centred geometry
+  and mixed centroid telemetry would silently corrupt seating measurements.
+- CPU material probe `brick-probe-005` tests aligned insertion, a 2 mm
+  lateral error and a non-contact hover for each configuration. All aligned
+  joints retained for the full one-second proof; all negative controls failed
+  retention. Final aligned seating gaps were 0.097–0.123 mm and maximum hard
+  overlap was below 0.030 mm. The 20 N value is a descent-stop threshold,
+  not a strict force cap: misaligned contacts briefly exceeded it.
+- The compliant contact model is an approximation, not measured PLA bending.
+  The largest transient compliant overlap was 0.461 mm at the socket transition;
+  nominal radial interference is 0.1 mm. Printing tolerances, insertion force
+  and pull-out force still need real calibration. Keep this limitation in
+  each task's fidelity statement. Probe results are not robot demonstrations.
+- Instrumented contact probes must enable contact processing and confirm
+  actual reports. Isaac Lab disables it by default; zero unobserved impulses
+  are not evidence of zero force. Probe004's pose checks are superseded by
+  probe005 for force/contact validation. CPU tensor views require the active
+  stage ID, without manually attaching the stage a second time.
+- Actual robot trials revealed loaded tracking error and upward brick slip
+  during insertion. Pose-only reachability cannot validate pressing. One-time
+  measured grasp-offset correction aligns the scripted demo, while Dream
+  retains the standard camera/robot observations. Trial-specific offsets,
+  source snapshots and failed attempts are preserved in local artifacts.
+- All four configurations now have a full-score robot demo. The four-stud
+  trial needed a 23 mm grasp height, 1 mm nominal squeeze per side and 6 mm
+  commanded press overtravel; other joins passed with 22 mm, 0.5 mm and 3 mm.
+  These are controller targets, not measured plastic deformation. All motions
+  use ordinary joint/gripper commands, with no brick teleport or joint creation.
+- Novelty is a material submission risk. The November 4 board snapshot has
+  previous-cohort DUPLO image/bridge/overhang plans; those are not accepted
+  reviews, but the board asks new tasks to differ from them. The primary
+  [WorkBenchMark](https://workbenchmark.github.io/) project already includes
+  two-brick DUPLO assembly. Our unsupported retention proof is a useful
+  distinction shared by all four tasks; four separate acceptances are not
+  assured. See `docs/brick-task-review.md` before choosing submissions.
+- The retained virtualenv's FFmpeg exports policy streams but lacks the
+  `drawtext` filter. Compose labeled review videos locally with the verified
+  bundled macOS FFmpeg; there is no need to leave the GPU running for that.
+
+### 2026-11-04 — final brick evidence and learning points (finished November 5 UTC)
+
+- Operator: repository agent; branch `duplo-joining-batch`. All four tasks are
+  complete for user review. No media was uploaded and no competition PR was
+  opened. The original die task and submission branch remain unchanged.
+- Final demo / Dream run IDs, scores and measured runner wall times:
+
+  | Variant | Demo | Dream |
+  |---|---|---|
+  | 2×2 | `brick-2x2-demo-004`: 1.0, 109.469 s | `brick-2x2-dream-001`: 0.0, 266.701 s |
+  | 1×1 | `brick-1x1-demo-002`: 1.0, 106.703 s | `brick-1x1-dream-001`: 0.0, 241.736 s |
+  | Mixed | `brick-mixed-demo-002`: 1.0, 107.380 s | `brick-mixed-dream-001`: 0.0, 264.635 s |
+  | Offset | `brick-offset-demo-002`: 1.0, 107.844 s | `brick-offset-dream-001`: 0.0, 263.739 s |
+
+- Every demo uses 400 actions / 20 simulated seconds; every Dream run uses
+  1,200 actions / 60 seconds. All eight independent audits pass with matching
+  frozen source hashes and replay scores, complete frame counts, and zero
+  executed action range/step-limit violations. The shared scorer passes 54
+  tests. One fixed-seed run per policy is not a reliability estimate.
+- Dream used the standard direct client but recovered expired sessions.
+  Request/attempt/retry/session counts are respectively 25/29/4/5 for 2×2,
+  25/26/1/2 for 1×1 and mixed, and 25/27/2/3 for offset. The four-stud diagnostic
+  identifies `DreamSessionExpired` (`DA-0001`). Recovery retries the same
+  observation window without a simulation action between attempts, adopts
+  the replacement session, and resets client action smoothing. Server
+  continuity and performance effects are unknown. Do not label these clean,
+  uninterrupted runs or attribute failure entirely to task difficulty.
+- Every task now has completed `VALIDATION.json`, anonymous numeric compressed
+  traces, audit reports, sampled visual review reports and the material probe.
+  Preserve the distinction between original-file hashes and curated-trace
+  hashes. Curating strips arbitrary text and still produces the same score.
+  `brick_workbench/finalize_batch.py` fails closed on mismatched/incomplete
+  evidence; do not bypass its checks to fill scores from memory.
+- Video review sampled setup, seating, unsupported lift and released finish,
+  with six times across each Dream run. Every-frame completeness and numeric
+  scoring were audited separately. Exact submillimetre seating is established
+  from geometry/telemetry, not claimed from an oblique frame. For offset, the
+  known grid and visible 16 mm displacement establish two engaged studs even
+  if one unused stud is hidden. Explain this in the manual judging guide.
+- Final composites are H.264/yuv420p, fast start, with every original frame.
+  Demos are 5.3–5.6 MB and Dream videos 14.7–19.1 MB; complete task folders
+  are about 3.8 MB each. Use `setup-closeup.png` (1600×1280) for a later upload,
+  rather than the smaller policy-view `setup.png`. Each task needs its own
+  upload/media ID and one-folder PR after user authorization.
+- All final media, measured trajectories, source snapshots and historical
+  development attempts have local copies under ignored `artifacts/`. Raw
+  camera arrays and the retained simulator installation remain on the VM.
+  Local FFmpeg composition was slow; stop GPU compute after evidence download,
+  then finish CPU-only composition, audits and documentation locally.
+- Reproduction must use the recorded VM source revisions, not whatever local
+  checkout is current. Physics 240 Hz is backed by the installed adapter's
+  source configuration, not inferred from 20 Hz control timestamps. Recorded
+  versions, revision hashes and action limits are in each validation record.
+
+- Stop requested at 00:29:52 UTC on November 5; STOPPED confirmed at
+  00:42:11 UTC. Shutdown took about 12m19s even though the CLI returned success
+  earlier. Always check the actual VM lifecycle status. No GPU compute
+  processes remained before stopping, and final evidence was downloaded.
+- Start request at November 4 23:16:16 UTC through confirmed stop spans
+  85m55s. At the observed $4.37746/hour total rate, conservatively charging
+  that whole interval estimates **$6.27 total / $1.57 per task**. This includes
+  failed starts, probe/demo development, idle time and shutdown; it is not an
+  invoice. Do not add overlapping per-run estimates. Separate Dream charges
+  and later retained storage are excluded. Last posted balance was $193.36
+  at 00:00:19 UTC, before completion; billing lag makes it unsuitable as the
+  complete batch cost. Filtered lifecycle/rate evidence is in ignored
+  `artifacts/brick-batch-session/`. The retained 256 GiB disk is about
+  $1.15/day at the catalog rate (UI rounded estimate $1.20/day), shared by
+  all tasks, not charged separately per task.
+
+- After confirmed shutdown, restored the retained VM to `g6e.2xlarge` for
+  later sessions; `brev ls` confirms STOPPED at that size. No restart was
+  requested. A scale operation can transiently report STOPPING and the old
+  type; wait for it to settle. The private access token can expire while
+  reading status: run the read-only `brev ls` to use the CLI's existing refresh
+  flow before requesting a new browser login. Never print credentials.
 
 ### 2026-11-03 — final media upload and competition submission
 
