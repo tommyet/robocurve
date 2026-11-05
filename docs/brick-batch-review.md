@@ -88,11 +88,17 @@ unchanged. Submission receipts and PR links are recorded in the team notes.
 
 ## Submitted PRs
 
-All four were received by Robocurve on November 5 UTC and are waiting for review.
+Status checked November 5, 21:55 UTC. Two remain pending; two received final
+rejections for being superficial variants of the full 2×2 task.
 
-| Task | PR | Board ID |
-|---|---|---|
-| Join two 2×2 blocks | [#364](https://github.com/robocurve/benchmark-tasks/pull/364) | `TK-BPUQW9` |
-| Join two 1×1 blocks | [#365](https://github.com/robocurve/benchmark-tasks/pull/365) | `TK-UJQEDY` |
-| Join a 1×1 block to a 2×2 block | [#366](https://github.com/robocurve/benchmark-tasks/pull/366) | `TK-PSN375` |
-| Join two 2×2 blocks with two studs overlapping | [#367](https://github.com/robocurve/benchmark-tasks/pull/367) | `TK-4NRFL8` |
+| Task | PR | Board ID | Current status |
+|---|---|---|---|
+| Join two 2×2 blocks | [#364](https://github.com/robocurve/benchmark-tasks/pull/364) | `TK-BPUQW9` | Waiting for review |
+| Join two 1×1 blocks | [#365](https://github.com/robocurve/benchmark-tasks/pull/365#issuecomment-6669481752) | `TK-UJQEDY` | Not accepted: final; PR closed |
+| Join a 1×1 block to a 2×2 block | [#366](https://github.com/robocurve/benchmark-tasks/pull/366#issuecomment-6669477142) | `TK-PSN375` | Not accepted: final; PR closed |
+| Join two 2×2 blocks with two studs overlapping | [#367](https://github.com/robocurve/benchmark-tasks/pull/367) | `TK-4NRFL8` | Waiting for review |
+
+The organizers judged changes in brick size, stud count and allowed stud
+positions insufficient for separate tasks. Their decisions say the two rejected
+tasks cannot be revised. The code and videos remain useful development evidence.
+The die PR also remains pending; no new review comments were posted on it.

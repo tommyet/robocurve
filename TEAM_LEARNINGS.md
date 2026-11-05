@@ -1,6 +1,6 @@
 # Shared working notes
 
-Last updated: 2026-11-04. Read this before starting work; update it when an
+Last updated: 2026-11-05. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
@@ -164,6 +164,38 @@ result or measure outcome fairness.
 
 ## Dated session log
 
+### 2026-11-05 — two final novelty rejections; three tasks still pending
+
+- Operator: repository agent; working branch `duplo-joining-batch`. User asked
+  for updates on all five submitted PRs. Checked GitHub status/comments at
+  21:54 UTC and the authenticated board at 21:55 UTC; no task or PR was changed.
+- [PR #365, two 1×1 blocks](https://github.com/robocurve/benchmark-tasks/pull/365#issuecomment-6669481752)
+  (`TK-UJQEDY`) was **not accepted: final** at 21:04:16 UTC.
+- [PR #366, 1×1 onto 2×2](https://github.com/robocurve/benchmark-tasks/pull/366#issuecomment-6669477142)
+  (`TK-PSN375`) was **not accepted: final** at 21:04:08 UTC.
+- Both organizer comments identify them as superficial variants of the full
+  2×2 task (`TK-BPUQW9`): changes to brick size, stud count and allowed stud
+  positions did not meet the Importance criterion. Both PRs are closed and
+  unmerged. The decisions explicitly forbid revising these tasks; a different
+  task may be submitted in a new PR. Do not reopen or treat them as ordinary
+  48-hour revision cases. New task development/submission needs user direction.
+- [Die #44](https://github.com/robocurve/benchmark-tasks/pull/44),
+  [full 2×2 #364](https://github.com/robocurve/benchmark-tasks/pull/364) and
+  [offset 2×2 #367](https://github.com/robocurve/benchmark-tasks/pull/367) remain
+  open, unmerged and pending, with no new review feedback after their receipts.
+  Keep those submitted branches unchanged. The rejected tasks' source and
+  evidence remain archived for learning; submitted heads are unchanged.
+- The board returns the three pending tasks with `reviewed_at: null`; the two
+  finally rejected tasks are absent from its list. The GitHub comments establish
+  the final decisions, not their absence from the board. No revision deadline
+  was provided. Local evidence: `artifacts/brick-submissions/pr-status-2026-11-05.json`
+  and `board-our-five-status-2026-11-05.json` in the same ignored directory.
+- Learning for future batches: changes in part size or number of engaged studs
+  do not establish a separate task here. Assess a distinct objective and skill
+  before developing another variant. Successful demos and rigorous scoring
+  do not establish novelty. The remaining two brick tasks have not yet received
+  an acceptance decision.
+
 ### 2026-11-04 — four brick tasks submitted (November 5 UTC)
 
 - Operator: repository agent; working branch `duplo-joining-batch`. The user
@@ -195,7 +227,7 @@ result or measure outcome fairness.
 | Join two 2×2 blocks with two studs overlapping | [#367](https://github.com/robocurve/benchmark-tasks/pull/367) | `TK-4NRFL8` | `M-NDBC5A` | `15c31bf` |
 
 - All four were received without ingestion errors at 01:01:51–01:01:59 UTC
-  on November 5 and are **waiting for review**. The live board confirms our
+  on November 5 and were **waiting for review** at receipt. The board confirmed our
   ownership, matching submitted text and all three media links for each.
 - Each PR is non-draft, authored by the registered `tommyet` account, against
   upstream `main`, with one commit and exactly 30 files under its one task
