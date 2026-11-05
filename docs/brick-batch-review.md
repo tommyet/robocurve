@@ -82,6 +82,6 @@ four variants. I would not assume that all four will be accepted as separate
 contributions. The [detailed review](brick-task-review.md) records the closest
 matches and the limits of that check.
 
-No media upload or new competition PR is authorized yet. These four folders
-are for your review; any later submission needs its own task-only branch and
-PR. The existing die submission is unchanged.
+The four submissions were explicitly authorized after review. Each has its own
+media upload and task-only submission branch. The existing die submission is
+unchanged. Submission receipts and PR links are recorded in the team notes.

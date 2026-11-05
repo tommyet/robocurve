@@ -16,7 +16,7 @@ The [short review](brick-batch-review.md) links all eight local videos.
   54 unit tests. No result is inferred from a planned controller motion.
 - Full videos and setup images are local; media IDs remain empty because no
   upload has been requested. Task scores include actual Dream recovery counts.
-  Fidelity text is 365 characters and score text is below 300 characters.
+  Fidelity text is within 500 characters and score text is below 300 characters.
 - Task text and curated numeric evidence contain no team identity or private
   paths. Sampled video frames and setup views show no team/account identifiers.
   Visual review sampled key times; timing and every-frame completeness were
@@ -53,10 +53,10 @@ The [short review](brick-batch-review.md) links all eight local videos.
 3. **Model-run interpretation.** All four Dream runs used standard recovery for
    expired sessions. Request/session counts are disclosed. The effect on model
    performance is unknown, so these are not uninterrupted inference baselines.
-4. **User review and submission.** No new upload or upstream PR is authorized.
-   Review the local videos, then choose the tasks. Any later submission needs
-   its own media ID and one-task branch/PR; shared notes, this review and
-   `brick_workbench/` stay outside that competition diff. The die PR is unchanged.
+4. **Submission scope.** The user explicitly authorized all four submissions.
+   Each receives its own media ID and one-task branch/PR; shared notes, this
+   review and `brick_workbench/` stay outside each competition diff. The die PR
+   is unchanged. Submission is not acceptance.
 
 ## Bounded novelty check — 2026-11-04
 
@@ -117,6 +117,13 @@ not establish four materially distinct tasks. Do not claim novelty merely from
 custom CAD, colours, stud count, or a different simulator. Acceptance remains
 the reviewers' decision.
 
-The final controlled build regenerated the four task packages from the frozen
-shared implementation and recorded evidence. No upload or new submission was
-made during this work.
+A fresh submission preflight on November 5 UTC checked 420 board entries
+(330 pending, 90 prior-cohort plans). The same three planned DUPLO tasks remain.
+The new pending `TK-E4WPXK` attaches a tipper-bed hinge, loads a cube and dumps
+it into a tray; its studs start preassembled. The bounded check found no new
+active direct counterpart to the two-loose-brick retention tasks. This does not
+remove the external benchmark overlap described above.
+
+The final prose edit preserved the exact recorded model instructions and every
+frozen simulation/scoring source hash. Media is uploaded; submission receipts
+and PR links are in the shared team notes.

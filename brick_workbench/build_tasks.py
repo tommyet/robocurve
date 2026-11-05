@@ -42,10 +42,10 @@ def build():
         previous = json.loads(details.read_text()) if details.exists() else {}
         fields = dict(title=c['title'], category='Societal relevance', keywords=['assembly', 'construction play', 'press fit'],
             instruction=c['instruction'],
-            context='Joining construction pieces supports assistance with hands-on play and model building. ' + task_distinction(c),
+            context='Joining toy bricks is a step in assisted play and model building. ' + task_distinction(c),
             setup=setup(c), scoring=rubric(c), run_limit='1,200 actions (60 seconds at 20 Hz)',
             reset_notes='Separate the bricks and return them upright to the fixed positions. Replace damaged printed parts.',
-            fidelity='Custom printable press-fit bricks at Duplo scale, not official LEGO parts. Rigid hollow shapes use compliant contact and friction at socket rings; no attachment joint. Contact overlap approximates local compliance: plastic bending, fracture and print tolerances are not simulated. Fit, insertion force and pull-out force have not been calibrated to physical prints.',
+            fidelity='Custom PLA designs at Duplo scale, not official LEGO. Hollow rigid bodies and compliant socket contacts approximate a frictional press fit; no attachment joint. Plastic bending, fracture and print tolerances are not simulated. Fit, insertion force and pull-out force are uncalibrated against physical prints.',
             scores=previous.get('scores', 'Unvalidated development task; demo and Dream runs pending.'),
             media=previous.get('media', ''))
         details.write_text(json.dumps(fields, ensure_ascii=False, indent=2) + '\n')
@@ -56,39 +56,44 @@ def setup(c):
         size = ' × '.join(f'{16*n-.2:g}' for n in shape)
         x, y = c[role + '_xy']
         colour = 'blue' if role == 'lower' else 'red'
-        return f'{colour} {shape[0]}×{shape[1]} brick: {size} mm footprint, 19.2 mm body plus 4.8 mm studs, {c[role+"_mass"]*1000:g} g model mass, body centre ({x:g}, {y:g}, 0.7571) m'
-    return ('Two custom press-fit bricks with solid printed PLA as the material target: ' + brick('lower') + '; ' + brick('upper') +
-            '. Studs face up; edges align with world X/Y. Stud pitch 16 mm; diameter 9.6 mm. '
-            'Oak-coloured 1.10 × 1.30 m tabletop, centre X=0.36 m/Y=0, top Z=0.7475 m. '
-            'Two YAM arms start in the station ready pose. No layout jitter. Printable CAD and exact socket dimensions are included.')
+        return f'{colour} {shape[0]}×{shape[1]}, {size} mm footprint, {c[role+"_mass"]*1000:g} g model mass, body centre ({x:g}, {y:g}, 0.7571) m'
+    return ('Two custom press-fit bricks, designed for solid printed PLA: ' + brick('lower') + '; ' + brick('upper') +
+            '. Both have 19.2 mm bodies and 4.8 mm-high studs, 9.6 mm in diameter on a 16 mm grid. '
+            'Studs face up; edges align with X/Y. Oak-coloured 1.10 × 1.30 m tabletop, '
+            'centre X=0.36 m/Y=0, top Z=0.7475 m. Two YAM arms start in the station ready pose. '
+            'Fixed layout, seed 0, no jitter. Printable CAD includes socket dimensions.')
 
 def rubric(c):
     n = c['required_studs']
-    yaw = ' Edge alignment must also be within 3° for the red 2×2 brick.' if c['upper_shape'] == (2, 2) else ''
-    return (f'0: no qualifying pickup. 0.25: hold red’s lowest point at least 20 mm above the table for 0.20 s. '
-            f'0.5: after pickup, seat exactly {n} stud(s), centre error ≤1 mm, gap ≤0.75 mm and tilt ≤3°, for 0.20 s. '
-            '1: also hold blue’s lowest point ≥20 mm above the table for 1 s while holding red only, then release the pair for 1 s: '
-            'blue bottom within 3 mm of table, upright within 3°, both arms ≥5 mm clear, both bricks stable within 2 mm/5°. '
-            'During lift, all robot surfaces must be ≥2 mm from blue.' + yaw + ' Use final score; separation removes connection credit. '
-            'Score 0 if any brick part exits X[−0.17,0.89] m/Y[−0.63,0.63] m (20 mm inside table edges) or falls >15 mm below the tabletop.')
+    studs = f'{n} '+('stud' if n == 1 else 'studs')
+    yaw = ' Red 2×2 edges must align within 3°; quarter-turns are allowed.' if c['upper_shape'] == (2, 2) else ''
+    return ('0.25: hold red’s lowest point ≥20 mm above the table for 0.20 s. '
+            f'0.5: after pickup, seat exactly {studs} for 0.20 s: each stud/socket centre within 1 mm laterally '
+            'and 0.75 mm of full insertion, relative tilt ≤3°.' + yaw +
+            ' 1: also lift blue’s lowest point ≥20 mm for 1 s, holding red only, with all robot surfaces ≥2 mm from blue; '
+            'then release for 1 s with blue’s bottom within 3 mm of the table, upright within 3°, both arms ≥5 mm clear '
+            'of both bricks, and each brick stable within 2 mm/5°. '
+            'Use the final score; separation or wrong alignment removes connection credit. '
+            '0: no qualifying pickup, or any brick part leaves X[−0.17,0.89] m/Y[−0.63,0.63] m '
+            '(20 mm inside the table edges) or falls >15 mm below the tabletop.')
 
 def task_distinction(c):
     if c['required_studs'] == 4:
-        return 'The target requires simultaneous seating and retention at four stud/socket locations on equal-size pieces.'
+        return 'All four connections must hold the equal-sized bricks together.'
     if c['required_studs'] == 2:
-        return 'The target requires a 16 mm offset and two-stud retention with an overhanging upper piece; full overlap is excluded.'
+        return 'A two-stud joint must support an overhanging brick; full overlap does not qualify.'
     if c['lower_shape'] == (1, 1):
-        return 'The target requires gripping two small pieces and retaining their single stud/socket connection.'
-    return 'The small upper piece must retain the larger base through one chosen stud; any corner is valid.'
+        return 'The small bricks must stay joined by a single stud.'
+    return 'One connection must support the larger base; any corner stud is allowed.'
 
 def target_pose(c):
     if c['required_studs'] == 2:
-        return ('At full seating, the horizontal body-centre offset is 16 mm along either axis and zero along the other. '
-                'Either sign is allowed: one adjacent row or column overlaps and two lower studs remain exposed.')
+        return ('Seated body centres are 16 mm apart along X or Y and aligned along the other axis. '
+                'Either direction is allowed, leaving two blue studs exposed.')
     if c['lower_shape'] != c['upper_shape']:
-        return ('At full seating, the upper body centre is 8 mm from the lower centre along each horizontal axis. '
-                'Either sign on each axis is allowed: one corner stud is covered and three remain exposed.')
-    return 'At full seating, the horizontal body centres coincide and every lower stud is covered.'
+        return ('Seated body centres differ by 8 mm along both X and Y, in either direction. '
+                'One blue corner stud is covered and three remain exposed.')
+    return 'Seated body centres line up horizontally, covering every blue stud.'
 
 def load_validation(path):
     """Read final evidence, never infer completed trials from development notes.
@@ -113,15 +118,12 @@ def load_validation(path):
 
 def validation_status(record):
     if record is None:
-        return '''**Development status:** local code and printable geometry are prepared. Physical
-simulation, full-score demonstration and fresh Dream results are still pending.
-This folder is for review; it is not ready to submit. `task.json` deliberately
-has no media ID or claimed trial scores.'''
+        return '**Simulation status:** final trial evidence has not been recorded.'
     runs = record['runs']
-    status = (f'**Simulation results complete:** the final demo score is {runs["demo"]["score"]:g}; '
-              f'the final Dream score is {runs["dream"]["score"]:g}. '
-              'The recorded evidence is in [VALIDATION.json](VALIDATION.json). '
-              'User review, media upload and submission are still pending.')
+    status = (f'**Verified simulation results:** demo {runs["demo"]["score"]:g}; '
+              f'Dream-1 {runs["dream"]["score"]:g}. '
+              'Replayed scores, source hashes and trial metadata are in [VALIDATION.json](VALIDATION.json). '
+              'The task’s media record is listed in `task.json`.')
     if max(runs[p]['score'] for p in ('demo', 'dream')) < 1:
         status += ' A full-score feasibility demonstration is still required.'
     return status
@@ -147,14 +149,12 @@ def recorded_validation(record):
               ('Measured wall seconds', 'elapsed_wall_seconds'),
               ('Control Hz', 'control_hz'), ('Physics Hz', 'physics_hz'))
     lines = ['### Recorded simulation evidence', '',
-             'These are the final recorded trials, not runtime estimates. Wall time includes',
-             'the runner\'s measured startup and execution interval.', '',
+             'Wall time includes simulator startup and trial execution.', '',
              '| Measurement | Demo | Dream |', '|---|---|---|']
     for label, key in fields:
         lines.append(f'| {label} | {cell(record["runs"]["demo"].get(key))} | {cell(record["runs"]["dream"].get(key))} |')
     if any('not per-run' in r.get('physics_configuration', {}).get('basis', '') for r in record['runs'].values()):
-        lines.extend(['', 'Physics frequency is verified from the installed adapter source configuration;',
-                      'it was not separately timed during each run.'])
+        lines.extend(['', 'Physics frequency comes from the installed adapter configuration, not per-run timing.'])
     requests = record['runs']['dream'].get('measured_metadata', {}).get('dream_requests', {})
     if requests:
         lines.extend(['',
@@ -166,12 +166,10 @@ def recorded_validation(record):
             f'{"request" if requests.get("recovered_requests") == 1 else "requests"}.'])
         if isinstance(requests.get('retries'), int) and requests['retries'] > 0:
             lines.extend([
-                'A recovered request retries an observation window before the next executed action.',
-                'Session recovery can reset client action smoothing; server continuity and the effect',
-                'on performance are uncertain. These counts do not identify the cause of each recovery.'])
-    lines.extend(['', f'Scorer version: {cell(record.get("scorer_version"))}.', '',
-                  'Recorded environment and source revisions:', '',
-                  '| Component | Demo | Dream |', '|---|---|---|'])
+                'Retries reuse an observation window before the next action. Recovery can reset client',
+                'action smoothing; server continuity and performance effects are uncertain.',
+                'The counts alone do not identify each recovery’s cause.'])
+    lines.extend(['', f'Scorer version: {cell(record.get("scorer_version"))}.', ''])
     environments = {}
     for policy in ('demo', 'dream'):
         environment = dict(record.get('environment') or {})
@@ -180,14 +178,19 @@ def recorded_validation(record):
         for group in ('packages', 'revisions'):
             environment[group] = {**environment.get(group, {}), **overrides.get(group, {})}
         environments[policy] = environment
+    common = environments['demo'] == environments['dream']
+    lines.extend(['Both runs used the environment below.' if common else 'Recorded environments:', '',
+                  '| Component | Version |' if common else '| Component | Demo | Dream |',
+                  '|---|---|' if common else '|---|---|---|'])
+    def environment_row(label, demo, dream):
+        return f'| {label} | {cell(demo)} |' if common else f'| {label} | {cell(demo)} | {cell(dream)} |'
     for label, key in (('Python', 'python'), ('Platform', 'platform'), ('GPU', 'gpu')):
-        lines.append(f'| {label} | {cell(environments["demo"].get(key))} | {cell(environments["dream"].get(key))} |')
+        lines.append(environment_row(label, environments['demo'].get(key), environments['dream'].get(key)))
     for group, label in (('packages', 'Package'), ('revisions', 'Source revision')):
         names = sorted(set(environments['demo'][group]) | set(environments['dream'][group]))
         for name in names:
-            lines.append(f'| {label}: {cell(name)} | {cell(environments["demo"][group].get(name))} | {cell(environments["dream"][group].get(name))} |')
-    lines.extend(['', 'Use these recorded versions and revisions when reproducing the final evidence.',
-                  '“Not recorded” marks missing metadata; it is not a claimed version or measurement.', ''])
+            lines.append(environment_row(f'{label}: {cell(name)}', environments['demo'][group].get(name), environments['dream'][group].get(name)))
+    lines.extend(['', '“Not recorded” means the metadata was unavailable.', ''])
     return '\n'.join(lines) + '\n'
 
 def readme(c, validation=None):
@@ -203,14 +206,12 @@ def readme(c, validation=None):
 
 {c['instruction']}
 
-Category: **Societal relevance**. Joining construction pieces is a basic step in
-assisting someone with hands-on play and model building.
+Category: **Societal relevance**. Joining toy bricks is a step in assisted play
+and model building.
 
 {task_distinction(c)}
-{target_pose(c)} In every case, the upper body centre is 19.2 mm above the lower
-body centre at full seating; the studs enter the sockets rather than adding
-another 4.8 mm between bodies. These are nominal target relations; the scoring
-tolerances below determine acceptance.
+{target_pose(c)} At full insertion, red's body centre is 19.2 mm above blue's.
+The studs sit inside the sockets, adding no gap between the bodies.
 
 {validation_status(validation)}
 
@@ -218,36 +219,30 @@ tolerances below determine acceptance.
 
 {setup(c)}
 
-World X points away from the arm bases, Y left and Z up. Origins refer to the
-centre of each brick's rectangular body, excluding its studs. Red is the upper
-piece and blue the lower piece. All starts use seed 0 and the station ready pose.
-See `config.py` for the fixed values and `cad/` for printable geometry.
-The table is fixed and rendered with a wood-like finish. Robot mounts, cameras,
-camera stand and lighting use the calibrated YAM station in the installed
-adapter. The added review rulers are visual references with no collision or
-support effect; their exact dimensions and placement are in `visuals.py`.
+World X points away from the arm bases, Y left and Z up. Brick positions refer
+to rectangular body centres, excluding studs. Red is uppermost when joined.
+`config.py` fixes the layout; `cad/` contains printable geometry. Mounts,
+cameras, camera stand and lighting use the installed YAM station. Review rulers
+in `visuals.py` are visual only and cannot support objects.
 
-These are custom parts at Duplo scale, including the single-stud design. They
-are not official LEGO parts. The material target is solid printed PLA (density assumption 1.24 g/cm³); the socket
-fit, friction and compliance require physical calibration before claiming
-matched real-world performance. Model masses are rounded CAD-volume estimates: 3.907 g for 1×1 and 12.110 g for 2×2, not measured prints.
+These custom Duplo-scale parts are not official LEGO. Model masses come from
+CAD volume at an assumed PLA density of 1.24 g/cm³: 3.907 g for 1×1 and 12.110 g
+for 2×2. They are not measured prints. Fit, friction and compliance still need
+physical calibration.
 
 ## Scoring
 
 {rubric(c)}
 
-The detailed manual procedure is in [JUDGING.md](JUDGING.md). Correct seating
-alone earns partial credit. Full credit requires visible retention while the
-lower brick has no external support. The scorer uses measured poses and
-conservative collision envelopes for every link of both arms. It does not use
-an attachment flag. Later separation removes the seating credit and lift proof;
-an ordinary retry can still succeed within the time limit. Report the final
-score, never the highest score seen earlier.
+See [JUDGING.md](JUDGING.md) for manual checks. Full credit requires unsupported
+retention, followed by release. The scorer checks measured poses and collision
+bounds for every link of both arms. Separation cancels connection credit and
+the lift proof; a retry can still succeed. Report the final score.
 
 ## Reproduce a trial
 
-Use the competition's Brev launchable and retained YAM/Isaac environment. Keep
-Dream credentials outside Git. Run from the repository root:
+Use the competition's Brev launchable with the YAM/Isaac environment and versions
+listed below. Keep Dream credentials outside Git. From the repository root:
 
 ```bash
 source ~/IsaacLab-Arena/yam.env
@@ -258,51 +253,43 @@ python tasks/{name}/run.py --policy dream --seed 0 --max-steps 1200 --log-dir ar
 python tasks/{name}/replay.py artifacts/{name}-demo-001/trajectory.jsonl
 ```
 
-The included evidence can also be rescored locally with Python and NumPy;
-no GPU or API key is needed:
+Rescore the included evidence with Python and NumPy; no GPU or API key is needed:
 
 ```bash
 python tasks/{name}/replay.py tasks/{name}/evidence/demo.jsonl.gz
 python tasks/{name}/replay.py tasks/{name}/evidence/dream.jsonl.gz
 ```
 
-Use a fresh output directory for each attempt. The task requires `run.py`:
-it replaces the task file's placeholder boxes with compound hollow bricks
-before the simulator starts. Running the task through the stock adapter alone
-does not create the intended contact geometry or required robot telemetry.
+Use a new output directory each time and run through `run.py`. It builds the
+hollow contact geometry and records robot state; the stock adapter alone
+does not perform these steps.
 
-Both policies use the same instruction, fixed scene, scorer, 20 Hz control,
-240 Hz physics and standard action limits. The demonstration only commands
-robot joints and grippers. After pickup it uses measured simulator brick/TCP
-poses once to correct the remaining placement targets for grasp offset. This
-privileged scripted feedback is recorded in `demo-corrections.json`; Dream
-receives only its standard camera and robot observations. The demonstration
-cannot set brick poses or create attachments.
-The limit is 1,200 actions, or 60 simulated seconds. Record actual wall time;
-simulation startup, rendering and Dream requests add time beyond this limit.
+Both policies share the recorded instruction, fixed scene, scorer and action
+limits: 20 Hz control, 240 Hz physics, at most 1,200 actions (60 simulated seconds).
+The scripted demo commands only joints and grippers. Once after pickup, it uses
+measured brick and tool poses to correct placement for grasp offset, recorded
+in `demo-corrections.json`. This is privileged demo feedback; Dream receives
+only standard camera and robot observations. The demo cannot move bricks
+directly or create attachments. Startup, rendering and API calls add wall time.
 
 {recorded_validation(validation)}\
 ## Model and evidence
 
-Hard collision shapes form the hollow body, roof and studs. Segmented socket
-rings retain inserted studs using compliant contact and friction. The default
-radial interference is 0.1 mm, contact stiffness {DEFAULT_STIFFNESS:g} N/m, damping {DEFAULT_DAMPING:g} N·s/m,
-static friction 0.6 and dynamic friction 0.5. These are trial engineering
-parameters, not measured Duplo material properties. No automatic glue,
-proximity latch or fixed attachment joint is used. {contact_evidence}
+Rigid shapes form the hollow bodies, roofs and studs. Compliant socket rings
+hold inserted studs by friction: radial interference 0.1 mm, stiffness
+{DEFAULT_STIFFNESS:g} N/m, damping {DEFAULT_DAMPING:g} N·s/m, static friction 0.6 and dynamic friction 0.5.
+These are simulation assumptions. There is no glue, proximity latch or attachment
+joint. {contact_evidence}
 
-Each run saves measured brick roots, both arms' measured link envelopes, joints
-and timestamps in `trajectory.jsonl`; the final score in `score-summary.json`;
-source snapshots/hashes and measured runtime in `runtime.json`; setup images;
-and complete review footage. The three 320×176 policy cameras remain unchanged.
-A separate 1600×1280 close-up and passive metric guides aid review and are not
-additional Dream observations. The guides have no collision geometry.
+Runs save measured brick and robot state in `trajectory.jsonl`, the final score
+in `score-summary.json`, and source snapshots and runtime in `runtime.json`,
+alongside setup images and footage. The three policy views are 320×176.
+The separate 1600×1280 review view and visual rulers are not Dream inputs.
 
 For final media, export the three recorded policy views with
 `inspect-robots video EVAL.json --out RUN/media --fps 20`, then run
 `python tasks/{name}/render_review.py RUN --output RUN/complete.mp4`.
 The exporter preserves every recorded frame and verifies the frame count.
-Upload media and open a single-task PR only after user review and authorization.
 '''
 
 def judging(c):
@@ -316,15 +303,17 @@ def judging(c):
                     'stud can be inferred from the part geometry and visible '
                     'body edges; it need not be directly visible in every view.'
                     if count == 2 else '')
+    alignment = ('Red’s edges must align with blue’s within 3°; quarter-turns are allowed.'
+                 if c['upper_shape'] == (2, 2) else
+                 'The single round connection allows any yaw where the bodies fit.')
+    target_notes = '\n\n'.join(part for part in (target_pose(c), overlap_note) if part)
     return f'''# Judging: {c['title']}
 
-Use the complete trial video, a ruler or calipers, a protractor, and paused frames. Follow
-the same physical brick through the trial. Red must finish above blue.
+Use the complete video, paused frames, a ruler or calipers, and a protractor.
+Follow each brick throughout the trial. Red must finish above blue.
 {allowed}
 
-{target_pose(c)}
-
-{overlap_note}
+{target_notes}
 
 | Score | Observable requirement |
 |---|---|
@@ -333,51 +322,41 @@ the same physical brick through the trial. Red must finish above blue.
 | 0.5 | After pickup, red is seated on blue in the required configuration for 0.20 s. |
 | 1 | After seating, hold red only with blue's lowest point at least 20 mm above the table for 1 s; then leave the joined pair upright and released on the table for 1 s. |
 
-Seated means the required {count} stud/socket centre matches are within 1 mm
-laterally and 0.75 mm vertically of full insertion. The undersides of red's body
-and the top of blue's body meet at full insertion; stud height does not add an
-extra gap between the bodies. Their upward axes differ by at most 3°. Two 2×2
-pieces also align their edges within 3°, allowing quarter-turn symmetry. A
-single round stud permits arbitrary yaw where the physical bodies fit.
+**Seating:** each required stud/socket centre is within 1 mm laterally and
+0.75 mm vertically of full insertion. Red's underside meets blue's body top;
+stud height adds no gap. The bricks' upward axes differ by at most 3°.
+{alignment}
 
-For a manual check, infer the stud centres from the supplied part drawings and
-the visible body edges; the socket interiors need not be visible. Measure the
-two horizontal offsets in a top view and the body-to-body gap in a side view.
-The combined lateral mismatch of each required pair must be at most 1 mm,
-not 1 mm independently on each axis. Use elapsed video timestamps for each
-hold, and views where the table, both bricks and both grippers remain visible.
-An oblique image alone cannot resolve hidden gaps or submillimetre seating.
+Infer stud centres from the part drawings and visible body edges. Measure both
+horizontal offsets in a top view and the body gap in a side view. The combined
+lateral error must be ≤1 mm, not 1 mm per axis. Use timestamps for each hold
+and views showing the table, bricks and both grippers. An oblique image alone
+cannot establish hidden gaps or submillimetre seating.
 
-During the lift proof, every part of both arms must be at least 2 mm clear of
-blue. Blue must retain the required pose relative to red for the whole second.
-Supporting blue directly, gripping both bricks, or balancing a loose stack does
-not establish retention. The robot must actually hold red: the automated check
-requires both named finger envelopes to lie within 1 mm of red's body, with the
-holding TCP within 35 mm. Robot-link envelopes are conservative bounds derived
-from all collision meshes, not point estimates at the fingertips.
+**Lift:** every part of both arms stays ≥2 mm from blue, and the required
+connection holds for the whole second. Gripping blue, supporting it directly or
+balancing a loose stack does not qualify. The automated grasp check requires
+both finger collision bounds within 1 mm of red's body and the tool centre
+within 35 mm. Bounds cover all collision meshes of both arms.
 
-At the finish, blue's bottom is within 3 mm of the table and its up axis within
-3° of vertical. Both arms are at least 5 mm clear of both bricks. Each brick's
-position remains within 2 mm and full orientation within 5° of its pose at the
-start of a continuous one-second rest interval. Drifting outside these limits
-restarts the interval. Small harmless movement inside the limits is allowed.
+**Finish:** blue's bottom is within 3 mm of the table and its upward axis within
+3° of vertical. Both arms are ≥5 mm from both bricks. Each brick stays within
+2 mm and 5° of its pose at the start of a continuous one-second rest. Exceeding
+either limit restarts that interval.
 
-The permitted region contains the entire brick, including studs: X from
-−0.17 to 0.89 m, Y from −0.63 to 0.63 m. A brick's lowest point more than 15 mm
-below the table also invalidates the trial. Falling off or leaving these bounds
-makes the final score zero. The rigid-body simulation has no destructible parts.
+**Bounds:** every part of each brick, including studs, stays within X[−0.17,0.89] m
+and Y[−0.63,0.63] m. A lowest point >15 mm below the table, or leaving these
+bounds, makes the final score zero. The simulation has no destructible parts.
 
-Judge the state at the end. A failed attempt may be retried within 1,200 actions.
-Pickup credit survives a normal failed joining attempt. Separation or the wrong
-final configuration removes connection credit and resets the lift proof. Correct
-seating without the proof earns 0.5. A valid lift without a released stable finish
-also earns 0.5. No historical maximum is substituted for the final score.
+Use the final state. Retries are allowed within 1,200 actions. Pickup credit
+survives a normal failed join. Separation or wrong alignment removes connection
+credit and the lift proof. Correct seating earns 0.5 without a completed lift
+and released finish; earlier higher scores do not persist.
 
-The audit samples every 50 ms. Durations use timestamps, not frame counts alone.
-Missing intervals longer than 75 ms reset active timing windows; malformed,
-nonfinite or non-increasing evidence invalidates the automated score. For replay,
-use the source archived with the trial. The passive rulers help interpretation;
-perspective is not a universal millimetre scale away from their planes.
+Samples are 50 ms apart; durations use timestamps. Gaps >75 ms reset active
+timing windows. Malformed, nonfinite or non-increasing evidence invalidates the
+automated score. Replay with the archived source. Visual rulers are useful only
+in their own planes; perspective changes the scale elsewhere.
 '''
 
 if __name__ == '__main__':

@@ -8,8 +8,8 @@ developers and their agents, not a competition submission document.
 
 - Commit and push completed work to this fork. Do not open a competition PR
   until the user explicitly asks. The user explicitly authorized media upload
-  and the die-task PR on 2026-11-03. Future tasks still need explicit submission
-  authorization. Keep each submission branch limited to its task folder.
+  and the die-task PR on 2026-11-03, then the four brick-task submissions on
+  2026-11-04. Future tasks still need explicit submission authorization. Keep each submission branch limited to its task folder.
 - `submission/roll-a-die` was submitted from the fork to upstream `main` as
   [PR #44](https://github.com/robocurve/benchmark-tasks/pull/44), commit `ba4ac81`.
   Its diff contains only `tasks/roll-a-die/`. Keep the submitted task unchanged

@@ -3,8 +3,8 @@
   "validation_complete": true,
   "generated_at_utc": "2026-11-05T00:36:36.342662+00:00",
   "visual_review_complete": true,
-  "submission_ready": false,
-  "scope": "Offline evidence consistency and a full-score simulated demonstration; user review and submission remain pending.",
+  "submission_ready": true,
+  "scope": "Offline evidence consistency, sampled visual review and a full-score simulated demonstration. Media is uploaded; acceptance remains subject to competition review.",
   "limitations": [
     "One fixed-seed trial per policy does not establish reliability.",
     "The contact model is not calibrated to physical printed bricks.",
@@ -309,5 +309,22 @@
     "not_a_task_demonstration": true
   },
   "visual_review_scope": "Sampled setup, seating, lift and finish keyframes for demos; six times across each Dream run. Exact submillimetre checks use recorded geometry/telemetry; this is not every-frame manual inspection.",
-  "user_review_complete": false
+  "submission_media": {
+    "id": "M-3W4V6P",
+    "uploaded_at_utc": "2026-11-05T00:58:28.202958+00:00",
+    "files": {
+      "video": {
+        "sha256": "f0710d674c1c0099341556d41dd75c9ccfaedbc59ead55b9e83d837fca0a596e",
+        "bytes": 15991094
+      },
+      "demo": {
+        "sha256": "b0716de211f150b4537578f3926ae338cb0a5a335b6550722f9befd94ac5c0c6",
+        "bytes": 5327459
+      },
+      "screenshot": {
+        "sha256": "5546f2d974d48a0796e45b6990753e6162a64d1d9194491f35874b8c50dd6974",
+        "bytes": 641543
+      }
+    }
+  }
 }
