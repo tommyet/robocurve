@@ -1,6 +1,6 @@
 # Shared working notes
 
-Last updated: 2026-11-05. Read this before starting work; update it when an
+Last updated: 2026-11-06 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
@@ -12,8 +12,8 @@ developers and their agents, not a competition submission document.
   2026-11-04. Future tasks still need explicit submission authorization. Keep each submission branch limited to its task folder.
 - `submission/roll-a-die` was submitted from the fork to upstream `main` as
   [PR #44](https://github.com/robocurve/benchmark-tasks/pull/44), commit `ba4ac81`.
-  Its diff contains only `tasks/roll-a-die/`. Keep the submitted task unchanged
-  while waiting for review; do not synchronize later working edits into it.
+  Its diff contains only `tasks/roll-a-die/`. It received a final rejection on
+  November 5; preserve the submitted task as evidence and do not reopen it.
   Record follow-up notes on `roll-a-die`, outside the submission branch.
 - The user confirmed upload team `T-39`. The private `.env.robocurve` stores
   `ROBOCURVE_TEAM` and a single-quoted `ROBOCURVE_TOKEN`. Parse the quoted value
@@ -164,7 +164,39 @@ result or measure outcome fairness.
 
 ## Dated session log
 
+### 2026-11-06 UTC — brick rejections withdrawn; die finally rejected
+
+- Operator: repository agent; working branch `duplo-joining-batch`. User asked
+  for current PR status. Fresh GitHub reads at 05:49 UTC show all four brick
+  PRs open and unmerged, and the die PR closed and unmerged. No submitted code,
+  media or PR was changed; no GPU was used. This supersedes the previous entry.
+- Organizers corrected [#365](https://github.com/robocurve/benchmark-tasks/pull/365#issuecomment-6671468200)
+  at November 5, 22:43:27 UTC and [#366](https://github.com/robocurve/benchmark-tasks/pull/366#issuecomment-6671466189)
+  at 22:43:20 UTC: their earlier decisions were posted in error, both tasks are
+  back in the review queue, and no action is needed from us. The PRs have been
+  reopened. Do not treat the withdrawn novelty decisions as established review
+  findings. Novelty remains an independent concern, not a published verdict.
+- [Die #44](https://github.com/robocurve/benchmark-tasks/pull/44#issuecomment-6672524315)
+  received **Not accepted: final** at November 5, 23:44:38 UTC. The stated reason
+  is “Task lacks strong real-world relevance.” The decision says the task fails
+  the importance bar and cannot be revised; a different task may be submitted
+  in a new PR. Preserve this submission and wait for user direction on new work.
+- #364 and #367 still have only receipt comments. None of our five tasks is
+  accepted. Keep all four pending brick submission branches unchanged.
+- Evidence: `artifacts/brick-submissions/pr-status-2026-11-06.json` (ignored).
+  The authenticated board at 05:50 UTC confirms all four brick tasks pending
+  with no review timestamp; the die is absent, so use its GitHub decision.
+  It lists 17 accepted, 582 pending, 12 rejected and 90 previous-cohort plans.
+  Board evidence: `artifacts/brick-submissions/board-our-five-status-2026-11-06-05-50-06.json`.
+  Reusable lesson: recheck live decisions before acting; organizers can correct
+  prior reviews. Technical feasibility and a full-score demo do not establish
+  the competition's real-world importance requirement.
+
 ### 2026-11-05 — two final novelty rejections; three tasks still pending
+
+**Superseded:** the organizers withdrew both brick decisions later that day.
+The historical snapshot below records what was published at the time, not the
+current review outcome. See the November 6 UTC entry above.
 
 - Operator: repository agent; working branch `duplo-joining-batch`. User asked
   for updates on all five submitted PRs. Checked GitHub status/comments at

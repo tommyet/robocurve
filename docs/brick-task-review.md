@@ -4,9 +4,9 @@ Final packaging reviewed 2026-11-04 (Pacific time), with evidence finalized on
 November 5 UTC. This is a development review outside any single-task submission.
 The [short review](brick-batch-review.md) links all eight local videos.
 
-**Review update, November 5:** the organizers finally rejected the two 1×1
-variants as superficial variations of the full 2×2 task. Both PRs are closed
-and cannot be revised. The full and offset 2×2 tasks remain pending. See the
+**Review update, November 6 UTC:** the organizers withdrew both 1×1 variant
+rejections, saying they were posted in error. Both PRs are reopened, and all
+four brick tasks are pending. No action is needed from us. See the
 [decision links and current status](brick-batch-review.md#submitted-prs).
 
 ## Completed checks
@@ -50,9 +50,9 @@ and cannot be revised. The full and offset 2×2 tasks remain pending. See the
 ## Review considerations
 
 1. **Importance and duplication.** The bounded check below found direct prior
-   DUPLO ideas and an existing two-brick benchmark. The two final rejections
-   now confirm that size/stud-count variants do not qualify separately here.
-   The other two tasks are still under review.
+   DUPLO ideas and an existing two-brick benchmark. The organizers withdrew
+   their earlier variant rejections as errors, so those comments do not
+   establish the novelty outcome. All four tasks remain under review.
 2. **Physical fidelity.** Contact compliance and friction produce retained joins
    in simulation, with negative controls, but print tolerances, insertion force,
    pull-out force and breakage have not been calibrated against real parts.

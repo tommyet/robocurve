@@ -88,17 +88,19 @@ unchanged. Submission receipts and PR links are recorded in the team notes.
 
 ## Submitted PRs
 
-Status checked November 5, 21:55 UTC. Two remain pending; two received final
-rejections for being superficial variants of the full 2×2 task.
+Status checked November 6, 05:49 UTC (November 5 Pacific). All four are pending.
+The organizers withdrew the two earlier rejections, saying they were posted
+in error; both PRs have been reopened and require no action from us.
 
 | Task | PR | Board ID | Current status |
 |---|---|---|---|
 | Join two 2×2 blocks | [#364](https://github.com/robocurve/benchmark-tasks/pull/364) | `TK-BPUQW9` | Waiting for review |
-| Join two 1×1 blocks | [#365](https://github.com/robocurve/benchmark-tasks/pull/365#issuecomment-6669481752) | `TK-UJQEDY` | Not accepted: final; PR closed |
-| Join a 1×1 block to a 2×2 block | [#366](https://github.com/robocurve/benchmark-tasks/pull/366#issuecomment-6669477142) | `TK-PSN375` | Not accepted: final; PR closed |
+| Join two 1×1 blocks | [#365](https://github.com/robocurve/benchmark-tasks/pull/365#issuecomment-6671468200) | `TK-UJQEDY` | Back in review; earlier decision withdrawn |
+| Join a 1×1 block to a 2×2 block | [#366](https://github.com/robocurve/benchmark-tasks/pull/366#issuecomment-6671466189) | `TK-PSN375` | Back in review; earlier decision withdrawn |
 | Join two 2×2 blocks with two studs overlapping | [#367](https://github.com/robocurve/benchmark-tasks/pull/367) | `TK-4NRFL8` | Waiting for review |
 
-The organizers judged changes in brick size, stud count and allowed stud
-positions insufficient for separate tasks. Their decisions say the two rejected
-tasks cannot be revised. The code and videos remain useful development evidence.
-The die PR also remains pending; no new review comments were posted on it.
+The withdrawn decisions do not establish whether these variants meet the
+importance bar. All four still await a substantive decision. Separately,
+[die PR #44](https://github.com/robocurve/benchmark-tasks/pull/44#issuecomment-6672524315)
+received a final rejection for lacking strong real-world relevance; it is closed
+and cannot be revised. None of our tasks has been accepted.

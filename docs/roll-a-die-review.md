@@ -1,14 +1,18 @@
 # Pick up and roll a die — task review
 
-Assessment: 2026-11-03. Current scorer: **roll-a-die-v3**.
+Technical assessment: 2026-11-03. Review status checked 2026-11-06 UTC.
+Current scorer: **roll-a-die-v3**.
 
 The task now uses a coloured, pip-marked die and directly observable pickup,
 release, turnover and rest criteria. A fresh recorded demonstration earns
 **1.0 in 9.10 simulated seconds**. The final camera-matched Dream evaluation earns **0.0** after its full
 60-second allowance; it does not establish a qualifying pickup. Final media is
 uploaded as **M-PV3ZXY**, and [submission PR #44](https://github.com/robocurve/benchmark-tasks/pull/44)
-is open. Robocurve received it as **TK-YBZD4Q** at 14:41:54 UTC and reports
-**waiting for review**. This is receipt, not acceptance.
+is now closed and unmerged. Robocurve received it as **TK-YBZD4Q** on November 3,
+then issued a [final rejection](https://github.com/robocurve/benchmark-tasks/pull/44#issuecomment-6672524315)
+on November 5 at 23:44:38 UTC: “Task lacks strong real-world relevance.” The
+decision says it fails the importance bar and cannot be revised. A different
+task would need a new submission and the user's authorization.
 
 ## Task and purpose
 
@@ -90,9 +94,9 @@ other robot links. Sampling at 20 Hz can miss faster motion.
 The source, numeric evidence, complete videos and setup screenshot form the
 review package. [VALIDATION.json](../tasks/roll-a-die/VALIDATION.json) records
 current measured results and hashes; older blank-cube evidence is explicitly
-historical. The task is more reviewable than v2, but acceptance remains a
-reviewer decision. Importance/novelty, physical fidelity and the strength of
-the game-assistance relevance still matter. Immediately before submission,
+historical. These checks established technical readiness, but the reviewers
+ultimately rejected its real-world relevance. The game-assistance context did
+not satisfy the importance requirement. Immediately before submission,
 the refreshed live board (128 entries: 38 pending and 90 pilot) and 43 public
 PRs showed no direct dice-roll duplicate.
 
@@ -103,8 +107,8 @@ PRs showed no direct dice-roll duplicate.
 reference documents, credentials, local artifacts and shared team notes are
 excluded. The ingestion validator's text-length findings were corrected
 before receipt: fidelity is 406/500 characters and scores is 275/300. Detailed
-audit information remains in the task documentation. The task is now held
-unchanged while waiting for review.
+audit information remains in the task documentation. The submitted task is
+preserved unchanged as development evidence following the final rejection.
 
 Run commands: [task README](../tasks/roll-a-die/README.md). Shared operating
 lessons and overall cost accounting: [TEAM_LEARNINGS.md](../TEAM_LEARNINGS.md).
