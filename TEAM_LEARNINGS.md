@@ -169,6 +169,64 @@ result or measure outcome fairness.
 
 ## Dated session log
 
+### 2026-11-07 — knot, folding, cutting and screw-cap idea review
+
+- Read-only research around 19:54 UTC: the authenticated board returned 992
+  tasks (879 pending, 18 accepted, five being revised, 90 pilots). The public
+  repository returned 999 PRs across all states. Raw snapshots and filtered
+  matches are ignored under `artifacts/task-ideas-2026-11-07/`. This is a dated
+  search, not a reservation or guarantee of novelty; recheck before building.
+  No GPU, task development, media upload or submission was started.
+- **Knot tying:** no direct knot-tying task was found in this snapshot. Pilot
+  `TK-MLM3G2` is “Undo a knot in a rope”; pending rope/line tasks include
+  [lacing an eyelet #750](https://github.com/robocurve/benchmark-tasks/pull/750)
+  and fastening maritime lines. Pilots are also relevant to the novelty check.
+  [HANDLOOM](https://proceedings.mlr.press/v229/viswanath23a.html) demonstrates
+  bimanual robotic knot tying, with specialized tooling; it does not validate
+  stock YAM grippers. Rope self-contact, friction, tightening and regrasping are
+  substantial new work for our runner. Evaluate one useful knot objective
+  before planning a batch; knot names alone do not establish distinct abilities.
+- **Clothes folding:** no direct clothes-folding entry or PR was found, but
+  [BEHAVIOR already specifies folding clothes](https://behavior.stanford.edu/knowledgebase/tasks/folding_clothes-0.html)
+  and [SoftGym](https://sites.google.com/view/softgym) includes cloth folding.
+  Generic folding therefore has strong prior-art risk even without a board
+  match. Cloth handling is also a larger simulation project than our bricks.
+  [Isaac Sim 6.1's migration guide](https://docs.isaacsim.omniverse.nvidia.com/6.1.0/migration_guides/isaac_sim_6_0/core_api_to_core_experimental.html)
+  says the old particle-cloth wrappers have no drop-in replacement. This does
+  not make cloth impossible; it means old examples cannot be assumed to work
+  in our pinned Arena/YAM environment. Changing garment or fold direction is
+  not a dependable novelty distinction.
+- **Food chopping:** [bread slicing #699](https://github.com/robocurve/benchmark-tasks/pull/699)
+  is received as `TK-N9C8DA` and pending. Vegetable chopping was not found as
+  an exact board title, but [BEHAVIOR specifies slicing vegetables](https://behavior.stanford.edu/knowledgebase/tasks/slicing_vegetables-0.html).
+  Our code has no validated cutting model. The hard part is separation,
+  deformation and cutting resistance, beyond carrying a knife. The pending
+  bread task discloses a custom rigid-slab/joint approximation; pending does
+  not establish reviewer approval of that approximation. Likewise,
+  [OmniGibson's slicing transition](https://behavior.stanford.edu/omnigibson/transition_rules.html)
+  replaces objects under prescribed conditions rather than validating fracture
+  physics. Deprioritize generic chopping for a quick submission.
+- **Unscrewing a bottle:** technically the most manageable of these four, but
+  clear competition overlap: [open bottle and pour #103](https://github.com/robocurve/benchmark-tasks/pull/103),
+  [child-resistant medicine cap #790](https://github.com/robocurve/benchmark-tasks/pull/790)
+  and [flashlight screw cap #230](https://github.com/robocurve/benchmark-tasks/pull/230)
+  are all received/pending. Pilot `TK-W6YVSV` opens, loads and recloses a screw
+  jar; `TK-YSCE4F` opens a medicine bottle. Ordinary screw-cap removal is not
+  an obviously unclaimed objective. [BiDemoSyn](https://arxiv.org/html/2512.09297v3)
+  demonstrates water-bottle unscrewing with two parallel grippers, but not our
+  specific YAM setup. Thread/contact mechanics and free cap release still need
+  validation; different cap sizes or thread counts alone are weak distinctions.
+- Scoring directions if a distinct task survives that check: knot topology plus
+  a specified gentle retention test and tail/slip limits; folds judged by marked
+  corner/edge alignment and layer configuration, not compactness alone; food
+  judged by complete separation and useful piece dimensions; screw caps judged
+  by actual thread disengagement and intact removal, not wrist rotation.
+  Dimensions and thresholds must be selected and tested for the actual objects.
+  Current recommendation: only investigate a specific functional knot after a
+  small rope-physics feasibility check; none of the four generic ideas is a
+  low-risk acceptance candidate. These are engineering/novelty judgments, not
+  organiser decisions.
+
 ### 2026-11-07 — shared main and agent handoff
 
 - The user asked whether all work was on `main` for Eito to continue. Fresh
