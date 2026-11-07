@@ -9,6 +9,14 @@ request until the user explicitly asks.** The submission steps below describe th
 competition process; they are not permission to submit. Keep shared team notes
 out of the eventual single-task competition pull request.
 
+The fork's `main` is the shared development baseline. Start new development
+branches from current `origin/main`, using `codex/` names. For an authorized
+competition submission, use a separate branch/worktree from fresh `upstream/main`
+and copy only the validated task folder. Never submit the fork's whole `main` or
+development branch upstream. The [README team quickstart](README.md#team-quickstart)
+and submission example describe this fork's workflow; the generic upstream
+example below does not mean this team needs another fork.
+
 You're working in a fork of `robocurve/benchmark-tasks`, the shared repository for the Robocurve Benchmarking
 Program. Teams build simulated robotics tasks and submit each one as a pull request here. Follow this file
 when helping a team build or submit a task. Program details, the full review checklist and the simulation

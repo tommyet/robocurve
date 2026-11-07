@@ -6,6 +6,10 @@ developers and their agents, not a competition submission document.
 
 ## Agreed workflow
 
+- The team fork's `main` is the shared development baseline. New work starts
+  from current `origin/main` on a `codex/` branch. Competition submission branches
+  start from fresh `upstream/main` and receive only one validated task folder.
+  See the [team quickstart](README.md#team-quickstart) for agent onboarding.
 - Commit and push completed work to this fork. Do not open a competition PR
   until the user explicitly asks. The user explicitly authorized media upload
   and the die-task PR on 2026-11-03, then the four brick-task submissions on
@@ -164,6 +168,21 @@ result or measure outcome fairness.
   accepted as T-39, and Robocurve received the `tommyet` PR as **TK-YBZD4Q**.
 
 ## Dated session log
+
+### 2026-11-07 — shared main and agent handoff
+
+- The user asked whether all work was on `main` for Eito to continue. Fresh
+  remote checks found `main` at `4f8c32c`, 16 commits behind the fully pushed
+  `duplo-joining-batch` branch, with no divergent commits. GitHub confirms
+  `Miyamura80` has write access and `main` is the repository's default branch.
+- The fork's `main` was fast-forwarded to the completed work and these handoff notes.
+  All five task folders match their submitted branch versions. The handoff
+  adds README setup steps and explicit development/submission branch guidance;
+  no task source, submitted media or submission branch changes are needed.
+- Code, CAD, curated numeric evidence and shared notes belong on `main`.
+  Credentials, private PDFs and full trial artifacts remain ignored. The
+  simulator is installed on the retained VM, not in Git; November 7 validation
+  and the stopped VM's evidence locations are recorded below.
 
 ### 2026-11-07 — official simulator update and compatibility validation
 
