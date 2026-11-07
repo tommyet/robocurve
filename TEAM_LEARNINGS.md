@@ -1,6 +1,6 @@
 # Shared working notes
 
-Last updated: 2026-11-06 UTC. Read this before starting work; update it when an
+Last updated: 2026-11-07 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
@@ -163,6 +163,40 @@ result or measure outcome fairness.
   accepted as T-39, and Robocurve received the `tommyet` PR as **TK-YBZD4Q**.
 
 ## Dated session log
+
+### 2026-11-07 — updated launchable instructions and FAQ
+
+- Operator: repository agent; branch `duplo-joining-batch`. Checked the live
+  [walkthrough](https://tasks.robocurve.org/walkthrough#updating) and
+  [FAQ](https://tasks.robocurve.org/#faq) at about 15:35 UTC. No VM start,
+  environment update, rerun or submission change was made.
+- The November 5 launchable update fixes outdated asset locations and upgrades
+  to inspect-robots 1.0. Our retained installation predates November 5; brick
+  `VALIDATION.json` records inspect-robots 0.60.0 and inspect-robots-yam 0.37.0.
+  No application of this fix is recorded. Before the next GPU batch, follow
+  the live update sequence below, check compatibility and record new versions.
+  The walkthrough PDF predates the update. Its effect on our earlier runs,
+  Dream session expiries and scores is unverified; no rerun requirement for
+  existing submissions was found in the update section.
+
+  ```bash
+  cd ~/YAM-inspect-Isaac
+  git pull origin main
+  bash launchable/setup.sh
+  ~/.local/bin/uv pip install -U inspect-robots-agent --python /data/IsaacLab-Arena/.venv/bin/python
+  ```
+
+- The FAQ says separate tasks need distinct objectives/abilities; geometry,
+  layout or difficulty changes usually do not suffice. This remains a risk for
+  the four pending brick tasks, not a new decision on them.
+- Custom assets are allowed under the task's open-source license. Third-party
+  assets must permit research use and redistribution, with licenses documented.
+  One primary 0–1 score is required; optional extra scores must be described in
+  both README and task.json. Bimanual parallel-gripper tasks still need Dream-1.
+- One accepted task makes a team eligible for the planned paper's authorship;
+  the number of authors depends on contribution. This is eligibility, not an
+  acceptance guarantee. Local guide snapshots are ignored under
+  `artifacts/brick-submissions/{guide,walkthrough}-2026-11-07.html`.
 
 ### 2026-11-06 UTC — brick rejections withdrawn; die finally rejected
 
