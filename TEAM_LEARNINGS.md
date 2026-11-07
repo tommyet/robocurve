@@ -169,6 +169,34 @@ result or measure outcome fairness.
 
 ## Dated session log
 
+### 2026-11-07 — rope and shoelace asset follow-up
+
+- Operator: repository agent; branch `codex/rope-asset-note`, based on
+  `a348579`. Read-only source review; no GPU started or physics trials run.
+- NVIDIA AutoData provides a deformable `Rope.usd`, loaded using
+  `DeformableObjectCfg`. Its [Franka example](https://isaac-sim.github.io/AutoData/main/pages/workflows/franka_rope_softmimicgen/index.html)
+  demonstrates grasping the rope and bringing its ends together, with PhysX or
+  Newton. It does **not** demonstrate knot formation or retention. The
+  [asset wrapper at inspected commit](https://github.com/isaac-sim/AutoData/blob/073c393e90d4188937d916096356fba992a3906c/autodata_examples/envs/isaac_lab_arena/franka_rope/rope_asset.py)
+  is a concrete integration starting point; no asset has been imported locally.
+- Our pinned Arena commit also includes a procedural
+  [Cable](https://github.com/isaac-sim/IsaacLab-Arena/blob/c7edf3a9d5d8276565208f72422f8f8a0806d6cf/isaaclab_arena/assets/cable.py)
+  using `CableObjectCfg`/`ObjectType.CABLE`. It requires Newton, with VBD
+  recommended. Its reset/export tests do not establish knotting behavior.
+- Neither candidate is a drop-in object for our current task loader:
+  `artifacts/simulator-update-2026-11-07/upstream/adapter-scene-pinned.py`
+  lines 196–218 load library USDs as `ObjectType.RIGID`. Custom deformable scene
+  integration is needed. AutoData's supported Arena pin also differs from ours.
+- No named rope/shoelace was found in the inspected ordinary Arena object
+  library (186 name definitions); registered PhysX deformables were cube,
+  surface and teddy bear. This was not an exhaustive SimReady/cloud catalog
+  search. A flat shoelace with aglets has not been identified.
+- Decision: a round cord and simple overhand knot are plausible candidates for
+  a small feasibility trial. First verify robot grasping, self-contact without
+  passing through itself, tightening and retention after release. Dimensions,
+  friction and knot reliability remain unmeasured; do not claim submission
+  feasibility from the existence of a rope asset alone.
+
 ### 2026-11-07 — knot, folding, cutting and screw-cap idea review
 
 - Read-only research around 19:54 UTC: the authenticated board returned 992
