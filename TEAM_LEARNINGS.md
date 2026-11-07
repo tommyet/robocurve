@@ -123,8 +123,9 @@ Use a new artifact directory for every attempt; do not overwrite evidence.
 
 The scene uses seed 0, no object jitter and a fixed scripted demonstration.
 This establishes a simulated manipulation example, not a random/fair die or a
-measured repeat-success rate. Numerical differences remain possible; exact
-determinism has not been tested. V3 adds 1–6 pips for tracking faces; it still does not request a particular
+measured repeat-success rate. The November 7 updated-simulator rerun matched the
+original v3 demo numerically; this does not establish determinism across other
+hardware or configurations. V3 adds 1–6 pips for tracking faces; it still does not request a particular
 result or measure outcome fairness.
 
 ## Die task findings and next checks
@@ -163,6 +164,74 @@ result or measure outcome fairness.
   accepted as T-39, and Robocurve received the `tommyet` PR as **TK-YBZD4Q**.
 
 ## Dated session log
+
+### 2026-11-07 — official simulator update and compatibility validation
+
+- Operator: repository agent; working branch `duplo-joining-batch`. The user
+  explicitly authorized the simulator update and checking the earlier runs.
+  The retained VM was STOPPED before this session; no active login or GPU job
+  was found after starting. Source snapshots, local patches and installed-package
+  manifests were saved before running the official update. Setup output is
+  private because the official script prints the existing desktop password.
+- Official launchable advanced from `d825f0c` to `25a2963`; its asset fix changes
+  Arena's library from the outdated staging bucket to the production root.
+  Inspect Robots upgraded 0.60.0 → 1.0.0, YAM plugin 0.37.0 → 0.38.0, agent
+  plugin 0.28.0 → 0.30.0, and NumPy 2.3.1 → 2.5.4. Other dependency changes are
+  recorded in `artifacts/simulator-update-2026-11-07/postflight.json`.
+  Isaac Sim 6.1, the adapter `0059d02` and Dream client 1.0.14 were retained.
+  The official setup and explicit agent upgrade both completed successfully;
+  YAM embodiments and Dream/scripted policies are registered.
+- Independent offline replay of all ten historical final trials still gives
+  demo 1.0 / Dream 0.0, with matching core and evidence hashes. The asset fix
+  targets library objects; our custom task-file scenes use procedural room
+  geometry, local bricks/die and bundled robot assets. The update does not
+  itself explain Dream's low scores or previous session recoveries.
+- All five fresh demos pass at **1.0**. Each brick demo uses 400 actions / 20
+  simulated seconds; the die uses 182 actions / 9.10 seconds. Every demo's
+  measured numeric trajectory and executed actions exactly match its original
+  final recording, with no action-range or delta violations. Archived task
+  sources match the submitted versions. This is a fixed-seed compatibility
+  check, not a general repeat-success or physical-fidelity claim.
+- The four brick demos took 130.5, 107.8, 110.3 and 109.4 seconds of runner wall
+  time (full 2×2, single-stud, mixed and offset); the die took 44.5 seconds.
+  The updated full 2×2 Dream trial completed in 262.9 seconds and scored **0.0**;
+  the robot did not achieve the pickup milestone. All 1,200 executed actions /
+  60 simulated seconds pass bounds and step checks. There were 25 requests,
+  27 attempts, two expired-session retries and three sessions, with recoveries
+  at steps 128 and 272. This is valid evidence of the observed failure, but
+  session recovery could affect performance: do not present it as an
+  uninterrupted measure of task difficulty. The other four historical Dream
+  trials were rescored locally rather than rerun on the GPU.
+- The new full 2×2 composite renders successfully and retains all 401 frames.
+  Visual samples of all four updated brick demos show the expected geometry,
+  suspended lower brick during the proof lift, and released final assemblies.
+  No obvious missing geometry or texture was seen. Sampling does not establish
+  every duration or contact condition; the numeric audits check those scores.
+- Inspect 1.0 changes camera-export filenames from `*_top_cam.mp4` to
+  `*~top_cam.mp4` (likewise wrist cameras). After exporting the camera videos,
+  run `python tools/prepare_review_media.py RUN`, then the existing task's
+  `render_review.py`. The helper adds relative aliases without overwriting or
+  re-encoding files; it supports both formats and rejects ambiguous inputs.
+  It was verified on actual old/new videos. No submitted task source or media
+  was edited, and no submission branch or upstream PR was changed.
+- Environment backups, trajectories, actions, videos, setup images and audit
+  reports were downloaded to ignored `artifacts/simulator-update-2026-11-07/`.
+  Raw camera arrays remain on the retained VM. See `historical-evidence-recheck.md`,
+  `updated-first-demo-audit.json`, `new-demos-audit.json`,
+  `new-die-demo-audit.json`, `new-dream-audit.json` and
+  `visual-check-3-brick-demos/visual-audit.json`.
+  These checks found no update-related reason to replace existing submissions;
+  they do not resolve the competition's novelty or importance criteria.
+- VM session: start requested **15:41:56 UTC**, healthy at 15:43:14; all trials
+  and downloads finished before the stop request at 16:05:54. No GPU compute
+  process remained. **STOPPED confirmed 16:13:47 UTC**; the existing
+  `g6e.2xlarge` and 256 GiB disk were retained without resizing or deletion.
+  Charging the entire 31m50.6s start-to-confirmed-stop interval at the observed
+  $3.279064/hour gives a conservative **$1.74** estimate, including storage
+  during that interval but excluding Dream API charges and later storage.
+  Posted credit was $186.46 before and $186.44 at 16:14:14; billing lag means
+  that $0.02 difference is not the session's actual cost. See `session.json`,
+  `billing-final.json` and `final-session-audit.json` in the artifact directory.
 
 ### 2026-11-07 — updated launchable instructions and FAQ
 
