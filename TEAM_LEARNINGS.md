@@ -63,7 +63,7 @@ developers and their agents, not a competition submission document.
   The user requested forming the knot on the table, opening a local arch and
   pulling both ends together. The free uncrossed U is translated 18 cm toward
   −Y. No rope poses, attachments or external tightening forces are introduced.
-- Sixteen table pilots are recorded in
+- Seventeen table pilots are recorded in
   [table-pilots.json](tasks/tie-overhand-knot/evidence/table-pilots.json).
   All score zero: 001/002 establish a small arch, 003 curls the loose tail,
   004/005 stop on excessive rope contact, 006 establishes the revised
@@ -78,8 +78,9 @@ developers and their agents, not a competition submission document.
   adds lowering but also fails during support-hand withdrawal. Trial 015
   validates the fixed physics switch but ends on a policy exception before
   support opening. Trial 016 passes the placement guard but fails on rope
-  contact during support withdrawal. These are development results, not
-  completed task demonstrations.
+  contact during support withdrawal. Trial 017 recovers both ends and forms a
+  valid held candidate before failing during right-only staging. These are
+  development results, not completed task demonstrations.
 - A wrist rotation is not control of a flexible free tip. In 003 the grasp
   remained held but the tip curled and finished 73.85 mm outside the loop.
   In 005, moving the tip back toward the crossing shortened the measured
@@ -215,7 +216,22 @@ developers and their agents, not a competition submission document.
   fully open and the existing park. A 130-command audit from measured trial-016
   robot state has minimum separation bounds of 215.59 mm between arms and
   16.17 mm above the table; this does not predict rope behavior. The scorer,
-  tolerance and fixed physics schedule are unchanged. The outcome is pending.
+  tolerance and fixed physics schedule are unchanged. Trial 017 subsequently
+  passed this withdrawal and both terminal pickups.
+- Trial 017 passes both terminal grasp witnesses at 102.50 seconds. The first
+  valid held overhand candidate appears at 103.35 during the red-tip lift;
+  independent frozen topology checks agree for all five closures. It remains
+  valid through 108.25. At 108.30, during right-only south staging, actual
+  capsule pair 19/27 has axis distance 9.389921 mm, exceeding allowed overlap
+  by 110.079 micrometres. Final pair 19/26 is 9.361055 mm apart at 108.35.
+  The recorded candidate label is cached after invalidity; those final frames
+  must not be described as valid candidate evidence. Score remains zero.
+- Trial 017 has 2,168 frames, clean execution/finalization and 607 independently
+  validated post-switch native intervals. Runtime was 1,106.993 wall seconds.
+  It reaches neither the qualifying span nor final release. Prospective 018
+  replaces 11 seconds of one-arm staging with six seconds lifting/separating
+  both held ends together from the 106.50-second state. This motion is pending
+  physical validation; it does not alter scoring or physics.
 - The completed native-pose audit of all 1,342 trial-012 frames found no
   inter-arm or tabletop intersections. Minimum bounds were 23.927 mm between
   arms at 49.05 seconds and 0.717 mm above the table at 7.50 seconds. This
@@ -223,7 +239,7 @@ developers and their agents, not a competition submission document.
   commanded targets. It does not certify times between the 20 Hz frames or
   the later recovery/pull route. A compact hash-backed summary is included
   in the trial-012 evidence.
-- The full controller is implemented; its revised sequence totals 143
+- The full controller is implemented; its revised prospective sequence totals 138
   simulated seconds, including simultaneous pulling, release and six seconds
   of settling. The prospective task limit is now 3,000 actions at 20 Hz
   (150 seconds), leaving room for deliberate clearance and regrasping. Earlier

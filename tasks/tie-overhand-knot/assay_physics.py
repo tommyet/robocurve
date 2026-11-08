@@ -112,6 +112,7 @@ class AssayPhysicsSwitch:
         self.pending = None
         self.callback_dts = []
         self.callback_error = None
+        self._closed = False
         self.report = {'status': 'not_started', 'diagnostic_only': bool(diagnostic_only),
                        'target_physics_hz': self.target_hz, 'control_hz': 20,
                        'switch_capture_time_s': self.last_time, 'intervals': [],
@@ -254,14 +255,36 @@ class AssayPhysicsSwitch:
             self.pending = None
 
     def close(self):
+        if self._closed:
+            return
         if self.handle is not None:
             self.handle.deregister()
             self.handle = None
+        self.report['callback_removed'] = True
+        self.report['validated_control_intervals'] = sum(bool(row.get('validated')) for row in self.report['intervals'])
         if self.pending is not None:
             self.report['status'] = 'failed'
             self.report.setdefault('error', 'Incomplete native interval at shutdown')
-        self.report['callback_removed'] = True
-        self.report['validated_control_intervals'] = sum(bool(row.get('validated')) for row in self.report['intervals'])
+        if self.callback_error:
+            self.fail(RuntimeError(self.callback_error))
+        # A callback after the final after_step() has no next interval to check
+        # it. Also detect counter advances that did not deliver a callback.
+        closure = {'schema': 'native-counter-closure-v1', 'complete': False,
+                   'callback_error': self.callback_error}
+        self.report['closure'] = closure
+        try:
+            before = self.report['counters_after']
+            steps = self.report['validated_control_intervals'] * self.substeps
+            expected = {key: before[key] + steps for key in ('native', 'environment')}
+            observed = self._counters()
+            closure.update(expected_counters=expected, observed_counters=observed)
+            if observed != expected:
+                raise ValueError('Native counters advanced outside completed audited intervals')
+            closure['complete'] = self.pending is None and self.callback_error is None
+        except (KeyError, TypeError, ValueError, AttributeError) as exc:
+            if self.report.get('status') != 'failed':
+                self.fail(exc)
+        self._closed = True
 
     def save(self, path):
         Path(path).write_text(json.dumps(self.report, indent=2, allow_nan=False)+'\n')

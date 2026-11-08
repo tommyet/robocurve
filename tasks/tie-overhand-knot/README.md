@@ -1,11 +1,10 @@
 # Tie an overhand knot
 
-**Implemented, but not yet validated or ready for submission.** The complete
-table method is in code. Sixteen table pilots have scored zero. Trial 016
-passed the measured support-placement guard and fixed physics checks, then
-stopped on invalid rope contact during support-hand withdrawal. Trial 017
-will lift the open support hand vertically before parking. Recovery, pulling
-and final retention remain unproven.
+**Implemented, but not yet validated or ready for submission.** Seventeen table
+pilots have scored zero. Trial 017 recovered both ends and formed a valid held
+overhand candidate, then stopped on invalid rope contact during one-arm
+staging. Trial 018 is testing simultaneous lifting and separation.
+The full pull and final released retention remain unproven.
 
 Tie one overhand knot in the blue cord. Pull its ends at least 117 cm apart
 for one second with the whole cord at least 1 cm above the table. Let go and
@@ -45,76 +44,32 @@ python replay.py /tmp/rope-arch-001/trajectory.jsonl
 python -m unittest discover -s . -p 'test_*.py'
 ```
 
-`table_policy.py` implements the sequence. The right hand grips segment 101
-and lays one crossing from the uncrossed U. It then grips standing segment 23
-and raises a local arch by 15 cm. The left hand grasps the actual red terminal,
-segment 103, and carries it under the arch. It releases the red tip inside
-the loop and withdraws empty. The right hand lowers the arch toward the table,
-releases it, lifts the open hand 3 cm before parking, then picks up the red
-terminal from above. The left approaches yellow segment 2 from the
-north with a 24 mm jaw opening and descends to grasp it. With both ends held,
-the right lifts the red terminal 6.5 cm, moves outward to clear the other arm,
-then moves south. Both arms stage the pull, move outward in the same control
-ticks and release the cord. The full sequence remains unvalidated.
+`table_policy.py` lays a crossing, raises a local arch, and carries the red
+terminal under it. The feeding hand releases the tip inside and withdraws;
+the support hand lowers the arch, opens and lifts clear. The arms then pick
+up both ends, lift and separate together, pull in the same control ticks,
+and release. The full sequence remains unvalidated.
 
-`loop` stops after the arch; `thread` stops after right-hand red-tip regrasp;
-`demo` attempts the whole sequence. Available commands do not establish
-feasibility. [Sixteen table pilots](evidence/table-pilots.json) all scored zero.
-Trials 004/005 stopped on invalid rope contact; 006 formed the right-arm arch.
-In 007 the terminal entered the loop, but the palm still supported the raised
-strand. Diagonal staging returned the topology to unknot, and a pickup-region
-guard stopped the run before pulling. Trial 008 produced an independently
-certified geometric overhand candidate during the deeper feed and retained it
-through the lift. The cord remained held, with no span or release attempt, so
-it still scored zero. In 009, the crossing migrated to the free yellow end
-and disappeared during staging. A pickup-region guard stopped the run before
-pulling. Trial 010 formed a candidate during red-tip release, but the tip
-recoiled into the far loop strand and violated the contact tolerance at
-68.15 seconds. Trial 011 used 480 Hz and failed on contact between the two
-ends during arch lifting, before reaching the new motions. Trial 012 returns
-to 240 Hz and kept the released terminal inside, with a 3.61 mm surface gap
-to the nearest strand. Its 15 mm planning margin stopped the run. Trial 013
-passed the 12 mm whole-axis guard and empty-hand withdrawal, then stopped
-on invalid contact after releasing the raised arch. It never reached the
-planned regrasp or pull. Trial 014 added a controlled 14 cm lowering, but the
-cord remained 12.66 mm above the table when opening began. It also failed
-during withdrawal, after the right hand was clear of the rope. The cause is
-not yet established. Trial 015 validated the 78-second physics switch through
-60 subsequent control intervals, but stopped on a policy exception at
-81 seconds. Its clean recording and zero CLI exit did not mean the policy
-succeeded. Trial 016 passed the measured support-placement guard and all
-154 post-switch native intervals, but capsule pair 28/90 crossed the unchanged
-contact threshold at 85.65 seconds. The controlled stop and recording
-finalized cleanly; no recovery or pull was reached. Trial 017 adds a 3 cm
-vertical withdrawal before fully opening and parking the support hand. Its
-result is pending. The full 132-test CPU suite passes; 17 focused checks also
-pass after the withdrawal change. They check scoring, recording and guards, not
-whether the robot can complete this task. A check of all 1,342 recorded native robot
-poses from trial 012 found no inter-arm or tabletop intersections; minimum
-separation bounds were 23.93 mm between arms and 0.72 mm above the table. This
-does not certify the later, unreached recovery and pull.
+`loop` stops after the arch; `thread` stops after red-tip regrasp; `demo`
+attempts the whole sequence. The default seed is 0 and the starting layout is
+fixed. The current sequence takes 138 simulated seconds, plus the final
+recording tick, within 3,000 actions at 20 Hz (150 seconds). Completed pilots
+took 3.6–18.5 wall-clock minutes each; full-task runtime is not yet measured.
+A matching Dream run must use the same final source, seed, scene, cameras,
+action limit and scorer. There are no evaluator actions after the episode.
 
-[Five earlier high-lift pilots](evidence/bimanual-pilots.json), also score zero,
-use the previous layout and controller. They are separate historical evidence.
-The table pilots took about 3.6–11.0 wall-clock minutes each in the recorded
-environment; full-task runtime is not yet measured. The current sequence totals
-143 simulated seconds before the final recording tick. The prospective limit
-is now 3,000 actions at 20 Hz (150 seconds), allowing time for careful clearance
-and regrasping, including release and the final five seconds. Recorded trials
-retain their original limits; trial 008 uses its frozen 2,400-action scene and
-1,800-action thread probe. A matching Dream trial must use the same final scene, cameras, action limits and scorer.
-There are no evaluator actions after the robot episode.
-
-Each run saves the exact source, configuration, package versions, executed
-actions, measured rope poses and velocities, joint gaps, robot collision
-geometry, setup images and a separate review-camera video. The review camera
-is not a policy input. `score-summary.json` is authoritative; `replay.py`
-recomputes the geometric result and checks clean finalization. Scheduled runs
-also save `policy-physics-transition.json`. Replay requires unchanged state
-at the switch, every native physics interval, fresh camera frames and clean
-cleanup through the last recorded sample, even if geometry became invalid.
-Legacy v3
-recordings continue to use their old scorer and recorded configuration.
+Each run saves its exact source, configuration, package versions, actions,
+measured cord and robot geometry, setup images and review video. The review
+camera is not a policy input. `score-summary.json` records the result;
+`replay.py` independently recomputes it and checks execution and finalization.
+Scheduled runs also save `policy-physics-transition.json`: replay checks state
+preservation, all native intervals, fresh cameras and cleanup through the last
+sample, including samples after a geometry failure. A clean recording alone
+does not mean that the robot completed the task. New version-2 certificates
+also require final native counter/callback checks and a successful Inspect
+execution record. Replay enforces both the task and trial action budgets.
+Version-1 recordings remain readable, with any missing shutdown or execution
+audit reported explicitly; their frozen source and results are preserved.
 
 The optional factual time/phase overlay preserves all original frames:
 
@@ -147,28 +102,34 @@ feedback is privileged demonstration assistance, not a Dream input.
 
 Friction is 0.8. Bending stiffness is 0.000390625 N m/rad and damping is
 0.0000390625 N m s/rad. These are engineering assumptions, not measured
-polyester parameters. The current candidate uses 240 Hz physics through
-78 seconds and 960 Hz afterward, with 20 Hz robot control throughout. The
-switch is fixed in time and applies equally to demo and Dream; it neither
-adds robot actions nor applies external forces. Trial 016 validated unchanged
-state, counters and 48 native substeps per action for 154 actions after the
-switch. That validates the transition through 85.70 seconds, not task completion. Solver settings remain 64 position and 16 velocity
-iterations, 0.5 mm contact offset and zero rest offset. Earlier trials keep
-their recorded rates: 011 used 480 Hz; trials 001–014 otherwise used 240 Hz. The 5% diameter
-penetration tolerance is unchanged.
-Fibres, stretch, wear and plastic deformation are not modelled.
+polyester parameters. Fibres, stretch, wear and plastic deformation are not
+modelled. The solver uses 64 position and 16 velocity iterations, a 0.5 mm
+contact offset and zero rest offset; allowed penetration is 5% of the diameter.
+
+The fixed 240→960 Hz physics schedule applies equally to demo and Dream,
+with 20 Hz control throughout. It adds no actions or external forces. Trial 017
+validated unchanged state/counters and 48 native substeps per action across
+607 post-switch intervals, through 108.35 seconds. That validates the observed
+transition, not completion of the task. Historical trials retain their recorded
+settings and scorer.
 
 The scorer checks each recorded 20 Hz frame for rope continuity, nonlocal
 penetration, topology, span and release. It cannot establish physical fidelity
 between samples. Topological ambiguity earns no credit. Synthetic test cases
 verify the scorer, not robot feasibility.
 
-[VALIDATION.json](VALIDATION.json) separates current table pilots, older
-high-lift pilots and historical v3 jig evidence. The old jig demo had an
-unresolved native-velocity spike during handover. Current success requires a
-fresh complete trial, independent replay and visual review. Raw trials remain
-outside Git. No media has been uploaded and no upstream pull request has been
-opened for this task.
+[The table-pilot evidence](evidence/table-pilots.json) contains all seventeen
+completed trials, each score zero. Trial 017 secured both ends at 102.50 seconds
+and recorded a valid held overhand candidate from 103.35 to 108.25 seconds,
+before invalid contact during one-arm staging. No qualifying span or final
+released retention has been demonstrated. The full 142-test CPU suite passes, including shutdown, execution and action-budget
+checks; these do not establish robot feasibility.
+
+[VALIDATION.json](VALIDATION.json) separates current evidence from the five
+older high-lift pilots and historical v3 jig trials. The old jig demo's native
+velocity spike remains unresolved. Submission requires a complete successful
+demo, a matching Dream run, independent replay and visual review. Raw trials
+remain outside Git. No media upload or upstream PR has been made for this task.
 
 ## Review lessons
 

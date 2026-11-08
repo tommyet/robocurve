@@ -260,15 +260,11 @@ def _pull_and_release(arms, working_index):
     yield from _move(right, 1, outward, held_rotation, 2.,
                      'clear the other arm before moving the red end south', held_index=working_index)
     _held(0, 2)
-    south = _tcp(1).copy()
-    south[1] = -.18
-    yield from _move(right, 1, south, held_rotation, 3.,
-                     'separate captured ends above the loop', held_index=working_index)
-    _held(0, 2)
-    yield from _move(right, 1, [.24, -.18, .94], DOWN, 4.,
-                     'raise held red end to pulling position', held_index=working_index)
-    yield from _move(left, 0, [.24, .18, .94], DOWN, 4.,
-                     'raise held yellow end to pulling position', held_index=2)
+    yield from both(
+        _move(left, 0, [.24, .18, .94], DOWN, 6.,
+              'raise and separate the yellow end', held_index=2),
+        _move(right, 1, [.24, -.18, .94], DOWN, 6.,
+              'raise and separate the red end', held_index=working_index))
     _held(0, 2)
     _held(1, working_index)
     angle = np.deg2rad(25.)

@@ -1,5 +1,5 @@
 {
-  "scope": "Sixteen table-supported development pilots, all score zero. Earlier pilots establish routing and transient topology or stop on geometry/guard failures. Trial 015 validates the fixed physics switch but ends on a policy exception. Trial 016 validates measured placement and normal stop handling, then stops on actual capsule contact during support-hand withdrawal. No full-score task is demonstrated.",
+  "scope": "Seventeen table-supported development pilots, all score zero. Trial 017 first recovers both terminals and retains a valid held overhand candidate during the initial lift, then stops on invalid contact during right-only staging. No full-score task is demonstrated.",
   "numeric_precision": "Measured values are rounded to 9 decimal places; artifact hashes identify the original full-precision data.",
   "measurement_limits": [
     "Top-view crossings and tip position do not prove under/over passage or knot topology.",
@@ -5180,7 +5180,625 @@
         "full_sequence_completed": false
       },
       "outcome": "The measured support-placement guard and fixed physics certificate passed. Actual capsule pair 28/90 fell 1.070 micrometres below the 9.5 mm axis-distance threshold at 85.65 seconds during the diagonal support-hand retreat. The controlled geometry stop was handled normally; execution and recording finalized cleanly. No recovery, pull or final retention was reached, and independent replay confirms score zero."
+    },
+    "table-017": {
+      "policy": "demo",
+      "seed": 0,
+      "max_steps": 3000,
+      "score": 0.0,
+      "samples": 2168,
+      "time_s": 108.35,
+      "last_valid_metric_time_s": 108.25,
+      "invalid": "nonlocal capsule penetration exceeds 5% diameter tolerance",
+      "initial_validated": true,
+      "initial_reason": "uncrossed top view and unknot certificate",
+      "topology_status": "overhand_candidate",
+      "finalization": {
+        "complete": true,
+        "errors": [],
+        "interrupted_by": null
+      },
+      "elapsed_wall_seconds": 1106.993,
+      "replay": {
+        "score": 0.0,
+        "compared_fields": [
+          "score",
+          "candidate_score",
+          "invalid",
+          "initial_validated",
+          "initial_reason",
+          "topology_status",
+          "samples",
+          "time"
+        ],
+        "matches_recorded": true,
+        "finalization_complete": true
+      },
+      "source_sha256": {
+        "assay_physics.py": "2aada75e6b2c5a58f36428eab9a36312c992c1756deaebb54c35bad64dd3aad3",
+        "bimanual_policy.py": "b374b20782717f0f15b9ff07bbcd6920542e7e9247703931400005f0350c8127",
+        "bimanual_scoring.py": "278b126c734b9867cacf3e5779aa210b0f7a1162f6a9e8cf4772020929269fb5",
+        "config.py": "d2c55f0162322740d2bac19dc12fe4709ab283e28364902e6c4065b5779555b0",
+        "demo_policy.py": "69edf1f5d0df691c499be324489cc6c677618dd8dec90e00dbb0118428fe9546",
+        "diagnostic_layouts.py": "b87524a85ecbeeb18c97d1170459338e9c9f05232e923eb8f29d68f577d93a06",
+        "fixed_policy_physics.py": "2ed70d06cd342417e0d3c526442fa40574cd29599d71db0632e223e5d5bba1a9",
+        "fixtures.py": "d30eb72c85d49cb91a01605e6bef26860c595d7d77aba79faeea1cd3924a3e60",
+        "hand_geometry.py": "5eb44a5b09551bb738a7a42aa0322566213b7170806290886c6e13b3ccf44a10",
+        "jig_layout.py": "8c6645f3c465e3f946336a8de2e51593a461d5fbefa5cf5cd8740b7520a7ee16",
+        "jig_policy.py": "ad22bd0c1559ad7b3a7b4401e297ad001cd50b4c16e7bc8f3ec24173a35b8311",
+        "proof_load.py": "0e7339480dbd059befcb1b57616991e6086aa2e9d02839b5259b8d87ac5b428b",
+        "render_review.py": "d87ff2e0215ac36c6298e23669ef49bfc90ed21996b897a26610703ac4cccaf6",
+        "replay.py": "64429ad1adb6a548352c2c32a93653dc7ddea3d6b741f7b7820d2f776db85d53",
+        "rope.py": "4783ebd97f3f0afe9c70b3fbec2592bd0a7311e4f7e36c43353d0d81d19ab692",
+        "run.py": "6acee3f1110b766e6fadb58a703bfad78000eef631c4c92973cf428744105be5",
+        "scoring.py": "9a3519561f15b83880c138eb7beedf866d9de21db247205257cf7c895d5f5c78",
+        "table_policy.py": "0399778a434b9fed55203581689babc3d1cdc074c7a2940ba518df8e3d7dc410",
+        "task.py": "ac5174aa5eed3bf7cd0b7b1df9ebd1c647afa3f29a7a081b24dc06484c11e031",
+        "telemetry.py": "fb64df7679298e5bacaa27f69d25ecb0f59d07f6b95859799a164071518854fa",
+        "topology.py": "21057280e6d69123019e432d2b50934e97b5f5131349186541215755f99a5ff2",
+        "visuals.py": "a7e8b4b040c526093570b3a295e9eea28a7192dbd33ae0db6dd1f7293c4ac819"
+      },
+      "source_snapshot_matches_runtime": true,
+      "artifact_sha256": {
+        "trajectory.jsonl": "245ac460ec39da07cc0c8d50439ce926f0490c6bbbeb4571bced7fd9699c7eef",
+        "runtime.json": "5e7ee2f8548855dd6ec00c57050755c0a6d434ff9877c7bd64458e64862ad6a7",
+        "score-summary.json": "8a3c9ac84e624bf7daddf198edf94d74f641a34e4705f327263dfc3cc7e670bc",
+        "replay-summary.json": "90a31c26211414eaaa445fadcf2865f2931751c8954828bc7b8f5406a13a89a2",
+        "demo-corrections.json": "04195333ef4bed162c6b33930ebe3fa7c753f70ac58584079496d74adc089c6e",
+        "review.mp4": "54c04be2d83ba9a98b189065a4de6023447123f15ffec07e13f4a66a3bd3af8e",
+        "policy-physics-transition.json": "f889b91c2f4084eff790755029730badd781eebaf1851e0d932b90c2b524fcaf"
+      },
+      "recording": {
+        "frames": 2168,
+        "fps": 20,
+        "frame_count_matches_trajectory": true,
+        "visual_review_performed_for_this_summary": false
+      },
+      "sampled_motion_maxima": {
+        "linear_velocity_m_s": 0.283065009,
+        "angular_velocity_rad_s": 81.153446454,
+        "joint_gap_m": 0.000138649
+      },
+      "crossing_events": [
+        {
+          "label": "table laid crossing",
+          "time_s": 22.5,
+          "standing_material": 17.884358769,
+          "working_material": 90.922181324,
+          "crossing_xy_m": [
+            0.287454757,
+            0.076963398
+          ],
+          "standing_axis_height_m": 0.752499976,
+          "working_axis_height_m": 0.762720555,
+          "working_above_m": 0.010220579
+        },
+        {
+          "label": "table local arch measurement",
+          "time_s": 38.5,
+          "standing_material": 8.817044194,
+          "working_material": 89.574711536,
+          "crossing_xy_m": [
+            0.261633724,
+            0.031998852
+          ],
+          "standing_axis_height_m": 0.752499859,
+          "working_axis_height_m": 0.762498584,
+          "working_above_m": 0.009998725
+        }
+      ],
+      "local_arch": {
+        "time_s": 38.5,
+        "held_material_index": 23,
+        "held_arm": "right",
+        "cord_surface_height_at_grasp_m": 0.147193191,
+        "projected_loop_extent_m": [
+          0.294576076,
+          0.285355732
+        ],
+        "fraction_of_segment_centres_with_surface_height_below_15mm": 0.730769231,
+        "working_tip_m": [
+          0.166944783,
+          0.171482661,
+          0.752499992
+        ],
+        "threading_validated": false
+      },
+      "working_tail_grasp_index": 103,
+      "working_tip_progression": [
+        {
+          "label": "table held terminal before underpass",
+          "time_s": 56.5,
+          "tip_m": [
+            0.369252718,
+            0.192860242,
+            0.758233768
+          ],
+          "inside_projected_loop": false,
+          "projected_boundary_distance_m": 0.139308193,
+          "standing_crossing_material": 11.470662807,
+          "working_crossing_material": 86.675843806,
+          "whole_axis_inside": false,
+          "whole_axis_projected_boundary_distance_m": 0.135096417
+        },
+        {
+          "label": "table held terminal during underpass",
+          "time_s": 58.5,
+          "tip_m": [
+            0.370446583,
+            0.13312003,
+            0.762108627
+          ],
+          "inside_projected_loop": false,
+          "projected_boundary_distance_m": 0.080368501,
+          "standing_crossing_material": 11.40163908,
+          "working_crossing_material": 86.688535348,
+          "whole_axis_inside": false,
+          "whole_axis_projected_boundary_distance_m": 0.073972235
+        },
+        {
+          "label": "table held terminal during underpass",
+          "time_s": 60.0,
+          "tip_m": [
+            0.369263546,
+            0.093804081,
+            0.762463613
+          ],
+          "inside_projected_loop": false,
+          "projected_boundary_distance_m": 0.042071576,
+          "standing_crossing_material": 11.278023268,
+          "working_crossing_material": 86.69306067,
+          "whole_axis_inside": false,
+          "whole_axis_projected_boundary_distance_m": 0.033765122
+        },
+        {
+          "label": "table held terminal during underpass",
+          "time_s": 62.0,
+          "tip_m": [
+            0.368758375,
+            0.043768882,
+            0.760818991
+          ],
+          "inside_projected_loop": true,
+          "projected_boundary_distance_m": 0.006341975,
+          "standing_crossing_material": 11.001601064,
+          "working_crossing_material": 86.63283671,
+          "whole_axis_inside": true,
+          "whole_axis_projected_boundary_distance_m": 0.006341975
+        },
+        {
+          "label": "table held terminal during underpass",
+          "time_s": 64.0,
+          "tip_m": [
+            0.369079489,
+            0.00359692,
+            0.762985758
+          ],
+          "inside_projected_loop": true,
+          "projected_boundary_distance_m": 0.030602889,
+          "standing_crossing_material": 10.858019697,
+          "working_crossing_material": 86.723119624,
+          "whole_axis_inside": true,
+          "whole_axis_projected_boundary_distance_m": 0.030602889
+        },
+        {
+          "label": "table held terminal inside loop",
+          "time_s": 64.0,
+          "tip_m": [
+            0.369079489,
+            0.00359692,
+            0.762985758
+          ],
+          "inside_projected_loop": true,
+          "projected_boundary_distance_m": 0.030602889,
+          "standing_crossing_material": 10.858019697,
+          "working_crossing_material": 86.723119624,
+          "whole_axis_inside": true,
+          "whole_axis_projected_boundary_distance_m": 0.030602889
+        },
+        {
+          "label": "table terminal after opening feeding hand",
+          "time_s": 67.0,
+          "tip_m": [
+            0.358525392,
+            -0.036545063,
+            0.752500095
+          ],
+          "inside_projected_loop": true,
+          "projected_boundary_distance_m": 0.0136061,
+          "standing_crossing_material": 10.683055892,
+          "working_crossing_material": 86.546777225,
+          "whole_axis_inside": true,
+          "whole_axis_projected_boundary_distance_m": 0.0136061
+        }
+      ],
+      "support_grasp_witnesses": {
+        "checks": 10,
+        "all_passed": true,
+        "last_time_s": 81.0,
+        "scope": "Geometric pad containment and jaw opening only; not measured grasp force."
+      },
+      "working_grasp_witnesses": {
+        "checks": 9,
+        "all_passed": true,
+        "last_time_s": 64.0,
+        "scope": "Geometric pad containment and jaw opening only; not measured grasp force."
+      },
+      "scene_run_limit_actions": 3000,
+      "topology_history": {
+        "recorded_status_frame_counts": {
+          "unknot": 1567,
+          "ambiguous": 500,
+          "overhand_candidate": 101
+        },
+        "recorded_transitions": [
+          {
+            "time_s": 0.0,
+            "topology_status": "unknot",
+            "topology_reason": "agreeing_exterior_closures_reduce_to_zero_crossings"
+          },
+          {
+            "time_s": 64.1,
+            "topology_status": "ambiguous",
+            "topology_reason": "fewer_than_three_valid_exterior_closures"
+          },
+          {
+            "time_s": 64.6,
+            "topology_status": "unknot",
+            "topology_reason": "agreeing_exterior_closures_reduce_to_zero_crossings"
+          },
+          {
+            "time_s": 65.35,
+            "topology_status": "ambiguous",
+            "topology_reason": "invariant_consistent_but_diagram_certificate_missing"
+          },
+          {
+            "time_s": 65.6,
+            "topology_status": "unknot",
+            "topology_reason": "agreeing_exterior_closures_reduce_to_zero_crossings"
+          },
+          {
+            "time_s": 79.1,
+            "topology_status": "ambiguous",
+            "topology_reason": "fewer_than_three_valid_exterior_closures"
+          },
+          {
+            "time_s": 103.1,
+            "topology_status": "ambiguous",
+            "topology_reason": "invariant_consistent_but_diagram_certificate_missing"
+          },
+          {
+            "time_s": 103.35,
+            "topology_status": "overhand_candidate",
+            "topology_reason": "agreeing_exterior_closures_with_three_crossing_certificates"
+          }
+        ],
+        "overhand_candidate_observed": true,
+        "interpretation": "Both terminal grasps passed at 102.50 seconds. A valid overhand candidate appears at 103.35 seconds and persists through 108.25 seconds, independently checked on selected frames. Invalid frames retain the cached topology label and are not valid candidate evidence. No suspended span or final release was reached.",
+        "first_valid_candidate_time_s": 103.35,
+        "last_valid_candidate_checked_time_s": 108.25,
+        "independently_checked_frames": [
+          {
+            "time_s": 103.35,
+            "recorded_invalid": null,
+            "topology": {
+              "status": "overhand_candidate",
+              "reason": "agreeing_exterior_closures_with_three_crossing_certificates",
+              "closures": [
+                {
+                  "variant": 0,
+                  "valid": true,
+                  "reason": null,
+                  "alexander_determinant": 3,
+                  "trefoil_certificate_count": 2
+                },
+                {
+                  "variant": 1,
+                  "valid": true,
+                  "reason": null,
+                  "alexander_determinant": 3,
+                  "trefoil_certificate_count": 2
+                },
+                {
+                  "variant": 2,
+                  "valid": true,
+                  "reason": null,
+                  "alexander_determinant": 3,
+                  "trefoil_certificate_count": 2
+                },
+                {
+                  "variant": 3,
+                  "valid": true,
+                  "reason": null,
+                  "alexander_determinant": 3,
+                  "trefoil_certificate_count": 2
+                },
+                {
+                  "variant": 4,
+                  "valid": true,
+                  "reason": null,
+                  "alexander_determinant": 3,
+                  "trefoil_certificate_count": 2
+                }
+              ]
+            }
+          },
+          {
+            "time_s": 104.5,
+            "recorded_invalid": null,
+            "topology": {
+              "status": "overhand_candidate",
+              "reason": "agreeing_exterior_closures_with_three_crossing_certificates",
+              "closures": [
+                {
+                  "variant": 0,
+                  "valid": true,
+                  "reason": null,
+                  "alexander_determinant": 3,
+                  "trefoil_certificate_count": 6
+                },
+                {
+                  "variant": 1,
+                  "valid": true,
+                  "reason": null,
+                  "alexander_determinant": 3,
+                  "trefoil_certificate_count": 6
+                },
+                {
+                  "variant": 2,
+                  "valid": true,
+                  "reason": null,
+                  "alexander_determinant": 3,
+                  "trefoil_certificate_count": 6
+                },
+                {
+                  "variant": 3,
+                  "valid": true,
+                  "reason": null,
+                  "alexander_determinant": 3,
+                  "trefoil_certificate_count": 6
+                },
+                {
+                  "variant": 4,
+                  "valid": true,
+                  "reason": null,
+                  "alexander_determinant": 3,
+                  "trefoil_certificate_count": 6
+                }
+              ]
+            }
+          },
+          {
+            "time_s": 106.5,
+            "recorded_invalid": null,
+            "topology": {
+              "status": "overhand_candidate",
+              "reason": "agreeing_exterior_closures_with_three_crossing_certificates",
+              "closures": [
+                {
+                  "variant": 0,
+                  "valid": true,
+                  "reason": null,
+                  "alexander_determinant": 3,
+                  "trefoil_certificate_count": 3
+                },
+                {
+                  "variant": 1,
+                  "valid": true,
+                  "reason": null,
+                  "alexander_determinant": 3,
+                  "trefoil_certificate_count": 3
+                },
+                {
+                  "variant": 2,
+                  "valid": true,
+                  "reason": null,
+                  "alexander_determinant": 3,
+                  "trefoil_certificate_count": 3
+                },
+                {
+                  "variant": 3,
+                  "valid": true,
+                  "reason": null,
+                  "alexander_determinant": 3,
+                  "trefoil_certificate_count": 3
+                },
+                {
+                  "variant": 4,
+                  "valid": true,
+                  "reason": null,
+                  "alexander_determinant": 3,
+                  "trefoil_certificate_count": 3
+                }
+              ]
+            }
+          },
+          {
+            "time_s": 108.25,
+            "recorded_invalid": null,
+            "topology": {
+              "status": "overhand_candidate",
+              "reason": "agreeing_exterior_closures_with_three_crossing_certificates",
+              "closures": [
+                {
+                  "variant": 0,
+                  "valid": true,
+                  "reason": null,
+                  "alexander_determinant": 3,
+                  "trefoil_certificate_count": 8
+                },
+                {
+                  "variant": 1,
+                  "valid": true,
+                  "reason": null,
+                  "alexander_determinant": 3,
+                  "trefoil_certificate_count": 8
+                },
+                {
+                  "variant": 2,
+                  "valid": true,
+                  "reason": null,
+                  "alexander_determinant": 3,
+                  "trefoil_certificate_count": 8
+                },
+                {
+                  "variant": 3,
+                  "valid": true,
+                  "reason": null,
+                  "alexander_determinant": 3,
+                  "trefoil_certificate_count": 8
+                },
+                {
+                  "variant": 4,
+                  "valid": true,
+                  "reason": null,
+                  "alexander_determinant": 3,
+                  "trefoil_certificate_count": 8
+                }
+              ]
+            }
+          },
+          {
+            "time_s": 108.3,
+            "recorded_invalid": "nonlocal capsule penetration exceeds 5% diameter tolerance",
+            "topology": {
+              "status": "invalid",
+              "reason": "nonlocal_capsule_penetration",
+              "closures": []
+            }
+          }
+        ]
+      },
+      "policy_physics_schedule": {
+        "initial_physics_hz": 240,
+        "target_physics_hz": 960,
+        "control_hz": 20,
+        "switch_after_completed_actions": 1560,
+        "switch_capture_time_s": 78.0
+      },
+      "runtime_overrides": {
+        "policy_physics_schedule": {
+          "initial_physics_hz": 240,
+          "target_physics_hz": 960,
+          "control_hz": 20,
+          "switch_after_completed_actions": 1560,
+          "switch_capture_time_s": 78.0
+        }
+      },
+      "policy_physics_certificate": {
+        "schema": "fixed-policy-physics-v1",
+        "status": "complete",
+        "error": null,
+        "completed_actions": 2167,
+        "expected_control_intervals": 607,
+        "final_capture_time_s": 108.35,
+        "pending_interval": false,
+        "closed": true,
+        "native_status": "validated_intervals",
+        "validated_control_intervals": 607,
+        "substeps_per_action": 48,
+        "state_sha256_before": "5f418a29356753fd86a8fcfd397c76e3b259aa02665548ec4fb910e8da3bdec0",
+        "state_sha256_after": "5f418a29356753fd86a8fcfd397c76e3b259aa02665548ec4fb910e8da3bdec0",
+        "counters_before": {
+          "native": 18840,
+          "environment": 18840
+        },
+        "counters_after": {
+          "native": 18840,
+          "environment": 18840
+        },
+        "callback_removed": true,
+        "policy_actions_modified": false,
+        "external_force_path_called": false,
+        "independent_frozen_replay_validation_passed": true,
+        "scope": "The fixed switch and all recorded post-boundary intervals are validated through the last trajectory frame, including frames after scorer invalidity. This does not establish task feasibility."
+      },
+      "policy_execution": {
+        "status": "complete",
+        "cli_return_code": 0,
+        "errors": [],
+        "logs": [
+          {
+            "file": "adhoc_d10fb7e7.json",
+            "sha256": "3532e6e14547b40515afcfe32bc48b56d7f782eb0080c53d92db96b16dad396c",
+            "status": "success",
+            "error": null,
+            "errored_trials": 0,
+            "sample_errors": []
+          }
+        ]
+      },
+      "support_lowering_measurement": {
+        "label": "table support lowering measured",
+        "time_s": 81.0,
+        "privileged_demo_only": true,
+        "horizontal_error_m": 0.005496764,
+        "support_surface_height_range_m": [
+          0.013643098,
+          0.021058006
+        ],
+        "ready_to_open": true
+      },
+      "failure": {
+        "reason": "nonlocal capsule penetration exceeds 5% diameter tolerance",
+        "time_s": 108.3,
+        "controller_phase": "During right-only south staging, after both terminals were grasped and the red terminal lifted.",
+        "first_invalid_contact": {
+          "time_s": 108.3,
+          "pair": [
+            19,
+            27
+          ],
+          "axis_distance_m": 0.009389921,
+          "excess_above_allowed_overlap_m": 0.000110079
+        },
+        "final_contact": {
+          "time_s": 108.35,
+          "pair": [
+            19,
+            26
+          ],
+          "axis_distance_m": 0.009361055,
+          "excess_above_allowed_overlap_m": 0.000138945
+        },
+        "arch_lowering_attempted": true,
+        "support_placement_guard_passed": true,
+        "support_release_attempted": true,
+        "terminal_recovery_attempted": true,
+        "yellow_pickup_attempted": true,
+        "simultaneous_pull_attempted": false,
+        "final_release_attempted": false,
+        "recording_finalized_cleanly": true,
+        "policy_execution_errored": false,
+        "full_sequence_completed": false,
+        "first_invalid_polyline_contact": {
+          "pair": [
+            19,
+            26
+          ],
+          "axis_distance_m": 0.009389927,
+          "excess_above_allowance_m": 0.000110073
+        }
+      },
+      "terminal_grasp_witnesses": {
+        "yellow": {
+          "checks": 3,
+          "all_passed": true,
+          "first_time_s": 102.5,
+          "last_time_s": 106.5,
+          "scope": "Geometric pad containment and jaw opening only; not measured grasp force."
+        },
+        "red_recovery": {
+          "checks": 5,
+          "all_passed": true,
+          "first_time_s": 94.5,
+          "last_time_s": 106.5,
+          "scope": "Geometric pad containment and jaw opening only; not measured grasp force."
+        }
+      },
+      "both_terminal_grasps_confirmed_time_s": 102.5,
+      "outcome": "The support hand cleared, the red terminal was recovered, and both terminal grasp witnesses passed at 102.50 seconds. A held overhand candidate is independently confirmed from 103.35 through the last valid checked frame at 108.25 seconds. At 108.30 seconds actual capsule pair 19/27 exceeds the unchanged overlap allowance by 110.079 micrometres during right-only south staging. Execution and recording finalized normally after the controlled geometry stop. No simultaneous pull, qualifying span or final released retention was reached; independent replay confirms score zero."
     }
   },
-  "common_runtime_scope": "Common values apply unless explicitly overridden. Table 011 uses 480 Hz; tables 015/016 start 240 Hz and follow their recorded fixed schedule to 960 Hz."
+  "common_runtime_scope": "Common values apply unless explicitly overridden. Table 011 uses 480 Hz; tables 015\u2013017 start 240 Hz and follow their recorded fixed schedule to 960 Hz."
 }

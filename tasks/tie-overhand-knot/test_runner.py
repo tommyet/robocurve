@@ -80,8 +80,8 @@ class FakeTransition:
                        'requested_substeps': target_hz // 20, 'old_physics_hz': 240.,
                        'native_physics_dt_s': 1/target_hz, 'state_writes': False,
                        'counter_writes': False, 'state_sha256_before': 'test-only',
-                       'state_sha256_after': 'test-only', 'counters_before': {'native': 1},
-                       'counters_after': {'native': 1}, 'switch_capture_time_s': capture_time_s,
+                       'state_sha256_after': 'test-only', 'counters_before': {'native': 1, 'environment': 1},
+                       'counters_after': {'native': 1, 'environment': 1}, 'switch_capture_time_s': capture_time_s,
                        'intervals': []}
         self.pending = None
 
@@ -120,6 +120,11 @@ class FakeTransition:
         if self.pending is not None:
             self.fail(ValueError('unfinished interval'))
         self.report['callback_removed'] = True
+        counters = {key: value + self.report['validated_control_intervals'] * (self.target_hz//20)
+                    for key, value in self.report['counters_after'].items()}
+        self.report['closure'] = dict(schema='native-counter-closure-v1', complete=True,
+                                     callback_error=None, expected_counters=counters,
+                                     observed_counters=counters.copy())
 
     def save(self, path):
         path.write_text(json.dumps(self.report))

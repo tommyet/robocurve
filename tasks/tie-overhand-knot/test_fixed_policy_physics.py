@@ -44,6 +44,10 @@ class FakeTransition:
 
     def close(self):
         self.report['callback_removed'] = True
+        counters = dict(native=self.base.native_steps, environment=self.base.native_steps)
+        self.report['closure'] = dict(schema='native-counter-closure-v1', complete=True,
+                                     callback_error=None, expected_counters=counters,
+                                     observed_counters=counters.copy())
 
 
 def base():
@@ -168,6 +172,15 @@ class ScheduleTests(unittest.TestCase):
                 audit.transition.report['intervals'][0]['capture_time_s'] = 78.10
             with self.assertRaisesRegex(PolicyPhysicsError, 'certificate is incomplete'):
                 audit.close(78.10)
+
+    def test_v2_requires_native_shutdown_closure(self):
+        audit = FixedPolicyPhysics(base(), factory=FakeTransition)
+        advance(audit, 1561)
+        audit.transition.close = lambda: audit.transition.report.update(callback_removed=True)
+        with self.assertRaisesRegex(PolicyPhysicsError, 'final callback/counter closure'):
+            audit.close(78.05)
+        self.assertEqual(audit.report['schema'], 'fixed-policy-physics-v2')
+        self.assertEqual(audit.report['status'], 'failed')
 
     def test_failed_report_can_be_saved_after_cleanup(self):
         audit = FixedPolicyPhysics(base(), factory=FakeTransition)

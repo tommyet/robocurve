@@ -107,7 +107,52 @@ class SwitchTests(unittest.TestCase):
         self.assertTrue(all(row['native_substeps'] == 48 for row in self.switch.report['intervals']))
         self.switch.close()
         self.assertTrue(Backend.removed)
+        closure = self.switch.report['closure']
+        self.assertTrue(closure['complete'])
+        self.assertIsNone(closure['callback_error'])
+        self.assertEqual(closure['expected_counters'], closure['observed_counters'])
+        self.assertEqual(closure['observed_counters']['native'], counters[0]+3*48)
         self.assertFalse(self.switch.report['diagnostic_only'])
+
+    def test_callback_after_last_interval_fails_closed(self):
+        self.switch.start()
+        self.switch.before_step(93.3, 0)
+        self.base.advance()
+        self.switch.after_step(93.35, 1)
+        self.switch._callback(1/960)  # No following after_step() to catch this.
+        self.switch.close()
+        self.assertEqual(self.switch.report['status'], 'failed')
+        self.assertIn('outside an audited interval', self.switch.report['closure']['callback_error'])
+        self.assertFalse(self.switch.report['closure']['complete'])
+        self.assertTrue(Backend.removed)
+
+    def test_unobserved_counter_advance_after_last_interval_fails_closed(self):
+        self.switch.start()
+        self.switch.before_step(93.3, 0)
+        self.base.advance()
+        self.switch.after_step(93.35, 1)
+        self.base.native_counter += 1
+        self.base._sim_step_counter += 1
+        self.switch.close()
+        self.assertEqual(self.switch.report['status'], 'failed')
+        closure = self.switch.report['closure']
+        self.assertFalse(closure['complete'])
+        self.assertEqual(closure['observed_counters']['native'] - closure['expected_counters']['native'], 1)
+        self.assertTrue(Backend.removed)
+
+    def test_counter_jump_between_intervals_cannot_hide_in_a_later_baseline(self):
+        self.switch.start()
+        self.switch.before_step(93.3, 0)
+        self.base.advance()
+        self.switch.after_step(93.35, 1)
+        self.base.native_counter += 1
+        self.base._sim_step_counter += 1
+        self.switch.before_step(93.35, 1)
+        self.base.advance()
+        self.switch.after_step(93.4, 2)
+        self.switch.close()
+        self.assertEqual(self.switch.report['status'], 'failed')
+        self.assertIn('outside completed audited intervals', self.switch.report['error'])
 
     def test_diagnostic_flag_is_explicit_and_does_not_relax_guards(self):
         base = Base()

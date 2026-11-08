@@ -127,6 +127,13 @@ close(final_capture_time_s) before destroying the simulation, then save().
                 self.expected_intervals = max(0, end_step - SCHEDULE['switch_after_completed_actions'])
                 if self.expected_intervals:
                     report = self.transition.report if self.transition is not None else {}
+                    closure = report.get('closure') or {}
+                    if (closure.get('schema') != 'native-counter-closure-v1'
+                            or closure.get('complete') is not True
+                            or 'callback_error' not in closure or closure['callback_error'] is not None
+                            or closure.get('expected_counters') != closure.get('observed_counters')
+                            or not closure.get('observed_counters')):
+                        raise ValueError('Policy native final callback/counter closure is incomplete')
                     intervals = report.get('intervals', [])
                     if (report.get('status') != 'validated_intervals' or report.get('error')
                             or report.get('validated_control_intervals') != self.expected_intervals
@@ -155,7 +162,7 @@ close(final_capture_time_s) before destroying the simulation, then save().
                   'complete' if self.closed and self.transition is not None else
                   'not_reached' if self.closed else 'in_progress')
         return {
-            'schema': 'fixed-policy-physics-v1',
+            'schema': 'fixed-policy-physics-v2',
             'schedule': deepcopy(SCHEDULE),
             'status': status,
             'error': self.failure,

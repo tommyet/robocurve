@@ -19,7 +19,7 @@ def _near(actual, expected, tolerance=1e-8):
     return math.isfinite(float(actual)) and math.isclose(float(actual), float(expected), rel_tol=0, abs_tol=tolerance)
 
 
-def _validate_native_intervals(certificate, *, hz, start, count):
+def _validate_native_intervals(certificate, *, hz, start, count, require_closure=False):
     """Validate recorded native steps, preserved state and fresh observations."""
     if not isinstance(certificate, dict):
         raise ValueError('native transition certificate is missing')
@@ -66,6 +66,20 @@ def _validate_native_intervals(certificate, *, hz, start, count):
                     or np.any(updated != stamp) or np.any(np.abs(stamp - expected) > tolerance)):
                 raise ValueError('native interval lacks one fresh camera frame')
 
+    if require_closure or 'closure' in certificate:
+        closure = certificate.get('closure')
+        if (not isinstance(closure, dict) or closure.get('schema') != 'native-counter-closure-v1'
+                or closure.get('complete') is not True or 'callback_error' not in closure
+                or closure['callback_error'] is not None):
+            raise ValueError('native final callback/counter closure is missing or failed')
+        before = certificate['counters_after']
+        if (set(before) != {'native', 'environment'}
+                or any(type(value) is not int or value < 0 for value in before.values())):
+            raise ValueError('native initial counters are invalid')
+        expected = {key: before[key] + count * substeps for key in before}
+        if closure.get('expected_counters') != expected or closure.get('observed_counters') != expected:
+            raise ValueError('native final counters do not cover exactly the audited intervals')
+
 
 def _validate_transition(result, config, certificate):
     """Reject missing/inconsistent legacy assessor evidence."""
@@ -85,11 +99,11 @@ def _validate_transition(result, config, certificate):
     _validate_native_intervals(certificate, hz=hz, start=start, count=count)
 
 
-def _validate_policy_transition(trajectory, config, certificate):
+def _validate_policy_transition(trajectory, config, certificate, *, max_steps=None):
     """Check the complete trajectory clock, including samples after invalidity."""
     from fixed_policy_physics import SCHEDULE, validate_schedule
     validate_schedule(config['policy_physics_schedule'], config['physics_hz'])
-    if not isinstance(certificate, dict) or certificate.get('schema') != 'fixed-policy-physics-v1':
+    if not isinstance(certificate, dict) or certificate.get('schema') not in ('fixed-policy-physics-v1', 'fixed-policy-physics-v2'):
         raise ValueError('policy physics certificate is missing or has an unsupported schema')
     if certificate.get('schedule') != SCHEDULE or certificate.get('error'):
         raise ValueError('policy physics schedule failed or differs from the recorded task')
@@ -107,6 +121,12 @@ def _validate_policy_transition(trajectory, config, certificate):
                 raise ValueError('trajectory lacks contiguous ordinary 20 Hz policy samples')
     if actions < 0:
         raise ValueError('trajectory is empty')
+    limit = config.get('run_limit')
+    if type(limit) is not int or limit <= 0 or actions > limit:
+        raise ValueError('trajectory exceeds or lacks the recorded task action limit')
+    if max_steps is not None and (type(max_steps) is not int or max_steps <= 0
+                                  or max_steps > limit or actions > max_steps):
+        raise ValueError('trajectory exceeds or has invalid recorded max_steps')
     count = max(0, actions - SCHEDULE['switch_after_completed_actions'])
     if (certificate.get('completed_actions') != actions
             or certificate.get('expected_control_intervals') != count
@@ -117,9 +137,13 @@ def _validate_policy_transition(trajectory, config, certificate):
             raise ValueError('policy physics transition is not complete')
         _validate_native_intervals(certificate.get('native_transition'),
                                    hz=SCHEDULE['target_physics_hz'],
-                                   start=SCHEDULE['switch_capture_time_s'], count=count)
+                                   start=SCHEDULE['switch_capture_time_s'], count=count,
+                                   require_closure=certificate['schema'] == 'fixed-policy-physics-v2')
     elif certificate.get('status') != 'not_reached' or certificate.get('native_transition') is not None:
         raise ValueError('policy physics transition occurred before its fixed boundary')
+    closure_recorded = bool(count and 'closure' in certificate['native_transition'])
+    return dict(schema=certificate['schema'], native_closure_status=(
+        'verified' if closure_recorded else 'not_reached' if not count else 'legacy_not_recorded'))
 
 
 def certify_result(result, config, certificate=None, *, finalization_complete=None, evidence_errors=()):
@@ -150,6 +174,30 @@ def certify_result(result, config, certificate=None, *, finalization_complete=No
     return result
 
 
+
+def _validate_execution_record(execution):
+    """Check the runner's independently collected Inspect outcome summary."""
+    if not isinstance(execution, dict) or execution.get('status') != 'complete':
+        raise ValueError('successful policy execution record is missing')
+    code = execution.get('cli_return_code')
+    if ('cli_return_code' not in execution or
+            (code is not None and (type(code) is not int or code != 0)) or execution.get('errors') != []):
+        raise ValueError('policy execution reports errors or a failed CLI result')
+    logs = execution.get('logs')
+    if not isinstance(logs, list) or len(logs) != 1:
+        raise ValueError('policy execution lacks exactly one Inspect log summary')
+    log = logs[0]
+    if (not isinstance(log, dict) or log.get('status') != 'success'
+            or 'error' not in log or log['error'] is not None
+            or log.get('errored_trials') != 0 or log.get('sample_errors') != []):
+        raise ValueError('Inspect log summary does not establish successful execution')
+    digest = log.get('sha256')
+    if (not isinstance(log.get('file'), str) or not log['file']
+            or not isinstance(digest, str) or len(digest) != 64
+            or any(char not in '0123456789abcdef' for char in digest)):
+        raise ValueError('Inspect log summary lacks its source filename or hash')
+
+
 def replay_trial(trajectory, runtime=None):
     """Load immutable trial artifacts; never trust their previously reported score."""
     trajectory = Path(trajectory)
@@ -170,26 +218,54 @@ def replay_trial(trajectory, runtime=None):
         except (OSError, ValueError, AttributeError):
             completed = False
         errors = []
+        policy_details = None
         scheduled = config.get('policy_physics_schedule') is not None
         if scheduled:
             try:
                 certificate = json.loads((trajectory.parent / 'policy-physics-transition.json').read_text())
-                _validate_policy_transition(trajectory, config, certificate)
+                max_steps = metadata['max_steps']
+                if type(max_steps) is not int or max_steps <= 0:
+                    raise ValueError('scheduled trial lacks valid recorded max_steps')
+                policy_details = _validate_policy_transition(trajectory, config, certificate, max_steps=max_steps)
             except (OSError, EOFError, KeyError, ValueError, TypeError, ArithmeticError, IndexError, AttributeError) as exc:
                 errors.append(str(exc))
         result = certify_bimanual(result, finalization_complete=completed and not errors)
         result['policy_physics_certification'] = dict(
             required=scheduled, status='incomplete' if errors else 'complete' if scheduled else 'not_required',
             errors=errors)
+        if policy_details is not None:
+            result['policy_physics_certification'].update(policy_details)
+            if policy_details['native_closure_status'] == 'legacy_not_recorded':
+                result['policy_physics_certification']['limitation'] = (
+                    'Version 1 did not record final callback/counter closure; '
+                    'the final shutdown interval is not independently certified.')
         if errors:
             result['score'] = 0.
             result['status'] = 'policy physics evidence is incomplete'
         execution = metadata.get('execution')
-        if execution is not None:
-            result['execution'] = execution
+        if policy_details is not None:
+            required = policy_details['schema'] == 'fixed-policy-physics-v2'
+            execution_audit = dict(required=required, status='complete', errors=[])
+            if execution is None and not required:
+                execution_audit.update(status='legacy_not_recorded', limitation=(
+                    'Version 1 may lack the Inspect execution record; orderly recording '
+                    'finalization alone does not establish successful policy execution.'))
+            else:
+                try:
+                    _validate_execution_record(execution)
+                except (ValueError, TypeError, AttributeError) as exc:
+                    execution_audit.update(status='incomplete', errors=[str(exc)])
+                    result['score'] = 0.
+                    result['status'] = 'recorded policy execution failed or is uncertified'
+            result['execution_certification'] = execution_audit
+        elif execution is not None:
+            # Preserve unscheduled v4 compatibility; new scheduled evidence
+            # uses the explicit versioned execution-record contract above.
             if not isinstance(execution, dict) or execution.get('status') != 'complete':
                 result['score'] = 0.
                 result['status'] = 'recorded policy execution failed'
+        if execution is not None:
+            result['execution'] = execution
         return result
     result = replay_file(trajectory, config)
     evidence, errors = {}, []
