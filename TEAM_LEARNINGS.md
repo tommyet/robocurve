@@ -169,6 +169,71 @@ result or measure outcome fairness.
 
 ## Dated session log
 
+### 2026-11-08 — Safari login restored; smaller Brev VM runs rope pilots
+
+- Operator: repository agent; development branch `codex/rope-bimanual`. After
+  the user signed into Safari, authenticated CLI/API access worked. The
+  original `g6e.2xlarge` and a `g6e.4xlarge` retry both failed with
+  `CAPACITY_UNAVAILABLE`. Resizing the existing VM to **g6e.xlarge** succeeded:
+  RUNNING/HEALTHY at **06:14:39 UTC**, with the retained installation intact.
+  Same L40S GPU and 256 GiB disk; 32 GiB RAM / four vCPUs. No reset or new VM.
+  This resolved today's capacity shortage; it does not reserve capacity for
+  future starts. Check actual lifecycle status and per-size price each session.
+- Fresh running rate: **$2.729872/hour** ($2.682 compute plus $0.047872
+  storage). This supersedes the old-size planning rate for this configuration.
+  The first two pilots took 253.36 and 274.217 seconds of runner wall time,
+  about $0.19 and $0.21 respectively; these exclude idle/setup/shutdown time.
+  Posted credits at 06:48:24 UTC were $168.75 and lag actual usage.
+- `loop-001` and `loop-002` retained both terminal grasps and formed a crossing,
+  but the standing strand stayed on the table. Raising the left end did not
+  lift the loop rim. The crossing search also missed material migrating into
+  the original bend; it now searches all interior nonadjacent segments.
+- `loop-003` used a wider U with the same length/material: 24 straight links,
+  56 semicircle links, 24 straight, 44.57 cm width. The crossing survived but
+  the loop collapsed to a 30.7 mm inscribed opening. A fixed ±6-segment
+  reference check rejected ordinary continuous sliding. The pilot now reports
+  the settled largest bight and material drift without claiming continuity.
+- `loop-004` gripped standing material 30, aligned to its measured tangent,
+  while retaining red-end material 101. Both grasps held, but the working
+  hand passed beside the relocated standing strand and no crossing formed.
+  A fifth probe lifted left to (0.30,0.33,1.12) and moved right to
+  (0.26,0.22,0.90). It formed a crossing at materials64.69/90.91; the standing
+  strand remained on the table because the crossing migrated far from the
+  held material30. All five trials scored0.0, with valid initial uncrossed
+  geometry and clean finalization. Independent replay agrees. No full knot
+  exists yet. The current robot controller stops after this measured probe.
+- Final loop005 enclosed 32.75 cm of centreline; projected extent5.72×13.86 cm,
+  largest sampled free-disk diameter4.13 cm. Under the standing crossing there
+  was only0.60 mm table clearance. The held standing material was42.75 cm
+  from the crossing. This explains why another single-strand lift is not a
+  demonstrated solution. A proposed next method is to physically pinch both
+  crossing strands, then pass only the tip using release/regrasp; capture,
+  threading and final terminal reacquisition remain unvalidated.
+- Task code/evidence commit `f98a984`; all94 local tests passed. Current scene,
+  controller, scorer and runner hashes match loop005. Historical v3 final
+  trials are explicitly separated from v4 incomplete status in VALIDATION.
+  No Dream API calls, media uploads or upstream PR were made.
+- Numeric pilot evidence and source/trajectory/video hashes are in
+  `tasks/tie-overhand-knot/evidence/bimanual-pilots.json`; full actions,
+  trajectories, source snapshots and videos are local under ignored
+  `artifacts/rope-knot-bimanual/loop-00*/`. Raw camera arrays remain on the VM.
+  The new terminal-grasp trials' sampled peak native linear velocity was
+  0.374 m/s, rather than the old v3 handover spike. This does not validate
+  unseen between-sample contacts or later threading.
+- Lifecycle evidence is in ignored
+  `artifacts/rope-knot-bimanual/retry-20261108-0552/`. `inspect-robots` is the
+  retained background service and was not a competing GPU trial. Current
+  stop was requested at07:04:54 UTC after verifying no GPU jobs and downloading
+  all five trials. **STOPPED confirmed at07:13:26 UTC**, with no operation in
+  progress. Same VM and installation retained; no resources deleted.
+- Successful start request06:13:13 through confirmed stop07:13:26 is60m13s.
+  At the observed rate, the complete session conservatively estimates
+  **$2.74**, including startup, idle/review and shutdown. The five runners
+  total1,318.995s, approximately **$1.00**; do not add this to the session
+  total. Later retained storage and failed-start attribution are outside this
+  estimate. Posted credits were **$167.39** at07:13:26; billing lag means the
+  posted change is not the session invoice.
+
 ### 2026-11-08 — Brev retry and startup diagnosis
 
 - The user requested another start for the revised knot demo. The CLI accepted
