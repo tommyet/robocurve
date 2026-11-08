@@ -1,8 +1,8 @@
 # Tie an overhand knot
 
 **The first full demo scores 1.0 in independent replay.** Trial 020 completes
-the task in 138.30 seconds. The matching Dream run is in progress; submission
-is still pending.
+the task in 138.30 seconds. The matching Dream run scores 0.0, but repeated
+server-session expirations limit its value as a baseline. Submission is pending.
 
 Tie one overhand knot in the blue cord. Pull its ends at least 117 cm apart
 for one second with the whole cord at least 1 cm above the table. Let go and
@@ -40,6 +40,7 @@ both the demo and Dream:
 python run.py --policy loop --physics-hz 240 --max-steps 1000 --log-dir /tmp/rope-arch-001
 python run.py --policy thread --physics-hz 240 --max-steps 2000 --log-dir /tmp/rope-feed-001
 python run.py --policy demo --physics-hz 240 --max-steps 3000 --log-dir /tmp/rope-demo-001
+python run.py --policy dream --physics-hz 240 --max-steps 3000 --log-dir /tmp/rope-dream-001
 python replay.py /tmp/rope-arch-001/trajectory.jsonl
 python -m unittest discover -s . -p 'test_*.py'
 ```
@@ -56,9 +57,10 @@ attempts the whole sequence. The default seed is 0 and the starting layout is
 fixed. The current sequence takes 137–140 simulated seconds, depending on how far
 the final pull must extend, plus the final recording tick. The limit is 3,000
 actions at 20 Hz (150 seconds). The successful demo stops when full score is
-reached at 138.30 seconds; the simulator runner reports 29.3 wall-clock minutes.
-A matching Dream run must use the same final source, seed, scene, cameras,
-action limit and scorer. There are no evaluator actions after the episode.
+reached at 138.30 seconds. On an NVIDIA L40S with 48 GB VRAM, the simulator
+runner took 29.3 wall-clock minutes for the demo and 26.2 minutes for Dream.
+The final pair uses the same frozen source, seed, scene, cameras, action limit
+and scorer. There are no evaluator actions after the episode.
 
 Each run saves its exact source, configuration, package versions, actions,
 measured cord and robot geometry, setup images and review video. The review
@@ -110,10 +112,10 @@ contact offset and zero rest offset; allowed penetration is 5% of the diameter.
 
 The fixed 240→960 Hz physics schedule applies equally to demo and Dream,
 with 20 Hz control throughout. It adds no actions or external forces. Trial 020
-validated unchanged state/counters, 48 native substeps per action across 1,206
-post-switch intervals, and version-2 final callback/counter closure through
-138.30 seconds. Historical trials
-retain their recorded settings and scorer.
+validated unchanged state/counters and 48 native substeps per action across
+1,206 post-switch intervals; Dream validated 1,440 intervals. Both pass version-2
+final callback/counter closure. Historical trials retain their recorded settings
+and scorer.
 
 The scorer checks each recorded 20 Hz frame for rope continuity, nonlocal
 penetration, topology, span and release. It cannot establish physical fidelity
@@ -121,7 +123,7 @@ between samples. Topological ambiguity earns no credit. Synthetic test cases
 verify the scorer, not robot feasibility.
 
 [The table-pilot evidence](evidence/table-pilots.json) preserves nineteen failed
-pilots and the successful trial 020. Its suspended span qualifies from
+pilots, successful demo 020 and matching Dream evaluation 021. Demo 020's suspended span qualifies from
 130.75–131.75 seconds; released-knot retention runs from 133.30–138.30 seconds.
 Both grasps remain held until intentional opening. All 2,767 recorded robot
 poses pass the arm/table mesh audit, and twelve key frames were visually
@@ -130,11 +132,18 @@ intersections. The closest recorded rope-axis separation is 9.509743 mm against 
 9.5 mm limit, a narrow margin. One fixed-seed success does not establish
 repeatability. The full 142-test CPU suite also passes.
 
+Dream completes all 3,000 actions and remains an unknot in every recorded frame.
+Frozen and current independent replay both score it 0.0. All 3,001 robot poses
+pass the mesh audits, and six key frames were reviewed. The SDK logs 61 session
+expirations across 62 successful inference chunks: each replacement restarts
+the server-side episode and resets client smoothing. This confounds the baseline;
+the zero score cannot be attributed to task difficulty alone.
+
 [VALIDATION.json](VALIDATION.json) separates current evidence from the five
 older high-lift pilots and historical v3 jig trials. The old jig demo's native
-velocity spike remains unresolved. Submission still needs the matching Dream
-result, independent replay and review of that run, and final submission checks. Raw trials
-remain outside Git. No media upload or upstream PR has been made for this task.
+velocity spike remains unresolved. Submission still needs a decision on the
+Dream session limitation and final submission checks. Raw trials remain outside
+Git. No media upload or upstream PR has been made for this task.
 
 ## Review lessons
 

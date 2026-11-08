@@ -1,5 +1,5 @@
 {
-  "scope": "Twenty completed table-supported trials: nineteen score zero; trial 020 independently demonstrates the full task at score 1.0. Matching current-source Dream trial 021 is running.",
+  "scope": "Twenty-one completed table-scene trials: nineteen development failures, successful full demo 020 at 1.0, and matching Dream evaluation 021 at 0.0. Dream session expirations confound its baseline interpretation.",
   "numeric_precision": "Measured values are rounded to 9 decimal places; artifact hashes identify the original full-precision data.",
   "measurement_limits": [
     "Top-view crossings and tip position do not prove under/over passage or knot topology.",
@@ -7586,7 +7586,7 @@
         "planned_final_wait_fully_elapsed": false,
         "interpretation": "All required task windows finish before the 150-second limit. The environment ends at full score during the controller\u2019s planned final settling wait; a later controller event is unnecessary for the completed five-second retention."
       },
-      "outcome": "First complete current table-method demo: both hands retain the ends through gradual closure, simultaneous lifting and pulling; the measured span qualifies for one second, and the released overhand remains for five seconds. Recorded and frozen replay scores are 1.0 with valid recorded geometry, complete version-2 execution/physics audits, all-frame robot mesh checks and twelve-frame visual review. The matching Dream run is pending.",
+      "outcome": "First complete current table-method demo: both hands retain the ends through gradual closure, simultaneous lifting and pulling; the measured span qualifies for one second, and the released overhand remains for five seconds. Recorded and frozen replay scores are 1.0 with valid recorded geometry, complete version-2 execution/physics audits, all-frame robot mesh checks and twelve-frame visual review. Matching Dream trial 021 completes at 0.0, with repeated server-side session expiration disclosed separately.",
       "limitations": [
         "One fixed-seed demo does not establish repeatability or calibrated rope dynamics.",
         "Minimum actual capsule-axis margin above the declared contact limit is 9.743 micrometres at 109.05 seconds; 20 Hz samples do not establish between-frame geometry.",
@@ -7753,6 +7753,731 @@
         "intersections": [],
         "report_file": "actual-own-arm-clearance-full.json"
       }
+    },
+    "table-021": {
+      "policy": "dream",
+      "seed": 0,
+      "max_steps": 3000,
+      "scene_run_limit_actions": 3000,
+      "score": 0.0,
+      "samples": 3001,
+      "actions": 3000,
+      "time_s": 150.0,
+      "last_valid_metric_time_s": 150.0,
+      "invalid": null,
+      "initial_validated": true,
+      "initial_reason": "uncrossed top view and unknot certificate",
+      "topology_status": "unknot",
+      "finalization": {
+        "complete": true,
+        "errors": [],
+        "interrupted_by": null
+      },
+      "elapsed_wall_seconds": 1573.375,
+      "elapsed_wall_seconds_basis": "runtime.json simulator-runner elapsed wall time",
+      "outer_execution": {
+        "trial": "table-021",
+        "started_at_utc": "2026-11-08T13:13:59.998620+00:00",
+        "finished_at_utc": "2026-11-08T13:40:14.792808+00:00",
+        "wall_seconds": 1574.794195241,
+        "return_code": 0,
+        "scope": "Serial wrapper start to finish; run-only elapsed-cost basis, excluding earlier setup, idle time and later VM shutdown."
+      },
+      "replay": {
+        "score": 0.0,
+        "current_score": 0.0,
+        "compared_fields": [
+          "score",
+          "candidate_score",
+          "invalid",
+          "initial_validated",
+          "initial_reason",
+          "topology_status",
+          "samples",
+          "time"
+        ],
+        "matches_recorded": true,
+        "finalization_complete": true,
+        "policy_physics_certification": {
+          "required": true,
+          "status": "complete",
+          "errors": [],
+          "schema": "fixed-policy-physics-v2",
+          "native_closure_status": "verified"
+        },
+        "execution_certification": {
+          "required": true,
+          "status": "complete",
+          "errors": []
+        }
+      },
+      "source_sha256": {
+        "assay_physics.py": "4455f6ec6fe8c61ea7d1e66cdbc10a56ae928f91337bcaa23de630d391b008e1",
+        "bimanual_policy.py": "b374b20782717f0f15b9ff07bbcd6920542e7e9247703931400005f0350c8127",
+        "bimanual_scoring.py": "278b126c734b9867cacf3e5779aa210b0f7a1162f6a9e8cf4772020929269fb5",
+        "config.py": "d2c55f0162322740d2bac19dc12fe4709ab283e28364902e6c4065b5779555b0",
+        "demo_policy.py": "69edf1f5d0df691c499be324489cc6c677618dd8dec90e00dbb0118428fe9546",
+        "diagnostic_layouts.py": "b87524a85ecbeeb18c97d1170459338e9c9f05232e923eb8f29d68f577d93a06",
+        "fixed_policy_physics.py": "c60c6b55b758653ca3deb16a6fb6d8a879c7f0c33737314f35012b437a8c3c62",
+        "fixtures.py": "d30eb72c85d49cb91a01605e6bef26860c595d7d77aba79faeea1cd3924a3e60",
+        "hand_geometry.py": "5eb44a5b09551bb738a7a42aa0322566213b7170806290886c6e13b3ccf44a10",
+        "jig_layout.py": "8c6645f3c465e3f946336a8de2e51593a461d5fbefa5cf5cd8740b7520a7ee16",
+        "jig_policy.py": "ad22bd0c1559ad7b3a7b4401e297ad001cd50b4c16e7bc8f3ec24173a35b8311",
+        "proof_load.py": "0e7339480dbd059befcb1b57616991e6086aa2e9d02839b5259b8d87ac5b428b",
+        "render_review.py": "d87ff2e0215ac36c6298e23669ef49bfc90ed21996b897a26610703ac4cccaf6",
+        "replay.py": "beba1636888d382b4bb83b728d6f6dad1760e11f8579924e7ff311c4885558bc",
+        "rope.py": "4783ebd97f3f0afe9c70b3fbec2592bd0a7311e4f7e36c43353d0d81d19ab692",
+        "run.py": "6acee3f1110b766e6fadb58a703bfad78000eef631c4c92973cf428744105be5",
+        "scoring.py": "9a3519561f15b83880c138eb7beedf866d9de21db247205257cf7c895d5f5c78",
+        "table_policy.py": "0f33a9a3a1cf048bba9c7785301ec3b3a9b7bce3f10d884c836057c487c61ef9",
+        "task.py": "ac5174aa5eed3bf7cd0b7b1df9ebd1c647afa3f29a7a081b24dc06484c11e031",
+        "telemetry.py": "fb64df7679298e5bacaa27f69d25ecb0f59d07f6b95859799a164071518854fa",
+        "topology.py": "21057280e6d69123019e432d2b50934e97b5f5131349186541215755f99a5ff2",
+        "visuals.py": "a7e8b4b040c526093570b3a295e9eea28a7192dbd33ae0db6dd1f7293c4ac819"
+      },
+      "source_snapshot_matches_runtime": true,
+      "current_source_differences": [
+        {
+          "file": "visuals.py",
+          "frozen_sha256": "a7e8b4b040c526093570b3a295e9eea28a7192dbd33ae0db6dd1f7293c4ac819",
+          "current_sha256": "cadb779772c1e6ca946113be7be99715d6ab27e41b4dc6383fcc9a29611eb5bd",
+          "python_ast_equal": true
+        }
+      ],
+      "matching_demo": {
+        "trial": "table-020",
+        "frozen_archive_sha256": "52616cbbfe6ceda7b3de4a7fbde0cdbe9d8806f6e2646bb3163903b58a0a9536",
+        "source_and_runtime_equivalence": {
+          "seed": true,
+          "max_steps": true,
+          "control_hz": true,
+          "score_version": true,
+          "packages": true,
+          "policy_physics_schedule": true,
+          "task_config": true,
+          "action_limits": true,
+          "frozen_source_sha256": true,
+          "archive_sha256": true
+        },
+        "record_configuration_equivalence": {
+          "task": true,
+          "seed": true,
+          "max_steps": true,
+          "max_seconds": true,
+          "embodiment": true,
+          "guard": true,
+          "trial_seed": true,
+          "scene": true,
+          "rubrics": true
+        },
+        "camera_equivalence": {
+          "review_camera_matches": true,
+          "review_reference_geometry_matches": true,
+          "review_camera_not_sent_to_dream": true,
+          "policy_resolution_from_identical_frozen_runner": [
+            320,
+            176
+          ],
+          "policy_cameras_from_shared_adapter": [
+            "top_cam",
+            "left_cam",
+            "right_cam"
+          ],
+          "basis": "Identical frozen run.py and task files, SDK package versions, and retained scene configuration; policy dimensions are fixed in the runner. Review-camera geometry/metadata also matches. This does not claim identical later image content under different actions."
+        },
+        "initial_native_cord_state_matches": true,
+        "initial_native_robot_state_matches": true
+      },
+      "artifact_sha256": {
+        "trajectory.jsonl": "5db22ae1ce5132799247b826fa5bf86362cf416fe675b549a41204bc403827e4",
+        "runtime.json": "eb00db2118089f30544562dafe1f8f36f733fc6e45e6ea84eb4786c966b2ccc0",
+        "score-summary.json": "00dd0318f8202a2784c9f316eb12c4e701bd39290f6449cd37a1e89502971cab",
+        "replay-summary.json": "0223293166ddec4426adc083616ced98b0805471c99845c1863d877ca59b8c90",
+        "replay-current-summary.json": "0223293166ddec4426adc083616ced98b0805471c99845c1863d877ca59b8c90",
+        "policy-physics-transition.json": "6074bbf01cf114a4bff9adf8d4649a99e5f001c06c9aecedfea946eac7895157",
+        "review.mp4": "cd148f283c524053c22bd528bb596a1e9c7bcc9ac2a01ed84246ad2a73e8e297",
+        "matching-dream-audit.json": "4270f78357b83499f9351d6556a9ca144aa93b2a53813150712f22f7e82cec45",
+        "cord-motion-audit.json": "b43d2617ed3e4e02fbd598a649ea2465463b53c4265f72c08d2d6b9102da2550"
+      },
+      "recording": {
+        "frames": 3001,
+        "fps": 20,
+        "frame_count_matches_trajectory": true,
+        "visual_review_performed_for_this_summary": true,
+        "visual_review": {
+          "method": "Six chronological full-frame views extracted from the original review video.",
+          "frames_s": [
+            0,
+            30,
+            60,
+            90,
+            120,
+            150
+          ],
+          "contact_sheet_sha256": "00e1b766dbd462b4d9528732c3931da5e29bb6e2590183eab02e3f21788bf629",
+          "findings": "Robot arms change pose and approach the cord; the cord remains in an untied U in the reviewed frames, including the final frame. No identifying text. Continuous outcome comes from independently replayed geometry."
+        }
+      },
+      "policy_execution": {
+        "status": "complete",
+        "cli_return_code": 0,
+        "errors": [],
+        "logs": [
+          {
+            "file": "adhoc_96527943.json",
+            "sha256": "2954a421d33a7f68dd40b86af253992aa525f1165646a8cbec9a17266e92393e",
+            "status": "success",
+            "error": null,
+            "errored_trials": 0,
+            "sample_errors": []
+          }
+        ]
+      },
+      "policy_physics_schedule": {
+        "initial_physics_hz": 240,
+        "target_physics_hz": 960,
+        "control_hz": 20,
+        "switch_after_completed_actions": 1560,
+        "switch_capture_time_s": 78.0
+      },
+      "policy_physics_certificate": {
+        "schema": "fixed-policy-physics-v2",
+        "status": "complete",
+        "error": null,
+        "completed_actions": 3000,
+        "expected_control_intervals": 1440,
+        "final_capture_time_s": 150.0,
+        "pending_interval": false,
+        "closed": true,
+        "policy_actions_modified": false,
+        "external_force_path_called": false,
+        "validated_control_intervals": 1440,
+        "state_sha256_before": "ff1080773acf12f31c25dbfaa14fac35ecb01b51904f04f4389a08a4bacebc5e",
+        "state_sha256_after": "ff1080773acf12f31c25dbfaa14fac35ecb01b51904f04f4389a08a4bacebc5e",
+        "counters_before": {
+          "native": 18840,
+          "environment": 18840
+        },
+        "counters_after": {
+          "native": 18840,
+          "environment": 18840
+        },
+        "callback_removed": true,
+        "closure": {
+          "schema": "native-counter-closure-v1",
+          "complete": true,
+          "callback_error": null,
+          "expected_counters": {
+            "native": 87960,
+            "environment": 87960
+          },
+          "observed_counters": {
+            "native": 87960,
+            "environment": 87960
+          }
+        },
+        "substeps_per_action": 48,
+        "native_status": "validated_intervals",
+        "independent_frozen_and_current_replay_validation_passed": true
+      },
+      "dream_transport": {
+        "model": "dreamlabs/dream-1-beta",
+        "dry_run": false,
+        "transport_runtime": "direct",
+        "direct_default_session": true,
+        "control_hz": 20.0,
+        "rows_per_request": 48,
+        "requests": 62,
+        "attempts": 123,
+        "retries": 61,
+        "distinct_sessions": 62,
+        "prediction_rows": 2976,
+        "prediction_rows_beyond_limits": 0,
+        "sum_request_rtt_seconds": 22.881682885,
+        "sum_inference_milliseconds": 16620,
+        "scope": "SDK transcript counts. Unused prediction rows may be included; actual executed action bounds are audited separately. No session identifiers or credentials are reproduced.",
+        "retry_reason_counts": {
+          "expired": 61
+        },
+        "console_sha256": "20633b37f9981a6bf21e155df30fc8934ee703594cb473b7ce1ffd51fc06114f",
+        "baseline_limitation": "Every successful chunk used a distinct server session. The SDK reports a server-side episode restart and resets its smoother on DreamSessionExpired, then automatically retries the current observation. The recorded 0.0 is a real completed evaluation but is confounded by repeated loss of session continuity; it is not a clean uninterrupted baseline. The cause of expiration is not established.",
+        "uninterrupted_session": false,
+        "sdk_source_basis": {
+          "dream/client.py": "34a057d00b8d91e221edf42d84a5d34dc4cf95951b8fb2c21a2ac33cc7e052a2",
+          "inspect_robots_dream/session.py": "e79ff8c14d658ba8d239bbd2892624d492b8648656c9cf063ddc031a45c6713c"
+        }
+      },
+      "executed_action_audit": {
+        "executed_actions": 3000,
+        "finite": true,
+        "range_violations": 0,
+        "step_limit_violations": 0,
+        "maximum_absolute_step_per_dimension": [
+          0.024329137,
+          0.02971302,
+          0.028316234,
+          0.031062512,
+          0.039432606,
+          0.033451533,
+          0.057834865,
+          0.023757283,
+          0.057216928,
+          0.041398086,
+          0.030045848,
+          0.026538868,
+          0.043323594,
+          0.155610992
+        ],
+        "action_file_sha256": "d9261dbf82cce48a396dd5b0995af095bc955e50e7b9c97ccbc4f1c5a484db31"
+      },
+      "topology_history": {
+        "recorded_status_frame_counts": {
+          "unknot": 3001
+        },
+        "ever_valid_overhand_candidate": false,
+        "span_certificate": null,
+        "final_release_seconds": 0.0
+      },
+      "measured_cord_motion": {
+        "scope": "Every recorded 20 Hz sample; corresponding material capsule centres compared with their own initial positions. This includes gravity settling and does not prove absence of microscopic contact.",
+        "frames": 3001,
+        "maximum_material_centre_displacement_m": 0.02182282,
+        "maximum_time_s": 150.0,
+        "maximum_material_index": 103,
+        "maximum_xy_displacement_m": 0.02182282,
+        "maximum_xy_time_s": 150.0,
+        "maximum_xy_material_index": 103,
+        "maximum_centre_vertical_change_m": 8.94e-07,
+        "maximum_final_centre_displacement_m": 0.02182282,
+        "maximum_cord_surface_height_above_table_m": 0.010000086,
+        "max_linear_speed_m_s": 0.017898687,
+        "trajectory_sha256": "5db22ae1ce5132799247b826fa5bf86362cf416fe675b549a41204bc403827e4"
+      },
+      "measured_robot_clearance_audit": {
+        "scope": "Read-only collision bounds from recorded native link frames and authored convex hulls.",
+        "trajectory_sha256": "5db22ae1ce5132799247b826fa5bf86362cf416fe675b549a41204bc403827e4",
+        "geometry_provenance": {
+          "urdf": "yam_arm.urdf",
+          "urdf_sha256": "d6cc3fca8d6848aad36c0d2bb8798de391fcf5ef8f41180fe7618eda141f0bef",
+          "collision_meshes_sha256": "d1a445176b9a35a200a6cc3e28687180e831a6b0932efff85e355221dae823c5",
+          "mesh_hash_format": "SHA256 of ordered filename+NUL+SHA256(mesh bytes), in selected-link/URDF-collision order",
+          "asset_source_commit": "120c3c81400171174604e503943f8d1ebc891058",
+          "links": {
+            "base": {
+              "collision_meshes": 26,
+              "center": [
+                4.28e-07,
+                1.87e-07,
+                0.036548991
+              ],
+              "half_size": [
+                0.036100662,
+                0.101100176,
+                0.037650103
+              ]
+            },
+            "gripper": {
+              "collision_meshes": 44,
+              "center": [
+                -2.7e-08,
+                1e-09,
+                0.026499384
+              ],
+              "half_size": [
+                0.051,
+                0.0325,
+                0.036999382
+              ]
+            },
+            "link1": {
+              "collision_meshes": 105,
+              "center": [
+                -0.031487323,
+                -0.002999805,
+                -0.009238666
+              ],
+              "half_size": [
+                0.031970071,
+                0.044382709,
+                0.028721578
+              ]
+            },
+            "link2": {
+              "collision_meshes": 8,
+              "center": [
+                1.6e-08,
+                -0.033400525,
+                0.132023096
+              ],
+              "half_size": [
+                0.030999999,
+                0.033349476,
+                0.162971158
+              ]
+            },
+            "link3": {
+              "collision_meshes": 12,
+              "center": [
+                -0.029867598,
+                -0.03492549,
+                -0.120980339
+              ],
+              "half_size": [
+                0.061332703,
+                0.04492451,
+                0.152476863
+              ]
+            },
+            "link4": {
+              "collision_meshes": 12,
+              "center": [
+                -0.04035017,
+                0.030000004,
+                -0.042422043
+              ],
+              "half_size": [
+                0.057850132,
+                0.043000005,
+                0.059896419
+              ]
+            },
+            "link5": {
+              "collision_meshes": 16,
+              "center": [
+                0.034476725,
+                -2.6e-08,
+                -0.00105
+              ],
+              "half_size": [
+                0.034476724,
+                0.028499998,
+                0.03455
+              ]
+            },
+            "tip_left": {
+              "collision_meshes": 45,
+              "center": [
+                0.023992342,
+                -0.032499981,
+                -0.043238302
+              ],
+              "half_size": [
+                0.033999133,
+                0.035785401,
+                0.046921298
+              ]
+            },
+            "tip_right": {
+              "collision_meshes": 47,
+              "center": [
+                -0.023993592,
+                0.032500002,
+                -0.043238302
+              ],
+              "half_size": [
+                0.03399961,
+                0.035785401,
+                0.046921298
+              ]
+            }
+          },
+          "scope": "robot",
+          "envelope": "one link-frame AABB per complete selected collision link"
+        },
+        "sample_count": 3001,
+        "start_s": 0.0,
+        "end_s": 150.0,
+        "capture_step_min_max_s": [
+          0.05,
+          0.05
+        ],
+        "minimum_arm": {
+          "time_s": 102.85,
+          "arm_separation_lower_m": 0.31652493,
+          "arm_closest": [
+            "link3",
+            "link3",
+            "native complete-link OBB"
+          ],
+          "nonbase_table_min_vertex_height_m": 0.07001716,
+          "table_closest": [
+            0,
+            "link1",
+            "collision/link1/link1_009.stl"
+          ]
+        },
+        "minimum_table": {
+          "time_s": 114.95,
+          "arm_separation_lower_m": 0.40568368,
+          "arm_closest": [
+            "link3",
+            "link3",
+            "native complete-link OBB"
+          ],
+          "nonbase_table_min_vertex_height_m": 0.005874712,
+          "table_closest": [
+            1,
+            "tip_left",
+            "collision/tip_left/tip_left_014.stl"
+          ]
+        },
+        "intersections": [],
+        "gjk_pairs": 0,
+        "limitations": [
+          "Sampled20Hz native link-frame poses; no claim about motion between captures.",
+          "Authored per-STL convex hulls before PhysX cooking/contact margins.",
+          "Positive separation values are conservative lower bounds, not necessarily exact nearest distance.",
+          "Base omitted from table-plane test because it is intentionally bolted to table; arm-to-arm includes base.",
+          "Other objects/rope contacts and self-collision within one arm are outside this audit."
+        ],
+        "report_sha256": "5f600253f4a8aef57f02da5ea659ef35222bc2ba2b045e5634ff598ee2be6631",
+        "report_file": "actual-robot-clearance-full.json"
+      },
+      "measured_own_arm_clearance_audit": {
+        "scope": "Sampled own-arm nonadjacent authored convex-mesh separation from native frames.",
+        "trajectory_sha256": "5db22ae1ce5132799247b826fa5bf86362cf416fe675b549a41204bc403827e4",
+        "geometry_provenance": {
+          "urdf": "yam_arm.urdf",
+          "urdf_sha256": "d6cc3fca8d6848aad36c0d2bb8798de391fcf5ef8f41180fe7618eda141f0bef",
+          "collision_meshes_sha256": "d1a445176b9a35a200a6cc3e28687180e831a6b0932efff85e355221dae823c5",
+          "mesh_hash_format": "SHA256 of ordered filename+NUL+SHA256(mesh bytes), in selected-link/URDF-collision order",
+          "asset_source_commit": "120c3c81400171174604e503943f8d1ebc891058",
+          "links": {
+            "base": {
+              "collision_meshes": 26,
+              "center": [
+                4.28e-07,
+                1.87e-07,
+                0.036548991
+              ],
+              "half_size": [
+                0.036100662,
+                0.101100176,
+                0.037650103
+              ]
+            },
+            "gripper": {
+              "collision_meshes": 44,
+              "center": [
+                -2.7e-08,
+                1e-09,
+                0.026499384
+              ],
+              "half_size": [
+                0.051,
+                0.0325,
+                0.036999382
+              ]
+            },
+            "link1": {
+              "collision_meshes": 105,
+              "center": [
+                -0.031487323,
+                -0.002999805,
+                -0.009238666
+              ],
+              "half_size": [
+                0.031970071,
+                0.044382709,
+                0.028721578
+              ]
+            },
+            "link2": {
+              "collision_meshes": 8,
+              "center": [
+                1.6e-08,
+                -0.033400525,
+                0.132023096
+              ],
+              "half_size": [
+                0.030999999,
+                0.033349476,
+                0.162971158
+              ]
+            },
+            "link3": {
+              "collision_meshes": 12,
+              "center": [
+                -0.029867598,
+                -0.03492549,
+                -0.120980339
+              ],
+              "half_size": [
+                0.061332703,
+                0.04492451,
+                0.152476863
+              ]
+            },
+            "link4": {
+              "collision_meshes": 12,
+              "center": [
+                -0.04035017,
+                0.030000004,
+                -0.042422043
+              ],
+              "half_size": [
+                0.057850132,
+                0.043000005,
+                0.059896419
+              ]
+            },
+            "link5": {
+              "collision_meshes": 16,
+              "center": [
+                0.034476725,
+                -2.6e-08,
+                -0.00105
+              ],
+              "half_size": [
+                0.034476724,
+                0.028499998,
+                0.03455
+              ]
+            },
+            "tip_left": {
+              "collision_meshes": 45,
+              "center": [
+                0.023992342,
+                -0.032499981,
+                -0.043238302
+              ],
+              "half_size": [
+                0.033999133,
+                0.035785401,
+                0.046921298
+              ]
+            },
+            "tip_right": {
+              "collision_meshes": 47,
+              "center": [
+                -0.023993592,
+                0.032500002,
+                -0.043238302
+              ],
+              "half_size": [
+                0.03399961,
+                0.035785401,
+                0.046921298
+              ]
+            }
+          },
+          "scope": "robot",
+          "envelope": "one link-frame AABB per complete selected collision link"
+        },
+        "sample_count": 3001,
+        "start_s": 0.0,
+        "end_s": 150.0,
+        "excluded_adjacent_pairs": [
+          [
+            "base",
+            "link1"
+          ],
+          [
+            "gripper",
+            "link5"
+          ],
+          [
+            "gripper",
+            "tip_left"
+          ],
+          [
+            "gripper",
+            "tip_right"
+          ],
+          [
+            "link1",
+            "link2"
+          ],
+          [
+            "link2",
+            "link3"
+          ],
+          [
+            "link3",
+            "link4"
+          ],
+          [
+            "link4",
+            "link5"
+          ]
+        ],
+        "excluded_gripper_assembly_pairs": [
+          [
+            "gripper",
+            "tip_left"
+          ],
+          [
+            "gripper",
+            "tip_right"
+          ],
+          [
+            "tip_left",
+            "tip_right"
+          ]
+        ],
+        "exclusion_reasons": {
+          "adjacent": "Links directly connected by one URDF joint have shared mechanical joint geometry; these pairs are excluded, with no multi-joint blanket exemption.",
+          "gripper_assembly": "All internal pairs among gripper, tip_left and tip_right are excluded because the SDK explicitly describes intentional convex-hull overlap of sliding carriages with housing and each other."
+        },
+        "minimum": {
+          "time_s": 129.45,
+          "side": "right",
+          "links": [
+            "gripper",
+            "link4"
+          ],
+          "separation_lower_m": 0.005000259,
+          "closest": [
+            "collision/gripper/gripper_020.stl",
+            "collision/link4/link4_000.stl",
+            "authored-mesh AABB"
+          ]
+        },
+        "intersections": [],
+        "gjk_pairs": 40666,
+        "limitations": [
+          "Captured native link poses only; no between-frame collision guarantee.",
+          "Per-STL convex hulls before native PhysX cooking or contact offsets.",
+          "Positive separation values are conservative lower bounds rather than necessarily exact Euclidean distances.",
+          "All explicitly excluded adjacent and internal gripper-assembly pairs are outside this result; finger links against every nonadjacent external arm link remain tested.",
+          "This audit covers own-arm geometry only. Separate audit covers other-arm and table."
+        ],
+        "tested_nonadjacent_link_pairs_per_arm": 27,
+        "report_sha256": "761367afcf50ae5a603bf2b878e7397d2ac47de1775ffae66c93188c435dcd6c",
+        "report_file": "actual-own-arm-clearance-full.json"
+      },
+      "labelled_media_copy": {
+        "source_sha256": {
+          "review.mp4": "cd148f283c524053c22bd528bb596a1e9c7bcc9ac2a01ed84246ad2a73e8e297",
+          "trajectory": "5db22ae1ce5132799247b826fa5bf86362cf416fe675b549a41204bc403827e4"
+        },
+        "output_sha256": "5c5325fed0e4fc4f9bf1145b131e2b7f7540558e4c686008d5c871f7fea12b05",
+        "output_bytes": 18763983,
+        "frames": 3001,
+        "fps": 20,
+        "width": 1600,
+        "height": 1280,
+        "first_time_s": 0.0,
+        "last_time_s": 150.0,
+        "phase_frames": {
+          "policy": 3001
+        },
+        "overlay": "recorded phase, elapsed simulation time, applied load during assay",
+        "score_displayed": false,
+        "interpolated_frames": false,
+        "source_and_output_timestamps_verified": true,
+        "manifest_sha256": "ebdee9124607033179c826dbafd56258f84aa5548b3015efb54a04581bd7e1cf",
+        "manifest_file": "review-labelled.json",
+        "output_file": "review-labelled.mp4",
+        "purpose": "Optional review copy with recorded phase/time labels; original video and every frame are preserved. All frames are policy frames, so no assay load or score overlay appears.",
+        "labelled_final_frame_visual_review": "Readable time label and unobstructed task view, reviewed by the coordinating agent."
+      },
+      "outcome": "Completed real direct Dream-1 evaluation: score 0.0 in recorded, frozen and current independent replay. All 3,001 frames are valid unknots; no recorded lift or knot occurs. Same frozen scene and run limit as successful demo 020. Repeated server-side session expiration confounds interpretation as an uninterrupted Dream baseline.",
+      "limitations": [
+        "Every successful chunk used a distinct server session. The SDK reports a server-side episode restart and resets its smoother on DreamSessionExpired, then automatically retries the current observation. The recorded 0.0 is a real completed evaluation but is confounded by repeated loss of session continuity; it is not a clean uninterrupted baseline. The cause of expiration is not established.",
+        "No repeatability or physical calibration claim; geometry audits cover recorded 20 Hz poses, not times between them.",
+        "Six video key frames were visually reviewed; full-trace outcome comes from independently replayed geometry."
+      ]
     }
   },
   "common_runtime_scope": "Common values apply unless explicitly overridden. Table 011 uses 480 Hz; tables 015\u2013020 start at 240 Hz and follow their recorded fixed schedule to 960 Hz."

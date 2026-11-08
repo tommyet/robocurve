@@ -28,9 +28,10 @@ limitations. Check the live task board before choosing a new objective.
 - Start with [the 2×2 task](tasks/join-two-2x2-blocks/README.md) for the scene, runner,
   scorer and evidence format. [The batch review](docs/brick-batch-review.md) records design tradeoffs;
   use the dated shared notes for current review status.
-- [The jig-assisted overhand knot](tasks/tie-overhand-knot/README.md) includes a
-  scored robot demo, Dream evaluation, capsule-cord model and load-test audit.
-  Read its fidelity limitations before reusing the rope model; it is not submitted.
+- [The table-method overhand knot](tasks/tie-overhand-knot/README.md) includes a
+  full-score bimanual demo, capsule-cord model and independent geometry audits.
+  It uses no fixtures or external tightening forces. Read its fidelity limits
+  before reusing the rope model; the task is not submitted.
 - `brick_workbench/` contains reusable brick geometry, scoring and CAD code. Its
   `build_tasks.py` regenerates all four existing brick tasks and preserves their previous scores
   and media IDs. Create a new task folder deliberately; do not use that builder as a generic
@@ -44,7 +45,7 @@ limitations. Check the live task board before choosing a new objective.
   ```
 
   The included demo scores 1.0. Simulator runs require the competition environment;
-  on the shared VM, source `~/IsaacLab-Arena/yam.env` and follow the task's run commands.
+  on the shared VM, source `/data/IsaacLab-Arena/yam.env` and follow the task's run commands.
   Coordinate VM use, use fresh artifact directories and batch GPU trials.
 - The retained VM was updated and validated on November 7. For the brick/die tasks
   with Inspect 1.0, run `python tools/prepare_review_media.py RUN` after exporting

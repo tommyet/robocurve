@@ -1,5 +1,5 @@
 {
-  "status": "First full current table-method demo recorded and independently replayed at score 1.0 in 138.30 seconds. Trial 020 passes recorded geometry, version-2 native closure, execution, finalization, every recorded robot mesh pose and twelve-frame visual review. Matching Dream trial 021 is running from the exact same frozen archive, seed and 3,000-action limit. Submission remains pending.",
+  "status": "Current table-method demo 020 independently scores 1.0 in 138.30 seconds. Matching Dream 021 completes 150 seconds and independently scores 0.0 with valid geometry, exact frozen source/configuration equivalence, native closure, clean execution and finalization. Both videos and all recorded robot poses are audited. Dream has 61 session expirations across 62 successful chunks, so it is not a clean uninterrupted baseline. Submission remains pending.",
   "submission_ready": false,
   "review_basis": {
     "accepted_examples": [
@@ -16,7 +16,7 @@
     "elapsed_s": 25.805
   },
   "still_required": [
-    "Finish the matching Dream trial; independently replay and visually review its result.",
+    "Review the Dream session-expiration limitation before submission; decide whether a continuous-session evaluation is needed.",
     "Complete final media/source and live task-board checks, and obtain user authorization before media upload or upstream submission."
   ],
   "score_version": "overhand-bimanual-v4",
@@ -27,29 +27,30 @@
     "score_version": "overhand-bimanual-v4",
     "unit_test_command": "python -m unittest discover -s . -p 'test_*.py'",
     "unit_tests_passed": 142,
-    "physics_trials": 20,
-    "dream_trials": 0,
+    "physics_trials": 21,
+    "dream_trials": 1,
     "full_demo_implemented": true,
     "remaining_work": [
-      "Finish the matching Dream trial; independently replay and visually review its result.",
+      "Review the Dream session-expiration limitation before submission; decide whether a continuous-session evaluation is needed.",
       "Complete final media/source and live task-board checks, and obtain user authorization before media upload or upstream submission."
     ],
     "nominal_pull_candidate": "evidence/bimanual-pull-kinematics.json",
     "historical_terminal_grasp_audit": "evidence/bimanual-loop-kinematics.json",
     "historical_high_loop_physics_trials": 5,
-    "total_completed_v4_physics_trials": 25,
+    "total_completed_v4_physics_trials": 26,
     "available_controller_stages": [
       "loop",
       "thread",
       "demo"
     ],
-    "validation_status": "First full current table-method demo recorded and independently replayed at score 1.0 in 138.30 seconds. Trial 020 passes recorded geometry, version-2 native closure, execution, finalization, every recorded robot mesh pose and twelve-frame visual review. Matching Dream trial 021 is running from the exact same frozen archive, seed and 3,000-action limit. Submission remains pending.",
+    "validation_status": "Current table-method demo 020 independently scores 1.0 in 138.30 seconds. Matching Dream 021 completes 150 seconds and independently scores 0.0 with valid geometry, exact frozen source/configuration equivalence, native closure, clean execution and finalization. Both videos and all recorded robot poses are audited. Dream has 61 session expirations across 62 successful chunks, so it is not a clean uninterrupted baseline. Submission remains pending.",
     "table_pilot_evidence": "evidence/table-pilots.json",
     "nominal_pull_candidate_scope": "Earlier staged outward-pull audit only; it does not validate the current threading-to-pull transition or actual rope behavior.",
     "commands": {
       "loop": "python run.py --policy loop --physics-hz 240 --max-steps 1000 --log-dir /tmp/rope-arch-001",
       "thread": "python run.py --policy thread --physics-hz 240 --max-steps 2000 --log-dir /tmp/rope-feed-001",
-      "demo": "python run.py --policy demo --physics-hz 240 --max-steps 3000 --log-dir /tmp/rope-demo-001"
+      "demo": "python run.py --policy demo --physics-hz 240 --max-steps 3000 --log-dir /tmp/rope-demo-001",
+      "dream": "python run.py --policy dream --physics-hz 240 --max-steps 3000 --log-dir /tmp/rope-dream-001"
     },
     "nominal_timing": {
       "arch_seconds": 38.5,
@@ -68,7 +69,11 @@
       "observed_demo_wall_seconds": 1757.542,
       "observed_demo_wall_seconds_basis": "runtime.json simulator-runner elapsed wall time",
       "observed_demo_outer_execution_wall_seconds": 1759.008620970002,
-      "outer_execution_wall_seconds_basis": "Serial wrapper start to finish; use this interval for a run-only elapsed-cost estimate. Full-session cost also includes setup, idle time and shutdown."
+      "outer_execution_wall_seconds_basis": "Serial wrapper start to finish; use this interval for a run-only elapsed-cost estimate. Full-session cost also includes setup, idle time and shutdown.",
+      "observed_dream_seconds": 150.0,
+      "observed_dream_wall_seconds": 1573.375,
+      "observed_dream_outer_execution_wall_seconds": 1574.7941952410001,
+      "hardware": "NVIDIA L40S, 48 GB VRAM"
     },
     "prospective_run_limit_actions": 3000,
     "run_limit_change_scope": "Future final demo and Dream trials use 3,000 actions at 20 Hz. Earlier frozen trials retain their recorded limits; table-008 uses a 2,400-action scene and 1,800-action thread plan.",
@@ -105,7 +110,7 @@
       "switch_capture_time_s": 78.0
     },
     "policy_physics_replay_review": {
-      "status": "The 142-test CPU suite passes. Successful demo 020 independently validates 1,206 post-switch native intervals and version-2 final closure through 138.30 seconds; successful Inspect execution and complete recording are certified.",
+      "status": "The 142-test CPU suite passes. Demo 020 and Dream 021 independently validate 1,206 and 1,440 post-switch native intervals, respectively, with version-2 final closure and clean execution/finalization. This audit does not certify Dream server-session continuity.",
       "certificate": "policy-physics-transition.json",
       "checks": [
         "Exact fixed schedule and state/counter preservation at the switch.",
@@ -248,10 +253,48 @@
       "scope": "Recorded 20 Hz native poses against authored convex meshes. Native same-arm collision is disabled for intentional gripper-assembly overlap, so this offline check covers nonadjacent links; no between-frame claim.",
       "evidence": "evidence/table-pilots.json",
       "report_sha256": "8b29df032b33c38f821c5c639c944f8b8d6247d0a56a84978b8712b66165bc7d"
+    },
+    "matching_dream_audit": {
+      "trial": "table-021",
+      "score": 0.0,
+      "frozen_and_current_replay_match": true,
+      "same_frozen_archive_and_configuration": true,
+      "source_archive_sha256": "52616cbbfe6ceda7b3de4a7fbde0cdbe9d8806f6e2646bb3163903b58a0a9536",
+      "audit_sha256": "4270f78357b83499f9351d6556a9ca144aa93b2a53813150712f22f7e82cec45",
+      "transport": {
+        "model": "dreamlabs/dream-1-beta",
+        "dry_run": false,
+        "transport_runtime": "direct",
+        "direct_default_session": true,
+        "control_hz": 20.0,
+        "rows_per_request": 48,
+        "requests": 62,
+        "attempts": 123,
+        "retries": 61,
+        "distinct_sessions": 62,
+        "prediction_rows": 2976,
+        "prediction_rows_beyond_limits": 0,
+        "sum_request_rtt_seconds": 22.881682884992188,
+        "sum_inference_milliseconds": 16620,
+        "scope": "SDK transcript counts. Unused prediction rows may be included; actual executed action bounds are audited separately. No session identifiers or credentials are reproduced.",
+        "retry_reason_counts": {
+          "expired": 61
+        },
+        "console_sha256": "20633b37f9981a6bf21e155df30fc8934ee703594cb473b7ce1ffd51fc06114f",
+        "baseline_limitation": "Every successful chunk used a distinct server session. The SDK reports a server-side episode restart and resets its smoother on DreamSessionExpired, then automatically retries the current observation. The recorded 0.0 is a real completed evaluation but is confounded by repeated loss of session continuity; it is not a clean uninterrupted baseline. The cause of expiration is not established.",
+        "uninterrupted_session": false,
+        "sdk_source_basis": {
+          "dream/client.py": "34a057d00b8d91e221edf42d84a5d34dc4cf95951b8fb2c21a2ac33cc7e052a2",
+          "inspect_robots_dream/session.py": "e79ff8c14d658ba8d239bbd2892624d492b8648656c9cf063ddc031a45c6713c"
+        }
+      },
+      "all_recorded_robot_mesh_poses_pass": true,
+      "all_recorded_nonadjacent_own_arm_pairs_pass": true,
+      "keyframe_visual_review_complete": true
     }
   },
   "v4_development": {
-    "status": "First full current table-method demo recorded and independently replayed at score 1.0 in 138.30 seconds. Trial 020 passes recorded geometry, version-2 native closure, execution, finalization, every recorded robot mesh pose and twelve-frame visual review. Matching Dream trial 021 is running from the exact same frozen archive, seed and 3,000-action limit. Submission remains pending.",
+    "status": "Current table-method demo 020 independently scores 1.0 in 138.30 seconds. Matching Dream 021 completes 150 seconds and independently scores 0.0 with valid geometry, exact frozen source/configuration equivalence, native closure, clean execution and finalization. Both videos and all recorded robot poses are audited. Dream has 61 session expirations across 62 successful chunks, so it is not a clean uninterrupted baseline. Submission remains pending.",
     "evidence": "evidence/table-pilots.json",
     "controller_sequence": [
       "Right hand grips segment 101 and lays a crossing from the uncrossed U.",
@@ -261,29 +304,11 @@
       "Right hand lowers the arch by 140 mm over three seconds while retaining its measured tilted orientation, checks measured support placement, releases to 24 mm, lifts vertically 30 mm over 1.5 seconds, then fully opens for one second and parks. It regrips red segment 103 from above; left hand approaches yellow segment 2 from 12 cm north, 20 mm above the measured point with a 24 mm jaw opening, then approaches horizontally and descends.",
       "With both ends captured, right-held segment 103 lifts 65 mm and moves outward to x=0.39 m using the original 4.5 mm half-gap command. Both ends then lift and separate together over six seconds toward DOWN while ordinary gripper closure ramps smoothly to zero. The arms turn outward and pull in the same control ticks; optional half-span targets 0.57/0.58/0.59 m stop when the measured span condition passes, followed by release and retention scoring."
     ],
-    "completed_physics_trials": 20,
+    "completed_physics_trials": 21,
     "successful_full_demos": 1,
-    "independent_replay": "Trials 001\u2013019 independently score zero; trial 020 independently scores 1.0 with valid recorded geometry, initial uncrossed validation, a one-second suspended span certificate and five-second released retention. Version-2 native closure, execution and finalization pass.",
-    "pending_trial": {
-      "name": "table-021",
-      "policy": "dream",
-      "max_steps": 3000,
-      "frozen_scene_run_limit": 3000,
-      "seed": 0,
-      "physics_hz": 240,
-      "policy_physics_schedule": {
-        "initial_physics_hz": 240,
-        "target_physics_hz": 960,
-        "control_hz": 20,
-        "switch_after_completed_actions": 1560,
-        "switch_capture_time_s": 78.0
-      },
-      "certificate_schema": "fixed-policy-physics-v2",
-      "matching_demo": "table-020",
-      "frozen_archive_sha256": "52616cbbfe6ceda7b3de4a7fbde0cdbe9d8806f6e2646bb3163903b58a0a9536",
-      "status": "Launched at approximately 13:15 UTC from the exact 020 frozen archive. Outcome pending; not counted as completed evidence."
-    },
-    "dream_trials": 0,
+    "independent_replay": "Trials 001\u2013019 independently score zero; demo 020 scores 1.0; matching Dream 021 scores 0.0. Both final recordings pass native closure, execution, finalization and recorded geometry checks. Dream server-session continuity is separately limited.",
+    "pending_trial": null,
+    "dream_trials": 1,
     "historical_high_loop_pilots": {
       "scope": "Earlier unshifted-U high-lift controller, not the current table method.",
       "completed_trials": 5,
@@ -294,89 +319,39 @@
     },
     "legacy_evidence_scope": "All historical_v3 records and old demo/Dream evidence are explicitly superseded for current-task feasibility.",
     "latest_completed_trial": {
-      "name": "table-020",
-      "policy": "demo",
+      "name": "table-021",
+      "policy": "dream",
       "max_steps": 3000,
-      "frozen_scene_run_limit": 3000,
       "seed": 0,
-      "physics_hz": 240,
-      "policy_physics_schedule": {
-        "initial_physics_hz": 240,
-        "target_physics_hz": 960,
-        "control_hz": 20,
-        "switch_after_completed_actions": 1560,
-        "switch_capture_time_s": 78.0
-      },
-      "certificate_schema": "fixed-policy-physics-v2",
-      "score": 1.0,
-      "time_s": 138.3,
-      "samples": 2767,
-      "actions": 2766,
-      "wall_seconds": 1757.542,
+      "score": 0.0,
+      "samples": 3001,
+      "actions": 3000,
+      "time_s": 150.0,
+      "wall_seconds": 1573.375,
+      "wall_seconds_basis": "runtime.json simulator-runner elapsed wall time",
+      "outer_execution_wall_seconds": 1574.7941952410001,
       "invalid": null,
-      "recording_finalization_complete": true,
-      "cli_return_code": 0,
-      "policy_execution_status": "complete",
-      "task_requirements_completed": true,
-      "episode_stopped_when_full_score_reached": true,
-      "validated_post_switch_intervals": 1206,
-      "native_substeps_per_action": 48,
-      "state_and_counters_unchanged_at_switch": true,
-      "callback_removed": true,
+      "topology_status": "unknot",
+      "frozen_and_current_replay_match": true,
       "native_final_closure": {
         "schema": "native-counter-closure-v1",
         "complete": true,
         "callback_error": null,
         "expected_counters": {
-          "native": 76728,
-          "environment": 76728
+          "native": 87960,
+          "environment": 87960
         },
         "observed_counters": {
-          "native": 76728,
-          "environment": 76728
+          "native": 87960,
+          "environment": 87960
         }
       },
-      "first_valid_candidate_time_s": 103.35,
-      "both_terminal_grasps_confirmed_time_s": 102.5,
-      "both_grasps_retained_until_intentional_release_s": 133.0,
-      "span_window_s": [
-        130.75,
-        131.75
-      ],
-      "minimum_certified_span_lower_bound_m": 1.170074087,
-      "minimum_table_clearance_in_span_window_m": 0.108722009,
-      "release_window_s": [
-        133.3,
-        138.3
-      ],
-      "minimum_robot_clearance_in_release_window_m": 0.037940798,
-      "replay_score": 1.0,
-      "current_core_source_matches_frozen_at_audit": true,
-      "minimum_actual_nonlocal_axis_distance_m": 0.009509743,
-      "minimum_axis_margin_above_contact_limit_m": 9.743e-06,
-      "all_recorded_robot_mesh_poses_pass": true,
-      "visual_review": {
-        "method": "Twelve chronological frames extracted from the unchanged review video; full-frame views at reset, crossing, arch, feeding, withdrawal, recovery, staging, simultaneous pull, suspended span and final release.",
-        "frames_s": [
-          0,
-          22.5,
-          38.5,
-          64,
-          78,
-          94.5,
-          106.5,
-          112.5,
-          124,
-          130.75,
-          132,
-          138.25
-        ],
-        "contact_sheet_sha256": "b04ee1a45b0fad0a04628ccf23c39638a926e450ff534826c878ccaff61bfde9",
-        "findings": "Uncrossed start, robot contact manipulation, visible shrinking loop during simultaneous pull, compact final knot, open hands and cord resting freely on table. No identifying text in reviewed frames. Topology and continuous timing rely on independently replayed geometry."
-      },
-      "interpretation": "First full physical table-method success. A single fixed-seed result and narrow observed contact margin do not establish repeatability or between-frame fidelity. Dream remains pending.",
-      "wall_seconds_basis": "runtime.json simulator-runner elapsed wall time",
-      "outer_execution_wall_seconds": 1759.008620970002
+      "validated_post_switch_intervals": 1440,
+      "recording_finalization_complete": true,
+      "policy_execution_status": "complete",
+      "matching_demo": "table-020",
+      "uninterrupted_dream_session": false,
+      "interpretation": "Every successful chunk used a distinct server session. The SDK reports a server-side episode restart and resets its smoother on DreamSessionExpired, then automatically retries the current observation. The recorded 0.0 is a real completed evaluation but is confounded by repeated loss of session continuity; it is not a clean uninterrupted baseline. The cause of expiration is not established."
     }
   },
   "historical_v3": {
@@ -661,14 +636,38 @@
       "independent_replay": true,
       "all_recorded_robot_mesh_poses_pass": true,
       "keyframe_visual_review_complete": true,
-      "complete_matching_demo_dream_pair": false,
+      "complete_matching_demo_dream_pair": true,
       "trial_key": "table-020",
       "wall_seconds_basis": "runtime.json simulator-runner elapsed wall time",
       "outer_execution_wall_seconds": 1759.008620970002,
       "labelled_review_video_sha256": "cbfca3a3d4766846f6140456615ab0d92f2fcb0ff743d1dae06dbf447ea431dd",
       "labelled_review_manifest_sha256": "9490cd1dcc77a74d6e770ce13d478669e86fc6d1f398dd12388c028529c91f00",
       "all_recorded_nonadjacent_own_arm_pairs_pass": true
+    },
+    "table-021": {
+      "role": "current matching Dream evaluation with session-expiration limitation",
+      "score": 0.0,
+      "seed": 0,
+      "actions": 3000,
+      "time_s": 150.0,
+      "wall_seconds": 1573.375,
+      "wall_seconds_basis": "runtime.json simulator-runner elapsed wall time",
+      "outer_execution_wall_seconds": 1574.7941952410001,
+      "evidence": "evidence/table-pilots.json",
+      "trial_key": "table-021",
+      "trajectory_sha256": "5db22ae1ce5132799247b826fa5bf86362cf416fe675b549a41204bc403827e4",
+      "review_video_sha256": "cd148f283c524053c22bd528bb596a1e9c7bcc9ac2a01ed84246ad2a73e8e297",
+      "labelled_review_video_sha256": "5c5325fed0e4fc4f9bf1145b131e2b7f7540558e4c686008d5c871f7fea12b05",
+      "labelled_review_manifest_sha256": "ebdee9124607033179c826dbafd56258f84aa5548b3015efb54a04581bd7e1cf",
+      "frozen_archive_sha256": "52616cbbfe6ceda7b3de4a7fbde0cdbe9d8806f6e2646bb3163903b58a0a9536",
+      "independent_frozen_and_current_replay": true,
+      "all_recorded_robot_mesh_poses_pass": true,
+      "all_recorded_nonadjacent_own_arm_pairs_pass": true,
+      "keyframe_visual_review_complete": true,
+      "complete_matching_demo_dream_pair": true,
+      "uninterrupted_dream_session": false,
+      "baseline_limitation": "Every successful chunk used a distinct server session. The SDK reports a server-side episode restart and resets its smoother on DreamSessionExpired, then automatically retries the current observation. The recorded 0.0 is a real completed evaluation but is confounded by repeated loss of session continuity; it is not a clean uninterrupted baseline. The cause of expiration is not established."
     }
   },
-  "current_version_evaluated_scope": "Current scripted demo 020 reaches full score with complete physical recording and independent replay. Twenty table trials and five older high-lift trials are recorded separately. Matching current-source Dream 021 is running; there is no complete demo/Dream pair or submission yet."
+  "current_version_evaluated_scope": "Current demo 020 reaches full score, and matching Dream 021 completes at 0.0. Twenty-one table-scene trials and five older high-lift trials are recorded separately. The final pair shares exact frozen source, seed, cameras and run limit. Dream session expirations limit baseline interpretation; no submission has occurred."
 }

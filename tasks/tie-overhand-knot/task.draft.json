@@ -13,5 +13,5 @@
   "run_limit": "3,000 control steps (150 seconds at 20 Hz), including the five-second release check.",
   "reset_notes": "Untie the reusable cord and restore the flat, uncrossed U.",
   "fidelity": "104 rigid capsules with bending resistance approximate braided polyester. Grasps use finger contact. There are no clamps, attachments, pegs or external endpoint loads. Mass follows a commercial 10 mm cord reference; friction and bending are uncalibrated. Fibres, stretch and wear are not modelled. The span target is geometric and does not establish knot tension or strength. Physics uses 240 Hz for the first 78 seconds and 960 Hz thereafter for every policy; robot control remains 20 Hz.",
-  "scores": "Demo: 1.0, independently replayed. The matching Dream-1 run is in progress."
+  "scores": "Dream-1 run: 0.0; demo: 1.0. Both independently replayed. Dream completed, but 61 API session expirations restarted its inference context; this limits interpretation of its result."
 }

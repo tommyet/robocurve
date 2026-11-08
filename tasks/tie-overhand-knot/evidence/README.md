@@ -1,11 +1,24 @@
-# V4 development evidence
+# Current table-method evidence
 
-The revised free-cord task has no successful full demonstration yet.
-`bimanual-pilots.json` records the physical loop probes, all scoring zero,
-with source, trajectory and video hashes. `loop-001-crossing.json` is an
-anonymous measured regression fixture for a crossing-search bug, not a knot.
-The kinematic audits establish commanded robot reach and envelope separation;
-they do not establish rope contacts or task feasibility.
+`table-pilots.json` preserves nineteen failed pilots and the first complete
+table-method demo, trial 020, independently replayed at **1.0**. It starts with
+an uncrossed free cord, forms the knot through robot contact, pulls both ends
+together and retains the knot for five seconds after release. Matching Dream
+trial 021 completes 150 seconds and independently scores **0.0**. Its 61 server
+session expirations across 62 successful chunks confound interpretation as an
+uninterrupted baseline; the full trace remains a valid unknot throughout.
+
+The record includes scoring windows, source and video hashes, native-step
+certification, transport continuity, and robot-clearance audits of every recorded
+pose. Complete recordings remain
+in the ignored `artifacts/rope-knot-table-session/` directory and on the retained
+VM. These summaries support review; they do not replace the recordings or
+establish calibration, repeatability or geometry between recorded frames.
+
+`bimanual-pilots.json` contains five earlier high-lift loop probes, all scoring
+zero. `loop-001-crossing.json` is a measured regression fixture for a crossing
+search bug. The older kinematic audits establish commanded reach, not successful
+rope manipulation.
 
 # Historical v3 jig-task evidence
 

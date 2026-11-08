@@ -57,15 +57,16 @@ developers and their agents, not a competition submission document.
 
 ## GPU cost and persistence
 
-### 2026-11-08 — table-supported knot development (session in progress)
+### 2026-11-08 — table-supported knot development (complete; VM stopped)
 
 - Operator: repository agent, `codex/rope-bimanual`, continuing from `6be43c1`.
   The user requested forming the knot on the table, opening a local arch and
   pulling both ends together. The free uncrossed U is translated 18 cm toward
   −Y. No rope poses, attachments or external tightening forces are introduced.
-- Twenty completed table trials are recorded in
+- Twenty-one completed table-scene trials are recorded in
   [table-pilots.json](tasks/tie-overhand-knot/evidence/table-pilots.json).
-  Trials 001–019 score zero; 020 scores 1.0. Trials 001/002 establish a small
+  Trials 001–019 score zero; demo 020 scores 1.0; matching Dream 021 scores
+  zero with a session-expiration limitation. Trials 001/002 establish a small
   arch, 003 curls the loose tail,
   004/005 stop on excessive rope contact, 006 establishes the revised
   right-arm support, 007 ends unknotted before pulling, and 008 forms a held
@@ -84,8 +85,8 @@ developers and their agents, not a competition submission document.
   avoids that contact failure but drops the yellow end during simultaneous
   lifting. Trial 019 retains both ends but fails on nonlocal rope contact.
   These nineteen trials are development failures. Trial 020 is the first
-  complete full-score demo, independently replayed at 1.0; matching Dream
-  trial 021 is now running.
+  complete full-score demo, independently replayed at 1.0. Matching Dream
+  trial 021 is complete at 0.0, with its transport limitation recorded below.
 - A wrist rotation is not control of a flexible free tip. In 003 the grasp
   remained held but the tip curled and finished 73.85 mm outside the loop.
   In 005, moving the tip back toward the crossing shortened the measured
@@ -342,9 +343,38 @@ developers and their agents, not a competition submission document.
   only 9.743 micrometres above the unchanged 9.5 mm threshold. Preserve that
   narrow observed margin and the single-seed limitation. This success does
   not prove repeatability, calibration or geometry between 20 Hz captures.
-  Trial 021 began around 13:15 UTC using the exact frozen 020 archive, seed 0,
-  scene and 3,000-action limit. Dream results remain pending; no media upload
-  or upstream submission has occurred for this task.
+- Matching Dream trial 021 ran from 13:13:59.998620 to 13:40:14.792808 UTC
+  using the exact frozen 020 archive, seed 0, scene, cameras and 3,000-action
+  limit. Its 3,001 frames cover 150 simulated seconds. Recorded, frozen and
+  current independent replay agree at 0.0; every frame is a valid unknot.
+  Maximum corresponding material-centre displacement is 21.823 mm at the red
+  terminal; maximum vertical change is only 0.000894 mm. No pickup is recorded.
+  Six chronological video frames were reviewed. All 3,001 native poses pass
+  inter-arm, table and nonadjacent own-arm mesh checks, with minimum conservative
+  separations of 316.525 mm, 5.875 mm and 5.000 mm, respectively.
+- The completed Dream recording is transport-confounded. Its official SDK
+  transcript records 62 successful chunks, 123 attempts, 61 retries and 62
+  distinct sessions; the console gives the retry reason as `expired` in all
+  61 cases. The SDK treats these as server-side episode restarts and resets
+  client smoothing before automatically retrying the same observation. Do not
+  present this as an uninterrupted baseline or attribute the zero score to
+  task difficulty alone. The logs do not establish why the service expired
+  the sessions. Investigate session
+  lifetime before deciding on another GPU/API evaluation; no new run was made.
+- Dream's 1,440 post-switch intervals and final native/environment counters of
+  87,960 pass version-2 closure. Execution, recording finalization and all
+  3,000 executed action bounds pass. Simulator-runner wall time was 1,573.375
+  seconds; the outer wrapper took 1,574.794195 seconds (26.2 minutes). Hardware
+  was an NVIDIA L40S with 48 GB VRAM. These run-only times exclude setup, idle
+  time and shutdown; they are not the cost of the full development session.
+- The optional labelled Dream video preserves all 3,001 original frames and
+  timestamps at 20 Hz, without interpolation or a score overlay. Its
+  18,763,983-byte output and manifest hashes are recorded in trial 021's
+  evidence, alongside source/configuration equivalence and transport audits.
+  The only executable-file difference from the shared frozen source is a
+  comment correcting the visual reference description from 3 cm to its actual
+  2 cm; the Python AST is unchanged. No media upload or upstream submission
+  has occurred for this task.
 - The 117 cm span target has a static geometric positive control at the current
   discretization. Scaling the historical demo-009 final shape by 1.25, trimming
   seven exterior-tail links from each end, then connecting the same measured
@@ -380,13 +410,29 @@ developers and their agents, not a competition submission document.
   The full 142-test integration suite passed in 25.805 seconds after versioned
   native-closure, execution and action-budget checks; 17 focused tests passed
   after trial 020's motion changes. The successful physical demo and its
-  independent replay are complete. The matching Dream run is in progress.
+  independent replay are complete. Matching Dream also completes at 0.0, but
+  the session-expiration limitation requires review before submission.
 - Fresh 07:23:10 UTC lifecycle check found the shared VM stopped with no
   operation pending. Current observed g6e.xlarge rate is $2.729872/hour,
   including storage; posted balance was $167.39. Start task timestamp is
-  07:28:33 UTC. This session is still active; download the remaining evidence,
-  check for other jobs and confirm STOPPED before recording final cost.
-  Local operational evidence is under `artifacts/rope-knot-table-session/`.
+  07:28:33 UTC. All 21 trials were downloaded and hash-checked; the final demo
+  and Dream videos were visually reviewed. Pre-stop checks found no GPU jobs,
+  simulator/training jobs or other login sessions. Stop was requested at
+  13:42:25 UTC and confirmed **STOPPED**, with no operation pending, at
+  **13:49:09 UTC**. The retained disk and environment were preserved.
+- Charging the full start-to-confirmed-stop interval (6h20m36s) at the catalog
+  running rate estimates **$17.32** for this development session. This exceeds
+  the $2 planning target and includes nineteen failed pilots, both final runs,
+  preparation, audits, idle gaps and shutdown. It is a conservative elapsed-time
+  estimate, not an invoice; it excludes Dream API charges and subsequent stopped
+  storage. The successful demo alone took 1,759.009 wrapper seconds (about
+  **$1.33**); Dream took 1,574.794 seconds (about **$1.19**). These overlap the
+  session total and must not be added again. Posted remaining credits were
+  $150.81 at shutdown; billing lag prevents using that balance change as a final
+  session invoice. Current stopped disk storage is about $1.15/day for the whole
+  VM. Local lifecycle, audit and billing evidence is preserved under
+  `artifacts/rope-knot-table-session/`, including `session.json`,
+  `pre-stop-audit.json` and `billing-final.json`.
 
 Observed on 2026-11-03: L40S, 48 GB VRAM, 256 GiB allocated disk. Running rate
 **$3.28/hour**, comprising $3.23 compute and $0.05 storage. These are observed
