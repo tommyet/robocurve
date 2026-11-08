@@ -1,0 +1,70 @@
+{
+  "status": "development: no validated robot knot demonstration or Dream evaluation",
+  "submission_ready": false,
+  "review_basis": {
+    "accepted_examples": [
+      "https://github.com/robocurve/benchmark-tasks/pull/8",
+      "https://github.com/robocurve/benchmark-tasks/pull/10",
+      "https://github.com/robocurve/benchmark-tasks/pull/42"
+    ],
+    "application": "Use a specific cord-finishing purpose, measurable released outcome, meaningful partial credit, independent failure controls, and disclosed simulation approximations."
+  },
+  "unit_checks": {
+    "command": "python -m unittest discover -s . -p 'test_*.py'",
+    "passed": 43,
+    "scope": "Topology negatives/positives, measured geometry validation, scoring phases, fixture clearance, and runner cleanup; synthetic positive unit cases do not establish physical feasibility."
+  },
+  "physics_evidence": {
+    "straight-damped-001": {
+      "samples": 102,
+      "duration_s": 5.04999999999999,
+      "maximum_joint_gap_m": 1.3364762116056842e-08,
+      "max_centre_displacement_m": 0.0,
+      "centroid_displacement_m": 0.0,
+      "end_max_link_speed_m_s": 8.958480683159015e-06,
+      "minimum_recorded_nonlocal_axis_distance_m": 0.019999971389772265,
+      "final_topology_status": "unknot",
+      "invalid": null
+    },
+    "jig-idle-001": {
+      "samples": 102,
+      "duration_s": 5.04999999999999,
+      "maximum_joint_gap_m": 2.219015120636183e-05,
+      "max_centre_displacement_m": 0.002983765092662857,
+      "centroid_displacement_m": 0.0002880593506392117,
+      "end_max_link_speed_m_s": 0.0048619979254853965,
+      "minimum_recorded_nonlocal_axis_distance_m": 0.0077968590430527104,
+      "final_topology_status": "unknot",
+      "invalid": null
+    },
+    "assay-ramp-002": {
+      "samples": 202,
+      "duration_s": 10.050000000000008,
+      "maximum_joint_gap_m": 0.00028369586134943567,
+      "max_centre_displacement_m": 0.3016787979448036,
+      "centroid_displacement_m": 0.03451775413831223,
+      "end_max_link_speed_m_s": 0.1216326330365393,
+      "minimum_recorded_nonlocal_axis_distance_m": 0.007602766458844736,
+      "final_topology_status": "overhand_candidate",
+      "invalid": null
+    }
+  },
+  "diagnostic_retention": {
+    "actual_task_score": 0.0,
+    "assay_candidate_score": 1.0,
+    "preformed_knot": true,
+    "robot_knotting": false,
+    "evidence": "evidence/diagnostic-retention.jsonl.gz"
+  },
+  "known_failures": [
+    "Abrupt endpoint-force loading caused invalid rope contact; the specified protocol now seats gradually.",
+    "Unassisted crossing-lift/threading probes produced excessive nonlocal capsule overlap; 960 Hz did not resolve it.",
+    "The first jig manipulation probe missed its initial pickup; the pad geometry supports a lower grasp."
+  ],
+  "still_required": [
+    "A full robot-tied, released knot with valid contact and clearance throughout the trial.",
+    "A successful recorded post-policy retention assay on that robot-tied knot.",
+    "Fresh Dream evaluation on the exact final scene and rubric.",
+    "Final visual review, independent replay, final setup and judging text, and task.json with real media identifiers."
+  ]
+}

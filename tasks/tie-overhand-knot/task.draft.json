@@ -1,0 +1,17 @@
+{
+  "title": "Tie an overhand stopper knot",
+  "category": "Societal relevance",
+  "keywords": [
+    "rope",
+    "knot tying",
+    "bimanual"
+  ],
+  "instruction": "Tie one overhand knot in the blue cord, leaving at least 4 cm of cord at each end, then let go. The knot will be tested with a gentle pull.",
+  "context": "Stable end knots are a basic step in finishing drawcords and similar cord assemblies.",
+  "setup": "One blue round cord, 96 cm between end centres, 8 mm diameter and 37.5 g, approximating braided polyester. Its first and last 1 cm links are yellow and red. The yellow end is held by a fixed grey bench clamp. The untied cord starts in a U: two 34 cm straight legs joined by a 28 cm semicircular section, on the standard YAM table. The README gives all coordinates and clamp dimensions.",
+  "scoring": "0.5: an intact single overhand knot is present at the end of the robot actions, with at least 4 cm of cord at each end and every robot part at least 3 cm clear of the cord. 1.0: that knot remains tied and retains those tail lengths throughout a separate 2-second ramp to 0.981 N opposing endpoint loads and a 5-second hold. A failed load test retains 0.5; damaged or invalid simulation evidence scores 0. All other outcomes score 0.",
+  "run_limit": "2,400 robot control steps (120 seconds at 20 Hz). A separate 7-second evaluator load test follows a qualifying released knot.",
+  "reset_notes": "Remove the knot and restore the fixed untied U layout. The cord and clamp are reusable.",
+  "fidelity": "A chain of 96 rigid capsules with bending joints approximates an inextensible round cord. Nonadjacent links collide; grippers use physical contact. An ideal fixed joint represents the standing-end clamp. The evaluator applies endpoint forces after robot actions end. Friction and bending are engineering assumptions; braided fibres, stretch and wear are not modelled.",
+  "scores": "Development draft: no validated robot knot demonstration or Dream run yet."
+}

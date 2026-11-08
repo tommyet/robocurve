@@ -1,6 +1,6 @@
 # Shared working notes
 
-Last updated: 2026-11-07 UTC. Read this before starting work; update it when an
+Last updated: 2026-11-08 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
@@ -168,6 +168,62 @@ result or measure outcome fairness.
   accepted as T-39, and Robocurve received the `tommyet` PR as **TK-YBZD4Q**.
 
 ## Dated session log
+
+### 2026-11-07–08 — overhand-knot development session (in progress)
+
+- Operator: repository agent; branch `codex/tie-overhand-knot` from `0ac98c6`.
+  User requested task implementation using review feedback and strong PRs;
+  this does not authorize an upstream PR. The planned first GPU checks are
+  rope stability, grasping, self-contact and knot retention before full demo
+  and Dream trials. No knot feasibility or score is established yet.
+- Brev CLI and filtered API checks confirmed the retained `robocurve-dice`
+  VM was STOPPED at 23:52 UTC, with no running compute. Posted credit $186.16;
+  observed catalog running rate $3.279064/hour, including allocated storage.
+  Session evidence is ignored under `artifacts/rope-knot-development/`.
+  Check current status and remote users/jobs before taking over this VM.
+- Read accepted cable tasks [#8](https://github.com/robocurve/benchmark-tasks/pull/8),
+  [#10](https://github.com/robocurve/benchmark-tasks/pull/10), and coordinated-latch
+  [#42](https://github.com/robocurve/benchmark-tasks/pull/42). Use a specific
+  functional purpose, independent negative controls, visible measurements and
+  explicit approximation limits. The die's relevance rejection is a warning
+  against presenting generic dexterity alone as societal value.
+- Implemented a maximal-coordinate capsule rope, ordinary joint-command
+  manipulation, topology checks, complete geometry capture, offline replay and
+  a separate load assay. **No validated robot-tied knot or Dream run yet.**
+  `tasks/tie-overhand-knot/task.draft.json` deliberately has no fabricated media
+  identifier. README, JUDGING and VALIDATION all identify development status.
+- Current scorer: 0.5 for a released overhand with both tails ≥4 cm; 1.0 if
+  that same knot survives a 2 s seating ramp followed by 5 s at 0.981 N ±5%.
+  Assessor-induced knot loss retains the pre-test half credit, but invalid
+  physics erases all credit. Projected core size/slip are diagnostics only;
+  they did not reliably correspond to ruler measurements. Forty-three local
+  tests passed, including negative topology, corrupted evidence, force/timing
+  checks, fixture clearance and runner cleanup. They do not establish robot
+  feasibility.
+- With body damping 0.5 linear / 2 angular and bend damping 2e-5, the straight
+  cord's recorded centres did not drift over 5.05 s. The earlier low-damping
+  straight chain rolled spontaneously. A preformed-knot **diagnostic** survived
+  the new gradual load protocol with maximum joint gap 0.284 mm and all
+  topology checks passing. It always scores zero as a task. Shareable anonymous
+  traces and configuration are in the task's `evidence/` folder.
+- Unassisted crossing-lift/threading probes had excess tip/standing-strand
+  overlap; raising physics from 240 to 960 Hz did not fix it and made runs much
+  slower. Actual USD capsule height excludes its hemispheres, matching our
+  geometry check. GPU CCD should not be assumed effective merely because its
+  authored flag is true. Current default remains 240 Hz, with source snapshots
+  and native scene settings recorded per trial.
+- An untied three-peg jig settled without invalid rope contact. Its first
+  manipulation missed a pickup at 13.5 mm above the rope axis; actual fingertips
+  extend only 12.842 mm beyond TCP. At +9 mm, pickup and rotation worked, but
+  the working strand wrapped around an upright and slipped during lifting.
+  A revised far-side support layout and reflected standing lead passed offline
+  geometry/robot-clearance checks; its physical trial is in progress. The
+  scorer requires the whole cord ≥1 cm clear of all jig parts before credit.
+  Every revised run stores its exact fixture geometry for reproducible replay.
+- VM remains running during this entry. Start request was 23:57:16 UTC on
+  November 7, at $3.279064/hour. Stop and billing evidence must be recorded
+  before this session is considered closed. No Dream API request or upstream
+  PR/media upload has been made in this session.
 
 ### 2026-11-07 — rope and shoelace asset follow-up
 

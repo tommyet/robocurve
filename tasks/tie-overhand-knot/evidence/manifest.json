@@ -1,0 +1,23 @@
+{
+  "diagnostic-retention": {
+    "run": "assay-ramp-002",
+    "sha256": "dbd19d3cb40d6ae9b20d69c78063da5ec37de872119e63b49c04bee2ec566763",
+    "bytes": 3690622,
+    "task_score": 0.0,
+    "successful_robot_demo": false
+  },
+  "jig-idle": {
+    "run": "jig-idle-001",
+    "sha256": "8c9fd5675868845d8e5aceb82996f58abcb42823dc1fdb6bd742f2cabbf9beba",
+    "bytes": 2798945,
+    "task_score": 0.0,
+    "successful_robot_demo": false
+  },
+  "straight-idle": {
+    "run": "straight-damped-001",
+    "sha256": "3f92565065fe083496d4ae31ba9bd99c4c60d7b1d85d652d52efe00e8489bc0d",
+    "bytes": 1239322,
+    "task_score": 0.0,
+    "successful_robot_demo": false
+  }
+}
