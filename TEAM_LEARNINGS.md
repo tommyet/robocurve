@@ -169,7 +169,7 @@ result or measure outcome fairness.
 
 ## Dated session log
 
-### 2026-11-07–08 — overhand-knot development session (in progress)
+### 2026-11-07–08 — overhand-knot implementation and evaluation
 
 - Operator: repository agent; branch `codex/tie-overhand-knot` from `0ac98c6`.
   User requested task implementation using review feedback and strong PRs;
@@ -326,7 +326,15 @@ result or measure outcome fairness.
 - All final evidence and action logs were downloaded before stopping. At
   05:02:12 UTC, `nvidia-smi`, process inspection and `who` found no GPU jobs,
   simulator processes or logged-in sessions. Stop requested at 05:02:48 UTC;
-  shutdown confirmation and full-session cost are recorded below when complete.
+  confirmed **STOPPED at 05:10:51 UTC**. Start request to confirmation was
+  5 h 13 m 36 s: a conservative **$17.14** for the whole development session at
+  $3.279064/hour, including failed experiments, setup, review and shutdown. This
+  is not an invoice and excludes later retained storage and Dream API charges.
+  Posted credits were $169.67 versus $186.16 initially; the $16.49 posted change
+  may lag and is not an additional cost. The installation/disk is retained as
+  agreed. Session/billing/backup evidence remains local in the ignored artifact
+  directory. Code and curated evidence are shared on the fork's `main`; no
+  upstream PR or media upload was made.
 
 ### 2026-11-07 — rope and shoelace asset follow-up
 
