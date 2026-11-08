@@ -75,7 +75,9 @@ developers and their agents, not a competition submission document.
   `expired` as idle-session expiry. Prepare one bounded evaluation with shorter
   action batches and stop on session replacement. Keep the successful demo's
   scene, physics, instruction and scorer unchanged.
-- Brev CLI refreshed authentication after transient API connection failures.
+- Brev CLI succeeded after two direct API reads failed with curl exit 56;
+  the next API read also succeeded. No interactive login was needed. The
+  connection failures' cause was not established.
   At 15:43:36 UTC the shared VM was STOPPED with no operation pending; rate
   remained $2.729872/hour and posted credits were $150.07. Prepare the run
   locally before restarting, then download evidence and confirm shutdown.
@@ -85,13 +87,45 @@ developers and their agents, not a competition submission document.
   the original demo runner's AST; scene, scorer, controller and physics hashes
   still match demo 020. A test-only measured coordinate is now embedded so the
   lean submission does not depend on the historical pilot ledger.
-- **Session active:** start requested at **15:48:01 UTC**. The 15:49:26 UTC
-  process audit found no GPU jobs, other simulator/training jobs or login
-  sessions. Final Dream trial **table-022** is running from a frozen source
-  archive, seed 0, 3,000 actions and the unchanged 240→960 Hz schedule. At
-  15:54:08 UTC it reached 38.55 simulated seconds with valid geometry and no
-  session replacement. Root owns this run; do not stop the shared VM while
-  it runs. Evidence and final shutdown/cost will be recorded here.
+- **Dream trial complete:** table-022 ran 15:49:39–16:16:47 UTC. It completed
+  all 3,000 actions / 150 simulated seconds, with 371 successful requests in
+  one session and no retries. Recorded, frozen-source and current-source
+  replay agree on **0.0**; the cord remains an unknot. Runner time was
+  1,626.185 s; outer process time was 1,628.319 s. All action bounds and native
+  physics closure checks pass. Eight-row requests kept maximum inter-request
+  idle time to 8.555 s, avoiding the previous session expiry problem.
+- Demo 020 remains **1.0** under final rescoring at 138.30 s. Its full sampled
+  robot-geometry checks pass. Dream has no inter-arm or tested same-arm
+  intersections, but 16 fingertip/table penetrations of at most 0.294 mm;
+  disclose this model-run limitation rather than claiming a blanket geometry
+  pass. Both summaries, source hashes and fidelity limits are in the task's
+  `evidence/final-runs.json`. The successful demo has a narrow rope-contact
+  validity margin and establishes one fixed-seed success, not repeatability.
+- All 38 requested Dream artifacts were downloaded and hash-verified. Full
+  raw camera arrays remain on the retained disk; final videos, source and
+  trajectories are local. The 16:18:23 UTC process audit found no GPU or
+  simulator jobs or other logged-in operators. Stop requested 16:19:21 UTC;
+  shutdown was subsequently confirmed below. Do not repeat the stop mutation.
+- Final media uploaded as **M-SYNKW3**: unchanged full-length demo 020 and
+  Dream 022 videos, with elapsed-time labels, plus the matching setup image.
+  Videos are H.264/yuv420p, 18.22 MB and 20.63 MB. The lean submission contains
+  42 allowlisted files (~480 KB), exact tested model instruction, concise
+  judging criteria and no private references, credentials or team notes.
+- **Submitted:** [PR #1153](https://github.com/robocurve/benchmark-tasks/pull/1153),
+  `codex/submit-overhand-knot` at `8198555`, was received at 16:26:06 UTC as
+  **TK-VWRHTS**, waiting for review. GitHub confirms exactly 42 files, all
+  within `tasks/tie-overhand-knot/`, from author `tommyet`. Do not merge it or
+  push task changes while review is pending; follow the board's revision rules.
+  Submission receipt is `artifacts/rope-knot-submission/submission-receipt.json`.
+- **VM stopped:** confirmed STOPPED with no pending operation at 16:27:52 UTC,
+  preserving the 256 GiB disk. Start request to first confirmed stop was
+  39m51s; at $2.729872/hour this conservatively estimates **$1.81 Brev**.
+  The 371 successful Dream requests add **$0.5194**, about **$2.33 combined**
+  for this final session. These are catalog-based estimates, not an invoice;
+  they exclude later retained storage. Posted Brev credits were $149.54 and
+  lag usage. Evidence: `artifacts/rope-knot-submission/session.json` and
+  `billing-final.json`. The prior development sessions are separate; do not
+  add the runner-only estimate to this whole-session estimate.
 - Official model pricing at this check is 140 millicents per inference
   ($0.0014). A complete eight-row run needs about 371 successful requests,
   approximately $0.5194 before retries. The read-only API key cannot read the

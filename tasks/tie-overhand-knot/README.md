@@ -5,9 +5,9 @@ Tie one overhand knot in the blue cord. Pull the ends apart to at least
 let go and leave the knot intact for five seconds.
 
 The scripted demo scores **1.0** and finishes in **138.30 seconds**. The recorded
-Dream run scores **0.0**. Both were independently replayed. Dream's server
-session expired 61 times, restarting its inference context; this limits
-interpretation of that result as a baseline.
+Dream run scores **0.0** after all 3,000 actions. Both were independently
+replayed. Dream completed 371 requests in one uninterrupted session, with
+no retries.
 
 ## Setup
 
@@ -54,7 +54,7 @@ silent loss of episode memory. Both policies use the same layout,
 seed and 3,000-action limit (150 seconds at 20 Hz), including final release.
 Physics runs at 240 Hz for 78 seconds, then 960 Hz for every policy, without
 extra actions or forces. On an NVIDIA L40S, the demo took 29.3 wall-clock
-minutes and Dream took 26.2 minutes. Runs save source, configuration, actions,
+minutes and Dream took 27.1 minutes. Runs save source, configuration, actions,
 geometry, video and scoring certificates for independent replay.
 
 The demo lays a crossing, raises a local arch, passes the red terminal under
@@ -72,7 +72,9 @@ Demo 020 meets the span check from 130.75–131.75 seconds and the release check
 from 133.30–138.30 seconds. During those intervals, its corrected tip span is
 at least 117.0074 cm, the cord is at least 10.8722 cm above the table, and its
 released clearance from the robot is at least 3.7941 cm. All recorded robot
-poses passed inter-arm, table and nonadjacent same-arm mesh checks. See
+poses passed inter-arm, table and nonadjacent same-arm mesh checks. Dream
+had 16 sampled fingertip/table penetrations, at most 0.294 mm; it formed no
+knot and scored zero. See
 [VALIDATION.json](VALIDATION.json) and [the final-run evidence](evidence/final-runs.json).
 
 The cord uses 104 rigid capsules with bending resistance, free axial twist

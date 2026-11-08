@@ -259,11 +259,375 @@
       "Friction and bending are uncalibrated; no real-cord trial has been performed.",
       "Geometry is checked at 20 Hz, not every physics substep. The 9.509743 mm rope separation has only 9.743 micrometres margin above the validity threshold.",
       "Topology is a conservative finite closure/view certificate supplemented by visual review; this is not a force or strength test."
-    ]
+    ],
+    "final_submission_rescore": {
+      "score": 1.0,
+      "samples": 2767,
+      "time_s": 138.2999999999972,
+      "policy_physics_certification": {
+        "required": true,
+        "status": "complete",
+        "errors": [],
+        "schema": "fixed-policy-physics-v2",
+        "native_closure_status": "verified"
+      },
+      "execution_status": "complete",
+      "sha256": "ed144f1719d60255ab844091149e5cf3d3ae858a9cb05fd6a75388ae47a94c73",
+      "scorer_sha256": "278b126c734b9867cacf3e5779aa210b0f7a1162f6a9e8cf4772020929269fb5",
+      "replay_sha256": "beba1636888d382b4bb83b728d6f6dad1760e11f8579924e7ff311c4885558bc"
+    }
   },
   "dream": {
+    "schema": "overhand-final-dream-evidence-v1",
     "trial": "table-022",
-    "status": "running"
+    "scope": "Final direct Dream-1 evaluation with continuous server session; summary does not replace recordings.",
+    "seed": 0,
+    "instruction": "Tie one overhand knot in the blue cord. Pull the ends apart to at least 117 cm for one second with the whole cord at least 1 cm above the table, then let go and leave the knot intact for five seconds.",
+    "result": {
+      "score": 0.0,
+      "independent_frozen_replay": 0.0,
+      "independent_current_replay": 0.0,
+      "recorded_replay_agreement": true,
+      "score_version": "overhand-bimanual-v4",
+      "invalid": null,
+      "initial_uncrossed_unknot_validated": true,
+      "final_topology": "unknot",
+      "samples": 3001,
+      "actions": 3000,
+      "final_simulation_time_s": 149.99999999999986,
+      "action_limit": 3000,
+      "run_limit_s": 150.0,
+      "control_hz": 20,
+      "finalized": true,
+      "execution": "complete",
+      "wall_seconds": 1626.185,
+      "wall_seconds_basis": "Simulator runner elapsed time; excludes outer process setup and teardown.",
+      "outer_execution_wall_seconds": 1628.318834819
+    },
+    "matching_demo": {
+      "trial": "table-020",
+      "source_changes": [
+        "run.py",
+        "visuals.py"
+      ],
+      "scene_config_seed_cameras_action_limits_and_scorer_match": true,
+      "demo_runner_ast_compatible": true,
+      "visuals_change_is_comment_only": true
+    },
+    "transport": {
+      "model": "dreamlabs/dream-1-beta",
+      "transport": "direct",
+      "dry_run": false,
+      "runtime_policy": "dream",
+      "inspect_policy_name": "dream",
+      "recorded_policy_name": "dream",
+      "rows_per_request": 8,
+      "preroll_steps": 32,
+      "requests": 371,
+      "attempts": 371,
+      "retries": 0,
+      "distinct_sessions": 1,
+      "successful_request_events": 371,
+      "session_replacement_events": 0,
+      "uninterrupted_session": true,
+      "maximum_idle_wall_seconds": 8.554643490999979,
+      "mean_idle_wall_seconds": 3.8719543659459448,
+      "maximum_request_wall_seconds": 3.7297914799999887,
+      "prediction_rows": 17808,
+      "prediction_rows_beyond_limits": 37,
+      "scope": "SDK transcript and independent client-call telemetry agree. Predictions include unused rows; the beyond-limits count covers selected raw rows, while executed action bounds are checked separately. No session identifiers or credentials reproduced."
+    },
+    "native_physics": {
+      "schema": "fixed-policy-physics-v2",
+      "status": "complete",
+      "schedule": {
+        "initial_physics_hz": 240,
+        "target_physics_hz": 960,
+        "control_hz": 20,
+        "switch_after_completed_actions": 1560,
+        "switch_capture_time_s": 78.0
+      },
+      "validated_post_switch_intervals": 1440,
+      "substeps_per_interval": 48,
+      "switch_state_and_counters_unchanged": true,
+      "state_writes": false,
+      "counter_writes": false,
+      "policy_actions_modified": false,
+      "external_force_path_called": false,
+      "callback_removed": true,
+      "closure": {
+        "schema": "native-counter-closure-v1",
+        "complete": true,
+        "callback_error": null,
+        "expected_counters": {
+          "native": 87960,
+          "environment": 87960
+        },
+        "observed_counters": {
+          "native": 87960,
+          "environment": 87960
+        }
+      }
+    },
+    "executed_action_checks": {
+      "executed_actions": 3000,
+      "finite": true,
+      "range_violations": 0,
+      "step_limit_violations": 0,
+      "action_file_sha256": "eb354f34739760a25d6178437ad2458a96e4702177e12983bc2d829fde1ea249"
+    },
+    "outcome": {
+      "recorded_topology_frame_counts": {
+        "unknot": 3001
+      },
+      "span_certificate": null,
+      "release_seconds": 0.0,
+      "material_motion": {
+        "maximum_material_centre_displacement_m": 0.3014485353850938,
+        "material_index": 103,
+        "time_s": 82.94999999999743,
+        "maximum_centre_vertical_change_m": 0.09673184156417847,
+        "scope": "Corresponding capsule centres across recorded 20 Hz samples; includes settling."
+      }
+    },
+    "frozen_source": {
+      "archive_file": "table-022-source.tgz",
+      "archive_sha256": "c4ebc1c067aaa3b3906dcc4a7bc2c2be8ab7360ece559778db85cc63e31c2587",
+      "snapshot_matches_all_runtime_module_hashes": true,
+      "source_sha256": {
+        "bimanual_scoring.py": "278b126c734b9867cacf3e5779aa210b0f7a1162f6a9e8cf4772020929269fb5",
+        "table_policy.py": "0f33a9a3a1cf048bba9c7785301ec3b3a9b7bce3f10d884c836057c487c61ef9",
+        "task.py": "ac5174aa5eed3bf7cd0b7b1df9ebd1c647afa3f29a7a081b24dc06484c11e031",
+        "run.py": "6a4f0d707e419ee3cf55a8c9b80f16712ca658451d6c28a2ff0692d8e7d3f248",
+        "config.py": "d2c55f0162322740d2bac19dc12fe4709ab283e28364902e6c4065b5779555b0",
+        "fixed_policy_physics.py": "c60c6b55b758653ca3deb16a6fb6d8a879c7f0c33737314f35012b437a8c3c62",
+        "scoring.py": "9a3519561f15b83880c138eb7beedf866d9de21db247205257cf7c895d5f5c78",
+        "render_review.py": "d87ff2e0215ac36c6298e23669ef49bfc90ed21996b897a26610703ac4cccaf6",
+        "telemetry.py": "fb64df7679298e5bacaa27f69d25ecb0f59d07f6b95859799a164071518854fa",
+        "jig_policy.py": "ad22bd0c1559ad7b3a7b4401e297ad001cd50b4c16e7bc8f3ec24173a35b8311",
+        "replay.py": "beba1636888d382b4bb83b728d6f6dad1760e11f8579924e7ff311c4885558bc",
+        "diagnostic_layouts.py": "b87524a85ecbeeb18c97d1170459338e9c9f05232e923eb8f29d68f577d93a06",
+        "rope.py": "4783ebd97f3f0afe9c70b3fbec2592bd0a7311e4f7e36c43353d0d81d19ab692",
+        "hand_geometry.py": "5eb44a5b09551bb738a7a42aa0322566213b7170806290886c6e13b3ccf44a10",
+        "topology.py": "21057280e6d69123019e432d2b50934e97b5f5131349186541215755f99a5ff2",
+        "demo_policy.py": "69edf1f5d0df691c499be324489cc6c677618dd8dec90e00dbb0118428fe9546",
+        "jig_layout.py": "8c6645f3c465e3f946336a8de2e51593a461d5fbefa5cf5cd8740b7520a7ee16",
+        "visuals.py": "cadb779772c1e6ca946113be7be99715d6ab27e41b4dc6383fcc9a29611eb5bd",
+        "assay_physics.py": "4455f6ec6fe8c61ea7d1e66cdbc10a56ae928f91337bcaa23de630d391b008e1",
+        "bimanual_policy.py": "b374b20782717f0f15b9ff07bbcd6920542e7e9247703931400005f0350c8127",
+        "fixtures.py": "d30eb72c85d49cb91a01605e6bef26860c595d7d77aba79faeea1cd3924a3e60",
+        "proof_load.py": "0e7339480dbd059befcb1b57616991e6086aa2e9d02839b5259b8d87ac5b428b"
+      }
+    },
+    "media": {
+      "raw_dream": {
+        "file": "review.mp4",
+        "sha256": "31b79506b84c7a42042f16b54d0bb005a9a901e46517578fec002899ee6dd31b"
+      },
+      "frames": 3001,
+      "fps": 20,
+      "frame_count_matches_trajectory": true,
+      "labelled_dream": {
+        "file": "review-labelled.mp4",
+        "sha256": "58f7597fa37dc2b5ff8e60a0f6f92bf92b506bdafd5a6e57fc5c9df261e3228c",
+        "bytes": 20628719,
+        "manifest_file": "review-labelled.json",
+        "manifest_sha256": "377bbc3eef7f069f0aeb6d794a5238de50fc502fc8c9dafdd163350b8264eb97",
+        "frames": 3001,
+        "fps": 20,
+        "timestamps_preserved": true,
+        "interpolated_frames": false,
+        "score_displayed": false,
+        "overlay": "Recorded elapsed simulation time and policy phase."
+      }
+    },
+    "sampled_robot_geometry": {
+      "sample_count": 3001,
+      "start_s": 0.0,
+      "end_s": 149.99999999999986,
+      "minimum_arm": {
+        "time_s": 108.29999999999599,
+        "arm_separation_lower_m": 0.07982256696107054,
+        "arm_closest": [
+          "link4",
+          "link4",
+          "native complete-link OBB"
+        ],
+        "nonbase_table_min_vertex_height_m": 0.0607582575583967,
+        "table_closest": [
+          0,
+          "tip_right",
+          "collision/tip_right/tip_right_005.stl"
+        ]
+      },
+      "minimum_table": {
+        "time_s": 42.299999999999734,
+        "arm_separation_lower_m": 0.4077996622733657,
+        "arm_closest": [
+          "base",
+          "base",
+          "native complete-link OBB"
+        ],
+        "nonbase_table_min_vertex_height_m": -0.00029368879545865756,
+        "table_closest": [
+          1,
+          "tip_left",
+          "collision/tip_left/tip_left_014.stl"
+        ]
+      },
+      "limitations": [
+        "Sampled20Hz native link-frame poses; no claim about motion between captures.",
+        "Authored per-STL convex hulls before PhysX cooking/contact margins.",
+        "Positive separation values are conservative lower bounds, not necessarily exact nearest distance.",
+        "Base omitted from table-plane test because it is intentionally bolted to table; arm-to-arm includes base.",
+        "Other objects/rope contacts and self-collision within one arm are outside this audit."
+      ],
+      "file": "actual-robot-clearance-full.json",
+      "sha256": "b6cd7c3f4f5cc1fff75efd12e32da5b1b8b593390f21c9b8c8d5d1ecd06025f0",
+      "intersection_count": 16,
+      "intersection_counts_by_kind": {
+        "nonbase mesh below table plane": 16
+      },
+      "first_contact_s": 42.24999999999974,
+      "last_contact_s": 71.49999999999808,
+      "deepest_contact": {
+        "time_s": 42.299999999999734,
+        "kind": "nonbase mesh below table plane",
+        "minimum_m": -0.00029368879545865756,
+        "closest": [
+          1,
+          "tip_left",
+          "collision/tip_left/tip_left_014.stl"
+        ]
+      },
+      "table_contact_footprint": {
+        "scope": "Confirms below-plane native authored-mesh vertices fall within the physical standard tabletop XY footprint. Same recorded20Hz limitation as the full audit.",
+        "table_center_m": [
+          0.36,
+          0.0,
+          0.7174999999999999
+        ],
+        "table_size_m": [
+          1.1,
+          1.3,
+          0.06
+        ],
+        "all_detected_contacts_within_tabletop": true,
+        "file": "actual-table-contact-footprint.json",
+        "sha256": "ea51bc4e1c63ee97ffc1e24f458cd82f82c59d04e74dcca2748b2310fb2883db"
+      }
+    },
+    "sampled_own_arm_geometry": {
+      "sample_count": 3001,
+      "start_s": 0.0,
+      "end_s": 149.99999999999986,
+      "minimum": {
+        "time_s": 72.44999999999803,
+        "side": "left",
+        "links": [
+          "link3",
+          "link5"
+        ],
+        "separation_lower_m": 0.005000095409521954,
+        "closest": [
+          "collision/link3/link3_001.stl",
+          "collision/link5/link5_004.stl",
+          "authored-mesh AABB"
+        ]
+      },
+      "excluded_adjacent_pairs": [
+        [
+          "base",
+          "link1"
+        ],
+        [
+          "gripper",
+          "link5"
+        ],
+        [
+          "gripper",
+          "tip_left"
+        ],
+        [
+          "gripper",
+          "tip_right"
+        ],
+        [
+          "link1",
+          "link2"
+        ],
+        [
+          "link2",
+          "link3"
+        ],
+        [
+          "link3",
+          "link4"
+        ],
+        [
+          "link4",
+          "link5"
+        ]
+      ],
+      "excluded_gripper_assembly_pairs": [
+        [
+          "gripper",
+          "tip_left"
+        ],
+        [
+          "gripper",
+          "tip_right"
+        ],
+        [
+          "tip_left",
+          "tip_right"
+        ]
+      ],
+      "limitations": [
+        "Captured native link poses only; no between-frame collision guarantee.",
+        "Per-STL convex hulls before native PhysX cooking or contact offsets.",
+        "Positive separation values are conservative lower bounds rather than necessarily exact Euclidean distances.",
+        "All explicitly excluded adjacent and internal gripper-assembly pairs are outside this result; finger links against every nonadjacent external arm link remain tested.",
+        "This audit covers own-arm geometry only. Separate audit covers other-arm and table."
+      ],
+      "file": "actual-own-arm-clearance-full.json",
+      "sha256": "435904b063d5be668729344e50b87125d19dbaa278aa57892e7fc795fd8a0a67",
+      "intersection_count": 0,
+      "intersection_counts_by_kind": {}
+    },
+    "visual_review": {
+      "complete": true,
+      "scope": "Six chronological frames visually inspected at 0, 30, 60, 90, 120 and 150 seconds; full video decoded without errors. Not continuous human frame-by-frame review.",
+      "observations": [
+        "Anonymous fixed scene and readable elapsed-time overlay.",
+        "Cord remains visibly unknotted, matching zero score.",
+        "The robot contacts and displaces the red end; no completed tying sequence is visible."
+      ],
+      "reviewed_media": "review-labelled.mp4",
+      "media_sha256": "58f7597fa37dc2b5ff8e60a0f6f92bf92b506bdafd5a6e57fc5c9df261e3228c",
+      "contact_sheet_sha256": "b494351c4f90802639d82496dd8ed21a713845080df2eab1f761799c133005f9",
+      "h264": true,
+      "pixel_format": "yuv420p",
+      "fps": 20,
+      "fast_start": true,
+      "full_decode_pass": true,
+      "bytes": 20628719
+    },
+    "artifact_sha256": {
+      "trajectory.jsonl": "98a2439c677bd0ca06c0d1428077fb987a1d9fc6797029d8bacf166185eb44ea",
+      "runtime.json": "eca66b2fd73bd9d6ac1c75228e6fe49e08c656efebffebf9ed36055bcdbfa07a",
+      "score-summary.json": "0e046b683853ccf66586f9fb28224669bf24278f347804da380c1cef4c138aea",
+      "replay-summary.json": "64da30f4fdc7d2ce6c3475760c4031e46e8f14f481c3620792abbc3e1365a168",
+      "replay-current-summary.json": "64da30f4fdc7d2ce6c3475760c4031e46e8f14f481c3620792abbc3e1365a168",
+      "policy-physics-transition.json": "f6a5d794c7221bb8723d331568cbe1d716c6b71b8b659497fdabc474215c400e",
+      "review.mp4": "31b79506b84c7a42042f16b54d0bb005a9a901e46517578fec002899ee6dd31b",
+      "matching-dream-audit.json": "68a29890a7ce8d8b3aa0f3f6f25be9eaf41f4d3aa7f360c143b3c9582f1867fd"
+    },
+    "limitations": [
+      "One fixed-seed evaluation, not a statistical performance estimate.",
+      "Friction and bending remain uncalibrated; robot geometry is audited at 20 Hz, not between captures.",
+      "The Dream run has 16 sampled finger/table penetrations, at most 0.294 mm; rope geometry and score remain valid."
+    ]
   },
   "demo_source_compatibility": {
     "scope": "Source-only compatibility audit; no new simulation. Frozen demo 020 remains unchanged.",

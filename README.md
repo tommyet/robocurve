@@ -31,7 +31,8 @@ limitations. Check the live task board before choosing a new objective.
 - [The table-method overhand knot](tasks/tie-overhand-knot/README.md) includes a
   full-score bimanual demo, capsule-cord model and independent geometry audits.
   It uses no fixtures or external tightening forces. Read its fidelity limits
-  before reusing the rope model; the task is not submitted.
+  before reusing the rope model. [PR #1153](https://github.com/robocurve/benchmark-tasks/pull/1153)
+  was received as **TK-VWRHTS** and is waiting for review.
 - `brick_workbench/` contains reusable brick geometry, scoring and CAD code. Its
   `build_tasks.py` regenerates all four existing brick tasks and preserves their previous scores
   and media IDs. Create a new task folder deliberately; do not use that builder as a generic

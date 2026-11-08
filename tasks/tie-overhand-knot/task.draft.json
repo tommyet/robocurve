@@ -13,5 +13,5 @@
   "run_limit": "3,000 control steps (150 seconds at 20 Hz), including the five-second release check.",
   "reset_notes": "Untie the reusable cord and restore the flat, uncrossed U.",
   "fidelity": "104 joined capsules approximate braided polyester. Grasping and threading use physical contact; no fixtures or endpoint forces assist tying. Mass follows a commercial 10 mm cord; friction and bending are uncalibrated. Fibres, stretch and wear are omitted. The span check limits slack, not knot strength. Physics runs at 240 Hz for 78 s, then 960 Hz for every policy; control stays at 20 Hz.",
-  "scores": "Dream-1 run: 0.0; demo: 1.0. Both independently replayed. Dream completed, but 61 API session expirations restarted its inference context; this limits interpretation of its result."
+  "scores": "Dream-1 run: 0.0; demo: 1.0. Both independently replayed. Dream completed all 3,000 actions in one uninterrupted session."
 }
