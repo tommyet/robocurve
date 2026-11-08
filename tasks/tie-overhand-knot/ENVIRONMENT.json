@@ -1,6 +1,6 @@
 {
   "checked_utc": "2026-11-08T03:39:36Z",
-  "scope": "Retained installation. Original environment verification and historical platform below concern v3 demo-009/dream-001; v4 pilot runtime/platform verification is recorded separately.",
+  "scope": "Pinned simulator installation used for the current table-method demo and Dream evaluation.",
   "python": "3.12.16",
   "packages": {
     "numpy": "2.5.4",
@@ -43,19 +43,9 @@
   },
   "platform": {
     "gpu": "NVIDIA L40S",
-    "compute_instance": "g6e.2xlarge",
-    "scope": "Historical v3 trials before resizing; retained GPU model and installation are unchanged."
-  },
-  "v4_pilot_environment": {
-    "date_utc": "2026-11-08",
-    "runtime_reference": "loop-004",
-    "python": "3.12.16",
-    "packages_match_retained_installation": true,
-    "platform": {
-      "gpu": "NVIDIA L40S",
-      "compute_instance": "g6e.xlarge",
-      "ram_gib": 32,
-      "vcpus": 4
-    }
+    "vram_gib": 48,
+    "compute_instance": "g6e.xlarge",
+    "ram_gib": 32,
+    "vcpus": 4
   }
 }

@@ -9,10 +9,12 @@ not physical knot retention, scene startup, or the complete Inspect CLI.
 Run: python -m unittest discover -s tasks/tie-overhand-knot -p test_runner.py -v
 """
 import ast
+import argparse
 from copy import deepcopy
 import io
 import hashlib
 import json
+import platform
 from pathlib import Path
 import subprocess
 import sys
@@ -161,6 +163,18 @@ class RunnerTests(unittest.TestCase):
                     self.assertIn('v4 has only a free, uncrossed cord', result.stderr)
                     self.assertNotIn('ModuleNotFoundError', result.stderr)
                     self.assertFalse(output.exists())
+
+    def test_dream_chunk_size_rejected_before_simulator_import(self):
+        with tempfile.TemporaryDirectory() as folder:
+            output = Path(folder) / 'must-not-be-created'
+            for value in ('0', '49'):
+                result = subprocess.run([sys.executable, str(Path(__file__).with_name('run.py')),
+                    '--policy', 'dream', '--dream-rows-per-request', value,
+                    '--log-dir', str(output)], capture_output=True, text=True)
+                self.assertEqual(result.returncode, 2)
+                self.assertIn('invalid choice', result.stderr)
+                self.assertNotIn('ModuleNotFoundError', result.stderr)
+                self.assertFalse(output.exists())
 
     def setUp(self):
         temp = tempfile.TemporaryDirectory()
@@ -570,6 +584,133 @@ class ExecutionOutcomeTests(unittest.TestCase):
         self.assertEqual(self.check(self.folder, set(), 0)['status'], 'failed')
         new.write_text('{')
         self.assertEqual(self.check(self.folder, {old}, 0)['status'], 'failed')
+
+
+class DreamTransportTests(unittest.TestCase):
+    """Exercise the retained real SDK using a fake, credential-free client."""
+
+    def setUp(self):
+        import dream
+        from run import _register_dream_policy
+        self.register_policy = _register_dream_policy
+        self.factories, self.audit = {}, []
+        self.responses = ['success', 'success']
+        responses = self.responses
+
+        class Client:
+            calls = 0
+
+            def __init__(self):
+                self.session_id = None
+                self.last_timing = {'serve_infer_ms': 1}
+
+            def get_models(self):
+                return [SimpleNamespace(id='dreamlabs/dream-1-beta')]
+
+            def policy(self, config):
+                self.policy_config = config
+
+            def get_action(self, *, commanded=None):
+                Client.calls += 1
+                response = responses.pop(0)
+                if response == 'expired':
+                    self.session_id = 'replacement'
+                    raise dream.DreamSessionExpired('test session expired', reason='expired')
+                self.session_id = 'replacement' if response == 'changed' else 'original'
+                return dict(q_l_chunk=np.zeros((48, 7)), q_r_chunk=np.zeros((48, 7)))
+
+            def close(self):
+                pass
+
+        self.client = Client
+        mock = patch.object(dream, 'DreamClient', Client)
+        mock.start()
+        self.addCleanup(mock.stop)
+
+    def register(self, kind, name):
+        self.assertEqual(kind, 'policy')
+        def save(factory):
+            self.factories[name] = factory
+            return factory
+        return save
+
+    def session(self, rows=8):
+        from inspect_robots_dream.session import Episode
+        name = self.register_policy(rows, self.register, self.audit)
+        policy = self.factories[name]()
+        self.assertEqual(policy.rows_per_request, rows)
+        policy._session.start(Episode())
+        return policy._session
+
+    def test_first_session_and_continuing_session_return_unchanged_chunks(self):
+        session = self.session(12)
+        for _ in range(2):
+            chunk = session.act(None)
+            self.assertEqual(chunk.rows.shape, (48, 14))
+            self.assertEqual(chunk.attempts, 1)
+            np.testing.assert_array_equal(chunk.rows, 0.)
+        self.assertEqual(self.client.calls, 2)
+        self.assertEqual([event['status'] for event in self.audit], ['success', 'success'])
+        self.assertIsNone(self.audit[0]['idle_wall_seconds'])
+        self.assertGreaterEqual(self.audit[1]['idle_wall_seconds'], 0.)
+
+    def test_expiry_stops_before_adapter_retry(self):
+        self.responses[:] = ['success', 'expired', 'success']
+        session = self.session()
+        session.act(None)
+        with self.assertRaisesRegex(RuntimeError, 'stopped before retry'):
+            session.act(None)
+        self.assertEqual(self.client.calls, 2)
+        self.assertEqual(self.responses, ['success'])
+        self.assertEqual(self.audit[-1]['status'], 'session_replaced')
+        self.assertEqual(self.audit[-1]['reason'], 'expired')
+
+    def test_silent_session_change_cannot_return_replacement_actions(self):
+        self.responses[:] = ['success', 'changed']
+        session = self.session()
+        session.act(None)
+        with self.assertRaisesRegex(RuntimeError, 'stopped before executing'):
+            session.act(None)
+        self.assertEqual(self.client.calls, 2)
+        self.assertEqual(self.audit[-1]['status'], 'error')
+
+    def test_actual_cli_default_override_and_demo_branch(self):
+        # Extract only the real parser/registration/metadata statements, leaving
+        # simulator creation out. This checks the CLI-to-factory connection.
+        import run
+        source = Path(run.__file__)
+        main = next(node for node in ast.parse(source.read_text()).body
+                    if isinstance(node, ast.FunctionDef) and node.name == 'main')
+        parsed = next(i for i, node in enumerate(main.body)
+                      if isinstance(node, ast.Assign) and isinstance(node.targets[0], ast.Name)
+                      and node.targets[0].id == 'args')
+        setup = []
+        for node in main.body[parsed + 1:]:
+            if isinstance(node, ast.Assign) and isinstance(node.targets[0], ast.Name):
+                if node.targets[0].id in ('policy_name', 'dream_request_audit', 'metadata'):
+                    setup.append(node)
+            elif isinstance(node, ast.If) and any(
+                    isinstance(child, ast.Call) and isinstance(child.func, ast.Name)
+                    and child.func.id == '_register_dream_policy' for child in ast.walk(node)):
+                setup.append(node)
+            elif isinstance(node, ast.If) and "metadata['dream_rows_per_request']" in ast.unparse(node):
+                setup.append(node)
+        tree = ast.Module(body=main.body[:parsed + 1] + setup, type_ignores=[])
+        for policy, option, expected in [('dream', [], 8), ('dream', ['--dream-rows-per-request', '12'], 12),
+                                         ('demo', [], None)]:
+            with self.subTest(policy=policy, expected=expected):
+                namespace = dict(argparse=argparse, CONFIG={'run_limit': 3000}, Path=Path,
+                    __doc__='test', _register_dream_policy=self.register_policy,
+                    register=self.register, platform=platform, SCORE_VERSION=run.SCORE_VERSION)
+                with patch.object(sys, 'argv', ['run.py', '--policy', policy, '--log-dir', '/tmp/test-only', *option]), \
+                     patch.dict(sys.modules, {'demo_policy': SimpleNamespace(register_policy=lambda mode: 'scripted') } ):
+                    exec(compile(tree, str(source), 'exec'), namespace)
+                if expected is None:
+                    self.assertEqual(namespace['policy_name'], 'scripted')
+                    self.assertNotIn('dream_rows_per_request', namespace['metadata'])
+                else:
+                    self.assertEqual(namespace['metadata']['dream_rows_per_request'], expected)
+                    self.assertEqual(self.factories[namespace['policy_name']]().rows_per_request, expected)
 
 
 if __name__ == "__main__":

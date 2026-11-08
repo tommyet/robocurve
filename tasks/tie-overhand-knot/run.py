@@ -86,6 +86,48 @@ def _record_execution_outcome(log_dir, metadata, execution):
     path.write_text(json.dumps(summary, indent=2) + '\n')
 
 
+def _register_dream_policy(rows_per_request, register, request_audit):
+    """Use supported SDK hooks; a replaced server episode cannot continue silently."""
+    import dream
+    from inspect_robots_dream import DreamPolicy
+    from inspect_robots_dream.session import DreamSession
+
+    class ContinuousDreamClient(dream.DreamClient):
+        def get_action(self, *, commanded=None):
+            started = time.monotonic()
+            previous = getattr(self, '_last_success_at', None)
+            before = self.session_id
+            event = dict(request=len(request_audit) + 1,
+                         idle_wall_seconds=None if previous is None else started - previous)
+            request_audit.append(event)
+            try:
+                reply = super().get_action(commanded=commanded)
+                if before is not None and self.session_id != before:
+                    raise RuntimeError('Dream server session changed; evaluation stopped before executing its reply')
+            except dream.DreamSessionExpired as exc:
+                event.update(status='session_replaced', reason=exc.reason)
+                # The adapter retries DreamSessionExpired. A plain RuntimeError
+                # instead reaches Inspect's normal failed-execution finalization.
+                raise RuntimeError('Dream server session expired or was replaced; evaluation stopped before retry') from exc
+            except Exception as exc:
+                event.update(status='error', error_type=type(exc).__name__)
+                raise
+            else:
+                self._last_success_at = time.monotonic()
+                event.update(status='success', session_changed=False)
+                return reply
+            finally:
+                event['wall_seconds'] = time.monotonic() - started
+
+    def make_policy():
+        return DreamPolicy(rows_per_request=rows_per_request,
+                           session=DreamSession(make_client=ContinuousDreamClient))
+
+    name = 'rope_dream'
+    register('policy', name)(make_policy)
+    return name
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--policy", choices=("demo", "dream", "idle", "grasp", "loop", "thread", "jig"), default="demo")
@@ -93,6 +135,8 @@ def main():
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--log-dir", type=Path, required=True)
     parser.add_argument("--headless", choices=("true", "false"), default="true")
+    parser.add_argument('--dream-rows-per-request', type=int, choices=range(1, 49), default=8,
+                        help='Dream action rows played before requesting a new chunk (default: 8)')
     parser.add_argument("--physics-hz", type=int, choices=(240, 480, 960), default=240,
                         help="Physics substeps; control and recorded policy observations remain 20 Hz")
     parser.add_argument("--assay-physics-hz", type=int, choices=(480, 960), default=960,
@@ -644,9 +688,12 @@ def main():
 
     register("embodiment", "audited_rope")(AuditedRopeEmbodiment)
     policy_name = "dream"
+    dream_request_audit = []
     if args.policy in ("demo", "idle", "grasp", "loop", "thread", "jig"):
         from demo_policy import register_policy
         policy_name = register_policy(mode=args.policy)
+    elif args.policy == 'dream':
+        policy_name = _register_dream_policy(args.dream_rows_per_request, register, dream_request_audit)
     cli_args = [
         "run", "--embodiment", "audited_rope", "--policy", policy_name,
         "-E", f"task={HERE / 'task.py'}", "-E", "object_jitter=0", "-E", "control_hz=20",
@@ -659,6 +706,9 @@ def main():
     metadata['policy_physics_schedule'] = policy_physics_schedule
     if args.policy == "dream":
         metadata["dream_transport"] = "direct"
+        metadata['dream_rows_per_request'] = args.dream_rows_per_request
+        metadata['dream_session_replacement_policy'] = 'stop before retry or executing replacement reply'
+        metadata['dream_request_audit'] = dream_request_audit
     metadata["task_config"] = CONFIG
     snapshot = args.log_dir / "task-source"
     snapshot.mkdir(exist_ok=True)

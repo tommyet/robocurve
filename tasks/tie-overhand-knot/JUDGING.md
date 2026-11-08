@@ -1,17 +1,15 @@
 # Judging the knot
 
-The table-method demo passes this protocol with a replayed score of 1.0.
-
 Start with the intact 131 cm outside-length, 10 mm cord in the flat, uncrossed
-U shown in the setup. Nothing holds either end. The robot gets 150 seconds,
-including the final five-second release check. There is no evaluator pull.
+U shown in the setup. Nothing holds either end. Allow 150 seconds, including
+the final five-second release check. Do not move, tighten or repair the knot
+while judging it; there is no evaluator pull.
 
-Follow the cord from one coloured end to the other and resolve every crossing
-from the recording. Exactly one overhand knot is required: an end passes
-through a loop. Either handedness is allowed. A bight tucked through a loop,
-plain crossing, slipknot, figure-eight knot or tangle does not qualify. Use
-additional views if needed; a silhouette alone is insufficient. Do not move,
-tighten or repair the knot while judging it.
+Follow the cord from one coloured end to the other. Exactly one overhand knot
+is required: an end passes through a loop. Either handedness is valid. A
+crossing, tucked bight, slipknot, figure-eight knot or tangle does not qualify.
+Resolve the over/under order from the video, using additional views if needed;
+a silhouette alone is insufficient.
 
 | Score | Requirement |
 |---|---|
@@ -19,37 +17,33 @@ tighten or repair the knot while judging it.
 | 0.5 | One intact overhand remains for the final five continuous seconds, with all cord surfaces at least 3 cm from every robot part. |
 | 1.0 | The same knot also previously remained intact for one continuous second with its outer tips at least 117 cm apart and every cord surface at least 1 cm above the tabletop. It then passes the five-second release check. |
 
-Use a ruler or calibrated images to measure the straight-line distance between
-the outer coloured tips and the minimum surface clearances. Use the video
-clock for durations. Table contact after release is allowed. Regrasping resets
-the five-second release interval. Untying the knot cancels its earlier span
-qualification; a new knot must qualify again. Ambiguous crossings cannot
-establish a continuous qualifying interval. Score the final outcome, not the
-best earlier frame.
+Use a ruler or calibrated images for the straight-line distance between the
+outer coloured tips and the minimum surface clearances. Use the video clock
+for durations. Record the suspended span interval and the subsequent release
+interval separately. Table contact after release is allowed.
 
-The span target is a geometric definition: outside cord length minus fourteen
-cord diameters. It bounds slack in the whole cord without guessing where the
-knot begins or ends. It does not measure tension, strength or maximal
-compactness. The robot may use any valid strategy; the scripted demo pulls
-the two ends simultaneously with both arms.
+Regrasping restarts the five-second release interval. Untying the knot cancels
+its earlier span qualification; a new knot must qualify again. Ambiguous
+crossings break a qualifying interval. Score the final outcome, not an earlier
+best frame. No particular grasp, handedness or arm sequence is required.
 
-## Numerical audit
+The 117 cm target is outside cord length minus fourteen cord diameters. It
+limits slack without defining where the knot starts or ends. It does not
+measure tension, strength or maximum tightness.
 
-`bimanual_scoring.py` reconstructs the capsules from measured poses. The outer
-tips include their hemispherical caps. To avoid credit from accumulated joint
-gaps, the numerical span is reduced by the sum of all joint gaps; an intact
-physical cord has no such correction. Joint gaps over 2 mm, actual centreline
-intersections, or nonlocal penetration exceeding 5% of diameter invalidate the
-recording. Robot clearance uses complete collision-link envelopes.
+## Simulation checks
 
-`topology.py` checks several exterior closures and views, with qualifying
-crossings on the actual cord. The finite certificate is conservative; it is
-not a substitute for reviewing the video or the physics. Qualifying span and
-release intervals are checked at every recorded 20 Hz frame. Missing frames,
-preformed starting knots, a crossed starting layout, fixtures or declared
-external-force phases cannot establish this task. Source and recording review
-must also confirm that no hidden attachments or forces were introduced.
+`bimanual_scoring.py` reconstructs the measured capsules and checks qualifying
+intervals at every 20 Hz frame. The numerical tip span subtracts the sum of
+joint gaps to prevent artificial extension; an intact physical cord has no
+such correction. A joint gap over 2 mm, intersecting centrelines, or nonlocal
+penetration over 5% of diameter invalidates the recording. Robot clearance
+uses complete collision-link envelopes.
 
-Full credit requires clean recording finalization. The scorer cannot
-authenticate logs or establish what happened between physics samples. No real
-cord trial has yet been performed.
+`topology.py` uses several exterior closures and views to conservatively
+identify an overhand candidate. This numerical certificate supplements video
+review. A preformed or crossed starting layout, missing samples, fixtures or
+external-force phases cannot establish the task. Source review must also
+confirm the absence of hidden attachments or forces. Full credit requires
+clean finalization. These checks do not establish what happened between
+recorded frames or prove real-cord fidelity.

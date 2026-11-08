@@ -1,6 +1,4 @@
 """CPU checks for the held-tip guard; no grasp or knot feasibility is inferred."""
-import json
-from pathlib import Path
 import sys
 from types import ModuleType
 import unittest
@@ -17,9 +15,9 @@ class HeldTerminalGuardTests(unittest.TestCase):
         saved_sample, saved_events = telemetry.latest_sample, telemetry.demo_events
         self.addCleanup(setattr, telemetry, 'latest_sample', saved_sample)
         self.addCleanup(setattr, telemetry, 'demo_events', saved_events)
-        fixture = json.loads((Path(__file__).parent / 'evidence' /
-                              'table-pilots.json').read_text())
-        terminal = fixture['trials']['table-002']['local_arch']['working_tip_m']
+        # Measured table-002 local_arch.working_tip_m; keep this small regression
+        # fixture independent of the historical development evidence ledger.
+        terminal = [0.166401751, 0.164726624, 0.752499981]
         # This measured tip is only a pickup-region fixture. The mocked motions
         # below do not model the rope, grasp, passage or endpoint orientation.
         self.point = np.asarray(terminal, float)

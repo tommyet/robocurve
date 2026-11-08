@@ -13,7 +13,9 @@ developers and their agents, not a competition submission document.
 - Commit and push completed work to this fork. Do not open a competition PR
   until the user explicitly asks. The user explicitly authorized media upload
   and the die-task PR on 2026-11-03, then the four brick-task submissions on
-  2026-11-04. Future tasks still need explicit submission authorization. Keep each submission branch limited to its task folder.
+  2026-11-04. On November 8 the user explicitly authorized final preparation,
+  media upload and the overhand-knot PR. Future tasks still need explicit
+  submission authorization. Keep each submission branch limited to its task folder.
 - `submission/roll-a-die` was submitted from the fork to upstream `main` as
   [PR #44](https://github.com/robocurve/benchmark-tasks/pull/44), commit `ba4ac81`.
   Its diff contains only `tasks/roll-a-die/`. It received a final rejection on
@@ -56,6 +58,44 @@ developers and their agents, not a competition submission document.
   content to this log. Keep task text and submitted media anonymous.
 
 ## GPU cost and persistence
+
+### 2026-11-08 — overhand-knot submission preparation
+
+- Operator: repository agent, `codex/rope-submission-prep` from shared `main`
+  at `5cc56f7`. User approved the table demo and explicitly requested a concise,
+  acceptance-ready submission followed by upload and PR.
+- Live guide and submission pages were fetched; current upstream base is
+  `7df8bd8`. The board contains 1,141 entries. No pending or accepted entry
+  ties an overhand knot. The closest entries are a pending lace-tip handover
+  through a rigid eyelet and a pilot for undoing a knot, distinct objectives.
+  A GitHub PR search for `knot` returned none. Evidence is preserved in the
+  ignored `artifacts/rope-knot-submission/` directory.
+- The guide permits partial or failed Dream runs, but the previous 61
+  expirations confound its baseline. Official Dream documentation identifies
+  `expired` as idle-session expiry. Prepare one bounded evaluation with shorter
+  action batches and stop on session replacement. Keep the successful demo's
+  scene, physics, instruction and scorer unchanged.
+- Brev CLI refreshed authentication after transient API connection failures.
+  At 15:43:36 UTC the shared VM was STOPPED with no operation pending; rate
+  remained $2.729872/hour and posted credits were $150.07. Prepare the run
+  locally before restarting, then download evidence and confirm shutdown.
+- The new runner uses the SDK's supported client factory, eight action rows
+  per request, timing telemetry and a fatal guard before retrying any replaced
+  session. All 147 CPU tests pass. Removing those Dream-only additions yields
+  the original demo runner's AST; scene, scorer, controller and physics hashes
+  still match demo 020. A test-only measured coordinate is now embedded so the
+  lean submission does not depend on the historical pilot ledger.
+- **Session active:** start requested at **15:48:01 UTC**. The 15:49:26 UTC
+  process audit found no GPU jobs, other simulator/training jobs or login
+  sessions. Final Dream trial **table-022** is running from a frozen source
+  archive, seed 0, 3,000 actions and the unchanged 240→960 Hz schedule. At
+  15:54:08 UTC it reached 38.55 simulated seconds with valid geometry and no
+  session replacement. Root owns this run; do not stop the shared VM while
+  it runs. Evidence and final shutdown/cost will be recorded here.
+- Official model pricing at this check is 140 millicents per inference
+  ($0.0014). A complete eight-row run needs about 371 successful requests,
+  approximately $0.5194 before retries. The read-only API key cannot read the
+  billing overview, so no API-credit balance is claimed. Brev cost is separate.
 
 ### 2026-11-08 — table-supported knot development (complete; VM stopped)
 
