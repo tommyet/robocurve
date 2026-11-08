@@ -5,6 +5,7 @@ replay cannot establish that the native assessor or recording completed. Legacy
 diagnostic traces remain useful for analysis and always receive task score zero.
 """
 import argparse
+import gzip
 import json
 import math
 from pathlib import Path
@@ -18,8 +19,8 @@ def _near(actual, expected, tolerance=1e-8):
     return math.isfinite(float(actual)) and math.isclose(float(actual), float(expected), rel_tol=0, abs_tol=tolerance)
 
 
-def _validate_transition(result, config, certificate):
-    """Reject missing/inconsistent certification, including a failed final step."""
+def _validate_native_intervals(certificate, *, hz, start, count):
+    """Validate recorded native steps, preserved state and fresh observations."""
     if not isinstance(certificate, dict):
         raise ValueError('native transition certificate is missing')
     if certificate.get('status') != 'validated_intervals' or certificate.get('error'):
@@ -28,9 +29,6 @@ def _validate_transition(result, config, certificate):
                          ('counter_writes', False), ('callback_removed', True)):
         if certificate.get(field) is not value:
             raise ValueError('native certificate has incorrect ' + field)
-    hz = config['assay_physics_hz']
-    if hz not in (480, 960) or config.get('physics_hz') != 240:
-        raise ValueError('recorded task lacks the supported policy/assessor physics rates')
     substeps = hz // 20
     if certificate.get('control_hz') != 20 or certificate.get('target_physics_hz') != hz or certificate.get('requested_substeps') != substeps:
         raise ValueError('native certificate disagrees with recorded task rates')
@@ -40,19 +38,11 @@ def _validate_transition(result, config, certificate):
         raise ValueError('native transition did not preserve measured state')
     if not certificate.get('counters_before') or certificate['counters_before'] != certificate.get('counters_after'):
         raise ValueError('native transition did not preserve counters')
-    policy_end = result['policy_end']
-    if not policy_end or policy_end.get('qualified') is not True:
-        raise ValueError('no independently qualifying policy-end knot')
-    start = float(policy_end['time'])
-    duration = float(result['seating']['required_seconds']) + float(config['proof_seconds'])
-    count = round(duration * 20)
-    if count <= 0 or not _near(count / 20, duration):
-        raise ValueError('assessor duration does not contain whole control intervals')
-    if not _near(certificate['switch_capture_time_s'], start) or not _near(result['time'], start + duration):
-        raise ValueError('native certificate does not cover this trajectory assay')
+    if not _near(certificate['switch_capture_time_s'], start):
+        raise ValueError('native certificate has incorrect switch time')
     rows = certificate.get('intervals')
     if not isinstance(rows, list) or len(rows) != count or certificate.get('validated_control_intervals') != count:
-        raise ValueError('native certificate has missing or extra assay intervals')
+        raise ValueError('native certificate has missing or extra intervals')
     for index, row in enumerate(rows):
         if row.get('validated') is not True or row.get('native_substeps') != substeps or not _near(row['capture_time_s'], start + (index + 1) / 20):
             raise ValueError('native interval is unvalidated or out of order')
@@ -75,6 +65,61 @@ def _validate_transition(result, config, certificate):
                     or not np.isfinite(stamp).all() or not np.isfinite(expected).all()
                     or np.any(updated != stamp) or np.any(np.abs(stamp - expected) > tolerance)):
                 raise ValueError('native interval lacks one fresh camera frame')
+
+
+def _validate_transition(result, config, certificate):
+    """Reject missing/inconsistent legacy assessor evidence."""
+    hz = config['assay_physics_hz']
+    if hz not in (480, 960) or config.get('physics_hz') != 240:
+        raise ValueError('recorded task lacks the supported policy/assessor physics rates')
+    policy_end = result['policy_end']
+    if not policy_end or policy_end.get('qualified') is not True:
+        raise ValueError('no independently qualifying policy-end knot')
+    start = float(policy_end['time'])
+    duration = float(result['seating']['required_seconds']) + float(config['proof_seconds'])
+    count = round(duration * 20)
+    if count <= 0 or not _near(count / 20, duration):
+        raise ValueError('assessor duration does not contain whole control intervals')
+    if not _near(result['time'], start + duration):
+        raise ValueError('native certificate does not cover this trajectory assay')
+    _validate_native_intervals(certificate, hz=hz, start=start, count=count)
+
+
+def _validate_policy_transition(trajectory, config, certificate):
+    """Check the complete trajectory clock, including samples after invalidity."""
+    from fixed_policy_physics import SCHEDULE, validate_schedule
+    validate_schedule(config['policy_physics_schedule'], config['physics_hz'])
+    if not isinstance(certificate, dict) or certificate.get('schema') != 'fixed-policy-physics-v1':
+        raise ValueError('policy physics certificate is missing or has an unsupported schema')
+    if certificate.get('schedule') != SCHEDULE or certificate.get('error'):
+        raise ValueError('policy physics schedule failed or differs from the recorded task')
+    for field, value in (('closed', True), ('pending_interval', False),
+                         ('policy_actions_modified', False), ('external_force_path_called', False)):
+        if certificate.get(field) is not value:
+            raise ValueError('policy physics certificate has incorrect ' + field)
+    trajectory = Path(trajectory)
+    opener = gzip.open if trajectory.suffix == '.gz' else open
+    actions = -1
+    with opener(trajectory, 'rt') as stream:
+        for actions, line in enumerate(stream):
+            sample = json.loads(line)
+            if not _near(sample['time'], actions / 20) or sample.get('phase') != 'policy':
+                raise ValueError('trajectory lacks contiguous ordinary 20 Hz policy samples')
+    if actions < 0:
+        raise ValueError('trajectory is empty')
+    count = max(0, actions - SCHEDULE['switch_after_completed_actions'])
+    if (certificate.get('completed_actions') != actions
+            or certificate.get('expected_control_intervals') != count
+            or not _near(certificate['final_capture_time_s'], actions / 20)):
+        raise ValueError('policy physics certificate does not cover the whole trajectory')
+    if count:
+        if certificate.get('status') != 'complete':
+            raise ValueError('policy physics transition is not complete')
+        _validate_native_intervals(certificate.get('native_transition'),
+                                   hz=SCHEDULE['target_physics_hz'],
+                                   start=SCHEDULE['switch_capture_time_s'], count=count)
+    elif certificate.get('status') != 'not_reached' or certificate.get('native_transition') is not None:
+        raise ValueError('policy physics transition occurred before its fixed boundary')
 
 
 def certify_result(result, config, certificate=None, *, finalization_complete=None, evidence_errors=()):
@@ -124,7 +169,28 @@ def replay_trial(trajectory, runtime=None):
                          and not finalization.get('errors') and not finalization.get('interrupted_by'))
         except (OSError, ValueError, AttributeError):
             completed = False
-        return certify_bimanual(result, finalization_complete=completed)
+        errors = []
+        scheduled = config.get('policy_physics_schedule') is not None
+        if scheduled:
+            try:
+                certificate = json.loads((trajectory.parent / 'policy-physics-transition.json').read_text())
+                _validate_policy_transition(trajectory, config, certificate)
+            except (OSError, EOFError, KeyError, ValueError, TypeError, ArithmeticError, IndexError, AttributeError) as exc:
+                errors.append(str(exc))
+        result = certify_bimanual(result, finalization_complete=completed and not errors)
+        result['policy_physics_certification'] = dict(
+            required=scheduled, status='incomplete' if errors else 'complete' if scheduled else 'not_required',
+            errors=errors)
+        if errors:
+            result['score'] = 0.
+            result['status'] = 'policy physics evidence is incomplete'
+        execution = metadata.get('execution')
+        if execution is not None:
+            result['execution'] = execution
+            if not isinstance(execution, dict) or execution.get('status') != 'complete':
+                result['score'] = 0.
+                result['status'] = 'recorded policy execution failed'
+        return result
     result = replay_file(trajectory, config)
     evidence, errors = {}, []
     # Legacy diagnostic traces need no production certificate and stay zero.

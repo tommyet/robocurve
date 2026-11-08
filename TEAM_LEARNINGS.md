@@ -57,6 +57,192 @@ developers and their agents, not a competition submission document.
 
 ## GPU cost and persistence
 
+### 2026-11-08 — table-supported knot development (session in progress)
+
+- Operator: repository agent, `codex/rope-bimanual`, continuing from `6be43c1`.
+  The user requested forming the knot on the table, opening a local arch and
+  pulling both ends together. The free uncrossed U is translated 18 cm toward
+  −Y. No rope poses, attachments or external tightening forces are introduced.
+- Sixteen table pilots are recorded in
+  [table-pilots.json](tasks/tie-overhand-knot/evidence/table-pilots.json).
+  All score zero: 001/002 establish a small arch, 003 curls the loose tail,
+  004/005 stop on excessive rope contact, 006 establishes the revised
+  right-arm support, 007 ends unknotted before pulling, and 008 forms a held
+  overhand candidate without attempting span or release. In 009 that candidate
+  slips over the free yellow end during staging. Trial 010 briefly forms a
+  candidate during red-tip release, then fails on contact with the far strand.
+  Trial 011 at 480 Hz fails on end-to-end contact during arch lifting. Trial
+  012 releases the terminal inside with valid contact, then stops on its
+  conservative routing margin. Trial 013 clears that guard and withdraws the
+  empty hand, then fails on contact after raised-arch release. Trial 014
+  adds lowering but also fails during support-hand withdrawal. Trial 015
+  validates the fixed physics switch but ends on a policy exception before
+  support opening. Trial 016 passes the placement guard but fails on rope
+  contact during support withdrawal. These are development results, not
+  completed task demonstrations.
+- A wrist rotation is not control of a flexible free tip. In 003 the grasp
+  remained held but the tip curled and finished 73.85 mm outside the loop.
+  In 005, moving the tip back toward the crossing shortened the measured
+  exterior tail chord from 138.03 to 24.80 mm instead of straightening it.
+  More table friction would not, by itself, fix either motion.
+- Choose the feeding arm from the direction of entry. Swapping roles lets the
+  left arm approach from the north and carry the actual red terminal under the
+  arch, while the right supports standing segment 23. In 006 the local cord
+  surface reached 147.19 mm above the table; 73.08% of segment centres had
+  surface height within 15 mm of the tabletop. The loop remained uncrossed at
+  reset, and the robot created the initial crossing.
+- Use the runtime's 60 IK iterations and 20 Hz interpolation for motion audits;
+  a target-only solve with 400 iterations does not establish a reachable path.
+  Aggregate collision boxes can be conservative; refine ambiguous pairs using
+  the authored convex collision meshes. A positive robot-clearance result
+  still does not predict how the rope will deform or establish knot topology.
+- A terminal inside the loop does not mean the hand has passed through. In
+  007, the terminal reached 30.90 mm inside the top-view boundary, but the palm
+  still supported the raised strand. Closure evidence remained ambiguous,
+  then returned to unknot during diagonal staging. The trial finalized at
+  78.55 seconds with no invalid-geometry flag and score zero; yellow-end pickup,
+  simultaneous pulling and final release were not reached.
+- At 007 time 74.5 seconds, the hand extended 143 mm behind its TCP. Frozen
+  convex-mesh checks still found contact at a deeper TCP y=-0.14 m; y=-0.16 m
+  cleared the measured standing cord by 13.7 mm. These are static bounds, not
+  predictions of deforming rope. In 008 the -0.14 m passage produced an
+  independently certified geometric overhand candidate at 75.35 seconds,
+  retained through the lift to 80.55 seconds. All five final exterior closures
+  had three physical crossing certificates. The palm still supported the
+  strand: segment 23 reached z=0.99562 m while the red tip was z=0.92992 m.
+  This is progress in topology, not proof of hand clearance or task completion.
+  The score remains zero.
+- In 009, the crossing moved from standing material 1.614 at 80.5 seconds to
+  0.170 at 82.35 seconds, then disappeared. The topology returned to unknot at
+  83.10 seconds while the red terminal remained held. This supports the loop
+  slipping over the free yellow end; it does not establish that the red tip
+  retraced the opening. The pickup-region guard stopped the run at 84.55
+  seconds, with no invalid geometry and score zero. Secure both ends before
+  substantial staging, rather than relying on table friction to retain a
+  short free tail.
+- Trial 010 formed a geometric overhand candidate during red-tip release at
+  67.35 seconds, independently confirmed through 68.00 seconds. It became
+  ambiguous at 68.10, then invalid at 68.15: capsule pair 76/103 had axis
+  distance 8.972343 mm, below the unchanged 9.5 mm threshold. By 68.20, the
+  released tip had moved 34.07 mm south and 12.63 mm down from its 66-second
+  position, into the far loop rim. The first-invalid time is distinct from the
+  scorer summary's last-valid time, 68.10 seconds. Recording finalized cleanly.
+- Trial 011 used 480 Hz and failed before threading, during right23 arch
+  lifting. At 36.35 seconds capsule pair 1/103 reached axis separation
+  9.388136 mm on the tabletop, exceeding the overlap allowance by 0.111864 mm.
+  The final 36.40-second frame recovered to 9.651879 mm, but invalidity correctly
+  remains latched. A finer timestep does not guarantee this controller will
+  retain the same rope geometry or avoid every excessive contact.
+- Trial 012 returned to 240 Hz and released 4 cm earlier. At 67.00 seconds
+  the entire red terminal axis remained inside: endpoint clearances were
+  13.606 and 25.950 mm, and exact capsule surface gap to nearest strand 80
+  was 3.606 mm. Terminal speed was 3.36 mm/s; no invalid contact occurred.
+  Its 15 mm routing guard stopped the run, which finalized at 67.05 seconds
+  with score zero and unknot topology, before recovery or pulling.
+- Trial 013 checks the whole terminal axis against a 12 mm boundary margin,
+  equal to two 5 mm cord radii plus 2 mm surface clearance, and requires both
+  axis endpoints inside. It uses exact projected segment-to-boundary distance
+  to avoid accepting an axis that crosses a concave boundary. This is a
+  geometric planning guard, not a relaxed knot score or collision tolerance.
+  After empty-hand withdrawal and arch release, right103 and left2 are both
+  captured. Yellow pickup uses a 24 mm jaw opening and a north-side detour
+  20 mm above the measured point. Red lifts 65 mm over two seconds, moves
+  outward to x=0.39 m over two seconds, then moves south before staging.
+  A nominal 570-pose audit using 60 IK iterations at 20 Hz gives minimum
+  bounds of 5.032 mm between arms and 1.169 mm above the table. It uses
+  measured 012 endpoints; post-withdrawal rope motion and tracking remain
+  unproven. Trial 013 passed its release guard and empty-hand withdrawal, but
+  did not reach this regrasp/staging route.
+- Trial 013 first becomes invalid at 80.75 seconds after the right hand
+  releases the elevated arch. Averaged-polyline pair 35/97 has axis distance
+  9.499908838 mm, 0.091 micrometres below the threshold; actual axes are still
+  9.500843117 mm apart. Joint-midpoint averaging accounts for the 0.934
+  micrometre difference. The next frame at 80.80 seconds also violates the
+  actual-body threshold: pair 35/98 is 9.498084696 mm apart. Record both
+  measurements rather than describing the first trigger as a large physical
+  penetration. The scorer and tolerance remain unchanged.
+- Trial 014 added a three-second, 140 mm lowering before opening the support
+  hand. The nominal audit predicted 1.18 mm cord clearance, but measured
+  surface height was 12.660 mm at opening; the TCP was 9.510 mm above its
+  commanded z. Do not equate commanded placement or a passing grasp witness
+  with achieved placement under contact.
+- Trial 014 failed at 83.30 seconds on actual capsule pair 15/28, axis distance
+  9.451115 mm: overlap exceeds the allowed 0.5 mm by 48.885 micrometres. The
+  right hand was 1.30 seconds into its park move. Neither 013 nor 014 records
+  an overhand candidate. Lowering reduced the opening-interval speed peak
+  from 1.150 to 0.394 m/s, but the later park-interval peak rose from 0.062
+  to 0.134 m/s. This does not isolate the cause of the eventual contact.
+- Native mesh checks find right-finger contact with material 24/25 through
+  82.65 seconds. All right robot meshes are more than 10 mm from every
+  capsule at sampled frames from 82.80 through 83.35; failure is at 83.30.
+  Direct hand contact at the failure instant is therefore unsupported. Earlier
+  withdrawal contact may affect subsequent motion, but elastic relaxation
+  versus prior mechanical disturbance is unresolved. Preserve this uncertainty
+  rather than treating free fall as the established sole cause.
+- Trial 015 kept the robot route and scorer but used 240 Hz for the first
+  1,560 actions and 960 Hz after the 78-second capture. Control remains 20 Hz
+  and the schedule applies equally to demo and Dream, irrespective of rope
+  state. The native certificate validates unchanged state/counters, 48 substeps
+  per action, fresh cameras and cleanup across 60 post-switch intervals through
+  81 seconds. This validates the transition, not complete task feasibility.
+- The new policy-physics certificate records state/counter preservation,
+  native intervals, fresh cameras and callback cleanup. Replay independently
+  checks the complete trajectory clock, including frames after a scorer's
+  invalidity freezes its time. Truncated gzip evidence now returns an invalid
+  certification rather than escaping with EOFError. Old v4 trials without
+  the schedule and legacy assessor checks retain their previous behavior.
+- Trial 015 stopped at 81 seconds with valid geometry but a policy exception:
+  `_move` tried to report a 13.885 mm TCP tracking miss, and `_stop(label=...)`
+  collided with `_event`'s positional label. Inspect logged `PolicyError`,
+  while recording finalization was orderly and the CLI returned 0. Always
+  inspect policy execution status; neither cleanup nor exit code alone means
+  the intended motion sequence completed. The runner now records and rejects
+  Inspect execution errors, and stop logging preserves the intended reason.
+- Trial 016 keeps the same 140 mm lowering over three seconds. That
+  contact placement now checks retained material 23, horizontal TCP error ≤12 mm,
+  and each actual capsule-axis endpoint height minus radius/table height in
+  [0, 25] mm. Frozen 015 has horizontal error 5.497 mm and endpoint-derived
+  heights 13.643–21.058 mm. This is a specific placement guard, not a relaxed
+  score or physics threshold; the full run remains unvalidated.
+- Trial 016 passed measured placement and all 154 post-switch native intervals
+  through 85.70 seconds. The first invalid frame is 85.65: actual capsule pair
+  28/90 is 9.498930 mm apart, exceeding the overlap allowance by 1.070
+  micrometres. The final distance is 9.496950 mm. The controlled geometry stop
+  was handled normally, with clean execution and recording finalization, but
+  terminal recovery, pulling and final retention were never reached.
+- Prospective 017 replaces diagonal withdrawal with a 30 mm vertical lift at
+  retained tilt and 24 mm opening over 1.5 seconds, followed by one second
+  fully open and the existing park. A 130-command audit from measured trial-016
+  robot state has minimum separation bounds of 215.59 mm between arms and
+  16.17 mm above the table; this does not predict rope behavior. The scorer,
+  tolerance and fixed physics schedule are unchanged. The outcome is pending.
+- The completed native-pose audit of all 1,342 trial-012 frames found no
+  inter-arm or tabletop intersections. Minimum bounds were 23.927 mm between
+  arms at 49.05 seconds and 0.717 mm above the table at 7.50 seconds. This
+  uses measured link poses and authored collision geometry, rather than
+  commanded targets. It does not certify times between the 20 Hz frames or
+  the later recovery/pull route. A compact hash-backed summary is included
+  in the trial-012 evidence.
+- The full controller is implemented; its revised sequence totals 143
+  simulated seconds, including simultaneous pulling, release and six seconds
+  of settling. The prospective task limit is now 3,000 actions at 20 Hz
+  (150 seconds), leaving room for deliberate clearance and regrasping. Earlier
+  frozen trials keep their original limits: 008 has a 2,400-action scene and
+  a 1,800-action thread plan. Final demo and Dream must share the final scene
+  and 3,000-action limit. The revised `thread` stage ends at 94.5 seconds; its
+  example command allows 2,000 actions. Recheck timing after route changes.
+  The full 132-test integration suite passed in 26.869 seconds after measured
+  placement, stop-logging and execution-error fixes; 17 focused tests passed
+  after the prospective withdrawal change. A complete physical demo and matching Dream run are still
+  missing. The independent
+  scorer must establish the released knot.
+- Fresh 07:23:10 UTC lifecycle check found the shared VM stopped with no
+  operation pending. Current observed g6e.xlarge rate is $2.729872/hour,
+  including storage; posted balance was $167.39. Start task timestamp is
+  07:28:33 UTC. This session is still active; download the remaining evidence,
+  check for other jobs and confirm STOPPED before recording final cost.
+  Local operational evidence is under `artifacts/rope-knot-table-session/`.
+
 Observed on 2026-11-03: L40S, 48 GB VRAM, 256 GiB allocated disk. Running rate
 **$3.28/hour**, comprising $3.23 compute and $0.05 storage. These are observed
 rates for this instance, not guaranteed future prices.

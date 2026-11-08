@@ -101,7 +101,7 @@ def script(arms, mode):
         yield from wait(10. if CONFIG.get('proof_probe') else 5.)
         return
     if mode in ('demo', 'loop', 'thread'):
-        from bimanual_policy import tie_overhand
+        from table_policy import tie_overhand
         yield from tie_overhand(arms, stage=mode)
         return
     if mode == 'jig':

@@ -75,7 +75,7 @@ def _move(arm, side, point, rotation, seconds, label, *, opening=None, held_inde
     yield from _drive(arm.move_pose(goal, rotation, seconds, opening=opening, label=label))
     error = float(np.linalg.norm(_tcp(side)-goal))
     if error > .012:
-        _stop('actual TCP did not reach the intended waypoint', label=label, tracking_error_m=error)
+        _stop('actual TCP did not reach the intended waypoint', motion_label=label, tracking_error_m=error)
     if held_index is not None:
         _held(side, held_index)
 
@@ -89,7 +89,7 @@ def _pick(arm, side, index, down, open_value, pinch):
     _held(side, index, require_loaded=True)
 
 
-def _crossing(reference=None, *, material_start=3):
+def _crossing(reference=None, *, material_start=3, working_over_only=False):
     """Find the large projected bight, allowing its crossing to migrate."""
     p = np.asarray(_sample()['cord']['polyline'], float)
     found = []
@@ -109,6 +109,8 @@ def _crossing(reference=None, *, material_start=3):
                                   standing_material=float(i+a), working_material=float(j+b),
                                   standing_point=first.tolist(), working_point=second.tolist(),
                                   working_above_m=float(second[2]-first[2])))
+    if working_over_only:
+        found = [c for c in found if c['working_above_m'] > 0]
     if reference is not None:
         found=[c for c in found
                if abs(c['standing_material']-reference['standing_material']) <= 6

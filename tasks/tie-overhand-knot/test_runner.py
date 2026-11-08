@@ -9,7 +9,9 @@ not physical knot retention, scene startup, or the complete Inspect CLI.
 Run: python -m unittest discover -s tasks/tie-overhand-knot -p test_runner.py -v
 """
 import ast
+from copy import deepcopy
 import io
+import hashlib
 import json
 from pathlib import Path
 import subprocess
@@ -27,7 +29,13 @@ from test_scoring import candidate, proof_sample, straight_sample
 
 class FakeEmbodiment:
     def step(self, action):
+        if getattr(self, 'ordinary_step_error', False):
+            raise RuntimeError('ordinary policy step failure')
         self._t += self._base.step_dt
+        if self.endpoint_load is None:
+            self.review_frames += 1
+            self.seen.append(action)
+            return 'ordinary-observation'
         self.endpoint_load.elapsed += self._base.step_dt
         elapsed, force = self.endpoint_load.elapsed, self.endpoint_load.magnitude
         self.task.module._tracker.update(proof_sample(self._t, elapsed, force, self.assay_phase))
@@ -136,15 +144,16 @@ class FakeEncoder:
 
 
 class RunnerTests(unittest.TestCase):
-    def test_unready_controller_is_rejected_before_simulator_import_or_output_creation(self):
+    def test_preformed_demo_is_rejected_before_simulator_import_or_output_creation(self):
         with tempfile.TemporaryDirectory() as folder:
             output = Path(folder) / 'must-not-be-created'
-            for policy in ('demo', 'thread'):
+            for policy in ('demo', 'dream'):
                 with self.subTest(policy=policy):
                     result = subprocess.run([sys.executable, str(Path(__file__).with_name('run.py')),
-                        '--policy', policy, '--log-dir', str(output)], capture_output=True, text=True)
+                        '--policy', policy, '--diagnostic-layout', 'preformed',
+                        '--log-dir', str(output)], capture_output=True, text=True)
                     self.assertEqual(result.returncode, 2)
-                    self.assertIn('full bimanual controller is not ready', result.stderr)
+                    self.assertIn('v4 has only a free, uncrossed cord', result.stderr)
                     self.assertNotIn('ModuleNotFoundError', result.stderr)
                     self.assertFalse(output.exists())
 
@@ -160,9 +169,10 @@ class RunnerTests(unittest.TestCase):
         self.metadata = {}
         namespace = dict(
             YamArenaEmbodiment=FakeEmbodiment, np=np, json=json, sys=sys,
-            subprocess=subprocess, metadata=self.metadata,
+            subprocess=subprocess, metadata=self.metadata, deepcopy=deepcopy,
+            policy_physics_schedule=None,
             args=SimpleNamespace(skip_assay=False, diagnostic_layout=None, log_dir=self.folder,
-                                 physics_hz=240, assay_physics_hz=960),
+                                 physics_hz=240, assay_physics_hz=960, proof_probe=False),
             CONFIG={"proof_seconds": 5., "proof_load_n": .981,
                     'physics_hz': 240, 'assay_physics_hz': 960},
             telemetry=SimpleNamespace(demo_events=[]),
@@ -196,6 +206,7 @@ class RunnerTests(unittest.TestCase):
         runner.assay_attempted, runner.assay_phase = False, None
         runner.physics_switch, runner.assay_transition_required = None, False
         runner._transition_failure = None
+        runner.policy_physics_audit, runner._policy_physics_failure = None, None
         runner.last_policy_action = SimpleNamespace(data=np.zeros(14))
         runner.policy_steps = 1
         scorer = KnotScorer()
@@ -366,6 +377,194 @@ class RunnerTests(unittest.TestCase):
         self.assertFalse(result['finalization_certification']['complete'])
         self.assertEqual(FakeTransition.constructed, 0)
         self.assertEqual(runner.seen, [])
+
+    def scheduled_embodiment(self):
+        from fixed_policy_physics import FixedPolicyPhysics, SCHEDULE
+        runner = self.bimanual_embodiment()
+        self.runner_class.close.__globals__['policy_physics_schedule'] = deepcopy(SCHEDULE)
+        runner.policy_physics_audit = FixedPolicyPhysics(runner._base, factory=FakeTransition)
+        runner.policy_steps = 0
+        return runner
+
+    def advance_policy(self, runner, count):
+        action = SimpleNamespace(data=np.zeros(14))
+        for _ in range(count):
+            self.assertEqual(runner.step(action), 'ordinary-observation')
+            self.assertIs(runner.seen[-1], action)
+        return action
+
+    def test_scheduled_policy_brackets_unchanged_actions_at_exact_boundary(self):
+        runner = self.scheduled_embodiment()
+        self.advance_policy(runner, 1560)
+        self.assertEqual(FakeTransition.constructed, 0)
+        self.assertAlmostEqual(runner._t, 78.)
+        self.advance_policy(runner, 3)
+        self.assertEqual(FakeTransition.constructed, 1)
+        runner.close()
+        cert = self.report('policy-physics-transition.json')
+        self.assertEqual(cert['status'], 'complete')
+        self.assertEqual(cert['completed_actions'], 1563)
+        self.assertEqual(cert['expected_control_intervals'], 3)
+        self.assertAlmostEqual(cert['native_transition']['switch_capture_time_s'], 78.)
+        self.assertEqual(len(runner.seen), 1563)
+        self.assertIsNone(runner.endpoint_load)
+        self.assertFalse((self.folder / 'assay-physics-transition.json').exists())
+        self.assertTrue(self.report()['finalization']['complete'])
+        self.assertEqual(self.metadata['policy_physics_transition']['status'], 'complete')
+
+    def test_scheduled_short_episode_preserves_not_reached_certificate(self):
+        runner = self.scheduled_embodiment()
+        self.advance_policy(runner, 2)
+        runner.close()
+        self.assertEqual(self.report('policy-physics-transition.json')['status'], 'not_reached')
+        self.assertEqual(FakeTransition.constructed, 0)
+        self.assertTrue(self.report()['finalization']['complete'])
+
+    def test_scheduled_caught_native_failure_cannot_be_finalized_as_success(self):
+        runner = self.scheduled_embodiment()
+        self.advance_policy(runner, 1560)
+        FakeTransition.fail_after = 1
+        with self.assertRaisesRegex(ValueError, 'native callback mismatch'):
+            runner.step(SimpleNamespace(data=np.zeros(14)))
+        with self.assertRaises(BaseExceptionGroup):
+            runner.close()
+        cert = self.report('policy-physics-transition.json')
+        self.assertEqual(cert['status'], 'failed')
+        self.assertTrue(cert['native_transition']['callback_removed'])
+        self.assertFalse(self.report()['finalization']['complete'])
+        self.assertEqual(self.report()['score'], 0.)
+        self.assertEqual(self.report()['geometric_score'], 1.)
+        self.assertEqual(self.report()['policy_physics_certification']['status'], 'incomplete')
+        self.assertTrue(runner.base_closed)
+        self.assertTrue(runner.audit.closed)
+
+    def test_scheduled_ordinary_step_exception_still_removes_callback(self):
+        runner = self.scheduled_embodiment()
+        self.advance_policy(runner, 1560)
+        runner.ordinary_step_error = True
+        with self.assertRaisesRegex(RuntimeError, 'ordinary policy step failure'):
+            runner.step(SimpleNamespace(data=np.zeros(14)))
+        with self.assertRaises(BaseExceptionGroup):
+            runner.close()
+        cert = self.report('policy-physics-transition.json')
+        self.assertEqual(cert['status'], 'failed')
+        self.assertTrue(cert['native_transition']['callback_removed'])
+        self.assertEqual(len(runner.seen), 1560)
+        self.assertIsNone(runner.endpoint_load)
+
+    def test_scheduled_repeated_reset_is_rejected(self):
+        runner = self.scheduled_embodiment()
+        runner._policy_reset_started = True
+        with self.assertRaisesRegex(RuntimeError, 'fresh embodiment'):
+            runner.reset(None)
+        with self.assertRaises(BaseExceptionGroup):
+            runner.close()
+        self.assertFalse(self.report()['finalization']['complete'])
+
+    def test_scheduled_missing_audit_cannot_claim_complete_finalization(self):
+        runner = self.scheduled_embodiment()
+        runner.policy_physics_audit = None
+        with self.assertRaisesRegex(RuntimeError, 'not initialized'):
+            runner.step(SimpleNamespace(data=np.zeros(14)))
+        with self.assertRaises(BaseExceptionGroup):
+            runner.close()
+        self.assertFalse(self.report()['finalization']['complete'])
+        self.assertEqual(self.report()['policy_physics_transition']['status'], 'missing')
+        self.assertEqual(self.report()['score'], 0.)
+        self.assertEqual(self.report()['geometric_score'], 1.)
+        self.assertTrue(runner.base_closed)
+
+    def test_scheduled_non240_cli_rejected_before_output_creation(self):
+        from fixed_policy_physics import SCHEDULE
+        output = self.folder / 'must-not-exist'
+        source = Path(__file__).with_name('run.py').resolve()
+        script = ('import runpy,sys; sys.path.insert(0,sys.argv[1]); from config import CONFIG; '
+                  'import json; CONFIG["policy_physics_schedule"]=json.loads(sys.argv[2]); '
+                  'script=sys.argv[3]; sys.argv=[script]+sys.argv[4:]; runpy.run_path(script,run_name="__main__")')
+        for hz in ('480', '960'):
+            result = subprocess.run([sys.executable, '-c', script, str(source.parent),
+                json.dumps(SCHEDULE), str(source), '--policy', 'dream', '--physics-hz', hz,
+                '--log-dir', str(output)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 2, result.stderr)
+            self.assertIn('requires initial --physics-hz 240', result.stderr)
+            self.assertNotIn('ModuleNotFoundError', result.stderr)
+            self.assertFalse(output.exists())
+
+
+class ExecutionOutcomeTests(unittest.TestCase):
+    """Inspect may swallow a PolicyError before the embodiment close hook."""
+
+    def setUp(self):
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        self.folder = Path(temp.name)
+        source = Path(__file__).with_name('run.py')
+        names = {'_inspect_execution', '_record_execution_outcome'}
+        functions = [node for node in ast.parse(source.read_text()).body
+                     if isinstance(node, ast.FunctionDef) and node.name in names]
+        namespace = dict(Path=Path, json=json, hashlib=hashlib)
+        exec(compile(ast.Module(body=functions, type_ignores=[]), str(source), 'exec'), namespace)
+        self.check = namespace['_inspect_execution']
+        self.record = namespace['_record_execution_outcome']
+        self.metadata = dict(audited_final_score=1., geometric_score=1., finalization_complete=True)
+        self.summary = dict(score=1., geometric_score=1., candidate_score=1., status='qualified',
+            finalization=dict(complete=True, errors=[], interrupted_by=None),
+            finalization_certification=dict(complete=True),
+            policy_physics_certification=dict(required=True, status='complete', errors=[]))
+        (self.folder / 'score-summary.json').write_text(json.dumps(self.summary))
+
+    def log(self, *, status='success', error=None, code_name='adhoc_test.json'):
+        log = dict(status=status, error='all 1 trial(s) errored; nothing was scored' if error else None,
+            results=dict(total_scenes=1, total_trials=1, errored_trials=int(error is not None)),
+            samples=[dict(scene_id='scene-0', status=status, error=error,
+                          termination_reasons=['policy_done'] if not error else [None])])
+        path = self.folder / code_name
+        path.write_text(json.dumps(log))
+        return path
+
+    def test_saved_policy_error_overrides_zero_cli_and_already_closed_summary(self):
+        self.log(status='error', error="PolicyError: _event() got multiple values for argument 'label'")
+        execution = self.check(self.folder, set(), 0)
+        self.assertEqual(execution['status'], 'failed')
+        self.assertIn('PolicyError:', execution['errors'][0])
+        self.assertEqual(execution['logs'][0]['errored_trials'], 1)
+        self.record(self.folder, self.metadata, execution)
+        result = json.loads((self.folder / 'score-summary.json').read_text())
+        self.assertEqual(result['score'], 0.)
+        self.assertEqual(result['geometric_score'], 1.)
+        self.assertEqual(self.metadata['audited_final_score'], 0.)
+        self.assertFalse(result['finalization']['complete'])
+        self.assertFalse(result['finalization_certification']['complete'])
+        self.assertEqual(result['policy_physics_certification']['status'], 'complete')
+
+    def test_graceful_recorded_policy_stop_remains_eligible(self):
+        path = self.log()  # A caught _StopAttempt ends the generator normally.
+        for return_code in (0, None):
+            execution = self.check(self.folder, set(), return_code)
+            self.assertEqual(execution['status'], 'complete')
+            self.assertEqual(execution['logs'][0]['sha256'], hashlib.sha256(path.read_bytes()).hexdigest())
+            self.record(self.folder, self.metadata, execution)
+            result = json.loads((self.folder / 'score-summary.json').read_text())
+            self.assertEqual(result['score'], 1.)
+            self.assertTrue(result['finalization']['complete'])
+
+    def test_nonzero_cli_or_exception_overrides_successful_log(self):
+        self.log()
+        for code, exceptions in ((1, ()), (0, (RuntimeError('policy transport failed'),))):
+            execution = self.check(self.folder, set(), code, exceptions)
+            self.assertEqual(execution['status'], 'failed')
+            self.record(self.folder, self.metadata, execution)
+            self.assertEqual(self.metadata['audited_final_score'], 0.)
+            self.assertFalse(self.metadata['finalization_complete'])
+
+    def test_stale_missing_multiple_and_malformed_logs_fail_closed(self):
+        old = self.log(code_name='adhoc_old.json')
+        self.assertEqual(self.check(self.folder, {old}, 0)['status'], 'failed')
+        new = self.log(code_name='adhoc_new.json')
+        self.assertEqual(self.check(self.folder, {old}, 0)['status'], 'complete')
+        self.assertEqual(self.check(self.folder, set(), 0)['status'], 'failed')
+        new.write_text('{')
+        self.assertEqual(self.check(self.folder, {old}, 0)['status'], 'failed')
 
 
 if __name__ == "__main__":

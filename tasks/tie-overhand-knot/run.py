@@ -26,10 +26,70 @@ SCORE_VERSION = "overhand-bimanual-v4"
 HERE = Path(__file__).resolve().parent
 
 
+def _inspect_execution(log_dir, previous_logs, cli_return_code, raised_errors=()):
+    """Check Inspect's saved outcome independently of its CLI exit semantics."""
+    errors = [f'{type(exc).__name__}: {exc}' for exc in raised_errors]
+    logs = []
+    # Older Inspect entry points return None, which SystemExit treats as zero.
+    # The fresh evaluation log is still required to establish success.
+    if cli_return_code is not None and (type(cli_return_code) is not int or cli_return_code != 0):
+        errors.append(f'Inspect CLI returned {cli_return_code!r}, expected 0 or None')
+    paths = sorted(path for path in Path(log_dir).glob('adhoc_*.json')
+                   if path not in previous_logs and not path.name.endswith('.live.json'))
+    if len(paths) != 1:
+        errors.append(f'Expected one fresh Inspect evaluation log, found {len(paths)}')
+    for path in paths:
+        try:
+            content = path.read_bytes()
+            log = json.loads(content)
+            result, samples = log['results'], log['samples']
+            sample_errors = [dict(scene_id=sample.get('scene_id'), status=sample.get('status'),
+                                  error=sample.get('error')) for sample in samples
+                             if sample.get('status') != 'success' or sample.get('error')]
+            logs.append(dict(file=path.name, sha256=hashlib.sha256(content).hexdigest(),
+                             status=log['status'], error=log.get('error'),
+                             errored_trials=result['errored_trials'], sample_errors=sample_errors))
+            if (log['status'] != 'success' or log.get('error') or sample_errors
+                    or result['errored_trials'] != 0 or result['total_trials'] != 1
+                    or result['total_scenes'] != 1 or len(samples) != 1):
+                details = [str(log.get('error') or log['status'])]
+                details += [str(sample['error'] or sample['status']) for sample in sample_errors]
+                errors.append('Inspect evaluation failed: ' + '; '.join(details))
+        except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
+            errors.append(f'Cannot validate Inspect log {path.name}: {type(exc).__name__}: {exc}')
+    return dict(status='failed' if errors else 'complete', cli_return_code=cli_return_code,
+                errors=errors, logs=logs)
+
+
+def _record_execution_outcome(log_dir, metadata, execution):
+    """Keep geometric diagnostics, but a crashed policy earns no task score."""
+    metadata['execution'] = execution
+    path = Path(log_dir) / 'score-summary.json'
+    if not path.exists():
+        if execution['status'] == 'complete':
+            raise RuntimeError('Completed Inspect execution has no audited score summary')
+        metadata['audited_final_score'] = 0.
+        metadata['finalization_complete'] = False
+        return
+    summary = json.loads(path.read_text())
+    summary['execution'] = execution
+    if execution['status'] != 'complete':
+        summary['score'] = 0.
+        summary['status'] = 'Policy or evaluation execution failed'
+        finalization = summary.setdefault('finalization', {})
+        finalization['complete'] = False
+        finalization.setdefault('errors', []).extend(execution['errors'])
+        if 'finalization_certification' in summary:
+            summary['finalization_certification']['complete'] = False
+        metadata['audited_final_score'] = 0.
+        metadata['finalization_complete'] = False
+    path.write_text(json.dumps(summary, indent=2) + '\n')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--policy", choices=("demo", "dream", "idle", "grasp", "loop", "thread", "jig"), default="demo")
-    parser.add_argument("--max-steps", type=int, default=2400)
+    parser.add_argument("--max-steps", type=int, default=CONFIG['run_limit'])
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--log-dir", type=Path, required=True)
     parser.add_argument("--headless", choices=("true", "false"), default="true")
@@ -46,12 +106,17 @@ def main():
     parser.add_argument("--skip-assay", action="store_true",
                         help="Development only: record policy outcome without the post-policy load test")
     args = parser.parse_args()
+    from fixed_policy_physics import validate_schedule
+    try:
+        policy_physics_schedule = validate_schedule(CONFIG.get('policy_physics_schedule'), args.physics_hz)
+    except ValueError as exc:
+        parser.error(str(exc))
     if args.development_jig or args.policy == 'jig' or args.diagnostic_layout or args.proof_probe:
         parser.error('v3 fixture/preformed/load probes are historical: use their saved task-source snapshot; v4 has only a free, uncrossed cord')
     if args.policy in ('demo', 'loop', 'thread'):
-        from bimanual_policy import READY_STAGES
-        if args.policy not in READY_STAGES:
-            parser.error('the full bimanual controller is not ready; only --policy loop is available for the first physics probe')
+        from table_policy import IMPLEMENTED_STAGES
+        if args.policy not in IMPLEMENTED_STAGES:
+            parser.error('requested controller stage is unavailable: '+args.policy)
     if args.policy in ('demo', 'dream'):
         if args.diagnostic_layout or args.proof_probe:
             parser.error('demo and dream use the ordinary task scene, not diagnostic layouts')
@@ -96,8 +161,8 @@ def main():
         CONFIG['proof_probe'] = args.proof_probe
     CONFIG['physics_hz'] = args.physics_hz
     CONFIG['assay_physics_hz'] = args.assay_physics_hz
-    if not 1 <= args.max_steps <= 2400:
-        parser.error("max-steps must be 1..2400 (120 seconds at 20 Hz)")
+    if not 1 <= args.max_steps <= CONFIG['run_limit']:
+        parser.error(f"max-steps must be 1..{CONFIG['run_limit']} ({CONFIG['run_limit']/20:g} seconds at 20 Hz)")
     args.log_dir.mkdir(parents=True, exist_ok=True)
     if (args.log_dir / "trajectory.jsonl").exists():
         parser.error("choose a fresh log directory; existing audit data will not be overwritten")
@@ -116,6 +181,9 @@ def main():
             self.audit = self.review_encoder = self.review_stderr = None
             self.endpoint_load = None
             self.physics_switch = None
+            self.policy_physics_audit = None
+            self._policy_physics_failure = None
+            self._policy_reset_started = False
             self.assay_transition_required = False
             self._transition_failure = None
             instances.append(self)
@@ -169,6 +237,7 @@ def main():
             from pxr import UsdPhysics
             physics = {'physics_dt': float(self._base.physics_dt),
                        'control_dt': float(self._base.step_dt), 'scenes': [],
+                       'policy_physics_schedule': policy_physics_schedule,
                        'rope_requested': {key: CONFIG[key] for key in ('contact_offset', 'solver_position_iterations', 'solver_velocity_iterations')},
                        'rope_rest_offset_m': 0.}
             for prim in get_current_stage().Traverse():
@@ -182,6 +251,15 @@ def main():
 
 
         def reset(self, scene, *, seed=None):
+            # A changed native timestep cannot be silently reused as the next
+            # trial's 240 Hz prefix, nor can existing evidence be overwritten.
+            if getattr(self, '_policy_reset_started', False):
+                exc = RuntimeError('Use a fresh embodiment for each audited rope trial')
+                self._policy_physics_failure = exc
+                if self.policy_physics_audit is not None:
+                    self.policy_physics_audit.fail(exc)
+                raise exc
+            self._policy_reset_started = True
             self.endpoint_load = None
             self.physics_switch = None
             self.assay_transition_required = False
@@ -209,6 +287,13 @@ def main():
             self.review_frames = 0
             (args.log_dir / "visuals.json").write_text(json.dumps(self.visual_metadata, indent=2) + "\n")
             self._audit_sample()
+            if policy_physics_schedule is not None:
+                from fixed_policy_physics import FixedPolicyPhysics
+                if (not np.isclose(self._base.physics_dt, 1/240, rtol=0, atol=1e-12)
+                        or not np.isclose(self._base.step_dt, .05, rtol=0, atol=1e-12)):
+                    raise RuntimeError('Policy physics schedule requires a fresh 240 Hz simulation at 20 Hz control')
+                self.policy_physics_audit = FixedPolicyPhysics(self._base)
+                self.policy_physics_audit.save(args.log_dir / 'policy-physics-transition.json')
             return observation
 
         def step(self, action):
@@ -232,7 +317,25 @@ def main():
                 # Policies may reuse/mutate their action object after step().
                 self.last_policy_action = deepcopy(action)
                 self.policy_steps += 1
-            return super().step(action)
+            policy_audit = getattr(self, 'policy_physics_audit', None)
+            if policy_audit is None:
+                if policy_physics_schedule is not None:
+                    raise RuntimeError('Required policy physics audit was not initialized')
+                return super().step(action)
+            try:
+                policy_audit.before_step(self._t, self.review_frames)
+                result = super().step(action)
+                policy_audit.after_step(self._t, self.review_frames)
+                # Keep recoverable evidence without rewriting the growing
+                # native interval log on every policy action.
+                if (policy_audit.completed_actions == policy_physics_schedule['switch_after_completed_actions'] + 1
+                        or policy_audit.completed_actions % 100 == 0):
+                    policy_audit.save(args.log_dir / 'policy-physics-transition.json')
+                return result
+            except BaseException as exc:
+                self._policy_physics_failure = exc
+                policy_audit.fail(exc)
+                raise
 
         def _run_assay(self):
             """Evaluate an already released knot after policy actions end."""
@@ -386,8 +489,11 @@ def main():
             # Never begin new simulation work while Inspect is unwinding an
             # error or interruption. Resource cleanup must still run in full.
             transition_failure = getattr(self, '_transition_failure', None)
-            unwinding = sys.exception() or getattr(self, '_skip_assay_reason', None) or transition_failure
+            policy_failure = getattr(self, '_policy_physics_failure', None)
+            unwinding = sys.exception() or getattr(self, '_skip_assay_reason', None) or transition_failure or policy_failure
             errors = [transition_failure] if transition_failure is not None else []
+            if policy_failure is not None:
+                errors.append(policy_failure)
 
             def attempt(operation):
                 try:
@@ -401,6 +507,15 @@ def main():
                     attempt(self._run_assay)
                 if self.endpoint_load is not None:
                     attempt(self.endpoint_load.clear)
+                policy_audit = getattr(self, 'policy_physics_audit', None)
+                if policy_audit is not None:
+                    if unwinding is not None:
+                        policy_audit.fail(unwinding)
+                    attempt(lambda: policy_audit.close(self._t))
+                    # Preserve failure certificates even if close raised.
+                    attempt(lambda: policy_audit.save(args.log_dir / 'policy-physics-transition.json'))
+                elif policy_physics_schedule is not None:
+                    errors.append(RuntimeError('Required policy physics audit is missing'))
                 if getattr(self, 'assay_transition_required', False):
                     transition = getattr(self, 'physics_switch', None)
                     if transition is not None:
@@ -468,6 +583,27 @@ def main():
                             'expected_control_intervals': getattr(self, '_assay_expected_intervals', None),
                             'callback_removed': report.get('callback_removed'),
                         }
+                        policy_audit = getattr(self, 'policy_physics_audit', None)
+                        policy_report = policy_audit.report if policy_audit is not None else {}
+                        summary['policy_physics_transition'] = {
+                            'required': policy_physics_schedule is not None,
+                            'status': policy_report.get('status', 'not_required' if policy_physics_schedule is None else 'missing'),
+                            'error': policy_report.get('error'),
+                            'completed_actions': policy_report.get('completed_actions'),
+                            'expected_control_intervals': policy_report.get('expected_control_intervals'),
+                            'closed': policy_report.get('closed'),
+                            'certificate': 'policy-physics-transition.json' if policy_physics_schedule is not None else None,
+                        }
+                        policy_errors = []
+                        if policy_physics_schedule is not None and (
+                                policy_report.get('status') not in ('complete', 'not_reached')
+                                or policy_report.get('closed') is not True
+                                or policy_report.get('pending_interval') is not False
+                                or policy_report.get('error')):
+                            policy_errors.append(policy_report.get('error') or
+                                                 'Required policy physics certificate is incomplete')
+                            if not errors:
+                                errors.append(RuntimeError(policy_errors[0]))
                         summary['finalization'] = {
                             'complete': not errors and unwinding is None,
                             'errors': [f'{type(exc).__name__}: {exc}' for exc in errors],
@@ -480,6 +616,14 @@ def main():
                         else:
                             summary = certify_result(summary, CONFIG, report or None,
                                 finalization_complete=summary['finalization']['complete'])
+                        summary['policy_physics_certification'] = {
+                            'required': policy_physics_schedule is not None,
+                            'status': 'incomplete' if policy_errors else 'complete' if policy_physics_schedule is not None else 'not_required',
+                            'errors': policy_errors,
+                        }
+                        if policy_errors:
+                            summary['score'] = 0.
+                            summary['status'] = 'Policy physics evidence is incomplete'
                         if summary['assay_certification']['required'] and summary['assay_certification']['status'] != 'complete' and not errors:
                             errors.append(RuntimeError('Full assessor evidence is not certified: ' +
                                           '; '.join(summary['assay_certification']['errors'])))
@@ -491,6 +635,8 @@ def main():
                         metadata['assay_certification'] = summary['assay_certification']
                         metadata['authoritative_score_file'] = 'score-summary.json'
                         metadata['finalization_complete'] = summary['finalization']['complete']
+                        metadata['policy_physics_transition'] = summary['policy_physics_transition']
+                        metadata['policy_physics_certification'] = summary['policy_physics_certification']
                     attempt(save_summary)
                 self._close_finished = True
             if errors:
@@ -510,6 +656,7 @@ def main():
         "--no-prompt", "--grader", "none",
     ]
     metadata = {"python": platform.python_version(), "policy": args.policy, "seed": args.seed, "max_steps": args.max_steps, "control_hz": 20, "score_version": SCORE_VERSION, "packages": {}}
+    metadata['policy_physics_schedule'] = policy_physics_schedule
     if args.policy == "dream":
         metadata["dream_transport"] = "direct"
     metadata["task_config"] = CONFIG
@@ -530,6 +677,7 @@ def main():
     started = time.monotonic()
     errors = []
     result = None
+    previous_eval_logs = set(args.log_dir.glob('adhoc_*.json'))
     try:
         result = inspect_main(cli_args)
     except BaseException as exc:
@@ -543,6 +691,14 @@ def main():
                 instance.close()
             except BaseException as exc:
                 errors.append(exc)
+        try:
+            execution = _inspect_execution(args.log_dir, previous_eval_logs, result, errors)
+            _record_execution_outcome(args.log_dir, metadata, execution)
+            if execution['status'] != 'complete':
+                errors.append(RuntimeError('; '.join(execution['errors'])))
+        except BaseException as exc:
+            errors.append(exc)
+            metadata['finalization_complete'] = False
         metadata["elapsed_wall_seconds"] = round(time.monotonic() - started, 3)
         try:
             (args.log_dir / "runtime.json").write_text(json.dumps(metadata, indent=2) + "\n")

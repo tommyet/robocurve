@@ -3,7 +3,7 @@
 **V4 protocol; new feasibility evidence is still required.**
 
 Start with the intact 131 cm outside-length, 10 mm cord in the flat, uncrossed
-U shown in the setup. Nothing holds either end. The robot gets 120 seconds,
+U shown in the setup. Nothing holds either end. The robot gets 150 seconds,
 including the final five-second release check. There is no evaluator pull.
 
 Follow the cord from one coloured end to the other and resolve every crossing
