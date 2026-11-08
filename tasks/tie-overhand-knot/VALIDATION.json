@@ -1,5 +1,5 @@
 {
-  "status": "Full table controller implemented but unvalidated. Nineteen completed table pilots score zero. Trial 019 retains both terminal grasps but fails on nonlocal rope contact at 108.30 seconds; its version-2 native closure and execution checks pass. Trial 020 is running with gradual grip closure during the original simultaneous lift. No qualifying full pull, final retention or matching Dream run.",
+  "status": "First full current table-method demo recorded and independently replayed at score 1.0 in 138.30 seconds. Trial 020 passes recorded geometry, version-2 native closure, execution, finalization, every recorded robot mesh pose and twelve-frame visual review. Matching Dream trial 021 is running from the exact same frozen archive, seed and 3,000-action limit. Submission remains pending.",
   "submission_ready": false,
   "review_basis": {
     "accepted_examples": [
@@ -16,35 +16,34 @@
     "elapsed_s": 25.805
   },
   "still_required": [
-    "Retain both terminal grasps through the full simultaneous pull and final released-knot interval within 3,000 actions.",
-    "Record a successful complete demo and matching Dream trial; independently replay and visually review both.",
-    "Refresh the live task board and obtain user authorization before any media upload or upstream submission."
+    "Finish the matching Dream trial; independently replay and visually review its result.",
+    "Complete final media/source and live task-board checks, and obtain user authorization before media upload or upstream submission."
   ],
   "score_version": "overhand-bimanual-v4",
   "implementation_complete": true,
-  "current_version_evaluated": false,
+  "current_version_evaluated": true,
   "historical_evidence_scope": "Historical v3 jig records and the five earlier v4 high-lift pilots are separate from current table-method evidence. None demonstrates success of the complete current controller.",
   "current_revision_checks": {
     "score_version": "overhand-bimanual-v4",
     "unit_test_command": "python -m unittest discover -s . -p 'test_*.py'",
     "unit_tests_passed": 142,
-    "physics_trials": 19,
+    "physics_trials": 20,
     "dream_trials": 0,
     "full_demo_implemented": true,
     "remaining_work": [
-      "Retain both terminal grasps through the full simultaneous pull and final released-knot interval within 3,000 actions.",
-      "Record a successful complete demo and matching Dream trial; independently replay and visually review both."
+      "Finish the matching Dream trial; independently replay and visually review its result.",
+      "Complete final media/source and live task-board checks, and obtain user authorization before media upload or upstream submission."
     ],
     "nominal_pull_candidate": "evidence/bimanual-pull-kinematics.json",
     "historical_terminal_grasp_audit": "evidence/bimanual-loop-kinematics.json",
     "historical_high_loop_physics_trials": 5,
-    "total_completed_v4_physics_trials": 24,
+    "total_completed_v4_physics_trials": 25,
     "available_controller_stages": [
       "loop",
       "thread",
       "demo"
     ],
-    "validation_status": "Trial 019 captures both ends and records a held overhand candidate, then fails on actual capsule pair 18/27 at 108.30 seconds. Both grasps stay held. All 2,168 recorded native robot poses pass the arm/table mesh audit. Replay scores zero with verified version-2 final counter/callback closure and successful execution. Trial 020 is pending.",
+    "validation_status": "First full current table-method demo recorded and independently replayed at score 1.0 in 138.30 seconds. Trial 020 passes recorded geometry, version-2 native closure, execution, finalization, every recorded robot mesh pose and twelve-frame visual review. Matching Dream trial 021 is running from the exact same frozen archive, seed and 3,000-action limit. Submission remains pending.",
     "table_pilot_evidence": "evidence/table-pilots.json",
     "nominal_pull_candidate_scope": "Earlier staged outward-pull audit only; it does not validate the current threading-to-pull transition or actual rope behavior.",
     "commands": {
@@ -64,7 +63,12 @@
         140.0
       ],
       "run_limit_seconds": 150.0,
-      "scope": "Prospective 020 preserves the original trial-018 route and pinch through 106.50 seconds, then smoothly closes both grippers during its six-second simultaneous lift toward DOWN. No extra stationary hold. Optional final half-span extensions stop when the measured span condition passes; the final recording tick adds time."
+      "scope": "The implemented controller allows 137\u2013140 seconds depending on optional final half-span extension. Trial 020 reaches full score at 138.30 seconds during the planned final settling wait; the environment ends after the completed five-second release interval.",
+      "observed_successful_demo_seconds": 138.3,
+      "observed_demo_wall_seconds": 1757.542,
+      "observed_demo_wall_seconds_basis": "runtime.json simulator-runner elapsed wall time",
+      "observed_demo_outer_execution_wall_seconds": 1759.008620970002,
+      "outer_execution_wall_seconds_basis": "Serial wrapper start to finish; use this interval for a run-only elapsed-cost estimate. Full-session cost also includes setup, idle time and shutdown."
     },
     "prospective_run_limit_actions": 3000,
     "run_limit_change_scope": "Future final demo and Dream trials use 3,000 actions at 20 Hz. Earlier frozen trials retain their recorded limits; table-008 uses a 2,400-action scene and 1,800-action thread plan.",
@@ -76,13 +80,13 @@
       "basis": "Two 5 mm cord radii plus 2 mm projected surface clearance. This planning guard does not establish knot topology or score."
     },
     "recorded_robot_clearance_audit": {
-      "trial": "table-019",
+      "trial": "table-020",
       "evidence": "evidence/table-pilots.json",
-      "samples": 2168,
-      "minimum_interarm_separation_lower_bound_m": 0.004392774993205753,
-      "minimum_nonbase_table_clearance_m": 0.00048801392716635306,
+      "samples": 2767,
+      "minimum_interarm_separation_lower_bound_m": 0.004392775,
+      "minimum_nonbase_table_clearance_m": 0.000488014,
       "reported_intersections": 0,
-      "scope": "Measured native link frames and authored collision geometry across every recorded 20 Hz pose. No between-frame or future-route guarantee."
+      "scope": "Measured native link frames and authored collision geometry across every recorded 20 Hz pose; no between-frame guarantee."
     },
     "prospective_recovery_route_audit": {
       "reference_trial": "table-012",
@@ -101,7 +105,7 @@
       "switch_capture_time_s": 78.0
     },
     "policy_physics_replay_review": {
-      "status": "The 142-test CPU suite passes. Trial 019 independently validates 607 post-switch native intervals and version-2 final closure through 108.35 seconds, including frames after scorer invalidity. Successful execution is recorded. Its invalid geometry still scores zero.",
+      "status": "The 142-test CPU suite passes. Successful demo 020 independently validates 1,206 post-switch native intervals and version-2 final closure through 138.30 seconds; successful Inspect execution and complete recording are certified.",
       "certificate": "policy-physics-transition.json",
       "checks": [
         "Exact fixed schedule and state/counter preservation at the switch.",
@@ -116,15 +120,15 @@
       "current_certificate_schema": "fixed-policy-physics-v2",
       "native_closure_schema": "native-counter-closure-v1",
       "native_version_2_validation": {
-        "trial": "table-019",
+        "trial": "table-020",
         "status": "complete",
-        "final_capture_time_s": 108.35,
-        "validated_control_intervals": 607,
-        "final_native_counter": 47976,
-        "final_environment_counter": 47976,
+        "final_capture_time_s": 138.3,
+        "validated_control_intervals": 1206,
+        "final_native_counter": 76728,
+        "final_environment_counter": 76728,
         "callback_error": null,
         "replay_native_closure_status": "verified",
-        "scope": "Confirms audit machinery, not task success."
+        "scope": "Validated in the complete full-score demo."
       }
     },
     "prospective_support_lowering_guard": {
@@ -137,11 +141,11 @@
         0.0,
         0.025
       ],
-      "scope": "Applies only to support lowering. Requires retained material 23 and each actual axis endpoint height minus cord radius/table height within0\u201325mm. This is a routing/placement guard, not a scoring or physics-tolerance change."
+      "scope": "Applies only to support lowering. Requires retained material 23 and each actual axis endpoint height minus cord radius/table height within 0\u201325 mm. This is a routing/placement guard, not a scoring or physics-tolerance change."
     },
     "focused_checks_after_withdrawal_change": {
       "passed": 17,
-      "scope": "Historical017 withdrawal change; superseded current focused check follows."
+      "scope": "Historical trial 017 withdrawal change; superseded current focused check follows."
     },
     "prospective_support_withdrawal": {
       "lift_m": 0.03,
@@ -169,7 +173,7 @@
       "gripper_half_gap_target_end_m": 0.0,
       "smooth_grip_closure_during_lift": true,
       "additional_stationary_grip_hold_seconds": 0.0,
-      "scope": "Trial 020 restores the trial-018 route through 106.50 seconds and ramps ordinary position-command closure during simultaneous staging. It does not change rope geometry, physics or scoring thresholds."
+      "scope": "Implemented in successful trial 020. Original pinch and motion exactly match trial 018 through 106.50 seconds; gradual ordinary position-command closure during the simultaneous lift retains both terminal grasps through intentional release. This is one recorded outcome, not a repeatability guarantee."
     },
     "focused_checks_after_trial019_motion_change": {
       "passed": 17,
@@ -182,7 +186,7 @@
         0.59
       ],
       "early_stop": "Measured span_condition true",
-      "scope": "Reach-audited ordinary bimanual motion, bounded by the unchanged 150-second episode. Does not alter span or scoring thresholds."
+      "scope": "All three optional half-span targets were used in successful trial 020. The one-second qualifying span and five-second final release both completed within 150 seconds; scoring thresholds are unchanged."
     },
     "focused_checks_after_trial020_motion_change": {
       "passed": 17,
@@ -194,7 +198,7 @@
       "report_sha256": "22b7715d4482afde9a2c221a23dc77518c97c4cc255a510f4527b63a71d8f564",
       "source": {
         "historical_trial": "demo-009",
-        "time_s": 100.29999999999644,
+        "time_s": 100.3,
         "trajectory_sha256": "44a6604b726d17932433b119f14993e66955edc0ec3ddee8aebf0d383c5453a5",
         "frozen_result_scope": "Historical jig task with external assessor; excluded as current v4 demonstration evidence.",
         "original_links": 118,
@@ -210,13 +214,13 @@
       "diameter_m": 0.01,
       "nominal_centreline_length_m": 1.3,
       "outside_length_m": 1.31,
-      "span_lower_bound_m": 1.1898854789138444,
+      "span_lower_bound_m": 1.189885479,
       "required_span_m": 1.17,
-      "span_margin_m": 0.019885478913844512,
+      "span_margin_m": 0.019885479,
       "maximum_joint_gap_m": 0.0,
-      "minimum_actual_nonlocal_axis_distance_m": 0.00997038360434059,
-      "minimum_axis_margin_above_contact_limit_m": 0.000470383604340591,
-      "maximum_adjacent_axis_bend_rad": 1.4504085841655525,
+      "minimum_actual_nonlocal_axis_distance_m": 0.009970384,
+      "minimum_axis_margin_above_contact_limit_m": 0.000470384,
+      "maximum_adjacent_axis_bend_rad": 1.450408584,
       "configured_per_swing_axis_limit_rad": 1.5,
       "unmocked_current_geometry_check": "passes _read_cord and analyze_open_rope; all five exterior closures give determinant 3 and seven trefoil certificates each",
       "current_source_sha256": {
@@ -225,28 +229,47 @@
         "scoring.py": "9a3519561f15b83880c138eb7beedf866d9de21db247205257cf7c895d5f5c78",
         "topology.py": "21057280e6d69123019e432d2b50934e97b5f5131349186541215755f99a5ff2"
       },
-      "conclusion": "A static connected configuration satisfies the current span, contact and bend limits. Current robot reach, formation and five-second released retention still require physical demonstration."
+      "conclusion": "A static connected configuration satisfies the current span, contact and bend limits. This geometric check alone does not prove dynamic feasibility; the separate physical trial 020 demonstrates robot formation, the qualifying span and five-second released retention."
+    },
+    "post_demo_source_note": {
+      "file": "visuals.py",
+      "change": "Comment corrected from red 3 cm to red 2 cm to match existing geometry/metadata. No executable change.",
+      "frozen_sha256": "a7e8b4b040c526093570b3a295e9eea28a7192dbd33ae0db6dd1f7293c4ac819",
+      "current_sha256": "cadb779772c1e6ca946113be7be99715d6ab27e41b4dc6383fcc9a29611eb5bd",
+      "dream_source": "Trial 021 uses the exact frozen 020 archive, including its original comment. Documentation/task text also updated to report the completed demo; these are not behavioral changes."
+    },
+    "recorded_own_arm_clearance_audit": {
+      "trial": "table-020",
+      "samples": 2767,
+      "nonadjacent_link_pairs_per_arm": 27,
+      "minimum_separation_lower_bound_m": 0.005000767382417726,
+      "reported_intersections": 0,
+      "excluded_pairs": "Eight directly joint-connected URDF pairs plus tip_left/tip_right; other finger-versus-arm pairs are checked.",
+      "scope": "Recorded 20 Hz native poses against authored convex meshes. Native same-arm collision is disabled for intentional gripper-assembly overlap, so this offline check covers nonadjacent links; no between-frame claim.",
+      "evidence": "evidence/table-pilots.json",
+      "report_sha256": "8b29df032b33c38f821c5c639c944f8b8d6247d0a56a84978b8712b66165bc7d"
     }
   },
   "v4_development": {
-    "status": "Full table controller implemented but unvalidated. Nineteen completed table pilots score zero. Trial 019 retains both terminal grasps but fails on nonlocal rope contact at 108.30 seconds; its version-2 native closure and execution checks pass. Trial 020 is running with gradual grip closure during the original simultaneous lift. No qualifying full pull, final retention or matching Dream run.",
+    "status": "First full current table-method demo recorded and independently replayed at score 1.0 in 138.30 seconds. Trial 020 passes recorded geometry, version-2 native closure, execution, finalization, every recorded robot mesh pose and twelve-frame visual review. Matching Dream trial 021 is running from the exact same frozen archive, seed and 3,000-action limit. Submission remains pending.",
     "evidence": "evidence/table-pilots.json",
     "controller_sequence": [
       "Right hand grips segment 101 and lays a crossing from the uncrossed U.",
       "Right hand grips segment 23 and raises a local arch by 15 cm.",
       "Left hand grips segment 103 and carries the actual red terminal under the arch.",
       "Left hand releases the terminal inside the loop, confirms the whole terminal axis is inside with at least 12 mm projected boundary clearance, then withdraws empty.",
-      "Right hand lowers the arch by 140 mm over three seconds while retaining its measured tilted orientation, checks measured support placement, releases to 24 mm, lifts vertically 30 mm over 1.5 seconds, then fully opens for one second and parks. It regrips red103 from above; left hand approaches yellow segment 2 from 12 cm north, 20 mm above the measured point with a 24 mm jaw opening, then approaches horizontally and descends.",
-      "With both ends captured, right103 lifts 65 mm and moves outward to x=0.39 m using the original 4.5 mm half-gap command. Both ends then lift and separate together over six seconds toward DOWN while ordinary gripper closure ramps smoothly to zero. The arms turn outward and pull in the same control ticks; optional half-span targets 0.57/0.58/0.59 m stop when the measured span condition passes, followed by release and retention scoring."
+      "Right hand lowers the arch by 140 mm over three seconds while retaining its measured tilted orientation, checks measured support placement, releases to 24 mm, lifts vertically 30 mm over 1.5 seconds, then fully opens for one second and parks. It regrips red segment 103 from above; left hand approaches yellow segment 2 from 12 cm north, 20 mm above the measured point with a 24 mm jaw opening, then approaches horizontally and descends.",
+      "With both ends captured, right-held segment 103 lifts 65 mm and moves outward to x=0.39 m using the original 4.5 mm half-gap command. Both ends then lift and separate together over six seconds toward DOWN while ordinary gripper closure ramps smoothly to zero. The arms turn outward and pull in the same control ticks; optional half-span targets 0.57/0.58/0.59 m stop when the measured span condition passes, followed by release and retention scoring."
     ],
-    "completed_physics_trials": 19,
-    "successful_full_demos": 0,
-    "independent_replay": "All nineteen completed recordings independently replay to score zero. Nine contain invalid recorded geometry; trial 015 also has a separate Inspect policy error. Trial 019 verifies the version-2 native final closure and successful execution, while its actual contact violation correctly keeps its score zero.",
+    "completed_physics_trials": 20,
+    "successful_full_demos": 1,
+    "independent_replay": "Trials 001\u2013019 independently score zero; trial 020 independently scores 1.0 with valid recorded geometry, initial uncrossed validation, a one-second suspended span certificate and five-second released retention. Version-2 native closure, execution and finalization pass.",
     "pending_trial": {
-      "name": "table-020",
-      "policy": "demo",
+      "name": "table-021",
+      "policy": "dream",
       "max_steps": 3000,
       "frozen_scene_run_limit": 3000,
+      "seed": 0,
       "physics_hz": 240,
       "policy_physics_schedule": {
         "initial_physics_hz": 240,
@@ -255,8 +278,10 @@
         "switch_after_completed_actions": 1560,
         "switch_capture_time_s": 78.0
       },
-      "status": "Frozen source/archive verified and launched. Physical outcome pending; not counted as completed evidence.",
-      "certificate_schema": "fixed-policy-physics-v2"
+      "certificate_schema": "fixed-policy-physics-v2",
+      "matching_demo": "table-020",
+      "frozen_archive_sha256": "52616cbbfe6ceda7b3de4a7fbde0cdbe9d8806f6e2646bb3163903b58a0a9536",
+      "status": "Launched at approximately 13:15 UTC from the exact 020 frozen archive. Outcome pending; not counted as completed evidence."
     },
     "dream_trials": 0,
     "historical_high_loop_pilots": {
@@ -269,10 +294,11 @@
     },
     "legacy_evidence_scope": "All historical_v3 records and old demo/Dream evidence are explicitly superseded for current-task feasibility.",
     "latest_completed_trial": {
-      "name": "table-019",
+      "name": "table-020",
       "policy": "demo",
       "max_steps": 3000,
       "frozen_scene_run_limit": 3000,
+      "seed": 0,
       "physics_hz": 240,
       "policy_physics_schedule": {
         "initial_physics_hz": 240,
@@ -282,25 +308,18 @@
         "switch_capture_time_s": 78.0
       },
       "certificate_schema": "fixed-policy-physics-v2",
-      "score": 0.0,
-      "time_s": 108.35,
-      "scorer_last_valid_time_s": 108.25,
-      "samples": 2168,
-      "wall_seconds": 1107.166,
-      "invalid": "nonlocal capsule penetration exceeds 5% diameter tolerance",
-      "first_invalid_time_s": 108.3,
-      "first_invalid_actual_pair": [
-        18,
-        27
-      ],
-      "first_invalid_actual_axis_distance_m": 0.009496831799,
-      "first_invalid_actual_excess_above_allowance_m": 3.168201e-06,
-      "final_actual_axis_distance_m": 0.009486626792,
+      "score": 1.0,
+      "time_s": 138.3,
+      "samples": 2767,
+      "actions": 2766,
+      "wall_seconds": 1757.542,
+      "invalid": null,
       "recording_finalization_complete": true,
       "cli_return_code": 0,
       "policy_execution_status": "complete",
-      "full_sequence_completed": false,
-      "validated_post_switch_intervals": 607,
+      "task_requirements_completed": true,
+      "episode_stopped_when_full_score_reached": true,
+      "validated_post_switch_intervals": 1206,
       "native_substeps_per_action": 48,
       "state_and_counters_unchanged_at_switch": true,
       "callback_removed": true,
@@ -309,24 +328,55 @@
         "complete": true,
         "callback_error": null,
         "expected_counters": {
-          "native": 47976,
-          "environment": 47976
+          "native": 76728,
+          "environment": 76728
         },
         "observed_counters": {
-          "native": 47976,
-          "environment": 47976
+          "native": 76728,
+          "environment": 76728
         }
       },
-      "first_valid_candidate_time_s": 104.349999999996,
-      "last_valid_candidate_time_s": 108.25,
+      "first_valid_candidate_time_s": 103.35,
       "both_terminal_grasps_confirmed_time_s": 102.5,
-      "both_terminal_grasps_retained_through_final_capture": true,
-      "simultaneous_staging_attempted": true,
-      "simultaneous_pull_attempted": false,
-      "final_release_attempted": false,
-      "replay_score": 0.0,
-      "current_replay_logic_matches_frozen": true,
-      "interpretation": "Early stronger grip plus its extra stationary hold changed the rope before simultaneous staging. Their separate effects are not isolated. Both grasps remained held; cached candidate labels after invalidity are not valid topology evidence."
+      "both_grasps_retained_until_intentional_release_s": 133.0,
+      "span_window_s": [
+        130.75,
+        131.75
+      ],
+      "minimum_certified_span_lower_bound_m": 1.170074087,
+      "minimum_table_clearance_in_span_window_m": 0.108722009,
+      "release_window_s": [
+        133.3,
+        138.3
+      ],
+      "minimum_robot_clearance_in_release_window_m": 0.037940798,
+      "replay_score": 1.0,
+      "current_core_source_matches_frozen_at_audit": true,
+      "minimum_actual_nonlocal_axis_distance_m": 0.009509743,
+      "minimum_axis_margin_above_contact_limit_m": 9.743e-06,
+      "all_recorded_robot_mesh_poses_pass": true,
+      "visual_review": {
+        "method": "Twelve chronological frames extracted from the unchanged review video; full-frame views at reset, crossing, arch, feeding, withdrawal, recovery, staging, simultaneous pull, suspended span and final release.",
+        "frames_s": [
+          0,
+          22.5,
+          38.5,
+          64,
+          78,
+          94.5,
+          106.5,
+          112.5,
+          124,
+          130.75,
+          132,
+          138.25
+        ],
+        "contact_sheet_sha256": "b04ee1a45b0fad0a04628ccf23c39638a926e450ff534826c878ccaff61bfde9",
+        "findings": "Uncrossed start, robot contact manipulation, visible shrinking loop during simultaneous pull, compact final knot, open hands and cord resting freely on table. No identifying text in reviewed frames. Topology and continuous timing rely on independently replayed geometry."
+      },
+      "interpretation": "First full physical table-method success. A single fixed-seed result and narrow observed contact margin do not establish repeatability or between-frame fidelity. Dream remains pending.",
+      "wall_seconds_basis": "runtime.json simulator-runner elapsed wall time",
+      "outer_execution_wall_seconds": 1759.008620970002
     }
   },
   "historical_v3": {
@@ -596,6 +646,29 @@
       "Oblique video and temporary occlusion limit direct ruler-level judging; geometric audit supplements visible knot formation and retention."
     ]
   },
-  "final_trials": {},
-  "current_version_evaluated_scope": "Nineteen table pilots and five older high-lift pilots remain separate. Trial 019 verifies version-2 audit closure and retained grasps but fails on actual nonlocal contact. Trial 020 is running with gradual closure during the original simultaneous lift. A successful full demo and matching Dream remain missing."
+  "final_trials": {
+    "table-020": {
+      "role": "current scripted demo",
+      "score": 1.0,
+      "seed": 0,
+      "actions": 2766,
+      "time_s": 138.3,
+      "wall_seconds": 1757.542,
+      "evidence": "evidence/table-pilots.json",
+      "trajectory_sha256": "e9d11abb3050151bf4ec7fc80ff4bf9ae6c1b7a89f4bb1144457290e9e760aca",
+      "review_video_sha256": "8b75d9c6592bbf926455fd7045c6095e3d93615625ab6245848bd585b0aefe5e",
+      "frozen_archive_sha256": "52616cbbfe6ceda7b3de4a7fbde0cdbe9d8806f6e2646bb3163903b58a0a9536",
+      "independent_replay": true,
+      "all_recorded_robot_mesh_poses_pass": true,
+      "keyframe_visual_review_complete": true,
+      "complete_matching_demo_dream_pair": false,
+      "trial_key": "table-020",
+      "wall_seconds_basis": "runtime.json simulator-runner elapsed wall time",
+      "outer_execution_wall_seconds": 1759.008620970002,
+      "labelled_review_video_sha256": "cbfca3a3d4766846f6140456615ab0d92f2fcb0ff743d1dae06dbf447ea431dd",
+      "labelled_review_manifest_sha256": "9490cd1dcc77a74d6e770ce13d478669e86fc6d1f398dd12388c028529c91f00",
+      "all_recorded_nonadjacent_own_arm_pairs_pass": true
+    }
+  },
+  "current_version_evaluated_scope": "Current scripted demo 020 reaches full score with complete physical recording and independent replay. Twenty table trials and five older high-lift trials are recorded separately. Matching current-source Dream 021 is running; there is no complete demo/Dream pair or submission yet."
 }

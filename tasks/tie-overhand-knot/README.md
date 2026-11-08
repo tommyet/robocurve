@@ -1,10 +1,8 @@
 # Tie an overhand knot
 
-**Implemented, but not yet validated or ready for submission.** Nineteen table
-pilots have scored zero. Trial 018 dropped an end during lifting; trial 019
-kept both ends held but failed on rope contact. Trial 020 is testing gradual
-gripper closure during the simultaneous lift.
-The full pull and final released retention remain unproven.
+**The first full demo scores 1.0 in independent replay.** Trial 020 completes
+the task in 138.30 seconds. The matching Dream run is in progress; submission
+is still pending.
 
 Tie one overhand knot in the blue cord. Pull its ends at least 117 cm apart
 for one second with the whole cord at least 1 cm above the table. Let go and
@@ -26,6 +24,8 @@ straight legs and a 70 cm semicircular section. End-joint centres start at
 (0.060,+0.0428461,0.753) and (0.060,−0.4028461,0.753); the straight legs end
 at x=0.360. The far bend reaches x=0.5828461. `config.py` supplies all 105 joint
 centres at exactly 12.5 mm spacing. Both arms start in the YAM ready pose.
+A render-only 28 cm tabletop ruler and 20 cm height guide have 5 mm ticks.
+They provide review cues and have no collision geometry.
 
 ## Run and score
 
@@ -48,15 +48,15 @@ python -m unittest discover -s . -p 'test_*.py'
 terminal under it. The feeding hand releases the tip inside and withdraws;
 the support hand lowers the arch, opens and lifts clear. The arms then pick
 up both ends, lift and separate together while gradually closing the grippers,
-turn outward, pull in the same control ticks, and release. The full sequence
-remains unvalidated.
+turn outward, pull in the same control ticks, and release. Trial 020 demonstrates
+this complete sequence from the uncrossed U.
 
 `loop` stops after the arch; `thread` stops after red-tip regrasp; `demo`
 attempts the whole sequence. The default seed is 0 and the starting layout is
 fixed. The current sequence takes 137–140 simulated seconds, depending on how far
 the final pull must extend, plus the final recording tick. The limit is 3,000
-actions at 20 Hz (150 seconds). Completed pilots took 3.6–20.0 wall-clock
-minutes each; full-task runtime is not yet measured.
+actions at 20 Hz (150 seconds). The successful demo stops when full score is
+reached at 138.30 seconds; the simulator runner reports 29.3 wall-clock minutes.
 A matching Dream run must use the same final source, seed, scene, cameras,
 action limit and scorer. There are no evaluator actions after the episode.
 
@@ -109,10 +109,10 @@ modelled. The solver uses 64 position and 16 velocity iterations, a 0.5 mm
 contact offset and zero rest offset; allowed penetration is 5% of the diameter.
 
 The fixed 240→960 Hz physics schedule applies equally to demo and Dream,
-with 20 Hz control throughout. It adds no actions or external forces. Trial 019
-validated unchanged state/counters, 48 native substeps per action across 607
+with 20 Hz control throughout. It adds no actions or external forces. Trial 020
+validated unchanged state/counters, 48 native substeps per action across 1,206
 post-switch intervals, and version-2 final callback/counter closure through
-108.35 seconds. Its geometry failure still scores zero. Historical trials
+138.30 seconds. Historical trials
 retain their recorded settings and scorer.
 
 The scorer checks each recorded 20 Hz frame for rope continuity, nonlocal
@@ -120,16 +120,20 @@ penetration, topology, span and release. It cannot establish physical fidelity
 between samples. Topological ambiguity earns no credit. Synthetic test cases
 verify the scorer, not robot feasibility.
 
-[The table-pilot evidence](evidence/table-pilots.json) contains all nineteen
-completed trials, each score zero. Both terminal pickup and held overhand
-candidates have been demonstrated, but no qualifying span or final released
-retention. The full 142-test CPU suite passes, including shutdown, execution
-and action-budget checks; these do not establish robot feasibility.
+[The table-pilot evidence](evidence/table-pilots.json) preserves nineteen failed
+pilots and the successful trial 020. Its suspended span qualifies from
+130.75–131.75 seconds; released-knot retention runs from 133.30–138.30 seconds.
+Both grasps remain held until intentional opening. All 2,767 recorded robot
+poses pass the arm/table mesh audit, and twelve key frames were visually
+reviewed. A separate audit of nonadjacent parts within each arm also finds no
+intersections. The closest recorded rope-axis separation is 9.509743 mm against the
+9.5 mm limit, a narrow margin. One fixed-seed success does not establish
+repeatability. The full 142-test CPU suite also passes.
 
 [VALIDATION.json](VALIDATION.json) separates current evidence from the five
 older high-lift pilots and historical v3 jig trials. The old jig demo's native
-velocity spike remains unresolved. Submission requires a complete successful
-demo, a matching Dream run, independent replay and visual review. Raw trials
+velocity spike remains unresolved. Submission still needs the matching Dream
+result, independent replay and review of that run, and final submission checks. Raw trials
 remain outside Git. No media upload or upstream PR has been made for this task.
 
 ## Review lessons

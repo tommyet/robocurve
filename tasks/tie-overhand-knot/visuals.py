@@ -83,7 +83,7 @@ def install_scene_visuals(base):
 
     # Render-only calibration graphics, outside the normal pickup/release area.
     # The tabletop scale has 5 mm ticks and 1 cm major ticks. The upright guide
-    # shows 0–20 cm, with a red 3 cm reference. They are visual annotations, not
+    # shows 0–20 cm, with a red 2 cm reference. They are visual annotations, not
     # physical obstacles; the run metadata records this simplification.
     from yam_arena.task_file import TABLE_TOP
     top = TABLE_TOP["station"]

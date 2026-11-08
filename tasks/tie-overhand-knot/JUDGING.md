@@ -1,6 +1,6 @@
 # Judging the knot
 
-**V4 protocol; new feasibility evidence is still required.**
+The table-method demo passes this protocol with a replayed score of 1.0.
 
 Start with the intact 131 cm outside-length, 10 mm cord in the flat, uncrossed
 U shown in the setup. Nothing holds either end. The robot gets 150 seconds,
@@ -30,8 +30,8 @@ best earlier frame.
 The span target is a geometric definition: outside cord length minus fourteen
 cord diameters. It bounds slack in the whole cord without guessing where the
 knot begins or ends. It does not measure tension, strength or maximal
-compactness. The robot may use any valid strategy; the scripted demo is
-intended to pull the two ends simultaneously with both arms.
+compactness. The robot may use any valid strategy; the scripted demo pulls
+the two ends simultaneously with both arms.
 
 ## Numerical audit
 

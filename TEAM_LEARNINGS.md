@@ -63,9 +63,10 @@ developers and their agents, not a competition submission document.
   The user requested forming the knot on the table, opening a local arch and
   pulling both ends together. The free uncrossed U is translated 18 cm toward
   −Y. No rope poses, attachments or external tightening forces are introduced.
-- Nineteen table pilots are recorded in
+- Twenty completed table trials are recorded in
   [table-pilots.json](tasks/tie-overhand-knot/evidence/table-pilots.json).
-  All score zero: 001/002 establish a small arch, 003 curls the loose tail,
+  Trials 001–019 score zero; 020 scores 1.0. Trials 001/002 establish a small
+  arch, 003 curls the loose tail,
   004/005 stop on excessive rope contact, 006 establishes the revised
   right-arm support, 007 ends unknotted before pulling, and 008 forms a held
   overhand candidate without attempting span or release. In 009 that candidate
@@ -82,7 +83,9 @@ developers and their agents, not a competition submission document.
   valid held candidate before failing during right-only staging. Trial 018
   avoids that contact failure but drops the yellow end during simultaneous
   lifting. Trial 019 retains both ends but fails on nonlocal rope contact.
-  These are development results, not completed task demonstrations.
+  These nineteen trials are development failures. Trial 020 is the first
+  complete full-score demo, independently replayed at 1.0; matching Dream
+  trial 021 is now running.
 - A wrist rotation is not control of a flexible free tip. In 003 the grasp
   remained held but the tip curled and finished 73.85 mm outside the loop.
   In 005, moving the tip back toward the crossing shortened the measured
@@ -297,11 +300,51 @@ developers and their agents, not a competition submission document.
   byte-matches its frozen dependencies. All 2,168 recorded robot poses also
   pass the native mesh audit, with minimum arm separation 4.393 mm and table
   clearance 0.488 mm. These do not excuse the separate rope-contact violation.
-- Trial 020 is frozen and running. It restores 018's original motion and
+- Trial 020's tested revision restores 018's original motion and
   4.5 mm pinch through 106.50 seconds, then gradually closes both grippers
   during the six-second simultaneous lift toward DOWN. It removes the extra
   hold and retains the original lift rotation. Physics and scoring remain
-  unchanged; the physical result is pending.
+  unchanged. Its successful physical result follows below.
+- Trial 020 now demonstrates the complete table method at score 1.0: 2,767
+  frames, 2,766 actions and 138.30 simulated seconds, within the 150-second
+  limit. Simulator-runner wall time was 1,757.542 seconds (29.3 minutes);
+  the enclosing serial wrapper took 1,759.008621 seconds. Use the wrapper
+  interval for a run-only elapsed-cost estimate; full-session cost also
+  includes setup, idle time and shutdown. The physical
+  states and executed actions exactly match 018 through 106.50 seconds;
+  gradually closing during the six-second lift retains both ends through
+  intentional opening at 133.00 seconds. Both arms pull together.
+- The successful span certificate covers 130.75–131.75 seconds. Its minimum
+  gap-corrected span is 1.170074 m and minimum cord/table clearance is
+  108.722 mm. The final released overhand remains from 133.30–138.30 seconds,
+  with minimum robot clearance 37.941 mm. The episode ends at full score
+  during the planned settling wait; no later evaluator action is needed.
+- Recorded and independent replay scores agree at 1.0, with no invalid frame.
+  Version 2 certifies all 1,206 post-switch intervals and final native and
+  environment counters of 76,728, with no stray callback. Inspect execution
+  and recording finalize cleanly. All 2,767 native robot poses pass mesh
+  checks: minimum arm separation 4.393 mm and table clearance 0.488 mm.
+  Twelve unchanged-video key frames were reviewed from reset through release;
+  topology and the continuous scoring windows rely on geometric replay.
+- Native same-arm collision is disabled for the gripper's intentional internal
+  overlap. A separate offline check of all 2,767 recorded poses tests 27
+  nonadjacent link pairs per arm, excluding only the eight direct URDF joint
+  pairs and the two-finger pair. It finds no intersections; the minimum
+  conservative separation is 5.001 mm. Other finger-versus-arm pairs are
+  included. The report hash is in trial 020's evidence; this remains a 20 Hz
+  authored-mesh check without a between-frame guarantee.
+- An optional labelled demo preserves all 2,767 original frames at 20 Hz and
+  their timestamps. It adds only phase/time labels, with no interpolation or
+  score overlay; the final labelled frame was reviewed for readability and
+  knot visibility. The 18,218,473-byte output and manifest hashes are recorded
+  in trial 020's evidence. The original video remains unchanged.
+- The closest actual rope-axis separation is 9.509743 mm at 109.05 seconds,
+  only 9.743 micrometres above the unchanged 9.5 mm threshold. Preserve that
+  narrow observed margin and the single-seed limitation. This success does
+  not prove repeatability, calibration or geometry between 20 Hz captures.
+  Trial 021 began around 13:15 UTC using the exact frozen 020 archive, seed 0,
+  scene and 3,000-action limit. Dream results remain pending; no media upload
+  or upstream submission has occurred for this task.
 - The 117 cm span target has a static geometric positive control at the current
   discretization. Scaling the historical demo-009 final shape by 1.25, trimming
   seven exterior-tail links from each end, then connecting the same measured
@@ -310,8 +353,10 @@ developers and their agents, not a competition submission document.
   lower bound 1.189885 m, zero joint gaps, minimum nonlocal axis separation
   9.970384 mm and maximum adjacent-axis bend 1.450409 rad, below 1.5 rad.
   All five exterior closures certify the overhand candidate. This establishes
-  a possible static configuration, not robot reach, knot formation or dynamic
-  retention. The old jig/assessor episode is not current demonstration evidence;
+  a possible static configuration; that check alone does not prove dynamic
+  feasibility. Separate physical trial 020 now demonstrates knot formation,
+  the qualifying span and released retention. The old jig/assessor episode
+  is not current demonstration evidence;
   the v4 full-score unit tests use mocked topology and do not prove this result.
   No simulator state was changed. The ignored report is
   `artifacts/rope-knot-table-session/span-geometric-feasibility.json`; its source
@@ -334,9 +379,8 @@ developers and their agents, not a competition submission document.
   example command allows 2,000 actions. Recheck timing after route changes.
   The full 142-test integration suite passed in 25.805 seconds after versioned
   native-closure, execution and action-budget checks; 17 focused tests passed
-  after trial 020's motion changes. A complete physical demo and matching
-  Dream run are still missing. The independent scorer must establish the
-  released knot.
+  after trial 020's motion changes. The successful physical demo and its
+  independent replay are complete. The matching Dream run is in progress.
 - Fresh 07:23:10 UTC lifecycle check found the shared VM stopped with no
   operation pending. Current observed g6e.xlarge rate is $2.729872/hour,
   including storage; posted balance was $167.39. Start task timestamp is
