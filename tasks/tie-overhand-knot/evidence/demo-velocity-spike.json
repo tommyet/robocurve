@@ -1,0 +1,169 @@
+{
+  "finding": "Isolated native velocity anomaly during policy handoff at43.10s. Recorded geometry remains within current thresholds, but instantaneous shared-joint endpoint velocities are inconsistent with an ideal inextensible chain.",
+  "interpretation": "A numerical transient is plausible. These20Hz records cannot distinguish substep solver motion from a backend velocity reporting issue. Do not label it harmless or claim continuous physical fidelity. No scorer threshold was changed.",
+  "samples": [
+    {
+      "time_s": 43.04999999999969,
+      "policy_score": 0.0,
+      "topology_status": "ambiguous",
+      "minimum_nonlocal_axis_distance_m": 0.007947947097782335,
+      "link104": {
+        "center_m": [
+          0.30168387293815613,
+          0.06839504837989807,
+          0.9192932844161987
+        ],
+        "linear_velocity_m_s": [
+          0.037256479263305664,
+          -0.12153779715299606,
+          -0.11072449386119843
+        ],
+        "angular_velocity_rad_s": [
+          -14.066627502441406,
+          -0.9682150483131409,
+          -0.5821433663368225
+        ],
+        "speed_m_s": 0.1685805294947151,
+        "angular_speed_rad_s": 14.111921930452667,
+        "neighbor_joint_gaps_m": [
+          7.505333432708313e-06,
+          1.6761052479486395e-07
+        ],
+        "neighbor_shared_endpoint_velocity_disagreements_m_s": [
+          0.0022412736288648046,
+          7.836041264793824e-06
+        ]
+      },
+      "link107_speed_m_s": 0.5834147969178697
+    },
+    {
+      "time_s": 43.09999999999969,
+      "policy_score": 0.0,
+      "topology_status": "ambiguous",
+      "minimum_nonlocal_axis_distance_m": 0.007920501278441846,
+      "link104": {
+        "center_m": [
+          0.30111098289489746,
+          0.06418132781982422,
+          0.9180248379707336
+        ],
+        "linear_velocity_m_s": [
+          24.08824920654297,
+          -7.147704124450684,
+          9.52955436706543
+        ],
+        "angular_velocity_rad_s": [
+          423.2283630371094,
+          3597.193603515625,
+          1527.7689208984375
+        ],
+        "speed_m_s": 26.872771173105,
+        "angular_speed_rad_s": 3931.0306465500844,
+        "neighbor_joint_gaps_m": [
+          1.9620215598923987e-05,
+          1.0749232638473396e-05
+        ],
+        "neighbor_shared_endpoint_velocity_disagreements_m_s": [
+          44.918549360925844,
+          12.722742331326195
+        ]
+      },
+      "link107_speed_m_s": 3.961475436524607
+    },
+    {
+      "time_s": 43.149999999999686,
+      "policy_score": 0.0,
+      "topology_status": "ambiguous",
+      "minimum_nonlocal_axis_distance_m": 0.007927116306733682,
+      "link104": {
+        "center_m": [
+          0.30234405398368835,
+          0.06487718224525452,
+          0.9219423532485962
+        ],
+        "linear_velocity_m_s": [
+          0.0370524525642395,
+          -0.012223568744957447,
+          0.10151270776987076
+        ],
+        "angular_velocity_rad_s": [
+          2.3143317699432373,
+          18.6516056060791,
+          -13.644499778747559
+        ],
+        "speed_m_s": 0.10875260784302644,
+        "angular_speed_rad_s": 23.225221149395587,
+        "neighbor_joint_gaps_m": [
+          3.750536296611069e-06,
+          5.246078487987554e-08
+        ],
+        "neighbor_shared_endpoint_velocity_disagreements_m_s": [
+          0.00021144776152923206,
+          9.694160189079338e-07
+        ]
+      },
+      "link107_speed_m_s": 0.12581064621411436
+    },
+    {
+      "time_s": 43.19999999999968,
+      "policy_score": 0.0,
+      "topology_status": "ambiguous",
+      "minimum_nonlocal_axis_distance_m": 0.007902814486963733,
+      "link104": {
+        "center_m": [
+          0.30292871594429016,
+          0.06213143467903137,
+          0.9239600300788879
+        ],
+        "linear_velocity_m_s": [
+          0.04659843072295189,
+          -0.023092634975910187,
+          0.015349667519330978
+        ],
+        "angular_velocity_rad_s": [
+          -7.988317489624023,
+          6.160586357116699,
+          -2.4940743446350098
+        ],
+        "speed_m_s": 0.05422449473186801,
+        "angular_speed_rad_s": 10.391652775910673,
+        "neighbor_joint_gaps_m": [
+          8.571153538586753e-06,
+          4.6807870200676726e-08
+        ],
+        "neighbor_shared_endpoint_velocity_disagreements_m_s": [
+          0.0020123919826057707,
+          6.61726685329499e-07
+        ]
+      },
+      "link107_speed_m_s": 0.189937349252593
+    }
+  ],
+  "interval_motion": [
+    {
+      "from_s": 43.04999999999969,
+      "to_s": 43.09999999999969,
+      "link104_displacement_m": 0.004437634543883378,
+      "link104_mean_translational_speed_m_s": 0.0887526908776726,
+      "link104_minimum_orientation_change_rad": 0.7829490835017235,
+      "maximum_any_link_displacement_m": 0.01567782163744176
+    },
+    {
+      "from_s": 43.09999999999969,
+      "to_s": 43.149999999999686,
+      "link104_displacement_m": 0.004165525614336007,
+      "link104_mean_translational_speed_m_s": 0.08331051228672488,
+      "link104_minimum_orientation_change_rad": 0.8351452939244027,
+      "maximum_any_link_displacement_m": 0.018304506725898246
+    },
+    {
+      "from_s": 43.149999999999686,
+      "to_s": 43.19999999999968,
+      "link104_displacement_m": 0.0034571634466844673,
+      "link104_mean_translational_speed_m_s": 0.06914326893369327,
+      "link104_minimum_orientation_change_rad": 0.11792874047612346,
+      "maximum_any_link_displacement_m": 0.0069320146981140555
+    }
+  ],
+  "source": "rope.py reads body_link_lin_vel_w and body_link_ang_vel_w without a finite-difference reconstruction or velocity writes."
+}

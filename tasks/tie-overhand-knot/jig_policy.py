@@ -242,7 +242,9 @@ def jig_thread(arms):
     # Tighten by moving the held free end away from the declared standing-end
     # clamp. No endpoint forces are used by this policy. Separate scorer and
     # retention assay determine whether a genuine overhand was tied.
-    yield from left.move_pose((.38, -.10, .98), rl, 3.,
+    # Put the free end on the near side of the clamp so the later pull draws
+    # the cord away from the jig, rather than toward its lower keeper.
+    yield from left.move_pose((.38, -.16, .98), rl, 3.,
                               label='jig draw working end to tighten')
     if not held(0, left_material):
         abort('left end slipped before final release')

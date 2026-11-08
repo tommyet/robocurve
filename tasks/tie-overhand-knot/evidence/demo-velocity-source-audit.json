@@ -1,0 +1,121 @@
+{
+  "conclusion": "No coordinate, unit, body-index or COM-offset error was identified in the recorded task code or public IsaacLab source at the installed git revision. The transient remains unresolved; neither physical harmlessness nor a native GPU readback defect is established.",
+  "scope": "Offline inspection only. No VM access, GPU run, task-source edit, velocity clamp or scoring change.",
+  "revision": "91a0906f93802eb859192dcb0bca879f891e92d6",
+  "provenance_limit": "Public files were retrieved at the recorded installed revision. These particular installed module bytes were not separately hashed during the run, so an unrecorded local modification cannot be excluded by this audit.",
+  "findings": [
+    {
+      "file": "rope.py",
+      "lines": [
+        433,
+        448
+      ],
+      "fact": "The same explicit seg_NNN name-to-index map is applied to positions, quaternions and velocities. Positions alone are translated by the fixed environment origin. Velocity values are copied to CPU with no rotation, scale, finite differencing or post-reset writer."
+    },
+    {
+      "file": "backend_data.py",
+      "lines": [
+        344,
+        360
+      ],
+      "fact": "body_com_vel_w reads RigidBodyView.get_velocities(), reshapes body-major data to instance-major, and copies it to a timestamped buffer. One environment makes the ordering transpose trivial."
+    },
+    {
+      "file": "backend_data.py",
+      "lines": [
+        287,
+        313,
+        584,
+        607,
+        890,
+        909
+      ],
+      "fact": "body_link_lin_vel_w and body_link_ang_vel_w are stable strided views of the first and last three components of body_link_vel_w, not finite differences. Both use the same updated parent buffer."
+    },
+    {
+      "file": "kernels.py",
+      "lines": [
+        23,
+        45,
+        317,
+        337
+      ],
+      "fact": "The COM-to-link kernel computes v_link = v_COM + omega cross (-R * COM_local_offset); omega is forwarded unchanged. A COM-offset mistake therefore cannot explain the enormous angular velocity. Some comments label spatial-vector ordering angular/linear, but operations and the native tensor contract use linear then angular."
+    },
+    {
+      "file": "backend_data.py",
+      "lines": [
+        127,
+        134,
+        295,
+        309,
+        352,
+        356
+      ],
+      "fact": "Every asset update advances _sim_timestamp. The velocity getter refreshes when its buffer timestamp is older. No stale timestamp condition was identified from source alone."
+    },
+    {
+      "file": "proxy_array.py",
+      "lines": [
+        122,
+        148
+      ],
+      "fact": "The Torch accessor caches a zero-copy view, not a snapshot. Subsequent buffer updates remain visible. The task then copies indexed values to CPU. This rules out interpreting the view cache itself as a frozen stale sample, but does not establish cross-stream synchronization correctness."
+    },
+    {
+      "file": "launch_cache.py",
+      "lines": [
+        9,
+        33
+      ],
+      "fact": "The Warp launch cache reuses a kernel command whose inputs are stable underlying buffers. No proven stale-pointer defect was found. GPU stream behavior is not observable in the saved20Hz JSONL."
+    }
+  ],
+  "additional_numeric_check": {
+    "time_s": 43.09999999999969,
+    "link": 104,
+    "angular_norm_rad_s": 3931.0306465500844,
+    "axis_world": [
+      -0.03595335185654398,
+      0.20671755270036907,
+      -0.9777398477590292
+    ],
+    "axial_spin_rad_s": -765.3739720739852,
+    "transverse_spin_rad_s": 3855.8014247348974,
+    "interpretation": "The spike is predominantly transverse, not only unconstrained axial spin of a round capsule."
+  },
+  "limits": [
+    "20Hz position differences are interval averages and cannot prove that an instantaneous end-of-substep velocity was small.",
+    "The recorded shared-endpoint velocity inconsistency remains substantial; no API reinterpretation found here removes it.",
+    "Post-solver velocity transients and a GPU readback/synchronization issue remain hypotheses, not established causes.",
+    "Geometry passing the existing scorer does not establish continuous physical fidelity across unrecorded substeps."
+  ],
+  "next_discriminating_measurement_if_investigated_later": "Around the handoff, record every native substep and compare raw RigidBodyView.get_velocities(), body_com_vel_w, derived body_link_vel_w, COM local pose and link poses at the same synchronized instant. Compare both adjacent joint endpoint velocities and gaps. This is a future diagnostic recommendation, not an executed GPU run.",
+  "api_source": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/109.0/extensions/runtime/source/omni.physics.tensors/docs/api/python.html#omni.physics.tensors.impl.api.RigidBodyView.get_velocities",
+  "sources": {
+    "backend_data.py": {
+      "url": "https://github.com/isaac-sim/IsaacLab/blob/91a0906f93802eb859192dcb0bca879f891e92d6/source/isaaclab_physx/isaaclab_physx/assets/rigid_object_collection/rigid_object_collection_data.py",
+      "sha256": "4e7d6fa81f1cd046a5c85c444a77edcc3bf627506bca20e780537702a60d82d8"
+    },
+    "kernels.py": {
+      "url": "https://github.com/isaac-sim/IsaacLab/blob/91a0906f93802eb859192dcb0bca879f891e92d6/source/isaaclab_physx/isaaclab_physx/assets/kernels.py",
+      "sha256": "fbd3614cfc121ecfa948c7e3a897c96668d350f4d6a89c23555e0385fc89f9f3"
+    },
+    "proxy_array.py": {
+      "url": "https://github.com/isaac-sim/IsaacLab/blob/91a0906f93802eb859192dcb0bca879f891e92d6/source/isaaclab/isaaclab/utils/warp/proxy_array.py",
+      "sha256": "9dbaf78e15548b4b7043ba54c0ab30efe4a9b53c49dcee1496d04c9042448ee4"
+    },
+    "launch_cache.py": {
+      "url": "https://github.com/isaac-sim/IsaacLab/blob/91a0906f93802eb859192dcb0bca879f891e92d6/source/isaaclab/isaaclab/utils/warp/launch_cache.py",
+      "sha256": "2fc8d26d868859d3d9ed3a191218d7ff8a8488aab6e8f7a2d1d0c4960e1b8d93"
+    },
+    "base_data.py": {
+      "url": "https://github.com/isaac-sim/IsaacLab/blob/91a0906f93802eb859192dcb0bca879f891e92d6/source/isaaclab/isaaclab/assets/rigid_object_collection/base_rigid_object_collection_data.py",
+      "sha256": "4b21c194e2754a011c6f4e202b3658d12d0d0aaac27e85c2162cae349be1897d"
+    },
+    "interface_data.py": {
+      "url": "https://github.com/isaac-sim/IsaacLab/blob/91a0906f93802eb859192dcb0bca879f891e92d6/source/isaaclab/isaaclab/assets/rigid_object_collection/rigid_object_collection_data.py",
+      "sha256": "b59ab8ba14f1e510c38de0c6640735da8708b7f3e27cab93c2c6e0b2b98535c5"
+    }
+  }
+}

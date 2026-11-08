@@ -1,6 +1,6 @@
 {
   "checked_utc": "2026-11-08T03:39:36Z",
-  "scope": "Development trials 007 and 008; each run records its own runtime and task source hashes.",
+  "scope": "Environment used for development and final demo-009 / dream-001. Each run records its actual package versions, physical configuration and source hashes.",
   "python": "3.12.16",
   "packages": {
     "numpy": "2.5.4",

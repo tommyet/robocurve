@@ -1,0 +1,322 @@
+{
+  "scope": "Independent CPU replay and measured geometry audit of captured20Hz samples; native certificate checks integration cadence, not every substep geometry. No new simulation.",
+  "score": 1.0,
+  "assay_certification": {
+    "required": true,
+    "status": "complete",
+    "errors": []
+  },
+  "phase_sample_counts": {
+    "policy": 1867,
+    "seating": 40,
+    "proof": 100
+  },
+  "policy_actions": 1866,
+  "policy_limit": 2400,
+  "physics_extrema": {
+    "all": {
+      "samples": 2007,
+      "max_joint_gap_m": {
+        "value": 0.00017188324701395872,
+        "time_s": 21.650000000000173
+      },
+      "minimum_nonlocal_distance_m": {
+        "value": 0.007620505338849451,
+        "time_s": 15.900000000000091
+      },
+      "minimum_robot_clearance_m": {
+        "value": 0.0,
+        "time_s": 3.649999999999995
+      },
+      "minimum_jig_clearance_m": {
+        "value": -0.0007037333544317719,
+        "time_s": 19.500000000000142
+      },
+      "max_link_speed_m_s": {
+        "value": 26.872771173105,
+        "time_s": 43.09999999999969
+      }
+    },
+    "policy": {
+      "samples": 1867,
+      "max_joint_gap_m": {
+        "value": 0.00017188324701395872,
+        "time_s": 21.650000000000173
+      },
+      "minimum_nonlocal_distance_m": {
+        "value": 0.007620505338849451,
+        "time_s": 15.900000000000091
+      },
+      "minimum_robot_clearance_m": {
+        "value": 0.0,
+        "time_s": 3.649999999999995
+      },
+      "minimum_jig_clearance_m": {
+        "value": -0.0007037333544317719,
+        "time_s": 19.500000000000142
+      },
+      "max_link_speed_m_s": {
+        "value": 26.872771173105,
+        "time_s": 43.09999999999969
+      }
+    },
+    "seating": {
+      "samples": 40,
+      "max_joint_gap_m": {
+        "value": 2.2140710870541114e-05,
+        "time_s": 94.59999999999677
+      },
+      "minimum_nonlocal_distance_m": {
+        "value": 0.007714955201726434,
+        "time_s": 94.29999999999679
+      },
+      "minimum_robot_clearance_m": {
+        "value": 0.09987770595569523,
+        "time_s": 93.79999999999681
+      },
+      "minimum_jig_clearance_m": {
+        "value": 0.01016883783092895,
+        "time_s": 93.64999999999682
+      },
+      "max_link_speed_m_s": {
+        "value": 1.4190432816245508,
+        "time_s": 94.59999999999677
+      }
+    },
+    "proof": {
+      "samples": 100,
+      "max_joint_gap_m": {
+        "value": 1.606996072889378e-05,
+        "time_s": 98.64999999999654
+      },
+      "minimum_nonlocal_distance_m": {
+        "value": 0.007991103113923858,
+        "time_s": 95.54999999999671
+      },
+      "minimum_robot_clearance_m": {
+        "value": 0.09988068741715636,
+        "time_s": 95.34999999999673
+      },
+      "minimum_jig_clearance_m": {
+        "value": 0.07581592152979583,
+        "time_s": 95.44999999999672
+      },
+      "max_link_speed_m_s": {
+        "value": 0.0902624462189052,
+        "time_s": 98.59999999999654
+      }
+    },
+    "assay": {
+      "samples": 140,
+      "max_joint_gap_m": {
+        "value": 2.2140710870541114e-05,
+        "time_s": 94.59999999999677
+      },
+      "minimum_nonlocal_distance_m": {
+        "value": 0.007714955201726434,
+        "time_s": 94.29999999999679
+      },
+      "minimum_robot_clearance_m": {
+        "value": 0.09987770595569523,
+        "time_s": 93.79999999999681
+      },
+      "minimum_jig_clearance_m": {
+        "value": 0.01016883783092895,
+        "time_s": 93.64999999999682
+      },
+      "max_link_speed_m_s": {
+        "value": 1.4190432816245508,
+        "time_s": 94.59999999999677
+      }
+    }
+  },
+  "recomputed_vs_recorded_metric_max_abs_error": 1.3877787807814457e-17,
+  "captured_time_range_s": [
+    0.0,
+    100.29999999999644
+  ],
+  "min_capture_dt_s": 0.04999999999999716,
+  "max_capture_dt_s": 0.05000000000000426,
+  "proof_force_range_n": [
+    0.9809999708509345,
+    0.9810000290412174
+  ],
+  "native_assay_substeps": 6720,
+  "native_assay_intervals": 140,
+  "inspect": {
+    "status": "success",
+    "sample_status": "success",
+    "error": null,
+    "sample_error": null,
+    "errored_trials": 0,
+    "total_steps": 1866,
+    "termination_reasons": [
+      "policy_stop"
+    ],
+    "policy_score": 0.5,
+    "policy": "rope_demo",
+    "api_inference_latency_s": null,
+    "external_model_api_called": false
+  },
+  "source_comparison": {
+    "assay_physics.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "config.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "demo_policy.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "diagnostic_layouts.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "fixtures.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "hand_geometry.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "jig_layout.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "jig_policy.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "proof_load.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "replay.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": false
+    },
+    "rope.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "run.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": false
+    },
+    "scoring.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "task.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "telemetry.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "test_assay_physics.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "test_runner.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": false
+    },
+    "test_scoring.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "test_topology.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "topology.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "visuals.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    }
+  },
+  "artifact_sha256": {
+    "trajectory.jsonl": "44a6604b726d17932433b119f14993e66955edc0ec3ddee8aebf0d383c5453a5",
+    "runtime.json": "2833604f8c55a189762e4a4ceead60ee2212145aaae6f8b436f5b4bc3974f9f2",
+    "score-summary.json": "008cf3b8c4d6c14ea66021c247e651f4b824b766075e212a678ec92e23aaea35",
+    "assay-physics-transition.json": "8cf4f0e89fa9a7b0388c20db19bffbc65b5821575afcec057eb51c51a68e5a38",
+    "replay-audit.json": "43253fa6f8e75631d7b3a5470a6fdee34df7a1519fa00531a1e46dce4a689657",
+    "adhoc_4b1a203a.json": "b1abddeffc8c558de49555d5733f81d13a139cc7db6afb16ffaef00e283e3eb6",
+    "actions.jsonl": "e37ca444aa859a9c9081aee5bb05433c1a2351ca513f6950ee579bb0b58f213a"
+  },
+  "action_limits_check": {
+    "count": 1866,
+    "shape": [
+      1866,
+      14
+    ],
+    "all_finite": true,
+    "consecutive_indices": true,
+    "absolute_bound_violations": 0,
+    "command_step_limit_violations": 0,
+    "max_absolute_step_each_dimension": [
+      0.0139555753115011,
+      0.031778325436429444,
+      0.01851066102698873,
+      0.08235806134886992,
+      0.04161966900414904,
+      0.04939488365836092,
+      0.02521831735889246,
+      0.014617838034328617,
+      0.053450847325849926,
+      0.06007626231791252,
+      0.03972609845707886,
+      0.03721731448309584,
+      0.047080119993301306,
+      0.06917758253461137
+    ],
+    "max_fraction_of_step_limit": 0.4445546015625005,
+    "max_absolute_bound_excess": 0.0,
+    "first_action": [
+      0.0,
+      1.0,
+      1.0,
+      -0.6,
+      0.0,
+      0.0,
+      1.0,
+      0.00047754634906161915,
+      1.0014202762967304,
+      1.0003875402668008,
+      -0.6003100422325927,
+      -0.0009344140078677598,
+      -0.0023118016784079215,
+      1.0
+    ],
+    "last_action": [
+      -0.6804954602854363,
+      2.211648276044682,
+      2.202472834489537,
+      -0.5150305946361083,
+      0.8188629544609706,
+      0.39958699034542283,
+      0.25559105431309903,
+      -0.07184676040012365,
+      1.3550227816978253,
+      1.0323922867738515,
+      -1.443020374321598,
+      -1.2147225944639526,
+      -0.20752332720393626,
+      0.25559105431309903
+    ]
+  },
+  "limitations": [
+    "Geometry is audited at20Hz, not every native substep.",
+    "One isolated native velocity anomaly at43.10s remains unresolved; see velocity-spike-audit.json.",
+    "Minimum whole-run nonlocal-axis margin above7.6mm threshold is0.0205mm; minimum assay jig-clearance margin above10mm is0.1688mm."
+  ]
+}

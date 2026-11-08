@@ -1,0 +1,83 @@
+{
+  "score": 1.0,
+  "samples": 2007,
+  "time": 100.29999999999644,
+  "invalid": null,
+  "status": "policy knot retained through seating and recorded load assay",
+  "terminal_validated": true,
+  "diagnostic_only": false,
+  "candidate_score": 1.0,
+  "candidate_status": "policy knot retained through seating and recorded load assay",
+  "released": true,
+  "minimum_robot_clearance_m": 0.09988120248588771,
+  "jig_clear": true,
+  "minimum_jig_clearance_m": 0.07706656512170279,
+  "max_joint_gap_m": 1.5876381029062504e-05,
+  "minimum_nonlocal_distance_m": 0.007991379425574556,
+  "topology_status": "overhand_candidate",
+  "topology_reason": "agreeing_exterior_closures_with_three_crossing_certificates",
+  "topology_time": 100.29999999999644,
+  "core": {
+    "core_span_m": 0.05520267660689451,
+    "material_core_bounds_m": [
+      0.3403722956878154,
+      0.48270096201220214
+    ],
+    "tail_lengths_m": [
+      0.3403722956878154,
+      0.6972990379877974
+    ],
+    "diagnostics_only": true,
+    "method": "projection_dependent_crossing_envelope_not_physical_knot_boundary"
+  },
+  "policy_end": {
+    "time": 93.29999999999684,
+    "qualified": true,
+    "released": true,
+    "topology_status": "overhand_candidate",
+    "core": {
+      "core_span_m": 0.19451203684989327,
+      "material_core_bounds_m": [
+        0.13966877720946827,
+        0.9188026120612011
+      ],
+      "tail_lengths_m": [
+        0.13966877720946827,
+        0.26119738793879843
+      ],
+      "diagnostics_only": true,
+      "method": "projection_dependent_crossing_envelope_not_physical_knot_boundary"
+    }
+  },
+  "seating": {
+    "elapsed_s": 2.000000000000001,
+    "required_seconds": 2.0,
+    "completed": true,
+    "observed_force_range_n": [
+      0.0,
+      0.9564749747796464
+    ]
+  },
+  "proof": {
+    "protocol": "opposing_endpoint_load_v1",
+    "attempts": 1,
+    "completed": true,
+    "elapsed_s": 4.99999999999999,
+    "target_force_n": 0.981,
+    "observed_force_range_n": [
+      0.9809999708509345,
+      0.9810000290412174
+    ],
+    "maximum_boundary_slip_m": 0.43633433054585524,
+    "slip_method": "projected_crossing_envelope_in_material_coordinates",
+    "slip_and_core_span_are_diagnostics_only": true,
+    "failure": null
+  },
+  "geometric_score": 1.0,
+  "assay_certification": {
+    "required": true,
+    "status": "complete",
+    "errors": []
+  },
+  "score_scope": "Geometry with native assessor and finalization certification for full credit"
+}

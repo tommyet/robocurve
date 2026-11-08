@@ -2,8 +2,8 @@
 import math
 REVIEW_CAMERA = {
     'name': 'review_cam', 'width': 1600, 'height': 1280,
-    'eye_m': (.83, -.51, 1.58), 'target_m': (.27, -.02, .82),
-    'focal_length_mm': 24., 'horizontal_aperture_mm': 20.955,
+    'eye_m': (.83, -.90, 2.00), 'target_m': (.40, -.05, .90),
+    'focal_length_mm': 18., 'horizontal_aperture_mm': 20.955,
     'policy_input': False,
 }
 
@@ -150,6 +150,6 @@ def install_scene_visuals(base):
     if any(p.HasAPI(UsdPhysics.CollisionAPI) or p.HasAPI(UsdPhysics.RigidBodyAPI) for p in added):
         raise RuntimeError('review rulers unexpectedly acquired physics')
     from hand_geometry import geometry_provenance
-    return {'version': 'rope-review-v1', 'review_camera': REVIEW_CAMERA,
+    return {'version': 'rope-review-v2', 'review_camera': REVIEW_CAMERA,
             'references': {'physical': False, 'tick_spacing_m': .005, 'red_height_above_table_m': .02},
             'robot_collision_envelopes': geometry_provenance(include_all_links=True)}

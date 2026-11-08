@@ -100,7 +100,7 @@ def script(arms, mode):
     if mode == 'idle':
         yield from wait(10. if CONFIG.get('proof_probe') else 5.)
         return
-    if mode == 'jig':
+    if mode in ('demo', 'jig'):
         from jig_policy import jig_thread
         yield from jig_thread(arms)
         return
@@ -118,11 +118,6 @@ def script(arms, mode):
     yield from right.grip(-.0035)
     yield from right.move(hover, 2., label='lift free end')
     yield from wait(2.)
-    if mode == 'demo':
-        # Deliberately fails closed until a complete knot sequence is validated.
-        # The development runner must not label a pickup probe as a full demo.
-        telemetry.demo_events.append({'label': 'knot sequence not validated',
-                                      'development_only': True})
     yield from right.move(pick, 2., label='return cord')
     yield from right.grip(FINGER_OPEN)
     yield from right.move(hover, 1.5, label='withdraw')

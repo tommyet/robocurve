@@ -1,5 +1,5 @@
 {
-  "status": "development: no validated robot knot demonstration or Dream evaluation",
+  "status": "implemented and evaluated: scripted demo 1.0, Dream-1 0.0; not uploaded or submitted",
   "submission_ready": false,
   "review_basis": {
     "accepted_examples": [
@@ -11,7 +11,7 @@
   },
   "unit_checks": {
     "command": "python -m unittest discover -s . -p 'test_*.py'",
-    "passed": 44,
+    "passed": 69,
     "scope": "Topology negatives/positives, measured geometry validation, scoring phases, fixture clearance, and runner cleanup; synthetic positive unit cases do not establish physical feasibility."
   },
   "physics_evidence": {
@@ -134,7 +134,49 @@
         84
       ],
       "first_invalid_axis_distance_m": 0.00747667970509557,
-      "interpretation": "The higher-resolution full trial failed during release before any load test. The contact-resolution configuration is not validated."
+      "interpretation": "The higher-resolution full trial failed during release before any load test. The contact-resolution configuration is not validated.",
+      "elapsed_wall_seconds": 1648.957
+    },
+    "checkpoint-006-contact960-001": {
+      "score": 0.0,
+      "diagnostic_only": true,
+      "candidate_score": 0.5,
+      "samples": 141,
+      "duration_s": 7.0,
+      "physics_hz": 960,
+      "position_iterations": 128,
+      "contact_offset_m": 0.001,
+      "elapsed_wall_seconds": 208.858,
+      "invalid": null,
+      "retained_overhand": true,
+      "interpretation": "Knot and contact remained valid through the full load, but a temporary jig clearance below 10 mm prevented candidate full credit. Restored state is not a robot demonstration."
+    },
+    "checkpoint-006-baseline960-001": {
+      "scope": "Restored-state diagnostic; task score always zero; not a robot demonstration",
+      "physics_hz": 960,
+      "position_iterations": 64,
+      "contact_offset_m": 0.0005,
+      "duration_s": 7.0,
+      "samples": 141,
+      "wall_seconds": 153.153,
+      "invalid": null,
+      "candidate_score": 0.5,
+      "minimum_jig_clearance_m": 0.008132,
+      "interpretation": "Retained overhand throughout loading with valid contact; temporary clearance below 1 cm prevents candidate full score."
+    },
+    "checkpoint-006-transition-002": {
+      "scope": "Restored-state diagnostic; task score always zero; not a robot demonstration",
+      "policy_physics_hz": 240,
+      "assay_physics_hz": 960,
+      "duration_s": 7.0,
+      "samples": 141,
+      "validated_control_intervals": 140,
+      "native_substeps_per_interval": 48,
+      "callback_removed": true,
+      "finalization_complete": true,
+      "invalid": null,
+      "candidate_score": 0.5,
+      "interpretation": "In-place timestep transition passed native substep, camera and state continuity audits; old release geometry still misses 1 cm fixture clearance during seating."
     }
   },
   "diagnostic_retention": {
@@ -154,10 +196,92 @@
     "jig-thread-008 at 480 Hz / 128 iterations / 1 mm offset failed during release at 80.6 s: links 23/84 overlapped by 0.523 mm."
   ],
   "still_required": [
-    "A full robot-tied, released knot with valid contact and clearance throughout the trial.",
-    "A successful recorded post-policy retention assay on that robot-tied knot.",
-    "Fresh Dream evaluation on the exact final scene and rubric.",
-    "Final visual review, independent replay, final setup and judging text, and task.json with real media identifiers."
+    "User review and separate authorization for media upload and upstream submission.",
+    "Refresh the live task board before any eventual submission.",
+    "Upload the verified videos and screenshot, then replace task.draft.json with task.json containing the returned media identifier."
   ],
-  "score_version": "overhand-retention-v3"
+  "score_version": "overhand-retention-v3",
+  "implementation_complete": true,
+  "final_trials": {
+    "demo-009": {
+      "policy": "scripted_demo",
+      "score": 1.0,
+      "actions": 1866,
+      "elapsed_wall_seconds": 785.038,
+      "independent_replay": true,
+      "finalization_complete": true,
+      "source_config_matches_other_trial": true,
+      "assay_certification": {
+        "required": true,
+        "status": "complete",
+        "errors": []
+      },
+      "video": {
+        "source_sha256": {
+          "review.mp4": "52eb7f976e56cea2873fd4a9519efe74ce5d788f9818f89342321e40b1eb736a",
+          "trajectory": "44a6604b726d17932433b119f14993e66955edc0ec3ddee8aebf0d383c5453a5"
+        },
+        "output_sha256": "6766145ebdcd31e8969c292b0e438718d391886e8287c2ebc3a93957f49fb954",
+        "output_bytes": 12459171,
+        "frames": 2007,
+        "fps": 20,
+        "width": 1600,
+        "height": 1280,
+        "first_time_s": 0.0,
+        "last_time_s": 100.3,
+        "phase_frames": {
+          "policy": 1867,
+          "seating": 40,
+          "proof": 100
+        },
+        "overlay": "recorded phase, elapsed simulation time, applied load during assay",
+        "score_displayed": false,
+        "interpolated_frames": false,
+        "source_and_output_timestamps_verified": true
+      },
+      "audit": "evidence/demo-audit.json"
+    },
+    "dream-001": {
+      "policy": "Dream-1",
+      "score": 0.0,
+      "actions": 2400,
+      "elapsed_wall_seconds": 775.05,
+      "independent_replay": true,
+      "finalization_complete": true,
+      "source_config_matches_other_trial": true,
+      "assay_certification": {
+        "required": false,
+        "status": "not_required",
+        "errors": []
+      },
+      "video": {
+        "source_sha256": {
+          "review.mp4": "7db43699785f3a7b709b0d2d9da002e358f227969fd79ecaa55d512e003f20a7",
+          "trajectory": "abc53220a71790d443fe994ba7ba66dc4bc0232f0aed40486dd4234cd39ab8fe"
+        },
+        "output_sha256": "71fa262b59697c72fad36f0596bc084579e66b7f473e9ae82f55a7e9cd67734d",
+        "output_bytes": 13949597,
+        "frames": 2401,
+        "fps": 20,
+        "width": 1600,
+        "height": 1280,
+        "first_time_s": 0.0,
+        "last_time_s": 120.0,
+        "phase_frames": {
+          "policy": 2401
+        },
+        "overlay": "recorded phase, elapsed simulation time, applied load during assay",
+        "score_displayed": false,
+        "interpolated_frames": false,
+        "source_and_output_timestamps_verified": true
+      },
+      "audit": "evidence/dream-audit.json"
+    }
+  },
+  "fidelity_limitations": [
+    "Single fixed-seed trials do not establish repeatability or calibrated physical cord dynamics.",
+    "Demo native velocity anomaly at 43.10 s: 26.87 m/s on one link despite about 4 mm displacement between neighboring recorded frames; 20 Hz geometry passes but does not resolve substep behavior. See evidence/demo-velocity-spike.json.",
+    "Small demo margins: minimum nonlocal axis distance 7.6205 mm vs 7.6 mm threshold; assay jig clearance 10.1688 mm vs 10 mm.",
+    "Oblique video and temporary occlusion limit direct ruler-level judging; geometric audit supplements visible knot formation and retention."
+  ]
 }

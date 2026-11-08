@@ -175,7 +175,7 @@ result or measure outcome fairness.
   User requested task implementation using review feedback and strong PRs;
   this does not authorize an upstream PR. The planned first GPU checks are
   rope stability, grasping, self-contact and knot retention before full demo
-  and Dream trials. No knot feasibility or score is established yet.
+  and Dream trials. At session start, no knot feasibility or score was established.
 - Brev CLI and filtered API checks confirmed the retained `robocurve-dice`
   VM was STOPPED at 23:52 UTC, with no running compute. Posted credit $186.16;
   observed catalog running rate $3.279064/hour, including allocated storage.
@@ -189,9 +189,9 @@ result or measure outcome fairness.
   against presenting generic dexterity alone as societal value.
 - Implemented a maximal-coordinate capsule rope, ordinary joint-command
   manipulation, topology checks, complete geometry capture, offline replay and
-  a separate load assay. **No validated robot-tied knot or Dream run yet.**
+  a separate load assay. The initial draft had no validated robot demo or Dream run.
   `tasks/tie-overhand-knot/task.draft.json` deliberately has no fabricated media
-  identifier. README, JUDGING and VALIDATION all identify development status.
+  identifier. The final measured outcomes and limitations are recorded below.
 - Current scorer v3: 0.5 for a released overhand; 1.0 if
   that same knot survives a 2 s seating ramp followed by 5 s at 0.981 N ±5%.
   Assessor-induced knot loss retains the pre-test half credit, but invalid
@@ -265,10 +265,68 @@ result or measure outcome fairness.
   `isaaclab` 17.0.2 / `isaaclab_physx` 6.0.0 come from Arena's IsaacLab submodule
   at `91a0906f93802eb859192dcb0bca879f891e92d6`, not the separate `/data/IsaacLab`
   checkout. The task environment manifest now records the active revision.
-- VM remains running during this entry. Start request was 23:57:16 UTC on
-  November 7, at $3.279064/hour. Stop and billing evidence must be recorded
-  before this session is considered closed. No Dream API request or upstream
-  PR/media upload has been made in this session.
+- A 240→960 Hz checkpoint transition passed all 140 recorded assessor
+  intervals: 48 native substeps per 20 Hz frame, continuous timestamps, unchanged
+  physical state at the switch, fresh camera frames and clean callback removal.
+  Set the live simulation dt, decimation and render interval; verify the active
+  PhysxManager implementation rather than assuming a USD rate is the live rate.
+  This installation exposes the manager through a ResolvableString proxy, so a
+  strict class-identity-only check incorrectly rejected the first probe.
+  Transition errors must remain sticky even when Inspect catches exceptions.
+- The old free-end release position lay farther toward the jig than the clamp,
+  so the seating force initially pulled the cord jigward. The revised final
+  left target is (0.38,−0.16,0.98), on the near side. A full-arm mesh/IK path
+  audit found at least 34.54 mm fixture clearance and 21.69 mm interarm clearance.
+  These geometric checks do not substitute for the full dynamic trial.
+- The review camera now shows the complete assay travel. The previous view
+  clipped the loaded red end. Policy cameras and observations are unchanged.
+  Local artifacts preserve camera projection checks and the before/after views.
+- Independent code review reproduced an audit reporting edge case: failure in
+  the final native-assay interval could leave a geometric score of 1.0 despite
+  incomplete finalization. Full credit must be gated by the complete native
+  transition certificate in both the runner and offline replay, with geometric
+  candidates kept separate. A valid pre-test knot retains only its earned half
+  credit when the load-test audit is incomplete.
+- Final `demo-009` earned **1.0**, independently replayed with the final native
+  certificate gate: 1,866 policy actions / 93.3 s, then 2 s seating and 5 s load.
+  All 140 native intervals passed; finalization was complete. Wall time was
+  785.038 s. Final `dream-001` earned **0.0** after all 2,400 actions / 120 s,
+  with valid recorded geometry and normal max-step termination; wall time
+  775.050 s. The scene, physical configuration, action limits and setup images
+  match. The final two runs alone estimate $1.42 at the observed rate; this
+  excludes the much larger development session and separate API charges.
+- All executed action rows pass absolute bounds and per-step limits. Dream's
+  transcript records 50 successful chunks, 49 recovered request retries and
+  raw generated rows that sometimes exceed limits; the executed commands do
+  not. No unrecovered episode error was recorded. Do not describe raw Dream
+  output as uniformly within bounds or guess the reason for the retries.
+- An independent audit found a native velocity anomaly at 43.10 s of the demo:
+  one link reports 26.87 m/s / 3931 rad/s, but moves only about 4 mm between
+  adjacent 20 Hz samples. Joint continuity and recorded contact pass. This is
+  unresolved numerical behavior, not evidence of calibrated cord dynamics;
+  a 20 Hz trace cannot establish continuous substep validity. Review of the
+  recorded-revision API source found no coordinate/units explanation; native
+  angular velocity passes through unchanged. The fidelity
+  field and README disclose it. No arbitrary velocity caps or relaxed contact
+  thresholds were introduced. Minimum all-run nonlocal axis distance is
+  7.6205 mm (threshold 7.6); minimum assay jig clearance is 10.1688 mm (threshold
+  10). These small margins and the single seed limit repeatability claims.
+- Final independent replay, action checks, source comparisons and visual audits
+  are saved locally with both complete traces/videos/actions. The task's
+  `evidence/` contains anonymous summaries and hashes, not substitutes for
+  the complete final traces. The full demo's 2,007 frames and Dream's 2,401
+  frames remain at 20 Hz; labelled H.264 copies are 12.46 / 13.95 MB. Labels
+  show only phase/time/applied load. Raw media is unchanged. Sixty-nine local
+  tests pass. A sampled visual review found no identifiers or frame clipping;
+  some hand/clamp occlusion and exact oblique-clearance judging remain limits.
+- No media upload or upstream PR was made. The implementation and measured
+  outcomes are ready for user review, with the disclosed fidelity limitations.
+  Before any later authorized submission, refresh the live board and upload
+  media; do not invent IDs in `task.draft.json`.
+- All final evidence and action logs were downloaded before stopping. At
+  05:02:12 UTC, `nvidia-smi`, process inspection and `who` found no GPU jobs,
+  simulator processes or logged-in sessions. Stop requested at 05:02:48 UTC;
+  shutdown confirmation and full-session cost are recorded below when complete.
 
 ### 2026-11-07 — rope and shoelace asset follow-up
 

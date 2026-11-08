@@ -1,0 +1,222 @@
+{
+  "review_type": "sampled visual inspection of original recorded frames",
+  "reviewed_at_utc": "2026-11-08T05:00:23.283446+00:00",
+  "source_video": "review.mp4",
+  "source_video_sha256": "52eb7f976e56cea2873fd4a9519efe74ce5d788f9818f89342321e40b1eb736a",
+  "source_trajectory_sha256": "44a6604b726d17932433b119f14993e66955edc0ec3ddee8aebf0d383c5453a5",
+  "video_frames": 2007,
+  "fps": 20,
+  "duration_to_last_frame_s": 100.3,
+  "reviewed_frames": [
+    {
+      "frame_index": 0,
+      "time_s": 0.0
+    },
+    {
+      "frame_index": 80,
+      "time_s": 4.0
+    },
+    {
+      "frame_index": 150,
+      "time_s": 7.5
+    },
+    {
+      "frame_index": 320,
+      "time_s": 16.0
+    },
+    {
+      "frame_index": 410,
+      "time_s": 20.5
+    },
+    {
+      "frame_index": 480,
+      "time_s": 24.0
+    },
+    {
+      "frame_index": 580,
+      "time_s": 29.0
+    },
+    {
+      "frame_index": 700,
+      "time_s": 35.0
+    },
+    {
+      "frame_index": 820,
+      "time_s": 41.0
+    },
+    {
+      "frame_index": 940,
+      "time_s": 47.0
+    },
+    {
+      "frame_index": 1080,
+      "time_s": 54.0
+    },
+    {
+      "frame_index": 1240,
+      "time_s": 62.0
+    },
+    {
+      "frame_index": 1380,
+      "time_s": 69.0
+    },
+    {
+      "frame_index": 1500,
+      "time_s": 75.0
+    },
+    {
+      "frame_index": 1600,
+      "time_s": 80.0
+    },
+    {
+      "frame_index": 1700,
+      "time_s": 85.0
+    },
+    {
+      "frame_index": 1800,
+      "time_s": 90.0
+    },
+    {
+      "frame_index": 1866,
+      "time_s": 93.3
+    },
+    {
+      "frame_index": 1876,
+      "time_s": 93.8
+    },
+    {
+      "frame_index": 1886,
+      "time_s": 94.3
+    },
+    {
+      "frame_index": 1906,
+      "time_s": 95.3
+    },
+    {
+      "frame_index": 1950,
+      "time_s": 97.5
+    },
+    {
+      "frame_index": 2006,
+      "time_s": 100.3
+    }
+  ],
+  "reviewed_frame_count": 23,
+  "all_frames_visually_watched": false,
+  "images_synthesized_or_scene_rerendered": false,
+  "observations": [
+    {
+      "times_s": [
+        0,
+        4,
+        7.5,
+        16
+      ],
+      "finding": "The prepared loop is on three pegs. The right gripper approaches and lifts the working tail; the red terminal marker is visible before pickup and after lifting."
+    },
+    {
+      "times_s": [
+        20.5,
+        24,
+        29,
+        35,
+        41,
+        47,
+        54
+      ],
+      "finding": "The working tail is presented at the loop and transferred to the other hand. The received strand is visibly held after the donor withdraws; the hands hide some of the threading and capture contact."
+    },
+    {
+      "times_s": [
+        62,
+        69,
+        75,
+        80,
+        85
+      ],
+      "finding": "The upper strand is regrasped and drawn off the upper pegs; the working end is carried to the near side. Loose crossings become visible below the fixture as the hands separate."
+    },
+    {
+      "times_s": [
+        90,
+        93.3
+      ],
+      "finding": "Both grippers are open and withdrawn from the loose knot. The red end lies free on the table. Projection overlap near the low peg prevents measuring the exact fixture clearance from this view alone."
+    },
+    {
+      "times_s": [
+        93.8,
+        94.3,
+        95.3
+      ],
+      "finding": "With the robot stationary, the red tail moves outward and the loose crossed structure seats into a compact knot. The loose crossings are most legible at 93.8–94.3 seconds."
+    },
+    {
+      "times_s": [
+        95.3,
+        97.5,
+        100.3
+      ],
+      "finding": "The compact knot remains visible in the same cord during the load hold. The entire red tip is inside the image; the standing clamp and nearby cord are partly occluded by a robot hand."
+    }
+  ],
+  "task_success_assessment": "The sampled sequence is visually consistent with completion, removal, release and retention of the intended overhand knot. This review corroborates the separately saved score-1 replay/certificate; it does not independently certify topology, forces or millimetre clearances.",
+  "privacy": {
+    "identifiers_observed": false,
+    "scope": "All 23 inspected raw frames show only the generic simulator station, jig, cord and ruler marks. No names, team logos, usernames, file paths or recognizable private lab were observed. Container/stream metadata inspected showed generic FFmpeg encoder and video-format tags."
+  },
+  "framing": {
+    "clipping_observed_in_reviewed_frames": false,
+    "all_recorded_pose_projection": {
+      "samples_checked": 2007,
+      "scope": "Pinhole projection of all measured capsule endpoints expanded conservatively by the 4 mm radius; all 20 Hz samples. This tests frame boundaries, not occlusion or contact.",
+      "camera": {
+        "name": "review_cam",
+        "width": 1600,
+        "height": 1280,
+        "eye_m": [
+          0.83,
+          -0.9,
+          2.0
+        ],
+        "target_m": [
+          0.4,
+          -0.05,
+          0.9
+        ],
+        "focal_length_mm": 18.0,
+        "horizontal_aperture_mm": 20.955,
+        "policy_input": false
+      },
+      "cord_bounds_px": [
+        540.2583533462528,
+        463.0555944551828,
+        1480.8252941006458,
+        1220.0030543327957
+      ],
+      "minimum_border_margin": {
+        "margin_px": 59.99694566720427,
+        "frame_index": 1904,
+        "time_s": 95.19999999999673,
+        "bounds_px": [
+          540.2618958154287,
+          673.2056796722521,
+          1473.937002187346,
+          1220.0030543327957
+        ]
+      },
+      "clipped_samples": 0
+    },
+    "scope_note": "Projection checks boundaries at every recorded 20 Hz sample, not occlusion or between-frame motion."
+  },
+  "limitations": [
+    "This is a sampled review of 23 keyframes, not continuous playback or inspection of all 2,007 frames.",
+    "Hand and fixture occlusion prevents visually following every crossing throughout threading from this one camera.",
+    "The final compact knot is small in the full-scene view; the prior loose-knot frames provide better crossing detail.",
+    "The permanent clamp and yellow terminal link are partly hidden in the final pose. Frame containment does not mean every strand is unobscured.",
+    "Recorded force, exact clearances, native physics validity and topology require the separate numerical evidence; no physical validation is claimed."
+  ],
+  "presentation_recommendation": "Keep the complete labelled video and its numerical audit. If a closer visual explanation is useful, use the already-recorded frames/policy views; preserve the full frame alongside any explicitly labelled crop.",
+  "blocking_privacy_or_frame_boundary_issue_found": false,
+  "user_review_complete": false
+}

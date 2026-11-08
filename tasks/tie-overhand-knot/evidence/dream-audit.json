@@ -1,0 +1,260 @@
+{
+  "scope": "Independent CPU replay and20Hz measured geometry/action/source audit. No new simulation.",
+  "score": 0.0,
+  "invalid": null,
+  "status": "no qualifying released knot",
+  "terminal_validated": true,
+  "assay_certification": {
+    "required": false,
+    "status": "not_required",
+    "errors": []
+  },
+  "finalization_complete": true,
+  "phase_sample_counts": {
+    "policy": 2401
+  },
+  "physics_extrema": {
+    "samples": 2401,
+    "max_joint_gap_m": {
+      "value": 2.0335164074672147e-05,
+      "time_s": 0.0
+    },
+    "minimum_nonlocal_distance_m": {
+      "value": 0.007736926316061392,
+      "time_s": 0.65
+    },
+    "minimum_robot_clearance_m": {
+      "value": 0.09987833013970038,
+      "time_s": 48.949999999999356
+    },
+    "minimum_jig_clearance_m": {
+      "value": -8.970644987428555e-08,
+      "time_s": 0.3
+    },
+    "max_link_speed_m_s": {
+      "value": 0.12617541886666742,
+      "time_s": 0.0
+    }
+  },
+  "recomputed_vs_recorded_metric_max_abs_error": 3.469446951953614e-18,
+  "captured_time_range_s": [
+    0.0,
+    119.99999999999532
+  ],
+  "min_capture_dt_s": 0.04999999999999716,
+  "max_capture_dt_s": 0.05000000000000426,
+  "action_limits_check": {
+    "count": 2400,
+    "shape": [
+      2400,
+      14
+    ],
+    "all_finite": true,
+    "consecutive_indices": true,
+    "absolute_bound_violations": 0,
+    "command_step_limit_violations": 0,
+    "max_absolute_step_each_dimension": [
+      0.01996821331811119,
+      0.03448962859618376,
+      0.024569741773716347,
+      0.03534174944971008,
+      0.033239453926786566,
+      0.02531471360954597,
+      0.10675945148601385,
+      0.01820433577457499,
+      0.05559920139246041,
+      0.04514280941102877,
+      0.0312112894925205,
+      0.018606994008007194,
+      0.04903473467555225,
+      0.055962027369679146
+    ],
+    "max_fraction_of_step_limit": 0.6860662613448554,
+    "max_absolute_bound_excess": 0.0,
+    "first_action": [
+      -1.9687181052052694e-10,
+      1.0,
+      1.0,
+      -0.6000000238418579,
+      -7.537725110751126e-09,
+      -2.065764087566535e-10,
+      1.0,
+      -1.9687181052052694e-10,
+      1.0,
+      1.0,
+      -0.6000000238418579,
+      -7.537725110751126e-09,
+      -2.065764087566535e-10,
+      1.0
+    ],
+    "last_action": [
+      0.25773975051644243,
+      -8.88178e-16,
+      0.3997889588346014,
+      -0.5693827274240258,
+      0.23502637779379223,
+      0.012759320407515384,
+      0.002895541958041949,
+      0.02943433581532299,
+      -8.88178e-16,
+      0.0,
+      -0.05520625791071733,
+      -0.13203002067851577,
+      0.1009364582962923,
+      0.05105586573134213
+    ]
+  },
+  "inspect": {
+    "status": "success",
+    "sample_status": "success",
+    "error": null,
+    "sample_error": null,
+    "errored_trials": 0,
+    "total_steps": 2400,
+    "termination_reasons": [
+      "max_steps"
+    ],
+    "policy_score": 0.0,
+    "event_counts": {
+      "reset": 1,
+      "inference": 2400,
+      "step": 2400,
+      "approval": 1894
+    }
+  },
+  "dream_api": {
+    "model": "dreamlabs/dream-1-beta",
+    "dry_run": false,
+    "preroll_steps": 32,
+    "successful_chunks": 50,
+    "returned_rows": 2400,
+    "request_attempt_count": 99,
+    "recovered_retry_count": 49,
+    "attempt_histogram": {
+      "1": 1,
+      "2": 49
+    },
+    "raw_rows_beyond_limits": 1926,
+    "unrecovered_episode_error": false,
+    "retry_reasons": "Not present in transcript; no reason inferred.",
+    "returned_rows_used_after_preroll": 2368,
+    "tracking_error_rad": {
+      "max": 0.06315428793371236,
+      "mean": 0.03064986487909607
+    },
+    "adapter_retry_interpretation_source": "Existing installed-source copy inspect_robots_dream/session.py DirectSession.act retries recoverable exceptions and logs attempts; no service calls made for audit."
+  },
+  "source_comparison": {
+    "assay_physics.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "config.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "demo_policy.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "diagnostic_layouts.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "fixtures.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "hand_geometry.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "jig_layout.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "jig_policy.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "proof_load.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "render_review.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": false
+    },
+    "replay.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "rope.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "run.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "scoring.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "task.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "telemetry.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "test_assay_physics.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "test_replay.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "test_runner.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "test_scoring.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "test_topology.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "topology.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    },
+    "visuals.py": {
+      "snapshot_matches_runtime": true,
+      "current_matches_snapshot": true
+    }
+  },
+  "demo_comparison": {
+    "task_config_identical": true,
+    "action_limits_identical": true,
+    "setup_screenshot_identical": true,
+    "closeup_screenshot_identical": true,
+    "physics_configuration_identical": true
+  },
+  "artifact_sha256": {
+    "trajectory.jsonl": "abc53220a71790d443fe994ba7ba66dc4bc0232f0aed40486dd4234cd39ab8fe",
+    "runtime.json": "740c037824fd84d258243736cc2ab2700b6eda33aa2b9a0fd0a35b5a81729f40",
+    "score-summary.json": "94fea65cd95222cc07e8d3712df7073afbc3e99b8eeea3adf96b45a79647cefd",
+    "replay-audit.json": "9a35d46765900b3c7e656afb154709c399ebdc59902d092a51d8582fd2fd0ae6",
+    "actions.jsonl": "13ff8c1ae6fb629a9f268cab732c87349fc40f6b9afde394cee15307f1d811cc",
+    "adhoc_334baef3.json": "8154128d0fef107c66912f5859b5212e3a0fa03a1b7a1d8610450daf89e7b0e8"
+  },
+  "limitations": [
+    "Geometry is audited at20Hz, not every native substep.",
+    "Retryable API exceptions were recovered; absence of episode errors does not imply zero API retries."
+  ]
+}

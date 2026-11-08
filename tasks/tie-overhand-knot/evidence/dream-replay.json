@@ -1,0 +1,53 @@
+{
+  "score": 0.0,
+  "samples": 2401,
+  "time": 119.99999999999532,
+  "invalid": null,
+  "status": "no qualifying released knot",
+  "terminal_validated": true,
+  "diagnostic_only": false,
+  "candidate_score": 0.0,
+  "candidate_status": "no qualifying released knot",
+  "released": true,
+  "minimum_robot_clearance_m": 0.0998783399097918,
+  "jig_clear": false,
+  "minimum_jig_clearance_m": -2.0189360979902538e-08,
+  "max_joint_gap_m": 1.791451910620088e-05,
+  "minimum_nonlocal_distance_m": 0.007899996209757067,
+  "topology_status": "unknot",
+  "topology_reason": "agreeing_exterior_closures_reduce_to_zero_crossings",
+  "topology_time": 119.99999999999532,
+  "core": null,
+  "policy_end": null,
+  "seating": {
+    "elapsed_s": 0.0,
+    "required_seconds": 2.0,
+    "completed": false,
+    "observed_force_range_n": [
+      null,
+      null
+    ]
+  },
+  "proof": {
+    "protocol": "opposing_endpoint_load_v1",
+    "attempts": 0,
+    "completed": false,
+    "elapsed_s": 0.0,
+    "target_force_n": 0.981,
+    "observed_force_range_n": [
+      null,
+      null
+    ],
+    "maximum_boundary_slip_m": 0.0,
+    "slip_method": "projected_crossing_envelope_in_material_coordinates",
+    "slip_and_core_span_are_diagnostics_only": true,
+    "failure": null
+  },
+  "geometric_score": 0.0,
+  "assay_certification": {
+    "required": false,
+    "status": "not_required",
+    "errors": []
+  },
+  "score_scope": "Geometry with native assessor and finalization certification for full credit"
+}

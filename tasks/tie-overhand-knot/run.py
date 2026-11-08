@@ -33,8 +33,10 @@ def main():
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--log-dir", type=Path, required=True)
     parser.add_argument("--headless", choices=("true", "false"), default="true")
-    parser.add_argument("--physics-hz", type=int, choices=(240, 480, 960), default=480,
+    parser.add_argument("--physics-hz", type=int, choices=(240, 480, 960), default=240,
                         help="Physics substeps; control and recorded policy observations remain 20 Hz")
+    parser.add_argument("--assay-physics-hz", type=int, choices=(480, 960), default=960,
+                        help="Physics rate used only after a released knot qualifies for the assessor")
     parser.add_argument("--development-jig", choices=("three-peg",),
                         help="Development fixture; requires separate task and contact validation")
     parser.add_argument("--diagnostic-layout", choices=("straight", "preformed"),
@@ -44,16 +46,18 @@ def main():
     parser.add_argument("--skip-assay", action="store_true",
                         help="Development only: record policy outcome without the post-policy load test")
     args = parser.parse_args()
-    if args.policy == 'demo':
-        parser.error('no validated full knot demo exists yet; choose an explicit development probe')
-    if args.policy == 'jig' and args.development_jig != 'three-peg':
-        parser.error('the jig policy requires --development-jig three-peg')
+    if args.policy in ('demo', 'dream', 'jig'):
+        if args.diagnostic_layout or args.proof_probe:
+            parser.error('demo, dream and jig use the ordinary task scene, not diagnostic layouts')
+        args.development_jig = 'three-peg'
     if args.development_jig and (args.diagnostic_layout or args.proof_probe):
         parser.error('development-jig cannot be combined with diagnostic-layout or proof-probe')
     if args.diagnostic_layout and args.policy != 'idle':
         parser.error('diagnostic layouts require the idle policy')
     if args.proof_probe and not args.diagnostic_layout:
         parser.error('proof-probe requires a diagnostic layout')
+    if not args.diagnostic_layout and not args.skip_assay and args.physics_hz != 240:
+        parser.error('the audited assessor switch requires 240 Hz policy physics; other development rates require --skip-assay')
     if args.development_jig:
         import config
         import jig_layout
@@ -78,6 +82,7 @@ def main():
         CONFIG['mass'] = density * CONFIG['length']
         CONFIG['proof_probe'] = args.proof_probe
     CONFIG['physics_hz'] = args.physics_hz
+    CONFIG['assay_physics_hz'] = args.assay_physics_hz
     if not 1 <= args.max_steps <= 2400:
         parser.error("max-steps must be 1..2400 (120 seconds at 20 Hz)")
     args.log_dir.mkdir(parents=True, exist_ok=True)
@@ -97,6 +102,9 @@ def main():
             self._close_finished = False
             self.audit = self.review_encoder = self.review_stderr = None
             self.endpoint_load = None
+            self.physics_switch = None
+            self.assay_transition_required = False
+            self._transition_failure = None
             instances.append(self)
             super().__init__(**kwargs)
             if not self.info.is_simulated:
@@ -162,6 +170,9 @@ def main():
 
         def reset(self, scene, *, seed=None):
             self.endpoint_load = None
+            self.physics_switch = None
+            self.assay_transition_required = False
+            self._transition_failure = None
             self.proof_record = None
             self.assay_phase = None
             self.assay_attempted = False
@@ -222,6 +233,7 @@ def main():
             metadata['inspect_policy_score'] = policy_result['score']
             if policy_result['score'] != .5 or policy_result['invalid'] is not None:
                 return
+            self.assay_transition_required = True
             from proof_load import EndpointLoad
             from rope import rope_state
             dt = float(self._base.step_dt)
@@ -231,11 +243,17 @@ def main():
                         'assessor_only': True, 'policy_receives_no_observations_or_actions_during_assay': True,
                         'seating_seconds': seating_seconds, 'proof_seconds': CONFIG['proof_seconds'],
                         'target_endpoint_force_n': CONFIG['proof_load_n'], 'completed': False,
+                        'policy_physics_hz': args.physics_hz, 'assay_physics_hz': args.assay_physics_hz,
                         'inspect_result_scope': 'Policy only; this assessor runs after Inspect finishes the episode.'}
             # Hold the policy's final joint command. The assessor adds only
             # endpoint forces, never body poses, new grasps or knot crossings.
             errors = []
             try:
+                from assay_physics import AssayPhysicsSwitch
+                self.physics_switch = AssayPhysicsSwitch(self._base, args.assay_physics_hz, self._t,
+                                                        diagnostic_only=bool(CONFIG.get('diagnostic_only')))
+                self.physics_switch.start()
+                self._assay_expected_intervals = round((seating_seconds + CONFIG['proof_seconds']) / dt)
                 self.endpoint_load = EndpointLoad(self._base, magnitude=0.)
                 for phase, duration in (('seating', seating_seconds), ('proof', CONFIG['proof_seconds'])):
                     self.assay_phase = phase
@@ -249,12 +267,18 @@ def main():
                         self.endpoint_load.magnitude = CONFIG['proof_load_n'] * (index/count if phase == 'seating' else 1.)
                         state = rope_state(self._base, 'cord')
                         self.endpoint_load.apply(state.start_tip, state.end_tip)
+                        self.physics_switch.before_step(self._t, self.review_frames)
                         super().step(self.last_policy_action)
+                        self.physics_switch.after_step(self._t, self.review_frames)
+                        self.physics_switch.save(args.log_dir / 'assay-physics-transition.json')
                         if tracker.invalid is not None:
                             evidence['stopped_reason'] = tracker.invalid
                             return
                 evidence['completed'] = True
             except BaseException as exc:
+                self._transition_failure = exc
+                if self.physics_switch is not None:
+                    self.physics_switch.fail(exc)
                 errors.append(exc)
             finally:
                 if self.endpoint_load is not None:
@@ -262,10 +286,18 @@ def main():
                         self.endpoint_load.clear()
                     except BaseException as exc:
                         errors.append(exc)
+                if self.physics_switch is not None:
+                    try:
+                        self.physics_switch.close()
+                        self.physics_switch.save(args.log_dir / 'assay-physics-transition.json')
+                    except BaseException as exc:
+                        self._transition_failure = exc
+                        errors.append(exc)
                 evidence['end_time'] = float(self._t)
                 evidence['errors'] = [f'{type(exc).__name__}: {exc}' for exc in errors]
                 try:
                     evidence['result'] = tracker.summary(final=True)
+                    evidence['result_scope'] = 'Geometry and force telemetry only; authoritative score is in score-summary.json after native audit and finalization.'
                     (args.log_dir / 'assay.json').write_text(json.dumps(evidence, indent=2)+'\n')
                 except BaseException as exc:
                     errors.append(exc)
@@ -337,8 +369,9 @@ def main():
                 return
             # Never begin new simulation work while Inspect is unwinding an
             # error or interruption. Resource cleanup must still run in full.
-            unwinding = sys.exception() or getattr(self, '_skip_assay_reason', None)
-            errors = []
+            transition_failure = getattr(self, '_transition_failure', None)
+            unwinding = sys.exception() or getattr(self, '_skip_assay_reason', None) or transition_failure
+            errors = [transition_failure] if transition_failure is not None else []
 
             def attempt(operation):
                 try:
@@ -352,6 +385,18 @@ def main():
                     attempt(self._run_assay)
                 if self.endpoint_load is not None:
                     attempt(self.endpoint_load.clear)
+                if getattr(self, 'assay_transition_required', False):
+                    transition = getattr(self, 'physics_switch', None)
+                    if transition is not None:
+                        attempt(transition.close)
+                        attempt(lambda: transition.save(args.log_dir / 'assay-physics-transition.json'))
+                    def require_complete_transition():
+                        report = transition.report if transition is not None else {}
+                        expected = getattr(self, '_assay_expected_intervals', None)
+                        if report.get('status') != 'validated_intervals' or expected is None or report.get('validated_control_intervals') != expected or not report.get('callback_removed'):
+                            raise RuntimeError('Required assay timestep transition did not complete: ' +
+                                               str(report.get('error', report.get('status', 'not started'))))
+                    attempt(require_complete_transition)
                 attempt(lambda: (args.log_dir / 'demo-corrections.json').write_text(
                     json.dumps(telemetry.demo_events, indent=2)+'\n'))
                 encoder = self.review_encoder
@@ -390,16 +435,36 @@ def main():
                 attempt(super().close)
                 if tracker is not None:
                     def save_summary():
+                        from replay import certify_result
                         summary = tracker.summary(final=True)
                         summary['score_scope'] = 'Policy plus recorded assessor phases, when present'
                         summary['inspect_result_scope'] = 'Policy episode only; post-policy assessor runs during close'
+                        transition = getattr(self, 'physics_switch', None)
+                        report = transition.report if transition is not None else {}
+                        summary['assay_physics_transition'] = {
+                            'required': bool(getattr(self, 'assay_transition_required', False)),
+                            'status': report.get('status', 'not_required'),
+                            'error': report.get('error'),
+                            'validated_control_intervals': report.get('validated_control_intervals', 0),
+                            'expected_control_intervals': getattr(self, '_assay_expected_intervals', None),
+                            'callback_removed': report.get('callback_removed'),
+                        }
                         summary['finalization'] = {
                             'complete': not errors and unwinding is None,
                             'errors': [f'{type(exc).__name__}: {exc}' for exc in errors],
                             'interrupted_by': f'{type(unwinding).__name__}: {unwinding}' if unwinding else None,
                         }
+                        summary = certify_result(summary, CONFIG, report or None,
+                            finalization_complete=summary['finalization']['complete'])
+                        if summary['assay_certification']['required'] and summary['assay_certification']['status'] != 'complete' and not errors:
+                            errors.append(RuntimeError('Full assessor evidence is not certified: ' +
+                                          '; '.join(summary['assay_certification']['errors'])))
+                            summary['finalization']['complete'] = False
+                            summary['finalization']['errors'] = [f'{type(exc).__name__}: {exc}' for exc in errors]
                         (args.log_dir / 'score-summary.json').write_text(json.dumps(summary, indent=2)+'\n')
                         metadata['audited_final_score'] = summary['score']
+                        metadata['geometric_score'] = summary['geometric_score']
+                        metadata['assay_certification'] = summary['assay_certification']
                         metadata['authoritative_score_file'] = 'score-summary.json'
                         metadata['finalization_complete'] = summary['finalization']['complete']
                     attempt(save_summary)

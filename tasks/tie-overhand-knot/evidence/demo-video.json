@@ -1,0 +1,23 @@
+{
+  "source_sha256": {
+    "review.mp4": "52eb7f976e56cea2873fd4a9519efe74ce5d788f9818f89342321e40b1eb736a",
+    "trajectory": "44a6604b726d17932433b119f14993e66955edc0ec3ddee8aebf0d383c5453a5"
+  },
+  "output_sha256": "6766145ebdcd31e8969c292b0e438718d391886e8287c2ebc3a93957f49fb954",
+  "output_bytes": 12459171,
+  "frames": 2007,
+  "fps": 20,
+  "width": 1600,
+  "height": 1280,
+  "first_time_s": 0.0,
+  "last_time_s": 100.3,
+  "phase_frames": {
+    "policy": 1867,
+    "seating": 40,
+    "proof": 100
+  },
+  "overlay": "recorded phase, elapsed simulation time, applied load during assay",
+  "score_displayed": false,
+  "interpolated_frames": false,
+  "source_and_output_timestamps_verified": true
+}

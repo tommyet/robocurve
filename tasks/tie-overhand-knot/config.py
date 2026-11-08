@@ -33,6 +33,6 @@ CONFIG = dict(radius=RADIUS, length=LENGTH, segment=SEGMENT, mass=MASS,
               table_top=TABLE_TOP, run_limit=RUN_LIMIT, instruction=INSTRUCTION,
               friction=.8, bend_stiffness=.0002, bend_damping=.00002,
               linear_damping=.5, angular_damping=2.,
-              contact_offset=.001, solver_position_iterations=128,
+              contact_offset=.0005, solver_position_iterations=64,
               solver_velocity_iterations=16, anchor_start=True,
               proof_load_n=.981, proof_seconds=5.)

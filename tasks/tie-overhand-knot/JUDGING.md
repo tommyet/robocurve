@@ -1,19 +1,19 @@
 # Judging the knot
 
-**Draft protocol. A complete robot demonstration and Dream run are still
-required before submission.**
+**Evaluated in simulation: scripted demo 1.0; Dream-1 0.0. Not submitted.**
 
-At the end of the robot's actions, inspect the cord from enough angles to
-follow it from one coloured end to the other. Either handedness is allowed.
-There must be exactly one overhand knot: one loop with an end passed through
-it. A plain crossing, untucked loop, slipknot, figure-eight knot or tangle
-does not qualify. Use the complete recording to resolve an obscured crossing;
-do not infer a knot from its silhouette alone.
+At the end of the robot's actions, follow the intact cord from one coloured
+end to the other, checking each crossing from enough angles to see which
+strand passes over it. There must be exactly one overhand knot: an end passed
+through a loop, rather than a folded bight passed through it. Either
+handedness is allowed. A plain crossing, untucked loop, slipknot, figure-eight
+knot or tangle does not qualify. Use the complete recording to resolve hidden
+crossings without moving or repairing the cord. A silhouette alone is
+insufficient.
 
-Every part of the robot must be at least 3 cm clear
-of the cord. In a jig trial, every part of the cord must be at least 1 cm
-clear of the pegs and their supports; the permanent
-standing-end bench clamp is the only permitted attachment.
+Measure clearance between surfaces. The entire cord must be at least 3 cm
+from every robot part and at least 1 cm from every peg and support. The yellow
+end remains in its permanent bench clamp; that is the only permitted attachment.
 
 | Score | Requirement |
 |---|---|
@@ -22,29 +22,35 @@ standing-end bench clamp is the only permitted attachment.
 | 1.0 | That knot remains tied and clear of the robot and jig throughout the load test below. |
 
 Keep the yellow end in its permanent clamp. The evaluator pulls the red end
-away from the yellow end, increasing the force from zero to 0.981 N over
-2 seconds, then holding it for 5 seconds. Full-load tolerance is ±5%.
+away from the yellow end along the line between the ends (within 10 degrees),
+increasing the force linearly from zero to 0.981 N over 2 seconds, then holding
+it for 5 seconds. Full-load tolerance is ±5%, or 0.93195–1.03005 N.
 The evaluator must not tuck, rethread or otherwise repair the knot.
-A genuine knot that comes undone during this test keeps its 0.5 pre-test
-credit. An unfinished load test cannot earn full credit. Invalid physics or
-missing evidence needed to establish the pre-test knot invalidates all credit.
+A knot that comes undone or loses the required clearance during this test
+keeps its established 0.5 pre-test credit. An unfinished or out-of-tolerance
+load test cannot earn full credit. Damaged cord, invalid physics or missing
+evidence needed to establish the pre-test knot invalidates all credit.
 
 A real-world check would use a ruler for clearance, a timer, and a spring
-balance on the red end, aligned away from the fixed yellow end. A 100 g mass
-weighs approximately 0.981 N, but hanging masses from both ends is not the
-procedure for this clamped setup. The loading procedure has not been physically
-validated; no physical trial has been performed for this draft.
+balance on the red end, aligned away from the fixed yellow end. No physical
+trial has been performed. Surviving this
+gentle pull does not establish a product load rating or a stopper-knot function.
 
 ## Automated audit
 
 The scorer reconstructs every rigid capsule from its measured pose. It checks
-continuity, self-contact, release and crossing order, rather than trusting the
-controller's claimed score. Multiple views and exterior closures must agree
-on a single overhand-knot certificate. Ambiguous geometry earns no credit.
+continuity, self-contact, release and crossing order. An open cord's numerical
+knot classification depends on how its ends are virtually joined. The scorer
+requires agreement across several exterior closures and views, with the
+qualifying crossings on the actual cord. This finite check reports an
+`overhand_candidate`; ambiguous geometry earns no credit. It supports the
+visual inspection and load test, rather than establishing physical validity
+by itself.
 
 The two-second seating and five-second proof intervals are recorded separately.
-Topology is checked at every assessor frame. Actual simulator force-buffer
-readback establishes the applied external load. The current numerical assay
+Topology is checked at every recorded assessor frame, at 20 Hz. Simulator
+force-buffer readback records the applied external load; replay checks the
+record's consistency, not its authenticity. The current numerical assay
 also applies an equal opposite force to the fixed yellow link, reacted by its
 clamp. It does not measure internal rope tension or apply twice the stated
 free-end load. The last policy action is held during the assay; the policy
