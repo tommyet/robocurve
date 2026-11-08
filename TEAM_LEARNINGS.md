@@ -302,6 +302,20 @@ developers and their agents, not a competition submission document.
   during the six-second simultaneous lift toward DOWN. It removes the extra
   hold and retains the original lift rotation. Physics and scoring remain
   unchanged; the physical result is pending.
+- The 117 cm span target has a static geometric positive control at the current
+  discretization. Scaling the historical demo-009 final shape by 1.25, trimming
+  seven exterior-tail links from each end, then connecting the same measured
+  directions at exact 12.5 mm intervals gives 104 links, 10 mm diameter and
+  1.31 m outside length. Current unmocked geometry/topology checks pass: span
+  lower bound 1.189885 m, zero joint gaps, minimum nonlocal axis separation
+  9.970384 mm and maximum adjacent-axis bend 1.450409 rad, below 1.5 rad.
+  All five exterior closures certify the overhand candidate. This establishes
+  a possible static configuration, not robot reach, knot formation or dynamic
+  retention. The old jig/assessor episode is not current demonstration evidence;
+  the v4 full-score unit tests use mocked topology and do not prove this result.
+  No simulator state was changed. The ignored report is
+  `artifacts/rope-knot-table-session/span-geometric-feasibility.json`; its source
+  and report hashes are recorded in the task's `VALIDATION.json`.
 - The completed native-pose audit of all 1,342 trial-012 frames found no
   inter-arm or tabletop intersections. Minimum bounds were 23.927 mm between
   arms at 49.05 seconds and 0.717 mm above the table at 7.50 seconds. This

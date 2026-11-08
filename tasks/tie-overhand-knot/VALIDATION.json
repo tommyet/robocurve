@@ -187,6 +187,45 @@
     "focused_checks_after_trial020_motion_change": {
       "passed": 17,
       "scope": "Controller and runner checks after restoring the original lift rotation and smoothly ramping grip closure during the six-second simultaneous lift. Physical outcome pending."
+    },
+    "static_span_geometric_positive": {
+      "scope": "Offline existence check only. This is not a recorded robot task, admissible reset, dynamic retention proof or full-score episode. The full-score unit tests separately mock topology and do not establish feasibility.",
+      "report_ignored_local_path": "artifacts/rope-knot-table-session/span-geometric-feasibility.json",
+      "report_sha256": "22b7715d4482afde9a2c221a23dc77518c97c4cc255a510f4527b63a71d8f564",
+      "source": {
+        "historical_trial": "demo-009",
+        "time_s": 100.29999999999644,
+        "trajectory_sha256": "44a6604b726d17932433b119f14993e66955edc0ec3ddee8aebf0d383c5453a5",
+        "frozen_result_scope": "Historical jig task with external assessor; excluded as current v4 demonstration evidence.",
+        "original_links": 118,
+        "scale": 1.25,
+        "retained_original_indices_inclusive": [
+          7,
+          110
+        ]
+      },
+      "construction": "Scale historical final capsule geometry by 1.25, trim seven exterior-tail links from each end, then reconstruct a connected chain from the same measured directions with exact 12.5 mm links. No simulator state is changed.",
+      "links": 104,
+      "segment_length_m": 0.0125,
+      "diameter_m": 0.01,
+      "nominal_centreline_length_m": 1.3,
+      "outside_length_m": 1.31,
+      "span_lower_bound_m": 1.1898854789138444,
+      "required_span_m": 1.17,
+      "span_margin_m": 0.019885478913844512,
+      "maximum_joint_gap_m": 0.0,
+      "minimum_actual_nonlocal_axis_distance_m": 0.00997038360434059,
+      "minimum_axis_margin_above_contact_limit_m": 0.000470383604340591,
+      "maximum_adjacent_axis_bend_rad": 1.4504085841655525,
+      "configured_per_swing_axis_limit_rad": 1.5,
+      "unmocked_current_geometry_check": "passes _read_cord and analyze_open_rope; all five exterior closures give determinant 3 and seven trefoil certificates each",
+      "current_source_sha256": {
+        "config.py": "d2c55f0162322740d2bac19dc12fe4709ab283e28364902e6c4065b5779555b0",
+        "bimanual_scoring.py": "278b126c734b9867cacf3e5779aa210b0f7a1162f6a9e8cf4772020929269fb5",
+        "scoring.py": "9a3519561f15b83880c138eb7beedf866d9de21db247205257cf7c895d5f5c78",
+        "topology.py": "21057280e6d69123019e432d2b50934e97b5f5131349186541215755f99a5ff2"
+      },
+      "conclusion": "A static connected configuration satisfies the current span, contact and bend limits. Current robot reach, formation and five-second released retention still require physical demonstration."
     }
   },
   "v4_development": {
