@@ -1,9 +1,9 @@
 # Tie an overhand knot
 
-**Implemented, but not yet validated or ready for submission.** Seventeen table
-pilots have scored zero. Trial 017 recovered both ends and formed a valid held
-overhand candidate, then stopped on invalid rope contact during one-arm
-staging. Trial 018 is testing simultaneous lifting and separation.
+**Implemented, but not yet validated or ready for submission.** Nineteen table
+pilots have scored zero. Trial 018 dropped an end during lifting; trial 019
+kept both ends held but failed on rope contact. Trial 020 is testing gradual
+gripper closure during the simultaneous lift.
 The full pull and final released retention remain unproven.
 
 Tie one overhand knot in the blue cord. Pull its ends at least 117 cm apart
@@ -47,14 +47,16 @@ python -m unittest discover -s . -p 'test_*.py'
 `table_policy.py` lays a crossing, raises a local arch, and carries the red
 terminal under it. The feeding hand releases the tip inside and withdraws;
 the support hand lowers the arch, opens and lifts clear. The arms then pick
-up both ends, lift and separate together, pull in the same control ticks,
-and release. The full sequence remains unvalidated.
+up both ends, lift and separate together while gradually closing the grippers,
+turn outward, pull in the same control ticks, and release. The full sequence
+remains unvalidated.
 
 `loop` stops after the arch; `thread` stops after red-tip regrasp; `demo`
 attempts the whole sequence. The default seed is 0 and the starting layout is
-fixed. The current sequence takes 138 simulated seconds, plus the final
-recording tick, within 3,000 actions at 20 Hz (150 seconds). Completed pilots
-took 3.6–18.5 wall-clock minutes each; full-task runtime is not yet measured.
+fixed. The current sequence takes 137–140 simulated seconds, depending on how far
+the final pull must extend, plus the final recording tick. The limit is 3,000
+actions at 20 Hz (150 seconds). Completed pilots took 3.6–20.0 wall-clock
+minutes each; full-task runtime is not yet measured.
 A matching Dream run must use the same final source, seed, scene, cameras,
 action limit and scorer. There are no evaluator actions after the episode.
 
@@ -107,23 +109,22 @@ modelled. The solver uses 64 position and 16 velocity iterations, a 0.5 mm
 contact offset and zero rest offset; allowed penetration is 5% of the diameter.
 
 The fixed 240→960 Hz physics schedule applies equally to demo and Dream,
-with 20 Hz control throughout. It adds no actions or external forces. Trial 017
-validated unchanged state/counters and 48 native substeps per action across
-607 post-switch intervals, through 108.35 seconds. That validates the observed
-transition, not completion of the task. Historical trials retain their recorded
-settings and scorer.
+with 20 Hz control throughout. It adds no actions or external forces. Trial 019
+validated unchanged state/counters, 48 native substeps per action across 607
+post-switch intervals, and version-2 final callback/counter closure through
+108.35 seconds. Its geometry failure still scores zero. Historical trials
+retain their recorded settings and scorer.
 
 The scorer checks each recorded 20 Hz frame for rope continuity, nonlocal
 penetration, topology, span and release. It cannot establish physical fidelity
 between samples. Topological ambiguity earns no credit. Synthetic test cases
 verify the scorer, not robot feasibility.
 
-[The table-pilot evidence](evidence/table-pilots.json) contains all seventeen
-completed trials, each score zero. Trial 017 secured both ends at 102.50 seconds
-and recorded a valid held overhand candidate from 103.35 to 108.25 seconds,
-before invalid contact during one-arm staging. No qualifying span or final
-released retention has been demonstrated. The full 142-test CPU suite passes, including shutdown, execution and action-budget
-checks; these do not establish robot feasibility.
+[The table-pilot evidence](evidence/table-pilots.json) contains all nineteen
+completed trials, each score zero. Both terminal pickup and held overhand
+candidates have been demonstrated, but no qualifying span or final released
+retention. The full 142-test CPU suite passes, including shutdown, execution
+and action-budget checks; these do not establish robot feasibility.
 
 [VALIDATION.json](VALIDATION.json) separates current evidence from the five
 older high-lift pilots and historical v3 jig trials. The old jig demo's native

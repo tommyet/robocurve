@@ -260,11 +260,13 @@ def _pull_and_release(arms, working_index):
     yield from _move(right, 1, outward, held_rotation, 2.,
                      'clear the other arm before moving the red end south', held_index=working_index)
     _held(0, 2)
+    # Increase normal jaw pressure gradually as both ends are lifted. Keep the
+    # earlier threading and red-end clearance motions at their original pinch.
     yield from both(
         _move(left, 0, [.24, .18, .94], DOWN, 6.,
-              'raise and separate the yellow end', held_index=2),
+              'raise and separate the yellow end', opening=0., held_index=2),
         _move(right, 1, [.24, -.18, .94], DOWN, 6.,
-              'raise and separate the red end', held_index=working_index))
+              'raise and separate the red end', opening=0., held_index=working_index))
     _held(0, 2)
     _held(1, working_index)
     angle = np.deg2rad(25.)
@@ -282,11 +284,14 @@ def _pull_and_release(arms, working_index):
         _held(0, 2)
         _held(1, working_index)
     if working_index == len(_sample()['cord']['points'])-1:
-        yield from _drive(both(*[arm.move_pose([.24, sign*.57, .94], rotation, 1.,
-            label='finish simultaneous terminal pull')
-            for arm, sign, rotation in zip(arms, (1., -1.), rotations)]))
-        _held(0, 2)
-        _held(1, working_index)
+        for half_span in (.57, .58, .59):
+            if _sample()['metrics']['span_condition']:
+                break
+            yield from _drive(both(*[arm.move_pose([.24, sign*half_span, .94], rotation, 1.,
+                label='finish simultaneous terminal pull')
+                for arm, sign, rotation in zip(arms, (1., -1.), rotations)]))
+            _held(0, 2)
+            _held(1, working_index)
     yield from _drive(wait(1.5))
     _event('table simultaneous pull measured', metrics=_sample()['metrics'])
     yield from _drive(both(left.grip(FINGER_OPEN, 1.), right.grip(FINGER_OPEN, 1.)))

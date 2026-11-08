@@ -1,5 +1,5 @@
 {
-  "status": "Full table controller implemented but unvalidated. Seventeen completed table pilots score zero. Table-017 recovered both terminals and formed a valid held overhand candidate, then stopped on invalid contact at 108.30 seconds during right-only staging. Table-018 will test simultaneous staging; no full pull, final retention or matching Dream run.",
+  "status": "Full table controller implemented but unvalidated. Nineteen completed table pilots score zero. Trial 019 retains both terminal grasps but fails on nonlocal rope contact at 108.30 seconds; its version-2 native closure and execution checks pass. Trial 020 is running with gradual grip closure during the original simultaneous lift. No qualifying full pull, final retention or matching Dream run.",
   "submission_ready": false,
   "review_basis": {
     "accepted_examples": [
@@ -16,7 +16,7 @@
     "elapsed_s": 25.805
   },
   "still_required": [
-    "Complete support release without invalid contact, recover both terminals, and retain an overhand through simultaneous pull and final release within 3,000 actions.",
+    "Retain both terminal grasps through the full simultaneous pull and final released-knot interval within 3,000 actions.",
     "Record a successful complete demo and matching Dream trial; independently replay and visually review both.",
     "Refresh the live task board and obtain user authorization before any media upload or upstream submission."
   ],
@@ -28,23 +28,23 @@
     "score_version": "overhand-bimanual-v4",
     "unit_test_command": "python -m unittest discover -s . -p 'test_*.py'",
     "unit_tests_passed": 142,
-    "physics_trials": 17,
+    "physics_trials": 19,
     "dream_trials": 0,
     "full_demo_implemented": true,
     "remaining_work": [
-      "Complete support release without invalid contact, recover both terminals, and retain an overhand through simultaneous pull and final release within 3,000 actions.",
+      "Retain both terminal grasps through the full simultaneous pull and final released-knot interval within 3,000 actions.",
       "Record a successful complete demo and matching Dream trial; independently replay and visually review both."
     ],
     "nominal_pull_candidate": "evidence/bimanual-pull-kinematics.json",
     "historical_terminal_grasp_audit": "evidence/bimanual-loop-kinematics.json",
     "historical_high_loop_physics_trials": 5,
-    "total_completed_v4_physics_trials": 22,
+    "total_completed_v4_physics_trials": 24,
     "available_controller_stages": [
       "loop",
       "thread",
       "demo"
     ],
-    "validation_status": "Table-017 recovered both terminals, with grasp witnesses at 102.50 seconds and independently confirmed held overhand candidates from 103.35 through 108.25 seconds. It then stopped on actual capsule contact during one-arm staging. Its 607 post-switch native intervals, replay, execution handling and recording finalization pass. Simultaneous staging in table-018 remains unvalidated.",
+    "validation_status": "Trial 019 captures both ends and records a held overhand candidate, then fails on actual capsule pair 18/27 at 108.30 seconds. Both grasps stay held. All 2,168 recorded native robot poses pass the arm/table mesh audit. Replay scores zero with verified version-2 final counter/callback closure and successful execution. Trial 020 is pending.",
     "table_pilot_evidence": "evidence/table-pilots.json",
     "nominal_pull_candidate_scope": "Earlier staged outward-pull audit only; it does not validate the current threading-to-pull transition or actual rope behavior.",
     "commands": {
@@ -55,10 +55,16 @@
     "nominal_timing": {
       "arch_seconds": 38.5,
       "thread_seconds": 94.5,
-      "remaining_pull_release_seconds": 43.5,
-      "total_seconds": 138.0,
+      "remaining_pull_release_seconds_range": [
+        42.5,
+        45.5
+      ],
+      "total_seconds_range": [
+        137.0,
+        140.0
+      ],
       "run_limit_seconds": 150.0,
-      "scope": "Prospective table-018 replaces 11 seconds of sequential staging with six seconds of simultaneous staging. Sum of phase durations; final recording tick adds time. The complete sequence has not finished physically."
+      "scope": "Prospective 020 preserves the original trial-018 route and pinch through 106.50 seconds, then smoothly closes both grippers during its six-second simultaneous lift toward DOWN. No extra stationary hold. Optional final half-span extensions stop when the measured span condition passes; the final recording tick adds time."
     },
     "prospective_run_limit_actions": 3000,
     "run_limit_change_scope": "Future final demo and Dream trials use 3,000 actions at 20 Hz. Earlier frozen trials retain their recorded limits; table-008 uses a 2,400-action scene and 1,800-action thread plan.",
@@ -70,13 +76,13 @@
       "basis": "Two 5 mm cord radii plus 2 mm projected surface clearance. This planning guard does not establish knot topology or score."
     },
     "recorded_robot_clearance_audit": {
-      "trial": "table-012",
+      "trial": "table-019",
       "evidence": "evidence/table-pilots.json",
-      "samples": 1342,
-      "minimum_interarm_separation_lower_bound_m": 0.023927285,
-      "minimum_nonbase_table_clearance_m": 0.000717189,
+      "samples": 2168,
+      "minimum_interarm_separation_lower_bound_m": 0.004392774993205753,
+      "minimum_nonbase_table_clearance_m": 0.00048801392716635306,
       "reported_intersections": 0,
-      "scope": "Measured native link frames, all recorded 20 Hz samples. Separate from nominal target auditing; no continuous or later-route guarantee."
+      "scope": "Measured native link frames and authored collision geometry across every recorded 20 Hz pose. No between-frame or future-route guarantee."
     },
     "prospective_recovery_route_audit": {
       "reference_trial": "table-012",
@@ -95,7 +101,7 @@
       "switch_capture_time_s": 78.0
     },
     "policy_physics_replay_review": {
-      "status": "CPU reviewed; 142 tests pass. Frozen table-017 version-1 evidence validates 607 recorded post-switch intervals through 108.35 seconds, with final shutdown counters unrecorded. Version-2 native shutdown closure awaits a new physical recording.",
+      "status": "The 142-test CPU suite passes. Trial 019 independently validates 607 post-switch native intervals and version-2 final closure through 108.35 seconds, including frames after scorer invalidity. Successful execution is recorded. Its invalid geometry still scores zero.",
       "certificate": "policy-physics-transition.json",
       "checks": [
         "Exact fixed schedule and state/counter preservation at the switch.",
@@ -109,7 +115,17 @@
       "historical_compatibility": "Unscheduled v4 and legacy assessor results retain their prior semantics. Scheduled version-1 certificates remain readable with explicit limitations for unrecorded final closure or execution evidence. Closure evidence, when present, is always checked. Frozen table-018 is version 1; its source and result must be retained separately from current replay.",
       "current_certificate_schema": "fixed-policy-physics-v2",
       "native_closure_schema": "native-counter-closure-v1",
-      "native_version_2_validation": "Pending; table-018 was frozen before this audit-only revision."
+      "native_version_2_validation": {
+        "trial": "table-019",
+        "status": "complete",
+        "final_capture_time_s": 108.35,
+        "validated_control_intervals": 607,
+        "final_native_counter": 47976,
+        "final_environment_counter": 47976,
+        "callback_error": null,
+        "replay_native_closure_status": "verified",
+        "scope": "Confirms audit machinery, not task success."
+      }
     },
     "prospective_support_lowering_guard": {
       "motion_change": false,
@@ -125,7 +141,7 @@
     },
     "focused_checks_after_withdrawal_change": {
       "passed": 17,
-      "scope": "Focused controller and runner checks after the prospective table-017 waypoint change; no full new physical result."
+      "scope": "Historical017 withdrawal change; superseded current focused check follows."
     },
     "prospective_support_withdrawal": {
       "lift_m": 0.03,
@@ -148,26 +164,47 @@
     },
     "prospective_simultaneous_staging": {
       "seconds": 6.0,
-      "replaces_sequential_staging_seconds": 11.0,
-      "scope": "Planned replacement after the measured 106.50-second both-held state. Native physical outcome pending."
+      "orientation_target": "DOWN for both arms, matching trial 018",
+      "gripper_half_gap_target_start_m": 0.0045,
+      "gripper_half_gap_target_end_m": 0.0,
+      "smooth_grip_closure_during_lift": true,
+      "additional_stationary_grip_hold_seconds": 0.0,
+      "scope": "Trial 020 restores the trial-018 route through 106.50 seconds and ramps ordinary position-command closure during simultaneous staging. It does not change rope geometry, physics or scoring thresholds."
+    },
+    "focused_checks_after_trial019_motion_change": {
+      "passed": 17,
+      "scope": "Controller and runner checks after the normal fully closed grip, retained-orientation simultaneous lift and bounded span-extension changes; no physical outcome inferred."
+    },
+    "prospective_final_span_extension": {
+      "half_span_targets_m": [
+        0.57,
+        0.58,
+        0.59
+      ],
+      "early_stop": "Measured span_condition true",
+      "scope": "Reach-audited ordinary bimanual motion, bounded by the unchanged 150-second episode. Does not alter span or scoring thresholds."
+    },
+    "focused_checks_after_trial020_motion_change": {
+      "passed": 17,
+      "scope": "Controller and runner checks after restoring the original lift rotation and smoothly ramping grip closure during the six-second simultaneous lift. Physical outcome pending."
     }
   },
   "v4_development": {
-    "status": "Seventeen completed table pilots score zero. Table-017 clears the support hand and captures both terminals, forming a valid held candidate before invalid rope contact during right-only south staging. Table-018 plans simultaneous lift/separation instead; outcome pending.",
+    "status": "Full table controller implemented but unvalidated. Nineteen completed table pilots score zero. Trial 019 retains both terminal grasps but fails on nonlocal rope contact at 108.30 seconds; its version-2 native closure and execution checks pass. Trial 020 is running with gradual grip closure during the original simultaneous lift. No qualifying full pull, final retention or matching Dream run.",
     "evidence": "evidence/table-pilots.json",
     "controller_sequence": [
       "Right hand grips segment 101 and lays a crossing from the uncrossed U.",
       "Right hand grips segment 23 and raises a local arch by 15 cm.",
       "Left hand grips segment 103 and carries the actual red terminal under the arch.",
       "Left hand releases the terminal inside the loop, confirms the whole terminal axis is inside with at least 12 mm projected boundary clearance, then withdraws empty.",
-      "Right hand lowers the arch by 140 mm over three seconds while retaining its measured tilted orientation, checks measured support placement, releases to 24 mm, lifts vertically 30 mm over 1.5 seconds, then fully opens for one second and parks. It regrips red103 from above; left hand approaches yellow2 from 12 cm north, 20 mm above the measured point with a 24 mm jaw opening, then approaches horizontally and descends.",
-      "With both ends held, right103 lifts 65 mm and moves outward to x=0.39 m. The prospective next route lifts and separates both ends together over six seconds for staging. The arms then pull outward in the same control ticks and release for final retention scoring."
+      "Right hand lowers the arch by 140 mm over three seconds while retaining its measured tilted orientation, checks measured support placement, releases to 24 mm, lifts vertically 30 mm over 1.5 seconds, then fully opens for one second and parks. It regrips red103 from above; left hand approaches yellow segment 2 from 12 cm north, 20 mm above the measured point with a 24 mm jaw opening, then approaches horizontally and descends.",
+      "With both ends captured, right103 lifts 65 mm and moves outward to x=0.39 m using the original 4.5 mm half-gap command. Both ends then lift and separate together over six seconds toward DOWN while ordinary gripper closure ramps smoothly to zero. The arms turn outward and pull in the same control ticks; optional half-span targets 0.57/0.58/0.59 m stop when the measured span condition passes, followed by release and retention scoring."
     ],
-    "completed_physics_trials": 17,
+    "completed_physics_trials": 19,
     "successful_full_demos": 0,
-    "independent_replay": "All seventeen completed recordings replay to score 0.0. Table-004, table-005, table-010, table-011, table-013, table-014, table-016 and table-017 contain invalid recorded geometry. All recordings finalized cleanly; table-015 has a separate Inspect policy error. Native fixed-physics certificates independently validate for table-015 through table-017.",
+    "independent_replay": "All nineteen completed recordings independently replay to score zero. Nine contain invalid recorded geometry; trial 015 also has a separate Inspect policy error. Trial 019 verifies the version-2 native final closure and successful execution, while its actual contact violation correctly keeps its score zero.",
     "pending_trial": {
-      "name": "table-018",
+      "name": "table-020",
       "policy": "demo",
       "max_steps": 3000,
       "frozen_scene_run_limit": 3000,
@@ -179,7 +216,8 @@
         "switch_after_completed_actions": 1560,
         "switch_capture_time_s": 78.0
       },
-      "status": "Simultaneous staging candidate being prepared; no native result and not counted as completed evidence."
+      "status": "Frozen source/archive verified and launched. Physical outcome pending; not counted as completed evidence.",
+      "certificate_schema": "fixed-policy-physics-v2"
     },
     "dream_trials": 0,
     "historical_high_loop_pilots": {
@@ -192,7 +230,7 @@
     },
     "legacy_evidence_scope": "All historical_v3 records and old demo/Dream evidence are explicitly superseded for current-task feasibility.",
     "latest_completed_trial": {
-      "name": "table-017",
+      "name": "table-019",
       "policy": "demo",
       "max_steps": 3000,
       "frozen_scene_run_limit": 3000,
@@ -204,45 +242,52 @@
         "switch_after_completed_actions": 1560,
         "switch_capture_time_s": 78.0
       },
+      "certificate_schema": "fixed-policy-physics-v2",
       "score": 0.0,
       "time_s": 108.35,
       "scorer_last_valid_time_s": 108.25,
       "samples": 2168,
-      "wall_seconds": 1106.993,
+      "wall_seconds": 1107.166,
       "invalid": "nonlocal capsule penetration exceeds 5% diameter tolerance",
       "first_invalid_time_s": 108.3,
       "first_invalid_actual_pair": [
-        19,
+        18,
         27
       ],
-      "first_invalid_actual_axis_distance_m": 0.009389920672,
-      "first_invalid_excess_above_allowance_m": 0.000110079328,
-      "final_actual_pair": [
-        19,
-        26
-      ],
-      "final_actual_axis_distance_m": 0.009361054503,
+      "first_invalid_actual_axis_distance_m": 0.009496831799,
+      "first_invalid_actual_excess_above_allowance_m": 3.168201e-06,
+      "final_actual_axis_distance_m": 0.009486626792,
       "recording_finalization_complete": true,
       "cli_return_code": 0,
       "policy_execution_status": "complete",
       "full_sequence_completed": false,
-      "support_placement_guard_passed": true,
-      "native_transition_status": "complete",
       "validated_post_switch_intervals": 607,
       "native_substeps_per_action": 48,
       "state_and_counters_unchanged_at_switch": true,
       "callback_removed": true,
-      "overhand_candidate_observed": true,
-      "first_valid_candidate_time_s": 103.35,
-      "last_valid_candidate_independently_checked_time_s": 108.25,
+      "native_final_closure": {
+        "schema": "native-counter-closure-v1",
+        "complete": true,
+        "callback_error": null,
+        "expected_counters": {
+          "native": 47976,
+          "environment": 47976
+        },
+        "observed_counters": {
+          "native": 47976,
+          "environment": 47976
+        }
+      },
+      "first_valid_candidate_time_s": 104.349999999996,
+      "last_valid_candidate_time_s": 108.25,
       "both_terminal_grasps_confirmed_time_s": 102.5,
-      "last_valid_topology_status": "overhand_candidate",
-      "support_release_attempted": true,
-      "terminal_recovery_attempted": true,
-      "yellow_pickup_attempted": true,
+      "both_terminal_grasps_retained_through_final_capture": true,
+      "simultaneous_staging_attempted": true,
       "simultaneous_pull_attempted": false,
       "final_release_attempted": false,
-      "interpretation": "A held candidate and both geometric grasp witnesses are progress, not full task success. Contact became invalid during right-only staging. The cached candidate label in the final invalid frames is not valid topology evidence."
+      "replay_score": 0.0,
+      "current_replay_logic_matches_frozen": true,
+      "interpretation": "Early stronger grip plus its extra stationary hold changed the rope before simultaneous staging. Their separate effects are not isolated. Both grasps remained held; cached candidate labels after invalidity are not valid topology evidence."
     }
   },
   "historical_v3": {
@@ -513,5 +558,5 @@
     ]
   },
   "final_trials": {},
-  "current_version_evaluated_scope": "Table-017 validates support withdrawal, both pickups, 607 post-boundary native intervals and a held overhand candidate before invalid contact. Seventeen table pilots and five earlier high-lift pilots are recorded separately. Table-018 simultaneous staging is pending; full successful demo and Dream are missing."
+  "current_version_evaluated_scope": "Nineteen table pilots and five older high-lift pilots remain separate. Trial 019 verifies version-2 audit closure and retained grasps but fails on actual nonlocal contact. Trial 020 is running with gradual closure during the original simultaneous lift. A successful full demo and matching Dream remain missing."
 }

@@ -63,7 +63,7 @@ developers and their agents, not a competition submission document.
   The user requested forming the knot on the table, opening a local arch and
   pulling both ends together. The free uncrossed U is translated 18 cm toward
   −Y. No rope poses, attachments or external tightening forces are introduced.
-- Seventeen table pilots are recorded in
+- Nineteen table pilots are recorded in
   [table-pilots.json](tasks/tie-overhand-knot/evidence/table-pilots.json).
   All score zero: 001/002 establish a small arch, 003 curls the loose tail,
   004/005 stop on excessive rope contact, 006 establishes the revised
@@ -79,8 +79,10 @@ developers and their agents, not a competition submission document.
   validates the fixed physics switch but ends on a policy exception before
   support opening. Trial 016 passes the placement guard but fails on rope
   contact during support withdrawal. Trial 017 recovers both ends and forms a
-  valid held candidate before failing during right-only staging. These are
-  development results, not completed task demonstrations.
+  valid held candidate before failing during right-only staging. Trial 018
+  avoids that contact failure but drops the yellow end during simultaneous
+  lifting. Trial 019 retains both ends but fails on nonlocal rope contact.
+  These are development results, not completed task demonstrations.
 - A wrist rotation is not control of a flexible free tip. In 003 the grasp
   remained held but the tip curled and finished 73.85 mm outside the loop.
   In 005, moving the tip back toward the crossing shortened the measured
@@ -232,6 +234,74 @@ developers and their agents, not a competition submission document.
   replaces 11 seconds of one-arm staging with six seconds lifting/separating
   both held ends together from the 106.50-second state. This motion is pending
   physical validation; it does not alter scoring or physics.
+- Trial 018 completed 2,252 frames through 112.55 seconds in 1,198.428 wall
+  seconds, with valid geometry and score zero. Both ends were captured at
+  102.50 seconds; the held overhand candidate persisted from 103.35 through
+  the finish. Six-second simultaneous staging avoided 017's contact failure,
+  but yellow2 left the left pad region at 110.90 seconds. Right103 remained
+  held. No qualifying span or final released retention was reached.
+- Measured left-pad geometry shows a late slip, rather than a missed initial
+  grasp. Yellow2 remained aligned through 110.75 seconds. Its opposite-pad
+  contact disappeared at 110.80–110.85 while the measured half-gap grew from
+  about 4.95 to 5.07 mm; neighbouring links still touched the fingers. At
+  110.90 all left meshes were over 10 mm from yellow links 0–8. Rotation alone
+  is not established as the cause; actual contact force was not recorded.
+  The native robot audit from 106.50–112.55 finds no inter-arm or table
+  intersections, with minimum bounds 5.066 mm and 1.655 mm respectively.
+- Trial 018's closest actual nonlocal axes were 9.523070 mm apart at 109.05
+  seconds, pair 13/30: only 23.070 micrometres above the unchanged 9.5 mm
+  minimum. The full-trace maximum joint gap was 0.138649 mm; during recorded
+  candidate frames it was 0.015939 mm. These are 20 Hz observations, not a
+  proof of clearance between frames. Compact values and source/report hashes
+  are in the table-pilot evidence; raw audits remain in ignored artifacts.
+- Read-only inspection confirmed the installed YAM finger actuators use
+  stiffness 5,000 N/m, damping 100 N s/m and a 50 N effort limit per prismatic
+  joint. The retained `constants.py`, `robot.py` and `demo.py` match the VM
+  hashes. At measured half-gap 4.95 mm, a 4.5 mm target gives only about
+  2.25 N of static proportional effort per finger; target zero gives about
+  24.75 N. These are PD estimates, not measured pinch forces. Zero is the
+  normal fully closed position command, with no attachment or rope resize.
+  Keep the existing contact tolerance and measured loaded-grasp checks.
+- Trial 019 was frozen and launched around 12:18 UTC. After both ends are
+  captured it commands both grippers closed for one second, then retains the
+  measured grasp rotations during the six-second simultaneous lift. The
+  existing outward turn follows. Audited optional half-span targets of
+  0.57/0.58/0.59 m stop once the measured span condition passes. Its outcome
+  remains pending; this is a controller change, not a scoring relaxation.
+- Version-2 policy-physics certificates now require final native counter and
+  callback closure plus successful Inspect execution evidence. Replay also
+  enforces both the task and recorded trial action limits. Focused regressions
+  cover callbacks after the last action, counter advances outside audited
+  intervals and missing/failed execution records. Version-1 recordings retain
+  their frozen semantics and explicitly report missing audits. Frozen and
+  hardened replay both give trial 018 score zero with valid geometry and 691
+  checked native intervals; its final native closure was not recorded. Trial
+  019 is the first physical run using version 2, with native results pending.
+- Trial 019 finished at 108.35 seconds, 2,168 frames, in 1,107.166 wall seconds.
+  Both terminal grasp witnesses remain valid throughout, but actual capsules
+  18/27 first violate the unchanged contact limit at 108.30: axis distance
+  9.496832 mm, 3.168 micrometres below the 9.5 mm minimum. Final distance is
+  9.486627 mm. The valid held candidate spans 104.35–108.25 seconds; later
+  cached topology labels do not override latched invalidity. Score remains zero.
+- Compare controller stages, not equal timestamps: 019 adds a one-second grip
+  hold after 102.50 seconds. Before simultaneous staging at 107.50, pair 18/27
+  is already at 9.552106 mm, compared with 018's 9.822292 mm at the equivalent
+  106.50-second state. The early closure/hold altered subsequent rope response
+  before the new fixed-rotation lift; fixed rotation cannot be the sole cause.
+  The separate contributions of stronger pinch and extra holding time remain
+  unresolved. Preserve a working prefix when testing a later grip correction.
+- Trial 019 verifies version-2 native closure: all 607 post-switch intervals
+  pass, final expected/observed native and environment counters equal 47,976,
+  and no out-of-interval callback is recorded. Execution and recording complete
+  cleanly. Frozen replay scores zero; current replay/certificate/scoring code
+  byte-matches its frozen dependencies. All 2,168 recorded robot poses also
+  pass the native mesh audit, with minimum arm separation 4.393 mm and table
+  clearance 0.488 mm. These do not excuse the separate rope-contact violation.
+- Trial 020 is frozen and running. It restores 018's original motion and
+  4.5 mm pinch through 106.50 seconds, then gradually closes both grippers
+  during the six-second simultaneous lift toward DOWN. It removes the extra
+  hold and retains the original lift rotation. Physics and scoring remain
+  unchanged; the physical result is pending.
 - The completed native-pose audit of all 1,342 trial-012 frames found no
   inter-arm or tabletop intersections. Minimum bounds were 23.927 mm between
   arms at 49.05 seconds and 0.717 mm above the table at 7.50 seconds. This
@@ -239,19 +309,20 @@ developers and their agents, not a competition submission document.
   commanded targets. It does not certify times between the 20 Hz frames or
   the later recovery/pull route. A compact hash-backed summary is included
   in the trial-012 evidence.
-- The full controller is implemented; its revised prospective sequence totals 138
-  simulated seconds, including simultaneous pulling, release and six seconds
-  of settling. The prospective task limit is now 3,000 actions at 20 Hz
+- The full controller is implemented; its revised prospective sequence takes
+  137–140 simulated seconds depending on the final span extension, including
+  simultaneous pulling, release and six seconds of settling. The task limit
+  is 3,000 actions at 20 Hz
   (150 seconds), leaving room for deliberate clearance and regrasping. Earlier
   frozen trials keep their original limits: 008 has a 2,400-action scene and
   a 1,800-action thread plan. Final demo and Dream must share the final scene
   and 3,000-action limit. The revised `thread` stage ends at 94.5 seconds; its
   example command allows 2,000 actions. Recheck timing after route changes.
-  The full 132-test integration suite passed in 26.869 seconds after measured
-  placement, stop-logging and execution-error fixes; 17 focused tests passed
-  after the prospective withdrawal change. A complete physical demo and matching Dream run are still
-  missing. The independent
-  scorer must establish the released knot.
+  The full 142-test integration suite passed in 25.805 seconds after versioned
+  native-closure, execution and action-budget checks; 17 focused tests passed
+  after trial 020's motion changes. A complete physical demo and matching
+  Dream run are still missing. The independent scorer must establish the
+  released knot.
 - Fresh 07:23:10 UTC lifecycle check found the shared VM stopped with no
   operation pending. Current observed g6e.xlarge rate is $2.729872/hour,
   including storage; posted balance was $167.39. Start task timestamp is
