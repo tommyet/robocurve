@@ -27,6 +27,7 @@ def jig_thread(arms):
     s, c = math.sin(math.radians(20)), math.cos(math.radians(20))
     rr = np.array([[1., 0., 0.], [0., -s, c], [0., -c, -s]])
     rl = np.array([[-1., 0., 0.], [0., s, -c], [0., -c, -s]])
+    receive_r = np.array([[-1., 0., 0.], [0., 0., -1.], [0., -1., 0.]])
     rb = rr @ np.array([[0., -1., 0.], [1., 0., 0.], [0., 0., 1.]])
     pinch, receive_open = -.0035, -.012
     right_material, left_material = -11, -2
@@ -120,7 +121,9 @@ def jig_thread(arms):
     if tip[1] < plane_y+.035:
         abort('tip did not remain beyond the loop plane', tip=tip.tolist())
         return
-    event('jig tip passed loop plane', tip=tip.tolist(), plane_y=plane_y)
+    event('jig tip reached nominal handover region', tip=tip.tolist(),
+          initial_bridge_plane_y=plane_y, current_bridge_max_y=float(points[48:64, 1].max()),
+          note='The loop can move; final knot topology is independently judged after removal.')
 
     # Receive a different material point, ~9 cm from the right grasp, from
     # the far side. Proximity is only a guard, never a scoring assertion.
@@ -128,19 +131,47 @@ def jig_thread(arms):
     if not (.27 < receive[0] < .33 and .87 < receive[2] < .93):
         abort('receiving point outside tested handover region', point=receive.tolist())
         return
-    receive_tcp = receive - rl[:, 2]*.006
-    yield from left.move_pose(receive_tcp-rl[:, 2]*.080, rl, 3.,
+    receive_tcp = receive - receive_r[:, 2]*.003
+    yield from left.move_pose(receive_tcp-receive_r[:, 2]*.080, receive_r, 3.,
                               opening=receive_open, label='jig far-side receiver approach')
-    receive = read()[1][left_material].copy()
-    yield from left.move_pose(receive-rl[:, 2]*.006, rl, 2.,
-                              label='jig capture inserted end')
-    yield from left.grip(pinch, 1.)
-    if not held(0, left_material):
-        abort('left hand not close enough to receiving material')
+    # Track the dangling material as open fingers approach; a stale target
+    # can leave the cord beside the pads after it moves on first contact.
+    for k in range(32):
+        receive = read()[1][left_material].copy()
+        current = tcp(0)
+        delta = receive-receive_r[:, 2]*.003-current
+        distance = float(np.linalg.norm(delta))
+        if distance < .0015:
+            break
+        goal = current+delta*min(1., .004/max(distance, 1e-9))
+        yield from left.move_pose(goal, receive_r, .20,
+                                  label=f'jig track receiving material {k}')
+    # Close in stages while the right hand continues holding the cord. A
+    # local pad footprint and loaded jaw gap replace the weak radial guard.
+    for opening in (-.008, -.005, pinch):
+        for k in range(3):
+            receive = read()[1][left_material].copy()
+            current = tcp(0)
+            delta = receive-receive_r[:, 2]*.003-current
+            distance = float(np.linalg.norm(delta))
+            goal = current+delta*min(1., .003/max(distance, 1e-9))
+            yield from left.move_pose(goal, receive_r, .25, opening=opening,
+                                      label='jig recenter and close receiver')
+    sample, points = read()
+    measured_r = np.asarray(sample['hands'][0]['tcp_rotation'], float)
+    pad_point = measured_r.T @ (points[left_material]-tcp(0))
+    half_gap = float(sample['hands'][0]['opening'])*.04695
+    event('jig receiver pad check', point_tcp_m=pad_point.tolist(),
+          measured_half_gap_m=half_gap, commanded_half_gap_m=abs(pinch))
+    if not (abs(pad_point[0]) < .0025 and abs(pad_point[1]) < .006
+            and -.002 < pad_point[2] < .008 and half_gap > abs(pinch)+.0002):
+        abort('receiving material not seated between loaded pads')
         return
     yield from right.grip(receive_open, 1.)
     yield from right.move_pose(tcp(1)-rr[:, 2]*.10, rr, 3.,
                                opening=receive_open, label='jig withdraw right above entry side')
+    yield from left.move_pose(tcp(0), rl, 1.5,
+                              label='jig turn received end for withdrawal')
     before = read()[1][left_material].copy()
     yield from left.move_pose(tcp(0)+[0., .015, 0.], rl, 1.5,
                               label='jig verify received end follows left')
@@ -174,35 +205,42 @@ def jig_thread(arms):
         abort('bridge not captured')
         return
 
-    # Far-side posts leave the near -Y ends open. Their rounded ends extend
-    # to y=-.068; actual cord geometry gates this removal stage.
-    for k in range(8):
-        sample, points = read()
+    # Pull the bridge toward the open ends while retaining the working end.
+    # Then carry that end over the loop's outer edge to the near side. Keeping
+    # it on the far side would leave a strand draped over the lower keeper.
+    for k in range(12):
         if not held(1, bridge_index) or not held(0, left_material):
             abort('grasp slipped during peg removal', removal_step=k)
             return
-        if float(points[27:86, 1].max()) < -.090:
+        current = tcp(1)
+        if current[1] <= -.178:
             break
-        dest = tcp(1)+[0., -.020, 0.]
-        if dest[1] < -.205:
-            abort('loop remains on jig after bounded removal travel')
+        dest = current.copy()
+        dest[1] = max(-.180, current[1]-.020)
+        yield from right.move_pose(dest, rb, 1.4,
+                                   label='jig slide bridge toward free peg ends')
+    for target, label in [((.30, .10, .98), 'raise working end above loop edge'),
+                          ((.30, -.10, .98), 'carry working end to near side')]:
+        yield from left.move_pose(target, rl, 3., label='jig '+label)
+        if not held(1, bridge_index) or not held(0, left_material):
+            abort('grasp slipped while clearing working end')
             return
-        yield from right.move_pose(dest, rb, 1.4, label='jig slide loop toward free peg ends')
+    yield from wait(.5)
     sample, points = read()
-    max_loop_y = float(points[27:86, 1].max())
-    event('jig measured loop removal', maximum_loop_y=max_loop_y,
-          required_center_y=-.090, scope='original loop material 27:86')
-    if max_loop_y >= -.090:
-        abort('loop did not clear peg ends')
+    clearance = sample['metrics'].get('minimum_jig_clearance_m')
+    event('jig whole cord removal check', minimum_fixture_clearance_m=clearance,
+          required_surface_clearance_m=.010)
+    if not sample['metrics'].get('jig_clear'):
+        abort('whole cord did not clear fixture')
         return
     yield from right.grip(receive_open, 1.)
-    yield from right.move_pose(tcp(1)-rr[:,2]*.12, rb, 3.,
+    yield from right.move_pose((.20, -.16, .970), rb, 3.,
                                label='jig release bridge and withdraw behind')
 
     # Tighten by moving the held free end away from the declared standing-end
     # clamp. No endpoint forces are used by this policy. Separate scorer and
     # retention assay determine whether a genuine overhand was tied.
-    yield from left.move_pose((.38, .195, .835), rl, 4.,
+    yield from left.move_pose((.38, -.10, .98), rl, 3.,
                               label='jig draw working end to tighten')
     if not held(0, left_material):
         abort('left end slipped before final release')

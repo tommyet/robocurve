@@ -192,11 +192,12 @@ result or measure outcome fairness.
   a separate load assay. **No validated robot-tied knot or Dream run yet.**
   `tasks/tie-overhand-knot/task.draft.json` deliberately has no fabricated media
   identifier. README, JUDGING and VALIDATION all identify development status.
-- Current scorer: 0.5 for a released overhand with both tails ≥4 cm; 1.0 if
+- Current scorer v3: 0.5 for a released overhand; 1.0 if
   that same knot survives a 2 s seating ramp followed by 5 s at 0.981 N ±5%.
   Assessor-induced knot loss retains the pre-test half credit, but invalid
-  physics erases all credit. Projected core size/slip are diagnostics only;
-  they did not reliably correspond to ruler measurements. Forty-three local
+  physics erases all credit. Projected core size, slip and tail lengths are diagnostics only;
+  they did not reliably correspond to ruler measurements. A rotation regression
+  crossed the former 4 cm tail threshold without changing the knot. Forty-four local
   tests passed, including negative topology, corrupted evidence, force/timing
   checks, fixture clearance and runner cleanup. They do not establish robot
   feasibility.
@@ -215,10 +216,18 @@ result or measure outcome fairness.
 - An untied three-peg jig settled without invalid rope contact. Its first
   manipulation missed a pickup at 13.5 mm above the rope axis; actual fingertips
   extend only 12.842 mm beyond TCP. At +9 mm, pickup and rotation worked, but
-  the working strand wrapped around an upright and slipped during lifting.
-  A revised far-side support layout and reflected standing lead passed offline
-  geometry/robot-clearance checks; its physical trial is in progress. The
-  scorer requires the whole cord ≥1 cm clear of all jig parts before credit.
+  the working strand wrapped around a near-side upright and slipped.
+  Far-side supports and a reflected standing lead fixed that snag. A tracked,
+  horizontal receiving grasp then completed handover; the original 20-degree
+  receiver contacted a rope fold and failed. Use TCP-frame pad bounds and a
+  loaded-jaw witness, not just radial proximity, before releasing the donor.
+- `jig-thread-005` formed an overhand with valid recorded contact through 71 s,
+  but stopped while the cord still touched the keeper. Independent v3 replay
+  agreed: **0.0**, not released and not jig-clear. It is progress, not a demo.
+  Raw videos/traces and each runtime's exact jig geometry are saved locally in
+  `artifacts/rope-knot-development/`. A proposed low left-arm removal route
+  passed IK but intersected a post in actual collision-mesh checks; keep the
+  route above the jig. Whole-arm fixture clearance matters as well as TCP reach.
   Every revised run stores its exact fixture geometry for reproducible replay.
 - VM remains running during this entry. Start request was 23:57:16 UTC on
   November 7, at $3.279064/hour. Stop and billing evidence must be recorded

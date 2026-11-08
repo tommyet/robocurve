@@ -21,10 +21,9 @@ import numpy as np
 from scoring import KnotScorer
 from config import CONFIG
 import telemetry
-SCORE_VERSION = "overhand-retention-v2"
+SCORE_VERSION = "overhand-retention-v3"
 
 HERE = Path(__file__).resolve().parent
-INSTRUCTION = CONFIG["instruction"]
 
 
 def main():
@@ -45,6 +44,8 @@ def main():
     parser.add_argument("--skip-assay", action="store_true",
                         help="Development only: record policy outcome without the post-policy load test")
     args = parser.parse_args()
+    if args.policy == 'demo':
+        parser.error('no validated full knot demo exists yet; choose an explicit development probe')
     if args.policy == 'jig' and args.development_jig != 'three-peg':
         parser.error('the jig policy requires --development-jig three-peg')
     if args.development_jig and (args.diagnostic_layout or args.proof_probe):
@@ -61,6 +62,7 @@ def main():
         density = CONFIG['mass'] / CONFIG['length']
         length = float(np.linalg.norm(np.diff(nodes, axis=0), axis=1).sum())
         CONFIG.update(initial_nodes=nodes.tolist(), development_jig='three-peg',
+                      instruction='Finish the overhand knot in the blue cord, remove it from the pegs and let go. The knot will be tested with a gentle pull.',
                       jig_geometry=jig_layout.geometry(),
                       length=length, mass=density*length, anchor_start=True)
     if args.diagnostic_layout:
@@ -412,7 +414,7 @@ def main():
         "run", "--embodiment", "audited_rope", "--policy", policy_name,
         "-E", f"task={HERE / 'task.py'}", "-E", "object_jitter=0", "-E", "control_hz=20",
         "-E", "cam_width=320", "-E", "cam_height=176", "-E", f"headless={args.headless}",
-        "--instruction", INSTRUCTION, "--scorer", "task_score", "--epochs", "1", "--seed", str(args.seed),
+        "--instruction", CONFIG["instruction"], "--scorer", "task_score", "--epochs", "1", "--seed", str(args.seed),
         "--max-steps", str(args.max_steps), "--store-frames", "--log-dir", str(args.log_dir),
         "--no-prompt", "--grader", "none",
     ]

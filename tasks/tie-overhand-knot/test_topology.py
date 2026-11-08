@@ -64,6 +64,22 @@ class TopologyTests(unittest.TestCase):
         for count in (100, 260):
             self.assertIs(analyze_open_rope(open_torus(samples=count), .002)["is_overhand"], True)
 
+    def test_crossing_envelope_tails_are_not_ruler_measurements(self):
+        # Exactly the same 8 mm-diameter synthetic curve, merely rotated.
+        # Its topology agrees, but finite projection envelopes cross the old
+        # 4 cm gate. These estimates must never become scoring thresholds.
+        points = open_torus(samples=100, tails=False)
+        axis = np.array([.2, -.5, .7]); axis /= np.linalg.norm(axis)
+        cross = np.array([[0, -axis[2], axis[1]], [axis[2], 0, -axis[0]], [-axis[1], axis[0], 0]])
+        tails = []
+        for angle in (1., 2.):
+            rotation = np.eye(3)+np.sin(angle)*cross+(1-np.cos(angle))*(cross@cross)
+            result = analyze_open_rope(points @ rotation.T, .008)
+            self.assertIs(result["is_overhand"], True)
+            tails.append(min(result["tail_lengths_m"]))
+        self.assertLess(tails[0], .02)
+        self.assertGreater(tails[1], .045)
+
     def test_straight_u_and_coil_are_unknotted(self):
         t = np.linspace(.15, 2*np.pi-.15, 160)
         u = np.column_stack([.1*np.cos(t), .1*np.sin(t), np.zeros(len(t))])

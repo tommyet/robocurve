@@ -1,8 +1,8 @@
 """Replayable, fail-closed numerical evidence for the overhand-knot task.
 
-No pickup credit.  0.5 needs a released overhand candidate with both tails
->=4 cm at the end of the robot policy. This result is frozen before the
-assessor acts. 1.0 additionally requires the knot and tails to persist through
+No pickup credit.  0.5 needs a released overhand candidate clear of the jig
+at the end of the robot policy. This result is frozen before the
+assessor acts. 1.0 additionally requires the knot to persist through
 a two-second seating ramp and five seconds of opposing endpoint load. Defaults
 use 0.981 N (a 100 g hanging mass) per end, not a claimed exact 1 N. Genuine
 assessor-induced failure preserves the pre-test half credit; invalid geometry
@@ -15,8 +15,9 @@ that evidence, rather than logging requests as measurements.  A source string
 alone is not independent verification.  The load assay must also be physically
 validated; endpoint force is not a direct measurement of internal rope tension.
 
-Core span and crossing-envelope motion are diagnostics only. Tightening and
-changes of view can move that envelope; neither quantity is a scoring condition.
+Core span, crossing-envelope motion and inferred tail lengths are diagnostics
+only. Tightening and changes of view can move that envelope; none is a scoring
+condition or a ruler measurement of the physical knot.
 
 Call ``summary(final=True)`` or ``finalize()`` at the end of every recording or
 replay. Per-frame ``summary()`` is cheap; policy topology is refreshed every
@@ -52,7 +53,7 @@ ROBOT_COLLISION_LINKS = frozenset(("base", "gripper", "tip_left", "tip_right",
                                  "link1", "link2", "link3", "link4", "link5"))
 DEFAULTS = {
     "radius": .004, "segment": .01, "length": .64, "control_hz": 20.,
-    "joint_gap_max_m": .002, "tail_min_m": .04, "hand_clearance_m": .03,
+    "joint_gap_max_m": .002, "hand_clearance_m": .03,
     "proof_load_n": .981, "seating_seconds": 2., "proof_seconds": 5.,
     "proof_force_relative_tolerance": .05,
     "topology_interval_s": .25,
@@ -214,7 +215,9 @@ def _core_metrics(topology, cord):
     material = np.arange(len(poly))*cord["segment"]
     material_bounds = np.interp(bounds, arc, material)
     return {"core_span_m": diameter, "material_core_bounds_m": material_bounds.tolist(),
-            "tail_lengths_m": [float(material_bounds[0]), float(material[-1]-material_bounds[1])]}
+            "tail_lengths_m": [float(material_bounds[0]), float(material[-1]-material_bounds[1])],
+            "diagnostics_only": True,
+            "method": "projection_dependent_crossing_envelope_not_physical_knot_boundary"}
 
 
 class KnotScorer:
@@ -262,8 +265,8 @@ class KnotScorer:
             self.metrics = _core_metrics(self.topology, self._last_cord)
 
     def _qualifies(self):
-        return bool(self.released and self.jig_clear and self.metrics and
-                    min(self.metrics["tail_lengths_m"]) >= self.config["tail_min_m"]-1e-9)
+        return bool(self.released and self.jig_clear and self.topology and
+                    self.topology["is_overhand"] is True)
 
     def _fail_proof(self, reason):
         if self._proof_failure is None:
@@ -294,7 +297,7 @@ class KnotScorer:
 
     def _retention_sample(self):
         if not self._qualifies():
-            self._fail_proof("released knot or minimum tail condition lost during assay")
+            self._fail_proof("knot, robot release or jig clearance lost during assay")
         if self.metrics and self._proof_baseline is not None:
             slip = float(np.max(np.abs(np.asarray(self.metrics["material_core_bounds_m"])-self._proof_baseline)))
             self._proof_max_slip = max(self._proof_max_slip, slip)

@@ -99,12 +99,13 @@ class ScorerTests(unittest.TestCase):
         self.assertEqual(scorer.finalize(), 0.)
 
     @patch("scoring.analyze_open_rope", return_value=candidate())
-    def test_policy_half_needs_both_tails_and_release(self, detector):
+    def test_policy_half_needs_release_but_has_no_inferred_tail_gate(self, detector):
         scorer = KnotScorer()
         scorer.update(straight_sample())
         self.assertEqual(scorer.value, .5)
         detector.return_value = candidate((.02, .04))
-        self.assertEqual(scorer.finalize(), 0.)
+        self.assertEqual(scorer.finalize(), .5)
+        self.assertTrue(scorer.summary()["core"]["diagnostics_only"])
         detector.return_value = candidate()
         near = straight_sample(.05)
         near["hands"][0]["finger_boxes"][0]["center"] = [.21, .025, 0.]
@@ -230,14 +231,14 @@ class ScorerTests(unittest.TestCase):
                 self.assertFalse(scorer.summary()["proof"]["completed"])
 
     @patch("scoring.analyze_open_rope", return_value=candidate())
-    def test_tail_loss_during_assay_preserves_half_but_blocks_full(self, detector):
+    def test_inferred_tail_changes_during_assay_do_not_change_credit(self, detector):
         scorer = KnotScorer()
         seat(scorer)
         for i in range(1, 101):
             detector.return_value = candidate((.02, .22)) if i == 20 else candidate()
             scorer.update(proof_sample(2+i/20, i/20))
-        self.assertEqual(scorer.finalize(), .5)
-        self.assertIn("minimum tail", scorer.summary()["proof"]["failure"])
+        self.assertEqual(scorer.finalize(), 1.)
+        self.assertIsNone(scorer.summary()["proof"]["failure"])
 
     @patch("scoring.analyze_open_rope")
     def test_assessor_cannot_create_policy_credit(self, detector):

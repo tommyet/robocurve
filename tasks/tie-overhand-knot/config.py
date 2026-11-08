@@ -12,8 +12,8 @@ SEGMENT = .01
 MASS = .0375
 RUN_LIMIT = 2400
 INSTRUCTION = (
-    "Tie one overhand knot in the blue cord, leaving at least 4 cm of cord at "
-    "each end, then let go. The knot will be tested with a gentle pull."
+    "Tie one overhand knot in the blue cord, then let go. "
+    "The knot will be tested with a gentle pull."
 )
 
 
@@ -34,5 +34,4 @@ CONFIG = dict(radius=RADIUS, length=LENGTH, segment=SEGMENT, mass=MASS,
               friction=.8, bend_stiffness=.0002, bend_damping=.00002,
               linear_damping=.5, angular_damping=2.,
               anchor_start=True,
-              proof_load_n=.981, proof_seconds=5., tail_min_m=.04,
-              compact_span_max_m=.045, slip_max_m=.01)
+              proof_load_n=.981, proof_seconds=5.)

@@ -11,7 +11,7 @@
   },
   "unit_checks": {
     "command": "python -m unittest discover -s . -p 'test_*.py'",
-    "passed": 43,
+    "passed": 44,
     "scope": "Topology negatives/positives, measured geometry validation, scoring phases, fixture clearance, and runner cleanup; synthetic positive unit cases do not establish physical feasibility."
   },
   "physics_evidence": {
@@ -47,6 +47,33 @@
       "minimum_recorded_nonlocal_axis_distance_m": 0.007602766458844736,
       "final_topology_status": "overhand_candidate",
       "invalid": null
+    },
+    "jig-thread-003": {
+      "score": 0.0,
+      "samples": 854,
+      "invalid": null,
+      "topology_status": "overhand_candidate",
+      "released": false,
+      "jig_clear": false,
+      "evidence_scope": "Development robot trial, not a full-score demonstration"
+    },
+    "jig-thread-004": {
+      "score": 0.0,
+      "samples": 857,
+      "invalid": "nonlocal capsule penetration exceeds 5% diameter tolerance",
+      "topology_status": "unknot",
+      "released": false,
+      "jig_clear": false,
+      "evidence_scope": "Development robot trial, not a full-score demonstration"
+    },
+    "jig-thread-005": {
+      "score": 0.0,
+      "samples": 1421,
+      "invalid": null,
+      "topology_status": "overhand_candidate",
+      "released": false,
+      "jig_clear": false,
+      "evidence_scope": "Development robot trial, not a full-score demonstration"
     }
   },
   "diagnostic_retention": {
@@ -59,12 +86,15 @@
   "known_failures": [
     "Abrupt endpoint-force loading caused invalid rope contact; the specified protocol now seats gradually.",
     "Unassisted crossing-lift/threading probes produced excessive nonlocal capsule overlap; 960 Hz did not resolve it.",
-    "The first jig manipulation probe missed its initial pickup; the pad geometry supports a lower grasp."
+    "The first jig manipulation probe missed its initial pickup; the pad geometry supports a lower grasp.",
+    "A far-side receiver at 20 degrees contacted a fold and missed the tip; a horizontal tracked receiver completed the handover with valid contact.",
+    "The valid jig-thread-005 trial formed an overhand but stopped with cord still touching the lower keeper; independent v3 replay correctly scored zero."
   ],
   "still_required": [
     "A full robot-tied, released knot with valid contact and clearance throughout the trial.",
     "A successful recorded post-policy retention assay on that robot-tied knot.",
     "Fresh Dream evaluation on the exact final scene and rubric.",
     "Final visual review, independent replay, final setup and judging text, and task.json with real media identifiers."
-  ]
+  ],
+  "score_version": "overhand-retention-v3"
 }

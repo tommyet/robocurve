@@ -1,17 +1,17 @@
 {
-  "title": "Tie an overhand stopper knot",
+  "title": "Tie an overhand knot using a jig",
   "category": "Societal relevance",
   "keywords": [
     "rope",
     "knot tying",
     "bimanual"
   ],
-  "instruction": "Tie one overhand knot in the blue cord, leaving at least 4 cm of cord at each end, then let go. The knot will be tested with a gentle pull.",
-  "context": "Stable end knots are a basic step in finishing drawcords and similar cord assemblies.",
-  "setup": "One blue round cord, 96 cm between end centres, 8 mm diameter and 37.5 g, approximating braided polyester. Its first and last 1 cm links are yellow and red. The yellow end is held by a fixed grey bench clamp. The untied cord starts in a U: two 34 cm straight legs joined by a 28 cm semicircular section, on the standard YAM table. The README gives all coordinates and clamp dimensions.",
-  "scoring": "0.5: an intact single overhand knot is present at the end of the robot actions, with at least 4 cm of cord at each end and every robot part at least 3 cm clear of the cord. 1.0: that knot remains tied and retains those tail lengths throughout a separate 2-second ramp to 0.981 N opposing endpoint loads and a 5-second hold. A failed load test retains 0.5; damaged or invalid simulation evidence scores 0. All other outcomes score 0.",
+  "instruction": "Finish the overhand knot in the blue cord, remove it from the pegs and let go. The knot will be tested with a gentle pull.",
+  "context": "The jig holds an untied loop for a repeatable cord-finishing step: threading the end, removing the loop and tightening the knot.",
+  "setup": "One blue round cord, 118 cm between end centres, 8 mm diameter and 46.1 g, approximating braided polyester. The first and last 1 cm links are yellow and red. A fixed grey clamp holds the yellow end. The cord starts with one untied crossing arranged on three rounded 16 mm steel-like pegs, fixed to the standard YAM table. Nothing attaches the cord to the pegs or grippers. The README gives the exact layout and fixture dimensions.",
+  "scoring": "0.5: an intact single overhand knot is present at the end of the robot actions, with every robot part at least 3 cm clear of the cord. In a jig trial, the whole cord must also be at least 1 cm clear of every peg and support. 1.0: that knot remains tied and clear throughout a separate pull on the red end away from the permanently clamped yellow end: a 2-second ramp to 0.981 N, then a 5-second hold within \u00b15%. A failed or unfinished load test retains established 0.5 credit; damaged cord or invalid simulation evidence scores 0. All other outcomes score 0.",
   "run_limit": "2,400 robot control steps (120 seconds at 20 Hz). A separate 7-second evaluator load test follows a qualifying released knot.",
-  "reset_notes": "Remove the knot and restore the fixed untied U layout. The cord and clamp are reusable.",
-  "fidelity": "A chain of 96 rigid capsules with bending joints approximates an inextensible round cord. Nonadjacent links collide; grippers use physical contact. An ideal fixed joint represents the standing-end clamp. The evaluator applies endpoint forces after robot actions end. Friction and bending are engineering assumptions; braided fibres, stretch and wear are not modelled.",
+  "reset_notes": "Untie the cord and restore the shown single-crossed loop on the three pegs. Keep the yellow end clamped. All parts are reusable.",
+  "fidelity": "A chain of 118 rigid capsules with bending joints approximates an inextensible round cord. Nonadjacent links collide; grippers use physical contact. An ideal fixed joint represents the standing-end clamp. After robot actions end, the evaluator loads the free end; an equal opposite numerical force is reacted by the fixed end's clamp. This checks external loading, not measured internal tension. Friction and bending are engineering assumptions; braided fibres, stretch and wear are not modelled.",
   "scores": "Development draft: no validated robot knot demonstration or Dream run yet."
 }
