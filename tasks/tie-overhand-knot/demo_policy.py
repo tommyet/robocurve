@@ -100,14 +100,13 @@ def script(arms, mode):
     if mode == 'idle':
         yield from wait(10. if CONFIG.get('proof_probe') else 5.)
         return
-    if mode in ('demo', 'jig'):
+    if mode in ('demo', 'loop', 'thread'):
+        from bimanual_policy import tie_overhand
+        yield from tie_overhand(arms, stage=mode)
+        return
+    if mode == 'jig':
         from jig_policy import jig_thread
         yield from jig_thread(arms)
-        return
-    if mode in ('loop', 'thread'):
-        crossing = yield from form_loop(arms)
-        if mode == 'thread' and crossing is not None:
-            yield from thread_tail(arms)
         return
     right = arms[1]
     p = np.asarray(telemetry.latest_sample['cord']['points'][-4], float)
@@ -115,7 +114,7 @@ def script(arms, mode):
     pick = p + [0, 0, .009]
     yield from right.move(hover, 2., opening=FINGER_OPEN, yaw=0., label='approach free end')
     yield from right.move(pick, 1.5, label='descend to cord')
-    yield from right.grip(-.0035)
+    yield from right.grip(-(CONFIG['radius']-.0005))
     yield from right.move(hover, 2., label='lift free end')
     yield from wait(2.)
     yield from right.move(pick, 2., label='return cord')

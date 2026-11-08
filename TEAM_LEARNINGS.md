@@ -169,6 +169,71 @@ result or measure outcome fairness.
 
 ## Dated session log
 
+### 2026-11-08 — revise the knot task after demo review
+
+- Operator: repository agent; branch `codex/rope-bimanual`, based on current
+  `origin/main` at `6db13ff`. The user rejected the prepared crossing and
+  evaluator-only final pull in the v3 demo. Those were disclosed v3 task
+  features, but they do not demonstrate the requested unassisted knot tying.
+  **Do not reuse the old 1.0 demo as validation of this revision.**
+- V4 starts with a free, uncrossed U: 104 links of 12.5 mm, 10 mm diameter,
+  1.30 m nominal centreline length / 1.31 m outside length and 97.11 g mass.
+  Nominal mass uses Marlow's 10 mm Doublebraid specification; bending and
+  friction remain engineering assumptions. Friction stays 0.8 initially:
+  increasing it can also jam self-contact. Link spacing must exceed diameter.
+- The runner no longer automatically adds the jig, and v4 cannot launch the
+  old fixture/preformed/load probes. No post-policy force assay runs in v4.
+  Old recordings remain replayable with their original scorer/configuration.
+- New rubric: 0.5 for one overhand retained for the final five seconds after
+  release with 3 cm robot clearance; 1.0 additionally requires the same knot
+  to meet a 117 cm outer-tip span, wholly 1 cm above the table, for one second.
+  This is an explicit geometric slack target (outside length minus fourteen
+  diameters), not a measurement of tension or strength. Summed joint gaps are
+  subtracted from simulated span to prevent artificial extension earning
+  credit. Regrasping restarts release time; untying cancels prior span credit.
+- The proposed controller retains both terminal grasps, creates a crossing,
+  uses a table-supported arch, and is intended to thread before a simultaneous
+  two-arm pull. Previous probes showed that a freely hanging loop collapsed
+  to 2–8 mm local free space; its global bounding size did not establish a
+  threading aperture. Full-hand geometry, not just TCP IK, must be checked.
+  The old velocity anomaly occurred during donor opening; eliminating that
+  handover is a design change, not evidence that the anomaly is resolved.
+- Local review caught a wrist-limit violation and inter-arm interference in
+  the first route, a grasp witness that accepted open jaws, a stale crossing
+  check and a mismatch between commanded TCP span and required actual tip
+  span. Fixes and remaining route limits must be evaluated before claiming
+  a successful demo. Ignored evidence is under `artifacts/rope-knot-bimanual/`.
+- GPU starts requested around 05:29:47, 05:33:29 and 05:36 UTC all failed;
+  no new simulator or Dream trial ran. The final attempt used the Brev CLI;
+  its waiting process was interrupted after the VM returned to stopped.
+  The API confirmed **STOPPED at 05:38:56 UTC**. Posted credits were $169.50
+  versus $169.67 before attempts. That $0.17 posted change is not an invoice
+  for these attempts: billing lag and retained storage still apply. The
+  response did not expose a specific provider failure reason; do not claim
+  capacity was definitively diagnosed. No new instance, resize, installation,
+  key transfer, media upload or upstream PR occurred.
+- Current validation: **93 local tests passed**. The loop pilot's 600 nominal
+  20 Hz commands passed IK and table/inter-arm envelope checks: worst position
+  error 0.1414 mm; minimum inter-arm separation 9.768 mm; minimum table
+  separation 1.676 mm. These are commanded-configuration bounds, not dynamic
+  evidence. Within-arm self-collision is not independently certified.
+  `evidence/bimanual-loop-kinematics.json` records the source hashes and scope.
+  Only `--policy loop` is currently implemented; full-demo and threading
+  commands reject before simulator startup. Their intended sequence is
+  documented locally in `artifacts/rope-knot-bimanual/DESIGN_STATUS.md`.
+- A separate final-pull candidate uses mirrored ±25-degree yaw on the
+  downward hand orientations, ending at TCPs (0.24,±0.56,0.94) m. Exact
+  60-iteration IK checks passed for 490 nominal commands, including opening
+  and holding still. Fixed zero-yaw rolls hit wrist limits. Actual outer-tip
+  span must gate release; TCP span alone is insufficient. Upward withdrawal
+  also hit limits, so the candidate opens and stays at the same height.
+  `evidence/bimanual-pull-kinematics.json` is **not integrated controller or
+  physics evidence**. The threading-to-pull transition is still unresolved.
+- **Status: implementation revision, not submission ready.** A successful
+  contact-only demo, fresh same-scene Dream trial, independent replay and
+  visual review remain required. Startup retry is not scheduled in the
+  background. Preserve historical v3 evidence and the stopped retained VM.
+
 ### 2026-11-07–08 — overhand-knot implementation and evaluation
 
 - Operator: repository agent; branch `codex/tie-overhand-knot` from `0ac98c6`.

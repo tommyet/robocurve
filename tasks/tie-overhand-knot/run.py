@@ -21,7 +21,7 @@ import numpy as np
 from scoring import KnotScorer
 from config import CONFIG
 import telemetry
-SCORE_VERSION = "overhand-retention-v3"
+SCORE_VERSION = "overhand-bimanual-v4"
 
 HERE = Path(__file__).resolve().parent
 
@@ -46,9 +46,18 @@ def main():
     parser.add_argument("--skip-assay", action="store_true",
                         help="Development only: record policy outcome without the post-policy load test")
     args = parser.parse_args()
-    if args.policy in ('demo', 'dream', 'jig'):
+    if args.development_jig or args.policy == 'jig' or args.diagnostic_layout or args.proof_probe:
+        parser.error('v3 fixture/preformed/load probes are historical: use their saved task-source snapshot; v4 has only a free, uncrossed cord')
+    if args.policy in ('demo', 'loop', 'thread'):
+        from bimanual_policy import READY_STAGES
+        if args.policy not in READY_STAGES:
+            parser.error('the full bimanual controller is not ready; only --policy loop is available for the first physics probe')
+    if args.policy in ('demo', 'dream'):
         if args.diagnostic_layout or args.proof_probe:
-            parser.error('demo, dream and jig use the ordinary task scene, not diagnostic layouts')
+            parser.error('demo and dream use the ordinary task scene, not diagnostic layouts')
+        if args.development_jig:
+            parser.error('the task starts with an uncrossed cord and has no jig')
+    if args.policy == 'jig':
         args.development_jig = 'three-peg'
     if args.development_jig and (args.diagnostic_layout or args.proof_probe):
         parser.error('development-jig cannot be combined with diagnostic-layout or proof-probe')
@@ -56,8 +65,12 @@ def main():
         parser.error('diagnostic layouts require the idle policy')
     if args.proof_probe and not args.diagnostic_layout:
         parser.error('proof-probe requires a diagnostic layout')
-    if not args.diagnostic_layout and not args.skip_assay and args.physics_hz != 240:
-        parser.error('the audited assessor switch requires 240 Hz policy physics; other development rates require --skip-assay')
+    # V4 has no post-policy force assay. Legacy fixtures and preformed layouts
+    # remain diagnostics only and can never establish success for this task.
+    CONFIG['score_version'] = SCORE_VERSION
+    if args.development_jig or args.diagnostic_layout:
+        CONFIG['diagnostic_only'] = True
+    args.skip_assay = True
     if args.development_jig:
         import config
         import jig_layout
@@ -189,7 +202,8 @@ def main():
             rgb = rgb[0, ..., :3].detach().cpu().numpy().astype(np.uint8)
             if not cv2.imwrite(str(args.log_dir / "setup.png"), cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)):
                 raise RuntimeError("could not save the initial scene image")
-            self.task.module._tracker = KnotScorer(CONFIG)
+            from bimanual_scoring import BimanualKnotScorer
+            self.task.module._tracker = BimanualKnotScorer(CONFIG)
             self.audit = (args.log_dir / "trajectory.jsonl").open("x")
             self.review_encoder = None
             self.review_frames = 0
@@ -222,6 +236,8 @@ def main():
 
         def _run_assay(self):
             """Evaluate an already released knot after policy actions end."""
+            if CONFIG.get('score_version') == 'overhand-bimanual-v4':
+                return  # V4: all manipulation, including tightening, is robotic.
             if self.assay_attempted:
                 return
             self.assay_attempted = True
@@ -327,7 +343,7 @@ def main():
             from yam_arena.scene import object_states
             cord = object_states(self._env, ('cord',))['cord']
             sample['cord'] = cord.to_record()
-            sample['diagnostic_only'] = bool(args.diagnostic_layout)
+            sample['diagnostic_only'] = bool(CONFIG.get('diagnostic_only'))
             if self.endpoint_load is not None and self.endpoint_load.active:
                 sample['phase'] = self.assay_phase
                 sample['proof'] = self.endpoint_load.record(self._base.step_dt)
@@ -437,8 +453,11 @@ def main():
                     def save_summary():
                         from replay import certify_result
                         summary = tracker.summary(final=True)
-                        summary['score_scope'] = 'Policy plus recorded assessor phases, when present'
-                        summary['inspect_result_scope'] = 'Policy episode only; post-policy assessor runs during close'
+                        bimanual = CONFIG.get('score_version') == 'overhand-bimanual-v4'
+                        summary['score_scope'] = ('Robot policy only; no external load' if bimanual else
+                                                  'Policy plus recorded assessor phases, when present')
+                        summary['inspect_result_scope'] = ('Complete robot episode' if bimanual else
+                                                          'Policy episode only; post-policy assessor runs during close')
                         transition = getattr(self, 'physics_switch', None)
                         report = transition.report if transition is not None else {}
                         summary['assay_physics_transition'] = {
@@ -454,8 +473,13 @@ def main():
                             'errors': [f'{type(exc).__name__}: {exc}' for exc in errors],
                             'interrupted_by': f'{type(unwinding).__name__}: {unwinding}' if unwinding else None,
                         }
-                        summary = certify_result(summary, CONFIG, report or None,
-                            finalization_complete=summary['finalization']['complete'])
+                        if bimanual:
+                            from bimanual_scoring import certify_result as certify_bimanual
+                            summary = certify_bimanual(summary,
+                                finalization_complete=summary['finalization']['complete'])
+                        else:
+                            summary = certify_result(summary, CONFIG, report or None,
+                                finalization_complete=summary['finalization']['complete'])
                         if summary['assay_certification']['required'] and summary['assay_certification']['status'] != 'complete' and not errors:
                             errors.append(RuntimeError('Full assessor evidence is not certified: ' +
                                           '; '.join(summary['assay_certification']['errors'])))
@@ -530,7 +554,7 @@ def main():
         raise BaseExceptionGroup('Rope trial failed', errors)
     if 'audited_final_score' in metadata:
         print(f"Final audited task score: {metadata['audited_final_score']}; "
-              f"see {args.log_dir / 'score-summary.json'} (includes any post-policy assessor).")
+              f"see {args.log_dir / 'score-summary.json'}.")
     return result
 
 

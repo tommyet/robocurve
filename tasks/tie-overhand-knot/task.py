@@ -1,4 +1,4 @@
-"""Tie an overhand stopper knot. Use run.py to record and audit a trial."""
+"""Tie one overhand in a free cord. Use run.py to record and audit a trial."""
 from config import CONFIG, initial_nodes
 from rope import rope
 from yam_arena.task_file import Box

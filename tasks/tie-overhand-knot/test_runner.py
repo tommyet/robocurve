@@ -136,6 +136,18 @@ class FakeEncoder:
 
 
 class RunnerTests(unittest.TestCase):
+    def test_unready_controller_is_rejected_before_simulator_import_or_output_creation(self):
+        with tempfile.TemporaryDirectory() as folder:
+            output = Path(folder) / 'must-not-be-created'
+            for policy in ('demo', 'thread'):
+                with self.subTest(policy=policy):
+                    result = subprocess.run([sys.executable, str(Path(__file__).with_name('run.py')),
+                        '--policy', policy, '--log-dir', str(output)], capture_output=True, text=True)
+                    self.assertEqual(result.returncode, 2)
+                    self.assertIn('full bimanual controller is not ready', result.stderr)
+                    self.assertNotIn('ModuleNotFoundError', result.stderr)
+                    self.assertFalse(output.exists())
+
     def setUp(self):
         temp = tempfile.TemporaryDirectory()
         self.addCleanup(temp.cleanup)
@@ -319,6 +331,41 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(result['assay_physics_transition']['validated_control_intervals'], 139)
         self.assertFalse(runner.endpoint_load.active)
         self.assertTrue(runner.base_closed)
+
+    def bimanual_embodiment(self):
+        runner = self.embodiment()
+        self.runner_class.close.__globals__['CONFIG']['score_version'] = 'overhand-bimanual-v4'
+        # This isolates runner finalization; scorer geometry/timing is exercised
+        # independently in test_bimanual_scoring, not invented by this stub.
+        runner.task.module._tracker = SimpleNamespace(summary=lambda final=False: dict(
+            score=1., candidate_score=1., invalid=None, diagnostic_only=False,
+            release_elapsed_s=5., release_required_s=5., status='qualified'))
+        return runner
+
+    def test_bimanual_close_never_adds_external_pull_or_simulation_steps(self):
+        runner = self.bimanual_embodiment()
+        runner.close()
+        result = self.report()
+        self.assertEqual(result['score'], 1.)
+        self.assertTrue(result['finalization']['complete'])
+        self.assertFalse(result['assay_certification']['required'])
+        self.assertEqual(FakeTransition.constructed, 0)
+        self.assertIsNone(runner.endpoint_load)
+        self.assertEqual(runner.seen, [])
+        self.assertTrue(runner.audit.closed)
+        self.assertTrue(runner.base_closed)
+
+    def test_bimanual_incomplete_recording_cannot_claim_full_credit(self):
+        runner = self.bimanual_embodiment()
+        runner.base_close_error = True
+        with self.assertRaises(BaseExceptionGroup):
+            runner.close()
+        result = self.report()
+        self.assertEqual(result['score'], .5)
+        self.assertFalse(result['finalization']['complete'])
+        self.assertFalse(result['finalization_certification']['complete'])
+        self.assertEqual(FakeTransition.constructed, 0)
+        self.assertEqual(runner.seen, [])
 
 
 if __name__ == "__main__":

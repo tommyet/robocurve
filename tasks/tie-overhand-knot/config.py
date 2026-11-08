@@ -6,33 +6,36 @@ whether the robot can complete the task or whether the rope model is adequate.
 import numpy as np
 
 TABLE_TOP = .7475
-RADIUS = .004
-LENGTH = .96
-SEGMENT = .01
-MASS = .0375
+RADIUS = .005
+LENGTH = 1.30
+SEGMENT = .0125
+# 74.7 g/m: the nominal mass of Marlow 10 mm Doublebraid polyester.
+# This grounds mass only; friction and bending below are uncalibrated.
+MASS = .0747 * LENGTH
 RUN_LIMIT = 2400
 INSTRUCTION = (
-    "Tie one overhand knot in the blue cord, then let go. "
-    "The knot will be tested with a gentle pull."
+    "Tie one overhand knot in the blue cord. Pull the ends apart to at least "
+    "117 cm for one second with the whole cord at least 1 cm above the table, then let go "
+    "and leave the knot intact for five seconds."
 )
 
 
 def initial_nodes():
-    """Untied U: 34 straight links, 28 around a semicircle, 34 straight."""
-    radius = SEGMENT / (2 * np.sin(np.pi / 56))
-    a = np.column_stack((np.linspace(-.02, .32, 35), np.zeros(35)))
-    theta = np.linspace(np.pi / 2, -np.pi / 2, 29)
-    b = np.column_stack((.32 + radius * np.cos(theta),
-                         -radius + radius * np.sin(theta)))
-    c = np.column_stack((np.linspace(.32, -.02, 35), np.full(35, -2 * radius)))
+    """Uncrossed flat U: 36 straight links, 32 semicircle links, 36 straight."""
+    radius = SEGMENT / (2 * np.sin(np.pi / 64))
+    a = np.column_stack((np.linspace(.06, .51, 37), np.full(37, radius)))
+    theta = np.linspace(np.pi / 2, -np.pi / 2, 33)
+    b = np.column_stack((.51 + radius * np.cos(theta), radius * np.sin(theta)))
+    c = np.column_stack((np.linspace(.51, .06, 37), np.full(37, -radius)))
     xy = np.vstack((a, b[1:], c[1:]))
     return np.column_stack((xy, np.full(len(xy), TABLE_TOP + RADIUS + .0005)))
 
 
 CONFIG = dict(radius=RADIUS, length=LENGTH, segment=SEGMENT, mass=MASS,
               table_top=TABLE_TOP, run_limit=RUN_LIMIT, instruction=INSTRUCTION,
-              friction=.8, bend_stiffness=.0002, bend_damping=.00002,
+              friction=.8, bend_stiffness=.000390625, bend_damping=.0000390625,
               linear_damping=.5, angular_damping=2.,
               contact_offset=.0005, solver_position_iterations=64,
-              solver_velocity_iterations=16, anchor_start=True,
+              solver_velocity_iterations=16, anchor_start=False,
+              score_version='overhand-bimanual-v4',
               proof_load_n=.981, proof_seconds=5.)

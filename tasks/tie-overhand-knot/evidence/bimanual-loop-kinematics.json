@@ -1,0 +1,89 @@
+{
+  "status": "nominal loop-only motion checks passed; physical trial unavailable",
+  "policy_source_sha256": "cde2374c8f67aa4690ad3b842f54ce7b0a35c209528677b9ba24dfed3b4b197c",
+  "config_source_sha256": "8e4c3191eb5cb257599a5a7030819abbcb418610a3c34df12a555c14d418f01a",
+  "route_ast_matches_audited_literals": true,
+  "route": [
+    {
+      "side": 0,
+      "goal_m": [
+        0.2,
+        0.24,
+        0.9
+      ],
+      "seconds": 3.0,
+      "label": "lift standing end"
+    },
+    {
+      "side": 0,
+      "goal_m": [
+        0.2,
+        0.24,
+        0.9
+      ],
+      "seconds": 2.0,
+      "label": "orient standing hand horizontally"
+    },
+    {
+      "side": 0,
+      "goal_m": [
+        0.17,
+        0.33,
+        1.04
+      ],
+      "seconds": 3.0,
+      "label": "raise standing end into an arch"
+    },
+    {
+      "side": 1,
+      "goal_m": [
+        0.25,
+        -0.14,
+        0.9
+      ],
+      "seconds": 4.0,
+      "label": "lift and orient working end"
+    },
+    {
+      "side": 1,
+      "goal_m": [
+        0.38,
+        -0.14,
+        0.9
+      ],
+      "seconds": 3.0,
+      "label": "approach overpass"
+    },
+    {
+      "side": 1,
+      "goal_m": [
+        0.38,
+        0.22,
+        0.9
+      ],
+      "seconds": 4.0,
+      "label": "cross working end above standing branch"
+    }
+  ],
+  "nominal_motion_seconds": 30.0,
+  "nominal_motion_commands": 600,
+  "additional_stationary_settle_seconds": 1.0,
+  "maximum_ik_position_error_mm": 0.14135353213673432,
+  "maximum_ik_orientation_error_deg": 0.025962710195407374,
+  "minimum_joint_limit_margin_deg": 10.421924974885288,
+  "minimum_table_envelope_separation_m": 0.0016758271912005185,
+  "minimum_interarm_envelope_separation_m": 0.00976815237468262,
+  "limitations": [
+    "Nominal TCP/IK/joint commands only; no simulator or physical rope/contact/grasp was run.",
+    "Every 20Hz commanded configuration was checked, not the continuously evolving dynamic configuration between commands.",
+    "All links from both arms are included in inter-arm collision-mesh OBB checks. Positive separating bounds are conservative separation evidence at sampled poses.",
+    "Within-arm self-collision was not independently checked.",
+    "Nominal pickup uses initial U link centres; the live pilot re-reads each selected centre before descent.",
+    "The 1.676mm table and 9.753mm inter-arm margins require dynamic verification; successful physics is not inferred from them.",
+    "Crossing existence, arch shape, entry corridor, thread topology, both-arm tightening and released retention remain unvalidated.",
+    "Mode demo and mode thread are disabled before simulation startup; only mode loop is available."
+  ],
+  "audit_method": "NumPy FK/IK with cached pinned robot URDF and the same 60-iteration solve limit as runtime ArmPlan. All 600 motion commands across every phase were rerun and checked at 20 Hz; no earlier phase results were reused. Complete arm-link collision OBBs were tested against the other arm and the table; individual collision-mesh OBBs refined overlapping whole-link bounds.",
+  "ik_iteration_limit": 60,
+  "all_phases_rerun_with_runtime_iteration_limit": true
+}

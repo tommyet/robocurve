@@ -1,5 +1,5 @@
 {
-  "status": "implemented and evaluated: scripted demo 1.0, Dream-1 0.0; not uploaded or submitted",
+  "status": "Revision in development: uncrossed free cord and robot-only tightening; previous v3 results below are historical jig-task evidence, not validation of v4",
   "submission_ready": false,
   "review_basis": {
     "accepted_examples": [
@@ -200,7 +200,7 @@
     "Refresh the live task board before any eventual submission.",
     "Upload the verified videos and screenshot, then replace task.draft.json with task.json containing the returned media identifier."
   ],
-  "score_version": "overhand-retention-v3",
+  "score_version": "overhand-bimanual-v4",
   "implementation_complete": true,
   "final_trials": {
     "demo-009": {
@@ -283,5 +283,26 @@
     "Demo native velocity anomaly at 43.10 s: 26.87 m/s on one link despite about 4 mm displacement between neighboring recorded frames; 20 Hz geometry passes but does not resolve substep behavior. See evidence/demo-velocity-spike.json.",
     "Small demo margins: minimum nonlocal axis distance 7.6205 mm vs 7.6 mm threshold; assay jig clearance 10.1688 mm vs 10 mm.",
     "Oblique video and temporary occlusion limit direct ruler-level judging; geometric audit supplements visible knot formation and retention."
-  ]
+  ],
+  "current_version_evaluated": false,
+  "historical_evidence_scope": "All pre-existing trial records and evidence files describe v3 or earlier diagnostics. They do not demonstrate the redesigned unassisted task.",
+  "current_revision_checks": {
+    "score_version": "overhand-bimanual-v4",
+    "unit_test_command": "python -m unittest discover -s . -p 'test_*.py'",
+    "unit_tests_passed": 93,
+    "physics_trials": 0,
+    "dream_trials": 0,
+    "full_demo_implemented": false,
+    "available_controller_stage": "loop",
+    "nominal_loop_audit": "evidence/bimanual-loop-kinematics.json",
+    "blocked_by": "Three Brev startup failures; VM confirmed STOPPED at2026-11-08T05:38:56Z",
+    "remaining_work": [
+      "Validate terminal grasps and robot-created loop in physics",
+      "Implement and validate passage through actual loop",
+      "Implement and validate simultaneous two-arm tightening and release",
+      "Record successful demo and same-scene Dream baseline",
+      "Independently replay final traces and review videos"
+    ],
+    "nominal_pull_candidate": "evidence/bimanual-pull-kinematics.json"
+  }
 }

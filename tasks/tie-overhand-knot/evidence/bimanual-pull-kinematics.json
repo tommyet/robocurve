@@ -1,0 +1,164 @@
+{
+  "status": "nominal_candidate_not_integrated",
+  "date": "2026-11-07",
+  "physics_run": false,
+  "controller_modified": false,
+  "purpose": "Possible final symmetric end pull after successful threading; this does not demonstrate tying, grasp retention or task success.",
+  "method": {
+    "control_hz": 20,
+    "ik_iterations": 60,
+    "interpolation": "Cartesian smoothstep and rotation slerp, warm-started NumPy IK",
+    "collision_checks": "Every commanded pose: all opposite-arm collision-link OBBs, refined to per-collision-mesh OBBs where aggregate bounds overlap; nonbase-link table envelopes."
+  },
+  "rotations_world_from_tcp": {
+    "left": [
+      [
+        -0.9063077870366499,
+        -0.42261826174069944,
+        0.0
+      ],
+      [
+        -0.42261826174069944,
+        0.9063077870366499,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    ],
+    "right": [
+      [
+        0.9063077870366499,
+        -0.42261826174069944,
+        0.0
+      ],
+      [
+        -0.42261826174069944,
+        -0.9063077870366499,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    ]
+  },
+  "yaw_adjustment_deg": {
+    "left": 25,
+    "right": -25
+  },
+  "starting_pose": {
+    "left_tcp_m": [
+      0.24,
+      0.18,
+      0.94
+    ],
+    "right_tcp_m": [
+      0.24,
+      -0.18,
+      0.94
+    ],
+    "both_rotation_world_from_tcp": [
+      [
+        0,
+        -1,
+        0
+      ],
+      [
+        -1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        -1
+      ]
+    ],
+    "finger_joint_m": -0.0045
+  },
+  "path": [
+    {
+      "action": "Rotate both hands at their staging TCPs to the listed final rotations",
+      "seconds": 3
+    },
+    {
+      "action": "Simultaneously pull at x=0.24 m, z=0.94 m, mirroring the listed positive y coordinates",
+      "positive_y_targets_m": [
+        0.2,
+        0.23,
+        0.26,
+        0.29,
+        0.32,
+        0.35,
+        0.38,
+        0.41,
+        0.44,
+        0.47,
+        0.5,
+        0.53,
+        0.56
+      ],
+      "seconds_per_target": 1
+    },
+    {
+      "action": "Hold the final pose closed; actual qualifying span must persist for at least one second before release",
+      "seconds": 1.5
+    },
+    {
+      "action": "Open both hands in place to finger joint -0.04695 m",
+      "seconds": 1
+    },
+    {
+      "action": "Hold final poses open while the cord releases and settles; do not command the rejected vertical withdrawal",
+      "seconds": 6
+    }
+  ],
+  "measured_nominal_results": {
+    "maximum_ik_position_error_mm": 0.08173336769193318,
+    "maximum_ik_rotation_error_deg": 0.013678307040282138,
+    "minimum_joint_limit_margin_deg": 4.365984394095692,
+    "minimum_interarm_separating_bound_m": 0.17163733960591515,
+    "minimum_nonbase_link_table_envelope_m": 0.07001707661315637,
+    "maximum_joint_command_step_deg": 1.62470977309534,
+    "nominal_command_seconds": 24.5,
+    "sampled_command_poses": 490
+  },
+  "ideal_span_arithmetic": {
+    "grasped_material_centres": [
+      2,
+      101
+    ],
+    "outer_tip_arclength_from_each_grasp_m": 0.03625,
+    "final_tcp_separation_m": 1.12,
+    "outward_tail_projection_fraction": 0.9063077870366499,
+    "ideal_straight_outward_tip_span_m": 1.1857073145601573,
+    "required_recorded_tip_span_m": 1.17,
+    "qualification": "Arithmetic only: use the actual scorer span lower bound, suspension and timing; neither tail projection nor a knot is simulated."
+  },
+  "rejected_alternatives": [
+    {
+      "candidate": "Unadjusted downward rotations at x=.24,z=.94",
+      "failure": "Joint6 saturation from y=+/-0.47 m; about4.34 degrees rotation error there,16.31 degrees at+/-0.56 m"
+    },
+    {
+      "candidate": "Yaw-adjusted inward/upward withdrawal to x=.24,y=+/-0.48,z=1.00",
+      "failure": "Joint4 saturation;33.14 mm and8.25 degrees worst IK error"
+    }
+  ],
+  "limitations": [
+    "Transition from the future threading pose into these staging poses is not audited.",
+    "No rope/contact, grasp retention, force, dynamics, topology or scoring success is demonstrated.",
+    "Within-arm self-collision, other scene fixtures and between-command motion are not independently certified.",
+    "Do not extend the pull beyond the audited targets or treat ideal tip arithmetic as measured span."
+  ],
+  "source_sha256": {
+    "artifacts/rope-knot-bimanual/final-pull-recommended-audit.py": "e73f4b1bfa87586c2daa785776d63a5fa01a7d63d4b09d55a3191c1d2409a10d",
+    "artifacts/rope-knot-bimanual/route-audit.py": "a9e27587eb8b1cf2d1ac284b28705320c5914d602d049c91b53d18fea490c71f",
+    "artifacts/rope-knot-development/high-final-route-audit.py": "e4092fa689d363673c37edf42d5e120aa73b6aabfadd6f358cc947fc8176b6fa",
+    "artifacts/rope-knot-development/adapter/yam_arena/ik.py": "8aa655c736ee1e542698d8b50edc6670d550966a378d083700ff3c3150308cec"
+  }
+}

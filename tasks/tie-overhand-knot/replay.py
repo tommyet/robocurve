@@ -113,6 +113,18 @@ def replay_trial(trajectory, runtime=None):
     config = metadata['task_config']
     if not all(name in config for name in ('length', 'mass', 'radius', 'segment')):
         raise ValueError('runtime.json lacks the recorded physical configuration')
+    if metadata.get('score_version') == 'overhand-bimanual-v4':
+        from bimanual_scoring import replay_file as replay_bimanual, certify_result as certify_bimanual
+        result = replay_bimanual(trajectory, config)
+        try:
+            saved = json.loads((trajectory.parent / 'score-summary.json').read_text())
+            finalization = saved.get('finalization') or {}
+            completed = (metadata.get('finalization_complete') is True
+                         and finalization.get('complete') is True
+                         and not finalization.get('errors') and not finalization.get('interrupted_by'))
+        except (OSError, ValueError, AttributeError):
+            completed = False
+        return certify_bimanual(result, finalization_complete=completed)
     result = replay_file(trajectory, config)
     evidence, errors = {}, []
     # Legacy diagnostic traces need no production certificate and stay zero.
