@@ -169,6 +169,24 @@ result or measure outcome fairness.
 
 ## Dated session log
 
+### 2026-11-08 — Brev retry and startup diagnosis
+
+- The user requested another start for the revised knot demo. The CLI accepted
+  `brev start robocurve-dice --detached` around 05:53 UTC, but the existing
+  `g6e.2xlarge` was confirmed STOPPED at 05:56:05 UTC. No simulation ran.
+  Posted credits remained $169.50; this is a lagging balance, not a bill.
+- The top-level status fields omit the useful error. Inspect
+  `environment.tasks[].message` and `labels.publicErrorCode`: the latest four
+  failed operations report `CAPACITY_UNAVAILABLE`, with the message
+  "Capacity is unavailable for this instance in the selected region."
+  This supplies the specific reason missing from the earlier status reads.
+  Filtered evidence is in ignored
+  `artifacts/rope-knot-bimanual/retry-20261108-0552/`.
+- `brev healthcheck` returned Healthy and authenticated API reads succeeded.
+  Safari's separate console session required login; the user's email was
+  filled in and the sign-in continuation was handed back to them. A console
+  login does not by itself establish that GPU capacity is available.
+
 ### 2026-11-08 — revise the knot task after demo review
 
 - Operator: repository agent; branch `codex/rope-bimanual`, based on current
