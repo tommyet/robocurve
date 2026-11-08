@@ -74,6 +74,67 @@
       "released": false,
       "jig_clear": false,
       "evidence_scope": "Development robot trial, not a full-score demonstration"
+    },
+    "jig-thread-006": {
+      "score": 0.0,
+      "samples": 1888,
+      "invalid": "nonlocal capsule penetration exceeds 5% diameter tolerance",
+      "topology_status": "overhand_candidate",
+      "released": true,
+      "jig_clear": true,
+      "policy_end": {
+        "time": 93.29999999999684,
+        "qualified": true,
+        "released": true,
+        "topology_status": "overhand_candidate",
+        "core": {
+          "core_span_m": 0.19774652989078198,
+          "material_core_bounds_m": [
+            0.14024258252525515,
+            0.9177464150692637
+          ],
+          "tail_lengths_m": [
+            0.14024258252525515,
+            0.2622535849307358
+          ],
+          "diagnostics_only": true,
+          "method": "projection_dependent_crossing_envelope_not_physical_knot_boundary"
+        }
+      },
+      "seating": {
+        "elapsed_s": 1.0000000000000002,
+        "required_seconds": 2.0,
+        "completed": false,
+        "observed_force_range_n": [
+          0.0,
+          0.46597499325427877
+        ]
+      },
+      "interpretation": "Robot formed, removed and released a qualifying knot at 93.3 s; excessive contact during seating at 94.35 s invalidated the whole trial."
+    },
+    "jig-thread-007": {
+      "score": 0.0,
+      "samples": 1607,
+      "duration_s": 80.3,
+      "elapsed_wall_seconds": 1450.191,
+      "invalid": null,
+      "topology_status": "overhand_candidate",
+      "released": false,
+      "jig_clear": false,
+      "minimum_jig_clearance_m": 0.009556146,
+      "interpretation": "Valid knot manipulation stopped at an intermediate 10 mm controller clearance guard before the final pull and release. Trial 008 uses a 5 mm intermediate guard; final scoring still requires 10 mm."
+    },
+    "jig-thread-008": {
+      "score": 0.0,
+      "samples": 1867,
+      "invalid": "nonlocal capsule penetration exceeds 5% diameter tolerance",
+      "first_invalid_time_s": 80.6,
+      "first_invalid_pair": [
+        23,
+        84
+      ],
+      "first_invalid_axis_distance_m": 0.00747667970509557,
+      "interpretation": "The higher-resolution full trial failed during release before any load test. The contact-resolution configuration is not validated."
     }
   },
   "diagnostic_retention": {
@@ -88,7 +149,9 @@
     "Unassisted crossing-lift/threading probes produced excessive nonlocal capsule overlap; 960 Hz did not resolve it.",
     "The first jig manipulation probe missed its initial pickup; the pad geometry supports a lower grasp.",
     "A far-side receiver at 20 degrees contacted a fold and missed the tip; a horizontal tracked receiver completed the handover with valid contact.",
-    "The valid jig-thread-005 trial formed an overhand but stopped with cord still touching the lower keeper; independent v3 replay correctly scored zero."
+    "The valid jig-thread-005 trial formed an overhand but stopped with cord still touching the lower keeper; independent v3 replay correctly scored zero.",
+    "jig-thread-006 completed robot knotting, but 0.900 mm capsule overlap during the seating ramp invalidated its score.",
+    "jig-thread-008 at 480 Hz / 128 iterations / 1 mm offset failed during release at 80.6 s: links 23/84 overlapped by 0.523 mm."
   ],
   "still_required": [
     "A full robot-tied, released knot with valid contact and clearance throughout the trial.",

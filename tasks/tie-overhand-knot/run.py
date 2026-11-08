@@ -33,7 +33,7 @@ def main():
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--log-dir", type=Path, required=True)
     parser.add_argument("--headless", choices=("true", "false"), default="true")
-    parser.add_argument("--physics-hz", type=int, choices=(240, 480, 960), default=240,
+    parser.add_argument("--physics-hz", type=int, choices=(240, 480, 960), default=480,
                         help="Physics substeps; control and recorded policy observations remain 20 Hz")
     parser.add_argument("--development-jig", choices=("three-peg",),
                         help="Development fixture; requires separate task and contact validation")
@@ -147,7 +147,9 @@ def main():
             from isaaclab.sim.utils.stage import get_current_stage
             from pxr import UsdPhysics
             physics = {'physics_dt': float(self._base.physics_dt),
-                       'control_dt': float(self._base.step_dt), 'scenes': []}
+                       'control_dt': float(self._base.step_dt), 'scenes': [],
+                       'rope_requested': {key: CONFIG[key] for key in ('contact_offset', 'solver_position_iterations', 'solver_velocity_iterations')},
+                       'rope_rest_offset_m': 0.}
             for prim in get_current_stage().Traverse():
                 if prim.IsA(UsdPhysics.Scene):
                     attrs = {}

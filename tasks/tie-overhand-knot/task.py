@@ -11,6 +11,9 @@ CORD = rope("cord", nodes=initial_nodes(), radius=CONFIG["radius"],
             bend_stiffness=CONFIG["bend_stiffness"],
             bend_damping=CONFIG["bend_damping"], color=(.1, .38, .85),
             linear_damping=CONFIG["linear_damping"], angular_damping=CONFIG["angular_damping"],
+            contact_offset=CONFIG["contact_offset"],
+            solver_position_iterations=CONFIG["solver_position_iterations"],
+            solver_velocity_iterations=CONFIG["solver_velocity_iterations"],
             anchor_start=CONFIG.get('anchor_start', False) and not CONFIG.get('diagnostic_only', False),
             start_color=(.9, .7, .05), end_color=(.85, .12, .1))
 TOP = CONFIG['table_top']

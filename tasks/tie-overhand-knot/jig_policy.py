@@ -228,10 +228,12 @@ def jig_thread(arms):
     yield from wait(.5)
     sample, points = read()
     clearance = sample['metrics'].get('minimum_jig_clearance_m')
+    # This is an intermediate contact guard, not the final scoring threshold.
+    # The subsequent pull increases clearance before the robot lets go.
     event('jig whole cord removal check', minimum_fixture_clearance_m=clearance,
-          required_surface_clearance_m=.010)
-    if not sample['metrics'].get('jig_clear'):
-        abort('whole cord did not clear fixture')
+          intermediate_surface_clearance_m=.005, final_scoring_clearance_m=.010)
+    if clearance is None or clearance < .005:
+        abort('cord is not safely off the fixture before final pull')
         return
     yield from right.grip(receive_open, 1.)
     yield from right.move_pose((.20, -.16, .970), rb, 3.,

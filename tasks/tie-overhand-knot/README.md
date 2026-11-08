@@ -4,19 +4,24 @@
 
 Finish the overhand knot in the blue cord, remove it from the pegs and let go.
 The knot is then tested with a gentle pull. The jig holds an untied loop for a
-repeatable cord-finishing step; forming the initial loop is outside this task.
+repeatable cord-finishing step used in drawstrings and bag handles. Forming the
+initial loop and assembling or strength-testing a finished product are outside
+this task.
 
 ## Setup
 
 The YAM station holds one blue, round cord: 118 cm between end-joint centres,
 8 mm diameter and 46.09375 g. Rounded caps extend 4 mm beyond each end. The
-first and last 1 cm links are yellow and red. The intended physical object is
+outside length is 118.8 cm including the terminal caps. The first and last
+1 cm links are yellow and red. The intended physical object is
 braided polyester cord; its material response is not calibrated.
 
 The cord starts with one untied crossing arranged on three rounded pegs.
 Nothing attaches it to the pegs or robot. `jig_layout.py` gives every initial
 joint centre and fixture dimension. Coordinates use metres, with x away from
-the robot, y to its left and z up. The table top is z=0.7475 m.
+the robot, y to its left and z up. The wooden tabletop is 110×130×6 cm, with its top at z=0.7475 m.
+The red end starts at (0.430,−0.25206,0.752); its straight working tail
+runs along x=0.430 m. The crossing lies below the keeper peg.
 
 The grey, steel-like pegs are 16 mm in diameter, with 140 mm straight sections
 along y=−0.060 to +0.080 m and hemispherical ends. Their (x,z) centres are
@@ -26,7 +31,10 @@ y=+0.096 m. The two tall posts are 22×16×192.5 mm; the short post is
 
 A fixed clamp holds the first 10 mm cord link, centred at
 (0.105,−0.122,0.752). Its visible top jaw is 30×40×8 mm; two side jaws are
-30×6×10 mm. The jaws are rigid grey blocks. An ideal fixed joint approximates
+30×6×10 mm, offset by ±17 mm in y from the clamped link. The top jaw
+is centred at (0.105,−0.122,0.7615); side-jaw centres are z=0.7525 m.
+The posts and clamp are intended as rigid metal parts, shown in grey. An ideal
+fixed joint approximates
 a firmly tightened bench clamp. The arms start in the station's ready pose.
 
 The current fixture is `far-supports-v3`. The earlier near-side upright caught
@@ -35,8 +43,10 @@ trials can still be replayed correctly.
 
 ## Run
 
-Use the competition's updated YAM / Isaac Lab-Arena installation and activate
-its `yam.env`. Run from this directory, choosing a fresh output directory:
+Use the competition's YAM / Isaac Lab-Arena installation and activate its
+`yam.env`. [ENVIRONMENT.json](ENVIRONMENT.json) records the exact package and
+repository versions, plus the public asset-root correction used for these
+trials. Seed 0 is the default. Run from this directory with a fresh output path:
 
 ```bash
 python run.py --policy idle --development-jig three-peg --max-steps 110 --log-dir /tmp/rope-jig-idle-001
@@ -49,8 +59,11 @@ validated full sequence. The intended limit is 2,400 actions: two minutes at
 geometry, segment poses and velocities, joint gaps, measured grippers, actions,
 source snapshots, versions and an additional review-camera video.
 
-The default physics rate is 240 Hz. A 960 Hz comparison did not resolve the
-unassisted threading probe's contact failures and was substantially slower.
+The current contact-resolution trial uses 480 Hz physics, 128 position and
+16 velocity solver iterations, 1 mm capsule contact offsets and zero rest
+offset. Earlier 240 Hz / 64-iteration trials completed robot knotting but
+failed during load seating. A 960 Hz comparison on a different unassisted
+pinching failure did not fix that problem. These are separate observations.
 
 Replay uses the saved dimensions and measured geometry, ignoring recorded
 score claims:
@@ -66,9 +79,9 @@ The complete review video and trajectory include those assessor steps.
 
 ## Judging
 
-The [draft protocol](JUDGING.md) gives 0.5 for a released overhand knot at least
-1 cm clear of every peg and support and 3 cm clear of the robot. The declared
-standing-end clamp remains attached. Full credit requires the knot to survive
+The [draft protocol](JUDGING.md) gives 0.5 for a released overhand knot, with
+the entire cord at least 1 cm from every peg and support and 3 cm from every
+robot part. The declared standing-end clamp remains attached. Full credit requires the knot to survive
 a 2-second seating ramp and 5 seconds under a 0.981 N free-end pull.
 
 A loop, ordinary crossing, tangle or damaged cord does not qualify. The

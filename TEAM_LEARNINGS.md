@@ -211,8 +211,9 @@ result or measure outcome fairness.
   overlap; raising physics from 240 to 960 Hz did not fix it and made runs much
   slower. Actual USD capsule height excludes its hemispheres, matching our
   geometry check. GPU CCD should not be assumed effective merely because its
-  authored flag is true. Current default remains 240 Hz, with source snapshots
-  and native scene settings recorded per trial.
+  authored flag is true. These probes used 240 Hz; the later contact-resolution
+  configuration below supersedes that default. Source snapshots and native
+  scene settings are recorded per trial.
 - An untied three-peg jig settled without invalid rope contact. Its first
   manipulation missed a pickup at 13.5 mm above the rope axis; actual fingertips
   extend only 12.842 mm beyond TCP. At +9 mm, pickup and rotation worked, but
@@ -229,6 +230,41 @@ result or measure outcome fairness.
   passed IK but intersected a post in actual collision-mesh checks; keep the
   route above the jig. Whole-arm fixture clearance matters as well as TCP reach.
   Every revised run stores its exact fixture geometry for reproducible replay.
+- `jig-thread-006` completed robot knotting, fixture removal and release at
+  93.3 s. The pre-test knot qualified, but at 94.35 s (1.05 s into seating),
+  links 21/56 overlapped by 0.900 mm under 0.4905 N; the scorer correctly
+  invalidated the whole trial. Maximum link speed was 0.658 m/s. This is a
+  dynamic tightening failure, distinct from the earlier gripper-pinch problem.
+- Next controlled configuration: 480 Hz, 128 position / 16 velocity iterations,
+  1 mm contact offset and zero rest offset. Dimensions, mass, friction, damping,
+  forces and scorer tolerances are unchanged. Native scene limits allow 128.
+  [PhysX contact offsets](https://nvidia-omniverse.github.io/PhysX/physx/5.4.2/docs/AdvancedCollisionDetection.html)
+  explain anticipatory contacts; [CCD limitations](https://nvidia-omniverse.github.io/PhysX/ovphysx/latest/simulation_setup/rigid_bodies.html#continuous-collision-detection)
+  explicitly exclude both sweep and speculative CCD on Direct GPU API mode.
+  If this configuration works, it does not isolate which of the three changes
+  helped. The later full trial did not validate this configuration.
+- `jig-thread-007` stayed physically valid at the higher numerical resolution,
+  but stopped before the final pull/release at an intermediate clearance guard:
+  9.556 mm against 10 mm. Its 80.3 simulated seconds took 1,450.191 wall seconds.
+  Trial 008 permits 5 mm at this intermediate controller checkpoint; the final
+  scoring requirement remains 10 mm throughout release and the load test.
+- `jig-thread-008` failed during release at 80.6 s, before the load test:
+  links 23/84 overlapped by 0.523 mm. Joint gap was only 6.82 µm. Higher
+  numerical resolution alone has not established reliable contact. An isolated
+  cold-start probe restores the valid 006 pre-test state, including measured
+  velocities, to screen contact settings without repeating the whole robot
+  motion. It always earns zero task credit and cannot substitute for a demo.
+- The cold-start baseline reproduced 006's invalid contact at 1.05 s. Native
+  state readback was exact, and native link inertias matched the uniform-capsule
+  calculation. At 960 Hz, both 128-iteration/1 mm and original 64-iteration/
+  0.5 mm settings retained the overhand with valid contact through 2 s seating
+  and 5 s full load. Both still earned only diagnostic candidate 0.5: clearance
+  briefly dipped to about 8 mm, below the unchanged 10 mm rubric. Actual task
+  scores remain zero. The original-contact 960 Hz probe took 153.153 s wall.
+- Resolve imported simulator sources using the activated interpreter. The used
+  `isaaclab` 17.0.2 / `isaaclab_physx` 6.0.0 come from Arena's IsaacLab submodule
+  at `91a0906f93802eb859192dcb0bca879f891e92d6`, not the separate `/data/IsaacLab`
+  checkout. The task environment manifest now records the active revision.
 - VM remains running during this entry. Start request was 23:57:16 UTC on
   November 7, at $3.279064/hour. Stop and billing evidence must be recorded
   before this session is considered closed. No Dream API request or upstream
