@@ -1,5 +1,7 @@
 """Regression checks for abort guards; these do not establish robot feasibility."""
 import unittest
+import json
+from pathlib import Path
 import numpy as np
 
 import bimanual_policy as policy
@@ -53,6 +55,15 @@ class GuardTests(unittest.TestCase):
         inside, clearance = policy._inside_distance([.5, 2.], polygon)
         self.assertTrue(inside)
         self.assertAlmostEqual(clearance, .5)
+
+    def test_crossing_can_migrate_into_original_bend_material(self):
+        fixture = json.loads((Path(__file__).parent / 'evidence' /
+                              'loop-001-crossing.json').read_text())
+        telemetry.latest_sample['cord']['polyline'] = fixture['polyline']
+        crossing = policy._crossing()
+        self.assertEqual(crossing['standing_index'], fixture['expected_standing_index'])
+        self.assertEqual(crossing['working_index'], fixture['expected_working_index'])
+        self.assertGreater(crossing['working_above_m'], .01)
 
 
 if __name__ == '__main__':

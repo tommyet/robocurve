@@ -19,10 +19,10 @@ clamps or attachments. Its diameter is 10 mm, nominal centreline length is
 This reference does not calibrate the simulated bending or friction.
 
 The wooden tabletop is 110×130×6 cm, with its top at z=0.7475 m. Coordinates
-use metres: x away from the robot, y to its left, z up. The U has two 45 cm
-straight legs and a 40 cm semicircular section. End-joint centres start at
-(0.060,+0.1273751,0.753) and (0.060,−0.1273751,0.753); the straight legs end
-at x=0.510. The far bend reaches x=0.6373751. `config.py` supplies all 105 joint
+use metres: x away from the robot, y to its left, z up. The U has two 30 cm
+straight legs and a 70 cm semicircular section. End-joint centres start at
+(0.060,+0.2228461,0.753) and (0.060,−0.2228461,0.753); the straight legs end
+at x=0.360. The far bend reaches x=0.5828461. `config.py` supplies all 105 joint
 centres at exactly 12.5 mm spacing. Both arms start in the YAM ready pose.
 
 ## Run and score
@@ -32,14 +32,23 @@ installation is pinned in [ENVIRONMENT.json](ENVIRONMENT.json). From this
 folder, choose a fresh output directory for each run:
 
 ```bash
-python run.py --policy loop --max-steps 700 --log-dir /tmp/rope-arch-001
+python run.py --policy loop --max-steps 800 --log-dir /tmp/rope-arch-001
 python replay.py /tmp/rope-arch-001/trajectory.jsonl
 python -m unittest discover -s . -p 'test_*.py'
 ```
 
-`loop` is the available pickup/crossing/arch feasibility probe. The threading
+`loop` is the available pickup/crossing/arch feasibility probe. Its current
+candidate grips the standing strand at material segment 30 and the red end
+at segment 101. The left pickup follows the measured strand tangent. This
+supports the loop closer to its rim; the yellow end must later be reacquired
+before a final two-arm pull. The threading
 and full-demo stages are explicitly blocked before simulator startup until
-their paths are validated. A new demo and Dream recording are still missing.
+their paths are validated. Five physical loop-development trials are recorded in
+[evidence/bimanual-pilots.json](evidence/bimanual-pilots.json), all with score
+0.0. The first three held the terminals but left a narrow table-level loop;
+the fourth retained an interior grip but its working end passed beside the
+standing strand. The fifth created a crossing, but its bight remained on the
+table and did not admit the tested hand route. A complete demo and matching Dream recording are still missing.
 Once implemented, both will use the same free cord, cameras, action limits
 and scorer. The limit
 is 2,400 actions at 20 Hz, including release and the final five seconds.
@@ -71,13 +80,14 @@ The span target limits whole-cord slack. It does not measure tension or prove
 a maximally tight or strong knot. Its 14-diameter allowance is a declared task
 target, not a material standard. Projected knot size and inferred tail lengths
 are not scoring conditions. No particular grasp or arm sequence is required;
-the demonstration uses both arms to pull.
+the planned demonstration will use both arms to pull.
 
 ## Simulation limits and evidence
 
 The cord is 104 rigid capsules with native D6 joints, bending resistance,
 free axial twist and nonadjacent self-contact. Only the reset restores poses.
-Grasps and threading use normal robot contacts; the controller neither moves
+Grasps use normal robot contacts; future threading must do the same. The
+controller neither moves
 cord bodies directly nor attaches them to a gripper. Its measured-geometry
 feedback is privileged demonstration assistance, not a Dream input.
 

@@ -21,12 +21,12 @@ INSTRUCTION = (
 
 
 def initial_nodes():
-    """Uncrossed flat U: 36 straight links, 32 semicircle links, 36 straight."""
-    radius = SEGMENT / (2 * np.sin(np.pi / 64))
-    a = np.column_stack((np.linspace(.06, .51, 37), np.full(37, radius)))
-    theta = np.linspace(np.pi / 2, -np.pi / 2, 33)
-    b = np.column_stack((.51 + radius * np.cos(theta), radius * np.sin(theta)))
-    c = np.column_stack((np.linspace(.51, .06, 37), np.full(37, -radius)))
+    """Uncrossed flat U: 24 straight links, 56 semicircle links, 24 straight."""
+    radius = SEGMENT / (2 * np.sin(np.pi / 112))
+    a = np.column_stack((np.linspace(.06, .36, 25), np.full(25, radius)))
+    theta = np.linspace(np.pi / 2, -np.pi / 2, 57)
+    b = np.column_stack((.36 + radius * np.cos(theta), radius * np.sin(theta)))
+    c = np.column_stack((np.linspace(.36, .06, 25), np.full(25, -radius)))
     xy = np.vstack((a, b[1:], c[1:]))
     return np.column_stack((xy, np.full(len(xy), TABLE_TOP + RADIUS + .0005)))
 

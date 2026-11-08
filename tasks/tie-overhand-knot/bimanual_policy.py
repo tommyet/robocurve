@@ -1,4 +1,4 @@
-"""Loop-only development pilot: terminal grasps and a table-supported arch.
+"""Loop-only development pilot: support the standing strand near the bight.
 
 Every change is an ordinary arm command. Measured geometry selects a route and
 can stop the attempt; it never changes the cord, contacts, joints or forces.
@@ -12,8 +12,9 @@ from config import CONFIG
 import telemetry
 
 READY_STAGES = frozenset({'loop'})
-PHASE_STATUS = ('Loop pilot has only nominal kinematic checks; physical grasp, '
-                'loop formation, threading, tightening and release remain unvalidated.')
+PHASE_STATUS = ('Terminal-grasp pilots formed a crossing but no threadable arch. '
+                'An interior standing-strand grasp is under test; threading, '
+                'tightening and release remain unvalidated.')
 
 
 class _StopAttempt(Exception):
@@ -66,7 +67,7 @@ def _held(side, index, *, require_loaded=False):
     _event('bimanual grasp witness', side=side, material_index=index,
            local_point_m=local.tolist(), measured_half_gap_m=half_gap, passed=bool(valid))
     if not valid:
-        _stop('terminal material is not retained in the measured pad region', side=side, material_index=index)
+        _stop('selected material is not retained in the measured pad region', side=side, material_index=index)
 
 
 def _move(arm, side, point, rotation, seconds, label, *, opening=None, held_index=None):
@@ -81,21 +82,21 @@ def _move(arm, side, point, rotation, seconds, label, *, opening=None, held_inde
 
 def _pick(arm, side, index, down, open_value, pinch):
     p = _point(index)
-    yield from _move(arm, side, p+[0,0,.11], down, 2.5, 'approach terminal strand', opening=open_value)
+    yield from _move(arm, side, p+[0,0,.11], down, 2.5, 'approach selected strand', opening=open_value)
     p = _point(index)
-    yield from _move(arm, side, p+[0,0,.009], down, 2., 'descend to one terminal strand')
+    yield from _move(arm, side, p+[0,0,.009], down, 2., 'descend to selected strand')
     yield from _drive(arm.grip(pinch, 1.))
     _held(side, index, require_loaded=True)
 
 
-def _crossing(reference=None):
-    """Projected crossing between original straight legs, with material order."""
+def _crossing(reference=None, *, material_start=3):
+    """Find the large projected bight, allowing its crossing to migrate."""
     p = np.asarray(_sample()['cord']['polyline'], float)
     found = []
-    # Fixed104-link U has36/32/36 links. Include adjacent deformed portions,
-    # while excluding the far bend and the tiny free tails beyond the grasps.
-    for i in range(3, 40):
-        for j in range(65, len(p)-4):
+    # Material from the initial bend can become part of either strand. Search
+    # all interior material, excluding local neighbours and the short tips.
+    for i in range(max(3,material_start), len(p)-8):
+        for j in range(i+4, len(p)-4):
             u, v = p[i+1]-p[i], p[j+1]-p[j]
             matrix = np.column_stack((u[:2], -v[:2]))
             if abs(np.linalg.det(matrix)) < 1e-9:
@@ -114,11 +115,13 @@ def _crossing(reference=None):
                and abs(c['working_material']-reference['working_material']) <= 6
                and c['working_above_m'] > 0]
     if not found:
-        _stop('the measured original over-crossing is absent or changed material neighbourhood')
+        _stop('no projected crossing found' if reference is None else
+              'no over-crossing found near the reference material')
     if reference is not None:
         return min(found,key=lambda c:abs(c['standing_material']-reference['standing_material'])
                    +abs(c['working_material']-reference['working_material']))
-    return min(found,key=lambda c:np.linalg.norm(np.asarray(c['position'])[:2]-[.30,.127]))
+    # The intended bight encloses more cord than incidental terminal curls.
+    return max(found,key=lambda c:c['working_material']-c['standing_material'])
 
 
 def _inside_distance(point, polygon):
@@ -150,7 +153,8 @@ def _arch_measurement(crossing, feed_x, lift_x):
     interior=all(inside and distance >= CONFIG['radius']+.005 for inside,distance in checks)
     # Only the standing arc on the bight side may provide the tunnel ceiling.
     # The exterior strand running back to the left gripper is excluded.
-    standing=np.vstack((crossing['standing_point'],p[s+1:min(40,w)]))
+    midpoint=int((crossing['standing_material']+crossing['working_material'])/2)
+    standing=np.vstack((crossing['standing_point'],p[s+1:midpoint+1]))
     nearby=standing[(standing[:,0] >= feed_x-.145)&(standing[:,0] <= feed_x+.025)]
     tunnel=(float(nearby[:,2].min()-CONFIG['radius']-CONFIG['table_top'])
             if len(nearby)>=3 else None)
@@ -168,31 +172,53 @@ def _arch_measurement(crossing, feed_x, lift_x):
 def _sequence(arms, stage):
     from yam_arena.constants import FINGER_OPEN
     from demo_policy import wait
-    left,right=arms; n=len(_sample()['cord']['points']); li,ri=2,n-3
+    left,right=arms; n=len(_sample()['cord']['points']); li,ri=30,n-3
     radius=float(CONFIG['radius']);pinch=-radius*.9
-    # Vertical terminal grasps close across the cord, not along its axis.
-    down_left=np.array([[0.,-1.,0.],[-1.,0.,0.],[0.,0.,-1.]])
-    down_right=down_left.copy()
+    # Support the bight directly instead of lifting a long external lead.
+    # The left pickup is on the U's bend, so align the fingers across its
+    # measured tangent. The right still grasps the straight terminal strand.
+    down_right=np.array([[0.,-1.,0.],[-1.,0.,0.],[0.,0.,-1.]])
+    nodes=np.asarray(_sample()['cord']['polyline'],float)
+    tangent=nodes[li+1]-nodes[li]
+    yaw=math.atan2(tangent[1],tangent[0]); cy,sy=math.cos(yaw),math.sin(yaw)
+    down_left=np.array([[cy,-sy,0.],[sy,cy,0.],[0.,0.,1.]]) @ down_right
     s,c=math.sin(math.radians(20)),math.cos(math.radians(20))
     forward=np.array([[0.,-s,c],[-1.,0.,0.],[0.,-c,-s]])
     _event('bimanual candidate started', stage=stage, left_material_index=li, right_material_index=ri)
     yield from _pick(left,0,li,down_left,FINGER_OPEN,pinch)
     yield from _pick(right,1,ri,down_right,FINGER_OPEN,pinch)
-    yield from _move(left,0,[.20,.24,.90],down_left,3.,'lift standing end',held_index=li)
+    yield from _move(left,0,[.20,.24,.90],down_right,3.,'lift standing strand',held_index=li)
     yield from _move(left,0,[.20,.24,.90],forward,2.,'orient standing hand horizontally',held_index=li)
-    yield from _move(left,0,[.17,.33,1.04],forward,3.,'raise standing end into an arch',held_index=li)
+    yield from _move(left,0,[.17,.33,1.04],forward,3.,'raise standing strand into an arch',held_index=li)
     yield from _move(right,1,[.25,-.14,.90],forward,4.,'lift and orient working end',held_index=ri)
     yield from _move(right,1,[.38,-.14,.90],forward,3.,'approach overpass',held_index=ri)
-    yield from _move(right,1,[.38,.22,.90],forward,4.,'cross working end above standing branch',held_index=ri)
-    crossing=_crossing()
-    if crossing['working_above_m'] < 2*radius:
-        _stop('working strand did not make the intended over-crossing',crossing=crossing)
-    _event('bimanual first crossing',crossing=crossing)
-    # A short hold tests whether the projected over-crossing survives settling,
-    # including its material neighbourhood and which strand passes above.
+    yield from _move(right,1,[.38,.22,.90],forward,4.,'move working end beside standing branch',held_index=ri)
+    # Lift before translating: the diagonal shortcut narrowly passes the
+    # opposite forearm. This probe tests whether the table-level crossing
+    # rises with the standing branch while both selected grasps remain held.
+    yield from _move(left,0,[.17,.33,1.12],forward,2.,
+                     'lift standing hand above opposite forearm',held_index=li)
+    yield from _move(left,0,[.30,.33,1.12],forward,3.,
+                     'move standing hand forward to raise the arch',held_index=li)
+    # The interior grip moves the standing branch away from the old crossing
+    # route. First reposition it, then cross at a reachable working-hand X.
+    yield from _move(right,1,[.26,.22,.90],forward,3.,
+                     'cross the relocated standing branch',held_index=ri)
+    _held(0,li)
+    crossing=_crossing(material_start=li+1)
+    if abs(crossing['working_above_m']) < 2*radius:
+        _stop('projected crossing has less than one diameter vertical separation',crossing=crossing)
+    _event('bimanual first crossing',crossing=crossing,
+           working_above=bool(crossing['working_above_m']>0))
+    # Measure again after settling. A real crossing can slide along the cord:
+    # total material drift alone must not be reported as a lost crossing.
+    # This fresh largest-bight measurement does not certify continuity.
     yield from _drive(wait(1.))
-    settled=_crossing(crossing)
-    _event('bimanual settled crossing',crossing=settled)
+    settled=_crossing(material_start=li+1)
+    _event('bimanual settled crossing',crossing=settled,
+           material_drift=[settled[k]-crossing[k]
+                           for k in ('standing_material','working_material')],
+           continuity_certified=False)
     entry_x=max(.35,float(settled['position'][0])+.06)
     lift_x=max(.53,float(settled['position'][0])+.18)
     _arch_measurement(settled,entry_x,lift_x)

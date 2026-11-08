@@ -6,12 +6,12 @@
     "knot tying",
     "bimanual"
   ],
-  "instruction": "Tie one overhand knot in the blue cord. Pull the ends at least 117 cm apart for one second with the whole cord at least 1 cm above the table. Let go and leave the knot intact for five seconds.",
+  "instruction": "Tie one overhand knot in the blue cord. Pull the ends apart to at least 117 cm for one second with the whole cord at least 1 cm above the table, then let go and leave the knot intact for five seconds.",
   "context": "Tying a cord end is a basic step in drawstrings, bag handles and everyday fastening.",
   "setup": "One blue 10 mm round polyester cord, 131 cm long including rounded end caps and 97.1 g. Its terminal 12.5 mm segments are yellow and red. It starts flat in an uncrossed U on the 110×130×6 cm wooden YAM tabletop, with no fixtures. Exact coordinates are in config.py.",
   "scoring": "0.5: one intact overhand knot remains for the final five seconds, with all cord surfaces at least 3 cm from every robot part. 1.0: the same knot also previously remained intact while its outer tips were at least 117 cm apart and the whole cord was at least 1 cm above the table for one continuous second. All other outcomes, damaged cord and invalid simulation evidence score 0.",
   "run_limit": "2,400 control steps (120 seconds at 20 Hz), including the five-second release check.",
   "reset_notes": "Untie the reusable cord and restore the flat, uncrossed U.",
   "fidelity": "104 rigid capsules with bending resistance approximate braided polyester. Grasps use finger contact. There are no clamps, attachments, pegs or external endpoint loads. Mass follows a commercial 10 mm cord reference; friction and bending are uncalibrated. Fibres, stretch and wear are not modelled. The span target is geometric and does not establish knot tension or strength.",
-  "scores": "Revised task not yet evaluated. Previous jig-task videos do not validate this version."
+  "scores": "Development loop trials:0.0. A full unassisted demo and matching Dream-1 run are still missing. Previous jig-task videos do not validate this version."
 }

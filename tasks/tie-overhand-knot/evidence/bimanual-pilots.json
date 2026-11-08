@@ -1,0 +1,1328 @@
+{
+  "scope": "Development pilots, all score zero; no complete knot, threading, tightening or release demonstrated. Numeric witnesses are not force measurements or between-sample fidelity certificates.",
+  "trials": {
+    "loop-001": {
+      "score": 0.0,
+      "samples": 602,
+      "time_s": 30.050000000000292,
+      "invalid": null,
+      "initial_validated": true,
+      "topology_status": "unknot",
+      "finalization": {
+        "complete": true,
+        "errors": [],
+        "interrupted_by": null
+      },
+      "elapsed_wall_seconds": 251.871,
+      "source_sha256": {
+        "assay_physics.py": "2aada75e6b2c5a58f36428eab9a36312c992c1756deaebb54c35bad64dd3aad3",
+        "bimanual_policy.py": "cde2374c8f67aa4690ad3b842f54ce7b0a35c209528677b9ba24dfed3b4b197c",
+        "bimanual_scoring.py": "278b126c734b9867cacf3e5779aa210b0f7a1162f6a9e8cf4772020929269fb5",
+        "config.py": "8e4c3191eb5cb257599a5a7030819abbcb418610a3c34df12a555c14d418f01a",
+        "demo_policy.py": "7c8a43dc9c02304fe3fe1030a984460b522130b22ef6f41c66a5561b183cf8d6",
+        "diagnostic_layouts.py": "b87524a85ecbeeb18c97d1170459338e9c9f05232e923eb8f29d68f577d93a06",
+        "fixtures.py": "d30eb72c85d49cb91a01605e6bef26860c595d7d77aba79faeea1cd3924a3e60",
+        "hand_geometry.py": "5eb44a5b09551bb738a7a42aa0322566213b7170806290886c6e13b3ccf44a10",
+        "jig_layout.py": "8c6645f3c465e3f946336a8de2e51593a461d5fbefa5cf5cd8740b7520a7ee16",
+        "jig_policy.py": "ad22bd0c1559ad7b3a7b4401e297ad001cd50b4c16e7bc8f3ec24173a35b8311",
+        "proof_load.py": "0e7339480dbd059befcb1b57616991e6086aa2e9d02839b5259b8d87ac5b428b",
+        "render_review.py": "d87ff2e0215ac36c6298e23669ef49bfc90ed21996b897a26610703ac4cccaf6",
+        "replay.py": "d8530b781907c0ae662f529f1412cd158295ebe5d4af5fb314f5034c0c2b1c34",
+        "rope.py": "4783ebd97f3f0afe9c70b3fbec2592bd0a7311e4f7e36c43353d0d81d19ab692",
+        "run.py": "2432560f8ac69d31a8c5fbe5f74dabe585274af01b44b70bb08997ba1ebf3bd9",
+        "scoring.py": "9a3519561f15b83880c138eb7beedf866d9de21db247205257cf7c895d5f5c78",
+        "task.py": "ac5174aa5eed3bf7cd0b7b1df9ebd1c647afa3f29a7a081b24dc06484c11e031",
+        "telemetry.py": "fb64df7679298e5bacaa27f69d25ecb0f59d07f6b95859799a164071518854fa",
+        "topology.py": "21057280e6d69123019e432d2b50934e97b5f5131349186541215755f99a5ff2",
+        "visuals.py": "a7e8b4b040c526093570b3a295e9eea28a7192dbd33ae0db6dd1f7293c4ac819"
+      },
+      "trajectory_sha256": "90208ad20a2515bf8e72f36b614fcb074abf0d5a43947bab528befb6006dbd8e",
+      "review_video_sha256": "b80b3476dd8d025ba498068a8c1cb951d45d99426518411dcb99beb3d061ad82",
+      "motion_maxima": {
+        "linear_velocity_m_s": {
+          "value": 0.3742009267745273,
+          "time_s": 28.000000000000263
+        },
+        "angular_velocity_rad_s": {
+          "value": 54.502435972107605,
+          "time_s": 28.55000000000027
+        },
+        "joint_gap_m": {
+          "value": 0.0001508524173085481,
+          "time_s": 18.800000000000132
+        },
+        "centre_displacement_speed_m_s": {
+          "value": 0.4041153605343633,
+          "time_s": 28.000000000000263
+        }
+      },
+      "grasp_witnesses": [
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 5.4999999999999885,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 2,
+          "local_point_m": [
+            3.197111701662135e-05,
+            0.00041577916635769397,
+            0.00900944106466721
+          ],
+          "measured_half_gap_m": 0.004931303672492504,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 11.000000000000021,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            -5.023506933946429e-06,
+            0.00037114962379528185,
+            0.009016134902237488
+          ],
+          "measured_half_gap_m": 0.004932725802063942,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 14.000000000000064,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 2,
+          "local_point_m": [
+            3.545833565752575e-05,
+            0.00041611106971532676,
+            0.009015597396689659
+          ],
+          "measured_half_gap_m": 0.004931531148031354,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 16.000000000000092,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 2,
+          "local_point_m": [
+            3.7151420645179764e-05,
+            0.0004167864630452026,
+            0.009015524790494429
+          ],
+          "measured_half_gap_m": 0.004931551171466708,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 19.000000000000135,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 2,
+          "local_point_m": [
+            3.9396115150222975e-05,
+            0.0004364134261328335,
+            0.009115438314046506
+          ],
+          "measured_half_gap_m": 0.004936269484460354,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 23.000000000000192,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            -4.49265068852087e-06,
+            0.00037141934823716307,
+            0.009016562498930361
+          ],
+          "measured_half_gap_m": 0.004933209624141455,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 26.000000000000234,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            -1.4587618983146261e-06,
+            0.0003722630393374602,
+            0.009017458561115854
+          ],
+          "measured_half_gap_m": 0.004932575160637498,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 30.00000000000029,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            7.122697045864148e-06,
+            0.0003730387057672194,
+            0.009021702535733093
+          ],
+          "measured_half_gap_m": 0.004934647120535374,
+          "passed": true
+        }
+      ],
+      "outcome_events": [
+        {
+          "label": "bimanual attempt stopped",
+          "time_s": 30.00000000000029,
+          "privileged_demo_only": true,
+          "reason": "the measured original over-crossing is absent or changed material neighbourhood"
+        }
+      ]
+    },
+    "loop-002": {
+      "score": 0.0,
+      "samples": 722,
+      "time_s": 36.05000000000009,
+      "invalid": null,
+      "initial_validated": true,
+      "topology_status": "unknot",
+      "finalization": {
+        "complete": true,
+        "errors": [],
+        "interrupted_by": null
+      },
+      "elapsed_wall_seconds": 274.217,
+      "source_sha256": {
+        "assay_physics.py": "2aada75e6b2c5a58f36428eab9a36312c992c1756deaebb54c35bad64dd3aad3",
+        "bimanual_policy.py": "0808d7d97da15aba802cc351985d66a2118ce88b092695a3ed418d914883a8fb",
+        "bimanual_scoring.py": "278b126c734b9867cacf3e5779aa210b0f7a1162f6a9e8cf4772020929269fb5",
+        "config.py": "8e4c3191eb5cb257599a5a7030819abbcb418610a3c34df12a555c14d418f01a",
+        "demo_policy.py": "7c8a43dc9c02304fe3fe1030a984460b522130b22ef6f41c66a5561b183cf8d6",
+        "diagnostic_layouts.py": "b87524a85ecbeeb18c97d1170459338e9c9f05232e923eb8f29d68f577d93a06",
+        "fixtures.py": "d30eb72c85d49cb91a01605e6bef26860c595d7d77aba79faeea1cd3924a3e60",
+        "hand_geometry.py": "5eb44a5b09551bb738a7a42aa0322566213b7170806290886c6e13b3ccf44a10",
+        "jig_layout.py": "8c6645f3c465e3f946336a8de2e51593a461d5fbefa5cf5cd8740b7520a7ee16",
+        "jig_policy.py": "ad22bd0c1559ad7b3a7b4401e297ad001cd50b4c16e7bc8f3ec24173a35b8311",
+        "proof_load.py": "0e7339480dbd059befcb1b57616991e6086aa2e9d02839b5259b8d87ac5b428b",
+        "render_review.py": "d87ff2e0215ac36c6298e23669ef49bfc90ed21996b897a26610703ac4cccaf6",
+        "replay.py": "d8530b781907c0ae662f529f1412cd158295ebe5d4af5fb314f5034c0c2b1c34",
+        "rope.py": "4783ebd97f3f0afe9c70b3fbec2592bd0a7311e4f7e36c43353d0d81d19ab692",
+        "run.py": "2432560f8ac69d31a8c5fbe5f74dabe585274af01b44b70bb08997ba1ebf3bd9",
+        "scoring.py": "9a3519561f15b83880c138eb7beedf866d9de21db247205257cf7c895d5f5c78",
+        "task.py": "ac5174aa5eed3bf7cd0b7b1df9ebd1c647afa3f29a7a081b24dc06484c11e031",
+        "telemetry.py": "fb64df7679298e5bacaa27f69d25ecb0f59d07f6b95859799a164071518854fa",
+        "topology.py": "21057280e6d69123019e432d2b50934e97b5f5131349186541215755f99a5ff2",
+        "visuals.py": "a7e8b4b040c526093570b3a295e9eea28a7192dbd33ae0db6dd1f7293c4ac819"
+      },
+      "trajectory_sha256": "16af45a66f5e36af781552a411b26792cec22894cd9df8d9f76265a9591e68f4",
+      "review_video_sha256": "c35578d1f2f3159b16cd241cd54367446a2f86ee7fe16dc57e34ed0394b79bad",
+      "motion_maxima": {
+        "linear_velocity_m_s": {
+          "value": 0.3742009267745273,
+          "time_s": 28.000000000000263
+        },
+        "angular_velocity_rad_s": {
+          "value": 54.502435972107605,
+          "time_s": 28.55000000000027
+        },
+        "joint_gap_m": {
+          "value": 0.00015656673480202851,
+          "time_s": 31.90000000000032
+        },
+        "centre_displacement_speed_m_s": {
+          "value": 0.4041153605343633,
+          "time_s": 28.000000000000263
+        }
+      },
+      "grasp_witnesses": [
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 5.4999999999999885,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 2,
+          "local_point_m": [
+            3.197111701662135e-05,
+            0.00041577916635769397,
+            0.00900944106466721
+          ],
+          "measured_half_gap_m": 0.004931303672492504,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 11.000000000000021,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            -5.023506933946429e-06,
+            0.00037114962379528185,
+            0.009016134902237488
+          ],
+          "measured_half_gap_m": 0.004932725802063942,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 14.000000000000064,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 2,
+          "local_point_m": [
+            3.545833565752575e-05,
+            0.00041611106971532676,
+            0.009015597396689659
+          ],
+          "measured_half_gap_m": 0.004931531148031354,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 16.000000000000092,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 2,
+          "local_point_m": [
+            3.7151420645179764e-05,
+            0.0004167864630452026,
+            0.009015524790494429
+          ],
+          "measured_half_gap_m": 0.004931551171466708,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 19.000000000000135,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 2,
+          "local_point_m": [
+            3.9396115150222975e-05,
+            0.0004364134261328335,
+            0.009115438314046506
+          ],
+          "measured_half_gap_m": 0.004936269484460354,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 23.000000000000192,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            -4.49265068852087e-06,
+            0.00037141934823716307,
+            0.009016562498930361
+          ],
+          "measured_half_gap_m": 0.004933209624141455,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 26.000000000000234,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            -1.4587618983146261e-06,
+            0.0003722630393374602,
+            0.009017458561115854
+          ],
+          "measured_half_gap_m": 0.004932575160637498,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 30.00000000000029,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            7.122697045864148e-06,
+            0.0003730387057672194,
+            0.009021702535733093
+          ],
+          "measured_half_gap_m": 0.004934647120535374,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 32.00000000000032,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 2,
+          "local_point_m": [
+            4.173946219483793e-05,
+            0.0004377333677808245,
+            0.009118353333392656
+          ],
+          "measured_half_gap_m": 0.00493630557321012,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 35.00000000000015,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 2,
+          "local_point_m": [
+            3.929187869533996e-05,
+            0.0004365580309973649,
+            0.009116526211890625
+          ],
+          "measured_half_gap_m": 0.004934399155899882,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 35.00000000000015,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            1.1978525628572724e-06,
+            0.0003731218377341192,
+            0.009019473779565957
+          ],
+          "measured_half_gap_m": 0.004934338619932532,
+          "passed": true
+        }
+      ],
+      "outcome_events": [
+        {
+          "label": "bimanual first crossing",
+          "time_s": 30.00000000000029,
+          "privileged_demo_only": true,
+          "crossing": {
+            "position": [
+              0.4414498844725845,
+              0.09922518727274457,
+              0.7585669053719297
+            ],
+            "standing_index": 42,
+            "working_index": 84,
+            "standing_material": 42.72709376118697,
+            "working_material": 84.87664777116308,
+            "standing_point": [
+              0.4414498844725845,
+              0.09922518727274457,
+              0.7524999501580725
+            ],
+            "working_point": [
+              0.4414498844725845,
+              0.09922518727274457,
+              0.7646338605857869
+            ],
+            "working_above_m": 0.01213391042771439
+          }
+        },
+        {
+          "label": "bimanual arch measurement",
+          "time_s": 30.00000000000029,
+          "privileged_demo_only": true,
+          "crossing": {
+            "position": [
+              0.4414498844725845,
+              0.09922518727274457,
+              0.7585669053719297
+            ],
+            "standing_index": 42,
+            "working_index": 84,
+            "standing_material": 42.72709376118697,
+            "working_material": 84.87664777116308,
+            "standing_point": [
+              0.4414498844725845,
+              0.09922518727274457,
+              0.7524999501580725
+            ],
+            "working_point": [
+              0.4414498844725845,
+              0.09922518727274457,
+              0.7646338605857869
+            ],
+            "working_above_m": 0.01213391042771439
+          },
+          "feed_x_m": 0.5014498844725845,
+          "lift_x_m": 0.6214498844725844,
+          "standing_to_table_height_m": -6.809518482420174e-08,
+          "loop_y_extent_m": 0.21595695524410724,
+          "entry_centre_inside_projected_bight": true,
+          "entry_projected_boundary_distance_m": 0.013504521353541937,
+          "complete_hand_lift_inside_projected_bight": false,
+          "minimum_lift_projected_boundary_distance_m": 0.000857132168552142,
+          "measured_entry_height_at_least_120mm": false,
+          "route_validated": false
+        },
+        {
+          "label": "bimanual settled crossing",
+          "time_s": 36.00000000000009,
+          "privileged_demo_only": true,
+          "crossing": {
+            "position": [
+              0.41193012733467965,
+              0.15348255762554658,
+              0.7649525436160067
+            ],
+            "standing_index": 40,
+            "working_index": 89,
+            "standing_material": 40.61852918702527,
+            "working_material": 89.36285580630438,
+            "standing_point": [
+              0.41193012733467965,
+              0.15348255762554658,
+              0.7524999392845335
+            ],
+            "working_point": [
+              0.41193012733467965,
+              0.15348255762554658,
+              0.7774051479474801
+            ],
+            "working_above_m": 0.024905208662946543
+          }
+        },
+        {
+          "label": "bimanual arch measurement",
+          "time_s": 36.00000000000009,
+          "privileged_demo_only": true,
+          "crossing": {
+            "position": [
+              0.41193012733467965,
+              0.15348255762554658,
+              0.7649525436160067
+            ],
+            "standing_index": 40,
+            "working_index": 89,
+            "standing_material": 40.61852918702527,
+            "working_material": 89.36285580630438,
+            "standing_point": [
+              0.41193012733467965,
+              0.15348255762554658,
+              0.7524999392845335
+            ],
+            "working_point": [
+              0.41193012733467965,
+              0.15348255762554658,
+              0.7774051479474801
+            ],
+            "working_above_m": 0.024905208662946543
+          },
+          "feed_x_m": 0.47193012733467965,
+          "lift_x_m": 0.5919301273346796,
+          "standing_to_table_height_m": -6.494493509645594e-08,
+          "loop_y_extent_m": 0.256294780688658,
+          "entry_centre_inside_projected_bight": true,
+          "entry_projected_boundary_distance_m": 0.009136404363886264,
+          "complete_hand_lift_inside_projected_bight": false,
+          "minimum_lift_projected_boundary_distance_m": 0.0005810253992574601,
+          "measured_entry_height_at_least_120mm": false,
+          "route_validated": false
+        },
+        {
+          "label": "bimanual arch probe finished",
+          "time_s": 36.00000000000009,
+          "privileged_demo_only": true,
+          "claimed_score": null,
+          "threading_validated": false,
+          "tightening_validated": false
+        }
+      ]
+    },
+    "loop-003": {
+      "score": 0.0,
+      "samples": 722,
+      "time_s": 36.05000000000009,
+      "invalid": null,
+      "initial_validated": true,
+      "topology_status": "unknot",
+      "finalization": {
+        "complete": true,
+        "errors": [],
+        "interrupted_by": null
+      },
+      "elapsed_wall_seconds": 273.149,
+      "source_sha256": {
+        "assay_physics.py": "2aada75e6b2c5a58f36428eab9a36312c992c1756deaebb54c35bad64dd3aad3",
+        "bimanual_policy.py": "0808d7d97da15aba802cc351985d66a2118ce88b092695a3ed418d914883a8fb",
+        "bimanual_scoring.py": "278b126c734b9867cacf3e5779aa210b0f7a1162f6a9e8cf4772020929269fb5",
+        "config.py": "6bd36e5268998425228390de466bc8c50ef48c68ac8570bbd363263e6d454dbd",
+        "demo_policy.py": "7c8a43dc9c02304fe3fe1030a984460b522130b22ef6f41c66a5561b183cf8d6",
+        "diagnostic_layouts.py": "b87524a85ecbeeb18c97d1170459338e9c9f05232e923eb8f29d68f577d93a06",
+        "fixtures.py": "d30eb72c85d49cb91a01605e6bef26860c595d7d77aba79faeea1cd3924a3e60",
+        "hand_geometry.py": "5eb44a5b09551bb738a7a42aa0322566213b7170806290886c6e13b3ccf44a10",
+        "jig_layout.py": "8c6645f3c465e3f946336a8de2e51593a461d5fbefa5cf5cd8740b7520a7ee16",
+        "jig_policy.py": "ad22bd0c1559ad7b3a7b4401e297ad001cd50b4c16e7bc8f3ec24173a35b8311",
+        "proof_load.py": "0e7339480dbd059befcb1b57616991e6086aa2e9d02839b5259b8d87ac5b428b",
+        "render_review.py": "d87ff2e0215ac36c6298e23669ef49bfc90ed21996b897a26610703ac4cccaf6",
+        "replay.py": "d8530b781907c0ae662f529f1412cd158295ebe5d4af5fb314f5034c0c2b1c34",
+        "rope.py": "4783ebd97f3f0afe9c70b3fbec2592bd0a7311e4f7e36c43353d0d81d19ab692",
+        "run.py": "2432560f8ac69d31a8c5fbe5f74dabe585274af01b44b70bb08997ba1ebf3bd9",
+        "scoring.py": "9a3519561f15b83880c138eb7beedf866d9de21db247205257cf7c895d5f5c78",
+        "task.py": "ac5174aa5eed3bf7cd0b7b1df9ebd1c647afa3f29a7a081b24dc06484c11e031",
+        "telemetry.py": "fb64df7679298e5bacaa27f69d25ecb0f59d07f6b95859799a164071518854fa",
+        "topology.py": "21057280e6d69123019e432d2b50934e97b5f5131349186541215755f99a5ff2",
+        "visuals.py": "a7e8b4b040c526093570b3a295e9eea28a7192dbd33ae0db6dd1f7293c4ac819"
+      },
+      "trajectory_sha256": "b6bee0a3e659ced6c806d77e8be8576165b329b7b8c7f1b271ca22550a20b1b0",
+      "review_video_sha256": "c2ac35a8b11211a0b4292e913efed8211c7dffd508261fd0689ccad1c6b656bd",
+      "motion_maxima": {
+        "linear_velocity_m_s": {
+          "value": 0.18633354100499222,
+          "time_s": 27.600000000000257
+        },
+        "angular_velocity_rad_s": {
+          "value": 53.266039501638915,
+          "time_s": 26.850000000000247
+        },
+        "joint_gap_m": {
+          "value": 0.00018348310075642232,
+          "time_s": 31.90000000000032
+        },
+        "centre_displacement_speed_m_s": {
+          "value": 0.1827529456687883,
+          "time_s": 18.05000000000012
+        }
+      },
+      "grasp_witnesses": [
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 5.4999999999999885,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 2,
+          "local_point_m": [
+            3.5545244859974506e-05,
+            0.00013094969691944375,
+            0.00904325708548577
+          ],
+          "measured_half_gap_m": 0.00493050180375576,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 11.000000000000021,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            -4.87138109338915e-06,
+            -0.00011808425003822948,
+            0.009055400660096401
+          ],
+          "measured_half_gap_m": 0.004935026867315173,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 14.000000000000064,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 2,
+          "local_point_m": [
+            3.576624083777732e-05,
+            0.00013095090450343486,
+            0.009047598810720989
+          ],
+          "measured_half_gap_m": 0.004930509487167001,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 16.000000000000092,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 2,
+          "local_point_m": [
+            3.633401801973651e-05,
+            0.0001322066278636484,
+            0.009048165386467523
+          ],
+          "measured_half_gap_m": 0.004930525552481413,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 19.000000000000135,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 2,
+          "local_point_m": [
+            3.4927723804548537e-05,
+            0.00011842676378359803,
+            0.009297857126430656
+          ],
+          "measured_half_gap_m": 0.004946252563968301,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 23.000000000000192,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            -4.370837745034055e-06,
+            -0.0001177289756158482,
+            0.009063712850335115
+          ],
+          "measured_half_gap_m": 0.004936158191412687,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 26.000000000000234,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            -8.66799469430388e-07,
+            -0.00011613151510396838,
+            0.009061668715450976
+          ],
+          "measured_half_gap_m": 0.004934774711728096,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 30.00000000000029,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            6.7385660815449906e-06,
+            -0.00011665392542314782,
+            0.009065402544139711
+          ],
+          "measured_half_gap_m": 0.0049371684435755014,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 32.00000000000032,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 2,
+          "local_point_m": [
+            3.725036644242694e-05,
+            0.00011878486021157583,
+            0.00929835216328025
+          ],
+          "measured_half_gap_m": 0.004946329863741994,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 35.00000000000015,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 2,
+          "local_point_m": [
+            3.403699032428221e-05,
+            0.0001189000571741104,
+            0.009295933759378322
+          ],
+          "measured_half_gap_m": 0.004945331485942006,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 35.00000000000015,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            1.0590771772807316e-07,
+            -0.00011687410550029805,
+            0.009063729248532685
+          ],
+          "measured_half_gap_m": 0.004936870886012912,
+          "passed": true
+        }
+      ],
+      "outcome_events": [
+        {
+          "label": "bimanual first crossing",
+          "time_s": 30.00000000000029,
+          "privileged_demo_only": true,
+          "crossing": {
+            "position": [
+              0.4352272325867029,
+              0.08497513782994325,
+              0.7582234335923195
+            ],
+            "standing_index": 43,
+            "working_index": 84,
+            "standing_material": 43.265380095510324,
+            "working_material": 84.07047326080799,
+            "standing_point": [
+              0.4352272325867029,
+              0.08497513782994325,
+              0.7525000019171996
+            ],
+            "working_point": [
+              0.4352272325867029,
+              0.08497513782994325,
+              0.7639468652674394
+            ],
+            "working_above_m": 0.011446863350239811
+          }
+        },
+        {
+          "label": "bimanual arch measurement",
+          "time_s": 30.00000000000029,
+          "privileged_demo_only": true,
+          "crossing": {
+            "position": [
+              0.4352272325867029,
+              0.08497513782994325,
+              0.7582234335923195
+            ],
+            "standing_index": 43,
+            "working_index": 84,
+            "standing_material": 43.265380095510324,
+            "working_material": 84.07047326080799,
+            "standing_point": [
+              0.4352272325867029,
+              0.08497513782994325,
+              0.7525000019171996
+            ],
+            "working_point": [
+              0.4352272325867029,
+              0.08497513782994325,
+              0.7639468652674394
+            ],
+            "working_above_m": 0.011446863350239811
+          },
+          "feed_x_m": 0.49522723258670287,
+          "lift_x_m": 0.6152272325867029,
+          "standing_to_table_height_m": -2.4244920882043886e-07,
+          "loop_y_extent_m": 0.2218643126586458,
+          "entry_centre_inside_projected_bight": false,
+          "entry_projected_boundary_distance_m": 0.003913476436363031,
+          "complete_hand_lift_inside_projected_bight": false,
+          "minimum_lift_projected_boundary_distance_m": 0.0019851847452234243,
+          "measured_entry_height_at_least_120mm": false,
+          "route_validated": false
+        },
+        {
+          "label": "bimanual attempt stopped",
+          "time_s": 36.00000000000009,
+          "privileged_demo_only": true,
+          "reason": "the measured original over-crossing is absent or changed material neighbourhood"
+        }
+      ]
+    },
+    "loop-004": {
+      "score": 0.0,
+      "samples": 602,
+      "time_s": 30.050000000000292,
+      "invalid": null,
+      "initial_validated": true,
+      "topology_status": "unknot",
+      "finalization": {
+        "complete": true,
+        "errors": [],
+        "interrupted_by": null
+      },
+      "elapsed_wall_seconds": 228.312,
+      "source_sha256": {
+        "assay_physics.py": "2aada75e6b2c5a58f36428eab9a36312c992c1756deaebb54c35bad64dd3aad3",
+        "bimanual_policy.py": "f1fad7c80181fe1ca6efbdf27b050bbf33e8031b5fd166aa6b9d0eabdfe067e5",
+        "bimanual_scoring.py": "278b126c734b9867cacf3e5779aa210b0f7a1162f6a9e8cf4772020929269fb5",
+        "config.py": "6bd36e5268998425228390de466bc8c50ef48c68ac8570bbd363263e6d454dbd",
+        "demo_policy.py": "7c8a43dc9c02304fe3fe1030a984460b522130b22ef6f41c66a5561b183cf8d6",
+        "diagnostic_layouts.py": "b87524a85ecbeeb18c97d1170459338e9c9f05232e923eb8f29d68f577d93a06",
+        "fixtures.py": "d30eb72c85d49cb91a01605e6bef26860c595d7d77aba79faeea1cd3924a3e60",
+        "hand_geometry.py": "5eb44a5b09551bb738a7a42aa0322566213b7170806290886c6e13b3ccf44a10",
+        "jig_layout.py": "8c6645f3c465e3f946336a8de2e51593a461d5fbefa5cf5cd8740b7520a7ee16",
+        "jig_policy.py": "ad22bd0c1559ad7b3a7b4401e297ad001cd50b4c16e7bc8f3ec24173a35b8311",
+        "proof_load.py": "0e7339480dbd059befcb1b57616991e6086aa2e9d02839b5259b8d87ac5b428b",
+        "render_review.py": "d87ff2e0215ac36c6298e23669ef49bfc90ed21996b897a26610703ac4cccaf6",
+        "replay.py": "d8530b781907c0ae662f529f1412cd158295ebe5d4af5fb314f5034c0c2b1c34",
+        "rope.py": "4783ebd97f3f0afe9c70b3fbec2592bd0a7311e4f7e36c43353d0d81d19ab692",
+        "run.py": "2432560f8ac69d31a8c5fbe5f74dabe585274af01b44b70bb08997ba1ebf3bd9",
+        "scoring.py": "9a3519561f15b83880c138eb7beedf866d9de21db247205257cf7c895d5f5c78",
+        "task.py": "ac5174aa5eed3bf7cd0b7b1df9ebd1c647afa3f29a7a081b24dc06484c11e031",
+        "telemetry.py": "fb64df7679298e5bacaa27f69d25ecb0f59d07f6b95859799a164071518854fa",
+        "topology.py": "21057280e6d69123019e432d2b50934e97b5f5131349186541215755f99a5ff2",
+        "visuals.py": "a7e8b4b040c526093570b3a295e9eea28a7192dbd33ae0db6dd1f7293c4ac819"
+      },
+      "trajectory_sha256": "0182c21c0f532531466ce9bc441b62dcfbf7458399ad39874c29fb411db289f2",
+      "review_video_sha256": "0e3e2af726a2eec2a5525e5be1acf703b1a20f1238af22ed6a8c3724bcb714ca",
+      "motion_maxima": {
+        "linear_velocity_m_s": {
+          "value": 0.3444396087761403,
+          "time_s": 13.05000000000005
+        },
+        "angular_velocity_rad_s": {
+          "value": 96.41529382337899,
+          "time_s": 16.6000000000001
+        },
+        "joint_gap_m": {
+          "value": 0.00033216130402095477,
+          "time_s": 29.80000000000029
+        },
+        "centre_displacement_speed_m_s": {
+          "value": 0.33292852863470723,
+          "time_s": 13.100000000000051
+        }
+      },
+      "grasp_witnesses": [
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 5.4999999999999885,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 30,
+          "local_point_m": [
+            5.069041120955102e-05,
+            -0.00045417035838178616,
+            0.008837247080178167
+          ],
+          "measured_half_gap_m": 0.0049134239088743925,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 11.000000000000021,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            -5.892845828323272e-06,
+            -0.0001176064055055782,
+            0.009055328849182146
+          ],
+          "measured_half_gap_m": 0.00493525480851531,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 14.000000000000064,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 30,
+          "local_point_m": [
+            5.786528833277927e-05,
+            -0.0004578038705868873,
+            0.008843429483599834
+          ],
+          "measured_half_gap_m": 0.004916603676974773,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 16.000000000000092,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 30,
+          "local_point_m": [
+            5.859523934722072e-05,
+            -0.0004534689845778167,
+            0.008843786163036198
+          ],
+          "measured_half_gap_m": 0.004915130790323019,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 19.000000000000135,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 30,
+          "local_point_m": [
+            4.280931363785382e-05,
+            -0.000360964529248063,
+            0.008866733358019107
+          ],
+          "measured_half_gap_m": 0.0049294414930045605,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 23.000000000000192,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            -4.917757741936802e-06,
+            -0.00011703727267603839,
+            0.009061248386897484
+          ],
+          "measured_half_gap_m": 0.004936321871355176,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 26.000000000000234,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            -2.6941889252090527e-06,
+            -0.00011682062156268122,
+            0.009059350241687048
+          ],
+          "measured_half_gap_m": 0.004935112548992038,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 30.00000000000029,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            1.4021032806895675e-06,
+            -0.00011558126865877406,
+            0.009060528444887259
+          ],
+          "measured_half_gap_m": 0.004936590325087309,
+          "passed": true
+        }
+      ],
+      "outcome_events": [
+        {
+          "label": "bimanual attempt stopped",
+          "time_s": 30.00000000000029,
+          "privileged_demo_only": true,
+          "reason": "the measured original over-crossing is absent or changed material neighbourhood"
+        }
+      ]
+    },
+    "loop-005": {
+      "score": 0.0,
+      "samples": 782,
+      "time_s": 39.04999999999992,
+      "invalid": null,
+      "initial_validated": true,
+      "topology_status": "unknot",
+      "finalization": {
+        "complete": true,
+        "errors": [],
+        "interrupted_by": null
+      },
+      "elapsed_wall_seconds": 291.446,
+      "source_sha256": {
+        "assay_physics.py": "2aada75e6b2c5a58f36428eab9a36312c992c1756deaebb54c35bad64dd3aad3",
+        "bimanual_policy.py": "ff6c6a4c503ad08fcd96b25d3d002ace2b38cb967eb0626da92cd2a1115ca25d",
+        "bimanual_scoring.py": "278b126c734b9867cacf3e5779aa210b0f7a1162f6a9e8cf4772020929269fb5",
+        "config.py": "6bd36e5268998425228390de466bc8c50ef48c68ac8570bbd363263e6d454dbd",
+        "demo_policy.py": "7c8a43dc9c02304fe3fe1030a984460b522130b22ef6f41c66a5561b183cf8d6",
+        "diagnostic_layouts.py": "b87524a85ecbeeb18c97d1170459338e9c9f05232e923eb8f29d68f577d93a06",
+        "fixtures.py": "d30eb72c85d49cb91a01605e6bef26860c595d7d77aba79faeea1cd3924a3e60",
+        "hand_geometry.py": "5eb44a5b09551bb738a7a42aa0322566213b7170806290886c6e13b3ccf44a10",
+        "jig_layout.py": "8c6645f3c465e3f946336a8de2e51593a461d5fbefa5cf5cd8740b7520a7ee16",
+        "jig_policy.py": "ad22bd0c1559ad7b3a7b4401e297ad001cd50b4c16e7bc8f3ec24173a35b8311",
+        "proof_load.py": "0e7339480dbd059befcb1b57616991e6086aa2e9d02839b5259b8d87ac5b428b",
+        "render_review.py": "d87ff2e0215ac36c6298e23669ef49bfc90ed21996b897a26610703ac4cccaf6",
+        "replay.py": "d8530b781907c0ae662f529f1412cd158295ebe5d4af5fb314f5034c0c2b1c34",
+        "rope.py": "4783ebd97f3f0afe9c70b3fbec2592bd0a7311e4f7e36c43353d0d81d19ab692",
+        "run.py": "2432560f8ac69d31a8c5fbe5f74dabe585274af01b44b70bb08997ba1ebf3bd9",
+        "scoring.py": "9a3519561f15b83880c138eb7beedf866d9de21db247205257cf7c895d5f5c78",
+        "task.py": "ac5174aa5eed3bf7cd0b7b1df9ebd1c647afa3f29a7a081b24dc06484c11e031",
+        "telemetry.py": "fb64df7679298e5bacaa27f69d25ecb0f59d07f6b95859799a164071518854fa",
+        "topology.py": "21057280e6d69123019e432d2b50934e97b5f5131349186541215755f99a5ff2",
+        "visuals.py": "a7e8b4b040c526093570b3a295e9eea28a7192dbd33ae0db6dd1f7293c4ac819"
+      },
+      "trajectory_sha256": "333c076c638d54fc2cde34e1f9b78bcccc1cee795e1f12fe2275b2d3e83f59cf",
+      "review_video_sha256": "9a37ffdb626f3671d8e3de03b50851badf82663d176961e5e1272f6ecfa37c5f",
+      "motion_maxima": {
+        "linear_velocity_m_s": {
+          "value": 0.3444396087761403,
+          "time_s": 13.05000000000005
+        },
+        "angular_velocity_rad_s": {
+          "value": 96.41529382337899,
+          "time_s": 16.6000000000001
+        },
+        "joint_gap_m": {
+          "value": 0.00033273694090593463,
+          "time_s": 33.150000000000254
+        },
+        "centre_displacement_speed_m_s": {
+          "value": 0.33292852863470723,
+          "time_s": 13.100000000000051
+        }
+      },
+      "grasp_witnesses": [
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 5.4999999999999885,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 30,
+          "local_point_m": [
+            5.069041120955102e-05,
+            -0.00045417035838178616,
+            0.008837247080178167
+          ],
+          "measured_half_gap_m": 0.0049134239088743925,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 11.000000000000021,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            -5.892845828323272e-06,
+            -0.0001176064055055782,
+            0.009055328849182146
+          ],
+          "measured_half_gap_m": 0.00493525480851531,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 14.000000000000064,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 30,
+          "local_point_m": [
+            5.786528833277927e-05,
+            -0.0004578038705868873,
+            0.008843429483599834
+          ],
+          "measured_half_gap_m": 0.004916603676974773,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 16.000000000000092,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 30,
+          "local_point_m": [
+            5.859523934722072e-05,
+            -0.0004534689845778167,
+            0.008843786163036198
+          ],
+          "measured_half_gap_m": 0.004915130790323019,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 19.000000000000135,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 30,
+          "local_point_m": [
+            4.280931363785382e-05,
+            -0.000360964529248063,
+            0.008866733358019107
+          ],
+          "measured_half_gap_m": 0.0049294414930045605,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 23.000000000000192,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            -4.917757741936802e-06,
+            -0.00011703727267603839,
+            0.009061248386897484
+          ],
+          "measured_half_gap_m": 0.004936321871355176,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 26.000000000000234,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            -2.6941889252090527e-06,
+            -0.00011682062156268122,
+            0.009059350241687048
+          ],
+          "measured_half_gap_m": 0.004935112548992038,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 30.00000000000029,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            1.4021032806895675e-06,
+            -0.00011558126865877406,
+            0.009060528444887259
+          ],
+          "measured_half_gap_m": 0.004936590325087309,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 32.00000000000032,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 30,
+          "local_point_m": [
+            3.726685553969725e-05,
+            -0.0003608352092661217,
+            0.00886689497511354
+          ],
+          "measured_half_gap_m": 0.004929134855046868,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 35.00000000000015,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 30,
+          "local_point_m": [
+            3.897308258313071e-05,
+            -0.00036070525042602867,
+            0.008866962334707493
+          ],
+          "measured_half_gap_m": 0.004929305287078023,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 37.99999999999998,
+          "privileged_demo_only": true,
+          "side": 1,
+          "material_index": 101,
+          "local_point_m": [
+            -4.0958727661540445e-06,
+            -0.00011842058799389115,
+            0.009061628582890974
+          ],
+          "measured_half_gap_m": 0.00493632024154067,
+          "passed": true
+        },
+        {
+          "label": "bimanual grasp witness",
+          "time_s": 37.99999999999998,
+          "privileged_demo_only": true,
+          "side": 0,
+          "material_index": 30,
+          "local_point_m": [
+            3.8026184402925504e-05,
+            -0.000360530419359992,
+            0.008866923802584609
+          ],
+          "measured_half_gap_m": 0.004929304821416736,
+          "passed": true
+        }
+      ],
+      "outcome_events": [
+        {
+          "label": "bimanual first crossing",
+          "time_s": 37.99999999999998,
+          "privileged_demo_only": true,
+          "crossing": {
+            "position": [
+              0.29743080040692316,
+              0.18134754699486222,
+              0.771453918790669
+            ],
+            "standing_index": 64,
+            "working_index": 91,
+            "standing_material": 64.61685192398194,
+            "working_material": 91.14386353172122,
+            "standing_point": [
+              0.29743080040692316,
+              0.18134754699486222,
+              0.7532434670251467
+            ],
+            "working_point": [
+              0.29743080040692316,
+              0.18134754699486222,
+              0.7896643705561915
+            ],
+            "working_above_m": 0.03642090353104488
+          },
+          "working_above": true
+        },
+        {
+          "label": "bimanual settled crossing",
+          "time_s": 38.99999999999992,
+          "privileged_demo_only": true,
+          "crossing": {
+            "position": [
+              0.2974673288324582,
+              0.1805159006500551,
+              0.7699849040968645
+            ],
+            "standing_index": 64,
+            "working_index": 90,
+            "standing_material": 64.68783820953895,
+            "working_material": 90.91355861601764,
+            "standing_point": [
+              0.2974673288324582,
+              0.1805159006500551,
+              0.7531185437427497
+            ],
+            "working_point": [
+              0.2974673288324582,
+              0.1805159006500551,
+              0.7868512644509794
+            ],
+            "working_above_m": 0.033732720708229746
+          },
+          "material_drift": [
+            0.07098628555701225,
+            -0.23030491570358436
+          ],
+          "continuity_certified": false
+        },
+        {
+          "label": "bimanual arch measurement",
+          "time_s": 38.99999999999992,
+          "privileged_demo_only": true,
+          "crossing": {
+            "position": [
+              0.2974673288324582,
+              0.1805159006500551,
+              0.7699849040968645
+            ],
+            "standing_index": 64,
+            "working_index": 90,
+            "standing_material": 64.68783820953895,
+            "working_material": 90.91355861601764,
+            "standing_point": [
+              0.2974673288324582,
+              0.1805159006500551,
+              0.7531185437427497
+            ],
+            "working_point": [
+              0.2974673288324582,
+              0.1805159006500551,
+              0.7868512644509794
+            ],
+            "working_above_m": 0.033732720708229746
+          },
+          "feed_x_m": 0.3574673288324582,
+          "lift_x_m": 0.53,
+          "standing_to_table_height_m": -6.640974870020244e-08,
+          "loop_y_extent_m": 0.13703265826017197,
+          "entry_centre_inside_projected_bight": false,
+          "entry_projected_boundary_distance_m": 0.052335719366898285,
+          "complete_hand_lift_inside_projected_bight": false,
+          "minimum_lift_projected_boundary_distance_m": 0.045049881149918834,
+          "measured_entry_height_at_least_120mm": false,
+          "route_validated": false
+        },
+        {
+          "label": "bimanual arch probe finished",
+          "time_s": 38.99999999999992,
+          "privileged_demo_only": true,
+          "claimed_score": null,
+          "threading_validated": false,
+          "tightening_validated": false
+        }
+      ]
+    }
+  }
+}

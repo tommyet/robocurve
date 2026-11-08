@@ -1,7 +1,17 @@
-# Recorded evidence
+# V4 development evidence
 
-The final scripted demo independently scores **1.0**; the fresh Dream-1 run
-scores **0.0**. The JSON audits contain measured extrema, executed-action checks,
+The revised free-cord task has no successful full demonstration yet.
+`bimanual-pilots.json` records the physical loop probes, all scoring zero,
+with source, trajectory and video hashes. `loop-001-crossing.json` is an
+anonymous measured regression fixture for a crossing-search bug, not a knot.
+The kinematic audits establish commanded robot reach and envelope separation;
+they do not establish rope contacts or task feasibility.
+
+# Historical v3 jig-task evidence
+
+The old jig-task scripted demo independently scores **1.0**; its Dream-1 run
+scores **0.0** under the old rubric. Neither validates the revised free-cord
+task or its robot-only pull. The JSON audits contain measured extrema, executed-action checks,
 source comparisons, certified replay results and video hashes. They are audit
 summaries, not substitutes for the complete recordings.
 

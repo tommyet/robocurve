@@ -11,298 +11,310 @@
   },
   "unit_checks": {
     "command": "python -m unittest discover -s . -p 'test_*.py'",
-    "passed": 69,
-    "scope": "Topology negatives/positives, measured geometry validation, scoring phases, fixture clearance, and runner cleanup; synthetic positive unit cases do not establish physical feasibility."
+    "passed": 94,
+    "scope": "Topology, scoring, recorded geometry, finalization and controller guards, including a measured crossing regression. Synthetic positives and kinematic audits do not establish knot feasibility."
   },
-  "physics_evidence": {
-    "straight-damped-001": {
-      "samples": 102,
-      "duration_s": 5.04999999999999,
-      "maximum_joint_gap_m": 1.3364762116056842e-08,
-      "max_centre_displacement_m": 0.0,
-      "centroid_displacement_m": 0.0,
-      "end_max_link_speed_m_s": 8.958480683159015e-06,
-      "minimum_recorded_nonlocal_axis_distance_m": 0.019999971389772265,
-      "final_topology_status": "unknot",
-      "invalid": null
-    },
-    "jig-idle-001": {
-      "samples": 102,
-      "duration_s": 5.04999999999999,
-      "maximum_joint_gap_m": 2.219015120636183e-05,
-      "max_centre_displacement_m": 0.002983765092662857,
-      "centroid_displacement_m": 0.0002880593506392117,
-      "end_max_link_speed_m_s": 0.0048619979254853965,
-      "minimum_recorded_nonlocal_axis_distance_m": 0.0077968590430527104,
-      "final_topology_status": "unknot",
-      "invalid": null
-    },
-    "assay-ramp-002": {
-      "samples": 202,
-      "duration_s": 10.050000000000008,
-      "maximum_joint_gap_m": 0.00028369586134943567,
-      "max_centre_displacement_m": 0.3016787979448036,
-      "centroid_displacement_m": 0.03451775413831223,
-      "end_max_link_speed_m_s": 0.1216326330365393,
-      "minimum_recorded_nonlocal_axis_distance_m": 0.007602766458844736,
-      "final_topology_status": "overhand_candidate",
-      "invalid": null
-    },
-    "jig-thread-003": {
-      "score": 0.0,
-      "samples": 854,
-      "invalid": null,
-      "topology_status": "overhand_candidate",
-      "released": false,
-      "jig_clear": false,
-      "evidence_scope": "Development robot trial, not a full-score demonstration"
-    },
-    "jig-thread-004": {
-      "score": 0.0,
-      "samples": 857,
-      "invalid": "nonlocal capsule penetration exceeds 5% diameter tolerance",
-      "topology_status": "unknot",
-      "released": false,
-      "jig_clear": false,
-      "evidence_scope": "Development robot trial, not a full-score demonstration"
-    },
-    "jig-thread-005": {
-      "score": 0.0,
-      "samples": 1421,
-      "invalid": null,
-      "topology_status": "overhand_candidate",
-      "released": false,
-      "jig_clear": false,
-      "evidence_scope": "Development robot trial, not a full-score demonstration"
-    },
-    "jig-thread-006": {
-      "score": 0.0,
-      "samples": 1888,
-      "invalid": "nonlocal capsule penetration exceeds 5% diameter tolerance",
-      "topology_status": "overhand_candidate",
-      "released": true,
-      "jig_clear": true,
-      "policy_end": {
-        "time": 93.29999999999684,
-        "qualified": true,
-        "released": true,
-        "topology_status": "overhand_candidate",
-        "core": {
-          "core_span_m": 0.19774652989078198,
-          "material_core_bounds_m": [
-            0.14024258252525515,
-            0.9177464150692637
-          ],
-          "tail_lengths_m": [
-            0.14024258252525515,
-            0.2622535849307358
-          ],
-          "diagnostics_only": true,
-          "method": "projection_dependent_crossing_envelope_not_physical_knot_boundary"
-        }
-      },
-      "seating": {
-        "elapsed_s": 1.0000000000000002,
-        "required_seconds": 2.0,
-        "completed": false,
-        "observed_force_range_n": [
-          0.0,
-          0.46597499325427877
-        ]
-      },
-      "interpretation": "Robot formed, removed and released a qualifying knot at 93.3 s; excessive contact during seating at 94.35 s invalidated the whole trial."
-    },
-    "jig-thread-007": {
-      "score": 0.0,
-      "samples": 1607,
-      "duration_s": 80.3,
-      "elapsed_wall_seconds": 1450.191,
-      "invalid": null,
-      "topology_status": "overhand_candidate",
-      "released": false,
-      "jig_clear": false,
-      "minimum_jig_clearance_m": 0.009556146,
-      "interpretation": "Valid knot manipulation stopped at an intermediate 10 mm controller clearance guard before the final pull and release. Trial 008 uses a 5 mm intermediate guard; final scoring still requires 10 mm."
-    },
-    "jig-thread-008": {
-      "score": 0.0,
-      "samples": 1867,
-      "invalid": "nonlocal capsule penetration exceeds 5% diameter tolerance",
-      "first_invalid_time_s": 80.6,
-      "first_invalid_pair": [
-        23,
-        84
-      ],
-      "first_invalid_axis_distance_m": 0.00747667970509557,
-      "interpretation": "The higher-resolution full trial failed during release before any load test. The contact-resolution configuration is not validated.",
-      "elapsed_wall_seconds": 1648.957
-    },
-    "checkpoint-006-contact960-001": {
-      "score": 0.0,
-      "diagnostic_only": true,
-      "candidate_score": 0.5,
-      "samples": 141,
-      "duration_s": 7.0,
-      "physics_hz": 960,
-      "position_iterations": 128,
-      "contact_offset_m": 0.001,
-      "elapsed_wall_seconds": 208.858,
-      "invalid": null,
-      "retained_overhand": true,
-      "interpretation": "Knot and contact remained valid through the full load, but a temporary jig clearance below 10 mm prevented candidate full credit. Restored state is not a robot demonstration."
-    },
-    "checkpoint-006-baseline960-001": {
-      "scope": "Restored-state diagnostic; task score always zero; not a robot demonstration",
-      "physics_hz": 960,
-      "position_iterations": 64,
-      "contact_offset_m": 0.0005,
-      "duration_s": 7.0,
-      "samples": 141,
-      "wall_seconds": 153.153,
-      "invalid": null,
-      "candidate_score": 0.5,
-      "minimum_jig_clearance_m": 0.008132,
-      "interpretation": "Retained overhand throughout loading with valid contact; temporary clearance below 1 cm prevents candidate full score."
-    },
-    "checkpoint-006-transition-002": {
-      "scope": "Restored-state diagnostic; task score always zero; not a robot demonstration",
-      "policy_physics_hz": 240,
-      "assay_physics_hz": 960,
-      "duration_s": 7.0,
-      "samples": 141,
-      "validated_control_intervals": 140,
-      "native_substeps_per_interval": 48,
-      "callback_removed": true,
-      "finalization_complete": true,
-      "invalid": null,
-      "candidate_score": 0.5,
-      "interpretation": "In-place timestep transition passed native substep, camera and state continuity audits; old release geometry still misses 1 cm fixture clearance during seating."
-    }
-  },
-  "diagnostic_retention": {
-    "actual_task_score": 0.0,
-    "assay_candidate_score": 1.0,
-    "preformed_knot": true,
-    "robot_knotting": false,
-    "evidence": "evidence/diagnostic-retention.jsonl.gz"
-  },
-  "known_failures": [
-    "Abrupt endpoint-force loading caused invalid rope contact; the specified protocol now seats gradually.",
-    "Unassisted crossing-lift/threading probes produced excessive nonlocal capsule overlap; 960 Hz did not resolve it.",
-    "The first jig manipulation probe missed its initial pickup; the pad geometry supports a lower grasp.",
-    "A far-side receiver at 20 degrees contacted a fold and missed the tip; a horizontal tracked receiver completed the handover with valid contact.",
-    "The valid jig-thread-005 trial formed an overhand but stopped with cord still touching the lower keeper; independent v3 replay correctly scored zero.",
-    "jig-thread-006 completed robot knotting, but 0.900 mm capsule overlap during the seating ramp invalidated its score.",
-    "jig-thread-008 at 480 Hz / 128 iterations / 1 mm offset failed during release at 80.6 s: links 23/84 overlapped by 0.523 mm."
-  ],
   "still_required": [
-    "User review and separate authorization for media upload and upstream submission.",
-    "Refresh the live task board before any eventual submission.",
-    "Upload the verified videos and screenshot, then replace task.draft.json with task.json containing the returned media identifier."
+    "Form a robot-created crossing with a threadable opening from the uncrossed setup.",
+    "Implement and physically validate threading, yellow-end reacquisition, simultaneous two-arm pull and final release.",
+    "Record a successful full demo and matching Dream trial; independently replay and visually review both.",
+    "Refresh the live task board and obtain user authorization before any media upload or upstream submission."
   ],
   "score_version": "overhand-bimanual-v4",
-  "implementation_complete": true,
-  "final_trials": {
-    "demo-009": {
-      "policy": "scripted_demo",
-      "score": 1.0,
-      "actions": 1866,
-      "elapsed_wall_seconds": 785.038,
-      "independent_replay": true,
-      "finalization_complete": true,
-      "source_config_matches_other_trial": true,
-      "assay_certification": {
-        "required": true,
-        "status": "complete",
-        "errors": []
-      },
-      "video": {
-        "source_sha256": {
-          "review.mp4": "52eb7f976e56cea2873fd4a9519efe74ce5d788f9818f89342321e40b1eb736a",
-          "trajectory": "44a6604b726d17932433b119f14993e66955edc0ec3ddee8aebf0d383c5453a5"
-        },
-        "output_sha256": "6766145ebdcd31e8969c292b0e438718d391886e8287c2ebc3a93957f49fb954",
-        "output_bytes": 12459171,
-        "frames": 2007,
-        "fps": 20,
-        "width": 1600,
-        "height": 1280,
-        "first_time_s": 0.0,
-        "last_time_s": 100.3,
-        "phase_frames": {
-          "policy": 1867,
-          "seating": 40,
-          "proof": 100
-        },
-        "overlay": "recorded phase, elapsed simulation time, applied load during assay",
-        "score_displayed": false,
-        "interpolated_frames": false,
-        "source_and_output_timestamps_verified": true
-      },
-      "audit": "evidence/demo-audit.json"
-    },
-    "dream-001": {
-      "policy": "Dream-1",
-      "score": 0.0,
-      "actions": 2400,
-      "elapsed_wall_seconds": 775.05,
-      "independent_replay": true,
-      "finalization_complete": true,
-      "source_config_matches_other_trial": true,
-      "assay_certification": {
-        "required": false,
-        "status": "not_required",
-        "errors": []
-      },
-      "video": {
-        "source_sha256": {
-          "review.mp4": "7db43699785f3a7b709b0d2d9da002e358f227969fd79ecaa55d512e003f20a7",
-          "trajectory": "abc53220a71790d443fe994ba7ba66dc4bc0232f0aed40486dd4234cd39ab8fe"
-        },
-        "output_sha256": "71fa262b59697c72fad36f0596bc084579e66b7f473e9ae82f55a7e9cd67734d",
-        "output_bytes": 13949597,
-        "frames": 2401,
-        "fps": 20,
-        "width": 1600,
-        "height": 1280,
-        "first_time_s": 0.0,
-        "last_time_s": 120.0,
-        "phase_frames": {
-          "policy": 2401
-        },
-        "overlay": "recorded phase, elapsed simulation time, applied load during assay",
-        "score_displayed": false,
-        "interpolated_frames": false,
-        "source_and_output_timestamps_verified": true
-      },
-      "audit": "evidence/dream-audit.json"
-    }
-  },
-  "fidelity_limitations": [
-    "Single fixed-seed trials do not establish repeatability or calibrated physical cord dynamics.",
-    "Demo native velocity anomaly at 43.10 s: 26.87 m/s on one link despite about 4 mm displacement between neighboring recorded frames; 20 Hz geometry passes but does not resolve substep behavior. See evidence/demo-velocity-spike.json.",
-    "Small demo margins: minimum nonlocal axis distance 7.6205 mm vs 7.6 mm threshold; assay jig clearance 10.1688 mm vs 10 mm.",
-    "Oblique video and temporary occlusion limit direct ruler-level judging; geometric audit supplements visible knot formation and retention."
-  ],
+  "implementation_complete": false,
   "current_version_evaluated": false,
   "historical_evidence_scope": "All pre-existing trial records and evidence files describe v3 or earlier diagnostics. They do not demonstrate the redesigned unassisted task.",
   "current_revision_checks": {
     "score_version": "overhand-bimanual-v4",
     "unit_test_command": "python -m unittest discover -s . -p 'test_*.py'",
-    "unit_tests_passed": 93,
-    "physics_trials": 0,
+    "unit_tests_passed": 94,
+    "physics_trials": 5,
     "dream_trials": 0,
     "full_demo_implemented": false,
     "available_controller_stage": "loop",
-    "nominal_loop_audit": "evidence/bimanual-loop-kinematics.json",
-    "blocked_by": "Three Brev startup failures; VM confirmed STOPPED at2026-11-08T05:38:56Z",
+    "nominal_loop_audit": "evidence/bimanual-crossing-kinematics.json",
+    "blocked_by": "Robot crossing and threading geometry remain unresolved; Brev access is working.",
     "remaining_work": [
-      "Validate terminal grasps and robot-created loop in physics",
-      "Implement and validate passage through actual loop",
-      "Implement and validate simultaneous two-arm tightening and release",
-      "Record successful demo and same-scene Dream baseline",
-      "Independently replay final traces and review videos"
+      "Form a robot-created crossing with a threadable opening from the uncrossed setup.",
+      "Implement and physically validate threading, yellow-end reacquisition, simultaneous two-arm pull and final release.",
+      "Record a successful full demo and matching Dream trial; independently replay and visually review both."
     ],
-    "nominal_pull_candidate": "evidence/bimanual-pull-kinematics.json"
-  }
+    "nominal_pull_candidate": "evidence/bimanual-pull-kinematics.json",
+    "historical_terminal_grasp_audit": "evidence/bimanual-loop-kinematics.json"
+  },
+  "v4_development": {
+    "status": "Five physical loop pilots completed, all score zero. The final pilot forms a crossing but its bight remains table-level and unsuitable for the tested hand route. No complete knot or matching Dream run.",
+    "evidence": "evidence/bimanual-pilots.json",
+    "independent_replay": "All five complete recordings independently replay to score0.0 with no invalid recorded geometry and clean finalization.",
+    "legacy_evidence_scope": "All historical_v3 records and old demo/Dream evidence are explicitly superseded for current-task feasibility."
+  },
+  "historical_v3": {
+    "scope": "Historical v3 jig-task results and earlier diagnostics; not validation of the current unassisted task.",
+    "rubric": "Historical jig removal, seating and external proof-load protocol",
+    "physics_evidence": {
+      "straight-damped-001": {
+        "samples": 102,
+        "duration_s": 5.04999999999999,
+        "maximum_joint_gap_m": 1.3364762116056842e-08,
+        "max_centre_displacement_m": 0.0,
+        "centroid_displacement_m": 0.0,
+        "end_max_link_speed_m_s": 8.958480683159015e-06,
+        "minimum_recorded_nonlocal_axis_distance_m": 0.019999971389772265,
+        "final_topology_status": "unknot",
+        "invalid": null
+      },
+      "jig-idle-001": {
+        "samples": 102,
+        "duration_s": 5.04999999999999,
+        "maximum_joint_gap_m": 2.219015120636183e-05,
+        "max_centre_displacement_m": 0.002983765092662857,
+        "centroid_displacement_m": 0.0002880593506392117,
+        "end_max_link_speed_m_s": 0.0048619979254853965,
+        "minimum_recorded_nonlocal_axis_distance_m": 0.0077968590430527104,
+        "final_topology_status": "unknot",
+        "invalid": null
+      },
+      "assay-ramp-002": {
+        "samples": 202,
+        "duration_s": 10.050000000000008,
+        "maximum_joint_gap_m": 0.00028369586134943567,
+        "max_centre_displacement_m": 0.3016787979448036,
+        "centroid_displacement_m": 0.03451775413831223,
+        "end_max_link_speed_m_s": 0.1216326330365393,
+        "minimum_recorded_nonlocal_axis_distance_m": 0.007602766458844736,
+        "final_topology_status": "overhand_candidate",
+        "invalid": null
+      },
+      "jig-thread-003": {
+        "score": 0.0,
+        "samples": 854,
+        "invalid": null,
+        "topology_status": "overhand_candidate",
+        "released": false,
+        "jig_clear": false,
+        "evidence_scope": "Development robot trial, not a full-score demonstration"
+      },
+      "jig-thread-004": {
+        "score": 0.0,
+        "samples": 857,
+        "invalid": "nonlocal capsule penetration exceeds 5% diameter tolerance",
+        "topology_status": "unknot",
+        "released": false,
+        "jig_clear": false,
+        "evidence_scope": "Development robot trial, not a full-score demonstration"
+      },
+      "jig-thread-005": {
+        "score": 0.0,
+        "samples": 1421,
+        "invalid": null,
+        "topology_status": "overhand_candidate",
+        "released": false,
+        "jig_clear": false,
+        "evidence_scope": "Development robot trial, not a full-score demonstration"
+      },
+      "jig-thread-006": {
+        "score": 0.0,
+        "samples": 1888,
+        "invalid": "nonlocal capsule penetration exceeds 5% diameter tolerance",
+        "topology_status": "overhand_candidate",
+        "released": true,
+        "jig_clear": true,
+        "policy_end": {
+          "time": 93.29999999999684,
+          "qualified": true,
+          "released": true,
+          "topology_status": "overhand_candidate",
+          "core": {
+            "core_span_m": 0.19774652989078198,
+            "material_core_bounds_m": [
+              0.14024258252525515,
+              0.9177464150692637
+            ],
+            "tail_lengths_m": [
+              0.14024258252525515,
+              0.2622535849307358
+            ],
+            "diagnostics_only": true,
+            "method": "projection_dependent_crossing_envelope_not_physical_knot_boundary"
+          }
+        },
+        "seating": {
+          "elapsed_s": 1.0000000000000002,
+          "required_seconds": 2.0,
+          "completed": false,
+          "observed_force_range_n": [
+            0.0,
+            0.46597499325427877
+          ]
+        },
+        "interpretation": "Robot formed, removed and released a qualifying knot at 93.3 s; excessive contact during seating at 94.35 s invalidated the whole trial."
+      },
+      "jig-thread-007": {
+        "score": 0.0,
+        "samples": 1607,
+        "duration_s": 80.3,
+        "elapsed_wall_seconds": 1450.191,
+        "invalid": null,
+        "topology_status": "overhand_candidate",
+        "released": false,
+        "jig_clear": false,
+        "minimum_jig_clearance_m": 0.009556146,
+        "interpretation": "Valid knot manipulation stopped at an intermediate 10 mm controller clearance guard before the final pull and release. Trial 008 uses a 5 mm intermediate guard; final scoring still requires 10 mm."
+      },
+      "jig-thread-008": {
+        "score": 0.0,
+        "samples": 1867,
+        "invalid": "nonlocal capsule penetration exceeds 5% diameter tolerance",
+        "first_invalid_time_s": 80.6,
+        "first_invalid_pair": [
+          23,
+          84
+        ],
+        "first_invalid_axis_distance_m": 0.00747667970509557,
+        "interpretation": "The higher-resolution full trial failed during release before any load test. The contact-resolution configuration is not validated.",
+        "elapsed_wall_seconds": 1648.957
+      },
+      "checkpoint-006-contact960-001": {
+        "score": 0.0,
+        "diagnostic_only": true,
+        "candidate_score": 0.5,
+        "samples": 141,
+        "duration_s": 7.0,
+        "physics_hz": 960,
+        "position_iterations": 128,
+        "contact_offset_m": 0.001,
+        "elapsed_wall_seconds": 208.858,
+        "invalid": null,
+        "retained_overhand": true,
+        "interpretation": "Knot and contact remained valid through the full load, but a temporary jig clearance below 10 mm prevented candidate full credit. Restored state is not a robot demonstration."
+      },
+      "checkpoint-006-baseline960-001": {
+        "scope": "Restored-state diagnostic; task score always zero; not a robot demonstration",
+        "physics_hz": 960,
+        "position_iterations": 64,
+        "contact_offset_m": 0.0005,
+        "duration_s": 7.0,
+        "samples": 141,
+        "wall_seconds": 153.153,
+        "invalid": null,
+        "candidate_score": 0.5,
+        "minimum_jig_clearance_m": 0.008132,
+        "interpretation": "Retained overhand throughout loading with valid contact; temporary clearance below 1 cm prevents candidate full score."
+      },
+      "checkpoint-006-transition-002": {
+        "scope": "Restored-state diagnostic; task score always zero; not a robot demonstration",
+        "policy_physics_hz": 240,
+        "assay_physics_hz": 960,
+        "duration_s": 7.0,
+        "samples": 141,
+        "validated_control_intervals": 140,
+        "native_substeps_per_interval": 48,
+        "callback_removed": true,
+        "finalization_complete": true,
+        "invalid": null,
+        "candidate_score": 0.5,
+        "interpretation": "In-place timestep transition passed native substep, camera and state continuity audits; old release geometry still misses 1 cm fixture clearance during seating."
+      }
+    },
+    "diagnostic_retention": {
+      "actual_task_score": 0.0,
+      "assay_candidate_score": 1.0,
+      "preformed_knot": true,
+      "robot_knotting": false,
+      "evidence": "evidence/diagnostic-retention.jsonl.gz"
+    },
+    "known_failures": [
+      "Abrupt endpoint-force loading caused invalid rope contact; the specified protocol now seats gradually.",
+      "Unassisted crossing-lift/threading probes produced excessive nonlocal capsule overlap; 960 Hz did not resolve it.",
+      "The first jig manipulation probe missed its initial pickup; the pad geometry supports a lower grasp.",
+      "A far-side receiver at 20 degrees contacted a fold and missed the tip; a horizontal tracked receiver completed the handover with valid contact.",
+      "The valid jig-thread-005 trial formed an overhand but stopped with cord still touching the lower keeper; independent v3 replay correctly scored zero.",
+      "jig-thread-006 completed robot knotting, but 0.900 mm capsule overlap during the seating ramp invalidated its score.",
+      "jig-thread-008 at 480 Hz / 128 iterations / 1 mm offset failed during release at 80.6 s: links 23/84 overlapped by 0.523 mm."
+    ],
+    "final_trials": {
+      "demo-009": {
+        "policy": "scripted_demo",
+        "score": 1.0,
+        "actions": 1866,
+        "elapsed_wall_seconds": 785.038,
+        "independent_replay": true,
+        "finalization_complete": true,
+        "source_config_matches_other_trial": true,
+        "assay_certification": {
+          "required": true,
+          "status": "complete",
+          "errors": []
+        },
+        "video": {
+          "source_sha256": {
+            "review.mp4": "52eb7f976e56cea2873fd4a9519efe74ce5d788f9818f89342321e40b1eb736a",
+            "trajectory": "44a6604b726d17932433b119f14993e66955edc0ec3ddee8aebf0d383c5453a5"
+          },
+          "output_sha256": "6766145ebdcd31e8969c292b0e438718d391886e8287c2ebc3a93957f49fb954",
+          "output_bytes": 12459171,
+          "frames": 2007,
+          "fps": 20,
+          "width": 1600,
+          "height": 1280,
+          "first_time_s": 0.0,
+          "last_time_s": 100.3,
+          "phase_frames": {
+            "policy": 1867,
+            "seating": 40,
+            "proof": 100
+          },
+          "overlay": "recorded phase, elapsed simulation time, applied load during assay",
+          "score_displayed": false,
+          "interpolated_frames": false,
+          "source_and_output_timestamps_verified": true
+        },
+        "audit": "evidence/demo-audit.json"
+      },
+      "dream-001": {
+        "policy": "Dream-1",
+        "score": 0.0,
+        "actions": 2400,
+        "elapsed_wall_seconds": 775.05,
+        "independent_replay": true,
+        "finalization_complete": true,
+        "source_config_matches_other_trial": true,
+        "assay_certification": {
+          "required": false,
+          "status": "not_required",
+          "errors": []
+        },
+        "video": {
+          "source_sha256": {
+            "review.mp4": "7db43699785f3a7b709b0d2d9da002e358f227969fd79ecaa55d512e003f20a7",
+            "trajectory": "abc53220a71790d443fe994ba7ba66dc4bc0232f0aed40486dd4234cd39ab8fe"
+          },
+          "output_sha256": "71fa262b59697c72fad36f0596bc084579e66b7f473e9ae82f55a7e9cd67734d",
+          "output_bytes": 13949597,
+          "frames": 2401,
+          "fps": 20,
+          "width": 1600,
+          "height": 1280,
+          "first_time_s": 0.0,
+          "last_time_s": 120.0,
+          "phase_frames": {
+            "policy": 2401
+          },
+          "overlay": "recorded phase, elapsed simulation time, applied load during assay",
+          "score_displayed": false,
+          "interpolated_frames": false,
+          "source_and_output_timestamps_verified": true
+        },
+        "audit": "evidence/dream-audit.json"
+      }
+    },
+    "fidelity_limitations": [
+      "Single fixed-seed trials do not establish repeatability or calibrated physical cord dynamics.",
+      "Demo native velocity anomaly at 43.10 s: 26.87 m/s on one link despite about 4 mm displacement between neighboring recorded frames; 20 Hz geometry passes but does not resolve substep behavior. See evidence/demo-velocity-spike.json.",
+      "Small demo margins: minimum nonlocal axis distance 7.6205 mm vs 7.6 mm threshold; assay jig clearance 10.1688 mm vs 10 mm.",
+      "Oblique video and temporary occlusion limit direct ruler-level judging; geometric audit supplements visible knot formation and retention."
+    ]
+  },
+  "final_trials": {},
+  "current_version_evaluated_scope": "No complete demo or Dream trial; development loop probes are listed separately."
 }

@@ -1,0 +1,111 @@
+{
+  "scope": "Actual loop004 final joint seeds; exact60 IK at20Hz and full-arm mesh-refined OBB checks. No rope dynamics.",
+  "time": 30.050000000000292,
+  "start_q": {
+    "left": [
+      1.1634502410888672,
+      0.4623395502567291,
+      0.9421975612640381,
+      -1.2324868440628052,
+      1.0369359254837036,
+      0.6692692041397095
+    ],
+    "right": [
+      1.1735522747039795,
+      2.831496477127075,
+      2.84334135055542,
+      -0.7409843802452087,
+      1.0425459146499634,
+      0.6787944436073303
+    ]
+  },
+  "phases": [
+    {
+      "label": "left-raise-first",
+      "side": "left",
+      "seconds": 2.0,
+      "ik_max_mm_deg": [
+        0.09555355318305597,
+        0.007649570242487671
+      ],
+      "minimum_joint_margin_deg": 16.58540312721176,
+      "minimum_table_envelope_m": [
+        0.07001706423698584,
+        "link1"
+      ],
+      "minimum_interarm_envelope_m": [
+        0.009347129066490142,
+        "tip_left",
+        "link4"
+      ],
+      "final_q": [
+        1.1650468609486633,
+        0.6860502168389968,
+        1.3447434961839724,
+        -1.403500107659591,
+        1.0418931339948097,
+        0.6723124958951948
+      ]
+    },
+    {
+      "label": "left-forward-second",
+      "side": "left",
+      "seconds": 3.0,
+      "ik_max_mm_deg": [
+        0.0942605627977414,
+        0.010483398721130677
+      ],
+      "minimum_joint_margin_deg": 16.604577452699917,
+      "minimum_table_envelope_m": [
+        0.07001706423758813,
+        "link1"
+      ],
+      "minimum_interarm_envelope_m": [
+        0.025634849420201646,
+        "tip_left",
+        "link4"
+      ],
+      "final_q": [
+        0.17599465163131858,
+        0.9111229770252248,
+        1.219607347299583,
+        -0.6625905929866318,
+        0.1653076428246562,
+        0.06075877132075296
+      ]
+    },
+    {
+      "label": "right-cross-at-.26",
+      "side": "right",
+      "seconds": 3.0,
+      "ik_max_mm_deg": [
+        0.09941797021204489,
+        0.015343584154607811
+      ],
+      "minimum_joint_margin_deg": 17.088388858651236,
+      "minimum_table_envelope_m": [
+        0.07001706421397569,
+        "link1"
+      ],
+      "minimum_interarm_envelope_m": [
+        0.01706085932478775,
+        "link3",
+        "link4"
+      ],
+      "final_q": [
+        1.3813618002997423,
+        2.629058932937444,
+        2.510967897229455,
+        -0.9746721560009632,
+        1.1754736052281776,
+        1.0593004253334972
+      ]
+    }
+  ],
+  "source_audit_sha256": "957875794b6d123fe5c374aa7ecab0bf7e317cd0d5f70206d50d8f345e748837",
+  "policy_source_sha256": "ff6c6a4c503ad08fcd96b25d3d002ace2b38cb967eb0626da92cd2a1115ca25d",
+  "limitations": [
+    "Commanded robot envelopes only; no rope dynamics, within-arm collisions or between-command motion certification.",
+    "The wider-U interior-grasp prefix has a separate nominal audit; actual feasibility is established only by recordings."
+  ]
+}
