@@ -1,25 +1,25 @@
 {
   "schema": "magnifier-physical-review-v1",
-  "reviewer": "Source, image and pose reviewer",
+  "reviewer": "Repository submission reviewer",
   "reviewed_full_trial": true,
-  "video_file": "demo.mp4",
+  "video_file": "dream.mp4",
   "source_sha256": {
-    "trace": "2b560fb967ddfc4240dacda5d279511912de8d452dff722ea1142a0159554db9",
-    "run_record": "0d2b5ab6d64d363c6acd5b18ba07b290386f443a10e3fca4272a5f896ee4c282",
-    "target_json": "da2ee04fde693b6b665255281f5558b0889fb08875113ef1c907bc22d2d1693b",
-    "video": "6b18b495df72df4e5d3dec7ee6a1d08c06bd1d91290dedec83818c8504620f6b"
+    "trace": "4f405f903d00980daad30763118305e26a3dd1ff82025a374ca51683c59ad501",
+    "run_record": "a8b84212c7641073c168fc7addf604b8a0f1dae810d27911fdd513b9b50e61c6",
+    "target_json": "a71d3ad4960ff85efdcdcf7a242594f7616be5c5b8c1fc9f36b76ba2bc6965a1",
+    "video": "7bc74de7f3add94c786d524c62d35a8d3863bea4cd59bc9145b89f4503397e27"
   },
   "interval_steps": [
-    470,
-    530
+    1140,
+    1200
   ],
   "observations": {
     "prescribed_initial_layout": true,
-    "picked_up_by_handle": true,
-    "held_only_by_gripper": true,
+    "picked_up_by_handle": false,
+    "held_only_by_gripper": false,
     "tool_and_target_intact": true,
     "ordinary_physics_and_camera": true,
-    "continuous_hold_visible": true
+    "continuous_hold_visible": false
   },
   "claim_definitions": {
     "prescribed_initial_layout": "The complete video begins in the prescribed reset layout, with the magnifier resting on the table.",
@@ -29,5 +29,5 @@
     "ordinary_physics_and_camera": "The recorded trial uses ordinary robot contact, no object attachment/teleport/applied object force, and unchanged native camera settings without digital crop, zoom or image replacement.",
     "continuous_hold_visible": "The video shows an uninterrupted handle grasp and at least 20 mm whole-tool table clearance throughout the scored three-second interval, with no visible interruption."
   },
-  "notes": "Reviewed complete recorded timeline in contact sheets, handle closure/lift close-ups, final wrist/reference images, and the 531-state measured joint/tool audit. The right fingers grasp the handle; the tool lifts at 5\u20137 s and remains supported there. The final 23.5\u201326.5 s window has at least74.3795 mm whole-tool clearance. Conservative source/FK audit finds no other tested tool supports; source uses one dynamic body and ordinary joint commands, with no attachment/object force. Target is a fixed plate/print. Both video and telemetry are20 Hz; motion between samples and all robot self-collision pairs are not certified."
+  "notes": "Reviewed full60-second video timeline, grasp-attempt closeups, final review/wrist images and ordinary-contact source. Dream repeatedly approaches and nudges the magnifier but never lifts the whole tool off the table; the maximum sampled clearance across1201 states is below zero by less than1 micrometre, consistent with resting contact. No handle-held, unsupported final hold occurs; the chart is absent from the final left-wrist view. Tool and fixed target remain intact. All146 requests succeed within one uninterrupted normal-adapter session. The observed failure earns0, independently of the missing optical alignment.20Hz evidence is sampled, not a substep safety certificate."
 }

@@ -4,9 +4,11 @@ Pick up the magnifier and align it with the left wrist camera and printed
 chart. The key skill is positioning and orienting an optical tool relative to
 the camera so that fine detail becomes readable.
 
-The validated prototype scores **1.0** under the final rubric. The matching
-Dream baseline is pending because the retained GPU could not start; this task
-has not been submitted. See [VALIDATION.json](VALIDATION.json).
+The scripted demo scores **1.0** and Dream-1 scores **0.0**.
+The demo completes 530 actions (26.5 seconds); Dream uses the full 1,200-action
+budget (60 seconds). On an L40S, total process runtimes were
+130.0 seconds and 274.0 seconds, respectively, including startup and
+reference capture. Both use seed 0. See [VALIDATION.json](VALIDATION.json).
 
 ## Setup
 

@@ -1,6 +1,6 @@
 {
-  "checked_utc": "2026-11-08T03:39:36Z",
-  "scope": "Pinned simulator installation for native refractive optics and physical magnifier trials; verify installed versions in each run metadata.",
+  "checked_utc": "2026-11-09T16:35:42.659934+00:00",
+  "scope": "Verified simulator installation for the submitted native-refraction demo and Dream baseline; per-run package versions are preserved in evidence.",
   "python": "3.12.16",
   "packages": {
     "numpy": "2.5.4",

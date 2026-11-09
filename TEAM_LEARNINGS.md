@@ -60,6 +60,53 @@ developers and their agents, not a competition submission document.
 
 ## GPU cost and persistence
 
+### 2026-11-09 — magnifier submitted after successful GPU retry
+
+- Operator: repository agent, `codex/magnifier-submission` from shared `main`
+  at `f92753e`. User renewed the already-authorized submission retry. The original
+  g6e.xlarge started successfully at 16:27 UTC; the retained installation was
+  unchanged. GPU/users were idle; the sole Python service was Inspect's viewer.
+- Canonical demo `submission-demo-001`: **1.0**, 530 actions / 26.5 seconds,
+  130.044 seconds total process runtime. Both video streams and all commands,
+  actual joints and tool poses exactly match validated pickup-005. Native-link
+  audit checked all 531 samples without tested conservative-box overlaps.
+  Final hold: minimum optical gain 1.87972×, registration shift <=0.14975 px,
+  whole-tool clearance >=74.3795 mm. This remains sampled evidence, not an
+  exhaustive self-collision or between-sample safety certificate.
+- Canonical Dream `submission-dream-001`: **0.0**, complete 1,200 actions /
+  60 seconds, 273.980 seconds total process runtime. All 146 requests succeeded
+  in one session, using eight rows per request after the 32-step observation
+  warm-up. It nudged the lens but never lifted the whole tool; the final wrist
+  view misses the target. Normal adapter bounds held for every executed command.
+  Out-of-range rows in full model responses include unused tails and do not
+  establish executed violations. Demo/Dream setup, target and core source match.
+- Independent CPU/source/physical reviews certify both final scores. All 19
+  unit, 14 image and seven hold checks passed for the unchanged execution code.
+  Curated final run records, traces, score reports and physical reviews replace
+  prototype-only evidence in the task folder; original artifacts remain local.
+  Reproducibility versions match ENVIRONMENT.json, including the documented
+  public asset-root patch. No further simulator install was needed.
+- Authenticated board check at 16:27 UTC: 1,274 visible tasks, no direct
+  magnifier duplicate; guide unchanged. Media **M-GCKMBY** uploaded at 16:40 UTC.
+  [PR #1305](https://github.com/robocurve/benchmark-tasks/pull/1305), commit
+  `24b7120`, contains only `tasks/use-a-magnifying-glass/` on fresh upstream.
+  [Receipt](https://github.com/robocurve/benchmark-tasks/pull/1305#issuecomment-6745686232)
+  at 16:42:33 UTC: **TK-KNVK82**, waiting for review. Do not merge or change the
+  frozen pending submission. GitHub connector creation returned 403; authenticated
+  `gh` successfully created it without requesting user authorization again.
+- Session evidence: `artifacts/magnifier-final-session-2026-11-09/`. Both archives
+  were downloaded and hash-verified, then an idle/user audit passed before the
+  stop request at 16:37:42 UTC. The current GetEnvironment RPC confirmed
+  **STOPPED**, with a successful stop operation, at 16:44:40 UTC. Legacy workspace
+  summaries briefly lagged; inspect the current RPC when the two disagree.
+  Start request to first confirmed stop was 17.03 minutes; at $2.729872/hour,
+  the conservative full-session estimate is **$0.77**, excluding later
+  storage and Dream API fees. The two process runtimes alone total 404.023 seconds
+  (~$0.306); do not add this overlapping figure to the session estimate. Posted
+  credits were $115.63 before and $114.66 at the final billing observation; lag
+  means that change is not an invoice for this session.
+
+
 ### 2026-11-09 — magnifier submission preparation
 
 - Operator: repository agent, `codex/magnifier-submission` from `origin/main`
