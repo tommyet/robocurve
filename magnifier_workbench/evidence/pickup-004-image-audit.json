@@ -1,0 +1,265 @@
+{
+  "schema": "magnifier-independent-pickup-audit-v1",
+  "timestamp_utc": "2026-11-09T06:10:32.834740+00:00",
+  "metric_changed_to_fit_result": false,
+  "metric_sha256": "a5e13d29a06b246efe5a330b349fb20947c02e41b465900a27ed066cc2c29b19",
+  "target_json_sha256": "934d432a9b05463a66e2183566006f6d0fd14b69bed174fe77a730e971ef7dc9",
+  "full_photo_score": 0.0,
+  "reason": "Required outer registration markers are occluded by the opaque rim. Do not waive this gate.",
+  "final_optical_and_detail_findings": {
+    "minimum_square_edge_gain": 1.8883330302083923,
+    "baseline_policy_vertical_bars_gaps": [
+      3,
+      2
+    ],
+    "candidate_policy_vertical_bars_gaps": [
+      5,
+      4
+    ],
+    "both_candidate_groups_readable": true,
+    "newly_readable_group": "vertical"
+  },
+  "samples": [
+    {
+      "step": 431,
+      "time_s": 21.55,
+      "photo_score": 0.0,
+      "valid": true,
+      "minimum_edge_gain": 1.871923372707919,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "candidate_policy_groups": {
+        "vertical": true,
+        "horizontal": true
+      },
+      "registration_passes": false,
+      "registration_error": "An outer black registration marker was not found"
+    },
+    {
+      "step": 436,
+      "time_s": 21.8,
+      "photo_score": 0.0,
+      "valid": true,
+      "minimum_edge_gain": 1.893372720730291,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "candidate_policy_groups": {
+        "vertical": true,
+        "horizontal": true
+      },
+      "registration_passes": false,
+      "registration_error": "An outer black registration marker was not found"
+    },
+    {
+      "step": 441,
+      "time_s": 22.05,
+      "photo_score": 0.0,
+      "valid": true,
+      "minimum_edge_gain": 1.886961325332365,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "candidate_policy_groups": {
+        "vertical": true,
+        "horizontal": true
+      },
+      "registration_passes": false,
+      "registration_error": "An outer black registration marker was not found"
+    },
+    {
+      "step": 446,
+      "time_s": 22.3,
+      "photo_score": 0.0,
+      "valid": true,
+      "minimum_edge_gain": 1.8942673109027481,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "candidate_policy_groups": {
+        "vertical": true,
+        "horizontal": true
+      },
+      "registration_passes": false,
+      "registration_error": "An outer black registration marker was not found"
+    },
+    {
+      "step": 451,
+      "time_s": 22.55,
+      "photo_score": 0.0,
+      "valid": true,
+      "minimum_edge_gain": 1.8930952939224361,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "candidate_policy_groups": {
+        "vertical": true,
+        "horizontal": true
+      },
+      "registration_passes": false,
+      "registration_error": "An outer black registration marker was not found"
+    },
+    {
+      "step": 456,
+      "time_s": 22.8,
+      "photo_score": 0.0,
+      "valid": true,
+      "minimum_edge_gain": 1.893042539503672,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "candidate_policy_groups": {
+        "vertical": true,
+        "horizontal": true
+      },
+      "registration_passes": false,
+      "registration_error": "An outer black registration marker was not found"
+    },
+    {
+      "step": 461,
+      "time_s": 23.05,
+      "photo_score": 0.0,
+      "valid": true,
+      "minimum_edge_gain": 1.8917696959017305,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "candidate_policy_groups": {
+        "vertical": true,
+        "horizontal": true
+      },
+      "registration_passes": false,
+      "registration_error": "An outer black registration marker was not found"
+    },
+    {
+      "step": 466,
+      "time_s": 23.3,
+      "photo_score": 0.0,
+      "valid": true,
+      "minimum_edge_gain": 1.8929482333956467,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "candidate_policy_groups": {
+        "vertical": true,
+        "horizontal": true
+      },
+      "registration_passes": false,
+      "registration_error": "An outer black registration marker was not found"
+    },
+    {
+      "step": 471,
+      "time_s": 23.55,
+      "photo_score": 0.0,
+      "valid": true,
+      "minimum_edge_gain": 1.8920050718837051,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "candidate_policy_groups": {
+        "vertical": true,
+        "horizontal": true
+      },
+      "registration_passes": false,
+      "registration_error": "An outer black registration marker was not found"
+    },
+    {
+      "step": 476,
+      "time_s": 23.8,
+      "photo_score": 0.0,
+      "valid": true,
+      "minimum_edge_gain": 1.8926141843693842,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "candidate_policy_groups": {
+        "vertical": true,
+        "horizontal": true
+      },
+      "registration_passes": false,
+      "registration_error": "An outer black registration marker was not found"
+    },
+    {
+      "step": 481,
+      "time_s": 24.05,
+      "photo_score": 0.0,
+      "valid": true,
+      "minimum_edge_gain": 1.8915834433142449,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "candidate_policy_groups": {
+        "vertical": true,
+        "horizontal": true
+      },
+      "registration_passes": false,
+      "registration_error": "An outer black registration marker was not found"
+    },
+    {
+      "step": 486,
+      "time_s": 24.3,
+      "photo_score": 0.0,
+      "valid": true,
+      "minimum_edge_gain": 1.8916267192061964,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "candidate_policy_groups": {
+        "vertical": true,
+        "horizontal": true
+      },
+      "registration_passes": false,
+      "registration_error": "An outer black registration marker was not found"
+    },
+    {
+      "step": 490,
+      "time_s": 24.5,
+      "capture": "final counterfactual-pair render",
+      "photo_score": 0.0,
+      "valid": true,
+      "minimum_edge_gain": 1.8883330302083923,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "candidate_policy_groups": {
+        "vertical": true,
+        "horizontal": true
+      },
+      "registration_passes": false,
+      "registration_error": "An outer black registration marker was not found"
+    }
+  ],
+  "trace_last_three_seconds": {
+    "steps": [
+      430,
+      490
+    ],
+    "time_s": [
+      21.5,
+      24.5
+    ],
+    "state_count": 61,
+    "hold_command_steps": [
+      431,
+      490
+    ],
+    "maximum_camera_translation_from_final_m": 0.0,
+    "maximum_camera_orientation_from_final_degrees": 0.0,
+    "maximum_tool_translation_from_final_m": 0.002084601147904168,
+    "minimum_tool_root_height_m": 0.8289247751235962
+  },
+  "same_pose_counterfactual_record": {
+    "same_camera_pose": true,
+    "same_physics_step": 6000,
+    "counterfactual": "Only glass hidden after control; frame and handle remain.",
+    "actual_policy_resize_verified": true
+  },
+  "final_and_baseline_png_match_npz": {
+    "baseline": true,
+    "final": true
+  },
+  "sampling_limit": "The last 60 hold actions span 3.0 seconds from state430 to490. Saved raw/policy hold PNGs cover states431,436,...486 plus final490; they do not prove pixel criteria on every control frame. Video contains the full interval but is compressed.",
+  "visual_review": "Final raw and actual224-pixel images show five bars and four gaps in both groups; baseline policy vertical group shows only three dark bars. The opaque rim hides the intended four outer registration markers.",
+  "next_change": "Move outer markers from(\u00b140,\u00b130)mm to(\u00b150,\u00b140)mm in a new chart version, and rerun. Existing v1 results retain score0."
+}

@@ -1,0 +1,18 @@
+{
+  "title": "Inspect a printed target through a magnifying glass",
+  "category": "Impact on jobs",
+  "keywords": [
+    "optical tool use",
+    "bimanual",
+    "visual inspection"
+  ],
+  "instruction": "Pick up the magnifying glass by its handle. Hold it above the printed target so the left wrist camera sees both groups of five bars enlarged and clearly separated for three seconds.",
+  "context": "Handheld magnifiers help people inspect small marks and components. This task asks a robot to improve its own camera view with a physical optical tool.",
+  "setup": "Two YAM arms face a wooden 110 by 130 cm tabletop at z=0.7475 m. A 120 g magnifier lies flat: 60 mm glass diameter, 68 mm frame diameter, 18 mm frame thickness, and an 80 by 20 by 18 mm plastic handle. The glass has two spherical surfaces of 100 mm radius, 1 mm edge thickness and refractive index 1.5. Its centre starts at (0.20,-0.20,0.757) m; the handle extends toward negative y. A fixed white 120 by 100 by 7.5 mm target plate is centred at (0.35,0.05,0.75125) m. The supplied print has a 19 mm square of coloured corner marks and two groups of five black bars, with 1.2 mm bar and gap widths. Coordinates use metres, x away from the arm bases, y left and z up. Both arms start in the standard ready pose. Camera settings remain unchanged.",
+  "scoring": "PROVISIONAL; not yet validated for submission. Compare the held view with a lens-free photo taken at the same camera and target pose. Score 0.5 if the intact magnifier is held clear of the table by its handle for three seconds, every side of the coloured square is at least 1.25 times its lens-free pixel length, and at least one previously unreadable five-bar group becomes readable. Score 1.0 if every side is at least 1.5 times its lens-free length and both groups are readable. Readable means five dark bars separated by four bright gaps, each at least one policy-image pixel wide across the central half of the bar length. All other outcomes score 0. The target must remain unchanged. The exact photo and continuous-hold checks are under development.",
+  "run_limit": "Proposed: 1,200 control steps (60 seconds at 20 Hz).",
+  "reset_notes": "Return the magnifier and arms to their starting poses. The fixed printed target is reusable.",
+  "fidelity": "A closed curved glass mesh produces native RTX refraction. The robot holds a single dynamic rigid tool through ordinary contact, without an attachment or applied object force. Friction is assumed, not calibrated. The glass cannot break. Ideal pinhole cameras omit physical focus, sensor noise and lens manufacturing defects. Scripted centring may use measured tool pose; this information must not be supplied to Dream.",
+  "scores": "Development demo: 530 actions / 26.5 seconds, with a measured optical benefit. No complete competition score finalized. Dream-1 has not been run.",
+  "media": ""
+}

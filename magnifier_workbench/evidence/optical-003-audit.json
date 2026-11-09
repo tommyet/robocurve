@@ -1,0 +1,2342 @@
+{
+  "schema": "magnifier-independent-pathtracing-audit-v1",
+  "timestamp_utc": "2026-11-09T05:53:02.575085+00:00",
+  "measure_py_sha256": "1e489c9cdfbbab9da1e0d27fba24719cac212f065385c9f65c09e2c6eeff31bc",
+  "gate_or_source_changed": false,
+  "render_mode": "PathTracing",
+  "render_arguments": {
+    "out": "/home/ubuntu/robocurve-magnifier/optical-003",
+    "target_dir": "/home/ubuntu/robocurve-magnifier/source-optical-003/target",
+    "mode": "PathTracing",
+    "renders": 64,
+    "target_distance": 0.2,
+    "lens_distance": 0.125
+  },
+  "checks": [
+    {
+      "case": "baseline",
+      "array_png_and_recorded_hashes_match": true,
+      "actual_policy_wrapper_verified_by_runner": true,
+      "camera_joints_unchanged": true
+    },
+    {
+      "case": "null_lens",
+      "array_png_and_recorded_hashes_match": true,
+      "actual_policy_wrapper_verified_by_runner": true,
+      "camera_joints_unchanged": true
+    },
+    {
+      "case": "aligned100",
+      "array_png_and_recorded_hashes_match": true,
+      "actual_policy_wrapper_verified_by_runner": true,
+      "camera_joints_unchanged": true
+    },
+    {
+      "case": "tilted100",
+      "array_png_and_recorded_hashes_match": true,
+      "actual_policy_wrapper_verified_by_runner": true,
+      "camera_joints_unchanged": true
+    },
+    {
+      "case": "aligned75",
+      "array_png_and_recorded_hashes_match": true,
+      "actual_policy_wrapper_verified_by_runner": true,
+      "camera_joints_unchanged": true
+    }
+  ],
+  "results": {
+    "null_lens": {
+      "passes_original_gate": false,
+      "raw": {
+        "valid": true,
+        "gain": 1.0000098246508415,
+        "new_pitches_both_orientations_mm": [],
+        "candidate_affine_rms_error_px": 0.003751749644943973,
+        "error": null
+      },
+      "resized_224": {
+        "valid": true,
+        "gain": 0.9999580428469006,
+        "new_pitches_both_orientations_mm": [],
+        "candidate_affine_rms_error_px": 0.0015847326332902867,
+        "error": null
+      }
+    },
+    "aligned100": {
+      "passes_original_gate": true,
+      "raw": {
+        "valid": true,
+        "gain": 1.904662432519208,
+        "new_pitches_both_orientations_mm": [
+          1.2
+        ],
+        "candidate_affine_rms_error_px": 0.004902669041243649,
+        "error": null
+      },
+      "resized_224": {
+        "valid": true,
+        "gain": 1.906919311816438,
+        "new_pitches_both_orientations_mm": [
+          2.4
+        ],
+        "candidate_affine_rms_error_px": 0.03644482148607704,
+        "error": null
+      }
+    },
+    "tilted100": {
+      "passes_original_gate": false,
+      "raw": {
+        "valid": false,
+        "gain": null,
+        "new_pitches_both_orientations_mm": [],
+        "candidate_affine_rms_error_px": null,
+        "error": "Missing RGB fiducial(s): red, green, blue, magenta"
+      },
+      "resized_224": {
+        "valid": false,
+        "gain": null,
+        "new_pitches_both_orientations_mm": [],
+        "candidate_affine_rms_error_px": null,
+        "error": "Missing RGB fiducial(s): red, green, blue, magenta"
+      }
+    },
+    "aligned75": {
+      "passes_original_gate": false,
+      "raw": {
+        "valid": true,
+        "gain": 3.2303860975448364,
+        "new_pitches_both_orientations_mm": [],
+        "candidate_affine_rms_error_px": 0.14675247747916403,
+        "error": null
+      },
+      "resized_224": {
+        "valid": true,
+        "gain": 3.2366680597397357,
+        "new_pitches_both_orientations_mm": [
+          2.4
+        ],
+        "candidate_affine_rms_error_px": 0.07157110419365298,
+        "error": null
+      }
+    }
+  },
+  "aligned100_rt_pt_agreement": {
+    "raw": {
+      "rt_gain": 1.9107626504047717,
+      "pt_gain": 1.904662432519208,
+      "absolute_gain_difference": 0.006100217885563586,
+      "relative_difference_percent": 0.31925565869059297
+    },
+    "resized_224": {
+      "rt_gain": 1.9081406879766032,
+      "pt_gain": 1.906919311816438,
+      "absolute_gain_difference": 0.0012213761601651552,
+      "relative_difference_percent": 0.06400870584968792
+    }
+  },
+  "reference_limit": "Budget timeout before baseline repeat; preserved completed images are audited, not a complete six-case probe.",
+  "comparisons": {
+    "null_lens": {
+      "schema": "magnifier-rgb-comparison-v1",
+      "source_sha256": {
+        "baseline": "714d42ee004c887360093527ca70e0b741ec7af426b0c0467231774b2707ecbe",
+        "candidate": "277806d0288d1ad470bb866da801c1a6bafd1c8730da5e447e87c14ddcf5b0ac",
+        "baseline_policy": "54fd2fe7b1e9c20e6dbe6baaa2360f189cd28c427f10dba77a90af724f379b23",
+        "candidate_policy": "78314515ac33d40f261bc8b00deb6c2601d173eceeb21276f578fee67dc66158"
+      },
+      "raw": {
+        "baseline": {
+          "image_size": [
+            640,
+            360
+          ],
+          "valid": true,
+          "affine_rms_error_px": 0.026224793136718397,
+          "coherent_quartets": 1,
+          "selection": "Most central coherent colored fiducial quadrilateral",
+          "fiducials": {
+            "red": {
+              "xy_px": [
+                298.4996796925048,
+                157.14157591287636
+              ],
+              "mask_pixels": 10
+            },
+            "green": {
+              "xy_px": [
+                335.6468481375358,
+                157.0730659025788
+              ],
+              "mask_pixels": 9
+            },
+            "blue": {
+              "xy_px": [
+                298.4936061381074,
+                194.13554987212277
+              ],
+              "mask_pixels": 10
+            },
+            "magenta": {
+              "xy_px": [
+                335.59022801302933,
+                194.15895765472314
+              ],
+              "mask_pixels": 10
+            }
+          },
+          "mm_to_pixel_affine": [
+            [
+              1.9537839557882384,
+              -0.0011869007288747991
+            ],
+            [
+              0.0016498336553642577,
+              -1.9494701502997536
+            ],
+            [
+              317.0575904952942,
+              175.62728733557523
+            ]
+          ],
+          "reference_luminance": {
+            "black": 0.6007865473480473,
+            "white": 0.9042747000972532
+          },
+          "reference_dynamic_range": 0.30348815274920593,
+          "patterns": [
+            {
+              "name": "vertical_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.5777777777777777,
+              "native_pixels_per_period": 1.2383140032901954,
+              "normalized_modulation": 0.012724816132748897,
+              "fit_r_squared": 0.22413433970688312
+            },
+            {
+              "name": "vertical_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.8,
+              "native_pixels_per_period": 2.442230395377885,
+              "normalized_modulation": 0.48016442468337306,
+              "fit_r_squared": 0.7613174784107354
+            },
+            {
+              "name": "vertical_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "vertical",
+              "resolved": true,
+              "fitted_frequency_per_mm": 0.4,
+              "native_pixels_per_period": 4.88446079075577,
+              "normalized_modulation": 2.146450352521257,
+              "fit_r_squared": 0.9027846600607132
+            },
+            {
+              "name": "horizontal_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.5777777777777777,
+              "native_pixels_per_period": 1.2355801151992598,
+              "normalized_modulation": 0.016728860833843947,
+              "fit_r_squared": 0.12268443516534988
+            },
+            {
+              "name": "horizontal_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.8055555555555556,
+              "native_pixels_per_period": 2.4200327773557917,
+              "normalized_modulation": 0.5617835326085738,
+              "fit_r_squared": 0.7635436136709345
+            },
+            {
+              "name": "horizontal_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "horizontal",
+              "resolved": true,
+              "fitted_frequency_per_mm": 0.40555555555555556,
+              "native_pixels_per_period": 4.806914420775202,
+              "normalized_modulation": 2.0946545314862446,
+              "fit_r_squared": 0.9091976429370358
+            }
+          ]
+        },
+        "candidate": {
+          "image_size": [
+            640,
+            360
+          ],
+          "valid": true,
+          "affine_rms_error_px": 0.003751749644943973,
+          "coherent_quartets": 1,
+          "selection": "Most central coherent colored fiducial quadrilateral",
+          "fiducials": {
+            "red": {
+              "xy_px": [
+                298.50737652341246,
+                157.11866581141757
+              ],
+              "mask_pixels": 10
+            },
+            "green": {
+              "xy_px": [
+                335.6444921316166,
+                157.08583690987123
+              ],
+              "mask_pixels": 9
+            },
+            "blue": {
+              "xy_px": [
+                298.5222295952223,
+                194.12342402123423
+              ],
+              "mask_pixels": 10
+            },
+            "magenta": {
+              "xy_px": [
+                335.66895133653185,
+                194.10212474297464
+              ],
+              "mask_pixels": 9
+            }
+          },
+          "mm_to_pixel_affine": [
+            [
+              1.9548378249872034,
+              -0.0014244257843650506
+            ],
+            [
+              -0.0010345335980308022,
+              -1.9479222642873673
+            ],
+            [
+              317.0857623966957,
+              175.60751287137435
+            ]
+          ],
+          "reference_luminance": {
+            "black": 0.5994296765351396,
+            "white": 0.9032786789740357
+          },
+          "reference_dynamic_range": 0.3038490024388961,
+          "patterns": [
+            {
+              "name": "vertical_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.588888888888889,
+              "native_pixels_per_period": 1.230317838851636,
+              "normalized_modulation": 0.015013617297387101,
+              "fit_r_squared": 0.23908720232736191
+            },
+            {
+              "name": "vertical_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.8055555555555556,
+              "native_pixels_per_period": 2.426695875252193,
+              "normalized_modulation": 0.5446458026387766,
+              "fit_r_squared": 0.7735018780750604
+            },
+            {
+              "name": "vertical_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "vertical",
+              "resolved": true,
+              "fitted_frequency_per_mm": 0.4027777777777778,
+              "native_pixels_per_period": 4.853391750504386,
+              "normalized_modulation": 2.0647251992398927,
+              "fit_r_squared": 0.9055268763644074
+            },
+            {
+              "name": "horizontal_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.5666666666666667,
+              "native_pixels_per_period": 1.2433548121312612,
+              "normalized_modulation": 0.016693389549133943,
+              "fit_r_squared": 0.08372445120484773
+            },
+            {
+              "name": "horizontal_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.8055555555555556,
+              "native_pixels_per_period": 2.41811073807597,
+              "normalized_modulation": 0.5709611861657213,
+              "fit_r_squared": 0.7763700634601709
+            },
+            {
+              "name": "horizontal_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "horizontal",
+              "resolved": true,
+              "fitted_frequency_per_mm": 0.4083333333333333,
+              "native_pixels_per_period": 4.770422544503615,
+              "normalized_modulation": 2.1303210838089734,
+              "fit_r_squared": 0.9148125793997451
+            }
+          ]
+        },
+        "valid": true,
+        "optical_benefit": false,
+        "linear_magnification": 1.0000098246508415,
+        "fiducial_pairs": [
+          {
+            "pair": [
+              "red",
+              "green"
+            ],
+            "baseline_span_px": 37.147231621010725,
+            "candidate_span_px": 37.13713011843934,
+            "linear_ratio": 0.9997280684958049
+          },
+          {
+            "pair": [
+              "red",
+              "blue"
+            ],
+            "baseline_span_px": 36.993974457814936,
+            "candidate_span_px": 37.00476119069998,
+            "linear_ratio": 1.000291580805878
+          },
+          {
+            "pair": [
+              "red",
+              "magenta"
+            ],
+            "baseline_span_px": 52.40224542649653,
+            "candidate_span_px": 52.42860743080286,
+            "linear_ratio": 1.0005030701278501
+          },
+          {
+            "pair": [
+              "green",
+              "blue"
+            ],
+            "baseline_span_px": 52.478482343345206,
+            "candidate_span_px": 52.43896675996566,
+            "linear_ratio": 0.9992470136022416
+          },
+          {
+            "pair": [
+              "green",
+              "magenta"
+            ],
+            "baseline_span_px": 37.08593497392598,
+            "candidate_span_px": 37.016295914041216,
+            "linear_ratio": 0.9981222245054971
+          },
+          {
+            "pair": [
+              "blue",
+              "magenta"
+            ],
+            "baseline_span_px": 37.09662926001799,
+            "candidate_span_px": 37.14672784762519,
+            "linear_ratio": 1.0013504889421638
+          }
+        ],
+        "newly_resolved_patterns": [],
+        "newly_resolved_in_both_orientations_mm": []
+      },
+      "resized_224": {
+        "baseline": {
+          "image_size": [
+            224,
+            224
+          ],
+          "valid": true,
+          "affine_rms_error_px": 0.007015939988203712,
+          "coherent_quartets": 1,
+          "selection": "Most central coherent colored fiducial quadrilateral",
+          "fiducials": {
+            "red": {
+              "xy_px": [
+                104.0,
+                97.52830188679245
+              ],
+              "mask_pixels": 2
+            },
+            "green": {
+              "xy_px": [
+                117.0,
+                97.51575931232092
+              ],
+              "mask_pixels": 2
+            },
+            "blue": {
+              "xy_px": [
+                104.0,
+                120.52316076294278
+              ],
+              "mask_pixels": 2
+            },
+            "magenta": {
+              "xy_px": [
+                117.0,
+                120.53868194842407
+              ],
+              "mask_pixels": 2
+            }
+          },
+          "mm_to_pixel_affine": [
+            [
+              0.6842105263157902,
+              7.838450025737505e-05
+            ],
+            [
+              4.460444098450007e-16,
+              -1.2109942503224598
+            ],
+            [
+              110.49999999999996,
+              109.02647597762005
+            ]
+          ],
+          "reference_luminance": {
+            "black": 0.6787504096906167,
+            "white": 0.8893683845918563
+          },
+          "reference_dynamic_range": 0.21061797490123957,
+          "patterns": [
+            {
+              "name": "vertical_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.5,
+              "native_pixels_per_period": 0.4561403538704874,
+              "normalized_modulation": 0.018629532872765784,
+              "fit_r_squared": 0.4884985390135438
+            },
+            {
+              "name": "vertical_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.7611111111111111,
+              "native_pixels_per_period": 0.8989627412046103,
+              "normalized_modulation": 0.09042179886751564,
+              "fit_r_squared": 0.542314535856445
+            },
+            {
+              "name": "vertical_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.375,
+              "native_pixels_per_period": 1.8245614154819496,
+              "normalized_modulation": 1.85826621930814,
+              "fit_r_squared": 0.8563684171443259
+            },
+            {
+              "name": "horizontal_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.6111111111111112,
+              "native_pixels_per_period": 0.7516516036484233,
+              "normalized_modulation": 0.022819963962319022,
+              "fit_r_squared": 0.03251172150987014
+            },
+            {
+              "name": "horizontal_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.75,
+              "native_pixels_per_period": 1.6146590004299464,
+              "normalized_modulation": 0.24377446319909898,
+              "fit_r_squared": 0.2528763861634412
+            },
+            {
+              "name": "horizontal_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.41111111111111115,
+              "native_pixels_per_period": 2.9456616899735506,
+              "normalized_modulation": 1.92194465236497,
+              "fit_r_squared": 0.9471666900732307
+            }
+          ]
+        },
+        "candidate": {
+          "image_size": [
+            224,
+            224
+          ],
+          "valid": true,
+          "affine_rms_error_px": 0.0015847326332902867,
+          "coherent_quartets": 1,
+          "selection": "Most central coherent colored fiducial quadrilateral",
+          "fiducials": {
+            "red": {
+              "xy_px": [
+                104.0,
+                97.5201072386059
+              ],
+              "mask_pixels": 2
+            },
+            "green": {
+              "xy_px": [
+                117.0,
+                97.51841359773371
+              ],
+              "mask_pixels": 2
+            },
+            "blue": {
+              "xy_px": [
+                104.0,
+                120.52328767123288
+              ],
+              "mask_pixels": 2
+            },
+            "magenta": {
+              "xy_px": [
+                117.0,
+                120.52793296089385
+              ],
+              "mask_pixels": 2
+            }
+          },
+          "mm_to_pixel_affine": [
+            [
+              0.6842105263157902,
+              7.767496812654802e-05
+            ],
+            [
+              4.460444098450007e-16,
+              -1.2108605209417653
+            ],
+            [
+              110.49999999999996,
+              109.02243536711657
+            ]
+          ],
+          "reference_luminance": {
+            "black": 0.6739303551253121,
+            "white": 0.8880871246811717
+          },
+          "reference_dynamic_range": 0.2141567695558596,
+          "patterns": [
+            {
+              "name": "vertical_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.5,
+              "native_pixels_per_period": 0.4561403538165425,
+              "normalized_modulation": 0.01749928979138935,
+              "fit_r_squared": 0.5266484486664458
+            },
+            {
+              "name": "vertical_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.7555555555555555,
+              "native_pixels_per_period": 0.90557276125343,
+              "normalized_modulation": 0.09294262386260817,
+              "fit_r_squared": 0.5706714511945615
+            },
+            {
+              "name": "vertical_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.375,
+              "native_pixels_per_period": 1.82456141526617,
+              "normalized_modulation": 1.760477950821015,
+              "fit_r_squared": 0.8514743276067793
+            },
+            {
+              "name": "horizontal_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.6111111111111112,
+              "native_pixels_per_period": 0.7515685992052337,
+              "normalized_modulation": 0.02224482455672736,
+              "fit_r_squared": 0.02871929123386041
+            },
+            {
+              "name": "horizontal_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.75,
+              "native_pixels_per_period": 1.6144806945890204,
+              "normalized_modulation": 0.23077303774597263,
+              "fit_r_squared": 0.21265465155689223
+            },
+            {
+              "name": "horizontal_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.41111111111111115,
+              "native_pixels_per_period": 2.9453364022907804,
+              "normalized_modulation": 1.9460538797850273,
+              "fit_r_squared": 0.9464844112951882
+            }
+          ]
+        },
+        "valid": true,
+        "optical_benefit": false,
+        "linear_magnification": 0.9999580428469006,
+        "fiducial_pairs": [
+          {
+            "pair": [
+              "red",
+              "green"
+            ],
+            "baseline_span_px": 13.000006050620684,
+            "candidate_span_px": 13.000000110323823,
+            "linear_ratio": 0.9999995430543003
+          },
+          {
+            "pair": [
+              "red",
+              "blue"
+            ],
+            "baseline_span_px": 22.99485887615033,
+            "candidate_span_px": 23.003180432626976,
+            "linear_ratio": 1.000361887695048
+          },
+          {
+            "pair": [
+              "red",
+              "magenta"
+            ],
+            "baseline_span_px": 26.428726616708836,
+            "candidate_span_px": 26.426502690805965,
+            "linear_ratio": 0.9999158519464397
+          },
+          {
+            "pair": [
+              "green",
+              "blue"
+            ],
+            "baseline_span_px": 26.426133306068003,
+            "candidate_span_px": 26.423932923347238,
+            "linear_ratio": 0.9999167345939234
+          },
+          {
+            "pair": [
+              "green",
+              "magenta"
+            ],
+            "baseline_span_px": 23.022922636103146,
+            "candidate_span_px": 23.009519363160138,
+            "linear_ratio": 0.9994178292150454
+          },
+          {
+            "pair": [
+              "blue",
+              "magenta"
+            ],
+            "baseline_span_px": 13.00000926565819,
+            "candidate_span_px": 13.00000082995059,
+            "linear_ratio": 0.9999993510998779
+          }
+        ],
+        "newly_resolved_patterns": [],
+        "newly_resolved_in_both_orientations_mm": []
+      },
+      "resize": "Native policy PNGs saved by the actual camera preprocessing pipeline.",
+      "actual_policy_input_checked": true,
+      "limits": [
+        "A static same-pose image comparison is required; camera or target motion invalidates the optical claim.",
+        "Color fiducials and line bars are measured from RGB. Geometry only labels physical dimensions.",
+        "A local affine map approximates distortion; inspect saved images and any rejected fiducials.",
+        "Three native pixels per period plus modulation/fit thresholds conservatively reject aliasing.",
+        "This is a feasibility metric, not a validated task scorer."
+      ],
+      "small_optical_test_passes": false
+    },
+    "aligned100": {
+      "schema": "magnifier-rgb-comparison-v1",
+      "source_sha256": {
+        "baseline": "714d42ee004c887360093527ca70e0b741ec7af426b0c0467231774b2707ecbe",
+        "candidate": "309a1dd3d9a69818efb408f86bac5c90ee8287db12158411aba6d1cc00fd774d",
+        "baseline_policy": "54fd2fe7b1e9c20e6dbe6baaa2360f189cd28c427f10dba77a90af724f379b23",
+        "candidate_policy": "0124a7b97b6b844bb9edbcf6802881d2769847ab333b3df97bee260e1cee0650"
+      },
+      "raw": {
+        "baseline": {
+          "image_size": [
+            640,
+            360
+          ],
+          "valid": true,
+          "affine_rms_error_px": 0.026224793136718397,
+          "coherent_quartets": 1,
+          "selection": "Most central coherent colored fiducial quadrilateral",
+          "fiducials": {
+            "red": {
+              "xy_px": [
+                298.4996796925048,
+                157.14157591287636
+              ],
+              "mask_pixels": 10
+            },
+            "green": {
+              "xy_px": [
+                335.6468481375358,
+                157.0730659025788
+              ],
+              "mask_pixels": 9
+            },
+            "blue": {
+              "xy_px": [
+                298.4936061381074,
+                194.13554987212277
+              ],
+              "mask_pixels": 10
+            },
+            "magenta": {
+              "xy_px": [
+                335.59022801302933,
+                194.15895765472314
+              ],
+              "mask_pixels": 10
+            }
+          },
+          "mm_to_pixel_affine": [
+            [
+              1.9537839557882384,
+              -0.0011869007288747991
+            ],
+            [
+              0.0016498336553642577,
+              -1.9494701502997536
+            ],
+            [
+              317.0575904952942,
+              175.62728733557523
+            ]
+          ],
+          "reference_luminance": {
+            "black": 0.6007865473480473,
+            "white": 0.9042747000972532
+          },
+          "reference_dynamic_range": 0.30348815274920593,
+          "patterns": [
+            {
+              "name": "vertical_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.5777777777777777,
+              "native_pixels_per_period": 1.2383140032901954,
+              "normalized_modulation": 0.012724816132748897,
+              "fit_r_squared": 0.22413433970688312
+            },
+            {
+              "name": "vertical_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.8,
+              "native_pixels_per_period": 2.442230395377885,
+              "normalized_modulation": 0.48016442468337306,
+              "fit_r_squared": 0.7613174784107354
+            },
+            {
+              "name": "vertical_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "vertical",
+              "resolved": true,
+              "fitted_frequency_per_mm": 0.4,
+              "native_pixels_per_period": 4.88446079075577,
+              "normalized_modulation": 2.146450352521257,
+              "fit_r_squared": 0.9027846600607132
+            },
+            {
+              "name": "horizontal_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.5777777777777777,
+              "native_pixels_per_period": 1.2355801151992598,
+              "normalized_modulation": 0.016728860833843947,
+              "fit_r_squared": 0.12268443516534988
+            },
+            {
+              "name": "horizontal_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.8055555555555556,
+              "native_pixels_per_period": 2.4200327773557917,
+              "normalized_modulation": 0.5617835326085738,
+              "fit_r_squared": 0.7635436136709345
+            },
+            {
+              "name": "horizontal_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "horizontal",
+              "resolved": true,
+              "fitted_frequency_per_mm": 0.40555555555555556,
+              "native_pixels_per_period": 4.806914420775202,
+              "normalized_modulation": 2.0946545314862446,
+              "fit_r_squared": 0.9091976429370358
+            }
+          ]
+        },
+        "candidate": {
+          "image_size": [
+            640,
+            360
+          ],
+          "valid": true,
+          "affine_rms_error_px": 0.004902669041243649,
+          "coherent_quartets": 1,
+          "selection": "Most central coherent colored fiducial quadrilateral",
+          "fiducials": {
+            "red": {
+              "xy_px": [
+                281.76539939064776,
+                140.353291826732
+              ],
+              "mask_pixels": 47
+            },
+            "green": {
+              "xy_px": [
+                352.43796128672886,
+                140.33463305946248
+              ],
+              "mask_pixels": 50
+            },
+            "blue": {
+              "xy_px": [
+                281.74494515660103,
+                210.9763446544205
+              ],
+              "mask_pixels": 45
+            },
+            "magenta": {
+              "xy_px": [
+                352.40227493411015,
+                210.97003745318352
+              ],
+              "mask_pixels": 45
+            }
+          },
+          "mm_to_pixel_affine": [
+            [
+              3.719207675620794,
+              -0.0006569991712246136
+            ],
+            [
+              0.0014773838596232138,
+              -3.7173278216160344
+            ],
+            [
+              317.0876451920219,
+              175.6585767484496
+            ]
+          ],
+          "reference_luminance": {
+            "black": 0.27267043709706223,
+            "white": 0.8946325302389494
+          },
+          "reference_dynamic_range": 0.6219620931418872,
+          "patterns": [
+            {
+              "name": "vertical_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.6666666666666667,
+              "native_pixels_per_period": 2.231524640190207,
+              "normalized_modulation": 0.1629128907500351,
+              "fit_r_squared": 0.5575068980204261
+            },
+            {
+              "name": "vertical_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "vertical",
+              "resolved": true,
+              "fitted_frequency_per_mm": 0.8388888888888889,
+              "native_pixels_per_period": 4.4334926626295506,
+              "normalized_modulation": 0.9128510368156432,
+              "fit_r_squared": 0.8958683781749215
+            },
+            {
+              "name": "vertical_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "vertical",
+              "resolved": true,
+              "fitted_frequency_per_mm": 0.4027777777777778,
+              "native_pixels_per_period": 9.23389506285603,
+              "normalized_modulation": 1.287902132984273,
+              "fit_r_squared": 0.911367148805104
+            },
+            {
+              "name": "horizontal_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.6777777777777778,
+              "native_pixels_per_period": 2.2156260289245306,
+              "normalized_modulation": 0.13368502256967651,
+              "fit_r_squared": 0.5117253123647886
+            },
+            {
+              "name": "horizontal_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "horizontal",
+              "resolved": true,
+              "fitted_frequency_per_mm": 0.8388888888888889,
+              "native_pixels_per_period": 4.431252057849061,
+              "normalized_modulation": 0.9194169381354189,
+              "fit_r_squared": 0.8813909264071698
+            },
+            {
+              "name": "horizontal_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "horizontal",
+              "resolved": true,
+              "fitted_frequency_per_mm": 0.41111111111111115,
+              "native_pixels_per_period": 9.042149469394705,
+              "normalized_modulation": 1.3119655548396227,
+              "fit_r_squared": 0.9224556660966572
+            }
+          ]
+        },
+        "valid": true,
+        "optical_benefit": true,
+        "linear_magnification": 1.904662432519208,
+        "fiducial_pairs": [
+          {
+            "pair": [
+              "red",
+              "green"
+            ],
+            "baseline_span_px": 37.147231621010725,
+            "candidate_span_px": 70.6725643591982,
+            "linear_ratio": 1.9024988209141627
+          },
+          {
+            "pair": [
+              "red",
+              "blue"
+            ],
+            "baseline_span_px": 36.993974457814936,
+            "candidate_span_px": 70.62305578972189,
+            "linear_ratio": 1.9090421298272493
+          },
+          {
+            "pair": [
+              "red",
+              "magenta"
+            ],
+            "baseline_span_px": 52.40224542649653,
+            "candidate_span_px": 99.88139441063863,
+            "linear_ratio": 1.9060518036529572
+          },
+          {
+            "pair": [
+              "green",
+              "blue"
+            ],
+            "baseline_span_px": 52.478482343345206,
+            "candidate_span_px": 99.93875097598398,
+            "linear_ratio": 1.9043757843857922
+          },
+          {
+            "pair": [
+              "green",
+              "magenta"
+            ],
+            "baseline_span_px": 37.08593497392598,
+            "candidate_span_px": 70.63541340843324,
+            "linear_ratio": 1.9046415698591637
+          },
+          {
+            "pair": [
+              "blue",
+              "magenta"
+            ],
+            "baseline_span_px": 37.09662926001799,
+            "candidate_span_px": 70.65733005901414,
+            "linear_ratio": 1.9046832951792525
+          }
+        ],
+        "newly_resolved_patterns": [
+          "vertical_1.2mm",
+          "horizontal_1.2mm"
+        ],
+        "newly_resolved_in_both_orientations_mm": [
+          1.2
+        ]
+      },
+      "resized_224": {
+        "baseline": {
+          "image_size": [
+            224,
+            224
+          ],
+          "valid": true,
+          "affine_rms_error_px": 0.007015939988203712,
+          "coherent_quartets": 1,
+          "selection": "Most central coherent colored fiducial quadrilateral",
+          "fiducials": {
+            "red": {
+              "xy_px": [
+                104.0,
+                97.52830188679245
+              ],
+              "mask_pixels": 2
+            },
+            "green": {
+              "xy_px": [
+                117.0,
+                97.51575931232092
+              ],
+              "mask_pixels": 2
+            },
+            "blue": {
+              "xy_px": [
+                104.0,
+                120.52316076294278
+              ],
+              "mask_pixels": 2
+            },
+            "magenta": {
+              "xy_px": [
+                117.0,
+                120.53868194842407
+              ],
+              "mask_pixels": 2
+            }
+          },
+          "mm_to_pixel_affine": [
+            [
+              0.6842105263157902,
+              7.838450025737505e-05
+            ],
+            [
+              4.460444098450007e-16,
+              -1.2109942503224598
+            ],
+            [
+              110.49999999999996,
+              109.02647597762005
+            ]
+          ],
+          "reference_luminance": {
+            "black": 0.6787504096906167,
+            "white": 0.8893683845918563
+          },
+          "reference_dynamic_range": 0.21061797490123957,
+          "patterns": [
+            {
+              "name": "vertical_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.5,
+              "native_pixels_per_period": 0.4561403538704874,
+              "normalized_modulation": 0.018629532872765784,
+              "fit_r_squared": 0.4884985390135438
+            },
+            {
+              "name": "vertical_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.7611111111111111,
+              "native_pixels_per_period": 0.8989627412046103,
+              "normalized_modulation": 0.09042179886751564,
+              "fit_r_squared": 0.542314535856445
+            },
+            {
+              "name": "vertical_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.375,
+              "native_pixels_per_period": 1.8245614154819496,
+              "normalized_modulation": 1.85826621930814,
+              "fit_r_squared": 0.8563684171443259
+            },
+            {
+              "name": "horizontal_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.6111111111111112,
+              "native_pixels_per_period": 0.7516516036484233,
+              "normalized_modulation": 0.022819963962319022,
+              "fit_r_squared": 0.03251172150987014
+            },
+            {
+              "name": "horizontal_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.75,
+              "native_pixels_per_period": 1.6146590004299464,
+              "normalized_modulation": 0.24377446319909898,
+              "fit_r_squared": 0.2528763861634412
+            },
+            {
+              "name": "horizontal_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.41111111111111115,
+              "native_pixels_per_period": 2.9456616899735506,
+              "normalized_modulation": 1.92194465236497,
+              "fit_r_squared": 0.9471666900732307
+            }
+          ]
+        },
+        "candidate": {
+          "image_size": [
+            224,
+            224
+          ],
+          "valid": true,
+          "affine_rms_error_px": 0.03644482148607704,
+          "coherent_quartets": 1,
+          "selection": "Most central coherent colored fiducial quadrilateral",
+          "fiducials": {
+            "red": {
+              "xy_px": [
+                98.34429400386847,
+                87.17408123791103
+              ],
+              "mask_pixels": 10
+            },
+            "green": {
+              "xy_px": [
+                123.04676489429853,
+                87.05701473414477
+              ],
+              "mask_pixels": 11
+            },
+            "blue": {
+              "xy_px": [
+                98.38680387409201,
+                131.06174334140437
+              ],
+              "mask_pixels": 11
+            },
+            "magenta": {
+              "xy_px": [
+                123.0145808019441,
+                131.06986634264885
+              ],
+              "mask_pixels": 11
+            }
+          },
+          "mm_to_pixel_affine": [
+            [
+              1.2981644162705828,
+              -0.002866934276887889
+            ],
+            [
+              -0.00027173099655743426,
+              -2.313171413473615
+            ],
+            [
+              110.69811089355073,
+              109.0906764140272
+            ]
+          ],
+          "reference_luminance": {
+            "black": 0.39779507456008095,
+            "white": 0.8934689163114691
+          },
+          "reference_dynamic_range": 0.4956738417513881,
+          "patterns": [
+            {
+              "name": "vertical_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.6,
+              "native_pixels_per_period": 0.8113547387566353,
+              "normalized_modulation": 0.024249195467888767,
+              "fit_r_squared": 0.06292546242626029
+            },
+            {
+              "name": "vertical_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.75,
+              "native_pixels_per_period": 1.7308901093474889,
+              "normalized_modulation": 0.1969882088018794,
+              "fit_r_squared": 0.2759735178230398
+            },
+            {
+              "name": "vertical_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "vertical",
+              "resolved": true,
+              "fitted_frequency_per_mm": 0.37777777777777777,
+              "native_pixels_per_period": 3.4363259523810443,
+              "normalized_modulation": 1.1762015463141995,
+              "fit_r_squared": 0.9147352568574141
+            },
+            {
+              "name": "horizontal_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.5,
+              "native_pixels_per_period": 1.5421142862892643,
+              "normalized_modulation": 0.02615568804359555,
+              "fit_r_squared": 0.021930211589333504
+            },
+            {
+              "name": "horizontal_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.8222222222222223,
+              "native_pixels_per_period": 2.8133166033655495,
+              "normalized_modulation": 0.7907893358539568,
+              "fit_r_squared": 0.811725039302238
+            },
+            {
+              "name": "horizontal_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "horizontal",
+              "resolved": true,
+              "fitted_frequency_per_mm": 0.4138888888888889,
+              "native_pixels_per_period": 5.588870567759749,
+              "normalized_modulation": 1.5141729985862833,
+              "fit_r_squared": 0.9443747065645203
+            }
+          ]
+        },
+        "valid": true,
+        "optical_benefit": true,
+        "linear_magnification": 1.906919311816438,
+        "fiducial_pairs": [
+          {
+            "pair": [
+              "red",
+              "green"
+            ],
+            "baseline_span_px": 13.000006050620684,
+            "candidate_span_px": 24.702748281493875,
+            "linear_ratio": 1.9002105218492915
+          },
+          {
+            "pair": [
+              "red",
+              "blue"
+            ],
+            "baseline_span_px": 22.99485887615033,
+            "candidate_span_px": 43.88768269115461,
+            "linear_ratio": 1.9085867379109585
+          },
+          {
+            "pair": [
+              "red",
+              "magenta"
+            ],
+            "baseline_span_px": 26.428726616708836,
+            "candidate_span_px": 50.35338122371355,
+            "linear_ratio": 1.9052518857219176
+          },
+          {
+            "pair": [
+              "green",
+              "blue"
+            ],
+            "baseline_span_px": 26.426133306068003,
+            "candidate_span_px": 50.44333273403608,
+            "linear_ratio": 1.9088427410018862
+          },
+          {
+            "pair": [
+              "green",
+              "magenta"
+            ],
+            "baseline_span_px": 23.022922636103146,
+            "candidate_span_px": 44.01286337569962,
+            "linear_ratio": 1.9116974882537858
+          },
+          {
+            "pair": [
+              "blue",
+              "magenta"
+            ],
+            "baseline_span_px": 13.00000926565819,
+            "candidate_span_px": 24.627778267460368,
+            "linear_ratio": 1.894443131861373
+          }
+        ],
+        "newly_resolved_patterns": [
+          "vertical_2.4mm",
+          "horizontal_2.4mm"
+        ],
+        "newly_resolved_in_both_orientations_mm": [
+          2.4
+        ]
+      },
+      "resize": "Native policy PNGs saved by the actual camera preprocessing pipeline.",
+      "actual_policy_input_checked": true,
+      "limits": [
+        "A static same-pose image comparison is required; camera or target motion invalidates the optical claim.",
+        "Color fiducials and line bars are measured from RGB. Geometry only labels physical dimensions.",
+        "A local affine map approximates distortion; inspect saved images and any rejected fiducials.",
+        "Three native pixels per period plus modulation/fit thresholds conservatively reject aliasing.",
+        "This is a feasibility metric, not a validated task scorer."
+      ],
+      "small_optical_test_passes": true
+    },
+    "tilted100": {
+      "schema": "magnifier-rgb-comparison-v1",
+      "source_sha256": {
+        "baseline": "714d42ee004c887360093527ca70e0b741ec7af426b0c0467231774b2707ecbe",
+        "candidate": "c14a21b3da57573983f70a8cfcc59b98579a3efa17787e71248e1e8203def73e",
+        "baseline_policy": "54fd2fe7b1e9c20e6dbe6baaa2360f189cd28c427f10dba77a90af724f379b23",
+        "candidate_policy": "8e9f0b3434abfd960de88773d7fa286bce1093f0fef19b97b3cc820bdb8189c0"
+      },
+      "raw": {
+        "baseline": {
+          "image_size": [
+            640,
+            360
+          ],
+          "valid": true,
+          "affine_rms_error_px": 0.026224793136718397,
+          "coherent_quartets": 1,
+          "selection": "Most central coherent colored fiducial quadrilateral",
+          "fiducials": {
+            "red": {
+              "xy_px": [
+                298.4996796925048,
+                157.14157591287636
+              ],
+              "mask_pixels": 10
+            },
+            "green": {
+              "xy_px": [
+                335.6468481375358,
+                157.0730659025788
+              ],
+              "mask_pixels": 9
+            },
+            "blue": {
+              "xy_px": [
+                298.4936061381074,
+                194.13554987212277
+              ],
+              "mask_pixels": 10
+            },
+            "magenta": {
+              "xy_px": [
+                335.59022801302933,
+                194.15895765472314
+              ],
+              "mask_pixels": 10
+            }
+          },
+          "mm_to_pixel_affine": [
+            [
+              1.9537839557882384,
+              -0.0011869007288747991
+            ],
+            [
+              0.0016498336553642577,
+              -1.9494701502997536
+            ],
+            [
+              317.0575904952942,
+              175.62728733557523
+            ]
+          ],
+          "reference_luminance": {
+            "black": 0.6007865473480473,
+            "white": 0.9042747000972532
+          },
+          "reference_dynamic_range": 0.30348815274920593,
+          "patterns": [
+            {
+              "name": "vertical_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.5777777777777777,
+              "native_pixels_per_period": 1.2383140032901954,
+              "normalized_modulation": 0.012724816132748897,
+              "fit_r_squared": 0.22413433970688312
+            },
+            {
+              "name": "vertical_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.8,
+              "native_pixels_per_period": 2.442230395377885,
+              "normalized_modulation": 0.48016442468337306,
+              "fit_r_squared": 0.7613174784107354
+            },
+            {
+              "name": "vertical_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "vertical",
+              "resolved": true,
+              "fitted_frequency_per_mm": 0.4,
+              "native_pixels_per_period": 4.88446079075577,
+              "normalized_modulation": 2.146450352521257,
+              "fit_r_squared": 0.9027846600607132
+            },
+            {
+              "name": "horizontal_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.5777777777777777,
+              "native_pixels_per_period": 1.2355801151992598,
+              "normalized_modulation": 0.016728860833843947,
+              "fit_r_squared": 0.12268443516534988
+            },
+            {
+              "name": "horizontal_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.8055555555555556,
+              "native_pixels_per_period": 2.4200327773557917,
+              "normalized_modulation": 0.5617835326085738,
+              "fit_r_squared": 0.7635436136709345
+            },
+            {
+              "name": "horizontal_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "horizontal",
+              "resolved": true,
+              "fitted_frequency_per_mm": 0.40555555555555556,
+              "native_pixels_per_period": 4.806914420775202,
+              "normalized_modulation": 2.0946545314862446,
+              "fit_r_squared": 0.9091976429370358
+            }
+          ]
+        },
+        "candidate": {
+          "image_size": [
+            640,
+            360
+          ],
+          "valid": false,
+          "error": "Missing RGB fiducial(s): red, green, blue, magenta"
+        },
+        "valid": false,
+        "optical_benefit": false
+      },
+      "resized_224": {
+        "baseline": {
+          "image_size": [
+            224,
+            224
+          ],
+          "valid": true,
+          "affine_rms_error_px": 0.007015939988203712,
+          "coherent_quartets": 1,
+          "selection": "Most central coherent colored fiducial quadrilateral",
+          "fiducials": {
+            "red": {
+              "xy_px": [
+                104.0,
+                97.52830188679245
+              ],
+              "mask_pixels": 2
+            },
+            "green": {
+              "xy_px": [
+                117.0,
+                97.51575931232092
+              ],
+              "mask_pixels": 2
+            },
+            "blue": {
+              "xy_px": [
+                104.0,
+                120.52316076294278
+              ],
+              "mask_pixels": 2
+            },
+            "magenta": {
+              "xy_px": [
+                117.0,
+                120.53868194842407
+              ],
+              "mask_pixels": 2
+            }
+          },
+          "mm_to_pixel_affine": [
+            [
+              0.6842105263157902,
+              7.838450025737505e-05
+            ],
+            [
+              4.460444098450007e-16,
+              -1.2109942503224598
+            ],
+            [
+              110.49999999999996,
+              109.02647597762005
+            ]
+          ],
+          "reference_luminance": {
+            "black": 0.6787504096906167,
+            "white": 0.8893683845918563
+          },
+          "reference_dynamic_range": 0.21061797490123957,
+          "patterns": [
+            {
+              "name": "vertical_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.5,
+              "native_pixels_per_period": 0.4561403538704874,
+              "normalized_modulation": 0.018629532872765784,
+              "fit_r_squared": 0.4884985390135438
+            },
+            {
+              "name": "vertical_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.7611111111111111,
+              "native_pixels_per_period": 0.8989627412046103,
+              "normalized_modulation": 0.09042179886751564,
+              "fit_r_squared": 0.542314535856445
+            },
+            {
+              "name": "vertical_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.375,
+              "native_pixels_per_period": 1.8245614154819496,
+              "normalized_modulation": 1.85826621930814,
+              "fit_r_squared": 0.8563684171443259
+            },
+            {
+              "name": "horizontal_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.6111111111111112,
+              "native_pixels_per_period": 0.7516516036484233,
+              "normalized_modulation": 0.022819963962319022,
+              "fit_r_squared": 0.03251172150987014
+            },
+            {
+              "name": "horizontal_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.75,
+              "native_pixels_per_period": 1.6146590004299464,
+              "normalized_modulation": 0.24377446319909898,
+              "fit_r_squared": 0.2528763861634412
+            },
+            {
+              "name": "horizontal_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.41111111111111115,
+              "native_pixels_per_period": 2.9456616899735506,
+              "normalized_modulation": 1.92194465236497,
+              "fit_r_squared": 0.9471666900732307
+            }
+          ]
+        },
+        "candidate": {
+          "image_size": [
+            224,
+            224
+          ],
+          "valid": false,
+          "error": "Missing RGB fiducial(s): red, green, blue, magenta"
+        },
+        "valid": false,
+        "optical_benefit": false
+      },
+      "resize": "Native policy PNGs saved by the actual camera preprocessing pipeline.",
+      "actual_policy_input_checked": true,
+      "limits": [
+        "A static same-pose image comparison is required; camera or target motion invalidates the optical claim.",
+        "Color fiducials and line bars are measured from RGB. Geometry only labels physical dimensions.",
+        "A local affine map approximates distortion; inspect saved images and any rejected fiducials.",
+        "Three native pixels per period plus modulation/fit thresholds conservatively reject aliasing.",
+        "This is a feasibility metric, not a validated task scorer."
+      ],
+      "small_optical_test_passes": false
+    },
+    "aligned75": {
+      "schema": "magnifier-rgb-comparison-v1",
+      "source_sha256": {
+        "baseline": "714d42ee004c887360093527ca70e0b741ec7af426b0c0467231774b2707ecbe",
+        "candidate": "66a66899f188fd9b72e0b39a895310486270b439d70d7bb7e5711134bc2c9bde",
+        "baseline_policy": "54fd2fe7b1e9c20e6dbe6baaa2360f189cd28c427f10dba77a90af724f379b23",
+        "candidate_policy": "8f93cf2d0e52f7867b233d1d3a3ba71af95bc743c0042890de32b44486d61e24"
+      },
+      "raw": {
+        "baseline": {
+          "image_size": [
+            640,
+            360
+          ],
+          "valid": true,
+          "affine_rms_error_px": 0.026224793136718397,
+          "coherent_quartets": 1,
+          "selection": "Most central coherent colored fiducial quadrilateral",
+          "fiducials": {
+            "red": {
+              "xy_px": [
+                298.4996796925048,
+                157.14157591287636
+              ],
+              "mask_pixels": 10
+            },
+            "green": {
+              "xy_px": [
+                335.6468481375358,
+                157.0730659025788
+              ],
+              "mask_pixels": 9
+            },
+            "blue": {
+              "xy_px": [
+                298.4936061381074,
+                194.13554987212277
+              ],
+              "mask_pixels": 10
+            },
+            "magenta": {
+              "xy_px": [
+                335.59022801302933,
+                194.15895765472314
+              ],
+              "mask_pixels": 10
+            }
+          },
+          "mm_to_pixel_affine": [
+            [
+              1.9537839557882384,
+              -0.0011869007288747991
+            ],
+            [
+              0.0016498336553642577,
+              -1.9494701502997536
+            ],
+            [
+              317.0575904952942,
+              175.62728733557523
+            ]
+          ],
+          "reference_luminance": {
+            "black": 0.6007865473480473,
+            "white": 0.9042747000972532
+          },
+          "reference_dynamic_range": 0.30348815274920593,
+          "patterns": [
+            {
+              "name": "vertical_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.5777777777777777,
+              "native_pixels_per_period": 1.2383140032901954,
+              "normalized_modulation": 0.012724816132748897,
+              "fit_r_squared": 0.22413433970688312
+            },
+            {
+              "name": "vertical_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.8,
+              "native_pixels_per_period": 2.442230395377885,
+              "normalized_modulation": 0.48016442468337306,
+              "fit_r_squared": 0.7613174784107354
+            },
+            {
+              "name": "vertical_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "vertical",
+              "resolved": true,
+              "fitted_frequency_per_mm": 0.4,
+              "native_pixels_per_period": 4.88446079075577,
+              "normalized_modulation": 2.146450352521257,
+              "fit_r_squared": 0.9027846600607132
+            },
+            {
+              "name": "horizontal_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.5777777777777777,
+              "native_pixels_per_period": 1.2355801151992598,
+              "normalized_modulation": 0.016728860833843947,
+              "fit_r_squared": 0.12268443516534988
+            },
+            {
+              "name": "horizontal_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.8055555555555556,
+              "native_pixels_per_period": 2.4200327773557917,
+              "normalized_modulation": 0.5617835326085738,
+              "fit_r_squared": 0.7635436136709345
+            },
+            {
+              "name": "horizontal_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "horizontal",
+              "resolved": true,
+              "fitted_frequency_per_mm": 0.40555555555555556,
+              "native_pixels_per_period": 4.806914420775202,
+              "normalized_modulation": 2.0946545314862446,
+              "fit_r_squared": 0.9091976429370358
+            }
+          ]
+        },
+        "candidate": {
+          "image_size": [
+            640,
+            360
+          ],
+          "valid": true,
+          "affine_rms_error_px": 0.14675247747916403,
+          "coherent_quartets": 1,
+          "selection": "Most central coherent colored fiducial quadrilateral",
+          "fiducials": {
+            "red": {
+              "xy_px": [
+                257.2060007021524,
+                115.8060439115288
+              ],
+              "mask_pixels": 222
+            },
+            "green": {
+              "xy_px": [
+                376.8883785580468,
+                115.99075361092645
+              ],
+              "mask_pixels": 214
+            },
+            "blue": {
+              "xy_px": [
+                256.98539891764455,
+                235.61356695065103
+              ],
+              "mask_pixels": 228
+            },
+            "magenta": {
+              "xy_px": [
+                377.156083487886,
+                235.47248962289146
+              ],
+              "mask_pixels": 212
+            }
+          },
+          "mm_to_pixel_affine": [
+            [
+              6.311922695424626,
+              0.0011482203062642108
+            ],
+            [
+              -0.0012395564560895198,
+              -6.297085764502294
+            ],
+            [
+              317.0589654164324,
+              175.72071352399948
+            ]
+          ],
+          "reference_luminance": {
+            "black": 0.3229018551741064,
+            "white": 0.8941176470588237
+          },
+          "reference_dynamic_range": 0.5712157918847173,
+          "patterns": [
+            {
+              "name": "vertical_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.8333333333333335,
+              "native_pixels_per_period": 3.442866981743281,
+              "normalized_modulation": 0.2379794555022655,
+              "fit_r_squared": 0.49165351144356684
+            },
+            {
+              "name": "vertical_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.9166666666666667,
+              "native_pixels_per_period": 6.885733963486562,
+              "normalized_modulation": 0.4684868087835319,
+              "fit_r_squared": 0.24657409186497825
+            },
+            {
+              "name": "vertical_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "vertical",
+              "resolved": true,
+              "fitted_frequency_per_mm": 0.4416666666666667,
+              "native_pixels_per_period": 14.29114596195324,
+              "normalized_modulation": 0.8867087983634943,
+              "fit_r_squared": 0.6114833581588139
+            },
+            {
+              "name": "horizontal_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.8333333333333335,
+              "native_pixels_per_period": 3.43477411991083,
+              "normalized_modulation": 0.07522851124594342,
+              "fit_r_squared": 0.2017282157458482
+            },
+            {
+              "name": "horizontal_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.9166666666666667,
+              "native_pixels_per_period": 6.86954823982166,
+              "normalized_modulation": 0.6181895475475466,
+              "fit_r_squared": 0.3976155741933053
+            },
+            {
+              "name": "horizontal_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "horizontal",
+              "resolved": true,
+              "fitted_frequency_per_mm": 0.45833333333333337,
+              "native_pixels_per_period": 13.73909647964332,
+              "normalized_modulation": 0.8144144766065406,
+              "fit_r_squared": 0.700845283624014
+            }
+          ]
+        },
+        "valid": true,
+        "optical_benefit": false,
+        "linear_magnification": 3.2303860975448364,
+        "fiducial_pairs": [
+          {
+            "pair": [
+              "red",
+              "green"
+            ],
+            "baseline_span_px": 37.147231621010725,
+            "candidate_span_px": 119.68252039004749,
+            "linear_ratio": 3.221842252232714
+          },
+          {
+            "pair": [
+              "red",
+              "blue"
+            ],
+            "baseline_span_px": 36.993974457814936,
+            "candidate_span_px": 119.80772613616007,
+            "linear_ratio": 3.238574062183546
+          },
+          {
+            "pair": [
+              "red",
+              "magenta"
+            ],
+            "baseline_span_px": 52.40224542649653,
+            "candidate_span_px": 169.43459088832734,
+            "linear_ratio": 3.2333460047239675
+          },
+          {
+            "pair": [
+              "green",
+              "blue"
+            ],
+            "baseline_span_px": 52.478482343345206,
+            "candidate_span_px": 169.37042834555655,
+            "linear_ratio": 3.2274261903657053
+          },
+          {
+            "pair": [
+              "green",
+              "magenta"
+            ],
+            "baseline_span_px": 37.08593497392598,
+            "candidate_span_px": 119.4820359148703,
+            "linear_ratio": 3.2217614575141376
+          },
+          {
+            "pair": [
+              "blue",
+              "magenta"
+            ],
+            "baseline_span_px": 37.09662926001799,
+            "candidate_span_px": 120.17076738081053,
+            "linear_ratio": 3.2393985593275505
+          }
+        ],
+        "newly_resolved_patterns": [],
+        "newly_resolved_in_both_orientations_mm": []
+      },
+      "resized_224": {
+        "baseline": {
+          "image_size": [
+            224,
+            224
+          ],
+          "valid": true,
+          "affine_rms_error_px": 0.007015939988203712,
+          "coherent_quartets": 1,
+          "selection": "Most central coherent colored fiducial quadrilateral",
+          "fiducials": {
+            "red": {
+              "xy_px": [
+                104.0,
+                97.52830188679245
+              ],
+              "mask_pixels": 2
+            },
+            "green": {
+              "xy_px": [
+                117.0,
+                97.51575931232092
+              ],
+              "mask_pixels": 2
+            },
+            "blue": {
+              "xy_px": [
+                104.0,
+                120.52316076294278
+              ],
+              "mask_pixels": 2
+            },
+            "magenta": {
+              "xy_px": [
+                117.0,
+                120.53868194842407
+              ],
+              "mask_pixels": 2
+            }
+          },
+          "mm_to_pixel_affine": [
+            [
+              0.6842105263157902,
+              7.838450025737505e-05
+            ],
+            [
+              4.460444098450007e-16,
+              -1.2109942503224598
+            ],
+            [
+              110.49999999999996,
+              109.02647597762005
+            ]
+          ],
+          "reference_luminance": {
+            "black": 0.6787504096906167,
+            "white": 0.8893683845918563
+          },
+          "reference_dynamic_range": 0.21061797490123957,
+          "patterns": [
+            {
+              "name": "vertical_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.5,
+              "native_pixels_per_period": 0.4561403538704874,
+              "normalized_modulation": 0.018629532872765784,
+              "fit_r_squared": 0.4884985390135438
+            },
+            {
+              "name": "vertical_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.7611111111111111,
+              "native_pixels_per_period": 0.8989627412046103,
+              "normalized_modulation": 0.09042179886751564,
+              "fit_r_squared": 0.542314535856445
+            },
+            {
+              "name": "vertical_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.375,
+              "native_pixels_per_period": 1.8245614154819496,
+              "normalized_modulation": 1.85826621930814,
+              "fit_r_squared": 0.8563684171443259
+            },
+            {
+              "name": "horizontal_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.6111111111111112,
+              "native_pixels_per_period": 0.7516516036484233,
+              "normalized_modulation": 0.022819963962319022,
+              "fit_r_squared": 0.03251172150987014
+            },
+            {
+              "name": "horizontal_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.75,
+              "native_pixels_per_period": 1.6146590004299464,
+              "normalized_modulation": 0.24377446319909898,
+              "fit_r_squared": 0.2528763861634412
+            },
+            {
+              "name": "horizontal_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.41111111111111115,
+              "native_pixels_per_period": 2.9456616899735506,
+              "normalized_modulation": 1.92194465236497,
+              "fit_r_squared": 0.9471666900732307
+            }
+          ]
+        },
+        "candidate": {
+          "image_size": [
+            224,
+            224
+          ],
+          "valid": true,
+          "affine_rms_error_px": 0.07157110419365298,
+          "coherent_quartets": 1,
+          "selection": "Most central coherent colored fiducial quadrilateral",
+          "fiducials": {
+            "red": {
+              "xy_px": [
+                89.65139366170294,
+                71.7784141529846
+              ],
+              "mask_pixels": 47
+            },
+            "green": {
+              "xy_px": [
+                131.5837912087912,
+                71.93296703296703
+              ],
+              "mask_pixels": 49
+            },
+            "blue": {
+              "xy_px": [
+                89.5951501723289,
+                146.4282373215165
+              ],
+              "mask_pixels": 51
+            },
+            "magenta": {
+              "xy_px": [
+                131.68108776266996,
+                146.34116192830655
+              ],
+              "mask_pixels": 46
+            }
+          },
+          "mm_to_pixel_affine": [
+            [
+              2.211008819406034,
+              0.001775723336117763
+            ],
+            [
+              -0.0010803438027539023,
+              -3.9225794227334587
+            ],
+            [
+              110.62785570137325,
+              109.12019510894366
+            ]
+          ],
+          "reference_luminance": {
+            "black": 0.4249830441793596,
+            "white": 0.8941856068917506
+          },
+          "reference_dynamic_range": 0.469202562712391,
+          "patterns": [
+            {
+              "name": "vertical_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.6555555555555557,
+              "native_pixels_per_period": 1.3355091135740438,
+              "normalized_modulation": 0.02642740275293367,
+              "fit_r_squared": 0.7579851303429249
+            },
+            {
+              "name": "vertical_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "vertical",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.9166666666666667,
+              "native_pixels_per_period": 2.4120103990610002,
+              "normalized_modulation": 0.41387580706057836,
+              "fit_r_squared": 0.16924083151053504
+            },
+            {
+              "name": "vertical_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "vertical",
+              "resolved": true,
+              "fitted_frequency_per_mm": 0.4416666666666667,
+              "native_pixels_per_period": 5.006059318805849,
+              "normalized_modulation": 0.9266628069215461,
+              "fit_r_squared": 0.6085285504944896
+            },
+            {
+              "name": "horizontal_0.6mm",
+              "pitch_mm": 0.6,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 1.8333333333333335,
+              "native_pixels_per_period": 2.139588857184986,
+              "normalized_modulation": 0.05994318984054953,
+              "fit_r_squared": 0.3499879714086068
+            },
+            {
+              "name": "horizontal_1.2mm",
+              "pitch_mm": 1.2,
+              "orientation": "horizontal",
+              "resolved": false,
+              "fitted_frequency_per_mm": 0.9166666666666667,
+              "native_pixels_per_period": 4.279177714369972,
+              "normalized_modulation": 0.5963834416850422,
+              "fit_r_squared": 0.43621766915003546
+            },
+            {
+              "name": "horizontal_2.4mm",
+              "pitch_mm": 2.4,
+              "orientation": "horizontal",
+              "resolved": true,
+              "fitted_frequency_per_mm": 0.45833333333333337,
+              "native_pixels_per_period": 8.558355428739944,
+              "normalized_modulation": 0.9261182741575306,
+              "fit_r_squared": 0.7311679213074775
+            }
+          ]
+        },
+        "valid": true,
+        "optical_benefit": true,
+        "linear_magnification": 3.2366680597397357,
+        "fiducial_pairs": [
+          {
+            "pair": [
+              "red",
+              "green"
+            ],
+            "baseline_span_px": 13.000006050620684,
+            "candidate_span_px": 41.93268236876536,
+            "linear_ratio": 3.2255894501497786
+          },
+          {
+            "pair": [
+              "red",
+              "blue"
+            ],
+            "baseline_span_px": 22.99485887615033,
+            "candidate_span_px": 74.64984435632253,
+            "linear_ratio": 3.2463710587825094
+          },
+          {
+            "pair": [
+              "red",
+              "magenta"
+            ],
+            "baseline_span_px": 26.428726616708836,
+            "candidate_span_px": 85.5926313535642,
+            "linear_ratio": 3.238621088140153
+          },
+          {
+            "pair": [
+              "green",
+              "blue"
+            ],
+            "baseline_span_px": 26.426133306068003,
+            "candidate_span_px": 85.51369054983493,
+            "linear_ratio": 3.235951683109052
+          },
+          {
+            "pair": [
+              "green",
+              "magenta"
+            ],
+            "baseline_span_px": 23.022922636103146,
+            "candidate_span_px": 74.40825850805962,
+            "linear_ratio": 3.2319206246811216
+          },
+          {
+            "pair": [
+              "blue",
+              "magenta"
+            ],
+            "baseline_span_px": 13.00000926565819,
+            "candidate_span_px": 42.08602766931307,
+            "linear_ratio": 3.2373844363704194
+          }
+        ],
+        "newly_resolved_patterns": [
+          "vertical_2.4mm",
+          "horizontal_2.4mm"
+        ],
+        "newly_resolved_in_both_orientations_mm": [
+          2.4
+        ]
+      },
+      "resize": "Native policy PNGs saved by the actual camera preprocessing pipeline.",
+      "actual_policy_input_checked": true,
+      "limits": [
+        "A static same-pose image comparison is required; camera or target motion invalidates the optical claim.",
+        "Color fiducials and line bars are measured from RGB. Geometry only labels physical dimensions.",
+        "A local affine map approximates distortion; inspect saved images and any rejected fiducials.",
+        "Three native pixels per period plus modulation/fit thresholds conservatively reject aliasing.",
+        "This is a feasibility metric, not a validated task scorer."
+      ],
+      "small_optical_test_passes": false
+    }
+  },
+  "visual_review": {
+    "completed": true,
+    "inspected": [
+      "aligned100-raw.png",
+      "aligned100-policy.png"
+    ],
+    "finding": "The milder aligned lens visibly enlarges the same central printed target and preserves recognizable bars; the scene and wrist-camera framing agree with the earlier realtime proof."
+  },
+  "findings": [
+    "Aligned100 passes the unchanged metric in both renderers. PathTracing gains are 1.90466x native and 1.90692x policy; differences from RealTimePathTracing are 0.3193% and 0.0640%, respectively.",
+    "The same pattern transitions are observed: native 1.2 mm bars and policy 2.4 mm bars become resolved in both orientations under the conservative development criterion.",
+    "The IOR=1 control remains at approximately 1.00x in both image sizes; tilt loses the target; the strongly curved lens remains unsuitable for uniform-gain interpretation.",
+    "All five completed cases match their saved array hashes and PNGs. The runner records actual policy-wrapper equality and unchanged joints. The missing baseline repeat is disclosed; no complete-run claim is made.",
+    "This independent rendering reference corroborates static native refraction and useful policy-input detail. It does not validate physical optical calibration or a manipulation task."
+  ]
+}

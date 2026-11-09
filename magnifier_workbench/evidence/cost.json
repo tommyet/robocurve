@@ -1,0 +1,22 @@
+{
+  "scope": "User-authorized feasibility and physical prototype; not a submitted task.",
+  "gpu_sessions": [
+    {
+      "start_requested_utc": "2026-11-09T05:39:42.482433+00:00",
+      "stop_requested_utc": "2026-11-09T06:06:50.346210+00:00",
+      "stop_confirmed_utc": "2026-11-09T06:14:51.034908+00:00",
+      "running_catalog_derived_usd_per_hour": "2.729872",
+      "conservative_running_cost_usd": "1.598910656120333333333333333"
+    },
+    {
+      "start_requested_utc": "2026-11-09T06:15:01.906018+00:00",
+      "stop_requested_utc": "2026-11-09T06:20:03.566204+00:00",
+      "stop_confirmed_utc": "2026-11-09T06:26:24.366303+00:00",
+      "running_catalog_derived_usd_per_hour": "2.729872",
+      "conservative_running_cost_usd": "0.5175081175370888888888888889"
+    }
+  ],
+  "total_conservative_cost_usd": 2.116418773657422,
+  "dream_requests": 0,
+  "cost_basis": "Elapsed start request to confirmed stopped time at catalog running rate. Conservative estimate, not invoice; retained storage after stop is additional."
+}

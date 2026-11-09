@@ -1,0 +1,139 @@
+{
+  "schema": "magnifier-independent-image-audit-v1",
+  "timestamp_utc": "2026-11-09T05:46:46.088171+00:00",
+  "source": "independent local remeasurement of downloaded actual RGB arrays and PNGs",
+  "measure_py_sha256": "1e489c9cdfbbab9da1e0d27fba24719cac212f065385c9f65c09e2c6eeff31bc",
+  "gate_changed_after_inspecting_results": false,
+  "recommended_proof_case": "aligned100",
+  "checks": [
+    {
+      "case": "baseline",
+      "array_png_and_recorded_hashes_match": true,
+      "actual_policy_wrapper_verified_by_runner": true,
+      "camera_joints_unchanged": true
+    },
+    {
+      "case": "null_lens",
+      "array_png_and_recorded_hashes_match": true,
+      "actual_policy_wrapper_verified_by_runner": true,
+      "camera_joints_unchanged": true
+    },
+    {
+      "case": "aligned100",
+      "array_png_and_recorded_hashes_match": true,
+      "actual_policy_wrapper_verified_by_runner": true,
+      "camera_joints_unchanged": true
+    },
+    {
+      "case": "tilted100",
+      "array_png_and_recorded_hashes_match": true,
+      "actual_policy_wrapper_verified_by_runner": true,
+      "camera_joints_unchanged": true
+    },
+    {
+      "case": "aligned75",
+      "array_png_and_recorded_hashes_match": true,
+      "actual_policy_wrapper_verified_by_runner": true,
+      "camera_joints_unchanged": true
+    },
+    {
+      "case": "baseline_repeat",
+      "array_png_and_recorded_hashes_match": true,
+      "actual_policy_wrapper_verified_by_runner": true,
+      "camera_joints_unchanged": true
+    }
+  ],
+  "results": {
+    "null_lens": {
+      "passes_original_gate": false,
+      "raw": {
+        "valid": true,
+        "gain": 1.0015515440129605,
+        "new_pitches_both_orientations_mm": [],
+        "candidate_affine_rms_error_px": 0.06409963771178637
+      },
+      "resized_224": {
+        "valid": true,
+        "gain": 1.002058650165318,
+        "new_pitches_both_orientations_mm": [],
+        "candidate_affine_rms_error_px": 0.02440548061835557
+      }
+    },
+    "aligned100": {
+      "passes_original_gate": true,
+      "raw": {
+        "valid": true,
+        "gain": 1.9107626504047717,
+        "new_pitches_both_orientations_mm": [
+          1.2
+        ],
+        "candidate_affine_rms_error_px": 0.07167638605224007
+      },
+      "resized_224": {
+        "valid": true,
+        "gain": 1.9081406879766032,
+        "new_pitches_both_orientations_mm": [
+          2.4
+        ],
+        "candidate_affine_rms_error_px": 0.07160890303821
+      }
+    },
+    "tilted100": {
+      "passes_original_gate": false,
+      "raw": {
+        "valid": false,
+        "gain": null,
+        "new_pitches_both_orientations_mm": [],
+        "candidate_affine_rms_error_px": null
+      },
+      "resized_224": {
+        "valid": false,
+        "gain": null,
+        "new_pitches_both_orientations_mm": [],
+        "candidate_affine_rms_error_px": null
+      }
+    },
+    "aligned75": {
+      "passes_original_gate": false,
+      "raw": {
+        "valid": true,
+        "gain": 3.2424290500973347,
+        "new_pitches_both_orientations_mm": [],
+        "candidate_affine_rms_error_px": 0.06824500132450585
+      },
+      "resized_224": {
+        "valid": true,
+        "gain": 3.2446362268166364,
+        "new_pitches_both_orientations_mm": [
+          2.4
+        ],
+        "candidate_affine_rms_error_px": 0.06517975757251754
+      }
+    },
+    "baseline_repeat": {
+      "passes_original_gate": false,
+      "raw": {
+        "valid": true,
+        "gain": 0.9991541794146721,
+        "new_pitches_both_orientations_mm": [],
+        "candidate_affine_rms_error_px": 0.07881738863244046
+      },
+      "resized_224": {
+        "valid": true,
+        "gain": 1.000780974823043,
+        "new_pitches_both_orientations_mm": [],
+        "candidate_affine_rms_error_px": 0.006742800614389921
+      }
+    }
+  },
+  "findings": [
+    "Aligned100 passes the original gate without any threshold or scoring change. Measured gain is approximately 1.91x in raw and actual policy frames.",
+    "Native 1.2 mm bar periods increase from approximately 2.47 pixels to 4.41 pixels in both orientations, with candidate sinusoid-fit R-squared above 0.91.",
+    "Policy vertical 2.4 mm bar period increases from 1.825 to 3.460 pixels; horizontal 2.4 mm grows from 2.99695 to 5.501 pixels. The baseline horizontal classification is borderline against the 3.0 threshold.",
+    "The unchanged baseline repeat and IOR=1 lens produce approximately 1.00x and do not pass; the 35-degree tilted lens loses the marked target and does not pass.",
+    "Aligned75 has visible nonlinear distortion: four corner markers remain a near-perfect quadrilateral while central patch locations differ from the affine map. Its 3.24x corner gain must not be described as uniform central magnification.",
+    "Raw and 224 gates can already pass different newly resolved pitches. Requiring raw to gain any new pitch is unnecessary if all raw baseline patterns are already resolved; keep current evidence unchanged and revise future gating only alongside a validated local-warp/ROI method.",
+    "Single-pixel policy markers, thin 0.8 mm black reference strip, fixed central 60-percent search region, and local affine patch lookup limit the metric. Normalized sinusoidal modulation may exceed 1 and is not calibrated Michelson contrast.",
+    "This validates rendered optical feasibility at one pose, not a task score, physical lens calibration, manipulation success, or a guaranteed real-world decoding gain."
+  ]
+}

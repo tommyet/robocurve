@@ -1,0 +1,39 @@
+{
+  "status": "Optical feasibility and physical scripted prototype demonstrated; not submission-ready.",
+  "demo": {
+    "trial": "pickup-005",
+    "steps": 530,
+    "simulated_seconds": 26.5,
+    "runner_wall_seconds": 131.37753607,
+    "actual_policy_size": [
+      224,
+      224
+    ],
+    "native_camera_size": [
+      640,
+      360
+    ]
+  },
+  "optical_hold": {
+    "certified": true,
+    "photo_hold_score": 1.0,
+    "frames": 61,
+    "seconds": 3.0,
+    "minimum_gain": 1.879721708447664,
+    "maximum_registration_shift_px": 0.1497434874887294,
+    "metric_sha256": "f1939b09c07da165bfe5e99f2742b46164be01fdce6a2af8b143235d09e201ba"
+  },
+  "physical_evidence": "531 measured-pose FK audit and full recorded video; no tested conservative-box overlaps; no attachment or object-force helper. Not a complete self-collision/continuous-time certificate.",
+  "dream": {
+    "run": false,
+    "requests": 0
+  },
+  "vm": "Both sessions confirmed stopped",
+  "total_estimated_brev_session_usd": 2.116418773657422,
+  "remaining": [
+    "Combined physical/optical scorer and rotation-invariance checks",
+    "Real-trial camera/reference protocol",
+    "Matching Dream baseline and final guide/novelty review",
+    "Explicit user authorization before media upload or upstream PR"
+  ]
+}

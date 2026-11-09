@@ -1,6 +1,6 @@
 # Shared working notes
 
-Last updated: 2026-11-08 UTC. Read this before starting work; update it when an
+Last updated: 2026-11-09 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
@@ -58,6 +58,90 @@ developers and their agents, not a competition submission document.
   content to this log. Keep task text and submitted media anonymous.
 
 ## GPU cost and persistence
+
+### 2026-11-09 — magnifier optics and physical prototype
+
+- Operator: repository agent, branch `codex/magnifier-optical-test` from shared
+  `origin/main` at `d9c31f0`. User authorized the optical test and continued
+  development if it works, with careful spending. No PR/media-upload authority
+  for this new task. Source and draft text are in `magnifier_workbench/`.
+- Static optical proof succeeded through the unchanged wrist-camera pipeline:
+  the 100 mm-curvature glass gives **1.911× native / 1.908× actual policy RGB**
+  enlargement in RT2. The PathTracing reference gives **1.905× / 1.907×**.
+  IOR=1 and lens-free repeats stay near 1×; a 35-degree tilt fails the detail
+  gate. The stronger 75 mm-curvature lens distorts the image and is not the
+  selected tool. PathTracing preserved five cases but hit its 240-second cap
+  before baseline repeat; do not call that six-case reference complete.
+- This is native closed-mesh OmniGlass refraction, not an image overlay, crop or
+  changed camera zoom. The actual policy image is the wrapper's cv2 resize to
+  224×224 from 640×360. The static test freezes physics and verifies the actual
+  mode. `antialiasing_mode=None` and disabling `/isaaclab/render/deterministic`
+  avoid silently overriding PathTracing with RT2. Preserve the recorded versions.
+- Physical tool: 120 g total mass, 60 mm glass disc, 68 mm frame and 80×20×18 mm
+  handle, ordinary child colliders on one dynamic rigid body. No attachment or
+  applied object force. Wrap **both** `obj.spawner_cfg.func` and its already
+  copied `obj.object_cfg.spawn.func` before physics initialization; changing
+  only the former produced pickup-001's missing-tool error.
+- A normalized gripper command of 0.20 allowed the tool to rotate during lift.
+  Commanding 0.0 at the unchanged 50 N actuator limit retained it. Small final
+  centring corrections use measured tool pose to command only the right arm;
+  this is privileged scripted-demo feedback, not information for Dream.
+- Pickup-004 completed 490 actions / 24.5 s. All 13 saved final-hold images show
+  both complete five-bar groups and at least 1.872× enlargement. Its full photo
+  score is **0**, because outer reference marks at (±40,±30) mm are hidden by
+  the opaque frame. V2 moves only those marks to (±50,±40) mm; thresholds remain
+  unchanged. Projecting all recorded poses gives at least 5.24 raw pixels of
+  rim clearance, but a new rendered verification is required.
+- The pickup-004 audit reconstructs 491 sampled actual poses from measured
+  joints and the pinned URDF: no tested conservative-box overlaps; minimum
+  inter-arm 44.69 mm, robot/head 13.83 mm, fingertip/table 3.18 mm. Final three
+  seconds: lens motion spans 2.35 mm, axis tilt <0.19 degrees, camera unchanged.
+  Tool-to-TCP drift <0.11 mm /0.11 degrees indicates that the remaining placement
+  error primarily reflects arm tracking, not measured grasp slip. This audit
+  does not cover all self-collision pairs or motion between samples.
+- `inspection_measure.py` counts five bars/four gaps in original pixels and
+  checks every coloured-square edge plus outer-marker registration. Its photo
+  score alone does not certify a grasp. `score_hold.py` requires all 61 frames
+  spanning the final three seconds; missing images fail certification. The
+  exploratory original Fourier/affine metric is preserved as optical evidence,
+  not silently replaced or presented as the final simple judging rule.
+- Evidence and frozen runs: `artifacts/magnifier-optical-session/`. Curated
+  anonymous numeric audits/traces are in `magnifier_workbench/evidence/` for
+  the other developer; original media remain ignored. All first-session evidence
+  was downloaded/hash-verified and the GPU, simulator jobs and logins were idle
+  before stop. First session 05:39:42–06:14:51 UTC estimates **$1.599** at
+  $2.729872/h, including the full shutdown interval. No Dream calls were made.
+  This is an elapsed-time estimate, not an invoice; stopped storage continues.
+- Pickup-005 completed 530 actions /26.5 s with the V2 chart and every hold
+  frame saved. All 61 final-three-second images show both bar groups and at
+  least 1.8797× enlargement. Final reference registration is within 0.083 pixel.
+  The V1 strict per-frame audit remains uncertified 0: 15 frames lose a tiny
+  marker because central-swatch brightness does not match the outer mark's
+  illumination. Preserve this failure and the V1 source. Independent anchored
+  analysis verifies continuous benefit from the fixed camera/target and the
+  registered final reference; a complete competition score still requires a
+  consistent physical and real-trial protocol.
+- Local detector correction: V2 fits each outer mark against its local
+  background and keeps strong contrast, expected-size and shape checks. The
+  one-pixel motion limit and inner enlargement/bar-count criteria are unchanged.
+  All 61 final hold frames now pass strictly: **photo-hold score 1.0**, minimum
+  gain 1.87972×, maximum registration shift 0.14975 pixel. Independent and root
+  offline reruns agree. Twelve synthetic image checks include illumination,
+  antialiased edges, missing/occluded marks, shadows, movement, zoom and blur.
+  Preserve the V1 source/failure and V2 reports in `magnifier_workbench/evidence/`.
+  A photo score still does not certify physical grasp or submission readiness.
+- The final physical audit covers 531 recorded poses with no tested conservative
+  overlaps. Last three seconds: lens movement 0.059 mm, axis tilt <=0.164 degrees,
+  whole-tool table clearance >=74.379 mm, camera unchanged. The first 491 states
+  exactly match pickup-004 commands, joints and tool poses. Keep the sampled-FK
+  and incomplete self-collision limitations explicit.
+- Final verification lifecycle: `artifacts/magnifier-verification-session/`,
+  06:15:01–06:26:24 UTC, estimated $0.518. Its runner used 131.4 s of a 180 s
+  cap. Evidence was downloaded/hash-verified and the shared VM was idle before
+  stopping. **Both sessions confirmed STOPPED; combined estimate $2.116**, no
+  Dream requests. Code, draft text, judging protocol and numeric evidence are
+  shared in the workbench. Final Dream baseline and submission readiness remain
+  open; do not call the prototype submitted or accepted.
 
 ### 2026-11-08 — magnifying-glass task feasibility (no GPU run)
 

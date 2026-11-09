@@ -1,0 +1,1193 @@
+{
+  "schema": "magnifier-anchored-hold-assessment-v1",
+  "timestamp_utc": "2026-11-09T06:22:57.870573+00:00",
+  "original_audit_preserved": {
+    "path": "independent-hold-audit.json",
+    "certified": false,
+    "photo_hold_score": 0.0,
+    "invalid_steps": [
+      500,
+      501,
+      502,
+      503,
+      505,
+      506,
+      507,
+      508,
+      509,
+      510,
+      511,
+      512,
+      513,
+      515,
+      516
+    ]
+  },
+  "assessment_type": "Separate protocol assessment after diagnosing the strict per-frame marker failure; no metric thresholds or source code changed.",
+  "anchored_optical_hold_supported": true,
+  "full_task_physical_certified": false,
+  "interval": {
+    "steps": [
+      470,
+      530
+    ],
+    "state_count": 61,
+    "expected_control_hz": 20,
+    "duration_s": 3.0,
+    "maximum_camera_translation_from_final_m": 0.0,
+    "maximum_camera_rotation_matrix_element_change": 0.0,
+    "camera_invariant": true,
+    "numerical_camera_invariance_tolerance": 1e-09
+  },
+  "anchor": {
+    "final_pair_photo_score": 1.0,
+    "maximum_registration_shift_px": 0.0822999681743906,
+    "frozen_reference": {
+      "same_camera_pose": true,
+      "same_physics_step": 6480,
+      "counterfactual": "Only glass hidden after control; frame and handle remain.",
+      "actual_policy_resize_verified": true
+    },
+    "source_sha256_verified": {
+      "pickup.py": "4bbebf02dc339462525798361b33bd414c229ddcd4c908cb36d606a94da4ff27",
+      "probe.py": "f7ce3d282857d8e3efde639edede95ba08b10209e3fd70c4679a79d691609e0e",
+      "pickup_scene.py": "81a12ffe2b8226aaa8956b05c4744c15c12009b3ce5965dbd3d6655731aba940"
+    },
+    "fixed_target_source_evidence": "pickup.py authors /World/InspectionPrint once at world center(0.35,0.05,0.7551), rotation diag(-1,-1,1), before execution. No target transform mutation or camera intrinsics mutation occurs during the run. This certifies the printed visual target; the separate plate body is not used as a pose proxy.",
+    "real_world_requirement": "A fixed card and a locked camera, or independently verified invariant camera and target poses, are needed for the entire hold. The final pair alone does not establish stability during the preceding interval."
+  },
+  "details": [
+    {
+      "step": 470,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8844194460479922,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.1252070588235294,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 2
+    },
+    {
+      "step": 471,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8848887721395715,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.13697176470588235,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 2
+    },
+    {
+      "step": 472,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8849655147017248,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.12240235294117646,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 2
+    },
+    {
+      "step": 473,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.885327535501214,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.14873647058823528,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 2
+    },
+    {
+      "step": 474,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.885674104641233,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.14564862745098042,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 2
+    },
+    {
+      "step": 475,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.88582449726882,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.1341670588235294,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 2
+    },
+    {
+      "step": 476,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8856062877202935,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.13305019607843135,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 2
+    },
+    {
+      "step": 477,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.884811199672414,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.1252070588235294,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 2
+    },
+    {
+      "step": 478,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.884357819832723,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.12240235294117646,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 2
+    },
+    {
+      "step": 479,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8843784123622,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.1341670588235294,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 480,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8844643350038304,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.1341670588235294,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 481,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8843277451179534,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.12240235294117646,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 482,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.883995540561515,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.11848078431372548,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 483,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.883736163552874,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.12549019607843137,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 484,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8840200823095286,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.12240235294117646,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 485,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8840236396130388,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.1252070588235294,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 486,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8839883176734247,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.12941176470588237,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 487,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.883356882876624,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.13305019607843135,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 488,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8834344705466293,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.13333333333333333,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 489,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8839043337466546,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.13305019607843135,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 490,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8834764449378532,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.12941176470588237,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 2
+    },
+    {
+      "step": 491,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8835684134283879,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.1341670588235294,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 492,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.883463978888236,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.1341670588235294,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 2
+    },
+    {
+      "step": 493,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8834645078415797,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.14481490196078434,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 2
+    },
+    {
+      "step": 494,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8805400145206561,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.14985333333333334,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 2
+    },
+    {
+      "step": 495,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8803599409179688,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.1607843137254902,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 2
+    },
+    {
+      "step": 496,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8836881949494244,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.1607843137254902,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 2
+    },
+    {
+      "step": 497,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.880760656306902,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.17618745098039215,
+      "right_bottom_minimum_xy_px": [
+        415,
+        254
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 498,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8806250312149422,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.16862745098039214,
+      "right_bottom_minimum_xy_px": [
+        415,
+        254
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 2
+    },
+    {
+      "step": 499,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8808842534036043,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.17647058823529413,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.899441568627451,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 500,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8803019596679766,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": false,
+      "right_bottom_marker_minimum_luminance": 0.1803921568627451,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 0
+    },
+    {
+      "step": 501,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8803970420760487,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": false,
+      "right_bottom_marker_minimum_luminance": 0.1803921568627451,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 0
+    },
+    {
+      "step": 502,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8801200254267156,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": false,
+      "right_bottom_marker_minimum_luminance": 0.1803921568627451,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 0
+    },
+    {
+      "step": 503,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.88008276455569,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": false,
+      "right_bottom_marker_minimum_luminance": 0.1840305882352941,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 0
+    },
+    {
+      "step": 504,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8802416017579002,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.17647058823529413,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 505,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8800144021003744,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": false,
+      "right_bottom_marker_minimum_luminance": 0.19187372549019607,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 0
+    },
+    {
+      "step": 506,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8800721192380854,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": false,
+      "right_bottom_marker_minimum_luminance": 0.18823529411764706,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 0
+    },
+    {
+      "step": 507,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8798878095593083,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": false,
+      "right_bottom_marker_minimum_luminance": 0.1840305882352941,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 0
+    },
+    {
+      "step": 508,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8798225669633677,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": false,
+      "right_bottom_marker_minimum_luminance": 0.18823529411764706,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 0
+    },
+    {
+      "step": 509,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.880270348322057,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": false,
+      "right_bottom_marker_minimum_luminance": 0.1843137254901961,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 0
+    },
+    {
+      "step": 510,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8805351244582558,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": false,
+      "right_bottom_marker_minimum_luminance": 0.18795215686274508,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 0
+    },
+    {
+      "step": 511,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8803905722395273,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": false,
+      "right_bottom_marker_minimum_luminance": 0.20392156862745095,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 0
+    },
+    {
+      "step": 512,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8808206689700069,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": false,
+      "right_bottom_marker_minimum_luminance": 0.199716862745098,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 0
+    },
+    {
+      "step": 513,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.88093410389284,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": false,
+      "right_bottom_marker_minimum_luminance": 0.1843137254901961,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 0
+    },
+    {
+      "step": 514,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.880898791525526,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.17647058823529413,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 515,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8810586518243855,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": false,
+      "right_bottom_marker_minimum_luminance": 0.1840305882352941,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 0
+    },
+    {
+      "step": 516,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8810889102325785,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": false,
+      "right_bottom_marker_minimum_luminance": 0.1803921568627451,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.899441568627451,
+      "pixels_below_strict_threshold": 0
+    },
+    {
+      "step": 517,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8811852434462342,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.17647058823529413,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 518,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8809437850402941,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.17226588235294116,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 519,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.880605002075975,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.17226588235294116,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 520,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8805442708549542,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.16862745098039214,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.899441568627451,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 521,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8805149021041656,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.16470588235294117,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.9008439215686274,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 522,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8804319135101748,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.16050117647058823,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.9012607843137255,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 523,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.879721708447664,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.15769647058823527,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.9008439215686274,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 524,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8798713225997503,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.16470588235294117,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.9012607843137255,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 525,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8797670501930237,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.1683443137254902,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 526,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.879760211994916,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.16946117647058823,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.899441568627451,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 527,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8797264953987205,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.1733827450980392,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.899441568627451,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 528,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.879762583424108,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.16161803921568627,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.9008439215686274,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 529,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8799934194397747,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.15657960784313724,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.8980392156862745,
+      "pixels_below_strict_threshold": 1
+    },
+    {
+      "step": 530,
+      "raw_target_measurement_valid": true,
+      "policy_target_measurement_valid": true,
+      "both_policy_groups_readable": true,
+      "minimum_edge_gain": 1.8799259309329062,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "strict_registration_valid": true,
+      "right_bottom_marker_minimum_luminance": 0.1450980392156863,
+      "right_bottom_minimum_xy_px": [
+        415,
+        255
+      ],
+      "right_bottom_local_white_luminance": 0.9008439215686274,
+      "pixels_below_strict_threshold": 1
+    }
+  ],
+  "summary": {
+    "all_61_raw_and_policy_target_measurements_valid": true,
+    "all_61_policy_groups_readable": true,
+    "all_61_have_newly_readable_vertical_group": true,
+    "minimum_edge_gain": 1.879721708447664,
+    "maximum_edge_gain": 1.88582449726882,
+    "strict_registration_valid_frames": 46
+  },
+  "failure_diagnosis": {
+    "marker": "right_bottom",
+    "fixed_threshold_from_central_references": 0.177489568627451,
+    "marker_minimum_luminance_range": [
+      0.11848078431372548,
+      0.20392156862745095
+    ],
+    "local_white_luminance_range": [
+      0.8980392156862745,
+      0.9012607843137255
+    ],
+    "observation": "All fifteen strict failures occur at the same tiny outer marker. Its darkest native pixel moves across a threshold derived from the differently illuminated central reference swatches. The reference marker has only one thresholded pixel in the final baseline/candidate images. Camera pose remains exactly invariant; inner detail stays readable throughout. No threshold has been relaxed."
+  },
+  "interpretation": "The separate anchored protocol supports a continuous three-second rendered optical benefit. It does not retroactively turn the original strict audit into a pass, and it does not establish physical grasp, collisions, real lens fidelity or Dream performance.",
+  "visual_review": {
+    "completed": true,
+    "images": [
+      "final-raw.png",
+      "final-policy.png",
+      "baseline-policy.png",
+      "hold-0470-policy.png",
+      "hold-0501-policy.png",
+      "hold-0530-policy.png"
+    ],
+    "finding": "Both final groups visibly contain five dark bars separated by four gaps. The baseline vertical group merges into three dark bars. The start, middle and end policy images preserve the readable enlarged target, including a frame rejected solely by the outer-marker detector."
+  }
+}

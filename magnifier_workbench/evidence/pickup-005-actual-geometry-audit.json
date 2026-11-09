@@ -1,0 +1,510 @@
+{
+  "scope": "Sampled actual joint/tool trace audit; robot links are reconstructed with URDF FK.",
+  "trace_sha256": "2b560fb967ddfc4240dacda5d279511912de8d452dff722ea1142a0159554db9",
+  "source_sha256": "4e84d6d08fe551c44034f626f9ef6480f0eef5e0c6fbc8e9643c50578392aa30",
+  "sample_count": 531,
+  "all_samples_audited": true,
+  "geometry_provenance": {
+    "urdf": "yam_arm.urdf",
+    "urdf_sha256": "d6cc3fca8d6848aad36c0d2bb8798de391fcf5ef8f41180fe7618eda141f0bef",
+    "collision_meshes_sha256": "d1a445176b9a35a200a6cc3e28687180e831a6b0932efff85e355221dae823c5",
+    "mesh_hash_format": "SHA256 of ordered filename+NUL+SHA256(mesh bytes), in selected-link/URDF-collision order",
+    "asset_source_commit": "120c3c81400171174604e503943f8d1ebc891058",
+    "links": {
+      "base": {
+        "collision_meshes": 26,
+        "center": [
+          4.2823490491172844e-07,
+          1.8682652919155274e-07,
+          0.036548991171995095
+        ],
+        "half_size": [
+          0.0361006620107427,
+          0.10110017601587441,
+          0.037650103202043636
+        ]
+      },
+      "gripper": {
+        "collision_meshes": 44,
+        "center": [
+          -2.6554510014487054e-08,
+          1.3634562472109035e-09,
+          0.026499383771419527
+        ],
+        "half_size": [
+          0.05099999974481762,
+          0.032499999739229686,
+          0.03699938207864762
+        ]
+      },
+      "link1": {
+        "collision_meshes": 105,
+        "center": [
+          -0.03148732307350635,
+          -0.002999804922007021,
+          -0.009238665650983524
+        ],
+        "half_size": [
+          0.031970070675015456,
+          0.044382709427736707,
+          0.02872157774982043
+        ]
+      },
+      "link2": {
+        "collision_meshes": 8,
+        "center": [
+          1.6437673569513755e-08,
+          -0.03340052475780249,
+          0.13202309579234123
+        ],
+        "half_size": [
+          0.030999999493360523,
+          0.03334947582334281,
+          0.16297115758061412
+        ]
+      },
+      "link3": {
+        "collision_meshes": 12,
+        "center": [
+          -0.029867597947406774,
+          -0.034925490248668936,
+          -0.12098033932426572
+        ],
+        "half_size": [
+          0.06133270263671876,
+          0.0449245100026019,
+          0.15247686253860596
+        ]
+      },
+      "link4": {
+        "collision_meshes": 12,
+        "center": [
+          -0.04035017048804759,
+          0.03000000440515578,
+          -0.04242204265668392
+        ],
+        "half_size": [
+          0.05785013176500798,
+          0.04300000495277346,
+          0.059896418824791915
+        ]
+      },
+      "link5": {
+        "collision_meshes": 16,
+        "center": [
+          0.034476724766194816,
+          -2.5856018069647657e-08,
+          -0.0010500004049390568
+        ],
+        "half_size": [
+          0.03447672445327044,
+          0.028499998152256015,
+          0.03455000021494926
+        ]
+      },
+      "tip_left": {
+        "collision_meshes": 45,
+        "center": [
+          0.02399234150817156,
+          -0.03249998061134815,
+          -0.04323830162715911
+        ],
+        "half_size": [
+          0.03399913292378188,
+          0.035785401239991195,
+          0.04692129790782929
+        ]
+      },
+      "tip_right": {
+        "collision_meshes": 47,
+        "center": [
+          -0.023993591654670236,
+          0.03250000244997933,
+          -0.04323830162715911
+        ],
+        "half_size": [
+          0.03399960976094008,
+          0.03578540141461418,
+          0.04692129790782929
+        ]
+      }
+    },
+    "scope": "robot",
+    "envelope": "one link-frame AABB per complete selected collision link"
+  },
+  "clearance_minima": {
+    "inter_arm": {
+      "kind": "inter_arm",
+      "lower_bound_m": 0.044686853348994526,
+      "step": 317,
+      "time_s": 15.85,
+      "phase": "hold inspection view",
+      "left": "link4",
+      "right": "link4"
+    },
+    "robot_glass_and_rim": {
+      "kind": "robot_glass_and_rim",
+      "lower_bound_m": 0.013829068756408363,
+      "step": 451,
+      "time_s": 22.55,
+      "phase": "hold centred view",
+      "side": "left",
+      "link": "tip_right"
+    },
+    "robot_handle_excluding_right_fingers": {
+      "kind": "robot_handle_excluding_right_fingers",
+      "lower_bound_m": 0.041423601619517796,
+      "step": 451,
+      "time_s": 22.55,
+      "phase": "hold centred view",
+      "side": "left",
+      "link": "tip_left"
+    },
+    "moving_robot_table": {
+      "kind": "moving_robot_table",
+      "lower_bound_m": 0.003184958466715168,
+      "step": 80,
+      "time_s": 4.0,
+      "phase": "descend to handle",
+      "side": "right",
+      "link": "tip_right"
+    }
+  },
+  "possible_obb_overlaps": [],
+  "final_three_seconds": {
+    "start_s": 23.5,
+    "end_s": 26.5,
+    "sample_count": 61,
+    "maximum_pairwise_lens_motion_m": 5.8605833880981036e-05,
+    "max_lens_error_to_goal_m": 0.001153697924879627,
+    "lens_axis_max_tilt_from_vertical_deg": 0.16365486554429715,
+    "maximum_pairwise_tool_rotation_deg": 0.01975537549784591,
+    "camera_maximum_pairwise_motion_m": 0.0,
+    "camera_maximum_pairwise_rotation_deg": 0.0,
+    "tool_min_bottom_clearance_m": 0.07437949760941653,
+    "tool_max_bottom_clearance_m": 0.07439567795246704,
+    "relative_tool_to_tcp_max_pairwise_translation_m": 2.678356312664251e-06,
+    "relative_tool_to_tcp_max_pairwise_rotation_deg": 0.004996978809342931,
+    "mean_tool_root_position_m": [
+      0.35004404675765116,
+      -0.019717767376635897,
+      0.8309780671948293
+    ],
+    "mean_lens_center_m": [
+      0.3500257632634544,
+      0.05028213531064036,
+      0.8310932028325562
+    ]
+  },
+  "initial_tool_bottom_clearance_m": -5.777353414559983e-07,
+  "pickup_lift": {
+    "at_complete_closure": {
+      "step": 100,
+      "time_s": 5.0,
+      "phase": "grasp handle",
+      "lens_center": [
+        0.19746952442470536,
+        -0.1997323413351476,
+        0.756750574959146
+      ],
+      "lens_axis": [
+        -0.00787141683392177,
+        -0.0015411115403413706,
+        0.9999678323687452
+      ],
+      "tool_rotation": [
+        [
+          0.044491150812968394,
+          0.998978767690467,
+          -0.00787141683392177
+        ],
+        [
+          -0.9990090704258,
+          0.044480357262492,
+          -0.0015411115403413706
+        ],
+        [
+          -0.001189414274508947,
+          0.007932182640151116,
+          0.9999678323687452
+        ]
+      ],
+      "tool_bottom_clearance_m": -2.1537112590230834e-05,
+      "tool_in_tcp_position": [
+        0.0004870575680168041,
+        -0.029088955973626335,
+        0.008535111630060361
+      ],
+      "tool_in_tcp_rotation": [
+        [
+          -0.002433583279989335,
+          0.9999947356202268,
+          -0.0021462535387228258
+        ],
+        [
+          0.9999813654413621,
+          0.0024215230397184617,
+          -0.005604016077552537
+        ],
+        [
+          -0.005598789373490555,
+          -0.0021598513840625317,
+          -0.9999819941376695
+        ]
+      ],
+      "camera_eye": [
+        0.3121880751740797,
+        0.3046533608317247,
+        1.1001564971491966
+      ],
+      "camera_rotation": [
+        [
+          0.008917761490768469,
+          0.8636149218031767,
+          -0.5040731498194359
+        ],
+        [
+          -0.9999601365082831,
+          0.00747697816906765,
+          -0.004880593385573143
+        ],
+        [
+          -0.00044600933822171363,
+          0.5040965796713491,
+          0.8636471730048779
+        ]
+      ],
+      "right_finger_positions_m": [
+        -0.00946670863777399,
+        -0.010091142728924751
+      ]
+    },
+    "at_complete_lift": {
+      "step": 140,
+      "time_s": 7.0,
+      "phase": "lift tool clear",
+      "lens_center": [
+        0.1973392100446737,
+        -0.20292521469085578,
+        0.9465254006191738
+      ],
+      "lens_axis": [
+        -0.01614621560033237,
+        0.015588633075017755,
+        0.9997481153973935
+      ],
+      "tool_rotation": [
+        [
+          0.07054929035999069,
+          0.9973776102116435,
+          -0.01614621560033237
+        ],
+        [
+          -0.9973686433563397,
+          0.07080101530618443,
+          0.015588633075017755
+        ],
+        [
+          0.01669092206068348,
+          0.015003962147517686,
+          0.9997481153973935
+        ]
+      ],
+      "tool_bottom_clearance_m": 0.18926567088381085,
+      "tool_in_tcp_position": [
+        0.00039540163483869987,
+        -0.029091600444731747,
+        0.008534753343647547
+      ],
+      "tool_in_tcp_rotation": [
+        [
+          -0.0011323321329326618,
+          0.9999960186567047,
+          -0.002584665293634398
+        ],
+        [
+          0.9999833146365186,
+          0.0011176689372859423,
+          -0.0056675625014922255
+        ],
+        [
+          -0.005664651136868279,
+          -0.002591039730690343,
+          -0.9999805989321051
+        ]
+      ],
+      "camera_eye": [
+        0.31218814235647846,
+        0.3046546542314623,
+        1.1001564713551837
+      ],
+      "camera_rotation": [
+        [
+          0.00892838338947351,
+          0.8636149601096597,
+          -0.504072896161698
+        ],
+        [
+          -0.9999600384364792,
+          0.007482466845566608,
+          -0.004892261237879951
+        ],
+        [
+          -0.00045332126051903583,
+          0.5040964326046121,
+          0.8636472550382701
+        ]
+      ],
+      "right_finger_positions_m": [
+        -0.009522132575511932,
+        -0.010041789151728153
+      ]
+    }
+  },
+  "tool_relative_to_right_tcp": {
+    "from_complete_closure": {
+      "anchor_step": 100,
+      "max_translation_from_anchor_m": 0.00010221261711752724,
+      "max_rotation_from_anchor_deg": 0.10381212041292046,
+      "final_translation_from_anchor_m": 3.027437825467914e-05,
+      "final_rotation_from_anchor_deg": 0.05896312442744713
+    },
+    "from_complete_lift": {
+      "anchor_step": 140,
+      "max_translation_from_anchor_m": 0.0001259420404851268,
+      "max_rotation_from_anchor_deg": 0.1135065533575587,
+      "final_translation_from_anchor_m": 0.00011384448317943132,
+      "final_rotation_from_anchor_deg": 0.07415180304462309
+    }
+  },
+  "final_tool": {
+    "step": 530,
+    "time_s": 26.5,
+    "phase": "hold centred view",
+    "lens_center": [
+      0.3500018901158821,
+      0.05029953983028662,
+      0.8310814339390444
+    ],
+    "lens_axis": [
+      -0.002271754063117071,
+      -0.0016302914196758423,
+      0.9999960906340403
+    ],
+    "tool_rotation": [
+      [
+        0.00033607578071570554,
+        0.9999973630897967,
+        -0.002271754063117071
+      ],
+      [
+        -0.9999986158382228,
+        0.00033237257081242255,
+        -0.0016302914196758423
+      ],
+      [
+        -0.0016295320520055513,
+        0.002272298820103591,
+        0.9999960906340403
+      ]
+    ],
+    "tool_bottom_clearance_m": 0.07437949760941653,
+    "tool_in_tcp_position": [
+      0.0005067770095615794,
+      -0.029088040572133676,
+      0.008558064704886554
+    ],
+    "tool_in_tcp_rotation": [
+      [
+        -0.002179188273928926,
+        0.9999939273323337,
+        -0.0027196391161938365
+      ],
+      [
+        0.9999770602774283,
+        0.002161693531038603,
+        -0.006419189979362122
+      ],
+      [
+        -0.006413271971470496,
+        -0.0027335653519580767,
+        -0.9999756984862614
+      ]
+    ],
+    "camera_eye": [
+      0.3508102764156903,
+      0.049862909851354706,
+      0.9539236062559742
+    ],
+    "camera_rotation": [
+      [
+        -0.9999528539948854,
+        0.00927737315004324,
+        0.0028670777662963957
+      ],
+      [
+        -0.009283976344570784,
+        -0.9999542614165047,
+        -0.0022984469117741683
+      ],
+      [
+        0.002845623080554497,
+        -0.002324956431344714,
+        0.9999932484806465
+      ]
+    ],
+    "right_finger_positions_m": [
+      -0.009441922418773174,
+      -0.01012223120778799
+    ]
+  },
+  "limitations": [
+    "Actual recorded joints and tool root poses; robot links reconstructed by pinned URDF FK, not recorded native body-link transforms.",
+    "20 Hz samples only; no between-sample or native-contact-offset guarantee.",
+    "Complete-link OBBs are conservative; overlaps are possible geometry overlaps requiring refinement, not proven collisions.",
+    "Glass and rim share a conservative 68x68x18 mm oriented head box.",
+    "Intended right finger/handle contact excluded; no forces or contact impulses were recorded.",
+    "Mounted base/link1 excluded from table check; self-collision and separate camera housing are outside this audit.",
+    "Relative TCP transform drift includes finger compliance, object slip, IK/native reconstruction and changing contact; it is not a force measurement."
+  ],
+  "tool_geometry_source_matches_recorded_run": {
+    "tool.py": {
+      "recorded": "56861f697bffb27c1264cf5afdf936f7ed7c66f3f6ee7ceccb96a85fc6aeb663",
+      "current": "56861f697bffb27c1264cf5afdf936f7ed7c66f3f6ee7ceccb96a85fc6aeb663",
+      "match": true
+    },
+    "lens.py": {
+      "recorded": "b9e78d799e0da701047902735c7f75f293311928383686158a743890e53ace15",
+      "current": "b9e78d799e0da701047902735c7f75f293311928383686158a743890e53ace15",
+      "match": true
+    }
+  },
+  "comparison_to_pickup004": {
+    "previous_trace_sha256": "f89f3bb0c5aa761c180f1bb4596290dd71ec5e7158216cd218b3ae50e5a4d2bf",
+    "common_frames": 491,
+    "exact_command_equal_count": 491,
+    "exact_actual_joint_equal_count": 491,
+    "exact_actual_tool_pose_equal_count": 491,
+    "first_command_difference": null,
+    "note": "Feedback commands may diverge when live measurements differ; matching scripted prefix is checked separately below.",
+    "scripted_prefix_commands_equal": true,
+    "motion_source_hashes_equal": {
+      "pickup_plan.py": false,
+      "align.py": true,
+      "tool.py": true,
+      "lens.py": true,
+      "pickup_scene.py": true
+    },
+    "changed_source_names": [
+      "inspection_measure.py",
+      "inspection_target.py",
+      "pickup.py",
+      "pickup_plan.py"
+    ],
+    "plan_hash_equal": false,
+    "frozen_motion_plan_frames_exactly_equal": true,
+    "changed_planner_explanation": "Only build_plan default changed from grasp_opening .20 to0.0; both executed frozen plans already used0.0 and their frames are exactly equal.",
+    "changed_runner_explanation": "Alignment default now60 (prior run explicitly requested60); stationary final hold extended by40steps; camera snapshots saved every hold step instead of every fifth. All491 shared actual frames match exactly."
+  },
+  "retention_complete_lift_to_end_samples": 391
+}

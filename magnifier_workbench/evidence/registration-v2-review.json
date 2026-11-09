@@ -1,0 +1,63 @@
+{
+  "schema": "magnifier-registration-v2-review-v1",
+  "timestamp_utc": "2026-11-09T06:30:56.884026+00:00",
+  "root_cause": "V1 reused shaded central black/white swatches to threshold outer markers under different illumination. A tiny antialiased marker could therefore vanish even while its physical location and camera pose were unchanged.",
+  "correction": "Estimate a local background plane around each expected outer marker. Require a strong dark ink core, identify its connected antialiased support, and use the complete compact square for shape checks and darkness-weighted centroid. This measures image features; no simulator pose is substituted for a marker centre.",
+  "unchanged": [
+    "One raw pixel maximum camera-reference registration displacement.",
+    "All inner fiducial enlargement calculations and thresholds.",
+    "Both five-bar/four-gap pixel-count rules and reference checks.",
+    "All 61 frames, exact camera invariance, resize checks, frozen reference requirements and minimum-over-time hold scoring."
+  ],
+  "changed_functions": [
+    "find_registration_marker",
+    "registration_check",
+    "self_test"
+  ],
+  "source_hashes": {
+    "v1": "a5e13d29a06b246efe5a330b349fb20947c02e41b465900a27ed066cc2c29b19",
+    "v2": "f1939b09c07da165bfe5e99f2742b46164be01fdce6a2af8b143235d09e201ba"
+  },
+  "synthetic_tests": {
+    "passed": true,
+    "cases": 12,
+    "synthetic_only": true,
+    "positive_minimum_gain": 1.878558019592128,
+    "positive_new_groups": [
+      "vertical"
+    ],
+    "local_gradient_marker_error_px": 0.004484290144800738,
+    "interpretation": "Synthetic image-counting checks, not rendered optical validation."
+  },
+  "detector_bounds": {
+    "local_background": "Robust linear plane from outer fitting ring; RMS residual <=0.06, predicted background >=0.15.",
+    "strong_core": "At least two connected pixels, each at least0.15 darker than local background and normalized darkness >=0.45.",
+    "antialiased_support": "Connected pixels at least0.08 darker than local background and normalized darkness >=0.20.",
+    "shape": "Known projected square size: component area between max(2,0.2\u00d7expected area) and1.8\u00d7expected area; box sides between max(1,0.4\u00d7expected) and1+1.8\u00d7expected; relative aspect ratio0.5\u20132; fill >=0.4; components touching search boundary rejected."
+  },
+  "preserved_v1_result": {
+    "path": "independent-hold-audit.json",
+    "certified": false,
+    "photo_hold_score": 0.0,
+    "invalid_frame_count": 15
+  },
+  "v2_result": {
+    "path": "registration-v2-final-hold-audit.json",
+    "certified": true,
+    "photo_hold_score": 1.0,
+    "frame_count": 61,
+    "minimum_edge_gain": 1.879721708447664,
+    "maximum_registration_shift_px": 0.1497434874887294,
+    "all_registration_markers": 244,
+    "minimum_candidate_strong_core_pixels": 2,
+    "minimum_candidate_local_contrast": 0.18485069008714572,
+    "maximum_per_marker_shift_px": {
+      "left_bottom": 0.1497434874887294,
+      "left_top": 0.09201386488021036,
+      "right_bottom": 0.12832816186989646,
+      "right_top": 0.0664668392151619
+    }
+  },
+  "full_task_physical_certified": false,
+  "limits": "An image hold certificate is not a physical grasp/collision certificate, a Dream result, or submission readiness. Stronger future lighting changes can still make registration inconclusive; failures stay explicit."
+}

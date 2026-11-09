@@ -1,0 +1,322 @@
+"""Count native image pixels in the proposed five-bar inspection task.
+
+This is a photo-only development scorer, pending rendered validation. It does
+not certify pickup, physical grasp, clearance or a three-second continuous hold.
+Those conditions must be checked separately on the trial. The earlier static
+proof and its measurement code remain unchanged.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import itertools
+import json
+from pathlib import Path
+
+import numpy as np
+from PIL import Image
+
+try:
+    from .measure import _components, _project, find_fiducials
+except ImportError:
+    from measure import _components, _project, find_fiducials
+
+
+def luminance(rgb):
+    return np.asarray(rgb, dtype=float)[..., :3] @ np.array([.2126, .7152, .0722]) / 255
+
+
+def native_reference_samples(gray, reference, affine):
+    """Read existing pixels inside the central half of a reference patch."""
+    center = np.asarray(reference["center_mm"])
+    half = np.asarray(reference["size_mm"]) * .25
+    corners = np.array([center+[x*half[0], y*half[1]] for x, y in itertools.product((-1, 1), repeat=2)])
+    projected = _project(corners, affine)
+    lo = np.ceil(projected.min(axis=0)).astype(int)
+    hi = np.floor(projected.max(axis=0)).astype(int)
+    if np.any(lo < 0) or hi[0] >= gray.shape[1] or hi[1] >= gray.shape[0]:
+        raise ValueError("Reference patch falls outside the image")
+    xx, yy = np.meshgrid(np.arange(lo[0], hi[0]+1), np.arange(lo[1], hi[1]+1))
+    xy = np.stack((xx.ravel(), yy.ravel()), axis=-1)
+    world = (xy-affine[2]) @ np.linalg.inv(affine[:2])
+    inside = np.all(np.abs(world-center) <= half+1e-10, axis=-1)
+    xy = xy[inside]
+    if not len(xy):
+        raise ValueError("No native pixel lies inside a reference patch's central half")
+    return float(np.median(gray[xy[:, 1], xy[:, 0]])), len(xy)
+
+
+def count_scanline(values, locations, black, white):
+    """Count actual dark/bright runs, without resampling or fitting a grating.
+
+    Midpoint separates runs. Each counted run must also contain a native pixel
+    at least 10% of the reference range away from the midpoint, so almost-flat
+    gray noise cannot establish readable black bars and white gaps.
+    """
+    values = np.asarray(values)
+    dark = values < (black+white)/2
+    starts = np.flatnonzero(np.r_[True, dark[1:] != dark[:-1]])
+    ends = np.r_[starts[1:], len(values)]
+    runs = []
+    dynamic = white-black
+    for start, end in zip(starts, ends):
+        is_dark = bool(dark[start])
+        strong = values[start:end] <= black+.4*dynamic if is_dark else values[start:end] >= black+.6*dynamic
+        runs.append({"kind": "dark" if is_dark else "bright", "pixels": int(end-start),
+                     "strong_pixels": int(strong.sum()),
+                     "start_xy": list(map(int, locations[start])),
+                     "end_xy": list(map(int, locations[end-1]))})
+    # White margins outside the two end bars are not part of the five-bar code.
+    if runs and runs[0]["kind"] == "bright":
+        runs.pop(0)
+    if runs and runs[-1]["kind"] == "bright":
+        runs.pop()
+    kinds = [run["kind"] for run in runs]
+    expected = ["dark" if i % 2 == 0 else "bright" for i in range(9)]
+    return {"readable": bool(kinds == expected and all(run["strong_pixels"] >= 1 for run in runs)),
+            "dark_bars": kinds.count("dark"), "bright_gaps": kinds.count("bright"),
+            "runs": runs}
+
+
+def measure_group(gray, group, affine, black, white):
+    center = np.asarray(group["center_mm"])
+    bar_axis = 0 if group["orientation"] == "vertical" else 1
+    stripe_axis = 1-bar_axis
+    image_center = _project(center, affine)
+    bar_vector, stripe_vector = affine[bar_axis], affine[stripe_axis]
+    varying_axis = int(np.argmax(np.abs(bar_vector)))
+    fixed_axis = 1-varying_axis
+    extent = group["size_mm"][bar_axis]/2
+    central_half_extent = group["size_mm"][stripe_axis]/4
+    result = {"name": group["name"], "readable": False, "scanlines": [],
+              "criterion": "Five dark runs and four bright gaps, each with at least one strong native pixel, on every full scanline through the central half of the stripe length."}
+    if abs(stripe_vector[fixed_axis]) < 1e-8:
+        result["error"] = "Target orientation does not support native row/column inspection"
+        return result
+    # Intersect the fixed-coordinate ranges at both ends. Every sampled row or
+    # column crosses the complete bar code inside the central half of its length.
+    radius = abs(stripe_vector[fixed_axis])*central_half_extent
+    endpoints = [image_center[fixed_axis]+bar_vector[fixed_axis]*u for u in (-extent, extent)]
+    low, high = max(endpoints)-radius, min(endpoints)+radius
+    fixed_coordinates = range(int(np.ceil(low)), int(np.floor(high))+1)
+    for fixed in fixed_coordinates:
+        span = []
+        for u in (-extent, extent):
+            v = (fixed-image_center[fixed_axis]-bar_vector[fixed_axis]*u)/stripe_vector[fixed_axis]
+            span.append(image_center[varying_axis]+bar_vector[varying_axis]*u+stripe_vector[varying_axis]*v)
+        values_at = np.arange(int(np.ceil(min(span))), int(np.floor(max(span)))+1)
+        if not len(values_at):
+            continue
+        locations = np.empty((len(values_at), 2), dtype=int)
+        locations[:, fixed_axis] = fixed
+        locations[:, varying_axis] = values_at
+        if (np.any(locations < 0) or np.any(locations[:, 0] >= gray.shape[1])
+                or np.any(locations[:, 1] >= gray.shape[0])):
+            result["error"] = "Bar group falls outside the image"
+            return result
+        line = count_scanline(gray[locations[:, 1], locations[:, 0]], locations, black, white)
+        line.update(fixed_image_axis="xy"[fixed_axis], fixed_coordinate=int(fixed))
+        result["scanlines"].append(line)
+    result["native_scanline_count"] = len(result["scanlines"])
+    result["readable"] = bool(result["scanlines"] and all(line["readable"] for line in result["scanlines"]))
+    if not result["scanlines"]:
+        result["error"] = "No complete native scanline fits the central half of the stripe length"
+    return result
+
+
+def measure_image(rgb, target):
+    rgb = np.asarray(rgb)[..., :3]
+    result = {"image_size": [int(rgb.shape[1]), int(rgb.shape[0])], "valid": False}
+    try:
+        selected, affine, fit = find_fiducials(rgb, target)
+        gray = luminance(rgb)
+        result.update(fit)
+        result["fiducials"] = {f["name"]: {"xy_px": c["xy"].tolist(), "mask_pixels": c["pixels"]}
+                               for f, c in zip(target["fiducials"], selected)}
+        result["mm_to_pixel_affine"] = affine.tolist()
+        references = {}
+        for ref in target["references"]:
+            value, count = native_reference_samples(gray, ref, affine)
+            references[ref["name"]] = {"luminance": value, "native_pixels": count}
+        black, white = references["black"]["luminance"], references["white"]["luminance"]
+        result["references"] = references
+        result["reference_dynamic_range"] = white-black
+        if white-black < .2:
+            raise ValueError("Black/white reference range is below 0.20 of full luminance")
+        result["bar_groups"] = [measure_group(gray, group, affine, black, white) for group in target["bar_groups"]]
+        result["valid"] = True
+    except (ValueError, np.linalg.LinAlgError) as exc:
+        result["error"] = str(exc)
+    return result
+
+
+def edge_gains(before, after):
+    pairs = (("red", "green"), ("blue", "magenta"), ("red", "blue"), ("green", "magenta"))
+    edges = []
+    for a, b in pairs:
+        p0 = np.array(before["fiducials"][a]["xy_px"])-before["fiducials"][b]["xy_px"]
+        p1 = np.array(after["fiducials"][a]["xy_px"])-after["fiducials"][b]["xy_px"]
+        edges.append({"pair": [a, b], "baseline_pixels": float(np.linalg.norm(p0)),
+                      "candidate_pixels": float(np.linalg.norm(p1)),
+                      "gain": float(np.linalg.norm(p1)/np.linalg.norm(p0))})
+    return {"edges": edges, "minimum_edge_gain": min(edge["gain"] for edge in edges)}
+
+
+def find_registration_marker(gray, center, half_window, threshold):
+    center = np.asarray(center)
+    left = max(0, int(np.floor(center[0]-half_window)))
+    right = min(gray.shape[1], int(np.ceil(center[0]+half_window))+1)
+    top = max(0, int(np.floor(center[1]-half_window)))
+    bottom = min(gray.shape[0], int(np.ceil(center[1]+half_window))+1)
+    mask = np.zeros_like(gray, dtype=bool)
+    mask[top:bottom, left:right] = gray[top:bottom, left:right] < threshold
+    choices = _components(mask, np.maximum(threshold-gray, 0)+1e-6)
+    choices = [c for c in choices if 1 <= c["pixels"] <= 36]
+    if not choices:
+        raise ValueError("An outer black registration marker was not found")
+    chosen = min(choices, key=lambda c: np.linalg.norm(c["xy"]-center))
+    if np.linalg.norm(chosen["xy"]-center) > half_window:
+        raise ValueError("Outer registration marker is outside its search window")
+    return chosen
+
+
+def registration_check(baseline_rgb, candidate_rgb, target, baseline_result):
+    result = {"valid": False, "passes": False, "maximum_allowed_shift_px": 1.0, "markers": []}
+    try:
+        affine = np.asarray(baseline_result["mm_to_pixel_affine"])
+        black = baseline_result["references"]["black"]["luminance"]
+        white = baseline_result["references"]["white"]["luminance"]
+        threshold = black+.4*(white-black)
+        gray0, gray1 = luminance(baseline_rgb), luminance(candidate_rgb)
+        for marker in target["registration_markers"]:
+            expected = _project(np.asarray(marker["xy_mm"]), affine)
+            a = find_registration_marker(gray0, expected, 5.0, threshold)
+            b = find_registration_marker(gray1, a["xy"], 4.0, threshold)
+            result["markers"].append({"name": marker["name"], "baseline_xy_px": a["xy"].tolist(),
+                                      "candidate_xy_px": b["xy"].tolist(),
+                                      "shift_px": float(np.linalg.norm(a["xy"]-b["xy"])),
+                                      "baseline_mask_pixels": a["pixels"], "candidate_mask_pixels": b["pixels"]})
+        result["maximum_shift_px"] = max(m["shift_px"] for m in result["markers"])
+        result.update(valid=True, passes=result["maximum_shift_px"] <= 1.0)
+    except (ValueError, KeyError) as exc:
+        result["error"] = str(exc)
+    return result
+
+
+def compare_arrays(baseline_raw, candidate_raw, baseline_policy, candidate_policy, target):
+    if np.asarray(baseline_raw).shape != np.asarray(candidate_raw).shape:
+        raise ValueError("Raw reference and candidate dimensions must match")
+    if np.asarray(baseline_policy).shape[:2] != (224, 224) or np.asarray(candidate_policy).shape[:2] != (224, 224):
+        raise ValueError("Supply actual 224 x 224 policy input images")
+    result = {"schema": "magnifier-inspection-photo-v1", "photo_score": 0.0,
+              "full_trial_score_certified": False, "valid": False,
+              "limits": ["Photo result does not establish a physical grasp, pickup, clearance or a continuous three-second hold.",
+                         "Use actual camera and policy images at unchanged intrinsics; no image zoom or crop is allowed.",
+                         "Raw outer-marker registration checks the same camera/target pose within one pixel.",
+                         "A local affine map locates the printed groups; strong nonlinear distortion can make that lookup inconclusive.",
+                         "This new chart and pixel-count metric still require rendered validation."]}
+    for name, before, after in (("raw", baseline_raw, candidate_raw), ("policy", baseline_policy, candidate_policy)):
+        a, b = measure_image(before, target), measure_image(after, target)
+        result[name] = {"baseline": a, "candidate": b}
+        if a["valid"] and b["valid"]:
+            result[name].update(edge_gains(a, b))
+    if not all(result[name][side]["valid"] for name in ("raw", "policy") for side in ("baseline", "candidate")):
+        result["error"] = "At least one image lacks measurable fiducials or contrast references"
+        return result
+    result["registration"] = registration_check(baseline_raw, candidate_raw, target, result["raw"]["baseline"])
+    prior = {g["name"]: g["readable"] for g in result["policy"]["baseline"]["bar_groups"]}
+    current = {g["name"]: g["readable"] for g in result["policy"]["candidate"]["bar_groups"]}
+    new_groups = [name for name in current if current[name] and not prior[name]]
+    minimum_gain = min(result[name]["minimum_edge_gain"] for name in ("raw", "policy"))
+    result.update(valid=True, newly_readable_groups=new_groups,
+                  minimum_edge_gain_both_sizes=minimum_gain)
+    photo_gate = result["registration"]["passes"] and bool(new_groups)
+    if photo_gate and minimum_gain >= 1.25:
+        result["photo_score"] = .5
+    if photo_gate and minimum_gain >= 1.5 and all(current.values()):
+        result["photo_score"] = 1.0
+    result["photo_rule"] = {"partial_gain": 1.25, "full_gain": 1.5,
+                            "partial_detail": "At least one previously unreadable group becomes readable.",
+                            "full_detail": "Both groups readable, with at least one newly readable.",
+                            "gain_measurement": "Minimum of all four square-edge ratios in raw and actual policy images.",
+                            "bar_rule": "Every complete native row/column across the central half of stripe length contains exactly five dark bars and four bright gaps, each with at least one strong pixel; dark <= B+0.4(W-B), bright >= B+0.6(W-B)."}
+    return result
+
+
+def compare_files(baseline_raw, candidate_raw, baseline_policy, candidate_policy, target_json):
+    paths = [baseline_raw, candidate_raw, baseline_policy, candidate_policy]
+    arrays = [np.asarray(Image.open(path).convert("RGB")) for path in paths]
+    result = compare_arrays(*arrays, json.loads(Path(target_json).read_text()))
+    result["source_sha256"] = {name: hashlib.sha256(Path(path).read_bytes()).hexdigest()
+                                for name, path in zip(("baseline_raw", "candidate_raw", "baseline_policy", "candidate_policy"), paths)}
+    return result
+
+
+def self_test():
+    """Synthetic algorithm checks only; no synthetic image is optical evidence."""
+    import tempfile
+    from PIL import ImageFilter
+    try:
+        from .inspection_target import generate
+    except ImportError:
+        from inspection_target import generate
+    with tempfile.TemporaryDirectory() as temporary:
+        target = generate(temporary, pixels_per_mm=20)
+        texture = Image.open(Path(temporary)/"target.png")
+        def card(scale):
+            image = Image.new("RGB", (640, 360), (150, 150, 150))
+            resized = texture.resize((round(120*scale), round(100*scale)), Image.Resampling.LANCZOS)
+            image.paste(resized, ((640-resized.width)//2, (360-resized.height)//2))
+            return np.asarray(image)
+        baseline = card(1.95)
+        enlarged = card(1.95*1.9)
+        yy, xx = np.indices(baseline.shape[:2])
+        lens_region = (xx-320)**2+(yy-180)**2 < 80**2
+        candidate = baseline.copy()
+        candidate[lens_region] = enlarged[lens_region]
+        def policy(raw):
+            return np.asarray(Image.fromarray(raw).resize((224, 224), Image.Resampling.BILINEAR))
+        good = compare_arrays(baseline, candidate, policy(baseline), policy(candidate), target)
+        assert good["photo_score"] == 1.0, good
+        identity = compare_arrays(baseline, baseline, policy(baseline), policy(baseline), target)
+        assert identity["photo_score"] == 0
+        zoom = compare_arrays(baseline, enlarged, policy(baseline), policy(enlarged), target)
+        assert zoom["photo_score"] == 0 and not zoom.get("registration", {}).get("passes", False)
+        blurred = candidate.copy()
+        blurred_all = np.asarray(Image.fromarray(candidate).filter(ImageFilter.GaussianBlur(6)))
+        # Erase detail while keeping markers, reference swatches and outer registration intact.
+        blurred[157:171, 298:342] = blurred_all[157:171, 298:342]
+        blurred[176:217, 313:327] = blurred_all[176:217, 313:327]
+        blur_result = compare_arrays(baseline, blurred, policy(baseline), policy(blurred), target)
+        assert blur_result["photo_score"] == 0, blur_result
+        moved = np.roll(candidate, 3, axis=1)
+        movement = compare_arrays(baseline, moved, policy(baseline), policy(moved), target)
+        assert movement["photo_score"] == 0 and not movement["registration"]["passes"]
+        flat = np.full_like(baseline, 128)
+        assert compare_arrays(baseline, flat, policy(baseline), policy(flat), target)["photo_score"] == 0
+        return {"passed": True, "cases": 6, "synthetic_only": True,
+                "positive_minimum_gain": good["minimum_edge_gain_both_sizes"],
+                "positive_new_groups": good["newly_readable_groups"],
+                "interpretation": "Synthetic image-counting checks, not rendered optical validation."}
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--baseline", type=Path)
+    parser.add_argument("--candidate", type=Path)
+    parser.add_argument("--baseline-policy", type=Path)
+    parser.add_argument("--candidate-policy", type=Path)
+    parser.add_argument("--target-json", type=Path)
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--self-test", action="store_true")
+    args = parser.parse_args()
+    if args.self_test:
+        result = self_test()
+    else:
+        if not all((args.baseline, args.candidate, args.baseline_policy, args.candidate_policy, args.target_json)):
+            parser.error("Supply all four actual-image paths and --target-json")
+        result = compare_files(args.baseline, args.candidate, args.baseline_policy, args.candidate_policy, args.target_json)
+    if args.output:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(json.dumps(result, indent=2)+"\n")
+    print(json.dumps(result, indent=2))

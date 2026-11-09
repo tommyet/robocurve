@@ -1,0 +1,3801 @@
+{
+  "schema": "magnifier-photo-hold-audit-v1",
+  "certified": true,
+  "photo_hold_score": 1.0,
+  "full_task_physical_certified": false,
+  "reasons": [],
+  "frames": [
+    {
+      "step": 470,
+      "time_s": 23.5,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "28d9e34468fdb6e5ec32cc0c785c63a6055bd117922071329a09cad7a7c3fcab",
+      "policy_sha256": "65a9fbe50f94cb6599074c5a7f526649d1a939fa4153e28b8e0f72f5011e2faa",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05783641581632653,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8844194460479922,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.10303631624107663
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 471,
+      "time_s": 23.55,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "45fc5ffe59863d8cbc712f394465f513ebf9c536245f337abd45f4051e87d6c9",
+      "policy_sha256": "0fbaf6c9eb67cbd10ead30cda035b0c187cab5963e5935029c5c0bf495e21091",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.057583971088435375,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8848887721395715,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.10739567741051774
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 472,
+      "time_s": 23.6,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "36f421f5e75f1ac93545a99f0899e36e3333ce5201db9f00076de8e207320d2b",
+      "policy_sha256": "3fd2334728ff55008e5b731ef8689fc5f8175997ed0a3dfbd48d201c15247e9d",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05610916241496599,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8849655147017248,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.10867320368482594
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 473,
+      "time_s": 23.65,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "6d8404522d2ad3a8bb4cc2166c5d2c0709407c5be699e72b77994161e1cf6470",
+      "policy_sha256": "4d2a8b5224540caa67dff5d65176f41a8d7ec47e26b7967d9c296d4d1d6256f9",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05683992346938776,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.885327535501214,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.1125457481618808
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 474,
+      "time_s": 23.7,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "ece831e80ca672b7d46490849cd5bb0922ad7fb9e2b9ad94e0465d15e1b2b743",
+      "policy_sha256": "d9e1fc118206fc5a00a1b9dcc7c372e67b17226a995a3e698797573f6560c567",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05625531462585034,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.885674104641233,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.12208246909066954
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 475,
+      "time_s": 23.75,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "3b03291b94bf7ceb55d9a87973122566fd52664949d275216386b217dff6afa5",
+      "policy_sha256": "813c5f5386c6b7a73801e2e78d7d2f365dfff1b11ce216f11a1c9dbf8f666e06",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.0565077593537415,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.88582449726882,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.1148062562977271
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 476,
+      "time_s": 23.8,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "34ce7c987b9602c8eb702b91ab8c7d79dcba28a1628ce84406f14ba18550aa9c",
+      "policy_sha256": "5fa5169382084f38d43692b137067a860989a035f17cdc9bbd995812fb7bb197",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.056388180272108845,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8856062877202935,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.13045970039104
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 477,
+      "time_s": 23.85,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "16737be78724655f827689ebbd9fd55fbf9d2c4b5c3a631272f2edd76939dc68",
+      "policy_sha256": "974171751982d30f39c580cf07cfe44a532e73f88d3111ababe3797eab1b6a5b",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05768362032312925,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.884811199672414,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.13626131829292662
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 478,
+      "time_s": 23.9,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "6323d97c8838ff6a286ea0b044d4a8ce1c15e042d03c590573d717b6c0ff22d5",
+      "policy_sha256": "2489727f694199ed850ecb6864f525c2f04b23e951d0b3480a3781a1da205660",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.0577766262755102,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.884357819832723,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.13561888127715954
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 479,
+      "time_s": 23.95,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "feaf642256de4edddf44f0d534a4b0440c46427f4ea5a005c605b763ca8228a5",
+      "policy_sha256": "af2188d27ec46a6dacc70614b8c86444f4d1f85c2b9acd390409df23de0f10b5",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05644132653061224,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8843784123622,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.137091399668306
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 480,
+      "time_s": 24.0,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "3de5671049f427464ffd20ce6066643db1667cb68cf296d6338132886f970a31",
+      "policy_sha256": "b1f103d840438198497ac5b77eb3365430351daabc44ec79244cfd011b8b77fd",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05684656675170068,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8844643350038304,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.08996473412802168
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 481,
+      "time_s": 24.05,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "10f7a9d49686b2d76dffb6e4c02d2824e070dfe7c7d94d3e97316ce46207aa43",
+      "policy_sha256": "006839b0064ccbd82f91ec8821f6b81dd74c2ebf3abbe7f1089b6754bdf1d870",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.0575640412414966,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8843277451179534,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.08374451376161084
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 482,
+      "time_s": 24.1,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "cd463f5ae57b241438ee0eb80700ad6f87fed9908233dad410d7653df53aa19d",
+      "policy_sha256": "4b9b0c341314620e7b0d6fd1f8f871d31b86741a6bbf8fa567386a3f37011cf7",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.057982568027210885,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.883995540561515,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.07315152761698183
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 483,
+      "time_s": 24.15,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "812c52730f93e9ac65038a8fb2fcc6cd6a67ea698f25d41c11b06947c7772938",
+      "policy_sha256": "41d0503e06e0ce9aae5836f02b17bfe98c5721a383c4a376af13cd03a612af87",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05813536352040816,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.883736163552874,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.12903346927954631
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 484,
+      "time_s": 24.2,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "c0400c94905a526f3b081b12570db7cbbedd5229e6dc72614e9322133f2a093a",
+      "policy_sha256": "0bed94642783f6e33b90c49b589781db5e0bb8ac88f09f3ba0f1e2cee750d889",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05765704719387755,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8840200823095286,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.13030099887327867
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 485,
+      "time_s": 24.25,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "5de82e376f1df7117e14b66dd5a24b938439731ff00878e5e314791247193ea5",
+      "policy_sha256": "124e31825faf44dedc61d840edbfee44998001494c8d68130b1b952a850c0eac",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05759725765306122,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8840236396130388,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.13169507089207605
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 486,
+      "time_s": 24.3,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "ccb2116e80da725d6652faa162a999b6cae09f218bacc8db798d5a9db2659d8b",
+      "policy_sha256": "f05c439efbe3619d5e27639c321dfa8ea3d7c5451e02aa24b926c2f42d688298",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05778991284013606,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8839883176734247,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.13023859940530078
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 487,
+      "time_s": 24.35,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "084d48dd8cf96db17cd216b1123db5361fef7f4e221883a1241787791afd0720",
+      "policy_sha256": "bcc9f2d3f5ed4b24c586d5c3a29e0613f74a4c24b9cb2c04c23755562b3ec36d",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05665391156462585,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.883356882876624,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.12471620965358202
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 488,
+      "time_s": 24.4,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "fb67fe4ce40fe72edf879de64d3530cdd8f0eb6c22b37e74545d0f278b26061e",
+      "policy_sha256": "7549f10af5b8d6b8408829ee68e1e6212dea2d5314f8817d974f4ed3a668073c",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.057849702380952384,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8834344705466293,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.12068039963525404
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 489,
+      "time_s": 24.45,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "e46200aa92a1055ae89e6b03f9386bc1c0933e4611e9096d08986ee9111ae734",
+      "policy_sha256": "5a36b1bf1d555490ba802651a1b0760e096122c8a20c50045f5f36ded6123803",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05691299957482993,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8839043337466546,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.12337961516984497
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 490,
+      "time_s": 24.5,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "6e517915d918295caf689299867d369118d52503227d7e26d317c4667a229b15",
+      "policy_sha256": "e235fd298bf1ad23b35c73a60e20c4705d73fe09d1ada9e7ff19b7bc76c65262",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.056673841411564625,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8834764449378532,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.12747109336022522
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 491,
+      "time_s": 24.55,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "bd395d0c7dcc8d391a4e6d875cfbf9e166d13e365a30a7dba11e004b5402d7c0",
+      "policy_sha256": "447458bc477e5f48c74a8a34c6c17bfd167db90942294d8b930808892e26ae6a",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05710565476190476,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8835684134283879,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.132742606254154
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 492,
+      "time_s": 24.6,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "339d88c332ac04448f3b6bc5100d62a88505dbe4b6ca6c8230eca5f48920cbc9",
+      "policy_sha256": "b52b80bdd6cde2bd32fe27c10e9675ad96bf79703ce63a632edc15d9ff77a635",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05704586522108843,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.883463978888236,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.1341991990159092
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 493,
+      "time_s": 24.65,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "5339fa47380926f7bac074e4452bda8b2a3754c41159b17c4533c854939e62d1",
+      "policy_sha256": "4e784f72815fc29002b1802e3ef0a919cada9dffcdbbab2f84c7cae3241c24b8",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05727838010204082,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8834645078415797,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.1325520405291114
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 494,
+      "time_s": 24.7,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "0b2e56346decb25f111707aef7d98a9728a19d3d15539d23e37576380105ecf3",
+      "policy_sha256": "c90430622cb92ab9e60a630f73bcd8d277fa2241e0b3521dae73ef8fbc15628f",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.0564811862244898,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8805400145206561,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.13737652791812974
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 495,
+      "time_s": 24.75,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "d39bc33ab3169ecbfd30d782b7550e84b1a8910ef40d996bdb6c7f71e8571c2d",
+      "policy_sha256": "fd28e7edb7c78c5e04a4dd5173d56b4305b8aed576a0409cdc7acfb7fef704f6",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.056521045918367346,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8803599409179688,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.1389971572684478
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 496,
+      "time_s": 24.8,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "50894d314fe2a9796031e3e1628946eb7b2c4fb4217f557b07ce605da7c2125f",
+      "policy_sha256": "372e275802f8f09b5fef7671897709ea6f6b89801cfcac50f2fabee61d6e8f32",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05723852040816327,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8836881949494244,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.1308326922649902
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 497,
+      "time_s": 24.85,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "1f62a93adbdb306a6e023170ceb186e3a8be2885fe2240349ef592c997ca1535",
+      "policy_sha256": "0105301c299996afd169b8a96969d6ca0c85978ed0f013d5352bb9a1e9c6d39f",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05737802933673469,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.880760656306902,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.12832816186989646
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 498,
+      "time_s": 24.9,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "579ac52afd84c9daa6479f2ad7f77db46729c1ef1c08427187856b18d2a86d0a",
+      "policy_sha256": "25e38c7e5b7e2423394465f223a9899887e02ed7c0eb2dd6c7940711e8d45e62",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.057225233843537414,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8806250312149422,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.12755342418871363
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 499,
+      "time_s": 24.95,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "990a9f26729e8bc39cebc40e4ce53321d89aa8c12a67bc3e4ca07f87365d462c",
+      "policy_sha256": "be7da4272658f9c8d3f29dabdc4630fa82a836cb4f8651e67a229d06af7e576e",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.057298309948979595,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8808842534036043,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.12039561342845706
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 500,
+      "time_s": 25.0,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "7f4576574f2bd78c5aff029da9e6c1486c9e59f52eb4a100dcbeab751f95497a",
+      "policy_sha256": "77baa2e25c21b34ea02b22925d8d60e3d99987839ec0440634885cf7542119b7",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05778991284013606,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8803019596679766,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.1234505518568579
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 501,
+      "time_s": 25.05,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "c5f3b691f6b1d110e0ff8f3169322b67c457d2f5b52ae1867f764896b4ed8110",
+      "policy_sha256": "c631bc881e5a95fc5f4b1b22c9a9df5acf9f05644688c3bf93cbe19532d57bab",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05776998299319728,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8803970420760487,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.12756998629272737
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 502,
+      "time_s": 25.1,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "1712a74f979f874b4f91471ae6090d081db997d0567972d7bfbeb0e97ed1817e",
+      "policy_sha256": "968d2972ff4397948ccee7d185dfc84ce6ad659e4873ece4b40ae8fcbb8898b5",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05723852040816327,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8801200254267156,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.13165635201871312
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 503,
+      "time_s": 25.15,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "c427cad3709a82a337da53b861de76765a5062676231fd2bd0152d321026bdd0",
+      "policy_sha256": "d0428c6ffeeb2faeb954f3db8946a274ba945e92e74b76c5249d3e6aa683017b",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.057145514455782316,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.88008276455569,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.13457399813592966
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 504,
+      "time_s": 25.2,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "222d0232c7f1c3afc382def9f09d224ea48254a17a8be8868060d1b5adca0d69",
+      "policy_sha256": "0d8654e42668755cdff01e217853acb3f402cf28a91cc934ad728ac7b5f0f5aa",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05765704719387755,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8802416017579002,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.1366276058298581
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 505,
+      "time_s": 25.25,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "a40dc1ae613fe7ac9eab4edaa4c8c055b6c3cd48517dafaeaaf7684b40929634",
+      "policy_sha256": "eae83530a3c313630b045eb2267bc9ac3c5990f33e217ea882e27d16a205e496",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.056720344387755105,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8800144021003744,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.1372174969130275
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 506,
+      "time_s": 25.3,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "190b77192f1f1f13050220a7b9062bcfa663338bab555b516f5d8098ea530f26",
+      "policy_sha256": "51d1b071915fc06dba9f87452a4ad56c2784b12bfc14a57d3d850ad4ee1db461",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.057936065051020405,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8800721192380854,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.13441091472584651
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 507,
+      "time_s": 25.35,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "65b33aa6c82af84d9bdc11aecc5f590cd839866f834ec24f0de85c94dec79bc4",
+      "policy_sha256": "6a6162c864cf89eefd59f64492b58a85600a166cd42393ad4d639fd47145d5a4",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.056959502551020405,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8798878095593083,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.14392598181187263
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 508,
+      "time_s": 25.4,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "210812a048b27a7a47d201eb217c4a226fc4382f3d47baad40b2ba2e25e24f9d",
+      "policy_sha256": "37154a4445b5d796d96c58b3ce5c7f04d9d0f84bab43bc7a74f223b66f015d63",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05778991284013606,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8798225669633677,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.14275013913487852
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 509,
+      "time_s": 25.45,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "e333ed0a45d0835b0c0961ed7472e037a2f3912e26d4f2a59281b944d98ab59f",
+      "policy_sha256": "56dcccab6342c58c5ca8892bcd80d36488ddd6c75a525e3c1ff277718b3b7b68",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05706579506802721,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.880270348322057,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.14641034624537466
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 510,
+      "time_s": 25.5,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "d8872b26082c44d62c53163c5229fe8512053a2a4ed11a8e7e9fb6fb9959788d",
+      "policy_sha256": "d2a0233d8b7049284e0ddf817f0ec45b1fd24bf3188b80480de48c3ee57e4529",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.057338169642857144,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8805351244582558,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.14464240208348628
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 511,
+      "time_s": 25.55,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "19df728ff5d289f9819c231fc572d64176776e1a38a640c03685f29a5dff4a3e",
+      "policy_sha256": "ec63974b1230301122df8629e597636d5a58f198594c260c96220001d07aef7e",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.057650403911564625,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8803905722395273,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.14826000207893641
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 512,
+      "time_s": 25.6,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "526458ce5a29215dbc17e9b18aaac6f3fac1acbbff0d0cb2735fe81edb7a0b9d",
+      "policy_sha256": "191571865e088b31e569f7f40d947cbe05752e07e59c1481f8776a628476a731",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.057916135204081634,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8808206689700069,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.14533098359520422
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 513,
+      "time_s": 25.65,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "7d10da8d05249b4053627affcf8fbff3e537e11a42f883e0cd77d06fa01296d5",
+      "policy_sha256": "98296e3f3b6bd622d8da00c36da8dfc7579cbc504707eb1ad3a62bb0aa6399f5",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.057431175595238096,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.88093410389284,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.13783429514291487
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 514,
+      "time_s": 25.7,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "50fc0c4485056fab3ff17945cd4037e5b1aaa2eb13ba14c505d998071fa14935",
+      "policy_sha256": "9e4fd8c446220e875f2e3e781d640e766fbfff0be56cd684110ee132e908292c",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05742453231292517,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.880898791525526,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.13696352368505832
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 515,
+      "time_s": 25.75,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "e5637812e85f66454aa19d4f4e8d1d1490fb48c4ba6259a05a68e12cbd187d51",
+      "policy_sha256": "97200a3ac08d09390c50f10c2b2d296c4a72c0bda79f8e2841f8c7174afb2550",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05694621598639456,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8810586518243855,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.14474032623180696
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 516,
+      "time_s": 25.8,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "c4900a774db20862ab8f8e7f117850891d5032613eb53a5fcd528e3328d4c466",
+      "policy_sha256": "3b97c9553bfa003bf96f38afd28fbde099d812171f35aca6386f029bf4480468",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05646125637755102,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8810889102325785,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.14563512952166366
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 517,
+      "time_s": 25.85,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "cc97e587beeac4c90ca51aa750c9a5c2bfb22e74ce03ff3a1a71e387dd05fe98",
+      "policy_sha256": "8f769f0f5ea44ec8af1c02849c0e4e9ea4619124d111901aa5d338775d0baf94",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05741124574829932,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8811852434462342,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.1497434874887294
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 518,
+      "time_s": 25.9,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "fec2da4a96fd84e3b55e437f47d2f2a0a8cdec57028bce211d2d790386ba7140",
+      "policy_sha256": "f242ef983362cb7b97717186a9e1b4c7bb75401ff435fcbf8123c32f1b583021",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.057916135204081634,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8809437850402941,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.14619017730565345
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 519,
+      "time_s": 25.95,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "5e846f6e54aad857bfa9ffa8bef9c91511a429b9eb8ae0fff4b49df58efebda2",
+      "policy_sha256": "19fa222825694d9e10ba71aaed9292aada6bfa95d3be02c4ff455a1fc1e3ce4c",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05747767857142857,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.880605002075975,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.14781113916956176
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 520,
+      "time_s": 26.0,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "9b82ce8b67ff918d5c843cfc1542d91a3318bd266e9dcfc3d4baba4dcb773bc9",
+      "policy_sha256": "7adab17f7c6861965d7ef47a814eb31a0c4e95e96701272c9414d1de7a69eb90",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05709901147959184,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8805442708549542,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.14424832344638772
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 521,
+      "time_s": 26.05,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "528292584808232bff3d9cb4a361b6ed7d7fb09605ae0ef10837fc0eab20eecb",
+      "policy_sha256": "6e1fdde80776313762f73d3dad56a1638349bfe9633ad108f2e1bf530cd0eb4d",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05785634566326531,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8805149021041656,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.14064799477469342
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 522,
+      "time_s": 26.1,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "d0c77b21cd0f6fba44747018bdbcb17139b7e99b082a99c8bcbcdd0fc7552c66",
+      "policy_sha256": "140987cc03d04cfb4d4ead8a796ede4320bc4bdcc6a6c1a77780bf211d7deffe",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.057716836734693876,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8804319135101748,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.13843557904014234
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 523,
+      "time_s": 26.15,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "40c09bd334e7261b34f1ae1517ce50cf7b6614a578a4153a0d0577f2c3d12724",
+      "policy_sha256": "a1a0ea52ab7733d7212990145c79922767a496f547f48354d17b442f2cda438e",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.0576703337585034,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.879721708447664,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.14370734828241866
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 524,
+      "time_s": 26.2,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "d47da5f08df0f14c712a22d1a4f8d21a5a56c8a2f6b98de478a8258d9b73b859",
+      "policy_sha256": "bd4908e068df846e7e08b5498ae5ddf3be40f7e43c4ca381779dbcb8cd2acb0e",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05723187712585034,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8798713225997503,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.14503716491481336
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 525,
+      "time_s": 26.25,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "1e6edfd5acade4326a3cd844fe3b1215f9a1bec5208e0351ac6abdb40aa06ec9",
+      "policy_sha256": "b4eeab0bb7261b4069a6bcac7cf837985546641a8c01a7d229a5ca539e51ff4d",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05780984268707483,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8797670501930237,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.14270735122606887
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 526,
+      "time_s": 26.3,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "0a4ecdc592535daae886af76eb0f7d42b46dbbc5f732bbe5de0dc85780d275af",
+      "policy_sha256": "fd51157c0d08b8beff307cae7f3cf45b3b5094ee887daa0fce865eb2d60b3c6c",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05743781887755102,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.879760211994916,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.14344529283909635
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 527,
+      "time_s": 26.35,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "102c6b0bdbf1e3acd12c8cab904ff55e86e7ea391875acc843948223789142dd",
+      "policy_sha256": "dbe24b4fde54e9f7b9dbb3cead93f03fec8fa7db7ed6d5b7ebbbf142bb9b80e3",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05865353954081633,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8797264953987205,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.13988614357671808
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 528,
+      "time_s": 26.4,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "cfd0a13749c3180bd00439fc640724cbd299455e0a0c0765fa0d5493602e3281",
+      "policy_sha256": "4d74e57647e14bcf6ed00a2d6ba40c7915796174cd7ba3c9bb2ba309f5b385b0",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.057942708333333336,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.879762583424108,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.09186462696555174
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 529,
+      "time_s": 26.45,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "7bc9ff4e18f8bcdf818797f59b10f1ddc7d3e6360b15acaf28af4d1f60663a6b",
+      "policy_sha256": "bc55385cdf74d9b3b348a99d19b32d3934fbfa087a0dace8a02eadcb5efab000",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05810214710884354,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8799934194397747,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.087834026248077
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "step": 530,
+      "time_s": 26.5,
+      "photo_score": 1.0,
+      "valid": true,
+      "raw_sha256": "1b139193134425d73b3f5215e4f20f2d9225752d887c71dee2b86cff3f7ac5c0",
+      "policy_sha256": "8b2637591de323d31daea19fd1a3acbc63bc3a9a71604fb8ad826e042d70f90e",
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05866018282312925,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "minimum_edge_gain": 1.8799259309329062,
+      "newly_readable_groups": [
+        "vertical"
+      ],
+      "registration": {
+        "valid": true,
+        "passes": true,
+        "maximum_allowed_shift_px": 1.0,
+        "maximum_shift_px": 0.08513825500028951
+      },
+      "candidate_policy_groups": {
+        "vertical": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        },
+        "horizontal": {
+          "readable": true,
+          "scanline_counts": [
+            [
+              5,
+              4,
+              true
+            ],
+            [
+              5,
+              4,
+              true
+            ]
+          ]
+        }
+      }
+    }
+  ],
+  "scope": "Exactly the final three seconds of image evidence, compared against the final frozen lens-free baseline. Physical pickup, grasp and collision checks remain separate.",
+  "source_sha256": {
+    "pickup_json": "0d2b5ab6d64d363c6acd5b18ba07b290386f443a10e3fca4272a5f896ee4c282",
+    "trace": "2b560fb967ddfc4240dacda5d279511912de8d452dff722ea1142a0159554db9",
+    "target_json": "da2ee04fde693b6b665255281f5558b0889fb08875113ef1c907bc22d2d1693b",
+    "inspection_measure_py": "f1939b09c07da165bfe5e99f2742b46164be01fdce6a2af8b143235d09e201ba",
+    "score_hold_py": "c3247cf327a70618c7aae20aa6b17d93ab76883ab099e30c96881bc72321d09a"
+  },
+  "trace_interval": {
+    "steps": [
+      470,
+      530
+    ],
+    "state_count": 61,
+    "expected_control_hz": 20,
+    "duration_s": 3.0,
+    "maximum_camera_translation_from_final_m": 0.0,
+    "maximum_camera_rotation_matrix_element_change": 0.0,
+    "camera_invariant": true,
+    "numerical_camera_invariance_tolerance": 1e-09
+  },
+  "missing_frame_files": [],
+  "physical_trace": {
+    "physical_grasp_certified": false,
+    "limit": "Positions and orientations describe the trace. They do not establish contact forces, grip integrity, collision validity or safe clearance.",
+    "lens_center_world_min_m": [
+      0.3500018901158821,
+      0.05027155033035913,
+      0.8310801805172173
+    ],
+    "lens_center_world_max_m": [
+      0.35004236504051506,
+      0.050300029752180106,
+      0.8311186075849223
+    ],
+    "lens_camera_axial_distance_range_m": [
+      0.1228073279859751,
+      0.12284588793077006
+    ],
+    "maximum_lens_offset_from_camera_axis_m": 0.0004815658504703826,
+    "maximum_tool_root_translation_from_final_m": 4.291734200805466e-05,
+    "minimum_tool_root_world_z_m": 0.830967366695404
+  },
+  "frozen_pair_checks": {
+    "baseline": {
+      "png_matches_npz": true,
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05923150510204082,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "raw_sha256": "bcd736ffa7e2159b12a9356a15794ba1d77a96611343eaf3808a639dcbb4c302",
+      "policy_sha256": "f53a17d082bbea47279b879e90e7c606a5a0795b880bc05e7ac164a5577f2c4c"
+    },
+    "final": {
+      "png_matches_npz": true,
+      "resize": {
+        "passes": true,
+        "maximum_rgb_level_difference": 1,
+        "mean_rgb_level_difference": 0.05868675595238095,
+        "method": "Unfiltered half-pixel bilinear resize, allowing one integer RGB level of rounding; exact cv2 verification is additionally required from the run record."
+      },
+      "raw_sha256": "fa31685574743e2e7dfd527f25748a122a09c92fe3daa3475293ba7da137d05d",
+      "policy_sha256": "5fa9762a4daacdd0473cae0bc5910213db592a75363883106d23cf02e2893bcd"
+    }
+  },
+  "minimum_edge_gain": 1.879721708447664,
+  "maximum_registration_shift_px": 0.1497434874887294,
+  "full_audit_sha256": "331da3a8536c71419650d6c303200471f02d109e704b24d133cec349cb3085bf",
+  "curation": "Retains per-frame scores, image hashes and count summaries. Full pixel/run diagnostics remain in ignored local trial artifacts."
+}
