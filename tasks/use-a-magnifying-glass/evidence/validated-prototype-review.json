@@ -1,0 +1,33 @@
+{
+  "schema": "magnifier-physical-review-v1",
+  "reviewer": "Source, image and pose reviewer",
+  "reviewed_full_trial": true,
+  "video_file": "demo.mp4",
+  "source_sha256": {
+    "trace": "2b560fb967ddfc4240dacda5d279511912de8d452dff722ea1142a0159554db9",
+    "run_record": "0d2b5ab6d64d363c6acd5b18ba07b290386f443a10e3fca4272a5f896ee4c282",
+    "target_json": "da2ee04fde693b6b665255281f5558b0889fb08875113ef1c907bc22d2d1693b",
+    "video": "6b18b495df72df4e5d3dec7ee6a1d08c06bd1d91290dedec83818c8504620f6b"
+  },
+  "interval_steps": [
+    470,
+    530
+  ],
+  "observations": {
+    "prescribed_initial_layout": true,
+    "picked_up_by_handle": true,
+    "held_only_by_gripper": true,
+    "tool_and_target_intact": true,
+    "ordinary_physics_and_camera": true,
+    "continuous_hold_visible": true
+  },
+  "claim_definitions": {
+    "prescribed_initial_layout": "The complete video begins in the prescribed reset layout, with the magnifier resting on the table.",
+    "picked_up_by_handle": "The robot picks the magnifier up by its handle using an ordinary gripper grasp.",
+    "held_only_by_gripper": "Throughout the scored interval, only the gripper supports the tool at its handle; the glass/frame are not propped against a camera, robot link, table or other object.",
+    "tool_and_target_intact": "The tool and printed target remain intact and unmodified, and the target stays fixed throughout the trial.",
+    "ordinary_physics_and_camera": "The recorded trial uses ordinary robot contact, no object attachment/teleport/applied object force, and unchanged native camera settings without digital crop, zoom or image replacement.",
+    "continuous_hold_visible": "The video shows an uninterrupted handle grasp and at least 20 mm whole-tool table clearance throughout the scored three-second interval, with no visible interruption."
+  },
+  "notes": "Reviewed complete recorded timeline in contact sheets, handle closure/lift close-ups, final wrist/reference images, and the 531-state measured joint/tool audit. The right fingers grasp the handle; the tool lifts at 5\u20137 s and remains supported there. The final 23.5\u201326.5 s window has at least74.3795 mm whole-tool clearance. Conservative source/FK audit finds no other tested tool supports; source uses one dynamic body and ordinary joint commands, with no attachment/object force. Target is a fixed plate/print. Both video and telemetry are20 Hz; motion between samples and all robot self-collision pairs are not certified."
+}

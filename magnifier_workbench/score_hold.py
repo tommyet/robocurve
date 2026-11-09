@@ -1,7 +1,8 @@
 """Offline audit of a complete three-second magnifier photo hold.
 
-This certifies only image evidence and camera invariance, never physical grasp
-or collision validity. Missing or invalid evidence yields uncertified score 0.
+This certifies image evidence and image registration, never physical grasp.
+Small camera motion is allowed when all four actual outer marks remain within
+one raw pixel of the frozen reference. ``scoring.py`` adds physical conditions.
 """
 from __future__ import annotations
 
@@ -52,9 +53,8 @@ def inspect_trace(trace, final_step):
         info.update(maximum_camera_translation_from_final_m=translation,
                     maximum_camera_rotation_matrix_element_change=matrix_change,
                     camera_invariant=translation <= 1e-9 and matrix_change <= 1e-9,
-                    numerical_camera_invariance_tolerance=1e-9)
-        if not info["camera_invariant"]:
-            reasons.append("Camera pose changes during the interval; one final frozen baseline cannot certify all frames")
+                    pose_values_are_diagnostic=True,
+                    camera_condition="All four actual outer-marker centres must remain within one native pixel of the same-pose frozen reference in every hold image.")
     except (KeyError, ValueError, TypeError) as error:
         reasons.append("Invalid camera trace: " + str(error))
     return window, info, reasons
@@ -137,7 +137,7 @@ def physical_trace_summary(window, record):
 
 def audit_run(run, target_json):
     run, target_json = Path(run), Path(target_json)
-    result = {"schema": "magnifier-photo-hold-audit-v1", "certified": False,
+    result = {"schema": "magnifier-photo-hold-audit-v2", "certified": False,
               "photo_hold_score": 0.0, "full_task_physical_certified": False,
               "reasons": [], "frames": [],
               "scope": "Exactly the final three seconds of image evidence, compared against the final frozen lens-free baseline. Physical pickup, grasp and collision checks remain separate."}
@@ -203,7 +203,11 @@ def audit_run(run, target_json):
                 if not frame["resize"]["passes"]:
                     raise ValueError("Actual policy image does not match the native camera resize")
                 photo = compare_arrays(baseline_raw, raw, baseline_policy, policy, target)
-                frame.update(valid=bool(photo["valid"] and photo.get("registration", {}).get("valid", False)),
+                # An intact camera frame with an absent, occluded or unreadable
+                # target is an observed task failure, not missing evidence.
+                # File/resize/provenance errors still fail certification above.
+                frame.update(valid=True,
+                             optical_measurement_valid=bool(photo["valid"] and photo.get("registration", {}).get("valid", False)),
                              photo_score=photo["photo_score"],
                              minimum_edge_gain=photo.get("minimum_edge_gain_both_sizes"),
                              newly_readable_groups=photo.get("newly_readable_groups", []),
@@ -211,8 +215,8 @@ def audit_run(run, target_json):
                              candidate_policy_groups={group["name"]: {"readable": group["readable"],
                                                                       "scanlines": group["scanlines"]}
                                                       for group in photo["policy"]["candidate"].get("bar_groups", [])})
-                if not frame["valid"]:
-                    frame["error"] = photo.get("error") or photo.get("registration", {}).get("error") or "Invalid photo comparison"
+                if not frame["optical_measurement_valid"]:
+                    frame["measurement_failure"] = photo.get("error") or photo.get("registration", {}).get("error") or "Target cannot be measured"
             except (OSError, ValueError, KeyError, TypeError) as error:
                 frame["error"] = str(error)
             result["frames"].append(frame)
@@ -221,9 +225,12 @@ def audit_run(run, target_json):
             result["invalid_frame_steps"] = invalid
             result["reasons"].append("One or more photo comparisons are invalid")
             return result
+        gains = [frame["minimum_edge_gain"] for frame in result["frames"] if frame["minimum_edge_gain"] is not None]
+        shifts = [frame["registration"]["maximum_shift_px"] for frame in result["frames"] if "maximum_shift_px" in frame["registration"]]
         result.update(certified=True, photo_hold_score=min(frame["photo_score"] for frame in result["frames"]),
-                      minimum_edge_gain=min(frame["minimum_edge_gain"] for frame in result["frames"]),
-                      maximum_registration_shift_px=max(frame["registration"]["maximum_shift_px"] for frame in result["frames"]))
+                      minimum_edge_gain=min(gains) if gains else None,
+                      maximum_registration_shift_px=max(shifts) if shifts else None,
+                      unmeasurable_target_steps=[frame["step"] for frame in result["frames"] if not frame["optical_measurement_valid"]])
     except (OSError, ValueError, KeyError, TypeError, IndexError, json.JSONDecodeError) as error:
         result["reasons"].append(type(error).__name__ + ": " + str(error))
     return result
@@ -239,7 +246,7 @@ def self_test():
     bad = copy.deepcopy(trace); bad[20]["time_s"] += .001
     assert inspect_trace(bad, 60)[2]
     bad = copy.deepcopy(trace); bad[20]["camera_eye"][0] = .002
-    assert inspect_trace(bad, 60)[2]
+    assert not inspect_trace(bad, 60)[2] and not inspect_trace(bad, 60)[1]["camera_invariant"]
     bad = copy.deepcopy(trace); bad[20]["step"] = 19
     assert inspect_trace(bad, 60)[2]
     with tempfile.TemporaryDirectory() as temporary:
@@ -253,7 +260,7 @@ def self_test():
         failed = audit_run(root, root/"missing-target.json")
         assert not failed["certified"] and failed["photo_hold_score"] == 0 and failed["reasons"]
     return {"passed": True, "cases": 7,
-            "scope": "Trace timing, missing states/files, camera-motion rejection and recoverable incomplete-artifact handling; not rendered optical validation."}
+            "scope": "Trace timing, missing states/files, camera-drift diagnostics and recoverable incomplete-artifact handling. Actual camera/target registration is gated by measured pixels in inspection_measure, not by exact pose equality."}
 
 
 if __name__ == "__main__":

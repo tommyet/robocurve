@@ -1,0 +1,57 @@
+{
+  "schema": "magnifier-task-score-v1",
+  "score": 1.0,
+  "certified": true,
+  "reasons": [],
+  "review": {
+    "valid": true,
+    "passes": true,
+    "errors": [],
+    "failed_conditions": [],
+    "reviewer": "Source, image and pose reviewer",
+    "interval_steps": [
+      470,
+      530
+    ]
+  },
+  "source_sha256": {
+    "scoring_py": "f49c752ba44e47da3870bcf44f9261bc1e2ac05e1df2b6c221f739b69e873044",
+    "common_py": "e2b646bf8ad20f48aab6cc9d2d6bf7d01592692f41761c68cbc187de9fbe1b6a",
+    "tool_py": "56861f697bffb27c1264cf5afdf936f7ed7c66f3f6ee7ceccb96a85fc6aeb663",
+    "lens_py": "b9e78d799e0da701047902735c7f75f293311928383686158a743890e53ace15",
+    "review_json": "4c2e8949e88c663267d78224773bc6f3791a9fee40e7c47782373b34344969e5"
+  },
+  "full_report": "validated-prototype-score.json.gz",
+  "optical_hold": {
+    "certified": true,
+    "photo_hold_score": 1.0,
+    "trace_interval": {
+      "steps": [
+        470,
+        530
+      ],
+      "state_count": 61,
+      "expected_control_hz": 20,
+      "duration_s": 3.0,
+      "maximum_camera_translation_from_final_m": 0.0,
+      "maximum_camera_rotation_matrix_element_change": 0.0,
+      "camera_invariant": true,
+      "pose_values_are_diagnostic": true,
+      "camera_condition": "All four actual outer-marker centres must remain within one native pixel of the same-pose frozen reference in every hold image."
+    },
+    "minimum_edge_gain": 1.879721708447664,
+    "maximum_registration_shift_px": 0.1497434874887294,
+    "unmeasurable_target_steps": []
+  },
+  "clearance": {
+    "valid": true,
+    "passes": true,
+    "minimum_required_m": 0.02,
+    "table_top_z_m": 0.7475,
+    "errors": [],
+    "minimum_clearance_m": 0.07437949760941642,
+    "minimum_step": 530,
+    "geometry": "All canonical collision-solid vertices, transformed by the actual measured rigid-tool pose.",
+    "scope": "61 sampled states over three seconds. The separately required video review checks visible grasp/support continuity; neither 20 Hz record proves motion between samples."
+  }
+}

@@ -4,7 +4,9 @@ Checkpoint: 2026-11-09 UTC, through `pickup-005`. This is a development
 workbench, not a submission-ready task. Real optical enlargement is demonstrated;
 the robot can pick up, centre and retain the tool. The current demo lasts
 26.5 seconds and demonstrates a continuous three-second optical benefit.
-The user authorized development, **not an upstream PR for this task**.
+The user authorized the upstream PR on November 9. The final task package is
+being assembled in `tasks/use-a-magnifying-glass/`; keep this development history
+out of its single-task submission branch.
 
 ## Evidence
 
@@ -153,7 +155,7 @@ static probe calls `sim.render()` and forces camera recomputation while assertin
 unchanged physics steps and joints, then checks raw RGB against the wrapper's
 actual image. See [Isaac Sim rendering modes](https://docs.isaacsim.omniverse.nvidia.com/6.1.0/reference_material/rendering_modes.html).
 
-## Remaining work
+## Historical checkpoint: remaining work after pickup-005
 
 1. Finalize the combined optical/physical score and the real-trial reference
    protocol. A fixed camera and fixed target must be established, not assumed
@@ -171,3 +173,17 @@ actual image. See [Isaac Sim rendering modes](https://docs.isaacsim.omniverse.nv
    the task setup, fidelity, reset and run instructions, then review every
    competition criterion. No Dream run or submission package is established by
    the evidence above. Request submission authorization only once reviewable.
+
+## Submission preparation update — 2026-11-09
+
+`run.py` now provides one scene/instruction for the demo and Dream. Its normal
+Dream adapter uses eight action rows per request and stops on session replacement.
+`scoring.py` combines the final three-second image check, a 20 mm whole-tool
+clearance check and an evidence-bound physical review. Camera roll and off-centre
+framing are supported. Exact camera-pose equality is diagnostic only; the
+one-pixel outer-marker registration is the actual task condition.
+
+The standard wrapper provides 224×224 images; Dream's normal transport then
+resizes those to 320×176 JPEG85. Do not describe the latter as untouched224 RGB.
+Final GPU trials and submission receipts are recorded under the ignored
+`artifacts/magnifier-submission/`; see TEAM_LEARNINGS for VM lifecycle and costs.

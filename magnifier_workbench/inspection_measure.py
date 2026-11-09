@@ -1,9 +1,8 @@
-"""Count native image pixels in the proposed five-bar inspection task.
+"""Measure real image enlargement and five-bar legibility.
 
-This is a photo-only development scorer, pending rendered validation. It does
-not certify pickup, physical grasp, clearance or a three-second continuous hold.
-Those conditions must be checked separately on the trial. The earlier static
-proof and its measurement code remain unchanged.
+This is the photo component of the task scorer. ``scoring.py`` adds the physical
+conditions and ``score_hold.py`` verifies every state of the three-second hold.
+No synthetic image or geometric projection supplies the measured enlargement.
 """
 from __future__ import annotations
 
@@ -17,9 +16,56 @@ import numpy as np
 from PIL import Image
 
 try:
-    from .measure import _components, _project, find_fiducials
+    from .measure import _components, _project
 except ImportError:
-    from measure import _components, _project, find_fiducials
+    from measure import _components, _project
+
+
+def find_fiducials(rgb, target):
+    """Locate the printed colour square anywhere in the actual camera image.
+
+    The original static-proof helper restricted detections to the central 60%.
+    Final judging has no such framing condition: use the same colour/geometry
+    checks over the full image and retain centrality only as a weak tie-breaker.
+    """
+    image = np.asarray(rgb, dtype=float)
+    height, width = image.shape[:2]
+    r, g, b = np.moveaxis(image, -1, 0)
+    masks = {"red": (r > 1.45*g) & (r > 1.45*b),
+             "green": (g > 1.35*r) & (g > 1.25*b),
+             "blue": (b > 1.4*r) & (b > 1.15*g),
+             "magenta": (r > 1.4*g) & (b > 1.4*g) & (r < 1.6*b) & (b < 1.6*r)}
+    bright = image.max(axis=-1) > 45
+    weights = image.max(axis=-1)-image.min(axis=-1)+1
+    candidates = []
+    for fiducial in target["fiducials"]:
+        components = _components(masks[fiducial["name"]] & bright, weights)
+        components.sort(key=lambda c: np.linalg.norm(c["xy"]-[width/2, height/2]))
+        candidates.append(components[:6])
+    if any(not choices for choices in candidates):
+        missing = [fid["name"] for fid, choices in zip(target["fiducials"], candidates) if not choices]
+        raise ValueError("Missing RGB fiducial(s): " + ", ".join(missing))
+    world = np.array([[*f["xy_mm"], 1] for f in target["fiducials"]])
+    choices = []
+    for group in itertools.product(*candidates):
+        pixels = np.array([c["xy"] for c in group])
+        affine = np.linalg.lstsq(world, pixels, rcond=None)[0]
+        singular = np.linalg.svd(affine[:2], compute_uv=False)
+        if singular[-1] < .15 or singular[0]/singular[-1] > 5:
+            continue
+        residual = float(np.sqrt(np.mean(np.sum((world@affine-pixels)**2, axis=1))))
+        span = np.median([np.linalg.norm(pixels[i]-pixels[j]) for i, j in itertools.combinations(range(4), 2)])
+        if residual > max(1.2, .04*span):
+            continue
+        centre_distance = np.linalg.norm(pixels.mean(axis=0)-[width/2, height/2])/min(width, height)
+        choices.append((residual/max(span, 1)+centre_distance*.08, group, affine, residual))
+    if not choices:
+        raise ValueError("RGB fiducials do not form a coherent target quadrilateral")
+    choices.sort(key=lambda item: item[0])
+    _, selected, affine, residual = choices[0]
+    return selected, affine, {"affine_rms_error_px": residual,
+                              "coherent_quartets": len(choices),
+                              "selection": "Full-image coherent colour quadrilateral; centrality only breaks ties"}
 
 
 def luminance(rgb):
@@ -85,42 +131,39 @@ def measure_group(gray, group, affine, black, white):
     image_center = _project(center, affine)
     bar_vector, stripe_vector = affine[bar_axis], affine[stripe_axis]
     varying_axis = int(np.argmax(np.abs(bar_vector)))
-    fixed_axis = 1-varying_axis
+    other_axis = 1-varying_axis
     extent = group["size_mm"][bar_axis]/2
     central_half_extent = group["size_mm"][stripe_axis]/4
     result = {"name": group["name"], "readable": False, "scanlines": [],
-              "criterion": "Five dark runs and four bright gaps, each with at least one strong native pixel, on every full scanline through the central half of the stripe length."}
-    if abs(stripe_vector[fixed_axis]) < 1e-8:
-        result["error"] = "Target orientation does not support native row/column inspection"
-        return result
-    # Intersect the fixed-coordinate ranges at both ends. Every sampled row or
-    # column crosses the complete bar code inside the central half of its length.
-    radius = abs(stripe_vector[fixed_axis])*central_half_extent
-    endpoints = [image_center[fixed_axis]+bar_vector[fixed_axis]*u for u in (-extent, extent)]
-    low, high = max(endpoints)-radius, min(endpoints)+radius
-    fixed_coordinates = range(int(np.ceil(low)), int(np.floor(high))+1)
-    for fixed in fixed_coordinates:
-        span = []
-        for u in (-extent, extent):
-            v = (fixed-image_center[fixed_axis]-bar_vector[fixed_axis]*u)/stripe_vector[fixed_axis]
-            span.append(image_center[varying_axis]+bar_vector[varying_axis]*u+stripe_vector[varying_axis]*v)
-        values_at = np.arange(int(np.ceil(min(span))), int(np.floor(max(span)))+1)
+              "criterion": "Five dark runs and four bright gaps, each with a strong original pixel, along every chart-aligned native-pixel transect spaced at most one pixel apart across the central half of the bar length."}
+    # Follow the printed bars, rather than requiring a horizontal image row to
+    # fit a rotated, narrow patch. At each integer coordinate of the dominant
+    # image axis read the nearest original pixel on that straight transect.
+    # No interpolation, rotated image, averaging or invented pixel is used.
+    # This is deliberately conservative at resolution limits: every transect
+    # must resolve the complete pattern, including intermediate offsets.
+    count = max(1, int(np.ceil(2*central_half_extent*np.linalg.norm(stripe_vector))))
+    for offset in np.linspace(-central_half_extent, central_half_extent, count+1):
+        origin = image_center+stripe_vector*offset
+        endpoints = [origin[varying_axis]+bar_vector[varying_axis]*u for u in (-extent, extent)]
+        values_at = np.arange(int(np.ceil(min(endpoints))), int(np.floor(max(endpoints)))+1)
         if not len(values_at):
             continue
         locations = np.empty((len(values_at), 2), dtype=int)
-        locations[:, fixed_axis] = fixed
         locations[:, varying_axis] = values_at
+        parameters = (values_at-origin[varying_axis])/bar_vector[varying_axis]
+        locations[:, other_axis] = np.floor(origin[other_axis]+bar_vector[other_axis]*parameters+.5).astype(int)
         if (np.any(locations < 0) or np.any(locations[:, 0] >= gray.shape[1])
                 or np.any(locations[:, 1] >= gray.shape[0])):
             result["error"] = "Bar group falls outside the image"
             return result
         line = count_scanline(gray[locations[:, 1], locations[:, 0]], locations, black, white)
-        line.update(fixed_image_axis="xy"[fixed_axis], fixed_coordinate=int(fixed))
+        line.update(dominant_image_axis="xy"[varying_axis], offset_along_bar_mm=float(offset))
         result["scanlines"].append(line)
     result["native_scanline_count"] = len(result["scanlines"])
     result["readable"] = bool(result["scanlines"] and all(line["readable"] for line in result["scanlines"]))
     if not result["scanlines"]:
-        result["error"] = "No complete native scanline fits the central half of the stripe length"
+        result["error"] = "No native-pixel transect crosses the bar group"
     return result
 
 
@@ -278,13 +321,12 @@ def compare_arrays(baseline_raw, candidate_raw, baseline_policy, candidate_polic
         raise ValueError("Raw reference and candidate dimensions must match")
     if np.asarray(baseline_policy).shape[:2] != (224, 224) or np.asarray(candidate_policy).shape[:2] != (224, 224):
         raise ValueError("Supply actual 224 x 224 policy input images")
-    result = {"schema": "magnifier-inspection-photo-v1", "photo_score": 0.0,
+    result = {"schema": "magnifier-inspection-photo-v3", "photo_score": 0.0,
               "full_trial_score_certified": False, "valid": False,
               "limits": ["Photo result does not establish a physical grasp, pickup, clearance or a continuous three-second hold.",
                          "Use actual camera and policy images at unchanged intrinsics; no image zoom or crop is allowed.",
                          "Raw outer-marker registration checks the same camera/target pose within one pixel.",
-                         "A local affine map locates the printed groups; strong nonlinear distortion can make that lookup inconclusive.",
-                         "This new chart and pixel-count metric still require rendered validation."]}
+                         "A local affine map locates the printed groups; strong nonlinear distortion can make that lookup inconclusive."]}
     for name, before, after in (("raw", baseline_raw, candidate_raw), ("policy", baseline_policy, candidate_policy)):
         a, b = measure_image(before, target), measure_image(after, target)
         result[name] = {"baseline": a, "candidate": b}
@@ -309,7 +351,7 @@ def compare_arrays(baseline_raw, candidate_raw, baseline_policy, candidate_polic
                             "partial_detail": "At least one previously unreadable group becomes readable.",
                             "full_detail": "Both groups readable, with at least one newly readable.",
                             "gain_measurement": "Minimum of all four square-edge ratios in raw and actual policy images.",
-                            "bar_rule": "Every complete native row/column across the central half of stripe length contains exactly five dark bars and four bright gaps, each with at least one strong pixel; dark <= B+0.4(W-B), bright >= B+0.6(W-B)."}
+                            "bar_rule": "Every chart-aligned native-pixel transect, spaced at most one pixel apart across the central half of the bar length, contains five dark bars and four bright gaps with at least one strong original pixel each; dark <= B+0.4(W-B), bright >= B+0.6(W-B)."}
     return result
 
 
@@ -348,6 +390,13 @@ def self_test():
             return np.asarray(Image.fromarray(raw).resize((224, 224), Image.Resampling.BILINEAR))
         good = compare_arrays(baseline, candidate, policy(baseline), policy(candidate), target)
         assert good["photo_score"] == 1.0, good
+        # The complete card remains visible at these offsets, but enlarged
+        # coloured dots extend outside the old central-60% development crop.
+        for translation in (-160, 160):
+            before = np.roll(baseline, translation, axis=1)
+            after = np.roll(candidate, translation, axis=1)
+            off_centre = compare_arrays(before, after, policy(before), policy(after), target)
+            assert off_centre["photo_score"] == 1.0, off_centre
         identity = compare_arrays(baseline, baseline, policy(baseline), policy(baseline), target)
         assert identity["photo_score"] == 0
         zoom = compare_arrays(baseline, enlarged, policy(baseline), policy(enlarged), target)
@@ -399,7 +448,7 @@ def self_test():
             raise AssertionError("A moderate shadow without dark ink was accepted")
         except ValueError:
             pass
-        return {"passed": True, "cases": 12, "synthetic_only": True,
+        return {"passed": True, "cases": 14, "synthetic_only": True,
                 "positive_minimum_gain": good["minimum_edge_gain_both_sizes"],
                 "positive_new_groups": good["newly_readable_groups"],
                 "local_gradient_marker_error_px": float(np.linalg.norm(located["xy"]-[20, 20])),

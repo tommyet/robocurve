@@ -1,0 +1,26 @@
+{
+  "status": "Ready for the final GPU evaluation; submission blocked by regional GPU capacity.",
+  "demo": {
+    "trial": "pickup-005",
+    "score": 1.0,
+    "certified": true,
+    "steps": 530,
+    "control_seconds": 26.5,
+    "minimum_optical_gain": 1.879721708447664,
+    "minimum_whole_tool_clearance_m": 0.07437949760941642
+  },
+  "dream": {
+    "run": false
+  },
+  "checks_complete": false,
+  "remaining": [
+    "Canonical runner smoke test and matching Dream baseline",
+    "Final media upload and one-task PR"
+  ],
+  "cpu_checks": {
+    "passed": true,
+    "unit_tests": 19,
+    "image_cases": 14,
+    "hold_cases": 7
+  }
+}

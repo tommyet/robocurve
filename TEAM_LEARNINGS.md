@@ -14,7 +14,8 @@ developers and their agents, not a competition submission document.
   until the user explicitly asks. The user explicitly authorized media upload
   and the die-task PR on 2026-11-03, then the four brick-task submissions on
   2026-11-04. On November 8 the user explicitly authorized final preparation,
-  media upload and the overhand-knot PR. Future tasks still need explicit
+  media upload and the overhand-knot PR. On November 9 the user explicitly authorized the magnifier PR, with concise
+  wording emphasizing lens orientation relative to the wrist camera. Future tasks still need explicit
   submission authorization. Keep each submission branch limited to its task folder.
 - `submission/roll-a-die` was submitted from the fork to upstream `main` as
   [PR #44](https://github.com/robocurve/benchmark-tasks/pull/44), commit `ba4ac81`.
@@ -58,6 +59,59 @@ developers and their agents, not a competition submission document.
   content to this log. Keep task text and submitted media anonymous.
 
 ## GPU cost and persistence
+
+### 2026-11-09 — magnifier submission preparation
+
+- Operator: repository agent, `codex/magnifier-submission` from `origin/main`
+  at `c20f5ad`. User explicitly requested the PR. Prepare final scoring, a
+  matching Dream baseline and anonymous media before a separate single-task
+  submission branch from fresh upstream. Keep the camera-relative alignment
+  skill central in the text.
+- The shared VM was confirmed STOPPED with no operation at 06:42 UTC, posted
+  credits $133.11 and running rate $2.729872/hour. Local preparation precedes
+  a bounded final run; record the completed session below.
+- The 06:49 UTC start failed with `CAPACITY_UNAVAILABLE`; the VM returned to
+  STOPPED with no active operation at 06:52 UTC. No simulator or Dream request
+  ran. One same-instance retry was requested; preserve both lifecycle records.
+- Final scorer now uses orientation-aware original-pixel paths and full-frame
+  coherent colour-fiducial detection. Synthetic checks cover camera roll and
+  off-centre framing. A 20 mm whole-tool clearance gate and evidence-bound
+  handle-grasp/video review complete the optical rubric. Same-pose comparison
+  uses the one-pixel registration tolerance, not exact numeric camera equality.
+- The same-size retry also failed; read-only RPC confirmed no active operation.
+  The same retained VM was resized with `brev scale robocurve-dice --gpu
+  g6e.2xlarge` after checking the fresh Mumbai rate: $3.279064/h including
+  storage (same L40S, 8 CPUs/64 GiB RAM). The shipped frontend lists a Connect
+  resize method that returned HTTP404; the installed CLI uses supported legacy
+  `PUT /api/workspaces/{id}`. Do not repeat uncertain lifecycle mutations.
+  After scaling, the legacy workspace summary briefly retained the old size;
+  the current GetEnvironment RPC confirmed g6e.2xlarge and a completed task.
+- Final local rescore of pickup-005 is now a complete **1.0**, including an
+  evidence-bound source/video review and >=74.3795 mm measured whole-tool
+  clearance. Saved camera and video evidence are20 Hz; this does not establish
+  substep clearance or exhaustive self-collision safety.
+- All four starts failed with `CAPACITY_UNAVAILABLE`: xlarge twice, then
+  2xlarge and 4xlarge once each. Last terminal failure was confirmed by the
+  current RPC at 07:12:56 UTC. No new simulator trial or Dream request ran.
+  At 07:14:53 UTC the original xlarge configuration was confirmed restored,
+  STOPPED, with no active operation. The retained disk and installation remain.
+  Posted credits fell from $133.11 to $132.10 during these observations, but
+  billing lags; this is not a cost attribution to these failed starts.
+- Development package: `tasks/use-a-magnifying-glass/`. All 19 unit tests,
+  14 image checks and 7 hold checks passed. The complete prototype score is
+  curated as compressed numeric evidence plus a concise summary and physical
+  review. Media remain ignored. `VALIDATION.json` explicitly records the
+  missing Dream baseline; no media upload or upstream PR was attempted.
+- Resume using `run.py --policy demo` first, then `--policy dream` on the same
+  retained VM, with 1,200-action limit and eight-row Dream batches. Frozen
+  archives and the bounded launcher are in `artifacts/magnifier-submission/`.
+  Regenerate archives after any task-source change. Inspect idle GPU/jobs/users
+  before the run, download/hash-check evidence, then stop and confirm STOPPED.
+  Score both final runs with `scoring.py` and complete their bound physical
+  reviews. Finish media/README/runtime/VALIDATION before copying only the task
+  folder into `codex/submit-magnifier`, based on fresh upstream. **User PR/upload
+  authorization persists; do not ask again merely because this turn was blocked.**
+
 
 ### 2026-11-09 — magnifier optics and physical prototype
 

@@ -1,5 +1,5 @@
 {
-  "status": "Optical feasibility and physical scripted prototype demonstrated; not submission-ready.",
+  "status": "Complete final-rubric prototype score1.0; canonical runner and Dream baseline blocked by GPU capacity.",
   "demo": {
     "trial": "pickup-005",
     "steps": 530,
@@ -31,9 +31,12 @@
   "vm": "Both sessions confirmed stopped",
   "total_estimated_brev_session_usd": 2.116418773657422,
   "remaining": [
-    "Combined physical/optical scorer and rotation-invariance checks",
-    "Real-trial camera/reference protocol",
-    "Matching Dream baseline and final guide/novelty review",
-    "Explicit user authorization before media upload or upstream PR"
-  ]
+    "Canonical runner smoke test and matching Dream baseline when GPU capacity is available",
+    "Final media upload and authorized single-task PR"
+  ],
+  "complete_prototype_score": {
+    "score": 1.0,
+    "certified": true,
+    "task_evidence": "tasks/use-a-magnifying-glass/evidence/validated-prototype-summary.json"
+  }
 }
