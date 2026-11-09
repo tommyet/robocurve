@@ -59,6 +59,49 @@ developers and their agents, not a competition submission document.
 
 ## GPU cost and persistence
 
+### 2026-11-08 — magnifying-glass task feasibility (no GPU run)
+
+- Operator: repository agent, `codex/magnifier-feasibility`, from shared
+  `origin/main` at `caf5dd1`. User proposed picking up a magnifier and orienting
+  it to improve an arm camera's view. This is feasibility research; no task
+  implementation, media upload or PR for this idea has been completed.
+- Live board: 1,235 tasks; no matches for magnification, magnifier, loupe or
+  convex lens across title/instruction/context/setup/scoring/fidelity. GitHub
+  search also returned no matching PR. Closest pending task **TK-UZH2XJ**
+  loads, centres and focuses a microscope slide; its fidelity explicitly says
+  no optics and scores physical gaps. A separate lens improving the robot's
+  own RGB feed appears distinct, but reviewers decide novelty. Board evidence:
+  `artifacts/magnifier-feasibility/board.json` and `board-matches.json`.
+- Local inspected YAM adapter uses ordinary RGB CameraCfg cameras with RTX,
+  calibrated pinhole/OpenCV intrinsics, 640x360 render resolution and default
+  cv2 resizing to 224x224 policy input. Camera settings are in
+  `yam_arena/embodiment.py`, `station.py`, and `inspect_embodiment.py` in the
+  preserved adapter checkout. Test the actual policy feed, not just a large
+  review-camera image. Keep camera intrinsics and resize policy unchanged.
+- NVIDIA [OmniGlass](https://docs.omniverse.nvidia.com/materials-and-rendering/latest/templates/OmniGlass.html)
+  supports index of refraction and thick glass; a closed curved lens with
+  thin_walled=false is a plausible starting point. This documents capability,
+  not a successful render in our environment. [Isaac Sim 6.1 rendering modes](https://docs.isaacsim.omniverse.nvidia.com/6.1.0/reference_material/rendering_modes.html)
+  distinguish RealTimePathTracing, PathTracing and legacy RaytracedLighting.
+  Record the actual mode; their transmission-bounce settings differ.
+- First experiment should be a static optical proof: one target with measured
+  fiducials and fine line pairs, one convex lens, and the real wrist-camera
+  pipeline. Compare lens absent/aligned/tilted at identical camera and target
+  poses, intrinsics, lighting and exposure. Check raw RGB and the 224x224 feed.
+  A higher-quality path-traced still can provide a renderer reference. This
+  needs no robot motion or Dream calls; GPU runtime remains unmeasured.
+- Score eventual optical benefit from measured image enlargement AND resolved
+  detail. A larger blur is not success. A same-pose lens-free reference prevents
+  moving the camera closer from substituting for optical gain; preserve both
+  images so a reviewer can count pixels and inspect the line gaps. Require a
+  stable held view and an unchanged target. Candidate 1.5x/2x partial/full
+  thresholds are provisional until the optical test establishes feasibility.
+  Do not score projected world-state boxes as proof of refracted image size.
+- No rented GPU was started and no paid inference was used for this check.
+  Next step is the small optical test before committing to a full manipulation
+  task. Native refraction, usable detail after resizing, reachable lens poses
+  and rendering cost remain unverified.
+
 ### 2026-11-08 — overhand-knot submission preparation
 
 - Operator: repository agent, `codex/rope-submission-prep` from shared `main`
