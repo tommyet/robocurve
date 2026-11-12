@@ -1,6 +1,6 @@
 # Shared working notes
 
-Last updated: 2026-11-09 UTC. Read this before starting work; update it when an
+Last updated: 2026-11-12 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
@@ -57,6 +57,41 @@ developers and their agents, not a competition submission document.
   [.gitignore](.gitignore).
   This repository is public: do not add account tokens or private application
   content to this log. Keep task text and submitted media anonymous.
+
+## Review findings
+
+### 2026-11-12 — knot accepted; three brick variants finally rejected
+
+- Checked GitHub at 06:41 UTC and corroborated visible task states on the
+  authenticated task board. [Overhand knot #1153](https://github.com/robocurve/benchmark-tasks/pull/1153)
+  was **accepted and merged** at 05:48 UTC (TK-VWRHTS).
+- [Full 2×2 join #364](https://github.com/robocurve/benchmark-tasks/pull/364)
+  (TK-BPUQW9) and [magnifier #1305](https://github.com/robocurve/benchmark-tasks/pull/1305)
+  (TK-KNVK82) remain **pending**, with no review feedback. Pending is not an
+  acceptance decision.
+- [1×1 join #365](https://github.com/robocurve/benchmark-tasks/pull/365),
+  [mixed-size join #366](https://github.com/robocurve/benchmark-tasks/pull/366)
+  and [overlapping join #367](https://github.com/robocurve/benchmark-tasks/pull/367)
+  received **new final rejections** around 06:20 UTC and were closed. These
+  supersede the November 5 reviews that had been retracted. Reviewers said
+  changing brick size or engaged-stud count does not meaningfully distinguish
+  the press-fit, lift and release skill from the earlier 2×2 task. They also
+  rejected privileged measured brick/tool pose feedback for demo placement
+  correction. The overlap review additionally flags uncalibrated physical fit,
+  insertion force and retention for printed bricks.
+- Each new rejection explicitly permits a reply requesting human review
+  within 48 hours: deadlines November 14 at 06:20:24, 06:20:28 and 06:20:31 UTC,
+  respectively. These are final rejections, not ordinary revision requests.
+  No appeal has been sent; posting one needs user authorization.
+- [Die #44](https://github.com/robocurve/benchmark-tasks/pull/44) remains finally
+  rejected since November 5 for insufficient importance/real-world relevance.
+  Overall: **one accepted, two pending, four final rejections**.
+- Reusable lessons: distinguish new tasks by the skill and real-world purpose,
+  not object dimensions or connection offsets; demos should use policy-available
+  observations for feedback. Current rejection comments are the evidence for
+  these conclusions, not a decision about either still-pending task.
+- Local snapshots (ignored): `artifacts/pr-status-2026-11-12/` contains
+  `github-metadata.json`, `github-comments.json` and `board.json`.
 
 ## GPU cost and persistence
 
