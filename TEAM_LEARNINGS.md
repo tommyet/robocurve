@@ -60,6 +60,59 @@ developers and their agents, not a competition submission document.
 
 ## Review findings
 
+### 2026-11-12 — six selected tasks enter local development
+
+- Operator: repository agent, branch `codex/six-task-batch-2026-11-12`, based on
+  freshly fetched `origin/main`. User selected wheel truing, T-shirt pegging,
+  staple removal, seam unpicking, shell-border piping and necktie tying for
+  submission preparation, with an approximate $3/task budget. This supersedes
+  the research-only restriction for these six, but does not authorize opening
+  their upstream PRs. See [the batch record](docs/six-task-batch-readiness.md).
+- Refreshed the authenticated guide, submission instructions, walkthrough,
+  board (479 current entries), all-state PR history (1,788 entries) and accepted
+  upstream source at `7e7fafb`. Local snapshots are under
+  `artifacts/six-task-batch-2026-11-12/`. No direct new match was found for five
+  ideas; pegging has finally rejected #760, with a still-open appeal window.
+  Recheck the claim before submission. A different garment alone is not novelty.
+- Brev login was renewed through Safari. At 12:01 UTC, two read-only billing
+  calls confirmed **−$2.28 remaining credits**, and usage overview totals were
+  $189.74 compute plus $12.5482 storage. These are whole-organization totals,
+  not this batch's spend or a per-person attribution. `brev ls --all` confirmed
+  both team VMs STOPPED. No GPU start or Dream prediction was made. Funding for
+  final trials is unresolved; the user was asked while local work continued.
+- The retained g6e.xlarge catalog running rate is $2.729872/hour including
+  storage. The approximate batch allowance is $18, provisionally split into
+  $13.50 active GPU, $3 model usage and $1.50 shared lifecycle overhead. Model
+  usage is a reserve, not an invoice estimate. Preserve the existing VM/disk;
+  do not bypass the funding problem by creating a new billed instance.
+- Native surface deformables are the candidate cloth path in Isaac Sim 6.1.
+  Do not infer feasibility from API availability: actual fabric self-contact,
+  passive clip capture, released retention and seam-cutting interactions still
+  need physical evidence. Local mechanics probes cannot establish task success.
+- The pinned IsaacLab revision `91a0906f` uses **xyzw**, including
+  `AssetBaseCfg.InitialStateCfg.rot=(0,0,0,1)` passed directly to the spawner.
+  Do not apply older IsaacLab wxyz assumptions. Its PhysX deformable backend
+  exposes `write_nodal_state_to_sim_index`; inspect the installed source rather
+  than substitute an API name from another release. Surface cloth must use a
+  deformable asset configuration, not an ordinary rigid Box configuration with
+  a different mesh spawner. These are source checks, not runtime proof.
+- Local review caught cake/board and paper/clinch starting-layout intersections,
+  stale USD-transform sampling in an isolated native probe, and direction bias
+  in the icing scorer. Use live physics readback for diagnostics and test
+  equivalent final results in both piping directions. These checks cost no GPU
+  or Dream requests. The final task folders retain explicit engineering gaps;
+  a native preview that holds the robot still is not a full-score demo.
+- Final local checkpoint: 76 CPU tests passed across the six folders (wheel 19,
+  shirt 7, staple 17, seam 9, cake 14, tie 10). Shirt/tie task definitions load
+  through the pinned YAM loader. Independent review also fixed the tie's rear
+  support intersecting its initial drape and added an all-triangle fixture
+  clearance regression; checking only vertices/collar-cylinder clearance had
+  missed it. Both cloth smoke runners now call an explicit environment reset
+  before recording. No native probe, robot demo or Dream trial has run. All
+  six remain drafts, with substantive implementation and validation gaps in
+  their `VALIDATION.json`; no task scores or media IDs are invented. Both VMs
+  remained STOPPED at the final read-only check.
+
 ### 2026-11-12 — verify benchmark mechanics before declaring duplication
 
 - Operator: repository agent, branch `codex/idea-followup-2026-11-12`.

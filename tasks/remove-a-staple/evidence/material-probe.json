@@ -1,0 +1,1801 @@
+{
+  "schema": "staple-material-probe-v1",
+  "calibrated": false,
+  "evidence_type": "CPU material-law and geometry probe, not extraction or a robot trial",
+  "steel_spec": {
+    "wire_width_m": 0.0005,
+    "wire_thickness_m": 0.0003,
+    "hinge_length_m": 0.0005,
+    "young_modulus_pa": 200000000000.0,
+    "yield_stress_pa": 250000000.0,
+    "hardening_fraction": 0.02
+  },
+  "paper_spec": {
+    "thickness_m": 0.0001,
+    "bond_width_m": 0.0005,
+    "peak_traction_pa": 15000000.0,
+    "opening_at_peak_m": 1e-05,
+    "fracture_energy_j_per_m2": 300.0,
+    "compression_stiffness_n_per_m": 75000.0
+  },
+  "hinge_stiffness_nm_per_rad": 0.44999999999999984,
+  "initial_yield_moment_nm": 0.0018749999999999997,
+  "plastic_bending": [
+    {
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "angle_rad": 0.005,
+      "moment_nm": 0.0018823529411764702,
+      "plastic_angle_rad": 0.0008169934640522872,
+      "plastic_increment_rad": 0.0008169934640522872,
+      "elastic_energy_j": 3.936947327950788e-06,
+      "dissipated_work_j": 1.5318627450980383e-06,
+      "stored_hardening_j": 3.0036524413687004e-09
+    },
+    {
+      "angle_rad": 0.01,
+      "moment_nm": 0.0019264705882352938,
+      "plastic_angle_rad": 0.005718954248366013,
+      "plastic_increment_rad": 0.004901960784313725,
+      "elastic_energy_j": 4.123654363706267e-06,
+      "dissipated_work_j": 1.0723039215686273e-05,
+      "stored_hardening_j": 1.4717896962706645e-07
+    },
+    {
+      "angle_rad": 0.015,
+      "moment_nm": 0.001970588235294118,
+      "plastic_angle_rad": 0.010620915032679736,
+      "plastic_increment_rad": 0.004901960784313723,
+      "elastic_energy_j": 4.314686658977319e-06,
+      "dissipated_work_j": 1.9914215686274504e-05,
+      "stored_hardening_j": 5.076172625913106e-07
+    },
+    {
+      "angle_rad": 0.02,
+      "moment_nm": 0.0020147058823529406,
+      "plastic_angle_rad": 0.015522875816993464,
+      "plastic_increment_rad": 0.004901960784313728,
+      "elastic_energy_j": 4.510044213763937e-06,
+      "dissipated_work_j": 2.9105392156862742e-05,
+      "stored_hardening_j": 1.0843185313341021e-06
+    },
+    {
+      "angle_rad": 0.025,
+      "moment_nm": 0.0020588235294117644,
+      "plastic_angle_rad": 0.02042483660130719,
+      "plastic_increment_rad": 0.004901960784313725,
+      "elastic_energy_j": 4.709727028066128e-06,
+      "dissipated_work_j": 3.829656862745098e-05,
+      "stored_hardening_j": 1.8772827758554398e-06
+    },
+    {
+      "angle_rad": 0.03,
+      "moment_nm": 0.0021029411764705887,
+      "plastic_angle_rad": 0.025326797385620912,
+      "plastic_increment_rad": 0.004901960784313723,
+      "elastic_energy_j": 4.913735101883894e-06,
+      "dissipated_work_j": 4.748774509803921e-05,
+      "stored_hardening_j": 2.8865099961553235e-06
+    },
+    {
+      "angle_rad": 0.035,
+      "moment_nm": 0.0021470588235294108,
+      "plastic_angle_rad": 0.030228758169934644,
+      "plastic_increment_rad": 0.0049019607843137315,
+      "elastic_energy_j": 5.122068435217221e-06,
+      "dissipated_work_j": 5.6678921568627456e-05,
+      "stored_hardening_j": 4.112000192233756e-06
+    },
+    {
+      "angle_rad": 0.04,
+      "moment_nm": 0.002191176470588235,
+      "plastic_angle_rad": 0.035130718954248366,
+      "plastic_increment_rad": 0.004901960784313722,
+      "elastic_energy_j": 5.334727028066129e-06,
+      "dissipated_work_j": 6.587009803921568e-05,
+      "stored_hardening_j": 5.553753364090732e-06
+    },
+    {
+      "angle_rad": 0.045,
+      "moment_nm": 0.002235294117647059,
+      "plastic_angle_rad": 0.04003267973856209,
+      "plastic_increment_rad": 0.004901960784313723,
+      "elastic_energy_j": 5.551710880430606e-06,
+      "dissipated_work_j": 7.50612745098039e-05,
+      "stored_hardening_j": 7.211769511726256e-06
+    },
+    {
+      "angle_rad": 0.05,
+      "moment_nm": 0.0022794117647058827,
+      "plastic_angle_rad": 0.04493464052287582,
+      "plastic_increment_rad": 0.0049019607843137315,
+      "elastic_energy_j": 5.773019992310653e-06,
+      "dissipated_work_j": 8.425245098039216e-05,
+      "stored_hardening_j": 9.086048635140327e-06
+    },
+    {
+      "angle_rad": 0.055,
+      "moment_nm": 0.002323529411764707,
+      "plastic_angle_rad": 0.04983660130718954,
+      "plastic_increment_rad": 0.0049019607843137246,
+      "elastic_energy_j": 5.998654363706274e-06,
+      "dissipated_work_j": 9.34436274509804e-05,
+      "stored_hardening_j": 1.1176590734332944e-05
+    },
+    {
+      "angle_rad": 0.06,
+      "moment_nm": 0.0023676470588235307,
+      "plastic_angle_rad": 0.05473856209150326,
+      "plastic_increment_rad": 0.0049019607843137246,
+      "elastic_energy_j": 6.228613994617464e-06,
+      "dissipated_work_j": 0.00010263480392156863,
+      "stored_hardening_j": 1.3483395809304106e-05
+    },
+    {
+      "angle_rad": 0.065,
+      "moment_nm": 0.0024117647058823515,
+      "plastic_angle_rad": 0.059640522875817,
+      "plastic_increment_rad": 0.004901960784313733,
+      "elastic_energy_j": 6.462898885044209e-06,
+      "dissipated_work_j": 0.00011182598039215688,
+      "stored_hardening_j": 1.600646386005382e-05
+    },
+    {
+      "angle_rad": 0.07,
+      "moment_nm": 0.002455882352941176,
+      "plastic_angle_rad": 0.06454248366013073,
+      "plastic_increment_rad": 0.004901960784313729,
+      "elastic_energy_j": 6.701509034986542e-06,
+      "dissipated_work_j": 0.00012101715686274512,
+      "stored_hardening_j": 1.8745794886582084e-05
+    },
+    {
+      "angle_rad": 0.075,
+      "moment_nm": 0.0024999999999999966,
+      "plastic_angle_rad": 0.06944444444444445,
+      "plastic_increment_rad": 0.004901960784313715,
+      "elastic_energy_j": 6.944444444444427e-06,
+      "dissipated_work_j": 0.00013020833333333333,
+      "stored_hardening_j": 2.1701388888888886e-05
+    },
+    {
+      "angle_rad": 0.08,
+      "moment_nm": 0.0025441176470588234,
+      "plastic_angle_rad": 0.07434640522875817,
+      "plastic_increment_rad": 0.004901960784313724,
+      "elastic_energy_j": 7.191705113417918e-06,
+      "dissipated_work_j": 0.00013939950980392156,
+      "stored_hardening_j": 2.487324586697423e-05
+    },
+    {
+      "angle_rad": 0.085,
+      "moment_nm": 0.0025882352941176447,
+      "plastic_angle_rad": 0.0792483660130719,
+      "plastic_increment_rad": 0.004901960784313731,
+      "elastic_energy_j": 7.443291041906947e-06,
+      "dissipated_work_j": 0.0001485906862745098,
+      "stored_hardening_j": 2.826136582083814e-05
+    },
+    {
+      "angle_rad": 0.09,
+      "moment_nm": 0.0026323529411764715,
+      "plastic_angle_rad": 0.08415032679738561,
+      "plastic_increment_rad": 0.0049019607843137115,
+      "elastic_energy_j": 7.69920222991158e-06,
+      "dissipated_work_j": 0.000157781862745098,
+      "stored_hardening_j": 3.186574875048057e-05
+    },
+    {
+      "angle_rad": 0.095,
+      "moment_nm": 0.0026764705882352923,
+      "plastic_angle_rad": 0.08905228758169935,
+      "plastic_increment_rad": 0.004901960784313733,
+      "elastic_energy_j": 7.95943867743175e-06,
+      "dissipated_work_j": 0.00016697303921568626,
+      "stored_hardening_j": 3.568639465590156e-05
+    },
+    {
+      "angle_rad": 0.1,
+      "moment_nm": 0.0027205882352941196,
+      "plastic_angle_rad": 0.09395424836601307,
+      "plastic_increment_rad": 0.004901960784313726,
+      "elastic_energy_j": 8.224000384467528e-06,
+      "dissipated_work_j": 0.00017616421568627448,
+      "stored_hardening_j": 3.9723303537101106e-05
+    },
+    {
+      "angle_rad": 0.105,
+      "moment_nm": 0.0027647058823529404,
+      "plastic_angle_rad": 0.0988562091503268,
+      "plastic_increment_rad": 0.004901960784313722,
+      "elastic_energy_j": 8.492887351018836e-06,
+      "dissipated_work_j": 0.0001853553921568627,
+      "stored_hardening_j": 4.3976475394079185e-05
+    },
+    {
+      "angle_rad": 0.11,
+      "moment_nm": 0.002808823529411761,
+      "plastic_angle_rad": 0.10375816993464053,
+      "plastic_increment_rad": 0.00490196078431373,
+      "elastic_energy_j": 8.766099577085718e-06,
+      "dissipated_work_j": 0.00019454656862745096,
+      "stored_hardening_j": 4.844591022683582e-05
+    },
+    {
+      "angle_rad": 0.115,
+      "moment_nm": 0.0028529411764705885,
+      "plastic_angle_rad": 0.10866013071895425,
+      "plastic_increment_rad": 0.004901960784313723,
+      "elastic_energy_j": 9.043637062668209e-06,
+      "dissipated_work_j": 0.00020373774509803918,
+      "stored_hardening_j": 5.3131608035371e-05
+    },
+    {
+      "angle_rad": 0.12,
+      "moment_nm": 0.0028970588235294093,
+      "plastic_angle_rad": 0.11356209150326797,
+      "plastic_increment_rad": 0.0049019607843137185,
+      "elastic_energy_j": 9.32549980776623e-06,
+      "dissipated_work_j": 0.0002129289215686274,
+      "stored_hardening_j": 5.803356881968472e-05
+    },
+    {
+      "angle_rad": 0.125,
+      "moment_nm": 0.002941176470588236,
+      "plastic_angle_rad": 0.1184640522875817,
+      "plastic_increment_rad": 0.004901960784313725,
+      "elastic_energy_j": 9.611687812379861e-06,
+      "dissipated_work_j": 0.00022212009803921563,
+      "stored_hardening_j": 6.315179257977699e-05
+    },
+    {
+      "angle_rad": 0.13,
+      "moment_nm": 0.0029852941176470573,
+      "plastic_angle_rad": 0.12336601307189543,
+      "plastic_increment_rad": 0.004901960784313733,
+      "elastic_energy_j": 9.902201076509028e-06,
+      "dissipated_work_j": 0.00023131127450980388,
+      "stored_hardening_j": 6.848627931564782e-05
+    },
+    {
+      "angle_rad": 0.135,
+      "moment_nm": 0.003029411764705878,
+      "plastic_angle_rad": 0.12826797385620917,
+      "plastic_increment_rad": 0.004901960784313728,
+      "elastic_energy_j": 1.0197039600153762e-05,
+      "dissipated_work_j": 0.0002405024509803921,
+      "stored_hardening_j": 7.403702902729719e-05
+    },
+    {
+      "angle_rad": 0.14,
+      "moment_nm": 0.0030735294117647115,
+      "plastic_angle_rad": 0.13316993464052287,
+      "plastic_increment_rad": 0.00490196078431372,
+      "elastic_energy_j": 1.0496203383314151e-05,
+      "dissipated_work_j": 0.00024969362745098033,
+      "stored_hardening_j": 7.980404171472508e-05
+    },
+    {
+      "angle_rad": 0.145,
+      "moment_nm": 0.0031176470588235323,
+      "plastic_angle_rad": 0.13807189542483658,
+      "plastic_increment_rad": 0.004901960784313716,
+      "elastic_energy_j": 1.0799692425990027e-05,
+      "dissipated_work_j": 0.00025888480392156855,
+      "stored_hardening_j": 8.578731737793152e-05
+    },
+    {
+      "angle_rad": 0.15,
+      "moment_nm": 0.003161764705882353,
+      "plastic_angle_rad": 0.14297385620915032,
+      "plastic_increment_rad": 0.004901960784313737,
+      "elastic_energy_j": 1.1107506728181473e-05,
+      "dissipated_work_j": 0.00026807598039215683,
+      "stored_hardening_j": 9.198685601691654e-05
+    },
+    {
+      "angle_rad": 0.155,
+      "moment_nm": 0.003205882352941174,
+      "plastic_angle_rad": 0.14787581699346405,
+      "plastic_increment_rad": 0.004901960784313732,
+      "elastic_energy_j": 1.1419646289888489e-05,
+      "dissipated_work_j": 0.00027726715686274506,
+      "stored_hardening_j": 9.840265763168011e-05
+    },
+    {
+      "angle_rad": 0.16,
+      "moment_nm": 0.0032499999999999946,
+      "plastic_angle_rad": 0.1527777777777778,
+      "plastic_increment_rad": 0.004901960784313725,
+      "elastic_energy_j": 1.1736111111111076e-05,
+      "dissipated_work_j": 0.0002864583333333333,
+      "stored_hardening_j": 0.00010503472222222221
+    },
+    {
+      "angle_rad": 0.165,
+      "moment_nm": 0.003294117647058828,
+      "plastic_angle_rad": 0.1576797385620915,
+      "plastic_increment_rad": 0.00490196078431372,
+      "elastic_energy_j": 1.2056901191849324e-05,
+      "dissipated_work_j": 0.0002956495098039215,
+      "stored_hardening_j": 0.00011188304978854284
+    },
+    {
+      "angle_rad": 0.17,
+      "moment_nm": 0.0033382352941176492,
+      "plastic_angle_rad": 0.16258169934640523,
+      "plastic_increment_rad": 0.004901960784313742,
+      "elastic_energy_j": 1.2382016532103058e-05,
+      "dissipated_work_j": 0.0003048406862745098,
+      "stored_hardening_j": 0.00011894764033064204
+    },
+    {
+      "angle_rad": 0.17500000000000002,
+      "moment_nm": 0.00338235294117647,
+      "plastic_angle_rad": 0.16748366013071897,
+      "plastic_increment_rad": 0.004901960784313735,
+      "elastic_energy_j": 1.2711457131872356e-05,
+      "dissipated_work_j": 0.000314031862745098,
+      "stored_hardening_j": 0.0001262284938485198
+    },
+    {
+      "angle_rad": 0.18,
+      "moment_nm": 0.003426470588235291,
+      "plastic_angle_rad": 0.17238562091503268,
+      "plastic_increment_rad": 0.004901960784313703,
+      "elastic_energy_j": 1.3045222991157226e-05,
+      "dissipated_work_j": 0.0003232230392156862,
+      "stored_hardening_j": 0.00013372561034217604
+    },
+    {
+      "angle_rad": 0.185,
+      "moment_nm": 0.0034705882352941116,
+      "plastic_angle_rad": 0.1772875816993464,
+      "plastic_increment_rad": 0.0049019607843137246,
+      "elastic_energy_j": 1.3383314109957668e-05,
+      "dissipated_work_j": 0.0003324142156862744,
+      "stored_hardening_j": 0.0001414389898116109
+    },
+    {
+      "angle_rad": 0.19,
+      "moment_nm": 0.003514705882352945,
+      "plastic_angle_rad": 0.18218954248366012,
+      "plastic_increment_rad": 0.0049019607843137185,
+      "elastic_energy_j": 1.3725730488273776e-05,
+      "dissipated_work_j": 0.0003416053921568626,
+      "stored_hardening_j": 0.00014936863225682424
+    },
+    {
+      "angle_rad": 0.195,
+      "moment_nm": 0.0035588235294117657,
+      "plastic_angle_rad": 0.18709150326797386,
+      "plastic_increment_rad": 0.004901960784313739,
+      "elastic_energy_j": 1.4072472126105358e-05,
+      "dissipated_work_j": 0.0003507965686274509,
+      "stored_hardening_j": 0.00015751453767781618
+    },
+    {
+      "angle_rad": 0.2,
+      "moment_nm": 0.0036029411764705865,
+      "plastic_angle_rad": 0.1919934640522876,
+      "plastic_increment_rad": 0.004901960784313734,
+      "elastic_energy_j": 1.442353902345251e-05,
+      "dissipated_work_j": 0.00035998774509803913,
+      "stored_hardening_j": 0.00016587670607458668
+    },
+    {
+      "angle_rad": 0.20500000000000002,
+      "moment_nm": 0.0036470588235294073,
+      "plastic_angle_rad": 0.19689542483660133,
+      "plastic_increment_rad": 0.004901960784313728,
+      "elastic_energy_j": 1.4778931180315232e-05,
+      "dissipated_work_j": 0.00036917892156862735,
+      "stored_hardening_j": 0.00017445513744713571
+    },
+    {
+      "angle_rad": 0.21,
+      "moment_nm": 0.0036911764705882407,
+      "plastic_angle_rad": 0.201797385620915,
+      "plastic_increment_rad": 0.004901960784313693,
+      "elastic_energy_j": 1.513864859669363e-05,
+      "dissipated_work_j": 0.0003783700980392155,
+      "stored_hardening_j": 0.00018324983179546318
+    },
+    {
+      "angle_rad": 0.215,
+      "moment_nm": 0.003735294117647062,
+      "plastic_angle_rad": 0.20669934640522875,
+      "plastic_increment_rad": 0.0049019607843137445,
+      "elastic_energy_j": 1.5502691272587496e-05,
+      "dissipated_work_j": 0.0003875612745098038,
+      "stored_hardening_j": 0.00019226078911956934
+    },
+    {
+      "angle_rad": 0.22,
+      "moment_nm": 0.0037794117647058827,
+      "plastic_angle_rad": 0.21160130718954248,
+      "plastic_increment_rad": 0.004901960784313737,
+      "elastic_energy_j": 1.5871059207996932e-05,
+      "dissipated_work_j": 0.0003967524509803921,
+      "stored_hardening_j": 0.00020148800941945398
+    },
+    {
+      "angle_rad": 0.225,
+      "moment_nm": 0.0038235294117647035,
+      "plastic_angle_rad": 0.21650326797385622,
+      "plastic_increment_rad": 0.0049019607843137315,
+      "elastic_energy_j": 1.624375240292194e-05,
+      "dissipated_work_j": 0.0004059436274509803,
+      "stored_hardening_j": 0.0002109314926951172
+    },
+    {
+      "angle_rad": 0.23,
+      "moment_nm": 0.0038676470588235243,
+      "plastic_angle_rad": 0.22140522875816995,
+      "plastic_increment_rad": 0.004901960784313726,
+      "elastic_energy_j": 1.6620770857362514e-05,
+      "dissipated_work_j": 0.00041513480392156853,
+      "stored_hardening_j": 0.00022059123894655898
+    },
+    {
+      "angle_rad": 0.23500000000000001,
+      "moment_nm": 0.003911764705882358,
+      "plastic_angle_rad": 0.22630718954248366,
+      "plastic_increment_rad": 0.00490196078431372,
+      "elastic_energy_j": 1.700211457131877e-05,
+      "dissipated_work_j": 0.00042432598039215675,
+      "stored_hardening_j": 0.00023046724817377926
+    },
+    {
+      "angle_rad": 0.24,
+      "moment_nm": 0.003955882352941179,
+      "plastic_angle_rad": 0.23120915032679737,
+      "plastic_increment_rad": 0.004901960784313714,
+      "elastic_energy_j": 1.738778354479049e-05,
+      "dissipated_work_j": 0.000433517156862745,
+      "stored_hardening_j": 0.00024055952037677807
+    },
+    {
+      "angle_rad": 0.245,
+      "moment_nm": 0.003999999999999999,
+      "plastic_angle_rad": 0.2361111111111111,
+      "plastic_increment_rad": 0.004901960784313737,
+      "elastic_energy_j": 1.7777777777777777e-05,
+      "dissipated_work_j": 0.00044270833333333326,
+      "stored_hardening_j": 0.0002508680555555555
+    },
+    {
+      "angle_rad": 0.25,
+      "moment_nm": 0.0040441176470588204,
+      "plastic_angle_rad": 0.24101307189542484,
+      "plastic_increment_rad": 0.00490196078431373,
+      "elastic_energy_j": 1.8172097270280638e-05,
+      "dissipated_work_j": 0.0004518995098039215,
+      "stored_hardening_j": 0.00026139285371011144
+    },
+    {
+      "angle_rad": 0.255,
+      "moment_nm": 0.004088235294117641,
+      "plastic_angle_rad": 0.24591503267973858,
+      "plastic_increment_rad": 0.004901960784313724,
+      "elastic_energy_j": 1.8570742022299064e-05,
+      "dissipated_work_j": 0.0004610906862745097,
+      "stored_hardening_j": 0.00027213391484044594
+    },
+    {
+      "angle_rad": 0.26,
+      "moment_nm": 0.004132352941176474,
+      "plastic_angle_rad": 0.2508169934640523,
+      "plastic_increment_rad": 0.0049019607843137185,
+      "elastic_energy_j": 1.897371203383318e-05,
+      "dissipated_work_j": 0.00047028186274509793,
+      "stored_hardening_j": 0.00028309123894655895
+    },
+    {
+      "angle_rad": 0.265,
+      "moment_nm": 0.004176470588235283,
+      "plastic_angle_rad": 0.25571895424836605,
+      "plastic_increment_rad": 0.004901960784313739,
+      "elastic_energy_j": 1.938100730488264e-05,
+      "dissipated_work_j": 0.0004794730392156862,
+      "stored_hardening_j": 0.0002942648260284506
+    },
+    {
+      "angle_rad": 0.27,
+      "moment_nm": 0.004220588235294117,
+      "plastic_angle_rad": 0.26062091503267976,
+      "plastic_increment_rad": 0.004901960784313707,
+      "elastic_energy_j": 1.97926278354479e-05,
+      "dissipated_work_j": 0.0004886642156862744,
+      "stored_hardening_j": 0.0003056546760861207
+    },
+    {
+      "angle_rad": 0.275,
+      "moment_nm": 0.00426470588235295,
+      "plastic_angle_rad": 0.26552287581699346,
+      "plastic_increment_rad": 0.00490196078431373,
+      "elastic_energy_j": 2.0208573625528734e-05,
+      "dissipated_work_j": 0.0004978553921568626,
+      "stored_hardening_j": 0.0003172607891195693
+    },
+    {
+      "angle_rad": 0.28,
+      "moment_nm": 0.004308823529411758,
+      "plastic_angle_rad": 0.27042483660130723,
+      "plastic_increment_rad": 0.004901960784313751,
+      "elastic_energy_j": 2.0628844675124895e-05,
+      "dissipated_work_j": 0.0005070465686274509,
+      "stored_hardening_j": 0.00032908316512879663
+    },
+    {
+      "angle_rad": 0.28500000000000003,
+      "moment_nm": 0.0043529411764705915,
+      "plastic_angle_rad": 0.27532679738562094,
+      "plastic_increment_rad": 0.004901960784313716,
+      "elastic_energy_j": 2.105344098423687e-05,
+      "dissipated_work_j": 0.0005162377450980392,
+      "stored_hardening_j": 0.00034112180411380235
+    },
+    {
+      "angle_rad": 0.29,
+      "moment_nm": 0.0043970588235294,
+      "plastic_angle_rad": 0.28022875816993464,
+      "plastic_increment_rad": 0.004901960784313684,
+      "elastic_energy_j": 2.148236255286417e-05,
+      "dissipated_work_j": 0.0005254289215686273,
+      "stored_hardening_j": 0.0003533767060745866
+    },
+    {
+      "angle_rad": 0.295,
+      "moment_nm": 0.004441176470588233,
+      "plastic_angle_rad": 0.28513071895424835,
+      "plastic_increment_rad": 0.004901960784313705,
+      "elastic_energy_j": 2.1915609381007294e-05,
+      "dissipated_work_j": 0.0005346200980392155,
+      "stored_hardening_j": 0.0003658478710111494
+    },
+    {
+      "angle_rad": 0.3,
+      "moment_nm": 0.0044852941176470665,
+      "plastic_angle_rad": 0.29003267973856206,
+      "plastic_increment_rad": 0.004901960784313728,
+      "elastic_energy_j": 2.235318146866598e-05,
+      "dissipated_work_j": 0.0005438112745098037,
+      "stored_hardening_j": 0.00037853529892349077
+    },
+    {
+      "angle_rad": 0.305,
+      "moment_nm": 0.004529411764705875,
+      "plastic_angle_rad": 0.2949346405228758,
+      "plastic_increment_rad": 0.004901960784313749,
+      "elastic_energy_j": 2.2795078815839995e-05,
+      "dissipated_work_j": 0.000553002450980392,
+      "stored_hardening_j": 0.00039143898981161085
+    },
+    {
+      "angle_rad": 0.31,
+      "moment_nm": 0.004573529411764708,
+      "plastic_angle_rad": 0.29983660130718953,
+      "plastic_increment_rad": 0.004901960784313714,
+      "elastic_energy_j": 2.3241301422529826e-05,
+      "dissipated_work_j": 0.0005621936274509802,
+      "stored_hardening_j": 0.0004045589436755093
+    },
+    {
+      "angle_rad": 0.315,
+      "moment_nm": 0.004617647058823516,
+      "plastic_angle_rad": 0.3047385620915033,
+      "plastic_increment_rad": 0.004901960784313737,
+      "elastic_energy_j": 2.3691849288734975e-05,
+      "dissipated_work_j": 0.0005713848039215684,
+      "stored_hardening_j": 0.0004178951605151864
+    },
+    {
+      "angle_rad": 0.32,
+      "moment_nm": 0.00466176470588235,
+      "plastic_angle_rad": 0.309640522875817,
+      "plastic_increment_rad": 0.004901960784313703,
+      "elastic_energy_j": 2.4146722414455953e-05,
+      "dissipated_work_j": 0.0005805759803921566,
+      "stored_hardening_j": 0.000431447640330642
+    },
+    {
+      "angle_rad": 0.325,
+      "moment_nm": 0.004705882352941183,
+      "plastic_angle_rad": 0.3145424836601307,
+      "plastic_increment_rad": 0.004901960784313724,
+      "elastic_energy_j": 2.4605920799692502e-05,
+      "dissipated_work_j": 0.0005897671568627448,
+      "stored_hardening_j": 0.0004452163831218761
+    },
+    {
+      "angle_rad": 0.33,
+      "moment_nm": 0.004749999999999991,
+      "plastic_angle_rad": 0.3194444444444445,
+      "plastic_increment_rad": 0.004901960784313746,
+      "elastic_energy_j": 2.506944444444436e-05,
+      "dissipated_work_j": 0.0005989583333333331,
+      "stored_hardening_j": 0.0004592013888888889
+    },
+    {
+      "angle_rad": 0.335,
+      "moment_nm": 0.004794117647058825,
+      "plastic_angle_rad": 0.3243464052287582,
+      "plastic_increment_rad": 0.004901960784313712,
+      "elastic_energy_j": 2.5537293348712054e-05,
+      "dissipated_work_j": 0.0006081495098039213,
+      "stored_hardening_j": 0.00047340265763168006
+    },
+    {
+      "angle_rad": 0.34,
+      "moment_nm": 0.004838235294117658,
+      "plastic_angle_rad": 0.3292483660130719,
+      "plastic_increment_rad": 0.004901960784313733,
+      "elastic_energy_j": 2.600946751249532e-05,
+      "dissipated_work_j": 0.0006173406862745095,
+      "stored_hardening_j": 0.00048782018935024976
+    },
+    {
+      "angle_rad": 0.34500000000000003,
+      "moment_nm": 0.004882352941176466,
+      "plastic_angle_rad": 0.33415032679738566,
+      "plastic_increment_rad": 0.004901960784313756,
+      "elastic_energy_j": 2.6485966935793886e-05,
+      "dissipated_work_j": 0.0006265318627450979,
+      "stored_hardening_j": 0.0005024539840445982
+    },
+    {
+      "angle_rad": 0.35000000000000003,
+      "moment_nm": 0.0049264705882352995,
+      "plastic_angle_rad": 0.33905228758169936,
+      "plastic_increment_rad": 0.004901960784313724,
+      "elastic_energy_j": 2.6966791618608296e-05,
+      "dissipated_work_j": 0.0006357230392156861,
+      "stored_hardening_j": 0.000517304041714725
+    },
+    {
+      "angle_rad": 0.355,
+      "moment_nm": 0.004970588235294109,
+      "plastic_angle_rad": 0.34395424836601307,
+      "plastic_increment_rad": 0.00490196078431369,
+      "elastic_energy_j": 2.745194156093801e-05,
+      "dissipated_work_j": 0.0006449142156862742,
+      "stored_hardening_j": 0.0005323703623606303
+    },
+    {
+      "angle_rad": 0.36,
+      "moment_nm": 0.005014705882352942,
+      "plastic_angle_rad": 0.3488562091503268,
+      "plastic_increment_rad": 0.004901960784313712,
+      "elastic_energy_j": 2.7941416762783564e-05,
+      "dissipated_work_j": 0.0006541053921568624,
+      "stored_hardening_j": 0.0005476529459823143
+    },
+    {
+      "angle_rad": 0.365,
+      "moment_nm": 0.005058823529411775,
+      "plastic_angle_rad": 0.3537581699346405,
+      "plastic_increment_rad": 0.004901960784313733,
+      "elastic_energy_j": 2.843521722414469e-05,
+      "dissipated_work_j": 0.0006632965686274506,
+      "stored_hardening_j": 0.0005631517925797767
+    },
+    {
+      "angle_rad": 0.37,
+      "moment_nm": 0.0051029411764705835,
+      "plastic_angle_rad": 0.35866013071895425,
+      "plastic_increment_rad": 0.004901960784313756,
+      "elastic_energy_j": 2.89333429450211e-05,
+      "dissipated_work_j": 0.000672487745098039,
+      "stored_hardening_j": 0.0005788669021530179
+    },
+    {
+      "angle_rad": 0.375,
+      "moment_nm": 0.005147058823529417,
+      "plastic_angle_rad": 0.36356209150326796,
+      "plastic_increment_rad": 0.004901960784313722,
+      "elastic_energy_j": 2.943579392541337e-05,
+      "dissipated_work_j": 0.0006816789215686272,
+      "stored_hardening_j": 0.0005947982747020375
+    },
+    {
+      "angle_rad": 0.38,
+      "moment_nm": 0.005191176470588225,
+      "plastic_angle_rad": 0.3684640522875817,
+      "plastic_increment_rad": 0.004901960784313743,
+      "elastic_energy_j": 2.9942570165320924e-05,
+      "dissipated_work_j": 0.0006908700980392154,
+      "stored_hardening_j": 0.0006109459102268357
+    },
+    {
+      "angle_rad": 0.385,
+      "moment_nm": 0.0052352941176470585,
+      "plastic_angle_rad": 0.37336601307189543,
+      "plastic_increment_rad": 0.004901960784313709,
+      "elastic_energy_j": 3.0453671664744335e-05,
+      "dissipated_work_j": 0.0007000612745098036,
+      "stored_hardening_j": 0.0006273098087274123
+    },
+    {
+      "angle_rad": 0.39,
+      "moment_nm": 0.005279411764705892,
+      "plastic_angle_rad": 0.37826797385620914,
+      "plastic_increment_rad": 0.0049019607843137315,
+      "elastic_energy_j": 3.096909842368332e-05,
+      "dissipated_work_j": 0.0007092524509803919,
+      "stored_hardening_j": 0.0006438899702037676
+    },
+    {
+      "angle_rad": 0.395,
+      "moment_nm": 0.0053235294117647,
+      "plastic_angle_rad": 0.3831699346405229,
+      "plastic_increment_rad": 0.004901960784313752,
+      "elastic_energy_j": 3.1488850442137584e-05,
+      "dissipated_work_j": 0.0007184436274509802,
+      "stored_hardening_j": 0.0006606863946559014
+    },
+    {
+      "angle_rad": 0.4,
+      "moment_nm": 0.005367647058823533,
+      "plastic_angle_rad": 0.3880718954248366,
+      "plastic_increment_rad": 0.0049019607843137185,
+      "elastic_energy_j": 3.201292772010771e-05,
+      "dissipated_work_j": 0.0007276348039215684,
+      "stored_hardening_j": 0.0006776990820838138
+    },
+    {
+      "angle_rad": 0.405,
+      "moment_nm": 0.005411764705882342,
+      "plastic_angle_rad": 0.3929738562091504,
+      "plastic_increment_rad": 0.004901960784313741,
+      "elastic_energy_j": 3.254133025759311e-05,
+      "dissipated_work_j": 0.0007368259803921567,
+      "stored_hardening_j": 0.0006949280324875048
+    },
+    {
+      "angle_rad": 0.41000000000000003,
+      "moment_nm": 0.005455882352941175,
+      "plastic_angle_rad": 0.3978758169934641,
+      "plastic_increment_rad": 0.004901960784313707,
+      "elastic_energy_j": 3.307405805459438e-05,
+      "dissipated_work_j": 0.0007460171568627449,
+      "stored_hardening_j": 0.0007123732458669741
+    },
+    {
+      "angle_rad": 0.41500000000000004,
+      "moment_nm": 0.005500000000000008,
+      "plastic_angle_rad": 0.4027777777777778,
+      "plastic_increment_rad": 0.004901960784313728,
+      "elastic_energy_j": 3.3611111111111225e-05,
+      "dissipated_work_j": 0.0007552083333333331,
+      "stored_hardening_j": 0.0007300347222222221
+    },
+    {
+      "angle_rad": 0.42,
+      "moment_nm": 0.0055441176470588166,
+      "plastic_angle_rad": 0.4076797385620915,
+      "plastic_increment_rad": 0.004901960784313698,
+      "elastic_energy_j": 3.415248942714333e-05,
+      "dissipated_work_j": 0.0007643995098039213,
+      "stored_hardening_j": 0.0007479124615532485
+    },
+    {
+      "angle_rad": 0.425,
+      "moment_nm": 0.00558823529411765,
+      "plastic_angle_rad": 0.4125816993464052,
+      "plastic_increment_rad": 0.004901960784313716,
+      "elastic_energy_j": 3.469819300269132e-05,
+      "dissipated_work_j": 0.0007735906862745095,
+      "stored_hardening_j": 0.0007660064638600535
+    },
+    {
+      "angle_rad": 0.43,
+      "moment_nm": 0.005632352941176459,
+      "plastic_angle_rad": 0.41748366013071897,
+      "plastic_increment_rad": 0.004901960784313739,
+      "elastic_energy_j": 3.524822183775458e-05,
+      "dissipated_work_j": 0.0007827818627450978,
+      "stored_hardening_j": 0.0007843167291426373
+    },
+    {
+      "angle_rad": 0.435,
+      "moment_nm": 0.005676470588235292,
+      "plastic_angle_rad": 0.4223856209150327,
+      "plastic_increment_rad": 0.004901960784313707,
+      "elastic_energy_j": 3.5802575932333705e-05,
+      "dissipated_work_j": 0.000791973039215686,
+      "stored_hardening_j": 0.0008028432574009994
+    },
+    {
+      "angle_rad": 0.44,
+      "moment_nm": 0.005720588235294126,
+      "plastic_angle_rad": 0.4272875816993464,
+      "plastic_increment_rad": 0.00490196078431373,
+      "elastic_energy_j": 3.636125528642841e-05,
+      "dissipated_work_j": 0.0008011642156862742,
+      "stored_hardening_j": 0.0008215860486351401
+    },
+    {
+      "angle_rad": 0.445,
+      "moment_nm": 0.005764705882352934,
+      "plastic_angle_rad": 0.43218954248366015,
+      "plastic_increment_rad": 0.004901960784313751,
+      "elastic_energy_j": 3.692425990003837e-05,
+      "dissipated_work_j": 0.0008103553921568626,
+      "stored_hardening_j": 0.0008405451028450595
+    },
+    {
+      "angle_rad": 0.45,
+      "moment_nm": 0.005808823529411767,
+      "plastic_angle_rad": 0.43709150326797386,
+      "plastic_increment_rad": 0.004901960784313714,
+      "elastic_energy_j": 3.7491589773164216e-05,
+      "dissipated_work_j": 0.0008195465686274508,
+      "stored_hardening_j": 0.0008597204200307572
+    },
+    {
+      "angle_rad": 0.455,
+      "moment_nm": 0.005852941176470601,
+      "plastic_angle_rad": 0.44199346405228757,
+      "plastic_increment_rad": 0.004901960784313735,
+      "elastic_energy_j": 3.8063244905805635e-05,
+      "dissipated_work_j": 0.000828737745098039,
+      "stored_hardening_j": 0.0008791120001922334
+    },
+    {
+      "angle_rad": 0.46,
+      "moment_nm": 0.005897058823529409,
+      "plastic_angle_rad": 0.44689542483660133,
+      "plastic_increment_rad": 0.0049019607843137575,
+      "elastic_energy_j": 3.8639225297962294e-05,
+      "dissipated_work_j": 0.0008379289215686273,
+      "stored_hardening_j": 0.0008987198433294885
+    },
+    {
+      "angle_rad": 0.465,
+      "moment_nm": 0.005941176470588242,
+      "plastic_angle_rad": 0.45179738562091504,
+      "plastic_increment_rad": 0.004901960784313725,
+      "elastic_energy_j": 3.921953094963486e-05,
+      "dissipated_work_j": 0.0008471200980392156,
+      "stored_hardening_j": 0.0009185439494425219
+    },
+    {
+      "angle_rad": 0.47000000000000003,
+      "moment_nm": 0.0059852941176470505,
+      "plastic_angle_rad": 0.4566993464052288,
+      "plastic_increment_rad": 0.004901960784313746,
+      "elastic_energy_j": 3.9804161860822665e-05,
+      "dissipated_work_j": 0.0008563112745098038,
+      "stored_hardening_j": 0.000938584318531334
+    },
+    {
+      "angle_rad": 0.47500000000000003,
+      "moment_nm": 0.006029411764705884,
+      "plastic_angle_rad": 0.4616013071895425,
+      "plastic_increment_rad": 0.004901960784313714,
+      "elastic_energy_j": 4.0393118031526363e-05,
+      "dissipated_work_j": 0.000865502450980392,
+      "stored_hardening_j": 0.0009588409505959245
+    },
+    {
+      "angle_rad": 0.48,
+      "moment_nm": 0.006073529411764692,
+      "plastic_angle_rad": 0.4665032679738562,
+      "plastic_increment_rad": 0.00490196078431368,
+      "elastic_energy_j": 4.098639946174531e-05,
+      "dissipated_work_j": 0.0008746936274509801,
+      "stored_hardening_j": 0.0009793138456362935
+    },
+    {
+      "angle_rad": 0.485,
+      "moment_nm": 0.006117647058823525,
+      "plastic_angle_rad": 0.4714052287581699,
+      "plastic_increment_rad": 0.004901960784313701,
+      "elastic_energy_j": 4.158400615148016e-05,
+      "dissipated_work_j": 0.0008838848039215683,
+      "stored_hardening_j": 0.0010000030036524412
+    },
+    {
+      "angle_rad": 0.49,
+      "moment_nm": 0.006161764705882359,
+      "plastic_angle_rad": 0.47630718954248363,
+      "plastic_increment_rad": 0.004901960784313724,
+      "elastic_energy_j": 4.2185938100730584e-05,
+      "dissipated_work_j": 0.0008930759803921566,
+      "stored_hardening_j": 0.0010209084246443673
+    },
+    {
+      "angle_rad": 0.495,
+      "moment_nm": 0.006205882352941167,
+      "plastic_angle_rad": 0.4812091503267974,
+      "plastic_increment_rad": 0.0049019607843137445,
+      "elastic_energy_j": 4.279219530949623e-05,
+      "dissipated_work_j": 0.0009022671568627448,
+      "stored_hardening_j": 0.001042030108612072
+    },
+    {
+      "angle_rad": 0.5,
+      "moment_nm": 0.00625,
+      "plastic_angle_rad": 0.4861111111111111,
+      "plastic_increment_rad": 0.004901960784313712,
+      "elastic_energy_j": 4.34027777777778e-05,
+      "dissipated_work_j": 0.000911458333333333,
+      "stored_hardening_j": 0.0010633680555555552
+    },
+    {
+      "angle_rad": 0.505,
+      "moment_nm": 0.006294117647058834,
+      "plastic_angle_rad": 0.4910130718954248,
+      "plastic_increment_rad": 0.004901960784313735,
+      "elastic_energy_j": 4.4017685505574934e-05,
+      "dissipated_work_j": 0.0009206495098039212,
+      "stored_hardening_j": 0.0010849222654748171
+    },
+    {
+      "angle_rad": 0.51,
+      "moment_nm": 0.006338235294117642,
+      "plastic_angle_rad": 0.4959150326797386,
+      "plastic_increment_rad": 0.004901960784313756,
+      "elastic_energy_j": 4.4636918492887295e-05,
+      "dissipated_work_j": 0.0009298406862745096,
+      "stored_hardening_j": 0.0011066927383698575
+    },
+    {
+      "angle_rad": 0.515,
+      "moment_nm": 0.006382352941176475,
+      "plastic_angle_rad": 0.5008169934640523,
+      "plastic_increment_rad": 0.00490196078431372,
+      "elastic_energy_j": 4.526047673971558e-05,
+      "dissipated_work_j": 0.0009390318627450978,
+      "stored_hardening_j": 0.0011286794742406763
+    },
+    {
+      "angle_rad": 0.52,
+      "moment_nm": 0.006426470588235309,
+      "plastic_angle_rad": 0.505718954248366,
+      "plastic_increment_rad": 0.004901960784313743,
+      "elastic_energy_j": 4.5888360246059436e-05,
+      "dissipated_work_j": 0.000948223039215686,
+      "stored_hardening_j": 0.0011508824730872738
+    },
+    {
+      "angle_rad": 0.525,
+      "moment_nm": 0.006470588235294142,
+      "plastic_angle_rad": 0.5106209150326797,
+      "plastic_increment_rad": 0.004901960784313764,
+      "elastic_energy_j": 4.6520569011918856e-05,
+      "dissipated_work_j": 0.0009574142156862744,
+      "stored_hardening_j": 0.0011733017349096495
+    },
+    {
+      "angle_rad": 0.53,
+      "moment_nm": 0.006514705882352926,
+      "plastic_angle_rad": 0.5155228758169935,
+      "plastic_increment_rad": 0.004901960784313786,
+      "elastic_energy_j": 4.715710303729315e-05,
+      "dissipated_work_j": 0.0009666053921568627,
+      "stored_hardening_j": 0.0011959372597078047
+    },
+    {
+      "angle_rad": 0.535,
+      "moment_nm": 0.006558823529411759,
+      "plastic_angle_rad": 0.5204248366013072,
+      "plastic_increment_rad": 0.004901960784313696,
+      "elastic_energy_j": 4.7797962322183715e-05,
+      "dissipated_work_j": 0.0009757965686274509,
+      "stored_hardening_j": 0.0012187890474817376
+    },
+    {
+      "angle_rad": 0.54,
+      "moment_nm": 0.006602941176470593,
+      "plastic_angle_rad": 0.5253267973856209,
+      "plastic_increment_rad": 0.0049019607843137185,
+      "elastic_energy_j": 4.844314686658985e-05,
+      "dissipated_work_j": 0.0009849877450980391,
+      "stored_hardening_j": 0.001241857098231449
+    },
+    {
+      "angle_rad": 0.545,
+      "moment_nm": 0.006647058823529426,
+      "plastic_angle_rad": 0.5302287581699346,
+      "plastic_increment_rad": 0.004901960784313739,
+      "elastic_energy_j": 4.909265667051157e-05,
+      "dissipated_work_j": 0.0009941789215686275,
+      "stored_hardening_j": 0.0012651414119569393
+    },
+    {
+      "angle_rad": 0.55,
+      "moment_nm": 0.006691176470588259,
+      "plastic_angle_rad": 0.5351307189542484,
+      "plastic_increment_rad": 0.004901960784313762,
+      "elastic_energy_j": 4.9746491733948856e-05,
+      "dissipated_work_j": 0.0010033700980392158,
+      "stored_hardening_j": 0.001288641988658208
+    },
+    {
+      "angle_rad": 0.555,
+      "moment_nm": 0.0067352941176470425,
+      "plastic_angle_rad": 0.5400326797385622,
+      "plastic_increment_rad": 0.004901960784313784,
+      "elastic_energy_j": 5.040465205690096e-05,
+      "dissipated_work_j": 0.0010125612745098041,
+      "stored_hardening_j": 0.0013123588283352557
+    },
+    {
+      "angle_rad": 0.56,
+      "moment_nm": 0.006779411764705876,
+      "plastic_angle_rad": 0.5449346405228759,
+      "plastic_increment_rad": 0.004901960784313698,
+      "elastic_energy_j": 5.106713763936939e-05,
+      "dissipated_work_j": 0.0010217524509803923,
+      "stored_hardening_j": 0.0013362919309880814
+    },
+    {
+      "angle_rad": 0.5650000000000001,
+      "moment_nm": 0.006823529411764709,
+      "plastic_angle_rad": 0.5498366013071896,
+      "plastic_increment_rad": 0.0049019607843137185,
+      "elastic_energy_j": 5.1733948481353395e-05,
+      "dissipated_work_j": 0.0010309436274509804,
+      "stored_hardening_j": 0.0013604412966166859
+    },
+    {
+      "angle_rad": 0.5700000000000001,
+      "moment_nm": 0.0068676470588235426,
+      "plastic_angle_rad": 0.5547385620915033,
+      "plastic_increment_rad": 0.004901960784313741,
+      "elastic_energy_j": 5.2405084582852967e-05,
+      "dissipated_work_j": 0.0010401348039215687,
+      "stored_hardening_j": 0.0013848069252210685
+    },
+    {
+      "angle_rad": 0.5750000000000001,
+      "moment_nm": 0.006911764705882376,
+      "plastic_angle_rad": 0.559640522875817,
+      "plastic_increment_rad": 0.004901960784313762,
+      "elastic_energy_j": 5.3080545943868116e-05,
+      "dissipated_work_j": 0.001049325980392157,
+      "stored_hardening_j": 0.00140938881680123
+    },
+    {
+      "angle_rad": 0.58,
+      "moment_nm": 0.006955882352941159,
+      "plastic_angle_rad": 0.5645424836601307,
+      "plastic_increment_rad": 0.004901960784313675,
+      "elastic_energy_j": 5.376033256439806e-05,
+      "dissipated_work_j": 0.0010585171568627452,
+      "stored_hardening_j": 0.0014341869713571697
+    },
+    {
+      "angle_rad": 0.585,
+      "moment_nm": 0.006999999999999992,
+      "plastic_angle_rad": 0.5694444444444444,
+      "plastic_increment_rad": 0.004901960784313698,
+      "elastic_energy_j": 5.4444444444444344e-05,
+      "dissipated_work_j": 0.0010677083333333333,
+      "stored_hardening_j": 0.0014592013888888884
+    },
+    {
+      "angle_rad": 0.59,
+      "moment_nm": 0.007044117647058826,
+      "plastic_angle_rad": 0.5743464052287581,
+      "plastic_increment_rad": 0.0049019607843137185,
+      "elastic_energy_j": 5.51328815840062e-05,
+      "dissipated_work_j": 0.0010768995098039214,
+      "stored_hardening_j": 0.0014844320693963855
+    },
+    {
+      "angle_rad": 0.595,
+      "moment_nm": 0.007088235294117659,
+      "plastic_angle_rad": 0.5792483660130718,
+      "plastic_increment_rad": 0.004901960784313741,
+      "elastic_energy_j": 5.5825643983083644e-05,
+      "dissipated_work_j": 0.0010860906862745097,
+      "stored_hardening_j": 0.001509879012879661
+    },
+    {
+      "angle_rad": 0.6,
+      "moment_nm": 0.007132352941176492,
+      "plastic_angle_rad": 0.5841503267973855,
+      "plastic_increment_rad": 0.004901960784313762,
+      "elastic_energy_j": 5.6522731641676645e-05,
+      "dissipated_work_j": 0.001095281862745098,
+      "stored_hardening_j": 0.0015355422193387151
+    },
+    {
+      "angle_rad": 0.605,
+      "moment_nm": 0.007176470588235276,
+      "plastic_angle_rad": 0.5890522875816994,
+      "plastic_increment_rad": 0.004901960784313784,
+      "elastic_energy_j": 5.722414455978443e-05,
+      "dissipated_work_j": 0.0011044730392156864,
+      "stored_hardening_j": 0.0015614216887735483
+    },
+    {
+      "angle_rad": 0.61,
+      "moment_nm": 0.00722058823529411,
+      "plastic_angle_rad": 0.5939542483660131,
+      "plastic_increment_rad": 0.004901960784313693,
+      "elastic_energy_j": 5.792988273740859e-05,
+      "dissipated_work_j": 0.0011136642156862745,
+      "stored_hardening_j": 0.0015875174211841595
+    },
+    {
+      "angle_rad": 0.615,
+      "moment_nm": 0.007264705882352943,
+      "plastic_angle_rad": 0.5988562091503268,
+      "plastic_increment_rad": 0.004901960784313716,
+      "elastic_energy_j": 5.8639946174548296e-05,
+      "dissipated_work_j": 0.0011228553921568626,
+      "stored_hardening_j": 0.0016138294165705493
+    },
+    {
+      "angle_rad": 0.62,
+      "moment_nm": 0.0073088235294117765,
+      "plastic_angle_rad": 0.6037581699346405,
+      "plastic_increment_rad": 0.004901960784313737,
+      "elastic_energy_j": 5.935433487120359e-05,
+      "dissipated_work_j": 0.001132046568627451,
+      "stored_hardening_j": 0.0016403576749327176
+    },
+    {
+      "angle_rad": 0.625,
+      "moment_nm": 0.00735294117647061,
+      "plastic_angle_rad": 0.6086601307189542,
+      "plastic_increment_rad": 0.00490196078431376,
+      "elastic_energy_j": 6.007304882737446e-05,
+      "dissipated_work_j": 0.0011412377450980393,
+      "stored_hardening_j": 0.0016671021962706644
+    },
+    {
+      "angle_rad": 0.63,
+      "moment_nm": 0.007397058823529393,
+      "plastic_angle_rad": 0.613562091503268,
+      "plastic_increment_rad": 0.004901960784313781,
+      "elastic_energy_j": 6.079608804306007e-05,
+      "dissipated_work_j": 0.0011504289215686276,
+      "stored_hardening_j": 0.0016940629805843902
+    },
+    {
+      "angle_rad": 0.635,
+      "moment_nm": 0.007441176470588226,
+      "plastic_angle_rad": 0.6184640522875817,
+      "plastic_increment_rad": 0.004901960784313692,
+      "elastic_energy_j": 6.152345251826208e-05,
+      "dissipated_work_j": 0.0011596200980392157,
+      "stored_hardening_j": 0.0017212400278738943
+    },
+    {
+      "angle_rad": 0.64,
+      "moment_nm": 0.00748529411764706,
+      "plastic_angle_rad": 0.6233660130718954,
+      "plastic_increment_rad": 0.004901960784313712,
+      "elastic_energy_j": 6.225514225297965e-05,
+      "dissipated_work_j": 0.0011688112745098038,
+      "stored_hardening_j": 0.001748633338139177
+    },
+    {
+      "angle_rad": 0.645,
+      "moment_nm": 0.007529411764705893,
+      "plastic_angle_rad": 0.6282679738562091,
+      "plastic_increment_rad": 0.004901960784313735,
+      "elastic_energy_j": 6.299115724721282e-05,
+      "dissipated_work_j": 0.0011780024509803922,
+      "stored_hardening_j": 0.0017762429113802377
+    },
+    {
+      "angle_rad": 0.65,
+      "moment_nm": 0.007573529411764726,
+      "plastic_angle_rad": 0.6331699346405228,
+      "plastic_increment_rad": 0.004901960784313756,
+      "elastic_energy_j": 6.373149750096153e-05,
+      "dissipated_work_j": 0.0011871936274509805,
+      "stored_hardening_j": 0.0018040687475970774
+    },
+    {
+      "angle_rad": 0.655,
+      "moment_nm": 0.007617647058823509,
+      "plastic_angle_rad": 0.6380718954248367,
+      "plastic_increment_rad": 0.004901960784313778,
+      "elastic_energy_j": 6.447616301422499e-05,
+      "dissipated_work_j": 0.0011963848039215688,
+      "stored_hardening_j": 0.0018321108467896962
+    },
+    {
+      "angle_rad": 0.66,
+      "moment_nm": 0.007661764705882343,
+      "plastic_angle_rad": 0.6429738562091504,
+      "plastic_increment_rad": 0.004901960784313688,
+      "elastic_energy_j": 6.522515378700485e-05,
+      "dissipated_work_j": 0.001205575980392157,
+      "stored_hardening_j": 0.001860369208958093
+    },
+    {
+      "angle_rad": 0.665,
+      "moment_nm": 0.007705882352941176,
+      "plastic_angle_rad": 0.6478758169934641,
+      "plastic_increment_rad": 0.004901960784313711,
+      "elastic_energy_j": 6.597846981930028e-05,
+      "dissipated_work_j": 0.001214767156862745,
+      "stored_hardening_j": 0.001888843834102268
+    },
+    {
+      "angle_rad": 0.67,
+      "moment_nm": 0.0077500000000000095,
+      "plastic_angle_rad": 0.6527777777777778,
+      "plastic_increment_rad": 0.0049019607843137315,
+      "elastic_energy_j": 6.67361111111113e-05,
+      "dissipated_work_j": 0.0012239583333333334,
+      "stored_hardening_j": 0.0019175347222222217
+    },
+    {
+      "angle_rad": 0.675,
+      "moment_nm": 0.007794117647058843,
+      "plastic_angle_rad": 0.6576797385620915,
+      "plastic_increment_rad": 0.004901960784313754,
+      "elastic_energy_j": 6.749807766243788e-05,
+      "dissipated_work_j": 0.0012331495098039217,
+      "stored_hardening_j": 0.001946441873317954
+    },
+    {
+      "angle_rad": 0.68,
+      "moment_nm": 0.007838235294117627,
+      "plastic_angle_rad": 0.6625816993464053,
+      "plastic_increment_rad": 0.004901960784313775,
+      "elastic_energy_j": 6.826436947327917e-05,
+      "dissipated_work_j": 0.00124234068627451,
+      "stored_hardening_j": 0.001975565287389466
+    },
+    {
+      "angle_rad": 0.685,
+      "moment_nm": 0.00788235294117646,
+      "plastic_angle_rad": 0.667483660130719,
+      "plastic_increment_rad": 0.004901960784313686,
+      "elastic_energy_j": 6.90349865436369e-05,
+      "dissipated_work_j": 0.0012515318627450982,
+      "stored_hardening_j": 0.002004904964436755
+    },
+    {
+      "angle_rad": 0.6900000000000001,
+      "moment_nm": 0.007926470588235294,
+      "plastic_angle_rad": 0.6723856209150327,
+      "plastic_increment_rad": 0.004901960784313709,
+      "elastic_energy_j": 6.98099288735102e-05,
+      "dissipated_work_j": 0.0012607230392156863,
+      "stored_hardening_j": 0.0020344609044598227
+    },
+    {
+      "angle_rad": 0.6950000000000001,
+      "moment_nm": 0.007970588235294127,
+      "plastic_angle_rad": 0.6772875816993464,
+      "plastic_increment_rad": 0.0049019607843137315,
+      "elastic_energy_j": 7.058919646289907e-05,
+      "dissipated_work_j": 0.0012699142156862746,
+      "stored_hardening_j": 0.0020642331074586695
+    },
+    {
+      "angle_rad": 0.7000000000000001,
+      "moment_nm": 0.00801470588235296,
+      "plastic_angle_rad": 0.6821895424836601,
+      "plastic_increment_rad": 0.004901960784313751,
+      "elastic_energy_j": 7.13727893118035e-05,
+      "dissipated_work_j": 0.001279105392156863,
+      "stored_hardening_j": 0.0020942215734332946
+    },
+    {
+      "angle_rad": 0.705,
+      "moment_nm": 0.008058823529411743,
+      "plastic_angle_rad": 0.6870915032679739,
+      "plastic_increment_rad": 0.004901960784313667,
+      "elastic_energy_j": 7.216070742022263e-05,
+      "dissipated_work_j": 0.001288296568627451,
+      "stored_hardening_j": 0.002124426302383698
+    },
+    {
+      "angle_rad": 0.71,
+      "moment_nm": 0.008102941176470577,
+      "plastic_angle_rad": 0.6919934640522876,
+      "plastic_increment_rad": 0.00490196078431369,
+      "elastic_energy_j": 7.295295078815822e-05,
+      "dissipated_work_j": 0.0012974877450980392,
+      "stored_hardening_j": 0.00215484729430988
+    },
+    {
+      "angle_rad": 0.715,
+      "moment_nm": 0.00814705882352941,
+      "plastic_angle_rad": 0.6968954248366013,
+      "plastic_increment_rad": 0.004901960784313712,
+      "elastic_energy_j": 7.374951941560937e-05,
+      "dissipated_work_j": 0.0013066789215686273,
+      "stored_hardening_j": 0.002185484549211841
+    },
+    {
+      "angle_rad": 0.72,
+      "moment_nm": 0.008191176470588243,
+      "plastic_angle_rad": 0.701797385620915,
+      "plastic_increment_rad": 0.0049019607843137315,
+      "elastic_energy_j": 7.45504133025761e-05,
+      "dissipated_work_j": 0.0013158700980392157,
+      "stored_hardening_j": 0.00221633806708958
+    },
+    {
+      "angle_rad": 0.725,
+      "moment_nm": 0.008235294117647077,
+      "plastic_angle_rad": 0.7066993464052287,
+      "plastic_increment_rad": 0.004901960784313754,
+      "elastic_energy_j": 7.53556324490584e-05,
+      "dissipated_work_j": 0.001325061274509804,
+      "stored_hardening_j": 0.0022474078479430976
+    },
+    {
+      "angle_rad": 0.73,
+      "moment_nm": 0.00827941176470586,
+      "plastic_angle_rad": 0.7116013071895425,
+      "plastic_increment_rad": 0.004901960784313777,
+      "elastic_energy_j": 7.616517685505537e-05,
+      "dissipated_work_j": 0.0013342524509803923,
+      "stored_hardening_j": 0.0022786938917723947
+    },
+    {
+      "angle_rad": 0.735,
+      "moment_nm": 0.008323529411764693,
+      "plastic_angle_rad": 0.7165032679738562,
+      "plastic_increment_rad": 0.004901960784313686,
+      "elastic_energy_j": 7.69790465205688e-05,
+      "dissipated_work_j": 0.0013434436274509804,
+      "stored_hardening_j": 0.0023101961985774696
+    },
+    {
+      "angle_rad": 0.74,
+      "moment_nm": 0.008367647058823527,
+      "plastic_angle_rad": 0.7214052287581699,
+      "plastic_increment_rad": 0.004901960784313709,
+      "elastic_energy_j": 7.779724144559782e-05,
+      "dissipated_work_j": 0.0013526348039215685,
+      "stored_hardening_j": 0.002341914768358323
+    },
+    {
+      "angle_rad": 0.745,
+      "moment_nm": 0.00841176470588236,
+      "plastic_angle_rad": 0.7263071895424836,
+      "plastic_increment_rad": 0.0049019607843137315,
+      "elastic_energy_j": 7.861976163014242e-05,
+      "dissipated_work_j": 0.0013618259803921569,
+      "stored_hardening_j": 0.002373849601114955
+    },
+    {
+      "angle_rad": 0.75,
+      "moment_nm": 0.008455882352941193,
+      "plastic_angle_rad": 0.7312091503267973,
+      "plastic_increment_rad": 0.004901960784313751,
+      "elastic_energy_j": 7.944660707420258e-05,
+      "dissipated_work_j": 0.0013710171568627452,
+      "stored_hardening_j": 0.0024060006968473656
+    },
+    {
+      "angle_rad": 0.755,
+      "moment_nm": 0.008499999999999976,
+      "plastic_angle_rad": 0.7361111111111112,
+      "plastic_increment_rad": 0.004901960784313773,
+      "elastic_energy_j": 8.027777777777737e-05,
+      "dissipated_work_j": 0.0013802083333333335,
+      "stored_hardening_j": 0.0024383680555555556
+    },
+    {
+      "angle_rad": 0.76,
+      "moment_nm": 0.00854411764705881,
+      "plastic_angle_rad": 0.7410130718954249,
+      "plastic_increment_rad": 0.004901960784313682,
+      "elastic_energy_j": 8.111327374086867e-05,
+      "dissipated_work_j": 0.0013893995098039217,
+      "stored_hardening_j": 0.0024709516772395226
+    },
+    {
+      "angle_rad": 0.765,
+      "moment_nm": 0.008588235294117643,
+      "plastic_angle_rad": 0.7459150326797386,
+      "plastic_increment_rad": 0.004901960784313705,
+      "elastic_energy_j": 8.195309496347554e-05,
+      "dissipated_work_j": 0.0013985906862745098,
+      "stored_hardening_j": 0.002503751561899269
+    },
+    {
+      "angle_rad": 0.77,
+      "moment_nm": 0.008632352941176476,
+      "plastic_angle_rad": 0.7508169934640523,
+      "plastic_increment_rad": 0.004901960784313728,
+      "elastic_energy_j": 8.279724144559799e-05,
+      "dissipated_work_j": 0.0014077818627450981,
+      "stored_hardening_j": 0.0025367677095347934
+    },
+    {
+      "angle_rad": 0.775,
+      "moment_nm": 0.00867647058823531,
+      "plastic_angle_rad": 0.755718954248366,
+      "plastic_increment_rad": 0.004901960784313751,
+      "elastic_energy_j": 8.364571318723601e-05,
+      "dissipated_work_j": 0.0014169730392156864,
+      "stored_hardening_j": 0.002570000120146097
+    },
+    {
+      "angle_rad": 0.78,
+      "moment_nm": 0.008720588235294093,
+      "plastic_angle_rad": 0.7606209150326798,
+      "plastic_increment_rad": 0.004901960784313769,
+      "elastic_energy_j": 8.449851018838864e-05,
+      "dissipated_work_j": 0.0014261642156862748,
+      "stored_hardening_j": 0.0026034487937331794
+    },
+    {
+      "angle_rad": 0.785,
+      "moment_nm": 0.008764705882352926,
+      "plastic_angle_rad": 0.7655228758169935,
+      "plastic_increment_rad": 0.004901960784313682,
+      "elastic_energy_j": 8.535563244905779e-05,
+      "dissipated_work_j": 0.001435355392156863,
+      "stored_hardening_j": 0.0026371137302960393
+    },
+    {
+      "angle_rad": 0.79,
+      "moment_nm": 0.00880882352941176,
+      "plastic_angle_rad": 0.7704248366013072,
+      "plastic_increment_rad": 0.004901960784313701,
+      "elastic_energy_j": 8.621707996924254e-05,
+      "dissipated_work_j": 0.001444546568627451,
+      "stored_hardening_j": 0.0026709949298346783
+    },
+    {
+      "angle_rad": 0.795,
+      "moment_nm": 0.008852941176470593,
+      "plastic_angle_rad": 0.7753267973856209,
+      "plastic_increment_rad": 0.004901960784313724,
+      "elastic_energy_j": 8.708285274894283e-05,
+      "dissipated_work_j": 0.0014537377450980393,
+      "stored_hardening_j": 0.002705092392349096
+    },
+    {
+      "angle_rad": 0.8,
+      "moment_nm": 0.008897058823529426,
+      "plastic_angle_rad": 0.7802287581699346,
+      "plastic_increment_rad": 0.004901960784313746,
+      "elastic_energy_j": 8.795295078815872e-05,
+      "dissipated_work_j": 0.0014629289215686277,
+      "stored_hardening_j": 0.0027394061178392915
+    }
+  ],
+  "unloaded_at_residual_angle": {
+    "moment_nm": 0.0,
+    "plastic_angle_rad": 0.7802287581699346,
+    "plastic_increment_rad": 0.0,
+    "elastic_energy_j": 0.0,
+    "dissipated_work_j": 0.0014629289215686277,
+    "stored_hardening_j": 0.0027394061178392915
+  },
+  "paper_complete_fracture_work_j": 1.5000000000000004e-05,
+  "paper_expected_fracture_work_j": 1.5000000000000002e-05,
+  "paper_reclosure": {
+    "force_n": 0.0,
+    "damage": 1.0,
+    "broken": true,
+    "maximum_opening_m": 4e-05
+  },
+  "paper_reopening": {
+    "force_n": 0.0,
+    "damage": 1.0,
+    "broken": true,
+    "maximum_opening_m": 4e-05
+  },
+  "initial_staple_centerline_m": [
+    [
+      -0.0010997787143782146,
+      0.0,
+      -0.00035
+    ],
+    [
+      -0.0015948008429403932,
+      0.0,
+      -0.00035
+    ],
+    [
+      -0.002089822971502572,
+      0.0,
+      -0.00035
+    ],
+    [
+      -0.0025848451000647504,
+      0.0,
+      -0.00035
+    ],
+    [
+      -0.003079867228626929,
+      0.0,
+      -0.00035
+    ],
+    [
+      -0.0035748893571891076,
+      0.0,
+      -0.00035
+    ],
+    [
+      -0.004069911485751287,
+      0.0,
+      -0.00035
+    ],
+    [
+      -0.004564933614313465,
+      0.0,
+      -0.00035
+    ],
+    [
+      -0.0050599557428756435,
+      0.0,
+      -0.00035
+    ],
+    [
+      -0.005554977871437822,
+      0.0,
+      -0.00035
+    ],
+    [
+      -0.006050000000000001,
+      0.0,
+      -0.00035
+    ],
+    [
+      -0.006158155948031232,
+      0.0,
+      -0.0003328697807033037
+    ],
+    [
+      -0.006255724838302367,
+      0.0,
+      -0.0002831559480312316
+    ],
+    [
+      -0.0063331559480312325,
+      0.0,
+      -0.0002057248383023656
+    ],
+    [
+      -0.006382869780703304,
+      0.0,
+      -0.00010815594803123159
+    ],
+    [
+      -0.0064,
+      0.0,
+      0.0
+    ],
+    [
+      -0.0064,
+      0.0,
+      0.00015
+    ],
+    [
+      -0.005907692307692308,
+      0.0,
+      0.00015
+    ],
+    [
+      -0.005415384615384615,
+      0.0,
+      0.00015
+    ],
+    [
+      -0.004923076923076923,
+      0.0,
+      0.00015
+    ],
+    [
+      -0.004430769230769231,
+      0.0,
+      0.00015
+    ],
+    [
+      -0.003938461538461538,
+      0.0,
+      0.00015
+    ],
+    [
+      -0.003446153846153846,
+      0.0,
+      0.00015
+    ],
+    [
+      -0.0029538461538461533,
+      0.0,
+      0.00015
+    ],
+    [
+      -0.002461538461538461,
+      0.0,
+      0.00015
+    ],
+    [
+      -0.001969230769230769,
+      0.0,
+      0.00015
+    ],
+    [
+      -0.001476923076923077,
+      0.0,
+      0.00015
+    ],
+    [
+      -0.0009846153846153841,
+      0.0,
+      0.00015
+    ],
+    [
+      -0.0004923076923076921,
+      0.0,
+      0.00015
+    ],
+    [
+      0.0,
+      0.0,
+      0.00015
+    ],
+    [
+      0.0004923076923076938,
+      0.0,
+      0.00015
+    ],
+    [
+      0.000984615384615385,
+      0.0,
+      0.00015
+    ],
+    [
+      0.001476923076923078,
+      0.0,
+      0.00015
+    ],
+    [
+      0.001969230769230769,
+      0.0,
+      0.00015
+    ],
+    [
+      0.002461538461538462,
+      0.0,
+      0.00015
+    ],
+    [
+      0.002953846153846155,
+      0.0,
+      0.00015
+    ],
+    [
+      0.003446153846153846,
+      0.0,
+      0.00015
+    ],
+    [
+      0.003938461538461539,
+      0.0,
+      0.00015
+    ],
+    [
+      0.004430769230769232,
+      0.0,
+      0.00015
+    ],
+    [
+      0.004923076923076925,
+      0.0,
+      0.00015
+    ],
+    [
+      0.005415384615384616,
+      0.0,
+      0.00015
+    ],
+    [
+      0.005907692307692309,
+      0.0,
+      0.00015
+    ],
+    [
+      0.0064,
+      0.0,
+      0.00015
+    ],
+    [
+      0.0064,
+      0.0,
+      0.0
+    ],
+    [
+      0.006382869780703304,
+      0.0,
+      -0.00010815594803123159
+    ],
+    [
+      0.0063331559480312325,
+      0.0,
+      -0.0002057248383023656
+    ],
+    [
+      0.006255724838302367,
+      0.0,
+      -0.0002831559480312316
+    ],
+    [
+      0.006158155948031232,
+      0.0,
+      -0.0003328697807033037
+    ],
+    [
+      0.006050000000000001,
+      0.0,
+      -0.00035
+    ],
+    [
+      0.005554977871437822,
+      0.0,
+      -0.00035
+    ],
+    [
+      0.0050599557428756435,
+      0.0,
+      -0.00035
+    ],
+    [
+      0.004564933614313465,
+      0.0,
+      -0.00035
+    ],
+    [
+      0.004069911485751286,
+      0.0,
+      -0.00035
+    ],
+    [
+      0.0035748893571891076,
+      0.0,
+      -0.00035
+    ],
+    [
+      0.0030798672286269286,
+      0.0,
+      -0.00035
+    ],
+    [
+      0.00258484510006475,
+      0.0,
+      -0.00035
+    ],
+    [
+      0.002089822971502572,
+      0.0,
+      -0.00035
+    ],
+    [
+      0.0015948008429403932,
+      0.0,
+      -0.00035
+    ],
+    [
+      0.0010997787143782146,
+      0.0,
+      -0.00035
+    ]
+  ],
+  "unimplemented": [
+    "Coupled 3D contact and paper-hole geometry",
+    "Contact-driven jaw leverage",
+    "Paper bending and mixed-mode crack propagation",
+    "Isaac/YAM integration",
+    "Robot policy",
+    "Physical calibration"
+  ]
+}

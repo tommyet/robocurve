@@ -1,0 +1,43 @@
+{
+  "schema": "proposed-setup-v1",
+  "calibrated": false,
+  "coordinates": "Metres in the standard YAM station: x forward, y left, z up.",
+  "table_top_z_m": 0.7475,
+  "wheel": {
+    "hub_center_m": [0.35, 0.0, 1.005],
+    "axle_direction": [1.0, 0.0, 0.0],
+    "rim_centerline_diameter_m": 0.42,
+    "rim_radial_depth_m": 0.02,
+    "rim_axial_width_m": 0.022,
+    "rim_material": "aluminium, nominal E=69 GPa; hollow section response uncalibrated",
+    "rim_mass_kg": 0.42,
+    "spokes": 32,
+    "spoke_material": "steel, nominal E=200 GPa",
+    "spoke_diameter_m": 0.002,
+    "hub_flange_diameter_m": 0.05,
+    "hub_flange_spacing_m": 0.05,
+    "nipples": "Brass, 12 mm long, 3.23 mm square wrench flats, nominal 0.454 mm thread pitch",
+    "starting_spoke_turn_offsets": {"0": -1.1, "2": -1.1, "4": -1.1, "6": -1.1},
+    "reset_note": "The four offsets are relative to the same nominal 700 N balanced reference; other offsets are zero. Label spoke 0 at the bottom; number around the rim counterclockwise viewed from +x. This is a proposed engineering reset, not calibrated commercial-wheel tension data."
+  },
+  "stand": {
+    "material": "steel",
+    "base_center_m": [0.35, 0.0, 0.7575],
+    "base_size_m": [0.18, 0.28, 0.02],
+    "upright_x_m": [0.285, 0.415],
+    "upright_size_m": [0.015, 0.025, 0.2375],
+    "attachment": "Base bolted to table; hub axle clamped in stand; hub rotates on its bearings.",
+    "pointer": "Steel 2 mm diameter pointer fixed beside the bottom rim, with 0.1 mm graduated backing scale; no initial rim contact."
+  },
+  "wrench": {
+    "material": "steel jaw, polymer handle",
+    "jaw_slot_m": 0.00325,
+    "handle_length_m": 0.08,
+    "handle_diameter_m": 0.016,
+    "mass_kg": 0.045,
+    "handle_center_m": [0.20, -0.20, 0.7555],
+    "long_axis_direction": [0.0, 1.0, 0.0],
+    "start": "Lying flat, jaw toward +y; not attached to the robot or nipple."
+  },
+  "assessor_tools": "0.1 mm feeler gauges, millimetre ruler, camera, 500 g mass, horizontal cord and pulley for the proposed unloaded/loaded rim check; not accessible during policy control."
+}

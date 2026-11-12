@@ -1,0 +1,27 @@
+{
+  "schema": "local-checks-v1",
+  "date_utc": "2026-11-12",
+  "cpu_tests_passed": 17,
+  "native_runtime_tests": 0,
+  "robot_trials": 0,
+  "paid_compute_usd": 0,
+  "syntax_and_json_checks": "passed",
+  "scope": "Local CPU mechanisms and rubric checks only; native authoring compiles but has not run. ENVIRONMENT.json is supplied independently by batch owner and is not included in this snapshot.",
+  "sha256": {
+    "JUDGING.md": "93257ecf27a92b3591949adff11eb4ee3df14a56b9c73ad0548944d64222b322",
+    "PAPER_SOLVER_PLAN.md": "1f20619c9755ab2dc232c58be66b6c6398923a1c36b2771f00cd6135a1a6ed06",
+    "README.md": "7e5b1939cc39f302bdfb96658d28025f56c51286ae4e86edb422443d7e2b8a78",
+    "VALIDATION.json": "5443dd495f839e5ebca14949460953741b871132ed2ffe86e2ece9aba593c4fc",
+    "contact_probe.py": "72b43b627c779262bddb0c91fb76901333f8884375b2a2e4d08a59a160d48c6c",
+    "materials.py": "544e77e601ca4185de6b51fd4f4980c486cb083a1051a568ce957a86858f42ef",
+    "native_probe.py": "912c50308cc9dca02ad98e697a322f538e7ed3f804a5f8163dc0c818d600167b",
+    "physx_material.py": "1248cd374d3386e99116be60a2717c5ac564bca57af184d0c8c8b76330326e33",
+    "probe.py": "eb14c8070c257b22b32811860824f74a08b82cb7819777053ce272e7d6f1e377",
+    "scoring.py": "5e45b38be4c6af98561108276e4ab06717048b7974212f4a7e45ec38d33e9348",
+    "setup.json": "8d6cb0e6d0214b1a35ada4ee8851b4ee8dcfe076d0b6753269d0273ef7eceb95",
+    "task.draft.json": "278d9c55b6e3f343e9eaaff545cf966b5925a402015052a8c1a17a03c80ac594",
+    "test_contact_probe.py": "38aa6d75f81425208aa79d8deec5dea2f916879977390e9641059768d2654260",
+    "test_materials.py": "62701546d805fe657a3bcbd8c1b3bfc03a19f44fd3b7d60ea908e1d20d473149",
+    "test_scoring.py": "506497ab7e1c66c21fcee4de0f9e09506f43dffcffb6944e1416d7f512430302"
+  }
+}

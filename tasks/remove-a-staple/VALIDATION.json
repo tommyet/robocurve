@@ -1,0 +1,25 @@
+{
+  "schema": "development-validation-v1",
+  "submission_ready": false,
+  "calibrated": false,
+  "cpu_checks": "Actual NumPy-only probes and unittest checks passed locally; native/robot checks not run.",
+  "simulator_probe": null,
+  "demo": null,
+  "dream": null,
+  "media": null,
+  "paid_compute_usd": 0,
+  "blocking_items": [
+    "Coupled deformable paper/steel contact solver with real puncture-hole geometry",
+    "Irreversible mixed-mode paper crack propagation and steel plastic bending",
+    "Sub-millimetre contact-scale stability without thickening paper or enlarging the staple",
+    "Measured staple/remover/paper properties and fixed starting layout",
+    "Successful full-score robot demo, Dream baseline and final media"
+  ],
+  "status": "development_not_submission_ready",
+  "native_probe": {
+    "entry_point": "native_probe.py",
+    "status": "authored_not_run",
+    "runtime_compatibility_verified": false
+  },
+  "cpu_tests_passed": 17
+}

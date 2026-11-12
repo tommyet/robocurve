@@ -1,0 +1,27 @@
+{
+  "schema": "local-checks-v1",
+  "date_utc": "2026-11-12",
+  "cpu_tests_passed": 19,
+  "native_runtime_tests": 0,
+  "robot_trials": 0,
+  "paid_compute_usd": 0,
+  "syntax_and_json_checks": "passed",
+  "scope": "Local CPU mechanisms and rubric checks only; native authoring compiles but has not run. ENVIRONMENT.json is supplied independently by batch owner and is not included in this snapshot.",
+  "sha256": {
+    "JUDGING.md": "e45f8e2f73d7f5025e2ef89c6a53c902619c52b93b13981ebb9a2dab18fe3f7c",
+    "README.md": "71c31dc90ba561de9373333306036970d8ea82237d08653ba0ae2d2a46b6f0b5",
+    "VALIDATION.json": "941f882abcf41ff28a69698fb11fdc48a739140af098cd97b49815000ec99600",
+    "mechanics.py": "49b3c828d80fd96a0a1c84f451a5b8ffb866307c5bf31a34e27da7001424c620",
+    "native_probe.py": "0d65a94546f2017f32b7dd4051ff39d72571159063ae9b0baa882b164a08d3cb",
+    "probe.py": "fa83750ed32549c2d3af55ee6efa1f12514faa50d2051c46819c6cab94661dd1",
+    "scene_probe.py": "9aa36517522ff381b2ae7d6754ddd7164df9ce0cb81247971b01437123c7506f",
+    "scoring.py": "7b634d6e46f0f667f60bf7a7041d486441454910edeb0e8ca24ef8a26f716eca",
+    "setup.json": "d8f8e69adab34a3143556ed5b7dc42571050923e3565171d463dedf2cd2b4937",
+    "task.draft.json": "063555e4f3343249f81d9c5856125c8735becb71ab24abac4e503343d2fc90cf",
+    "test_mechanics.py": "81cae8752ba26524631188ff1ad756d4d92c7dfb8baa794175e13b4cfbc37ea1",
+    "test_scoring.py": "7758815b27e6483d1c6e89db6a6bbd8397d1eb680c5b5cc32a9777376ad33e81",
+    "test_thread_coupling.py": "e0db6fe13ea38c05cf3d29052a020d7f75b60ab7f96a00ee339a03e6c977e4f1",
+    "thread_coupling.py": "1601060fdf3ffddb1e526c72e4dba59490c9558c9517f520016151041e1c20f4",
+    "wheel_scene.py": "b4732e03fc18551a4e66824cb6b98b197c939ce7f12b7d5655d81631f795062e"
+  }
+}

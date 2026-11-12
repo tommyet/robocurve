@@ -1,0 +1,41 @@
+{
+  "status": "development_not_submission_ready",
+  "checked_utc": "2026-11-12",
+  "cpu_tests_passed": 14,
+  "native_simulator_run": false,
+  "robot_demo_run": false,
+  "dream_run": false,
+  "media_uploaded": false,
+  "scores": null,
+  "paid_compute_used_usd": 0.0,
+  "remaining_gates": [
+    "Native passive-plunger and nozzle contact unexecuted",
+    "No demonstrated shell shape or star-ridge preservation",
+    "Complete robot/material collision and reset not validated",
+    "Draft scorer lacks physical/photo agreement",
+    "Robot demo, Dream, media and real recipe/dispenser reference absent"
+  ],
+  "sources_sha256": {
+    "material.py": "863f1bcf7f8f8493f912af3fab3deb3156e45a45da2ef23082630ff9c89b1242",
+    "native.py": "57a82d80b39eb50bba35a6306c0a5c38c5ce94d7b07b714b82d3053383cf6a5c",
+    "preview_yam.py": "b180a4f2d46f670d9f3f0ed4633dddd3772c65b05d657327b673bcfd5d954b8b",
+    "probe.py": "dc2421d3342eda2052d7340d10bbf856493ad5b30b121ad839fddda7c7a57c17",
+    "probe_native.py": "4ae085c9d2151b6df952a6e6f03f454022991f0e6e2267165eee15f1d1f021b9",
+    "scene.py": "2a2348ce361b8c1ba4894988f26126bf1972050dd8ab35fdbf961edb2139abad",
+    "scoring.py": "f6215455e67f481836d18b754607ae6334f9009e85f7d749212390f2ccb787f5",
+    "test_material.py": "bd738f10cd79bb7625908498ad8e3d0ba87a0fdda75759eb88750229dd0dd02e"
+  },
+  "cpu_probe": {
+    "simulated_seconds": 1.500000000000022,
+    "wall_seconds": 0.19254487499711104,
+    "volume_balance": {
+      "initial_m3": 2e-05,
+      "reservoir_m3": 1.9433358691964363e-05,
+      "deposited_m3": 5.666413080356378e-07,
+      "airborne_m3": 0.0,
+      "lost_m3": 0.0,
+      "error_m3": -4.235164736271502e-22
+    },
+    "meaning": "one prescribed-motion material deposit, not robot or shell demonstration"
+  }
+}

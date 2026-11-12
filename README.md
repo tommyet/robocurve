@@ -32,7 +32,9 @@ limitations. Check the live task board before choosing a new objective.
   full-score bimanual demo, capsule-cord model and independent geometry audits.
   It uses no fixtures or external tightening forces. Read its fidelity limits
   before reusing the rope model. [PR #1153](https://github.com/robocurve/benchmark-tasks/pull/1153)
-  was received as **TK-VWRHTS** and is waiting for review.
+  was accepted and merged as **TK-VWRHTS** on November 12. Later reviews of
+  other tasks reject privileged object-state corrections in demos; follow the
+  current feedback in `TEAM_LEARNINGS.md` when building a new controller.
 - `brick_workbench/` contains reusable brick geometry, scoring and CAD code. Its
   `build_tasks.py` regenerates all four existing brick tasks and preserves their previous scores
   and media IDs. Create a new task folder deliberately; do not use that builder as a generic
@@ -55,6 +57,9 @@ limitations. Check the live task board before choosing a new objective.
 - Credentials, private reference PDFs, full videos and raw trial artifacts are intentionally
   ignored. A clone includes code, CAD and curated numeric evidence. Arrange Brev access and
   credentials privately; full recordings are backed up on Tom's machine and the retained VM.
+- The [six-task development batch](docs/six-task-batch-readiness.md) records the
+  current material prototypes, validation gaps and compute budget. Its drafts
+  are not completed competition submissions.
 
 Development branches start from this fork's `main`. **Competition submission branches start
 from `upstream/main` and contain only one `tasks/<name>/` folder.** Keep team notes and other

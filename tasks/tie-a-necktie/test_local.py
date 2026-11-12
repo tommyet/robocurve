@@ -1,0 +1,61 @@
+"""CPU mesh and evidence-rubric checks, not physics or knot-success evidence."""
+import unittest
+import numpy as np
+from cloth_mesh import necktie,edge_strain
+from layout import initial_layout,fixture_geometry,NECK,TABLE
+from fixture_clearance import fixture_intersections,triangle_box_intersects,triangle_cylinder_intersects
+from scoring import score
+
+
+class Geometry(unittest.TestCase):
+    def test_strip_has_width_and_two_different_tips(self):
+        m=necktie()
+        self.assertEqual(len(m.audit()['boundary_loops']),1)
+        self.assertGreater(np.ptp(m.rest[:,0]),.069)
+        self.assertAlmostEqual(np.ptp(m.rest[:,1]),1.4)
+        self.assertNotEqual(m.markers['wide_tip'],m.markers['narrow_tip'])
+    def test_diagnostic_drape_does_not_stretch_the_reset_mesh(self):
+        m=necktie();p=initial_layout(m)
+        # Chords approximate a true cylinder; geometric strain is below 0.03%.
+        self.assertLess(np.max(np.abs(edge_strain(m.rest,p,m.faces))),.0003)
+    def test_all_drape_triangles_clear_every_fixture_by_one_mm(self):
+        m=necktie();p=initial_layout(m)
+        self.assertEqual(fixture_intersections(p,m.faces,fixture_geometry(),margin=.001),
+                         {name:[] for name in fixture_geometry()})
+    def test_previous_rear_post_intersection_is_detected(self):
+        m=necktie();fixtures=fixture_geometry()
+        fixtures['Post']['center']=(NECK[0]+.055,0.,(NECK[2]+TABLE)/2)
+        self.assertGreater(len(fixture_intersections(initial_layout(m),m.faces,fixtures,margin=0.)['Post']),0)
+    def test_face_crossings_without_inside_vertices_are_detected(self):
+        triangle=np.array(((-2.,-2.,0.),(2.,-2.,0.),(0.,3.,0.)))
+        self.assertTrue(triangle_box_intersects(triangle,(0,0,0),(1,1,1)))
+        self.assertTrue(triangle_cylinder_intersects(triangle,(0,0,0),.5,1.))
+        self.assertFalse(triangle_box_intersects(triangle+(0,0,2),(0,0,0),(1,1,1)))
+        self.assertFalse(triangle_cylinder_intersects(triangle+(0,0,2),(0,0,0),.5,1.))
+
+
+class Judging(unittest.TestCase):
+    def record(self):
+        return dict(evidence_sha256={k:'0'*64 for k in ('released_video','front_photo','rear_photo')},
+                    integrity_checked=True,intact=True,four_in_hand_verified=True,released_hold_s=5.,
+                    wide_face_out=True,narrow_end_hidden=True,knot_zone_offset_mm=10.,
+                    neckband_gap_mm=5.,wide_tip_below_collar_mm=320.)
+    def test_complete_and_retained_but_undressed_knot(self):
+        j=self.record();self.assertEqual(score(j),1.)
+        j['wide_face_out']=False;self.assertEqual(score(j),.5)
+        j['four_in_hand_verified']=False;self.assertEqual(score(j),0.)
+    def test_physical_invalidity_erases_credit(self):
+        j=self.record();j['intact']=False;self.assertEqual(score(j),0.)
+        j=self.record();j['released_hold_s']=4.9;self.assertEqual(score(j),0.)
+    def test_good_knot_bad_fit_is_partial(self):
+        j=self.record();j['neckband_gap_mm']=11.;self.assertEqual(score(j),.5)
+        j=self.record();j['wide_tip_below_collar_mm']=100.;self.assertEqual(score(j),.5)
+    def test_missing_assessment_raises(self):
+        j=self.record();del j['four_in_hand_verified']
+        with self.assertRaises(ValueError):score(j)
+    def test_unknown_fit_measurement_cannot_score(self):
+        j=self.record();j['neckband_gap_mm']=float('nan')
+        with self.assertRaises(ValueError):score(j)
+
+
+if __name__=='__main__':unittest.main()

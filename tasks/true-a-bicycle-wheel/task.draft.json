@@ -1,0 +1,17 @@
+{
+  "title": "True a wobbly bicycle wheel",
+  "category": "Impact on jobs",
+  "keywords": [
+    "bicycle repair",
+    "spoke tension",
+    "tool use"
+  ],
+  "instruction": "Adjust the spoke nipples to leave the bicycle wheel running straight and freely rotating.",
+  "context": "Bicycle mechanics correct a wheel by finding the wobble and redistributing spoke tension without making the wheel loose or off-centre.",
+  "setup": "Proposed fixed setup in setup.json: a 420 mm centreline-diameter aluminium rim with 32 steel 2 mm spokes, 50 mm flange-diameter/spacing hub and 12 mm brass nipples; upright steel truing stand centred at (0.35, 0, 1.005) m above the station floor. A steel spoke wrench with 3.25 mm slot and 80 mm handle lies at (0.20, -0.20, 0.7555) m. Four same-side nipples in one quadrant start 1.1 turns looser than the balanced reference. Full dimensions/materials are recorded, but physical calibration, reach and screenshot remain unvalidated.",
+  "scoring": "Provisional: 0.5 for at most 1.5 mm peak-to-peak lateral runout; 1.0 for at most 0.5 mm. Both require a complete released revolution, radial runout at most 1 mm, dish error at most 0.5 mm, and the stated 500 g rim/spoke proof checks. All 32 midpoint spoke deflections must be 0.15\u20131.2 mm; maximum rim deflection 2 mm and residual deflection 0.2 mm. Invalid, damaged or externally braced outcomes score zero. These service limits still need physical validation.",
+  "run_limit": "Proposed 3,600 control steps (180 seconds at 20 Hz); no robot run yet.",
+  "reset_notes": "Restore the same documented nipple rest lengths and intact wheel. Initial wobble is created by uneven spoke rest lengths, not a bent rim animation.",
+  "fidelity": "A CPU elastic ring/spoke model and native implicit-joint probes are authored. The unrun full native stage adds a freely rotating hub, colliding two-half steel spokes, square nipples, wrench and measured-angle thread shortening with equal/opposite lead torque. Thread friction is approximated by capped native damping. No YAM reset/trial runner, full robot demo, physical calibration or validated damage model exists yet.",
+  "scores": "Not run. No demo, Dream score or media exists. This is not submission metadata."
+}

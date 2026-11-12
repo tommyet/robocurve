@@ -1,0 +1,74 @@
+{
+  "status": "development_not_submission_ready",
+  "checked_date": "2026-11-12",
+  "local_checks": {
+    "geometry_and_rubric_tests": 10,
+    "result": "passed",
+    "command": ".venv/bin/python -m unittest discover -s tasks/tie-a-necktie -p test_local.py -v",
+    "scope": "CPU geometry and synthetic evidence-rubric cases only; no physics or task-success claim",
+    "python_source_files": 11,
+    "syntax_and_json_check": {
+      "result": "passed",
+      "command": ".venv/bin/python tasks/tie-a-necktie/run.py --check-only",
+      "scope": "No simulator imports or native execution"
+    },
+    "pinned_yam_task_loader": {
+      "result": "passed",
+      "command": "PYTHONPATH=artifacts/rope-knot-development/adapter:tasks/tie-a-necktie PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -c 'from yam_arena.task_file import load; t=load(\"tasks/tie-a-necktie/task.py\"); print(t.scene,t.names,t.free_objects); assert t.score is None and t.module.DEVELOPMENT_ONLY'",
+      "scope": "Actual retained adapter task loader accepts the station and custom specifications; this does not instantiate native assets or prove physics."
+    },
+    "fixture_clearance": {
+      "result": "passed",
+      "scope": "All 4464 initial cloth triangles clear neck cylinder, central post, base and both collar points by a conservative 1 mm margin. Includes former rear-post collision and triangle-only intersection regressions. Static geometry only; native gravity settling remains untested."
+    }
+  },
+  "native_gpu_checks": {
+    "status": "not_run",
+    "reason": "Shared GPU balance/access unavailable at this development checkpoint"
+  },
+  "demo": {
+    "status": "not_implemented"
+  },
+  "dream": {
+    "status": "not_run"
+  },
+  "scores": null,
+  "media": null,
+  "missing_evidence": [
+    "native surface FEM runtime, self-contact and rigid contact validation",
+    "naturally settled reachable collar reset; current horizontal-end pose is diagnostic only",
+    "flat-fabric threading, tightening, face orientation and wearable knot retention",
+    "physical material/fixture parameter checks",
+    "native YAM smoke execution, observation-based robot demonstration and final scored runner",
+    "full-score demo within the declared limit",
+    "Dream baseline and final independent scoring",
+    "matching anonymous setup screenshot and H.264 videos",
+    "media upload and final task.json"
+  ],
+  "source_sha256": {
+    "ENVIRONMENT.json": "894a573dafa0d1ef4380e51a3e61f984e80cbbcfdf4988d3b1cc96e2f9eeb16e",
+    "JUDGING.md": "bb8f8c787b5e6628fd5bb35883d671239fa533327307451ca5d3426fdbf3ce6a",
+    "LICENSE": "a71ddeb012ff1961bf252489309b565ffd0443632819aa9c88eef4377f9f9f7a",
+    "README.md": "d8d429168565965450b5c057b9d6428d732f06de51abd9792d061e4c09c1f6cf",
+    "arena_cloth.py": "d6c4574249c9eb9a5772288c7ce0f03afccc5b8637f44ec923c7522ea4f387c6",
+    "arena_props.py": "5f2b6d710f1e8144d99a8c956db134b68b0e37996f4171415019a82ad67be9c4",
+    "cloth_mesh.py": "44a8d8027e7694edfae1b4d82eefad0add3f809899c61913ba3c6b0b7cea410c",
+    "fixture_clearance.py": "a872e448c64c1d2d9acbb0b89d9b39e1c7ec0bcdbf2f2b890175ca15aab96fc0",
+    "layout.py": "18bf90899ad1fc6ce10a67399b667046c443d1890017bd5bf6c1f2ed4e2235ad",
+    "native_cloth.py": "1cf8812ced06fb4a75fb2ea231bb4a780aff07a44298ea235a5cd0d094d7506b",
+    "probe.py": "79e2d2f08ffac9063d1a9bdcf785c43221e0f31d47d7a065068e549c8efac5b1",
+    "run.py": "8f7dbb05bf3b853b71fdc518f1860aa74e300074d2a21c62ffa0471c5554f0c7",
+    "scoring.py": "e38ba3b60cd283a432529e76757ee6d93b4223b53fa7cb45982fd66bac56d85a",
+    "task.draft.json": "7951d461f96e0ebcd7b122f8a27c2741eb9ce1bff0b8a7bfba18554933524f0e",
+    "task.py": "6e93d3c714586b03f577142d645281e9c07b57cc834a2696cb3db560df498706",
+    "test_local.py": "ee6ec138e5b2b4ff5daedaeffc7164b33a5462bc88cf79ffe5ab72068e45ba17"
+  },
+  "implementation_checkpoint": {
+    "native_surface_cloth": "Implemented; native API/source checked, execution untested",
+    "arena_scene": "Full declared station scene registered with native deformable asset and custom fixtures; execution untested",
+    "passive_pegs": "Not applicable",
+    "runner": "Guarded bounded no-op YAM smoke recorder with explicit raw environment reset, reset physics-step provenance, source snapshots, normal camera video, native-node/robot/prop assessor traces; execution untested, no success claim",
+    "controller": "No observation-based successful task controller yet",
+    "judging": "Evidence-bound manual photo/video/ruler rubric with adversarial local tests; final thresholds need runtime validation"
+  }
+}

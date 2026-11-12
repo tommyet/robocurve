@@ -1,0 +1,78 @@
+"""Force/time thread severing and conservative blade-damage detection.
+
+The cut input must come from a PhysX blade-vs-thread contact-force matrix. Blade
+pose or distance alone never cuts thread. A true contact event disables one
+native joint within the contacted thread loop; the cloth is never detached.
+Parameters are uncalibrated starting values, requiring a real thread/tool test.
+"""
+from dataclasses import dataclass
+import numpy as np
+
+
+@dataclass(frozen=True)
+class CutParameters:
+    minimum_edge_force_n: float=.25
+    sustained_seconds: float=.040
+    thread_radius_m: float=.0002
+
+
+class ThreadCutter:
+    def __init__(self,link_counts,parameters=CutParameters()):
+        self.counts=tuple(map(int,link_counts));self.p=parameters
+        if not self.counts or min(self.counts)<3:raise ValueError('Closed thread loops need three or more links')
+        self.elapsed=np.zeros(sum(self.counts));self.severed=set();self.events=[];self.t=0.
+
+    def update(self,forces_on_blade,edge_normal_world,dt):
+        f,n=np.asarray(forces_on_blade,float),np.asarray(edge_normal_world,float)
+        if (f.shape!=(len(self.elapsed),3) or n.shape!=(3,) or not np.isfinite(f).all()
+                or not np.isfinite(n).all() or np.linalg.norm(n)<1e-9 or not np.isfinite(dt) or dt<=0):
+            raise ValueError('Invalid measured blade contact state')
+        normal=n/np.linalg.norm(n)
+        force=-f@normal
+        active=force>=self.p.minimum_edge_force_n
+        self.elapsed=np.where(active,self.elapsed+dt,0.)
+        newly=[]
+        for k in np.flatnonzero(self.elapsed>=self.p.sustained_seconds):
+            if int(k) not in self.severed:
+                self.severed.add(int(k));newly.append(int(k))
+                self.events.append({'time_s':self.t+dt,'link':int(k),'edge_force_n':float(force[k]),
+                                    'continuous_contact_s':float(self.elapsed[k])})
+        self.t+=dt
+        return newly
+
+
+def segment_triangle_intersections(a,b,vertices,faces,eps=1e-10):
+    """Möller–Trumbore finite segment test, vectorized over actual cloth faces."""
+    a,b,p,f=np.asarray(a,float),np.asarray(b,float),np.asarray(vertices,float),np.asarray(faces,int)
+    d=b-a;v0,v1,v2=(p[f[:,i]] for i in range(3))
+    e1,e2=v1-v0,v2-v0
+    h=np.cross(np.broadcast_to(d,e2.shape),e2);det=np.einsum('ij,ij->i',e1,h)
+    nonparallel=np.abs(det)>eps
+    inv=np.divide(1.,det,out=np.zeros_like(det),where=nonparallel)
+    s=a-v0;u=inv*np.einsum('ij,ij->i',s,h)
+    q=np.cross(s,e1);v=inv*(q@d);t=inv*np.einsum('ij,ij->i',e2,q)
+    return np.flatnonzero(nonparallel&(u>=-eps)&(v>=-eps)&(u+v<=1+eps)&(t>=-eps)&(t<=1+eps))
+
+
+class DamageAudit:
+    """Latch any blade crossing of fabric outside the pre-existing holes.
+
+    Native FEM cannot tear topology at runtime. This audit conservatively
+    invalidates a trial rather than pretend intact fabric survived a blade.
+    It does not claim to simulate fracture propagation or inspect tiny fibres.
+    """
+    def __init__(self):self.crossed_faces=set();self.events=[]
+
+    def update(self,blade_previous,blade_current,cloth_vertices,cloth_faces,time_s):
+        before,now=np.asarray(blade_previous,float),np.asarray(blade_current,float)
+        if before.shape!=now.shape or now.ndim!=2 or now.shape[1]!=3:
+            raise ValueError('Blade samples must be Nx3')
+        for layer,(p,f) in enumerate(zip(cloth_vertices,cloth_faces)):
+            hits=set()
+            for a,b in zip(before,now):hits.update(segment_triangle_intersections(a,b,p,f).tolist())
+            # Include the physical blade edge itself, not only its moving tips.
+            for a,b in zip(now[:-1],now[1:]):hits.update(segment_triangle_intersections(a,b,p,f).tolist())
+            fresh={(layer,int(i)) for i in hits}-self.crossed_faces
+            if fresh:self.events.append({'time_s':float(time_s),'layer':layer,'triangles':sorted(i for _,i in fresh)})
+            self.crossed_faces.update(fresh)
+        return bool(self.crossed_faces)

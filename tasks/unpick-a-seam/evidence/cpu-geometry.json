@@ -1,0 +1,59 @@
+{
+  "kind": "CPU topology audit, not dynamics evidence",
+  "result": {
+    "cloth": [
+      {
+        "vertices": 1346,
+        "triangles": 2492,
+        "surface_area_m2": 0.005982720000000001,
+        "boundary_loops": 13,
+        "connected": true
+      },
+      {
+        "vertices": 1346,
+        "triangles": 2492,
+        "surface_area_m2": 0.005982720000000001,
+        "boundary_loops": 13,
+        "connected": true
+      }
+    ],
+    "stitches": [
+      {
+        "nodes": 28,
+        "length_m": 0.024800000000000155,
+        "minimum_link_m": 0.0008000000000000229,
+        "closed": true
+      },
+      {
+        "nodes": 28,
+        "length_m": 0.024800000000000155,
+        "minimum_link_m": 0.0008000000000000229,
+        "closed": true
+      },
+      {
+        "nodes": 28,
+        "length_m": 0.024800000000000155,
+        "minimum_link_m": 0.0008000000000000229,
+        "closed": true
+      },
+      {
+        "nodes": 28,
+        "length_m": 0.024800000000000155,
+        "minimum_link_m": 0.0008000000000000229,
+        "closed": true
+      },
+      {
+        "nodes": 28,
+        "length_m": 0.024800000000000155,
+        "minimum_link_m": 0.0008000000000000229,
+        "closed": true
+      },
+      {
+        "nodes": 28,
+        "length_m": 0.024800000000000155,
+        "minimum_link_m": 0.0008000000000000229,
+        "closed": true
+      }
+    ]
+  }
+}

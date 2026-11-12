@@ -1,0 +1,31 @@
+{
+  "status": "development_not_submission_ready",
+  "checked_utc": "2026-11-12",
+  "cpu_tests_passed": 9,
+  "native_simulator_run": false,
+  "robot_demo_run": false,
+  "dream_run": false,
+  "media_uploaded": false,
+  "scores": null,
+  "paid_compute_used_usd": 0.0,
+  "remaining_gates": [
+    "Native thin-thread/cloth-hole contact and intact/open retention untested",
+    "Force-qualified cutting native hook unexecuted",
+    "Blade-crossing audit wired but unvalidated; tensile damage and native cloth tearing unsupported",
+    "Final released-stitch inspection absent; native reset adapters implemented but unexecuted",
+    "Robot demo, Dream, media and real reference absent"
+  ],
+  "sources_sha256": {
+    "arena_cloth.py": "053dc4d811c210ff75f34125679081b86c3e7fbc816f92fad10e1b39627d888d",
+    "arena_thread.py": "25b8177924029bbd9893f4c96065097517efd302d8b450d89e8410dcb4735895",
+    "cutting.py": "f6a87366f5ea8b297a721e60460071699f198326beb3e608d85bfb9e045858b8",
+    "geometry.py": "03a90ccd676c2853618e0139ce297152304422713492813842179c4498015cbe",
+    "native_cloth.py": "a09c2d018df718b9947c8d11cf8b7679035e8e7f45a6a22b04e3069859f18314",
+    "native_stitches.py": "350c61ea5ec1a84103e5ebbc6d286876c8a3e3ee9747ce3068cb51a49f0a3589",
+    "preview_yam.py": "13db697140bac04fdbb34264ba204aa7d099e7b9cf8dd37cfdb66be1d1540faa",
+    "probe_native.py": "e558433725b85a027277b9113d32475c398266a4acc87511402efe9cf36592a5",
+    "scene.py": "5800239d4857db335241aaba1b9131c281b24673062c2db3057e52155e273023",
+    "scoring.py": "09c573a841083d2c095c5b5ae3aa0c7905c4f2bf4adde8468c2703eb13e27026",
+    "test_mechanism.py": "d292367e8dd3c1da873ca12c6204514bc5797a5faf19d23b69fc7e8a8679a122"
+  }
+}
