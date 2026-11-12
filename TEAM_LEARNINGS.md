@@ -60,6 +60,29 @@ developers and their agents, not a competition submission document.
 
 ## Review findings
 
+### 2026-11-12 — organizer review-process clarification
+
+- Operator: repository agent, branch `codex/review-process-2026-11-12`.
+  The user supplied an organizer announcement: expected review turnaround is
+  48 hours; automated feedback is provided for revision/rejection; passing
+  automated screening leads to human review for final acceptance. Pending
+  alone does not establish that screening passed or predict acceptance.
+- Treat review turnaround, the team's revision window and any appeal deadline
+  as separate clocks. The announcement's invitation to contact an organizer
+  about overdue review is not user authorization to send a message. No contact
+  was made, and no automation or reminder was created.
+- The linked [review-agent v21 prompt](https://github.com/robocurve/robocurve-taskboard/blob/main/review-agent/prompts/v21.md)
+  returned 404 via connector, signed-in CLI, raw URL and browser. Its contents
+  remain unverified; do not claim that a task or idea has been audited against
+  v21 until the actual file is accessible. The task-guide refresh also failed.
+- Submission-event statistics that include revisions are not unique-task
+  acceptance probabilities. A chart counting a revision as a new submission
+  does not itself instruct the team to create a new GitHub PR; follow the
+  task-specific feedback and actual submission guide.
+- The private idea brief was updated with this distinction and the remaining
+  uncertainty. No Brev/Dream compute, simulator work, task implementation,
+  media upload or submission was performed.
+
 ### 2026-11-12 — broader novelty research and acceptance lessons
 
 - Operator: repository agent, branch `codex/task-ideation-2026-11-12`.
