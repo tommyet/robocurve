@@ -60,6 +60,32 @@ developers and their agents, not a competition submission document.
 
 ## Review findings
 
+### 2026-11-12 — Runpod key entry and compatibility audit
+
+- The user supplied a Runpod API key through a native masked local dialog.
+  It is stored in `.env.runpod`, mode 0600, confirmed ignored and untracked.
+  Load it programmatically; never print it, put it in a URL, shell argument,
+  screenshot or committed artifact. Use authorization headers. The local
+  audit helpers and filtered responses are under ignored
+  `artifacts/runpod-audit-2026-11-12/`.
+- Initial REST v2 reads authenticated and returned no Pods or network volumes.
+  Billing and catalog reads explicitly lacked `billing:read` and
+  `catalog:read`; the GraphQL balance query also returned unauthorized. Credit
+  remains unknown until a successful balance read. The user was asked to add
+  the two missing read scopes. Do not confuse an empty resource list with a
+  zero balance or with evidence that other chargeable product types are absent.
+- One full L40S 48 GB Pod is a candidate for our stack, not a proven replacement.
+  Host driver/Vulkan graphics support must pass a bounded headless Isaac and
+  YAM camera/physics test. `nvidia-smi` alone is insufficient. Enable NVIDIA
+  graphics driver capabilities at Pod creation. Pods are containers; do not
+  assume the Brev launchable's Docker/Compose setup works nested inside one.
+- Keep results in persistent storage and record its separate ongoing charge.
+  Stale search excerpts advertised `--stop-after`, but current source/CLI
+  checks did not establish a provider-enforced deadline. The [official guide](https://docs.runpod.io/pods/manage-pods)
+  shows a process-dependent stop timer. Verify a bounded job, a separately
+  supervised shutdown and control-plane STOPPED state before relying on a
+  cost cap. No Pod was created, started, stopped or deleted in this audit.
+
 ### 2026-11-12 — GPU alternatives after grant exhaustion
 
 - Read-only research; no account creation, application, new GPU job or payment.
