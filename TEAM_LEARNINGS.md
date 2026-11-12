@@ -60,6 +60,33 @@ developers and their agents, not a competition submission document.
 
 ## Review findings
 
+### 2026-11-12 — GPU alternatives after grant exhaustion
+
+- Read-only research; no account creation, application, new GPU job or payment.
+  The local Mac is an M1 Pro with 16 GB unified memory. It can run our CPU
+  checks, asset preparation, scoring and media review, but not the required
+  Isaac Sim 6.1 stack. [NVIDIA's versioned requirements](https://docs.isaacsim.omniverse.nvidia.com/6.1.0/installation/requirements.html)
+  list supported NVIDIA hardware and Linux/Windows; A100/H100 lack the required
+  RT cores. A generic free GPU offer is not sufficient for camera-based trials.
+- [Modal Starter](https://modal.com/pricing) includes $30/month compute; L40S
+  Functions cost $1.9512/GPU-hour plus CPU/memory. A valid payment method is
+  required for GPU access. Its [November 11 graphics announcement](https://modal.com/blog/modal-gvisor-maintainer)
+  explicitly covers Vulkan, headless OpenGL and NVIDIA Omniverse. This makes it
+  a candidate, not a verified replacement: test our pinned Isaac/YAM versions
+  with one bounded job before migrating trials. Use Functions for batch work;
+  Sandbox rates differ. Verify actual credits and [workspace budget/spend limits](https://modal.com/docs/guide/budgets)
+  before launching; default settings may permit paid usage. No migration has run.
+- [Lightning](https://studio.lightning.ai/pricing/) advertises up to 30 starter
+  credits. Its signup documentation states 5 initial credits plus 25 after
+  adding a card; this is not a verified recurring grant. Account verification,
+  host-driver compatibility and storage above the free allowance need checking.
+- [Google Cloud](https://docs.cloud.google.com/free/docs/free-cloud-features)
+  offers eligible new customers $300/90 days, but the non-billable free trial
+  excludes GPUs. Paid-account activation retains unused credits; GPU quota is
+  still required and overages become billable. Do not describe it as immediate
+  GPU access with no billing exposure. No general repeat Brev grant was found;
+  the Robocurve guide states that its program credit cannot be topped up.
+
 ### 2026-11-12 — reconcile shared Brev credit exhaustion
 
 - Operator: repository agent, branch `codex/brev-billing-reconciliation-2026-11-12`.
