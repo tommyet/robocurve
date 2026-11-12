@@ -60,6 +60,35 @@ developers and their agents, not a competition submission document.
 
 ## Review findings
 
+### 2026-11-12 — verify benchmark mechanics before declaring duplication
+
+- Operator: repository agent, branch `codex/idea-followup-2026-11-12`.
+  User's preferred candidates and additional idea assessments are recorded in
+  the ignored local `artifacts/ideation-2026-11-12/shortlist.md` and
+  `new-suggestions.md`. These are research preferences, not authorization to
+  implement or run paid evaluations. No Brev, Dream or simulator use.
+- Check source implementations when a benchmark title is ambiguous. The
+  [#661 review](https://github.com/robocurve/benchmark-tasks/pull/661#issuecomment-6816771955)
+  cites RoboCasa meat-skewer assembly, but its
+  [source](https://github.com/robocasa/robocasa/blob/main/robocasa/environments/kitchen/composite/filling_serving_dishes/meat_skewer_assembly.py)
+  transfers already assembled kebabs rather than piercing food. The review's
+  separate criticism of predrilled rigid food is well-founded; do not turn its
+  benchmark reference into a stronger mechanical-duplication claim than the
+  code supports. Other food-skewering research remains relevant prior art.
+- Distinguish an existing task definition, an implemented benchmark and a
+  research demonstration. For example, BEHAVIOR catalog entries may contain
+  planned assets; a robotics paper may demonstrate a skill without defining a
+  popular benchmark. Record the actual evidence and uncertainty in novelty
+  decisions rather than treating every prior demonstration as an automatic ban.
+- [Caulking #1454](https://github.com/robocurve/benchmark-tasks/pull/1454#issuecomment-6821383058)
+  received revision feedback requiring functional trigger-dependent flow and
+  measurable physical bead coverage/continuity. Tip proximity alone was
+  insufficient. This is useful evidence that a causal flow approximation may
+  be acceptable in principle, but it is not approval of an untested model.
+- [Panel painting #1530](https://github.com/robocurve/benchmark-tasks/pull/1530#issuecomment-6822205107)
+  was accepted at 11:21 UTC. Recheck individual comments when a review is newer
+  than a downloaded snapshot; GitHub merge state may lag the board decision.
+
 ### 2026-11-12 — organizer review-process clarification
 
 - Operator: repository agent, branch `codex/review-process-2026-11-12`.
