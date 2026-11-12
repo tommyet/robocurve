@@ -60,6 +60,48 @@ developers and their agents, not a competition submission document.
 
 ## Review findings
 
+### 2026-11-12 — broader novelty research and acceptance lessons
+
+- Operator: repository agent, branch `codex/task-ideation-2026-11-12`.
+  User requested research only, with no Brev/Dream spending and no implementation
+  until they select ideas. No simulator, GPU, Dream, media upload or submission
+  was run. Seven candidates were shortlisted; keep their unpublished details in
+  the ignored local research brief rather than expose them on the public fork.
+- The final read-only board refresh around 10:00 UTC contained 791 entries:
+  68 accepted, 452 pending, 181 rejected and 90 pilot plans. All-state GitHub
+  history contained 1,780 PRs. Search all board fields plus closed PR history;
+  closed does not necessarily mean reviewed/rejected. Raw snapshots and source
+  catalogs are ignored under `artifacts/ideation-2026-11-12/`.
+- Search beyond the six benchmark names in the guide. Reviewers explicitly
+  rejected [lacing #750](https://github.com/robocurve/benchmark-tasks/pull/750#issuecomment-6818514721)
+  against RoboArc Rope Threading 01 and
+  [reaming #1137](https://github.com/robocurve/benchmark-tasks/pull/1137#issuecomment-6818594623)
+  against RoboCasa. Our wider check also eliminated apparent gaps using
+  ContactBench, RH20T, T-Rex and other primary benchmark sources. Absence from
+  the current board, or from titles alone, is insufficient novelty evidence.
+- A useful distinction is the physical skill and functional outcome, not new
+  geometry or a harder version. [Sanding #772](https://github.com/robocurve/benchmark-tasks/pull/772#issuecomment-6819265313)
+  was finally rejected as overlapping accepted filing and for crediting an
+  air gap. The three brick decisions below provide the same novelty lesson.
+- Simplification must preserve the task's defining causal interaction.
+  [Guitar #1399](https://github.com/robocurve/benchmark-tasks/pull/1399#issuecomment-6818000813)
+  failed for painted strings/air sweeps;
+  [belt replacement #973](https://github.com/robocurve/benchmark-tasks/pull/973#issuecomment-6817229692)
+  for rigid loops in place of a flexible working belt;
+  [sewing #678](https://github.com/robocurve/benchmark-tasks/pull/678#issuecomment-6816753380)
+  for rigid plates/loose cylinders in place of fabric and sewing. These reviews
+  do not establish that the underlying activity or category is unwelcome.
+- Accepted [filing #1374](https://github.com/robocurve/benchmark-tasks/pull/1374#issuecomment-6818670293)
+  and [cord cutting #218](https://github.com/robocurve/benchmark-tasks/pull/218#issuecomment-6814973181)
+  show that simplified material-change models can pass when contact/work still
+  causes the claimed result. Do not infer approval of an untested model from
+  those examples. Prefer a useful final-state check, physical damage gates,
+  simple judging tools and partial credit tied to substantive progress.
+- Proposed thresholds in an idea brief are design choices, not calibrated
+  measurements. Real props, dimensions, material response and full-score
+  feasibility remain to be established for each selected candidate. Refresh
+  the board again before development; pending claims change quickly.
+
 ### 2026-11-12 — knot accepted; three brick variants finally rejected
 
 - Checked GitHub at 06:41 UTC and corroborated visible task states on the
