@@ -60,6 +60,34 @@ developers and their agents, not a competition submission document.
 
 ## Review findings
 
+### 2026-11-12 — reconcile shared Brev credit exhaustion
+
+- Operator: repository agent, branch `codex/brev-billing-reconciliation-2026-11-12`.
+  A live per-instance billing audit reconciled the November 10 balance report
+  with the exhausted organization balance. Our retained `robocurve-dice` had
+  accrued no further compute since that report; the second team VM,
+  `yam-eval-launchable-72837c`, accounts for all subsequent compute charges.
+  Its lifecycle shows provision on November 8 and stopping on November 12.
+  Billing does not establish who operated it or whether it was idle.
+- A normal restart of `robocurve-dice` was refused with **“Credits are
+  exhausted.”** A subsequent `brev ls --all` confirmed both VMs STOPPED.
+  No paid simulator or Dream run occurred for the six-task batch. Detailed
+  financial records remain private under the ignored
+  `artifacts/brev-reconciliation-2026-11-12/` directory.
+- When reporting credit remaining, inspect **every VM in the organization**,
+  report which are running and their hourly/daily cost, and distinguish a
+  snapshot balance from money reserved for future work. A stopped personal
+  work VM does not protect a shared balance from another running VM.
+  Coordinate before stopping anyone else's active work. Do not infer
+  wall-clock uptime from aggregate billing `TotalTime` fields; compare
+  lifecycle timestamps, catalog rates and the daily usage overview.
+- Stopped storage continues billing. NVIDIA's [billing documentation](https://docs.nvidia.com/brev/guides/console-reference)
+  also warns that resources can be deleted after credits remain exhausted.
+  Preserve local code/evidence; do not delete the shared VM or assume its
+  retained installation will remain indefinitely. The program's statement
+  that grant credits cannot be topped up is separate from Brev's ability to
+  accept customer-funded credits; no payment or organizer contact was made.
+
 ### 2026-11-12 — six selected tasks enter local development
 
 - Operator: repository agent, branch `codex/six-task-batch-2026-11-12`, based on

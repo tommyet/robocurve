@@ -34,9 +34,9 @@ Accepted examples are references for useful approximations and submission struct
 
 ## Compute plan and blocker
 
-At 12:01 UTC on November 12, Brev's billing profile reported **−$2.28 remaining**. A second read confirmed it. The usage breakdown total was $189.74 compute plus $12.5482 storage. Both team VMs were stopped. These are organization totals, not costs incurred by this batch or proof of which teammate incurred a charge.
+At 14:12 UTC on November 12, Brev's billing profile reported **−$2.48 remaining**. The usage overview total was $189.74 compute plus $12.7512 storage. Both team VMs were stopped. A per-instance reconciliation found all additional compute since the November 10 balance check on the second team VM, `yam-eval-launchable-72837c`; `robocurve-dice` had no additional compute charges. These are organization costs, not costs incurred by this batch or proof of who operated a VM. Rounded per-instance and overview totals can differ by a cent.
 
-The retained `robocurve-dice` rate remains $2.729872/hour including its catalog storage rate while running. Its previous installation is preserved. No VM start, simulator trial or Dream prediction has been made for this batch. GPU validation is waiting for funded access; local development continues. The guide says program credits cannot be topped up, so another available account or an arrangement with the organizers may be necessary. No organizer has been contacted.
+The retained `robocurve-dice` rate remains $2.729872/hour including its catalog storage rate while running. A normal restart was attempted during the billing audit and refused with **“Credits are exhausted.”** Both VMs were confirmed stopped afterward. No successful VM start, simulator trial or Dream prediction has occurred for this batch. GPU validation is waiting for funded access. The program guide does not promise additional grant credits; Brev separately supports customer-funded credits. No payment or organizer contact has been made. Stopped storage continues billing, and [Brev's exhausted-credit policy](https://docs.nvidia.com/brev/guides/console-reference) warns of eventual resource deletion, so preservation of the retained installation is not guaranteed indefinitely.
 
 Provisional allocation, to refine using the first measured runtimes:
 
