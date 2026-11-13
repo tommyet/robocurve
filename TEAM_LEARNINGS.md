@@ -60,6 +60,65 @@ developers and their agents, not a competition submission document.
 
 ## Review findings
 
+
+### 2026-11-13 — spray cap diagnostic recorded; carton mechanics drafts checked
+
+- Root agent completed two no-model native spray runs on the existing L40S:
+  150-step/7.5-second hold probe and 600-step/30-second cap-removal attempt.
+  Both completed normally with finite telemetry and score 0.0. The cap attempt
+  did not detach the cap (maximum cap/can centre separation 86.998 mm), and
+  emitted no paint. Do not call it a spraying demo or task success.
+- Complete diagnostic video has 601 synchronized three-camera frames,
+  H.264/yuv420p, 640x552, 20 fps, 30.05 seconds, with an explicit diagnostic
+  title. Evidence/video/screenshots are ignored locally under
+  `artifacts/spray-panel-20261113/spray-capprobe-001/`; review archive is 1.9 MB.
+  Final overview was visually inspected. LaunchServices could not open MP4
+  and QuickTime Player was unavailable; provide the file link to the user.
+- Native runtime ordering and geometry initialized successfully, but cap
+  grasp/contact/force diagnosis and all nozzle/painting manipulation remain.
+  `VALIDATION.json` and README distinguish the failed diagnostic from success.
+  No Dream requests, no media upload, no new competition PR.
+- Carton branch `codex/carton-breakdown-packing` contains two engineering
+  drafts. Breakdown has twelve-body/twelve-hinge native USD geometry, hinge
+  anchor checks, three bottom tape cut paths, four-bottom-flap opening and
+  intact released flattening scoring: 12 local tests passed. Packing has finite
+  ordinary loose-roll accounting, candidate force-based contact/cohesion law,
+  product/four-flap/connected-strip/adhesion scoring: 20 local tests passed.
+  Neither carton has a live robot adapter, native rollout, full-score demo or
+  model/video evidence. Flush-edge tape peeling is explicitly unproven; no
+  prepared tab, tool-path adhesion or hidden successful rollout is assumed.
+- Read sources pinned at #1893 d12739e and #1858 eb9eec1. Existing sealing
+  task already depicts a hand tape gun; the difference must be mechanics and
+  full preparation, not merely calling the new roll more normal. User was
+  asked loose roll versus ordinary dispenser; absent an answer, loose roll is
+  provisional. No statement that the prior task is physically invalid was
+  inferred from the user's visual assessment.
+- Both VMs confirmed STOPPED before 23:50:22 UTC after manual `brev stop`.
+  The proposed timer command included unsupported stop flag `-d`, so it must
+  NOT be treated as a verified automatic safety stop. Timer was cancelled
+  after independent STOPPED confirmation. `brev start` accepts `-d`; `brev
+  stop` does not. Use a tested supervisor for future GPU sessions. Current
+  session had GPU compute charges; billing total was not read.
+
+
+
+### 2026-11-13 — spray preview session and two carton tasks authorized
+
+- Operator root agent, carton branch `codex/carton-breakdown-packing` from
+  fresh origin/main 5a225a9; spray remains `codex/uncap-spray-object` in its own
+  worktree. User requested a spray video and authorized both bottom-tape
+  cutting/four-bottom-flap opening/carton collapse and packing/sealing using
+  ordinary tape form factor. No new upstream submission authorized.
+- Existing `yam-eval-launchable-72837c` was started for a bounded no-model spray
+  preview. Initial UNHEALTHY/SSH timeout recovered to RUNNING/READY; direct
+  normal SSH confirmed an L40S. A local independent 25-minute stop watchdog
+  covers the session; it is process supervision, not a provider billing cap.
+  Do not start a competing simulator. Session completion and artifacts follow.
+- Loose ordinary tape roll is the provisional packing design; a text question
+  was sent to distinguish it from a conventional dispenser. No hidden leader,
+  pre-laid strip or tool-path-only adhesion is to be counted as realism.
+
+
 ### 2026-11-13 — Runpod Isaac/YAM compatibility test passed
 
 - The user authorized one short GPU compatibility test. The final probe passed
