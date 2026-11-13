@@ -151,6 +151,7 @@ class ToolPoseServo:
         self.latched_key=None;self.nipple_rotation=None
         self.approach_settle_samples=[];self.realigned_approaches=set()
         self.last=None
+        self.withdrawal_pose=None
 
     def target_spoke(self,step):
         if not self.nipple_feedback or not 1<=step<=len(self.plan['frames']):return None
@@ -205,6 +206,21 @@ class ToolPoseServo:
                 realigned_after_stable_approach=realign,
                 target_translation_correction_m=float(np.linalg.norm(p-original_p)),
                 target_orientation_correction_rad=float(np.arccos(np.clip((np.trace(R@original_R.T)-1)/2,-1,1))))
+        withdrawal=self.plan.get('measured_axial_withdrawal')
+        if withdrawal is not None and withdrawal['from_step']<=step<=withdrawal['through_step']:
+            from withdrawal import axial_target
+            first=int(withdrawal['from_step']);last=int(withdrawal['move_through_step'])
+            if not first<last<=int(withdrawal['through_step']):
+                raise ValueError('Invalid bounded axial withdrawal interval')
+            if self.withdrawal_pose is None:
+                if step!=first:raise RuntimeError('Measured withdrawal must start at its first action')
+                self.withdrawal_pose=(np.asarray(measured_tool_pose)[:3].copy(),rotation(np.asarray(measured_tool_pose)[3:]))
+            fraction=ik.smoothstep(min(1.,(step-first+1)/(last-first+1)))
+            tool_p,tool_R=axial_target(*self.withdrawal_pose,float(withdrawal['distance_m'])*fraction)
+            p=tool_p+tool_R@self.position;R=tool_R@self.rotation
+            nipple_diagnostic=dict(nipple_diagnostic or {},measured_axial_withdrawal=True,
+                commanded_withdrawal_m=float(withdrawal['distance_m'])*fraction,
+                orientation_latched_from_native_tool=True)
         actual_p,actual_R=ik.tcp_pose(q,station.BASES['right'])
         desired_p,desired_R,diagnostic=compensated_tcp(p,R,actual_p,actual_R,measured_tool_pose,self.position,self.rotation)
         if diagnostic['tcp_correction_m']>.06:

@@ -383,19 +383,19 @@ def main():
                 report['receiving_check_steps']=sorted(receiving_check_steps)
                 report['state_assisted_handoff']=continuation['grasp'];save()
             if args.state_assisted_regrasp and step in (581,641):
-                from adult_knot import carry_for_regrasp,take_wide_with_right,classify_patch_contacts
+                from adult_knot import carry_for_regrasp,take_wide_along_plane,classify_patch_contacts
                 from audit_adult_motion import audit
                 from audit_reset_approach import screen
                 native=arena_cloth.state(emb._env,'tie');mesh=arena_cloth.SPECS['tie'].mesh
                 np.savez_compressed(args.out/f'regrasp-input-{step}.npz',nodes=native.nodes,rest=mesh.rest,faces=mesh.faces,action=fixed_actions[step-2])
                 fragment=(carry_for_regrasp(fixed_actions[step-2]) if step==581 else
-                    take_wide_with_right(fixed_actions[step-2],mesh.rest,native.nodes))
+                    take_wide_along_plane(fixed_actions[step-2],mesh.rest,native.nodes))
                 rigid=audit(fragment)
                 (args.out/f'regrasp-rigid-{step}.json').write_text(json.dumps(rigid,indent=2)+'\n')
                 if not rigid['passed']:raise RuntimeError('Regrasp continuation intersects a rigid fixture or other arm')
                 if step==641:
                     hits=screen(fragment,native.nodes,mesh.faces,steps=range(1,121),side='right',inflation=arena_cloth.SPECS['tie'].fabric.thickness/2)
-                    blocked,intended=classify_patch_contacts(hits,mesh.rest,mesh.faces,longitudinal=.15)
+                    blocked,intended=classify_patch_contacts(hits,mesh.rest,mesh.faces,longitudinal=.20,patch_half_width=.065)
                     (args.out/'regrasp-cloth-approach.json').write_text(json.dumps(dict(blocked=blocked,intended=intended),indent=2)+'\n')
                     if blocked:raise RuntimeError('Regrasp approach crosses material outside its selected pinch patch')
                 fixed_plan['frames'][step-1:step-1+len(fragment['frames'])]=fragment['frames']

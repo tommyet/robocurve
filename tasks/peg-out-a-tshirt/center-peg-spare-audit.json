@@ -1,0 +1,7 @@
+{
+  "kind": "offline_unused_peg_convex_volume_rejection",
+  "passed": true,
+  "checked_frames": 1280,
+  "violations": [],
+  "limitation": "Static measured spare poses and sampled commanded robot poses; actual dynamics, tracking and continuous collisions remain unverified."
+}

@@ -27,6 +27,49 @@ developers and their agents, not a competition submission document.
   and all GPUs are confirmed stopped, as requested. No paid tests are authorized
   for those ideas yet.
 
+## 2026-11-13 — measured contact and continuation diagnostics, batches143–149
+
+- Cake PR1919 remains the only new submission. None of the other five has a
+  full-score demonstration; diagnostic completion must not be called success.
+- Shirt143 jaw relief drops the garment.146's slower lift/turn retains it
+  (306mm hem lift; final patch18.3mm from TCP), with no transverse crossings in
+  nine sampled states, but native cooked finger hulls confirm up to1.245mm
+  node penetration. The original URDF hull audit overestimates some contacts;
+  native cooking drops vertices by up to0.7mm on individual finger parts. Use
+  queried native collision representations for definitive contact audits.
+ 148 halves the timestep to960Hz; the changed settled cloth makes the initial
+  approach unreachable, so it stops at0 actions. It proves no improved grasp.
+- The revised centre-peg route1280 passes local rigid and spare-peg checks:
+  first peg y0, spare y+0.20m,15mm initial withdrawal clears the raised support.
+  It has not run natively. Original first-peg route collided with the board.
+- Tie143 and147 retain the transferred tip through640 actions but stop at
+  near-tip regrasp planning. Moving the carry forward to x0.26m avoids the
+  collar release interference but changes the strip orientation. Local bounded
+  IK finds three reachable alternatives; approach paths still hit the other
+  gripper. No regrasp or knot is claimed. Archives143,146,147 are local and
+  hash verified;143's later offline audits are separate from its archive.
+- Wheel144 velocity feedforward reduces turn tracking error and turns nipple0
+  from-0.7519 to-0.5385turn by530, but withdrawal unwinds it to-0.5862 by575.
+  It stops at576 on a0.268mm IK residual. The large mismatch between the
+  nominal90degree tool angle and measured engaged angle suggests wedging during
+  withdrawal. Candidate149 latches the actual wrench orientation at533 and
+  withdraws16mm along its own mouth axis, through normal robot targets.
+  Local screening from the native532 grip finds120 clear hull samples,
+  maximum speed47.2% of ordinary limit and predicted6.66mm mouth clearance.
+  Eighty wheel unit checks pass. Native trial remains necessary.
+- Seam145 at3840Hz now keeps cloth stretch below1.564% and reaches0.360N blade
+  force (unchanged0.25N/40ms cutting law), but a thread centreline crosses a
+  native panel midplane4.19µm inside its edge at14.26849s. No cut or blade
+  damage occurs, and uncut joint gap peaks0.605mm. This is a new finite-solid
+  contact failure, not the earlier stretch stop. Do not increase the timestep
+  resolution again without diagnosing this contact. Full evidence is preserved.
+- Staple145's5000Hz baseline trial continues with unchanged material, aperture
+  guards and ordinary pose controller. The velocity-damping140 variant failed
+  earlier and is not used. No extraction demonstration exists.
+- These experiments use the same two$1.09/hour Pods and bounded processes.
+  Independent watchdog deadlines were renewed18:55UTC to19:40UTC; verify live
+  deadlines before further GPU work. No new Dream requests in this session.
+
 ## 2026-11-13 — contact fixes during authorized completion
 
 - At18:28UTC the two current Pods total about$2.14 estimated compute; combined

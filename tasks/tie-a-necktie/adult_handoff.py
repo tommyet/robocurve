@@ -11,7 +11,7 @@ import numpy as np
 RECEIVING_ROUTE_RELEASED = True
 
 
-def _compile(start_action,schedule):
+def _compile(start_action,schedule,*,robust_joint=False):
     from yam_arena import ik,station
     from yam_arena.constants import SHOULDER,WRIST,GRIPPER,FINGER_OPEN
     q={s:np.asarray(start_action,float)[7*i:7*i+6].copy() for i,s in enumerate(('left','right'))}
@@ -20,6 +20,18 @@ def _compile(start_action,schedule):
         position=np.asarray(position);p0,r0=ik.tcp_pose(q[side],station.BASES[side]);q0=q[side].copy();o0=opening[side];pe_max=re_max=0.;goal=None
         if mode=='joint':
             goal,pe,re=ik.solve(position,ik.matrix_to_quat_xyzw(rotation),q0,base_pos=station.BASES[side],iters=600)
+            if robust_joint and (pe>.004 or re>.04):
+                from scipy.optimize import least_squares
+                def residual(candidate):
+                    p,r=ik.tcp_pose(candidate,station.BASES[side])
+                    return np.r_[p-position,.3*ik._rot_error(rotation,r)]
+                offset=0 if side=='left' else 7
+                seeds=(q0,np.asarray(start_action)[offset:offset+6],(ik.LOWER+ik.UPPER)/2)
+                solutions=[least_squares(residual,np.clip(seed,ik.LOWER,ik.UPPER),
+                    bounds=(ik.LOWER,ik.UPPER),max_nfev=200,ftol=1e-10,xtol=1e-10,gtol=1e-10)
+                    for seed in seeds]
+                result=min(solutions,key=lambda s:np.linalg.norm(s.fun))
+                goal=result.x;pe=float(np.linalg.norm(result.fun[:3]));re=float(np.linalg.norm(result.fun[3:])/.3)
             if pe>.004 or re>.04:raise ValueError('Measured receiving approach is unreachable')
         for k in range(1,round(seconds*20)+1):
             t=ik.smoothstep(k/(seconds*20))

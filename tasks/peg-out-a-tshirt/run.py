@@ -120,9 +120,12 @@ def main():
     p.add_argument('--continuous-pad-diagnostic',action='store_true',help='Reobserve the garment at action100 and target the continuous finger pads with ordinary joint commands')
     p.add_argument('--surface-contact-diagnostic',action='store_true',help='Native speculative cloth CCD and eight collision-pair updates; unchanged cloth material and thickness')
     p.add_argument('--contact-pinch-diagnostic',action='store_true',help='Ordinary jaw relief from measured pad penetration during the short cloth pickup; no attachments or state writes')
+    p.add_argument('--lift-turn-diagnostic',action='store_true',help='Keep the pinch plane during withdrawal, then turn it slowly while lifting through ordinary joint actions')
+    p.add_argument('--center-peg-diagnostic',action='store_true',help='Explicit reset with the first peg at line centre and the spare200mm to its left')
     p.add_argument('--reset-diagnostic',action='store_true',help='Read-only early reset native nodes and topology; unchanged reset physics')
     p.add_argument('--binary-cloth-trace',action='store_true',help='Preserve all native float32 cloth states in binary arrays, reducing diagnostic JSON overhead')
     p.add_argument('--solver-iterations',type=int,choices=(32,128),default=32,help='Native cloth numerical convergence diagnostic; material unchanged')
+    p.add_argument('--physics-hz',type=int,choices=(480,960),default=480,help='Native timestep convergence diagnostic; material and control rate unchanged')
     p.add_argument('--external-forces-once-diagnostic',action='store_true',help='Use the ordinary once-per-step TGS force integration option for a controlled comparison')
     p.add_argument('--state-assisted-clip',action='store_true',help='Explicit scripted demo: center free peg jaws with ordinary robot actions before closure')
     p.add_argument('--joint-feedback-from',type=int,help='Enable bounded right-arm PI tracking after this many actions, using ordinary joint observations only')
@@ -132,6 +135,7 @@ def main():
     args=p.parse_args()
     os.environ['ROBOCURVE_SHIRT_RAISED_SUPPORT']='1' if args.raised_support_diagnostic else '0'
     os.environ['ROBOCURVE_SHIRT_SURFACE_CONTACT_DIAGNOSTIC']='1' if args.surface_contact_diagnostic else '0'
+    os.environ['ROBOCURVE_SHIRT_CENTER_PEG_DIAGNOSTIC']='1' if args.center_peg_diagnostic else '0'
     if args.regular_refined and args.contact_refined:p.error('Select one garment mesh')
     fixed_plan=fixed_actions=None
     if args.mode=='motion-probe':
@@ -139,6 +143,8 @@ def main():
             p.error('motion-probe requires a precomputed --plan')
         from fixed_motion import load
         fixed_plan,fixed_actions=load(args.plan)
+        if bool(fixed_plan.get('requires_center_peg_reset'))!=args.center_peg_diagnostic:
+            p.error('Frozen motion and explicit peg reset must match')
         if fixed_plan.get('do_not_run_reason'):
             p.error('Blocked diagnostic plan: '+fixed_plan['do_not_run_reason'])
         if fixed_plan.get('line_pegs_required'):
@@ -180,6 +186,8 @@ def main():
         p.error('Continuous-pad diagnostic requires the raised-support scripted grasp')
     if args.contact_pinch_diagnostic and not (args.continuous_pad_diagnostic and args.surface_contact_diagnostic and args.steps==320):
         p.error('Contact pinch is restricted to the320-action surface-contact pickup diagnostic')
+    if args.lift_turn_diagnostic and not (args.continuous_pad_diagnostic and args.surface_contact_diagnostic and args.steps>=320 and not args.contact_pinch_diagnostic):
+        p.error('Lift-turn comparison requires a complete surface-contact pickup without jaw relief')
     if args.state_assisted_clip and (args.mode!='motion-probe' or args.steps<940 or args.joint_feedback_from!=700):
         p.error('State-assisted clip requires the tracked first-clip sequence through at least940 actions')
     if not 0<=args.seed<2**32:
@@ -242,10 +250,9 @@ def main():
         import omni.usd
         import arena_cloth
         from arena_props import PEG_SPECS
-        from scene import PHYSICS_HZ
         from yam_arena import inspect_embodiment as wrapper,scene
         # The normal callback derives decimation from this timestep and20 Hz.
-        scene.PHYSICS_DT=1/PHYSICS_HZ
+        scene.PHYSICS_DT=1/args.physics_hz
         if args.external_forces_once_diagnostic:
             original_cfg_callback=scene.env_cfg_callback
             def configure_callback(*values,**kwargs):
@@ -421,7 +428,7 @@ def main():
                 from audit_motion import audit
                 observed=np.asarray(emb._observation().state['joint_pos'],float)
                 actual=arena_cloth.state(emb._env,'tshirt').nodes
-                candidate=reobserve(fixed_plan,observed,arena_cloth.SPECS['tshirt'].mesh.rest,actual)
+                candidate=reobserve(fixed_plan,observed,arena_cloth.SPECS['tshirt'].mesh.rest,actual,lift_turn=args.lift_turn_diagnostic)
                 rejection=audit(dict(candidate,frames=candidate['frames'][:320]))
                 (args.out/'continuous-pad-hull-audit.json').write_text(json.dumps(rejection,indent=2)+'\n')
                 if not rejection['passed_rejection_check']:

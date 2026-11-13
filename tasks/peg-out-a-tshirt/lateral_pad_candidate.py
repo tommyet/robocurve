@@ -16,7 +16,7 @@ import numpy as np
 PINCH_OPENING = .0025
 
 
-def reobserve(reference, measured_action, rest, nodes):
+def reobserve(reference, measured_action, rest, nodes, *, lift_turn=False):
     from yam_arena import ik, station
     from yam_arena.constants import READY, SHOULDER, WRIST, GRIPPER, FINGER_OPEN
     from fixed_motion import ROTATIONS
@@ -59,7 +59,13 @@ def reobserve(reference, measured_action, rest, nodes):
             (1., np.array((.1494, target[1], target[2])), PINCH_OPENING, rotation,
              'pull forward clear of support'),
             (1., np.array((.1494, sign * .115, .898 if side == 'left' else .902)),
-             PINCH_OPENING, ROTATIONS[side], 'turn held hem in clear space')]
+             PINCH_OPENING, rotation if lift_turn else ROTATIONS[side],
+             'carry held hem clear before lifting' if lift_turn else 'turn held hem in clear space')]
+        if lift_turn:
+            goal=np.asarray(reference['frames'][259]['action14'])[7*index:7*index+6]
+            goal_p,goal_R=ik.tcp_pose(goal,station.BASES[side])
+            schedule.append((3.,goal_p,PINCH_OPENING,goal_R,
+                             'lift and slowly turn the held hem'))
         for seconds, position, grip, orientation, label in schedule:
             p0, r0 = ik.tcp_pose(q, station.BASES[side])
             opening0 = opening
@@ -83,12 +89,16 @@ def reobserve(reference, measured_action, rest, nodes):
             observed_center_m=center.tolist(), target_tcp_m=target.tolist(),
             rotation=rotation.tolist(), desired_patch_local_m=desired_local.tolist())
     result = copy.deepcopy(reference)
-    result['frames'][100:200] = [dict(action14=a['action'] + b['action'], stage=a['stage'])
+    replaced_through=260 if lift_turn else 200
+    result['frames'][100:replaced_through] = [dict(action14=a['action'] + b['action'], stage=a['stage'])
                                for a, b in zip(arms['left'], arms['right'])]
     # Preserve the new pinch during the lift and preserve the original smooth
     # release timing. Merely changing the closure phase would reopen the jaws.
-    for frame in result['frames'][200:]:
+    for frame_index,frame in enumerate(result['frames'][replaced_through:],replaced_through):
         for index in (6, 13):
+            # Later right-hand openings operate the spring peg, not the cloth.
+            if index==13 and frame_index>=320:
+                continue
             original = float(frame['action14'][index])
             fraction = np.clip((original - .018) / (.6 - .018), 0., 1.)
             frame['action14'][index] = float(PINCH_OPENING + fraction * (.6 - PINCH_OPENING))
@@ -97,9 +107,12 @@ def reobserve(reference, measured_action, rest, nodes):
     limits = np.tile([SHOULDER['velocity'] / 20] * 3 + [WRIST['velocity'] / 20] * 3 +
                      [GRIPPER['velocity'] / abs(FINGER_OPEN) / 20], 2)
     if np.any(abs(np.diff(actions, axis=0)) > limits * 1.001):
-        raise ValueError('Candidate exceeds ordinary action speeds')
+        ratio=abs(np.diff(actions,axis=0))/limits
+        frame,joint=np.unravel_index(np.argmax(ratio),ratio.shape)
+        raise ValueError(f'Candidate exceeds ordinary action speeds at action{frame+1}, joint{joint}: {ratio[frame,joint]:.3f} times limit')
     result['candidate_status'] = 'diagnostic; native retention not yet established'
     result['reobservation_at_action'] = 100
+    result['lift_turn_diagnostic'] = bool(lift_turn)
     result['pad_candidate_calibration'] = dict(patches=patches, kinematics=audits,
         normalized_pinch_opening=PINCH_OPENING,
         nominal_pad_aperture_m=.0008302080055186407 + .0939 * PINCH_OPENING,

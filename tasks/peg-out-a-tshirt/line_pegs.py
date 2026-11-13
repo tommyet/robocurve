@@ -5,6 +5,7 @@ sole support; no world joint, fixed grasp or fabric attachment is added. Handles
 point downward, placing the peg centre of mass below its line contact.
 """
 import math
+import os
 from scene import LINE_X,LINE_Z
 
 BASE_ANGLE=-math.pi/2
@@ -12,6 +13,9 @@ OPEN_ANGLE=-.075
 
 
 def positions():
+    if os.environ.get('ROBOCURVE_SHIRT_CENTER_PEG_DIAGNOSTIC')=='1':
+        return {'Left':(LINE_X+.0011,0.,LINE_Z-.030),
+                'Right':(LINE_X+.0011,.20,LINE_Z-.030)}
     return {'Left':(LINE_X+.0011,.115,LINE_Z-.030),
             'Right':(LINE_X+.0011,-.115,LINE_Z-.030)}
 
