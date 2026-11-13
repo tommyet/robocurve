@@ -15,5 +15,5 @@
   "reset_notes": "Replace or clean the cake surface and refill the dispenser. Rebuild the simulation scene and reset the material reservoir for each trial.",
   "fidelity": "A passive sliding piston compresses a finite reservoir. Pressure drives extrusion through a physical star nozzle and local icing spread on a 0.5 mm surface grid. Material and seal properties are engineering approximations. The model omits suspended strings and voids; unsupported finger/cream contact invalidates a trial. No preset shell meshes or target-aware spawning.",
   "scores": "Dream-1: 0.0 (2,400 actions); scripted demo: 1.0 (1,114 actions). Both independently rescored.",
-  "media": null
+  "media": "M-S6DRFK"
 }

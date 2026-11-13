@@ -4,6 +4,29 @@ Last updated: 2026-11-13 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-13 — authorized submissions and next GPU session
+
+- The user explicitly authorized media uploads and one PR for each of the six
+  tasks, plus additional GPU rental where useful. The earlier pending budget
+  question is superseded by that continuation. Keep runs bounded and verify
+  shutdown; never submit a failed diagnostic as a successful demonstration.
+- Cake is submitted as [PR1919](https://github.com/robocurve/benchmark-tasks/pull/1919),
+  received as **TK-XPE4K7** at17:26UTC. Media **M-S6DRFK** contains the verified
+  demo1.0, Dream0.0 and setup image. Submission commit4a14700 contains only its
+  task folder, from fresh upstream/main d418612. The connector returned403;
+  the authorized signed-in `gh` CLI succeeded. Do not push pending wording edits
+  expecting the task board to pick them up.
+- Current board snapshot at17:22UTC has574 entries; no matching icing-border task.
+  It confirms submissions are open and20/24h, videos50MB, code25MB.
+- Restart of previous Pod qfrir2yk06lh40 failed explicitly with no free host GPU.
+  It remains stopped. Replacement zzbxdyticazlm9 started17:27UTC at$1.09/hour,
+  RTX6000Ada,16vCPU,94GB host RAM. Lifecycle and independent local watchdog:
+  `artifacts/six-task-submissions-gpu1-2026-11-13/`. This is a separate session;
+  previous incurred estimate$14.55 is preserved. New GPU setup is bounded.
+- The ten new ideas are deferred until all authorized submissions are completed
+  and all GPUs are confirmed stopped, as requested. No paid tests are authorized
+  for those ideas yet.
+
 ## 2026-11-13 — paired cake runs and remaining contact failures
 
 - Cake111 now has both complete native episodes: scripted demo1.0 in1,114

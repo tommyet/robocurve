@@ -7,6 +7,7 @@ the probe must establish stability/contact before any task evaluation.
 """
 from dataclasses import dataclass
 import math
+import os
 import numpy as np
 
 
@@ -70,6 +71,11 @@ def author_cloth(stage, path, mesh, material=Fabric(), points=None, color=(.08,.
     _set(prim,'physxDeformableBody:selfCollision',True)
     _set(prim,'physxDeformableBody:disableGravity',False)
     _set(prim,'physxDeformableBody:solverPositionIterationCount',material.solver_iterations)
+    if os.environ.get('ROBOCURVE_TIE_SURFACE_CONTACT_DIAGNOSTIC') == '1':
+        # NVIDIA's surface solver can refresh pairs within a time step and
+        # predict velocity-dependent contact. Material and rest gaps stay fixed.
+        _set(prim,'physxDeformableBody:enableSpeculativeCCD',True)
+        _set(prim,'physxDeformableBody:collisionPairUpdateFrequency',8)
     UsdPhysics.CollisionAPI.Apply(prim)
     collision = PhysxSchema.PhysxCollisionAPI.Apply(prim)
     collision.CreateContactOffsetAttr(material.contact_offset)

@@ -24,6 +24,7 @@ def main():
     p.add_argument('--out',type=Path,required=True)
     p.add_argument('--physics-hz',type=int,choices=(960,1920,3840),default=960)
     p.add_argument('--speed',type=float,choices=(.25,1.),default=1.)
+    p.add_argument('--effective-contact-diagnostic',action='store_true')
     p.add_argument('--seconds',type=float,default=.1);a=p.parse_args()
     if not .05<=a.seconds<=.4:p.error('Short contact diagnostic requires0.05–0.4seconds')
     with np.load(a.state) as archive:data={key:archive[key] for key in archive.files}
@@ -101,6 +102,8 @@ def main():
         for name in ('handle','blade'):initial_body(root+'/ripper_'+name,data[name],data[name+'_velocity'])
         initial_body(root+'/clamp_moving_jaw',data['jaw'],data['jaw_velocity'])
         UsdPhysics.RigidBodyAPI(stage.GetPrimAtPath(root+'/ripper_handle')).CreateKinematicEnabledAttr(True)
+        if a.effective_contact_diagnostic:
+            PhysxSchema.PhysxContactReportAPI.Apply(stage.GetPrimAtPath(root+'/ripper_handle')).CreateThresholdAttr(0.)
         for prim in stage.Traverse():
             if prim.HasAPI(UsdPhysics.RigidBodyAPI):
                 api=PhysxSchema.PhysxRigidBodyAPI.Apply(prim)
@@ -123,6 +126,13 @@ def main():
         filter_paths=list(contact.filter_paths)
         if filter_paths and isinstance(filter_paths[0],(list,tuple)):filter_paths=filter_paths[0]
         force_order=np.array([filter_paths.index(path) for path in thread_paths])
+        handle_contact=None
+        if a.effective_contact_diagnostic:
+            handle_contact=sim.create_rigid_contact_view([root+'/ripper_handle'],filter_patterns=[thread_paths],max_contact_data_count=4096)
+            hp=list(handle_contact.filter_paths)
+            if hp and isinstance(hp[0],(list,tuple)):hp=hp[0]
+            handle_order=np.array([hp.index(path) for path in thread_paths])
+            report['effective_shape_counts']={'handle':int(handle.max_shapes),'blade':int(blade.max_shapes),'thread':int(tv.max_shapes)}
         cutter=ThreadCutter([24]*6,CutParameters(thread_radius_m=.0004));integrity=ThreadIntegrity([24]*6,.0004)
         crossing=[ThreadClothAudit(shell['mesh'].faces) for shell in shells]
         junctions=ClosedJunctionCrossings([s['mesh'].faces for s in shells],144)
@@ -153,6 +163,12 @@ def main():
             invalid=bool(integrity.first_failure or any(c.first_failure for c in crossing) or any(s.first_excursion for s in strains) or
                 any(not c['valid'] for c in checks) or any(s['native_midplane_intersections'] for s in solids) or damage.crossed_faces or
                 any(not c['valid'] for c in junctions.summary()))
+            if handle_contact is not None:
+                if step==1:
+                    from effective_tool_contact import query_guards
+                    report['effective_guard_rays']=query_guards(array(handle.get_transforms())[0],root+'/ripper_handle')
+                hf=np.zeros((144,3)) if not step else array(handle_contact.get_contact_force_matrix(dt=dt))[0,handle_order]
+                report.setdefault('handle_contact_history',[]).append(dict(time_s=t,maximum_force_n=float(np.linalg.norm(hf,axis=1).max()),force_by_thread_link=hf.tolist()))
             forces=np.zeros((144,3)) if not step else array(contact.get_contact_force_matrix(dt=dt))[0,force_order]
             edge_force=-forces@br[:,0];peak_force=max(peak_force,float(edge_force.max()))
             restore_separated_cut_contacts(stage,threads,segments)

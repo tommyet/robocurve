@@ -115,6 +115,7 @@ def main():
     p.add_argument('--contact-refined',action='store_true',help='Use the explicitly refined cloth contact band for every policy reset')
     p.add_argument('--regular-refined',action='store_true',help='Use the regular2.5mm cloth grid for every policy reset, preserving1.6mm seam width')
     p.add_argument('--raised-support-diagnostic',action='store_true',help='Use an explicitly180mm laundry support and a measured lateral grasp; otherwise100mm')
+    p.add_argument('--continuous-pad-diagnostic',action='store_true',help='Reobserve the garment at action100 and target the continuous finger pads with ordinary joint commands')
     p.add_argument('--reset-diagnostic',action='store_true',help='Read-only early reset native nodes and topology; unchanged reset physics')
     p.add_argument('--binary-cloth-trace',action='store_true',help='Preserve all native float32 cloth states in binary arrays, reducing diagnostic JSON overhead')
     p.add_argument('--solver-iterations',type=int,choices=(32,128),default=32,help='Native cloth numerical convergence diagnostic; material unchanged')
@@ -170,6 +171,8 @@ def main():
         p.error('Joint feedback option must exactly match the frozen plan')
     if args.state_assisted_grasp and (args.mode!='motion-probe' or args.steps<200):
         p.error('State-assisted reset grasp requires at least200 scripted motion actions')
+    if args.continuous_pad_diagnostic and not (args.state_assisted_grasp and args.raised_support_diagnostic):
+        p.error('Continuous-pad diagnostic requires the raised-support scripted grasp')
     if args.state_assisted_clip and (args.mode!='motion-probe' or args.steps<940 or args.joint_feedback_from!=700):
         p.error('State-assisted clip requires the tracked first-clip sequence through at least940 actions')
     if not 0<=args.seed<2**32:
@@ -400,6 +403,24 @@ def main():
         save()
         command=torch.as_tensor(ready[None,:],device=base.device,dtype=torch.float32)
         for step in range(1,args.steps+1):
+            if step==101 and args.continuous_pad_diagnostic:
+                from lateral_pad_candidate import reobserve
+                from audit_motion import audit
+                observed=np.asarray(emb._observation().state['joint_pos'],float)
+                actual=arena_cloth.state(emb._env,'tshirt').nodes
+                candidate=reobserve(fixed_plan,observed,arena_cloth.SPECS['tshirt'].mesh.rest,actual)
+                rejection=audit(dict(candidate,frames=candidate['frames'][:320]))
+                (args.out/'continuous-pad-hull-audit.json').write_text(json.dumps(rejection,indent=2)+'\n')
+                if not rejection['passed_rejection_check']:
+                    raise RuntimeError('Continuous-pad candidate fails rigid fixture/hull screening')
+                fixed_plan=candidate
+                fixed_actions=np.asarray([f['action14'] for f in fixed_plan['frames']],float)
+                if np.any(fixed_actions<emb._low) or np.any(fixed_actions>emb._high):
+                    raise RuntimeError('Continuous-pad candidate exceeds ordinary joint bounds')
+                (frozen/'fixed-motion.json').write_text(json.dumps(fixed_plan,indent=2)+'\n')
+                report['continuous_pad_diagnostic']=candidate['pad_candidate_calibration']
+                report['executed_plan_sha256']=hashlib.sha256((frozen/'fixed-motion.json').read_bytes()).hexdigest()
+                save()
             if step==321 and args.state_assisted_grasp and args.steps>320:
                 from scripted_grasp import held_patch_geometry
                 actual_cloth=scene.object_states(emb._env,names)['tshirt'].nodes

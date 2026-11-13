@@ -1,8 +1,8 @@
 """Unvalidated local candidate after the measured lateral-pickup miss.
 
 This pure planner re-observes the native garment at action100 and aims at the
-continuous finger-pad region instead of the central notch. It is not wired
-into the runner or claimed to grasp fabric. No simulation state is written.
+continuous finger-pad region instead of the central notch. The runner exposes
+it only through an explicit diagnostic option. No simulation state is written.
 """
 import copy
 import hashlib
@@ -84,7 +84,7 @@ def reobserve(reference, measured_action, rest, nodes):
                      [GRIPPER['velocity'] / abs(FINGER_OPEN) / 20], 2)
     if np.any(abs(np.diff(actions, axis=0)) > limits * 1.001):
         raise ValueError('Candidate exceeds ordinary action speeds')
-    result['candidate_status'] = 'local-only; not wired or native tested'
+    result['candidate_status'] = 'diagnostic; native retention not yet established'
     result['reobservation_at_action'] = 100
     result['pad_candidate_calibration'] = dict(patches=patches, kinematics=audits,
         input_nodes_sha256=hashlib.sha256(np.ascontiguousarray(nodes).tobytes()).hexdigest(),

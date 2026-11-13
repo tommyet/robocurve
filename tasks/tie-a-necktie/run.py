@@ -74,6 +74,8 @@ def native_audit(stage,cloth_names,peg_names):
                 result['cloth'][name]={'path':path,'schemas':list(schemas),
                      'rigid_body':prim.HasAPI(UsdPhysics.RigidBodyAPI),
                      'self_collision':prim.GetAttribute('physxDeformableBody:selfCollision').Get(),
+                     'speculative_ccd':prim.GetAttribute('physxDeformableBody:enableSpeculativeCCD').Get(),
+                     'collision_pair_update_frequency':prim.GetAttribute('physxDeformableBody:collisionPairUpdateFrequency').Get(),
                      'solver_position_iterations':prim.GetAttribute('physxDeformableBody:solverPositionIterationCount').Get()}
         for name in peg_names:
             if '/'+name+'/' in path:
@@ -114,10 +116,12 @@ def main():
     p.add_argument('--adult-collar',action='store_true',help='Explicit diagnostic145cm tie and standalone folded-collar form')
     p.add_argument('--state-assisted-grasp',action='store_true',help='Disclosed scripted adult pickup: use measured reset cloth to select ordinary finger targets')
     p.add_argument('--state-assisted-handoff',action='store_true',help='Disclosed scripted adult tip transfer: measure the held free tip before ordinary receiving-finger actions')
+    p.add_argument('--surface-contact-diagnostic',action='store_true',help='Native speculative cloth contact and eight within-step collision-pair updates; no material or rest-gap changes')
     p.add_argument('--judging-views',action='store_true',help='Record additional native960×720 front/rear assessor videos')
     p.add_argument('--out',type=Path)
     p.add_argument('--check-only',action='store_true',help='Compile source and check JSON without loading a simulator')
     args=p.parse_args()
+    os.environ['ROBOCURVE_TIE_SURFACE_CONTACT_DIAGNOSTIC']='1' if args.surface_contact_diagnostic else '0'
     fixed_plan=fixed_actions=None
     if args.mode=='motion-probe':
         if args.plan is None:
@@ -238,6 +242,10 @@ def main():
         if not names:
             raise RuntimeError('Task custom assets were not registered')
         report['native_scene_audit']=native_audit(stage,list(arena_cloth.SPECS),list(PEG_SPECS))
+        if args.surface_contact_diagnostic:
+            actual=report['native_scene_audit']['cloth']['tie']
+            if actual['speculative_ccd'] is not True or actual['collision_pair_update_frequency']!=8:
+                raise RuntimeError('Requested surface collision settings did not reach native cloth')
         report['physics_dt_s']=float(base.sim.get_physics_dt())
         if args.adult_collar:
             from adult_layout import fixture_geometry

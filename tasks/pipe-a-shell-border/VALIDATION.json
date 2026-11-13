@@ -1,18 +1,18 @@
 {
-  "status": "ready_for_user_review",
+  "status": "submitted_pending_review",
   "checked_utc": "2026-11-13T13:30:09.718740+00:00",
   "cpu_tests_passed": 55,
   "native_simulator_run": true,
   "robot_demo_run": true,
   "dream_run": true,
-  "media_uploaded": false,
+  "media_uploaded": true,
   "scores": {
     "demo": 1.0,
     "dream": 0.0
   },
   "paid_compute_used_usd": null,
   "remaining_gates": [
-    "User review; no media upload or PR is authorized in this request."
+    "Robocurve review"
   ],
   "sources_sha256": {
     "test_release.py": "d2b6b9b3388736c2a8e6d85cba253c43086dcfab7885be8b7a3973b0e7523f19",
@@ -226,5 +226,12 @@
     "unclear_evidence": "Retake photographs; no assumed ridge credit.",
     "optional_helper": "photo_profile.py",
     "synthetic_geometry_tests": 9
+  },
+  "submission": {
+    "pr": 1919,
+    "task_id": "TK-XPE4K7",
+    "media": "M-S6DRFK",
+    "commit": "4a14700",
+    "received_utc": "2026-11-13T17:26:31Z"
   }
 }
