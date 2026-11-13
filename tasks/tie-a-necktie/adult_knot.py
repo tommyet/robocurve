@@ -15,6 +15,66 @@ def carry_for_regrasp(start_action):
         'carry wide tip into reachable regrasp area','cartesian')])
 
 
+def clear_for_narrow(start_action):
+    """Clear the free hand below the collar while carrying the wide strip aside."""
+    from cross_motion import yaw_rotation
+    return _compile(start_action, [
+        (2., 'left', (.19, .06, 1.25), .6, yaw_rotation(150.),
+         'withdraw free hand in front of the held strip', 'cartesian'),
+        (2., 'left', (.18, .20, 1.25), .6, yaw_rotation(90.),
+         'move free hand to narrow side', 'cartesian'),
+        (2., 'right', (.22, -.21, 1.18), 0., yaw_rotation(30.),
+         'carry held wide strip away from narrow hand approach', 'joint'),
+        (2., 'left', (.18, .20, 1.02), .6, yaw_rotation(90.),
+         'lower free hand below collar', 'cartesian')], robust_joint=True)
+
+
+def take_narrow(start_action, rest, nodes, *, longitudinal=1.25,
+                closing_tilt_degrees=20., shoulder_arc=.30):
+    """Measure and pinch the narrow end after the separate clearing motion.
+
+    The shoulder arc avoids brushing the strip during joint-space alignment.
+    It changes only ordinary robot targets. Actual-input rigid and material
+    screening and native contact/retention checks remain necessary.
+    """
+    from adult_motion import grasp_frame
+    from yam_arena import ik
+    from yam_arena.constants import SHOULDER, WRIST, GRIPPER, FINGER_OPEN
+    if not (1.20 <= longitudinal <= 1.30 and 15. <= closing_tilt_degrees <= 30.
+            and 0. <= shoulder_arc <= .40):
+        raise ValueError('Narrow-end approach is outside its bounded choices')
+    grasp = grasp_frame(rest, nodes, longitudinal=longitudinal, side='left')
+    tilt = np.deg2rad(closing_tilt_degrees)
+    rotation = np.asarray(grasp['rotation']) @ np.array((
+        (np.cos(tilt), 0., np.sin(tilt)), (0., 1., 0.),
+        (-np.sin(tilt), 0., np.cos(tilt)))) @ np.diag((-1., -1., 1.))
+    target = np.asarray(grasp['center_m']) + .012 * rotation[:, 2]
+    pre = target - .035 * rotation[:, 2]
+    plan = _compile(start_action, [
+        (2., 'left', pre, .6, rotation, 'align outside measured narrow strand', 'joint'),
+        (2., 'left', target, .6, rotation, 'insert around narrow strand', 'cartesian'),
+        (1., 'left', target, 0., rotation, 'pinch narrow strand', 'cartesian'),
+        (2., 'left', target, 0., rotation, 'hold both strands', 'cartesian')],
+        robust_joint=True)
+    for i in range(40):
+        plan['frames'][i]['action14'][0] += shoulder_arc * np.sin(np.pi * (i + 1) / 40) ** 2
+    actions = np.asarray([start_action] + [f['action14'] for f in plan['frames']])
+    limits = np.tile([SHOULDER['velocity']/20]*3 + [WRIST['velocity']/20]*3 +
+                    [GRIPPER['velocity']/abs(FINGER_OPEN)/20], 2)
+    if np.any(abs(np.diff(actions, axis=0)) > limits*1.001):
+        raise ValueError('Narrow approach exceeds normal action speeds')
+    for offset in (0, 7):
+        if (np.any(actions[:, offset:offset+6] < ik.LOWER) or
+                np.any(actions[:, offset:offset+6] > ik.UPPER)):
+            raise ValueError('Narrow approach exceeds normal joint bounds')
+    grasp.update(rotation=rotation.tolist(), target_tcp_m=target.tolist(),
+                 closing_tilt_degrees=float(closing_tilt_degrees),
+                 shoulder_arc_rad=float(shoulder_arc))
+    plan.update(grasp=grasp, approach_steps=80,
+                native_nodes_sha256=hashlib.sha256(np.ascontiguousarray(nodes).tobytes()).hexdigest())
+    return plan
+
+
 def take_wide_with_right(start_action,rest,nodes,longitudinal=.15,tilt_degrees=0.):
     """Transfer the working wide strip while the left hand holds its tip.
 

@@ -117,6 +117,7 @@ def main():
     p.add_argument('--state-assisted-grasp',action='store_true',help='Disclosed scripted adult pickup: use measured reset cloth to select ordinary finger targets')
     p.add_argument('--state-assisted-handoff',action='store_true',help='Disclosed scripted adult tip transfer: measure the held free tip before ordinary receiving-finger actions')
     p.add_argument('--state-assisted-regrasp',action='store_true',help='Extend the verified handoff with a screened carry and measured ordinary near-tip regrasp')
+    p.add_argument('--state-assisted-narrow',action='store_true',help='After the wide regrasp, clear the collar and measure a screened ordinary narrow-end pinch')
     p.add_argument('--surface-contact-diagnostic',action='store_true',help='Native speculative cloth contact and eight within-step collision-pair updates; no material or rest-gap changes')
     p.add_argument('--judging-views',action='store_true',help='Record additional native960×720 front/rear assessor videos')
     p.add_argument('--out',type=Path)
@@ -132,7 +133,7 @@ def main():
         if args.state_assisted_regrasp:
             import copy
             if len(fixed_actions)!=580:p.error('Regrasp diagnostic requires the580-action handoff prefix')
-            fixed_plan['frames'] += [copy.deepcopy(fixed_plan['frames'][-1]) for _ in range(300)]
+            fixed_plan['frames'] += [copy.deepcopy(fixed_plan['frames'][-1]) for _ in range(600 if args.state_assisted_narrow else 300)]
             fixed_actions=np.asarray([f['action14'] for f in fixed_plan['frames']],float)
         if bool(fixed_plan.get('requires_inside_out_reset')) != args.inside_out_reset:
             p.error('Motion and explicitly selected initial face do not match')
@@ -158,10 +159,11 @@ def main():
     if args.mode=='dream' and not(args.adult_collar and args.inside_out_reset):p.error('Current Dream candidate requires the adult inside-out reset matching its demo')
     if not 0<=args.seed<2**32:
         p.error('Seed must be an unsigned 32-bit integer')
-    if args.state_assisted_grasp and (args.mode!='motion-probe' or not args.adult_collar or args.steps not in ((880,) if args.state_assisted_regrasp else (280,580) if args.state_assisted_handoff else (220,))):
+    if args.state_assisted_grasp and (args.mode!='motion-probe' or not args.adult_collar or args.steps not in ((1180,) if args.state_assisted_narrow else (880,) if args.state_assisted_regrasp else (280,580) if args.state_assisted_handoff else (220,))):
         p.error('Adult scripted pickup requires 220 actions; the transfer permits a 280-action held-pose diagnostic or 580 actions')
     if args.state_assisted_handoff and not args.state_assisted_grasp:p.error('Tip transfer requires the measured adult pickup prefix')
     if args.state_assisted_regrasp and not (args.state_assisted_handoff and args.surface_contact_diagnostic):p.error('Regrasp requires the validated surface-contact handoff')
+    if args.state_assisted_narrow and not args.state_assisted_regrasp:p.error('Narrow pickup requires the measured wide regrasp')
     if args.state_assisted_handoff and args.steps>280:
         from adult_handoff import RECEIVING_ROUTE_RELEASED
         if not RECEIVING_ROUTE_RELEASED:
@@ -276,7 +278,7 @@ def main():
                 fixed_plan=template(fixed_plan)
                 if args.state_assisted_regrasp:
                     import copy
-                    fixed_plan['frames'] += [copy.deepcopy(fixed_plan['frames'][-1]) for _ in range(300)]
+                    fixed_plan['frames'] += [copy.deepcopy(fixed_plan['frames'][-1]) for _ in range(600 if args.state_assisted_narrow else 300)]
                 raised_clearance=audit(dict(frames=fixed_plan['frames'][220:280]))
                 if not raised_clearance['passed']:raise RuntimeError('Raised transfer pose fails commanded hull rejection check')
             fixed_plan.pop('do_not_run_reason',None)
@@ -285,6 +287,7 @@ def main():
             report['executed_plan_sha256']=hashlib.sha256((frozen/'fixed-motion.json').read_bytes()).hexdigest()
             report['state_assisted_grasp']=fixed_plan['grasp']
             fixed_actions=np.asarray([f['action14'] for f in fixed_plan['frames']],float)
+            if len(fixed_actions)<args.steps:raise RuntimeError('Measured plan does not cover the requested bounded trial')
         report['initial_physics_step_count']=int(base.sim._physics_step_count)
         report['initial_snapshot']='After one raw reset and the declared five-second native cloth/peg settling period'
         (args.out/'meshes.json').write_text(json.dumps({name:{'rest':spec.mesh.rest.tolist(),
@@ -428,6 +431,58 @@ def main():
                 fixed_actions=np.asarray([f['action14'] for f in fixed_plan['frames']],float)
                 if np.any(fixed_actions<emb._low) or np.any(fixed_actions>emb._high):raise ValueError('Regrasp exceeds joint bounds')
                 if np.any(abs(np.diff(fixed_actions,axis=0))>delta_limit*1.001):raise ValueError('Regrasp exceeds ordinary action speeds')
+                (frozen/'fixed-motion.json').write_text(json.dumps(fixed_plan,indent=2)+'\n')
+                report['executed_plan_sha256']=hashlib.sha256((frozen/'fixed-motion.json').read_bytes()).hexdigest();save()
+            if args.state_assisted_narrow and step in (881,1041):
+                from adult_knot import clear_for_narrow,take_narrow,classify_patch_contacts
+                from audit_adult_motion import audit
+                from audit_reset_approach import screen
+                native=arena_cloth.state(emb._env,'tie');mesh=arena_cloth.SPECS['tie'].mesh
+                start=fixed_actions[step-2]
+                np.savez_compressed(args.out/f'narrow-input-{step}.npz',nodes=native.nodes,
+                    rest=mesh.rest,faces=mesh.faces,action=start)
+                if step==881:
+                    fragment=clear_for_narrow(start)
+                    hits=screen(fragment,native.nodes,mesh.faces,steps=None,side='left',
+                        inflation=arena_cloth.SPECS['tie'].fabric.thickness/2)
+                    (args.out/'narrow-clearing-cloth-audit.json').write_text(json.dumps(hits,indent=2)+'\n')
+                    if hits:raise RuntimeError('Free-hand clearing route meets the measured tie')
+                else:
+                    choices=[dict(longitudinal=1.25,closing_tilt_degrees=20.),
+                        dict(longitudinal=1.25,closing_tilt_degrees=30.),
+                        dict(longitudinal=1.20,closing_tilt_degrees=20.),
+                        dict(longitudinal=1.30,closing_tilt_degrees=20.)]
+                    candidates=[]
+                    for choice in choices:
+                        record=dict(choice);candidates.append(record)
+                        try:
+                            candidate=take_narrow(start,mesh.rest,native.nodes,**choice)
+                            rigid=audit(candidate);record['rigid_violations']=len(rigid['violations'])
+                            if not rigid['passed']:continue
+                            hits=screen(candidate,native.nodes,mesh.faces,steps=range(1,81),side='left',
+                                inflation=arena_cloth.SPECS['tie'].fabric.thickness/2)
+                            blocked,intended=classify_patch_contacts(hits,mesh.rest,mesh.faces,
+                                longitudinal=choice['longitudinal'],patch_half_width=.065,final_insertion_from=40)
+                            record['blocked_material_samples']=len(blocked)
+                            if blocked:continue
+                            fragment=candidate
+                            (args.out/'narrow-pinch-cloth-audit.json').write_text(
+                                json.dumps(dict(blocked=blocked,intended=intended),indent=2)+'\n')
+                            break
+                        except ValueError as exc:record['error']=str(exc)
+                    else:
+                        (args.out/'narrow-candidate-checks.json').write_text(json.dumps(candidates,indent=2)+'\n')
+                        raise RuntimeError('No narrow-end approach passes actual-state reach, rigid and material checks')
+                    (args.out/'narrow-candidate-checks.json').write_text(json.dumps(candidates,indent=2)+'\n')
+                rigid=audit(fragment)
+                (args.out/f'narrow-rigid-{step}.json').write_text(json.dumps(rigid,indent=2)+'\n')
+                if not rigid['passed']:raise RuntimeError('Narrow-end continuation intersects a fixture or the other arm')
+                fixed_plan['frames'][step-1:step-1+len(fragment['frames'])]=fragment['frames']
+                from adaptive_plan import hold_suffix
+                hold_suffix(fixed_plan['frames'],step-1+len(fragment['frames']))
+                fixed_actions=np.asarray([f['action14'] for f in fixed_plan['frames']],float)
+                if np.any(fixed_actions<emb._low) or np.any(fixed_actions>emb._high):raise ValueError('Narrow continuation exceeds joint bounds')
+                if np.any(abs(np.diff(fixed_actions,axis=0))>delta_limit*1.001):raise ValueError('Narrow continuation exceeds ordinary action speeds')
                 (frozen/'fixed-motion.json').write_text(json.dumps(fixed_plan,indent=2)+'\n')
                 report['executed_plan_sha256']=hashlib.sha256((frozen/'fixed-motion.json').read_bytes()).hexdigest();save()
             if args.state_assisted_handoff and step in receiving_check_steps:

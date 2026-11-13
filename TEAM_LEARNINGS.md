@@ -27,6 +27,33 @@ developers and their agents, not a competition submission document.
   and all GPUs are confirmed stopped, as requested. No paid tests are authorized
   for those ideas yet.
 
+## 2026-11-13 — narrow-end route and shared A40 tests
+
+- A measured300-action continuation from tie155 now passes all rigid fixture/
+  inter-arm checks and both free-hand/material approach screens locally. It
+  clears the collar, carries the held wide strip aside, lowers the free hand,
+  then uses a0.30rad smooth shoulder arc to avoid brushing the narrow strip
+  during alignment. Pinching is ordinary native contact; no attachment or
+  material/contact tolerance changes. Actual observations are rechecked after
+  the carry at action1041. Four bounded narrow-grasp choices fail closed if
+  none passes. The1,180-action native160 test is running; no narrow grasp or
+  knot success is claimed. Twenty-four existing tie tests and the runner's
+  check-only path pass.
+- Shirt158 and tie160 share the sameA40; no second GPU is active. The watchdog
+  was verified and extended to**21:20UTC** to cover both bounded tests and
+  evidence transfer. Shirt has a1,100s process cap; tie1,200s. The A40's first
+  shirt initialization took804s before action execution, including native reset,
+  shader/setup and actual-state route screening. This is substantially slower
+  than the retained RTX6000 runs; do not infer cost efficiency from hourly rate
+  alone. At20:58 neither test has a completed outcome.
+- NVIDIA's5.2 migration notes explicitly remove joint projection; an old USD
+  attribute listing is not proof it works in the pinned newer simulator.
+  https://nvidia-omniverse.github.io/PhysX/physx/5.6.0/docs/MigrationTo52.html
+  Joint mass/inertia scaling is documented as nonphysical, affecting momentum,
+  energy and reported break forces, so it is unsuitable as an unqualified fix
+  for the paper integrity guards. No such change was made.
+  https://nvidia-omniverse.github.io/PhysX/physx/5.4.0/docs/Joints.html
+
 ## 2026-11-13 — follow-up capacity and next cloth test
 
 - Both stopped RTX6000 hosts rejected restart for unavailable host capacity.
