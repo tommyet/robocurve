@@ -48,6 +48,8 @@ def main():
     p.add_argument('--judging-views',action='store_true',help='Fixed close review cameras, never policy inputs')
     p.add_argument('--joint-tracking',action='store_true',help='Bounded ordinary-joint integral tracking, without object feedback')
     p.add_argument('--position-iterations',type=int,choices=(32,64,128),default=128)
+    p.add_argument('--paper-gap-envelope-um',type=int,choices=(25,100),default=25,
+        help='100 is an explicitly unscored continuity diagnostic; it does not change contact or forces')
     p.add_argument('--solver-type',choices=('TGS','PGS'),default='TGS')
     p.add_argument('--recenter-at-paper',action='store_true',help='Fixed global origin shift including robot bases and fixed cameras before construction')
     p.add_argument('--reset-profile',choices=('pocket-support-candidate',),default='pocket-support-candidate')
@@ -55,7 +57,7 @@ def main():
     p.add_argument('--refined-contact-diagnostic',action='store_true')
     p.add_argument('--max-depenetration-m-s',type=float)
     a=p.parse_args()
-    if a.dream and (a.plan or a.joint_tracking):p.error('Dream cannot use a scripted plan or demo tracking')
+    if a.dream and (a.plan or a.joint_tracking or a.paper_gap_envelope_um!=25):p.error('Dream cannot use scripted feedback or a diagnostic continuity envelope')
     if a.joint_tracking and not a.plan:p.error('Joint tracking requires a plan')
     if not 1<=a.steps<=(600 if a.plan or a.dream else 100):p.error('Bounded preview step count exceeded')
     import runtime_config
@@ -76,6 +78,7 @@ def main():
     a.out.mkdir(parents=True,exist_ok=False);started=time.monotonic()
     report={'kind':'staple_panel_yam_integration_preview','status':'running','score':None,'robot_demo':False,
         'joint_tracking':a.joint_tracking,'solver_type':a.solver_type,'position_iterations':a.position_iterations,
+        'diagnostic_only':a.paper_gap_envelope_um!=25,'paper_gap_envelope_m':a.paper_gap_envelope_um*1e-6,
         'dream_requests':0,'requested_steps':a.steps,'control_hz':20,'phase':'launch',
         'policy':'Dream with ordinary camera/joint observations' if a.dream else 'ordinary fixed joint commands; no object state feedback',
         'paper_model':'native analytic100um box panels with passive bending/strength hinges',
@@ -101,6 +104,7 @@ def main():
         arena_hardware.PANEL_CONTACT_CANDIDATE=True
         arena_hardware.PANEL_POSITION_ITERATIONS=a.position_iterations
         arena_panels.POSITION_ITERATIONS=a.position_iterations
+        arena_panels.MAXIMUM_HINGE_GAP_M=a.paper_gap_envelope_um*1e-6
         from yam_arena import inspect_embodiment as wrapper,scene as adapter
         wrapper._APP=app;report['phase']='build'
         emb=wrapper.YamArenaEmbodiment(task=str(Path(__file__).with_name('task_panels.py')),object_jitter=0.,control_hz=20,cam_width=224,cam_height=224,device='cpu')
@@ -217,7 +221,11 @@ def main():
         report.update(status='complete',meaning='Unscored integration only; no successful extraction demonstrated')
     except BaseException as error:
         report.update(status='invalid_model_domain' if type(error).__name__=='MaterialDomainError' else 'failed',
-            error=f'{type(error).__name__}: {error}',traceback=traceback.format_exc(),material=[m.last for m in monitors]);raise
+            error=f'{type(error).__name__}: {error}',traceback=traceback.format_exc(),material=[m.last for m in monitors])
+        for index,monitor in enumerate(monitors):
+            if monitor.failure_state is not None:
+                np.savez_compressed(a.out/f'first-invalid-state-{index}.npz',**monitor.failure_state)
+        raise
     finally:
         if trace:trace.close()
         if video:video.close()

@@ -16,17 +16,23 @@ def x_quat(direction):
     q=np.array((0.,-d[2],d[1],1+d[0]));return q/np.linalg.norm(q)
 
 
-def author_thread(stage,path,nodes,*,radius=.0002,density=1400.,open_diagnostic=False,joint_kind='spherical'):
+def author_thread(stage,path,nodes,*,radius=.0002,density=1400.,open_diagnostic=False,joint_kind='spherical',bending=None):
     from pxr import Gf,Sdf,UsdGeom,UsdPhysics,PhysxSchema,UsdShade
     if joint_kind not in ('spherical','d6'):raise ValueError('Unknown native thread joint kind')
+    if bending is not None and joint_kind!='d6':raise ValueError('Passive swing bending requires native D6 joints')
     nodes=np.asarray(nodes,float);d=np.roll(nodes,-1,axis=0)-nodes
     lengths=np.linalg.norm(d,axis=1);centres=(nodes+np.roll(nodes,-1,axis=0))/2
     if np.any(lengths<2*radius):raise ValueError('Thread links too short for their radius')
+    if bending is not None:
+        from thread_bending import planar_frames
+        quaternions=planar_frames(nodes)
+        bend_stiffness,bend_damping=bending.gains(lengths,radius,density)
+    else:quaternions=np.asarray([x_quat(v) for v in d])
     n=len(nodes);bodies=[];joints=[]
     for i,(p,direction,length) in enumerate(zip(centres,d,lengths)):
         root=UsdGeom.Xform.Define(stage,f'{path}/link_{i:03d}')
         root.AddTranslateOp().Set(Gf.Vec3d(*p))
-        q=x_quat(direction);root.AddOrientOp(UsdGeom.XformOp.PrecisionDouble).Set(Gf.Quatd(q[3],*q[:3]))
+        q=quaternions[i];root.AddOrientOp(UsdGeom.XformOp.PrecisionDouble).Set(Gf.Quatd(q[3],*q[:3]))
         prim=root.GetPrim();UsdPhysics.RigidBodyAPI.Apply(prim)
         UsdPhysics.MassAPI.Apply(prim).CreateMassAttr(float(math.pi*radius**2*length*density))
         rb=PhysxSchema.PhysxRigidBodyAPI.Apply(prim)
@@ -65,11 +71,24 @@ def author_thread(stage,path,nodes,*,radius=.0002,density=1400.,open_diagnostic=
             for axis in ('transX','transY','transZ'):
                 limit=UsdPhysics.LimitAPI.Apply(joint.GetPrim(),axis)
                 limit.CreateLowAttr(1.);limit.CreateHighAttr(-1.)
+            if bending is not None:
+                # Passive straight-rest bending, with free axial twist and no
+                # hard angular limits. The drive never follows task state.
+                for axis in ('rotY','rotZ'):
+                    drive=UsdPhysics.DriveAPI.Apply(joint.GetPrim(),axis)
+                    drive.CreateTypeAttr('force')
+                    drive.CreateStiffnessAttr(float(bend_stiffness[i]*math.pi/180.))
+                    drive.CreateDampingAttr(float(bend_damping[i]*math.pi/180.))
+                    drive.CreateTargetPositionAttr(0.);drive.CreateTargetVelocityAttr(0.)
         joint.CreateCollisionEnabledAttr(False)
         joint.CreateJointEnabledAttr(not (open_diagnostic and i==0))
         joints.append(str(joint.GetPath()))
-    result={'bodies':bodies,'joints':joints,'nodes':nodes,'lengths':lengths,
+    result={'bodies':bodies,'joints':joints,'nodes':nodes,'lengths':lengths,'radius_m':radius,
             'mass_kg':float(math.pi*radius**2*lengths.sum()*density)}
+    if bending is not None:
+        result['bending']={'rigidity_nm2':bending.rigidity_nm2,'damping_ratio':bending.damping_ratio,
+                          'stiffness_nm_rad':bend_stiffness.tolist(),'damping_nms_rad':bend_damping.tolist(),
+                          'straight_rest':True,'axial_twist_free':True,'hard_angular_limits':False}
     if open_diagnostic:set_joint_enabled(stage,result,0,False)
     return result
 
@@ -97,18 +116,21 @@ def author_pair(stage,*,transform=lambda p:p,open_diagnostic=False,root_path='/W
     return cloth,threads
 
 
-def set_joint_enabled(stage,thread,index,enabled):
+def set_joint_enabled(stage,thread,index,enabled,*,restore_contact=True):
     """Change one thread connection and its adjoining end-cap pair together.
 
     Joined capsules share overlapping hemispheres, so that pair is filtered.
-    A cut removes only this exclusion, in both directions, and enables the
-    joint's collision flag. All other pair filters are retained. Native contact
-    rebuilding and the resulting end-cap separation still need a cut probe.
+    A cut disables the mechanical connection immediately. With deferred contact,
+    the original overlapping end-cap exclusion persists only until the finite
+    capsules separate. Turning it on while the endcaps coincide injects contact
+    correction energy. All cloth/tool/non-neighbour contact remains active.
     """
     from pxr import UsdPhysics
     n=len(thread['bodies'])
-    if type(enabled) is not bool or not 0<=index<n or len(thread['joints'])!=n:
+    if (type(enabled) is not bool or type(restore_contact) is not bool or
+            not isinstance(index,(int,np.integer)) or not 0<=index<n or len(thread['joints'])!=n):
         raise ValueError('Invalid native thread connection')
+    filtered=enabled or not restore_contact
     before=(index-1)%n
     paths=[thread['bodies'][before],thread['bodies'][index]]
     prims=[stage.GetPrimAtPath(path) for path in paths]
@@ -116,12 +138,58 @@ def set_joint_enabled(stage,thread,index,enabled):
         relationship=UsdPhysics.FilteredPairsAPI(prim).GetFilteredPairsRel()
         targets=list(relationship.GetTargets());other_path=other.GetPath()
         targets=[target for target in targets if target!=other_path]
-        if enabled:targets.append(other_path)
+        if filtered:targets.append(other_path)
         if not relationship.SetTargets(targets):raise RuntimeError('Cannot update cut-end collision filter')
     joint=UsdPhysics.Joint(stage.GetPrimAtPath(thread['joints'][index]))
-    if not joint.GetCollisionEnabledAttr().Set(not enabled):
+    if not joint.GetCollisionEnabledAttr().Set(not filtered):
         raise RuntimeError('Cannot update cut-end joint collision flag')
     if not joint.GetJointEnabledAttr().Set(enabled):raise RuntimeError('Cannot change native thread joint')
+    pending=thread.setdefault('pending_cut_contacts',set())
+    if not enabled and not restore_contact:pending.add(index)
+    else:pending.discard(index)
+
+
+def segment_distance(first,second):
+    """Minimum distance of two finite axes, including interior and endpoints."""
+    first,second=np.asarray(first,float),np.asarray(second,float)
+    if first.shape!=(2,3) or second.shape!=(2,3) or not np.isfinite([first,second]).all():
+        raise ValueError('Invalid capsule axes')
+    a,b=first;c,d=second;u=b-a;v=d-c;w=a-c
+    A=u@u;B=u@v;C=v@v;D=u@w;E=v@w
+    if A<=0 or C<=0:raise ValueError('Capsule axes must have positive length')
+    determinant=A*C-B*B;values=[]
+    if determinant>1e-12*A*C:
+        s=(B*E-C*D)/determinant;t=(A*E-B*D)/determinant
+        if 0<=s<=1 and 0<=t<=1:values.append(np.linalg.norm(a+s*u-c-t*v))
+    for p in (a,b):values.append(np.linalg.norm(p-c-np.clip((p-c)@v/C,0,1)*v))
+    for p in (c,d):values.append(np.linalg.norm(p-a-np.clip((p-a)@u/A,0,1)*u))
+    return float(min(values))
+
+
+def restore_separated_cut_contacts(stage,threads,capsule_axes):
+    """Re-enable only separated cut pairs; no joint, force or geometry repair.
+
+    Separation includes both 50µm native contact offsets. Checking complete
+    finite axes prevents folded links with distant endpoints from being treated
+    as separated. A restored pair can never become excluded again during a run.
+    """
+    if not any(thread.get('pending_cut_contacts') for thread in threads):return []
+    axes=np.asarray(capsule_axes,float)
+    count=sum(len(thread['bodies']) for thread in threads)
+    if axes.shape!=(count,2,3) or not np.isfinite(axes).all():
+        raise ValueError('Missing finite capsule geometry for cut contacts')
+    restored=[];start=0
+    for thread in threads:
+        n=len(thread['bodies']);radius=float(thread['radius_m'])
+        if not np.isfinite(radius) or radius<=0:raise ValueError('Invalid thread radius')
+        for index in sorted(thread.get('pending_cut_contacts',set())):
+            if not 0<=index<n:raise ValueError('Unknown deferred cut contact')
+            before=(index-1)%n
+            if segment_distance(axes[start+before],axes[start+index])>=2*radius+.0001:
+                set_joint_enabled(stage,thread,index,False,restore_contact=True)
+                restored.append(start+index)
+        start+=n
+    return restored
 
 
 def restore_thread_joints(stage,thread):
@@ -129,10 +197,10 @@ def restore_thread_joints(stage,thread):
     for index in range(len(thread['joints'])):set_joint_enabled(stage,thread,index,True)
 
 
-def sever_contacted_joints(stage,threads,global_indices):
+def sever_contacted_joints(stage,threads,global_indices,*,defer_end_contact=True):
     """Apply force-qualified events from ThreadCutter; never release cloth."""
     connections=[(thread,index) for thread in threads for index in range(len(thread['joints']))]
     for k in global_indices:
         if not 0<=int(k)<len(connections):raise ValueError('Unknown thread joint')
         thread,index=connections[int(k)]
-        set_joint_enabled(stage,thread,index,False)
+        set_joint_enabled(stage,thread,index,False,restore_contact=not defer_end_contact)

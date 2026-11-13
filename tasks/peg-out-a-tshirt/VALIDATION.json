@@ -296,6 +296,46 @@
     "wall_seconds": 570.9157,
     "evidence": "artifacts/six-task-completion-2026-11-13/native-batch-075-shirt/shirt-regular-clip",
     "finding": "The regular2.5mm cloth physically lifted in both hands, then passed through the left pads when the right grip released. Max sampled node penetration3.357mm; garment fell to table by300. No line crossings at sampled times, because the garment never reached the line. The later1.5mm nominal peg-alignment guard is not the decisive failure.",
-    "next": "Short320-action ordinary finite-pinch target0.01 with unchanged physics, pending native evidence."
+    "next": "The finite-pinch320 control084 also lost the garment; see gentle_pinch084."
+  },
+  "gentle_pinch084": {
+    "status": "failed physical retention; no score",
+    "actions_completed": 320,
+    "wall_seconds": 229.6995,
+    "evidence": "artifacts/six-task-completion-2026-11-13/native-batch-084-shirt/shirt-gentle-pinch",
+    "commanded_pinch_opening": 0.01,
+    "finding": "The two-layer patch lifted, then moved through the left finger pads when the right hand released. Maximum sampled node penetration was3.13449 mm; the shirt was back on the table by320. Bite depth decreased from14.9 mm at160 to7.1 mm at280.",
+    "measured_contact_at260": {
+      "actual_pad_gap_min_m": 0.0011372510962447888,
+      "actual_pad_gap_median_m": 0.0015247149244344308,
+      "median_paired_layer_separation_m": 0.0006297178001984042,
+      "two_shell_half_thicknesses_m": 0.0006
+    },
+    "next": "Same320-action finite-pinch trajectory with128 native cloth solver iterations, unchanged material and robot, pending. Wider physically justified finger aperture will depend on actual results; no additional numerical sweep released."
+  },
+  "solver128_grasp089": {
+    "status": "retained but excessive local pad penetration; full episode withheld",
+    "completed_actions": 320,
+    "wall_seconds": 558.2042076298967,
+    "evidence": "artifacts/six-task-completion-2026-11-13/native-batch-089-shirt/shirt-128",
+    "retention": "Hem patch stays at z1.201m after the other hand opens; bite depth18.09\u219217.75mm from260 to320. Actual opening\u22480.020 resists the0.010 target.",
+    "contact_audit": {
+      "samples": 9,
+      "maximum_native_node_penetration_m": 0.0024416521756984375,
+      "deepest_node_rest_m": [
+        -0.135,
+        0.03,
+        -0.0008
+      ],
+      "location": "Left gripper tip_right collision hull5, back hem beside the held patch; not a visual mesh audit."
+    },
+    "next": "One320-action comparison uses ordinary0.018 pinch target with128 solver iterations; all320 calibrated hull poses pass. Material, mass, mesh, reset procedure and robot bounds unchanged.",
+    "collision_geometry_verification": {
+      "method": "Read-only exact native converted USD collider vertices in their rigid-link frames compared with the URDF collision hulls, not visuals.",
+      "colliders": 92,
+      "all_native_approximation": "convexHull",
+      "maximum_vertex_set_difference_m": 8.585044734608962e-10,
+      "evidence": "artifacts/six-task-completion-2026-11-13/native-finger-collider-comparison.json"
+    }
   }
 }

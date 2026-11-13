@@ -1,5 +1,5 @@
 {
-  "schema": "proposed-setup-v2",
+  "schema": "development-pocket-setup-v3",
   "calibrated": false,
   "coordinates": "Metres in the standard YAM station: x forward, y left, z up.",
   "table_top_z_m": 0.7475,
@@ -13,16 +13,16 @@
     ],
     "bottom_sheet_center_m": [
       0.32,
-      0.0,
-      0.76821
+      0,
+      0.76755
     ],
     "top_sheet_center_m": [
       0.32,
       0.012,
-      0.76833
+      0.76767
     ],
     "orientation": "210 mm edges parallel to x; upper sheet shifted 12 mm along +y. Both sheets remain free.",
-    "reset_settling": "Spawn flat sheets with a 120 \u00b5m midplane gap and 20 \u00b5m clearance below the staple crown. The lower sheet underside starts 0.66 mm above the support. Native gravity/contact must settle and drape the free sheets over clinched tails and support edge. No pins or shape edits. Settled shape and tool access remain unvalidated.",
+    "reset_settling": "The lower sheet starts on the support. Both free sheets settle through native gravity and contact; the 120 micrometre initial midplane gap closes naturally. The crown starts 20 micrometres above the upper surface. No pins, attachments or runtime shape edits.",
     "initial_midplane_gap_m": 0.00012,
     "initial_crown_clearance_m": 2e-05
   },
@@ -37,7 +37,7 @@
     "crown_center_m": [
       0.227,
       -0.05,
-      0.76855
+      0.76789
     ],
     "crown_axis_direction": [
       0.0,
@@ -75,7 +75,7 @@
     "start_orientation": "Grip along y, fork tips point +y. Heel and grip rest on tabletop. The native tool must pivot by physical support contact; no grasp attachment."
   },
   "assessor_tools": "A millimetre ruler, backlight and before/after photographs of both sides of both sheets; not used to help the robot.",
-  "implementation_status": "Full native scene authored in full_scene.py; not runtime validated.",
+  "implementation_status": "Full native box-panel paper reset and passive CPU/YAM controls pass. Loaded bracing and complete robot extraction are still under validation.",
   "document_support": {
     "material": "rigid flat plastic document support",
     "size_m": [
@@ -89,6 +89,18 @@
       0.7575
     ],
     "top_m": 0.7675,
-    "purpose": "Supports staple and remover fulcrum. Lower/upper far sheet edges overhang 20/32 mm for later separation; no attachments."
+    "purpose": "Supports the paper and remover fulcrum. A physical pocket under the staple clears its clinched legs; both sheets remain free.",
+    "clinch_clearance_pocket": {
+      "center_m": [
+        0.227,
+        -0.05,
+        0.7635
+      ],
+      "size_m": [
+        0.0015,
+        0.016,
+        0.008
+      ]
+    }
   }
 }

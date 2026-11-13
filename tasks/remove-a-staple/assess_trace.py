@@ -78,7 +78,7 @@ def assess(directory):
     from audit_robot_plan import tool_props
     with gzip.open(directory/'trace.jsonl.gz','rt') as stream:
         rows=[json.loads(line) for line in stream]
-    samples=[];whole_run_valid=(report['status']!='invalid_model_domain' and
+    samples=[];whole_run_valid=(not report.get('diagnostic_only',False) and report['status']!='invalid_model_domain' and
                                all(m['valid'] for m in report.get('material',[])))
     for row in rows:
         wire=measured_wire(row,lengths);chain=wire_chain_continuity(wire)

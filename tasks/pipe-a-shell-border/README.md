@@ -87,7 +87,7 @@ Run CPU checks without renting a GPU:
 python -m unittest discover -s tasks/pipe-a-shell-border -p 'test_*.py' -v
 ```
 
-Thirty-five tests cover pressure causality, finite volume, contact and damage,
+Thirty-nine tests cover pressure causality, finite volume, contact and damage,
 shape scoring and released-tool evidence. Native tests have demonstrated a
 physical pickup, passive plunger extrusion and an elongated head and tail.
 Native035 released the tool cleanly and scored0.25 under its recorded independent
@@ -105,13 +105,10 @@ from a completed physical trial. It records the calibration hashes and preserves
 the nozzle/piston recipe. Only ordinary joint targets change; this candidate has
 not yet demonstrated a full border.
 
-Native080's learned feedforward improves the result to0.5: three valid shapes
-across45mm, clean release and no recorded damage, but no qualifying ridges.
-A prescribed-input replay using the20Hz measured tool trajectory produces ridges;
-this is diagnostic and does not establish native robot feasibility. The next
-comparison changes only native integration from240 to960Hz, retaining20Hz control,
-and records every physical tool/material input with `--tool-substep-trace`.
-The default remains240Hz until the comparison is assessed.
+Trial 080's learned feedforward reaches 0.5: three valid shapes across 45 mm,
+clean release and no recorded damage, but no qualifying ridges. Replaying the
+measured 20 Hz tool trajectory produces ridges in a diagnostic; this is not
+robot feasibility evidence. Trial087 at960Hz also scores0.5, with three valid shapes but only1mm of continuous ridging per shell. Exact physics-step replay reproduces its deposited volume to numerical precision. The next candidate corrects material boundary velocity to the actual unsmoothed surface displacement; see MATERIAL.md. Its local replay has three ridged shells, which is diagnostic rather than robot evidence. The default remains240Hz pending the fresh trial.
 
 The passive mechanism control emitted 0.1587 ml under an 8 N load and nothing
 under zero load; flow stopped after release and volume balance closed. Those

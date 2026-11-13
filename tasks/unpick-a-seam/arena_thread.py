@@ -10,6 +10,7 @@ from native_stitches import author_thread,x_quat
 class Thread(Box):
     nodes: object=None
     radius_m: float=.0002
+    bending: object=None
     @property
     def free(self):return False
 
@@ -25,7 +26,11 @@ SPAWNED={}
 
 def initial(spec):
     p=np.asarray(spec.nodes,float);d=np.roll(p,-1,axis=0)-p
-    return np.column_stack(((p+np.roll(p,-1,axis=0))/2,np.asarray([x_quat(v) for v in d])))
+    if spec.bending is not None:
+        from thread_bending import planar_frames
+        q=planar_frames(p)
+    else:q=np.asarray([x_quat(v) for v in d])
+    return np.column_stack(((p+np.roll(p,-1,axis=0))/2,q))
 
 
 def spawn(path,cfg,**kwargs):
@@ -33,7 +38,11 @@ def spawn(path,cfg,**kwargs):
     stage=get_current_stage();root=str(path).rsplit('/',1)[0]
     spec=SPECS[cfg.thread_name]
     if not stage.GetPrimAtPath(str(path)):
-        SPAWNED[spec.name]=author_thread(stage,root,np.asarray(spec.nodes),radius=spec.radius_m)
+        item=author_thread(stage,root,np.asarray(spec.nodes),radius=spec.radius_m,
+                           joint_kind='d6' if spec.bending is not None else 'spherical',bending=spec.bending)
+        SPAWNED[spec.name]=item
+        from cpu_scene import configure_native
+        configure_native(stage,item['bodies'])
     return stage.GetPrimAtPath(str(path))
 
 

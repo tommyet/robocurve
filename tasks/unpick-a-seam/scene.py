@@ -12,6 +12,7 @@ from native_cloth import seam_fabric
 from native_cloth import ensure_gpu_scene
 from runtime_config import CONFIG
 from tool_geometry import HANDLE_SIZE,BLADE_SIZE,BLADE_OFFSET,METAL_PARTS,GUARDS
+from coordinate_frame import to_native
 
 SCENE='station'
 FABRIC=seam_fabric(CONFIG.cloth_contact_offset_m)
@@ -55,7 +56,7 @@ else:
     INITIAL=[mesh.rest.copy() for mesh in MESHES]
 
 def thread_nodes(y):
-    nodes=stitch_loop(y);nodes[:,2]-=CONFIG.seam_lowering_m
+    nodes=stitch_loop(y,clear_capsules=CONFIG.clear_thread_sampling);nodes[:,2]-=CONFIG.seam_lowering_m
     if CONFIG.sewing_clamp:
         from clamp_layout import transform
         nodes=transform(nodes,lower_edge_supported=CONFIG.supported_clamp)
@@ -82,6 +83,14 @@ if CONFIG.sewing_clamp:
                  mass=PARAMETERS.mass_kg if CONFIG.passive_clamp and name==MOVING_NAME else None)
              for name,size,position in components]
 
+if CONFIG.passive_thread_bending:
+    from thread_bending import ThreadBending
+    THREAD_BENDING=ThreadBending()
+else:THREAD_BENDING=None
+# Custom collections carry absolute authored/reset positions. Ordinary root
+# assets and fixed cameras are translated once by the configuration callback.
+for mesh in MESHES:mesh.rest=to_native(mesh.rest)
+INITIAL=[to_native(p) for p in INITIAL]
 OBJECTS=[
     Cloth('cloth_left',pos=(0.,0.,0.),size=(.13,.08,.004),mesh=MESHES[0],initial=INITIAL[0],
           fabric=FABRIC,color=(.76,.68,.47),contact_refinement=CONFIG.contact_refinement,
@@ -90,7 +99,7 @@ OBJECTS=[
           fabric=FABRIC,color=(.25,.42,.66),contact_refinement=CONFIG.contact_refinement,
           **({'primitive_boxes':CONFIG.box_panels} if CONFIG.facet_cloth else {})),
     *[Thread(f'stitch_{i}',pos=(0.,0.,0.),size=(.011,2*CONFIG.thread_radius_m,.003),
-             nodes=thread_nodes(y),radius_m=CONFIG.thread_radius_m) for i,y in enumerate(STITCH_Y)],
+             nodes=to_native(thread_nodes(y)),radius_m=CONFIG.thread_radius_m,bending=THREAD_BENDING) for i,y in enumerate(STITCH_Y)],
     *FIXTURE,
     Box('ripper_handle',pos=(.20,-.12,TABLE_TOP+.008),size=HANDLE_SIZE,mass=.018,color=(.2,.45,.25)),
     Box('ripper_blade',pos=(.25,-.12,TABLE_TOP+.008),size=BLADE_SIZE,mass=.001,color=(.7,.72,.74)),
@@ -111,6 +120,9 @@ def task_object(spec):
         stage=omni.usd.get_context().get_stage()
         ROOTS[spec.name]=str(prim_path)
         prim=spawn(prim_path,cfg,*a,**kw)
+        if prim.HasAPI(UsdPhysics.RigidBodyAPI):
+            from cpu_scene import configure_native
+            configure_native(stage,[str(prim_path)])
         if fixture:
             mat=UsdShade.Material.Define(stage,str(prim_path)+'/ClampContact')
             material=UsdPhysics.MaterialAPI.Apply(mat.GetPrim())
@@ -124,7 +136,7 @@ def task_object(spec):
                     UsdShade.MaterialBindingAPI.Apply(child).Bind(mat,UsdShade.Tokens.weakerThanDescendants,'physics')
             if CONFIG.passive_clamp and spec.name==MOVING_NAME:
                 from passive_clamp import author_guide
-                author_guide(stage,str(prim_path),spec.pos)
+                author_guide(stage,str(prim_path),to_native(spec.pos))
             return prim
         if spec.name=='ripper_handle':return prim
         # Tensor contact forces require contact reporting before simulation

@@ -63,3 +63,25 @@ single-valued surface. Pressure transmission onto the supported layer applies
 to downward-facing outlets; upward ejection remains ballistic. This representation cannot model overhangs, long strings
 or voids. Only the native robot run with matching final photographs can establish
 task feasibility. Prescribed-input material probes are diagnostic controls.
+
+
+## Native boundary motion
+
+From the next trial after087, the external material solver uses the unsmoothed
+world displacement of every metal-face sample and nozzle tip over the preceding
+native step. The explicit coupling is staggered by one step. Reset primes the
+previous pose; no subsequent displacement is clipped, filtered or suppressed.
+The native reported velocity remains in the saved trace for diagnostics.
+[PhysX documents](https://nvidia-omniverse.github.io/PhysX/physx/5.4.0/docs/RigidBodyDynamics.html)
+that its split-impulse solver can report velocities different from transform
+integration. Holding the endpoint velocity over an entire external material
+step incorrectly represented the observed nozzle motion in trial087.
+
+Pressure and contact forces are applied at each body origin, with contact
+moments about that same origin. PhysX therefore transfers the wrench to the
+actual centre of mass; it is not assumed to coincide with the body origin.
+Stationary, translation, rotation and reset controls pass. This correction does
+not change the reservoir, material law, nozzle geometry or scoring. A recorded
+input replay restores ridges, but a fresh robot run is still required; neither
+replay nor these kinematic controls prove energy conservation of the coupled
+approximation.

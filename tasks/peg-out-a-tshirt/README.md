@@ -161,3 +161,17 @@ when one hand released: material passed through the remaining finger pads
 by3.36mm. It never reached the line. The next320-action diagnostic uses an
 ordinary finite pinch target (0.939mm commanded jaw gap) with unchanged
 physics. Real intact grasp and released line capture remain unproved.
+
+The short finite-pinch control (batch084, 320 actions, 229.7 seconds) also lost
+the shirt after the other hand released. Actual pad gaps narrowed to about
+1.14 mm while the two cloth layers require roughly 1.23 mm at that location.
+The next isolated control changes cloth solver iterations from32 to128; no
+material, friction, motor limit or attachment changes. A full hanging demo
+remains unproven.
+
+Batch089 changed only cloth solver iterations from 32 to 128. The shirt stayed
+held through the 320-action prefix, including the other hand opening. However,
+a back-hem fold penetrated a finger pad by up to 2.44 mm, so this is not clean
+contact proof. The next short comparison uses a 0.018 ordinary finger target
+to reduce compression. The native USD collision meshes were checked against
+the audit geometry: all 92 finger hulls match within 0.86 nanometres.

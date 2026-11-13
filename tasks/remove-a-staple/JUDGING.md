@@ -1,11 +1,11 @@
 # Judging staple removal
 
-The development reset is two aligned 80 gsm office-paper sheets, 210 × 148 mm,
-with one ordinary clinched steel staple near a corner. Its crown midpoint is
-12 mm inside each nearest edge, as fixed in `setup.json`. Photograph both faces
+The development reset is two 80 gsm office-paper sheets, 210 × 148 mm,
+with one ordinary clinched steel staple near a corner. The upper sheet is offset 12 mm along its short direction. The crown midpoint
+is 12 mm from the left edge of each sheet, and 12/24 mm from the
+upper/lower sheet's near edge, as fixed in `setup.json`. Photograph both faces
 of both sheets with a millimetre ruler before assembly. The four original hole
-boundaries must be recorded after stapling and before the trial. The nominal
-props/layout are fixed; their measured physical match remains unvalidated.
+boundaries must be recorded after stapling and before the trial. The props and layout are fixed; a complete robot extraction remains unvalidated.
 
 After the trial, inspect the whole of both sheets from both sides. A new tear
 extending more than 2 mm from an original staple-hole boundary gives zero.
@@ -39,5 +39,5 @@ boolean observations are review fields, not automatic claims by the simulator.
 The record schema is `staple-judging-v4`. Record `staple_touching_remover` and
 `remover_released` explicitly; release of an unused remover elsewhere is irrelevant.
 
-The 2 mm damage allowance and proposed 30-second run limit remain development
-choices. Check their suitability with the selected real paper and remover.
+The 2 mm damage allowance and proposed 30-second run limit are fixed development
+choices. The full-score demonstration must fit them before submission.

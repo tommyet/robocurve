@@ -6,6 +6,19 @@ from facet_paper import coupon_mesh,box_coupon_mesh,box_task_mesh,mechanics,meas
 
 
 class FacetPaperTests(unittest.TestCase):
+    def test_diagnostic_envelope_does_not_change_measured_geometry(self):
+        mesh=box_coupon_mesh();model=mechanics(mesh,primitive_boxes=True)
+        shell=dict(mesh=mesh,model=model)
+        poses=np.c_[model['centres'],np.tile((0.,0.,0.,1.),(len(model['centres']),1))]
+        poses[0,0]+=.00003;before=poses.copy()
+        strict,first=measured_surface(shell,poses)
+        diagnostic,second=measured_surface(shell,poses,.0001)
+        self.assertFalse(first['valid']);self.assertTrue(second['valid'])
+        self.assertAlmostEqual(first['maximum_hinge_endpoint_gap_m'],.00003)
+        self.assertEqual(first['maximum_hinge_endpoint_gap_m'],second['maximum_hinge_endpoint_gap_m'])
+        np.testing.assert_array_equal(strict,diagnostic)
+        np.testing.assert_array_equal(before,poses)
+
     def test_box_panels_preserve_paper_area_holes_mass_and_rigid_motion(self):
         mesh=box_coupon_mesh();model=mechanics(mesh,primitive_boxes=True)
         self.assertEqual(len(model['masses']),152)

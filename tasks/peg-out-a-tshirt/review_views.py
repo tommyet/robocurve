@@ -25,14 +25,18 @@ def configure(embodiment):
     embodiment.camera_config=make_configclass('ShirtJudgingCameraCfg',fields,bases=(ArenaCameraCfg,))()
 
 
-def images(base):
+def images(base,*,warnings=None,step=None):
     """Native pixels for assessor recording only; no resizing or policy input."""
     result={}
     for name,eye,target,up,focal,resolution in CONFIGS:
         value=base.scene[name].data.output['rgb'];value=getattr(value,'torch',value)
         pixels=value.detach().cpu().numpy()[0] if hasattr(value,'detach') else np.asarray(value)[0]
-        if pixels.shape[:2]!=(resolution[1],resolution[0]) or pixels.ndim!=3 or np.std(pixels[:,:,:3])<2.:
-            raise RuntimeError(f'Missing or blank native judging image: {name}')
+        if pixels.ndim!=3 or pixels.shape[:2]!=(resolution[1],resolution[0]) or pixels.shape[2]<3:
+            raise RuntimeError(f'Malformed native judging image: {name}')
+        spread=float(np.std(pixels[:,:,:3]))
+        if spread<2. and warnings is not None:
+            warnings.append(dict(step=step,camera=name,pixel_standard_deviation=spread,
+                issue='Low-variance native frame, possibly occluded; retained unchanged for review'))
         result[name]=np.ascontiguousarray(pixels[:,:,:3],dtype=np.uint8)
     return result
 

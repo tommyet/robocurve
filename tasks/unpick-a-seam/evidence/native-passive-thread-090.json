@@ -1,0 +1,325 @@
+{
+  "date": "2026-11-13",
+  "status": "native_passive_controls_pass_robot_cut_and_release_unproven",
+  "free_archive_sha256": "0aba31fc4d8c57fa69da4737206f7a0e7f7927807b598380e1546220d684a4e8",
+  "intact_archive_sha256": "df6fcd16bb2ab1652f334b533ca8a546b4bef79727c36589c0b1147015c50b11",
+  "free_controls": [
+    {
+      "status": "complete",
+      "completed_steps": 48,
+      "physics_hz": 960,
+      "seconds": 0.05,
+      "bending": {
+        "rigidity_nm2": 1.2e-09,
+        "damping_ratio": 0.1,
+        "stiffness_nm_rad": [
+          1.0909090909090463e-06,
+          1.199999999999999e-06,
+          1.1999999999999989e-06,
+          1.1999999999999987e-06,
+          1.1999999999999989e-06,
+          1.1999999999999995e-06,
+          1.1999999999999995e-06,
+          1.1999999999999989e-06,
+          1.1999999999999987e-06,
+          1.1999999999999989e-06,
+          1.090909090909156e-06,
+          9.99999999999971e-07,
+          1.0909090909091005e-06,
+          1.1999999999999989e-06,
+          1.1999999999999987e-06,
+          1.1999999999999987e-06,
+          1.1999999999999989e-06,
+          1.2e-06,
+          1.1999999999999997e-06,
+          1.1999999999999976e-06,
+          1.1999999999999978e-06,
+          1.1999999999999978e-06,
+          1.0909090909089904e-06,
+          9.99999999999972e-07
+        ],
+        "damping_nms_rad": [
+          4.802077113185441e-11,
+          4.5639912281206e-11,
+          4.5639912281206005e-11,
+          4.563991228120602e-11,
+          4.5639912281206005e-11,
+          4.5639912281206e-11,
+          4.5639912281206005e-11,
+          4.563991228120601e-11,
+          4.563991228120602e-11,
+          4.5639912281206005e-11,
+          4.802077113184921e-11,
+          5.198338520058033e-11,
+          4.802077113185018e-11,
+          4.5639912281206005e-11,
+          4.563991228120602e-11,
+          4.563991228120602e-11,
+          4.5639912281206005e-11,
+          4.5639912281205986e-11,
+          4.563991228120599e-11,
+          4.5639912281206044e-11,
+          4.563991228120604e-11,
+          4.563991228120603e-11,
+          4.802077113185541e-11,
+          5.1983385200580293e-11
+        ],
+        "straight_rest": true,
+        "axial_twist_free": true,
+        "hard_angular_limits": false
+      },
+      "initial_thread_integrity": {
+        "maximum_closed_joint_gap_m": 2.2428535140062564e-10,
+        "first_failure": null,
+        "valid": true
+      },
+      "thread_integrity": {
+        "maximum_closed_joint_gap_m": 2.371312892252925e-07,
+        "first_failure": null,
+        "valid": true
+      },
+      "maximum_nontranslation_m": 2.986053459608229e-06,
+      "maximum_body_speed_m_s": 0.4902345836162567,
+      "centre_of_mass_displacement_m": [
+        3.600618248000842e-09,
+        1.2148796627308193e-15,
+        -0.012509304098784924
+      ],
+      "wall_seconds": 3.669656762853265,
+      "initial_elastic_diagnostic": {
+        "bending_energy_proxy_j": 9.551231574914869e-07,
+        "relative_kinetic_energy_j": 0.0,
+        "maximum_bend_rad": 0.3043161872918919,
+        "centre_velocity_m_s": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "name": "thread-bend-circle",
+      "files_sha256": {
+        "initial-native.npz": "d826acb1148ab4cf210db2c98fe160701d9115a767195d85631cb6947bac678d",
+        "state.npz": "bdf54359a1aa165a505acf2cd0093303e555c419290bc6bd4382e47e019180b7",
+        "probe.json": "bb82a2bd607286f89b6066e7751b6cba8a96dce9d18aa4d3ff557efa0fc3a96d",
+        "initial.usda": "1e6ff5b24a2cf7c972b643e104fa6f0998d34141b49f7d212ef095edd8d8d69b"
+      },
+      "final_elastic": {
+        "time_s": 0.05,
+        "bending_energy_proxy_j": 9.551311941748956e-07,
+        "relative_kinetic_energy_j": 3.693370700320684e-13,
+        "maximum_bend_rad": 0.3057039988884726,
+        "centre_velocity_m_s": [
+          -8.51006990827951e-11,
+          -6.809268515772072e-14,
+          -0.4899995420728952
+        ]
+      },
+      "maximum_proxy_plus_relative_kinetic_j": 9.551333001671036e-07,
+      "maximum_relative_kinetic_j": 1.3127825163947434e-12,
+      "maximum_relative_native_gain_error": 2.739298277099067e-08
+    },
+    {
+      "status": "complete",
+      "completed_steps": 192,
+      "physics_hz": 960,
+      "seconds": 0.2,
+      "bending": {
+        "rigidity_nm2": 1.2e-09,
+        "damping_ratio": 0.1,
+        "stiffness_nm_rad": [
+          1.0909090909090459e-06,
+          1.1999999999999989e-06,
+          1.1999999999999989e-06,
+          1.1999999999999989e-06,
+          1.1999999999999989e-06,
+          1.1999999999999989e-06,
+          1.1999999999999989e-06,
+          1.1999999999999989e-06,
+          1.1999999999999989e-06,
+          1.1999999999999989e-06,
+          1.090909090909156e-06,
+          9.999999999999714e-07,
+          1.090909090909101e-06,
+          1.1999999999999989e-06,
+          1.1999999999999989e-06,
+          1.1999999999999989e-06,
+          1.1999999999999989e-06,
+          1.1999999999999989e-06,
+          1.1999999999999989e-06,
+          1.1999999999999989e-06,
+          1.1999999999999989e-06,
+          1.1999999999999989e-06,
+          1.0909090909089908e-06,
+          9.999999999999714e-07
+        ],
+        "damping_nms_rad": [
+          4.802077113185442e-11,
+          4.5639912281206005e-11,
+          4.5639912281206005e-11,
+          4.5639912281206005e-11,
+          4.5639912281206005e-11,
+          4.5639912281206005e-11,
+          4.5639912281206005e-11,
+          4.5639912281206005e-11,
+          4.5639912281206005e-11,
+          4.5639912281206005e-11,
+          4.802077113184921e-11,
+          5.1983385200580326e-11,
+          4.802077113185018e-11,
+          4.5639912281206005e-11,
+          4.5639912281206005e-11,
+          4.5639912281206005e-11,
+          4.5639912281206005e-11,
+          4.5639912281206005e-11,
+          4.5639912281206005e-11,
+          4.5639912281206005e-11,
+          4.5639912281206005e-11,
+          4.5639912281206005e-11,
+          4.802077113185538e-11,
+          5.1983385200580326e-11
+        ],
+        "straight_rest": true,
+        "axial_twist_free": true,
+        "hard_angular_limits": false
+      },
+      "initial_thread_integrity": {
+        "maximum_closed_joint_gap_m": 3.0174851506359346e-10,
+        "first_failure": null,
+        "valid": true
+      },
+      "thread_integrity": {
+        "maximum_closed_joint_gap_m": 1.120140269311071e-06,
+        "first_failure": null,
+        "valid": true
+      },
+      "maximum_nontranslation_m": 0.0063898093067109585,
+      "maximum_body_speed_m_s": 2.1034488677978516,
+      "centre_of_mass_displacement_m": [
+        -1.0878193901220357e-09,
+        -4.492423322233208e-09,
+        -0.19669117033481598
+      ],
+      "wall_seconds": 4.383765083737671,
+      "initial_elastic_diagnostic": {
+        "bending_energy_proxy_j": 5.383420582412292e-06,
+        "relative_kinetic_energy_j": 0.0,
+        "maximum_bend_rad": 1.5707963267948968,
+        "centre_velocity_m_s": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "name": "thread-bend-rectangle",
+      "files_sha256": {
+        "initial-native.npz": "b7785ed0e12687a5070d2690207a0c9c5b7d086ac691d83233f56ff7b7ac7173",
+        "state.npz": "b0f9b96707fab7d28572b86f80637a0e57a91d5932f28266e63c08a708fa822b",
+        "probe.json": "ced036ce0e856c77a3cceb20d0141d0e826db24701ed87f9a77bcccb3a97dd72",
+        "initial.usda": "0780bd7881d85ab925dc8f4e876c4020969c9ce2721a236eed53a46cfe37ec76"
+      },
+      "final_elastic": {
+        "time_s": 0.2,
+        "bending_energy_proxy_j": 1.0017431309302146e-06,
+        "relative_kinetic_energy_j": 2.1659833370086985e-07,
+        "maximum_bend_rad": 0.33931572057568093,
+        "centre_velocity_m_s": [
+          -4.971153796251311e-08,
+          -1.7751012021583994e-09,
+          -1.9541283538281173
+        ]
+      },
+      "maximum_proxy_plus_relative_kinetic_j": 2.9653703990534337e-06,
+      "maximum_relative_kinetic_j": 1.2785914617937215e-06,
+      "maximum_relative_native_gain_error": 2.739298277099067e-08
+    }
+  ],
+  "intact_control": {
+    "status": "complete",
+    "completed_steps": 1920,
+    "physics_hz": 960,
+    "seconds": 2.0,
+    "effective_scene_physics": {
+      "gpu_dynamics": false,
+      "broadphase": "MBP",
+      "sweep_ccd": true,
+      "solver": "TGS"
+    },
+    "maximum_hinge_endpoint_gap_m": 2.0383345465545715e-05,
+    "final_maximum_body_speed_m_s": [
+      0.010839696042239666,
+      0.007015482056885958
+    ],
+    "wall_seconds": 78.32392399106175,
+    "thread_joint_integrity": {
+      "maximum_closed_joint_gap_m": 2.070829314298e-05,
+      "first_failure": null,
+      "valid": true
+    },
+    "first_invalid_step": null,
+    "clear_thread_sampling": true,
+    "passive_thread_bending": true,
+    "files_sha256": {
+      "state.npz": "fe7ab0867092e6bccd32e697c95cccfe1dca32326fbcc98fb91ed6fafe889755",
+      "probe.json": "28c7a10f394f7f99f6d6db4eda7e78283a044c2fe097af441b7dc2a59aa4863b",
+      "initial.usda": "2f51fda6a79e9615689da96a7f051e3a956939ce42610fcb97e1a1b0001fa124"
+    },
+    "first_actual_box_midplane_intersection": null,
+    "link_changes": [],
+    "expected_initial_link_count": 24,
+    "last_one_second": {
+      "start_s": 1.0010416666666666,
+      "end_s": 2.0,
+      "frames": 960,
+      "patches": [
+        {
+          "expected_links": 12,
+          "all_initial_links_retained": true,
+          "minimum_retained_initial_links": 12,
+          "native_midplane_intersection_frames": 0,
+          "maximum_capsule_overlap_lower_bound_m": 1.5400982823836036e-07,
+          "maximum_hinge_endpoint_gap_m": 5.453582660552986e-06
+        },
+        {
+          "expected_links": 12,
+          "all_initial_links_retained": true,
+          "minimum_retained_initial_links": 12,
+          "native_midplane_intersection_frames": 0,
+          "maximum_capsule_overlap_lower_bound_m": 1.0583921173063816e-05,
+          "maximum_hinge_endpoint_gap_m": 1.9738861584162403e-06
+        }
+      ]
+    },
+    "strain": [
+      {
+        "side": 0,
+        "maximum_stretch": 1.0028698010309618,
+        "first_excursion": null
+      },
+      {
+        "side": 1,
+        "maximum_stretch": 1.0028369547253613,
+        "first_excursion": null
+      }
+    ],
+    "full_trace_peak_overlap": [
+      {
+        "side": 0,
+        "time_s": 0.00625,
+        "maximum_capsule_overlap_lower_bound_m": 0.00021077008765997475
+      },
+      {
+        "side": 1,
+        "time_s": 0.0010416666666666667,
+        "maximum_capsule_overlap_lower_bound_m": 9.658402974180584e-05
+      }
+    ]
+  },
+  "finding": "Passive thread bending removes the sharp folding/contact instability in these bounded controls. The full seam retains24 links for2seconds without a geometric passage, invalid material state or disjoint thread. This is passive setup evidence, not a full-score robot task.",
+  "limitations": [
+    "The bending rigidity is a disclosed low-stiffness approximation based on a thinner published thread.",
+    "Native capsule contact has small finite penetration; maximum last-second lower-cloth overlap10.584micrometres.",
+    "Initial elastic relaxation has transient finite capsule overlap up to210.77micrometres upper/96.58micrometres lower. No actual box-midplane passage or hole-link loss occurs; ordinary physical settling is appropriate, not a state warp.",
+    "Bending energy reported by the coupon is a small-angle proxy, not an exact PhysX finite-angle potential.",
+    "YAM bridge, cutting contact, cut-end energy, fragment extraction, safe release, Dream and final media remain unvalidated."
+  ]
+}

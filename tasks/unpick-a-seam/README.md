@@ -68,7 +68,7 @@ From the repository root:
 .venv/bin/python -m unittest discover -s tasks/unpick-a-seam -p 'test_*.py' -v
 ```
 
-Fifty-eight tests pass: connected cloth with real needle holes, needle-path clearance,
+Sixty-two tests pass: connected cloth with real needle holes, needle-path clearance,
 force direction and sustained contact for cutting, interrupted-contact rejection,
 blade damage latching, whole-thread clearance, rigid-motion-invariant strain
 inspection, moving-cloth/thread tunnelling detection, and final-state scoring. These are CPU geometry/rule
@@ -662,3 +662,41 @@ A matched native PGS control is prepared with the same 24-link geometry, mass,
 material, all self-contact and sweep CCD. It changes the contact solver only,
 retains every-step evidence and stops on a disjoint uncut joint. No PGS result
 or valid manipulation reset is claimed yet.
+
+The PGS comparison also opens an uncut joint at36.5ms, with all24 hole links
+retained and no actual box-midplane passage. PGS alone is not a remedy
+(`evidence/native-pgs-thread-088.json`). The next material candidate adds
+passive thread bending, described in `thread_bending.py` and
+`evidence/thread-bending-cpu.json`. Its native D6 swing springs have fixed
+straight rest, free axial twist and no angular limits or task-aware forces.
+Two free-loop controls test circular equilibrium and rectangular relaxation
+before any full seam attempt. These controls are prepared, not validated.
+
+The passive-thread candidate passed both native free-loop controls in090. The
+circular loop changes shape by less than3micrometres over50ms; the rectangular
+loop relaxes from90-degree maximum bends to19.4degrees over0.2s, with declining
+mechanical-energy proxy and no disjoint joint. The complete intact seam then
+retained all24 hole links for2s, with no actual box-midplane passage and peak
+reconstructed extension below0.29%. Last-second finite contact penetration
+peaked at10.6micrometres. This is a usable passive-control result, not robot
+feasibility. See `evidence/native-passive-thread-090.json`.
+
+The opt-in CPU/YAM bridge now carries the same geometry, bending and CCD
+settings, consistently translating all world roots and fixed cameras near the
+seam. Its ordinary reset is unvalidated. A separate zero-bending free-loop cut
+checks whether restoring collision between overlapping cut endcaps injects
+energy; it is diagnostic only and never qualifies as the task's blade cut.
+
+The093 zero-load cut exposed artificial contact-correction energy when the
+formerly adjoining, overlapping capsule endcaps were enabled immediately. An
+uncut joint subsequently opened1.24mm. The prepared correction breaks the cut
+connection immediately and restores only that pair's contact after the complete
+finite capsules separate by their radii plus the native contact margins. All
+cloth, tool and other thread contacts remain active. The native zero-load and
+elastic-relaxation comparisons must pass before this is used for removal.
+
+The093 YAM attempt stopped before stepping because its tensor view omitted the
+attached USD stage ID. Inspection also found unshifted generic Box reset events;
+the corrected bridge translates those poses with the world roots and checks the
+native tensor device.65 CPU tests pass; native validation remains pending. See
+`evidence/native-cut-bridge-093.json`.

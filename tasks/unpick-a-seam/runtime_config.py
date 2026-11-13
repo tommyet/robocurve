@@ -27,6 +27,10 @@ class SeamRuntime:
     backed_clamp: bool = False
     facet_cloth: bool = False
     box_panels: bool = False
+    cpu_ccd: bool = False
+    solver: str = 'TGS'
+    clear_thread_sampling: bool = False
+    passive_thread_bending: bool = False
 
 
 CONFIG=SeamRuntime()

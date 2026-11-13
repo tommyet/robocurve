@@ -344,7 +344,7 @@ def main():
             video.append_data(image)
             if args.judging_views:
                 from review_views import images
-                for camera,pixels in images(base).items():
+                for camera,pixels in images(base,warnings=report.setdefault('judging_frame_warnings',[]),step=step).items():
                     judging_videos[camera].append_data(pixels)
                     if step in (0,args.steps):
                         label='start' if step==0 else 'final'
@@ -365,12 +365,21 @@ def main():
         save()
         command=torch.as_tensor(ready[None,:],device=base.device,dtype=torch.float32)
         for step in range(1,args.steps+1):
+            if step==321 and args.state_assisted_grasp and args.steps>320:
+                from scripted_grasp import held_patch_geometry
+                actual_cloth=scene.object_states(emb._env,names)['tshirt'].nodes
+                robot=base.scene['left_robot']
+                pose=arr(robot.data.body_link_pose_w)[0,robot.body_names.index('gripper')]
+                geometry=held_patch_geometry(arena_cloth.SPECS['tshirt'].mesh.rest,actual_cloth,pose)
+                report['pickup_retention_guard']=geometry
+                if geometry['plainly_lost']:
+                    raise RuntimeError('Hem has left the hand after pickup; later peg actions withheld')
             if fixed_actions is not None:
                 reference_action=fixed_actions[step-1].copy()
                 observed=np.asarray(emb._observation().state['joint_pos'],float)
                 if clip_servo is not None:
                     from arena_props import peg_state
-                    body_poses=peg_state(emb._env,'left_peg').body_poses if clip_servo.start<step<=clip_servo.end else None
+                    body_poses=peg_state(emb._env,'left_peg').body_poses if clip_servo.start<step<=clip_servo.end+1 else None
                     reference_action=clip_servo.action(step,reference_action,observed,body_poses)
                     report['peg_alignment']=clip_servo.records
                 requested_action=tracking.action(reference_action,observed,enabled=args.joint_feedback_from is not None and step>args.joint_feedback_from)
@@ -391,6 +400,12 @@ def main():
             report['completed_steps']=step
             if step%20==0:
                 save()
+        if args.judging_views:
+            issues=report.get('judging_frame_warnings',[])
+            report['judging_recording_quality']=dict(flagged_frames=len(issues),
+                final_frame_flagged=any(x['step']==args.steps for x in issues),
+                requires_visual_review=True,
+                note='All returned native frames are retained. Optional camera occlusion does not alter physics or imply task success; final scoring still requires meaningful visible evidence.')
         report['status']='complete'
         report['meaning']='Bounded diagnostic execution completed; no task success or contact fidelity certified'
     except BaseException as exc:

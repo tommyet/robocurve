@@ -91,7 +91,11 @@ def author_dispenser(stage,barrel_path,plunger_path,*,diagnostic_fixture=False):
 
 
 class Coupling:
-    def __init__(self,material=None,dispenser=None):
+    def __init__(self,material=None,dispenser=None,*,boundary_velocity='displacement'):
+        if boundary_velocity not in ('displacement','native'):
+            raise ValueError('Unknown boundary velocity convention')
+        self.boundary_velocity=boundary_velocity
+        self.previous_boundary_pose=None
         self.material=material or Icing()
         self.dispenser=dispenser or DispenserParameters()
         self.last_piston_m=0.
@@ -120,6 +124,35 @@ class Coupling:
         self.contact_samples=np.asarray(samples)
         self.contact_weights=np.asarray(weights)/sum(weights)
 
+    def prime_boundary(self,pose):
+        """Record an episode-reset pose without changing any native state."""
+        self.previous_boundary_pose=np.asarray(pose,float).copy()
+
+    def boundary_motion(self,pose,velocity,dt):
+        """Use actual, unsmoothed surface displacement for explicit coupling.
+
+        PhysX split impulses make the reported end velocity differ from the
+        transform motion. Material transport uses the preceding native-step
+        displacement, including rotation, at each actual boundary point. This
+        is a staggered one-step coupling, not a velocity filter or pose edit.
+        The native convention is retained solely for replaying older evidence.
+        """
+        if dt<=0:raise ValueError('Positive integration step required')
+        b,v=np.asarray(pose,float),np.asarray(velocity,float)
+        r=rotation(b[3:]);tip=b[:3]+r@np.array((0.,.080,0.))
+        world=self.contact_samples@r.T+b[:3]
+        if self.boundary_velocity=='native':
+            tipvel=v[:3]+np.cross(v[3:],tip-b[:3])
+            velocities=v[:3]+np.cross(np.broadcast_to(v[3:],world.shape),world-b[:3])
+        elif self.previous_boundary_pose is None:
+            tipvel=np.zeros(3);velocities=np.zeros_like(world)
+        else:
+            previous=self.previous_boundary_pose;pr=rotation(previous[3:])
+            tipvel=(tip-previous[:3]-pr@np.array((0.,.080,0.)))/dt
+            velocities=(world-(self.contact_samples@pr.T+previous[:3]))/dt
+        self.previous_boundary_pose=b.copy()
+        return tip,tipvel,world,velocities
+
     def advance(self,barrel_pose,barrel_velocity,plunger_pose,dt):
         """Return world pressure wrenches from measured native body state."""
         b,p,v=(np.asarray(a,float) for a in (barrel_pose,plunger_pose,barrel_velocity))
@@ -132,8 +165,7 @@ class Coupling:
         q=float(np.clip(q,0.,self.material.p.stroke_m))
         speed=0. if self.previous_piston_m is None else (q-self.previous_piston_m)/dt
         self.previous_piston_m=q
-        tip=b[:3]+r@np.array((0.,.080,0.))
-        tipvel=v[:3]+np.cross(v[3:],tip-b[:3])
+        tip,tipvel,world,velocities=self.boundary_motion(b,v,dt)
         nr=r@np.array([[1.,0.,0.],[0.,0.,1.],[0.,-1.,0.]])
         reaction=self.material.step(dt,piston_m=q,nozzle_pos=tip,
                                     nozzle_rotation=nr,nozzle_velocity=tipvel)
@@ -141,8 +173,6 @@ class Coupling:
               self.dispenser.seal_friction_n*np.tanh(speed/self.dispenser.friction_regularization_m_s))
         stopping_force=self.dispenser.seal_effective_mass_kg*abs(speed)/dt
         seal=float(np.clip(seal,-stopping_force,stopping_force))
-        world=self.contact_samples@r.T+b[:3]
-        velocities=v[:3]+np.cross(np.broadcast_to(v[3:],world.shape),world-b[:3])
         contact=self.material.tool_contact(world,velocities,dt,
                                           stiffness_n_m=1500.*self.contact_weights,
                                           damping_ns_m=self.contact_weights)
@@ -157,6 +187,7 @@ class Coupling:
     def reset(self):
         """Episode reset only; never used to control the running dispenser."""
         self.material.reset()
+        self.previous_boundary_pose=None
         self.previous_piston_m=None
         self.last_piston_m=self.last_piston_velocity_m_s=self.last_reaction_n=self.last_seal_force_n=0.
         self.last_contact_force=np.zeros(3);self.last_contact_torque=np.zeros(3)

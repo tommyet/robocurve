@@ -4,8 +4,8 @@
 wrench, but no valid tightening demonstration exists. A clean CPU PGS central
 spring control now matches the isolated load law and remains bounded for 0.3 s
 with live thread coupling. The wheel's angular momentum settles, rather than
-continuously accelerating as in earlier TGS trials. Corrected spoke tension,
-loaded robot engagement and a complete released revolution remain unverified.
+continuously accelerating as in earlier TGS trials. The corrected-state PGS128 control retains 410–423 N spoke tension. Loaded
+robot engagement and a complete released revolution remain unverified.
 No Dream run or submission media exists.
 
 The robot adjusts spoke nipples until the wheel runs straight, remains centred
@@ -62,7 +62,7 @@ to ±3 turns. See `VALIDATION.json` for parameters, limits and test history.
 
 ## Reproducing the current checks
 
-The 53 CPU checks need NumPy, use no randomness and take under one second:
+The 61 CPU checks need NumPy, use no randomness and take under one second:
 
 ```sh
 python -m unittest discover -s tasks/true-a-bicycle-wheel -p 'test_*.py'
@@ -71,17 +71,16 @@ python -m unittest discover -s tasks/true-a-bicycle-wheel -p 'test_*.py'
 In the pinned Isaac 6.1 environment, use a new output directory for each run:
 
 ```sh
-python tasks/true-a-bicycle-wheel/scene_probe.py --out OUTPUT --seconds .3 --dt .000025 --solver-position-iterations 32 --reset-profile two-defect-candidate
-python tasks/true-a-bicycle-wheel/wrench_contact_probe.py --out OUTPUT --dt .00005 --turn-deg -45
-python tasks/true-a-bicycle-wheel/wrench_contact_probe.py --out OUTPUT --dt .00005 --turn-deg -45 --no-contact
-python tasks/true-a-bicycle-wheel/preview_yam.py --out OUTPUT --steps 2 --physics-hz 20000 --device cpu
+python tasks/true-a-bicycle-wheel/scene_probe.py --out OUTPUT --seconds .5 --dt .0001 --solver-type PGS --solver-position-iterations 128 --solver-velocity-iterations 4 --reset-profile zero-defect-control --wheel-clocking-deg 55 --nipple-flat-phase-deg 45 --central-spring-candidate --distance-tolerance-compensation-m .025
+python tasks/true-a-bicycle-wheel/preview_yam.py --out OUTPUT --steps 2 --physics-hz 10000 --device cpu --solver-type PGS --solver-position-iterations 128 --central-spring-candidate --distance-tolerance-compensation-m .025 --wheel-clocking-deg 55 --nipple-flat-phase-deg 45
 ```
 
-The wrench tests are explicit kinematic fixtures, not robot demos. Their
-no-contact control moves the wrench 40 mm off the nipple. Without `--plan`, the YAM preview holds the ready pose. A frozen ordinary
-joint plan can be passed for bounded pickup checks; see `MOTION_PLAN.md`.
-Both modes record cameras and native state. Read the JSON status
-and physical checks: Isaac may exit with code zero after a Python failure.
+The first command is a passive corrected-state control. The second holds the
+ordinary robot ready pose. Neither is a task demonstration. The service plan
+and disclosed pose-feedback options are described in `MOTION_PLAN.md`. Read
+the JSON status and physical checks: Isaac may exit with code zero after a
+Python failure. The older controls below preserve development history; they
+are not the current task configuration.
 
 An isolated spring passes the expected quarter-turn displacement check at a
 25 µs step. The isolated rim remains bounded for two seconds. The full assembly
@@ -161,3 +160,32 @@ must establish that the planned repair can satisfy the 400 N floor.
 The inextensible-rim TGS diagnostic still develops artificial axle torque and
 is not promoted. Historical TGS settling numbers above are not the current
 PGS task baseline. See `evidence/native-pgs-071-074-summary.json`.
+
+### Current corrected-state control and review evidence
+
+PGS128 preserves410–423N spoke tension in the nominal corrected state, with
+2.68µm lateral runout. The matched32-iteration result falls below the unchanged
+400N floor. Both results are preserved in
+`evidence/native-pgs-preload-080-082-summary.json`. This establishes a possible
+corrected physical state, not robot repair. All 61 CPU checks pass.
+
+`assess_trace.py` reconstructs the actual outer rim surface from native poses,
+including rigid-sector rotations, and reports lateral/radial runout, dish and
+all32 spoke tensions. It includes the known radial chord-error bound and never
+labels robot-held rotation as a free revolution. Final judging still requires
+continuous release and integrity review. `--judging-views` adds fixed key/gauge
+cameras; they never enter policy observations.
+
+`--dream` uses ordinary camera/joint observations in the same runner, rejects
+demo feedback, and records raw versus ordinary bounded actions. No Dream
+request or successful complete native repair has been recorded yet.
+
+### Latest approach check
+
+Native085 reached 158 actions before the scripted IK guard stopped a clear
+approach. Only commands 159–160 need an approximate target: their computed
+jaw errors are 0.379/0.602 mm including rotational error, within the physical
+mouth's 0.885 mm half-clearance. The controller now reserves 0.135 mm of this
+clearance during approach; insertion and turning keep their stricter checks.
+The 202-command replay and 44-frame measured-geometry suffix screen pass
+offline. Native engagement and repair are still unproven.

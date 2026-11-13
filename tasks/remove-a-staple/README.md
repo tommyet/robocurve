@@ -8,7 +8,7 @@ material. Complete extraction and loaded robot feasibility remain unverified.
 There is no demo, Dream run or media ID.
 
 The robot removes a clinched staple without tearing either sheet and leaves the
-complete staple at least10mm clear. The difficulty is engaging a remover under
+complete staple at least 10 mm clear. The difficulty is engaging a remover under
 the crown and unbending both legs without damaging their paper holes. No
 unrelated transport or separation of the sheets is required.
 
@@ -22,7 +22,7 @@ difference. The three unedited reports are in `evidence/native-coupon-*.json`;
 `VALIDATION.json` records their hashes. These are contact/material tests, not
 paper extraction or robot demonstrations. Material parameters are approximate.
 
-There are 55 passing CPU checks for the steel law, punctured meshes,
+There are 59 passing CPU checks for the steel law, punctured meshes,
 latched membrane/contact guards, tool approach geometry and photo-based judging.
 The older CPU cohesive-opening model remains a research probe; it does not
 supply tearing physics in the native scene.
@@ -48,7 +48,16 @@ From the repository root, with NumPy installed:
 python -m unittest discover -s tasks/remove-a-staple -p 'test_*.py' -v
 ```
 
-In the pinned Isaac 6.1 environment:
+The active panel-paper integration command, in the pinned Isaac 6.1 environment:
+
+```sh
+python tasks/remove-a-staple/preview_panels.py --out OUTPUT --steps 2 --physics-hz 2000 --solver-type PGS --position-iterations 128 --recenter-at-paper --judging-views
+```
+
+Add `--plan PLAN.json --joint-tracking` for a compiled ordinary robot motion.
+The complete candidate has 386 actions; full extraction is not yet validated.
+The following commands reproduce historical material/FEM diagnostics only:
+
 
 ```sh
 python tasks/remove-a-staple/native_probe.py --out artifacts/staple-positive --dt .0001 --seconds 1
@@ -199,7 +208,7 @@ python tasks/remove-a-staple/facet_probe.py --out artifacts/paper-box-full --sec
 
 `arena_panels.py` and `task_panels.py` are separate candidate YAM modules. They
 use reset-only pose writes and inspect paper continuity/crossing every substep.
-They have not yet run. Paper remains a discretely flexible shell, not one rigid
+That early revision had not yet run. Paper remains a discretely flexible shell, not one rigid
 sheet; anisotropy, permanent crease memory and detailed post-fracture topology
 are not represented. Any broken/gaping hinge invalidates the candidate trial.
 
@@ -227,7 +236,7 @@ need matched mechanical checks before a full robot trial. The 236-action
 pocket-support lever plan has a clean whole-arm collision screen, but has not
 yet grasped the remover or extracted the staple in this model.
 
-Run the current integration gate in the pinned environment:
+The earlier TGS integration gate used:
 
 ```sh
 python tasks/remove-a-staple/preview_panels.py --out OUTPUT --steps 2 --physics-hz 10000 --recenter-at-paper
@@ -259,3 +268,22 @@ continuity/crossing checks. `assess_trace.py` supplies conservative geometric
 distance/release evidence after a run; it does not fill human review fields or
 certify a score. The staple may remain in the released remover, at least10mm
 from both papers.
+
+The first complete motion attempt stops at action46, when the left fingertips
+first brace the paper. The upper-panel endpoint mismatch reaches29.73µm;
+wire crossings remain clean and the staple remains connected. This crosses
+the current25µm numerical envelope, not a measured physical tear threshold.
+The matched 128-iteration contact trial keeps material and scoring unchanged.
+No extraction score is claimed from the interrupted run.
+
+`--dream` selects the ordinary Dream policy in the same runner and rejects
+scripted plans or joint tracking. It records raw and bounded joint actions,
+request timing and continuous-session evidence without private server IDs.
+No Dream request has been made for this development package.
+
+The matched 128-iteration bracing run reaches 46 actions and a 29.57 µm
+endpoint residual. Its across-edge opening is 16.79 µm, with 21.83 µm
+along-edge slip and 10.75 µm normal offset. The optional
+`--paper-gap-envelope-um 100` is an unscored diagnostic to establish whether
+this settles or grows; it changes no contacts or forces, and the assessor
+rejects it as task-valid evidence. First-invalid native poses are saved.

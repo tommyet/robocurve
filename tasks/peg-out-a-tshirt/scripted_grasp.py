@@ -44,3 +44,21 @@ def calibrate(reference_plan,rest,nodes):
     result['state_assisted_reset_grasp']=patches
     result['native_reset_nodes_sha256']=hashlib.sha256(np.ascontiguousarray(nodes).tobytes()).hexdigest()
     return result,dict(patches=patches,input_native_nodes_sha256=result['native_reset_nodes_sha256'],state_writes=False)
+
+
+def held_patch_geometry(rest, nodes, gripper_pose, side='left'):
+    """Reject a plainly lost grasp; proximity alone never proves retention."""
+    from interpret_motion import rotation_xyzw
+    rest = np.asarray(rest, float)
+    nodes = np.asarray(nodes, float)
+    pose = np.asarray(gripper_pose, float)
+    hem_x = -.12 if side == 'left' else .12
+    ids = np.flatnonzero((abs(rest[:, 0] - hem_x) < .011) & (rest[:, 1] < .021))
+    if not len(ids) or nodes.shape != rest.shape or pose.shape != (7,):
+        raise ValueError('Missing actual cloth or gripper observations')
+    rotation = rotation_xyzw(pose[3:])
+    tcp = pose[:3] + rotation @ np.array((0., 0., .134))
+    local = (nodes[ids].mean(0) - tcp) @ rotation
+    nearby = abs(local[0]) < .015 and abs(local[1]) < .05 and -.06 < local[2] < .03
+    return dict(patch_relative_to_tcp_m=local.tolist(), plainly_lost=not bool(nearby),
+        scope='Early failure guard only; no grasp or task-success claim')

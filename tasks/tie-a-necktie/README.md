@@ -86,3 +86,9 @@ available only as explicitly identified diagnostics.
 Native authoring follows [NVIDIA surface deformables](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/deformables_beta/deformable_beta.html).
 [TieBot](https://tiebots.github.io/) is relevant prior research; it does not
 supply this YAM controller or validate this contact model.
+
+The revised receiving approach reached action308 in batch086 before an arm
+occluded an optional judging camera. The original cloth pinch remained held;
+seven sampled robot/cloth checks found no deep intersections. Recording now
+keeps and flags occluded review frames rather than stopping physical execution.
+The receiving pinch, transfer and knot still require native evidence.

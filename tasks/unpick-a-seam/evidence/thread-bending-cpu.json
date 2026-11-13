@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-13",
+  "status": "cpu_authoring_checks_only_native_pending",
+  "source": "https://pure.hw.ac.uk/ws/portalfiles/portal/26145930/Last_Revised_Part_2._JTI_05_12_18.pdf",
+  "citation": "Amir, Leaf and Stylios (2020), A Model of Seam Pucker and Its Applications. Part II: Experimental, Table1, DOI10.1080/00405000.2019.1646076",
+  "measured_reference": {
+    "polyester_thread_diameter_m": 0.000236,
+    "bending_rigidity_gf_cm2": 0.0012,
+    "bending_rigidity_nm2": 1.1767979999999999e-09
+  },
+  "candidate": {
+    "collision_diameter_m": 0.0008,
+    "rigidity_nm2": 1.2e-09,
+    "damping_ratio": 0.1,
+    "limitation": "Low-stiffness engineering approximation based on a thinner measured thread; not a calibration of the0.8mm collision strand.",
+    "equation": "k_i=B / ((L_i+L_previous)/2); passive straight-rest torques use native D6 rotY/rotZ force drives, gains per degree = gains per radian*pi/180. Axial twist free; no angular limits.",
+    "damping": "c_i=2*zeta*sqrt(k_i*I_reduced), using cylinder transverse inertia only for this damping estimate. Native capsule inertia remains unchanged."
+  },
+  "stiffness_range_nm_rad": [
+    9.999999999999714e-07,
+    1.1999999999999989e-06
+  ],
+  "damping_range_nms_rad": [
+    4.5639912281206005e-11,
+    5.1983385200580326e-11
+  ],
+  "circle_length_error_m": 1.5178830414797062e-18,
+  "circle_min_nonadjacent_capsule_gap_m": 0.00019999999999999977,
+  "runtime_pose_writes": false,
+  "external_task_aware_force": false,
+  "contacts_disabled": false,
+  "energy_note": "Read-only centreline bending energy is a small-angle proxy; it is not asserted identical to PhysX finite-angle D6 potential and does not decide a pass.",
+  "native_drive_sources": [
+    "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/joints.html",
+    "https://nvidia-omniverse.github.io/PhysX/ovphysx/0.7.0/population/PhysicsDriveAPI.html"
+  ],
+  "native_drive_note": "Same rotY/rotZ gains as recommended for D6 swing; per-degree authored gains compensate the parser conversion to radians. A SphericalJoint alone has no supported drive, so the optional candidate uses generic D6 translation locks."
+}

@@ -53,6 +53,7 @@ def main():
     p.add_argument('--solver',choices=('TGS','PGS'),default='TGS',help='Native CPU contact-solver comparison; geometry and material unchanged')
     p.add_argument('--recenter-at-seam',action='store_true',help='Coordinate-only comparison: translate every authored object and world-fixed jaw anchor so the seam is near the origin')
     p.add_argument('--clear-thread-sampling',action='store_true',help='Same centreline and diameter with24links per loop; no non-neighbour tangent capsules at reset')
+    p.add_argument('--passive-thread-bending',action='store_true',help='Same thread geometry with disclosed B=1.2e-9 N m2 native passive straight-rest D6 swing drives')
     p.add_argument('--seconds',type=float,default=.5)
     p.add_argument('--record-every-step',action='store_true',help='Save raw native body poses at every substep for geometry diagnosis')
     p.add_argument('--continue-after-audit-warning',action='store_true',help='Unscored forensic recording only: retain contact/hinge warnings through the bounded duration; physically disjoint closed thread ends still stop')
@@ -61,6 +62,8 @@ def main():
     if a.cpu_ccd and not a.box_panels:p.error('CPU CCD comparison requires native box panels')
     if a.ccd_mode!='hybrid' and not a.cpu_ccd:p.error('CCD mode requires the CPU CCD comparison')
     if a.solver!='TGS' and not a.cpu_ccd:p.error('PGS comparison requires CPU PhysX')
+    if a.passive_thread_bending and (not a.cpu_ccd or not a.clear_thread_sampling or a.mode not in ('intact','open')):
+        p.error('Passive thread candidate requires the clear-sampled CPU intact/open control')
     if a.recenter_at_seam and (not a.box_panels or a.mode not in ('intact','open')):
         p.error('Seam recentering requires a box-panel intact/open comparison')
     a.out.mkdir(parents=True,exist_ok=False)
@@ -113,6 +116,7 @@ def main():
         report['box_panels']=a.box_panels
         report['ccd_mode']=a.ccd_mode if a.cpu_ccd else 'direct_gpu_unsupported'
         report['clear_thread_sampling']=a.clear_thread_sampling
+        report['passive_thread_bending']=a.passive_thread_bending
         isolated=a.mode in ('bend','freefall')
         offset=np.array((-.300,0.,-.8127)) if a.recenter_at_seam else np.zeros(3)
         report['world_coordinate_offset_m']=offset.tolist()
@@ -144,8 +148,12 @@ def main():
                 position=np.asarray(position)+offset
                 author_box(stage,path,size,position,dynamic=name==MOVING_NAME,mass=PARAMETERS.mass_kg,friction=.8)
                 if name==MOVING_NAME:author_guide(stage,path,position)
+            from thread_bending import ThreadBending
+            bending=ThreadBending() if a.passive_thread_bending else None
             threads=[author_thread(stage,f'/World/Stitch_{i}',transform(stitch_loop(y,clear_capsules=a.clear_thread_sampling),lower_edge_supported=True)+offset,
-                                   radius=.0004,open_diagnostic=a.mode=='open') for i,y in enumerate(STITCH_Y)]
+                                   radius=.0004,open_diagnostic=a.mode=='open',
+                                   joint_kind='d6' if bending is not None else 'spherical',bending=bending) for i,y in enumerate(STITCH_Y)]
+            if bending is not None:report['thread_bending']=[t['bending'] for t in threads]
         if a.velocity_iterations is not None:
             for prim in stage.Traverse():
                 if prim.HasAPI(UsdPhysics.RigidBodyAPI):

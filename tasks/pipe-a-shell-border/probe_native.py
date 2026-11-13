@@ -73,6 +73,7 @@ def main():
         plunger=sim.create_rigid_body_view('/World/Plunger')
         if barrel.count!=1 or plunger.count!=1:raise RuntimeError('Missing native dispenser body')
         device=barrel.get_transforms().device
+        coupling.prime_boundary(barrel.get_transforms().detach().cpu().numpy()[0])
         trace=[];phase='physics stepping'
         for i in range(int(args.seconds*480)):
             bp=barrel.get_transforms().detach().cpu().numpy()[0]
@@ -84,7 +85,8 @@ def main():
             for view,force in ((barrel,fb),(plunger,fp)):
                 view.apply_forces_and_torques_at_position(force_data=torch.as_tensor(force,dtype=torch.float32,device=device).reshape(1,3),
                     torque_data=(torch.as_tensor(coupling.last_contact_torque,dtype=torch.float32,device=device).reshape(1,3)
-                                 if view is barrel else None),position_data=None,
+                                 if view is barrel else None),
+                    position_data=torch.as_tensor(bp[:3] if view is barrel else pp[:3],dtype=torch.float32,device=device).reshape(1,3),
                     indices=torch.tensor([0],dtype=torch.int32,device=device),is_global=True)
             physics.simulate(1/480,i/480);physics.fetch_results()
             if i%24==0:

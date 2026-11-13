@@ -50,6 +50,26 @@ def compensated_tcp(nominal_tcp, nominal_rotation, measured_tcp, measured_rotati
         tcp_correction_m=float(np.linalg.norm(desired_tcp-nominal_tcp)))
 
 
+def ik_acceptance(stage, tcp_error_m, rotation_error_rad, tool_error_m):
+    """Bound a clear approach by the physical jaw lead-in, not an exact TCP.
+
+    The 5 mm mouth admits a 3.23 mm nipple with 0.885 mm half-clearance.
+    During the approach only, reserve at least 0.135 mm of that clearance and
+    bound the position error of every jaw point within 10 mm of its centre.
+    Insertion, turning and withdrawal retain the original stricter gate. This
+    is a command-quality check; only native contact can establish engagement.
+    """
+    values=np.asarray((tcp_error_m,rotation_error_rad,tool_error_m),float)
+    if not np.isfinite(values).all() or np.any(values<0):
+        return False,{'mode':'invalid','jaw_error_bound_m':None}
+    jaw_error=tool_error_m+2*.010*np.sin(rotation_error_rad/2)
+    exact=tcp_error_m<=.0002 and rotation_error_rad<=.002
+    capture=(stage.startswith('Approach nipple ') and tcp_error_m<=.001
+             and rotation_error_rad<=.002 and jaw_error<=.00075)
+    return bool(exact or capture),dict(mode='strict' if exact else 'lead_in' if capture else 'rejected',
+        jaw_error_bound_m=float(jaw_error),lead_in_half_clearance_m=.000885)
+
+
 class ToolPoseServo:
     def __init__(self,plan,*,nipple_feedback=False):
         cal=plan['held_grasp_calibration']
@@ -100,8 +120,15 @@ class ToolPoseServo:
             raise RuntimeError('Tool grasp changed by more than60mm; stop scripted servo')
         solution,pe,rotation_error=ik.solve(desired_p,ik.matrix_to_quat_xyzw(desired_R),target[7:13],
             station.BASES['right'],iters=150,damping=.008,tol=1e-7)
-        if pe>.0002 or rotation_error>.002:
+        solved_p,solved_R=ik.tcp_pose(solution,station.BASES['right'])
+        solved_tool_R=solved_R@np.asarray(diagnostic['measured_grasp_rotation_in_tool']).T
+        solved_tool_p=solved_p-solved_tool_R@np.asarray(diagnostic['measured_grasp_position_in_tool_m'])
+        tool_error=float(np.linalg.norm(solved_tool_p-diagnostic['desired_tool_position_m']))
+        accepted,quality=ik_acceptance(self.plan['frames'][step-1]['stage'],pe,rotation_error,tool_error)
+        if not accepted:
             raise RuntimeError(f'Tool servo IK failed: position={pe}, rotation={rotation_error}')
         target[7:13]=solution
-        self.last={'active':True,**diagnostic,'nipple_target':nipple_diagnostic,'ik_position_error_m':float(pe),'ik_rotation_error_rad':float(rotation_error)}
+        self.last={'active':True,**diagnostic,'nipple_target':nipple_diagnostic,
+            'ik_position_error_m':float(pe),'ik_rotation_error_rad':float(rotation_error),
+            'ik_tool_position_error_m':tool_error,'ik_acceptance':quality}
         return target

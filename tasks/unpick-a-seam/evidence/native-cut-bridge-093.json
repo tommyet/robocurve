@@ -1,0 +1,68 @@
+{
+  "date": "2026-11-13",
+  "status": "failed_diagnostics_not_task_evidence",
+  "score": null,
+  "archive_sha256": "193d45ffe1073b266a0d1ca339ca8ee6a97fe1f6324ae1cf82ea9d4f63a4d4d8",
+  "zero_load_cut": {
+    "configuration": "24-link closed loop, no bending, ordinary self-contact, CPU TGS sweep CCD, 960 Hz; diagnostic cut at25ms",
+    "status": "invalid_closed_chain",
+    "completed_steps": 82,
+    "simulated_s": 0.08541666666666667,
+    "cut_event": {
+      "time_s": 0.025,
+      "joint": 0,
+      "reason": "Unscored zero-tool cut-end collision-energy diagnostic, not a task cutting event",
+      "before": {
+        "bending_energy_proxy_j": 0.0,
+        "relative_kinetic_energy_j": 5.1228597732941305e-20,
+        "maximum_bend_rad": 1.570850119175331,
+        "centre_velocity_m_s": [
+          -4.1501050206666857e-16,
+          1.6024621595273013e-24,
+          -0.24512241492348336
+        ]
+      }
+    },
+    "first_post_cut_relative_kinetic_energy_j": 7.715547992852599e-10,
+    "maximum_post_cut_relative_kinetic_energy_j": 2.8447614051956264e-06,
+    "thread_integrity": {
+      "maximum_closed_joint_gap_m": 0.0012352504661639874,
+      "first_failure": {
+        "time_s": 0.08541666666666667,
+        "joint": 22,
+        "gap_m": 0.0012352504661639874,
+        "maximum_connected_endcap_gap_m": 0.0008,
+        "reason": "unsevered native joint has physically disjoint end caps"
+      },
+      "valid": false
+    },
+    "maximum_body_speed_m_s": 1.7988930940628052,
+    "mechanism": "Restoring collision immediately between overlapping formerly adjacent hemispheres produces artificial contact-correction energy and eventually separates an uncut joint."
+  },
+  "yam_bridge": {
+    "status": "failed",
+    "completed_steps": 0,
+    "error": "Exception: Failed to create simulation view with backend 'physx'",
+    "native_scene_physics": {
+      "gpu": false,
+      "ccd": true,
+      "solver": "TGS",
+      "broadphase": "MBP"
+    },
+    "configuration_defects": [
+      "Tensor view did not receive explicit attached stage ID.",
+      "Generic Box reset event poses remained in station coordinates while authored roots were recentered; detected before successful stepping."
+    ]
+  },
+  "prepared_corrections": [
+    "Pass explicit cached USD stage ID to native tensor view and verify CPU device.",
+    "Translate generic world-space Pose reset events together with asset init_state; preserve source Pose and relative cameras.",
+    "Disable the cut connection immediately; retain only its former adjacency filter until finite capsule-axis separation reaches2r+100\u00b5m, then restore it permanently. All other contact remains active."
+  ],
+  "validation": "65 CPU checks pass. Native correction controls remain pending; no robot cut or extraction claim.",
+  "files_sha256": {
+    "thread-cut-zero-load/probe.json": "f98b8922c53ab156f7fb1f2a65581d6ba8852aadaac92fed6bb33d8ee5179cee",
+    "thread-cut-zero-load/state.npz": "b2d9f244168ead19b3093281a598a06e38abc59e7791c2453b86e99238a5a14d",
+    "seam-yam2/preview.json": "1aa98f40092a0549f31305939dd452c92d22f0eff8bd3b76bcded1ab91908998"
+  }
+}

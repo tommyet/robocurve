@@ -1,0 +1,84 @@
+{
+  "date": "2026-11-13",
+  "status": "invalid_contact_constraint_dynamics_no_task_score",
+  "source_archive_sha256": "a0e6db7da6f9e1b45ad854483a5b4ed041344bd07c7b6e2e22ac849e2e7c3097",
+  "files_sha256": {
+    "state.npz": "fda6d683897d750c666149e3392cb8acc05e92b75926e0cf1d66ea57bf8ee59e",
+    "probe.json": "f1cacb64e8b912e6b7aa95b29c1d467ceb017aadec9f8d042d05525a28150648",
+    "first-event-native.npz": "d5fddb11fc1cea538ae54685c7bcbc570f50b3fc7d962fa8e8b20f5b69198ba1",
+    "initial.usda": "27aa675c50b6734bc3389e6b5207bc990844c57eb377459eeba45d4bf63fdd6e"
+  },
+  "completed_steps": 35,
+  "physics_hz": 960,
+  "effective_scene_physics": {
+    "gpu_dynamics": false,
+    "broadphase": "MBP",
+    "sweep_ccd": true,
+    "solver": "PGS"
+  },
+  "ccd_mode": "sweep",
+  "clear_thread_sampling": true,
+  "thread_joint_integrity": {
+    "maximum_closed_joint_gap_m": 0.001027750926570521,
+    "first_failure": {
+      "time_s": 0.036458333333333336,
+      "joint": 129,
+      "gap_m": 0.001027750926570521,
+      "maximum_connected_endcap_gap_m": 0.0008,
+      "reason": "unsevered native joint has physically disjoint end caps"
+    },
+    "valid": false
+  },
+  "first_invalid_step": 32,
+  "wall_seconds": 5.387855241075158,
+  "actual_box_midplane_crossings": null,
+  "hole_link_changes": [],
+  "expected_initial_hole_links": 24,
+  "full_trace_summary": {
+    "start_s": 0.0010416666666666667,
+    "end_s": 0.036458333333333336,
+    "frames": 35,
+    "patches": [
+      {
+        "expected_links": 12,
+        "all_initial_links_retained": true,
+        "minimum_retained_initial_links": 12,
+        "native_midplane_intersection_frames": 0,
+        "maximum_capsule_overlap_lower_bound_m": 0.0004,
+        "maximum_hinge_endpoint_gap_m": 0.0002785168856265017
+      },
+      {
+        "expected_links": 12,
+        "all_initial_links_retained": true,
+        "minimum_retained_initial_links": 12,
+        "native_midplane_intersection_frames": 0,
+        "maximum_capsule_overlap_lower_bound_m": 9.259499702554181e-05,
+        "maximum_hinge_endpoint_gap_m": 8.608461755136925e-05
+      }
+    ]
+  },
+  "final_exact_contact": {
+    "time_s": 0.036458333333333336,
+    "patches": [
+      {
+        "maximum_hinge_endpoint_gap_m": 0.00018600013542227837,
+        "maximum_vertex_average_error_m": 0.00012811228534338553,
+        "maximum_capsule_overlap_lower_bound_m": 0.0002277999590219495,
+        "overlapping_pairs": 12,
+        "native_midplane_intersections": 0,
+        "retained_initial_links": 12,
+        "ambiguous_links": 0
+      },
+      {
+        "maximum_hinge_endpoint_gap_m": 8.608461755136925e-05,
+        "maximum_vertex_average_error_m": 5.829538259167202e-05,
+        "maximum_capsule_overlap_lower_bound_m": 9.259499702554181e-05,
+        "overlapping_pairs": 10,
+        "native_midplane_intersections": 0,
+        "retained_initial_links": 12,
+        "ambiguous_links": 0
+      }
+    ]
+  },
+  "finding": "PGS also fails, opening an uncut joint after35steps. No actual box-midplane passage or hole-link loss precedes the physically disjoint uncut thread joint. A zero-bending string model remains inadequate for stable contact here; no valid manipulation reset or task score exists."
+}

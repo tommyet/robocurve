@@ -2,7 +2,7 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "55 CPU checks pass. Full-size flexible100um box-panel paper passes passive contact and two-action native YAM integration with PGS32 at500us after a fixed station-origin shift. Complete robot extraction and release remain unverified.",
+  "cpu_checks": "58 CPU checks pass. PGS500us/32iteration passive and two-action YAM controls pass. Actual robot contact084 stops at an upper-paper29.73um hinge endpoint mismatch during bracing; this exceeds a numerical envelope and does not establish a tear. PGS128 convergence control pending. Complete extraction not proven.",
   "simulator_probe": "One native 3 mm steel leg with contact-driven plastic hinge, not full task.",
   "demo": null,
   "dream": null,
@@ -51,7 +51,7 @@
       }
     }
   },
-  "cpu_tests_passed": 55,
+  "cpu_tests_passed": 59,
   "coupled_paper_probe": {
     "entry_point": "paper_probe.py",
     "status": "Native surface solver runs; mesh cleanup and documented bend coefficient still leave both contact trials outside provisional validity domain.",
@@ -742,5 +742,18 @@
     "status": "full_size_passive_contact_and_short_YAM_bridge_passed_robot_pending"
   },
   "latest_pgs_controls": "evidence/native-pgs-panels-080-082-summary.json",
-  "next_native_trial": "386 ordinary robot actions including physical remover release, atPGS2000Hz/32position iterations, with55 CPU checks and full-frame motion screen."
+  "next_native_trial": "386 ordinary robot actions including physical remover release, atPGS2000Hz/32position iterations, with55 CPU checks and full-frame motion screen.",
+  "latest_robot_contact": "evidence/native-bracing-084-summary.json",
+  "latest_bracing_control": {
+    "batch": "093",
+    "position_iterations": 128,
+    "completed_actions": 46,
+    "maximum_upper_gap_m": 2.956598708951339e-05,
+    "across_edge_opening_m": 1.6788451233540336e-05,
+    "along_edge_slip_m": 2.1833640863250237e-05,
+    "normal_offset_m": 1.075116851374398e-05,
+    "wire_crossings": 0,
+    "task_score": null,
+    "interpretation": "Numerical25um envelope exceeded at hand brace; no tear established. Next100um override is explicitly diagnostic and excluded by assessor validity."
+  }
 }

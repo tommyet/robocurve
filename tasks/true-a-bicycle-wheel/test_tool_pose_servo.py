@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from tool_pose_servo import compensated_tcp,nipple_alignment
+from tool_pose_servo import compensated_tcp,nipple_alignment,ik_acceptance
 from wheel_scene import quat,spoke_phase
 
 
@@ -31,3 +31,18 @@ class ToolPoseServoTests(unittest.TestCase):
     def test_invalid_pose_rejected(self):
         with self.assertRaises(ValueError):
             compensated_tcp(np.zeros(3),np.eye(3),np.zeros(3),np.eye(3),np.full(7,np.nan),np.zeros(3),np.eye(3))
+
+    def test_small_approach_residual_fits_flared_mouth(self):
+        accepted,quality=ik_acceptance('Approach nipple 0',.000601,.001685,.000585)
+        self.assertTrue(accepted)
+        self.assertEqual(quality['mode'],'lead_in')
+        self.assertLess(quality['jaw_error_bound_m'],.00075)
+
+    def test_capture_allowance_does_not_apply_to_insert_or_turn(self):
+        for stage in ('Nipple 0 quarter 1 insert','Nipple 0 quarter 1 tighten','Clear approach nipple 0'):
+            self.assertFalse(ik_acceptance(stage,.000601,.001685,.000585)[0])
+
+    def test_approach_error_outside_reserved_capture_is_rejected(self):
+        self.assertFalse(ik_acceptance('Approach nipple 0',.0008,.001,.00075)[0])
+        self.assertFalse(ik_acceptance('Approach nipple 0',.0001,.003,0.)[0])
+        self.assertFalse(ik_acceptance('Approach nipple 0',float('nan'),0.,0.)[0])

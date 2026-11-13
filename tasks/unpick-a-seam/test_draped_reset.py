@@ -124,6 +124,27 @@ assert all(len(mesh.faces)==236 for mesh in result['MESHES'])
 assert len(result['FIXTURE'])==17
 assert type(result['OBJECTS'][0]).__name__=='FacetCloth'
 assert abs(result['MESHES'][0].audit()['surface_area_m2']-baseline['MESHES'][0].audit()['surface_area_m2'])<1e-12
+station=result
+import coordinate_frame
+coordinate_frame.configure(True)
+runtime_config.CONFIG=replace(runtime_config.CONFIG,box_panels=True,cpu_ccd=True,
+    clear_thread_sampling=True,passive_thread_bending=True)
+result=runpy.run_path('scene.py')
+for old,mesh,initial in zip(station['MESHES'],result['MESHES'],result['INITIAL']):
+    np.testing.assert_allclose(mesh.rest,old.rest+coordinate_frame.OFFSET_M,rtol=0,atol=1e-15)
+    np.testing.assert_array_equal(mesh.rest,initial)
+from arena_thread import initial as thread_reset
+from thread_bending import planar_frames
+threads=[item for item in result['OBJECTS'] if item.name.startswith('stitch_')]
+assert len(threads)==6 and all(len(item.nodes)==24 for item in threads)
+for item in threads:
+    reset=thread_reset(item)
+    np.testing.assert_allclose(reset[:,:3],(item.nodes+np.roll(item.nodes,-1,axis=0))/2,atol=1e-15)
+    np.testing.assert_allclose(reset[:,3:],planar_frames(item.nodes),atol=1e-15)
+    assert item.bending.rigidity_nm2==1.2e-9
+assert all(abs(mesh.rest[:,0].mean())<.001 for mesh in result['MESHES'])
+assert station['FIXTURE']==result['FIXTURE']  # ordinary roots shift in cfg, once
+coordinate_frame.configure(False)
 '''
         result=subprocess.run([sys.executable,'-c',script],cwd=Path(__file__).resolve().parent,
                               text=True,capture_output=True)

@@ -10,6 +10,32 @@ DOWN=np.diag((1.,-1.,-1.))
 
 
 class MaterialTests(unittest.TestCase):
+    def test_stationary_surface_ignores_unintegrated_solver_velocity(self):
+        c=Coupling(self.model());pose=np.array([.2,0.,.9,0.,0.,0.,1.])
+        c.prime_boundary(pose)
+        _,tipvel,_,vel=c.boundary_motion(pose,np.ones(6)*10.,1/960)
+        np.testing.assert_allclose(tipvel,0.,atol=1e-12)
+        np.testing.assert_allclose(vel,0.,atol=1e-12)
+
+    def test_translation_preserves_full_displacement_without_clipping(self):
+        c=Coupling(self.model());pose=np.array([.2,0.,.9,0.,0.,0.,1.]);dt=1/960
+        c.prime_boundary(pose);translation=np.array([.001,-.002,.003]);pose[:3]+=translation
+        _,tipvel,_,vel=c.boundary_motion(pose,np.zeros(6),dt)
+        np.testing.assert_allclose(tipvel,translation/dt,atol=1e-12)
+        np.testing.assert_allclose(vel,np.broadcast_to(translation/dt,vel.shape),atol=1e-12)
+
+    def test_rotation_uses_each_actual_boundary_point(self):
+        c=Coupling(self.model());pose=np.array([.2,0.,.9,0.,0.,0.,1.]);dt=1/960
+        c.prime_boundary(pose);theta=.02;pose[5:]=[np.sin(theta/2),np.cos(theta/2)]
+        tip,tipvel,world,vel=c.boundary_motion(pose,np.zeros(6),dt)
+        np.testing.assert_allclose(tipvel,(tip-(pose[:3]+[0.,.08,0.]))/dt,atol=1e-12)
+        np.testing.assert_allclose(vel,(world-(c.contact_samples+pose[:3]))/dt,atol=1e-12)
+        self.assertGreater(np.ptp(vel[:,1]),.01)
+
+    def test_reset_clears_boundary_history(self):
+        c=Coupling(self.model());c.prime_boundary([0.,0.,0.,0.,0.,0.,1.]);c.reset()
+        self.assertIsNone(c.previous_boundary_pose)
+
     def test_ridges_must_continue_beyond_one_fortunate_cross_section(self):
         dx=.0005;x=np.arange(-.004,.0041,dx);y=np.arange(-.005,.0051,dx)
         profile=.002+.002*(np.exp(-((x-.002)/.0005)**2)+np.exp(-((x+.002)/.0005)**2))

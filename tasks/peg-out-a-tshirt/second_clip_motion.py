@@ -15,7 +15,7 @@ def compile_fragment(first_plan):
     from yam_arena.constants import READY,SHOULDER,WRIST,GRIPPER,FINGER_OPEN
     reflect=np.diag((1.,-1.,1.));finger_swap=np.diag((-1.,1.,1.))
     q={side:np.asarray(READY,float) for side in ('left','right')};frames=[];errors=[]
-    for index,f in enumerate(first_plan['frames'][300:1220]):
+    for index,f in enumerate(first_plan['frames'][300:]):
         original=np.asarray(f['action14']);a=np.empty(14)
         for i,side,source in ((0,'left','right'),(1,'right','left')):
             j=1-i;position,rotation=ik.tcp_pose(original[j*7:j*7+6],station.BASES[source]);position=reflect@position;rotation=reflect@rotation@finger_swap
@@ -27,7 +27,10 @@ def compile_fragment(first_plan):
     deltas=np.abs(np.diff(np.asarray([f['action14'] for f in frames]),axis=0))/limit
     return dict(schema='cloth-fixed-motion-fragment-v1',kind='unvalidated_continuation_not_episode',control_hz=20,score=None,
         action_count=len(frames),frames=frames,kinematic_failures=errors,max_normal_joint_speed_ratio=float(deltas.max()),
-        line_pegs_required=True,feedback='Candidate ordinary fixed continuation; missing right-hand state-assisted cloth pickup prefix',
+        line_pegs_required=True,peg_hand='left',
+        clip_servo_window=[int(x)-300 for x in first_plan.get('clip_servo_window',[820,940])],
+        joint_feedback_from=int(first_plan.get('requires_joint_feedback_from',700))-300,
+        feedback='Candidate ordinary fixed continuation; missing right-hand state-assisted cloth pickup prefix',
         requires='Retained first clip at+y; unused spare at−y; right hand physically holding opposite cloth region; left hand clear before first fragment pose.',
         do_not_run_reason='Not a whole episode: missing native right-hand fabric presentation, continuity into initial fragment pose, and full contact validation.')
 

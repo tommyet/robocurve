@@ -243,5 +243,20 @@
     "evidence": "artifacts/six-task-completion-2026-11-13/native-batch-076-tie/tie-handoff",
     "finding": "Raised held wide strand and measured its30mm tip at(.28761,-.19513,.87975)m. Proposed left joint-space receiving swing would cross the actual narrow end with forearm links3/4 (material1.295\u20131.45m); runtime guard correctly withheld it.",
     "next": "Clear front-space staged receiving route under CPU audit; no added cloth constraints."
+  },
+  "adult_handoff086": {
+    "status": "incomplete: optional judging camera occlusion stopped recording",
+    "actions_completed": 308,
+    "wall_seconds": 332.88903345074505,
+    "evidence": "artifacts/six-task-completion-2026-11-13/native-batch-086-tie/tie-handoff580",
+    "physical_findings": "The original wide-strand pinch remains retained at z1.299 m; receiving arm has only begun its clear front-space staging. No receiving pinch or transfer has occurred. The recorder wrote native step309 before the optional image failure; completed_steps reports308.",
+    "actual_robot_contact_audit": {
+      "samples": 8,
+      "full_triangle_hits_with_200um_contraction": 0,
+      "maximum_node_penetration_m": 1.1079519284279415e-05
+    },
+    "recorder_fix": "Optional low-variance judging frames are now retained unchanged and flagged for review instead of stopping physics. Malformed image data remain errors. Policy camera inputs and physics are unchanged.",
+    "next": "Same580-action handoff with recorder fix, pending; no knot or score.",
+    "last_native_trace_step": 309
   }
 }

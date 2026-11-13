@@ -1,0 +1,45 @@
+{
+  "kind": "native_wrench_approach_failure_and_offline_correction",
+  "native_completed_actions": 158,
+  "native_requested_actions": 202,
+  "native_wall_seconds": 602.5660200780258,
+  "failure": "Clear approach command159 exceeded old0.2mm TCP approximation gate; no native tightening reached.",
+  "actual_jaw_error_bounds_m": [
+    0.0003793140181584805,
+    0.0006022186122262435
+  ],
+  "mouth_half_clearance_m": 0.000885,
+  "reserved_approach_jaw_error_bound_m": 0.00075,
+  "insertion_and_turn_gate_unchanged": true,
+  "offline_corrected_suffix_steps": [
+    159,
+    202
+  ],
+  "offline_unintended_intersections": 0,
+  "offline_prefix_and_suffix_commands": 202,
+  "physics_changed": false,
+  "robot_task_success": false,
+  "source_hashes": {
+    "tool_pose_servo.py": "edf8eee2956daba9b075b2a4853530e8333585a32923598b1777744de291a3f6",
+    "test_tool_pose_servo.py": "ac6aeffa64de9826597d337d0f718e709726b4500e97a14f646c34c17529bb1b"
+  },
+  "evidence_hashes": {
+    "native_report": "5f1e42a5dcb957f8778bb25f437ca5f1d6a5224ebc8254ad0752a3a899877974",
+    "native_trace": "4d2fe2ee6f640dd9a95dd6e0e96fa0d3bcc2936ac94d2c116dbc74e0cffea32d",
+    "corrected_ik_replay": "36baecf8da0c2857b03b5267765316d282cbdd58621bf700d072d87bddd37d5e",
+    "native_pose_suffix_audit": "dfb2108108b0b5ffb55452b14cdd03bef0f22f7ecbed1dc10e1b908224ffce4b"
+  },
+  "limitations": [
+    "Measured actual state only through158; suffix assumes fixed last measured wheel shape and grasp.",
+    "Native contact must demonstrate seating and torque transfer.",
+    "Desired-pose hull screening is not a continuous physical collision guarantee."
+  ],
+  "measured_geometry_audit": "Actual native6mm-long/1.5mm-radius nipple barrels enclosed by6\u00d73\u00d73mm oriented boxes; both spoke halves and actual rim sector poses checked.",
+  "measured_085_geometry_audit": {
+    "frames": 159,
+    "unexpected_intersections": 0,
+    "intersection_ball_radius_margin_m": 0.0002,
+    "sha256": "63cf04ffecb989931b3f9e6d17c6b6c5988b665da94e14ae1c781e548098ffc2",
+    "limitation": "Sampled geometry only; no continuous-time or contact-force conclusion."
+  }
+}

@@ -34,6 +34,7 @@ class PanelState(ObjectState):
 SPECS={}
 SHELLS={}
 POSITION_ITERATIONS=128
+MAXIMUM_HINGE_GAP_M=.000025
 
 
 def _spawn(path,cfg,translation=None,orientation=None,**kwargs):
@@ -102,7 +103,7 @@ def state(env,name):
     p=read('body_link_pos_w','object_link_pos_w');q=read('body_link_quat_w','object_link_quat_w')
     v=read('body_link_lin_vel_w','object_link_lin_vel_w');w=read('body_link_ang_vel_w','object_link_ang_vel_w')
     p-=getattr(base.scene.env_origins,'torch',base.scene.env_origins)[0].detach().cpu().numpy()
-    poses=np.c_[p,q];nodes,continuity=measured_surface(shell,poses)
+    poses=np.c_[p,q];nodes,continuity=measured_surface(shell,poses,MAXIMUM_HINGE_GAP_M)
     if not all(np.isfinite(x).all() for x in (nodes,v,w)):raise RuntimeError('Invalid native paper state')
     low,high=nodes.min(0),nodes.max(0)
     return PanelState(pos=(low+high)/2,quat_xyzw=np.array((0.,0.,0.,1.)),lin_vel=v.mean(0),ang_vel=w.mean(0),
@@ -125,6 +126,7 @@ class PanelMonitor:
         from contact_guard import PaperWireCrossingGuard
         self.crossing=[PaperWireCrossingGuard(s['mesh'].faces) for s in self.shells]
         self.steps=0;self.last=None;self.frames={};self.failed=False
+        self.failure_state=None
         self.peak_wire_gap_m=0.;self.peak_paper_gaps_m=[0.,0.]
     def get_rigidbody_transformation(self,path):
         row=self.frames.get(path)
@@ -133,20 +135,26 @@ class PanelMonitor:
         from native_paper import update_staple,measured_wire_segments
         from arena_hardware import MaterialDomainError
         self.frames=dict(zip(self.rigid.prim_paths,self.rigid.get_transforms().detach().cpu().numpy()))
-        staple=self.item['metadata']['staple'];wire=measured_wire_segments(self,staple);values=[]
+        staple=self.item['metadata']['staple'];wire=measured_wire_segments(self,staple);values=[];paper_poses=[]
         from contact_guard import wire_chain_continuity
         chain=wire_chain_continuity(wire)
         self.peak_wire_gap_m=max(self.peak_wire_gap_m,chain['maximum_endpoint_gap_m'])
         for shell,view,ids,audit in zip(self.shells,self.views,self.indices,self.crossing):
             poses=view.get_transforms().detach().cpu().numpy()[ids]
-            nodes,continuity=measured_surface(shell,poses);crossing=audit.update(nodes,wire)
+            paper_poses.append(poses)
+            nodes,continuity=measured_surface(shell,poses,MAXIMUM_HINGE_GAP_M);crossing=audit.update(nodes,wire)
             values.append(dict(continuity=continuity,contact_audit=crossing,
                 valid=continuity['valid'] and crossing['valid']))
         self.steps+=1;self.failed=self.failed or not chain['valid'] or not all(x['valid'] for x in values)
         self.peak_paper_gaps_m=[max(old,x['continuity']['maximum_hinge_endpoint_gap_m']) for old,x in zip(self.peak_paper_gaps_m,values)]
         self.last={'observations':self.steps,'paper':values,'wire_continuity':chain,
             'peak_wire_endpoint_gap_m':self.peak_wire_gap_m,'peak_paper_hinge_gaps_m':list(self.peak_paper_gaps_m),'valid':not self.failed}
-        if self.failed:raise MaterialDomainError('Paper hinge continuity or staple crossing failed; no task score is valid')
+        if self.failed:
+            if self.failure_state is None:
+                self.failure_state={f'paper_{i}_poses':p.copy() for i,p in enumerate(paper_poses)}
+                self.failure_state['wire_segments']=wire.copy()
+                self.failure_state['hardware_poses']=np.asarray([self.frames[p] for p in self.rigid.prim_paths]).copy()
+            raise MaterialDomainError('Paper hinge continuity or staple crossing failed; no task score is valid')
         if update_material:self.last['steel']=update_staple(self,staple)
         return self.last
 

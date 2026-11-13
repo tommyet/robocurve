@@ -229,13 +229,14 @@ def author_shell(stage,path,mesh,material=ShellMaterial(),color=(.94,.94,.91),*,
     return dict(bodies=bodies,joints=joints,mesh=mesh,model=model,material=material)
 
 
-def measured_surface(shell,poses):
+def measured_surface(shell,poses,maximum_gap_m=.000025):
     """Reconstruct mean shared vertices and measure actual joint consistency.
 
     Averaging never excuses gaps: maximum endpoint disagreement is separately
     reported and must remain below the explicit25µm numerical envelope.
     """
     from scipy.spatial.transform import Rotation
+    if not np.isfinite(maximum_gap_m) or maximum_gap_m<=0:raise ValueError('Positive finite numerical gap envelope required')
     poses=np.asarray(poses,float);mesh=shell['mesh'];model=shell['model']
     ids=model['vertex_ids']
     if poses.shape!=(len(ids),7) or not np.isfinite(poses).all():raise ValueError('Invalid facet poses')
@@ -250,7 +251,8 @@ def measured_surface(shell,poses):
     magnitudes=np.linalg.norm(delta,axis=1);worst=int(np.argmax(magnitudes))
     gap=float(magnitudes[worst])
     result=dict(maximum_hinge_endpoint_gap_m=gap,
-                maximum_vertex_average_error_m=float(disagreement.max()),valid=gap<=.000025)
+                maximum_vertex_average_error_m=float(disagreement.max()),
+                maximum_allowed_gap_m=float(maximum_gap_m),valid=gap<=maximum_gap_m)
     if gap>.0000125:
         pair=pairs[worst]
         result['worst_endpoint']=dict(panel_indices=[int(pair[0]),int(pair[2])],

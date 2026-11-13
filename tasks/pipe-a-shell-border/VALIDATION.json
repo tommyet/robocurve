@@ -1,7 +1,7 @@
 {
   "status": "development_not_submission_ready",
   "checked_utc": "2026-11-13",
-  "cpu_tests_passed": 35,
+  "cpu_tests_passed": 39,
   "native_simulator_run": true,
   "robot_demo_run": true,
   "dream_run": false,
@@ -9,7 +9,7 @@
   "scores": null,
   "paid_compute_used_usd": null,
   "remaining_gates": [
-    "Native080 completes838 ordinary actions, releases cleanly and scores0.5: three valid shell shapes across45mm, but no qualifying ridges. Full-score feasibility remains unproven.",
+    "Native087 at960Hz completes838 ordinary actions, releases cleanly and scores0.5: three valid shell shapes across48.5mm, but no qualifying continuous ridges. Full-score feasibility remains unproven.",
     "Complete joined border, visible continuous ridges and agreement with photographs remain unverified.",
     "Dream baseline and final rescoring pending; no API requests or media uploads."
   ],
@@ -20,12 +20,13 @@
     "joint_tracking.py": "a5e2cee60f6a84e0a46d95240f1a098794e95a12c1ac166b3c7d5be184ff3a44",
     "learn_tracking.py": "1cb75143d727ed3977c66c7fa1f58a836a0c5001fd6621cba6ecece0c8709663",
     "material.py": "a82fb1cb242a02990707a3c08a6466f304cf757541a663a974765eebb984d525",
-    "native.py": "bd7399d45e89f4955aaa0d945b518f98f81e4ac31eafb618cdc615e909b95fef",
+    "native.py": "449756a20db7a7f585a5d5a7a702209e57c55ba2c8b55092ffaf4f9bdd2f73cc",
     "plan.py": "d30d85b075a439865d750dee90a7a059637f21f9330a8e0aa0924ce4e0eb9c2b",
-    "preview_yam.py": "962b1f6d8eca05bdaeb8212ab4046ae51fd72cda9e5c31e2a08cafad48b75351",
+    "preview_yam.py": "9bf3da7e9fdfbd80115088ff04a06966e3a4c47bd93df0656ef842dc17b4f39e",
     "probe.py": "dc2421d3342eda2052d7340d10bbf856493ad5b30b121ad839fddda7c7a57c17",
-    "probe_native.py": "1d5d47f963be39660c32dec7b626a26080d7d290da69cfc06e5e8e9f1945b4e8",
+    "probe_native.py": "8aa6cc9d6ee650d364e2681896e360d08c03d768053a568377a5d7e2dab38515",
     "probe_shell_shape.py": "a4e2ab3a31c23b0acc9baeef718887a8d9e74c8fca1f2ed91659c2aa9732289e",
+    "replay_material.py": "9685a24978cadf125aea945a232d3043ccafc13100ef55b7ca056bdd681a38b8",
     "review_views.py": "91fff198f4643babe15e10ca1d72cfb068ee8521e556e3d3e49fda0a2b9c804d",
     "run.py": "3f23a922f9bba0e959c19624107defc95f13e580f0cd9efee832e4ae1b88b893",
     "scene.py": "893a2016851d05ec62ca47f22cb3aca3c11fc19a2ef81333372132dd856dfcf5",
@@ -33,7 +34,7 @@
     "scripted_plan.py": "27a6c93162569cc520c8949fe67780e8a77afdcdb82f224bdda249ec47300b32",
     "scripted_servo.py": "485d391accda6b836864334bb2d074d7695e27bc6b6c3b111aefae902c320a55",
     "test_learn_tracking.py": "e6c8af0d8ec9e91edbacbaf9dbb728e8534af7e4d4288d2cbda00e6a3bc7fd74",
-    "test_material.py": "183250183f5f42ec16e9bd6e92737c85ac43dbf4a5ac06a47a9ee289446db230",
+    "test_material.py": "26102a27bd6df3bb3e6d36ed0736a97158198e7964f630ee5acb977468c8c0e0",
     "test_release.py": "d2b6b9b3388736c2a8e6d85cba253c43086dcfab7885be8b7a3973b0e7523f19",
     "test_scripted_servo.py": "f5c48f4db8c9958760f702e8a2615aeae3ef263d71477351aaa91a3962f9c1af"
   },
@@ -81,7 +82,7 @@
     "native080_pose_replay": "Interpolating the actual20Hz tool pose and piston trace into240Hz produces three ridged shells/47.5mm in an offline prescribed-input diagnostic. This is not robot evidence; unrecorded within-action motion and pressure are under investigation."
   },
   "cpu_checks_current": {
-    "test_count": 35,
+    "test_count": 39,
     "result": "passed",
     "command": "python -m unittest discover -s tasks/pipe-a-shell-border -p test_*.py"
   },
@@ -94,10 +95,52 @@
     "source_sha256": "96408e0ee9e663fb799c6f91572f900794aa4f304d505ccbb9c778524b658073"
   },
   "native_integration_diagnostic": {
-    "status": "candidate_unrun",
+    "status": "complete_partial_score",
+    "batch": "087",
     "physics_hz": 960,
-    "control_hz": 20,
+    "actions": 838,
+    "score": 0.5,
+    "valid_shells": 3,
+    "valid_length_mm": 48.5,
+    "continuous_ridge_length_mm": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "release_passed": true,
     "material_changes": false,
-    "purpose": "Resolve passive pressure/seal response and record every native tool/material input. Default remains240Hz pending evidence."
+    "wall_seconds": 1161.12,
+    "finding": "Finer integration alone does not preserve qualifying ridges; no full-border claim."
+  },
+  "native_input_replay": {
+    "steps": 40224,
+    "maximum_cell_volume_error_m3": 4.818327068121386e-23,
+    "sum_absolute_volume_error_m3": 3.974631713062631e-21,
+    "meaning": "Independent deterministic material replay agrees with the actual native input record; not a new robot run.",
+    "recording_limitation": "First substep recorder rounded scalar outputs tofloat32 via NumPy weak-scalar promotion. Native float32 poses/velocities are exact; replay uses exact native timestep from report. Future recorder preserves scalar float64 precision."
+  },
+  "boundary_motion_correction": {
+    "status": "CPU controls passed; native test pending",
+    "date": "2026-11-13",
+    "method": "Unsmoothed measured point displacement per preceding native step, including rotation; reset primed; no clamping or smoothing. Forces applied at body origin with moments about same origin.",
+    "material_and_scoring_changed": false,
+    "kinematic_controls": [
+      "stationary surface with nonzero reported solver velocity",
+      "constant translation including large displacement",
+      "finite rotation of every face sample",
+      "episode reset"
+    ],
+    "local_replay": {
+      "kind": "prescribed-input diagnostic, not robot evidence",
+      "valid_shells": 3,
+      "ridge_lengths_mm": [
+        8.5,
+        9.0,
+        4.0
+      ],
+      "length_mm": 47.5,
+      "score": 0.5
+    },
+    "source": "https://nvidia-omniverse.github.io/PhysX/physx/5.4.0/docs/RigidBodyDynamics.html"
   }
 }

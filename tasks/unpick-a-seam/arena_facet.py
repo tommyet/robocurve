@@ -49,6 +49,8 @@ def spawn(path,cfg,**kwargs):
     stage=get_current_stage();root=str(path).rsplit('/',1)[0];spec=SPECS[cfg.facet_name]
     if not stage.GetPrimAtPath(str(path)):
         SPAWNED[spec.name]=author_shell(stage,root,spec.mesh,material(spec),spec.color,primitive_boxes=spec.primitive_boxes)
+        from cpu_scene import configure_native
+        configure_native(stage,SPAWNED[spec.name]['bodies'])
     return stage.GetPrimAtPath(str(path))
 
 

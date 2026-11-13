@@ -4,6 +4,60 @@ Last updated: 2026-11-13 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-13 — contact and coupling evidence at 11:03 UTC
+
+- Wheel091 completes202 actions with clean sampled hull intersections, but the
+  nipple turns only22.86° of the requested90°. A fast insertion and turn create
+  substantial actual tracking lag; slow physical engagement is the next control.
+- Paper093's128-iteration trial stops at46 on29.57µm hinge mismatch. The worst
+  edge has16.79µm across-edge opening,21.83µm along-edge slip and10.75µm normal
+  offset. This is not a demonstrated tear or wire passage. A diagnostic-only
+ 100µm envelope will determine whether it settles; forces and geometry stay fixed.
+- Seam090 passes a2s intact CPU trial with all24 hole links retained and no
+  actual panel-midplane crossings. Small early contact overlaps relax. Passive
+  thread bending is explicitly approximate. Cut093 exposes spurious impulses
+  from reactivating coincident adjacent endcaps; only that former-neighbour pair
+  now waits for actual separation before contact resumes. Short controls pending.
+- Shirt089 retains the hem with128 iterations, but an independent audit finds
+ 2.44mm cloth/pad penetration. Exact native collision hulls match the local audit
+  within0.86nm. A wider physical pinch is being tested; do not call retention alone
+  a valid grasp. Tie580 is retrying after its optional-camera recorder fix.
+- Icing087 at960Hz scores0.5 with clean release but insufficient ridge length.
+  Replay of every recorded native input matches deposited volume to numerical
+  precision. PhysX end velocity differs markedly from actual surface displacement,
+  as its split-impulse documentation permits. The next material coupling uses
+  unsmoothed displacement of every actual surface point over the preceding native
+  step; no pose writes or velocity clipping. Wrenches are applied about the
+  correct body origin.39 CPU checks pass; fresh robot evidence remains required.
+- Fresh inventory at10:58 confirms exactly one$1.09/hour Pod; estimated active
+  compute$11.132 plus$0.319 compatibility and temporary disk. Billing is unavailable.
+  The verified local watchdog is renewed to11:43 UTC. Budget retains$2.205 Dream
+  and$0.30 storage reserves. No Dream calls, uploads or PRs; none ready yet.
+
+## 2026-11-13 — checkpoint and guarded continuation at 10:25 UTC
+
+- Shared development checkpoint `0e807ba` is pushed to
+  `codex/six-task-completion-2026-11-13`; no PR was opened.
+- Fresh inventory confirms one running RunPod at $1.09/hour. Elapsed active
+  compute estimate is $10.522, plus $0.319 compatibility work and approximately
+  $0.13 temporary storage. This is an estimate, not account billing. The local
+  shutdown watchdog is renewed to 11:10 UTC and its process was verified alive.
+- Budget tracking now reserves $2.205 for the draft six-task Dream limits
+  (1,575 eight-row requests at the last verified $0.0014/request), plus $0.30
+  storage. These are unspent estimates; verify pricing and final limits before
+  calls. The renewal check includes these reserves against the $18 batch target.
+- Wheel 085 stops at action 159 on a 0.379 mm IK residual. Offline checks are
+  distinguishing the clear flared-mouth approach from tight slot insertion;
+  collision-screened approximate approach is legitimate, but actual nipple
+  rotation still needs a physical demonstration. PGS at 500µs is not promoted:
+  corrected-state tensions fall to 126–217 N and fail the unchanged floor.
+- Tie 086 remains physically clean through action 308; an obscured optional
+  review camera caused the stop. The recorder now retains and flags such frames
+  rather than aborting physics. Final review images must still be usable.
+- Source snapshots and all completed result archives through 088 are preserved
+  and SHA-verified locally. Shirt 128-iteration and icing 960Hz trials are active;
+  none of the six is ready to submit, and there have been no Dream calls.
+
 ## 2026-11-13 — higher accuracy controls and remaining manipulation failures
 
 - Wheel PGS at128 position iterations passes the corrected-state physical
