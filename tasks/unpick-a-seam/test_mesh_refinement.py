@@ -10,6 +10,19 @@ class HoleMeshTests(unittest.TestCase):
         cls.base=patch(hole_half=.0008)
         cls.refined=patch(hole_half=.0008,hole_mesh_spacing=.0004)
 
+    def test_quality_candidate_preserves_holes_and_eliminates_sliver_elements(self):
+        from quality_mesh import quality_patch,quality
+        for left in (True,False):
+            mesh=quality_patch(left);q=quality(mesh)
+            expected=patch(left,hole_half=.0008).audit()
+            self.assertAlmostEqual(q['surface_area_m2'],expected['surface_area_m2'],places=14)
+            self.assertEqual(q['boundary_loops'],13)
+            self.assertLess(q['triangles'],3000)
+            self.assertGreaterEqual(q['minimum_edge_m'],.0004-1e-12)
+            self.assertGreater(q['minimum_angle_degrees'],17.)
+            triangles=mesh.rest[mesh.faces]
+            self.assertTrue(np.all(np.cross(triangles[:,1]-triangles[:,0],triangles[:,2]-triangles[:,0])[:,2]>0.))
+
     def test_refinement_preserves_surface_area_connectivity_and_hole_count(self):
         a,b=self.base.audit(),self.refined.audit()
         self.assertEqual(b['boundary_loops'],13)

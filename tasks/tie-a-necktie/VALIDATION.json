@@ -2,7 +2,7 @@
   "status": "development_not_submission_ready",
   "checked_date": "2026-11-13",
   "local_checks": {
-    "geometry_and_rubric_tests": 11,
+    "geometry_and_rubric_tests": 15,
     "result": "passed",
     "command": ".venv/bin/python -m unittest discover -s tasks/tie-a-necktie -p test_local.py -v",
     "scope": "CPU geometry and synthetic evidence-rubric cases only; no physics or task-success claim",
@@ -29,7 +29,61 @@
     "contact_trial": "Batch015 native grasp320 actions: material patch lifts197.2 mm, holds193.5 mm above start after2 seconds, and drops187 mm after fingers open. Held patch stays within3 mm of actual TCP. All11 sampled full-triangle fixture audits clear; largest sampled edge strain7.16% during draw.",
     "diagnostics_not_task_success": true,
     "judging_views": "Native960x720 front/rear recordings verified; cameras registered before scene construction and excluded from policy observations.",
-    "handoff": "Batch022 corrected640-action handoff retains wide-tip region after original grip release, lifts~167 mm and holds2 seconds. Fully open withdrawal still supports/snags fabric. Nine actual robot-hull triangle checks have no intersections with0.2 mm solid contraction; deepest sampled node penetration0.119 mm. Clean final release and a knot remain unproven."
+    "handoff": "Batch022 corrected640-action handoff retains wide-tip region after original grip release, lifts~167 mm and holds2 seconds. Fully open withdrawal still supports/snags fabric. Nine actual robot-hull triangle checks have no intersections with0.2 mm solid contraction; deepest sampled node penetration0.119 mm. Clean final release and a knot remain unproven.",
+    "front_cross_attempt": "Batch025 completed900 native actions with both strands retained and a front crossing. No collar/fixture intersections in24 sampled states. Narrow-strand pull produced22.2% transient edge strain; wide-hand rotation produced1.46mm maximum sampled node penetration into finger geometry. This continuation is not accepted as valid knot evidence; lower-strand and contact corrections are pending.",
+    "free_tail_wrap_attempt": {
+      "batch": "030",
+      "status": "retained_grasp_but_wrap_unwound",
+      "actions": 980,
+      "sampled_fixture_intersections": 0,
+      "sampled_transverse_self_crossings": 0,
+      "transverse_self_crossing_samples": 99,
+      "maximum_sampled_robot_node_penetration_m": 0.00017168298880321925,
+      "one_triangle_robot_penetration_m": 0.00020976066589355473,
+      "p99_edge_strain_at_maximum_sample": 0.02479399304339497,
+      "maximum_single_edge_strain": 0.1234404516880312,
+      "finding": "Free narrow tail swept with the wide end during rear pass, so no retained wrap or knot. Next candidate stabilizes the narrow tail at its current height before wrapping.",
+      "score": null
+    },
+    "stabilized_wrap032": {
+      "status": "failed_no_retained_wrap",
+      "completed_actions": 1140,
+      "wall_seconds": 262.5312372231856,
+      "source_trace_sha256": "f7439bfec1ae97d81fbc6019f016dbb7a421d6d18f64a2cfe5b075648cabde08",
+      "transverse_self_crossings": 0,
+      "self_contact_samples": 115,
+      "max_sampled_shoulder_triangle_penetration_m": 0.0007127380371093749,
+      "max_sampled_robot_node_penetration_m": 0.001151704209255774,
+      "max_sampled_single_edge_strain": 0.3273,
+      "max_sampled_p99_strain": 0.0947,
+      "failure": "Narrow tail initially pinched but slipped upward during rear wide pass; loaded wide strip intersected shoulder edge and fingertip surfaces. No valid wrap or task score."
+    },
+    "simple_knot_alternative": {
+      "status": "cpu_candidate_only",
+      "actions": 1200,
+      "all_commanded_pose_hull_rejection_check": "passed",
+      "initial_face": "explicit optional inside-out reset; default unchanged",
+      "initial_geometry": "triangle clearance and strain CPU checks passed",
+      "native_tested": false,
+      "score": null
+    },
+    "front_space_wrap_trial": {
+      "batch": "035",
+      "status": "failed_narrow_tail_slips_no_knot",
+      "completed_actions": 1180,
+      "wall_seconds": 289.98,
+      "sampled_fixture_triangle_intersections": 0,
+      "fixture_audit_samples": 60,
+      "sampled_nonadjacent_transverse_triangle_crossings": 0,
+      "self_audit_samples": 60,
+      "max_sampled_abs_edge_strain": 0.13023767594113433,
+      "max_sampled_p99_abs_edge_strain": 0.04181921550240841,
+      "sampled_max_robot_node_penetration_m": 0.00021309260298077448,
+      "trace_sha256": "9b44869e883aa03c15bb6334f1f6660a0040daf33b44b9e4468195ff7b2625d9",
+      "failure": "Shoulder contact is clear. The15mm narrow-tail bite slips upward during crossing960\u2013980 and escapes by1000, allowing the wrap to unwind. Next uses40mm of tail below the physical pinch, with the same clear front-space route. No material or fixture changes.",
+      "sampled_max_robot_full_triangle_penetration_m": 0.0009628105163574218,
+      "robot_contact_interpretation": "Full-triangle clipping detects interior overlap missed by node-only depth. Maximum0.963mm at the failed pass; this is not valid contact proof."
+    }
   },
   "demo": {
     "status": "not_implemented"

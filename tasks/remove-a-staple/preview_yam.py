@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import time
 import traceback
+import signal
 import numpy as np
 
 
@@ -35,19 +36,45 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--out',type=Path,required=True);p.add_argument('--steps',type=int,default=10)
     p.add_argument('--physics-hz',type=int,choices=(2000,5000,10000),default=2000)
+    p.add_argument('--plan',type=Path)
+    p.add_argument('--reset-profile',choices=('floating-reference','supported-edge-candidate'),default='floating-reference')
+    p.add_argument('--mesh-profile',choices=('baseline','coarse'),default='baseline')
+    p.add_argument('--refined-contact-diagnostic',action='store_true')
+    p.add_argument('--max-depenetration-m-s',type=float)
     a=p.parse_args()
-    if not 1<=a.steps<=100:p.error('Integration preview limited to100 control steps')
+    if not 1<=a.steps<=(2400 if a.plan else 100):p.error('Bounded preview step count exceeded')
+    import runtime_config
+    runtime_config.configure(a.reset_profile,a.mesh_profile,a.refined_contact_diagnostic,a.max_depenetration_m_s)
+    plan=actions=None
+    if a.plan:
+        from motion_plan import load
+        from yam_arena import YAM_URDF
+        plan,actions=load(a.plan)
+        if a.steps>len(actions):p.error('Requested steps exceed plan')
+        if plan['reset_profile']!=a.reset_profile or plan['mesh_profile']!=a.mesh_profile:p.error('Plan and native reset must match')
+        if hashlib.sha256(Path(YAM_URDF).read_bytes()).hexdigest()!=plan['urdf_sha256']:raise RuntimeError('Plan URDF mismatch')
+        for name,digest in plan['source_sha256'].items():
+            if hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()!=digest:raise RuntimeError('Stale plan source: '+name)
     if not version('isaacsim').startswith('6.1.'):raise RuntimeError('Use the pinned Isaac6.1 environment')
     a.out.mkdir(parents=True,exist_ok=False);started=time.monotonic()
     report={'kind':'staple_yam_integration_preview','status':'running','score':None,'robot_demo':False,
         'dream_requests':0,'requested_steps':a.steps,'control_hz':20,'phase':'launch',
-        'policy':'ordinary constant ready-joint targets; no object state feedback',
+        'policy':'ordinary fixed joint commands; no object state feedback',
+        'plan_sha256':hashlib.sha256(a.plan.read_bytes()).hexdigest() if a.plan else None,
+        'reset_profile':a.reset_profile,'mesh_profile':a.mesh_profile,
+        'refined_contact':a.refined_contact_diagnostic,'max_depenetration_m_s':a.max_depenetration_m_s,
         'source_sha256':{f.name:hashlib.sha256(f.read_bytes()).hexdigest() for f in Path(__file__).parent.glob('*.py')}}
+    def checkpoint():
+        report['wall_seconds']=time.monotonic()-started
+        temporary=a.out/'preview.tmp.json';temporary.write_text(json.dumps(report,indent=2,allow_nan=False)+'\n');temporary.replace(a.out/'preview.json')
+    def terminated(signum,frame):raise TimeoutError('Preview stopped by external watchdog')
+    signal.signal(signal.SIGTERM,terminated);checkpoint()
     app=video=trace=None;monitors=[]
     try:
         from isaaclab.app import AppLauncher
         app=AppLauncher(headless=True,enable_cameras=True).app
         import imageio.v2 as imageio
+        import torch
         from PIL import Image
         import omni.usd
         import arena_paper,arena_hardware
@@ -67,7 +94,9 @@ def main():
         video=imageio.get_writer(a.out/'preview.mp4',fps=20,codec='libx264',pixelformat='yuv420p',ffmpeg_params=['-movflags','+faststart'],macro_block_size=1)
         report['phase']='record'
         for step in range(a.steps+1):
-            if step:emb._env.step(emb._ready)
+            if step:
+                action=emb._ready if actions is None else torch.as_tensor(actions[step-1][None],device=base.device,dtype=torch.float32)
+                emb._env.step(action)
             # Observe every final substep too; the material callback inspects
             # preceding states before all intermediate native substeps.
             for monitor in monitors:monitor.inspect(update_material=False)
@@ -75,12 +104,14 @@ def main():
             paper=[arena_paper.state(emb._env,'paper_'+str(i)) for i in range(2)]
             hardware=arena_hardware.hardware_state(emb._env,'hardware')
             trace.write(json.dumps({'step':step,'time_s':step/20,'joint_pos':np.asarray(observation.state['joint_pos']).tolist(),
+                'commanded_action14':None if step==0 or actions is None else actions[step-1].tolist(),
                 'paper_nodes':[x.nodes.tolist() for x in paper],'hardware_names':list(hardware.body_names),
                 'hardware_poses':hardware.body_poses.tolist(),'material':[m.last for m in monitors]})+'\n')
             rgb=base.scene['top_cam'].data.output['rgb'];rgb=getattr(rgb,'torch',rgb)
             frame=rgb.detach().cpu().numpy()[0,:,:,:3].astype(np.uint8);video.append_data(frame)
             if step in (0,a.steps):Image.fromarray(frame).save(a.out/('setup.png' if not step else 'final.png'))
             report['completed_steps']=step
+            if step%5==0:trace.flush();checkpoint()
         report.update(status='complete',meaning='Unscored integration only; no successful extraction demonstrated')
     except BaseException as error:
         report.update(status='invalid_model_domain' if type(error).__name__=='MaterialDomainError' else 'failed',
@@ -89,7 +120,7 @@ def main():
         if trace:trace.close()
         if video:video.close()
         report['wall_seconds']=time.monotonic()-started
-        (a.out/'preview.json').write_text(json.dumps(report,indent=2,allow_nan=False)+'\n')
+        checkpoint()
         if app:app.close()
 
 

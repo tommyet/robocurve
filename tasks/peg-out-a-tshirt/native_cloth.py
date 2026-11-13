@@ -168,16 +168,21 @@ def author_peg_hinge(stage,path,pos=(0.,0.,0.),*,fixed_lower=False,spring=True):
     return hinge
 
 
-def author_peg(stage,path,pos=(0.,0.,0.),*,fixed_lower=False,spring=True,open_angle=-.35):
+def author_peg(stage,path,pos=(0.,0.,0.),*,fixed_lower=False,spring=True,open_angle=-.35,base_angle=0.):
     """Two rigid jaws with a passive spring. Only a diagnostic may fix one jaw.
 
     Nominal 70 x 10 x 22 mm open-envelope wooden peg, mass 8 g. Jaw contact
     remains active. No controller changes the spring or attaches any fabric.
     Closing torque/friction require physical calibration.
     """
-    author_peg_jaw(stage,path+'/lower',pos,upper=False,angle=0.)
-    author_peg_jaw(stage,path+'/upper',pos,upper=True,angle=open_angle)
-    return author_peg_hinge(stage,path,pos,fixed_lower=fixed_lower,spring=spring)
+    author_peg_jaw(stage,path+'/lower',pos,upper=False,angle=base_angle)
+    author_peg_jaw(stage,path+'/upper',pos,upper=True,angle=base_angle+open_angle)
+    hinge=author_peg_hinge(stage,path,pos,fixed_lower=fixed_lower,spring=spring)
+    if fixed_lower and base_angle:
+        from pxr import Gf,UsdPhysics
+        fixed=UsdPhysics.FixedJoint(stage.GetPrimAtPath(path+'/diagnostic_fixture'))
+        fixed.CreateLocalRot0Attr(Gf.Quatf(math.cos(base_angle/2),0.,math.sin(base_angle/2),0.))
+    return hinge
 
 
 def ensure_gpu_scene(stage):

@@ -37,6 +37,7 @@ class ContactRefinement:
     speculative_ccd: bool = False
     collision_iterations: int = 1
     pair_update_frequency: int = 1
+    max_depenetration_m_s: float | None = None
 
     def attributes(self, solver_iterations):
         if not isinstance(self.speculative_ccd, bool):
@@ -47,9 +48,14 @@ class ContactRefinement:
         if (type(self.pair_update_frequency) is not int or
                 not 0 <= self.pair_update_frequency <= solver_iterations):
             raise ValueError('Pair update frequency outside native schema range')
-        return {'physxDeformableBody:enableSpeculativeCCD':self.speculative_ccd,
+        values={'physxDeformableBody:enableSpeculativeCCD':self.speculative_ccd,
                 'physxDeformableBody:collisionIterationMultiplier':self.collision_iterations,
                 'physxDeformableBody:collisionPairUpdateFrequency':self.pair_update_frequency}
+        if self.max_depenetration_m_s is not None:
+            if not math.isfinite(self.max_depenetration_m_s) or not .01<=self.max_depenetration_m_s<=1.:
+                raise ValueError('Diagnostic depenetration velocity must be 0.01 to 1 m/s')
+            values['physxDeformableBody:maxDepenetrationVelocity']=self.max_depenetration_m_s
+        return values
 
 
 def _set(prim, name, value):

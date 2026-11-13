@@ -11,7 +11,7 @@ CHECKS = ("correct_start", "both_sheet_faces_inspected", "staple_intact",
 def score(record):
     result = {"score": 0., "record_valid": False, "submission_certified": False, "reasons": []}
     try:
-        if record.get("schema") != "staple-judging-v1":
+        if record.get("schema") != "staple-judging-v2":
             raise ValueError("Unsupported judging record")
         checks = record["checks"]
         if any(type(checks.get(k)) is not bool for k in CHECKS):
@@ -19,9 +19,17 @@ def score(record):
         legs = record["legs_clear_of_both_sheets"]
         if type(legs) is not int or legs not in (0, 1, 2):
             raise ValueError("Number of entirely withdrawn legs must be 0, 1 or 2")
-        measures = {k: record[k] for k in ("maximum_new_tear_mm", "final_sheet_gap_mm", "release_seconds")}
+        measures = {k: record[k] for k in ("maximum_new_tear_mm", "release_seconds")}
         if any(type(v) not in (int,float) or not math.isfinite(v) or v < 0 for v in measures.values()):
             raise ValueError("Finite nonnegative measurements required")
+        offsets={key:record[key] for key in ('initial_relative_corner_offset_mm','final_relative_corner_offset_mm')}
+        if any(not isinstance(v,(list,tuple)) or len(v)!=2 or any(type(x) not in (int,float) or not math.isfinite(x) for x in v) for v in offsets.values()):
+            raise ValueError('Two finite signed tabletop coordinates required for each relative corner offset')
+        initial=offsets['initial_relative_corner_offset_mm'];final=offsets['final_relative_corner_offset_mm']
+        if math.hypot(initial[0],initial[1]-12.)>1.:
+            raise ValueError('Initial corresponding-corner offset must match the fixed12mm stagger within1mm')
+        independent_slide=math.hypot(final[0]-initial[0],final[1]-initial[1])
+        result['relative_displacement_change_mm']=independent_slide
         if type(record.get("any_new_damage_away_from_holes")) is not bool:
             raise ValueError("Inspect both full sheets for new damage away from original holes")
         result["record_valid"] = True
@@ -32,7 +40,7 @@ def score(record):
             result["reasons"].append("New tear, cut or puncture away from the original holes")
         if result["reasons"]:
             return result
-        if legs == 2 and measures["final_sheet_gap_mm"] >= 30. and measures["release_seconds"] >= 3.:
+        if legs == 2 and independent_slide >= 30. and measures["release_seconds"] >= 3.:
             result["score"] = 1.
         elif legs >= 1:
             result["score"] = .5

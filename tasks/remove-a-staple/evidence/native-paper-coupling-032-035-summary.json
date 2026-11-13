@@ -1,0 +1,83 @@
+{
+  "kind": "native coupled-paper diagnostic history",
+  "task_success": false,
+  "interpretation": "All stapled controls exceed the explicit 1% diagnostic stop. Curvature warnings are not tears. Initial finite wire/paper geometry is non-overlapping; holding the crown, capping wire correction and reducing TGS velocity iterations do not resolve the membrane/contact failure. Native segment masses match physical wire volume with no clamp. A supported plate with a clinch-clearance pocket is the next physical candidate.",
+  "results": [
+    {
+      "batch": 32,
+      "condition": "paper-stapled-observe",
+      "report_sha256": "5fd6a7d096dd556cfad7b43398bbde739c3e67a5944af7335753794201613e22",
+      "status": "invalid_model_domain",
+      "steps": 63,
+      "physics_hz": 10000,
+      "maximum_membrane_strain": [
+        0.010566750411768355,
+        0.004363072514405042
+      ],
+      "maximum_bending_strain": [
+        0.04917430653195816,
+        0.014319045737980674
+      ],
+      "all_centerline_crossing_checks_valid": true,
+      "maximum_wire_mass_relative_error": null,
+      "wall_seconds": 6.650117172859609
+    },
+    {
+      "batch": 33,
+      "condition": "paper-wire-capped",
+      "report_sha256": "1846cd48bfa676eef9721fa64f120e07cbd1f595a583d1dec4533b05a3f2810a",
+      "status": "invalid_model_domain",
+      "steps": 52,
+      "physics_hz": 10000,
+      "maximum_membrane_strain": [
+        0.011429837628395445,
+        0.00330704801570203
+      ],
+      "maximum_bending_strain": [
+        0.041925504063728344,
+        0.022046508292656274
+      ],
+      "all_centerline_crossing_checks_valid": true,
+      "maximum_wire_mass_relative_error": null,
+      "wall_seconds": 6.231602596119046
+    },
+    {
+      "batch": 34,
+      "condition": "paper-fixed-crown",
+      "report_sha256": "ae937890090c5ad1ddfb2942dd2556680d7f97c1a1877f8ee4db2f64f1984442",
+      "status": "invalid_model_domain",
+      "steps": 71,
+      "physics_hz": 10000,
+      "maximum_membrane_strain": [
+        0.010095512726351785,
+        0.0024752906470668634
+      ],
+      "maximum_bending_strain": [
+        0.029928791658269116,
+        0.020729792958524715
+      ],
+      "all_centerline_crossing_checks_valid": true,
+      "maximum_wire_mass_relative_error": null,
+      "wall_seconds": 7.143699089996517
+    },
+    {
+      "batch": 35,
+      "condition": "paper-four-velocity",
+      "report_sha256": "6fa899951bf99000b3ce33411fdee3362127241d85577a28e66c1bb23a78981f",
+      "status": "invalid_model_domain",
+      "steps": 55,
+      "physics_hz": 10000,
+      "maximum_membrane_strain": [
+        0.0024652570407641683,
+        0.013174360853997147
+      ],
+      "maximum_bending_strain": [
+        0.016636798182317176,
+        0.04100716249070419
+      ],
+      "all_centerline_crossing_checks_valid": true,
+      "maximum_wire_mass_relative_error": 3.654322001416979e-08,
+      "wall_seconds": 6.296034253202379
+    }
+  ]
+}

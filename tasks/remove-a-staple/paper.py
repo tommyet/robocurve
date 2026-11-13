@@ -1,8 +1,9 @@
-"""Actual thin-sheet mesh and conservative elastic-domain monitoring.
+"""Actual thin-sheet mesh and conservative membrane-domain monitoring.
 
 Native surface FEM supplies dynamics/contact. The guard never edits a pose,
-repairs a sheet or awards points: unsupported strain irreversibly invalidates
-an episode before a no-tear claim. Its numerical limits remain uncalibrated.
+repairs a sheet or awards points. Membrane failure invalidates an episode;
+curvature is recorded separately because creasing is allowed by this task.
+The numerical limits are declared approximations, not calibrated tear strains.
 """
 from dataclasses import dataclass
 import numpy as np
@@ -100,8 +101,10 @@ class ElasticDomainGuard:
     It must run at every physics substep. A failed run cannot be resumed or
     awarded partial credit even if the final mesh appears flat again.
     """
-    def __init__(self, mesh, material=None):
+    def __init__(self, mesh, material=None, *, reject_bending=True):
         self.mesh=mesh;self.material=material or PaperMaterial()
+        self.reject_bending=bool(reject_bending)
+        self.first_bending_warning=None
         p=mesh.rest[mesh.faces]
         e1=p[:,1]-p[:,0];e2=p[:,2]-p[:,0]
         length=np.linalg.norm(e1,axis=1)
@@ -142,6 +145,7 @@ class ElasticDomainGuard:
         norm=np.linalg.norm(normal,axis=1)
         if np.min(norm)<=1e-16:
             bending=float(np.finfo(np.float64).max)
+            self.failed=True
             self.first_failure=self.first_failure or {'step':self.steps,'reason':'degenerate paper triangle'}
         else:
             normal/=norm[:,None]
@@ -149,16 +153,21 @@ class ElasticDomainGuard:
             angle=np.arccos(np.clip(cosine,-1.,1.))
             surface_strain=self.material.thickness_m*.5*angle/self.dual_width
             worst=int(np.argmax(surface_strain));bending=float(surface_strain[worst])
-            self.last_diagnostics={'worst_bending_edge':self.edges[worst].tolist(),
+            self.last_diagnostics={'current_tensile_strain':tension,
+                'current_surface_bending_strain':bending,'worst_bending_edge':self.edges[worst].tolist(),
                 'worst_bending_faces':self.pairs[worst].tolist(),
                 'worst_edge_dihedral_rad':float(angle[worst]),
                 'worst_edge_dual_width_m':float(self.dual_width[worst]),
                 'worst_membrane_face':int(np.argmax(stretches))}
         self.maximum_tensile_strain=max(self.maximum_tensile_strain,tension)
         self.maximum_bending_strain=max(self.maximum_bending_strain,bending)
-        if tension>self.material.max_tensile_strain or bending>self.material.max_surface_bending_strain:
+        if bending>self.material.max_surface_bending_strain:
+            self.first_bending_warning=self.first_bending_warning or {
+                'step':self.steps,'surface_bending_strain':bending,
+                'meaning':'Elastic bending approximation; not evidence of a tear'}
+        if tension>self.material.max_tensile_strain or (self.reject_bending and bending>self.material.max_surface_bending_strain):
             self.failed=True
-            self.first_failure=self.first_failure or {'step':self.steps,'reason':'outside elastic paper model',
+            self.first_failure=self.first_failure or {'step':self.steps,'reason':'outside elastic paper model' if self.reject_bending else 'outside membrane validity domain',
                 'tensile_strain':tension,'surface_bending_strain':bending}
         return self.summary()
 
@@ -166,4 +175,18 @@ class ElasticDomainGuard:
         return {'valid':not self.failed,'steps':self.steps,'first_failure':self.first_failure,
                 'maximum_tensile_strain':self.maximum_tensile_strain,
                 'maximum_surface_bending_strain':self.maximum_bending_strain,
+                'bending_is_failure':self.reject_bending,'first_bending_warning':self.first_bending_warning,
                 'thresholds_calibrated':False,'last_geometry_diagnostics':self.last_diagnostics}
+
+
+class PaperIntegrityGuard(ElasticDomainGuard):
+    """Membrane/geometry validity; harmless curvature alone is not a tear.
+
+    The FEM still uses reversible elastic bending and does not retain a crease.
+    This guard does not make that constitutive model more accurate. It prevents
+    overstretch/degeneracy from being scored as an intact sheet, while keeping
+    the curvature warning visible for review. Separate wire-crossing and final
+    visual paper checks remain required.
+    """
+    def __init__(self,mesh,material=None):
+        super().__init__(mesh,material,reject_bending=False)

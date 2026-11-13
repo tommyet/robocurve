@@ -1,0 +1,167 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Failed native YAM sewing-clamp reset; zero completed actions, no cutting or score",
+  "report_sha256": "295f883a4d67cc5e4a7e01fa7fb59704e18fd894cf42240fbe881a04ffcff3a5",
+  "final_state_sha256": "33e86d8a2f21c6550e6177fc6a82b43dd873dd51c3fc392f9f83ee19afc0c879",
+  "measurements": {
+    "status": "failed",
+    "error": "RuntimeError: Native seam material/contact validity boundary crossed",
+    "runtime": {
+      "thread_radius_m": 0.0004,
+      "hole_half_m": 0.0008,
+      "hole_mesh_spacing_m": 0.0004,
+      "physics_hz": 3840,
+      "contact_refinement": {
+        "speculative_ccd": true,
+        "collision_iterations": 4,
+        "pair_update_frequency": 4,
+        "max_depenetration_m_s": null
+      },
+      "maximum_stretch": 1.05,
+      "quality_mesh": false,
+      "seam_lowering_m": 0.0,
+      "pre_draped_seam": false,
+      "drape_shape": "gaussian",
+      "sewing_clamp": true
+    },
+    "completed_steps": 0,
+    "audited_physics_substeps": 21,
+    "strain": [
+      {
+        "maximum_principal_stretch": 1.0649084029074427,
+        "first_validity_excursion": {
+          "time_s": 0.00546875,
+          "triangle": 6954,
+          "principal_stretch": 1.0649084029074427,
+          "limit": 1.05
+        },
+        "first_2pct_warning": {
+          "time_s": 0.003125,
+          "triangle": 3215,
+          "principal_stretch": 1.0270478117787807,
+          "limit": 1.02
+        },
+        "maximum_stretch_limit": 1.05
+      },
+      {
+        "maximum_principal_stretch": 1.0013580482005129,
+        "first_validity_excursion": null,
+        "first_2pct_warning": null,
+        "maximum_stretch_limit": 1.05
+      }
+    ],
+    "contact_audit": [
+      {
+        "valid": true,
+        "steps": 22,
+        "first_failure": null
+      },
+      {
+        "valid": true,
+        "steps": 22,
+        "first_failure": null
+      }
+    ],
+    "native_surface_contact": [
+      {
+        "physxCollision:restOffset": 0.00019999999494757503,
+        "physxCollision:contactOffset": 0.0002500000118743628,
+        "physxDeformableBody:selfCollisionFilterDistance": "-inf",
+        "physxDeformableBody:maxDepenetrationVelocity": "inf",
+        "physxDeformableBody:maxLinearVelocity": "inf",
+        "physxDeformableBody:enableSpeculativeCCD": true,
+        "physxDeformableBody:collisionIterationMultiplier": 4,
+        "physxDeformableBody:collisionPairUpdateFrequency": 4
+      },
+      {
+        "physxCollision:restOffset": 0.00019999999494757503,
+        "physxCollision:contactOffset": 0.0002500000118743628,
+        "physxDeformableBody:selfCollisionFilterDistance": "-inf",
+        "physxDeformableBody:maxDepenetrationVelocity": "inf",
+        "physxDeformableBody:maxLinearVelocity": "inf",
+        "physxDeformableBody:enableSpeculativeCCD": true,
+        "physxDeformableBody:collisionIterationMultiplier": 4,
+        "physxDeformableBody:collisionPairUpdateFrequency": 4
+      }
+    ],
+    "final_maximum_cloth_speed_m_s": [
+      0.6288130283355713,
+      0.052139461040496826
+    ],
+    "damage_events": [],
+    "cut_events": [],
+    "measured_wall_timings_s": {
+      "readback": 0.05426433775573969,
+      "strain": 0.03486855421215296,
+      "crossing": 0.016055692918598652,
+      "junctions": 0.0,
+      "crossing_poll": 0.0013498878106474876,
+      "blade_damage": 0.02987915463745594,
+      "cutting": 0.06527996808290482,
+      "control_steps_total": 1.1818793583661318,
+      "native_step_total": 0.7993455333635211,
+      "scene_write_total": 0.06565365381538868,
+      "scene_update_total": 0.016218102537095547
+    }
+  },
+  "failure_triangle": {
+    "index": 6954,
+    "vertices": [
+      3118,
+      2313,
+      2312
+    ],
+    "rest_points_m": [
+      [
+        0.2995999999999999,
+        0.005175,
+        0.8269000000000001
+      ],
+      [
+        0.2995999999999999,
+        0.00515,
+        0.8271000000000001
+      ],
+      [
+        0.2995999999999999,
+        0.0052,
+        0.8271000000000001
+      ]
+    ],
+    "displacement_m": [
+      [
+        5.149841386664633e-09,
+        -1.3634040206670674e-05,
+        7.415351867667841e-05
+      ],
+      [
+        5.149841386664633e-09,
+        -1.2868450582027499e-05,
+        8.503475189203247e-05
+      ],
+      [
+        5.149841386664633e-09,
+        -1.3826400786638021e-05,
+        8.706130981439575e-05
+      ]
+    ],
+    "velocity_m_s": [
+      [
+        0.0,
+        0.21835124492645264,
+        0.24025703966617584
+      ],
+      [
+        0.0,
+        0.24464716017246246,
+        0.1532164067029953
+      ],
+      [
+        0.0,
+        0.24452726542949677,
+        0.2117931842803955
+      ]
+    ]
+  },
+  "interpretation": "The first 5% domain excursion is at a 50 micrometre needle-hole sliver about 66 mm below the jaws, not at the clamp. Native stepping took 0.799 s within 1.182 s of controlled execution; the 107.894 s total includes application startup/finalization and concurrent load. Both this run and the earlier 020 standalone coupon use GPU PhysX and TGS. Before geometry changes, compare composed scene attributes and actual pre/post-reset tensors, then the identical transformed clamp in the standalone pipeline."
+}

@@ -19,7 +19,7 @@ def front_rotation(degrees=-30.,side='left'):
 ROTATIONS={side:front_rotation(side=side) for side in ('left','right')}
 
 
-def compile_grasp():
+def compile_grasp(grasp_x=.210):
     from yam_arena import ik, station
     from yam_arena.constants import READY, FINGER_OPEN, SHOULDER, WRIST, GRIPPER
     from scene import SUPPORT_BOARD_THICKNESS,PHYSICS_HZ
@@ -30,8 +30,8 @@ def compile_grasp():
         targets.append([
             (3.,(.1494,sign*.115,pre_z),.6,'joint approach above exposed hem'),
             (2.,(.1494,sign*.115,pre_z),.6,'hold clear approach pose'),
-            (2.,(.210,sign*.115,hem_z),.6,'approach exposed hem'),
-            (1.,(.210,sign*.115,hem_z),0.,'close fingers on hem'),
+            (2.,(grasp_x,sign*.115,hem_z),.6,'approach exposed hem'),
+            (1.,(grasp_x,sign*.115,hem_z),0.,'close fingers on hem'),
             (2.,(.1494,sign*.115,pre_z),0.,'pull clear of support'),
             (3.,(.260,sign*.115,1.100),0.,'lift flexible garment'),
             (2.,(.350,sign*.115,1.100),0.,'carry above clear support'),

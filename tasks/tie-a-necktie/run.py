@@ -106,6 +106,7 @@ def main():
     p.add_argument('--steps',type=int,default=None)
     p.add_argument('--plan',type=Path,help='Precomputed ordinary joint commands; required for motion-probe')
     p.add_argument('--seed',type=int,default=0)
+    p.add_argument('--inside-out-reset',action='store_true',help='Explicit diagnostic reset for a simple (Oriental) knot; default remains front-face drape')
     p.add_argument('--judging-views',action='store_true',help='Record additional native960×720 front/rear assessor videos')
     p.add_argument('--out',type=Path)
     p.add_argument('--check-only',action='store_true',help='Compile source and check JSON without loading a simulator')
@@ -116,6 +117,8 @@ def main():
             p.error('motion-probe requires a precomputed --plan')
         from fixed_motion import load
         fixed_plan,fixed_actions=load(args.plan)
+        if bool(fixed_plan.get('requires_inside_out_reset')) != args.inside_out_reset:
+            p.error('Motion and explicitly selected initial face do not match')
         if fixed_plan.get('do_not_run_reason'):
             p.error(fixed_plan['do_not_run_reason'])
         expected=hashlib.sha256((HERE/'layout.py').read_bytes()).hexdigest()
@@ -151,10 +154,13 @@ def main():
         shutil.copyfile(args.plan,frozen/'fixed-motion.json')
         source_hashes['fixed-motion.json']=hashlib.sha256(args.plan.read_bytes()).hexdigest()
     draft=json.loads((HERE/'task.draft.json').read_text())
+    if args.inside_out_reset:
+        draft['instruction']='Tie a simple (Oriental) necktie knot on the collar form and leave it ready to wear.'
     started=time.monotonic()
     report={'kind':'diagnostic_yam_'+args.mode+'_not_submission_evidence','status':'initializing',
             'score':None,'demo':False,'dream_requests':0,'started_utc':datetime.now(timezone.utc).isoformat(),
             'source_sha256':source_hashes,'versions':versions,'seed':args.seed,
+            'initial_face':'inside-out for simple knot diagnostic' if args.inside_out_reset else 'front-face four-in-hand diagnostic',
             'control_hz':CONTROL_HZ,'requested_steps':args.steps,'completed_steps':0,
             'policy':('constant adapter-ready joint targets' if fixed_plan is None else 'frozen fixed joint trajectory')+'; no object/assessor feedback',
             'instruction':draft['instruction']}
@@ -171,6 +177,7 @@ def main():
     previous_sigterm=signal.signal(signal.SIGTERM,terminate)
     try:
         os.environ.setdefault('OMNI_KIT_ACCEPT_EULA','YES')
+        os.environ['ROBOCURVE_TIE_INSIDE_OUT_RESET']='1' if args.inside_out_reset else '0'
         from isaaclab.app import AppLauncher
         app=AppLauncher(headless=True,enable_cameras=True).app
         import torch
@@ -217,7 +224,7 @@ def main():
                 judging_videos[camera['name']]=imageio.get_writer(
                     args.out/(camera['name'].replace('_','-')+'.mp4'),fps=CONTROL_HZ,
                     codec='libx264',pixelformat='yuv420p',ffmpeg_params=['-movflags','+faststart'],macro_block_size=1)
-        trace=gzip.open(args.out/'trace.jsonl.gz','wt')
+        trace=gzip.open(args.out/'trace.jsonl.gz','wt',compresslevel=1)
         ready=emb._ready.detach().cpu().numpy()[0].copy()
         if ready.shape!=(14,) or not np.isfinite(ready).all():
             raise RuntimeError('Invalid ready action')

@@ -5,7 +5,7 @@ from pathlib import Path
 import unittest
 import numpy as np
 from contact_guard import PaperWireCrossingGuard
-from full_scene import paper_mesh,SHEET_CENTRES,PAPER_CENTRE_HEIGHTS,STAPLE_XY,PAPER_TOP,scene_layout,SUPPORT_TOP
+from full_scene import paper_mesh,SHEET_CENTRES,PAPER_CENTRE_HEIGHTS,STAPLE_XY,PAPER_TOP,scene_layout,SUPPORT_TOP,support_parts
 from generate_meshes import quality
 from materials import clinched_staple_centerline
 from paper import ElasticDomainGuard,PaperMesh
@@ -58,6 +58,22 @@ class FullPaperTests(unittest.TestCase):
             mesh=paper_mesh(i)
             result=ElasticDomainGuard(mesh).update(mesh.rest@rotation.T+[.3,-.2,.7])
             self.assertTrue(result['valid'])
+
+    def test_pocket_support_leaves_the_entire_planar_leg_sweep_free(self):
+        layout=scene_layout('pocket-support-candidate');parts=support_parts(layout)
+        pocket=layout['clinch_clearance_pocket'];center=np.array(pocket['center_m']);size=np.array(pocket['size_m'])
+        self.assertAlmostEqual(sum(np.prod(s) for _,_,s in parts),np.prod(layout['support_size'])-np.prod(size))
+        # Conservative envelope: a whole 6mm leg rotates from inward flat to
+        # vertical under either puncture. Its finite wire section fits too.
+        for side in (-1,1):
+            for angle in np.linspace(0,np.pi/2,91):
+                for length in np.linspace(0,.006,13):
+                    point=np.array((STAPLE_XY[0],STAPLE_XY[1]+side*(.0064-length*np.cos(angle)),
+                                    SUPPORT_TOP-.0002-length*np.sin(angle)))
+                    self.assertGreaterEqual(point[2]-.00015,center[2]-size[2]/2)
+                    self.assertLessEqual(abs(point[0]-center[0])+.00025,size[0]/2)
+                    self.assertLessEqual(abs(point[1]-center[1])+.00015,size[1]/2)
+        self.assertAlmostEqual(layout['paper_centres_z'][0]-.00005,SUPPORT_TOP)
 
     def test_missing_triangle_cannot_pass_boundary_or_area_audit(self):
         mesh=paper_mesh(0)

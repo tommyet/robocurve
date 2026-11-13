@@ -4,11 +4,12 @@ The paper is a flexible 100 µm surface mesh with explicit staple punctures.
 Native FEM computes its motion and contact. It is an isotropic elastic
 approximation; it does not render fibre fracture or permanent creases.
 
-The current 0.3% membrane and outer-fibre bending limits are **model-validity
-checks, not tear detectors**. A breach invalidates the diagnostic. It does not
-mean that real paper would have torn. In particular, an ordinary crease can
-remain intact. At 100 µm thickness, the bending limit corresponds to a radius
-of about 17 mm, which is much gentler than many harmless paper folds.
+The 0.3% membrane limit is a conservative approximation boundary, **not a tear
+detector**. Its breach still invalidates a task trial. The 0.3% outer-fibre
+bending estimate is now a recorded warning in the task monitor, because an
+ordinary crease can remain intact. It corresponds to a radius of about 17 mm,
+much gentler than many harmless folds. Older strict elastic diagnostics retain
+their original reported failures; this distinction does not alter their physics.
 
 There is a plausible basis for the elastic boundary. In Yoshihara and
 Yoshinobu's copy-paper experiments, the plotted directional modulus is roughly
@@ -29,16 +30,20 @@ crossing intact triangles.
 
 For the task, damage means a new tear, a hole enlarged by more than the stated
 judging tolerance, or broken hardware. A crease by itself is not a tear.
-A successful native trial must stay within its declared material approximation,
+A successful native trial must stay within its declared membrane approximation,
 keep contact topology intact and release the sheets through the original
 punctures. Neither a low final strain nor a visually flat final frame repairs
 an earlier invalid trial. The final submission must disclose the absence of
 post-fracture rendering.
 
-The present contact probes are not converged: merely reducing the time step
-made the full stapled scene fail sooner, and an unstapled pair also develops a
-local contact wrinkle when dropped onto the support. Raising a limit until
-that trace passes would not establish valid physics. Native contact refinement
-and a supported physical reset are being compared first. If realistic removal
-needs permanent bending, the approximation or its stated scope must change;
-calling the bend a tear would not resolve the mismatch.
+The supported, coarser puncture mesh and bounded native contact correction now
+settle an unstapled pair for 0.1 seconds below the membrane limit. Curvature
+warnings touch only 0.078% and 0.057% of the sheets' area, near the punctures;
+their worst local hinge angles are 4.66° and 3.63°. This supports reporting a
+local bending approximation instead of calling it a tear. The simulator does
+not preserve permanent crease memory, which must remain disclosed.
+
+The full stapled control still reaches 0.368% local membrane strain at 5.6 ms.
+That result remains invalid under the current task monitor. A bounded diagnostic
+will establish whether it settles or grows before extraction is attempted.
+No final paper-preservation or task-success claim follows from these controls.

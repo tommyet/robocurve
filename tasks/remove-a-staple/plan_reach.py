@@ -10,7 +10,20 @@ import json
 import math
 from pathlib import Path
 import numpy as np
-from full_scene import SUPPORT_TOP,TABLE_TOP,STAPLE_XY
+from full_scene import SUPPORT_TOP,TABLE_TOP,STAPLE_XY,scene_layout
+
+TOOL_TCP=np.array((0.,-.043,.016))
+GRIP=np.diag((-1.,1.,-1.))
+
+
+def insertion_pitch(profile='supported-edge-candidate'):
+    """Put the50µm tip's upper edge2µm below the published crown underside.
+
+    The finite tip is thicker than the reset clearance. Paper must physically
+    deflect during insertion; this calculation does not remove that contact.
+    """
+    target=scene_layout(profile)['crown_underside_z']-SUPPORT_TOP-.000002
+    return math.asin(target/math.hypot(.029,.00305))-math.atan2(.00305,.029)
 
 
 def tool_frame(pitch):
@@ -21,18 +34,18 @@ def tool_frame(pitch):
 
 def heel_supported_pose(pitch):
     # The heel bottom, local(y=-4mm,z=-3mm), contacts the document support.
-    return np.array((STAPLE_XY[0]+.025,STAPLE_XY[1],
+    return np.array((STAPLE_XY[0]+.025*math.cos(pitch)-.00005*math.sin(pitch),STAPLE_XY[1],
                      SUPPORT_TOP+.004*math.sin(pitch)+.003*math.cos(pitch)))
 
 
-def targets():
-    down=np.array(((0.,-1.,0.),(-1.,0.,0.),(0.,0.,-1.)))
-    grip=np.array((0.,-.043,.013))
+def targets(profile='supported-edge-candidate'):
+    down=GRIP
+    grip=TOOL_TCP
     initial=np.array((.28,-.20,TABLE_TOP+.003))
     yield 'pickup_above',initial+grip+(0.,0.,.08),down
     yield 'pickup',initial+grip,down
     yield 'pickup_lift',initial+grip+(0.,0.,.06),down
-    pitch=-.07;R=tool_frame(pitch);root=heel_supported_pose(pitch)
+    pitch=insertion_pitch(profile);R=tool_frame(pitch);root=heel_supported_pose(pitch)
     yield 'orient_clear',root+R@grip+(0.,0.,.06),R@down
     yield 'approach_crown',root+R@grip+(.012,0.,.006),R@down
     yield 'insert_candidate',root+R@grip,R@down

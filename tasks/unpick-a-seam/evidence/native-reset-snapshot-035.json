@@ -1,0 +1,480 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Read-only authored-scene and reset diagnosis of failing YAM clamp; not a demo or score",
+  "evidence_sha256": {
+    "preview.json": "d6c4d00f4dc3f3f16a4c4532fd87e7d27e32695c5f4ad9d3a143e778db9e53d8",
+    "initial.usda": "28152c9cbb9c41da3e6d6a77135a18d4b4d9b1a80306336ee9c93c3e07da9f46",
+    "before-reset-state.npz": "dc2a9a933f5e5053fd8e7201846a558309c7bd09cd4299653a0b9b68d65885dd",
+    "after-reset-state.npz": "7ea44291b110b02da62eccf9add4e3aeeeaa0ef79b180af5b13e6e5b78604c9d",
+    "last-measured-state.npz": "1ded0d8e3084b8a3b850e425cca6d51a6ec44d6ad43f75ee09cf0f9106651956"
+  },
+  "measurements": {
+    "status": "failed",
+    "error": "RuntimeError: Native seam material/contact validity boundary crossed",
+    "audited_physics_substeps": 23,
+    "completed_steps": 0,
+    "strain": [
+      {
+        "maximum_principal_stretch": 1.0565623343479817,
+        "first_validity_excursion": {
+          "time_s": 0.005989583333333333,
+          "triangle": 6468,
+          "principal_stretch": 1.0565623343479817,
+          "limit": 1.05
+        },
+        "first_2pct_warning": {
+          "time_s": 0.003125,
+          "triangle": 3215,
+          "principal_stretch": 1.0270478117787807,
+          "limit": 1.02
+        },
+        "maximum_stretch_limit": 1.05
+      },
+      {
+        "maximum_principal_stretch": 1.0013580482005129,
+        "first_validity_excursion": null,
+        "first_2pct_warning": null,
+        "maximum_stretch_limit": 1.05
+      }
+    ],
+    "contact_audit": [
+      {
+        "valid": true,
+        "steps": 24,
+        "first_failure": null
+      },
+      {
+        "valid": true,
+        "steps": 24,
+        "first_failure": null
+      }
+    ],
+    "reset_observations": {
+      "before": {
+        "physics_step_count": 0,
+        "left": {
+          "maximum_position_error_m": 2.9727555032972445e-08,
+          "maximum_speed_m_s": 0.005089443642646074
+        },
+        "right": {
+          "maximum_position_error_m": 3.169906579089313e-08,
+          "maximum_speed_m_s": 0.005089443176984787
+        },
+        "maximum_thread_speed_m_s": 0.005109358578920364,
+        "maximum_thread_angular_speed_rad_s": 2.0229338133503916e-06
+      },
+      "after": {
+        "physics_step_count": 0,
+        "left": {
+          "maximum_position_error_m": 2.9727555032972445e-08,
+          "maximum_speed_m_s": 0.0
+        },
+        "right": {
+          "maximum_position_error_m": 3.169906579089313e-08,
+          "maximum_speed_m_s": 0.0
+        },
+        "maximum_thread_speed_m_s": 0.0,
+        "maximum_thread_angular_speed_rad_s": 0.0
+      }
+    },
+    "authored_scene": {
+      "settings": {
+        "/physics/suppressReadback": true,
+        "/physics/cudaDevice": 0,
+        "/physics/disableContactProcessing": false,
+        "/physics/updateToUsd": false
+      },
+      "physics_scenes": {
+        "/physicsScene": {
+          "physics:gravityDirection": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "physics:gravityMagnitude": 9.8100004196167,
+          "physxScene:bounceThreshold": 0.5,
+          "physxScene:broadphaseType": "GPU",
+          "physxScene:collisionSystem": "PCM",
+          "physxScene:disableSleeping": false,
+          "physxScene:enableCCD": false,
+          "physxScene:enableEnhancedDeterminism": false,
+          "physxScene:enableExternalForcesEveryIteration": true,
+          "physxScene:enableGPUDynamics": true,
+          "physxScene:enableSceneQuerySupport": false,
+          "physxScene:enableStabilization": false,
+          "physxScene:frictionCorrelationDistance": 0.02500000037252903,
+          "physxScene:frictionOffsetThreshold": 0.03999999910593033,
+          "physxScene:frictionType": "patch",
+          "physxScene:gpuCollisionStackSize": 67108864,
+          "physxScene:gpuFoundLostAggregatePairsCapacity": 33554432,
+          "physxScene:gpuFoundLostPairsCapacity": 2097152,
+          "physxScene:gpuHeapCapacity": 67108864,
+          "physxScene:gpuMaxDeformableSurfaceContacts": 1048576,
+          "physxScene:gpuMaxDeformableVolumeContacts": 1048576,
+          "physxScene:gpuMaxNumPartitions": 8,
+          "physxScene:gpuMaxParticleContacts": 1048576,
+          "physxScene:gpuMaxRigidContactCount": 8388608,
+          "physxScene:gpuMaxRigidPatchCount": 163840,
+          "physxScene:gpuMaxSoftBodyContacts": 1048576,
+          "physxScene:gpuTempBufferCapacity": 16777216,
+          "physxScene:gpuTotalAggregatePairsCapacity": 2097152,
+          "physxScene:invertCollisionGroupFilter": true,
+          "physxScene:maxBiasCoefficient": "inf",
+          "physxScene:maxPositionIterationCount": 255,
+          "physxScene:maxVelocityIterationCount": 255,
+          "physxScene:minPositionIterationCount": 1,
+          "physxScene:minVelocityIterationCount": 0,
+          "physxScene:reportKinematicKinematicPairs": false,
+          "physxScene:reportKinematicStaticPairs": false,
+          "physxScene:solveArticulationContactLast": false,
+          "physxScene:solverType": "TGS",
+          "physxScene:timeStepsPerSecond": 3840,
+          "physxScene:updateType": "Synchronous"
+        }
+      },
+      "fixtures": {
+        "clamp_jaw_0": [
+          {
+            "path": "/World/envs/env_0/clamp_jaw_0/geometry/mesh",
+            "type": "Cube",
+            "low_m": [
+              0.29344998905435205,
+              -0.042500001323098946,
+              0.8894999702821176
+            ],
+            "high_m": [
+              0.2994499891065061,
+              0.042500001323098946,
+              0.8974999705900748
+            ],
+            "contact": {
+              "physics:collisionEnabled": true,
+              "physxCollision:contactOffset": 0.0005000000237487257,
+              "physxCollision:minTorsionalPatchRadius": 0.0,
+              "physxCollision:restOffset": 0.0,
+              "physxCollision:torsionalPatchRadius": 0.0
+            },
+            "physics_material_path": "/World/envs/env_0/clamp_jaw_0/ClampContact",
+            "physics_material": {
+              "physics:density": 0.0,
+              "physics:dynamicFriction": 0.800000011920929,
+              "physics:restitution": 0.0,
+              "physics:staticFriction": 0.800000011920929
+            }
+          }
+        ],
+        "clamp_jaw_1": [
+          {
+            "path": "/World/envs/env_0/clamp_jaw_1/geometry/mesh",
+            "type": "Cube",
+            "low_m": [
+              0.2997499913908541,
+              -0.042500001323098946,
+              0.8894999702821176
+            ],
+            "high_m": [
+              0.3057499914430082,
+              0.042500001323098946,
+              0.8974999705900748
+            ],
+            "contact": {
+              "physics:collisionEnabled": true,
+              "physxCollision:contactOffset": 0.0005000000237487257,
+              "physxCollision:minTorsionalPatchRadius": 0.0,
+              "physxCollision:restOffset": 0.0,
+              "physxCollision:torsionalPatchRadius": 0.0
+            },
+            "physics_material_path": "/World/envs/env_0/clamp_jaw_1/ClampContact",
+            "physics_material": {
+              "physics:density": 0.0,
+              "physics:dynamicFriction": 0.800000011920929,
+              "physics:restitution": 0.0,
+              "physics:staticFriction": 0.800000011920929
+            }
+          }
+        ],
+        "clamp_base": [
+          {
+            "path": "/World/envs/env_0/clamp_base/geometry/mesh",
+            "type": "Cube",
+            "low_m": [
+              0.2799999937415123,
+              -0.0549999987706542,
+              0.7474999977275729
+            ],
+            "high_m": [
+              0.35999999195337296,
+              0.0549999987706542,
+              0.7574999975040555
+            ],
+            "contact": {
+              "physics:collisionEnabled": true,
+              "physxCollision:contactOffset": 0.0005000000237487257,
+              "physxCollision:minTorsionalPatchRadius": 0.0,
+              "physxCollision:restOffset": 0.0,
+              "physxCollision:torsionalPatchRadius": 0.0
+            },
+            "physics_material_path": "/World/envs/env_0/clamp_base/ClampContact",
+            "physics_material": {
+              "physics:density": 0.0,
+              "physics:dynamicFriction": 0.800000011920929,
+              "physics:restitution": 0.0,
+              "physics:staticFriction": 0.800000011920929
+            }
+          }
+        ],
+        "clamp_post": [
+          {
+            "path": "/World/envs/env_0/clamp_post/geometry/mesh",
+            "type": "Cube",
+            "low_m": [
+              0.31399999279528856,
+              -0.006000000052154064,
+              0.7574999831790725
+            ],
+            "high_m": [
+              0.3259999928995967,
+              0.006000000052154064,
+              0.897499988210698
+            ],
+            "contact": {
+              "physics:collisionEnabled": true,
+              "physxCollision:contactOffset": 0.0005000000237487257,
+              "physxCollision:minTorsionalPatchRadius": 0.0,
+              "physxCollision:restOffset": 0.0,
+              "physxCollision:torsionalPatchRadius": 0.0
+            },
+            "physics_material_path": "/World/envs/env_0/clamp_post/ClampContact",
+            "physics_material": {
+              "physics:density": 0.0,
+              "physics:dynamicFriction": 0.800000011920929,
+              "physics:restitution": 0.0,
+              "physics:staticFriction": 0.800000011920929
+            }
+          }
+        ],
+        "clamp_arm": [
+          {
+            "path": "/World/envs/env_0/clamp_arm/geometry/mesh",
+            "type": "Cube",
+            "low_m": [
+              0.30299999308772385,
+              -0.006000000284984708,
+              0.8894999702461064
+            ],
+            "high_m": [
+              0.3229999940376729,
+              0.006000000284984708,
+              0.897499970626086
+            ],
+            "contact": {
+              "physics:collisionEnabled": true,
+              "physxCollision:contactOffset": 0.0005000000237487257,
+              "physxCollision:minTorsionalPatchRadius": 0.0,
+              "physxCollision:restOffset": 0.0,
+              "physxCollision:torsionalPatchRadius": 0.0
+            },
+            "physics_material_path": "/World/envs/env_0/clamp_arm/ClampContact",
+            "physics_material": {
+              "physics:density": 0.0,
+              "physics:dynamicFriction": 0.800000011920929,
+              "physics:restitution": 0.0,
+              "physics:staticFriction": 0.800000011920929
+            }
+          }
+        ],
+        "clamp_bridge_0": [
+          {
+            "path": "/World/envs/env_0/clamp_bridge_0/geometry/mesh",
+            "type": "Cube",
+            "low_m": [
+              0.29345000523943454,
+              -0.044999998761340976,
+              0.893500012345612
+            ],
+            "high_m": [
+              0.3057500050602481,
+              -0.041999998735263944,
+              0.9055000124499202
+            ],
+            "contact": {
+              "physics:collisionEnabled": true,
+              "physxCollision:contactOffset": 0.0005000000237487257,
+              "physxCollision:minTorsionalPatchRadius": 0.0,
+              "physxCollision:restOffset": 0.0,
+              "physxCollision:torsionalPatchRadius": 0.0
+            },
+            "physics_material_path": "/World/envs/env_0/clamp_bridge_0/ClampContact",
+            "physics_material": {
+              "physics:density": 0.0,
+              "physics:dynamicFriction": 0.800000011920929,
+              "physics:restitution": 0.0,
+              "physics:staticFriction": 0.800000011920929
+            }
+          }
+        ],
+        "clamp_bridge_1": [
+          {
+            "path": "/World/envs/env_0/clamp_bridge_1/geometry/mesh",
+            "type": "Cube",
+            "low_m": [
+              0.29345000523943454,
+              0.041999998735263944,
+              0.893500012345612
+            ],
+            "high_m": [
+              0.3057500050602481,
+              0.044999998761340976,
+              0.9055000124499202
+            ],
+            "contact": {
+              "physics:collisionEnabled": true,
+              "physxCollision:contactOffset": 0.0005000000237487257,
+              "physxCollision:minTorsionalPatchRadius": 0.0,
+              "physxCollision:restOffset": 0.0,
+              "physxCollision:torsionalPatchRadius": 0.0
+            },
+            "physics_material_path": "/World/envs/env_0/clamp_bridge_1/ClampContact",
+            "physics_material": {
+              "physics:density": 0.0,
+              "physics:dynamicFriction": 0.800000011920929,
+              "physics:restitution": 0.0,
+              "physics:staticFriction": 0.800000011920929
+            }
+          }
+        ]
+      },
+      "surfaces": {
+        "/World/envs/env_0/cloth_left": {
+          "contact": {
+            "physics:collisionEnabled": true,
+            "physxCollision:contactOffset": 0.0002500000118743628,
+            "physxCollision:minTorsionalPatchRadius": 0.0,
+            "physxCollision:restOffset": 0.00019999999494757503,
+            "physxCollision:torsionalPatchRadius": 0.0,
+            "physxDeformableBody:collisionIterationMultiplier": 4,
+            "physxDeformableBody:collisionPairUpdateFrequency": 4,
+            "physxDeformableBody:disableGravity": false,
+            "physxDeformableBody:enableSpeculativeCCD": true,
+            "physxDeformableBody:linearDamping": 0.0,
+            "physxDeformableBody:maxDepenetrationVelocity": "inf",
+            "physxDeformableBody:maxLinearVelocity": "inf",
+            "physxDeformableBody:selfCollision": true,
+            "physxDeformableBody:selfCollisionFilterDistance": "-inf",
+            "physxDeformableBody:settlingDamping": 10.0,
+            "physxDeformableBody:settlingThreshold": 0.10000000149011612,
+            "physxDeformableBody:sleepThreshold": 0.05000000074505806,
+            "physxDeformableBody:solverPositionIterationCount": 64
+          },
+          "physics_material_path": "/World/envs/env_0/cloth_left/Fabric",
+          "physics_material": {
+            "omniphysics:density": 350.0,
+            "omniphysics:dynamicFriction": 0.550000011920929,
+            "omniphysics:poissonsRatio": 0.30000001192092896,
+            "omniphysics:staticFriction": 0.0,
+            "omniphysics:surfaceBendStiffness": 80000.0,
+            "omniphysics:surfaceShearStiffness": 0.0,
+            "omniphysics:surfaceStretchStiffness": 0.0,
+            "omniphysics:surfaceThickness": 0.00039999998989515007,
+            "omniphysics:youngsModulus": 2000000.0,
+            "physxDeformableMaterial:bendDamping": 0.004999999888241291,
+            "physxDeformableMaterial:elasticityDamping": 0.004999999888241291
+          },
+          "world_transform": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        "/World/envs/env_0/cloth_right": {
+          "contact": {
+            "physics:collisionEnabled": true,
+            "physxCollision:contactOffset": 0.0002500000118743628,
+            "physxCollision:minTorsionalPatchRadius": 0.0,
+            "physxCollision:restOffset": 0.00019999999494757503,
+            "physxCollision:torsionalPatchRadius": 0.0,
+            "physxDeformableBody:collisionIterationMultiplier": 4,
+            "physxDeformableBody:collisionPairUpdateFrequency": 4,
+            "physxDeformableBody:disableGravity": false,
+            "physxDeformableBody:enableSpeculativeCCD": true,
+            "physxDeformableBody:linearDamping": 0.0,
+            "physxDeformableBody:maxDepenetrationVelocity": "inf",
+            "physxDeformableBody:maxLinearVelocity": "inf",
+            "physxDeformableBody:selfCollision": true,
+            "physxDeformableBody:selfCollisionFilterDistance": "-inf",
+            "physxDeformableBody:settlingDamping": 10.0,
+            "physxDeformableBody:settlingThreshold": 0.10000000149011612,
+            "physxDeformableBody:sleepThreshold": 0.05000000074505806,
+            "physxDeformableBody:solverPositionIterationCount": 64
+          },
+          "physics_material_path": "/World/envs/env_0/cloth_right/Fabric",
+          "physics_material": {
+            "omniphysics:density": 350.0,
+            "omniphysics:dynamicFriction": 0.550000011920929,
+            "omniphysics:poissonsRatio": 0.30000001192092896,
+            "omniphysics:staticFriction": 0.0,
+            "omniphysics:surfaceBendStiffness": 80000.0,
+            "omniphysics:surfaceShearStiffness": 0.0,
+            "omniphysics:surfaceStretchStiffness": 0.0,
+            "omniphysics:surfaceThickness": 0.00039999998989515007,
+            "omniphysics:youngsModulus": 2000000.0,
+            "physxDeformableMaterial:bendDamping": 0.004999999888241291,
+            "physxDeformableMaterial:elasticityDamping": 0.004999999888241291
+          },
+          "world_transform": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ]
+        }
+      }
+    }
+  },
+  "interpretation": [
+    "Composed jaw dimensions, 0.300002 mm gap, 0.5 mm contact margin, zero rest offset and friction 0.8 match the intended physical clamp. Cloth world transforms are identity and the expected fabric binding is resolved.",
+    "Initialization leaves about 5.09 mm/s downward velocity despite the public step counter being zero. Explicit reset removes all native velocities; cloth positions agree with requested float32 state within 32 nm and thread positions within 27 nm. No stale pose or velocity is evident after reset.",
+    "Upper-patch local extension still exceeds 5% after 23 audited substeps / 5.990 ms, without crossing, cutting or blade damage. The corresponding standalone pose/fixture comparison is needed before attributing the failure to the YAM pipeline."
+  ]
+}

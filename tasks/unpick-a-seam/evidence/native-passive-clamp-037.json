@@ -1,0 +1,107 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Passive jaw seats correctly; cloth still exceeds declared strain domain. No robot or score.",
+  "evidence_sha256": {
+    "probe.json": "26cf456d656bba094c33a6f6d6183d1805465e538067b6bdf8fc0e679c2facda",
+    "state.npz": "d9506c7328f385709bcb05f1908d48bbaece97bf651d0a782e371a2008d61f37",
+    "initial.usda": "9d7f7a95ea15e6eb48c31c3acde6737f3fc922890c235db372171dd5587e059e"
+  },
+  "measurements": {
+    "status": "invalid_model_domain",
+    "physics_hz": 3840,
+    "completed_steps": 145,
+    "right_centroid_drop_m": 0.0014609488495250789,
+    "left_centroid_drop_m": -5.048886994407642e-05,
+    "passive_jaw_final": {
+      "pose_xyzw": [
+        0.3027997314929962,
+        6.8041748450820005e-12,
+        0.8934999704360962,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "velocity": [
+        2.29703127843095e-05,
+        5.258016244624741e-13,
+        -4.071409875905374e-11,
+        -2.355478867510641e-10,
+        1.4290495009561255e-08,
+        -9.22911400080828e-12
+      ],
+      "gap_m": 0.0003997385501861572,
+      "inferred_drive_force_x_n": -0.4998442530632019,
+      "force_note": "Computed from authored spring/damper law and measured state, not a native contact-force measurement"
+    },
+    "strain": [
+      {
+        "maximum_principal_stretch": 1.0523202201198187,
+        "first_validity_excursion": {
+          "time_s": 0.037760416666666664,
+          "triangle": 6943,
+          "principal_stretch": 1.0523202201198187,
+          "limit": 1.05
+        },
+        "first_2pct_warning": {
+          "time_s": 0.003125,
+          "triangle": 1987,
+          "principal_stretch": 1.0227097243533394,
+          "limit": 1.02
+        },
+        "maximum_stretch_limit": 1.05
+      },
+      {
+        "maximum_principal_stretch": 1.0460494626904364,
+        "first_validity_excursion": null,
+        "first_2pct_warning": {
+          "time_s": 0.0125,
+          "triangle": 1551,
+          "principal_stretch": 1.0239001224090585,
+          "limit": 1.02
+        },
+        "maximum_stretch_limit": 1.05
+      }
+    ],
+    "contact_audit": [
+      {
+        "valid": true,
+        "steps": 145,
+        "first_failure": null
+      },
+      {
+        "valid": true,
+        "steps": 145,
+        "first_failure": null
+      }
+    ],
+    "maximum_node_step_m": 0.0002047474990831688,
+    "maximum_thread_endpoint_step_m": 8.553366655080057e-05
+  },
+  "first_failure_triangle": {
+    "index": 6943,
+    "rest_m": [
+      [
+        0.2995999999999999,
+        0.005175,
+        0.8277
+      ],
+      [
+        0.2995999999999999,
+        0.00515,
+        0.8279000000000001
+      ],
+      [
+        0.2995999999999999,
+        0.0052,
+        0.8279000000000001
+      ]
+    ],
+    "edge_lengths_m": [
+      0.00020155644370755202,
+      4.99999999999997e-05,
+      0.00020155644370755202
+    ]
+  },
+  "interpretation": "The passive jaw reaches a 0.399739 mm gap at 0.023 mm/s, with inferred 0.49984 N drive load. No centreline crossing occurs before the 5% strain stop at 37.760 ms. The failing triangle has a 50 micrometre edge. Compare the existing graded mesh, preserving the exact physical holes, fabric, fixture and all validity guards."
+}

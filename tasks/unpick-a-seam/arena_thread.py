@@ -39,7 +39,7 @@ def spawn(path,cfg,**kwargs):
 
 def reset(env,env_ids,thread_name):
     import torch
-    from pxr import UsdPhysics
+    from native_stitches import restore_thread_joints
     import omni.usd
     base=env.unwrapped if hasattr(env,'unwrapped') else env
     origins=getattr(base.scene.env_origins,'torch',base.scene.env_origins)
@@ -49,8 +49,7 @@ def reset(env,env_ids,thread_name):
     obj=base.scene[thread_name]
     obj.write_body_link_pose_to_sim_index(body_poses=pose,env_ids=ids)
     obj.write_body_link_velocity_to_sim_index(body_velocities=torch.zeros((len(ids),pose.shape[1],6),device=origins.device),env_ids=ids)
-    for path in SPAWNED[thread_name]['joints']:
-        UsdPhysics.Joint(omni.usd.get_context().get_stage().GetPrimAtPath(path)).GetJointEnabledAttr().Set(True)
+    restore_thread_joints(omni.usd.get_context().get_stage(),SPAWNED[thread_name])
 
 
 def asset(spec):

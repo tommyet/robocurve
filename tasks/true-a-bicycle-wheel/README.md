@@ -1,7 +1,7 @@
 # True a wobbly bicycle wheel
 
 **Development package, not ready to submit.** The native wheel now settles and
-holds its spoke adjustments in short tests. Wrench contact, robot manipulation,
+holds its spoke adjustments in short tests. A fixture demonstrates physical wrench contact. Robot manipulation,
 a full-score demo and a Dream run are still outstanding.
 
 The robot adjusts spoke nipples until the wheel runs straight, remains centred
@@ -23,17 +23,29 @@ The jaws must turn the 3.23 mm nipple flats through collision. Internal bearing
 and eyelet interfaces are represented by joints and filtered only against their
 own connected bodies. External wrench contacts remain active.
 
+The current nipple flats are exposed 16 mm inward from the rim centreline.
+The current wrench has a 175 × 10 × 4 mm steel neck and a 55 mm grip, with
+195 mm between the slot and the grasp point. Its 90 g mass includes a steel
+tang inside the polymer grip. The longer handle and shorter front axle give
+the robot room to reach the nipples. This geometry passes sampled hull checks;
+native pickup is still pending. Earlier tests establish the unchanged jaw
+contact, not the whole revised tool.
+
+A conservative 0.2 N m handle moment gives roughly 7.5 MPa weak-axis bending
+stress in this rectangular neck (M divided by section modulus). This is an
+engineering sizing estimate, not a measured tool certification.
+
 An implicit elastic Coulomb drive models thread friction. It holds an adjustment
 without restoring the nipple to its starting angle. All material torques are
 applied every physics step. A cache skips only identical native float32
 attribute writes. Object poses are written only during episode reset.
 
-The historical reset loosens nipples 0, 2, 4 and 6 by 1.1 turns. A shorter
-candidate loosens nipples 0 and 2 by 0.75 turn. Its linear CPU estimate starts
-at 0.697 mm runout and 354 N minimum tension; two quarter-turn corrections per
-nipple predict 0.232 mm runout and 585–777 N tension. This candidate needs native
-verification before becoming the task reset. It does not require restoring an
-arbitrary reference tension exactly.
+The reset loosens nipples 0 and 2 by 0.75 turn. After native settling it has
+0.889 mm runout and190–647 N spoke tension, so it earns zero. A separate static
+control with two quarter-turn corrections per nipple reaches0.297 mm runout
+but only375 N minimum tension; it still fails the400 N floor. The planned
+physical demonstration will make three quarter-turn corrections per nipple.
+The older four-defect reset remains available only as a diagnostic reference.
 
 These are declared engineering approximations, not measurements of a commercial
 wheel. The model uses elastic rim compliance, tension-only spokes and simplified
@@ -44,7 +56,7 @@ to ±3 turns. See `VALIDATION.json` for parameters, limits and test history.
 
 ## Reproducing the current checks
 
-The 38 CPU checks need NumPy, use no randomness and take under one second:
+The 41 CPU checks need NumPy, use no randomness and take under one second:
 
 ```sh
 python -m unittest discover -s tasks/true-a-bicycle-wheel -p 'test_*.py'
@@ -54,23 +66,24 @@ In the pinned Isaac 6.1 environment, use a new output directory for each run:
 
 ```sh
 python tasks/true-a-bicycle-wheel/scene_probe.py --out OUTPUT --seconds .3 --dt .000025 --solver-position-iterations 32 --reset-profile two-defect-candidate
-python tasks/true-a-bicycle-wheel/wrench_contact_probe.py --out OUTPUT --dt .000025 --turn-deg -90
-python tasks/true-a-bicycle-wheel/wrench_contact_probe.py --out OUTPUT --dt .000025 --turn-deg -90 --no-contact
-python tasks/true-a-bicycle-wheel/preview_yam.py --out OUTPUT --steps 2 --physics-hz 40000
+python tasks/true-a-bicycle-wheel/wrench_contact_probe.py --out OUTPUT --dt .00005 --turn-deg -45
+python tasks/true-a-bicycle-wheel/wrench_contact_probe.py --out OUTPUT --dt .00005 --turn-deg -45 --no-contact
+python tasks/true-a-bicycle-wheel/preview_yam.py --out OUTPUT --steps 2 --physics-hz 20000 --device cpu
 ```
 
 The wrench tests are explicit kinematic fixtures, not robot demos. Their
-no-contact control moves the wrench 40 mm off the nipple. The YAM preview only
-holds the ready pose and records cameras and native state. Read the JSON status
+no-contact control moves the wrench 40 mm off the nipple. Without `--plan`, the YAM preview holds the ready pose. A frozen ordinary
+joint plan can be passed for bounded pickup checks; see `MOTION_PLAN.md`.
+Both modes record cameras and native state. Read the JSON status
 and physical checks: Isaac may exit with code zero after a Python failure.
 
 An isolated spring passes the expected quarter-turn displacement check at a
 25 µs step. The isolated rim remains bounded for two seconds. The full assembly
 with elastic Coulomb friction passes 0.3 seconds at 25 µs and 32 solver
 iterations: final runout 2.033 mm, final 20 ms rim drift 0.364 µm and thread drift
-1.41e-6 turns/second. That run took 56 wall seconds. A 50 µs comparison still
-had a small settling transient at 0.1 seconds; it is not yet a validated runtime
-choice. Curated reports are in `evidence/`; none demonstrates robot truing.
+1.41e-6 turns/second. That run took 56 wall seconds. The minimal reset also passes0.3 seconds at50 µs with a valid guard at every
+substep. Its0.902 mm runout differs by12.6 µm from25 µs, and it takes31 wall
+seconds. Wrench interaction still needs its own convergence check. Curated reports are in `evidence/`; none demonstrates robot truing.
 
 ## Scoring and remaining evidence
 
@@ -80,7 +93,14 @@ tensiometer. Full credit requires lateral runout ≤0.5 mm; partial credit allow
 within this fixture's 400–1000 N range, intact equipment and a complete released
 revolution. Destructive or invalid outcomes receive zero.
 
-Next verify contact-driven tightening and release, complete ordinary YAM
+Next verify robot-driven tightening and release, complete ordinary YAM
 joint-command manipulation, and demonstrate full score within the run limit.
 Then run Dream with the same physics and score both recordings. No media ID,
 final runtime, task score or submission certificate exists yet.
+
+The short YAM CPU check now works with GPU-rendered cameras. Use `--device cpu`
+(the preview default): the corresponding GPU YAM run develops unexplained wheel
+acceleration before grasping. Both isolated CPU and GPU scene controls remain
+bounded, so that discrepancy belongs to the integrated GPU path. Two CPU control
+actions take about 7.8 seconds each, excluding startup; the full trial runtime
+and cost remain unmeasured.

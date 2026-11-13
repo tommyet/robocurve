@@ -46,7 +46,9 @@ one cell; material crossing the modeled boundary remains recorded as lost.
 Prescribed-input CPU controls at 0.5 mm and 0.25 mm now produce similar shell
 heads and long ridges down the tapered shoulders. Their scored decorated lengths
 are 75.0 and 73.75 mm for the six-shape diagnostic, both below the 80 mm full-credit
-threshold. These are material controls, not robot demos. Native batches through
+threshold. Maximum deposit heights are 5.27 and 6.06 mm, a remaining 15%
+grid sensitivity; this model is not fully converged. These are material
+controls, not robot demos. Native batches through
 031 precede the full-face contact and bilinear deposition corrections; they
 cannot validate the final material implementation.
 

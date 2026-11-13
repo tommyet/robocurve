@@ -1,0 +1,36 @@
+{
+  "complete_native_execution": true,
+  "frozen_material_diagnostic": false,
+  "seconds": 0.3,
+  "dt": 2.5e-05,
+  "wall_seconds": 62.1720759216696,
+  "maximum_runout_m": 0.0015281140804290771,
+  "final_runout_m": 0.0008889436721801758,
+  "late_maximum_rim_displacement_m": 5.523574535650305e-07,
+  "late_maximum_thread_rate_turns_s": 1.650107528917419e-06,
+  "late_tension_range_n": [
+    190.52670226005134,
+    647.1865699474683
+  ],
+  "peak_rim_domain": {
+    "maximum_axial_bending_strain": 0.0011609416277031854,
+    "maximum_twist_rad": 0.0007909633619865657,
+    "maximum_locked_joint_gap_m": 2.5702569241161555e-06
+  },
+  "robot_demo": false,
+  "task_score": null,
+  "interpretation": "Short settling gate only. Does not test wrench interaction, full-duration stability or robot feasibility.",
+  "geometry_gate_pass": true,
+  "thread_holding_gate_pass": true,
+  "physical_gate_pass": true,
+  "native_report_sha256": "5e69fdf37949deb1468629a038019927ce1a2775d0ac24fe4d9963b48f7099a1",
+  "reset_profile": "two-defect-candidate",
+  "all_substep_rim_guard": null,
+  "source_sha256": {
+    "scene_probe.py": "cd783f310af0d10fd6fab9ff1521d8ecc55a9c44d5d57f8ef38f471a1b8b4ed7",
+    "wheel_scene.py": "d6015254044d08d8f7d5ea47e7d8c434dbf7d93ffabb31835964c648f34bd77a",
+    "native_probe.py": "11e7c3dddc7f4726099f6977b0db80c54f4b438b6e26a4adbcceca914e3503f7",
+    "thread_coupling.py": "c7c37185369fdd496b8ad90f3038023251d4730e0c0851d4b63739ef78de8074",
+    "mechanics.py": "d37341e5d564aec7cbe993844d66d5b8916babd78aea4227db376f502f545baf"
+  }
+}

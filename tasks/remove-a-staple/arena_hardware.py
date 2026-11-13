@@ -32,9 +32,11 @@ def _spawn(path,cfg,translation=None,orientation=None,**kwargs):
     from isaaclab.sim.utils.stage import get_current_stage
     from pxr import UsdGeom
     from full_scene import build_scene
+    import runtime_config
     stage=get_current_stage();root=str(path)[:-len(cfg.body_name)-1]
     if cfg.assembly_name not in ASSEMBLIES:
-        metadata=build_scene(stage,root=root,include_table=False,include_papers=False)
+        metadata=build_scene(stage,root=root,include_table=False,include_papers=False,
+            reset_profile=runtime_config.RESET_PROFILE,mesh_profile=runtime_config.MESH_PROFILE)
         cache=UsdGeom.XformCache();poses=[]
         for name in BODY_NAMES:
             matrix=cache.GetLocalToWorldTransform(stage.GetPrimAtPath(root+'/'+name))
@@ -111,7 +113,6 @@ class MaterialDomainError(RuntimeError):pass
 
 class NativeMonitor:
     def __init__(self,simulation,item,paper_specs):
-        from paper import ElasticDomainGuard
         self.item=item;self.specs=paper_specs
         self.rigid=simulation.create_rigid_body_view(item['metadata']['staple']['paths']+[item['metadata']['remover_path']])
         env_root=item['root'].rsplit('/',1)[0]
@@ -119,9 +120,9 @@ class NativeMonitor:
         if any(view.count!=1 for view in self.paper_views):raise RuntimeError('Native paper missing from monitor')
         self.reset()
     def reset(self):
-        from paper import ElasticDomainGuard
+        from paper import PaperIntegrityGuard
         from contact_guard import PaperWireCrossingGuard
-        self.guards=[ElasticDomainGuard(s.mesh,s.material) for s in self.specs]
+        self.guards=[PaperIntegrityGuard(s.mesh,s.material) for s in self.specs]
         self.crossing=[PaperWireCrossingGuard(s.mesh.faces) for s in self.specs]
         self.steps=0;self.last=None;self.frames={}
     def get_rigidbody_transformation(self,path):
@@ -136,7 +137,7 @@ class NativeMonitor:
             result=guard.update(nodes);result['contact_audit']=audit.update(nodes,wire)
             result['valid']=result['valid'] and result['contact_audit']['valid'];values.append(result)
         self.steps+=1;self.last={'observations':self.steps,'paper':values,'valid':all(x['valid'] for x in values)}
-        if not self.last['valid']:raise MaterialDomainError('Trial left the supported elastic/contact domain; no task score is valid')
+        if not self.last['valid']:raise MaterialDomainError('Trial left the supported membrane/contact domain; no task score is valid')
         if update_material:self.last['steel']=update_staple(self,staple)
         return self.last
 

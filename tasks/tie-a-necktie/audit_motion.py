@@ -50,9 +50,11 @@ def audit(plan):
                     if distance<-.0005:
                         violations.append(dict(step=step,stage=frame['stage'],side=side,
                                                link=link,fixture=name,penetration_m=-distance))
-        for a in groups[0]:
-            for b in groups[1]:
-                if np.any(np.maximum(b[5]-a[6],a[5]-b[6])>0.):continue
+        low_a=np.asarray([a[5] for a in groups[0]]);high_a=np.asarray([a[6] for a in groups[0]])
+        low_b=np.asarray([b[5] for b in groups[1]]);high_b=np.asarray([b[6] for b in groups[1]])
+        pairs=np.argwhere(np.all(np.maximum(low_b[None,:,:]-high_a[:,None,:],low_a[:,None,:]-high_b[None,:,:])<=0.,axis=2))
+        for ai,bi in pairs:
+                a,b=groups[0][ai],groups[1][bi]
                 def inside(source,target):
                     local=(source[4]-target[3])@target[2];planes=target[1].planes
                     return float((local@planes[:,:3].T-planes[:,3]).max(1).min())

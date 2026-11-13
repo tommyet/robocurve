@@ -2,9 +2,9 @@
   "status": "development_not_submission_ready",
   "checked_date": "2026-11-13",
   "local_checks": {
-    "geometry_and_rubric_tests": 8,
+    "geometry_and_rubric_tests": 12,
     "result": "passed",
-    "command": ".venv/bin/python -m unittest discover -s tasks/peg-out-a-tshirt -p test_local.py -v",
+    "command": ".venv/bin/python -m unittest discover -s tasks/peg-out-a-tshirt -p 'test*.py' -v",
     "scope": "CPU geometry and synthetic evidence-rubric cases only; no physics or task-success claim",
     "python_source_files": 26,
     "syntax_and_json_check": {
@@ -27,7 +27,64 @@
     "contact_trial": "Batch016 hit240-second wall cap at366 trace records (0\u2013365). Both hem layers follow grippers through~230\u2013250 mm lift and hold, then fall upon opening. Lower garment still rests on board. Ten sampled support/table triangle audits clear. Trace is truncated, videos usable; not a complete run or hanging demo.",
     "peg_rest_candidate": "Selected ordinary stepped rests at x=.32,y=\u00b1.30,z=.88: batch020 passive native settling complete. About1 mm settle; final0.5 s position range<.24 \u00b5m. Raw constrained-jaw velocities remain inconsistent with pose stability, so no velocity-quiescence claim. Robot pickup pending.",
     "line_transfer": "Batch020 completed620 actions/308.6 s wall. Held hem lifted331 mm and crossed the line; a one-handed hold remained supported, but full release dropped the garment back onto the board.17 sampled full-triangle fixture audits clear. This is not hanging success.",
-    "peg_pickup": "Batch022: dynamic peg opens~15.8 degrees (jaw gap~8.9 mm), lifts136 mm and remains in a two-second hold. It slips laterally~8 mm and yaws~28 degrees; the measured transform defines the next line-insertion probe. Replacing it on the narrow rest failed; release dropped it onto the table."
+    "peg_pickup": "Batch022: dynamic peg opens~15.8 degrees (jaw gap~8.9 mm), lifts136 mm and remains in a two-second hold. It slips laterally~8 mm and yaws~28 degrees; the measured transform defines the next line-insertion probe. Replacing it on the narrow rest failed; release dropped it onto the table.",
+    "first_peg_attempt": "Batch025 completed1160 native actions. Free spring peg remained on the line after both hands released, but shirt touched the table and8 cloth triangles still crossed the line axis at final hold. Maximum line penetration1.5mm equals its radius: this is not mere surface tolerance. No partial or full score is claimed. Diagnostic contact-resolution controls are pending.",
+    "spare_line_peg_reset": {
+      "status": "native_and_yam_fixed_settle_completed",
+      "batch": "029",
+      "physics_hz": 480,
+      "seconds": 3,
+      "hidden_world_constraints": false,
+      "max_last_half_second_root_translation_range_m": 3.2186508178710938e-06,
+      "initial_garment_score": 0,
+      "full_triangle_fixture_intersections_initial_and_final": 0,
+      "limitations": "Native029 passive retention and YAM031 five-second reset completed; subsequent robot handling failed. No task success."
+    },
+    "line_clamp_controls": {
+      "status": "loaded_contact_error_remains",
+      "baseline_480_hz_5mm_max_jaw_penetration_m": 0.0015986432896715175,
+      "960_hz_5mm_max_jaw_penetration_m": 0.0005501533306862894,
+      "480_hz_damping_0085_max_full_triangle_jaw_penetration_m": 0.00056689453125,
+      "baseline_physics_unchanged": true,
+      "next": "Ordinary robot handles should ease closure; do not score numerical interpenetration as attachment."
+    },
+    "first_feed_trial": {
+      "batch": "031",
+      "status": "failed_no_hanging",
+      "completed_actions": 1040,
+      "wall_seconds": 450.09274224191904,
+      "target_peg_opened": false,
+      "target_jaw_gap_m": 0.002719,
+      "max_sampled_held_patch_lift_m": 0.3447790940602622,
+      "sampled_fixture_triangle_intersections": 0,
+      "sampled_robot_node_penetration_max_m": 0.0004982387045800868,
+      "source_trace_sha256": "44647744466e8db0c810bf0f95cd5a4fee053e8f653f1101df5c96688ec507d2",
+      "failure": "Right forearm commanded through the thin line, missed handle target by about75 mm and knocked the spare peg off. The held shirt slipped before feeding. Offline finite-axis clipping finds516 intersections missed by the original vertex-only audit. No partial or full score."
+    },
+    "tilted_feed_trial": {
+      "batch": "033",
+      "status": "failed_no_hanging",
+      "completed_actions": 1040,
+      "wall_seconds": 517.6,
+      "target_peg_opened": false,
+      "sampled_fixture_triangle_intersections": 0,
+      "sampled_cloth_jaw_intersections_at_02mm_contraction": 0,
+      "held_hem_retained_until_commanded_release": true,
+      "failure": "The tilted approach reaches the handle target, and the deeper hem bite retains cloth. Hanging fabric first approaches within1mm of the target upper handle at action556; the peg moves at558 and falls574\u2013580 before the commanded squeeze. No hanging score. An isolated empty-peg opening control is next.",
+      "source_trace_sha256": "18c76f19fe08bdeb0c26788a4e6f82959101294604f90c367505b3e70b08680e"
+    },
+    "empty_peg_opening_trial": {
+      "batch": "035",
+      "status": "ordinary_handle_opening_completed",
+      "actions": 340,
+      "wall_seconds": 232.72217006236315,
+      "open_jaw_gap_m": 0.00832,
+      "closed_jaw_gap_m": 0.00272,
+      "released_line_retention": true,
+      "hidden_peg_constraint": false,
+      "garment_untouched": true,
+      "score": null
+    }
   },
   "demo": {
     "status": "not_implemented"
@@ -93,7 +150,7 @@
     "arena_scene": "Native YAM cloth/free passive jaws and five-second480 Hz reset validated. Full hanging interaction pending.",
     "passive_pegs": "Closed/open native contact controls pass; actual robot peg pickup/opening/line capture untested.",
     "runner": "Smoke and fixed-joint motion probes share explicit raw reset plus exactly100 ready-position control steps of native settling; all setup physics counts/time recorded separately.",
-    "controller": "Complete garment carry and physical peg pickup/squeeze/lift demonstrated separately.1160-action combined first-peg capture/release candidate passes composed hull audit. No retained line fastening or full hanging demo yet.",
+    "controller": "Native cloth pickup/carry and free peg pickup/opening proven separately. Tilted line approach and deeper held hem pass batch033, but carried fabric knocks target peg free before opening. Short empty-peg opening control isolates approach, then a candidate keeps shirt forward until opening.",
     "judging": "Evidence-bound manual photo/video/ruler rubric with adversarial local tests; final thresholds need runtime validation"
   }
 }

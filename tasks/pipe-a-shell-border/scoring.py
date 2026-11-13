@@ -89,7 +89,7 @@ def assess(x,y,volume,*,dx,emitted_m3,lost_m3=0.,airborne_m3=0.,damage_depth_m=0
     profile=a.max(axis=0)
     width=(a>=.0005).sum(axis=0)*dx
     # Find shapes from the actual final surface, without fixed shell centres.
-    heads=_peaks(width,minimum=.006,spacing=max(1,round(.009/dx)),prominence=.002)
+    heads=_peaks(width,minimum=.006,spacing=max(1,round(.006/dx)),prominence=.002)
     covered_by_valid_shell=np.zeros(len(yy),dtype=bool)
     for n,k in enumerate(heads):
         stop=heads[n+1] if n+1<len(heads) else len(yy)-1

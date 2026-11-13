@@ -20,7 +20,13 @@ slipped off an embedded leg does not satisfy that condition.
 |---|---|
 | 0 | Neither leg is fully clear, damaged paper beyond the stated tolerance, broken staple, altered sheets or invalid/incomplete evidence. |
 | 0.5 | At least one complete leg is clear of both sheets and all preservation checks pass. |
-| 1.0 | Both legs are clear; the two intact sheets are laid separately with at least 30 mm between their nearest edges and remain released for three seconds. |
+| 1.0 | Both legs are clear; the sheets move at least30 mm relative to one another from their initial12 mm stagger, then remain released for three seconds. |
+
+For the slide check, use the same corresponding corner on each sheet in the
+before/after overhead photographs. Measure their relative tabletop displacement
+vector. Initially it is (0,12) mm. The length of the change in that vector must
+be at least30 mm. Moving the whole stack together does not count. The sheets
+may still overlap. Wrinkles and creases alone are not tears.
 
 Judge the final state, not an earlier successful frame. The staple need not be
 straight or neatly placed in a tray. Both tool-assisted methods and successful

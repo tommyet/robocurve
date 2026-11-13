@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from paper import perforated_sheet, ElasticDomainGuard
+from paper import perforated_sheet, ElasticDomainGuard, PaperIntegrityGuard, PaperMesh
 
 
 class PaperTests(unittest.TestCase):
@@ -40,6 +40,27 @@ class PaperTests(unittest.TestCase):
         p=mesh.rest.copy();p[0,0]=np.nan
         self.assertFalse(guard.update(p)['valid'])
         self.assertFalse(guard.update(mesh.rest)['valid'])
+
+    def test_task_allows_an_isometric_crease_but_reports_it(self):
+        mesh=PaperMesh(np.array(((-.01,0.,0.),(.01,0.,0.),(0.,.01,0.),(0.,-.01,0.))),
+                       np.array(((0,1,2),(1,0,3))),[])
+        folded=mesh.rest.copy();folded[3]=[0.,0.,-.01]
+        result=PaperIntegrityGuard(mesh).update(folded)
+        self.assertTrue(result['valid'])
+        self.assertIsNotNone(result['first_bending_warning'])
+        self.assertFalse(result['bending_is_failure'])
+        self.assertFalse(ElasticDomainGuard(mesh).update(folded)['valid'])
+
+    def test_task_membrane_failure_remains_latched(self):
+        mesh=perforated_sheet();guard=PaperIntegrityGuard(mesh)
+        stretched=mesh.rest.copy();stretched[:,0]*=1.004
+        self.assertFalse(guard.update(stretched)['valid'])
+        self.assertFalse(guard.update(mesh.rest)['valid'])
+
+    def test_degenerate_sheet_is_invalid_even_with_bending_warning_only(self):
+        mesh=perforated_sheet();guard=PaperIntegrityGuard(mesh)
+        flatline=mesh.rest.copy();flatline[:,1]=0
+        self.assertFalse(guard.update(flatline)['valid'])
 
 
 if __name__=='__main__':unittest.main()

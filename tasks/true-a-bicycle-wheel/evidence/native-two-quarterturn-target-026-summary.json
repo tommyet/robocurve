@@ -1,0 +1,49 @@
+{
+  "complete_native_execution": true,
+  "frozen_material_diagnostic": false,
+  "seconds": 0.3,
+  "dt": 2.5e-05,
+  "wall_seconds": 58.28490302246064,
+  "maximum_runout_m": 0.0004993975162506104,
+  "final_runout_m": 0.0002968907356262207,
+  "late_maximum_rim_displacement_m": 4.6271491408280984e-07,
+  "late_maximum_thread_rate_turns_s": 1.5545526586299614e-06,
+  "late_tension_range_n": [
+    374.8849988982177,
+    527.4294872272122
+  ],
+  "peak_rim_domain": {
+    "maximum_axial_bending_strain": 0.0007345426155807684,
+    "maximum_twist_rad": 0.0002696686670942979,
+    "maximum_locked_joint_gap_m": 1.6646279791635448e-06
+  },
+  "robot_demo": false,
+  "task_score": null,
+  "interpretation": "Short settling gate only. Does not test wrench interaction, full-duration stability or robot feasibility.",
+  "geometry_gate_pass": true,
+  "thread_holding_gate_pass": true,
+  "physical_gate_pass": true,
+  "native_report_sha256": "ca0d30bb23c2089f9cb10d919384442905cc2702b26578314c94c519314671e9",
+  "reset_profile": "two-defect-corrected-control",
+  "all_substep_rim_guard": {
+    "valid": true,
+    "steps": 12000,
+    "first_failure": null,
+    "maximum_axial_bending_strain": 0.00058950971415258,
+    "maximum_twist_rad": 0.00019538739557687488,
+    "maximum_locked_joint_gap_m": 1.1778451117789332e-06,
+    "peaks": {
+      "maximum_axial_bending_strain": 0.0008752555160905721,
+      "maximum_twist_rad": 0.0002909835195344293,
+      "maximum_locked_joint_gap_m": 3.77222925326839e-06
+    }
+  },
+  "source_sha256": {
+    "scene_probe.py": "eeefe29822538b79d779fecee7f6e884514e7ae1ea4dfd91f179a57de561c3f3",
+    "wheel_scene.py": "7397c7b7b5728fad713ac17215640d42a02d253e4a5bab6685e56208c9f1666f",
+    "native_probe.py": "11e7c3dddc7f4726099f6977b0db80c54f4b438b6e26a4adbcceca914e3503f7",
+    "thread_coupling.py": "4023f373f81f3c98420d58c5dc9b395aed0c8c96ed644d278f3799fac4933a0c",
+    "mechanics.py": "a0bc89a7b61ae46ed0ecf555c1f45cc12b52972392cd6b69292907b3c995ba87",
+    "integrity.py": "8c917dd46bd126c023c04439b303f5d9fafb1d31289014ed99fe0a5aac28a90b"
+  }
+}

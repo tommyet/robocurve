@@ -1,7 +1,7 @@
 """Author the proposed wheel/stand/nipple/wrench scene in an existing USD stage.
 
-This is substantive native geometry and mechanics, but remains UNRUN. It is not
-a YAM demo, policy, score or submission certificate. The caller must install
+Short native settling is verified; wrench contact and YAM manipulation remain
+unrun. This module is not a demo, score or submission certificate. The caller must install
 NativeThreadCoupler.before_step before every physics substep, preserve its
 failure conditions, and reset all bodies/joints to their authored states.
 """
@@ -11,6 +11,17 @@ import numpy as np
 from mechanics import WheelSpec, starting_turn_errors
 from native_probe import build as build_ring
 from thread_coupling import ThreadSpec
+
+# Six exposed millimetres of flats and a six-millimetre barrel into the rim.
+NIPPLE_CENTER_INSET_M = .016
+NIPPLE_FLAT_LENGTH_M = .006
+WRENCH_ORIGIN_M = (.20,-.005,.7555)
+WRENCH_HANDLE_CENTER_M = (0.,-.2075,0.)
+WRENCH_HANDLE_SIZE_M = (.016,.055,.016)
+WRENCH_NECK_CENTER_M = (0.,-.0925,0.)
+WRENCH_NECK_SIZE_M = (.010,.175,.004)
+WRENCH_TCP_M = (0.,-.195,.011)
+WRENCH_MASS_KG = .090
 
 
 def quat(R):
@@ -40,20 +51,36 @@ def x_frame(direction):
     return np.column_stack((x,y,np.cross(x,y)))
 
 
+def spoke_phase(angle):
+    c,s=math.cos(angle),math.sin(angle)
+    return np.array(((1.,0.,0.),(0.,c,-s),(0.,s,c)))
+
+
+def wheel_world_frame(clocking_rad=0.):
+    """Clock the whole wheel about its axle without changing internal geometry."""
+    if not np.isfinite(clocking_rad):raise ValueError("Nonfinite wheel clocking")
+    return spoke_phase(clocking_rad)@np.array(((0.,0.,1.),(0.,1.,0.),(-1.,0.,0.)))
+
+
 def stand_boxes():
-    """Open-front truing stand: offset uprights with top arms to the axle."""
-    boxes=[('base',(.35,.10,.7575),(.18,.50,.02))]
-    for i,x in enumerate((.285,.415)):
-        boxes.append((f'upright_{i}',(x,.24,.88625),(.015,.025,.2375)))
-        boxes.append((f'axle_arm_{i}',(x,.12,1.005),(.015,.24,.015)))
-    return boxes
+    """Single-sided bench stand, clamped to the axle's far end.
+
+    The former front upright intersected the standard open READY hand. This
+    rigid cantilever fixture leaves the ordinary robot reset and rim access
+    clear; it does not lock the rotating hub or remove external contacts.
+    """
+    return [('base',(.48,.02,.7575),(.14,.25,.02)),
+            ('upright',(.48,0.,.88625),(.025,.025,.2375)),
+            ('axle_arm',(.4475,0.,1.005),(.065,.025,.015))]
 
 
 def wrench_jaw_mesh(side):
     """A real flared mouth guides the3.23mm nipple into a3.25mm working slot."""
     if side not in (-1,1):raise ValueError('Jaw side must be -1 or1')
-    outline=np.array(((.001625,-.004),(.003625,-.004),(.003625,.004),
-                      (.0025,.004),(.001625,-.002)))
+    # Centred nipple spans y=±1.615mm. Keep that entire square in the straight
+    # working slot; beginning the flare at-2mm caused ~20° of geometric play.
+    outline=np.array(((.001625,-.004),(.003625,-.004),(.003625,.008),
+                      (.0025,.008),(.001625,.002)))
     outline[:,0]*=side
     if side<0:outline=outline[::-1]
     points=np.array([(x,y,z) for z in (-.002,.002) for x,y in outline])
@@ -64,9 +91,10 @@ def wrench_jaw_mesh(side):
     return points,np.array(faces,int)
 
 
-def build_scene(stage, root="/WheelTask", *, reset_profile="four-defect-reference"):
+def build_scene(stage, root="/WheelTask", *, reset_profile="two-defect-candidate", nipple_flat_phase_rad=0., wheel_clocking_rad=0.):
     from pxr import Gf, PhysxSchema, Sdf, UsdGeom, UsdPhysics, Vt
     spec,thread=WheelSpec(),ThreadSpec()
+    flat_phase=spoke_phase(nipple_flat_phase_rad)
     wheel=root+"/wheel"
     n=spec.spokes
     UsdGeom.Xform.Define(stage,root)
@@ -75,6 +103,7 @@ def build_scene(stage, root="/WheelTask", *, reset_profile="four-defect-referenc
     wheel_xf=UsdGeom.Xform.Define(stage,wheel)
     wheel_xf.AddTranslateOp().Set(Gf.Vec3d(.35,0.,1.005))
     wheel_xf.AddRotateYOp().Set(90.)
+    wheel_xf.AddRotateZOp().Set(math.degrees(wheel_clocking_rad))
 
     def qgf(R):
         x,y,z,w=map(float,quat(R))
@@ -83,9 +112,9 @@ def build_scene(stage, root="/WheelTask", *, reset_profile="four-defect-referenc
     def shape(parent,name,center,size,kind="box",color=(.45,.47,.5)):
         path=parent+"/"+name
         scale=None
-        if kind=="cylinder":
+        if kind in ("cylinder","cylinder_x"):
             g=UsdGeom.Cylinder.Define(stage,path)
-            g.CreateAxisAttr("Z")
+            g.CreateAxisAttr("X" if kind=="cylinder_x" else "Z")
             g.CreateRadiusAttr(size[0])
             g.CreateHeightAttr(size[1])
         elif kind=="capsule":
@@ -132,7 +161,9 @@ def build_scene(stage, root="/WheelTask", *, reset_profile="four-defect-referenc
 
     hub=wheel+"/hub"
     body(hub,(0.,0.,0.),I,.18)
-    shape(hub,"axle",(0.,0.,0.),(.010,.010,.130))
+    # Single-sided stand: 10mm of axle beyond the front flange is enough.
+    # The far end remains at world x=.415m, inside the cantilever clamp.
+    shape(hub,"axle",(0.,0.,.015),(.010,.010,.100))
     shape(hub,"barrel",(0.,0.,0.),(.035,.035,.050))
     for side in (-1,1):
         shape(hub,f"flange_{'left' if side<0 else 'right'}",(0.,0.,side*.025),(.025,.003,0.),kind="cylinder")
@@ -140,7 +171,7 @@ def build_scene(stage, root="/WheelTask", *, reset_profile="four-defect-referenc
     bearing.CreateAxisAttr("Z")
     bearing.CreateBody1Rel().SetTargets([Sdf.Path(hub)])
     bearing.CreateLocalPos0Attr(Gf.Vec3f(.35,0.,1.005))
-    bearing.CreateLocalRot0Attr(Gf.Quatf(math.sqrt(.5),0.,math.sqrt(.5),0.))
+    bearing.CreateLocalRot0Attr(qgf(wheel_world_frame(wheel_clocking_rad)))
     bearing.CreateLocalPos1Attr(Gf.Vec3f(0.,0.,0.))
     visc=UsdPhysics.DriveAPI.Apply(bearing.GetPrim(),"angular")
     visc.CreateTypeAttr("force")
@@ -154,7 +185,9 @@ def build_scene(stage, root="/WheelTask", *, reset_profile="four-defect-referenc
     vertices=np.column_stack((spec.rim_radius_m*np.cos(theta),spec.rim_radius_m*np.sin(theta),np.zeros(n)))
     chord=2*spec.rim_radius_m*math.sin(math.pi/n)
     metadata={"hub_path":hub,"spokes":[],"wrench_path":root+"/wrench",
-              "reset_profile":reset_profile,"initial_turn_offsets":initial.tolist()}
+              "reset_profile":reset_profile,"initial_turn_offsets":initial.tolist(),
+              "nipple_flat_phase_rad":float(nipple_flat_phase_rad),
+              "wheel_clocking_rad":float(wheel_clocking_rad)}
     for i in range(n):
         old_spokes[i].CreateJointEnabledAttr(False)
         side=1 if i%2==0 else -1
@@ -222,9 +255,11 @@ def build_scene(stage, root="/WheelTask", *, reset_profile="four-defect-referenc
         soft.CreateDampingAttr(1.)
 
         nipple=f"{wheel}/nipple_{i:02d}"
-        nipple_center=endpoint-R[:,0]*.006
-        body(nipple,nipple_center,R,.0009)
-        shape(nipple,"flats",(0.,0.,0.),(.012,.00323,.00323),color=(.7,.52,.17))
+        nipple_center=endpoint-R[:,0]*NIPPLE_CENTER_INSET_M
+        nipple_R=R@flat_phase
+        body(nipple,nipple_center,nipple_R,.0009)
+        shape(nipple,"flats",(0.,0.,0.),(NIPPLE_FLAT_LENGTH_M,.00323,.00323),color=(.7,.52,.17))
+        shape(nipple,"barrel",(.006,0.,0.),(.0015,.006,0.),kind="cylinder_x",color=(.7,.52,.17))
         UsdPhysics.FilteredPairsAPI.Apply(stage.GetPrimAtPath(nipple)).CreateFilteredPairsRel().SetTargets([
             Sdf.Path(rim_paths[i]),Sdf.Path(rim_paths[(i-1)%n]),Sdf.Path(outer)])
         hinge=UsdPhysics.RevoluteJoint.Define(stage,f"{wheel}/nipple_{i:02d}_bearing")
@@ -233,13 +268,15 @@ def build_scene(stage, root="/WheelTask", *, reset_profile="four-defect-referenc
         hinge.CreateBody1Rel().SetTargets([Sdf.Path(nipple)])
         hinge.CreateLocalPos0Attr(Gf.Vec3f(*map(float,rim_R.T@(nipple_center-rim_center))))
         hinge.CreateLocalPos1Attr(Gf.Vec3f(0.,0.,0.))
-        hinge.CreateLocalRot0Attr(qgf(rim_R.T@R))
+        hinge.CreateLocalRot0Attr(qgf(rim_R.T@nipple_R))
         # Thread friction acts between nipple and outer spoke, not between
         # nipple and rim. The separate rim bearing locates the nipple but does
         # not prescribe its threaded angle or transfer a fictitious torque.
         thread_joint=UsdPhysics.Joint.Define(stage,f'{wheel}/nipple_{i:02d}_thread_friction')
         thread_joint.CreateBody0Rel().SetTargets([Sdf.Path(outer)])
         thread_joint.CreateBody1Rel().SetTargets([Sdf.Path(nipple)])
+        thread_joint.CreateLocalRot0Attr(qgf(flat_phase))
+        thread_joint.CreateLocalRot1Attr(qgf(I))
         friction=UsdPhysics.DriveAPI.Apply(thread_joint.GetPrim(),"rotX")
         friction.CreateTypeAttr("force")
         friction.CreateStiffnessAttr(thread.friction_stiffness_nm_per_rad*math.pi/180.)
@@ -248,7 +285,7 @@ def build_scene(stage, root="/WheelTask", *, reset_profile="four-defect-referenc
         friction.CreateTargetVelocityAttr(0.)
         friction.CreateMaxForceAttr(thread.friction_coefficient*spec.baseline_tension_n*thread.thread_mean_radius_m)
         metadata["spokes"].append({"nipple_path":nipple,"rim_path":rim_paths[i],
-            "reference_nipple_in_spoke_rotation":I.tolist(),
+            "reference_nipple_in_spoke_rotation":flat_phase.tolist(),
             "initial_turn_offset":float(initial[i]),"hub_anchor_local_m":anchor.tolist(),
             "rim_anchor_local_m":[-chord/2,0.,0.],"nominal_rest_m":nominal,
             "stiffness_n_per_m":k,"rest_target_attribute":limit.GetHighAttr(),
@@ -256,8 +293,11 @@ def build_scene(stage, root="/WheelTask", *, reset_profile="four-defect-referenc
             "rest_target_origin_m":L,"friction_drive":friction})
 
     wrench=metadata["wrench_path"]
-    body(wrench,(.20,-.155,.7555),I,.045)
-    shape(wrench,"handle",(0.,-.045,0.),(.016,.080,.016),color=(.13,.28,.4))
+    # A manufacturable extended spoke key keeps the bulky wrist in front of
+    # the wheel. The validated jaw is unchanged; the neck remains collidable.
+    body(wrench,WRENCH_ORIGIN_M,I,WRENCH_MASS_KG)
+    shape(wrench,"handle",WRENCH_HANDLE_CENTER_M,WRENCH_HANDLE_SIZE_M,color=(.13,.28,.4))
+    shape(wrench,"steel_neck",WRENCH_NECK_CENTER_M,WRENCH_NECK_SIZE_M,color=(.45,.47,.5))
     for side in (-1,1):
         points,faces=wrench_jaw_mesh(side)
         jaw=UsdGeom.Mesh.Define(stage,wrench+f"/jaw_{'left' if side<0 else 'right'}")

@@ -9,28 +9,28 @@
   "scores": null,
   "paid_compute_used_usd": null,
   "remaining_gates": [
-    "Native031 completed957 actions with released tool and conserved material, but rough deposits score0. Final whole-face nozzle contact and bilinear material deposition remain untested in a robot run.",
+    "Native035 completed its three-shell candidate, with conserved material and released tool. Independent current scoring gives0.25: two valid shell shapes, only one meeting continuous-ridge criterion. Full border and consistent shape remain unproven.",
     "Complete joined border, visible continuous ridges, and agreement with photographs remain unverified.",
     "Dream baseline and final rescoring are pending. No API requests or media upload made."
   ],
   "sources_sha256": {
-    "test_release.py": "d2b6b9b3388736c2a8e6d85cba253c43086dcfab7885be8b7a3973b0e7523f19",
-    "preview_yam.py": "02d00005f5402810665120653445a7bcb152b6d05782522057bc0f625aba2975",
-    "plan.py": "5b4ed5b56c728acefca0a5db3cc0a485e1fdb96debd1ca22d1c76b9f68761cfb",
-    "run.py": "3f23a922f9bba0e959c19624107defc95f13e580f0cd9efee832e4ae1b88b893",
-    "material.py": "a82fb1cb242a02990707a3c08a6466f304cf757541a663a974765eebb984d525",
-    "probe_native.py": "1d5d47f963be39660c32dec7b626a26080d7d290da69cfc06e5e8e9f1945b4e8",
-    "scoring.py": "713f7bbfcb0fdcb4fdccef004bf726c1e9a5fa1e860185fdc676fca4053ba65c",
-    "test_material.py": "3a7fb1893d4c46df15d31eab9f2a7adedc804af2fe2578e82388a1555f870037",
-    "scene.py": "893a2016851d05ec62ca47f22cb3aca3c11fc19a2ef81333372132dd856dfcf5",
-    "native.py": "bd7399d45e89f4955aaa0d945b518f98f81e4ac31eafb618cdc615e909b95fef",
-    "probe_shell_shape.py": "a4e2ab3a31c23b0acc9baeef718887a8d9e74c8fca1f2ed91659c2aa9732289e",
-    "probe.py": "dc2421d3342eda2052d7340d10bbf856493ad5b30b121ad839fddda7c7a57c17",
-    "joint_tracking.py": "a5e2cee60f6a84e0a46d95240f1a098794e95a12c1ac166b3c7d5be184ff3a44",
-    "dream_policy.py": "ad92ac9ddcf4c1d48c9985fcd0a0fc116144a995d8d4b0368e476b3f432b611b",
-    "contact_audit.py": "789e5285c8283d915fee82c2a5deab0519e44005edba0085d6f37f3a6062f147",
     "audit_run.py": "27a34c14178caa3e6d76689437917d9d40503eb38a75453536d94778ca50a6a9",
-    "review_views.py": "91fff198f4643babe15e10ca1d72cfb068ee8521e556e3d3e49fda0a2b9c804d"
+    "contact_audit.py": "789e5285c8283d915fee82c2a5deab0519e44005edba0085d6f37f3a6062f147",
+    "dream_policy.py": "ad92ac9ddcf4c1d48c9985fcd0a0fc116144a995d8d4b0368e476b3f432b611b",
+    "joint_tracking.py": "a5e2cee60f6a84e0a46d95240f1a098794e95a12c1ac166b3c7d5be184ff3a44",
+    "material.py": "a82fb1cb242a02990707a3c08a6466f304cf757541a663a974765eebb984d525",
+    "native.py": "bd7399d45e89f4955aaa0d945b518f98f81e4ac31eafb618cdc615e909b95fef",
+    "plan.py": "664b1838f75a6ce0e23741b07c0b7dc90c2362677838b49ad2096670333db977",
+    "preview_yam.py": "02d00005f5402810665120653445a7bcb152b6d05782522057bc0f625aba2975",
+    "probe.py": "dc2421d3342eda2052d7340d10bbf856493ad5b30b121ad839fddda7c7a57c17",
+    "probe_native.py": "1d5d47f963be39660c32dec7b626a26080d7d290da69cfc06e5e8e9f1945b4e8",
+    "probe_shell_shape.py": "a4e2ab3a31c23b0acc9baeef718887a8d9e74c8fca1f2ed91659c2aa9732289e",
+    "review_views.py": "91fff198f4643babe15e10ca1d72cfb068ee8521e556e3d3e49fda0a2b9c804d",
+    "run.py": "3f23a922f9bba0e959c19624107defc95f13e580f0cd9efee832e4ae1b88b893",
+    "scene.py": "893a2016851d05ec62ca47f22cb3aca3c11fc19a2ef81333372132dd856dfcf5",
+    "scoring.py": "56c0ce90074f44ab9e9a6c28c1d09d6bcf2e3174693d4eb37475f68d0eca072b",
+    "test_material.py": "3a7fb1893d4c46df15d31eab9f2a7adedc804af2fe2578e82388a1555f870037",
+    "test_release.py": "d2b6b9b3388736c2a8e6d85cba253c43086dcfab7885be8b7a3973b0e7523f19"
   },
   "cpu_probe": {
     "simulated_seconds": 1.500000000000022,
@@ -52,7 +52,8 @@
     "evidence/native-robot-extrusion-014-015.json",
     "evidence/native-single-shell-021.json",
     "evidence/native-three-shell-026.json",
-    "evidence/native-three-shell-030-031.json"
+    "evidence/native-three-shell-030-031.json",
+    "evidence/native-three-shell-033-035.json"
   ],
   "full_score_demo": false
 }

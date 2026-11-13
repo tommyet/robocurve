@@ -6,6 +6,8 @@ from yam_arena.task_file import Box,ObjectState
 
 @dataclass(frozen=True)
 class SpringPeg(Box):
+    base_angle: float=0.
+    open_angle: float=0.
     @property
     def free(self):
         return False  # reset the actual dynamic jaws instead of a phantom root
@@ -13,7 +15,9 @@ class SpringPeg(Box):
     def _check(self):
         super()._check()
         if self.yaw != 0.:
-            raise ValueError('This fixed reset uses pegs aligned with world x')
+            raise ValueError('Peg yaw is fixed; the explicit initial pitch is authored on both jaws')
+        if not np.isfinite((self.base_angle,self.open_angle)).all():
+            raise ValueError('Peg initial angles must be finite')
 
 
 @dataclass(frozen=True)
@@ -36,10 +40,11 @@ def _peg_spawn(path,cfg,translation=None,orientation=None,**kwargs):
     from native_cloth import author_peg_jaw,author_peg_hinge,ensure_gpu_scene
     stage=get_current_stage()
     ensure_gpu_scene(stage)
-    if orientation is not None and not np.allclose(orientation,(0.,0.,0.,1.)):
-        raise ValueError('Task pegs start closed and aligned with x')
+    expected=(0.,np.sin(cfg.angle/2),0.,np.cos(cfg.angle/2))
+    if orientation is not None and not np.allclose(orientation,expected):
+        raise ValueError('Peg initial rotation differs from the authored jaw angle')
     position=translation or (0.,0.,0.)
-    prim=author_peg_jaw(stage,str(path),position,upper=cfg.upper,angle=0.)
+    prim=author_peg_jaw(stage,str(path),position,upper=cfg.upper,angle=cfg.angle)
     if cfg.upper:
         # The lower body is first in the collection, so both jaws exist now.
         author_peg_hinge(stage,str(path).rsplit('/',1)[0],position,
@@ -55,7 +60,10 @@ def reset_peg(env,env_ids,peg_name):
     ids=torch.arange(len(origins),device=origins.device,dtype=torch.long) if env_ids is None else env_ids
     pose=torch.zeros((len(ids),2,7),device=origins.device,dtype=origins.dtype)
     pose[:,:,:3]=torch.as_tensor(PEG_SPECS[peg_name].pos,device=origins.device,dtype=origins.dtype)+origins[ids,None,:]
-    pose[:,:,6]=1.
+    spec=PEG_SPECS[peg_name]
+    angles=torch.as_tensor((spec.base_angle,spec.base_angle+spec.open_angle),device=origins.device,dtype=origins.dtype)
+    pose[:,:,4]=torch.sin(angles/2)
+    pose[:,:,6]=torch.cos(angles/2)
     obj.write_body_link_pose_to_sim_index(body_poses=pose,env_ids=ids)
     obj.write_body_link_velocity_to_sim_index(
         body_velocities=torch.zeros((len(ids),2,6),device=origins.device,dtype=origins.dtype),env_ids=ids)
@@ -74,13 +82,17 @@ def peg_asset(spec):
     class SpawnCfg(SpawnerCfg):
         func: object=clone(_peg_spawn)
         upper: bool=False
+        angle: float=0.
     class PegAsset(Asset):
         def __init__(self):
             super().__init__(spec.name,tags=['spring-peg','passive','physx'])
-            bodies={name:RigidObjectCfg(prim_path='{ENV_REGEX_NS}/'+spec.name+'/'+name,
-                        spawn=SpawnCfg(upper=upper),
-                        init_state=RigidObjectCfg.InitialStateCfg(pos=tuple(spec.pos),rot=(0.,0.,0.,1.)))
-                    for name,upper in (('lower',False),('upper',True))}
+            bodies={}
+            for name,upper in (('lower',False),('upper',True)):
+                angle=spec.base_angle+(spec.open_angle if upper else 0.)
+                rotation=(0.,float(np.sin(angle/2)),0.,float(np.cos(angle/2)))
+                bodies[name]=RigidObjectCfg(prim_path='{ENV_REGEX_NS}/'+spec.name+'/'+name,
+                    spawn=SpawnCfg(upper=upper,angle=angle),
+                    init_state=RigidObjectCfg.InitialStateCfg(pos=tuple(spec.pos),rot=rotation))
             self.cfg=RigidObjectCollectionCfg(rigid_objects=bodies)
         def get_object_cfg(self):
             return self.name,self.cfg

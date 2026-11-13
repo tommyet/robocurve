@@ -23,11 +23,12 @@ From the repository root:
 # Bounded native physics controls.
 python tasks/peg-out-a-tshirt/probe.py --mode clamp --seconds 3 --output /tmp/closed-peg
 python tasks/peg-out-a-tshirt/probe.py --mode open-clamp --seconds 3 --output /tmp/open-peg
-python tasks/peg-out-a-tshirt/probe.py --mode task-layout --seconds 3 --output /tmp/shirt-reset
+python tasks/peg-out-a-tshirt/probe.py --mode task-layout --line-pegs --physics-hz 480 --seconds 3 --output /tmp/shirt-reset
 
 # Contact diagnostic, not a submission demo.
 python tasks/peg-out-a-tshirt/run.py --mode motion-probe \
-  --plan tasks/peg-out-a-tshirt/peg-plan.json --judging-views --out /tmp/peg-pickup
+  --plan tasks/peg-out-a-tshirt/peg-open-plan.json --steps 340 \
+  --judging-views --out /tmp/peg-opening
 ```
 
 The full station runs at 480 Hz physics and 20 Hz control. The shared
@@ -58,14 +59,31 @@ It fell back onto the board after both hands opened. Seventeen sampled full
 triangle/fixture audits were clear. This establishes contact and transport,
 not successful hanging.
 
-The selected ordinary peg rests expose 20 mm of each handle. Their native
-passive check settled about 1 mm; final half-second position range was below
-0.24 µm. Raw constrained-jaw velocities were not equally quiet, so this is a
-pose-stability observation. The 300-action native pickup opens the mouth to 8.9 mm, lifts the peg 136 mm
-and holds it for two seconds. It drifts about 8 mm and yaws 28° in the fingers;
-replacement on the narrow rest fails. `attach-plan.json` uses the measured
-held transform to attempt line capture and a five-second released hold. Its
-1,160 actions pass the sampled hull checks; native fastening remains untested.
+The earlier rest pickup opened a peg to 8.9 mm and lifted it 136 mm. Its later
+horizontal line insertion failed integrity: cloth crossed the line axis and
+the shirt touched the table. That recording earns no score.
+
+The current reset instead has two spare pegs clipped to the empty line, with
+handles downward. A three-second native test retained both freely moving pegs;
+their final half-second hinge movement was below 3.3 µm. The shirt stayed on
+the board with no sampled full-triangle fixture intersection. The combined
+five-second YAM reset also completed in batch031. Its first feeding attempt
+failed: the right forearm hit the line, never opened the target peg and the
+shirt slipped from the other hand. The original vertex-only planner check
+missed a thin line passing through a convex hull; it now clips the finite line
+axis against every convex face. The old plan is blocked. Batch033 confirms that a tilted approach keeps the
+wrist below the line and reaches the handles; a deeper ordinary hem grasp
+also retains the shirt. However, dangling fabric brushes the peg off before
+the squeeze. The next short trial isolates opening an empty peg with the
+shirt untouched. A subsequent candidate holds the shirt clear until opening.
+Neither is a hanging demonstration.
+The runner refuses plans still marked as awaiting their collision audit.
+
+Line-clamp coupons exposed loaded jaw penetration. Halving the timestep or
+raising passive damping reduced the maximum depth from 1.60 mm to about
+0.55 mm, without a line-axis crossing. Neither change is adopted in the task.
+The next robot trial tests slow ordinary handle closure; loaded contact must
+be inspected before assigning any score.
 
 ## Setup, physics and scoring
 

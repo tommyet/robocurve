@@ -16,9 +16,12 @@ camera/joint observation.
    of the table, and transfer to a grasp near the tip with the other hand.
    Check the pale/gold edge orientation before wrapping. The collar's contact
    and friction support the remaining drape; there is no neck attachment.
-3. **Make the front crossing.** Hold the narrow strand below the collar while
-   passing the wide end across its front. The hands must retain a visible gap
-   for the next wrap; closing the collar loop is not yet the goal.
+3. **Make the front crossing and stabilize.** Pass the wide end across the
+   freely hanging narrow strand, then grasp the narrow strand about 40 mm
+   above its tip without pulling it away from its current position. Leaving
+   it free throughout the rear pass swept it along and unwound the attempted
+   wrap. An earlier pulled-narrow-end trial over-tensioned the strip. The
+   collar drape must remain supported by ordinary friction and gravity.
 4. **Wrap behind and around.** Carry the wide end behind the narrow strand and
    return it across the front. Maintain an open front wrap using a real finger
    as a spacer, then release that spacer only after the next handoff. No
@@ -67,3 +70,26 @@ A 1.40 m adult tie was incompatible with the short form's 280–320 mm final
 drop: the same rough budget would leave 854 mm for two ends, more than two
 320 mm drops can accommodate. The shorter tie is an explicit prop choice,
 not hidden slack or relaxed narrow-end judging.
+
+## Simpler knot candidate
+
+The user's objective permits another normal wearable knot. The
+[simple/Oriental technique](https://www.ties.com/how-to-tie-a-tie/simple) begins
+inside out, passes the wide end under the narrow end, then across its front,
+up through the neck loop and down through the front loop. This removes one
+initial crossing from the four-in-hand route; it does not remove threading or
+tightening.
+
+The CPU candidate parks the wide hand high, stabilizes the narrow tip and
+routes the wide end at 1.12 m height. Its 1,200 commanded poses pass the
+fixture/opposite-arm rejection screen. The optional inside-out reset reverses
+the material width direction before physics; it has no crossing or knot and
+passes the same initial triangle-clearance and strain tests. Both still need
+native validation. The four-in-hand default, rubric and historical evidence
+have not been relabeled.
+
+After any retained wrap, the next physical milestones are: hold the front
+opening with an ordinary pinch near the junction; raise the wide tip through
+the neck loop; feed that tip down the front opening to a receiving hand; pull
+through and adjust the knot on the narrow tail. The large grippers may require
+a handoff. No part of the front opening will be fixed or animated.

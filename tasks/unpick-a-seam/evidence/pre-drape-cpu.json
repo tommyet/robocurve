@@ -1,0 +1,40 @@
+{
+  "status": "cpu_only_native_unrun",
+  "construction": "fixed 5 mm Gaussian width, 0.95 mm rise, upper 0.55 mm offset with 6 mm ramp; flat intrinsic rest mesh unchanged",
+  "thread_radius_m": 0.0004,
+  "cloth_thickness_m": 0.0004,
+  "maximum_sample_interval_m": 9.09090909090915e-05,
+  "patches": [
+    {
+      "maximum_principal_stretch": 1.0181171979579038,
+      "first_crossing": null,
+      "minimum_axis_surface_sample_distance_m": 0.000800467248429872,
+      "continuous_axis_surface_distance_lower_bound_m": 0.0007550127029753262,
+      "minimum_height_above_table_m": 0.00019999999999997797
+    },
+    {
+      "maximum_principal_stretch": 1.0181171979579036,
+      "first_crossing": null,
+      "minimum_axis_surface_sample_distance_m": 0.0006819829068946328,
+      "continuous_axis_surface_distance_lower_bound_m": 0.000636528361440087,
+      "minimum_height_above_table_m": 0.00019999999999997797
+    }
+  ],
+  "cloth_to_cloth": {
+    "minimum_surface_distance_m": 0.0004631634421434766,
+    "face_pair": [
+      1199,
+      1658
+    ],
+    "exact_minimum": true,
+    "tested_triangle_pairs": 55762,
+    "excluded_pairs_farther_than_m": 0.001
+  },
+  "source_sha256": {
+    "draped_reset.py": "333a68a8c78ecd92883eec624bca1fd85ae8bc7bbcdb4ee299889130cbf2e127",
+    "quality_mesh.py": "03f72a04f7d296ca99044709462ec178804647914887a4db1dde860ae550059b",
+    "geometry.py": "13f5e255dc50bd92498a06c2a8f5d2647faa3f8eb1a2db0fbf01ba689b130e47",
+    "inspection.py": "4290f7f32c2e3925417f4c6917b059fe21aa3e787e55b50955e0fda42fdd303b",
+    "contact_audit.py": "319323f3b4fbc3660e28b158cab743e192809d03291b603137e5c04d60530065"
+  }
+}

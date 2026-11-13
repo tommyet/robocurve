@@ -1,0 +1,43 @@
+{
+  "date_utc": "2026-11-13",
+  "status": "CPU candidate only; native unrun",
+  "construction": "Fixed cylindrical bends outside the 20 mm overlap; 20 mm smooth ramps with horizontal arc length integrated by 32-point Gauss-Legendre quadrature. Flat intrinsic rest meshes, Y coordinates and every needle opening are unchanged.",
+  "runtime_selection": "--coarse-thread --quality-mesh --pre-draped-seam --drape-shape cylindrical",
+  "thread_radius_m": 0.0004,
+  "cloth_thickness_m": 0.0004,
+  "required_axis_to_surface_distance_m": 0.0006,
+  "maximum_axis_sample_interval_m": 9.09090909090915e-05,
+  "patches": [
+    {
+      "maximum_principal_stretch": 1.0000214377172207,
+      "continuous_thread_axis_clearance_lower_bound_m": 0.0007545647444363162,
+      "first_crossing": null,
+      "maximum_outer_x_shift_m": 6.321779738013844e-05,
+      "minimum_middle_surface_height_above_table_m": 0.000200000000000089
+    },
+    {
+      "maximum_principal_stretch": 1.000008256765546,
+      "continuous_thread_axis_clearance_lower_bound_m": 0.000654545454545488,
+      "first_crossing": null,
+      "maximum_outer_x_shift_m": 2.4321129345694636e-05,
+      "minimum_middle_surface_height_above_table_m": 0.00019999999999997797
+    }
+  ],
+  "cloth_to_cloth": {
+    "minimum_surface_distance_m": 0.0005429881621236913,
+    "face_pair": [
+      20,
+      11
+    ],
+    "exact_minimum": true,
+    "tested_triangle_pairs": 55993,
+    "excluded_pairs_farther_than_m": 0.001
+  },
+  "source_sha256": {
+    "draped_reset.py": "1a88185204f7cf7e07bc8cb1befe7dd90e9db69edefa08a35c524a81c2fcdb16",
+    "quality_mesh.py": "03f72a04f7d296ca99044709462ec178804647914887a4db1dde860ae550059b",
+    "geometry.py": "13f5e255dc50bd92498a06c2a8f5d2647faa3f8eb1a2db0fbf01ba689b130e47",
+    "inspection.py": "4290f7f32c2e3925417f4c6917b059fe21aa3e787e55b50955e0fda42fdd303b",
+    "contact_audit.py": "319323f3b4fbc3660e28b158cab743e192809d03291b603137e5c04d60530065"
+  }
+}

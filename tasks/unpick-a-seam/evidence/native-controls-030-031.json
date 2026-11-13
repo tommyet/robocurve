@@ -1,0 +1,185 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Initial pre-drape diagnosis only, no valid completed action or task score",
+  "trials": [
+    {
+      "batch": "030",
+      "trial": "seam-predrape",
+      "report_sha256": "2aed095298238cc5119bdf72e71e7115f6c255e72b4940e246b815a3f6466aac",
+      "measurements": {
+        "status": "failed",
+        "error": "ValueError: Pre-drape requires the quality mesh and coarse resting thread",
+        "runtime": {
+          "thread_radius_m": 0.0004,
+          "hole_half_m": 0.0008,
+          "hole_mesh_spacing_m": null,
+          "physics_hz": 3840,
+          "contact_refinement": {
+            "speculative_ccd": true,
+            "collision_iterations": 4,
+            "pair_update_frequency": 4
+          },
+          "maximum_stretch": 1.02,
+          "quality_mesh": true,
+          "seam_lowering_m": 0.0019999999999999996,
+          "pre_draped_seam": true
+        },
+        "completed_steps": 0
+      }
+    },
+    {
+      "batch": "031",
+      "trial": "seam-predrape",
+      "report_sha256": "279ca2f40e912a65222cfed8fdc0ffead41a6b090a02253e8dfbdc1a4bad6d92",
+      "measurements": {
+        "status": "failed",
+        "error": "RuntimeError: Native seam material/contact validity boundary crossed",
+        "runtime": {
+          "thread_radius_m": 0.0004,
+          "hole_half_m": 0.0008,
+          "hole_mesh_spacing_m": null,
+          "physics_hz": 3840,
+          "contact_refinement": {
+            "speculative_ccd": true,
+            "collision_iterations": 4,
+            "pair_update_frequency": 4
+          },
+          "maximum_stretch": 1.02,
+          "quality_mesh": true,
+          "seam_lowering_m": 0.0019999999999999996,
+          "pre_draped_seam": true
+        },
+        "completed_steps": 0,
+        "audited_physics_substeps": 1,
+        "strain": [
+          {
+            "maximum_principal_stretch": 1.0291382558412134,
+            "first_validity_excursion": {
+              "time_s": 0.00026041666666666666,
+              "triangle": 2640,
+              "principal_stretch": 1.0291382558412134,
+              "limit": 1.02
+            },
+            "first_2pct_warning": {
+              "time_s": 0.00026041666666666666,
+              "triangle": 2640,
+              "principal_stretch": 1.0291382558412134,
+              "limit": 1.02
+            },
+            "maximum_stretch_limit": 1.02
+          },
+          {
+            "maximum_principal_stretch": 1.027244948443248,
+            "first_validity_excursion": {
+              "time_s": 0.00026041666666666666,
+              "triangle": 2574,
+              "principal_stretch": 1.027244948443248,
+              "limit": 1.02
+            },
+            "first_2pct_warning": {
+              "time_s": 0.00026041666666666666,
+              "triangle": 2574,
+              "principal_stretch": 1.027244948443248,
+              "limit": 1.02
+            },
+            "maximum_stretch_limit": 1.02
+          }
+        ],
+        "contact_audit": [
+          {
+            "valid": true,
+            "steps": 2,
+            "first_failure": null
+          },
+          {
+            "valid": true,
+            "steps": 2,
+            "first_failure": null
+          }
+        ],
+        "final_maximum_cloth_speed_m_s": [
+          0.8036245107650757,
+          0.6219522356987
+        ],
+        "damage_events": [],
+        "cut_events": []
+      },
+      "final_native_state_sha256": "0e88f12767af0c5f1322f0ad8389558cfb226d208c246f646194f24a2d9b6e04"
+    },
+    {
+      "batch": "031",
+      "trial": "seam-predrape-5pct",
+      "report_sha256": "7dee9143e1fd7ceeda16ae1906567d37b80e374f6d24a9d9091033e962dcf11f",
+      "measurements": {
+        "status": "failed",
+        "error": "RuntimeError: Native seam material/contact validity boundary crossed",
+        "runtime": {
+          "thread_radius_m": 0.0004,
+          "hole_half_m": 0.0008,
+          "hole_mesh_spacing_m": null,
+          "physics_hz": 3840,
+          "contact_refinement": {
+            "speculative_ccd": true,
+            "collision_iterations": 4,
+            "pair_update_frequency": 4
+          },
+          "maximum_stretch": 1.05,
+          "quality_mesh": true,
+          "seam_lowering_m": 0.0019999999999999996,
+          "pre_draped_seam": true
+        },
+        "completed_steps": 0,
+        "audited_physics_substeps": 8,
+        "strain": [
+          {
+            "maximum_principal_stretch": 1.0829049260530703,
+            "first_validity_excursion": {
+              "time_s": 0.0020833333333333333,
+              "triangle": 2872,
+              "principal_stretch": 1.0829049260530703,
+              "limit": 1.05
+            },
+            "first_2pct_warning": {
+              "time_s": 0.00026041666666666666,
+              "triangle": 2640,
+              "principal_stretch": 1.0291382558412134,
+              "limit": 1.02
+            },
+            "maximum_stretch_limit": 1.05
+          },
+          {
+            "maximum_principal_stretch": 1.0476365765985969,
+            "first_validity_excursion": null,
+            "first_2pct_warning": {
+              "time_s": 0.00026041666666666666,
+              "triangle": 2574,
+              "principal_stretch": 1.027244948443248,
+              "limit": 1.02
+            },
+            "maximum_stretch_limit": 1.05
+          }
+        ],
+        "contact_audit": [
+          {
+            "valid": true,
+            "steps": 9,
+            "first_failure": null
+          },
+          {
+            "valid": true,
+            "steps": 9,
+            "first_failure": null
+          }
+        ],
+        "final_maximum_cloth_speed_m_s": [
+          1.4062690734863281,
+          1.7257131338119507
+        ],
+        "damage_events": [],
+        "cut_events": []
+      },
+      "final_native_state_sha256": "98d792cb2786e9879913a35753fcfe9f849e4883d6e05d20861b3ea1eb7a8059"
+    }
+  ],
+  "interpretation": "030 was an exact-float scene-guard bug corrected before 031. At the first 031 native step, hole-boundary nodes reach 0.804/0.622 m/s mostly in plane; the 5% run fails after 8 steps at 8.29% left extension. A rapid contact correction or initial prestretch relaxation may contribute; velocity evidence does not identify the cause alone."
+}

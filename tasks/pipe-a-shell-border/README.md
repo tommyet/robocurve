@@ -78,8 +78,9 @@ python -m unittest discover -s tasks/pipe-a-shell-border -p 'test_*.py' -v
 Twenty-nine tests cover pressure causality, finite volume, contact and damage,
 shape scoring and released-tool evidence. Native tests have demonstrated a
 physical pickup, passive plunger extrusion and an elongated head and tail.
-The latest three-deposit trial released the tool cleanly, but produced rough, uneven
-deposits and scored zero. A full joined shell border remains pending.
+Native035 released the tool cleanly and scored0.25 under the current independent
+scorer: two valid shell shapes, one with continuous ridges. The incomplete,
+uneven finish is not submission quality. A full joined border remains pending.
 
 The passive mechanism control emitted 0.1587 ml under an 8 N load and nothing
 under zero load; flow stopped after release and volume balance closed. Those
@@ -91,7 +92,8 @@ controls are not robot task scores. Dated evidence is listed in `VALIDATION.json
 nozzle resistance, ballistic parcels and conservative viscoplastic surface flow.
 The surface now uses a depth-dependent shear yield and Herschel–Bulkley flow law;
 see [MATERIAL.md](MATERIAL.md) for equations, sources and numerical limits.
-This revision still needs fresh native validation.
+Native033 and035 exercise this material law and whole-face nozzle contact.
+Their conserved deposits provide mechanism evidence, not a completed border.
 When icing submerges the star aperture, local pressure spreads it sideways over
 a declared 2 mm transfer depth. The pressure law sees the nozzle and existing
 material, without shell coordinates or templates. The 0.5 mm grid preserves
@@ -105,8 +107,8 @@ the discrete friction update cannot reverse motion and introduce chatter.
 
 This is an approximation, not a calibrated cream simulation. It cannot model
 overhangs, suspended strings or voids. Offline shape probes produce rounded
-heads and tapered tails; ridge retention still needs inspection in the native
-robot render. Full scoring requires visible ridges and an elongated head-to-tail shape.
+heads and tapered tails; the native trials retain some ridges, but do not yet
+produce a consistent finish. Full scoring requires visible ridges and an elongated head-to-tail shape.
 A round mound cannot pass merely because it narrows at its edge.
 `contact_audit.py` conservatively rejects non-nozzle body overlap with icing or
 cake, using every dynamic collision shape and measured rigid-body transforms.

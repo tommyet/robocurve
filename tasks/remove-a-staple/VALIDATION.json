@@ -2,16 +2,16 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "32 NumPy checks pass. Native steel coupon passes positive/negative/time-step tests. Full-size paper contact remains unresolved; finer step and no-staple controls do not pass.",
+  "cpu_checks": "38 CPU checks pass. Native steel coupon passes positive/negative/time-step tests. Coarse unstapled full sheets settle for0.1s with membrane strain below0.3%; stapled scene exceeds the membrane approximation at5.6ms. No extraction demo exists.",
   "simulator_probe": "One native 3 mm steel leg with contact-driven plastic hinge, not full task.",
   "demo": null,
   "dream": null,
   "media": null,
   "blocking_items": [
-    "Native paper/staple contact and time-step convergence validation",
-    "Validate complete free staple, A5 sheets and passive remover YAM scene",
-    "Evidence-supported elastic-domain validity boundary and adversarial non-contact/destructive tests",
-    "Successful ordinary robot demo, Dream baseline and final media"
+    "Resolve or bound local puncture-region membrane excursion in the full stapled scene",
+    "Validate free staple extraction with the passive remover and ordinary YAM actions",
+    "Verify final original-hole clearance, independent30mm sheet displacement, paper preservation and release",
+    "Successful robot demo, Dream baseline and final media"
   ],
   "status": "development_not_submission_ready",
   "native_probe": {
@@ -51,7 +51,7 @@
       }
     }
   },
-  "cpu_tests_passed": 32,
+  "cpu_tests_passed": 38,
   "coupled_paper_probe": {
     "entry_point": "paper_probe.py",
     "status": "Native surface solver runs; mesh cleanup and documented bend coefficient still leave both contact trials outside provisional validity domain.",
@@ -324,7 +324,79 @@
       "crown_underside_m": 0.76774,
       "explanation": "Lower paper rests on board; staple8mm beyond its left edge so clinched legs hang clear. No pins or filtered paper contacts.",
       "task_default_changed": false
-    }
+    },
+    "latest_contact_controls": [
+      {
+        "batch": "025",
+        "diagnostic": "paper-contact",
+        "report_sha256": "16849bdcaa64a85c38eb1949f6a8b992328d667d04ca094ee534cb4ef61495ae",
+        "status": "invalid_model_domain",
+        "completed_steps": 128,
+        "physics_hz": 10000,
+        "first_invalid_step": 126,
+        "maximum_tensile_strain": [
+          6.550877070909955e-05,
+          0.0045756431878525294
+        ],
+        "maximum_surface_bending_strain": [
+          0.0042445569620668784,
+          0.03755572456552688
+        ],
+        "wall_seconds": 7.89654232095927
+      },
+      {
+        "batch": "025",
+        "diagnostic": "paper-supported",
+        "report_sha256": "3555e3dd9ed5aa360eca9082875ac31732a6edabf08c6b7d9b6d6f762009af0f",
+        "status": "invalid_model_domain",
+        "completed_steps": 24,
+        "physics_hz": 10000,
+        "first_invalid_step": 14,
+        "maximum_tensile_strain": [
+          0.00273041533602858,
+          0.0030921150935958597
+        ],
+        "maximum_surface_bending_strain": [
+          0.03535057291033012,
+          0.013824353619824549
+        ],
+        "wall_seconds": 4.610518451780081
+      },
+      {
+        "batch": "026",
+        "diagnostic": "paper-no-staple",
+        "report_sha256": "e50e9a0bea1bd2d2aaeefb7146936aa77c48eab7020772fb1143b0b53a7d21f0",
+        "status": "invalid_model_domain",
+        "completed_steps": 48,
+        "physics_hz": 10000,
+        "first_invalid_step": 44,
+        "maximum_tensile_strain": [
+          0.0032939702427829953,
+          0.0038859448940942176
+        ],
+        "maximum_surface_bending_strain": [
+          0.038792247343660775,
+          0.03450954708079912
+        ],
+        "wall_seconds": 5.898839629255235
+      }
+    ],
+    "latest_diagnosis": "Supported no-staple pair still fails at4.8ms. Between4.4\u20134.8ms one upper node far from holes rises0.71mm above its initial plane while lower sheet remains supported: contact instability, not evidence of paper tearing. Isolate lower sheet and native rest-neighbor self filter before changing material/domain."
   },
-  "material_domain": "MATERIAL_DOMAIN.md distinguishes published onset-of-nonlinearity evidence from tearing.0.3% is an approximate elastic boundary, not a calibrated damage detector."
+  "material_domain": "MATERIAL_DOMAIN.md distinguishes published onset-of-nonlinearity evidence from tearing.0.3% is an approximate elastic boundary, not a calibrated damage detector.",
+  "current_paper_status": {
+    "date": "2026-11-13",
+    "coarse_pair030": "1000 native steps at10000Hz complete with0.272%/0.283% peak membrane strain; bend estimate reaches1.86%/1.68% locally. No hardware in this control.",
+    "stapled031": "Stops at56steps, lower membrane0.3682%, upper0.1726%; wire-crossing guards clean. Further diagnostic required.",
+    "bending_scope": "Task monitor records curvature warnings without treating them as tears. Native bending remains reversible elastic, with no permanent crease memory. Membrane0.3%, degenerate triangles and wire crossings remain latched validity failures.",
+    "localization030": "Faces incident to >0.3% bending estimate cover0.078%/0.057% of each sheet area; worst hinge angles4.66deg/3.63deg cluster near punctures. This does not prove extraction validity.",
+    "scoring": "Judging-v2:30mm additional relative corner displacement from initial(0,12)mm, complete leg clearance and3s release; creases alone are not tears."
+  },
+  "latest_material_evidence": "evidence/native-coarse-paper-030-031-summary.json",
+  "current_paper_coupling": {
+    "status": "not_validated",
+    "evidence": "evidence/native-paper-coupling-032-035-summary.json",
+    "next_candidate": "Explicit support plate with 1.5x16x8mm clinch-clearance pocket; no constraints or filters on paper.",
+    "cpu_tests_passed": 39
+  }
 }

@@ -58,7 +58,19 @@ def _spawn(path,cfg,translation=None,orientation=None,**kwargs):
     points=np.asarray(spec.initial)+np.asarray(translation or (0.,0.,0.))
     center=points[0]-spec.mesh.rest[0]
     if not np.allclose(points-spec.mesh.rest,center):raise ValueError("Initial paper must be an unstrained translated sheet")
-    return author_paper(stage,str(path),spec.mesh,center,material=spec.material).GetPrim()
+    prim=author_paper(stage,str(path),spec.mesh,center,material=spec.material).GetPrim()
+    import runtime_config
+    controls={}
+    if runtime_config.REFINED_CONTACT:
+        controls.update({'physxDeformableBody:enableSpeculativeCCD':True,
+            'physxDeformableBody:collisionIterationMultiplier':4,
+            'physxDeformableBody:collisionPairUpdateFrequency':4})
+    if runtime_config.MAX_DEPENETRATION_M_S is not None:
+        controls['physxDeformableBody:maxDepenetrationVelocity']=runtime_config.MAX_DEPENETRATION_M_S
+    for name,value in controls.items():
+        attr=prim.GetAttribute(name)
+        if not attr or not attr.Set(value):raise RuntimeError('Missing native paper contact control: '+name)
+    return prim
 
 
 def reset_paper(env,env_ids,paper_name):

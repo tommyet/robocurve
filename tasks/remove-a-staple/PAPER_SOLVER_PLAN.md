@@ -8,10 +8,11 @@ remain unfinished.
 
 A complete post-fracture animation is not necessary to reject damaged outcomes.
 The chosen development route instead ends a trial irreversibly when measured
-triangle stretch or outer-surface bending strain leaves the paper model's
-elastic range. No later flat pose can restore validity or earn partial credit.
+triangle stretch leaves the declared membrane range, geometry degenerates or
+wire crosses an intact triangle. Curvature alone is now a recorded approximation
+warning, since a crease is allowed by the task. No later flat pose can restore validity or earn partial credit.
 This is a validity boundary, not a claim to predict a crack's exact length.
-The proposed0.3% limits are an elastic-domain approximation consistent with
+The proposed0.3% membrane limit is an elastic-domain approximation consistent with
 the approximate onset of nonlinearity in published copy-paper tensile curves;
 they are not a tear threshold. See [material interpretation](MATERIAL_DOMAIN.md).
 A non-damaging extraction trial remains necessary.
@@ -31,7 +32,7 @@ The diagnostic sequence is:
 2. Free-pair controls pass with a small initial clearance. The unsupported
    stapled coupon crosses the provisional bending-domain boundary. The fixed
    crown and clinched legs must retain the stapled pair by contact alone while
-   both sheets remain inside the elastic validity boundary. Inspect the actual
+   both sheets remain inside the membrane/contact validity boundary. Inspect the actual
    hole/wire contacts and check a finer time step and mesh before interpreting
    a positive result.
 3. Add a release diagnostic that straightens and withdraws the wire through the

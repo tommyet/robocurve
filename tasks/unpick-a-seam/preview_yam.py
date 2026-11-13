@@ -36,29 +36,63 @@ def main():
     p.add_argument('--physics-hz',type=int,choices=(960,1920,3840),default=960)
     p.add_argument('--coarse-thread',action='store_true')
     p.add_argument('--hole-mesh-spacing',type=float)
+    p.add_argument('--resting-seam',action='store_true',help='Lower the sewn assembly so the bottom thread starts tangent to the tabletop; records the fixed layout change')
+    p.add_argument('--pre-draped-seam',action='store_true',help='Fixed initial drape over the resting thread, with unchanged flat intrinsic rest shape; requires coarse thread and quality mesh')
+    p.add_argument('--drape-shape',choices=('gaussian','cylindrical'),default='gaussian',help='Cylindrical bends preserve material arc length; applies only to the pre-draped reset')
+    p.add_argument('--quality-mesh',action='store_true',help='Opt-in graded 0.4 mm hole-boundary triangulation; requires coarse thread and no hole-mesh-spacing')
+    p.add_argument('--sewing-clamp',action='store_true',help='Vertical swatches in an ordinary fixed bench clamp; requires coarse thread and 0.4 mm hole refinement, without table-reset options')
+    p.add_argument('--passive-clamp',action='store_true',help='Replace the incompatible fixed-gap jaws with the declared force-limited passive spring jaw; requires --sewing-clamp')
+    p.add_argument('--keep-constructor-state',action='store_true',help='Integration diagnostic: keep the fresh native scene state after IsaacLab initialization instead of rewinding positions/velocities; no runtime resets')
     p.add_argument('--contact-refinement',choices=('baseline','iterations','speculative','combined'),default='baseline')
+    p.add_argument('--max-depenetration-m-s',type=float,help='Bound native deformable contact-correction velocity (0.01–1 m/s); no change to object velocity or scoring limits')
     p.add_argument('--maximum-stretch',type=float,choices=(1.02,1.05),default=1.02,
-                   help='Explicit engineering domain; 2% telemetry remains recorded, neither limit is a calibrated tear law')
+                   help='Explicit engineering domain; 2%% telemetry remains recorded, neither limit is a calibrated tear law')
     p.add_argument('--crossing-backend',choices=('cpu','warp-shadow','warp'),default='cpu')
+    p.add_argument('--audit-junctions',action='store_true',help='Also audit the closed native-joint connectors and disjoint end caps; force-qualified severed joints are excluded')
     p.add_argument('--profile-steps',action='store_true',help='CPU call profile around the bounded control steps; does not alter physics or audit cadence')
+    p.add_argument('--continue-after-strain',action='store_true',
+                   help='Failure analysis only: retain invalid status but observe ready-hold settling for at most 0.2 s; crossings and blade damage still stop the run')
     a=p.parse_args()
     if not 1<=a.steps<=2400:p.error('Use 1 to 2400 control steps')
+    if a.quality_mesh and (not a.coarse_thread or a.hole_mesh_spacing is not None):
+        p.error('Quality mesh requires --coarse-thread and omitting --hole-mesh-spacing')
+    if a.pre_draped_seam and not (a.coarse_thread and a.quality_mesh):
+        p.error('Pre-drape requires --coarse-thread and --quality-mesh')
+    if a.sewing_clamp and (not a.coarse_thread or (not a.quality_mesh and a.hole_mesh_spacing!=.0004) or a.resting_seam or a.pre_draped_seam):
+        p.error('Sewing clamp requires --coarse-thread and either --hole-mesh-spacing .0004 or --quality-mesh, without table reset options')
+    if a.passive_clamp and not a.sewing_clamp:p.error('Passive clamp requires --sewing-clamp')
+    if a.drape_shape!='gaussian' and not a.pre_draped_seam:
+        p.error('Drape shape requires --pre-draped-seam')
+    if a.max_depenetration_m_s is not None and not .01<=a.max_depenetration_m_s<=1.:
+        p.error('Diagnostic depenetration velocity must be 0.01 to 1 m/s')
     if a.plan is None and a.steps>200:p.error('Ready-hold preview limited to 200 steps')
+    if a.continue_after_strain and (a.plan is not None or a.steps>4):
+        p.error('Strain continuation is limited to four ready-hold steps and cannot run a policy')
     actions=None
     if a.plan is not None:
         plan=json.loads(a.plan.read_text())
         if plan.get('control_hz')!=20 or plan.get('no_object_feedback') is not True:
             raise ValueError('Expected a frozen 20 Hz joint plan without object feedback')
+        if plan.get('requires_pre_draped_seam') and not a.pre_draped_seam:
+            raise ValueError('This frozen cutting plan requires the declared pre-draped seam reset')
+        if plan.get('requires_junction_audit') and not a.audit_junctions:
+            raise ValueError('This frozen cutting plan requires the closed-junction audit')
+        if bool(plan.get('requires_sewing_clamp'))!=a.sewing_clamp:
+            raise ValueError('Frozen plan does not match the selected sewing-clamp layout')
+        if plan.get('requires_passive_clamp') and not a.passive_clamp:
+            raise ValueError('This frozen cutting plan requires the passive spring jaw')
         actions=np.asarray([row['action14'] for row in plan['frames']],float)
         if actions.ndim!=2 or actions.shape[1]!=14 or not np.isfinite(actions).all() or len(actions)<a.steps:
             raise ValueError('Incomplete/invalid fixed action sequence')
     from native_cloth import ContactRefinement
     import runtime_config
     refined=a.contact_refinement in ('iterations','combined')
-    settings=ContactRefinement(a.contact_refinement in ('speculative','combined'),4 if refined else 1,4 if refined else 1)
+    settings=ContactRefinement(a.contact_refinement in ('speculative','combined'),4 if refined else 1,4 if refined else 1,a.max_depenetration_m_s)
     runtime_config.CONFIG=runtime_config.SeamRuntime(
         .0004 if a.coarse_thread else .0002,.0008 if a.coarse_thread else .0006,
-        a.hole_mesh_spacing,a.physics_hz,settings,a.maximum_stretch)
+        a.hole_mesh_spacing,a.physics_hz,settings,a.maximum_stretch,a.quality_mesh,
+        .0024-(.0004 if a.coarse_thread else .0002) if (a.resting_seam or a.pre_draped_seam) else 0.,
+        a.pre_draped_seam,a.drape_shape,a.sewing_clamp,a.passive_clamp)
     a.out.mkdir(parents=True,exist_ok=False)
     frozen=a.out/'task-source';frozen.mkdir()
     hashes={}
@@ -73,6 +107,10 @@ def main():
     report={'status':'running','robot_demo':False,'score':None,'dream_requests':0,
             'requested_steps':a.steps,'completed_steps':0,'control_hz':20,
             'crossing_backend':a.crossing_backend,
+            'audit_junctions':a.audit_junctions,
+            'continue_after_strain':a.continue_after_strain,
+            'reset_mode':'fresh-constructor-state' if a.keep_constructor_state else 'explicit-state-reset',
+            'constructor_prefix_audited':False,
             'runtime':asdict(runtime_config.CONFIG),'source_sha256':hashes,
             'policy':'ordinary ready targets' if actions is None else 'frozen joint targets; no object feedback'}
     app=video=trace=emb=None
@@ -127,9 +165,28 @@ def main():
             prim=stage.GetPrimAtPath(envroot+'/'+name)
             if 'OmniPhysicsSurfaceDeformableSimAPI' not in prim.GetAppliedSchemas() or prim.HasAPI(UsdPhysics.RigidBodyAPI):
                 raise RuntimeError('Cloth is not native surface FEM')
+        contact_names=('physxCollision:restOffset','physxCollision:contactOffset',
+                       'physxDeformableBody:selfCollisionFilterDistance',
+                       'physxDeformableBody:maxDepenetrationVelocity',
+                       'physxDeformableBody:maxLinearVelocity',
+                       'physxDeformableBody:enableSpeculativeCCD',
+                       'physxDeformableBody:collisionIterationMultiplier',
+                       'physxDeformableBody:collisionPairUpdateFrequency')
+        report['native_surface_contact']=[{key:stage.GetPrimAtPath(envroot+'/'+name).GetAttribute(key).Get()
+                                           for key in contact_names}
+                                          for name in ('cloth_left','cloth_right')]
+        for row in report['native_surface_contact']:
+            for key,value in row.items():
+                if isinstance(value,float) and not np.isfinite(value):row[key]=str(value)
         sim=tensors.create_simulation_view('torch');sim.set_subspace_roots('/')
         blade=sim.create_rigid_body_view(roots['ripper_blade'])
         handle=sim.create_rigid_body_view(roots['ripper_handle'])
+        moving_jaw=None
+        if a.passive_clamp:
+            from passive_clamp import description,MOVING_NAME
+            report['passive_clamp']=description()
+            moving_jaw=sim.create_rigid_body_view(roots[MOVING_NAME])
+            if moving_jaw.count!=1:raise RuntimeError('Missing dynamic spring jaw')
         thread_view=sim.create_rigid_body_view(all_paths)
         native_paths=list(thread_view.prim_paths)
         order=np.asarray([native_paths.index(path) for path in all_paths])
@@ -146,20 +203,49 @@ def main():
         if abs(dt-1/a.physics_hz)>1e-10:raise RuntimeError('Requested physics timestep was not applied')
         report.update(physics_dt_s=dt,contact_processing_disabled=carb.settings.get_settings().get('/physics/disableContactProcessing'))
         if report['contact_processing_disabled'] is True:raise RuntimeError('Native contact reporting is disabled')
-        emb._env.reset()
-        # Every following substep, including settling, is audited after reset.
+        from scene_snapshot import authored_scene,native_state,state_summary
+        report['authored_scene']=authored_scene(stage,roots)
+        stage.GetRootLayer().Export(str(a.out/'initial.usda'))
+        report['initial_stage']='initial.usda'
+        report['reset_observations']={}
+        def snapshot_reset(label):
+            row={'physics_step_count':int(base.sim._physics_step_count)}
+            try:
+                data=native_state(views,cloth,thread_view,order)
+                np.savez_compressed(a.out/f'{label}-reset-state.npz',**data)
+                row.update(state_summary(data,namespace['INITIAL']))
+                row['maximum_thread_speed_m_s']=float(np.linalg.norm(data['thread_velocity'][:,:3],axis=1).max())
+                row['maximum_thread_angular_speed_rad_s']=float(np.linalg.norm(data['thread_velocity'][:,3:],axis=1).max())
+                if moving_jaw is not None:
+                    row['moving_jaw_pose']=array(moving_jaw.get_transforms())[0].tolist()
+                    row['moving_jaw_velocity']=array(moving_jaw.get_velocities())[0].tolist()
+            except Exception as exc:
+                row['snapshot_error']=f'{type(exc).__name__}: {exc}'
+            report['reset_observations'][label]=row
+        snapshot_reset('before')
+        if not a.keep_constructor_state:
+            emb._env.reset()
+        snapshot_reset('after')
+        # Every following substep is audited. Constructor-internal startup
+        # steps are outside this hook and explicitly reported as unobserved.
+        # Keeping their state requires a freshly constructed scene per trial;
+        # no material/body state is rewound during control execution.
         cutter=ThreadCutter([len(t['bodies']) for t in threads],CutParameters(thread_radius_m=runtime_config.CONFIG.thread_radius_m))
         damage=DamageAudit();strain=[StrainAudit(m.rest,m.faces,maximum_stretch=a.maximum_stretch) for m in cloth]
         crossing=[ThreadClothAudit(m.faces) for m in cloth]
         lengths=np.concatenate([t['lengths'] for t in threads])
+        from thread_integrity import ThreadIntegrity,ClosedJunctionCrossings
+        integrity=ThreadIntegrity([len(t['lengths']) for t in threads],runtime_config.CONFIG.thread_radius_m)
+        junctions=ClosedJunctionCrossings([m.faces for m in cloth],len(lengths)) if a.audit_junctions else None
         gpu_crossing=None
         if a.crossing_backend!='cpu':
             from warp_contact import PersistentCrossingAudit
             gpu_crossing=PersistentCrossingAudit(cloth,len(lengths),dt,device=base.device)
-        edge_local=np.column_stack((np.full(9,.0005),np.linspace(-.002,.002,9),np.zeros(9)))
-        state={'steps':0,'invalid':False,'previous_edge':None,
+        from tool_geometry import blade_edge_samples
+        edge_local=blade_edge_samples()
+        state={'steps':0,'invalid':False,'non_strain_invalid':False,'previous_edge':None,
                'last_physics_step':int(base.sim._physics_step_count),'max_edge_force_n':0.,
-               'timings_s':dict(readback=0.,strain=0.,crossing=0.,crossing_poll=0.,blade_damage=0.,cutting=0.,control_steps_total=0.)}
+               'timings_s':dict(readback=0.,strain=0.,crossing=0.,junctions=0.,crossing_poll=0.,blade_damage=0.,cutting=0.,control_steps_total=0.,native_step_total=0.,scene_write_total=0.,scene_update_total=0.)}
         def measured():
             poses=array(thread_view.get_transforms())[order]
             nodes=[array(view.get_simulation_nodal_positions())[0,:len(mesh.rest)] for view,mesh in zip(views,cloth)]
@@ -179,12 +265,19 @@ def main():
                 for j,points in enumerate(nodes):crossing[j].update(points,segments,t)
             if gpu_crossing is not None:gpu_crossing.update(nodes,segments,state['steps'])
             state['timings_s']['crossing']+=time.perf_counter()-start
+            junction_invalid=False
+            if junctions is not None:
+                start=time.perf_counter()
+                connectors=integrity.update(segments,cutter.severed,t)
+                junction_invalid=junctions.update(nodes,connectors,cutter.severed,t) or integrity.first_failure is not None
+                state['timings_s']['junctions']+=time.perf_counter()-start
             start=time.perf_counter()
             damage.update(edge if state['previous_edge'] is None else state['previous_edge'],edge,
                           nodes,[m.faces for m in cloth],t)
             state['timings_s']['blade_damage']+=time.perf_counter()-start
             state['previous_edge']=edge.copy()
-            invalid=bool(damage.crossed_faces or any(s.first_excursion for s in strain) or any(s.first_failure for s in crossing))
+            state['non_strain_invalid']=bool(junction_invalid or damage.crossed_faces or any(s.first_failure for s in crossing))
+            invalid=bool(state['non_strain_invalid'] or any(s.first_excursion for s in strain))
             if invalid:
                 state['invalid']=True
                 if 'first_invalid_substep' not in report:
@@ -223,12 +316,25 @@ def main():
         assess_step(False)
         check_crossing_boundary()
         original_update=base.scene.update
+        if a.profile_steps:
+            def timed(function,key):
+                def wrapped(*args,**kwargs):
+                    begin=time.perf_counter()
+                    try:return function(*args,**kwargs)
+                    finally:state['timings_s'][key]+=time.perf_counter()-begin
+                return wrapped
+            # Explicit wall timers retain native/C++ wait time that is absent
+            # from some profiler callbacks. These never change call cadence.
+            base.sim.step=timed(base.sim.step,'native_step_total')
+            base.scene.write_data_to_sim=timed(base.scene.write_data_to_sim,'scene_write_total')
+            original_update=timed(original_update,'scene_update_total')
         def after_physics(*args,**kwargs):
             result=original_update(*args,**kwargs)
             count=int(base.sim._physics_step_count)
             if count!=state['last_physics_step']:
                 state['last_physics_step']=count;state['steps']+=1;assess_step()
-                if state['invalid']:raise RuntimeError('Native seam material/contact validity boundary crossed')
+                if state['invalid'] and (not a.continue_after_strain or state['non_strain_invalid']):
+                    raise RuntimeError('Native seam material/contact validity boundary crossed')
             return result
         base.scene.update=after_physics
         ready=array(emb._ready)[0]
@@ -268,13 +374,15 @@ def main():
         if state['steps']!=round(a.steps*a.physics_hz/20):raise RuntimeError('Every-substep audit coverage mismatch')
         if gpu_crossing is not None and gpu_crossing.updates!=state['steps']+1:
             raise RuntimeError('GPU crossing audit missed a native substep')
+        if junctions is not None and any(audit.steps!=state['steps']+1 for audit in junctions.audits):
+            raise RuntimeError('Closed-junction audit missed a native substep')
         pieces=[];start=0
         for t in threads:
             end=start+len(t['lengths']);pieces.append(state['segments'][start:end]);start=end
         removed=inspect_removed_threads(pieces,state['nodes'],[m.faces for m in cloth],radius=runtime_config.CONFIG.thread_radius_m)
         for name in ('top_cam','left_cam','right_cam'):
             Image.fromarray(array(base.scene[name].data.output['rgb'])[0,:,:,:3].astype(np.uint8)).save(a.out/f'final-{name}.png')
-        report.update(status='complete',thread_inspection=removed,
+        report.update(status='invalid_model_domain' if state['invalid'] else 'complete',thread_inspection=removed,
                       note='Unscored native robot diagnostic, not full task acceptance evidence.')
     except BaseException as exc:
         report.update(status='failed',error=f'{type(exc).__name__}: {exc}',traceback=traceback.format_exc())
@@ -303,8 +411,31 @@ def main():
                 measured_wall_timings_s=state['timings_s'],
                 material_invalid=state['invalid'],cut_events=cutter.events,damage_events=damage.events,
                 contact_audit=cross_report,
+                thread_joint_integrity=integrity.summary() if a.audit_junctions else None,
+                closed_junction_contact_audit=junctions.summary() if junctions is not None else None,
                 strain=[{'maximum_principal_stretch':s.maximum_observed,'first_validity_excursion':s.first_excursion,
                          'first_2pct_warning':s.first_warning,'maximum_stretch_limit':s.limit} for s in strain])
+            # Preserve the actual terminal geometry and velocities even for a
+            # failed diagnostic. This is evidence only, never a reset target
+            # or a declaration that a material-domain violation was repaired.
+            try:
+                velocities=[array(view.get_simulation_nodal_velocities())[0,:len(mesh.rest)]
+                            for view,mesh in zip(views,cloth)]
+                thread_velocity=array(thread_view.get_velocities())[order]
+                np.savez_compressed(a.out/'last-measured-state.npz',
+                    left=state['nodes'][0],right=state['nodes'][1],
+                    left_velocity=velocities[0],right_velocity=velocities[1],
+                    thread=state['poses'],thread_velocity=thread_velocity,
+                    left_rest=cloth[0].rest,right_rest=cloth[1].rest,
+                    left_faces=cloth[0].faces,right_faces=cloth[1].faces,
+                    time_s=state['steps']*dt,material_invalid=state['invalid'])
+                report['last_measured_state']='last-measured-state.npz'
+                report['final_maximum_cloth_speed_m_s']=[float(np.linalg.norm(v,axis=1).max()) for v in velocities]
+                if moving_jaw is not None:
+                    report['final_moving_jaw_pose']=array(moving_jaw.get_transforms())[0].tolist()
+                    report['final_moving_jaw_velocity']=array(moving_jaw.get_velocities())[0].tolist()
+            except BaseException as exc:
+                report['last_measured_state_error']=f'{type(exc).__name__}: {exc}'
         if trace:trace.close()
         if video:video.close()
         save()

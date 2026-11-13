@@ -67,5 +67,6 @@
       "first_failure": null
     }
   ],
-  "interpretation": "Same exact physical holes and surface; fewer, better-conditioned numerical elements. Native contact, deformation and runtime remain untested; this candidate is not a new material."
+  "interpretation": "Same exact physical holes and surface; fewer, better-conditioned numerical elements. Native contact, deformation and runtime remain untested; this candidate is not a new material.",
+  "runner_opt_in_available": true
 }

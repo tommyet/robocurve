@@ -10,7 +10,7 @@ import math
 from pathlib import Path
 import numpy as np
 from mechanics import WheelSpec
-from wheel_scene import x_frame
+from wheel_scene import x_frame,NIPPLE_CENTER_INSET_M,WRENCH_TCP_M
 
 
 def candidate_tool_frames(spoke):
@@ -20,7 +20,7 @@ def candidate_tool_frames(spoke):
     end=np.array((s.rim_radius_m*math.cos(theta),s.rim_radius_m*math.sin(theta),0.))
     R=np.array(((0.,0.,1.),(0.,1.,0.),(-1.,0.,0.)))
     frame=R@x_frame(end-anchor)
-    center=np.array((.35,0.,1.005))+R@(end-x_frame(end-anchor)[:,0]*.006)
+    center=np.array((.35,0.,1.005))+R@(end-x_frame(end-anchor)[:,0]*NIPPLE_CENTER_INSET_M)
     base=frame[:,[2,1,0]]@np.diag((1.,1.,-1.))
     # Four equivalent square-nipple engagements; they are separate proposed
     # approach orientations, not arbitrary hidden changes to a held wrench.
@@ -35,7 +35,7 @@ def main():
     from yam_arena import ik,station
     from yam_arena.constants import READY
     down=np.array(((0.,-1.,0.),(-1.,0.,0.),(0.,0.,-1.)))
-    tool_to_tcp=np.array((0.,-.045,.011))
+    tool_to_tcp=np.array(WRENCH_TCP_M)
     report={'kind':'kinematic_reach_only','collision_validated':False,'task_score':None,'targets':[]}
     targets=[('pickup',np.array((.20,-.20,.7665)),down)]
     for spoke in (0,2,4,6):

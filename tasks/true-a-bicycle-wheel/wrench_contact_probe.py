@@ -28,6 +28,8 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--out',type=Path,required=True)
     p.add_argument('--dt',type=float,default=.000025)
+    p.add_argument('--nipple-flat-phase-deg',type=float,choices=(0.,45.),default=0.)
+    p.add_argument('--wheel-clocking-deg',type=float,choices=(0.,10.,20.),default=0.)
     p.add_argument('--solver-position-iterations',type=int,choices=(16,32,64,128),default=32)
     p.add_argument('--reset-profile',choices=RESET_PROFILES,default='two-defect-candidate')
     p.add_argument('--settle-seconds',type=float,default=.3)
@@ -36,6 +38,7 @@ def main():
     p.add_argument('--hold-seconds',type=float,default=.1)
     p.add_argument('--turn-deg',type=float,default=-90.,help='Negative is clockwise tightening viewed from rim')
     p.add_argument('--no-contact',action='store_true')
+    p.add_argument('--hold-hub-diagnostic',action='store_true',help='Lock the native axle bearing as an explicit bench fixture; never a robot task')
     a=p.parse_args()
     if not .00001<=a.dt<=.0001 or not 10<=abs(a.turn_deg)<=90:p.error('Use dt .00001–.0001 and |turn|10–90deg')
     durations=(a.settle_seconds,a.insert_seconds,a.turn_seconds,a.hold_seconds)
@@ -43,6 +46,8 @@ def main():
     a.out.mkdir(parents=True,exist_ok=False);started=time.monotonic()
     report={'kind':'wrench_contact_fixture','complete':False,'robot_demo':False,'score':None,
             'negative_control':a.no_contact,'dt':a.dt,'commanded_wrench_turn_deg':a.turn_deg,'samples':[],
+            'hub_clamped_diagnostic':a.hold_hub_diagnostic,
+            'nipple_flat_phase_deg':a.nipple_flat_phase_deg,'wheel_clocking_deg':a.wheel_clocking_deg,
             'solver_position_iterations':a.solver_position_iterations,'reset_profile':a.reset_profile,
             'initial_turn_offsets':starting_turn_errors(profile=a.reset_profile).tolist(),
             'source_sha256':{n:hashlib.sha256(Path(__file__).with_name(n).read_bytes()).hexdigest()
@@ -68,7 +73,10 @@ def main():
         scene=UsdPhysics.Scene.Define(stage,'/physicsScene');scene.CreateGravityDirectionAttr(Gf.Vec3f(0.,0.,-1.));scene.CreateGravityMagnitudeAttr(9.80665)
         ps=PhysxSchema.PhysxSceneAPI.Apply(scene.GetPrim());ps.CreateSolverTypeAttr('TGS');ps.CreateEnableGPUDynamicsAttr(False);ps.CreateBroadphaseTypeAttr('MBP');ps.CreateEnableCCDAttr(True)
         table=UsdGeom.Cube.Define(stage,'/Bench');table.CreateSizeAttr(1.);table.AddTranslateOp().Set(Gf.Vec3d(.3,0.,.7275));table.AddScaleOp().Set(Gf.Vec3f(1.,1.,.04));UsdPhysics.CollisionAPI.Apply(table.GetPrim())
-        metadata=build_scene(stage,reset_profile=a.reset_profile)
+        metadata=build_scene(stage,reset_profile=a.reset_profile,nipple_flat_phase_rad=np.deg2rad(a.nipple_flat_phase_deg),wheel_clocking_rad=np.deg2rad(a.wheel_clocking_deg))
+        if a.hold_hub_diagnostic:
+            bearing=UsdPhysics.RevoluteJoint.Get(stage,'/WheelTask/wheel/hub_bearing')
+            bearing.CreateLowerLimitAttr(0.);bearing.CreateUpperLimitAttr(0.)
         for path in body_paths(metadata):
             PhysxSchema.PhysxRigidBodyAPI.Get(stage,path).CreateSolverPositionIterationCountAttr(a.solver_position_iterations)
         wrench_prim=stage.GetPrimAtPath(metadata['wrench_path'])
@@ -109,7 +117,11 @@ def main():
             coupling.before_step();sim.simulate(a.dt,t);sim.fetch_results()
             report['completed_steps']=step+1
             if step%max(1,round(.02/a.dt))==0 or step==steps-1:
-                report['samples'].append({'step':step+1,'t':t+a.dt,'thread0':dict(coupling.last[0])})
+                io.begin_step()
+                poses={}
+                for label,path in (('nipple',target['nipple_path']),('hub',metadata['hub_path']),('wrench',metadata['wrench_path'])):
+                    pp,rr=io.frame(path);poses[label]={'position':pp.tolist(),'rotation':rr.tolist()}
+                report['samples'].append({'step':step+1,'t':t+a.dt,'thread0':dict(coupling.last[0]),'poses':poses})
                 if time.monotonic()-checkpoint>=5.:save();checkpoint=time.monotonic()
         measured=(coupling.last[0]['turns']-start_turn)*360
         report['measured_tightening_turn_deg']=measured

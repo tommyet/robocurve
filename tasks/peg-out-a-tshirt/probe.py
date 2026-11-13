@@ -16,22 +16,28 @@ from cloth_mesh import Mesh,tshirt,edge_strain
 from native_cloth import Fabric
 
 
-def coupon():
-    x,y=np.meshgrid(np.linspace(0,.18,37),np.linspace(-.025,.025,11))
+def coupon(spacing=.005):
+    nx=round(.18/spacing);ny=round(.05/spacing)
+    x,y=np.meshgrid(np.linspace(0,.18,nx+1),np.linspace(-.025,.025,ny+1))
     points=np.column_stack((x.ravel(),y.ravel(),np.zeros(x.size)))
     faces=[]
-    for j in range(10):
-        for i in range(36):
-            a=j*37+i
-            faces.extend(((a,a+1,a+38),(a,a+38,a+37)))
+    for j in range(ny):
+        for i in range(nx):
+            a=j*(nx+1)+i
+            faces.extend(((a,a+1,a+nx+2),(a,a+nx+2,a+nx+1)))
     return Mesh(points,np.asarray(faces),{})
 
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--mode',choices=('drop','drape','clamp','open-clamp','task-layout'),default='drape')
+    p.add_argument('--mode',choices=('drop','drape','clamp','open-clamp','line-clamp','task-layout'),default='drape')
+    p.add_argument('--line-diameter-mm',type=float,choices=(3.,5.),default=3.,help='Line-clamp diagnostic only')
+    p.add_argument('--coupon-spacing-mm',type=float,choices=(2.5,5.,10.),default=10.,help='Line-clamp diagnostic only')
+    p.add_argument('--spring-stiffness-scale',type=float,choices=(.1,.25,1.),default=1.,help='Line-clamp force diagnostic only; task spring is unchanged')
+    p.add_argument('--spring-damping',type=float,choices=(.003,.0085),default=.003,help='Line-clamp damping diagnostic in Nm s/rad; .0085 is five times the fixed-jaw critical estimate')
     p.add_argument('--seconds',type=float,default=3.)
     p.add_argument('--peg-rests',action=argparse.BooleanOptionalAction,default=None,help='Ordinary handle-access rests, selected by default for task-layout; --no-peg-rests reproduces the old table-peg control')
+    p.add_argument('--line-pegs',action='store_true',help='Task-layout candidate: spare pegs physically clipped to the empty line, with no peg rests')
     p.add_argument('--board-thickness-mm',type=float,default=None,
                    help='Task-layout diagnostic override for support thickness; task default is 8 mm')
     p.add_argument('--physics-hz',type=int,choices=(240,480,960),default=480)
@@ -46,7 +52,11 @@ def main():
     if args.board_thickness_mm is not None and (args.mode!='task-layout' or not 8<=args.board_thickness_mm<=40):
         p.error('board thickness diagnostics require task-layout and 8–40 mm')
     if args.peg_rests is True and args.mode!='task-layout':p.error('--peg-rests requires task-layout')
-    args.peg_rests=args.mode=='task-layout' and args.peg_rests is not False
+    if args.spring_stiffness_scale!=1. and args.mode!='line-clamp':p.error('Spring-force diagnostic requires line-clamp')
+    if args.spring_damping!=.003 and args.mode!='line-clamp':p.error('Damping diagnostic requires line-clamp')
+    if args.line_pegs and args.mode!='task-layout':p.error('--line-pegs requires task-layout')
+    if args.line_pegs and args.peg_rests is True:p.error('Choose line pegs or peg rests')
+    args.peg_rests=args.mode=='task-layout' and args.peg_rests is not False and not args.line_pegs
     args.output.mkdir(parents=True,exist_ok=True)
     started=time.monotonic()
     # Application must precede all simulator imports.
@@ -56,7 +66,7 @@ def main():
             'mode':args.mode,'material':asdict(Fabric()),'physics_hz':args.physics_hz,
             'seconds':args.seconds,'provenance':{},'phase':'build',
             'render_bridge':None if args.no_render else 'native PhysX Fabric'}
-    for name in ('probe.py','cloth_mesh.py','native_cloth.py','scene.py','probe_capture.py','probe_runtime.py','peg_rests.py'):
+    for name in ('probe.py','cloth_mesh.py','native_cloth.py','scene.py','probe_capture.py','probe_runtime.py','peg_rests.py','line_pegs.py'):
         report['provenance'][name]=hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
     capture=None
     world=None
@@ -78,7 +88,8 @@ def main():
             from scene import author_props,initial_layout,TABLE
             author_box(stage,'/World/Table',(1.1,1.3,.06),(.36,0.,TABLE-.03),(.58,.39,.25))
             report['peg_rests_candidate']=bool(args.peg_rests)
-            mesh=author_props(stage,with_peg_rests=args.peg_rests)
+            report['line_pegs_candidate']=bool(args.line_pegs)
+            mesh=author_props(stage,with_peg_rests=args.peg_rests,line_pegs=args.line_pegs)
             initial=initial_layout(mesh)
             cloth_path='/World/Tshirt'
         elif args.mode in ('drop','drape'):
@@ -99,11 +110,33 @@ def main():
                 collision.CreateContactOffsetAttr(.0005)
                 collision.CreateRestOffsetAttr(0.)
         else:
-            mesh=coupon()
+            mesh=coupon(args.coupon_spacing_mm/1000 if args.mode=='line-clamp' else .005)
             initial=mesh.rest.copy()
             initial[:,2]+=.5004
             author_peg(stage,'/World/Peg',pos=(0.,0.,.5),fixed_lower=True,
-                       spring=args.mode=='clamp',open_angle=-.35)
+                       spring=args.mode in ('clamp','line-clamp'),open_angle=-.35)
+            if args.mode=='line-clamp':
+                # Mechanism coupon only: a fixed lower jaw removes robot
+                # positioning variance. The upper jaw closes by its passive
+                # spring. Cloth begins clear of both jaws and the round line.
+                radius=args.line_diameter_mm/2000
+                center=(.030,0.,.5005+radius)
+                initial[:,0]+=.020
+                initial[:,2]=center[2]+radius+.0006
+                rail=UsdGeom.Cylinder.Define(stage,'/World/Line')
+                rail.CreateRadiusAttr(radius);rail.CreateHeightAttr(.2);rail.CreateAxisAttr('Y')
+                rail.AddTranslateOp().Set(Gf.Vec3d(*center))
+                UsdPhysics.CollisionAPI.Apply(rail.GetPrim())
+                cp=PhysxSchema.PhysxCollisionAPI.Apply(rail.GetPrim())
+                cp.CreateContactOffsetAttr(.0005);cp.CreateRestOffsetAttr(0.)
+                report['line_fixture']=dict(kind='cylinder',center=center,radius=radius,height=.2,axis='Y')
+                report['coupon_spacing_m']=args.coupon_spacing_mm/1000
+                drive=UsdPhysics.DriveAPI(stage.GetPrimAtPath('/World/Peg/hinge'),'angular')
+                drive.GetStiffnessAttr().Set(drive.GetStiffnessAttr().Get()*args.spring_stiffness_scale)
+                drive.GetDampingAttr().Set(args.spring_damping*np.pi/180)
+                report['spring_stiffness_scale']=args.spring_stiffness_scale
+                report['spring_damping_Nm_s_per_rad']=args.spring_damping
+                report['damping_basis']='Upper jaw4g, two35x10x6mm boxes with their authored offsets: hinge-axis inertia1.798e-6kgm2, critical damping2sqrt(0.4*I)=0.001696Nm s/rad.0.0085 is a diagnostic five-critical overdamped closure, not calibrated wood friction.'
             if args.mode=='open-clamp':
                 # Negative diagnostic: the jaw is fixed in the declared open
                 # pose. This fixture is never used in a task episode.
@@ -125,7 +158,7 @@ def main():
                 'physxDeformableBody:enableSpeculativeCCD')}}
         if not args.no_render:
             from probe_capture import ProbeCapture
-            if args.mode in ('clamp','open-clamp'):
+            if args.mode in ('clamp','open-clamp','line-clamp'):
                 eye,target=(.30,-.38,.72),(.045,0.,.45)
             elif args.mode=='task-layout':
                 eye,target=(1.25,-1.30,1.60),(.38,0.,.92)
@@ -148,6 +181,11 @@ def main():
             peg_paths=[f'/World/{side}Peg/{jaw}' for side in ('Left','Right') for jaw in ('lower','upper')]
             peg_view=simview.create_rigid_body_view(peg_paths)
             if peg_view.count!=4:raise RuntimeError('Expected four actual free peg-jaw bodies')
+            report['peg_body_paths']=peg_paths
+        elif args.mode=='line-clamp':
+            peg_paths=['/World/Peg/lower','/World/Peg/upper']
+            peg_view=simview.create_rigid_body_view(peg_paths)
+            if peg_view.count!=2:raise RuntimeError('Expected two actual diagnostic peg jaws')
             report['peg_body_paths']=peg_paths
         report['phase']='simulate'
         report['initial_native_sample_time_s']=1/args.physics_hz

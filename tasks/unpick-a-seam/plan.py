@@ -9,6 +9,8 @@ import hashlib
 import json
 from pathlib import Path
 import numpy as np
+from geometry import TABLE_TOP
+from tool_geometry import BLADE_OFFSET
 
 DOWN=np.array([[0.,-1.,0.],[-1.,0.,0.],[0.,0.,-1.]])
 
@@ -16,6 +18,11 @@ DOWN=np.array([[0.,-1.,0.],[-1.,0.,0.],[0.,0.,-1.]])
 def rz(a):
     c,s=np.cos(a),np.sin(a)
     return np.array(((c,-s,0.),(s,c,0.),(0.,0.,1.)))
+
+
+def rx(a):
+    c,s=np.cos(a),np.sin(a)
+    return np.array(((1.,0.,0.),(0.,c,-s),(0.,s,c)))
 
 
 def compile_plan():
@@ -38,21 +45,27 @@ def compile_plan():
                 s['q']=q;s['finger']=f0+(f1-f0)*w
                 action.extend([*q.tolist(),float(np.clip(s['finger']/FINGER_OPEN,0,1))])
             frames.append({'phase':label,'action14':action})
-    centre=np.array((.200,-.120,.7555));offset=np.array((0.,0.,.008))
+    centre=np.array((.200,-.120,TABLE_TOP+.008));offset=np.array((0.,0.,.008))
     # The handle lies along X; DOWN closes pads across its 12 mm Y width.
     transition(2.,'approach ripper',{'right':(centre+[0,0,.08],DOWN,FINGER_OPEN)})
     transition(2.,'lower around handle',{'right':(centre+offset,DOWN,FINGER_OPEN)})
     transition(1.,'grasp handle',{'right':(centre+offset,DOWN,-.0055)})
     transition(2.,'lift ripper',{'right':(centre+offset+[0,0,.08],DOWN,-.0055)})
-    turn=rz(np.pi/2)
+    # The fork starts vertical within the square handle's footprint. Turn the
+    # shaft across the tack and pitch down 5 degrees without rolling the broad
+    # gripper palm sideways into the table. This remains a high hover only.
+    turn=rx(-np.deg2rad(5.))@rz(np.pi/2)
     transition(2.,'turn cutting edge across tack',{'right':(centre+offset+[0,0,.08],turn@DOWN,-.0055)})
-    # Ripper points +Y after the turn. Its front edge is 50 mm ahead of the
-    # handle, so hold 8 mm before the first tack with 12 mm vertical clearance.
-    approach=np.array((.300,-.030-.050-.008,.7523+.012))
-    transition(3.,'approach first tack above fabric',{'right':(approach+offset,turn@DOWN,-.0055)})
+    # Keep the leading point behind the first tack before any later descent.
+    # Transform the grasp offset with the tool; it is not always world +Z.
+    blade=np.array((.300,-.030-.016,TABLE_TOP+.0048+.012))
+    approach=blade-turn@np.asarray(BLADE_OFFSET)+turn@offset
+    transition(3.,'approach first tack above fabric',{'right':(approach,turn@DOWN,-.0055)})
     transition(2.,'hold for native contact inspection',{})
     return {'schema':'fixed-joint-plan-v1','control_hz':20,'no_object_feedback':True,
             'status':'unvalidated pickup and approach only','frames':frames,
+            'tool_fork_plane':'XZ; long point below blade at reset',
+            'approach_pitch_degrees':5.,'blade_hover_xyz_m':blade.tolist(),
             'maximum_ik_position_error_m':position_error,'maximum_ik_rotation_error_rad':rotation_error,
             'plan_source_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
 

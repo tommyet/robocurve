@@ -1,0 +1,199 @@
+{
+  "kind": "native_material_evidence_not_robot_demo",
+  "runs": [
+    {
+      "label": "coarse_pair030",
+      "report_sha256": "db65eb222da8b04b039acd978861350f0054524919d4c1778337c1c6ab186055",
+      "status": "complete_outside_elastic_domain_diagnostic_only",
+      "completed_steps": 1000,
+      "wall_seconds": 41.327105787582695,
+      "physics_hz": 10000,
+      "reset_profile": "supported-edge-candidate",
+      "mesh_profile": "coarse",
+      "paper": [
+        {
+          "valid": false,
+          "steps": 1000,
+          "first_failure": {
+            "step": 46,
+            "reason": "outside elastic paper model",
+            "tensile_strain": 0.0006222221558103147,
+            "surface_bending_strain": 0.007972965207698447
+          },
+          "maximum_tensile_strain": 0.0027182540998706983,
+          "maximum_surface_bending_strain": 0.01855395196145495,
+          "thresholds_calibrated": false,
+          "last_geometry_diagnostics": {
+            "current_tensile_strain": 0.001570182827149491,
+            "current_surface_bending_strain": 0.01853421794711012,
+            "worst_bending_edge": [
+              155,
+              169
+            ],
+            "worst_bending_faces": [
+              203,
+              204
+            ],
+            "worst_edge_dihedral_rad": 0.08137195915909827,
+            "worst_edge_dual_width_m": 0.00021951818898241105,
+            "worst_membrane_face": 362
+          }
+        },
+        {
+          "valid": false,
+          "steps": 1000,
+          "first_failure": {
+            "step": 47,
+            "reason": "outside elastic paper model",
+            "tensile_strain": 0.0005057339035245967,
+            "surface_bending_strain": 0.0073115606050098555
+          },
+          "maximum_tensile_strain": 0.0028290255785075047,
+          "maximum_surface_bending_strain": 0.016815335063090346,
+          "thresholds_calibrated": false,
+          "last_geometry_diagnostics": {
+            "current_tensile_strain": 0.0015902714218898328,
+            "current_surface_bending_strain": 0.01680168311136651,
+            "worst_bending_edge": [
+              155,
+              164
+            ],
+            "worst_bending_faces": [
+              334,
+              342
+            ],
+            "worst_edge_dihedral_rad": 0.06332288030972065,
+            "worst_edge_dual_width_m": 0.0001884420741957753,
+            "worst_membrane_face": 1139
+          }
+        }
+      ],
+      "contact_audit": [
+        {
+          "valid": true,
+          "steps": 0,
+          "first_failure": null
+        },
+        {
+          "valid": true,
+          "steps": 0,
+          "first_failure": null
+        }
+      ],
+      "source_sha256": {
+        "paper.py": "53d08288fd491a396127ee85588c23c6b190447295ee3834e461a1c24e9ce981",
+        "full_scene.py": "d13bfeeab3846a5745a094dc535ed4869e307f70e9810f5fbdb9abb52137996b",
+        "full_probe.py": "2107371eedc57da505123811a34ef910eed7c8568fb990c5e6c00cc073e7f607",
+        "native_paper.py": "fb920b9a7ce24b15c30b5355a45135e3f9587439877bb497d2920c604304b021",
+        "materials.py": "9840b118f8a908b85260cf767025ec1a009162e99820c540032e2171d085aa83",
+        "physx_material.py": "b4efc3dfc7671b3a5e57933cc066cdc5ac4e655301c9f595e97db97b47be8524",
+        "contact_guard.py": "95cba1bacf521fcde76ef639cb03968eb29dac81f49fac40115eb97e8a50a133"
+      },
+      "asset_sha256": {
+        "coarse/mesh-manifest.json": "e763b0bfb08f24911b5f9c68651087b6876ce25281a77f117a178c0c85ddbc9c",
+        "coarse/paper_0.npz": "035aa15493591f7e8c8e9cd94fd48168a0293661739677bf0f5e99b1060ba0ad",
+        "coarse/paper_1.npz": "03bc4a370bb3328ee953875262bc89ddc06330fced7f7ab03a4897d8b73414c8",
+        "mesh-manifest.json": "bebe9b86e18633ce072d21a9010e2b90e63ca1c2322007971e3fde4175ff5681",
+        "paper_0.npz": "afe3c313c5b835d5b1617e09ff558e869bbc539f34ab3792e849dfc652803b2b",
+        "paper_1.npz": "7f20ccc85f3a52567f4b35744bb075df7449bee195c9b39c8c272e98f756d53e"
+      }
+    },
+    {
+      "label": "stapled031",
+      "report_sha256": "df2b334902011c7fa5dcd23f8b207cb60d4c718c408400d8611a829a73cd2631",
+      "status": "invalid_model_domain",
+      "completed_steps": 56,
+      "wall_seconds": 6.620975646190345,
+      "physics_hz": 10000,
+      "reset_profile": "supported-edge-candidate",
+      "mesh_profile": "coarse",
+      "paper": [
+        {
+          "valid": false,
+          "steps": 56,
+          "first_failure": {
+            "step": 45,
+            "reason": "outside elastic paper model",
+            "tensile_strain": 0.0003951475541035254,
+            "surface_bending_strain": 0.007973817489292264
+          },
+          "maximum_tensile_strain": 0.003681578142677999,
+          "maximum_surface_bending_strain": 0.028205460502007257,
+          "thresholds_calibrated": false,
+          "last_geometry_diagnostics": {
+            "current_tensile_strain": 0.003681578142677999,
+            "current_surface_bending_strain": 0.028183802603450946,
+            "worst_bending_edge": [
+              106,
+              120
+            ],
+            "worst_bending_faces": [
+              308,
+              343
+            ],
+            "worst_edge_dihedral_rad": 0.16910281562070528,
+            "worst_edge_dual_width_m": 0.0002999999999999993,
+            "worst_membrane_face": 1377
+          }
+        },
+        {
+          "valid": false,
+          "steps": 56,
+          "first_failure": {
+            "step": 38,
+            "reason": "outside elastic paper model",
+            "tensile_strain": 0.00048053681996629294,
+            "surface_bending_strain": 0.003085889287687191
+          },
+          "maximum_tensile_strain": 0.0017261055844721707,
+          "maximum_surface_bending_strain": 0.0076196168799778415,
+          "thresholds_calibrated": false,
+          "last_geometry_diagnostics": {
+            "current_tensile_strain": 0.0011805116839791463,
+            "current_surface_bending_strain": 0.007613373591576336,
+            "worst_bending_edge": [
+              111,
+              120
+            ],
+            "worst_bending_faces": [
+              347,
+              352
+            ],
+            "worst_edge_dihedral_rad": 0.027796801090358515,
+            "worst_edge_dual_width_m": 0.00018255245691025675,
+            "worst_membrane_face": 348
+          }
+        }
+      ],
+      "contact_audit": [
+        {
+          "valid": true,
+          "steps": 56,
+          "first_failure": null
+        },
+        {
+          "valid": true,
+          "steps": 56,
+          "first_failure": null
+        }
+      ],
+      "source_sha256": {
+        "paper.py": "53d08288fd491a396127ee85588c23c6b190447295ee3834e461a1c24e9ce981",
+        "full_scene.py": "d13bfeeab3846a5745a094dc535ed4869e307f70e9810f5fbdb9abb52137996b",
+        "full_probe.py": "2107371eedc57da505123811a34ef910eed7c8568fb990c5e6c00cc073e7f607",
+        "native_paper.py": "fb920b9a7ce24b15c30b5355a45135e3f9587439877bb497d2920c604304b021",
+        "materials.py": "9840b118f8a908b85260cf767025ec1a009162e99820c540032e2171d085aa83",
+        "physx_material.py": "b4efc3dfc7671b3a5e57933cc066cdc5ac4e655301c9f595e97db97b47be8524",
+        "contact_guard.py": "95cba1bacf521fcde76ef639cb03968eb29dac81f49fac40115eb97e8a50a133"
+      },
+      "asset_sha256": {
+        "coarse/mesh-manifest.json": "e763b0bfb08f24911b5f9c68651087b6876ce25281a77f117a178c0c85ddbc9c",
+        "coarse/paper_0.npz": "035aa15493591f7e8c8e9cd94fd48168a0293661739677bf0f5e99b1060ba0ad",
+        "coarse/paper_1.npz": "03bc4a370bb3328ee953875262bc89ddc06330fced7f7ab03a4897d8b73414c8",
+        "mesh-manifest.json": "bebe9b86e18633ce072d21a9010e2b90e63ca1c2322007971e3fde4175ff5681",
+        "paper_0.npz": "afe3c313c5b835d5b1617e09ff558e869bbc539f34ab3792e849dfc652803b2b",
+        "paper_1.npz": "7f20ccc85f3a52567f4b35744bb075df7449bee195c9b39c8c272e98f756d53e"
+      }
+    }
+  ]
+}

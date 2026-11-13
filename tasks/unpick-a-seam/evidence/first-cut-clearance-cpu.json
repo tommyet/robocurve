@@ -1,0 +1,95 @@
+{
+  "status": "nominal CPU candidate, not native contact proof",
+  "minimum_hand_table_clearance": {
+    "left/gripper": {
+      "clearance_m": 0.08370128119273079,
+      "step": 360,
+      "phase": "press cloth with closed left fingertips"
+    },
+    "left/tip_left": {
+      "clearance_m": 0.0003575484331455048,
+      "step": 360,
+      "phase": "press cloth with closed left fingertips"
+    },
+    "left/tip_right": {
+      "clearance_m": 0.00035756038037049187,
+      "step": 360,
+      "phase": "press cloth with closed left fingertips"
+    },
+    "right/gripper": {
+      "clearance_m": 0.08650128908536325,
+      "step": 80,
+      "phase": "lower around handle"
+    },
+    "right/tip_left": {
+      "clearance_m": 0.0031575504103296126,
+      "step": 80,
+      "phase": "lower around handle"
+    },
+    "right/tip_right": {
+      "clearance_m": 0.0031575570558642907,
+      "step": 100,
+      "phase": "grasp handle"
+    }
+  },
+  "inter_hand_obb_intersections": [],
+  "tool_left_hand_obb_intersections": [],
+  "frames": 540,
+  "plan_file_sha256": "a7853e4d280638d0454f43fde856602d51092b48cba7b78ffff576b39451c22a",
+  "geometry": {
+    "urdf": "yam_arm.urdf",
+    "urdf_sha256": "d6cc3fca8d6848aad36c0d2bb8798de391fcf5ef8f41180fe7618eda141f0bef",
+    "collision_meshes_sha256": "ca5c3df10fcbf8adaf9a4e59ced2d379df9a8f4ffb20b68c9148ca4bcf84dcf6",
+    "mesh_hash_format": "SHA256 of ordered filename+NUL+SHA256(mesh bytes), in selected-link/URDF-collision order",
+    "asset_source_commit": "120c3c81400171174604e503943f8d1ebc891058",
+    "links": {
+      "gripper": {
+        "collision_meshes": 44,
+        "center": [
+          -2.6554510014487054e-08,
+          1.3634562472109035e-09,
+          0.026499383771419527
+        ],
+        "half_size": [
+          0.05099999974481762,
+          0.032499999739229686,
+          0.03699938207864762
+        ]
+      },
+      "tip_left": {
+        "collision_meshes": 45,
+        "center": [
+          0.02399234150817156,
+          -0.03249998061134815,
+          -0.04323830162715911
+        ],
+        "half_size": [
+          0.03399913292378188,
+          0.035785401239991195,
+          0.04692129790782929
+        ]
+      },
+      "tip_right": {
+        "collision_meshes": 47,
+        "center": [
+          -0.023993591654670236,
+          0.03250000244997933,
+          -0.04323830162715911
+        ],
+        "half_size": [
+          0.03399960976094008,
+          0.03578540141461418,
+          0.04692129790782929
+        ]
+      }
+    },
+    "scope": "hand",
+    "envelope": "one link-frame AABB per complete selected collision link"
+  },
+  "press_note": "Raised 0.3 mm from the earlier unrun target. A 0.358 mm fingertip/table gap gives approximately 0.042 mm nominal compression of a 0.4 mm sheet, pending native force/strain measurements.",
+  "limitations": [
+    "Commanded poses and an assumed offline calibrated grasp, not measured native poses",
+    "Complete-link OBBs conservatively bound the geometry at 20 Hz samples; this is not continuous-time contact proof",
+    "Only inter-hand, tool/left-hand and hand/table screening; full arm self-collision remains native"
+  ]
+}

@@ -1,0 +1,559 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Bounded diagnostic failures; no robot demo, full-score evidence or acceptance claim. Near-boundary contact snapshots do not measure persistence or permanent unthreading.",
+  "trials": [
+    {
+      "batch": "025",
+      "trial": "seam-yam-profile",
+      "files_sha256": {
+        "first-invalid.npz": "66524a03b156eff17eab4e47d38eb8d4ea54594b9da156c14fad56ca2e79ca21",
+        "preview.json": "d6d6ea346e9fa1360abaeb2ee31886fcd57e414aa45b46b069ba4d2dda4c9fe3"
+      },
+      "measurements": {
+        "status": "failed",
+        "completed_steps": 0,
+        "requested_steps": 2,
+        "audited_physics_substeps": 100,
+        "first_invalid_substep": 100,
+        "runtime": {
+          "thread_radius_m": 0.0004,
+          "hole_half_m": 0.0008,
+          "hole_mesh_spacing_m": 0.0004,
+          "physics_hz": 3840,
+          "contact_refinement": {
+            "speculative_ccd": true,
+            "collision_iterations": 4,
+            "pair_update_frequency": 4
+          },
+          "maximum_stretch": 1.05
+        },
+        "strain": [
+          {
+            "maximum_principal_stretch": 1.0305297140056666,
+            "first_validity_excursion": null,
+            "first_2pct_warning": {
+              "time_s": 0.02421875,
+              "triangle": 6387,
+              "principal_stretch": 1.0253611168747276,
+              "limit": 1.02
+            },
+            "maximum_stretch_limit": 1.05
+          },
+          {
+            "maximum_principal_stretch": 1.0514585090981325,
+            "first_validity_excursion": {
+              "time_s": 0.026041666666666668,
+              "triangle": 2097,
+              "principal_stretch": 1.0514585090981325,
+              "limit": 1.05
+            },
+            "first_2pct_warning": {
+              "time_s": 0.022395833333333334,
+              "triangle": 2404,
+              "principal_stretch": 1.023243457435951,
+              "limit": 1.02
+            },
+            "maximum_stretch_limit": 1.05
+          }
+        ],
+        "contact_audit": [
+          {
+            "valid": true,
+            "steps": 101,
+            "first_failure": null
+          },
+          {
+            "valid": true,
+            "steps": 101,
+            "first_failure": null
+          }
+        ],
+        "damage_events": [],
+        "cut_events": [],
+        "measured_wall_timings_s": {
+          "readback": 0.09107205457985401,
+          "strain": 0.3417356899008155,
+          "crossing": 0.13189027924090624,
+          "crossing_poll": 0.00011095032095909119,
+          "blade_damage": 0.3204128937795758,
+          "cutting": 0.044682737439870834,
+          "control_steps_total": 5.80397664103657
+        },
+        "source_sha256": {
+          "warp_contact.py": "47f1cf9f27d957564eca3673327c59a65147e63a42680b9d8b6f0128cd63477d",
+          "runtime_config.py": "ffeba4d16c3a7de6ce5af294a2614639a9fcc5de95ff0c2e703577c6f34640a0",
+          "probe_native.py": "cb5b968892fff8954eba35b14be676adc84df9cb5dc0b685438beb85cdb75978",
+          "scoring.py": "8690167a5404134907425a352f0beb838156c112aae4b234261e4dabde17b89c",
+          "arena_cloth.py": "845c229b418e5306f02b3c0fecb98ddd8b5f5d0ca805f892c3fcc173f215bf5f",
+          "scene.py": "6f304c0eb35ec4b867d866ee2106cdaa439183f934e87ab735a8ab5677683342",
+          "cutting.py": "c23ebf001df44a3254192359940d678f09edb2f60299ec79ece2e0c088486858",
+          "inspection.py": "4290f7f32c2e3925417f4c6917b059fe21aa3e787e55b50955e0fda42fdd303b",
+          "test_contact_audit.py": "8dcfed3daab8bf70ad53f830dbe744fb7462d5900f4fe2e225e38936c6aee49a",
+          "native_cloth.py": "75398dce1057a25e6700171903dfa69d49c2cd988a660f058a9528ce3a572ca8",
+          "check_warp_contact.py": "ebfc43b64ab1d3e58d737bdb9d2cd79c09e1329aac7f8197fa8ca85248613052",
+          "native_stitches.py": "2cd3655b33adcdb7bf91a32e61f293be60c615d647589a728f5d54b6afe54425",
+          "arena_thread.py": "2d69f2c5e59509442d5e9e372cd5e19ccbb9783a0697cabb29b428b6e24fe60b",
+          "preview_yam.py": "f6c280424c9545c66d29ee227b8a076b299e98c2c39195e68e124d5a3ea88a42",
+          "plan.py": "96515fba8a322e72189a6542edcf7e6b0264845ed4c2f254bc1c6b5752f9adbf",
+          "test_mechanism.py": "5f79764c33394229b71bfb7f91dd760e90ef273821f4adc3c232148660e6a44f",
+          "geometry.py": "13f5e255dc50bd92498a06c2a8f5d2647faa3f8eb1a2db0fbf01ba689b130e47",
+          "contact_audit.py": "319323f3b4fbc3660e28b158cab743e192809d03291b603137e5c04d60530065",
+          "test_mesh_refinement.py": "9604ad8cce0d2cf67cf32e30e62b70c44651b7878d1236eb9a656cfb1237c49f"
+        },
+        "wall_seconds": 28.383652912452817
+      }
+    },
+    {
+      "batch": "026",
+      "trial": "seam-quality-intact",
+      "files_sha256": {
+        "state.npz": "573e72e18eab47d9c0b60cd9d0e3453013339a80b2f4c535f49081e132335d9d",
+        "first-contact-pair.npz": "becf2f35f9c3fefe734d7ce34b472dd8fcd7e7868794781e7796eb39d88f18b6",
+        "probe.json": "ad8a2d8a2e24255d2bcfc570590c9bc841b7fac8a5d2dc97a5ef3ea2adde27a6"
+      },
+      "measurements": {
+        "status": "invalid_model_domain",
+        "physics_hz": 3840,
+        "completed_steps": 490,
+        "strain": [
+          {
+            "maximum_principal_stretch": 1.0373048337155246,
+            "first_validity_excursion": {
+              "time_s": 0.021875,
+              "triangle": 2498,
+              "principal_stretch": 1.0215710239529023,
+              "limit": 1.02
+            }
+          },
+          {
+            "maximum_principal_stretch": 1.0394591998450542,
+            "first_validity_excursion": {
+              "time_s": 0.01953125,
+              "triangle": 2285,
+              "principal_stretch": 1.0225327168917084,
+              "limit": 1.02
+            }
+          }
+        ],
+        "contact_audit": [
+          {
+            "valid": false,
+            "steps": 490,
+            "first_failure": {
+              "step": 490,
+              "time_s": 0.12760416666666666,
+              "reason": "thread crosses intact fabric",
+              "static_intersections": 1,
+              "swept_intersections": 0,
+              "static_crossing_details": [
+                {
+                  "segment_index": 0,
+                  "face_index": 2827,
+                  "coordinate_frame": "current",
+                  "intersection_m": [
+                    0.00024109641771706455,
+                    -0.02977428632378754,
+                    0.4391033832042178
+                  ],
+                  "barycentric": [
+                    0.005729460857962498,
+                    0.541329185435419,
+                    0.45294135370661853
+                  ],
+                  "segment_parameter": 0.17964455329930484,
+                  "strictly_inside_triangle": true,
+                  "strictly_inside_segment": true,
+                  "distance_to_mesh_boundary_m": 2.290274489191252e-06,
+                  "closest_boundary_edge": [
+                    851,
+                    852
+                  ],
+                  "closest_boundary_point_m": [
+                    0.00024121474614312286,
+                    -0.029774281334945942,
+                    0.4391056704144685
+                  ],
+                  "closest_boundary_edge_length_m": 0.0004035686103019082,
+                  "closest_boundary_vertices_distance_to_thread_axis_m": [
+                    0.00022075347148524125,
+                    0.00018268998260936737
+                  ],
+                  "nearest_mesh_vertex_distance_to_thread_axis_m": 0.00018268998260936737
+                }
+              ],
+              "swept_crossing_details": []
+            }
+          },
+          {
+            "valid": true,
+            "steps": 490,
+            "first_failure": null
+          }
+        ],
+        "source_sha256": {
+          "probe_native.py": "34ac5a323c60d5a78d9e3ae3ecefc61c93b48dbeb787b2817c98f4f9f93af3bc",
+          "native_stitches.py": "02a8a6d7979aa5f4e9e06cc5b869442e5bc2d8aa87a6f50c7092f963c9435de4",
+          "native_cloth.py": "75398dce1057a25e6700171903dfa69d49c2cd988a660f058a9528ce3a572ca8",
+          "geometry.py": "13f5e255dc50bd92498a06c2a8f5d2647faa3f8eb1a2db0fbf01ba689b130e47",
+          "quality_mesh.py": "03f72a04f7d296ca99044709462ec178804647914887a4db1dde860ae550059b",
+          "contact_audit.py": "319323f3b4fbc3660e28b158cab743e192809d03291b603137e5c04d60530065",
+          "inspection.py": "4290f7f32c2e3925417f4c6917b059fe21aa3e787e55b50955e0fda42fdd303b"
+        },
+        "wall_seconds": 23.321012455038726,
+        "thread_radius_m": 0.0004,
+        "hole_width_m": 0.0016,
+        "cloth_geometry": [
+          {
+            "vertices": 1582,
+            "triangles": 2888,
+            "surface_area_m2": 0.005969280000000001,
+            "boundary_loops": 13,
+            "connected": true
+          },
+          {
+            "vertices": 1582,
+            "triangles": 2888,
+            "surface_area_m2": 0.00596928,
+            "boundary_loops": 13,
+            "connected": true
+          }
+        ],
+        "first_contact_failure_step": 490,
+        "maximum_node_step_m": 0.00012113666161894798,
+        "maximum_thread_endpoint_step_m": 0.000123913361896254
+      }
+    },
+    {
+      "batch": "026",
+      "trial": "seam-quality-open",
+      "files_sha256": {
+        "state.npz": "22d5ed6fed28d20649d80a3cf7deaa19c2ce2e864f5ccc8a2f2e43bb94f47355",
+        "first-contact-pair.npz": "4476aa47a80f8a9f5869d1c497b2196c61bdae30f2ca3348481afb9c356c1cfa",
+        "probe.json": "f523001ec1d0633beb867fd13378085763a6b9041f6e6bb9bd6353004331ee8a"
+      },
+      "measurements": {
+        "status": "invalid_model_domain",
+        "physics_hz": 3840,
+        "completed_steps": 471,
+        "strain": [
+          {
+            "maximum_principal_stretch": 1.0459576432891229,
+            "first_validity_excursion": {
+              "time_s": 0.015885416666666666,
+              "triangle": 2628,
+              "principal_stretch": 1.0311045934561955,
+              "limit": 1.02
+            }
+          },
+          {
+            "maximum_principal_stretch": 1.0550280890463948,
+            "first_validity_excursion": {
+              "time_s": 0.019791666666666666,
+              "triangle": 2343,
+              "principal_stretch": 1.0205498201030108,
+              "limit": 1.02
+            }
+          }
+        ],
+        "contact_audit": [
+          {
+            "valid": false,
+            "steps": 471,
+            "first_failure": {
+              "step": 471,
+              "time_s": 0.12265625,
+              "reason": "thread crosses intact fabric",
+              "static_intersections": 1,
+              "swept_intersections": 0,
+              "static_crossing_details": [
+                {
+                  "segment_index": 65,
+                  "face_index": 2628,
+                  "coordinate_frame": "current",
+                  "intersection_m": [
+                    0.0004034572523751196,
+                    -0.006142527111727373,
+                    0.429098642655787
+                  ],
+                  "barycentric": [
+                    0.3140546337836049,
+                    0.02894900713698669,
+                    0.6569963590794085
+                  ],
+                  "segment_parameter": 0.345876907999039,
+                  "strictly_inside_triangle": true,
+                  "strictly_inside_segment": true,
+                  "distance_to_mesh_boundary_m": 1.1457871996915264e-05,
+                  "closest_boundary_edge": [
+                    1380,
+                    1381
+                  ],
+                  "closest_boundary_point_m": [
+                    0.00040081843313817815,
+                    -0.006142445687939659,
+                    0.42910979222232115
+                  ],
+                  "closest_boundary_edge_length_m": 0.00041528242808920503,
+                  "closest_boundary_vertices_distance_to_thread_axis_m": [
+                    0.0002843135244689049,
+                    0.00012959829386924318
+                  ],
+                  "nearest_mesh_vertex_distance_to_thread_axis_m": 0.00012959829386924318
+                }
+              ],
+              "swept_crossing_details": []
+            }
+          },
+          {
+            "valid": true,
+            "steps": 471,
+            "first_failure": null
+          }
+        ],
+        "source_sha256": {
+          "probe_native.py": "34ac5a323c60d5a78d9e3ae3ecefc61c93b48dbeb787b2817c98f4f9f93af3bc",
+          "native_stitches.py": "02a8a6d7979aa5f4e9e06cc5b869442e5bc2d8aa87a6f50c7092f963c9435de4",
+          "native_cloth.py": "75398dce1057a25e6700171903dfa69d49c2cd988a660f058a9528ce3a572ca8",
+          "geometry.py": "13f5e255dc50bd92498a06c2a8f5d2647faa3f8eb1a2db0fbf01ba689b130e47",
+          "quality_mesh.py": "03f72a04f7d296ca99044709462ec178804647914887a4db1dde860ae550059b",
+          "contact_audit.py": "319323f3b4fbc3660e28b158cab743e192809d03291b603137e5c04d60530065",
+          "inspection.py": "4290f7f32c2e3925417f4c6917b059fe21aa3e787e55b50955e0fda42fdd303b"
+        },
+        "wall_seconds": 25.051154904067516,
+        "thread_radius_m": 0.0004,
+        "hole_width_m": 0.0016,
+        "cloth_geometry": [
+          {
+            "vertices": 1582,
+            "triangles": 2888,
+            "surface_area_m2": 0.005969280000000001,
+            "boundary_loops": 13,
+            "connected": true
+          },
+          {
+            "vertices": 1582,
+            "triangles": 2888,
+            "surface_area_m2": 0.00596928,
+            "boundary_loops": 13,
+            "connected": true
+          }
+        ],
+        "first_contact_failure_step": 471,
+        "maximum_node_step_m": 0.00013720773858949542,
+        "maximum_thread_endpoint_step_m": 0.0004121680450958187
+      }
+    },
+    {
+      "batch": "027",
+      "trial": "seam-resting-yam",
+      "files_sha256": {
+        "first-invalid.npz": "183aab569efd87c3ad8a812d85c152e33f6f65704e7e64b3cfd6a3698e99bba8",
+        "preview.json": "f697a2a4c9731f337a938681540b9f43887f5f8c2740bf6319eddb91a848dd37"
+      },
+      "measurements": {
+        "status": "failed",
+        "completed_steps": 0,
+        "requested_steps": 2,
+        "audited_physics_substeps": 48,
+        "first_invalid_substep": 48,
+        "runtime": {
+          "thread_radius_m": 0.0004,
+          "hole_half_m": 0.0008,
+          "hole_mesh_spacing_m": 0.0004,
+          "physics_hz": 3840,
+          "contact_refinement": {
+            "speculative_ccd": true,
+            "collision_iterations": 4,
+            "pair_update_frequency": 4
+          },
+          "maximum_stretch": 1.05,
+          "quality_mesh": false,
+          "seam_lowering_m": 0.0019999999999999996
+        },
+        "strain": [
+          {
+            "maximum_principal_stretch": 1.0458862707133223,
+            "first_validity_excursion": null,
+            "first_2pct_warning": {
+              "time_s": 0.01015625,
+              "triangle": 3795,
+              "principal_stretch": 1.0206398326224648,
+              "limit": 1.02
+            },
+            "maximum_stretch_limit": 1.05
+          },
+          {
+            "maximum_principal_stretch": 1.0632936982922638,
+            "first_validity_excursion": {
+              "time_s": 0.0125,
+              "triangle": 2193,
+              "principal_stretch": 1.0632936982922638,
+              "limit": 1.05
+            },
+            "first_2pct_warning": {
+              "time_s": 0.008333333333333333,
+              "triangle": 1962,
+              "principal_stretch": 1.0202176177757172,
+              "limit": 1.02
+            },
+            "maximum_stretch_limit": 1.05
+          }
+        ],
+        "contact_audit": [
+          {
+            "valid": true,
+            "steps": 49,
+            "first_failure": null
+          },
+          {
+            "valid": true,
+            "steps": 49,
+            "first_failure": null
+          }
+        ],
+        "damage_events": [],
+        "cut_events": [],
+        "measured_wall_timings_s": {
+          "readback": 0.03898943308740854,
+          "strain": 0.1523819286376238,
+          "crossing": 0.06347465794533491,
+          "crossing_poll": 9.079091250896454e-05,
+          "blade_damage": 0.14274683315306902,
+          "cutting": 0.020514114759862423,
+          "control_steps_total": 2.7121079126372933,
+          "native_step_total": 1.9651887202635407,
+          "scene_write_total": 0.06497670151293278,
+          "scene_update_total": 0.046735238283872604
+        },
+        "source_sha256": {
+          "plan.py": "96515fba8a322e72189a6542edcf7e6b0264845ed4c2f254bc1c6b5752f9adbf",
+          "probe_native.py": "34ac5a323c60d5a78d9e3ae3ecefc61c93b48dbeb787b2817c98f4f9f93af3bc",
+          "test_mechanism.py": "5f79764c33394229b71bfb7f91dd760e90ef273821f4adc3c232148660e6a44f",
+          "arena_cloth.py": "845c229b418e5306f02b3c0fecb98ddd8b5f5d0ca805f892c3fcc173f215bf5f",
+          "cutting.py": "c23ebf001df44a3254192359940d678f09edb2f60299ec79ece2e0c088486858",
+          "test_contact_audit.py": "8dcfed3daab8bf70ad53f830dbe744fb7462d5900f4fe2e225e38936c6aee49a",
+          "check_warp_contact.py": "ebfc43b64ab1d3e58d737bdb9d2cd79c09e1329aac7f8197fa8ca85248613052",
+          "geometry.py": "13f5e255dc50bd92498a06c2a8f5d2647faa3f8eb1a2db0fbf01ba689b130e47",
+          "contact_audit.py": "319323f3b4fbc3660e28b158cab743e192809d03291b603137e5c04d60530065",
+          "arena_thread.py": "2d69f2c5e59509442d5e9e372cd5e19ccbb9783a0697cabb29b428b6e24fe60b",
+          "warp_contact.py": "47f1cf9f27d957564eca3673327c59a65147e63a42680b9d8b6f0128cd63477d",
+          "preview_yam.py": "420ae6ff56c381839027316f87569fa2510d1ed46e09713b245f1ff9657f2683",
+          "runtime_config.py": "44ec3f881d8019066860c8fecb208fefc3ea8758d7a454264193f388a9b2ada6",
+          "quality_mesh.py": "03f72a04f7d296ca99044709462ec178804647914887a4db1dde860ae550059b",
+          "scoring.py": "8690167a5404134907425a352f0beb838156c112aae4b234261e4dabde17b89c",
+          "scene.py": "7b2893e46619f3d302bc55ee3fbe019ea88b71f65dbc11a21a72972ec2980626",
+          "inspection.py": "4290f7f32c2e3925417f4c6917b059fe21aa3e787e55b50955e0fda42fdd303b",
+          "native_cloth.py": "75398dce1057a25e6700171903dfa69d49c2cd988a660f058a9528ce3a572ca8",
+          "native_stitches.py": "02a8a6d7979aa5f4e9e06cc5b869442e5bc2d8aa87a6f50c7092f963c9435de4",
+          "test_mesh_refinement.py": "227373c15871db6c3cbf2e01ab6617d0d50fc656545d42a090e5c87b330555f4"
+        },
+        "wall_seconds": 24.321178362704813
+      }
+    },
+    {
+      "batch": "028",
+      "trial": "seam-quality-resting",
+      "files_sha256": {
+        "first-invalid.npz": "91bac8262342f2aa2cab2d13cb3f1693ca147807fef7b02b421e0bd41f8fa624",
+        "preview.json": "41253034d22143483a2b34b262d17d39facba3cfe2c603d0f340d1d6361fc227"
+      },
+      "measurements": {
+        "status": "failed",
+        "completed_steps": 0,
+        "requested_steps": 2,
+        "audited_physics_substeps": 38,
+        "first_invalid_substep": 38,
+        "runtime": {
+          "thread_radius_m": 0.0004,
+          "hole_half_m": 0.0008,
+          "hole_mesh_spacing_m": null,
+          "physics_hz": 3840,
+          "contact_refinement": {
+            "speculative_ccd": true,
+            "collision_iterations": 4,
+            "pair_update_frequency": 4
+          },
+          "maximum_stretch": 1.05,
+          "quality_mesh": true,
+          "seam_lowering_m": 0.0019999999999999996
+        },
+        "strain": [
+          {
+            "maximum_principal_stretch": 1.0150421228778954,
+            "first_validity_excursion": null,
+            "first_2pct_warning": null,
+            "maximum_stretch_limit": 1.05
+          },
+          {
+            "maximum_principal_stretch": 1.0510321424483189,
+            "first_validity_excursion": {
+              "time_s": 0.009895833333333333,
+              "triangle": 2436,
+              "principal_stretch": 1.0510321424483189,
+              "limit": 1.05
+            },
+            "first_2pct_warning": {
+              "time_s": 0.008333333333333333,
+              "triangle": 2550,
+              "principal_stretch": 1.0205548639263766,
+              "limit": 1.02
+            },
+            "maximum_stretch_limit": 1.05
+          }
+        ],
+        "contact_audit": [
+          {
+            "valid": true,
+            "steps": 39,
+            "first_failure": null
+          },
+          {
+            "valid": true,
+            "steps": 39,
+            "first_failure": null
+          }
+        ],
+        "damage_events": [],
+        "cut_events": [],
+        "measured_wall_timings_s": {
+          "readback": 0.03277133125811815,
+          "strain": 0.05129057075828314,
+          "crossing": 0.04941986408084631,
+          "crossing_poll": 9.023118764162064e-05,
+          "blade_damage": 0.04894244950264692,
+          "cutting": 0.016750086098909378,
+          "control_steps_total": 2.3449484603479505,
+          "native_step_total": 1.8750464459881186,
+          "scene_write_total": 0.05675279535353184,
+          "scene_update_total": 0.03997388854622841
+        },
+        "source_sha256": {
+          "arena_thread.py": "2d69f2c5e59509442d5e9e372cd5e19ccbb9783a0697cabb29b428b6e24fe60b",
+          "preview_yam.py": "777d1e01b9646f1a66598a2a07e6905d1978a8a0b6ca675ca21b346e7d87e6dd",
+          "plan.py": "732a527ff4850c6a07e024762e95cd11f163b5d30ea23bb65096c20954f73da1",
+          "quality_mesh.py": "03f72a04f7d296ca99044709462ec178804647914887a4db1dde860ae550059b",
+          "scoring.py": "8690167a5404134907425a352f0beb838156c112aae4b234261e4dabde17b89c",
+          "scene.py": "2d0f7df759828b3d29f078aee7caf25bc659448556f850124324756beb02b843",
+          "contact_history.py": "1fbb7dda089809edbb658dc75ffcedc34db637acf3dae8fb464e6646cacdadc5",
+          "test_contact_audit.py": "8dcfed3daab8bf70ad53f830dbe744fb7462d5900f4fe2e225e38936c6aee49a",
+          "check_warp_contact.py": "ebfc43b64ab1d3e58d737bdb9d2cd79c09e1329aac7f8197fa8ca85248613052",
+          "geometry.py": "13f5e255dc50bd92498a06c2a8f5d2647faa3f8eb1a2db0fbf01ba689b130e47",
+          "contact_audit.py": "319323f3b4fbc3660e28b158cab743e192809d03291b603137e5c04d60530065",
+          "test_contact_history.py": "561d6038b387bdaf91aed9c576f8ba4ea7ba5cc67bb2937bdad90a5adfdeb1e0",
+          "test_mesh_refinement.py": "227373c15871db6c3cbf2e01ab6617d0d50fc656545d42a090e5c87b330555f4",
+          "warp_contact.py": "47f1cf9f27d957564eca3673327c59a65147e63a42680b9d8b6f0128cd63477d",
+          "runtime_config.py": "44ec3f881d8019066860c8fecb208fefc3ea8758d7a454264193f388a9b2ada6",
+          "probe_native.py": "c41f4b39742469dbd9d583fa60694775e634137208e1d53ad60e2cf71f7b37e6",
+          "test_mechanism.py": "5f79764c33394229b71bfb7f91dd760e90ef273821f4adc3c232148660e6a44f",
+          "arena_cloth.py": "845c229b418e5306f02b3c0fecb98ddd8b5f5d0ca805f892c3fcc173f215bf5f",
+          "cutting.py": "c23ebf001df44a3254192359940d678f09edb2f60299ec79ece2e0c088486858",
+          "inspection.py": "4290f7f32c2e3925417f4c6917b059fe21aa3e787e55b50955e0fda42fdd303b",
+          "native_cloth.py": "75398dce1057a25e6700171903dfa69d49c2cd988a660f058a9528ce3a572ca8",
+          "native_stitches.py": "02a8a6d7979aa5f4e9e06cc5b869442e5bc2d8aa87a6f50c7092f963c9435de4",
+          "tool_geometry.py": "3972bd467f38ad64308577db9bc7d706a68927b03dd8f986134e570c3a314953"
+        },
+        "wall_seconds": 23.220031248405576
+      }
+    }
+  ]
+}

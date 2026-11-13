@@ -116,8 +116,13 @@ def main():
             p.error('motion-probe requires a precomputed --plan')
         from fixed_motion import load
         fixed_plan,fixed_actions=load(args.plan)
+        if fixed_plan.get('do_not_run_reason'):
+            p.error('Blocked diagnostic plan: '+fixed_plan['do_not_run_reason'])
+        if fixed_plan.get('line_pegs_required'):
+            expected=hashlib.sha256(Path(__file__).with_name('line_pegs.py').read_bytes()).hexdigest()
+            if fixed_plan.get('line_peg_source_sha256')!=expected or not 'LINE_PEGS_ENABLED=True' in Path(__file__).with_name('task.py').read_text():
+                p.error('Motion requires the matching passive pegs-on-line reset')
         if fixed_plan.get('peg_rests_required') or fixed_plan.get('peg_rests_candidate'):
-            import hashlib
             expected=hashlib.sha256(Path(__file__).with_name('peg_rests.py').read_bytes()).hexdigest()
             if fixed_plan.get('peg_rest_source_sha256')!=expected:
                 p.error('Peg motion does not match the current rest source; recompile and audit first')
@@ -225,7 +230,7 @@ def main():
                 judging_videos[camera['name']]=imageio.get_writer(
                     args.out/(camera['name'].replace('_','-')+'.mp4'),fps=CONTROL_HZ,
                     codec='libx264',pixelformat='yuv420p',ffmpeg_params=['-movflags','+faststart'],macro_block_size=1)
-        trace=gzip.open(args.out/'trace.jsonl.gz','wt')
+        trace=gzip.open(args.out/'trace.jsonl.gz','wt',compresslevel=1)
         ready=emb._ready.detach().cpu().numpy()[0].copy()
         if ready.shape!=(14,) or not np.isfinite(ready).all():
             raise RuntimeError('Invalid ready action')

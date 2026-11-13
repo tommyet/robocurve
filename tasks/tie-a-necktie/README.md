@@ -55,9 +55,25 @@ robot hull checks. Batch022 then transferred the tip, lifted it 167 mm and held 
 seconds. Fabric still snags or rests on the hand during its later open-finger
 withdrawal. Nine actual robot-hull audits found no triangle intersection after
 a 0.2 mm hull contraction; the deepest sampled node penetration was 0.119 mm.
-Clean release remains unproven. `cross-plan.json` uses the measured narrow-end
-position for the next grip and front crossing; its 900 poses clear the sampled
-hull checks. `wrap-plan.json` is unreleased planning only.
+Clean release remains unproven. The 900-action front-crossing trial retained
+both ends but produced 22% local strain and up to 1.46 mm finger penetration.
+It is not valid knot evidence. Batch030's 980-action free-tail attempt kept
+the wide end in the hand but swept the narrow tail aside, so the wrap unwound.
+Ninety-nine sampled states had no transverse nonadjacent triangle crossing;
+one fingertip contact reached 0.210 mm triangle penetration. This is still
+not knot evidence. Batch032 then pinched the narrow tail, but the rear pass
+loaded the wide strip against the shoulder and the narrow grip slipped.
+The shoulder penetration reached 0.713 mm and sampled local strain reached
+32.7%; that attempt is blocked. `front-space-wrap-plan.json` instead grasps
+lower on the narrow tail and brings it forward before wrapping in the space
+ahead of the shoulder. Batch035 completes the clear route: 60 sampled fixture and self-crossing
+audits pass. The narrow tip nevertheless slips out during crossing and the
+wrap unwinds. The next candidate pinches 40 mm above the narrow tip, leaving
+more material below the grip while preserving the clear route. No knot or
+partial score is claimed. A simpler under/over knot route is CPU-only and
+has passed its 1,200-pose hull screen. Its explicit `--inside-out-reset` option
+reverses the initial material face before the same physical settling; the
+default task remains unchanged. No native simple-knot trial has run.
 
 `MOTION_PLAN.md` describes the remaining wrap, neck-loop passage, front-loop
 threading and tightening. No in-progress knot may be carried across resets.

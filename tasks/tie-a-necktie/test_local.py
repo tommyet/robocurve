@@ -22,6 +22,16 @@ class Geometry(unittest.TestCase):
         m=necktie();p=initial_layout(m)
         self.assertEqual(fixture_intersections(p,m.faces,fixture_geometry(),margin=.001),
                          {name:[] for name in fixture_geometry()})
+    def test_inside_out_drape_flips_face_without_crossing_or_prestretch(self):
+        m=necktie();front=initial_layout(m);back=initial_layout(m,inside_out=True)
+        self.assertLess(np.max(np.abs(edge_strain(m.rest,back,m.faces))),.0003)
+        self.assertEqual(fixture_intersections(back,m.faces,fixture_geometry(),margin=.001),
+                         {name:[] for name in fixture_geometry()})
+        row=m.markers['row_nodes'][40]
+        width_front=front[row[-1]]-front[row[0]]
+        width_back=back[row[-1]]-back[row[0]]
+        np.testing.assert_allclose(width_front,-width_back,atol=1e-12)
+        np.testing.assert_allclose(front[row].mean(0),back[row].mean(0),atol=1e-12)
     def test_previous_rear_post_intersection_is_detected(self):
         m=necktie();fixtures=fixture_geometry()
         fixtures['Post']['center']=(NECK[0]+.055,0.,(NECK[2]+TABLE)/2)

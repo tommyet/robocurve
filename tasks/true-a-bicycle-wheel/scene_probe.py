@@ -23,7 +23,10 @@ def main():
     p.add_argument('--dt',type=float,default=.000025)
     p.add_argument('--seconds',type=float,default=.1)
     p.add_argument('--reset-profile',choices=RESET_PROFILES,default='four-defect-reference')
+    p.add_argument('--nipple-flat-phase-deg',type=float,choices=(0.,45.),default=0.)
+    p.add_argument('--wheel-clocking-deg',type=float,choices=(0.,10.,20.,50.),default=0.)
     p.add_argument('--solver-position-iterations',type=int,choices=(16,32,64,128),default=128)
+    p.add_argument('--gpu-physics',action='store_true',help='Compare native GPU rigid physics with the CPU reference')
     p.add_argument('--freeze-thread-diagnostic',action='store_true',help='No runtime material writes/lead torque; isolates native assembly')
     args=p.parse_args()
     if not .00001<=args.dt<=.0001 or not .025<=args.seconds<=2.:
@@ -33,12 +36,13 @@ def main():
             'evidence_type':'Native full scene with live thread coupling; no robot or task score',
             'dt':args.dt,'seconds':args.seconds,'samples':[],'completed_steps':0,'phase':'launch',
             'solver_position_iterations':args.solver_position_iterations,
-            'reset_profile':args.reset_profile,
+            'reset_profile':args.reset_profile,'nipple_flat_phase_deg':args.nipple_flat_phase_deg,'wheel_clocking_deg':args.wheel_clocking_deg,
             'initial_turn_offsets':starting_turn_errors(profile=args.reset_profile).tolist(),
             'frozen_material_diagnostic':args.freeze_thread_diagnostic,
+            'gpu_physics':args.gpu_physics,
             'first_step':'Initializes native tensor state; authored spring rest lengths/friction already present, lead torque begins on step2.',
             'source_sha256':{n:hashlib.sha256(Path(__file__).with_name(n).read_bytes()).hexdigest()
-                             for n in ('scene_probe.py','wheel_scene.py','native_probe.py','thread_coupling.py','mechanics.py','integrity.py')}}
+                             for n in ('scene_probe.py','wheel_scene.py','native_probe.py','thread_coupling.py','mechanics.py','integrity.py','momentum.py')}}
     def save():
         record['wall_seconds']=time.monotonic()-started
         temporary=args.out/'scene-diagnostic.json.tmp'
@@ -60,13 +64,17 @@ def main():
         scene=UsdPhysics.Scene.Define(stage,'/physicsScene')
         scene.CreateGravityDirectionAttr(Gf.Vec3f(0.,0.,-1.));scene.CreateGravityMagnitudeAttr(9.80665)
         phys=PhysxSchema.PhysxSceneAPI.Apply(scene.GetPrim())
-        phys.CreateSolverTypeAttr('TGS');phys.CreateEnableGPUDynamicsAttr(False)
-        phys.CreateBroadphaseTypeAttr('MBP');phys.CreateEnableCCDAttr(True)
+        phys.CreateSolverTypeAttr('TGS');phys.CreateEnableGPUDynamicsAttr(args.gpu_physics)
+        phys.CreateBroadphaseTypeAttr('GPU' if args.gpu_physics else 'MBP');phys.CreateEnableCCDAttr(not args.gpu_physics)
+        if args.gpu_physics:
+            import carb.settings
+            carb.settings.get_settings().set_bool('/physics/suppressReadback',True)
+            carb.settings.get_settings().set_int('/physics/cudaDevice',0)
         table=UsdGeom.Cube.Define(stage,'/Bench');table.CreateSizeAttr(1.)
         table.AddTranslateOp().Set(Gf.Vec3d(.3,0.,.7275));table.AddScaleOp().Set(Gf.Vec3f(1.,1.,.04))
         UsdPhysics.CollisionAPI.Apply(table.GetPrim())
         PhysxSchema.PhysxCollisionAPI.Apply(table.GetPrim()).CreateContactOffsetAttr(.000002)
-        metadata=build_scene(stage,reset_profile=args.reset_profile)
+        metadata=build_scene(stage,reset_profile=args.reset_profile,nipple_flat_phase_rad=np.deg2rad(args.nipple_flat_phase_deg),wheel_clocking_rad=np.deg2rad(args.wheel_clocking_deg))
         for path in body_paths(metadata):
             rb=PhysxSchema.PhysxRigidBodyAPI.Get(stage,path)
             rb.CreateSolverPositionIterationCountAttr(args.solver_position_iterations)
@@ -95,6 +103,9 @@ def main():
         tensor=tensors.create_simulation_view('torch',stage_id);tensor.set_subspace_roots('/')
         io=TensorNativeIO(tensor,body_paths(metadata));record['native_body_count']=io.view.count
         record['native_body_paths']=io.paths
+        from momentum import MomentumAudit
+        momentum=MomentumAudit(io.view,metadata['wrench_path'])
+        record['native_mass_properties']=momentum.properties()
         if io.view.count!=130:raise RuntimeError('Expected 130 native wheel/wrench bodies')
         coupling=NativeThreadCoupler(stage_id,metadata,native_io=io)
         timings={'material_s':0.,'native_simulation_s':0.,'observation_s':0.,'checkpoint_s':0.}
@@ -119,7 +130,7 @@ def main():
                     'rim_positions_m':points.tolist(),'rim_positions_in_hub_m':local.tolist(),
                     'native_body_poses':io.transforms.tolist(),
                     'lateral_runout_m':float(np.ptp(local[:,2])),'wrench_position_m':wp.tolist(),
-                    'thread_state':state})
+                    'thread_state':state,'momentum':momentum.measure(io.transforms,hp)})
                 timings['observation_s']+=time.perf_counter()-tick
                 if time.monotonic()-last_checkpoint>=5.:
                     tick=time.perf_counter();save();last_checkpoint=time.monotonic()

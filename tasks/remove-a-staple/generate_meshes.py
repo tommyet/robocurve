@@ -12,13 +12,16 @@ import numpy as np
 from paper import PaperMesh
 
 
-def make(size,centres,hole_size,spacing=.008):
+def make(size,centres,hole_size,spacing=.008,profile="baseline"):
+    if profile not in ("baseline","coarse"):raise ValueError("Unknown mesh profile")
+    rings=(0.,.00015,.0004,.0009,.0018,.0036,.0072) if profile=="baseline" else (0.,.0004,.0009,.0018,.0036,.0072)
+    minimum_pitch=.00015 if profile=="baseline" else .00035
     from scipy.spatial import Delaunay
     lo=-np.array(size)/2;hi=-lo;half=np.array(hole_size)/2;centres=np.array(centres)
     points=[]
     for centre in centres:
-        for distance in (0.,.00015,.0004,.0009,.0018,.0036,.0072):
-            extent=half+distance;pitch=max(.00015,distance*.6)
+        for distance in rings:
+            extent=half+distance;pitch=max(minimum_pitch,distance*.6)
             for axis in range(2):
                 other=1-axis
                 values=np.linspace(-extent[axis],extent[axis],max(2,int(np.ceil(2*extent[axis]/pitch))+1))
@@ -81,12 +84,16 @@ def quality(mesh,size):
 
 def main():
     import scipy
-    destination=Path(__file__).with_name('assets');destination.mkdir(exist_ok=True)
-    manifest={'generator_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+    import argparse
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument("--profile",choices=("baseline","coarse"),default="baseline");args=parser.parse_args()
+    destination=Path(__file__).with_name("assets")
+    if args.profile!="baseline":destination=destination/args.profile
+    destination.mkdir(parents=True,exist_ok=True)
+    manifest={'profile':args.profile,'generator_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
               'numpy_version':np.__version__,'scipy_version':scipy.__version__,'meshes':[]}
     for i in range(2):
         centres=[(-.093,-.05+side*.0064-i*.012) for side in (-1,1)]
-        mesh=make((.21,.148),centres,(.00062,.00042));path=destination/f'paper_{i}.npz'
+        mesh=make((.21,.148),centres,(.00062,.00042),profile=args.profile);path=destination/f'paper_{i}.npz'
         np.savez_compressed(path,rest=mesh.rest,faces=mesh.faces,holes=mesh.holes,
                             size=(.21,.148),centres=centres,hole_size=(.00062,.00042))
         manifest['meshes'].append({'file':path.name,'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),

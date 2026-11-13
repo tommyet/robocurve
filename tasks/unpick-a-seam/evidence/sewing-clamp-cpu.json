@@ -1,0 +1,158 @@
+{
+  "status": "CPU scene-authoring check only; YAM fixture stability unrun",
+  "date_utc": "2026-11-13",
+  "source_reference": "020 vertical intact/open retained-contact controls; no force attachments",
+  "cloth": [
+    {
+      "geometry": {
+        "vertices": 4407,
+        "triangles": 8490,
+        "surface_area_m2": 0.005969280000000001,
+        "boundary_loops": 13,
+        "connected": true
+      },
+      "maximum_initial_stretch": 1.0000000000022546,
+      "minimum_world_m": [
+        0.2995999999999999,
+        -0.04,
+        0.8225
+      ],
+      "maximum_world_m": [
+        0.2995999999999999,
+        0.04,
+        0.8975000000000001
+      ]
+    },
+    {
+      "geometry": {
+        "vertices": 4407,
+        "triangles": 8490,
+        "surface_area_m2": 0.005969280000000001,
+        "boundary_loops": 13,
+        "connected": true
+      },
+      "maximum_initial_stretch": 1.000000000002221,
+      "minimum_world_m": [
+        0.30039999999999994,
+        -0.04,
+        0.7675000000000001
+      ],
+      "maximum_world_m": [
+        0.30039999999999994,
+        0.04,
+        0.8425
+      ]
+    }
+  ],
+  "fixture": [
+    {
+      "name": "clamp_jaw_0",
+      "size_m": [
+        0.006,
+        0.085,
+        0.008
+      ],
+      "center_m": [
+        0.29645,
+        0.0,
+        0.8935000000000001
+      ]
+    },
+    {
+      "name": "clamp_jaw_1",
+      "size_m": [
+        0.006,
+        0.085,
+        0.008
+      ],
+      "center_m": [
+        0.30274999999999996,
+        0.0,
+        0.8935000000000001
+      ]
+    },
+    {
+      "name": "clamp_base",
+      "size_m": [
+        0.08,
+        0.11,
+        0.01
+      ],
+      "center_m": [
+        0.32,
+        0.0,
+        0.7525000000000001
+      ]
+    },
+    {
+      "name": "clamp_post",
+      "size_m": [
+        0.012,
+        0.012,
+        0.14
+      ],
+      "center_m": [
+        0.32,
+        0.0,
+        0.8275
+      ]
+    },
+    {
+      "name": "clamp_arm",
+      "size_m": [
+        0.02,
+        0.012,
+        0.008
+      ],
+      "center_m": [
+        0.313,
+        0.0,
+        0.8935000000000001
+      ]
+    },
+    {
+      "name": "clamp_bridge_0",
+      "size_m": [
+        0.0123,
+        0.003,
+        0.012
+      ],
+      "center_m": [
+        0.2996,
+        -0.0435,
+        0.8995000000000001
+      ]
+    },
+    {
+      "name": "clamp_bridge_1",
+      "size_m": [
+        0.0123,
+        0.003,
+        0.012
+      ],
+      "center_m": [
+        0.2996,
+        0.0435,
+        0.8995000000000001
+      ]
+    }
+  ],
+  "jaw_gap_m": 0.0003,
+  "jaw_static_dynamic_friction": 0.8,
+  "jaw_contact_offset_m": 0.0005,
+  "jaw_rest_offset_m": 0.0,
+  "cloth_thickness_m": 0.0004,
+  "thread_diameter_m": 0.0008,
+  "needle_hole_width_m": 0.0016,
+  "upper_patch_top_above_table_m": 0.15000000000000002,
+  "lower_patch_bottom_above_table_m": 0.02,
+  "no_cloth_attachments": true,
+  "source_sha256": {
+    "clamp_layout.py": "4894f9b31cf7a066e720003e897e04c0a361deed4609364ceb5cc7d7cd73bd76",
+    "scene.py": "613048bccf9208403c0a5ac1151dbc92fc8b056dbc23d685f149711b6f7652dd",
+    "geometry.py": "13f5e255dc50bd92498a06c2a8f5d2647faa3f8eb1a2db0fbf01ba689b130e47",
+    "native_cloth.py": "e1260c808e989ba9039279a2a9a44d80490f2e76b4f116cdc8a2911d21b0a615",
+    "runtime_config.py": "3f508d612eba3bf0c479a0abbddd58567f99242de3bad8fa6a78e99839a53bab"
+  },
+  "orientation_note": "The full retained-contact assembly is yawed 180 degrees to face the robot bases; the stand is behind at larger X. Gravity, jaw gaps, intrinsic geometry and relative cloth/thread positions are unchanged."
+}

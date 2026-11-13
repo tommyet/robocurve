@@ -1,0 +1,229 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Failed reset diagnostics only; no complete robot action or task score",
+  "trials": [
+    {
+      "batch": "032",
+      "trial": "seam-gaussian-capped",
+      "report_sha256": "049978f614b39ba99a4b8f242a94b93f94a8add933ab6936b2ddcd072dbceecf",
+      "final_native_state_sha256": "37af0f0910955fed8bec2fd4b0cc471afbbd62c12035f91970e42e24e3f4aaf0",
+      "measurements": {
+        "status": "failed",
+        "error": "RuntimeError: Native seam material/contact validity boundary crossed",
+        "runtime": {
+          "thread_radius_m": 0.0004,
+          "hole_half_m": 0.0008,
+          "hole_mesh_spacing_m": null,
+          "physics_hz": 3840,
+          "contact_refinement": {
+            "speculative_ccd": true,
+            "collision_iterations": 4,
+            "pair_update_frequency": 4,
+            "max_depenetration_m_s": 0.05
+          },
+          "maximum_stretch": 1.05,
+          "quality_mesh": true,
+          "seam_lowering_m": 0.0019999999999999996,
+          "pre_draped_seam": true,
+          "drape_shape": "gaussian"
+        },
+        "completed_steps": 0,
+        "audited_physics_substeps": 8,
+        "strain": [
+          {
+            "maximum_principal_stretch": 1.0475199515233664,
+            "first_validity_excursion": null,
+            "first_2pct_warning": {
+              "time_s": 0.00026041666666666666,
+              "triangle": 2640,
+              "principal_stretch": 1.0291382558412134,
+              "limit": 1.02
+            },
+            "maximum_stretch_limit": 1.05
+          },
+          {
+            "maximum_principal_stretch": 1.0515020700112252,
+            "first_validity_excursion": {
+              "time_s": 0.0020833333333333333,
+              "triangle": 2683,
+              "principal_stretch": 1.0515020700112252,
+              "limit": 1.05
+            },
+            "first_2pct_warning": {
+              "time_s": 0.00026041666666666666,
+              "triangle": 2574,
+              "principal_stretch": 1.027244948443248,
+              "limit": 1.02
+            },
+            "maximum_stretch_limit": 1.05
+          }
+        ],
+        "contact_audit": [
+          {
+            "valid": true,
+            "steps": 9,
+            "first_failure": null
+          },
+          {
+            "valid": true,
+            "steps": 9,
+            "first_failure": null
+          }
+        ],
+        "native_surface_contact": [
+          {
+            "physxCollision:restOffset": 0.00019999999494757503,
+            "physxCollision:contactOffset": 0.0002500000118743628,
+            "physxDeformableBody:selfCollisionFilterDistance": "-inf",
+            "physxDeformableBody:maxDepenetrationVelocity": 0.05000000074505806,
+            "physxDeformableBody:maxLinearVelocity": "inf",
+            "physxDeformableBody:enableSpeculativeCCD": true,
+            "physxDeformableBody:collisionIterationMultiplier": 4,
+            "physxDeformableBody:collisionPairUpdateFrequency": 4
+          },
+          {
+            "physxCollision:restOffset": 0.00019999999494757503,
+            "physxCollision:contactOffset": 0.0002500000118743628,
+            "physxDeformableBody:selfCollisionFilterDistance": "-inf",
+            "physxDeformableBody:maxDepenetrationVelocity": 0.05000000074505806,
+            "physxDeformableBody:maxLinearVelocity": "inf",
+            "physxDeformableBody:enableSpeculativeCCD": true,
+            "physxDeformableBody:collisionIterationMultiplier": 4,
+            "physxDeformableBody:collisionPairUpdateFrequency": 4
+          }
+        ],
+        "final_maximum_cloth_speed_m_s": [
+          1.5044761896133423,
+          1.9315706491470337
+        ],
+        "damage_events": [],
+        "cut_events": [],
+        "measured_wall_timings_s": {
+          "readback": 0.0064206961542367935,
+          "strain": 0.006987863220274448,
+          "crossing": 0.009028838947415352,
+          "junctions": 0.0,
+          "crossing_poll": 8.751172572374344e-05,
+          "blade_damage": 0.006128310225903988,
+          "cutting": 0.0028925901278853416,
+          "control_steps_total": 0.4372870996594429,
+          "native_step_total": 0.3646809170022607,
+          "scene_write_total": 0.00810195878148079,
+          "scene_update_total": 0.006765430793166161
+        }
+      }
+    },
+    {
+      "batch": "032",
+      "trial": "seam-cylindrical",
+      "report_sha256": "4b6c6e3faef26bc78bdc7ba25c48582680e688451628ed0727c49c1d1fcc5124",
+      "final_native_state_sha256": "fdbe8356c69b0f117846890d1d2a5a460bfeea7a4fee3e9368c83b0f969be81f",
+      "measurements": {
+        "status": "failed",
+        "error": "RuntimeError: Native seam material/contact validity boundary crossed",
+        "runtime": {
+          "thread_radius_m": 0.0004,
+          "hole_half_m": 0.0008,
+          "hole_mesh_spacing_m": null,
+          "physics_hz": 3840,
+          "contact_refinement": {
+            "speculative_ccd": true,
+            "collision_iterations": 4,
+            "pair_update_frequency": 4,
+            "max_depenetration_m_s": null
+          },
+          "maximum_stretch": 1.05,
+          "quality_mesh": true,
+          "seam_lowering_m": 0.0019999999999999996,
+          "pre_draped_seam": true,
+          "drape_shape": "cylindrical"
+        },
+        "completed_steps": 0,
+        "audited_physics_substeps": 29,
+        "strain": [
+          {
+            "maximum_principal_stretch": 1.0316671295517026,
+            "first_validity_excursion": null,
+            "first_2pct_warning": {
+              "time_s": 0.0067708333333333336,
+              "triangle": 702,
+              "principal_stretch": 1.0226657531717083,
+              "limit": 1.02
+            },
+            "maximum_stretch_limit": 1.05
+          },
+          {
+            "maximum_principal_stretch": 1.0564581109377649,
+            "first_validity_excursion": {
+              "time_s": 0.007552083333333333,
+              "triangle": 2524,
+              "principal_stretch": 1.0564581109377649,
+              "limit": 1.05
+            },
+            "first_2pct_warning": {
+              "time_s": 0.0067708333333333336,
+              "triangle": 2780,
+              "principal_stretch": 1.0221428515072561,
+              "limit": 1.02
+            },
+            "maximum_stretch_limit": 1.05
+          }
+        ],
+        "contact_audit": [
+          {
+            "valid": true,
+            "steps": 30,
+            "first_failure": null
+          },
+          {
+            "valid": true,
+            "steps": 30,
+            "first_failure": null
+          }
+        ],
+        "native_surface_contact": [
+          {
+            "physxCollision:restOffset": 0.00019999999494757503,
+            "physxCollision:contactOffset": 0.0002500000118743628,
+            "physxDeformableBody:selfCollisionFilterDistance": "-inf",
+            "physxDeformableBody:maxDepenetrationVelocity": "inf",
+            "physxDeformableBody:maxLinearVelocity": "inf",
+            "physxDeformableBody:enableSpeculativeCCD": true,
+            "physxDeformableBody:collisionIterationMultiplier": 4,
+            "physxDeformableBody:collisionPairUpdateFrequency": 4
+          },
+          {
+            "physxCollision:restOffset": 0.00019999999494757503,
+            "physxCollision:contactOffset": 0.0002500000118743628,
+            "physxDeformableBody:selfCollisionFilterDistance": "-inf",
+            "physxDeformableBody:maxDepenetrationVelocity": "inf",
+            "physxDeformableBody:maxLinearVelocity": "inf",
+            "physxDeformableBody:enableSpeculativeCCD": true,
+            "physxDeformableBody:collisionIterationMultiplier": 4,
+            "physxDeformableBody:collisionPairUpdateFrequency": 4
+          }
+        ],
+        "final_maximum_cloth_speed_m_s": [
+          1.2795131206512451,
+          1.4263991117477417
+        ],
+        "damage_events": [],
+        "cut_events": [],
+        "measured_wall_timings_s": {
+          "readback": 0.025932195596396923,
+          "strain": 0.0407029939815402,
+          "crossing": 0.04008030146360397,
+          "junctions": 0.0,
+          "crossing_poll": 8.771102875471115e-05,
+          "blade_damage": 0.036118349991738796,
+          "cutting": 0.014558443799614906,
+          "control_steps_total": 1.6743768695741892,
+          "native_step_total": 1.302329315803945,
+          "scene_write_total": 0.04549861140549183,
+          "scene_update_total": 0.03109272476285696
+        }
+      }
+    }
+  ],
+  "interpretation": "Gaussian with the native 0.05 m/s correction cap still reaches 5.150% right extension at 2.083 ms. Nearly isometric cylindrical default-correction reset delays the first 2% warning until 6.771 ms but reaches 5.646% at 7.552 ms. Its failing right triangle lies beside the 305 mm / -6 mm needle hole, with 0.60-0.65 mm downward displacement versus 0.28 mm gravitational free fall. Contact correction is a candidate contributor; these terminal snapshots alone cannot isolate the cause. No crossing or blade damage was detected before either stop. Neither reset is valid."
+}

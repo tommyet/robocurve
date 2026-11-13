@@ -33,6 +33,8 @@ ASSEMBLIES = {}
 # Explicit diagnostic overrides are set before environment construction only.
 RESET_PROFILE_OVERRIDE = None
 SOLVER_ITERATIONS_OVERRIDE = None
+CLOCKING_RAD_OVERRIDE = 0.
+FLAT_PHASE_RAD_OVERRIDE = 0.
 
 
 def _spawn(path, cfg, translation=None, orientation=None, **kwargs):
@@ -45,7 +47,8 @@ def _spawn(path, cfg, translation=None, orientation=None, **kwargs):
     # Paths contain nested wheel/rim entries; strip the complete known suffix.
     root = str(path)[:-len(cfg.body_name)-1]
     if name not in ASSEMBLIES:
-        metadata = build_scene(stage, root=root, reset_profile=RESET_PROFILE_OVERRIDE or 'four-defect-reference')
+        metadata = build_scene(stage, root=root, reset_profile=RESET_PROFILE_OVERRIDE or 'two-defect-candidate',
+            wheel_clocking_rad=CLOCKING_RAD_OVERRIDE,nipple_flat_phase_rad=FLAT_PHASE_RAD_OVERRIDE)
         if SOLVER_ITERATIONS_OVERRIDE is not None:
             from pxr import PhysxSchema
             from thread_coupling import body_paths

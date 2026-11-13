@@ -1,0 +1,112 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Failed table-reset diagnostic; no complete action or score",
+  "report_sha256": "81ef5f3574b3516e417c1bb0330bf37759426729c3bdbfdf430b6f1652261d4f",
+  "final_state_sha256": "08047c71557b9c907ffe1f1818de11016745e43d1fc8d4003717ac2ac7bc1acc",
+  "measurements": {
+    "status": "failed",
+    "error": "RuntimeError: Native seam material/contact validity boundary crossed",
+    "runtime": {
+      "thread_radius_m": 0.0004,
+      "hole_half_m": 0.0008,
+      "hole_mesh_spacing_m": null,
+      "physics_hz": 3840,
+      "contact_refinement": {
+        "speculative_ccd": true,
+        "collision_iterations": 4,
+        "pair_update_frequency": 4,
+        "max_depenetration_m_s": 0.05
+      },
+      "maximum_stretch": 1.05,
+      "quality_mesh": true,
+      "seam_lowering_m": 0.0019999999999999996,
+      "pre_draped_seam": true,
+      "drape_shape": "cylindrical"
+    },
+    "completed_steps": 0,
+    "audited_physics_substeps": 34,
+    "strain": [
+      {
+        "maximum_principal_stretch": 1.0639638757031316,
+        "first_validity_excursion": {
+          "time_s": 0.008854166666666666,
+          "triangle": 2506,
+          "principal_stretch": 1.0639638757031316,
+          "limit": 1.05
+        },
+        "first_2pct_warning": {
+          "time_s": 0.00703125,
+          "triangle": 635,
+          "principal_stretch": 1.02883625814275,
+          "limit": 1.02
+        },
+        "maximum_stretch_limit": 1.05
+      },
+      {
+        "maximum_principal_stretch": 1.047890382595618,
+        "first_validity_excursion": null,
+        "first_2pct_warning": {
+          "time_s": 0.005989583333333333,
+          "triangle": 2720,
+          "principal_stretch": 1.0234174609406042,
+          "limit": 1.02
+        },
+        "maximum_stretch_limit": 1.05
+      }
+    ],
+    "contact_audit": [
+      {
+        "valid": true,
+        "steps": 35,
+        "first_failure": null
+      },
+      {
+        "valid": true,
+        "steps": 35,
+        "first_failure": null
+      }
+    ],
+    "native_surface_contact": [
+      {
+        "physxCollision:restOffset": 0.00019999999494757503,
+        "physxCollision:contactOffset": 0.0002500000118743628,
+        "physxDeformableBody:selfCollisionFilterDistance": "-inf",
+        "physxDeformableBody:maxDepenetrationVelocity": 0.05000000074505806,
+        "physxDeformableBody:maxLinearVelocity": "inf",
+        "physxDeformableBody:enableSpeculativeCCD": true,
+        "physxDeformableBody:collisionIterationMultiplier": 4,
+        "physxDeformableBody:collisionPairUpdateFrequency": 4
+      },
+      {
+        "physxCollision:restOffset": 0.00019999999494757503,
+        "physxCollision:contactOffset": 0.0002500000118743628,
+        "physxDeformableBody:selfCollisionFilterDistance": "-inf",
+        "physxDeformableBody:maxDepenetrationVelocity": 0.05000000074505806,
+        "physxDeformableBody:maxLinearVelocity": "inf",
+        "physxDeformableBody:enableSpeculativeCCD": true,
+        "physxDeformableBody:collisionIterationMultiplier": 4,
+        "physxDeformableBody:collisionPairUpdateFrequency": 4
+      }
+    ],
+    "final_maximum_cloth_speed_m_s": [
+      1.746505618095398,
+      2.5423641204833984
+    ],
+    "damage_events": [],
+    "cut_events": [],
+    "measured_wall_timings_s": {
+      "readback": 0.022704806178808212,
+      "strain": 0.031347441487014294,
+      "crossing": 0.030753248371183872,
+      "junctions": 0.0,
+      "crossing_poll": 9.963195770978928e-05,
+      "blade_damage": 0.028953871689736843,
+      "cutting": 0.01130370981991291,
+      "control_steps_total": 1.6941140871495008,
+      "native_step_total": 1.4033440118655562,
+      "scene_write_total": 0.03595132939517498,
+      "scene_update_total": 0.025841444730758667
+    }
+  },
+  "decision": "Stop tuning this table reset. Use the ordinary sewing-clamp layout derived from the earlier vertical retained-contact controls, with unchanged 5% operating domain and crossing/damage guards."
+}

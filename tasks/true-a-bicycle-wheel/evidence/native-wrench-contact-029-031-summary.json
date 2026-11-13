@@ -1,0 +1,125 @@
+{
+  "kind": "native_fixture_evidence_not_robot_demo",
+  "runs": [
+    {
+      "label": "contact029",
+      "report_sha256": "96280367a6acdf494e5c5392e03a992f5a196b53a8fc9714a9601a8062f98a8e",
+      "dt": 5e-05,
+      "completed_steps": 16000,
+      "wall_seconds": 70.84463307913393,
+      "commanded_wrench_turn_deg": -45.0,
+      "measured_tightening_turn_deg": 25.55553436973989,
+      "expected_response_pass": false,
+      "rim_integrity": {
+        "valid": true,
+        "steps": 16000,
+        "first_failure": null,
+        "maximum_axial_bending_strain": 0.001071455342708021,
+        "maximum_twist_rad": 0.0007015947493306239,
+        "maximum_locked_joint_gap_m": 2.469149155215178e-06,
+        "peaks": {
+          "maximum_axial_bending_strain": 0.0014078233329498156,
+          "maximum_twist_rad": 0.0010645528057019386,
+          "maximum_locked_joint_gap_m": 4.521027469048846e-06
+        }
+      },
+      "source_sha256": {
+        "wrench_contact_probe.py": "15d5096b6dce352e4a7f5a2b3f9e404a82eda905703651acd9d9363f7bc44490",
+        "wheel_scene.py": "cea1e76544d0f18eeb8ad38c7d62d2b3f5daff272b33fe801083507de54d664c",
+        "thread_coupling.py": "4023f373f81f3c98420d58c5dc9b395aed0c8c96ed644d278f3799fac4933a0c",
+        "mechanics.py": "a0bc89a7b61ae46ed0ecf555c1f45cc12b52972392cd6b69292907b3c995ba87",
+        "integrity.py": "8c917dd46bd126c023c04439b303f5d9fafb1d31289014ed99fe0a5aac28a90b"
+      }
+    },
+    {
+      "label": "no_contact029",
+      "report_sha256": "7cf4167e67e95f77698805217238ab615fd178625b59e7fd0b33c09456e9db87",
+      "dt": 5e-05,
+      "completed_steps": 16000,
+      "wall_seconds": 76.24756163917482,
+      "commanded_wrench_turn_deg": -45.0,
+      "measured_tightening_turn_deg": -1.6564131266605386e-06,
+      "expected_response_pass": true,
+      "rim_integrity": {
+        "valid": true,
+        "steps": 16000,
+        "first_failure": null,
+        "maximum_axial_bending_strain": 0.0010647716079790997,
+        "maximum_twist_rad": 0.0007261186689312152,
+        "maximum_locked_joint_gap_m": 3.0485221432350466e-06,
+        "peaks": {
+          "maximum_axial_bending_strain": 0.0014078233329498156,
+          "maximum_twist_rad": 0.0010645528057019386,
+          "maximum_locked_joint_gap_m": 4.521027469048846e-06
+        }
+      },
+      "source_sha256": {
+        "wrench_contact_probe.py": "15d5096b6dce352e4a7f5a2b3f9e404a82eda905703651acd9d9363f7bc44490",
+        "wheel_scene.py": "cea1e76544d0f18eeb8ad38c7d62d2b3f5daff272b33fe801083507de54d664c",
+        "thread_coupling.py": "4023f373f81f3c98420d58c5dc9b395aed0c8c96ed644d278f3799fac4933a0c",
+        "mechanics.py": "a0bc89a7b61ae46ed0ecf555c1f45cc12b52972392cd6b69292907b3c995ba87",
+        "integrity.py": "8c917dd46bd126c023c04439b303f5d9fafb1d31289014ed99fe0a5aac28a90b"
+      }
+    },
+    {
+      "label": "held_hub030",
+      "report_sha256": "a99d1c8f881e56e8f8c30fab448c9a270de1f4a515927e9f5db6eab870a7e658",
+      "dt": 5e-05,
+      "completed_steps": 16000,
+      "wall_seconds": 69.49376352503896,
+      "commanded_wrench_turn_deg": -45.0,
+      "measured_tightening_turn_deg": 25.42373960189993,
+      "expected_response_pass": false,
+      "rim_integrity": {
+        "valid": true,
+        "steps": 16000,
+        "first_failure": null,
+        "maximum_axial_bending_strain": 0.001069108305978875,
+        "maximum_twist_rad": 0.0007016833262200482,
+        "maximum_locked_joint_gap_m": 2.4086516469089905e-06,
+        "peaks": {
+          "maximum_axial_bending_strain": 0.0014422677754442209,
+          "maximum_twist_rad": 0.0010594416228601065,
+          "maximum_locked_joint_gap_m": 4.1679857049854385e-06
+        }
+      },
+      "source_sha256": {
+        "wrench_contact_probe.py": "f43f4b98169e2e9cc7d58ec31f1f538658b007fbd3765f33f6c29b69d9ce5d95",
+        "wheel_scene.py": "cea1e76544d0f18eeb8ad38c7d62d2b3f5daff272b33fe801083507de54d664c",
+        "thread_coupling.py": "4023f373f81f3c98420d58c5dc9b395aed0c8c96ed644d278f3799fac4933a0c",
+        "mechanics.py": "a0bc89a7b61ae46ed0ecf555c1f45cc12b52972392cd6b69292907b3c995ba87",
+        "integrity.py": "8c917dd46bd126c023c04439b303f5d9fafb1d31289014ed99fe0a5aac28a90b"
+      }
+    },
+    {
+      "label": "straight_slot031",
+      "report_sha256": "7301b569486eb1d1494bcdff361ef108eb0fa51fd0565a599b50965e7edccb74",
+      "dt": 5e-05,
+      "completed_steps": 16000,
+      "wall_seconds": 69.34738947171718,
+      "commanded_wrench_turn_deg": -45.0,
+      "measured_tightening_turn_deg": 32.90430824919055,
+      "expected_response_pass": true,
+      "rim_integrity": {
+        "valid": true,
+        "steps": 16000,
+        "first_failure": null,
+        "maximum_axial_bending_strain": 0.0010796253277779776,
+        "maximum_twist_rad": 0.0006934731697285669,
+        "maximum_locked_joint_gap_m": 2.2948601592324075e-06,
+        "peaks": {
+          "maximum_axial_bending_strain": 0.0014422677754442209,
+          "maximum_twist_rad": 0.0010594416228601065,
+          "maximum_locked_joint_gap_m": 4.1679857049854385e-06
+        }
+      },
+      "source_sha256": {
+        "wrench_contact_probe.py": "f43f4b98169e2e9cc7d58ec31f1f538658b007fbd3765f33f6c29b69d9ce5d95",
+        "wheel_scene.py": "90c7932a84443e06f2e1bc69edf4c7b8f7bfcb4a553fe7e372620064cfa04e6c",
+        "thread_coupling.py": "4023f373f81f3c98420d58c5dc9b395aed0c8c96ed644d278f3799fac4933a0c",
+        "mechanics.py": "a0bc89a7b61ae46ed0ecf555c1f45cc12b52972392cd6b69292907b3c995ba87",
+        "integrity.py": "8c917dd46bd126c023c04439b303f5d9fafb1d31289014ed99fe0a5aac28a90b"
+      }
+    }
+  ]
+}

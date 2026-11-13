@@ -1,6 +1,6 @@
 """Surface-cloth bridge for the pinned YAM/Arena loader.
 
-Pattern follows the team's accepted rope task: lazy Box subclass dispatch.
+Uses lazy Box subclass dispatch with the retained YAM task loader.
 The actual body is a native DeformableObject, never a rigid shirt proxy. Nodal
 state is exposed only to the assessor, not to any demonstration policy.
 """

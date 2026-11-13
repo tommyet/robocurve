@@ -43,13 +43,16 @@ def face_colors(mesh):
     return colours
 
 
-def initial_layout(mesh=None):
+def initial_layout(mesh=None, *, inside_out=False):
     """Isometric diagnostic drape, not yet the task's settled reset state.
 
     A half-cylinder at the back of the form joins two uncrossed free ends.
     Gravity must create the hanging configuration in the probe. The initially
     horizontal ends are explicitly not presented as a photographed task setup.
     Freeze and audit a naturally settled configuration only after GPU evidence.
+    The optional inside-out drape reverses the cross-width material direction
+    before physics; it creates no twist, crossing or knot. The current task
+    continues to use the default front-face layout until explicitly selected.
     """
     mesh=necktie() if mesh is None else mesh
     r=.065
@@ -65,7 +68,7 @@ def initial_layout(mesh=None):
         else:
             theta=(s-arc_start)/r-np.pi/2
             center=np.array((NECK[0]+r*np.cos(theta),r*np.sin(theta),NECK[2]))
-        current[row]=center+mesh.rest[row,0,None]*np.array((0.,0.,1.))
+        current[row]=center+mesh.rest[row,0,None]*np.array((0.,0.,-1. if inside_out else 1.))
     return current
 
 

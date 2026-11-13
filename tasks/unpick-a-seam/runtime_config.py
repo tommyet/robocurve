@@ -16,6 +16,12 @@ class SeamRuntime:
     physics_hz: int = 960
     contact_refinement: ContactRefinement = ContactRefinement()
     maximum_stretch: float = 1.02
+    quality_mesh: bool = False
+    seam_lowering_m: float = 0.
+    pre_draped_seam: bool = False
+    drape_shape: str = 'gaussian'
+    sewing_clamp: bool = False
+    passive_clamp: bool = False
 
 
 CONFIG=SeamRuntime()

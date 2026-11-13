@@ -1,0 +1,385 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Tool-only pickup success and separate invalid cloth reset; no task demo, cutting or full score",
+  "files_sha256": {
+    "seam-forensic/preview.json": "26592f8b96ab7301bdebceb4e0a1b5cf0789421f6d07d93c05ea4bcb726070c7",
+    "seam-tool-pickup/tool-probe.json": "cf5fb86df210c741d80a364b4307897d6493117c860b3f3b6297a7b026963cf4",
+    "seam-tool-pickup/tool-trace.jsonl.gz": "0625e681dd37c77e9d0820c992b0c6036d6070e8cd72e77ccd3ca5054217818f"
+  },
+  "tool_pickup": {
+    "status": "complete",
+    "scope": "tool-only contact pickup coupon; no cloth, cutting or material assessment",
+    "robot_demo": false,
+    "task_score": null,
+    "dream_requests": 0,
+    "requested_steps": 220,
+    "completed_steps": 220,
+    "control_hz": 20,
+    "physics_hz": 240,
+    "release_control": true,
+    "policy": "frozen joint targets; no object feedback",
+    "last_handle_pose_xyzw": [
+      0.20058582723140717,
+      -0.12133926153182983,
+      0.7534996867179871,
+      1.5218645785353146e-05,
+      1.3903336366638541e-06,
+      0.026219703257083893,
+      0.9996561408042908
+    ],
+    "maximum_handle_height_increase_m": 0.07758766412734985,
+    "wall_seconds": 38.899611133150756,
+    "plan_end_handle_z_m": 0.8330838680267334,
+    "before_release_handle_z_m": 0.8330875039100647,
+    "final_handle_height_increase_m": -0.0020003318786621094,
+    "handle_drop_after_release_m": 0.07958781719207764
+  },
+  "held_grasp": {
+    "actions_included": [
+      140,
+      159
+    ],
+    "tcp_offset_in_handle_frame_mean_m": [
+      -9.950938871923642e-05,
+      3.4341715052307704e-05,
+      0.010021400344699432
+    ],
+    "component_ranges_m": [
+      2.9124359659725397e-07,
+      1.1845274557509858e-06,
+      3.6271317191242936e-07
+    ],
+    "live_policy_feedback": false
+  },
+  "cloth_forensic": {
+    "status": "failed",
+    "requested_steps": 4,
+    "completed_steps": 0,
+    "runtime": {
+      "thread_radius_m": 0.0004,
+      "hole_half_m": 0.0008,
+      "hole_mesh_spacing_m": null,
+      "physics_hz": 3840,
+      "contact_refinement": {
+        "speculative_ccd": true,
+        "collision_iterations": 4,
+        "pair_update_frequency": 4
+      },
+      "maximum_stretch": 1.05,
+      "quality_mesh": true,
+      "seam_lowering_m": 0.0019999999999999996
+    },
+    "continue_after_strain": true,
+    "audited_physics_substeps": 192,
+    "material_invalid": true,
+    "strain": [
+      {
+        "maximum_principal_stretch": 1.3637045913227004,
+        "first_validity_excursion": {
+          "time_s": 0.0109375,
+          "triangle": 2408,
+          "principal_stretch": 1.05027691334737,
+          "limit": 1.05
+        },
+        "first_2pct_warning": {
+          "time_s": 0.009375,
+          "triangle": 2535,
+          "principal_stretch": 1.022373644216136,
+          "limit": 1.02
+        },
+        "maximum_stretch_limit": 1.05
+      },
+      {
+        "maximum_principal_stretch": 1.485863894505889,
+        "first_validity_excursion": {
+          "time_s": 0.009635416666666667,
+          "triangle": 2869,
+          "principal_stretch": 1.0523473164375148,
+          "limit": 1.05
+        },
+        "first_2pct_warning": {
+          "time_s": 0.008072916666666666,
+          "triangle": 2502,
+          "principal_stretch": 1.0201856894247716,
+          "limit": 1.02
+        },
+        "maximum_stretch_limit": 1.05
+      }
+    ],
+    "contact_audit": [
+      {
+        "valid": true,
+        "steps": 53,
+        "first_failure": null
+      },
+      {
+        "valid": false,
+        "steps": 53,
+        "first_failure": {
+          "step": 53,
+          "time_s": 0.013541666666666667,
+          "reason": "thread crosses intact fabric",
+          "static_intersections": 1,
+          "swept_intersections": 4,
+          "static_crossing_details": [
+            {
+              "segment_index": 79,
+              "face_index": 309,
+              "coordinate_frame": "current",
+              "intersection_m": [
+                0.29634239481541597,
+                -0.0059703607004214475,
+                0.7478992182521471
+              ],
+              "barycentric": [
+                0.014397328305463433,
+                0.9743925921108734,
+                0.011210079583663199
+              ],
+              "segment_parameter": 0.66562443368762,
+              "strictly_inside_triangle": true,
+              "strictly_inside_segment": true,
+              "distance_to_mesh_boundary_m": 0.00043981367259791253,
+              "closest_boundary_edge": [
+                344,
+                345
+              ],
+              "closest_boundary_point_m": [
+                0.2959462568591429,
+                -0.0060629636145786425,
+                0.7477320791289789
+              ],
+              "closest_boundary_edge_length_m": 0.0004260656170016758,
+              "closest_boundary_vertices_distance_to_thread_axis_m": [
+                0.0003724122093659039,
+                0.000223616853797967
+              ],
+              "nearest_mesh_vertex_distance_to_thread_axis_m": 9.833850676707767e-06
+            }
+          ],
+          "swept_crossing_details": [
+            {
+              "segment_index": 79,
+              "face_index": 308,
+              "coordinate_frame": "previous_triangle_endpoint_0",
+              "intersection_m": [
+                0.2968847990663811,
+                -0.005870784057742437,
+                0.7483940871909838
+              ],
+              "barycentric": [
+                0.21372873241000578,
+                0.2771343812233883,
+                0.5091368863666059
+              ],
+              "segment_parameter": 0.9240440461942452,
+              "strictly_inside_triangle": true,
+              "strictly_inside_segment": true,
+              "distance_to_mesh_boundary_m": 0.000985429942424734,
+              "closest_boundary_edge": [
+                345,
+                346
+              ],
+              "closest_boundary_point_m": [
+                0.295900950466765,
+                -0.005922007977488837,
+                0.748371946402685
+              ],
+              "closest_boundary_edge_length_m": 0.00041747721635184847,
+              "closest_boundary_vertices_distance_to_thread_axis_m": [
+                0.0009865814989724322,
+                0.0010343761495992532
+              ],
+              "nearest_mesh_vertex_distance_to_thread_axis_m": 0.00034478371035481304
+            },
+            {
+              "segment_index": 80,
+              "face_index": 1990,
+              "coordinate_frame": "previous_triangle_endpoint_0",
+              "intersection_m": [
+                0.2959955922087277,
+                -0.00603276392953225,
+                0.7483521564837915
+              ],
+              "barycentric": [
+                0.12866398383079308,
+                0.765496414591794,
+                0.10583960157741294
+              ],
+              "segment_parameter": 0.8496069251154788,
+              "strictly_inside_triangle": true,
+              "strictly_inside_segment": true,
+              "distance_to_mesh_boundary_m": 9.101950410223923e-05,
+              "closest_boundary_edge": [
+                344,
+                345
+              ],
+              "closest_boundary_point_m": [
+                0.2959062711167791,
+                -0.006028432515145457,
+                0.7483351997296935
+              ],
+              "closest_boundary_edge_length_m": 0.0004007005205152352,
+              "closest_boundary_vertices_distance_to_thread_axis_m": [
+                0.0003301405593876407,
+                9.726039649186933e-05
+              ],
+              "nearest_mesh_vertex_distance_to_thread_axis_m": 9.726039649186933e-05
+            },
+            {
+              "segment_index": 80,
+              "face_index": 1990,
+              "coordinate_frame": "current_triangle_endpoint_0",
+              "intersection_m": [
+                0.29606006522216316,
+                -0.006036525949565264,
+                0.7477719692456762
+              ],
+              "barycentric": [
+                0.16043158169176136,
+                0.7050060946553293,
+                0.13456232365290938
+              ],
+              "segment_parameter": 0.7598928919931491,
+              "strictly_inside_triangle": true,
+              "strictly_inside_segment": true,
+              "distance_to_mesh_boundary_m": 0.0001234449715129736,
+              "closest_boundary_edge": [
+                344,
+                345
+              ],
+              "closest_boundary_point_m": [
+                0.29594603330315944,
+                -0.00606108181955746,
+                0.7477315663783387
+              ],
+              "closest_boundary_edge_length_m": 0.0004260656170016758,
+              "closest_boundary_vertices_distance_to_thread_axis_m": [
+                0.0003566908661775165,
+                0.0001474736086919088
+              ],
+              "nearest_mesh_vertex_distance_to_thread_axis_m": 0.0001474736086919088
+            },
+            {
+              "segment_index": 78,
+              "face_index": 308,
+              "coordinate_frame": "previous_triangle_endpoint_1",
+              "intersection_m": [
+                0.2968837910678237,
+                -0.005871177065914223,
+                0.7483941495793068
+              ],
+              "barycentric": [
+                0.21504745469129904,
+                0.2769277476932736,
+                0.5080247976154273
+              ],
+              "segment_parameter": 0.9291795895664562,
+              "strictly_inside_triangle": true,
+              "strictly_inside_segment": true,
+              "distance_to_mesh_boundary_m": 0.0009844045511497878,
+              "closest_boundary_edge": [
+                345,
+                346
+              ],
+              "closest_boundary_point_m": [
+                0.2959009673065045,
+                -0.0059222927983915725,
+                0.7483718570602902
+              ],
+              "closest_boundary_edge_length_m": 0.00041747721635184847,
+              "closest_boundary_vertices_distance_to_thread_axis_m": [
+                0.000985516924501682,
+                0.0010339729417564842
+              ],
+              "nearest_mesh_vertex_distance_to_thread_axis_m": 0.0003455677863638882
+            },
+            {
+              "segment_index": 79,
+              "face_index": 1990,
+              "coordinate_frame": "previous_triangle_endpoint_1",
+              "intersection_m": [
+                0.29599430078173317,
+                -0.006032712175015983,
+                0.7483519186355496
+              ],
+              "barycentric": [
+                0.12544761189972697,
+                0.7689598454400799,
+                0.10559254266019313
+              ],
+              "segment_parameter": 0.8530173967068793,
+              "strictly_inside_triangle": true,
+              "strictly_inside_segment": true,
+              "distance_to_mesh_boundary_m": 8.970540207325937e-05,
+              "closest_boundary_edge": [
+                344,
+                345
+              ],
+              "closest_boundary_point_m": [
+                0.29590627131819924,
+                -0.006028439202696446,
+                0.7483351969604358
+              ],
+              "closest_boundary_edge_length_m": 0.0004007005205152352,
+              "closest_boundary_vertices_distance_to_thread_axis_m": [
+                0.00032987590782979705,
+                9.599242287932067e-05
+              ],
+              "nearest_mesh_vertex_distance_to_thread_axis_m": 9.599242287932067e-05
+            },
+            {
+              "segment_index": 79,
+              "face_index": 1990,
+              "coordinate_frame": "current_triangle_endpoint_1",
+              "intersection_m": [
+                0.2960589452956219,
+                -0.006036529515982678,
+                0.7477714435358425
+              ],
+              "barycentric": [
+                0.15756358466719567,
+                0.7078214837520371,
+                0.1346149315807672
+              ],
+              "segment_parameter": 0.762649230219343,
+              "strictly_inside_triangle": true,
+              "strictly_inside_segment": true,
+              "distance_to_mesh_boundary_m": 0.0001222376905976254,
+              "closest_boundary_edge": [
+                344,
+                345
+              ],
+              "closest_boundary_point_m": [
+                0.29594600353393996,
+                -0.006060831235484067,
+                0.7477314980993058
+              ],
+              "closest_boundary_edge_length_m": 0.0004260656170016758,
+              "closest_boundary_vertices_distance_to_thread_axis_m": [
+                0.0003564979682422395,
+                0.00014652157069160673
+              ],
+              "nearest_mesh_vertex_distance_to_thread_axis_m": 0.00014652157069160673
+            }
+          ],
+          "native_substep": 52
+        }
+      }
+    ],
+    "damage_events": [],
+    "cut_events": [],
+    "measured_wall_timings_s": {
+      "readback": 0.15228424407541752,
+      "strain": 0.2531284084543586,
+      "crossing": 0.22927050665020943,
+      "crossing_poll": 0.07299814932048321,
+      "blade_damage": 0.23195560835301876,
+      "cutting": 0.016436063684523106,
+      "control_steps_total": 10.77442351076752,
+      "native_step_total": 8.551064336672425,
+      "scene_write_total": 0.27263646852225065,
+      "scene_update_total": 0.18536199443042278
+    }
+  }
+}

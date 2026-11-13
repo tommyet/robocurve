@@ -59,17 +59,25 @@ def author_thread(stage,path,nodes,*,radius=.0002,density=1400.,open_diagnostic=
         joint.CreateCollisionEnabledAttr(False)
         joint.CreateJointEnabledAttr(not (open_diagnostic and i==0))
         joints.append(str(joint.GetPath()))
-    return {'bodies':bodies,'joints':joints,'nodes':nodes,'lengths':lengths,
+    result={'bodies':bodies,'joints':joints,'nodes':nodes,'lengths':lengths,
             'mass_kg':float(math.pi*radius**2*lengths.sum()*density)}
+    if open_diagnostic:set_joint_enabled(stage,result,0,False)
+    return result
 
 
 def author_pair(stage,*,transform=lambda p:p,open_diagnostic=False,root_path='/World',
-                thread_radius=.0002,hole_half=.0006,contact_refinement=None,hole_mesh_spacing=None):
+                thread_radius=.0002,hole_half=.0006,contact_refinement=None,hole_mesh_spacing=None,quality_mesh=False):
     cloth=[]
     material=Fabric(thickness=.0004,density=350.,youngs_modulus=2e6,bend_modulus=8e4,
                     contact_offset=.00025,rest_offset=.0002,solver_iterations=64)
     for i,left in enumerate((True,False)):
-        mesh=patch(left,hole_half=hole_half,hole_mesh_spacing=hole_mesh_spacing)
+        if quality_mesh:
+            if abs(hole_half-.0008)>1e-12 or hole_mesh_spacing is not None:
+                raise ValueError("Quality mesh is the fixed 1.6 mm hole diagnostic")
+            from quality_mesh import quality_patch
+            mesh=quality_patch(left)
+        else:
+            mesh=patch(left,hole_half=hole_half,hole_mesh_spacing=hole_mesh_spacing)
         mesh.rest=transform(mesh.rest)
         author_cloth(stage,f'{root_path}/Cloth_{i}',mesh,material,
                      color=(.76,.68,.47) if left else (.25,.42,.66),
@@ -80,10 +88,42 @@ def author_pair(stage,*,transform=lambda p:p,open_diagnostic=False,root_path='/W
     return cloth,threads
 
 
+def set_joint_enabled(stage,thread,index,enabled):
+    """Change one thread connection and its adjoining end-cap pair together.
+
+    Joined capsules share overlapping hemispheres, so that pair is filtered.
+    A cut removes only this exclusion, in both directions, and enables the
+    joint's collision flag. All other pair filters are retained. Native contact
+    rebuilding and the resulting end-cap separation still need a cut probe.
+    """
+    from pxr import UsdPhysics
+    n=len(thread['bodies'])
+    if type(enabled) is not bool or not 0<=index<n or len(thread['joints'])!=n:
+        raise ValueError('Invalid native thread connection')
+    before=(index-1)%n
+    paths=[thread['bodies'][before],thread['bodies'][index]]
+    prims=[stage.GetPrimAtPath(path) for path in paths]
+    for prim,other in zip(prims,reversed(prims)):
+        relationship=UsdPhysics.FilteredPairsAPI(prim).GetFilteredPairsRel()
+        targets=list(relationship.GetTargets());other_path=other.GetPath()
+        targets=[target for target in targets if target!=other_path]
+        if enabled:targets.append(other_path)
+        if not relationship.SetTargets(targets):raise RuntimeError('Cannot update cut-end collision filter')
+    joint=UsdPhysics.Joint(stage.GetPrimAtPath(thread['joints'][index]))
+    if not joint.GetCollisionEnabledAttr().Set(not enabled):
+        raise RuntimeError('Cannot update cut-end joint collision flag')
+    if not joint.GetJointEnabledAttr().Set(enabled):raise RuntimeError('Cannot change native thread joint')
+
+
+def restore_thread_joints(stage,thread):
+    """Reset-only restoration; cannot be called by the action policy."""
+    for index in range(len(thread['joints'])):set_joint_enabled(stage,thread,index,True)
+
+
 def sever_contacted_joints(stage,threads,global_indices):
     """Apply force-qualified events from ThreadCutter; never release cloth."""
-    from pxr import UsdPhysics
-    all_joints=[j for t in threads for j in t['joints']]
+    connections=[(thread,index) for thread in threads for index in range(len(thread['joints']))]
     for k in global_indices:
-        if not 0<=int(k)<len(all_joints):raise ValueError('Unknown thread joint')
-        UsdPhysics.Joint(stage.GetPrimAtPath(all_joints[int(k)])).GetJointEnabledAttr().Set(False)
+        if not 0<=int(k)<len(connections):raise ValueError('Unknown thread joint')
+        thread,index=connections[int(k)]
+        set_joint_enabled(stage,thread,index,False)

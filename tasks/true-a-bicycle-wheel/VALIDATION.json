@@ -2,16 +2,16 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "38 CPU tests pass. Full130-body assembly with elastic Coulomb threads passes0.3s settling at25\u00b5s/32iterations; physical wrench and YAM integration remain untested.",
+  "cpu_checks": "41 CPU checks pass. Native exposed-flat wrench contact and no-contact controls establish causal rotation; corrected straight slot passes its 45-degree transfer gate. Full-turn robot plan is blocked by the offline collision screen. Pickup integration is pending.",
   "simulator_probe": null,
   "demo": null,
   "dream": null,
   "media": null,
   "blocking_items": [
-    "Runtime stability of curved-sector native scene, thread coupling and YAM bridge",
-    "Contact-driven wrench rotation, creep, slip and convergence checks",
-    "Practical integrity judging and full released-wheel spin measurement",
-    "Collision-safe YAM manipulation, full-score demo, Dream baseline and final media"
+    "Verify YAM bridge and real free-wrench pickup",
+    "Replace the collision-rejected full-turn plan; demonstrate sufficient physical nipple adjustment",
+    "Complete released-wheel revolution and final spoke-tension judging",
+    "Full-score ordinary robot demo, Dream baseline and final media"
   ],
   "status": "development_not_submission_ready",
   "native_probe": {
@@ -66,7 +66,7 @@
       "next": "Full 130-body geometry and live thread coupling .1s at25\u00b5s."
     }
   },
-  "cpu_tests_passed": 38,
+  "cpu_tests_passed": 41,
   "native_scene": {
     "authoring_entry_point": "wheel_scene.build_scene(stage, root)",
     "material_callback": "NativeThreadCoupler.before_step before every native substep",
@@ -75,15 +75,16 @@
     "limitations": [
       "YAM asset/reset bridge and camera preview remain unrun; no robot manipulation demo.",
       "Elastic Coulomb thread holding passes short settling; wrench-driven slip and reversal remain untested.",
-      "Thread travel is bounded to\u00b13turns. Rim guard now checks every material substep and the final pose; native guarded retry pending.",
-      "32-iteration solver passes0.3s; longer duration, physical wrench contact and task scoring remain outstanding."
+      "Thread travel is bounded to \u00b13 turns. A latched rim guard checks every material substep; earlier geometry passes 0.3 s at 25/50 \u00b5s.",
+      "32-iteration solver passes0.3s; longer duration, physical wrench contact and task scoring remain outstanding.",
+      "Earlier settling reports do not validate the latest exposed nipple and thin-neck geometry."
     ],
     "preview_entry_point": "preview_yam.py --out OUTPUT --steps 2 --physics-hz 40000",
     "wrench_contact_diagnostic": "wrench_contact_probe.py --out OUTPUT --dt .000025 --turn-deg -90; .9s explicit kinematic fixture, not robot demo",
     "thread_coupling": "Measured nipple rotation relative to outer spoke drives rest length and equal/opposite lead torque; native elastic Coulomb friction holds after settling.",
     "tensor_pose_conversion": "Batched native poses, relative thread/energy algebra and torques. Lazy assessor snapshots; exact per-joint rest/friction attributes. CPU equivalence checks pass; full native integration pending.",
     "scene_probe": "scene_probe.py --out OUTPUT --dt .000025 --seconds .1",
-    "geometry_authoring_check": "x_frame preserves metric input vectors; regression protects actual half-spoke centre placement.",
+    "geometry_authoring_check": "Recording stub executes all 130 rigid bodies and axis declarations; native USD/schema validity and physical behavior are separate checks.",
     "latest_observation": {
       "complete_native_execution": true,
       "frozen_material_diagnostic": false,
@@ -117,29 +118,52 @@
     "larger_timestep_diagnostic": {
       "complete_native_execution": true,
       "frozen_material_diagnostic": false,
-      "seconds": 0.1,
+      "seconds": 0.3,
       "dt": 5e-05,
-      "wall_seconds": 11.483913411386311,
-      "maximum_runout_m": 0.0036419928073883057,
-      "final_runout_m": 0.002048015594482422,
-      "late_maximum_rim_displacement_m": 5.1738691844654033e-05,
-      "late_maximum_thread_rate_turns_s": 6.819105358891515e-07,
+      "wall_seconds": 30.753658164292574,
+      "maximum_runout_m": 0.0015645921230316162,
+      "final_runout_m": 0.0009015798568725586,
+      "late_maximum_rim_displacement_m": 2.429236562269486e-06,
+      "late_maximum_thread_rate_turns_s": 8.724693541842175e-07,
       "late_tension_range_n": [
-        56.96309738210236,
-        637.6012069187898
+        195.06525179605447,
+        636.4357837643931
       ],
       "peak_rim_domain": {
-        "maximum_axial_bending_strain": 0.0015930102007603861,
-        "maximum_twist_rad": 0.0015875830836898888,
-        "maximum_locked_joint_gap_m": 2.9296466429301475e-06
+        "maximum_axial_bending_strain": 0.001156962060134774,
+        "maximum_twist_rad": 0.0009873338462992047,
+        "maximum_locked_joint_gap_m": 3.540508792874209e-06
       },
       "robot_demo": false,
       "task_score": null,
       "interpretation": "Short settling gate only. Does not test wrench interaction, full-duration stability or robot feasibility.",
-      "geometry_gate_pass": false,
+      "geometry_gate_pass": true,
       "thread_holding_gate_pass": true,
-      "physical_gate_pass": false,
-      "native_report_sha256": "d4068d011c84ab81d5fa44c1464571b7eb9fc736d53f305966ced30b8f7d0027"
+      "physical_gate_pass": true,
+      "native_report_sha256": "0e444137a7cfaec2435f73bdc5566d3d80832eccf5e276cb554a7c819433e932",
+      "reset_profile": "two-defect-candidate",
+      "all_substep_rim_guard": {
+        "valid": true,
+        "steps": 6000,
+        "first_failure": null,
+        "maximum_axial_bending_strain": 0.0010651749264258869,
+        "maximum_twist_rad": 0.0007259663455709368,
+        "maximum_locked_joint_gap_m": 2.5781272888219627e-06,
+        "peaks": {
+          "maximum_axial_bending_strain": 0.0014075755802789203,
+          "maximum_twist_rad": 0.0010729549228819975,
+          "maximum_locked_joint_gap_m": 4.612839455661039e-06
+        }
+      },
+      "source_sha256": {
+        "scene_probe.py": "eeefe29822538b79d779fecee7f6e884514e7ae1ea4dfd91f179a57de561c3f3",
+        "wheel_scene.py": "7397c7b7b5728fad713ac17215640d42a02d253e4a5bab6685e56208c9f1666f",
+        "native_probe.py": "11e7c3dddc7f4726099f6977b0db80c54f4b438b6e26a4adbcceca914e3503f7",
+        "thread_coupling.py": "4023f373f81f3c98420d58c5dc9b395aed0c8c96ed644d278f3799fac4933a0c",
+        "mechanics.py": "a0bc89a7b61ae46ed0ecf555c1f45cc12b52972392cd6b69292907b3c995ba87",
+        "integrity.py": "8c917dd46bd126c023c04439b303f5d9fafb1d31289014ed99fe0a5aac28a90b"
+      },
+      "evidence": "evidence/native-minimal-50us-026-summary.json"
     },
     "reset_candidate": {
       "profile": "two-defect-candidate",
@@ -147,9 +171,109 @@
         "0": -0.75,
         "2": -0.75
       },
-      "status": "CPU_only_native_pending",
-      "reason": "Minimal realistic repair; CPU predicts fourquarterturn corrections suffice without exactreference restoration.",
-      "task_default_changed": false
+      "status": "short_native_settling_passed",
+      "reason": "Minimal real truing reset; native initial tension190\u2013647N fails scoring. Planned threequarterturn corrections per nipple; four total were insufficient for400N tension floor.",
+      "task_default_changed": true,
+      "evidence": {
+        "complete_native_execution": true,
+        "frozen_material_diagnostic": false,
+        "seconds": 0.3,
+        "dt": 2.5e-05,
+        "wall_seconds": 62.1720759216696,
+        "maximum_runout_m": 0.0015281140804290771,
+        "final_runout_m": 0.0008889436721801758,
+        "late_maximum_rim_displacement_m": 5.523574535650305e-07,
+        "late_maximum_thread_rate_turns_s": 1.650107528917419e-06,
+        "late_tension_range_n": [
+          190.52670226005134,
+          647.1865699474683
+        ],
+        "peak_rim_domain": {
+          "maximum_axial_bending_strain": 0.0011609416277031854,
+          "maximum_twist_rad": 0.0007909633619865657,
+          "maximum_locked_joint_gap_m": 2.5702569241161555e-06
+        },
+        "robot_demo": false,
+        "task_score": null,
+        "interpretation": "Short settling gate only. Does not test wrench interaction, full-duration stability or robot feasibility.",
+        "geometry_gate_pass": true,
+        "thread_holding_gate_pass": true,
+        "physical_gate_pass": true,
+        "native_report_sha256": "5e69fdf37949deb1468629a038019927ce1a2775d0ac24fe4d9963b48f7099a1",
+        "reset_profile": "two-defect-candidate",
+        "all_substep_rim_guard": null,
+        "source_sha256": {
+          "scene_probe.py": "cd783f310af0d10fd6fab9ff1521d8ecc55a9c44d5d57f8ef38f471a1b8b4ed7",
+          "wheel_scene.py": "d6015254044d08d8f7d5ea47e7d8c434dbf7d93ffabb31835964c648f34bd77a",
+          "native_probe.py": "11e7c3dddc7f4726099f6977b0db80c54f4b438b6e26a4adbcceca914e3503f7",
+          "thread_coupling.py": "c7c37185369fdd496b8ad90f3038023251d4730e0c0851d4b63739ef78de8074",
+          "mechanics.py": "d37341e5d564aec7cbe993844d66d5b8916babd78aea4227db376f502f545baf"
+        },
+        "evidence": "evidence/native-minimal-reset-025-summary.json"
+      }
+    },
+    "partial_correction_control": {
+      "complete_native_execution": true,
+      "frozen_material_diagnostic": false,
+      "seconds": 0.3,
+      "dt": 2.5e-05,
+      "wall_seconds": 58.28490302246064,
+      "maximum_runout_m": 0.0004993975162506104,
+      "final_runout_m": 0.0002968907356262207,
+      "late_maximum_rim_displacement_m": 4.6271491408280984e-07,
+      "late_maximum_thread_rate_turns_s": 1.5545526586299614e-06,
+      "late_tension_range_n": [
+        374.8849988982177,
+        527.4294872272122
+      ],
+      "peak_rim_domain": {
+        "maximum_axial_bending_strain": 0.0007345426155807684,
+        "maximum_twist_rad": 0.0002696686670942979,
+        "maximum_locked_joint_gap_m": 1.6646279791635448e-06
+      },
+      "robot_demo": false,
+      "task_score": null,
+      "interpretation": "Short settling gate only. Does not test wrench interaction, full-duration stability or robot feasibility.",
+      "geometry_gate_pass": true,
+      "thread_holding_gate_pass": true,
+      "physical_gate_pass": true,
+      "native_report_sha256": "ca0d30bb23c2089f9cb10d919384442905cc2702b26578314c94c519314671e9",
+      "reset_profile": "two-defect-corrected-control",
+      "all_substep_rim_guard": {
+        "valid": true,
+        "steps": 12000,
+        "first_failure": null,
+        "maximum_axial_bending_strain": 0.00058950971415258,
+        "maximum_twist_rad": 0.00019538739557687488,
+        "maximum_locked_joint_gap_m": 1.1778451117789332e-06,
+        "peaks": {
+          "maximum_axial_bending_strain": 0.0008752555160905721,
+          "maximum_twist_rad": 0.0002909835195344293,
+          "maximum_locked_joint_gap_m": 3.77222925326839e-06
+        }
+      },
+      "source_sha256": {
+        "scene_probe.py": "eeefe29822538b79d779fecee7f6e884514e7ae1ea4dfd91f179a57de561c3f3",
+        "wheel_scene.py": "7397c7b7b5728fad713ac17215640d42a02d253e4a5bab6685e56208c9f1666f",
+        "native_probe.py": "11e7c3dddc7f4726099f6977b0db80c54f4b438b6e26a4adbcceca914e3503f7",
+        "thread_coupling.py": "4023f373f81f3c98420d58c5dc9b395aed0c8c96ed644d278f3799fac4933a0c",
+        "mechanics.py": "a0bc89a7b61ae46ed0ecf555c1f45cc12b52972392cd6b69292907b3c995ba87",
+        "integrity.py": "8c917dd46bd126c023c04439b303f5d9fafb1d31289014ed99fe0a5aac28a90b"
+      },
+      "evidence": "evidence/native-two-quarterturn-target-026-summary.json"
+    },
+    "grasp_planning": "BLOCKED: 499-action plan is IK-reachable but intersects wheel/hub by up to15.4mm. Do not run it. Replanning grip and layout.",
+    "latest_geometry_revision": {
+      "status": "native_pending",
+      "nipple_center_inset_m": 0.016,
+      "exposed_flat_length_m": 0.006,
+      "barrel_length_m": 0.006,
+      "wrench_thin_neck_size_m": [
+        0.01,
+        0.03,
+        0.004
+      ],
+      "reason": "Old square flats lay inside the solid rim collider. Thick handle also obstructed wrench access. Current exposed flats and thin steel neck preserve physical external collisions."
     }
   },
   "judging": "v2: pointer/feeler-gauge runout and dish; mechanical spoke tensiometer, all32 spokes 400\u20131000N for this fixture; no separate hanging-weight trials.",
@@ -174,5 +298,20 @@
       "observed_displacement_m": -0.00011348724365234375,
       "interpretation": "Static equilibrium error falls about16.4\u00d7 for a4\u00d7 smaller step; quarterturn response also agrees."
     }
+  },
+  "current_manipulation_status": {
+    "date": "2026-11-13",
+    "pickup": "82 actions; sampled commanded-pose hull screen has zero unintended intersections with the latest cantilever stand. Native grasp unproven.",
+    "turns": "BLOCKED: 499-action plan is IK-reachable but intersects wheel/hub by up to15.4mm. Do not run it. Replanning grip and layout.",
+    "fixture": "031 corrected straight-slot held-hub fixture transfers32.9043deg from45deg command, with all16000 rim checks valid. It is a diagnostic fixture, not robot success.",
+    "latest_geometry": "Single-sided stand and straight working slot are explicit authored geometry; no collision filters hide robot/tool interference."
+  },
+  "wrench_contact_evidence": "evidence/native-wrench-contact-029-031-summary.json",
+  "current_runtime_status": {
+    "task_success": false,
+    "native_yam_cpu_035": "2 actions completed, effective cpu;7.78/7.73 seconds per action. Hub angular speed declined from .280 to .140rad/s; no runaway in this short control.",
+    "native_yam_gpu_034": "Interrupted before grasp. Recoverable trace reaches23 actions/1.15s and shows uncommanded hub speed37rad/s. GPU YAM is unsuitable until this is diagnosed. Truncated gzip is partial evidence, not a completed trial.",
+    "standalone_pair_035": "Both CPU/GPU0.1s scenes pass rim integrity and rotate only about0.2degrees; difference lies in YAM GPU integration/configuration.",
+    "next": "CPU100us convergence and ordinary pickup; no successful repair yet."
   }
 }

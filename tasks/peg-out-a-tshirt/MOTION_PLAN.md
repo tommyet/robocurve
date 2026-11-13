@@ -7,7 +7,7 @@ standard camera/joint observation for online corrections.
 
 1. Let the loose garment settle over the laundry support. Confirm the hem is
    exposed, the cloth clears the support solids and the starting state is at
-   rest. Both pegs start closed and are freely movable.
+   rest. Both freely moving pegs start clipped to the empty line, with handles down.
 2. Approach the two exposed hem corners from in front, close vertically across both fabric layers,
    pull the fabric away from the support, then lift. The current 21-second
    grasp/release diagnostic tests only this contact stage; it is not a hanging
@@ -17,9 +17,9 @@ standard camera/joint observation for online corrections.
 3. Lift the garment high enough to clear the board and carry the hem toward
    the line. Keep one corner supported while positioning the first fastening
    site; do not rely on an invented cloth-to-hand attachment.
-4. With one arm retaining the garment, the other grasps a peg by its handles.
+4. With one arm retaining the garment, the other approaches the handles of a spare peg already on the line.
    Squeezing the handles must open the two real jaws through their hinge.
-   Place the open mouth around the line and fabric, then release the handles
+   Feed the fabric into the open mouth beside the line, then release the handles
    so the passive spring closes the peg. Hand clearance and retained fabric
    must be visible; merely moving a closed peg nearby earns no credit.
 5. Release the first cloth grasp only after the physical first peg supports

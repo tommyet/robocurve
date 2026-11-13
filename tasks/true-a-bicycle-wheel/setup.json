@@ -24,66 +24,72 @@
     "spoke_diameter_m": 0.002,
     "hub_flange_diameter_m": 0.05,
     "hub_flange_spacing_m": 0.05,
-    "nipples": "Brass, 12 mm long, 3.23 mm square wrench flats, nominal 0.454 mm thread pitch",
+    "nipples": "Brass, 12 mm total length: 6 mm square flats of 3.23 mm width, followed by a 6 mm barrel of 3 mm diameter into the rim bearing. Flat centre is 16 mm inward from the rim centreline along the spoke; nominal thread pitch 0.454 mm.",
     "starting_spoke_turn_offsets": {
-      "0": -1.1,
-      "2": -1.1,
-      "4": -1.1,
-      "6": -1.1
+      "0": -0.75,
+      "2": -0.75
     },
-    "reset_note": "The four offsets are relative to the same nominal 700 N balanced reference; other offsets are zero. Label spoke 0 at the bottom; number around the rim counterclockwise viewed from +x. This is a proposed engineering reset, not calibrated commercial-wheel tension data."
+    "reset_note": "Nipples0 and2 are0.75turn loose relative to the nominal700N reference; other offsets zero. Spoke0 starts at the bottom. The native0.3s settling check yields0.889mm runout and190\u2013647N tension, so the start earns zero. Engineering fixture, not calibrated commercial-wheel data.",
+    "robot_plan_candidate": {
+      "native_validated": false,
+      "clocking_deg": 50,
+      "square_flat_phase_deg": 45,
+      "note": "Explicit diagnostic layout only; default scene clocking and flat phase remain zero."
+    },
+    "axle_geometry": {
+      "length_m": 0.1,
+      "diameter_m": 0.01,
+      "center_m": [
+        0.365,
+        0,
+        1.005
+      ],
+      "note": "Front end x=.315, rear end x=.415; fixed far-side truing stand clamps the rear end."
+    }
   },
   "stand": {
     "material": "steel",
     "base_center_m": [
-      0.35,
-      0.1,
+      0.48,
+      0.02,
       0.7575
     ],
     "base_size_m": [
-      0.18,
-      0.5,
+      0.14,
+      0.25,
       0.02
     ],
-    "upright_x_m": [
-      0.285,
-      0.415
+    "upright_center_m": [
+      0.48,
+      0,
+      0.88625
     ],
     "upright_size_m": [
-      0.015,
+      0.025,
       0.025,
       0.2375
     ],
-    "attachment": "Base bolted to table; uprights stand240mm behind axle, with top arms extending forward to clamp axle ends. Hub rotates on its bearings; bottom nipple/tool sweep remains open.",
-    "pointer": "Steel20\u00d72\u00d72mm pointer beside the bottom rim; the gap is measured with feeler gauges. No initial rim contact.",
-    "upright_y_m": 0.24,
-    "axle_arm_centres_m": [
-      [
-        0.285,
-        0.12,
-        1.005
-      ],
-      [
-        0.415,
-        0.12,
-        1.005
-      ]
+    "axle_arm_center_m": [
+      0.4475,
+      0,
+      1.005
     ],
     "axle_arm_size_m": [
-      0.015,
-      0.24,
+      0.065,
+      0.025,
       0.015
-    ]
+    ],
+    "attachment": "Single-sided cantilever stand bolted to table, clamping the far axle end at x=.415m. Hub remains free on bearings; no active brake or wheel attachment to the robot.",
+    "pointer": "Steel20\u00d72\u00d72mm pointer beside bottom rim; gap measured with feeler gauges. No initial rim contact."
   },
   "wrench": {
-    "material": "steel jaw, polymer handle",
+    "material": "Steel jaw and 175 mm neck, steel tang inside polymer grip",
     "jaw_slot_m": 0.00325,
-    "handle_length_m": 0.08,
-    "handle_diameter_m": 0.016,
-    "mass_kg": 0.045,
+    "handle_length_m": 0.055,
+    "mass_kg": 0.09,
     "handle_center_m": [
       0.2,
-      -0.2,
+      -0.2125,
       0.7555
     ],
     "long_axis_direction": [
@@ -91,10 +97,25 @@
       1.0,
       0.0
     ],
-    "start": "Lying flat, jaw toward +y; not attached to the robot or nipple.",
+    "start": "Lying flat, slot centre at (0.20, -0.005, 0.7555) m and mouth toward +y; free from robot and nipple.",
     "mouth_width_m": 0.005,
     "lead_in_length_m": 0.006,
-    "jaw_thickness_m": 0.004
+    "jaw_thickness_m": 0.004,
+    "overall_length_m": 0.243,
+    "handle_cross_section_m": [
+      0.016,
+      0.016
+    ],
+    "neck_size_m": [
+      0.01,
+      0.175,
+      0.004
+    ],
+    "slot_to_grip_tcp_m": [
+      0,
+      -0.195,
+      0.011
+    ]
   },
   "assessor_tools": "0.1 mm feeler gauges, millimetre ruler, camera and mechanical spoke tensiometer with2mm round-steel conversion chart; used for judging, not available to the policy."
 }

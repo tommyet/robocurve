@@ -60,6 +60,44 @@ developers and their agents, not a competition submission document.
 
 ## Review findings
 
+### 2026-11-13 — native batches033–037, active completion session
+
+- One RTX6000Ada Pod is active at $1.09/hour. At06:29UTC its elapsed
+  compute estimate was $6.23, plus the earlier compatibility test and small
+  temporary disk charge. Account billing remains inaccessible. Full inventory,
+  rate, budget and the local stop watchdog were checked; deadline07:14UTC.
+- Two isolated source snapshots can run concurrently on this Pod: observed
+  combined use was12GB VRAM,22GB host memory and about10 CPU cores. Never
+  overwrite a running snapshot. Use at most two simulator processes and keep
+  both bounded; this supersedes the earlier sequential-only starting policy.
+- CPU PhysX removes the wheel's YAM-only free-spin instability while retaining
+  GPU rendering. At100microsecond steps, the0.3-second gate keeps all integrity
+  checks valid and gives0.916mm lateral runout versus0.902mm at50microseconds.
+  Two YAM actions take about5seconds each. Full pickup remains under test.
+- Shirt035 physically opens a passive peg from2.72mm to8.32mm, holds it open,
+  closes it and leaves it on the line. The preceding carried-shirt approach
+  brushed the peg away. The next plan keeps the shirt260mm forward until the
+  opening is established. No hanging-shirt success has yet been demonstrated.
+- Tie035 removes the shoulder collision but the shallow narrow-end grasp slips
+  during the wrap. A deeper ordinary pinch is the next correction. A completed
+  knot is still missing.
+- Seam037's passive spring jaw seats at0.399739mm gap, about0.5N inferred
+  spring load, with all cloth nodes free. The old fixed0.3mm gap was physically
+  incompatible with the declared contact thickness. Needle-hole mesh strain
+  still fails after37.76ms; the graded mesh comparison keeps the same material.
+- Paper036's supporting pocket reduces the first invalid local membrane strain
+  to0.411%. This exceeds the elastic-domain warning, not a measured tearing
+  threshold. A bounded diagnostic observes whether it settles below1% without
+  crossing, rather than misreporting small local strain as torn paper.
+- Icing035 conserves its material and releases the dispenser, independently
+  scoring0.25: two valid shapes, one with continuous ridges. The incomplete,
+  uneven finish is not submission quality. Longer physical tails are prepared;
+  no material state or object pose is used by the robot policy.
+- No Dream calls, media uploads or upstream PRs have been made for this batch.
+  Preserve numeric records and local SHA-verified archives before stopping the
+  ephemeral Pod. Passing diagnostic gates is not a full-score demonstration.
+
+
 ### 2026-11-13 — native batches 028–032 and numerical corrections
 
 - All results through 032 are downloaded and SHA-256 verified, either as full

@@ -1,0 +1,98 @@
+{
+  "status": "CPU-authored passive fixture; native stability unrun",
+  "parameters": {
+    "mass_kg": 0.012,
+    "initial_gap_m": 0.0006,
+    "stiffness_n_m": 1250.0,
+    "damping_n_s_m": 8.0,
+    "force_limit_n": 0.6,
+    "opening_travel_m": 0.001,
+    "guide": "world-fixed X-axis prismatic bearing",
+    "target_displacement_m": -0.0006,
+    "lower_limit_m": -0.0006,
+    "upper_limit_m": 0.001,
+    "nominal_seated_load_n": 0.5,
+    "contact_thickness_m": 0.0004,
+    "cloth_attachments": false,
+    "runtime_target_changes": false
+  },
+  "fixture": [
+    {
+      "name": "clamp_front_jaw",
+      "size_m": [
+        0.006,
+        0.085,
+        0.016
+      ],
+      "center_m": [
+        0.2964,
+        0.0,
+        0.8975000000000001
+      ],
+      "mass_kg": null
+    },
+    {
+      "name": "clamp_moving_jaw",
+      "size_m": [
+        0.006,
+        0.085,
+        0.008
+      ],
+      "center_m": [
+        0.303,
+        0.0,
+        0.8935000000000001
+      ],
+      "mass_kg": 0.012
+    },
+    {
+      "name": "clamp_base",
+      "size_m": [
+        0.08,
+        0.11,
+        0.01
+      ],
+      "center_m": [
+        0.32,
+        0.0,
+        0.7525000000000001
+      ],
+      "mass_kg": null
+    },
+    {
+      "name": "clamp_post",
+      "size_m": [
+        0.012,
+        0.012,
+        0.148
+      ],
+      "center_m": [
+        0.32,
+        0.0,
+        0.8315
+      ],
+      "mass_kg": null
+    },
+    {
+      "name": "clamp_top_bridge",
+      "size_m": [
+        0.0326,
+        0.012,
+        0.004
+      ],
+      "center_m": [
+        0.3097,
+        0.0,
+        0.9035000000000001
+      ],
+      "mass_kg": null
+    }
+  ],
+  "checks": [
+    "The fixed face is tangent to the declared cloth collision thickness; moving face starts 0.20 mm clear.",
+    "Moving jaw full allowed sweep does not overlap any frame component.",
+    "Nominal damping exceeds critical damping for the free slider spring/mass.",
+    "Nominal seated friction capacity exceeds the two patches weight plus 0.25 N blade threshold; native load/retention remain unproven."
+  ],
+  "source_sha256": "a6f27b2c7a1a2d955c42c9f6c2bf49600c9b2715d33abb21d4e3944bd0a9c659"
+}

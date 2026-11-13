@@ -3,10 +3,11 @@ from scoring import score, CHECKS
 
 
 def record():
-    return {"schema": "staple-judging-v1", "checks": dict.fromkeys(CHECKS, True),
+    return {"schema": "staple-judging-v2", "checks": dict.fromkeys(CHECKS, True),
             "legs_clear_of_both_sheets": 2, "maximum_new_tear_mm": 0.,
             "any_new_damage_away_from_holes": False,
-            "final_sheet_gap_mm": 30., "release_seconds": 3.}
+            "initial_relative_corner_offset_mm": [0.,12.],
+            "final_relative_corner_offset_mm": [0.,42.], "release_seconds": 3.}
 
 
 class ScoringTests(unittest.TestCase):
@@ -30,11 +31,23 @@ class ScoringTests(unittest.TestCase):
         r["any_new_damage_away_from_holes"] = True
         self.assertEqual(score(r)["score"], 0.)
 
-    def test_missing_release_or_gap_only_partial(self):
-        for key in ("final_sheet_gap_mm", "release_seconds"):
-            r = record()
-            r[key] = 0.
-            self.assertEqual(score(r)["score"], .5)
+    def test_whole_stack_motion_does_not_prove_independent_sheets(self):
+        r=record();r['final_relative_corner_offset_mm']=[0.,12.]
+        self.assertEqual(score(r)['score'],.5)
+        r=record();r['release_seconds']=0.
+        self.assertEqual(score(r)['score'],.5)
+
+    def test_sliding_either_direction_counts_without_disjoint_sheets(self):
+        r=record();r['final_relative_corner_offset_mm']=[-30.,12.]
+        self.assertEqual(score(r)['score'],1.)
+        r['final_relative_corner_offset_mm']=[0.,-18.]
+        self.assertEqual(score(r)['score'],1.)
+
+    def test_initial_stagger_cannot_be_counted_as_new_motion(self):
+        r=record();r['final_relative_corner_offset_mm']=[0.,30.]
+        self.assertEqual(score(r)['score'],.5)
+        r['initial_relative_corner_offset_mm']=[0.,0.]
+        self.assertFalse(score(r)['record_valid'])
 
     def test_missing_or_nonfinite_observations_fail_closed(self):
         r = record()

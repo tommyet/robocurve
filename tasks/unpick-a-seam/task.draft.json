@@ -1,14 +1,19 @@
 {
   "title": "Unpick a seam without damaging the fabric",
   "category": "Impact on jobs",
-  "keywords": ["garment repair", "seam ripper", "flexible fabric", "selective cutting"],
+  "keywords": [
+    "garment repair",
+    "seam ripper",
+    "flexible fabric",
+    "selective cutting"
+  ],
   "instruction": "Remove the six tacking stitches joining the canvas patches. Separate the patches without cutting or tearing either one.",
   "context": "Repairing and reusing textiles requires removing embedded thread while preserving the surrounding fabric.",
-  "setup": "Two 75 x 80 x 0.4 mm cotton-canvas patches overlap by 20 mm. Six red 0.4 mm threads form separate tacking stitches through twelve 1.2 mm needle holes per patch. A 19 g seam ripper starts unheld beside the patches. Exact dimensions, fixed layout and thread geometry are in README.md.",
+  "setup": "Two flexible 75 × 80 × 0.4 mm cotton-canvas patches hang with a 20 mm overlap. Six red 0.8 mm polyester tacking loops pass through twelve 1.6 mm square needle holes per patch. A bench sewing clamp with a force-limited passive rear jaw holds the upper patch’s top 8 mm; the lower patch starts 20 mm above the table. A 19 g seam ripper lies unheld beside the fixture. Dimensions and positions are in README.md.",
   "scoring": "Draft: 0.25 for two released stitches, 0.5 for four, 0.75 for six, and 1.0 for all six plus 30 mm separation with no remaining thread bridge and the tool released. Any new cut or tear extending over 2 mm beyond an original hole makes the score zero. Cut events alone do not count as released stitches. See JUDGING.md.",
   "run_limit": "2,400 control steps (2 minutes at 20 Hz); proposed, not yet demonstrated.",
   "reset_notes": "Use a fresh pair of patches with six stitches in the same layout. Rebuild the native scene for each current development probe.",
-  "fidelity": "Development: two native flexible surface meshes with actual needle holes, joined by contact with six closed segmented thread loops. No cloth welds or proximity release. Blade contact force and duration can sever a thread joint. Thin-contact stability, complete stitch removal and damage detection are unverified; native cloth tearing is unsupported. No full robot demonstration exists.",
+  "fidelity": "Development: native flexible surface meshes with real needle openings, joined by contact with six segmented thread loops. A bench clamp supports one edge through contact, using a 12 g sliding jaw, fixed spring/damper and 0.6 N force cap. The ideal jaw guide is a mechanical fixture constraint; no cloth node is attached. Sustained blade contact can sever thread and restore the cut ends’ collisions. Fixture stability, full thread removal and damage assessment still need native validation. No full robot demonstration exists.",
   "scores": "Not run. CPU geometry and rule tests are not task scores.",
   "media": null
 }
