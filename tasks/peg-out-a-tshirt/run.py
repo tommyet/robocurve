@@ -119,6 +119,7 @@ def main():
     p.add_argument('--raised-support-diagnostic',action='store_true',help='Use an explicitly180mm laundry support and a measured lateral grasp; otherwise100mm')
     p.add_argument('--continuous-pad-diagnostic',action='store_true',help='Reobserve the garment at action100 and target the continuous finger pads with ordinary joint commands')
     p.add_argument('--surface-contact-diagnostic',action='store_true',help='Native speculative cloth CCD and eight collision-pair updates; unchanged cloth material and thickness')
+    p.add_argument('--contact-pinch-diagnostic',action='store_true',help='Ordinary jaw relief from measured pad penetration during the short cloth pickup; no attachments or state writes')
     p.add_argument('--reset-diagnostic',action='store_true',help='Read-only early reset native nodes and topology; unchanged reset physics')
     p.add_argument('--binary-cloth-trace',action='store_true',help='Preserve all native float32 cloth states in binary arrays, reducing diagnostic JSON overhead')
     p.add_argument('--solver-iterations',type=int,choices=(32,128),default=32,help='Native cloth numerical convergence diagnostic; material unchanged')
@@ -177,6 +178,8 @@ def main():
         p.error('State-assisted reset grasp requires at least200 scripted motion actions')
     if args.continuous_pad_diagnostic and not (args.state_assisted_grasp and args.raised_support_diagnostic):
         p.error('Continuous-pad diagnostic requires the raised-support scripted grasp')
+    if args.contact_pinch_diagnostic and not (args.continuous_pad_diagnostic and args.surface_contact_diagnostic and args.steps==320):
+        p.error('Contact pinch is restricted to the320-action surface-contact pickup diagnostic')
     if args.state_assisted_clip and (args.mode!='motion-probe' or args.steps<940 or args.joint_feedback_from!=700):
         p.error('State-assisted clip requires the tracked first-clip sequence through at least940 actions')
     if not 0<=args.seed<2**32:
@@ -361,6 +364,8 @@ def main():
                 raise ValueError('Fixed trajectory exceeds normal joint/gripper speed limits')
         from joint_tracking import JointTracking
         tracking=JointTracking()
+        from contact_pinch import ContactPinch
+        pinch=ContactPinch() if args.contact_pinch_diagnostic else None
         from scripted_clip import PegMouthServo
         clip_window=fixed_plan.get('clip_servo_window',[820,880]) if fixed_plan is not None else [820,880]
         clip_servo=PegMouthServo(start=clip_window[0],end=clip_window[1]) if args.state_assisted_clip else None
@@ -441,6 +446,16 @@ def main():
             if fixed_actions is not None:
                 reference_action=fixed_actions[step-1].copy()
                 observed=np.asarray(emb._observation().state['joint_pos'],float)
+                if pinch is not None and step>=141:
+                    cloth_nodes=arena_cloth.state(emb._env,'tshirt').nodes
+                    for index,side in enumerate(('left','right')):
+                        robot=base.scene[side+'_robot']
+                        poses=dict(zip(robot.body_names,arr(robot.data.body_link_pose_w)[0]))
+                        joint=7*index+6
+                        releasing=side=='right' and step>260
+                        reference_action[joint]=pinch.action(side,reference_action[joint],observed[joint],
+                            cloth_nodes,poses,step,release=releasing)
+                    report['contact_pinch_feedback']=pinch.records
                 if clip_servo is not None:
                     from arena_props import peg_state
                     body_poses=peg_state(emb._env,'left_peg').body_poses if clip_servo.start<step<=clip_servo.end+1 else None

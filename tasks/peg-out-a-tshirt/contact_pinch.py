@@ -34,7 +34,7 @@ class ContactPinch:
 
     A caller must hold the ordinary arm pose while establishing contact; the
     fixed trajectory must not simply advance into its lift before this closes.
-    This helper is deliberately not wired into the runner. Native node overlap
+    The runner enables it only in an explicitly selected diagnostic. Native node overlap
     is a compression diagnostic, not a force measurement or a grasp certificate.
     """
     def __init__(self, close_slew=.003, open_slew=.006):

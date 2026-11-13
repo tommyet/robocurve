@@ -29,6 +29,28 @@ developers and their agents, not a competition submission document.
 
 ## 2026-11-13 — contact fixes during authorized completion
 
+- At18:28UTC the two current Pods total about$2.14 estimated compute; combined
+  with the preserved previous$14.55 estimate this is about$16.69. Both independent
+  stop watchdogs were verified and renewed to19:13UTC. Billing remains unavailable.
+- Wheel127 completes652 actions but does not repair the wheel. Nipple0 turns
+  from-0.752 to about-0.568turn, then slips and unwinds to-0.871turn during
+  withdrawal. Native sampled geometry has one marginal0.203mm spoke-enclosure
+  intersection at589; the main observed problem is tracking/grip loss. Wrench
+  error grows to4.6mm and its grasp rotates16.5degrees by530. Candidate144 adds
+  the already unit-tested native-drive D/K velocity feedforward through bounded
+  ordinary targets from431; actuator limits and wheel physics are unchanged.
+- Shirt139 retains the hem with no transverse cloth crossings in nine sampled
+  states, but left-finger node penetration reaches0.984mm. Candidate143 tests
+  bounded ordinary jaw relief. The old first-peg route collides with the taller
+  laundry board (515 flagged hull samples); it cannot be reused unmodified.
+- Seam140's fresh robot trial with correctly cooked convex capsules gets past
+  the prior guard failure, but stops at280 for5.45% cloth stretch with no cut.
+  Blade force peaks at0.033N, below the unchanged0.25N/40ms cutting law.144 tests
+ 1920Hz against960Hz with unchanged geometry/material and validity thresholds.
+- Tie141 stops before the handoff: a stale future hold in the new regrasp
+  suffix violates the speed guard. The fix replaces unplanned suffix holds
+  with the just-planned measured endpoint, with three regression tests.143
+  reruns the full fresh episode; the earlier131 handoff remains valid evidence.
 - A second Pod x6benni8rtvknu started17:31UTC, also$1.09/hour. Both run
   bounded jobs with independent local stop watchdogs. At17:57, full inventory
   contains only these two active Pods; new-session estimated compute is$1.00.

@@ -369,6 +369,11 @@ def main():
                 (args.out/'handoff-cloth-approach-audit.json').write_text(json.dumps(selected['approach'],indent=2)+'\n')
                 report['handoff_route_selection']=selected['selection']
                 fixed_plan['frames'][280:580]=continuation['frames'];fixed_plan['handoff_calibration']=continuation['grasp']
+                if args.state_assisted_regrasp:
+                    # The unplanned suffix must hold this measured endpoint,
+                    # not the stale endpoint from the initial template.
+                    from adaptive_plan import hold_suffix
+                    hold_suffix(fixed_plan['frames'],580)
                 fixed_actions=np.asarray([f['action14'] for f in fixed_plan['frames']],float)
                 if np.any(fixed_actions<emb._low) or np.any(fixed_actions>emb._high):raise ValueError('Receiving trajectory exceeds normal joint limits')
                 if np.any(np.abs(np.diff(fixed_actions[279:],axis=0))>delta_limit*1.001):raise ValueError('Receiving trajectory exceeds normal action speeds')
@@ -394,6 +399,8 @@ def main():
                     (args.out/'regrasp-cloth-approach.json').write_text(json.dumps(dict(blocked=blocked,intended=intended),indent=2)+'\n')
                     if blocked:raise RuntimeError('Regrasp approach crosses material outside its selected pinch patch')
                 fixed_plan['frames'][step-1:step-1+len(fragment['frames'])]=fragment['frames']
+                from adaptive_plan import hold_suffix
+                hold_suffix(fixed_plan['frames'],step-1+len(fragment['frames']))
                 fixed_actions=np.asarray([f['action14'] for f in fixed_plan['frames']],float)
                 if np.any(fixed_actions<emb._low) or np.any(fixed_actions>emb._high):raise ValueError('Regrasp exceeds joint bounds')
                 if np.any(abs(np.diff(fixed_actions,axis=0))>delta_limit*1.001):raise ValueError('Regrasp exceeds ordinary action speeds')

@@ -20,6 +20,7 @@ def main():
     p.add_argument('--no-rewind-diagnostic',action='store_true',help='Preserve constructor native state; not a repeatable task reset')
     p.add_argument('--freeze-thread-diagnostic',action='store_true',help='Isolate native assembly without custom thread writes or torques')
     p.add_argument('--joint-tracking-diagnostic',action='store_true',help='Bounded integral tracking from ordinary robot joint measurements only; requires --plan')
+    p.add_argument('--joint-velocity-feedforward-from',type=int,help='From this action add native drive D/K desired-velocity compensation through ordinary bounded joint targets')
     p.add_argument('--central-spring-candidate',action='store_true')
     p.add_argument('--batch-sdf-notices',action='store_true',help='Batch identical native Float updates; standalone paired501-state trajectory verified identical')
     p.add_argument('--solver-type',choices=('TGS','PGS'),default='TGS')
@@ -47,6 +48,8 @@ def main():
     if a.solver_type=='PGS' and (not a.central_spring_candidate or a.external_forces_once_diagnostic):
         p.error('PGS candidate requires the central spring and has no TGS force-integration override')
     if a.joint_tracking_diagnostic and a.plan is None:p.error('Joint tracking requires a frozen nominal plan')
+    if a.joint_velocity_feedforward_from is not None and (not a.joint_tracking_diagnostic or a.joint_velocity_feedforward_from<1):
+        p.error('Velocity feedforward requires joint tracking and a positive start action')
     if a.tool_pose_servo_diagnostic and (a.plan is None or not a.joint_tracking_diagnostic):
         p.error('Tool pose servo requires a plan and bounded joint tracking')
     if a.nipple_target_servo_diagnostic and not a.tool_pose_servo_diagnostic:p.error('Nipple targeting requires tool pose servo')
@@ -72,6 +75,7 @@ def main():
         'robot_demo': False, 'dream_requests': 0, 'requested_steps': a.steps,
         'policy':'Dream with ordinary camera/joint observations' if a.dream else 'scripted or ready joint targets',
         'requested_device':a.device,'joint_tracking_diagnostic':a.joint_tracking_diagnostic,
+        'joint_velocity_feedforward_from':a.joint_velocity_feedforward_from,
         'external_forces_once_diagnostic':a.external_forces_once_diagnostic,
         'no_rewind_diagnostic':a.no_rewind_diagnostic,'freeze_thread_diagnostic':a.freeze_thread_diagnostic,
         'preloaded_reset_candidate':a.preloaded_reset_candidate,
@@ -231,7 +235,13 @@ def main():
                 if dream_policy is not None:
                     from dream_policy import bounded_action
                     issued=bounded_action(target,issued,emb._low,emb._high,limit)
-                else:issued=target if tracker is None else tracker.command(target,np.asarray(observation.state['joint_pos']))
+                else:
+                    if tracker is not None and a.joint_velocity_feedforward_from is not None and step>=a.joint_velocity_feedforward_from:
+                        from yam_arena.constants import SHOULDER,WRIST
+                        tracker.damping_over_stiffness_s[:]=np.tile(
+                            [SHOULDER['damping']/SHOULDER['stiffness']]*3+
+                            [WRIST['damping']/WRIST['stiffness']]*3+[0.],2)
+                    issued=target if tracker is None else tracker.command(target,np.asarray(observation.state['joint_pos']))
                 command=torch.as_tensor(issued[None],device=base.device,dtype=torch.float32)
                 tick=time.perf_counter();emb._env.step(command)
                 report['control_step_wall_seconds'].append(time.perf_counter()-tick)
