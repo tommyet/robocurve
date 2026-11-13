@@ -20,7 +20,7 @@ All guide marks are 0.1 mm thick.
 Use a hand-operated 20 ml plastic icing syringe with a passive sliding piston
 and a stainless steel six-point star nozzle. Nominal barrel grip: 30 × 80 × 30 mm; piston diameter:
 25 mm; maximum stroke: 40.74 mm. The nozzle is 40 mm long, tapering to a hollow
-star aperture with a 2.5 mm mean radius. The model starts with 20 ml of icing.
+star aperture with a 2.5 mm mean radius, six lobes, and radial limits of 1.625–3.375 mm. The metal outer radius is 4 mm (minimum wall 0.625 mm). The model starts with 20 ml of icing.
 Its barrel begins at (0.180, −0.160, 0.7775) m, nozzle along −Y; the plunger centre
 is at (0.180, −0.100, 0.7775) m, 60 mm behind it. Both bodies start at yaw 180°.
 A 50 × 40 × 15 mm plastic rest at (0.180, −0.160, 0.755) m supports the dispenser. The tool starts
@@ -174,3 +174,5 @@ but do not demonstrate a full border. See
 The next fixed trajectory uses continuous tail motion: two smoothstep segments
 had unintentionally stopped the nozzle halfway through the tail. The material
 and scoring thresholds are unchanged.
+
+Trial095 completes838actions at240Hz with clean release and scores0.5: three valid shells across49mm, two with qualifying ridges. Exact input replay matches native material state. The next hardware candidate deepens the star aperture from28% to35% of mean radius; its identical-pose diagnostic yields ridge lengths10.5,3.5and4mm. This changes both physical metal geometry and the material aperture, without changing cream properties or scoring. It still needs a native robot demonstration.

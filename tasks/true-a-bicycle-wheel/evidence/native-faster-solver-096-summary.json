@@ -1,0 +1,43 @@
+{
+  "kind": "native_wheel_faster_solver_comparison",
+  "promoted": false,
+  "task_score": null,
+  "dt_s": 0.0002,
+  "position_iterations": 255,
+  "reference_dt_s": 0.0001,
+  "reference_position_iterations": 128,
+  "final_tension_range_n": [
+    326.5979245738261,
+    362.94274752961275
+  ],
+  "reference_final_tension_range_n": [
+    410.45,
+    423.26
+  ],
+  "unchanged_scoring_tension_range_n": [
+    400,
+    1000
+  ],
+  "wall_seconds": 23.559513734653592,
+  "timing": {
+    "material_s": 6.548980796709657,
+    "native_simulation_s": 8.976665236987174,
+    "observation_s": 0.8180553922429681,
+    "checkpoint_s": 3.741340918466449
+  },
+  "rim_integrity": {
+    "valid": true,
+    "steps": 2500,
+    "first_failure": null,
+    "maximum_axial_bending_strain": 0.0008178354688232253,
+    "maximum_twist_rad": 3.995520384842098e-06,
+    "maximum_locked_joint_gap_m": 9.782964939981978e-06,
+    "peaks": {
+      "maximum_axial_bending_strain": 0.0008384377726554937,
+      "maximum_twist_rad": 4.320113564991133e-06,
+      "maximum_locked_joint_gap_m": 1.0056877955568648e-05
+    }
+  },
+  "interpretation": "Completed and bounded but under-resolves preload. Do not promote or lower the400N floor. Retain100us128iterations for native robot trials.",
+  "native_report_sha256": "377dde170b40520dcbc8f430f476db62b42aa9cdcf1046cdbb25620ba85ba6ee"
+}

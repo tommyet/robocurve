@@ -37,6 +37,8 @@ class CoordinateTests(unittest.TestCase):
         self.assertEqual(pose.position_xyz,(.303,0.,.8737))
         self.assertIs(params['pose'],pose)
         self.assertEqual(cfg.events.jaw.params['pose'].rotation_xyzw,pose.rotation_xyzw)
+        self.assertTrue(all(type(x) is float for x in cfg.events.jaw.params['pose'].position_xyz))
+        self.assertTrue(all(type(x) is float for x in cfg.scene.jaw.init_state.pos))
         self.assertEqual(sum(row['kind']=='world_reset_pose' for row in frame.CONFIG_AUDIT),1)
         p=np.array((.29558279,.027,.8127))
         np.testing.assert_allclose(frame.to_station(frame.to_native(p)),p,atol=1e-15)

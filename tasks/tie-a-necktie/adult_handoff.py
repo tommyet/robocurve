@@ -37,10 +37,19 @@ def raise_for_transfer(start_action):
     return _compile(start_action,[(3.,'right',(.30,-.16,1.30),0.,yaw_rotation(30.),'raise and turn held wide strip for tip transfer','cartesian')])
 
 
-def receive_tip(start_action,rest,nodes):
+def receive_tip(start_action,rest,nodes,approach_tilt_degrees=10.):
     from adult_motion import grasp_frame
     from cross_motion import yaw_rotation
-    grasp=grasp_frame(rest,nodes,longitudinal=.03,side='left');target=np.asarray(grasp['target_tcp_m']);R=np.asarray(grasp['rotation'])
+    grasp=grasp_frame(rest,nodes,longitudinal=.03,side='left')
+    if not -20. <= approach_tilt_degrees <= 20.:
+        raise ValueError('Receiving tilt exceeds the bounded planning range')
+    angle=np.deg2rad(approach_tilt_degrees)
+    # Rotate the approach within the material plane. The closing normal is
+    # unchanged; this moves the forearm clear of the loose narrow strand.
+    turn=np.array([[1.,0.,0.],[0.,np.cos(angle),-np.sin(angle)],[0.,np.sin(angle),np.cos(angle)]])
+    R=np.asarray(grasp['rotation'])@turn
+    target=np.asarray(grasp['center_m'])+.020*R[:,2]
+    grasp.update(rotation=R.tolist(),target_tcp_m=target.tolist(),approach_tilt_degrees=float(approach_tilt_degrees))
     if not (.20<target[0]<.39 and -.25<target[1]<-.06 and .80<target[2]<1.02):raise ValueError('Measured wide tip lies outside the receiving workspace: '+repr(target.tolist()))
     schedule=[(2.,'left',(.18,.25,1.03),.6,yaw_rotation(90.),'withdraw in front of both strands','joint'),
         (2.,'left',(.17,-.20,.94),.6,yaw_rotation(180.),'cross open front space','cartesian'),
@@ -75,3 +84,57 @@ def classify_receiving_contacts(hits,rest,faces):
         if good:intended.append(dict(sample,hits=good))
         if bad:blocked.append(dict(sample,hits=bad))
     return blocked,intended
+
+
+def select_receiving_plan(start_action, rest, nodes, faces, half_thickness):
+    """Choose a clear ordinary approach from the measured loose cloth.
+
+    Two millimetres is a route preference, never an acceptance threshold. The
+    blocking check uses the actual shell half-thickness. A fallback may use
+    closer surface clearance; all proximity warnings remain in the audit.
+    """
+    from audit_adult_motion import audit
+    from audit_reset_approach import screen
+    if not 0. < half_thickness <= .002:
+        raise ValueError('Invalid material half-thickness')
+    records=[];fallback=[]
+    def validate(plan, entry):
+        rigid=audit(plan)
+        entry['rigid_intersections']=len(rigid['violations'])
+        if not rigid['passed']:
+            return None
+        steps=range(1,plan['approach_steps']+1)
+        hits=screen(plan,nodes,faces,steps=steps,side='left',inflation=half_thickness)
+        blocked,intended=classify_receiving_contacts(hits,rest,faces)
+        entry['forbidden_shell_contact_samples']=len(blocked)
+        if blocked:
+            return None
+        proximity=screen(plan,nodes,faces,steps=steps,side='left',inflation=.001)
+        approach=dict(samples=plan['approach_steps'],inflation_m=half_thickness,
+            proximity_inflation_m=.001,proximity_warnings=proximity,
+            raw_intersections=hits,blocked_intersections=blocked,
+            intended_finger_contact=intended)
+        return dict(plan=plan,rigid=rigid,approach=approach,candidates=records)
+    for tilt in (10.,-10.,-20.,0.):
+        entry=dict(approach_tilt_degrees=tilt);records.append(entry)
+        try:
+            plan=receive_tip(start_action,rest,nodes,approach_tilt_degrees=tilt)
+        except ValueError as exc:
+            entry['kinematic_error']=str(exc)
+            continue
+        near=screen(plan,nodes,faces,steps=range(116,121),side='left',inflation=.002)
+        blocked,_=classify_receiving_contacts(near,rest,faces)
+        entry['two_mm_final_approach_warning_samples']=len(blocked)
+        if blocked:
+            fallback.append((plan,entry))
+            continue
+        selected=validate(plan,entry)
+        if selected is not None:
+            selected['selection']='Clear physical route with additional final-approach separation'
+            return selected
+    for plan,entry in fallback:
+        selected=validate(plan,entry)
+        if selected is not None:
+            selected['selection']='Physical shell-clear route; extra proximity warnings retained'
+            return selected
+    return dict(plan=None,candidates=records)

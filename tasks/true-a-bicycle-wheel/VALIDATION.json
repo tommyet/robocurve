@@ -2,17 +2,15 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "61 CPU checks pass. PGS128 corrected-state control preserves410\u2013423N preload and2.68um runout. Native085 stops at approach command159 before tightening; a bounded physical-mouth IK allowance passes offline202-command replay and44-frame measured-geometry hull screen. Complete repair/released revolution remains unproven.",
+  "cpu_checks": "61 CPU checks pass. Native091 completes202actions with clean sampled collision/integrity checks, but the requested90-degree turn achieves only22.86degrees net: motor tracking lag loses wrench engagement. The slower380action first-quarter candidate remains unvalidated.",
   "simulator_probe": null,
   "demo": null,
   "dream": null,
   "media": null,
   "blocking_items": [
-    "Validate unbiased native spoke forces and reproducible passive wheel settling",
-    "Validate finite-load wrench engagement without excessive jaw penetration",
-    "Run the collision-screened replacement service route with ordinary robot joint-state tracking",
-    "Complete released-wheel revolution and final spoke-tension judging",
-    "Full-score ordinary robot demo, Dream baseline and final media"
+    "Demonstrate sustained native wrench engagement and full tightening under ordinary robot effort limits",
+    "Complete the repair, release, and full-revolution numeric judging",
+    "Full-score scripted demo, ordinary Dream baseline, review and final media"
   ],
   "status": "development_not_submission_ready",
   "native_probe": {
@@ -603,5 +601,93 @@
       "Assumes the measured grip persists",
       "Rigidly indexes measured wheel shape; no future contact/deformation prediction"
     ]
+  },
+  "latest_native_robot_trial": {
+    "kind": "native_first_quarter_tracking_diagnostic",
+    "submission_ready": false,
+    "score": null,
+    "run_status": "complete",
+    "completed_actions": 202,
+    "wall_seconds": 825.1425321027637,
+    "physical_settings": "CPU PGS128/4,100us,central tension spring with25mm native-tolerance compensation",
+    "nipple0_initial_turns": -0.7500000026694886,
+    "nipple0_final_turns": -0.6864921901961992,
+    "nipple0_net_change_turns": 0.0635078124732894,
+    "minimum_nipple0_turns": -0.998652278694392,
+    "maximum_tool_tracking_error_m": 0.1127575425776447,
+    "maximum_arm_tracking_error_rad": 0.6481115992912505,
+    "final_geometry": {
+      "lateral_runout_m": 0.0009056046123268602,
+      "radial_runout_upper_bound_m": 0.00021077663127267,
+      "dish_offset_m": 1.1093774025694447e-05,
+      "minimum_tension_n": 112.5844000624215,
+      "maximum_tension_n": 615.4177318575418
+    },
+    "rim_integrity": {
+      "valid": true,
+      "steps": 101002,
+      "first_failure": null,
+      "maximum_axial_bending_strain": 0.0010388688811638605,
+      "maximum_twist_rad": 0.0004429234674062485,
+      "maximum_locked_joint_gap_m": 3.4639316789204698e-06,
+      "peaks": {
+        "maximum_axial_bending_strain": 0.001447618407474323,
+        "maximum_twist_rad": 0.001138482175650244,
+        "maximum_locked_joint_gap_m": 1.968611917256832e-05
+      }
+    },
+    "native_geometry_samples": 203,
+    "unexpected_intersections": 0,
+    "interpretation": "Native contact moves the nipple, but trajectory lag causes initial loosening and lost engagement. Only22.86degrees net tightening, not the requested90degrees. No full task demo or success claim.",
+    "next": "Same physics and actuator limits; first160actionsunchanged, then slower insertion/turn with ordinary settling holds.",
+    "sha256": {
+      "preview.json": "5d54c083a08443e25af1a9253d04c6823925bcb6f372e9ddac26a148597d0190",
+      "trace.jsonl.gz": "4ec5971e0d373920ed627ead22baa16ee5d4aa2fe4c2dec900bf332185e8c292",
+      "wheel091-geometric-evidence.json": "47d806ea9f39314460dd6a660459d186accb248b8aa2b280d291912ee91f3e3d",
+      "wheel091-native-geometry-audit.json": "af76b04a8ed380fcfe90ec370d86df00ebf1721148f3f0f2144f0b192821653f"
+    }
+  },
+  "faster_solver_096": {
+    "kind": "native_wheel_faster_solver_comparison",
+    "promoted": false,
+    "task_score": null,
+    "dt_s": 0.0002,
+    "position_iterations": 255,
+    "reference_dt_s": 0.0001,
+    "reference_position_iterations": 128,
+    "final_tension_range_n": [
+      326.5979245738261,
+      362.94274752961275
+    ],
+    "reference_final_tension_range_n": [
+      410.45,
+      423.26
+    ],
+    "unchanged_scoring_tension_range_n": [
+      400,
+      1000
+    ],
+    "wall_seconds": 23.559513734653592,
+    "timing": {
+      "material_s": 6.548980796709657,
+      "native_simulation_s": 8.976665236987174,
+      "observation_s": 0.8180553922429681,
+      "checkpoint_s": 3.741340918466449
+    },
+    "rim_integrity": {
+      "valid": true,
+      "steps": 2500,
+      "first_failure": null,
+      "maximum_axial_bending_strain": 0.0008178354688232253,
+      "maximum_twist_rad": 3.995520384842098e-06,
+      "maximum_locked_joint_gap_m": 9.782964939981978e-06,
+      "peaks": {
+        "maximum_axial_bending_strain": 0.0008384377726554937,
+        "maximum_twist_rad": 4.320113564991133e-06,
+        "maximum_locked_joint_gap_m": 1.0056877955568648e-05
+      }
+    },
+    "interpretation": "Completed and bounded but under-resolves preload. Do not promote or lower the400N floor. Retain100us128iterations for native robot trials.",
+    "native_report_sha256": "377dde170b40520dcbc8f430f476db62b42aa9cdcf1046cdbb25620ba85ba6ee"
   }
 }

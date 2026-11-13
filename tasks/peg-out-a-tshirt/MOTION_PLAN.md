@@ -12,7 +12,9 @@ No controller writes cloth or prop poses, adds attachments or changes forces.
 2. Pinch the two exposed hem corners, pull clear of the support and lift.
    Coarser-mesh carry demonstrations worked, but the regular-mesh shirt has
    passed through a finger pad when one hand releases. The current short
-   control tests 128 cloth solver iterations with the same finite pinch.
+   128-iteration trial retained the hem but still compressed some material
+   into a native finger collider. The next short control widens the ordinary
+   pinch target from 0.010 to 0.018, with the same physics and trajectory.
    A full sequence stops early if the hem plainly leaves the retaining hand.
 3. Keep the shirt forward of the line. Use the free hand to squeeze a spare
    peg's handles, remove it from the line and turn its open jaws downward.
@@ -25,7 +27,12 @@ No controller writes cloth or prop poses, adds attachments or changes forces.
    Then exchange roles: pick up the other free hem corner, open the spare peg
    and clip from above. The peg separation must be at least 180 mm. The
    mirrored second-peg fragment is only a planning aid; it needs the actual
-   supported shirt state and a physical pickup.
+   supported shirt state and a physical pickup. Its complete 980-action route
+   includes the measured peg alignment and final hold. A candidate episode
+   budget is 1,180 actions through the first release, 150 for the second cloth
+   pickup, about 60 to join the continuation and 980 for the second clip:
+   2,370 actions in total. Reach, cloth tension and physical retention may
+   require changes; this is not a validated full sequence.
 6. Withdraw both hands. Record five seconds with the whole shirt at least
    20 mm clear of table and floor, supported only by the line and pegs.
    Judge jaw/line/fabric capture from close views and the released hold.

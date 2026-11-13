@@ -14,8 +14,10 @@ cloth, add attachments, change material rest lengths or apply hidden forces.
    collar contact. The source-authored reset shape comes from recorded gravity
    settling; it contains no knot.
 2. Lift the wide strand and physically transfer its tip to the other hand.
-   The adult pickup is proven. The receiving approach is still being tested;
-   a temporary review-camera occlusion stopped batch086 before its pinch.
+   The adult pickup is proven. The receiving approach is still being tested.
+   Its measured fabric plane now guides a small wrist tilt to clear the loose
+   narrow tip; this preserves the closing plane and physical bite depth.
+   Extra proximity warnings are separate from actual shell intersections.
 3. Take a near-tip grasp with the hand that has a clear wrapping route. The
    other hand then stabilizes the narrow end without pulling it taut. Reach
    and actual cloth contact must pass before the next stage.

@@ -1,0 +1,165 @@
+{
+  "date": "2026-11-13",
+  "status": "native_yam_reset_and_two_action_bridge_pass",
+  "score": null,
+  "archive_sha256": "ed74280679524f5ff89cb129a9b0961ccd48972f8198680a402a4ef7c74112e4",
+  "configuration": "CPU TGS, sweep CCD,960Hz, one velocity iteration, once-per-step forces; recentered supported/backed passive clamp,0.4mm box panels,24-link0.8mm threads with passive bending;5% engineering strain envelope",
+  "measurements": {
+    "status": "complete",
+    "completed_steps": 2,
+    "audited_physics_substeps": 96,
+    "native_tensor_device": "cpu",
+    "reset_observations": {
+      "before": {
+        "physics_step_count": 0,
+        "left": {
+          "maximum_position_error_m": 0.0011414136250728877,
+          "maximum_speed_m_s": 0.07989182700656851
+        },
+        "right": {
+          "maximum_position_error_m": 0.0013181317203813385,
+          "maximum_speed_m_s": 0.027046007973940973
+        },
+        "maximum_thread_speed_m_s": 0.09852076321840286,
+        "maximum_thread_angular_speed_rad_s": 359.3506774902344,
+        "moving_jaw_pose": [
+          0.002797315828502178,
+          -2.4686343790319076e-16,
+          0.061000000685453415,
+          1.7161423259711263e-15,
+          2.104976349476262e-12,
+          1.5167509819457008e-15,
+          1.0
+        ],
+        "moving_jaw_velocity": [
+          -2.916403047947824e-07,
+          -2.5920599000528455e-11,
+          -5.611582309938967e-10,
+          2.1054651078156184e-11,
+          1.0785279158653793e-07,
+          -2.742365223795673e-10
+        ]
+      },
+      "after": {
+        "physics_step_count": 0,
+        "left": {
+          "maximum_position_error_m": 1.4694502286460314e-09,
+          "maximum_speed_m_s": 0.0
+        },
+        "right": {
+          "maximum_position_error_m": 1.469450126557252e-09,
+          "maximum_speed_m_s": 0.0
+        },
+        "maximum_thread_speed_m_s": 0.0,
+        "maximum_thread_angular_speed_rad_s": 0.0,
+        "moving_jaw_pose": [
+          0.003000000026077032,
+          0.0,
+          0.061000000685453415,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "moving_jaw_velocity": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "contact_audit": [
+      {
+        "valid": true,
+        "steps": 97,
+        "first_failure": null
+      },
+      {
+        "valid": true,
+        "steps": 97,
+        "first_failure": null
+      }
+    ],
+    "thread_joint_integrity": {
+      "maximum_closed_joint_gap_m": 1.75745039987135e-05,
+      "first_failure": null,
+      "valid": true
+    },
+    "closed_junction_contact_audit": [
+      {
+        "valid": true,
+        "steps": 97,
+        "first_failure": null
+      },
+      {
+        "valid": true,
+        "steps": 97,
+        "first_failure": null
+      }
+    ],
+    "strain": [
+      {
+        "maximum_principal_stretch": 1.0013518192678483,
+        "first_validity_excursion": null,
+        "first_2pct_warning": null,
+        "maximum_stretch_limit": 1.05
+      },
+      {
+        "maximum_principal_stretch": 1.001724666985162,
+        "first_validity_excursion": null,
+        "first_2pct_warning": null,
+        "maximum_stretch_limit": 1.05
+      }
+    ],
+    "facet_consistency": [
+      {
+        "maximum_hinge_endpoint_gap_m": 1.1696162679983436e-05,
+        "first_failure": null,
+        "valid": true,
+        "reads": 97,
+        "maximum_allowed_gap_m": 0.0001
+      },
+      {
+        "maximum_hinge_endpoint_gap_m": 4.027956165833905e-06,
+        "first_failure": null,
+        "valid": true,
+        "reads": 97,
+        "maximum_allowed_gap_m": 0.0001
+      }
+    ],
+    "wall_seconds": 27.738817881792784,
+    "measured_wall_timings_s": {
+      "readback": 0.09034441225230694,
+      "strain": 0.017365507781505585,
+      "crossing": 0.24272570200264454,
+      "junctions": 0.2362566450610757,
+      "crossing_poll": 2.781953662633896e-05,
+      "blade_damage": 0.014629603363573551,
+      "cutting": 0.012207777239382267,
+      "control_steps_total": 2.568413414992392,
+      "native_step_total": 0.0,
+      "scene_write_total": 0.0,
+      "scene_update_total": 0.0
+    }
+  },
+  "visual_review": "Overview renders the complete fixture, tool and two arms without private identifiers. Stitches are too small in this broad view for final judging; optional fixed close-up cameras are prepared but not yet rendered.",
+  "limits": [
+    "Only2 ready-hold actions/.1s after normal reset, no tool manipulation.",
+    "Every97 reset/substep audit passed; constructor-internal warmup was not audited.",
+    "No robot blade cut, extraction, task score or Dream trial."
+  ],
+  "files_sha256": {
+    "final-top_cam.png": "7673ce4da7a5247ca6e0b5c8cb43ca26d2e559d1976fa6236d6b98a74e276f9f",
+    "before-reset-state.npz": "a65682340c4826249135a7d8aa15369bab762427c818583137dac8e832e0a5bd",
+    "final-right_cam.png": "0d39806c180c9248ae0735375ee412df280042e28f8846e2796dae3e07e12532",
+    "last-measured-state.npz": "67777ad4ccd176db743481d54ac7df5cd92f8c5ab78240d48884bf659b5d3dac",
+    "after-reset-state.npz": "51bfbd8f9db323738613145b2ce15d1a4100822cca886b381b513c08824fa9d4",
+    "setup.png": "a097ea96edde5dea81ee2f2bffb00931e72b195c59320d50eb6c699556e396a8",
+    "preview.mp4": "8bc6d36eb3e2ed6e60b929eaf6430fd56446b2d5c5657ccbe7529762c98732b2",
+    "final-left_cam.png": "3f80c71bb084287815ed2f6bf38f29ce6622aee640d642aea5a1531e1f5041cd",
+    "preview.json": "41ff48a1aa53ca50a768ecbb1163848abc4b53269be064452fe8772b820111d7"
+  }
+}

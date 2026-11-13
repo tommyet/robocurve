@@ -329,20 +329,18 @@ def main():
         command=torch.as_tensor(ready[None,:],device=base.device,dtype=torch.float32)
         for step in range(1,args.steps+1):
             if args.state_assisted_handoff and step==281:
-                from adult_handoff import receive_tip,classify_receiving_contacts
-                from audit_adult_motion import audit
-                from audit_reset_approach import screen
+                from adult_handoff import select_receiving_plan
                 native=arena_cloth.state(emb._env,'tie');mesh=arena_cloth.SPECS['tie'].mesh
                 np.savez_compressed(args.out/'handoff-input-cloth.npz',positions=native.nodes,rest=mesh.rest,faces=mesh.faces)
-                continuation=receive_tip(fixed_actions[279],mesh.rest,native.nodes)
-                clearance=audit(continuation)
-                (args.out/'handoff-hull-audit.json').write_text(json.dumps(clearance,indent=2)+'\n')
-                if not clearance['passed']:raise RuntimeError('Measured receiving trajectory intersects a fixture or opposite arm')
-                approach_steps=continuation['approach_steps']
-                approach_hits=screen(continuation,native.nodes,mesh.faces,steps=range(1,approach_steps+1),side='left')
-                blocked,intended=classify_receiving_contacts(approach_hits,mesh.rest,mesh.faces)
-                (args.out/'handoff-cloth-approach-audit.json').write_text(json.dumps(dict(samples=approach_steps,inflation_m=.001,raw_intersections=approach_hits,blocked_intersections=blocked,intended_finger_contact=intended),indent=2)+'\n')
-                if blocked:raise RuntimeError('Receiving approach intersects a body or cloth region outside the intended finger contact')
+                selected=select_receiving_plan(fixed_actions[279],mesh.rest,native.nodes,mesh.faces,
+                    half_thickness=arena_cloth.SPECS['tie'].fabric.thickness/2)
+                (args.out/'handoff-candidate-audit.json').write_text(json.dumps(selected['candidates'],indent=2)+'\n')
+                if selected['plan'] is None:
+                    raise RuntimeError('No ordinary receiving approach clears the measured cloth and fixtures')
+                continuation=selected['plan']
+                (args.out/'handoff-hull-audit.json').write_text(json.dumps(selected['rigid'],indent=2)+'\n')
+                (args.out/'handoff-cloth-approach-audit.json').write_text(json.dumps(selected['approach'],indent=2)+'\n')
+                report['handoff_route_selection']=selected['selection']
                 fixed_plan['frames'][280:]=continuation['frames'];fixed_plan['handoff_calibration']=continuation['grasp']
                 fixed_actions=np.asarray([f['action14'] for f in fixed_plan['frames']],float)
                 if np.any(fixed_actions<emb._low) or np.any(fixed_actions>emb._high):raise ValueError('Receiving trajectory exceeds normal joint limits')

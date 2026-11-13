@@ -44,14 +44,14 @@ def shift_scene_config(cfg):
         if initial is not None and hasattr(initial,'pos'):
             old=np.asarray(initial.pos,float)
             asset.init_state=copy.deepcopy(initial)
-            asset.init_state.pos=tuple(to_native(old))
+            asset.init_state.pos=tuple(map(float,to_native(old)))
             kind='root_asset'
         elif camera is not None and hasattr(camera,'pos'):
-            if name not in ('top_cam','overview_cam','judging_top','judging_side'):
+            if name not in ('top_cam','overview_cam','judging_top','judging_side','judging_front','judging_detail'):
                 raise ValueError('Unclassified camera coordinate frame: '+name)
             old=np.asarray(camera.pos,float)
             asset.offset=copy.deepcopy(camera)
-            asset.offset.pos=tuple(to_native(old))
+            asset.offset.pos=tuple(map(float,to_native(old)))
             kind='fixed_world_camera'
         else:continue
         shifted.add(name)
@@ -74,7 +74,9 @@ def shift_scene_config(cfg):
         if not is_dataclass(pose) or not hasattr(pose,'position_xyz'):
             raise ValueError('Expected an Arena Pose dataclass: '+name)
         old=np.asarray(pose.position_xyz,float)
-        event.params=dict(params,pose=replace(pose,position_xyz=tuple(to_native(old))))
+        # Arena Pose.to_tensor infers dtype. NumPy float64 scalars promote the
+        # whole transform to float64, incompatible with native transformf.
+        event.params=dict(params,pose=replace(pose,position_xyz=tuple(map(float,to_native(old)))))
         CONFIG_AUDIT.append(dict(name=name,asset_name=asset_name,kind='world_reset_pose',
             original_position_m=old.tolist(),native_position_m=to_native(old).tolist()))
     _CONFIGURED_SCENES.append(cfg.scene)

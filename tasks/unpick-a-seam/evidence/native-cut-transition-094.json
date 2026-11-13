@@ -1,0 +1,132 @@
+{
+  "date": "2026-11-13",
+  "status": "cut_end_transition_measured_yam_reset_api_fix_pending",
+  "score": null,
+  "archive_sha256": "9ee406174bf6a599da04e9f62cb8f0f7faa66eab9540a0cd4dad26bd58c934af",
+  "controls": [
+    {
+      "status": "complete",
+      "completed_steps": 192,
+      "simulated_s": 0.2,
+      "thread_integrity": {
+        "maximum_closed_joint_gap_m": 6.427765113654687e-07,
+        "first_failure": null,
+        "valid": true
+      },
+      "cut_contact_events": [],
+      "pending_cut_contacts": [
+        0
+      ],
+      "cut_event": {
+        "time_s": 0.025,
+        "joint": 0,
+        "reason": "Unscored zero-tool cut-end collision-energy diagnostic, not a task cutting event",
+        "before": {
+          "bending_energy_proxy_j": 0.0,
+          "relative_kinetic_energy_j": 5.1228597732941305e-20,
+          "maximum_bend_rad": 1.570850119175331,
+          "centre_velocity_m_s": [
+            -4.1501050206666857e-16,
+            1.6024621595273013e-24,
+            -0.24512241492348336
+          ]
+        }
+      },
+      "wall_seconds": 4.27393105905503,
+      "name": "seam-free-cut",
+      "peak_reported_relative_kinetic_energy_j": 1.2558819439109946e-16,
+      "peak_pose_difference_relative_kinetic_proxy_j": 1.786132893249155e-12,
+      "first_post_cut_relative_kinetic_energy_j": 1.1129017449744313e-19
+    },
+    {
+      "status": "complete",
+      "completed_steps": 192,
+      "simulated_s": 0.2,
+      "thread_integrity": {
+        "maximum_closed_joint_gap_m": 9.39951422008819e-05,
+        "first_failure": null,
+        "valid": true
+      },
+      "cut_contact_events": [
+        {
+          "joint": 0,
+          "time_s": 0.027083333333333334
+        }
+      ],
+      "pending_cut_contacts": [],
+      "cut_event": {
+        "time_s": 0.025,
+        "joint": 0,
+        "reason": "Unscored zero-tool cut-end collision-energy diagnostic, not a task cutting event",
+        "before": {
+          "bending_energy_proxy_j": 1.0790347425723738e-06,
+          "relative_kinetic_energy_j": 9.443550381258532e-07,
+          "maximum_bend_rad": 0.4803714904877944,
+          "centre_velocity_m_s": [
+            -3.178513874350197e-08,
+            1.6080469294456378e-11,
+            -0.24512218156709295
+          ]
+        }
+      },
+      "wall_seconds": 3.926684496924281,
+      "name": "seam-bending-cut",
+      "peak_reported_relative_kinetic_energy_j": 1.6773936844051927e-05,
+      "peak_pose_difference_relative_kinetic_proxy_j": 1.2689764033571094e-06,
+      "first_post_cut_relative_kinetic_energy_j": 9.656774275154567e-07,
+      "non_neighbour_contact_penetrations": [
+        {
+          "step": 32,
+          "time_s": 0.03333333333333333,
+          "depth_m": 0.00026867740075764554,
+          "pair": [
+            3,
+            19
+          ]
+        },
+        {
+          "step": 33,
+          "time_s": 0.034375,
+          "depth_m": 0.0002632204146503235,
+          "pair": [
+            3,
+            19
+          ]
+        },
+        {
+          "step": 34,
+          "time_s": 0.035416666666666666,
+          "depth_m": 4.972255797996267e-05,
+          "pair": [
+            1,
+            20
+          ]
+        }
+      ],
+      "maximum_self_contact_penetration_m": 0.00026867740075764554,
+      "cut_pair_axis_separation_at_reactivation_m": 0.001014401201471625
+    }
+  ],
+  "yam": {
+    "status": "failed",
+    "completed_steps": 0,
+    "native_tensor_device": "cpu",
+    "error": "RuntimeError: Could not convert array interface with typestr='<f8' to Warp array with dtype=<class 'warp._src.types.transformf'>",
+    "fix": "Convert translated reset Pose position elements to Python float; Arena Pose.to_tensor inferred float64 from NumPy scalar inputs, incompatible with Warp transformf."
+  },
+  "interpretation": [
+    "Deferred recontact removes the zero-load cut activation impulse without suppressing other contacts.",
+    "The bent loop separates naturally and re-enables cut-end contact after2.083ms. Remaining joints stay physically connected.",
+    "Later non-neighbour rotational contact has temporary penetration. Reported endpoint kinetic energy spikes, but unsmoothed pose-difference motion does not show comparable energy; PhysX split-impulse fields differ from transform integration.",
+    "Finite-angle bending energy is a proxy and includes a severed connection after cutting; it must not be treated as exact post-cut stored energy. No new energy score/guard is introduced.",
+    "No robot cut, extraction or task score has been demonstrated."
+  ],
+  "physical_reference": "https://nvidia-omniverse.github.io/PhysX/physx/5.4.0/docs/RigidBodyDynamics.html",
+  "files_sha256": {
+    "seam-free-cut/state.npz": "859a2d8606601bbecf6012a3e65ac4afe5c0407991b9d4279fa71ea3acb5ce20",
+    "seam-free-cut/probe.json": "70993f83cd9ea43ef39cc8da9627ba4dc61a899a579ef091296907dc182f179f",
+    "seam-bending-cut/state.npz": "0a4f2624db664fa988497296591a3ebc91db0beabdcb5113b4d439c4aa7da3e3",
+    "seam-bending-cut/probe.json": "62a724965ea84a063fad819904edf202001427698357681669c25994d7e76329",
+    "seam-yam2/preview.json": "8c98ec392608208953e0df27c93e102cc6e9b38802ba36fc1cdb3a44e3fd5adb"
+  }
+}

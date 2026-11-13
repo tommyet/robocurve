@@ -162,6 +162,25 @@
       "final_robot_contact": "No full-triangle overlap or proximity within1mm at1180 or1280.",
       "line_integrity": "Eight faces cross the3mm line axis by940 and remain through1280; no scored retention claim.",
       "candidate": "Conforming local rest-mesh line and hem-grasp contact regions with\u22642.5mm edges,29434nodes/58696faces; area, material, mass, four openings and3mm line unchanged. Native gate pending."
+    },
+    "wider_pinch093": {
+      "status": "retained_pickup_with_local_contact_approximation",
+      "actions": 320,
+      "normalized_finger_target": 0.018,
+      "cloth_solver_iterations": 128,
+      "mesh": "regular2.5mm",
+      "held_patch_lift_m": 0.345137357711792,
+      "held_patch_tcp_depth_final_m": -0.0169,
+      "sampled_max_finger_node_penetration_m": 0.0004100984456333612,
+      "sampled_max_finger_triangle_penetration_m": 0.0010951858758926395,
+      "triangle_contact_scope": "Six faces around one rounded fingertip corner; localized node compression and linear face interpolation. No sampled forearm or fixture crossing. This is retained pickup evidence, not hanging success.",
+      "full_plan_rigid_rejection": {
+        "frames": 1280,
+        "violations": 0,
+        "executed_320_prefix_max_difference": 1.2987388942065081e-12
+      },
+      "next": "Same ordinary .018 pinch and numerical settings for first-peg placement; actual line capture and release remain unproven.",
+      "score": null
     }
   },
   "demo": {

@@ -158,6 +158,8 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
         report['tool_substep_trace']=a.tool_substep_trace
         report['tool_substep_recording_precision']='Native float32 poses/velocities, exact float64 scalar inputs and material outputs'
         report['material_boundary_velocity']=coupling.boundary_velocity
+        report['material_parameters']=vars(coupling.material.p).copy()
+        report['dispenser_parameters']=vars(coupling.dispenser).copy()
         report['tool_local_coms']={name:array(view.get_coms())[0].tolist()
             for name,view in (('barrel',barrel),('plunger',plunger))}
         report['robot_body_names']={name:list(base.scene[name].body_names) for name in ('left_robot','right_robot')}

@@ -26,7 +26,7 @@ class IcingParameters:
     yield_pressure_pa: float = 6_000.
     conductance_m3_per_pa_s: float = 3e-11
     nozzle_radius_m: float = .0025
-    star_depth: float = .28
+    star_depth: float = .35
     star_lobes: int = 6
     density_kg_m3: float = 850.
     shear_yield_pa: float = 800.

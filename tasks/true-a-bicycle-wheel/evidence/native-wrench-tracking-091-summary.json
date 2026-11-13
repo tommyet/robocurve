@@ -1,0 +1,45 @@
+{
+  "kind": "native_first_quarter_tracking_diagnostic",
+  "submission_ready": false,
+  "score": null,
+  "run_status": "complete",
+  "completed_actions": 202,
+  "wall_seconds": 825.1425321027637,
+  "physical_settings": "CPU PGS128/4,100us,central tension spring with25mm native-tolerance compensation",
+  "nipple0_initial_turns": -0.7500000026694886,
+  "nipple0_final_turns": -0.6864921901961992,
+  "nipple0_net_change_turns": 0.0635078124732894,
+  "minimum_nipple0_turns": -0.998652278694392,
+  "maximum_tool_tracking_error_m": 0.1127575425776447,
+  "maximum_arm_tracking_error_rad": 0.6481115992912505,
+  "final_geometry": {
+    "lateral_runout_m": 0.0009056046123268602,
+    "radial_runout_upper_bound_m": 0.00021077663127267,
+    "dish_offset_m": 1.1093774025694447e-05,
+    "minimum_tension_n": 112.5844000624215,
+    "maximum_tension_n": 615.4177318575418
+  },
+  "rim_integrity": {
+    "valid": true,
+    "steps": 101002,
+    "first_failure": null,
+    "maximum_axial_bending_strain": 0.0010388688811638605,
+    "maximum_twist_rad": 0.0004429234674062485,
+    "maximum_locked_joint_gap_m": 3.4639316789204698e-06,
+    "peaks": {
+      "maximum_axial_bending_strain": 0.001447618407474323,
+      "maximum_twist_rad": 0.001138482175650244,
+      "maximum_locked_joint_gap_m": 1.968611917256832e-05
+    }
+  },
+  "native_geometry_samples": 203,
+  "unexpected_intersections": 0,
+  "interpretation": "Native contact moves the nipple, but trajectory lag causes initial loosening and lost engagement. Only22.86degrees net tightening, not the requested90degrees. No full task demo or success claim.",
+  "next": "Same physics and actuator limits; first160actionsunchanged, then slower insertion/turn with ordinary settling holds.",
+  "sha256": {
+    "preview.json": "5d54c083a08443e25af1a9253d04c6823925bcb6f372e9ddac26a148597d0190",
+    "trace.jsonl.gz": "4ec5971e0d373920ed627ead22baa16ee5d4aa2fe4c2dec900bf332185e8c292",
+    "wheel091-geometric-evidence.json": "47d806ea9f39314460dd6a660459d186accb248b8aa2b280d291912ee91f3e3d",
+    "wheel091-native-geometry-audit.json": "af76b04a8ed380fcfe90ec370d86df00ebf1721148f3f0f2144f0b192821653f"
+  }
+}

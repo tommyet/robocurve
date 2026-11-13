@@ -35,6 +35,7 @@ SPECS={}
 SHELLS={}
 POSITION_ITERATIONS=128
 MAXIMUM_HINGE_GAP_M=.000025
+GEOMETRIC_APERTURE_LIMIT_M=None
 
 
 def _spawn(path,cfg,translation=None,orientation=None,**kwargs):
@@ -103,7 +104,8 @@ def state(env,name):
     p=read('body_link_pos_w','object_link_pos_w');q=read('body_link_quat_w','object_link_quat_w')
     v=read('body_link_lin_vel_w','object_link_lin_vel_w');w=read('body_link_ang_vel_w','object_link_ang_vel_w')
     p-=getattr(base.scene.env_origins,'torch',base.scene.env_origins)[0].detach().cpu().numpy()
-    poses=np.c_[p,q];nodes,continuity=measured_surface(shell,poses,MAXIMUM_HINGE_GAP_M)
+    poses=np.c_[p,q];nodes,continuity=measured_surface(shell,poses,MAXIMUM_HINGE_GAP_M,
+        geometry_aperture_m=GEOMETRIC_APERTURE_LIMIT_M)
     if not all(np.isfinite(x).all() for x in (nodes,v,w)):raise RuntimeError('Invalid native paper state')
     low,high=nodes.min(0),nodes.max(0)
     return PanelState(pos=(low+high)/2,quat_xyzw=np.array((0.,0.,0.,1.)),lin_vel=v.mean(0),ang_vel=w.mean(0),
@@ -142,7 +144,8 @@ class PanelMonitor:
         for shell,view,ids,audit in zip(self.shells,self.views,self.indices,self.crossing):
             poses=view.get_transforms().detach().cpu().numpy()[ids]
             paper_poses.append(poses)
-            nodes,continuity=measured_surface(shell,poses,MAXIMUM_HINGE_GAP_M);crossing=audit.update(nodes,wire)
+            nodes,continuity=measured_surface(shell,poses,MAXIMUM_HINGE_GAP_M,
+                geometry_aperture_m=GEOMETRIC_APERTURE_LIMIT_M);crossing=audit.update(nodes,wire)
             values.append(dict(continuity=continuity,contact_audit=crossing,
                 valid=continuity['valid'] and crossing['valid']))
         self.steps+=1;self.failed=self.failed or not chain['valid'] or not all(x['valid'] for x in values)

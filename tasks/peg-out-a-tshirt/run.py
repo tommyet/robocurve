@@ -153,6 +153,12 @@ def main():
         maximum=2400 if args.mode=='dream' else MAX_SMOKE_STEPS
         args.steps=maximum if args.mode=='dream' and args.steps is None else 60 if args.steps is None else args.steps
         if not 1<=args.steps<=maximum:p.error(f'This mode permits1–{maximum} control steps')
+    if fixed_plan is not None:
+        if fixed_plan.get('required_cloth_mesh')=='regular_2p5mm' and not args.regular_refined:
+            p.error('This motion requires the validated regular 2.5 mm cloth mesh')
+        expected_iterations=fixed_plan.get('required_solver_iterations')
+        if expected_iterations is not None and args.solver_iterations!=expected_iterations:
+            p.error('This motion requires its recorded cloth solver iteration count')
     if args.mode=='dream' and (args.state_assisted_grasp or args.state_assisted_clip or args.joint_feedback_from is not None):p.error('Dream receives ordinary observations and its own actions only')
     if args.joint_feedback_from is not None and (args.mode!='motion-probe' or not 0<=args.joint_feedback_from<args.steps):
         p.error('Joint feedback requires a motion probe and a start before its last action')

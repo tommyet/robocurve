@@ -127,6 +127,30 @@
       "finding": "Initial direct joint sweep contacts wide strip at31\u201340, moving patch57mm sideways before intended pinch. Patch remainsz0.877m during commanded lift.",
       "reset": "Source-authored gravity drape stays untied and accessible; guard passes.",
       "candidate": "Ordinary clear staging pose followed by Cartesian approach, screened against the actual reset cloth before insertion; no state writes."
+    },
+    "handoff093": {
+      "status": "stopped_before_receiving_approach_on_excess_proximity_margin",
+      "completed_actions": 280,
+      "wall_seconds": 340.5214200625196,
+      "finding": "The 1mm-inflated planner hull touched the narrow tip in the final two approach poses. Exact triangle clipping showed at least0.749mm separation from the rigid forearm, beyond the actual0.6mm shell half-thickness. This was a proximity warning, not a physical crossing.",
+      "correction": "Preserve 1mm warnings; use measured material half-thickness for the blocking screen. All120 poses clear on both086 and093 states. Trajectory, reset and physical parameters unchanged. Native097 is pending.",
+      "score": null,
+      "actual_prefix_audit": {
+        "robot_samples": 3,
+        "fixture_samples": 10,
+        "max_node_penetration_m": 2.6015875419727053e-05,
+        "sampled_triangle_crossings": 0,
+        "held_patch_lift_m": 0.4191768850599016
+      }
+    },
+    "handoff097": {
+      "status": "stopped_before_receiving_on_marginal_approach",
+      "actions": 280,
+      "wall_seconds": 379.5591625450179,
+      "finding": "Small loose-tip variation brought the narrow strand into the0.6mm shell envelope of the final two receiving forearm poses. No receiving action was executed.",
+      "correction": "Tilt the approach10degrees within the actual material plane, preserving its closing normal and20mm bite. Three recorded states(086,093,097) all pass120 cloth-approach poses even at2mm proximity inflation and300 full fixture/inter-arm poses. Runtime tries bounded measured-geometry alternatives only if necessary;2mm is a route preference, not a physical pass/fail threshold. The0.6mm shell gate remains.",
+      "native_validation": "pending",
+      "score": null
     }
   },
   "demo": {

@@ -9,7 +9,7 @@
   "scores": null,
   "paid_compute_used_usd": null,
   "remaining_gates": [
-    "Native087 at960Hz completes838 ordinary actions, releases cleanly and scores0.5: three valid shell shapes across48.5mm, but no qualifying continuous ridges. Full-score feasibility remains unproven.",
+    "Native095 completes838 actions at240Hz with clean release and score0.5. Three valid shells, only two qualifying ridges. The deeper physical star nozzle and full border still require native validation.",
     "Complete joined border, visible continuous ridges and agreement with photographs remain unverified.",
     "Dream baseline and final rescoring pending; no API requests or media uploads."
   ],
@@ -19,14 +19,14 @@
     "dream_policy.py": "ad92ac9ddcf4c1d48c9985fcd0a0fc116144a995d8d4b0368e476b3f432b611b",
     "joint_tracking.py": "a5e2cee60f6a84e0a46d95240f1a098794e95a12c1ac166b3c7d5be184ff3a44",
     "learn_tracking.py": "1cb75143d727ed3977c66c7fa1f58a836a0c5001fd6621cba6ecece0c8709663",
-    "material.py": "a82fb1cb242a02990707a3c08a6466f304cf757541a663a974765eebb984d525",
+    "material.py": "49a59537b8b3c7e26808715b68e12c5f1cddbc30c6387d825936aac28ab6ea54",
     "native.py": "449756a20db7a7f585a5d5a7a702209e57c55ba2c8b55092ffaf4f9bdd2f73cc",
     "plan.py": "d30d85b075a439865d750dee90a7a059637f21f9330a8e0aa0924ce4e0eb9c2b",
-    "preview_yam.py": "9bf3da7e9fdfbd80115088ff04a06966e3a4c47bd93df0656ef842dc17b4f39e",
+    "preview_yam.py": "d4bb3bf7b30da1088bde94a707936f76d29d727dcbf45935d5ae1a2892b00f22",
     "probe.py": "dc2421d3342eda2052d7340d10bbf856493ad5b30b121ad839fddda7c7a57c17",
     "probe_native.py": "8aa6cc9d6ee650d364e2681896e360d08c03d768053a568377a5d7e2dab38515",
     "probe_shell_shape.py": "a4e2ab3a31c23b0acc9baeef718887a8d9e74c8fca1f2ed91659c2aa9732289e",
-    "replay_material.py": "9685a24978cadf125aea945a232d3043ccafc13100ef55b7ca056bdd681a38b8",
+    "replay_material.py": "fffc379bd85001fabb01bde5ae425701dce38cd2f32f5670446065ceff6ff680",
     "review_views.py": "91fff198f4643babe15e10ca1d72cfb068ee8521e556e3d3e49fda0a2b9c804d",
     "run.py": "3f23a922f9bba0e959c19624107defc95f13e580f0cd9efee832e4ae1b88b893",
     "scene.py": "893a2016851d05ec62ca47f22cb3aca3c11fc19a2ef81333372132dd856dfcf5",
@@ -142,5 +142,40 @@
       "score": 0.5
     },
     "source": "https://nvidia-omniverse.github.io/PhysX/physx/5.4.0/docs/RigidBodyDynamics.html"
+  },
+  "native095": {
+    "status": "complete_partial_score",
+    "actions": 838,
+    "physics_hz": 240,
+    "wall_seconds": 362,
+    "score": 0.5,
+    "valid_shells": 3,
+    "length_mm": 49,
+    "continuous_ridge_mm": [
+      4,
+      2.5,
+      1.5
+    ],
+    "released_clear": true,
+    "spill_mm2": 0,
+    "damage_mm": 0,
+    "exact_replay_max_cell_volume_error_m3": 3.4043652085385545e-23
+  },
+  "next_nozzle": {
+    "star_depth": 0.35,
+    "mean_radius_mm": 2.5,
+    "inner_radius_range_mm": [
+      1.625,
+      3.375
+    ],
+    "metal_outer_radius_mm": 4,
+    "minimum_wall_mm": 0.625,
+    "native_status": "not_yet_tested",
+    "local_095_input_counterfactual_ridge_mm": [
+      10.5,
+      3.5,
+      4
+    ],
+    "material_properties_and_scoring_changed": false
   }
 }

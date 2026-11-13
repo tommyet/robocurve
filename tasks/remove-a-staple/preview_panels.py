@@ -50,6 +50,8 @@ def main():
     p.add_argument('--position-iterations',type=int,choices=(32,64,128),default=128)
     p.add_argument('--paper-gap-envelope-um',type=int,choices=(25,100),default=25,
         help='100 is an explicitly unscored continuity diagnostic; it does not change contact or forces')
+    p.add_argument('--geometry-aware-continuity',action='store_true',
+        help='Unscored150um empty-aperture diagnostic; preserve raw endpoint errors and native fracture events')
     p.add_argument('--solver-type',choices=('TGS','PGS'),default='TGS')
     p.add_argument('--recenter-at-paper',action='store_true',help='Fixed global origin shift including robot bases and fixed cameras before construction')
     p.add_argument('--reset-profile',choices=('pocket-support-candidate',),default='pocket-support-candidate')
@@ -57,7 +59,7 @@ def main():
     p.add_argument('--refined-contact-diagnostic',action='store_true')
     p.add_argument('--max-depenetration-m-s',type=float)
     a=p.parse_args()
-    if a.dream and (a.plan or a.joint_tracking or a.paper_gap_envelope_um!=25):p.error('Dream cannot use scripted feedback or a diagnostic continuity envelope')
+    if a.dream and (a.plan or a.joint_tracking or a.paper_gap_envelope_um!=25 or a.geometry_aware_continuity):p.error('Dream cannot use scripted feedback or a diagnostic continuity envelope')
     if a.joint_tracking and not a.plan:p.error('Joint tracking requires a plan')
     if not 1<=a.steps<=(600 if a.plan or a.dream else 100):p.error('Bounded preview step count exceeded')
     import runtime_config
@@ -78,7 +80,10 @@ def main():
     a.out.mkdir(parents=True,exist_ok=False);started=time.monotonic()
     report={'kind':'staple_panel_yam_integration_preview','status':'running','score':None,'robot_demo':False,
         'joint_tracking':a.joint_tracking,'solver_type':a.solver_type,'position_iterations':a.position_iterations,
-        'diagnostic_only':a.paper_gap_envelope_um!=25,'paper_gap_envelope_m':a.paper_gap_envelope_um*1e-6,
+        'diagnostic_only':a.paper_gap_envelope_um!=25 or a.geometry_aware_continuity,
+        'paper_gap_envelope_m':a.paper_gap_envelope_um*1e-6,
+        'geometry_aware_continuity':a.geometry_aware_continuity,
+        'empty_aperture_limit_m':.00015 if a.geometry_aware_continuity else None,
         'dream_requests':0,'requested_steps':a.steps,'control_hz':20,'phase':'launch',
         'policy':'Dream with ordinary camera/joint observations' if a.dream else 'ordinary fixed joint commands; no object state feedback',
         'paper_model':'native analytic100um box panels with passive bending/strength hinges',
@@ -92,10 +97,12 @@ def main():
         temporary=a.out/'preview.tmp.json';temporary.write_text(json.dumps(report,indent=2,allow_nan=False)+'\n');temporary.replace(a.out/'preview.json')
     def terminated(signum,frame):raise TimeoutError('Preview stopped by external watchdog')
     signal.signal(signal.SIGTERM,terminated);checkpoint()
-    app=video=trace=dream_policy=None;monitors=[];request_audit=[];session_audit={'session_count':0}
+    app=video=trace=dream_policy=break_observer=None;monitors=[];request_audit=[];session_audit={'session_count':0}
     try:
         from isaaclab.app import AppLauncher
         app=AppLauncher(headless=True,enable_cameras=True,device='cpu').app
+        from joint_break_observer import JointBreakObserver
+        break_observer=JointBreakObserver()
         import imageio.v2 as imageio
         import torch
         from PIL import Image
@@ -105,6 +112,7 @@ def main():
         arena_hardware.PANEL_POSITION_ITERATIONS=a.position_iterations
         arena_panels.POSITION_ITERATIONS=a.position_iterations
         arena_panels.MAXIMUM_HINGE_GAP_M=a.paper_gap_envelope_um*1e-6
+        arena_panels.GEOMETRIC_APERTURE_LIMIT_M=.00015 if a.geometry_aware_continuity else None
         from yam_arena import inspect_embodiment as wrapper,scene as adapter
         wrapper._APP=app;report['phase']='build'
         emb=wrapper.YamArenaEmbodiment(task=str(Path(__file__).with_name('task_panels.py')),object_jitter=0.,control_hz=20,cam_width=224,cam_height=224,device='cpu')
@@ -136,7 +144,7 @@ def main():
             adapter.make_env=original_make_env
         report['coordinate_configuration_audit']=list(coordinate_frame.CONFIG_AUDIT)
         base=emb._base;stage=omni.usd.get_context().get_stage()
-        report['phase']='reset';emb._env.reset()
+        report['phase']='reset';break_observer.context('reset');emb._env.reset()
         report['native_audit']=native_audit(stage)
         arena_panels.install_material_hook(base,stage)
         monitors=[x['monitor'] for x in arena_hardware.ASSEMBLIES.values()]
@@ -178,6 +186,7 @@ def main():
             tracker=JointTracker(issued,emb._low,emb._high,limits)
             report['tracking_disclosure']='Only robot joint observations; no native object poses, attachments, forces or actuator-effort changes.'
         for step in range(a.steps+1):
+            break_observer.context('episode',step)
             requested=None
             if step:
                 if dream_policy is not None:
@@ -203,6 +212,7 @@ def main():
                 'commanded_action14':None if step==0 else issued.tolist(),
                 'dream_requested_action14':None if requested is None else requested.tolist(),
                 'joint_tracking':None if tracker is None else tracker.last,
+                'native_joint_break_events':break_observer.summary(),
                 'paper_nodes':[x.nodes.tolist() for x in paper],
                 'paper_continuity':[x.continuity for x in paper],'hardware_names':list(hardware.body_names),
                 'hardware_poses':hardware.body_poses.tolist(),'hardware_velocities':hardware.body_velocities.tolist(),'material':[m.last for m in monitors]})+'\n')
@@ -233,6 +243,9 @@ def main():
             from dream_policy import public_transcript
             (a.out/'dream-transcript.json').write_text(json.dumps(public_transcript(dream_policy),indent=2)+'\n')
         report.update(dream_requests=len(request_audit),dream_session_audit=session_audit)
+        if break_observer is not None:
+            report['native_joint_break_events']=break_observer.summary()
+            break_observer.close()
         if request_audit:(a.out/'dream-requests.json').write_text(json.dumps(request_audit,indent=2)+'\n')
         report['wall_seconds']=time.monotonic()-started
         checkpoint()

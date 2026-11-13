@@ -1,0 +1,105 @@
+{
+  "kind": "native_loaded_paper_contact_diagnostic",
+  "submission_ready": false,
+  "task_score": null,
+  "completed_steps": 46,
+  "wall_seconds": 245.15195010229945,
+  "diagnostic_gap_envelope_m": 0.0001,
+  "default_gap_envelope_m": 2.5e-05,
+  "observations": 4654,
+  "paper_continuity": [
+    {
+      "maximum_hinge_endpoint_gap_m": 2.33085881202791e-05,
+      "maximum_vertex_average_error_m": 1.316342494469171e-05,
+      "maximum_allowed_gap_m": 9.999999999999999e-05,
+      "valid": true,
+      "worst_endpoint": {
+        "panel_indices": [
+          547,
+          548
+        ],
+        "positions_m": [
+          [
+            0.08167669803972033,
+            0.06260119014248042,
+            1.5536671533290162e-05
+          ],
+          [
+            0.08167300459822652,
+            0.06261400266114728,
+            3.46544155294826e-05
+          ]
+        ],
+        "difference_m": [
+          3.693441493812788e-06,
+          -1.2812518666860395e-05,
+          -1.9117743996192436e-05
+        ]
+      }
+    },
+    {
+      "maximum_hinge_endpoint_gap_m": 0.00016740907789489096,
+      "maximum_vertex_average_error_m": 0.00010796233928807215,
+      "maximum_allowed_gap_m": 9.999999999999999e-05,
+      "valid": false,
+      "worst_endpoint": {
+        "panel_indices": [
+          478,
+          479
+        ],
+        "positions_m": [
+          [
+            0.08179677415513167,
+            0.051733711048936586,
+            6.524602239827887e-05
+          ],
+          [
+            0.08167983907664565,
+            0.051835351642069614,
+            0.00012865877039623013
+          ]
+        ],
+        "difference_m": [
+          0.0001169350784860218,
+          -0.00010164059313302887,
+          -6.341274799795125e-05
+        ]
+      }
+    }
+  ],
+  "wire_continuity": {
+    "maximum_endpoint_gap_m": 1.8121171045388224e-06,
+    "maximum_allowed_gap_m": 3e-05,
+    "valid": true
+  },
+  "contact_audits": [
+    {
+      "valid": true,
+      "steps": 4654,
+      "first_failure": null
+    },
+    {
+      "valid": true,
+      "steps": 4654,
+      "first_failure": null
+    }
+  ],
+  "worst_upper_edge_geometry": {
+    "panel_indices": [
+      478,
+      479
+    ],
+    "edge_length_m": 0.01138461538461538,
+    "native_break_force_n": 17.076923076923073,
+    "relative_panel_angle_rad": 0.012013781066347696,
+    "across_edge_compression_m": 0.00011748024189854168,
+    "along_edge_slip_m": -0.00010088518097901608,
+    "normal_disagreement_m": -6.36095778490513e-05
+  },
+  "interpretation": "Growing numerical contact/constraint disagreement at first left-finger touchdown. Across-edge displacement is compression/overlap, not an opening crack; this does not establish tearing. No extraction occurred. Native joint-break observer and slower touchdown are prepared.",
+  "native_sha256": {
+    "preview.json": "f0d079dd14d7f5b1ee5b83117e2eb8617bc73db24fd7ec837220adfbd8652691",
+    "first-invalid-state-0.npz": "a233e9ee7720f0c344ca20fcc8263b5af978b3b9e37ddb00569e2e9daa5ae129",
+    "trace.jsonl.gz": "6a15b1ef6e5f0b4ce82a1591f345b4be96af39286c2a134e5190e6a3ecfc7b96"
+  }
+}

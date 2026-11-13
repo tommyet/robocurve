@@ -2,10 +2,69 @@
 import unittest
 import numpy as np
 from scipy.spatial.transform import Rotation
-from facet_paper import coupon_mesh,box_coupon_mesh,box_task_mesh,mechanics,measured_surface,ShellMaterial
+from facet_paper import (coupon_mesh,box_coupon_mesh,box_task_mesh,mechanics,measured_surface,
+    ShellMaterial,geometric_edge_measurements,_rectangular_mesh)
 
 
 class FacetPaperTests(unittest.TestCase):
+    def test_geometry_diagnostic_does_not_stop_on_harmless_overlap(self):
+        mesh=_rectangular_mesh(np.array((0.,.01,.02)),np.array((0.,.01)),[])
+        model=mechanics(mesh,primitive_boxes=True);shell=dict(mesh=mesh,model=model)
+        poses=np.c_[model['centres'],np.tile((0.,0.,0.,1.),(2,1))]
+        poses[0,0]+=.0002
+        nodes,old=measured_surface(shell,poses)
+        new_nodes,new=measured_surface(shell,poses,geometry_aperture_m=.00015)
+        self.assertFalse(old['valid']);self.assertTrue(new['valid'])
+        self.assertAlmostEqual(new['geometry']['maximum_empty_aperture_m'],0.)
+        np.testing.assert_array_equal(nodes,new_nodes)
+        poses[0,0]-=.0004
+        self.assertFalse(measured_surface(shell,poses,geometry_aperture_m=.00015)[1]['valid'])
+
+    def test_geometry_diagnostic_rejects_lost_edge_overlap(self):
+        mesh=_rectangular_mesh(np.array((0.,.01,.02)),np.array((0.,.01)),[])
+        model=mechanics(mesh,primitive_boxes=True);shell=dict(mesh=mesh,model=model)
+        poses=np.c_[model['centres'],np.tile((0.,0.,0.,1.),(2,1))]
+        poses[0,1]+=.011
+        _,result=measured_surface(shell,poses,geometry_aperture_m=.00015)
+        self.assertFalse(result['valid'])
+        self.assertEqual(result['geometry']['edges_without_overlap'],1)
+
+    def edge_geometry(self,shift):
+        mesh=_rectangular_mesh(np.array((0.,.01,.02)),np.array((0.,.01)),[])
+        model=mechanics(mesh,primitive_boxes=True)
+        world=model['points'].copy();world[0]+=shift
+        return geometric_edge_measurements(model,world,np.tile(np.eye(3),(2,1,1)))
+
+    def test_compressed_edges_are_not_reported_as_open_cracks(self):
+        result=self.edge_geometry(np.array((.00012,0.,0.)))
+        self.assertAlmostEqual(result['maximum_empty_aperture_m'],0.)
+        self.assertAlmostEqual(result['maximum_across_edge_compression_m'],.00012)
+
+    def test_positive_edge_opening_is_retained(self):
+        result=self.edge_geometry(np.array((-.00012,0.,0.)))
+        self.assertAlmostEqual(result['maximum_empty_aperture_m'],.00012)
+        self.assertAlmostEqual(result['maximum_across_edge_compression_m'],0.)
+
+    def test_normal_clearance_accounts_for_physical_panel_thickness(self):
+        self.assertAlmostEqual(self.edge_geometry(np.array((0.,0.,.00008)))['maximum_empty_normal_clearance_m'],0.)
+        self.assertAlmostEqual(self.edge_geometry(np.array((0.,0.,.00014)))['maximum_empty_normal_clearance_m'],.00004)
+
+    def test_along_edge_slip_is_distinct_from_opening(self):
+        result=self.edge_geometry(np.array((0.,.002,0.)))
+        self.assertAlmostEqual(result['maximum_empty_aperture_m'],0.)
+        self.assertAlmostEqual(result['maximum_along_edge_slip_m'],.002)
+        self.assertAlmostEqual(result['minimum_shared_edge_overlap_m'],.008)
+        self.assertEqual(result['edges_without_overlap'],0)
+
+    def test_edge_opening_is_invariant_to_world_frame(self):
+        mesh=_rectangular_mesh(np.array((0.,.01,.02)),np.array((0.,.01)),[])
+        model=mechanics(mesh,primitive_boxes=True);world=model['points'].copy()
+        world[0, :, 0]-=.00012
+        R=Rotation.from_rotvec((.6,-.9,.2)).as_matrix()
+        result=geometric_edge_measurements(model,world@R.T+(.1,-.3,.4),np.tile(R,(2,1,1)))
+        self.assertAlmostEqual(result['maximum_empty_aperture_m'],.00012)
+        self.assertAlmostEqual(result['maximum_empty_normal_clearance_m'],0.)
+
     def test_diagnostic_envelope_does_not_change_measured_geometry(self):
         mesh=box_coupon_mesh();model=mechanics(mesh,primitive_boxes=True)
         shell=dict(mesh=mesh,model=model)

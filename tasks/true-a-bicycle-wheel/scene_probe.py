@@ -27,7 +27,7 @@ def main():
     p.add_argument('--wheel-clocking-deg',type=float,choices=(0.,10.,20.,50.,55.),default=0.)
     p.add_argument('--solver-velocity-iterations',type=int,choices=(1,4),default=4)
     p.add_argument('--solver-type',choices=('TGS','PGS'),default='TGS',help='Native solver diagnostic with unchanged geometry and material')
-    p.add_argument('--solver-position-iterations',type=int,choices=(16,32,64,128),default=128)
+    p.add_argument('--solver-position-iterations',type=int,choices=(16,32,64,128,255),default=128)
     p.add_argument('--gpu-physics',action='store_true',help='Compare native GPU rigid physics with the CPU reference')
     p.add_argument('--external-forces-every-iteration',action='store_true',help='Match the YAM TGS external-force integration option; diagnostic only')
     p.add_argument('--omit-bearing-diagnostic',action='store_true',help='Remove only the world bearing before attachment; short free-fall momentum isolation')

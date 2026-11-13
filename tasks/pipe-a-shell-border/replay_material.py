@@ -13,6 +13,10 @@ from native import Coupling
 
 
 def replay(directory, output):
+    frozen_material=directory/'task-source'/'material.py'
+    if (frozen_material.exists() and hashlib.sha256(frozen_material.read_bytes()).digest()
+            !=hashlib.sha256(Path(__file__).with_name('material.py').read_bytes()).digest()):
+        raise ValueError('Material source changed: run replay with the recorded task-source modules')
     source=directory/'tool-substeps.npz'
     with np.load(source,allow_pickle=False) as data:
         rows=data['values'];columns=data['columns'].tolist()

@@ -35,6 +35,7 @@ def main():
     p.add_argument('--steps',type=int,default=20)
     p.add_argument('--plan',type=Path,help='Frozen action14 JSON produced by plan.py')
     p.add_argument('--pose-assisted-entry',action='store_true',help='Disclosed scripted demo: after the proven140-action pickup, filter measured tool-in-gripper pose to convert the fixed blade path into ordinary bounded joint targets')
+    p.add_argument('--judging-views',action='store_true',help='Fixed native seam close-ups for recording only, excluded from policy inputs')
     p.add_argument('--physics-hz',type=int,choices=(960,1920,3840),default=960)
     p.add_argument('--coarse-thread',action='store_true')
     p.add_argument('--hole-mesh-spacing',type=float)
@@ -204,10 +205,18 @@ def main():
                     return cfg
                 return override
             adapter.env_cfg_callback=callback
+        original_make_env=adapter.make_env
+        if a.judging_views:
+            from review_views import configure as configure_views
+            def make_env(embodiment,**kwargs):
+                configure_views(embodiment)
+                return original_make_env(embodiment,**kwargs)
+            adapter.make_env=make_env
         try:
             emb._ensure_sim(None)
         finally:
             adapter.env_cfg_callback=original_callback
+            adapter.make_env=original_make_env
         base=emb._base;stage=omni.usd.get_context().get_stage()
         report['coordinate_configuration_audit']=list(coordinate_frame.CONFIG_AUDIT)
         report['native_device']=str(base.device)
@@ -502,6 +511,9 @@ def main():
             hand=array(right_robot.data.body_link_pose_w)[0,right_gripper_index]
             hand_rotation=rotation(hand[3:]);handle_pose=array(handle.get_transforms())[0]
             rgb=array(base.scene['top_cam'].data.output['rgb'])[0,:,:,:3].astype(np.uint8)
+            if a.judging_views:
+                from review_views import composite_frame
+                rgb=composite_frame(base)
             video.append_data(rgb)
             if step==0:Image.fromarray(rgb).save(a.out/'setup.png')
             row={'step':step,'time_s':step/20,'action14':action.tolist(),'physics_substeps':state['steps'],
@@ -560,6 +572,9 @@ def main():
         removed=inspect_removed_threads(pieces,state['nodes'],[m.faces for m in cloth],radius=runtime_config.CONFIG.thread_radius_m)
         for name in ('top_cam','left_cam','right_cam'):
             Image.fromarray(array(base.scene[name].data.output['rgb'])[0,:,:,:3].astype(np.uint8)).save(a.out/f'final-{name}.png')
+        if a.judging_views:
+            from review_views import capture_final
+            report['judging_views']=capture_final(base,a.out)
         report.update(status='invalid_model_domain' if state['invalid'] else 'complete',thread_inspection=removed,
                       note='Unscored native robot diagnostic, not full task acceptance evidence.')
     except BaseException as exc:

@@ -5,8 +5,9 @@ tearing either patch, then put the seam ripper down. Patch relocation is not
 required. See `JUDGING.md` for the final inspection and safe-release criteria.
 
 **Development package; not ready to submit.** No robot demo, Dream run, media or
-task score exists. `task.draft.json` is a draft. Matched 0.2 s controls at 3,840 Hz
-had no thread crossings; YAM reset stability and full manipulation are unproven.
+task score exists. `task.draft.json` is a draft. The current flexible-panel and
+passive-thread candidate retained every stitch for2s. Its CPU/YAM reset and
+two-action bridge pass; full robot manipulation remains unproven.
 
 ## Setup
 
@@ -68,7 +69,7 @@ From the repository root:
 .venv/bin/python -m unittest discover -s tasks/unpick-a-seam -p 'test_*.py' -v
 ```
 
-Sixty-two tests pass: connected cloth with real needle holes, needle-path clearance,
+Sixty-five tests pass: connected cloth with real needle holes, needle-path clearance,
 force direction and sustained contact for cutting, interrupted-contact rejection,
 blade damage latching, whole-thread clearance, rigid-motion-invariant strain
 inspection, moving-cloth/thread tunnelling detection, and final-state scoring. These are CPU geometry/rule
@@ -700,3 +701,23 @@ attached USD stage ID. Inspection also found unshifted generic Box reset events;
 the corrected bridge translates those poses with the world roots and checks the
 native tensor device.65 CPU tests pass; native validation remains pending. See
 `evidence/native-cut-bridge-093.json`.
+
+The094 deferred cut control removes the zero-load contact impulse: peak
+relative kinetic energy stays below1.3e-16J over0.2s. With passive bending,
+the ends separate and their ordinary contact returns after2.08ms; all remaining
+thread joints stay connected. A later three-step self-contact has at most
+0.269mm capsule overlap before clearing. PhysX endpoint velocities briefly
+spike, while the unsmoothed pose-difference motion remains bounded; these are
+recorded separately rather than turned into an invented energy scoring gate.
+See `evidence/native-cut-transition-094.json`. The YAM retry exposed a reset
+dtype mismatch, corrected by preserving Python float values in Arena Pose
+configuration. Neither free-loop control is a robot cutting demonstration.
+
+The097 CPU/YAM bridge passes two ready-hold actions with96 physics substeps
+audited. The ordinary reset restores cloth positions within1.5nm and zero
+velocities. Peak extension is0.173%, all thread/cloth and closed-junction checks
+pass, and no blade damage is detected. This establishes integration only; the
+294-action first-cut candidate remains to be tested. Native overview images are
+clean but too wide to inspect individual stitches. Optional `--judging-views`
+adds fixed native close-up views for recording only; camera framing has not yet
+been validated. See `evidence/native-yam-bridge-097.json`.

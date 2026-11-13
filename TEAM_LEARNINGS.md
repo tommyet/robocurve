@@ -4,6 +4,45 @@ Last updated: 2026-11-13 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-13 — manipulation progress at 11:26 UTC
+
+- Development checkpoint `388d75b` is pushed. New work remains on the same
+  development branch; no upstream PR, media upload or Dream request has run.
+- Cake095 completes 838 actions at 240 Hz, with clean release and no spill or
+  damage. It scores 0.5: three valid shapes across 49 mm, with continuous ridges
+  of 4, 2.5 and 1.5 mm (the third fails the unchanged 2 mm requirement). Exact
+  input replay matches material volume to numerical precision. A physical nozzle
+  with 35% rather than 28% star depth is now being tested on the full six-shell
+  motion; both the metal geometry and material aperture change together. Cream
+  properties and judging thresholds are unchanged. No full-score claim yet.
+- Wheel096's faster 200 µs/255-iteration corrected-state control fails tension
+  convergence (327–363 N). Keep 100 µs/128 iterations. The slower 380-action
+  insertion/quarter-turn trial is running; only its actual result can validate it.
+- Shirt093's wider pinch retains the hem after the other hand opens. Sampled
+  fixture/forearm checks pass; local rounded-pad contact still has up to 0.410 mm
+  nodal overlap and 1.10 mm triangle/chord overlap. This is disclosed, rather than
+  equated with the earlier cloth-through-pad escape. The screened 1,280-action
+  first-peg continuation is frozen as098 and queued.
+- Tie097 again stops before receiving the end. Natural settling moves the loose
+  narrow tip into a marginal forearm path. A 10° receiving approach now clears
+  all three recorded cloth states with 2 mm proximity screening; the actual
+  shell-thickness guard remains unchanged. No handoff or knot demonstrated yet.
+- Seam097 passes the two-action CPU/YAM integration and reaches251 actions in
+  the first-cut trial. Pickup/entry grasp slip is at most0.160 mm; all12,071
+  thread/cloth and junction audits remain clean. It stops on a110 µm fabric
+  hinge error before cutting. Determine signed aperture and actual fracture,
+  rather than treating every Euclidean residual as torn fabric.
+- Paper094's growing raw hinge mismatch includes compression and slip. All-edge
+  geometry finds a maximum positive aperture of120.69 µm, with no empty normal
+  clearance or lost shared-edge overlap. The next gentle-touchdown diagnostic
+  uses a150 µm aperture bound (half the300 µm wire thickness) plus native break
+  telemetry; it retains all wire-crossing and material-strength checks.
+- One Pod remains shared by at most two bounded simulator jobs. The most recent
+  inventory at11:12 UTC estimates active compute at$11.389, plus$0.319 prior
+  compatibility work and temporary disk. Billing remains unavailable. Verified
+  local shutdown deadline11:57 UTC; renew during active work, preserve all
+  archives before stopping. Budget still reserves$2.205 for Dream and$0.30 disk.
+
 ## 2026-11-13 — contact and coupling evidence at 11:03 UTC
 
 - Wheel091 completes202 actions with clean sampled hull intersections, but the
