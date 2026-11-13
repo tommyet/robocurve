@@ -30,6 +30,10 @@ if REGULAR_REFINED:MESH=tshirt(spacing=.0025)
 elif CONTACT_REFINED:
     from refined_cloth import contact_band_mesh
     MESH=contact_band_mesh()
+if os.environ.get('ROBOCURVE_SHIRT_PAD_REFINED')=='1':
+    if not REGULAR_REFINED:raise ValueError('Pad refinement requires the regular base mesh')
+    from refined_cloth import pad_refined_mesh
+    MESH=pad_refined_mesh()
 INITIAL=initial_layout(MESH)
 OBJECTS=[
     Cloth('tshirt',pos=(.345,0.,SUPPORT_TOP+.003),size=(.30,.40,.0016),

@@ -7,6 +7,17 @@ from scoring import score
 
 
 class Geometry(unittest.TestCase):
+    def test_pad_refinement_preserves_area_topology_and_resolves_grip_edges(self):
+        from refined_cloth import pad_refined_mesh
+        m=pad_refined_mesh();a=m.audit();b=tshirt(spacing=.0025).audit()
+        self.assertEqual(len(a['boundary_loops']),4)
+        self.assertAlmostEqual(a['surface_area_m2'],b['surface_area_m2'],places=12)
+        triangles=m.rest[m.faces]
+        selected=(triangles[:,:,1].min(1)<=.035)&(triangles[:,:,0].max(1)>=-.15)&(triangles[:,:,0].min(1)<=.15)
+        selected&=(triangles[:,:,0].min(1)<=-.095)|(triangles[:,:,0].max(1)>=.095)
+        lengths=np.linalg.norm(triangles[selected]-np.roll(triangles[selected],-1,axis=1),axis=2)
+        self.assertLessEqual(lengths.max(),.00125*1.000001)
+
     def test_garment_has_four_openings_and_two_sewn_layers(self):
         m=tshirt()
         self.assertEqual(len(m.audit()['boundary_loops']),4)

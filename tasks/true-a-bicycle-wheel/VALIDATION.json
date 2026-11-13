@@ -1270,14 +1270,17 @@
     "next": "Run the explicit relocated passive gate, then the matching two-action YAM gate. Only after both pass attempt the 652-action diagnostic; see RELOCATION_DIAGNOSTIC.md."
   },
   "latest_review_2026_11_13": {
-    "status": "One native quarter-turn and clean withdrawal validated; full repair and judging remain absent.",
-    "batch": "149",
-    "actions": 652,
-    "wall_seconds": 2577.027,
-    "retained_nipple_rotation_turns": 0.2124566,
-    "final_mouth_clearance_mm": 6.454,
-    "unexpected_native_hull_intersections": 0,
-    "latest_candidate": "Second-stroke candidate is reachable but fails local collision checks; not run.",
-    "cpu_tests": 83
+    "status": "tool_grasp_lost_during_first_turn",
+    "batch": 162,
+    "actions": 562,
+    "wall_seconds": 3991.5721,
+    "retained_nipple_rotation_turns": 0.1745366,
+    "latest_candidate": "Local physical rim-bracing screen, no native result.",
+    "native_hull_audit": {
+      "from_action": 430,
+      "through_action": 562,
+      "samples": 133,
+      "unexpected_intersections": 0
+    }
   }
 }

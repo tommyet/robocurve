@@ -16,7 +16,7 @@ import numpy as np
 PINCH_OPENING = .0025
 
 
-def reobserve(reference, measured_action, rest, nodes, *, lift_turn=False,edge_patch=False,wide_insertion=False):
+def reobserve(reference, measured_action, rest, nodes, *, lift_turn=False,edge_patch=False,wide_insertion=False,no_turn_lift=False):
     from yam_arena import ik, station
     from yam_arena.constants import READY, SHOULDER, WRIST, GRIPPER, FINGER_OPEN
     from fixed_motion import ROTATIONS
@@ -68,7 +68,14 @@ def reobserve(reference, measured_action, rest, nodes, *, lift_turn=False,edge_p
             (1., np.array((.1494, sign * .115, .898 if side == 'left' else .902)),
              PINCH_OPENING, rotation if lift_turn else ROTATIONS[side],
              'carry held hem clear before lifting' if lift_turn else 'turn held hem in clear space')]
-        if lift_turn:
+        if no_turn_lift:
+            schedule.append((5.,np.array((.1494,sign*.115,1.20)),PINCH_OPENING,rotation,
+                             'lift both hems without rotating the fingers'))
+            schedule.append((2.,np.array((.1494,sign*.115,1.20)),PINCH_OPENING if side=='left' else .6,rotation,
+                             'release right hem'))
+            schedule.append((2.,np.array((.1494,sign*.115,1.20)),PINCH_OPENING if side=='left' else .6,rotation,
+                             'hold left hem after right release'))
+        elif lift_turn:
             goal=np.asarray(reference['frames'][259]['action14'])[7*index:7*index+6]
             goal_p,goal_R=ik.tcp_pose(goal,station.BASES[side])
             schedule.append((3.,goal_p,PINCH_OPENING,goal_R,
@@ -96,7 +103,7 @@ def reobserve(reference, measured_action, rest, nodes, *, lift_turn=False,edge_p
             observed_center_m=center.tolist(), target_tcp_m=target.tolist(),
             rotation=rotation.tolist(), desired_patch_local_m=desired_local.tolist())
     result = copy.deepcopy(reference)
-    replaced_through=260 if lift_turn else 200
+    replaced_through=380 if no_turn_lift else 260 if lift_turn else 200
     result['frames'][100:replaced_through] = [dict(action14=a['action'] + b['action'], stage=a['stage'])
                                for a, b in zip(arms['left'], arms['right'])]
     # Preserve the new pinch during the lift and preserve the original smooth

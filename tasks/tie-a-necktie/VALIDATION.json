@@ -426,18 +426,13 @@
   },
   "submission_ready": false,
   "latest_review_2026_11_13": {
-    "status": "Measured-state diagnostic retains both strands during a38mm narrow-end lift; no knot or full fresh-start improved sequence.",
-    "batch": "167",
-    "actions": 320,
-    "wall_seconds": 237.39429652504623,
-    "narrow_patch_lift_m": 0.0374293397454655,
-    "sampled_robot_hull_checks": 6,
-    "maximum_robot_node_penetration_m": 0.0,
-    "self_crossing_samples": 9,
+    "status": "first_crossing_with_triangle_contact_error_not_knot",
+    "batch": 169,
+    "actions": 240,
+    "maximum_triangle_interior_penetration_m": 0.0011015063,
     "self_crossing_pairs": 0,
-    "fixture_samples": 11,
     "fixture_triangle_hits": 0,
     "cpu_tests": 27,
-    "next": "Native169 first underpass candidate from the recorded167 end state; no score or task-demo claim."
+    "next": "170 slower crossing; no fresh-start knot yet."
   }
 }

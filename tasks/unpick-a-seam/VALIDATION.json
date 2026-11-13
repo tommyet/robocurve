@@ -170,15 +170,19 @@
   "native_short_contact_replay": "evidence/native-contact-replay-120-123.json",
   "submission_ready": false,
   "latest_review_2026_11_13": {
-    "status": "Native164 checkpoint resolution comparison remains outside the material model domain; no cut or removal.",
-    "batch": "164",
-    "solver_position_iterations": 255,
-    "replay_simulated_seconds": 0.0036458333333333334,
-    "maximum_cloth_strain_percent": 8.25469394548937,
-    "strain_domain_limit_percent": 5,
+    "status": "stationary128_valid_255_invalid_no_cuts",
+    "batch": 168,
+    "stationary128": {
+      "seconds": 0.1,
+      "max_strain_percent": 1.15644,
+      "blade_force_n": 0.0888376
+    },
+    "stationary255": {
+      "seconds": 0.00859375,
+      "max_strain_percent": 5.80525,
+      "empty_aperture_um": 409.448
+    },
     "thread_cuts": 0,
-    "maximum_blade_edge_force_n": 0.40317966659839516,
-    "cpu_tests": 80,
-    "limitation": "Reconstruction omits solver warm starts. This does not establish the outcome of a full fresh-start255-iteration episode."
+    "cpu_tests": 80
   }
 }

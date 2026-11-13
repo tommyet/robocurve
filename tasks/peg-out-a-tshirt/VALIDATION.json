@@ -537,16 +537,14 @@
   },
   "submission_ready": false,
   "latest_review_2026_11_13": {
-    "status": "Native161 retains the hem after release, but sampled finger penetration invalidates the pickup; no hanging demonstration.",
-    "batch": "161",
-    "actions": 320,
-    "wall_seconds": 1327.678933929,
-    "maximum_sampled_robot_node_penetration_m": 0.0008637496958807528,
-    "self_crossing_samples": 14,
+    "status": "retained_grasp_with_triangle_contact_error_not_demo",
+    "batch": 166,
+    "actions": 180,
+    "wall_seconds": 1619.5671,
+    "maximum_triangle_interior_penetration_m": 0.0003673378,
     "self_crossing_pairs": 0,
-    "fixture_audit_samples": 15,
     "fixture_intersections": 0,
-    "cpu_tests": 19,
-    "next": "Native166 short measured-state comparison lifts without wrist rotation. It is not a task reset or demonstration."
+    "cpu_tests": 20,
+    "next": "Fresh-start171: no-turn lift and conforming1.25mm grip-region mesh; same material and integrity limits."
   }
 }

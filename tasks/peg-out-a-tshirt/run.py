@@ -116,6 +116,8 @@ def main():
     p.add_argument('--state-assisted-grasp',action='store_true',help='Explicit scripted feasibility demo: measure reset cloth once to place ordinary fingers; never used by Dream')
     p.add_argument('--contact-refined',action='store_true',help='Use the explicitly refined cloth contact band for every policy reset')
     p.add_argument('--regular-refined',action='store_true',help='Use the regular2.5mm cloth grid for every policy reset, preserving1.6mm seam width')
+    p.add_argument('--pad-refined',action='store_true',help='Conforming1.25mm contact refinement at the two hem grips; unchanged material')
+    p.add_argument('--no-turn-lift-diagnostic',action='store_true',help='380-action pickup with vertical lift and right release, preserving pinch orientation')
     p.add_argument('--raised-support-diagnostic',action='store_true',help='Use an explicitly180mm laundry support and a measured lateral grasp; otherwise100mm')
     p.add_argument('--continuous-pad-diagnostic',action='store_true',help='Reobserve the garment at action100 and target the continuous finger pads with ordinary joint commands')
     p.add_argument('--surface-contact-diagnostic',action='store_true',help='Native speculative cloth CCD and eight collision-pair updates; unchanged cloth material and thickness')
@@ -139,6 +141,8 @@ def main():
     os.environ['ROBOCURVE_SHIRT_SURFACE_CONTACT_DIAGNOSTIC']='1' if args.surface_contact_diagnostic else '0'
     os.environ['ROBOCURVE_SHIRT_CENTER_PEG_DIAGNOSTIC']='1' if args.center_peg_diagnostic else '0'
     if args.regular_refined and args.contact_refined:p.error('Select one garment mesh')
+    if args.pad_refined and not args.regular_refined:p.error('Pad refinement requires the regular base mesh')
+    os.environ['ROBOCURVE_SHIRT_PAD_REFINED']='1' if args.pad_refined else '0'
     fixed_plan=fixed_actions=None
     if args.mode=='motion-probe':
         if args.plan is None:
@@ -172,6 +176,8 @@ def main():
         args.steps=maximum if args.mode=='dream' and args.steps is None else 60 if args.steps is None else args.steps
         if not 1<=args.steps<=maximum:p.error(f'This mode permits1–{maximum} control steps')
     if fixed_plan is not None:
+        if bool(fixed_plan.get('requires_pad_refinement'))!=args.pad_refined:
+            p.error('Frozen motion and contact mesh refinement must match')
         if fixed_plan.get('required_cloth_mesh')=='regular_2p5mm' and not args.regular_refined:
             p.error('This motion requires the validated regular 2.5 mm cloth mesh')
         expected_iterations=fixed_plan.get('required_solver_iterations')
@@ -194,6 +200,8 @@ def main():
         p.error('Contact pinch is restricted to the320-action surface-contact pickup diagnostic')
     if args.lift_turn_diagnostic and not (args.continuous_pad_diagnostic and args.surface_contact_diagnostic and args.steps>=320 and not args.contact_pinch_diagnostic):
         p.error('Lift-turn comparison requires a complete surface-contact pickup without jaw relief')
+    if args.no_turn_lift_diagnostic and not (args.lift_turn_diagnostic and args.steps==380 and not args.state_assisted_clip):
+        p.error('No-turn lift requires the380-action measured pickup diagnostic')
     if args.state_assisted_clip and (args.mode!='motion-probe' or args.steps<940 or args.joint_feedback_from!=700):
         p.error('State-assisted clip requires the tracked first-clip sequence through at least940 actions')
     if not 0<=args.seed<2**32:
@@ -224,6 +232,7 @@ def main():
             'control_hz':CONTROL_HZ,'requested_steps':args.steps,'completed_steps':0,
             'policy':('constant adapter-ready joint targets' if fixed_plan is None else 'frozen fixed joint trajectory')+'; no object/assessor feedback',
             'instruction':draft['instruction'],'joint_feedback_from':args.joint_feedback_from,'state_assisted_grasp':args.state_assisted_grasp,'contact_refined':args.contact_refined,'regular_refined':args.regular_refined,'support_height_m':.18 if args.raised_support_diagnostic else .10,'solver_iterations':args.solver_iterations,'external_forces_once_diagnostic':args.external_forces_once_diagnostic}
+    report.update(pad_refined=args.pad_refined,no_turn_lift_diagnostic=args.no_turn_lift_diagnostic)
     if args.joint_feedback_from is not None:
         report['policy']='frozen joint reference with bounded right-arm PI from ordinary joint observations; no object/assessor feedback'
     if args.state_assisted_grasp:
@@ -453,8 +462,8 @@ def main():
                 actual=arena_cloth.state(emb._env,'tshirt').nodes
                 candidate=reobserve(fixed_plan,observed,arena_cloth.SPECS['tshirt'].mesh.rest,actual,
                     lift_turn=args.lift_turn_diagnostic,edge_patch=args.edge_patch_diagnostic,
-                    wide_insertion=args.wide_insertion_diagnostic)
-                rejection=audit(dict(candidate,frames=candidate['frames'][:320]))
+                    wide_insertion=args.wide_insertion_diagnostic,no_turn_lift=args.no_turn_lift_diagnostic)
+                rejection=audit(dict(candidate,frames=candidate['frames'][:380 if args.no_turn_lift_diagnostic else 320]))
                 (args.out/'continuous-pad-hull-audit.json').write_text(json.dumps(rejection,indent=2)+'\n')
                 if not rejection['passed_rejection_check']:
                     raise RuntimeError('Continuous-pad candidate fails rigid fixture/hull screening')
@@ -466,7 +475,7 @@ def main():
                 report['continuous_pad_diagnostic']=candidate['pad_candidate_calibration']
                 report['executed_plan_sha256']=hashlib.sha256((frozen/'fixed-motion.json').read_bytes()).hexdigest()
                 save()
-            if step==321 and args.state_assisted_grasp and args.steps>320:
+            if step==321 and args.state_assisted_grasp and args.steps>320 and not args.no_turn_lift_diagnostic:
                 from scripted_grasp import held_patch_geometry
                 actual_cloth=scene.object_states(emb._env,names)['tshirt'].nodes
                 robot=base.scene['left_robot']

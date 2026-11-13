@@ -1099,13 +1099,12 @@
     "unintended_intersections": 0
   },
   "latest_review_2026_11_13": {
-    "status": "Native156 fails paper continuity during insertion; no extraction or score.",
-    "batch": "156",
-    "actions": 280,
-    "wall_seconds": 1341.019,
-    "maximum_empty_aperture_um": 150.5448954522233,
-    "validity_limit_um": 150,
-    "latest_candidate": "Desired-velocity feedforward does not fix paper continuity; model/contact change required before another full run.",
+    "status": "invalid_model_domain_before_insertion",
+    "batch": 164,
+    "actions": 299,
+    "wall_seconds": 1917.2988668,
+    "maximum_empty_aperture_um": 151.0523,
+    "validity_limit_um": 150.0,
     "cpu_tests": 76
   }
 }

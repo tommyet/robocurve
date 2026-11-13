@@ -27,6 +27,59 @@ developers and their agents, not a competition submission document.
   and all GPUs are confirmed stopped, as requested. No paid tests are authorized
   for those ideas yet.
 
+## 2026-11-13 — later material results and bounded follow-ups
+
+- Native164 staple/255 stops at299actions after1917.30s, before fork insertion.
+  The lower sheet opens151.05µm, beyond the unchanged150µm empty-aperture limit.
+  No wire crossing or hinge fracture is reported; this remains an invalid
+  paper-model outcome, not successful extraction. Archive164 is verified locally
+  (SHA2565015e674fbd5398353e4c7a81419f236cb23308a288c737e11a1bd2720c08c93).
+- Stationary seam168 preserves recorded velocities but adds no handle motion.
+  At128iterations it passes0.1s with1.16% peak strain and0.0888N blade force.
+  At255 it fails after8.59ms with5.81% strain and409.45µm opening. Higher
+  iteration count is not a useful general remedy. These reconstructions omit
+  solver warm starts; neither is a fresh-start cutting demonstration.
+- Shirt166 completes180actions in1619.57s. Ten fixture samples and ten self-
+  crossing samples are clear. The left patch rises296mm and remains retained
+  after right release, but four robot-contact samples have triangle-interior
+  overlaps. Independent convex-depth optimization measures0.367mm maximum;
+  nodes remain within22.4µm. Do not call it a contact-valid pickup. Native171
+  tests a fresh-start380-action no-turn lift, with conforming1.25mm refinement
+  at both hem grips. Area, topology, layers, mass/material and audit limits
+  remain unchanged. Twenty local tests pass; native outcome is pending.
+- Tie169 completes240actions and retains both strands. Thirteen self and
+  thirteen fixture samples are clear. One robot sample at160 exposes triangle
+  overlap reaching1.102mm into a right fingertip; node depth alone underreports
+  this. Native170 retimes the same crossing from4 to6seconds, starting from
+  the valid167 reconstruction. No knot or full demo is established.
+- Native162 wheel stops at562actions/3991.57s after losing its wrench grip.
+  The left hand was parked and the wheel moved during torque application.
+  All133 actual cooked-hull samples430–562 are clear of unintended intersections.
+  Investigate physical rim bracing before repeating a long free-wheel trial.
+  Archive162 is local and hash-verified:
+  e52996e247cd4d3f2c786f0c7bea6b5d7048be006fd04442fa249998c2298281.
+  A406j5r534r2o9ghj is confirmedEXITED after evidence transfer. Only theRTX
+  c9rp6c7dpr908a remains active. Its independent watchdog89420 was verified
+  alive and has a23:20UTC deadline for171, whose process has a2100s cap.
+  Tie170 has a separate verified process monitor9018, hard deadline22:53UTC;
+  its original timeout wrapper is paused. Preserve extended-limit.json with
+  native run status. No additional Dream calls or upstream PRs.
+
+## 2026-11-13 — current board and progress check
+
+- Board read at22:20UTC contains599 tasks. A title/keyword check finds no new
+  direct match to the five unfinished ideas. Our cake TK-XPE4K7 remains pending.
+  The sock-on-line PR760 remains closed, finally rejected, with no appeal
+  comment. Its review rejects rigid fabric, automatic/fixed clipping and
+  proximity-based grasp scoring; it does not establish an accepted competing
+  flexible-garment task. Recheck current ownership immediately before submission.
+- At22:22UTC staple164/255 has reached295 actions without an invalid-domain
+  stop, beyond the earlier128-iteration failure at280. It is still in heel
+  touchdown, before fork insertion329 and extraction365; no extraction claim.
+- Shirt166 reaches120 of180 actions and is releasing the right hem. Tie169
+  completes240 actions in160.22s; its first crossing and grip/contact checks
+  are pending. Wheel162 reaches450/1182. No new Dream calls or PRs.
+
 ## 2026-11-13 — retained narrow grip and continuing diagnostics
 
 - Tie165's six-second alignment keeps the narrow strand between the pads.
