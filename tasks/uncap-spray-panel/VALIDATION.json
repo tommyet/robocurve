@@ -1,14 +1,17 @@
 {
   "status": "development_prototype_not_submission_ready",
   "checked_date": "2026-11-13",
-  "local_scorer_tests": {"passed": 15, "command": "python3 -m unittest discover -s tasks/uncap-spray-panel -p 'test_*.py' -v"},
-  "native_runtime_tested": false,
+  "local_scorer_tests": {
+    "passed": 15,
+    "command": "python3 -m unittest discover -s tasks/uncap-spray-panel -p 'test_*.py' -v"
+  },
+  "native_runtime_tested": true,
   "scripted_demo_score": null,
   "dream_score": null,
   "media": null,
-  "gpu_started_for_this_task": false,
+  "gpu_started_for_this_task": true,
   "remaining": [
-    "No-model native mechanics probe and geometry/contact review",
+    "Cap grasp/access and force diagnosis: first physical removal attempt did not detach cap",
     "Cap retention and removal under ordinary robot forces",
     "Bimanual can grasp and physical nozzle press/release",
     "Full robot geometry spray occlusion beyond conservative TCP spheres",
@@ -16,5 +19,28 @@
     "Feedback controller and repeated full-score sealed-start demo",
     "Dream run with the final matching scene and scorer",
     "Videos, screenshot, task.json and novelty recheck"
-  ]
+  ],
+  "diagnostic_probe": {
+    "steps": 150,
+    "simulated_seconds": 7.5,
+    "score": 0.0,
+    "invalid": null
+  },
+  "cap_removal_diagnostic": {
+    "steps": 600,
+    "simulated_seconds": 30.0,
+    "score": 0.0,
+    "cap_detached": false,
+    "coverage": 0.0,
+    "spray_seconds": 0.0
+  },
+  "diagnostic_video": {
+    "frames": 601,
+    "fps": 20,
+    "codec": "h264",
+    "width": 640,
+    "height": 552,
+    "successful_spray_demo": false,
+    "local_path": "/Users/miyamura/Github/robocurve/artifacts/spray-panel-20261113/spray-capprobe-001/diagnostic-preview.mp4"
+  }
 }

@@ -11,7 +11,7 @@ from scoring import SprayScorer
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--policy',choices=['probe','dream'],default='probe')
+    parser.add_argument('--policy',choices=['probe','capprobe','dream'],default='probe')
     parser.add_argument('--max-steps',type=int,default=2400)
     parser.add_argument('--log-dir',type=Path,required=True)
     args=parser.parse_args()
@@ -162,7 +162,8 @@ def main():
                 return ActionChunk(actions=[Action(data=pack(arm,arm))],control_hz=20.)
         policy='spray_geometry_probe'
         register('policy',policy)(HoldPolicy)
-    (out/'mode.json').write_text(json.dumps(dict(policy=args.policy,diagnostic=args.policy=='probe')))
+    elif policy=='capprobe':policy='yam_scripted'
+    (out/'mode.json').write_text(json.dumps(dict(policy=args.policy,diagnostic=args.policy!='dream')))
     return cli(['run','--embodiment','uncap_spray_prototype','--policy',policy,
                 '-E',f'task={Path(__file__).parent / "task.py"}','-E','object_jitter=0',
                 '-E','control_hz=20','-E','cam_width=320','-E','cam_height=176',

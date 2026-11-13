@@ -1,8 +1,12 @@
 # Uncap a spray can and coat a panel
 
-Development prototype: local scorer checks pass. Native joints, robot access,
-cap removal, nozzle operation and a full-score demonstration are **unverified**.
-No model score, successful demo, media ID or submission is claimed.
+Development prototype: local scorer checks pass. Native scene initialized and
+ran a 150-step stability probe. A 600-step two-arm cap-removal diagnostic
+failed to detach the cap; no paint was emitted. Robot access, cap removal,
+nozzle operation and a full-score demonstration remain **unverified**.
+No model score, successful demo, media ID or submission is claimed. A complete
+601-frame three-camera H.264 diagnostic video exists locally; it is explicitly
+labelled as a prototype, not a spraying demonstration.
 
 The robot removes an ordinary friction cap, parks it, grips the cylindrical
 can and presses its button while sweeping blue spray over a white panel. This
@@ -68,7 +72,8 @@ using only ordinary arm commands, record a full-score run and repeat from a
 sealed start. Only then spend Dream requests. Reproduce scores from measured
 telemetry, review all three camera views, and retain hashes of final sources.
 
-The native runner is not yet runtime-tested. First run its no-model hold probe
+The native runner completed a no-model hold probe on the existing L40S. This
+is the command to reproduce it:
 to check geometry, initial stability, joints and camera views. This probe holds
 the arms ready and cannot demonstrate cap removal or nozzle actuation:
 
@@ -77,9 +82,11 @@ the arms ready and cannot demonstrate cap removal or nozzle actuation:
   --policy probe --max-steps 150 --log-dir ~/yam-eval/spray-probe-001
 ```
 
-A manipulation probe and demo controller are outstanding.
-`task.demo()` deliberately refuses to invent
-a successful trajectory. Draft run limit is 2,400 controls (120 seconds at
+The `--policy capprobe` mode uses `task.demo()` for a diagnostic cap-removal
+attempt. Its first 600-step run failed: measured cap/can centre separation
+never exceeded 86.998 mm, cap guide never released, and no spray was emitted.
+This is a failed attempt, not a successful task demo. A working feedback
+controller and nozzle/painting sequence remain outstanding. Draft run limit is 2,400 controls (120 seconds at
 20 Hz); adjust to the demonstrated task before submission.
 
 ## Local checks

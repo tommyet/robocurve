@@ -30,5 +30,17 @@ def success(objects):
     return score(objects) == 1.
 
 def demo():
-    # No untested waypoint sequence is advertised as a successful demo.
-    raise RuntimeError('Robot demonstration is pending physical cap/nozzle validation')
+    """Diagnostic cap-removal attempt; not a full-score painting demo."""
+    from yam_arena.demo import Waypoint as W
+    from yam_arena.constants import FINGER_OPEN as O
+    x,y,_=CAN_START
+    return {
+        'left':[W(2.,(x,y,TOP+.26),O),W(2.,(x,y,TOP+.08),O),
+                W(2.,(x,y,TOP+.08),.024),W(24.,(x,y,TOP+.08),.024)],
+        'right':[W(7.,(x,y,TOP+.29),O),W(3.,(x,y,TOP+.157),O),
+                 W(2.,(x,y,TOP+.157),.028),W(3.,(x,y,TOP+.27),.028),
+                 W(3.,(CAP_PAD[0],CAP_PAD[1],TOP+.27),.028),
+                 W(3.,(CAP_PAD[0],CAP_PAD[1],TOP+.019),.028),
+                 W(2.,(CAP_PAD[0],CAP_PAD[1],TOP+.019),O),
+                 W(3.,(CAP_PAD[0],CAP_PAD[1],TOP+.25),O)],
+    }
