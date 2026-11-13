@@ -11,7 +11,10 @@ The current handle-free, wrapped-tape scene has a complete sealed-start scripted
 demonstration and unchanged repeat scoring **1.0**, independently replayed and
 audited. Each uses 2,045 actions / 102.25 simulated seconds (289.90 / 292.59 wall
 seconds on the reference VM). All 23 scorer/controller tests pass. These are two
-fixed-seed repeats, not a broad reliability estimate.
+fixed-seed repeats, not a broad reliability estimate. Dream-1 scored **0.0**
+after all 3,600 actions / 180 simulated seconds, with no tape segments cut. Its
+setup and runtime hashes match the demos; all evidence checks pass. The model
+used 75 successful requests in one session with no retries.
 
 Earlier demonstrations used tabs and do not establish success for this scene;
 their evidence is preserved under `evidence/tabbed-v1/` and commit `bbc3a68`.
@@ -152,4 +155,4 @@ air jumps, forced opening before all cuts, and invalid final placement.
 
 Historical tabbed-box traces and audits live under `evidence/tabbed-v1/`. Replay
 them using that version, not the current wrapped-tape scorer; its README gives
-the commands. Current complete-run evidence is listed in `VALIDATION.json`.
+the commands. Current demo and Dream evidence is listed in `VALIDATION.json`.

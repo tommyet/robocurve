@@ -1,8 +1,8 @@
 {
-  "status": "Handle-free wrapped-tape task: full-score sealed-start scripted feasibility demonstrated in two fixed-layout trials; no submission",
+  "status": "Sealed-start scripted feasibility and Dream evaluation complete; user authorized submission",
   "date": "2026-11-13",
   "demo_score": 1.0,
-  "dream_score": null,
+  "dream_score": 0.0,
   "media": null,
   "scorer_and_controller_tests": {
     "command": "python -m unittest -v test_scoring test_controller",
@@ -200,13 +200,64 @@
   "limitations": [
     "Two zero-jitter fixed-seed repeats establish deterministic feasibility in this scene, not broad reliability. Their camera exports are byte-identical.",
     "Tape fracture is a geometric sweep approximation. Tape has no rigid collider; cardboard, fixture, hinge and grasp proxies remain uncalibrated.",
-    "Scripted controller uses privileged measured hand/object poses. Dream has not been run on this revision.",
+    "Scripted controller uses privileged measured hand/object poses. Dream was evaluated once on the same fixed layout.",
     "The support-hand retreat has a 24.6 mm peak planned Cartesian IK residual over 27 samples above 1 mm. Measured retreat and joint-space parking clear the hand before lifting; planned residuals are not tracking precision.",
     "Meaningful novelty distinction remains unresolved given related pending carton-cutting PR #1856."
   ],
   "remaining": [
-    "Model-policy evaluation if requested",
     "Material/force calibration and broader variation testing",
-    "Novelty resolution and explicit authorization before submission"
-  ]
+    "Media upload and authorized submission handled separately"
+  ],
+  "dream": {
+    "run": "unbox-plain-dream-001",
+    "inspect_log": "adhoc_4c57e4b8.json",
+    "score": 0.0,
+    "replay_score": 0.0,
+    "control_steps": 3600,
+    "simulated_seconds": 180.00000000000668,
+    "wall_seconds": 486.951124156,
+    "termination_reasons": [
+      "max_steps"
+    ],
+    "inference": {
+      "model": "dreamlabs/dream-1-beta",
+      "requests": 75,
+      "attempts": 75,
+      "sessions": 1,
+      "retries": 0,
+      "raw_response_rows_beyond_limits": 2078,
+      "note": "Raw response counts include unused predicted rows. All executed actions pass bounds and independent command-rate checks."
+    },
+    "audit": "evidence/dream-001-audit.json",
+    "all_audit_checks_passed": true,
+    "runtime_source_hashes_match": true,
+    "setup_sha256": "fd2666ca1ea8a78e62e62fcd5bcd2b929f0cbaedbf02051d23aaa9260eda911b",
+    "setup_matches_demo": true,
+    "cut_segments": 0,
+    "invalid_outcome": false,
+    "maximum_cutter_rise_m": 0.003214597702026367,
+    "camera_frames_each": 3601,
+    "curated_trace": "evidence/dream-run.jsonl.gz",
+    "original_trace_sha256": "734779b739f3a5e6c173f479fa96077fc59204446399d8cb6a6b46464b3726a3",
+    "curated_trace_sha256": "ffbecb6f0531a9afb7eec7c5437bb5c62c54d658f7667ed614b072b30b3768d2",
+    "gzip_sha256": "c9c4cc20c4af0972fc4d5a1508491a5f027fd0bc2aa1aab1719201dc7abb8715",
+    "camera_video_sha256": {
+      "top": "c43419b8e2cf07b02980336f2b25a6e15ad3391bfc6ec7652e7cc222fa963e15",
+      "left": "aa8d347295e061e1bb28bda225672f90729c6838505645cb5cf907b343e0ee90",
+      "right": "5f83dca9fb865de75096c2bccb7a990b8147f9dc4d78213ed3191edefac06361"
+    },
+    "local_review_video": {
+      "file": "dream.mp4",
+      "submitted": false,
+      "sha256": "1890a3edacb3bc9f702db5e8da886aa622fed65984765db199812289ec26f7b8",
+      "bytes": 9252013,
+      "codec": "h264",
+      "pixel_format": "yuv420p",
+      "width": 640,
+      "height": 528,
+      "fps": 20,
+      "frames": 3601,
+      "duration_seconds": 180.05
+    }
+  }
 }

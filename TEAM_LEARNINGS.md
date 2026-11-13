@@ -1151,6 +1151,41 @@ result or measure outcome fairness.
 
 ## Dated session log
 
+### 2026-11-13 — authorized unboxing submission evidence: Dream completed
+
+- User explicitly authorized submission despite the known PR #1856 overlap.
+  Root agent owns media upload and the isolated fresh-upstream submission
+  worktree; Astra handles the required Dream evidence on the validated scene.
+- Restarted `yam-eval-launchable-72837c` from confirmed STOPPED at about
+  22:57 UTC. No GPU compute or other `run.py` process was present on connection.
+  All eight runtime source hashes match validated commit `d695684`. Existing
+  Dream credentials are present with mode 0600; contents were not displayed.
+- Complete sealed-start `unbox-plain-dream-001`, model `dreamlabs/dream-1-beta`,
+  scored **0.0**, independently replayed **0.0**, after all 3,600 actions / 180
+  simulated seconds. Normal `max_steps` termination; runner wall 486.951 s.
+  The outer 30-minute guard was not reached. Model nudged the cutter, maximum
+  root rise 3.215 mm, but cut zero segments; flaps stayed closed, no invalid
+  outcome. No runtime or scorer file changed.
+- All audit checks pass: genuine Dream policy/unprivileged full-task mode,
+  complete action budget, score/replay, frame/action counts, source and setup
+  match, valid executed ranges/rates, and no runtime error. Requests/attempts/
+  sessions are 75/75/1, with no retries. Raw predictions contain 2,078 rows
+  beyond limits (including unused tail rows); executed commands pass bounds.
+  Do not confuse those raw-row counts with executed violations.
+- All three complete 3,601-frame videos, raw logs, sources and measurements
+  are downloaded and SHA-256 verified in ignored
+  `artifacts/unbox-plain-20261113/unbox-plain-dream-001/`. Curated anonymous
+  scorer inputs and `evidence/dream-001-audit.json` are committed with updated
+  validation/scores. Review composite `review/dream.mp4` is full-length H.264/
+  yuv420p, 180.05 seconds, 640 x 528, 9.25 MB. Its actual setup screenshot is
+  byte-identical to the successful demos. Sampled video review confirms the
+  unsuccessful tool interaction and still-closed parcel.
+- Evidence downloaded and GPU/user jobs empty before stopping. Provider
+  confirmed **STOPPED at 23:08:46 UTC**. No additional GPU test, upload or PR
+  was performed by this agent. Root handles the separately authorized
+  submission. Billing was not queried; no cost is claimed.
+
+
 ### 2026-11-13 — handle-free wrapped-tape unboxing reaches full score twice
 
 - Operator: Astra agent, delegated at the user's request; branch

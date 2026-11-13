@@ -16,6 +16,11 @@ python3 -m unittest -v test_scoring
 ```
 
 `VALIDATION.json` distinguishes original, curated and compressed trace hashes.
+`dream-001-audit.json` records the genuine Dream-1 run: 0.0 after 3,600 actions,
+with 3,601 frames per camera, identical setup/runtime, and normal action-limit
+termination. `dream-run.jsonl.gz` contains its anonymous scorer inputs. Replay
+it with the same command pattern above; expected score is 0.0.
+
 Full videos, source snapshots and raw trial evidence are kept in ignored local
 artifacts; no media has been submitted. The pre-cut opening diagnostic earns
 zero task credit and is not this sealed-start demonstration.
