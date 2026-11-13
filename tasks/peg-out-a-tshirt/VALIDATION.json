@@ -545,6 +545,19 @@
     "self_crossing_pairs": 0,
     "fixture_intersections": 0,
     "cpu_tests": 20,
-    "next": "Fresh-start171: no-turn lift and conforming1.25mm grip-region mesh; same material and integrity limits."
+    "next": "Fresh-start171 stopped after7actions because measured runtime could not reach the pickup within the cap. Smaller contact tests are required before another full run."
+  },
+  "native171": {
+    "status": "interrupted_runtime_gate",
+    "completed_actions": 7,
+    "requested_actions": 380,
+    "wall_seconds": 1412.4073848919943,
+    "reset_wall_seconds": 1246.4367685820907,
+    "documented_process_pause_seconds": 208.059,
+    "settled_simulated_seconds": 5.0,
+    "initial_transverse_self_crossings": 0,
+    "initial_fixture_triangle_hits": 0,
+    "interpretation": "The refined cloth settles with clear sampled geometry, but no grasp, peg placement or contact-convergence result was reached.",
+    "archive_sha256": "f6d9bf4b08a87f1c80b15c349643a689adb2deb639162349f5bef0dc8e66fc64"
   }
 }

@@ -2,7 +2,7 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "83 CPU checks pass. One native quarter-turn and clean withdrawal validated; full repair and judging remain absent. Second-stroke candidate is reachable but fails local collision checks; not run.",
+  "cpu_checks": "The physical rim-bracing candidate passes all1182 commanded-pose cooked-hull checks. Native162 lost its wrench grip during the first turn. Full repair, released revolution and final scoring remain absent.",
   "simulator_probe": null,
   "demo": null,
   "dream": null,
@@ -1275,7 +1275,7 @@
     "actions": 562,
     "wall_seconds": 3991.5721,
     "retained_nipple_rotation_turns": 0.1745366,
-    "latest_candidate": "Local physical rim-bracing screen, no native result.",
+    "latest_candidate": "braced-right-workspace-plan.json: ordinary left rim grip, all1182 commanded-pose cooked-hull checks clear; no native result.",
     "native_hull_audit": {
       "from_action": 430,
       "through_action": 562,

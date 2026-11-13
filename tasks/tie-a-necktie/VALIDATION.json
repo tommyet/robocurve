@@ -426,13 +426,41 @@
   },
   "submission_ready": false,
   "latest_review_2026_11_13": {
-    "status": "first_crossing_with_triangle_contact_error_not_knot",
-    "batch": 169,
-    "actions": 240,
-    "maximum_triangle_interior_penetration_m": 0.0011015063,
-    "self_crossing_pairs": 0,
+    "status": "refined_contact_gate_passed_but_no_knot",
+    "batch": 172,
+    "actions": 40,
+    "cpu_tests": 28,
+    "next": "A full fresh-start refined grasp and complete knot controller remain required; GPUs are stopped."
+  },
+  "native170": {
+    "status": "stopped_after_contact_invalidity",
+    "actions": 244,
+    "wall_seconds": 1183.0344410976395,
+    "measured_maximum_triangle_interior_penetration_m": 0.0011226,
+    "interpretation": "Slowing the crossing from4 to6seconds did not resolve the same coarse-face fingertip error. No knot or score.",
+    "archive_sha256": "0278f1c8ca83cccdcb07985af2063900f65d719fe98a061ce72f4664f1b3bccd"
+  },
+  "native172": {
+    "status": "short_refined_contact_diagnostic_passes_sampled_audits",
+    "actions": 40,
+    "wall_seconds": 255.5474820844829,
+    "source_checkpoint": "native169/action140, explicitly refined and reconstructed",
+    "nodes": 21167,
+    "faces": 41072,
+    "robot_audit_samples": 5,
+    "intersecting_robot_hull_samples": 0,
+    "maximum_sampled_robot_node_penetration_m": 0.00010068170375315127,
+    "fixture_audit_samples": 5,
     "fixture_triangle_hits": 0,
-    "cpu_tests": 27,
-    "next": "170 slower crossing; no fresh-start knot yet."
+    "self_audit_samples": 5,
+    "transverse_self_crossing_pairs": 0,
+    "score": null,
+    "demonstration": false,
+    "archive_sha256": "4f461b0a80ab3d46ae47bb96a3e8f9d8ca7b9918736fe49e167cf761637fb893",
+    "limitations": [
+      "Interpolation changes mesh resolution but does not project nodes out of contact.",
+      "Reconstruction omits solver warm starts and estimates joint velocity from20Hz samples.",
+      "Discrete contact checks do not certify continuous contact, a knot or a full task episode."
+    ]
   }
 }

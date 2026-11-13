@@ -114,6 +114,7 @@ def main():
     p.add_argument('--seed',type=int,default=0)
     p.add_argument('--inside-out-reset',action='store_true',help='Explicit diagnostic reset for a simple (Oriental) knot; default remains front-face drape')
     p.add_argument('--adult-collar',action='store_true',help='Explicit diagnostic145cm tie and standalone folded-collar form')
+    p.add_argument('--grip-refined',action='store_true',help='Conforming1.25mm mesh around the wide-end grip; unchanged material')
     p.add_argument('--state-assisted-grasp',action='store_true',help='Disclosed scripted adult pickup: use measured reset cloth to select ordinary finger targets')
     p.add_argument('--state-assisted-handoff',action='store_true',help='Disclosed scripted adult tip transfer: measure the held free tip before ordinary receiving-finger actions')
     p.add_argument('--state-assisted-regrasp',action='store_true',help='Extend the verified handoff with a screened carry and measured ordinary near-tip regrasp')
@@ -157,6 +158,7 @@ def main():
         if not 1<=args.steps<=maximum:p.error(f'This mode permits1–{maximum} control steps')
     if args.mode=='dream' and (args.state_assisted_grasp or args.state_assisted_handoff):p.error('Dream receives ordinary observations and its own actions only')
     if args.mode=='dream' and not(args.adult_collar and args.inside_out_reset):p.error('Current Dream candidate requires the adult inside-out reset matching its demo')
+    if args.grip_refined and not args.adult_collar:p.error('Grip refinement requires the adult tie mesh')
     if not 0<=args.seed<2**32:
         p.error('Seed must be an unsigned 32-bit integer')
     if args.state_assisted_grasp and (args.mode!='motion-probe' or not args.adult_collar or args.steps not in ((1180,) if args.state_assisted_narrow else (880,) if args.state_assisted_regrasp else (280,580) if args.state_assisted_handoff else (220,))):
@@ -195,6 +197,7 @@ def main():
             'source_sha256':source_hashes,'versions':versions,'seed':args.seed,
             'initial_face':'inside-out for simple knot diagnostic' if args.inside_out_reset else 'front-face four-in-hand diagnostic',
             'adult_collar_candidate':args.adult_collar,
+            'grip_refined':args.grip_refined,
             'control_hz':CONTROL_HZ,'requested_steps':args.steps,'completed_steps':0,
             'policy':('constant adapter-ready joint targets' if fixed_plan is None else 'frozen fixed joint trajectory')+'; no object/assessor feedback',
             'instruction':draft['instruction']}
@@ -217,6 +220,7 @@ def main():
         os.environ.setdefault('OMNI_KIT_ACCEPT_EULA','YES')
         os.environ['ROBOCURVE_TIE_INSIDE_OUT_RESET']='1' if args.inside_out_reset else '0'
         os.environ['ROBOCURVE_TIE_ADULT_COLLAR']='1' if args.adult_collar else '0'
+        os.environ['ROBOCURVE_TIE_GRIP_REFINED']='1' if args.grip_refined else '0'
         from isaaclab.app import AppLauncher
         app=AppLauncher(headless=True,enable_cameras=True).app
         import torch

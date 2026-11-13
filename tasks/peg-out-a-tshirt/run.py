@@ -300,11 +300,16 @@ def main():
         from reset_scene import reset_and_settle
         report['reset']={'method':'raw reset plus five seconds of fixed native settling','status':'requested'}
         save()
-        reset_observer=None
+        reset_diagnostic=None
         if args.reset_diagnostic:
             from reset_diagnostic import ResetDiagnostic
-            reset_observer=ResetDiagnostic(emb,args.out)
+            reset_diagnostic=ResetDiagnostic(emb,args.out)
             report['native_scene_before_reset']=native_audit(omni.usd.get_context().get_stage(),list(arena_cloth.SPECS),list(PEG_SPECS))
+        def reset_observer(label,elapsed):
+            report['reset_progress']={'phase':label,'simulated_seconds':elapsed,
+                                      'target_simulated_seconds':5.}
+            save()
+            if reset_diagnostic is not None:reset_diagnostic(label,elapsed)
         report['reset']=reset_and_settle(emb,observer=reset_observer)
         stage=omni.usd.get_context().get_stage()
         names=list(arena_cloth.SPECS)+list(PEG_SPECS)

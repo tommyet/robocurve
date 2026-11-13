@@ -153,3 +153,12 @@ Neither grants a success certificate. `scoring.py` evaluates a completed,
 reviewed `wheel-judging-v 2` record. Incomplete, destructive or invalid outcomes
 score zero. `VALIDATION.json` and `evidence/` preserve the earlier controls and
 failures. No Dream run, media ID or upstream submission exists.
+
+### Current bracing candidate (13 November)
+
+`braced-right-workspace-plan.json` keeps the right arm's two-stroke path and
+adds an ordinary left-finger rim grip. This addresses the wheel motion seen in
+batch162, where the wrench slipped out before completing its first stroke.
+All1,182 commanded poses pass the local native-hull collision screen. This
+is a planning check only: the candidate has no native trial, repair score,
+released revolution or submission video. Do not use it as successful evidence.

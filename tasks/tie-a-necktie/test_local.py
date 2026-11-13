@@ -8,6 +8,20 @@ from scoring import score
 
 
 class Geometry(unittest.TestCase):
+    def test_grip_refinement_preserves_material_and_affine_reset(self):
+        from adult_layout import make_mesh,settled_initial_layout
+        from refined_contact import refine,interpolate
+        base=make_mesh(grip_refined=False);mesh,midpoints,order=refine(base)
+        self.assertEqual(len(mesh.audit()['boundary_loops']),1)
+        self.assertAlmostEqual(mesh.audit()['surface_area_m2'],base.audit()['surface_area_m2'],places=12)
+        np.testing.assert_allclose(interpolate(base.rest,midpoints,order),mesh.rest,atol=1e-15)
+        translated=base.rest+np.array([.2,.4,1.1])
+        np.testing.assert_allclose(interpolate(translated,midpoints,order),mesh.rest+[.2,.4,1.1],atol=1e-14)
+        for ids in mesh.markers['row_nodes']:self.assertTrue(np.all(np.diff(mesh.rest[ids,0])>=0))
+        points=settled_initial_layout(mesh);self.assertEqual(points.shape,mesh.rest.shape)
+        tri=mesh.rest[mesh.faces];selected=(tri[:,:,1].max(1)>=.16)&(tri[:,:,1].min(1)<=.24)
+        self.assertLessEqual(np.linalg.norm(tri[selected]-np.roll(tri[selected],-1,axis=1),axis=2).max(),.00125*1.000001)
+
     def test_strip_has_width_and_two_different_tips(self):
         m=necktie()
         self.assertEqual(len(m.audit()['boundary_loops']),1)

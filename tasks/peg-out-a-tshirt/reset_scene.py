@@ -28,7 +28,7 @@ def reset_and_settle(emb,observer=None):
         raise ValueError('Ready action exceeds normal adapter limits')
     for step in range(1,RESET_SETTLE_STEPS+1):
         emb._env.step(ready)
-        if observer is not None and step in (1,2,10,20,40,100):
+        if observer is not None and (step in (1,2) or step%10==0):
             observer("settle",step/RESET_CONTROL_HZ)
     emb._t=0.
     return dict(method='raw environment reset followed by fixed native settling',

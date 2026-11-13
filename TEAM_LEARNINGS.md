@@ -4,6 +4,52 @@ Last updated: 2026-11-13 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-13 — final contact gate and GPU shutdown, 23:11 UTC
+
+- Cake PR1919/TK-XPE4K7 is open and still awaiting review. Only cake is
+  submitted. The other five lack full-score demonstrations and must not be PRed
+  as ready. The concise current overview is `docs/six-task-batch-readiness.md`.
+- Tie170 was stopped at244actions after the slower crossing still produced
+  1.123mm triangle-interior fingertip overlap. Its verified archive SHA256 is
+  0278f1c8ca83cccdcb07985af2063900f65d719fe98a061ce72f4664f1b3bccd.
+- Tie172 explicitly refines the wide grip at material s=.16–.24m to maximum
+  1.25mm edges, preserving area, topology and physical material. It interpolates
+  the native169/action140 recorded state without contact projection. Forty
+  ordinary continuation actions complete in255.55s. Five sampled robot checks
+  have no0.2mm-shrunken-hull intersections; maximum node depth is0.101mm. Five
+  fixture and five transverse self-crossing checks are also clear. This is an
+  unscored reconstruction diagnostic, not a knot or fresh-start episode.
+  The archive SHA256 is
+  4f461b0a80ab3d46ae47bb96a3e8f9d8ca7b9918736fe49e167cf761637fb893.
+  Source/provenance preserves the explicit resolution change, missing solver
+  warm starts and20Hz joint-velocity estimate. Twenty-eight tie tests pass;
+  the three crossing tests also verify true/false cases with5/10/20mm grids.
+  A5mm audit grid reduces candidate-search memory without changing crossing
+  tolerances; use `audit_self_contact.py --cell .005` for the refined mesh.
+- Shirt171 reaches a clear settled state at960Hz, but only7/380actions before
+  deliberate interruption. Five simulated reset seconds took1246.44s wall,
+  including a documented208.06s process pause. Its full pickup could not fit
+  the2100s cap. No grasp/contact-convergence claim. Archive SHA256 is
+  f6d9bf4b08a87f1c80b15c349643a689adb2deb639162349f5bef0dc8e66fc64.
+  Future runner reports now save reset progress every10control steps; this
+  changes observation/reporting only, not settling actions or physics.
+- `braced-right-workspace-plan.json` preserves all right-arm commands and adds
+  ordinary left fingers at rim angle115degrees. All1182 commanded poses pass
+  the actual cooked-hull screen. It has no native bracing trial or repair score.
+  Do not confuse the planned collision check with physical contact retention.
+- All final archives170–172 are downloaded, extracted and hash-verified under
+  `artifacts/six-task-material255-new-2026-11-13/`. Local audit outputs are under
+  `artifacts/six-task-completion-2026-11-13/tie172-*`. The final Pod
+  c9rp6c7dpr908a is confirmedEXITED at23:10:14UTC. Fully paginated account
+  inventory at23:11 finds six Pods, zero active. Their disks remain retained.
+  The older A40 is also confirmedEXITED; no simulator remains rented/running.
+- Elapsed-time compute estimate is$23.70: prior$20.88 plus$1.2261 A40 and
+  $1.5936 RTX. Storage and Dream charges are excluded. This exceeds the original
+  $18 batch target and is not billing or remaining balance. Detailed estimate
+  and inventory are saved in ignored local artifacts. No further GPU/Dream
+  jobs launched. New-idea research remains deferred because the five PRs are
+  incomplete; no compute was spent on those ten ideas.
+
 ## 2026-11-13 — authorized submissions and next GPU session
 
 - The user explicitly authorized media uploads and one PR for each of the six

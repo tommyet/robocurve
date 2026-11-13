@@ -64,7 +64,14 @@ def main():
     try:
         os.environ['ROBOCURVE_TIE_INSIDE_OUT_RESET']='1'
         os.environ['ROBOCURVE_TIE_ADULT_COLLAR']='1'
+        os.environ['ROBOCURVE_TIE_GRIP_REFINED']='1' if provenance.get('grip_mesh_refinement') else '0'
         os.environ['ROBOCURVE_TIE_SURFACE_CONTACT_DIAGNOSTIC']='1'
+        from adult_layout import make_mesh
+        authored=make_mesh()
+        if (authored.rest.shape!=state['rest'].shape or
+                not np.allclose(authored.rest,state['rest'],rtol=0.,atol=1e-12) or
+                not np.array_equal(authored.faces,state['faces'])):
+            raise ValueError('Checkpoint numerical mesh differs from the native scene')
         from isaaclab.app import AppLauncher
         app=AppLauncher(headless=True,enable_cameras=True).app
         import torch

@@ -50,21 +50,24 @@ def crossing_pairs(nodes,faces,tolerance=1e-6,cell=.02):
 
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('trial',type=Path);p.add_argument('--out',type=Path,required=True);p.add_argument('--every',type=int,default=20);args=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('trial',type=Path);p.add_argument('--out',type=Path,required=True);p.add_argument('--every',type=int,default=20)
+    p.add_argument('--cell',type=float,default=.02,help='Spatial grid size in metres; changes candidate-search cost, not crossing criteria')
+    args=p.parse_args()
     if args.every<1:p.error('--every must be positive')
+    if not np.isfinite(args.cell) or args.cell<=0:p.error('--cell must be finite and positive')
     meshes=json.loads((args.trial/'meshes.json').read_text());mesh=meshes['tie'];faces=np.asarray(mesh['faces']);report=json.loads((args.trial/'run.json').read_text())
     rows=[]
     with gzip.open(args.trial/'trace.jsonl.gz','rt') as f:
         for line in f:
             row=json.loads(line)
             if row['step']%args.every and row['step']!=report['completed_steps']:continue
-            pairs=crossing_pairs(cloth_array(args.trial,row,'tie'),faces)
+            pairs=crossing_pairs(cloth_array(args.trial,row,'tie'),faces,cell=args.cell)
             rows.append(dict(step=row['step'],time_s=row['time_s'],transversely_crossing_triangle_pairs=pairs))
     result=dict(kind='offline_native_cloth_self_crossing_rejection_audit',score=None,
         run_status=report['status'],sample_count=len(rows),samples=rows,
         max_crossing_pairs=max((len(r['transversely_crossing_triangle_pairs']) for r in rows),default=0),
         trace_sha256=hashlib.sha256((args.trial/'trace.jsonl.gz').read_bytes()).hexdigest(),
-        tolerance_m=1e-6,shared_vertex_pairs_excluded=True,
+        tolerance_m=1e-6,spatial_grid_cell_m=args.cell,shared_vertex_pairs_excluded=True,
         limitation='Discrete sampled transverse surface crossings only. Does not assess coplanar/tangential contact, continuous trajectories, knot topology or physical tearing.')
     args.out.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({k:v for k,v in result.items() if k!='samples'},indent=2))
 

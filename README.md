@@ -58,8 +58,8 @@ limitations. Check the live task board before choosing a new objective.
   ignored. A clone includes code, CAD and curated numeric evidence. Arrange Brev access and
   credentials privately; full recordings are backed up on Tom's machine and the retained VM.
 - The [six-task development batch](docs/six-task-batch-readiness.md) records the
-  current material prototypes, validation gaps and compute budget. Its drafts
-  are not completed competition submissions.
+  current validation gaps and compute budget. Cake is submitted as PR1919;
+  the other five remain development drafts.
 
 Development branches start from this fork's `main`. **Competition submission branches start
 from `upstream/main` and contain only one `tasks/<name>/` folder.** Keep team notes and other

@@ -4,6 +4,7 @@ This isolated probe keeps the earlier child-collar trials reproducible. The
 1.45m tie starts untied and uncrossed, then settles under native gravity.
 """
 import numpy as np
+import os
 from pathlib import Path
 from cloth_mesh import necktie
 
@@ -16,13 +17,18 @@ ARC_START=.83
 DRAPE_RADIUS=.065
 
 
-def make_mesh():
+def make_mesh(grip_refined=None):
     # The native054 coarse mesh retained the band, but one5mm triangle cut
     # through the leading flap corner. Resolve the whole curved neckband and
     # adjacent bends at1.25mm longitudinal / about2.2mm across its width.
     # Geometry, material and collision thresholds are unchanged.
     s=np.r_[np.linspace(0.,.75,151),np.linspace(.75,1.12,297)[1:],np.linspace(1.12,LENGTH,67)[1:]]
-    return necktie(length=LENGTH,columns=16,longitudinal_samples=s)
+    mesh=necktie(length=LENGTH,columns=16,longitudinal_samples=s)
+    if grip_refined is None:grip_refined=os.environ.get('ROBOCURVE_TIE_GRIP_REFINED')=='1'
+    if grip_refined:
+        from refined_contact import refine
+        mesh=refine(mesh)[0]
+    return mesh
 
 
 def fixture_geometry():
@@ -89,9 +95,18 @@ def settled_initial_layout(mesh=None,*,inside_out=True):
     if not inside_out:raise ValueError('The measured adult reset is inside-out')
     mesh=make_mesh() if mesh is None else mesh
     with np.load(Path(__file__).with_name('adult-settled-reset.npz'),allow_pickle=False) as data:
-        if mesh.rest.shape!=data['rest'].shape or not np.allclose(mesh.rest,data['rest'],rtol=0.,atol=1e-12) or not np.array_equal(mesh.faces,data['faces']):
+        base=make_mesh(grip_refined=False)
+        if base.rest.shape!=data['rest'].shape or not np.allclose(base.rest,data['rest'],rtol=0.,atol=1e-12) or not np.array_equal(base.faces,data['faces']):
             raise ValueError('Measured adult reset does not match the authored material mesh')
         points=data['positions'].copy()
+    if mesh.rest.shape!=base.rest.shape:
+        from refined_contact import refine,interpolate
+        refined,midpoints,order=refine(base)
+        if not np.array_equal(mesh.rest,refined.rest) or not np.array_equal(mesh.faces,refined.faces):
+            raise ValueError('Unknown adult contact refinement')
+        points=interpolate(points,midpoints,order)
+    elif not np.array_equal(mesh.rest,base.rest) or not np.array_equal(mesh.faces,base.faces):
+        raise ValueError('Unknown adult cloth geometry')
     if points.shape!=mesh.rest.shape or not np.isfinite(points).all():raise ValueError('Invalid measured adult reset')
     return points
 
