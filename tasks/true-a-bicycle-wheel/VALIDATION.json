@@ -2,7 +2,7 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "77 CPU checks pass. Native 112 shows causal nipple rotation but invalid entry/withdrawal; 122 stops before insertion. A relocated 652-action quarter cycle now passes all nominal and two measured-state route screens, but has no native validation. No complete repair/demo/Dream.",
+  "cpu_checks": "83 CPU checks pass. One native quarter-turn and clean withdrawal validated; full repair and judging remain absent. Second-stroke candidate is reachable but fails local collision checks; not run.",
   "simulator_probe": null,
   "demo": null,
   "dream": null,
@@ -65,7 +65,7 @@
       "next": "Full 130-body geometry and live thread coupling .1s at25\u00b5s."
     }
   },
-  "cpu_tests_passed": 77,
+  "cpu_tests_passed": 83,
   "native_scene": {
     "authoring_entry_point": "wheel_scene.build_scene(stage, root)",
     "material_callback": "NativeThreadCoupler.before_step before every native substep",
@@ -1268,5 +1268,16 @@
       "One quarter cycle only. Native reset, contact, withdrawal, full repair, final revolution and Dream remain unproved."
     ],
     "next": "Run the explicit relocated passive gate, then the matching two-action YAM gate. Only after both pass attempt the 652-action diagnostic; see RELOCATION_DIAGNOSTIC.md."
+  },
+  "latest_review_2026_11_13": {
+    "status": "One native quarter-turn and clean withdrawal validated; full repair and judging remain absent.",
+    "batch": "149",
+    "actions": 652,
+    "wall_seconds": 2577.027,
+    "retained_nipple_rotation_turns": 0.2124566,
+    "final_mouth_clearance_mm": 6.454,
+    "unexpected_native_hull_intersections": 0,
+    "latest_candidate": "Second-stroke candidate is reachable but fails local collision checks; not run.",
+    "cpu_tests": 83
   }
 }

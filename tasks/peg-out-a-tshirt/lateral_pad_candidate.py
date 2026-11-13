@@ -16,7 +16,7 @@ import numpy as np
 PINCH_OPENING = .0025
 
 
-def reobserve(reference, measured_action, rest, nodes, *, lift_turn=False,edge_patch=False):
+def reobserve(reference, measured_action, rest, nodes, *, lift_turn=False,edge_patch=False,wide_insertion=False):
     from yam_arena import ik, station
     from yam_arena.constants import READY, SHOULDER, WRIST, GRIPPER, FINGER_OPEN
     from fixed_motion import ROTATIONS
@@ -30,7 +30,8 @@ def reobserve(reference, measured_action, rest, nodes, *, lift_turn=False,edge_p
     arms = {}
     patches = {}
     audits = []
-    for index, (side, hx, sign) in enumerate((('left', -.13 if edge_patch else -.12, 1.), ('right', .12, -1.))):
+    left_patch=reference.get('edge_grasp_material_x',{}).get('left',-.13) if edge_patch else -.12
+    for index, (side, hx, sign) in enumerate((('left', left_patch, 1.), ('right', .12, -1.))):
         ids = (abs(rest[:, 0] - hx) < .011) & (rest[:, 1] < .011)
         front = ids & (rest[:, 2] > 0)
         uv = rest[front, :2]
@@ -42,9 +43,15 @@ def reobserve(reference, measured_action, rest, nodes, *, lift_turn=False,edge_p
         normal /= np.linalg.norm(normal)
         approach, closing = sign * width, sign * normal
         rotation = np.column_stack((closing, np.cross(approach, closing), approach))
-        angle = np.deg2rad(-10. if side == 'right' or edge_patch else 0.)
+        angle = np.deg2rad(reference.get('edge_grasp_angles_degrees',{}).get(side,-10.)
+                          if edge_patch else (-10. if side == 'right' else 0.))
         rotation = rotation @ np.array(((1., 0., 0.),
             (0., np.cos(angle), -np.sin(angle)), (0., np.sin(angle), np.cos(angle))))
+        if edge_patch and side=='left':
+            tilt=np.deg2rad(reference.get('edge_grasp_left_closing_tilt',0.))
+            rotation=rotation@np.array(((np.cos(tilt),0.,np.sin(tilt)),(0.,1.,0.),(-np.sin(tilt),0.,np.cos(tilt))))
+        if edge_patch and side=='left' and reference.get('edge_grasp_flip_left',False):
+            rotation=rotation@np.diag((-1.,-1.,1.))
         center = nodes[ids].mean(0)
         # Native hulls have no pad at local(y=0,z=-10mm). Both opposed pads
         # have continuous surfaces around(y=-8mm,z=-10mm), measured in125.
@@ -54,7 +61,7 @@ def reobserve(reference, measured_action, rest, nodes, *, lift_turn=False,edge_p
         opening = float(observed[7 * index + 6])
         frames = []
         schedule = [
-            (2., target, .2, rotation, 're-observed insertion at continuous pads'),
+            (2., target, 1. if wide_insertion else .2, rotation, 're-observed insertion at continuous pads'),
             (1., target, PINCH_OPENING, rotation, 'ordinary finite pinch at continuous pads'),
             (1., np.array((.1494, target[1], target[2])), PINCH_OPENING, rotation,
              'pull forward clear of support'),
@@ -113,6 +120,7 @@ def reobserve(reference, measured_action, rest, nodes, *, lift_turn=False,edge_p
     result['candidate_status'] = 'diagnostic; native retention not yet established'
     result['reobservation_at_action'] = 100
     result['lift_turn_diagnostic'] = bool(lift_turn)
+    result['wide_insertion_diagnostic'] = bool(wide_insertion)
     result['pad_candidate_calibration'] = dict(patches=patches, kinematics=audits,
         normalized_pinch_opening=PINCH_OPENING,
         nominal_pad_aperture_m=.0008302080055186407 + .0939 * PINCH_OPENING,

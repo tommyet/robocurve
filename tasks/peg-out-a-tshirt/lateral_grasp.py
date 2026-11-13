@@ -8,20 +8,27 @@ import numpy as np
 from fixed_motion import ROTATIONS
 
 
-def calibrate(reference,rest,nodes,*,edge_patch=False,clear_height=None):
+def calibrate(reference,rest,nodes,*,edge_patch=False,clear_height=None,clear_x=.15,left_angle=-10.,right_angle=-10.,flip_left=False,left_patch_x=-.13,left_closing_tilt=0.):
     from yam_arena import ik,station
     from yam_arena.constants import READY,SHOULDER,WRIST,GRIPPER,FINGER_OPEN
     rest=np.asarray(rest);nodes=np.asarray(nodes)
     if rest.shape!=nodes.shape or not np.isfinite(nodes).all():raise ValueError('Invalid cloth observation')
+    if not -.14<=left_patch_x<=-.10:raise ValueError('Left patch must stay on exposed hem')
     arms={};records=[];patches={}
-    for side,hx,sign in [('left',-.13 if edge_patch else -.12,1.),('right',.12,-1.)]:
+    for side,hx,sign in [('left',left_patch_x if edge_patch else -.12,1.),('right',.12,-1.)]:
         ids=(abs(rest[:,0]-hx)<.011)&(rest[:,1]<.011);front=ids&(rest[:,2]>0)
         uv=rest[front,:2];points=nodes[front]
         fit=np.linalg.lstsq(np.c_[uv-uv.mean(0),np.ones(len(uv))],points-points.mean(0),rcond=None)[0]
         width=fit[0]/np.linalg.norm(fit[0]);normal=np.cross(width,fit[1]);normal/=np.linalg.norm(normal)
         approach=sign*width;closing=sign*normal;R=np.column_stack((closing,np.cross(approach,closing),approach))
-        angle=np.deg2rad(-10. if side=='right' or edge_patch else 0.)
+        if not -35.<=left_angle<=35. or not -35.<=right_angle<=35.:raise ValueError('Bounded in-plane grasp angle required')
+        angle=np.deg2rad((left_angle if side=='left' else right_angle) if edge_patch else (-10. if side=='right' else 0.))
         R=R@np.array([[1,0,0],[0,np.cos(angle),-np.sin(angle)],[0,np.sin(angle),np.cos(angle)]])
+        if not -15.<=left_closing_tilt<=15.:raise ValueError('Closing-axis tilt is bounded to15degrees')
+        if edge_patch and side=='left':
+            tilt=np.deg2rad(left_closing_tilt)
+            R=R@np.array(((np.cos(tilt),0.,np.sin(tilt)),(0.,1.,0.),(-np.sin(tilt),0.,np.cos(tilt))))
+        if edge_patch and side=='left' and flip_left:R=R@np.diag((-1.,-1.,1.))
         center=nodes[ids].mean(0)
         target=center-R@np.array((0.,-.008 if edge_patch else 0.,-.010))
         pre=target-(.020 if edge_patch else .060)*R[:,2]
@@ -39,7 +46,8 @@ def calibrate(reference,rest,nodes,*,edge_patch=False,clear_height=None):
             schedule[1:3]=[(2.,pre,.2,R,'align outside the measured hem patch','joint')]
             if clear_height is not None:
                 if not 0.<=clear_height<=.10:raise ValueError('Bounded front approach height required')
-                schedule[1:2]=[(1.,np.array((.15,pre[1],pre[2]+clear_height)),.2,R,'orient in front of board','joint'),
+                if not .13<=clear_x<=.22:raise ValueError('Front approach must remain outside board')
+                schedule[1:2]=[(1.,np.array((clear_x,pre[1],pre[2]+clear_height)),.2,R,'orient in front of board','joint'),
                     (1.,pre,.2,R,'enter clear hem approach','cartesian')]
         for seconds,position,grip,rotation,label,mode in schedule:
             q0=q.copy();p0,R0=ik.tcp_pose(q0,station.BASES[side]);opening0=opening;goal=None;em=er=0.
@@ -50,10 +58,16 @@ def calibrate(reference,rest,nodes,*,edge_patch=False,clear_height=None):
                     def error(candidate):
                         p,r=ik.tcp_pose(candidate,station.BASES[side])
                         return np.r_[p-position,.3*ik._rot_error(rotation,r)]
-                    result=least_squares(error,q0,bounds=(ik.LOWER,ik.UPPER),max_nfev=200,
-                        ftol=1e-10,xtol=1e-10,gtol=1e-10)
+                    seeds=[q0,(ik.LOWER+ik.UPPER)/2,*np.random.default_rng(0).uniform(ik.LOWER,ik.UPPER,(8,6))]
+                    solutions=[]
+                    for seed in seeds:
+                        result=least_squares(error,seed,bounds=(ik.LOWER,ik.UPPER),max_nfev=200,
+                            ftol=1e-10,xtol=1e-10,gtol=1e-10)
+                        solutions.append(result)
+                        if np.linalg.norm(result.fun[:3])<=.004 and np.linalg.norm(result.fun[3:])/.3<=.04:break
+                    result=min(solutions,key=lambda s:(np.linalg.norm(s.fun[:3])>.004 or np.linalg.norm(s.fun[3:])/.3>.04,np.linalg.norm(s.fun)))
                     goal=result.x;pe=np.linalg.norm(result.fun[:3]);re=np.linalg.norm(result.fun[3:])/.3
-                if pe>.004 or re>.04:raise ValueError('Raised-support clear approach is unreachable')
+                if pe>.004 or re>.04:raise ValueError(f'Raised-support clear approach is unreachable: {side} {label}; {pe:.6g}m {re:.6g}rad')
             for k in range(1,round(seconds*20)+1):
                 t=ik.smoothstep(k/(seconds*20))
                 if goal is not None:q=q0+t*(goal-q0);pe=re=0.
@@ -68,6 +82,11 @@ def calibrate(reference,rest,nodes,*,edge_patch=False,clear_height=None):
             for i in range(60,100):frames[i]['action'][1]-=.60*np.sin(np.pi*(i-59)/40)**2
         arms[side]=frames;patches[side]=dict(material_node_ids=np.flatnonzero(ids).tolist(),observed_center_m=center.tolist(),target_tcp_m=target.tolist(),rotation=R.tolist(),desired_patch_local_m=[0.,-.008 if edge_patch else 0.,-.010])
     result=copy.deepcopy(reference)
+    if edge_patch:
+        result['edge_grasp_angles_degrees']=dict(left=float(left_angle),right=float(right_angle))
+        result['edge_grasp_flip_left']=bool(flip_left)
+        result['edge_grasp_material_x']=dict(left=float(left_patch_x),right=.12)
+        result['edge_grasp_left_closing_tilt']=float(left_closing_tilt)
     result['frames'][:200]=[dict(action14=a['action']+b['action'],stage=a['stage']) for a,b in zip(arms['left'],arms['right'])]
     actions=np.array([np.r_[READY,1.,READY,1.]]+[f['action14'] for f in result['frames']])
     limits=np.tile([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/20],2)

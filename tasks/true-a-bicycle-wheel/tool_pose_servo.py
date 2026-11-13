@@ -152,6 +152,21 @@ class ToolPoseServo:
         self.approach_settle_samples=[];self.realigned_approaches=set()
         self.last=None
         self.withdrawal_pose=None
+        self.withdrawal_start=None
+        self.references=[cal]+list(plan.get('additional_grasp_calibrations',[]))
+        starts=[int(c['applies_from_step']) for c in self.references]
+        if starts!=sorted(set(starts)):raise ValueError('Grasp references must have distinct increasing start actions')
+        from withdrawal import axial_target
+        for reference in self.references:
+            axial_target(reference['tcp_position_in_tool_m'],reference['tcp_rotation_in_tool'],0.)
+        first_withdrawal=plan.get('measured_axial_withdrawal')
+        self.withdrawals=([first_withdrawal] if first_withdrawal is not None else [])+list(plan.get('additional_measured_axial_withdrawals',[]))
+        previous=0
+        for entry in self.withdrawals:
+            if not previous<int(entry['from_step'])<int(entry['move_through_step'])<=int(entry['through_step'])<=len(plan['frames']):
+                raise ValueError('Withdrawal intervals must be bounded, increasing and disjoint')
+            if not 0.<float(entry['distance_m'])<=.05:raise ValueError('Bounded positive axial distance required')
+            previous=int(entry['through_step'])
 
     def target_spoke(self,step):
         if not self.nipple_feedback or not 1<=step<=len(self.plan['frames']):return None
@@ -163,6 +178,9 @@ class ToolPoseServo:
         target=np.asarray(nominal,float).copy()
         if step<self.first_step or step>=self.release_step:
             self.last={'active':False};return target
+        reference=next(c for c in reversed(self.references) if int(c['applies_from_step'])<=step)
+        self.position=np.asarray(reference['tcp_position_in_tool_m'],float)
+        self.rotation=np.asarray(reference['tcp_rotation_in_tool'],float)
         q=np.asarray(measured_joint_positions,float)[7:13]
         p,R=ik.tcp_pose(target[7:13],station.BASES['right'])
         nipple_diagnostic=None
@@ -206,15 +224,16 @@ class ToolPoseServo:
                 realigned_after_stable_approach=realign,
                 target_translation_correction_m=float(np.linalg.norm(p-original_p)),
                 target_orientation_correction_rad=float(np.arccos(np.clip((np.trace(R@original_R.T)-1)/2,-1,1))))
-        withdrawal=self.plan.get('measured_axial_withdrawal')
-        if withdrawal is not None and withdrawal['from_step']<=step<=withdrawal['through_step']:
+        withdrawal=next((entry for entry in self.withdrawals if entry['from_step']<=step<=entry['through_step']),None)
+        if withdrawal is not None:
             from withdrawal import axial_target
             first=int(withdrawal['from_step']);last=int(withdrawal['move_through_step'])
             if not first<last<=int(withdrawal['through_step']):
                 raise ValueError('Invalid bounded axial withdrawal interval')
-            if self.withdrawal_pose is None:
+            if self.withdrawal_start!=first:
                 if step!=first:raise RuntimeError('Measured withdrawal must start at its first action')
                 self.withdrawal_pose=(np.asarray(measured_tool_pose)[:3].copy(),rotation(np.asarray(measured_tool_pose)[3:]))
+                self.withdrawal_start=first
             fraction=ik.smoothstep(min(1.,(step-first+1)/(last-first+1)))
             tool_p,tool_R=axial_target(*self.withdrawal_pose,float(withdrawal['distance_m'])*fraction)
             p=tool_p+tool_R@self.position;R=tool_R@self.rotation

@@ -27,6 +27,60 @@ developers and their agents, not a competition submission document.
   and all GPUs are confirmed stopped, as requested. No paid tests are authorized
   for those ideas yet.
 
+## 2026-11-13 — follow-up capacity and next cloth test
+
+- Both stopped RTX6000 hosts rejected restart for unavailable host capacity.
+  New RTX6000 and L40S requests also returned explicit no-capacity responses;
+  exact-name checks found no created Pods. The source/failed-attempt records
+  remain private in `artifacts/six-task-*-2026-11-13/`.
+- Replacement A40 **6j5r534r2o9ghj** started20:36:32UTC at**$0.59/hour**,
+  9vCPU/50GB host RAM,100GB container disk. Independent local watchdog limits
+  this session to30minutes. `artifacts/six-task-shirt-a40-2026-11-13/` records
+  its lifecycle. Initial job is only the screened full-opening shirt grasp;
+  pinned simulator setup has a750-second wall limit. No Dream key is needed.
+- A second wheel-stroke local search finds a reachable alternative orientation
+  but its planned sweep collides with the wheel, stand and table. It is not
+  authorized by a passing IK result: do not run or call it a validated plan.
+  The five unfinished tasks' `VALIDATION.json` files now carry current explicit
+  blockers. All282 local checks across those tasks pass; these do not establish
+  native feasibility.
+
+## 2026-11-13 — native results149,155–157 and verified shutdown
+
+- Wheel149 completes652 actions in2577.03s. Nipple0 changes from−0.75190 to
+  −0.53944 turns, retaining0.21246 turn through measured axial withdrawal.
+  Final mouth clearance is6.454mm;123 measured samples530–652 have zero
+  unexpected intersections against native cooked robot hulls. This proves one
+  adjustment and clean withdrawal, not a repaired wheel or task score.
+- Tie155 completes880 actions in663.83s. After left-hand release, the right
+  material patch stays9.0–9.1mm from its TCP. Twenty-three self-crossing samples,
+  ten native robot-contact samples and thirty fixture samples report zero
+  intersections. This is a retained regrasp; no knot exists yet.
+- Querying the pinned simulator returns315 cooked collision records across all
+  robot links. Its actual convex hulls eliminate the earlier URDF-only tie150
+  wrist-contact false positive. Use native cooking for definitive contact
+  rejection; do not weaken tolerances to reconcile different representations.
+- Shirt157 completes320 actions in831.86s but misses the hem. Twelve sampled
+  self/robot checks and seventeen fixture checks are clear because the fabric
+  remains on the support. By140 the selected patch lies17.7mm off the jaw
+  centre while the opening is too narrow to surround it. The subsequent fully
+  open insertion candidate passes320 local rigid checks; native retention is
+  untested. The left-patch measurement for this candidate uses−130mm material
+  coordinate; the older generic−120mm measurement is only supplementary.
+- Staple156 desired-velocity feedforward postpones failure to280 actions but
+  does not fix it: upper-paper empty aperture150.545µm exceeds the unchanged
+  150µm validity envelope. Steel remains continuous; there is no extraction or
+  score. No further full rerun is justified without a material/contact fix.
+- Archives149,154,155,156,157 are SHA256-verified and extracted locally; later
+  native-hull and fixture audits are also saved. All four Runpods were confirmed
+  EXITED in a fully paginated inventory at20:24:32UTC. GPU1 stopped20:23:16,
+  GPU2 stopped20:24:01. The session estimates$3.2017+$3.1264=$6.3280 compute;
+  with the previous$14.55, cumulative estimate$20.88, excluding new storage and
+  any subsequent runs. This is elapsed-time accounting, not an invoice.
+- Cake PR1919 remains the only submitted task. Five full-score demos and their
+  Dream/media/submission steps remain outstanding. The ten-idea research is
+  still deferred under the user's requested ordering.
+
 ## 2026-11-13 — bounded continuation and contact diagnosis, batches150–156
 
 - Cake PR1919 is still the only submitted task from this batch. The other five

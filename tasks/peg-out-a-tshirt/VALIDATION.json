@@ -534,5 +534,18 @@
       "maximum_vertex_set_difference_m": 8.585044734608962e-10,
       "evidence": "artifacts/six-task-completion-2026-11-13/native-finger-collider-comparison.json"
     }
+  },
+  "submission_ready": false,
+  "latest_review_2026_11_13": {
+    "status": "Native157 misses the hem; subsequent peg actions remain blocked.",
+    "batch": "157",
+    "actions": 320,
+    "wall_seconds": 831.859,
+    "sampled_self_crossings": 0,
+    "sampled_native_robot_intersections": 0,
+    "sampled_fixture_intersections": 0,
+    "retained_grasp": false,
+    "latest_candidate": "Fully open insertion passes320 local rigid checks; new native158 is being prepared.",
+    "cpu_tests": 19
   }
 }

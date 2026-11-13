@@ -2,7 +2,7 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "70 CPU checks pass. Native114 reaches129 actions but measured heel overshoot causes actual contact-through-sheet and34 inter-sheet triangle crossings. The584-action slower descent candidate passes all nominal and measured-grasp local IK/hull screens; no extraction success.",
+  "cpu_checks": "76 CPU checks pass. Native156 fails paper continuity during insertion; no extraction or score. Desired-velocity feedforward does not fix paper continuity; model/contact change required before another full run.",
   "simulator_probe": "One native 3 mm steel leg with contact-driven plastic hinge, not full task.",
   "demo": null,
   "dream": null,
@@ -14,7 +14,7 @@
     "Successful robot demo, Dream baseline and final media"
   ],
   "status": "development_not_submission_ready",
-  "cpu_tests_passed": 70,
+  "cpu_tests_passed": 76,
   "current_paper_status": {
     "date": "2026-11-13",
     "coarse_pair030": "1000 native steps at10000Hz complete with0.272%/0.283% peak membrane strain; bend estimate reaches1.86%/1.68% locally. No hardware in this control.",
@@ -1097,5 +1097,15 @@
     "nominal_hull_samples": 584,
     "measured_grasp_hull_samples": 584,
     "unintended_intersections": 0
+  },
+  "latest_review_2026_11_13": {
+    "status": "Native156 fails paper continuity during insertion; no extraction or score.",
+    "batch": "156",
+    "actions": 280,
+    "wall_seconds": 1341.019,
+    "maximum_empty_aperture_um": 150.5448954522233,
+    "validity_limit_um": 150,
+    "latest_candidate": "Desired-velocity feedforward does not fix paper continuity; model/contact change required before another full run.",
+    "cpu_tests": 76
   }
 }

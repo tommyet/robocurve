@@ -423,5 +423,18 @@
     "cpu_check": "All60 new carry actions clear fixed fixtures and opposite robot; maximum IK position error77.53\u00b5m.",
     "reason": "Original handoff sweeps cloth aside; direct axial receiving poses place the forearm near the separate narrow strand. Moving the held material into front space is a normal technique.",
     "receiving_continuation": "126 reordered transfer retained through recovered549, but residual self-contact and pad penetration invalidate it; no knot."
+  },
+  "submission_ready": false,
+  "latest_review_2026_11_13": {
+    "status": "Native155 completes retained handoff/regrasp; no knot.",
+    "batch": "155",
+    "actions": 880,
+    "wall_seconds": 663.828,
+    "final_material_patch_tcp_distance_mm": 9.14,
+    "sampled_self_crossings": 0,
+    "sampled_native_robot_intersections": 0,
+    "sampled_fixture_intersections": 0,
+    "latest_candidate": "Narrow-end approach still fails reach or fixture checks; no next native run.",
+    "cpu_tests": 24
   }
 }
