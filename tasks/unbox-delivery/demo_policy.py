@@ -22,14 +22,16 @@ def rx(angle):
 
 
 def flap_target(side,angle,offset=None,relative_rotation=None):
-    """Rigid grasp trajectory about the measured carton fold's fixed axis."""
+    """Plain inner edge, approached obliquely by the opposite arm."""
     sign=1 if side=='left' else -1
     rotation=rx(-sign*angle)
     hinge=np.array([CENTER[0],sign*WIDTH/2,LID_Z])
-    root_offset=np.array([0.,-sign*(WIDTH/4-.001),0.])
-    if offset is None: offset=np.array([0.,-sign*.011,.017])
-    if relative_rotation is None: relative_rotation=grip_rotation()
-    return hinge+rotation@(root_offset+offset),rotation@relative_rotation
+    root_offset=np.array([0.,-sign*FLAP_WIDTH/2,0.])
+    if offset is None:offset=np.array([-.05,-sign*(FLAP_CENTER_Y-(.012 if side=='left' else .002)),.006])
+    if side=='left':hand_rotation=rx(max(35.,50.-angle))@grip_rotation()
+    else:hand_rotation=rx(-max(35.,50.-angle))@grip_rotation()
+    if relative_rotation is not None:hand_rotation=hand_rotation@relative_rotation
+    return hinge+rotation@(root_offset+offset),hand_rotation
 
 
 class ParcelFeedbackPolicy(YamScriptedPolicy):
@@ -56,10 +58,10 @@ class ParcelFeedbackPolicy(YamScriptedPolicy):
             self.target[side]=(np.array(h['tcp']),np.array(h['tcp_rotation']),h['opening'])
             self.q[side]=np.array(h['joints'])
             self.q_override[side]=self.q[side].copy()
-        self.cut_plan=ArmPlan(self._task.module.demo()['left'][:12],self._bases['left'])
+        self.cut_plan=ArmPlan(self._task.module.demo()['left'],self._bases['left'])
         self.park_plan=ArmPlan([Waypoint(3.,(.13,-.24,TOP+.17),FINGER_OPEN)],self._bases['right'])
         self.retries={'left':0,'right':0};self.pick_retries=0;self.carrying=False
-        if self.opening_only: self.begin_flap('left')
+        if self.opening_only:self.begin_opening()
         self.event('start',diagnostic_precut=self.opening_only)
 
     def hand(self,side):
@@ -89,19 +91,42 @@ class ParcelFeedbackPolicy(YamScriptedPolicy):
         self.failure=reason;self.event('failure',reason=reason);self.phase='failed'
         self.motion=None;self.carrying=False
 
+    def edge_opening(self):
+        return .018/abs(FINGER_OPEN)/2
+
+    def edge_is_held(self,opening):
+        return .028<opening<(.14 if self.side=='left' else .35)
+
+    def begin_opening(self):
+        self.side='left';self.arm='right';self.support_active=True
+        self.move('left',(.32,-.035,LID_Z+.07),grip_rotation(),0.,2.,'support_approached')
+
     def begin_flap(self,side):
         self.side=side
+        self.arm='right' if side=='left' else 'left'  # Cross-grasp each ordinary inner edge.
         p,r=flap_target(side,self.angle(side))
         self.event('approach_flap',side=side,angle=self.angle(side),attempt=self.retries[side]+1)
-        self.move(side,p-r[:,2]*.075,r,1.,2.,'flap_approached')
+        self.move(self.arm,(.13,0.,TOP+.20),r,self.edge_opening(),2.,'flap_front_entry')
 
     def retry_flap(self,reason):
         side=self.side
         self.event('flap_retry',side=side,reason=reason,angle=self.angle(side))
         self.retries[side]+=1
         if self.retries[side]>2: return self.fail(side+' flap: '+reason)
-        h=self.hand(side);p=np.array(h['tcp']);r=np.array(h['tcp_rotation'])
-        self.move(side,p-r[:,2]*.06,r,.75,1.5,'flap_retry_clear')
+        h=self.hand(self.arm);p=np.array(h['tcp']);r=np.array(h['tcp_rotation'])
+        self.move(self.arm,p-r[:,2]*.06,r,self.edge_opening(),1.5,'flap_retry_clear')
+
+    def start_rotation(self):
+        side=self.side;h=self.hand(self.arm);flap=telemetry.latest['flaps'][side]
+        if side=='left' and not self.edge_is_held(h['opening']):return self.retry_flap('edge lost while clearing support arm')
+        r=quat_xyzw_to_matrix(np.array(flap['quat']))
+        self.grasp_offset=r.T@(np.array(h['tcp'])-np.array(flap['pos']))
+        _,nominal=flap_target(side,self.angle(side))
+        self.grasp_rotation=nominal.T@np.array(h['tcp_rotation'])
+        self.command_angle=self.angle(side);self.last_angle=self.angle(side)
+        self.engagement_start=self.angle(side);self.engagement_verified=False
+        self.last_progress=self.now;self.rotate_start=self.now;self.phase='rotate_flap'
+        self.event('plain_edge_lift_probe',side=side,arm=self.arm,offset=self.grasp_offset.tolist(),opening=h['opening'])
 
     def begin_pick(self):
         self.carrying=False
@@ -112,35 +137,52 @@ class ParcelFeedbackPolicy(YamScriptedPolicy):
 
     def transition(self,name):
         side=getattr(self,'side','left')
-        if name=='flap_approached':
+        arm=getattr(self,'arm','right')
+        edge_gap=.002/abs(FINGER_OPEN)/2
+        if name=='support_approached':
+            self.move('left',(.32,-.035,LID_Z+.002),grip_rotation(),0.,2.,'support_pressed')
+        elif name=='support_pressed':self.hold(.4,'support_check')
+        elif name=='support_check':
+            self.event('opposite_flap_depressed',angle=self.angle('right'))
+            if self.angle('right')>-7.:return self.fail('opposite flap did not expose the seam edge')
+            self.begin_flap('left')
+        elif name=='support_withdrawn':
+            self.park('left','support_parked')
+        elif name=='support_parked':self.begin_flap('right')
+        elif name=='flap_front_entry':
             p,r=flap_target(side,self.angle(side))
-            self.move(side,p,r,1.,2.,'flap_descended')
+            self.move(arm,p-r[:,2]*.075,r,self.edge_opening(),1.5,'flap_approached')
+        elif name=='flap_approached':
+            p,r=flap_target(side,self.angle(side))
+            self.move(arm,p,r,self.edge_opening(),2.,'flap_descended')
         elif name=='flap_descended':
-            p,r=self.target[side][:2]
-            self.move(side,p,r,.011/abs(FINGER_OPEN)/2,.9,'flap_closed')
+            p,r=flap_target(side,self.angle(side)) if side=='right' else self.target[arm][:2]
+            self.move(arm,p,r,edge_gap,.9,'flap_closed')
         elif name=='flap_closed': self.hold(.4,'flap_grasp_check')
         elif name=='flap_grasp_check':
-            h=self.hand(side);flap=telemetry.latest['flaps'][side]
-            if not .08<h['opening']<.3: return self.retry_flap('no tab between the jaws')
-            r=quat_xyzw_to_matrix(np.array(flap['quat']))
-            self.grasp_offset=r.T@(np.array(h['tcp'])-np.array(flap['pos']))
-            self.grasp_rotation=r.T@np.array(h['tcp_rotation'])
-            self.command_angle=max(0.,self.angle(side));self.last_angle=self.angle(side)
-            self.last_progress=self.now;self.rotate_start=self.now;self.phase='rotate_flap'
-            self.event('flap_grasp',side=side,offset=self.grasp_offset.tolist(),opening=h['opening'])
-        elif name=='flap_retry_clear': self.begin_flap(side)
+            h=self.hand(arm)
+            if side=='left' and not self.edge_is_held(h['opening']):return self.retry_flap('plain edge not pinched')
+            if getattr(self,'support_active',False):
+                self.move('left',(.32,-.035,LID_Z+.12),grip_rotation(),1.,1.5,'support_clear_lifted')
+            else:self.start_rotation()
+        elif name=='support_clear_lifted':self.park('left','support_clear_parked')
+        elif name=='support_clear_parked':
+            self.support_active=False;self.start_rotation()
+        elif name=='flap_retry_clear':
+            if side=='left' and self.angle(side)<10. and self.angle('right')>-7.:self.begin_opening()
+            else:self.begin_flap(side)
         elif name=='flap_rotated':
-            p,r=self.target[side][:2]
-            self.move(side,p,r,.75,.9,'flap_released')
+            p,r=self.target[arm][:2]
+            self.move(arm,p,r,self.edge_opening(),.9,'flap_released')
         elif name=='flap_released':
-            h=self.hand(side);p=np.array(h['tcp']);r=np.array(h['tcp_rotation'])
-            self.move(side,p-r[:,2]*.075,r,.75,1.8,'flap_withdrawn')
+            h=self.hand(arm);p=np.array(h['tcp']);r=np.array(h['tcp_rotation'])
+            self.move(arm,p-r[:,2]*.075,r,self.edge_opening(),1.8,'flap_withdrawn')
         elif name=='flap_withdrawn':
-            self.park(side,'flap_parked')
+            self.park(arm,'flap_parked')
         elif name=='flap_parked':
             if self.angle(side)<80: return self.retry_flap('flap did not remain open after release')
             self.event('flap_open_verified',side=side,angle=self.angle(side))
-            if side=='left': self.begin_flap('right')
+            if side=='left':self.begin_flap('right')
             elif min(telemetry.latest['flap_angles'])<80: self.fail('first flap fell shut')
             elif self.opening_only:
                 self.event('diagnostic_open_completed');self.phase='done'
@@ -197,20 +239,21 @@ class ParcelFeedbackPolicy(YamScriptedPolicy):
         elif self.phase.startswith('hold:'):
             if self.now>=self.until: self.transition(self.phase[5:])
         elif self.phase=='rotate_flap':
-            a=self.angle(self.side);h=self.hand(self.side)
+            a=self.angle(self.side);h=self.hand(self.arm)
+            if not self.engagement_verified and a>=self.engagement_start+5.:
+                self.engagement_verified=True;self.event('edge_engagement_verified',side=self.side,angle=a)
+            if a>=(102. if self.side=='left' else 95.):
+                self.event('flap_open_reached',side=self.side,angle=a)
+                self.hold(.4,'flap_rotated');return
             if a>self.last_angle+1.:
                 self.last_angle=a;self.last_progress=self.now
             if self.now-self.last_progress>2.5 or self.now-self.rotate_start>16.:
                 return self.retry_flap('opening stalled')
-            if h['opening']<.06: return self.retry_flap('tab slipped out')
-            self.command_angle=min(107.,self.command_angle+18.*self._dt,max(0.,a)+10.)
-            p,_=flap_target(self.side,self.command_angle,self.grasp_offset,self.grasp_rotation)
-            sign=1 if self.side=='left' else -1
-            # Keep the wrist within its reachable range. Past 80 degrees the
-            # TCP continues its arc while the tab rotates in the compliant grasp.
-            r=rx(-sign*min(self.command_angle,80.))@self.grasp_rotation
-            self.target[self.side]=(p,r,.011/abs(FINGER_OPEN)/2)
-            if a>=102. and self.command_angle>=105.: self.hold(.5,'flap_rotated')
+            if self.side=='left' and h['opening']<.027:return self.retry_flap('plain edge slipped out')
+            self.command_angle=min(107.,self.command_angle+18.*self._dt,a+10.)
+            p,r=flap_target(self.side,self.command_angle,self.grasp_offset,self.grasp_rotation)
+            self.target[self.arm]=(p,r,.002/abs(FINGER_OPEN)/2)
+
 
     def act(self,observation):
         if not self.initialized: self.initialize()
@@ -221,8 +264,13 @@ class ParcelFeedbackPolicy(YamScriptedPolicy):
             t=self.now+self._dt
             if t<=self.cut_plan.duration:
                 a=self.cut_plan.action7(t)[0];b=self.park_plan.action7(t)[0]
+                errors={}
+                for side,action,plan in (('left',a,self.cut_plan),('right',b,self.park_plan)):
+                    p,r=ik.tcp_pose(action[:6],self._bases[side]);goal,rot,_,_=plan.target(t)
+                    errors[side]=dict(position_m=float(np.linalg.norm(p-goal)),rotation_rad=float(np.linalg.norm(ik._rot_error(rot,r))))
+                telemetry.command=dict(phase='cut',ik_errors=errors,failure=None)
                 return ActionChunk(actions=[Action(data=pack(a,b))],control_hz=1/self._dt)
-            if sample['metrics']['cut_segments']!=21 or sample['held']:
+            if sample['metrics']['cut_segments']!=CUT_SEGMENTS or sample['held']:
                 self.fail('cutting and cutter return were not established')
             else:
                 for side in ('left','right'):
@@ -230,7 +278,7 @@ class ParcelFeedbackPolicy(YamScriptedPolicy):
                     self.target[side]=(np.array(h['tcp']),np.array(h['tcp_rotation']),h['opening'])
                     self.q[side]=np.array(h['joints'])
                     self.q_override[side]=self.q[side].copy()
-                self.begin_flap('left')
+                self.begin_opening()
         if self.carrying:
             h=self.hand('right')
             predicted=np.array(h['tcp'])+np.array(h['tcp_rotation'])@self.item_offset

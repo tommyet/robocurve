@@ -7,13 +7,13 @@
     "tape cutting",
     "hinged carton"
   ],
-  "instruction": "Use the guarded cutter to cut the top seam tape, return the cutter to its pad, open both flaps, and place the blue item on the green pad.",
+  "instruction": "Cut the top seam and both taped end folds, return the cutter, open the plain box flaps, and place the blue item on the green pad.",
   "context": "Receiving and unpacking parcels requires tool use followed by opening an enclosure and retrieving its contents.",
-  "setup": "Fixed plain cardboard parcel, 220 x 180 x 75 mm with 3 mm walls and two hinged top flaps, on the YAM station table; 210 mm taped seam; 55 g guarded cutter on an orange pad to the left; 40 mm blue cube, 60 g, inside; 100 mm green pad to the right. See task.py and README for all dimensions and fixed coordinates.",
-  "scoring": "0.25 for the complete measured tape cut; 0.5 after both flaps reach 80 degrees; 1.0 after released item placement and cutter return with flaps at least 70 degrees open for one second. Numeric placement and invalidation conditions are in README. Incomplete tape cut or invalid outcomes score 0.",
-  "run_limit": "2400 control steps at 20 Hz (120 simulated seconds). Scripted full success demonstrated in 1596 steps / 79.8 simulated seconds.",
+  "setup": "Plain cardboard carton, 220 x 180 x 75 mm, 3 mm walls, ordinary flaps without handles or pull tabs. A 48 mm tape strip covers the lid seam and wraps 40 mm down both end walls. Guarded cutter and blue item; fixed numeric geometry in task.py.",
+  "scoring": "0.25 only after the long seam and both end folds are cut; 0.5 after both flaps reach 80 degrees; 1.0 for released item placement and cutter return with both flaps at least 70 degrees open for one second. All numeric conditions are in README.",
+  "run_limit": "3600 control steps at 20 Hz (180 simulated seconds); validated scripted demo completes in 2045 steps.",
   "reset_notes": "Fresh process per trial restores closed flaps, uncut tape, item and cutter. Fixed seed 0; object jitter 0.",
   "fidelity": "Rigid cardboard with ideal hinges and fixed packing fixture. Tape fracture uses measured held-blade sweep coverage to release a physical hinge latch; adhesive, fracture forces, cardboard flexibility and tool damage are not calibrated. No object teleportation or hand attachment. Development prototype, not validated for real-world fidelity.",
-  "scores": "Scripted demo: 1.0 in two fixed-layout trials; independent replays: 1.0 / 1.0. Dream has not been run on this task.",
+  "scores": "Handle-free wrapped-tape scripted demo and repeat: 1.0 each in 2045 actions, independently replayed and audited. Dream not run. Historical tabbed demonstrations are separate evidence.",
   "media": null
 }

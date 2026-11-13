@@ -1151,6 +1151,102 @@ result or measure outcome fairness.
 
 ## Dated session log
 
+### 2026-11-13 — handle-free wrapped-tape unboxing reaches full score twice
+
+- Operator: Astra agent, delegated at the user's request; branch
+  `codex/unbox-parcel`, retained `yam-eval-launchable-72837c`. No competing
+  simulator process was present. This continues the authorized session below;
+  no upload or upstream PR is authorized.
+- The 3 mm original tooth was wider than the 2 mm centre seam. The revised
+  0.6 mm tooth and visual-only tape film preserve the measured fracture latch:
+  all three H paths still need 316 covered cells / 30 complete segments.
+  `unbox-plain-full-002` nevertheless jammed the tooth at the front wall and
+  slipped the tool in its grasp; score 0, 3/30 segments. Do not call this fixed
+  from geometry/IK tests alone.
+- Measured entry tip was z=0.8234 m above an end-wall top of 0.8225 m, and
+  y=+2.1 mm outside the narrow seam. A 3 mm higher cut target and -2 mm lateral
+  compensation completed all three cuts in sealed `unbox-plain-full-003`,
+  returned/released the cutter, and opened the first plain flap to 110 degrees.
+  It ended at **0.25**, because the second edge slipped on bounded attempts.
+  Small evidence is local under `artifacts/unbox-plain-20261113/full-003/`;
+  full source snapshots/camera frames remain in the corresponding VM run.
+- The opposite-arm second-edge approaches in diagnostics 008/010 physically
+  knocked the first flap shut. Diagnostic 009's same-side grasp preserved the
+  first flap but failed to retain the second edge. These are zero-credit
+  pre-cut probes, not task demonstrations.
+- The original artificial 110-degree outward stop left the first flap upright
+  in the other wrist's approach. Extending only the outward hinge range to
+  170 degrees lets the first flap fall outward under gravity after the same
+  ordinary 102-degree lift. In diagnostic 011 it stayed at about 170 degrees,
+  while the second flap reached about 53 degrees before stalling. The second
+  grip was about 9 mm farther inside the panel than the successful first grip.
+  Diagnostic 012 corrected that edge position and completed both ordinary
+  flap openings, released at about 170 degrees. Its task credit remains zero.
+  No cardboard/grip features, attachment joints, or scorer relaxations were
+  added. Twenty-three current CPU/controller tests pass.
+- Directory 007 already existed from the earlier session. The runner refused
+  overwrite; that failed launch produced no new trial. Always check fresh run
+  IDs and source snapshots before interpreting a similarly named diagnostic.
+- Final sealed `unbox-plain-full-004` and unchanged repeat `unbox-plain-full-005`
+  each score **1.0**, independently replayed **1.0**, in 2,045 actions / 102.25
+  simulated seconds. Runner wall times are 289.898 / 292.592 seconds. All three
+  cuts complete at 29.40 s; the opening milestone occurs at 77.45 s. Both flaps
+  finish at 170.010 degrees; the released item rests at (0.17477, -0.23149,
+  0.76950) m and the cutter is released on its pad. Two identical fixed-seed
+  repeats establish reproducible feasibility, not robustness to variation.
+- Both audits pass all 16 checks: expected/replay scores, source hashes,
+  timestamps/actions, no invalid outcomes/controller failure, final released
+  state, bounds/rates, and all 2,046 frames from each of three cameras. The
+  support-hand retreat has a 24.6 mm maximum planned Cartesian IK residual;
+  the measured hand still clears and parks before lifting. Record that limit;
+  do not infer uniformly precise tracking from nominal arc tests.
+- Current `VALIDATION.json`, two audits and an anonymous compressed scorer
+  trace document the handle-free successes. Earlier tabbed evidence stays in
+  `evidence/tabbed-v1/`. Final videos, source snapshots and small diagnostic
+  archives are downloaded and SHA-256 verified under ignored
+  `artifacts/unbox-plain-20261113/`. All three repeat camera MP4 hashes are
+  identical to the first run. Full review video `review/demo.mp4` combines
+  every frame, H.264/yuv420p, 20 Hz, 102.3 seconds, 640 x 528, 5.25 MB.
+- No Dream request, media upload or upstream PR. GPU compute was empty before
+  shutdown; the only login was the pre-existing session. Stop requested at
+  about 22:05 UTC; provider reported STOPPING at 22:05:10 and confirmed
+  **STOPPED at 22:06:38 UTC**. Retained disk/environment preserved. Billing was
+  not queried; no cost is claimed for this session.
+
+
+### 2026-11-13 — handle-free carton revision in progress (superseded above)
+
+- Operator: repository agent; branch `codex/unbox-parcel`. User requested removing
+  the unrealistic flap handles and wrapping the tape down the box ends, then
+  explicitly asked to keep working. Earlier 1.0 results belong to the tabbed
+  scene; archived under `tasks/unbox-delivery/evidence/tabbed-v1/`, commit
+  `bbc3a68`. Do not reuse them as evidence for this revised geometry/scorer.
+- Restarted the retained user-selected `yam-eval-launchable-72837c`; installation
+  was preserved. No other login/GPU job was present after connection. Planned
+  probes: plain-flap edge access, all three wrapped-tape cuts, then complete runs.
+- Removed every tab collider. Runtime geometry audit requires exactly one
+  cardboard collider per flap. Current panels have a 2 mm centre seam and
+  0.25 mm end-corner clearance; the initial full-length rigid panels intersected
+  the end walls when folded inward, so those clearances were corrected.
+- Tape now spans the 220 mm lid and 40 mm down both end walls, width 48 mm.
+  The three required cuts form an H: long seam plus the two taped end folds.
+  Wall tails remain attached afterward. Thirty segments / 316 measured 1 mm
+  cells must be severed; seam-only or missing-end cuts cannot release the latches.
+  Added blade alignment/direction checks. All twenty current CPU tests pass.
+- Plain-edge probes lift/open each flap using ordinary hand contact, without
+  replacement handles, attachments or object pose writes. Current candidate
+  depresses one flap to expose the other's edge, pinches it with the opposite
+  arm, and clears the support arm. `unbox-plain-open-003` opened individual
+  flaps fully but failed the sequence: approach to the second knocked the first
+  shut, and the controller treated an already-open slipped flap as a grasp
+  failure. These are diagnostics, not full-task success. Approach clearance
+  and actual-angle completion checks are being revised in probe 004.
+- New sealed-start full-score feasibility is pending. Current task metadata
+  explicitly invalidates the historical 1.0 claim for the revised task. No
+  Dream run, upload or upstream PR. VM lifecycle completion and final evidence
+  will be recorded at session end.
+
+
 ### 2026-11-13 — unboxing feedback controller reaches full score twice
 
 - Operator: repository agent; branch `codex/unbox-parcel`. User explicitly asked

@@ -26,19 +26,37 @@ def cutter_usd(path):
     UsdPhysics.MassAPI.Apply(root.GetPrim()).CreateMassAttr(.055)
     cube(stage,'/Cutter/handle',(.11,.025,.025),(0.,0.,0.),(1.,.28,.03))
     cube(stage,'/Cutter/guard',(.025,.03,.02),(.057,0.,.002),(.12,.12,.14))
-    cube(stage,'/Cutter/blade',(.014,.003,.008),(.065,0.,-.016),(.7,.73,.76))
+    cube(stage,'/Cutter/blade',(.014,BLADE_THICKNESS,.008),(.065,0.,-.016),(.7,.73,.76))
     stage.GetRootLayer().Save(); return str(Path(path).resolve())
 
 def add_flap(stage,prim_path,side):
     root=stage.GetPrimAtPath(prim_path)
-    # Existing primitive is a cube scaled by the spawner. Put joints outside it
-    # so local hinge positions are metres, not affected by the cube's scale.
+    # Each plain flap is a rigid Xform with one cardboard collider. Joint anchors
+    # are in metres and are not affected by a geometry scale.
     sign=1 if side=='left' else -1
     hinge=UsdPhysics.RevoluteJoint.Define(stage, prim_path+'/hinge')
     hinge.CreateBody1Rel().SetTargets([root.GetPath()])
     hinge.CreateAxisAttr('X')
     hinge.CreateLocalPos0Attr(Gf.Vec3f(CENTER[0], sign*WIDTH/2,LID_Z))
-    hinge.CreateLocalPos1Attr(Gf.Vec3f(0.,sign*(WIDTH/4-.001),0.))
+    hinge.CreateLocalPos1Attr(Gf.Vec3f(0.,sign*FLAP_WIDTH/2,0.))
     hinge.CreateLowerLimitAttr(0.); hinge.CreateUpperLimitAttr(0.)
     hinge.CreateExcludeFromArticulationAttr(True)
     return hinge
+
+def wrapped_tape_usd(path,end):
+    """Visible continuous wall-to-lid film; holding/fracture use the seam latch.
+
+    Film is not an uncuttable rigid barrier. A cut through each top end fold is
+    still required by the scorer before either physical hinge can be released.
+    """
+    stage=Usd.Stage.CreateNew(str(path));UsdGeom.SetStageMetersPerUnit(stage,1.)
+    UsdGeom.SetStageUpAxis(stage,UsdGeom.Tokens.z)
+    root=UsdGeom.Xform.Define(stage,'/Tape');stage.SetDefaultPrim(root.GetPrim())
+    front=end=='front';i=0 if front else 1
+    x=SEAM[i]+(-.0002 if front else .0002)
+    inward=FLAP_END_X[i]-x
+    color=(.34,.20,.08)
+    cube(stage,'/Tape/wall',(.0001,TAPE_WIDTH,TAPE_DROP),(0.,0.,.0016),color,False)
+    cube(stage,'/Tape/top_fold',(abs(inward),TAPE_WIDTH,.0001),
+         (inward/2,0.,TAPE_DROP/2+.0016),color,False)
+    stage.GetRootLayer().Save();return str(Path(path).resolve())

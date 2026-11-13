@@ -20,7 +20,7 @@ def main():
     p.add_argument('--max-steps',type=int,default=1800)
     p.add_argument('--log-dir',type=Path,required=True)
     args=p.parse_args()
-    if not 1<=args.max_steps<=2400: p.error('max-steps must be 1..2400')
+    if not 1<=args.max_steps<=3600: p.error('max-steps must be 1..3600')
     args.log_dir=args.log_dir.expanduser().resolve()
     args.log_dir.mkdir(parents=True,exist_ok=False)
     (args.log_dir/'source').mkdir()
@@ -46,14 +46,17 @@ def main():
                 atexit.register(adapter._close_app_at_exit)
             from yam_arena import scene as sc
             import isaaclab.sim as sim
-            from mechanics import cutter_usd, add_flap
+            from mechanics import cutter_usd, add_flap, wrapped_tape_usd
             from pxr import UsdPhysics, UsdGeom, Gf
             import omni.usd
             original=sc.task_object
             cutter=cutter_usd(args.log_dir/'cutter.usda')
+            tapes={end+'_tape':wrapped_tape_usd(args.log_dir/(end+'_tape.usda'),end) for end in ('front','back')}
             def make(spec):
                 obj=original(spec)
                 custom_cfg=None
+                if spec.name in tapes:
+                    custom_cfg=sim.UsdFileCfg(usd_path=tapes[spec.name])
                 if spec.name=='cutter':
                     custom_cfg=sim.UsdFileCfg(usd_path=cutter)
                 if spec.name.endswith('_flap'):
@@ -70,18 +73,23 @@ def main():
                         UsdPhysics.RigidBodyAPI.Apply(root.GetPrim())
                         UsdPhysics.MassAPI.Apply(root.GetPrim()).CreateMassAttr(.018)
                         cube(stage,path+'/cardboard',spec.size,(0.,0.,0.),spec.color)
-                        # Thickened paper pull tab gives parallel jaws a grasp.
                         sign=1 if side=='left' else -1
-                        cube(stage,path+'/tab',(.035,.014,.009),(0.,-sign*.011,.006),(.69,.46,.23))
-                        for i in range(21):
-                            xx=SEAM[0]+(i+.5)*.01-CENTER[0]
-                            cube(stage,path+'/tape_'+str(i),(.0098,.012,.0005),
-                                 (xx,-sign*.038,.002),(.34,.20,.08),False)
+                        for i in range(22):
+                            lo=max(FLAP_END_X[0],SEAM[0]+i*.01)
+                            hi=min(FLAP_END_X[1],SEAM[0]+(i+1)*.01)
+                            xx=(lo+hi)/2-CENTER[0]
+                            cube(stage,path+'/tape_'+str(i),(hi-lo-.0002,TAPE_WIDTH/2,.0003),
+                                 (xx,-sign*(FLAP_CENTER_Y-TAPE_WIDTH/4),.0017),(.34,.20,.08),False)
+                        for end,xx in enumerate(END_CUT_X):
+                            # Render the taped top corner; the vertical tail is
+                            # a separate wall patch and remains after cutting.
+                            cube(stage,path+'/fold_'+str(end),(.001,TAPE_WIDTH/2,.0004),
+                                 (xx-CENTER[0],-sign*(FLAP_CENTER_Y-TAPE_WIDTH/4),.0019),(.34,.20,.08),False)
                         add_flap(stage,path,side)
                         return root.GetPrim()
                     custom_cfg=sim.UsdFileCfg(usd_path=cutter,func=spawn)
                 if custom_cfg is not None:
-                    return sc.Object(name=spec.name,object_type=sc.ObjectType.RIGID,
+                    return sc.Object(name=spec.name,object_type=sc.ObjectType.BASE if spec.name in tapes else sc.ObjectType.RIGID,
                                      spawner_cfg=custom_cfg,
                                      initial_pose=sc.Pose(position_xyz=tuple(spec.pos),rotation_xyzw=(0.,0.,0.,1.)))
                 return obj
@@ -106,11 +114,24 @@ def main():
                     raise RuntimeError('expected one physical '+side+' hinge; found '+repr(paths))
                 self.hinges[side]=UsdPhysics.RevoluteJoint(found[0])
                 self.flap_paths[side]=str(found[0].GetParent().GetPath())
+            for path in self.flap_paths.values():
+                root=self.stage.GetPrimAtPath(path)
+                colliders=[str(p.GetPath()) for p in self.stage.Traverse()
+                           if str(p.GetPath()).startswith(path+'/') and p.HasAPI(UsdPhysics.CollisionAPI)]
+                if colliders!=[path+'/cardboard']:raise RuntimeError('plain flap must have exactly one cardboard collider')
+            for name in ('front_tape','back_tape'):
+                path='/World/envs/env_0/'+name
+                if any(str(p.GetPath()).startswith(path) and p.HasAPI(UsdPhysics.CollisionAPI) for p in self.stage.Traverse()):
+                    raise RuntimeError('tape film must use fracture constraints, not solid colliders')
+            (args.log_dir/'geometry-audit.json').write_text(json.dumps(dict(handles=False,
+                flap_length=FLAP_LENGTH,flap_width=FLAP_WIDTH,seam_gap=SEAM_GAP,
+                corner_clearance=.00025,tape_width=TAPE_WIDTH,wrap_drop=TAPE_DROP,
+                flap_outward_limit_deg=FLAP_OUTWARD_LIMIT,tape_colliders=0,tape_cut_paths=[p['name'] for p in CUT_PATHS],blade_thickness=BLADE_THICKNESS),indent=2))
             self.task.module._tracker=UnboxScorer()
             self.task.module._diagnostic=args.stage=='opening'
             if args.stage=='opening':
-                self.task.module._tracker.cut=[True]*21
-                self.task.module._tracker.covered.update(range(210))
+                self.task.module._tracker.cut=[True]*CUT_SEGMENTS
+                self.task.module._tracker.covered.update(range(CUT_CELLS))
             telemetry.latest=None;telemetry.events.clear()
             self.released=False
             self.audit=(args.log_dir/'trajectory.jsonl').open('x')
@@ -148,7 +169,7 @@ def main():
                         tip=(np.array(cutter['pos'])+rot@np.array(TIP_LOCAL)).tolist(),
                         hands=[dict(tcp=tcp.tolist(),opening=opening,tcp_rotation=rotation.tolist(),joints=joints.tolist())
                                for tcp,opening,rotation,joints in hands],flaps=flaps,
-                        held=bool(held),blade_down=float(rot[2,2]),flap_angles=angles,
+                        held=bool(held),blade_down=float(rot[2,2]),blade_forward=rot[:,0].tolist(),flap_angles=angles,
                         item_released=all(np.linalg.norm(tcp-np.array(item['pos']))>.065 for tcp,_,_,_ in hands),diagnostic=args.stage=='opening')
             tracker=self.task.module._tracker
             sample['metrics']=tracker.update(sample)
@@ -156,15 +177,21 @@ def main():
             if all(tracker.cut) and not self.released:
                 for side in ('left','right'):
                     joint=self.hinges[side]
-                    joint.GetLowerLimitAttr().Set(-110. if side=='left' else 0.)
-                    joint.GetUpperLimitAttr().Set(0. if side=='left' else 110.)
+                    joint.GetLowerLimitAttr().Set(-FLAP_OUTWARD_LIMIT if side=='left' else -85.)
+                    joint.GetUpperLimitAttr().Set(85. if side=='left' else FLAP_OUTWARD_LIMIT)
                 self.released=True
             # Show cut segments on both halves. This changes appearance only.
             for side in ('left','right'):
-                for i,cut in enumerate(tracker.cut):
+                for i,cut in enumerate(tracker.cut[:22]):
                     if cut:
                         prim=self.stage.GetPrimAtPath(self.flap_paths[side]+'/tape_'+str(i))
                         if prim: UsdGeom.Gprim(prim).GetDisplayColorAttr().Set([Gf.Vec3f(.12,.07,.03)])
+            groups=tracker.groups()
+            for side in ('left','right'):
+                for i,name in enumerate(('front_fold','back_fold')):
+                    if groups[name]['cut']==groups[name]['total']:
+                        prim=self.stage.GetPrimAtPath(self.flap_paths[side]+'/fold_'+str(i))
+                        if prim:UsdGeom.Gprim(prim).GetDisplayColorAttr().Set([Gf.Vec3f(.12,.07,.03)])
             telemetry.latest=sample
             self.audit.write(json.dumps(sample,allow_nan=False)+'\n'); self.audit.flush()
             return super()._task_step()

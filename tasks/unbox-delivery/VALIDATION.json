@@ -1,90 +1,119 @@
 {
-  "status": "full-score scripted feasibility demonstrated in two fixed-layout trials; competition draft",
+  "status": "Handle-free wrapped-tape task: full-score sealed-start scripted feasibility demonstrated in two fixed-layout trials; no submission",
   "date": "2026-11-13",
   "demo_score": 1.0,
   "dream_score": null,
   "media": null,
   "scorer_and_controller_tests": {
     "command": "python -m unittest -v test_scoring test_controller",
-    "passed": 16
+    "passed": 23
   },
   "demos": [
     {
-      "run": "unbox-feedback-full-002",
-      "inspect_log": "adhoc_3f05810f.json",
+      "run": "unbox-plain-full-004",
+      "inspect_log": "adhoc_c8ec95fe.json",
       "score": 1.0,
       "replay_score": 1.0,
-      "control_steps": 1596,
-      "simulated_seconds": 79.79999999999761,
-      "wall_seconds": 222.85589639399996,
-      "first_complete_cut_s": 15.950000000000092,
-      "first_open_milestone_s": 53.899999999999075,
+      "control_steps": 2045,
+      "simulated_seconds": 102.24999999999633,
+      "wall_seconds": 289.89780575700024,
+      "first_complete_cut_s": 29.400000000000283,
+      "first_open_milestone_s": 77.44999999999774,
       "final_flap_angles_deg": [
-        110.00395779550477,
-        110.00398073802762
+        170.01017195617044,
+        170.0101694045761
       ],
       "final_item": {
         "pos": [
-          0.17552140355110168,
-          -0.23141057789325714,
+          0.17476987838745117,
+          -0.23148579895496368,
           0.7694998979568481
         ],
         "quat": [
-          3.1521826713287737e-06,
-          -1.2428480431481148e-06,
-          0.0008376273326575756,
-          0.9999996423721313
+          3.1439763006346766e-06,
+          -1.169201709672052e-06,
+          0.0029541512485593557,
+          0.9999956488609314
         ],
-        "speed": 0.00017060796451890471
+        "speed": 0.00017301646792021273
       },
-      "camera_frames_each": 1597,
-      "audit": "evidence/full-002-audit.json",
+      "camera_frames_each": 2046,
+      "audit": "evidence/full-004-audit.json",
       "all_audit_checks_passed": true,
-      "runtime_source_hashes_match": true
+      "runtime_source_hashes_match": true,
+      "maximum_planned_ik_residual_m": 0.024623451596464133,
+      "camera_video_sha256": {
+        "top": "f4909a3e192c495a70d3290e99397a9139ae3769dc12c956c72f849f921ca97e",
+        "left": "6366f2ec9d8bc3e194b44fe91a5d8e151fab98b8707567788827dc1d63d4c954",
+        "right": "5ed695f8bf23d7e0b72c1fef79be3fdcc599f6434ee42eb61f30cb8e8467eab0"
+      }
     },
     {
-      "run": "unbox-feedback-full-003",
-      "inspect_log": "adhoc_fadd7150.json",
+      "run": "unbox-plain-full-005",
+      "inspect_log": "adhoc_d2590266.json",
       "score": 1.0,
       "replay_score": 1.0,
-      "control_steps": 1596,
-      "simulated_seconds": 79.79999999999761,
-      "wall_seconds": 220.4265593490004,
-      "first_complete_cut_s": 15.950000000000092,
-      "first_open_milestone_s": 53.899999999999075,
+      "control_steps": 2045,
+      "simulated_seconds": 102.24999999999633,
+      "wall_seconds": 292.59192051099944,
+      "first_complete_cut_s": 29.400000000000283,
+      "first_open_milestone_s": 77.44999999999774,
       "final_flap_angles_deg": [
-        110.00395779550477,
-        110.00398073802762
+        170.01017195617044,
+        170.0101694045761
       ],
       "final_item": {
         "pos": [
-          0.17552140355110168,
-          -0.23141057789325714,
+          0.17476987838745117,
+          -0.23148579895496368,
           0.7694998979568481
         ],
         "quat": [
-          3.1521826713287737e-06,
-          -1.2428480431481148e-06,
-          0.0008376273326575756,
-          0.9999996423721313
+          3.1439763006346766e-06,
+          -1.169201709672052e-06,
+          0.0029541512485593557,
+          0.9999956488609314
         ],
-        "speed": 0.00017060796451890471
+        "speed": 0.00017301646792021273
       },
-      "camera_frames_each": 1597,
-      "audit": "evidence/full-003-audit.json",
+      "camera_frames_each": 2046,
+      "audit": "evidence/full-005-audit.json",
       "all_audit_checks_passed": true,
-      "runtime_source_hashes_match": true
+      "runtime_source_hashes_match": true,
+      "maximum_planned_ik_residual_m": 0.024623451596464133,
+      "camera_video_sha256": {
+        "top": "f4909a3e192c495a70d3290e99397a9139ae3769dc12c956c72f849f921ca97e",
+        "left": "6366f2ec9d8bc3e194b44fe91a5d8e151fab98b8707567788827dc1d63d4c954",
+        "right": "5ed695f8bf23d7e0b72c1fef79be3fdcc599f6434ee42eb61f30cb8e8467eab0"
+      }
     }
   ],
   "source_sha256": {
-    "config.py": "9ba8708b5c39159144cff73e22f5427b5a220de949f77f8ae9b2fa6207767d90",
-    "mechanics.py": "11cdf857e36764680bc6857107c53abd27884f892e6b14093aa8ab7db2c010ed",
-    "task.py": "3b91b45cc135d7ae85c1a1d39018e15b292cb620ea5a596ef6477626adf07f76",
-    "scoring.py": "f710dc39fd64546e1f20c96afc06e8251f5baa3f39bb5fa9d117ab152b0424d6",
-    "run.py": "31d319bcefc7adbfeb33a64fa35e831173f580f67d64715e77b4903aded15d5b",
-    "demo_policy.py": "6125277eb7f84461dbbe7b54cee49425602a28c8489fc10b8e0860649723d382",
+    "config.py": "33e7be859bb6ddc7fae40039e93c42160ac0f8016b79c3c4162bccc808806cc0",
+    "mechanics.py": "35e76b348a864fef4b451c63165686163f07bb8a9a4514e0b9851c83d2058ca0",
+    "task.py": "5d6b25e2bfba3ef098cad26ee07eaae9ecd418009541b2bca1f3d4f5fe3d9e35",
+    "scoring.py": "c3241ced0cba4cb676878242241e7d94220e9ffcaed24f60bcbbf88ad1c05122",
+    "run.py": "d3a310c7c701ad9a0d87a7ac1665bccad124952fedaedcdfaa32c45cb2fcc10a",
+    "demo_policy.py": "b4fc2b13e4a09cbddbdd503569cbd0badb20bdc5e31ed58e36ec454dff9d5e9b",
     "telemetry.py": "574f9949ddb5492f0f913403555bc32e2f6fdfac4ad215609e597a61f92b52b5",
-    "replay.py": "d20bd98997442b289094764e7068899518f3e9933ac2729c22473f3df75ec29d"
+    "replay.py": "c42f6e340eb96f56f8d12a9ba040e984b3cdd17fba2fab822bc7c3b1215d0131"
+  },
+  "geometry": {
+    "handles": false,
+    "flap_length": 0.2135,
+    "flap_width": 0.089,
+    "seam_gap": 0.002,
+    "corner_clearance": 0.00025,
+    "tape_width": 0.048,
+    "wrap_drop": 0.04,
+    "flap_outward_limit_deg": 170.0,
+    "tape_colliders": 0,
+    "tape_cut_paths": [
+      "seam",
+      "front_fold",
+      "back_fold"
+    ],
+    "blade_thickness": 0.0006
   },
   "environment": {
     "python": "3.12.16",
@@ -99,24 +128,45 @@
     "adapter_commit": "0059d02a1a91bc6834c1d0846022891df0c78730"
   },
   "opening_diagnostic": {
-    "run": "unbox-open-003",
+    "run": "unbox-plain-open-012",
     "diagnostic_precut": true,
     "task_credit": 0.0,
     "completed": true,
+    "control_steps": 916,
+    "simulated_seconds": 45.799999999999535,
     "final_flap_angles_deg": [
-      110.00398801078583,
-      110.00396171294695
+      170.01012772853647,
+      170.0101404865075
     ],
-    "maximum_ik_position_residual_m": 8.291397501884656e-05,
-    "note": "Tape assumed pre-cut only in the diagnostic. Both complete trials start sealed and receive no such assistance."
+    "note": "Diagnostic only; tape initialized as cut. Both full demonstrations start sealed."
   },
   "evidence": {
     "curated_trace": "evidence/full-demo.jsonl.gz",
+    "source_run": "unbox-plain-full-004",
     "replay_score": 1.0,
-    "original_trace_sha256": "5cc199194dd7fc0b2626275b7d8c68e68c90acc9783b421e8635332424c48ed7",
-    "curated_trace_sha256": "f2d44dbeb3ec862d9e28fb0ed7449dfa8821504c1bddd8e5aae30bb7db7f736e",
-    "gzip_sha256": "106a52cec6a281e6ee8cd136de47448ed331686fbd9d39394b39aa1c7d021c4c",
-    "note": "Curated trace contains only scorer inputs; score is recomputed, not copied from stored metrics."
+    "original_trace_sha256": "2a240b03e39b494b7470b864c9a9c76e7c2ce704b54ff79e6030a14f966c297c",
+    "curated_trace_sha256": "ceb5dcbd538f01191cf4d4ce8053040c4d91d1c66db4a76bed24303dc1a1030a",
+    "gzip_sha256": "2abc73c0e858cac7eab5a6201f4f8e36a983b2ec982ea454521a727b57718fb2",
+    "note": "Only measured scorer inputs; score recomputed independently, with no stored metrics or controller text."
+  },
+  "local_review_video": {
+    "file": "demo.mp4",
+    "submitted": false,
+    "sha256": "0fbd5d2030efdf8208fc3cb41fce7362efe9c70ec9054658a1c617ff3ed921c6",
+    "bytes": 5254518,
+    "codec": "h264",
+    "pixel_format": "yuv420p",
+    "width": 640,
+    "height": 528,
+    "fps": 20,
+    "frames": 2046,
+    "duration_seconds": 102.3,
+    "content": "Full overview above both full wrist streams; no frames omitted; native camera streams are 320 x 176."
+  },
+  "historical_tabbed_version": {
+    "commit": "bbc3a68",
+    "evidence": "evidence/tabbed-v1",
+    "note": "Earlier 1.0 scores used added grasp tabs and do not validate this revision."
   },
   "novelty": {
     "status": "significant overlap with pending submission",
@@ -127,26 +177,36 @@
   },
   "history": [
     {
-      "run": "unbox-demo-006",
-      "score": 0.25,
-      "source_commit": "5d3e9e0",
-      "note": "Original open-loop prototype; superseded."
+      "run": "unbox-plain-full-002",
+      "score": 0.0,
+      "note": "Thin blade still caught front wall; tool slipped."
     },
     {
-      "run": "unbox-feedback-full-001",
-      "score": 0.5,
-      "note": "Both flaps opened; item slipped because carry transitions removed grasp preload. Preserving commanded jaw targets fixed this controller bug."
+      "run": "unbox-plain-full-003",
+      "score": 0.25,
+      "note": "All three cuts and return validated; second edge grip slipped."
+    },
+    {
+      "run": "unbox-plain-open-011",
+      "score": 0.0,
+      "note": "Pre-cut diagnostic: 170-degree range cleared first flap; second grasp stalled inside panel."
+    },
+    {
+      "run": "unbox-plain-open-012",
+      "score": 0.0,
+      "note": "Pre-cut diagnostic: edge-position correction opened both plain flaps."
     }
   ],
   "limitations": [
-    "Two fixed-seed, zero-jitter successes establish feasibility in this specific scene, not broad reliability.",
-    "Tape fracture remains a geometric sweep approximation; rigid cardboard, fixture, friction and grasp proxy remain uncalibrated.",
-    "The scripted controller uses privileged measured object and hand poses; Dream receives standard observations and has not been run on this task.",
-    "Meaningful novelty distinction is still needed given related pending carton-cutting PR #1856."
+    "Two zero-jitter fixed-seed repeats establish deterministic feasibility in this scene, not broad reliability. Their camera exports are byte-identical.",
+    "Tape fracture is a geometric sweep approximation. Tape has no rigid collider; cardboard, fixture, hinge and grasp proxies remain uncalibrated.",
+    "Scripted controller uses privileged measured hand/object poses. Dream has not been run on this revision.",
+    "The support-hand retreat has a 24.6 mm peak planned Cartesian IK residual over 27 samples above 1 mm. Measured retreat and joint-space parking clear the hand before lifting; planned residuals are not tracking precision.",
+    "Meaningful novelty distinction remains unresolved given related pending carton-cutting PR #1856."
   ],
   "remaining": [
-    "Model-policy evaluation after the validated scripted baseline",
-    "Material/force calibration and physical-fidelity validation",
-    "Novelty resolution before any submission"
+    "Model-policy evaluation if requested",
+    "Material/force calibration and broader variation testing",
+    "Novelty resolution and explicit authorization before submission"
   ]
 }

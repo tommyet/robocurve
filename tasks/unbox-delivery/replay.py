@@ -2,6 +2,7 @@
 import argparse
 import json
 from scoring import UnboxScorer
+from config import CUT_SEGMENTS,CUT_CELLS
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('trajectory');args=p.parse_args()
@@ -15,7 +16,7 @@ def main():
             if diagnostic is None:
                 diagnostic=mode
                 if diagnostic:
-                    tracker.cut=[True]*21;tracker.covered.update(range(210))
+                    tracker.cut=[True]*CUT_SEGMENTS;tracker.covered.update(range(CUT_CELLS))
             elif diagnostic!=mode: raise ValueError('mixed diagnostic and full-task telemetry')
             previous=s['time'];tracker.update(s)
     result=tracker.result()
