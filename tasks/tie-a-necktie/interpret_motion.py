@@ -33,7 +33,11 @@ def main():
     sys.path.insert(0,str(source.resolve()))
     from cloth_mesh import edge_strain
     from fixture_clearance import fixture_intersections
-    from layout import fixture_geometry,TABLE
+    report=json.loads((args.trial/'run.json').read_text())
+    if report.get('adult_collar_candidate'):
+        from adult_layout import fixture_geometry,TABLE
+    else:
+        from layout import fixture_geometry,TABLE
     fixtures=fixture_geometry()
     fixtures['Table']=dict(kind='box',center=(.36,0.,TABLE-.03),size=(1.1,1.3,.06))
     meshes=json.loads((args.trial/'meshes.json').read_text())
@@ -43,7 +47,6 @@ def main():
     plan_path=source/'fixed-motion.json'
     frames=json.loads(plan_path.read_text())['frames'] if plan_path.exists() else []
     endpoints={i+1 for i,f in enumerate(frames) if i==len(frames)-1 or f['stage']!=frames[i+1]['stage']}
-    report=json.loads((args.trial/'run.json').read_text())
     samples=[];initial=None;last=None
     with gzip.open(args.trial/'trace.jsonl.gz','rt') as handle:
         for line in handle:

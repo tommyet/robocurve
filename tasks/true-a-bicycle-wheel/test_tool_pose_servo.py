@@ -1,10 +1,20 @@
 import unittest
 import numpy as np
-from tool_pose_servo import compensated_tcp,nipple_alignment,ik_acceptance
+from tool_pose_servo import compensated_tcp,nipple_alignment,ik_acceptance,orientations_settled,engagement_key
 from wheel_scene import quat,spoke_phase
 
 
 class ToolPoseServoTests(unittest.TestCase):
+    def test_clear_approach_and_contact_keep_one_latched_orientation(self):
+        stages=('Clear approach nipple 0','Approach nipple 0','Approach nipple 0 settle',
+                'Nipple 0 quarter 1 insert','Nipple 0 quarter 1 tighten','Nipple 0 quarter 1 disengage')
+        self.assertEqual({engagement_key(0,stage) for stage in stages},{(0,1)})
+        self.assertEqual(engagement_key(0,'Nipple 0 quarter 2 insert'),(0,2))
+        self.assertEqual(engagement_key(2,'Approach nipple 2'),(2,1))
+    def test_approach_realign_waits_for_stable_observed_orientation(self):
+        self.assertFalse(orientations_settled([spoke_phase(0.)]*4))
+        self.assertFalse(orientations_settled([spoke_phase(a) for a in (0.,.5,.4,.01,.005)]))
+        self.assertTrue(orientations_settled([spoke_phase(a) for a in (.005,.004,.003,.002,.001)]))
     def test_square_symmetry_does_not_accumulate_wrist_turns(self):
         p=np.array((.3,.1,.9));reference=spoke_phase(.2)
         for quarter in range(4):
@@ -44,5 +54,13 @@ class ToolPoseServoTests(unittest.TestCase):
 
     def test_approach_error_outside_reserved_capture_is_rejected(self):
         self.assertFalse(ik_acceptance('Approach nipple 0',.0008,.001,.00075)[0])
-        self.assertFalse(ik_acceptance('Approach nipple 0',.0001,.003,0.)[0])
+        self.assertFalse(ik_acceptance('Approach nipple 0',.0001,.011,0.)[0])
         self.assertFalse(ik_acceptance('Approach nipple 0',float('nan'),0.,0.)[0])
+
+    def test_measured_096_residual_fits_same_reserved_jaw_envelope(self):
+        accepted,quality=ik_acceptance('Approach nipple 0 settle',
+            .0007444145836,.0020857919752,.0007253163071)
+        self.assertTrue(accepted)
+        self.assertLess(quality['jaw_error_bound_m'],.00075)
+        self.assertFalse(ik_acceptance('Nipple 0 quarter 1 tighten',
+            .0007444145836,.0020857919752,.0007253163071)[0])

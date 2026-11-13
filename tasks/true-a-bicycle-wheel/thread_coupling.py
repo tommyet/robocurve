@@ -72,19 +72,66 @@ class NativeFloatAttributes:
     is no position/force tolerance or time decimation. Invalidate after reset
     or any external attribute edit.
     """
-    def __init__(self,attributes):
+    def __init__(self,attributes,*,batch_sdf_notices=False):
         self.attributes=attributes
         self.values=np.full((len(attributes),len(attributes[0])),np.nan,dtype=np.float32)
         self.attempts=0;self.writes=0
+        self.batch_count=0;self.sdf_specs=None;self._change_block=None
+        self._sdf_readback_verified=False
+        if batch_sdf_notices:
+            from pxr import Sdf
+            self._change_block=Sdf.ChangeBlock
+            specs=[];identifiers=set()
+            # Cache all downstream USD resolutions BEFORE any ChangeBlock.
+            # Inside it, touch only these authored Sdf specs. OpenUSD forbids
+            # downstream Usd API calls while change notices are deferred:
+            # https://openusd.org/dev/api/class_sdf_change_block.html
+            for row in attributes:
+                target=[]
+                for attr in row:
+                    stack=attr.GetPropertyStack()
+                    if not stack or stack[0].typeName!=Sdf.ValueTypeNames.Float:
+                        raise RuntimeError('Batched material updates require authored Float attributes')
+                    spec=stack[0];identity=(spec.layer.identifier,str(spec.path))
+                    if identity in identifiers or spec.default is None or not spec.layer.permissionToEdit:
+                        raise RuntimeError('Material specs must be unique, writable and have authored defaults')
+                    identifiers.add(identity);target.append(spec)
+                specs.append(target)
+            self.sdf_specs=specs
 
     def invalidate(self):self.values.fill(np.nan)
+
+    def statistics(self):
+        """Read back through USD only after any Sdf notice batch has closed."""
+        authored=np.asarray([[attr.Get() for attr in row] for row in self.attributes],dtype=np.float32)
+        return {'attempted':self.attempts,'written':self.writes,
+            'sdf_notice_batches':self.batch_count,
+            'first_sdf_readback_verified':self._sdf_readback_verified,
+            'final_authored_values':authored.tolist(),
+            'final_cached_values_match_authored':bool(np.array_equal(authored,self.values)),
+            'skipping_rule':'Only float32-identical values; no material tolerance or update decimation'}
 
     def set(self,values):
         values=np.asarray(values,dtype=np.float32)
         if values.shape!=self.values.shape or not np.isfinite(values).all():
             raise ValueError('Finite native float attributes with matching shape required')
         self.attempts+=values.size
-        for row,column in np.argwhere(values!=self.values):
+        changed=np.argwhere(values!=self.values)
+        if self.sdf_specs is not None:
+            edits=[(int(row),int(column),float(values[row,column]),self.sdf_specs[row][column]) for row,column in changed]
+            if not edits:return
+            with self._change_block():
+                for _,_,value,spec in edits:spec.default=value
+            # First batch verifies the native authored Float conversion. Later
+            # writes use the same typed Sdf setter with identical float32 inputs.
+            if not self._sdf_readback_verified:
+                if any(float(spec.default)!=value for _,_,value,spec in edits):
+                    raise RuntimeError('Sdf batch altered a native Float value')
+                self._sdf_readback_verified=True
+            for row,column,value,_ in edits:self.values[row,column]=value
+            self.writes+=len(edits);self.batch_count+=1
+            return
+        for row,column in changed:
             if not self.attributes[row][column].Set(float(values[row,column])):
                 raise RuntimeError('Native material attribute update failed')
             self.values[row,column]=values[row,column];self.writes+=1
@@ -184,7 +231,7 @@ class NativeThreadCoupler:
     excess thread travel raises and invalidates the trial. The caller must
     record that error and must not resume with a saturated/clamped state.
     """
-    def __init__(self, stage_id, metadata, spec=None, native_io=None):
+    def __init__(self, stage_id, metadata, spec=None, native_io=None,*,batch_sdf_notices=False):
         from omni.physx import get_physx_interface, get_physx_simulation_interface
         from pxr import PhysicsSchemaTools, Sdf
         from integrity import RimDomainGuard
@@ -202,7 +249,7 @@ class NativeThreadCoupler:
         self.friction=ThreadFriction(len(metadata['spokes']),self.spec.friction_stiffness_nm_per_rad)
         self.parameters=NativeFloatAttributes([[s['rest_target_attribute'],
             s['friction_drive'].GetMaxForceAttr(),s['friction_drive'].GetTargetPositionAttr()]
-            for s in metadata['spokes']])
+            for s in metadata['spokes']],batch_sdf_notices=batch_sdf_notices)
         self.last=[]
         self._batch=None
         if native_io is not None:

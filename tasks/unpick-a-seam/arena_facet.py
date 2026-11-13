@@ -96,21 +96,36 @@ def asset(spec):
 class FacetView:
     """Read-only surface adapter; preserve every-substep hinge-gap evidence."""
     count=1
-    def __init__(self,simulation,shell):
+    def __init__(self,simulation,shell,*,geometry_aperture_m=None):
         self.shell=shell;self.view=simulation.create_rigid_body_view(shell['bodies'])
+        self.geometry_aperture_m=geometry_aperture_m
         paths=list(self.view.prim_paths)
         self.order=np.array([paths.index(p) for p in shell['bodies']])
         if self.view.count!=len(self.order):raise RuntimeError('Missing facet body')
         self.reset_audit()
     def reset_audit(self):
         self.maximum_gap=0.;self.first_failure=None;self.updates=0
+        self.first_endpoint_warning=None;self.last_check=None;self.last_poses=None
+        self.first_aperture_warning=None
+        self.first_solid_failure=None;self.solid_checks=0;self.maximum_thread_overlap=0.
+        self.geometry_maxima={}
     def poses(self):
         values=self.view.get_transforms()
         return getattr(values,'torch',values).detach().cpu().numpy()[self.order].copy()
     def get_simulation_nodal_positions(self):
         import torch
-        points,check=measured_surface(self.shell,self.poses())
+        self.last_poses=self.poses()
+        points,check=measured_surface(self.shell,self.last_poses,
+                                     geometry_aperture_m=self.geometry_aperture_m)
+        self.last_check=check
         self.maximum_gap=max(self.maximum_gap,check['maximum_hinge_endpoint_gap_m'])
+        if check['legacy_endpoint_warning'] and self.first_endpoint_warning is None:
+            self.first_endpoint_warning=dict(update=self.updates,**check)
+        if check.get('aperture_warning') and self.first_aperture_warning is None:
+            self.first_aperture_warning=dict(update=self.updates,**check)
+        for key,value in check.get('geometry',{}).items():
+            if key.startswith('maximum_'):
+                self.geometry_maxima[key]=max(value,self.geometry_maxima.get(key,0.))
         if not check['valid'] and self.first_failure is None:
             self.first_failure=dict(update=self.updates,**check)
         self.updates+=1
@@ -129,7 +144,34 @@ class FacetView:
         return torch.as_tensor((out/count[:,None])[None])
     def summary(self):
         return dict(maximum_hinge_endpoint_gap_m=self.maximum_gap,first_failure=self.first_failure,
-                    valid=self.first_failure is None,reads=self.updates,maximum_allowed_gap_m=.0001)
+                    valid=self.first_failure is None and self.first_solid_failure is None,reads=self.updates,
+                    legacy_endpoint_warning_m=.0001,
+                    endpoint_distance_is_stop_condition=self.geometry_aperture_m is None,
+                    maximum_allowed_empty_aperture_m=self.geometry_aperture_m,
+                    first_endpoint_warning=self.first_endpoint_warning,
+                    first_aperture_warning=self.first_aperture_warning,
+                    native_thread_solid_audit=dict(checks=self.solid_checks,
+                        first_failure=self.first_solid_failure,
+                        maximum_capsule_overlap_m=self.maximum_thread_overlap,
+                        interpretation='Exact current capsule axes against actual box midplanes; finite overlap is reported separately. The independent swept mesh/junction guards remain active.'),
+                    geometry_maxima=self.geometry_maxima,last_check=self.last_check)
+
+    def audit_thread_solids(self,segments,radius,time_s):
+        from panel_diagnostics import solid_contacts
+        result=solid_contacts(self.shell['model'],self.last_poses,segments,
+                              radius=radius,thickness=self.shell['material'].thickness_m)
+        self.solid_checks+=1
+        self.maximum_thread_overlap=max(self.maximum_thread_overlap,
+            result['maximum_capsule_overlap_lower_bound_m'])
+        if result['native_midplane_intersections'] and self.first_solid_failure is None:
+            self.first_solid_failure=dict(time_s=float(time_s),**result)
+        return self.first_solid_failure is not None
+
+    def native_state(self):
+        """Unaveraged readback for geometry reconstruction after any failure."""
+        values=self.view.get_velocities()
+        velocity=getattr(values,'torch',values).detach().cpu().numpy()[self.order].copy()
+        return self.poses(),velocity
 
 
 original_object,original_states=scene.task_object,scene.object_states

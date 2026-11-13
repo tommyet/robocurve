@@ -348,6 +348,15 @@ def main():
                 (frozen/'fixed-motion.json').write_text(json.dumps(fixed_plan,indent=2)+'\n')
                 report['executed_plan_sha256']=hashlib.sha256((frozen/'fixed-motion.json').read_bytes()).hexdigest()
                 report['state_assisted_handoff']=continuation['grasp'];save()
+            if args.state_assisted_handoff and step in (421,461):
+                from adult_handoff import receiving_material_present
+                native=arena_cloth.state(emb._env,'tie');mesh=arena_cloth.SPECS['tie'].mesh
+                robot=base.scene['left_robot'];index=list(robot.body_names).index('gripper')
+                presence=receiving_material_present(mesh.rest,native.nodes,arr(robot.data.body_link_pose_w)[0,index])
+                report.setdefault('receiving_material_checks',[]).append(dict(step_before_action=step,**presence))
+                save()
+                if presence['obvious_empty_pinch']:
+                    raise RuntimeError('Wide tip is outside the receiving finger region; physical transfer is not established')
             if fixed_actions is not None:
                 active_action=fixed_actions[step-1].copy()
                 command=torch.as_tensor(active_action[None,:],device=base.device,dtype=torch.float32)

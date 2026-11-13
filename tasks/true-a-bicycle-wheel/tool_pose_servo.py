@@ -13,7 +13,8 @@ def nipple_alignment(nominal_position,nominal_rotation,measured_pose):
     """Choose the nearest equivalent square-flat orientation, before a turn.
 
     Rotation is latched for each quarter-turn, so successful nipple rotation
-    never moves the target further away. Actual centre translation may follow
+    never moves the turning target further away. A clear approach can be
+    realigned once after its observed orientation settles. Centre translation may follow
     the physically deforming rim. The four equivalent square orientations
     keep each return stroke within the original wrist workspace.
     """
@@ -56,6 +57,9 @@ def ik_acceptance(stage, tcp_error_m, rotation_error_rad, tool_error_m):
     The 5 mm mouth admits a 3.23 mm nipple with 0.885 mm half-clearance.
     During the approach only, reserve at least 0.135 mm of that clearance and
     bound the position error of every jaw point within 10 mm of its centre.
+    Up to0.01rad approach orientation error is allowed only inside that same
+    pointwise bound; a separate near-zero angular threshold would reject a
+    command that still fits the real lead-in. Native contact establishes fit.
     Insertion, turning and withdrawal retain the original stricter gate. This
     is a command-quality check; only native contact can establish engagement.
     """
@@ -65,9 +69,27 @@ def ik_acceptance(stage, tcp_error_m, rotation_error_rad, tool_error_m):
     jaw_error=tool_error_m+2*.010*np.sin(rotation_error_rad/2)
     exact=tcp_error_m<=.0002 and rotation_error_rad<=.002
     capture=(stage.startswith('Approach nipple ') and tcp_error_m<=.001
-             and rotation_error_rad<=.002 and jaw_error<=.00075)
+             and rotation_error_rad<=.01 and jaw_error<=.00075)
     return bool(exact or capture),dict(mode='strict' if exact else 'lead_in' if capture else 'rejected',
         jaw_error_bound_m=float(jaw_error),lead_in_half_clearance_m=.000885)
+
+
+def orientations_settled(samples):
+    """Five20Hz observations within0.01rad; no inferred or edited physics."""
+    if len(samples)<5:return False
+    last=np.asarray(samples[-1])
+    angles=[np.arccos(np.clip((np.trace(np.asarray(R)@last.T)-1)/2,-1.,1.)) for R in samples[-5:]]
+    return bool(np.isfinite(angles).all() and max(angles)<=.01)
+
+
+def engagement_key(spoke,stage):
+    """A clear approach and its first insertion are one physical engagement.
+
+    Relatching at the stage-name boundary would chase nipple rotation caused
+    by early mouth contact and abruptly rotate the long tool handle.
+    """
+    quarter=re.search(r'quarter (\d+)',stage)
+    return int(spoke),1 if quarter is None else int(quarter.group(1))
 
 
 class ToolPoseServo:
@@ -79,6 +101,7 @@ class ToolPoseServo:
         self.release_step=int(plan.get('released_tool',{}).get('from_step',10**9))
         self.plan=plan;self.nipple_feedback=bool(nipple_feedback)
         self.latched_key=None;self.nipple_rotation=None
+        self.approach_settle_samples=[];self.realigned_approaches=set()
         self.last=None
 
     def target_spoke(self,step):
@@ -101,17 +124,27 @@ class ToolPoseServo:
             frame=self.plan['frames'][step-1]
             centre,nR=nominal_nipple(spoke,np.deg2rad(self.plan['nipple_flat_phase_deg']),
                                    np.deg2rad(frame['nominal_wheel_clocking_deg']))
-            quarter=re.search(r'quarter (\d+)',frame['stage'])
-            key=(spoke,0 if quarter is None else int(quarter.group(1)))
-            if key!=self.latched_key:
+            key=engagement_key(spoke,frame['stage'])
+            clear_settle=frame['stage'].startswith('Approach nipple ') and frame['stage'].endswith(' settle')
+            realign=False
+            if clear_settle and key not in self.realigned_approaches:
+                candidate,_=nipple_alignment(centre,nR,measured_nipple_pose)
+                self.approach_settle_samples.append(candidate)
+                self.approach_settle_samples=self.approach_settle_samples[-5:]
+                realign=orientations_settled(self.approach_settle_samples)
+            elif not clear_settle:
+                self.approach_settle_samples=[]
+            if realign or key!=self.latched_key:
                 self.nipple_rotation,nipple_diagnostic=nipple_alignment(centre,nR,measured_nipple_pose)
                 self.latched_key=key
+                if realign:self.realigned_approaches.add(key)
             else:
                 nipple_diagnostic={'latched_from_earlier_frame':True}
             original_p=p.copy();original_R=R.copy()
             p=np.asarray(measured_nipple_pose)[:3]+self.nipple_rotation@(p-centre)
             R=self.nipple_rotation@R
             nipple_diagnostic.update(spoke=spoke,quarter=key[1],rotation_is_latched=True,
+                realigned_after_stable_approach=realign,
                 target_translation_correction_m=float(np.linalg.norm(p-original_p)),
                 target_orientation_correction_rad=float(np.arccos(np.clip((np.trace(R@original_R.T)-1)/2,-1,1))))
         actual_p,actual_R=ik.tcp_pose(q,station.BASES['right'])

@@ -1,0 +1,60 @@
+{
+  "kind": "native_gentle_brace_diagnostic",
+  "submission_ready": false,
+  "task_score": null,
+  "status": "invalid_model_domain",
+  "completed_steps": 89,
+  "wall_seconds": 387.14565044734627,
+  "observations": 9022,
+  "upper_geometry": {
+    "maximum_positive_edge_opening_m": 0.00017158765928246782,
+    "maximum_empty_normal_clearance_m": 0.0,
+    "maximum_empty_aperture_m": 0.00017158765928246782,
+    "maximum_across_edge_compression_m": 0.00018676858283742795,
+    "maximum_along_edge_slip_m": 0.0002079145354355473,
+    "minimum_shared_edge_overlap_m": 0.0005976518563380051,
+    "edges_without_overlap": 0,
+    "worst_aperture": {
+      "panel_indices": [
+        456,
+        479
+      ],
+      "endpoint": 0,
+      "opening_m": 0.00017158765928246782,
+      "normal_clearance_m": 0.0
+    },
+    "interpretation": "Empty aperture geometry only. Compression and tangential slip are reported separately; native hinge fracture is a distinct event.",
+    "measurement": "native_edge_geometry"
+  },
+  "native_joint_break_events": {
+    "observer_installed": true,
+    "event_count": 0,
+    "paper_hinge_break_count": 0,
+    "events": [],
+    "interpretation": "Native break notifications only; no joint edits, score or no-damage certificate."
+  },
+  "steel_continuity": {
+    "maximum_endpoint_gap_m": 1.864731782306509e-06,
+    "maximum_allowed_gap_m": 3e-05,
+    "valid": true
+  },
+  "contact_audits": [
+    {
+      "valid": true,
+      "steps": 9022,
+      "first_failure": null
+    },
+    {
+      "valid": true,
+      "steps": 9022,
+      "first_failure": null
+    }
+  ],
+  "interpretation": "Slower touchdown still creates growing numerical panel opening at the distant hand brace. No native break notification or steel crossing was recorded; this is not a measured tear or a successful extraction.",
+  "next_candidate": "Remove the optional distant left-hand brace. Keep the left arm at READY and use the free remover heel as the opposing local contact during levering. Mechanics, strength, aperture and crossing guards unchanged.",
+  "native_sha256": {
+    "preview.json": "63895e400c03a06bd0e1962510562dc028b77ed5e94a8a413590564e9a2a9c51",
+    "trace.jsonl.gz": "bfeb6b8a0247bb8ed67b4f66c9ec63d11370bed099eaa78310ed1106b33ab312",
+    "first-invalid-state-0.npz": "b43ddde7af9d95ad7131bda0957452f8bb3e203ecfc2209aa6de95544ea2afde"
+  }
+}

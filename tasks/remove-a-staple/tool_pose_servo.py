@@ -1,7 +1,7 @@
 """Optional scripted remover-pose compensation; ordinary joint commands only.
 
-This source is prepared for later grasp review and is not yet wired into the
-runner. Native object poses may guide a disclosed scripted feasibility demo,
+The runner enables this only with an explicit scripted-demo flag. Native
+object poses may guide a disclosed scripted feasibility demo,
 but never Dream. Nothing here writes objects, forces, materials or attachments.
 """
 import numpy as np

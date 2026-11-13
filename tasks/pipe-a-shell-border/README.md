@@ -1,12 +1,12 @@
 # Pipe a shell border
 
-Pipe a joined shell border between two marks on a cake. Each shell should have
-a rounded head, visible ridges and a tapered tail. Leave the cake and surrounding board
-clean.
+Pipe a joined row of ridged icing shells between two marks on a cake, then set
+the dispenser down. The task tests coordinated pressure and tool motion.
 
-**Development package; not ready to submit.** Partial robot trials exist, but no
-full-score demo, Dream run or media upload. `task.draft.json` is deliberately
-not named `task.json`. See `VALIDATION.json` for the remaining gates.
+**Awaiting final review evidence and Dream baseline.** Native trial 099 scores 1.0:
+six ridged shells covering 87 mm, with the dispenser released. Its broad photographs
+support the shape, but close-ups are being recorded to inspect the small ridges.
+No media has been uploaded and no PR has been opened.
 
 ## Setup
 
@@ -31,148 +31,92 @@ has yet been measured. A syringe avoids pretending that a
 rigid object is a deformable piping bag; pressure control still comes from
 physical piston movement.
 
-## Run and inspect
+## Run and score
 
-Use the pinned Linux/NVIDIA environment in `ENVIRONMENT.json`. From the repository
-root, compile the fixed plan, run it, then score the saved physical record:
+Use the Linux/NVIDIA stack pinned in `ENVIRONMENT.json`, with its YAM adapter
+installed. Run from the repository root, using the IsaacLab environment's Python.
+The saved plan includes the complete physical pickup, six shells and release:
 
 ```bash
-python tasks/pipe-a-shell-border/plan.py --mode shell --press-stroke .007 --shell-count 3 --release-tool --out artifacts/piping-plan.json
-python tasks/pipe-a-shell-border/run.py --policy demo --joint-feedback --plan artifacts/piping-plan.json --steps 2400 --out artifacts/piping-demo
+python tasks/pipe-a-shell-border/run.py --policy demo --joint-feedback --state-assisted-demo --plan tasks/pipe-a-shell-border/demo-plan.json --steps 2400 --tool-substep-trace --out artifacts/piping-demo
 python tasks/pipe-a-shell-border/audit_run.py artifacts/piping-demo --out artifacts/piping-demo/audit.json
-```
-
-The current three-shell plan is a development test, not a full border. The plan
-is compiled from robot kinematics and a fixed, recorded tool-grasp calibration.
-During execution, bounded PI correction reads ordinary joint angles only. It
-changes action targets, not motor gains or object poses. The independent audit
-uses the deposited material and measured tool/robot geometry. Confirm agreement
-with the matching top and side photographs; a numeric score alone is insufficient.
-
-The newer, explicitly state-assisted scripted candidate uses:
-
-```bash
-python tasks/pipe-a-shell-border/scripted_plan.py --shells 3 --out artifacts/piping-assisted-plan.json
-python tasks/pipe-a-shell-border/run.py --policy demo --joint-feedback --state-assisted-demo --plan artifacts/piping-assisted-plan.json --steps 2400 --out artifacts/piping-assisted-demo
-```
-
-It measures the native barrel/plunger poses to compensate the physical grasp and
-track a fixed piston recipe. It commands ordinary bounded joint targets; it does
-not move objects, change forces or read the achieved decoration. This assistance
-is limited to the scripted feasibility demo. Dream receives standard observations.
-
-A direct baseline uses the same scene and ordinary Dream observations:
-
-```bash
 python tasks/pipe-a-shell-border/run.py --policy dream --steps 2400 --out artifacts/piping-dream
 python tasks/pipe-a-shell-border/audit_run.py artifacts/piping-dream --out artifacts/piping-dream/audit.json
 ```
 
-Dream credentials must be configured privately through the client's credentials
-file or environment. The Dream branch is implemented but has not yet run.
-Do not use the generic scene runner's placeholder score; this task requires
-`run.py` and `audit_run.py` for material coupling and assessment.
+Configure Dream credentials privately through the client environment or its
+credential file. Never put a key in a command, task file or recorded artifact.
+Use a new output directory for every run. The generic scene runner's placeholder
+score is not this task's score; `run.py` performs the material coupling and
+`audit_run.py` independently scores the saved physical record.
 
-Trials use a fixed starting layout, no object jitter and 20 Hz control. The limit
-is 2,400 actions, or 120 simulated seconds. The latest three-deposit
-trial took about 326 wall seconds for 838 actions on an RTX 6000 Ada. Full demo and
-Dream runtimes remain unmeasured. Each run saves its exact Python source, plan,
-video, photographs, joint actions, material state and contact audit.
+Both policies get the same fixed layout,240 Hz physics,20 Hz controls, motor limits
+and 2,400-action limit (120 simulated seconds). There is no object jitter or
+randomized scene seed. The demo ends after 994 actions (49.7 s); trial 099 took 459 s
+on an RTX 6000 Ada. Dream wall time remains unmeasured.
 
-## Validation so far
+The scripted demo openly uses native barrel/plunger poses and joint angles to
+command bounded ordinary joint targets. A fixed pressure/motion recipe and
+recorded joint feedforward compensate tracking lag. It never moves objects,
+changes motor gains, reads the score or injects icing. Dream receives its normal
+camera and joint observations, without this assistance.
 
-Run CPU checks without renting a GPU:
+Each trial saves native video, setup and judging photographs, actions, tool
+poses, material state, contact audit, source hashes and the exact demo plan.
+The optional substep trace allows a separate consistency check:
 
 ```bash
-python -m unittest discover -s tasks/pipe-a-shell-border -p 'test_*.py' -v
+python tasks/pipe-a-shell-border/replay_material.py artifacts/piping-demo --out artifacts/piping-replay
 ```
 
-Thirty-nine tests cover pressure causality, finite volume, contact and damage,
-shape scoring and released-tool evidence. Native tests have demonstrated a
-physical pickup, passive plunger extrusion and an elongated head and tail.
-Native035 released the tool cleanly and scored0.25 under its recorded independent
-scorer: two valid shell shapes, one with continuous ridges. The incomplete,
-uneven finish is not submission quality. Later pose-assisted trials058/062
-complete 838 actions and release cleanly, but score zero under the current
-scorer: pressure falls during tail travel, leaving rounded deposits. A full
-joined border remains pending.
+That replay is a diagnostic of measured inputs, not another robot demonstration.
 
-Later controller trials065–073 remain below submission quality. Increasing
-feedback gain caused oscillation and spill; restoring moderate gains keeps the
-surface clean but still leaves short, weakly ridged deposits. The next diagnostic
-uses `learn_tracking.py` to compile bounded right-arm joint-target compensation
-from a completed physical trial. It records the calibration hashes and preserves
-the nozzle/piston recipe. Only ordinary joint targets change; this candidate has
-not yet demonstrated a full border.
+## Judging and evidence
 
-Trial 080's learned feedforward reaches 0.5: three valid shapes across 45 mm,
-clean release and no recorded damage, but no qualifying ridges. Replaying the
-measured 20 Hz tool trajectory produces ridges in a diagnostic; this is not
-robot feasibility evidence. Trial087 at960Hz also scores0.5, with three valid shapes but only1mm of continuous ridging per shell. Exact physics-step replay reproduces its deposited volume to numerical precision. The next candidate corrects material boundary velocity to the actual unsmoothed surface displacement; see MATERIAL.md. Its local replay has three ridged shells, which is diagnostic rather than robot evidence. The default remains240Hz pending the fresh trial.
+[JUDGING.md](JUDGING.md) defines the ruler/photo checks and partial credit. Count
+actual raised heads, tapered tails and continuous ridges; a plain line or row of
+round blobs cannot pass. The scorer uses the final material surface, not intended
+shell locations. Full credit also requires a joined finish and released tool.
 
-The passive mechanism control emitted 0.1587 ml under an 8 N load and nothing
-under zero load; flow stopped after release and volume balance closed. Those
-controls are not robot task scores. Dated evidence is listed in `VALIDATION.json`.
+Trial 099's exact 11,928-step input replay reproduces deposited volume to numerical
+precision. Its independent audit finds 87 mm of valid decoration, six ridged shells,
+no qualifying spill or cake gouge, and more than 63 mm clearance from the border
+at release. A visible film outside the strip is at most 0.097 mm thick; the rubric
+counts spill from 0.5 mm. This film is present in the photographs and is not hidden.
+See [the recorded evidence](evidence/native-six-shell-099.json).
 
-## Fidelity and judging
+The scorer originally treated a low tail shoulder as a separate head and
+truncated the last shell. Its correction applies the existing 2.5 mm head-height
+minimum before segmentation. Over-height and oversized mounds still obstruct a
+shell; disconnected icing cannot supply a tail. No judging threshold changed.
 
-`material.py` contains a finite reservoir, compression pressure, yield pressure,
-nozzle resistance, ballistic parcels and conservative viscoplastic surface flow.
-The surface now uses a depth-dependent shear yield and Herschel–Bulkley flow law;
-see [MATERIAL.md](MATERIAL.md) for equations, sources and numerical limits.
-Native033 and035 exercise this material law and whole-face nozzle contact.
-Their conserved deposits provide mechanism evidence, not a completed border.
-When icing submerges the star aperture, local pressure spreads it sideways over
-a declared 2 mm transfer depth. The pressure law sees the nozzle and existing
-material, without shell coordinates or templates. The 0.5 mm grid preserves
-small ridges better than the initial 1 mm grid.
-Only current piston position, nozzle state and material state affect flow. The
-material model has no target coordinates or shell list. `native.py` applies
-pressure reaction and passive seal drag to both native bodies, and metal-lip contact reaction
-to the barrel. The star opening is physical geometry, not a painted marking.
-Seal drag is capped at the relative momentum available in one physics step, so
-the discrete friction update cannot reverse motion and introduce chatter.
+```bash
+python -m unittest discover -s tasks/pipe-a-shell-border -p 'test_*.py'
+```
 
-This is an approximation, not a calibrated cream simulation. It cannot model
-overhangs, suspended strings or voids. Offline shape probes produce rounded
-heads and tapered tails; the native trials retain some ridges, but do not yet
-produce a consistent finish. Full scoring requires visible ridges and an elongated head-to-tail shape.
-A round mound cannot pass merely because it narrows at its edge.
-`contact_audit.py` conservatively rejects non-nozzle body overlap with icing or
-cake, using every dynamic collision shape and measured rigid-body transforms.
-This boundary prevents omitted finger smearing from earning credit; it may
-reject a near miss because bounding boxes overestimate occupied volume.
-Unknown collider types fail the preview. Negative CPU controls exercise this
-check; completed manipulation diagnostics pass it. Repeat the audit on each
-final trial.
-Cake damage is a conservative penetration audit,
-not a cake-fracture simulation. The complete trial still needs independent photo scoring.
+The 43 CPU checks cover pressure causality, finite volume, physical contact,
+damage, negative shape controls, segmentation and released-tool evidence.
+Older experiments remain in `evidence/` and `VALIDATION.json`; their scores are
+historical and should not be substituted for the final pair of runs.
 
-Demo and Dream use the same scene, material, starting layout, actuator limits
-and run limit, followed by final rescoring. Disclosed scripted pose feedback is
-not supplied to Dream. Scores and media stay unset until
-those runs are complete.
+## Simulation limits
 
-## Review calibration
+A passive sliding piston compresses a finite reservoir. Pressure drives flow
+through the physical star aperture. Ballistic parcels and a conservative 0.5 mm
+surface grid model deposited icing; a Herschel–Bulkley law controls spreading.
+The tool receives pressure, seal-drag and contact reactions. Both the metal
+nozzle and material law use the same aperture. See [MATERIAL.md](MATERIAL.md).
 
-Accepted [filing #1374](https://github.com/robocurve/benchmark-tasks/pull/1374)
-shows contact-based material laws can be useful. [Caulking #1454](https://github.com/robocurve/benchmark-tasks/pull/1454)
-was asked to make flow depend on a working trigger; [cake smoothing #674](https://github.com/robocurve/benchmark-tasks/pull/674)
-was rejected for lacking actual icing manipulation. These sources inform the
-design, not approval of this untested implementation. All geometry and source in
-this folder are original team work; no accepted task source was copied.
+The cream and seal parameters are engineering approximations, not measurements
+of a particular commercial recipe. The model omits suspended strings, overhangs,
+voids and thixotropy. It cannot simulate finger smearing: non-nozzle overlap with
+icing or cake invalidates the run. Cake gouging is a penetration measurement,
+not a fracture simulation. Review the native photographs alongside the score.
 
-The physical technique follows [Wilton’s shell-border guide](https://wilton.com/how-to-pipe-a-shell-border/wltech-131/):
-build a head with a star nozzle, reduce pressure while drawing a tail, and overlap
-the next head with that tail. This supports the intended technique and shape,
-not the simulation's numerical material properties. Checked 2026-11-13.
-
-Native038 and042 longer-tail and pressure-taper trials remain uneven (0.25,0,0
-under the current scorer). They conserve material and release the dispenser,
-but do not demonstrate a full border. See
-[evidence/native-three-shell-038-042.json](evidence/native-three-shell-038-042.json).
-The next fixed trajectory uses continuous tail motion: two smoothstep segments
-had unintentionally stopped the nozzle halfway through the tail. The material
-and scoring thresholds are unchanged.
-
-Trial095 completes838actions at240Hz with clean release and scores0.5: three valid shells across49mm, two with qualifying ridges. Exact input replay matches native material state. The next hardware candidate deepens the star aperture from28% to35% of mean radius; its identical-pose diagnostic yields ridge lengths10.5,3.5and4mm. This changes both physical metal geometry and the material aperture, without changing cream properties or scoring. It still needs a native robot demonstration.
+The technique follows [Wilton's shell-border guide](https://wilton.com/how-to-pipe-a-shell-border/wltech-131/):
+build a head, draw a tapered tail while reducing pressure, and overlap the next
+head with it. Accepted [filing #1374](https://github.com/robocurve/benchmark-tasks/pull/1374)
+and feedback on [caulking #1454](https://github.com/robocurve/benchmark-tasks/pull/1454)
+and [cake smoothing #674](https://github.com/robocurve/benchmark-tasks/pull/674)
+informed the need for causal material manipulation. Those decisions do not
+establish acceptance of this task. No other team's task code was copied.

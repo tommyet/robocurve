@@ -1,177 +1,102 @@
 # Peg a T-shirt onto a clothesline
 
-**Development only; not ready to submit.** Native cloth pickup/carry and physical peg pickup/opening work. Fastening the
-shirt to the line and leaving it hanging remain unproven. No
-full-score demo, Dream run, final score or uploaded media exists.
+**Development only; not ready to submit.** The latest pickup retains the hem,
+but an independent audit found front/back fabric intersections in its reset.
+The longer trial is held. A valid two-peg hang, full-score demo, Dream run and
+submission media are still missing; no score is claimed.
 
-Hang a small T-shirt using two spring pegs, then let go. The shirt has two sewn
-fabric layers and open neck, cuffs and hem. Each peg has two dynamic wooden
-jaws, a hinge and a constant closing spring. Squeezing the handles must open
-the jaws through physical contact. There are no cloth attachments, proximity
-grasps, animated object paths or runtime changes to spring targets.
+Hang a small T-shirt using two spring pegs, then let go. The garment has two
+sewn fabric layers and open neck, cuffs and hem. Each wooden peg has two free
+jaws, a hinge and a passive closing spring. The robot must open the handles,
+feed fabric and line between the jaws, and release them through contact.
+There are no cloth attachments, proximity grasps or animated object paths.
 
 ## Run
 
 Use the pinned Isaac Sim 6.1 / IsaacLab / YAM environment in `ENVIRONMENT.json`.
-From the repository root:
+Run from the repository root. Current commands are diagnostics, not successful
+task demonstrations:
 
 ```bash
-# CPU checks; these do not prove simulation or task success.
-.venv/bin/python -m unittest discover -s tasks/peg-out-a-tshirt -p test_local.py
+.venv/bin/python -m unittest discover -s tasks/peg-out-a-tshirt -p 'test*.py'
 .venv/bin/python tasks/peg-out-a-tshirt/run.py --check-only
 
-# Bounded native physics controls.
+# Passive controls: the closed peg should retain the coupon; the open one drops it.
 python tasks/peg-out-a-tshirt/probe.py --mode clamp --seconds 3 --output /tmp/closed-peg
 python tasks/peg-out-a-tshirt/probe.py --mode open-clamp --seconds 3 --output /tmp/open-peg
-python tasks/peg-out-a-tshirt/probe.py --mode task-layout --line-pegs --physics-hz 480 --seconds 3 --output /tmp/shirt-reset
 
-# Contact diagnostic, not a submission demo.
+# Actual free-peg opening and release, with the garment untouched.
 python tasks/peg-out-a-tshirt/run.py --mode motion-probe \
   --plan tasks/peg-out-a-tshirt/peg-open-plan.json --steps 340 \
   --judging-views --out /tmp/peg-opening
+
+# Short rest-bending diagnostic; this override is not adopted in task physics.
+python tasks/peg-out-a-tshirt/probe.py --mode task-layout --line-pegs \
+  --regular-refined --solver-iterations 128 --physics-hz 480 --seconds 1 \
+  --rest-bend-angles restShapeDefault --no-render --output /tmp/shirt-rest-bend
+python tasks/peg-out-a-tshirt/audit_self_contact.py /tmp/shirt-rest-bend \
+  --out /tmp/shirt-rest-bend-audit.json
 ```
 
-The full station runs at 480 Hz physics and 20 Hz control. The shared
-`reset_scene.py` resets once and advances exactly 100 ready-position control
-steps (5 seconds) before the first policy observation. Cloth and free pegs
-settle together. Every policy must use this same reset. The task limit is
-2,400 actions, including the final five-second released hold; settling is
-recorded separately. The seed defaults to zero.
+The station uses 480 Hz physics and 20 Hz control. Every policy gets the same
+reset: the shirt starts over the laundry board, both pegs are freely clipped
+to the empty line, and native physics settles for five seconds. The task limit
+is 2,400 actions, including a final five-second released hold. The seed is zero.
 
-The runner saves ordinary camera images, native 960×720 judging views when
-requested, source hashes, actual runtime and assessor telemetry. It checks
-native deformable/self-contact registration and rejects attachments or
-kinematic peg jaws. Frozen plans supply ordinary joint commands only; object
-and mesh readings are assessor-only unless `--state-assisted-grasp` is
-explicitly selected. That scripted feasibility mode measures the reset hem once
-to center ordinary fingers, then uses bounded joint actions. It never writes
-cloth or prop state and is separate from the Dream image/joint policy.
-Interrupted runs remain marked as
-interrupted. All current diagnostic scores are null.
+A disclosed scripted feasibility controller may read actual cloth and peg
+positions to select ordinary bounded joint and finger targets. Dream gets
+normal camera/joint observations with identical scene physics and reset.
+Neither controller may write material or prop poses, add constraints or change
+forces. Recorded evidence includes native cloth states, robot and peg poses,
+executed actions, source hashes, runtime and optional 960 × 720 judging views.
+Interrupted trials remain marked as interrupted; diagnostic scores are null.
 
-## What has been demonstrated
+## Evidence and current blocker
 
-The passive closed-peg control retains a cloth coupon; the open control drops
-it. The actual task has free pegs, so that control alone does not prove pickup
-or line capture. The thin laundry board required 480 Hz physics: the selected
-reset has no sampled initial tunneling or final triangle/fixture intersections.
+The passive peg controls behave differently as expected. Native robot trials
+also demonstrate physical peg opening, removal, turning and released capture
+of the empty line. Those mechanisms do not establish garment hanging.
 
-Batch020 completed the 620-action garment carry in 308.6 wall-clock seconds.
-Both hem layers followed the grippers through a 331 mm lift. During the
-one-handed line hold, the whole garment cleared the board by at least 35 mm.
-It fell back onto the board after both hands opened. Seventeen sampled full
-triangle/fixture audits were clear. This establishes contact and transport,
-not successful hanging.
+An earlier coarse-mesh clipping attempt let eight cloth faces cross the 3 mm
+line axis. Its apparent retention is invalid. A regular 2.5 mm mesh addresses
+that contact scale. With 128 cloth iterations and a wider ordinary pinch,
+trial093 retains the hem after the other hand releases; its marked patch rises
+345 mm. Sampled fixture and forearm checks are clear. Local fingertip contact
+still has up to 0.410 mm nodal overlap and 1.10 mm linear-triangle overlap.
 
-The earlier rest pickup opened a peg to 8.9 mm and lifted it 136 mm. Its later
-horizontal line insertion failed integrity: cloth crossed the line axis and
-the shirt touched the table. That recording earns no score.
+A subsequent self-contact audit finds 3,001 transverse front/back triangle
+pairs in that trial's reset. The authored garment has none. Independent
+edge/plane checks confirm sampled crossings away from sewn edges; separated,
+coincident and shared-vertex controls are not flagged. This invalidates the
+reset's layer-integrity claim. Native topology is verified to match the audit.
+A matched contact-filter control did not resolve it. The next bounded control
+tests the documented rest-bending convention: the default tries to flatten
+the garment's sewn side folds instead of preserving their rest angles. The
+longer clipping sequence must wait for a valid reset. `VALIDATION.json` preserves earlier
+results and failures; `MOTION_PLAN.md` describes the unfinished sequence.
 
-The current reset instead has two spare pegs clipped to the empty line, with
-handles downward. A three-second native test retained both freely moving pegs;
-their final half-second hinge movement was below 3.3 µm. The shirt stayed on
-the board with no sampled full-triangle fixture intersection. The combined
-five-second YAM reset also completed in batch031. Its first feeding attempt
-failed: the right forearm hit the line, never opened the target peg and the
-shirt slipped from the other hand. The original vertex-only planner check
-missed a thin line passing through a convex hull; it now clips the finite line
-axis against every convex face. The old plan is blocked. Batch033 confirms that a tilted approach keeps the
-wrist below the line and reaches the handles; a deeper ordinary hem grasp
-also retains the shirt. However, dangling fabric brushes the peg off before
-the squeeze. The isolated empty-peg trial035 opens its mouth to8.32mm, closes it and
-leaves it on the line. Trial037 then opens the peg with the garment held
-clear, but sideways fabric entry dislodges the upward-facing peg. It falls
-on release, so that trial also earns no score. The next candidate withdraws
-the held peg downward, turns its jaws downward in free space and clips the
-cloth and line from above/front. No hanging demonstration exists yet.
-The runner refuses plans still marked as awaiting their collision audit.
+## Setup and judging
 
-Line-clamp coupons exposed loaded jaw penetration. Halving the timestep or
-raising passive damping reduced the maximum depth from 1.60 mm to about
-0.55 mm, without a line-axis crossing. Neither change is adopted in the task.
-The next robot trial tests slow ordinary handle closure; loaded contact must
-be inspected before assigning any score.
+`task.draft.json` lists the proposed fixed layout. The shirt is 400 mm across
+its sleeves, 280 mm across its body and 300 mm long, with nominal 180 g/m²
+fabric and 33.9 g mass. Native surface FEM models stretch, bend, gravity and
+self-contact. The 3 mm line is rigid. Cotton anisotropy, yarns, tearing and
+wetness are omitted; stiffness, friction and peg torque are engineering
+estimates. Numerical strain alone cannot certify undamaged cloth.
 
-## Setup, physics and scoring
-
-`task.draft.json` lists the proposed prop sizes and positions. The shirt is
-400 mm across its sleeves, 280 mm across its body and 300 mm long, with nominal
-180 g/m² fabric and 33.9 g mass. Surface FEM handles stretch, bend, gravity and
-self-contact; the taut 3 mm line is rigid. Cotton anisotropy, yarns, tearing and
-wetness are omitted. Material stiffness, friction and peg torque are
-engineering estimates, not calibrated physical measurements. Native strain
-alone cannot certify intact fabric.
-
-`JUDGING.md` defines visible capture, released retention and simple ruler
-measurements. One valid peg earns partial credit; two separated by at least
-180 mm earn full credit. The shirt must remain supported only by the line and
-pegs for five seconds with at least 20 mm table/floor clearance. A peg merely
-near the line earns nothing. Unknown integrity or contact leaves the result
-unscored.
+`JUDGING.md` uses visible jaw/fabric/line capture, a ruler and released retention.
+One valid peg earns partial credit; two at least 180 mm apart earn full credit.
+For five seconds, the whole shirt must remain at least 20 mm clear of table
+and floor, supported only by the line and pegs. Unknown integrity or contact
+leaves the result unscored.
 
 ```bash
 python tasks/peg-out-a-tshirt/judge.py /path/to/judging.json \
   --evidence-dir /path/to/trial --out /path/to/reviewed-score.json
 ```
 
-The judge verifies the evidence-file digests before applying the rubric.
-`interpret_motion.py` and `interpret_peg.py` provide offline diagnostics, never
-success flags. No completed judging record exists yet.
-
-Native authoring follows [NVIDIA surface deformables](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/deformables_beta/deformable_beta.html).
-The earlier [sock-pegging submission](https://github.com/robocurve/benchmark-tasks/pull/760)
+The judge binds measurements to evidence hashes. No completed judging record
+exists. Native authoring follows [NVIDIA surface deformables](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/110.0/dev_guide/deformables/deformable_bodies.html).
+The prior [sock-pegging submission](https://github.com/robocurve/benchmark-tasks/pull/760)
 failed for rigid cloth, automatic clips and proximity scoring. This design
-addresses those omissions, but ownership and novelty still need review.
-[BEHAVIOR clothesline hanging](https://behavior.stanford.edu/knowledgebase/tasks/hanging_clothes_on_clothesline-0.html)
-is relevant prior work; its draping task does not establish novelty here.
-
-Trial043 physically removes and turns the opened spare peg by120degrees.
-The hand deflects24mm upward under load, so its mouth misses the line;
-the hem also creeps out before closure. Both props fall, with no score.
-The revised1,220-action candidate deepens the hem bite10mm and corrects
-the clipping target using ordinary right-arm joint observations. Its bounded
-PI changes only ordinary joint targets; it never reads cloth or peg state.
-All reference poses pass the rigid-hull and finite-line-axis rejection check.
-Actual capture, contact integrity and released retention still need native proof.
-
-The next scripted candidate can use `--state-assisted-grasp` to handle measured
-reset variation. Both observed043 and050 reset shapes pass the200-action
-collision rejection check after this calibration. All later reference actions
-remain unchanged. The actual executed plan, input-state hash and grasp targets
-are saved with the trial. This calibration physically retained the shirt in
-later trials; it does not establish correct clipping or hanging.
-
-Batch058 retained the unused peg throughout the corrected approach. The first
-clip was withheld after830 actions when the mouth controller could not produce
-a reachable target. Its corrected outer loop integrates the desired TCP instead
-of adding measured hand compliance repeatedly; all11 available recorded input
-states pass the local hull screen. Batch064 tests six seconds of alignment
-before closure. Its mouth alignment converged to1.47mm and the peg closed.
-However, eight garment faces crossed the3mm line axis and remained there
-after both hands withdrew. That retention is invalid and receives no score.
-
-A denser mesh is under test with the same garment, mass, material and line.
-Adaptive refinement introduced0.2mm seam features; its069 reset moved some
-sleeve nodes through the support board. The regular2.5mm-grid candidate keeps
-the1.6mm seam width, has30,538nodes, and changes no physical geometry. Select
-it explicitly with `--regular-refined` in either the passive probe or YAM
-runner. Batch072 completed the five-second passive reset with no sampled
-board/leg/table triangle intersections. Batch075 lifted the shirt but lost it
-when one hand released: material passed through the remaining finger pads
-by3.36mm. It never reached the line. The next320-action diagnostic uses an
-ordinary finite pinch target (0.939mm commanded jaw gap) with unchanged
-physics. Real intact grasp and released line capture remain unproved.
-
-The short finite-pinch control (batch084, 320 actions, 229.7 seconds) also lost
-the shirt after the other hand released. Actual pad gaps narrowed to about
-1.14 mm while the two cloth layers require roughly 1.23 mm at that location.
-The next isolated control changes cloth solver iterations from32 to128; no
-material, friction, motor limit or attachment changes. A full hanging demo
-remains unproven.
-
-Batch089 changed only cloth solver iterations from 32 to 128. The shirt stayed
-held through the 320-action prefix, including the other hand opening. However,
-a back-hem fold penetrated a finger pad by up to 2.44 mm, so this is not clean
-contact proof. The next short comparison uses a 0.018 ordinary finger target
-to reduce compression. The native USD collision meshes were checked against
-the audit geometry: all 92 finger hulls match within 0.86 nanometres.
+addresses those mechanisms, but novelty and ownership still require review.

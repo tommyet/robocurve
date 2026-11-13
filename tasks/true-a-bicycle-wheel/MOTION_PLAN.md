@@ -19,6 +19,10 @@ The target does not chase nipple rotation during tightening. Measured nipple
 translation follows rim deflection. All outputs are ordinary position-, speed-
 and effort-limited robot joint targets; no object state, material, attachments
 or actuator efforts are modified. Dream does not receive this feedback.
+During the clear approach's settling hold, one re-alignment is allowed after
+five successive20Hz orientations remain within0.01rad. This avoids chasing
+the brief nipple wobble seen in096 while preventing a stale approach frame.
+Insertion and tightening retain a fixed orientation target for that quarter.
 
 The joint tracker adds bounded integral compensation, at most 0.12 rad, using
 only robot joint observations. Native 091 showed why the old 0.9 s turn was too
@@ -36,6 +40,12 @@ Only the clear approach may accept a bounded IK residual fitting the 5 mm mouth.
 The jaw-point error bound is at most 0.75 mm versus 0.885 mm mouth half-clearance.
 Tight insertion/turning retains the stricter command-quality check. Native
 contact, not IK accuracy, must prove engagement and torque transfer.
+Native096 stops at177 before insertion on0.002086rad versus the old0.002rad
+angular limit, although its0.7462mm jaw-point bound fits the reserved0.750mm.
+The approach angular cap is now0.01rad only inside that unchanged jaw bound.
+The revised controller passes all recorded096 approach observations and the
+203 remaining commands with the measured177 grasp; their hull screens have
+no unexpected intersections. This is local evidence, not a completed retry.
 
 Compile and run commands are in `README.md`. Plans carry source and URDF hashes.
 `audit_robot_plan.py` screens nominal targets; `audit_native_trace.py` checks

@@ -2,10 +2,10 @@
   "status": "development_not_submission_ready",
   "checked_date": "2026-11-13",
   "local_checks": {
-    "geometry_and_rubric_tests": 15,
+    "geometry_and_rubric_tests": 19,
     "result": "passed",
     "command": ".venv/bin/python -m unittest discover -s tasks/peg-out-a-tshirt -p 'test*.py' -v",
-    "scope": "CPU geometry and synthetic evidence-rubric cases only; no physics or task-success claim",
+    "scope": "CPU geometry, synthetic rubric and independent transverse-crossing controls only; no physics or task-success claim",
     "python_source_files": 26,
     "syntax_and_json_check": {
       "result": "passed",
@@ -164,7 +164,7 @@
       "candidate": "Conforming local rest-mesh line and hem-grasp contact regions with\u22642.5mm edges,29434nodes/58696faces; area, material, mass, four openings and3mm line unchanged. Native gate pending."
     },
     "wider_pinch093": {
-      "status": "retained_pickup_with_local_contact_approximation",
+      "status": "pickup_retained_but_reset_layer_integrity_invalid",
       "actions": 320,
       "normalized_finger_target": 0.018,
       "cloth_solver_iterations": 128,
@@ -180,7 +180,33 @@
         "executed_320_prefix_max_difference": 1.2987388942065081e-12
       },
       "next": "Same ordinary .018 pinch and numerical settings for first-peg placement; actual line capture and release remain unproven.",
-      "score": null
+      "score": null,
+      "self_contact_audit": {
+        "reset_transverse_pairs": 3001,
+        "final320_transverse_pairs": 3733,
+        "synthetic_controls": "Separated and coincident triangles return0; a known transverse crossing returns1; original authored garment returns0.",
+        "independent_verification": "All13 sampled pairs independently intersect via edge-plane/barycentric calculation; corresponding front/back faces occur away from seams.",
+        "consequence": "Full1280 run held. No physical cloth-integrity or task-success claim.",
+        "hypothesis": "Contact-filter control104 did not resolve layer interleaving. A documented rest-bending convention mismatch at sewn edges is being tested; the long run stays held."
+      }
+    },
+    "reset_self_contact": "Invalid layer interleaving in093 despite prior rigid-fixture checks. A targeted native rest-space contact-filter control is pending.",
+    "reset_self_contact_controls": {
+      "status": "filter_hypothesis_not_supported",
+      "command_base": "python tasks/peg-out-a-tshirt/probe.py --mode task-layout --line-pegs --regular-refined --solver-iterations 128 --physics-hz 480 --seconds 1 --no-render --output <fresh-directory>",
+      "difference": "Second control adds --self-collision-filter-mm 0.6; no other physical changes.",
+      "telemetry": "Read-only native simulation/rest triangle indices and rest positions test authored-mesh correspondence.",
+      "schema_evidence": "Installed PhysX110.3.2 schema: native-auto default(-inf), allowed range starts at twice collision restOffset(0.6mm here).",
+      "baseline072": "Earlier32-iteration standalone probe has117 transverse front/back pairs after the first1/480s step,80 after5s; no equivalence with128-iteration YAM reset is assumed.",
+      "automatic_final_transverse_pairs": 2471,
+      "explicit_06mm_final_transverse_pairs": 2463,
+      "first_step_transverse_pairs_both": 2512,
+      "native_topology": "Simulation/rest triangle sets match exactly; per-node rest differences at most 16 nm."
+    },
+    "reset_rest_bending_candidate": {
+      "status": "released_short_control_pending",
+      "finding": "The authored garment has 674 interior seam edges with 90-degree rest bends. Native restBendAnglesDefault is flatDefault, which ignores these angles. A restShapeDefault diagnostic tests this specific mismatch with the same finite bend modulus, geometry, material, solver and automatic contact filter.",
+      "not_a_confirmed_fix": true
     }
   },
   "demo": {

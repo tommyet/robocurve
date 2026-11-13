@@ -29,6 +29,7 @@ def main():
     p.add_argument('--solver-type',choices=('TGS','PGS'),default='TGS',help='Native solver diagnostic with unchanged geometry and material')
     p.add_argument('--solver-position-iterations',type=int,choices=(16,32,64,128,255),default=128)
     p.add_argument('--gpu-physics',action='store_true',help='Compare native GPU rigid physics with the CPU reference')
+    p.add_argument('--batch-sdf-notices',action='store_true',help='Write identical Float defaults through cached Sdf specs in one notice batch per native substep')
     p.add_argument('--external-forces-every-iteration',action='store_true',help='Match the YAM TGS external-force integration option; diagnostic only')
     p.add_argument('--omit-bearing-diagnostic',action='store_true',help='Remove only the world bearing before attachment; short free-fall momentum isolation')
     p.add_argument('--freeze-thread-diagnostic',action='store_true',help='No runtime material writes/lead torque; isolates native assembly')
@@ -50,6 +51,7 @@ def main():
             'solver_position_iterations':args.solver_position_iterations,
             'solver_velocity_iterations':args.solver_velocity_iterations,
             'solver_type':args.solver_type,
+            'batch_sdf_notices':args.batch_sdf_notices,
             'reset_profile':args.reset_profile,'nipple_flat_phase_deg':args.nipple_flat_phase_deg,'wheel_clocking_deg':args.wheel_clocking_deg,
             'initial_turn_offsets':starting_turn_errors(profile=args.reset_profile).tolist(),
             'frozen_material_diagnostic':args.freeze_thread_diagnostic,
@@ -137,7 +139,7 @@ def main():
         momentum=MomentumAudit(io.view,metadata['wrench_path'])
         record['native_mass_properties']=momentum.properties()
         if io.view.count!=130:raise RuntimeError('Expected 130 native wheel/wrench bodies')
-        coupling=NativeThreadCoupler(stage_id,metadata,native_io=io)
+        coupling=NativeThreadCoupler(stage_id,metadata,native_io=io,batch_sdf_notices=args.batch_sdf_notices)
         timings={'material_s':0.,'native_simulation_s':0.,'observation_s':0.,'checkpoint_s':0.}
         record['timing']=timings
         steps=round(args.seconds/args.dt);record['phase']='simulate';last_checkpoint=time.monotonic()
@@ -167,8 +169,7 @@ def main():
                     timings['checkpoint_s']+=time.perf_counter()-tick
         record['rim_integrity']=coupling.audit_integrity()
         record['complete']=True
-        record['native_parameter_updates']={'attempted':coupling.parameters.attempts,'written':coupling.parameters.writes,
-            'skipping_rule':'Only float32-identical values; no material tolerance or update decimation'}
+        record['native_parameter_updates']=coupling.parameters.statistics()
         record['interpretation']='Execution only; assess geometry, tension and uncommanded thread drift before advancing.'
         stage.GetRootLayer().Export(str(args.out/'final-authored-parameters.usda'))
     except BaseException as error:

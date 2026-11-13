@@ -1,37 +1,50 @@
 # Proposed robot sequence
 
-This is a planning note, not a demo or a claim of feasibility. The nine corrected right-arm
-poses from `plan_reach.py` pass offline inverse kinematics. The current 236-action
-lever plan also passes every-action sampled hull screening against the robot,
-tool and support, with the left brace at (0.405, 0.050) m. Flexible paper and
-wire contacts remain native-test requirements. This is not a successful grasp
-or extraction. The full-size panel reset currently fails before robot actions.
+The current candidate uses one hand. The left arm stays at READY; the free
+remover's 15 mm-wide heel supplies the opposing local contact on the sheets
+while the forks lift the crown. This removes an optional distant hand brace,
+not the paper or steel mechanics. All 386 nominal hull frames are clear. The
+native extraction still needs demonstration. After pickup, an explicit scripted
+servo may use the measured remover grasp to correct ordinary joint targets.
 
-1. Pick up the remover across its 18 mm grip width and lift it clear of the
-   table. The gripper closes across the handle, not against its two ends.
-2. Use the left fingertips to hold the papers flat beside the staple. They must
-   touch the papers normally; no attachment or pose correction is allowed.
-3. Approach the staple from its right side. This keeps the remover heel on the
-   document support. The two fork tips align below the crown, inside its legs.
-4. Insert with the tool pitched down about 5.54 degrees. Pivot to level against
-   the support. Do not rotate past level: the handle would hit the support.
-   This angle comes from the 50 µm tip, heel geometry and fixed crown height.
-   The old four-degree sketch put the tips about 1 mm above the crown.
-5. Lift the held remover about 12 mm, continuing to hold the sheets down. The
-   staple legs must straighten and leave the original holes through contact.
-   A bent crown, floating stack or still-threaded leg is not extraction.
-6. Leave the complete staple at least10mm clear of both sheets, then release
-   the tool and papers for three seconds. Both legs must be present and clear
-   of the original holes. Moving or separating the sheets is unnecessary.
+The earlier braced candidate below remains as a development record. Its slower
+touchdown still stops at 89 actions with 171.59 µm positive panel aperture,
+no native hinge-break notification and no steel crossing. That is a numerical
+contact observation, not a demonstrated tear.
 
-Every substep keeps the selected material's continuity and wire-crossing guards
-active. A stopped trial remains invalid even if a later continuation could look
-successful. The panel candidate uses finite native hinge strength; the older
-surface-FEM path has separate membrane validity limits.
+This is a planning note, not a demonstrated extraction. Full-size passive
+panel-paper reset and short YAM integration pass. Actual bracing reaches 46
+control actions; the next trial changes touchdown speed and records geometric
+continuity and native break events.
 
-A separate `finalize_plan.py` appends ordinary remover placement, release and
-3.2 seconds of final observation. The resulting candidate has 386 actions
-(19.3 seconds) within a proposed 600-action/30-second limit. It can leave the
-intact staple on the released remover, at least10mm from the paper, as allowed
-by judging v4. The old236-action lever plan remains available for the first
-contact test; neither plan is a completed native extraction demonstration.
+1. Approach the remover and paper brace. Pause with the left fingertips 2 mm
+   above the sheets, let the wrist level, then lower 2 mm over 1.5 seconds. The
+   final nominal brace pose is unchanged.
+2. Pick up the remover across its 18 mm handle width and lift it clear of the
+   tabletop. Keep the papers held by ordinary left-finger contact.
+3. Approach the staple from its right side, with the heel over the support
+   and fork tips under the crown, inside both legs.
+4. Insert at about 5.54° downward pitch, then pivot to level using contact
+   with the support. Further rotation would drive the handle into the board.
+5. Lift the held remover 12 mm. Both legs must unbend and leave their holes
+   through physical contact. A floating stack or retained leg is not removal.
+6. Keep the complete staple at least 10 mm clear of both sheets, put down and
+   release the remover, then leave staple and papers released for 3.2 seconds.
+   The staple may remain on the remover. Sheet separation is unnecessary.
+
+The 446-action candidate lasts 22.3 seconds within the proposed 600-action limit.
+Its first 30commands match the earlier 386-action plan; it adds a slower brace
+and settling holds. All 446commanded hull frames pass the offline rejection
+screen. Flexible contact and actual motor tracking require the native trial.
+
+The next 144-action prefix ends after pickup and before tool alignment over
+the staple. The later nominal poses pass inverse kinematics and geometry
+screening, but physical grasp rotation may require a disclosed pose-assisted
+scripted controller. Such feedback may issue only normal bounded robot joint
+targets; it cannot edit object poses, forces, attachments or actuator limits.
+Dream will receive ordinary camera and joint observations only.
+
+Every native substep retains steel continuity and wire-crossing checks.
+The next geometric paper diagnostic records positive empty aperture, finite
+shared-edge overlap, raw endpoint errors and separate native break events.
+A diagnostic recording is not automatically a valid task demonstration.

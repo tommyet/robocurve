@@ -47,6 +47,7 @@ def main():
     p.add_argument('--dream-rows-per-request',type=int,choices=(2,4,8),default=8)
     p.add_argument('--judging-views',action='store_true',help='Fixed close review cameras, never policy inputs')
     p.add_argument('--joint-tracking',action='store_true',help='Bounded ordinary-joint integral tracking, without object feedback')
+    p.add_argument('--tool-pose-servo',action='store_true',help='Disclosed scripted remover-pose feedback through ordinary joint targets; never Dream')
     p.add_argument('--position-iterations',type=int,choices=(32,64,128),default=128)
     p.add_argument('--paper-gap-envelope-um',type=int,choices=(25,100),default=25,
         help='100 is an explicitly unscored continuity diagnostic; it does not change contact or forces')
@@ -59,8 +60,9 @@ def main():
     p.add_argument('--refined-contact-diagnostic',action='store_true')
     p.add_argument('--max-depenetration-m-s',type=float)
     a=p.parse_args()
-    if a.dream and (a.plan or a.joint_tracking or a.paper_gap_envelope_um!=25 or a.geometry_aware_continuity):p.error('Dream cannot use scripted feedback or a diagnostic continuity envelope')
+    if a.dream and (a.plan or a.joint_tracking or a.tool_pose_servo or a.paper_gap_envelope_um!=25 or a.geometry_aware_continuity):p.error('Dream cannot use scripted feedback or a diagnostic continuity envelope')
     if a.joint_tracking and not a.plan:p.error('Joint tracking requires a plan')
+    if a.tool_pose_servo and (not a.plan or not a.joint_tracking):p.error('Tool-pose servo requires a plan and bounded joint tracking')
     if not 1<=a.steps<=(600 if a.plan or a.dream else 100):p.error('Bounded preview step count exceeded')
     import runtime_config
     import coordinate_frame
@@ -80,12 +82,15 @@ def main():
     a.out.mkdir(parents=True,exist_ok=False);started=time.monotonic()
     report={'kind':'staple_panel_yam_integration_preview','status':'running','score':None,'robot_demo':False,
         'joint_tracking':a.joint_tracking,'solver_type':a.solver_type,'position_iterations':a.position_iterations,
+        'tool_pose_servo':a.tool_pose_servo,
         'diagnostic_only':a.paper_gap_envelope_um!=25 or a.geometry_aware_continuity,
         'paper_gap_envelope_m':a.paper_gap_envelope_um*1e-6,
         'geometry_aware_continuity':a.geometry_aware_continuity,
         'empty_aperture_limit_m':.00015 if a.geometry_aware_continuity else None,
         'dream_requests':0,'requested_steps':a.steps,'control_hz':20,'phase':'launch',
-        'policy':'Dream with ordinary camera/joint observations' if a.dream else 'ordinary fixed joint commands; no object state feedback',
+        'policy':('Dream with ordinary camera/joint observations' if a.dream else
+                  'State-assisted scripted tool-pose servo; ordinary bounded joint commands' if a.tool_pose_servo else
+                  'ordinary fixed joint commands; no object state feedback'),
         'paper_model':'native analytic100um box panels with passive bending/strength hinges',
         'world_coordinate_offset_m':coordinate_frame.OFFSET_M.tolist(),
         'plan_sha256':hashlib.sha256(a.plan.read_bytes()).hexdigest() if a.plan else None,
@@ -167,7 +172,7 @@ def main():
         video=imageio.get_writer(a.out/'preview.mp4',fps=20,codec='libx264',pixelformat='yuv420p',ffmpeg_params=['-movflags','+faststart'],macro_block_size=1)
         report['phase']='record'
         report['control_step_wall_seconds']=[]
-        tracker=None
+        tracker=tool_servo=None
         observation=emb._observation()
         issued=emb._ready.detach().cpu().numpy()[0].copy()
         from yam_arena.constants import SHOULDER,WRIST,GRIPPER,FINGER_OPEN
@@ -185,6 +190,11 @@ def main():
             from joint_tracking import JointTracker
             tracker=JointTracker(issued,emb._low,emb._high,limits)
             report['tracking_disclosure']='Only robot joint observations; no native object poses, attachments, forces or actuator-effort changes.'
+        if a.tool_pose_servo:
+            from tool_pose_servo import RemoverPoseServo
+            tool_servo=RemoverPoseServo(plan)
+            report['tool_servo_disclosure']='The scripted demo reads native remover pose and observed robot joints to compensate grasp slip after pickup. It issues only ordinary bounded joint targets; no object pose, force, material, attachment or effort-limit writes. Dream cannot use this controller.'
+        hardware=arena_hardware.hardware_state(emb._env,'hardware')
         for step in range(a.steps+1):
             break_observer.context('episode',step)
             requested=None
@@ -197,7 +207,11 @@ def main():
                     issued=bounded_action(requested,issued,emb._low,emb._high,limits)
                 else:
                     nominal=emb._ready.detach().cpu().numpy()[0] if actions is None else actions[step-1]
-                    issued=nominal if tracker is None else tracker.command(nominal,np.asarray(observation.state['joint_pos']))
+                    target=nominal
+                    if tool_servo is not None:
+                        tool_pose=hardware.body_poses[list(hardware.body_names).index('remover')]
+                        target=tool_servo.command(step,nominal,np.asarray(observation.state['joint_pos']),tool_pose)
+                    issued=target if tracker is None else tracker.command(target,np.asarray(observation.state['joint_pos']))
                 action=torch.as_tensor(issued[None],device=base.device,dtype=torch.float32)
                 tick=time.perf_counter();emb._env.step(action)
                 report['control_step_wall_seconds'].append(time.perf_counter()-tick)
@@ -212,6 +226,7 @@ def main():
                 'commanded_action14':None if step==0 else issued.tolist(),
                 'dream_requested_action14':None if requested is None else requested.tolist(),
                 'joint_tracking':None if tracker is None else tracker.last,
+                'tool_pose_servo':None if tool_servo is None else tool_servo.last,
                 'native_joint_break_events':break_observer.summary(),
                 'paper_nodes':[x.nodes.tolist() for x in paper],
                 'paper_continuity':[x.continuity for x in paper],'hardware_names':list(hardware.body_names),

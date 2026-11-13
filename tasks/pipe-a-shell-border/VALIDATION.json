@@ -1,7 +1,7 @@
 {
   "status": "development_not_submission_ready",
-  "checked_utc": "2026-11-13",
-  "cpu_tests_passed": 39,
+  "checked_utc": "2026-11-13T11:52:00Z",
+  "cpu_tests_passed": 43,
   "native_simulator_run": true,
   "robot_demo_run": true,
   "dream_run": false,
@@ -9,9 +9,9 @@
   "scores": null,
   "paid_compute_used_usd": null,
   "remaining_gates": [
-    "Native095 completes838 actions at240Hz with clean release and score0.5. Three valid shells, only two qualifying ridges. The deeper physical star nozzle and full border still require native validation.",
-    "Complete joined border, visible continuous ridges and agreement with photographs remain unverified.",
-    "Dream baseline and final rescoring pending; no API requests or media uploads."
+    "Native099 independently scores1.0 with six ridged shells over87mm; final close-up repeat105 is running.",
+    "Exact small-ridge photo agreement, uninterrupted Dream baseline and final paired rescoring remain pending.",
+    "No media upload or PR; user review is required before submission."
   ],
   "sources_sha256": {
     "audit_run.py": "27a34c14178caa3e6d76689437917d9d40503eb38a75453536d94778ca50a6a9",
@@ -27,14 +27,14 @@
     "probe_native.py": "8aa6cc9d6ee650d364e2681896e360d08c03d768053a568377a5d7e2dab38515",
     "probe_shell_shape.py": "a4e2ab3a31c23b0acc9baeef718887a8d9e74c8fca1f2ed91659c2aa9732289e",
     "replay_material.py": "fffc379bd85001fabb01bde5ae425701dce38cd2f32f5670446065ceff6ff680",
-    "review_views.py": "91fff198f4643babe15e10ca1d72cfb068ee8521e556e3d3e49fda0a2b9c804d",
+    "review_views.py": "e0530fb097624103fd40f8bff6be89ee0c604189252231b43e1aafe8ec901f07",
     "run.py": "3f23a922f9bba0e959c19624107defc95f13e580f0cd9efee832e4ae1b88b893",
     "scene.py": "893a2016851d05ec62ca47f22cb3aca3c11fc19a2ef81333372132dd856dfcf5",
-    "scoring.py": "96408e0ee9e663fb799c6f91572f900794aa4f304d505ccbb9c778524b658073",
+    "scoring.py": "744ec375c9a0b5c2e09f0190d278f74839a40d5dcc84426a58d44064afcf1601",
     "scripted_plan.py": "27a6c93162569cc520c8949fe67780e8a77afdcdb82f224bdda249ec47300b32",
     "scripted_servo.py": "485d391accda6b836864334bb2d074d7695e27bc6b6c3b111aefae902c320a55",
     "test_learn_tracking.py": "e6c8af0d8ec9e91edbacbaf9dbb728e8534af7e4d4288d2cbda00e6a3bc7fd74",
-    "test_material.py": "26102a27bd6df3bb3e6d36ed0736a97158198e7964f630ee5acb977468c8c0e0",
+    "test_material.py": "e586febb3611a550ce05f3ea6cad6371f69eb77c4505c63d66457185ddbe7249",
     "test_release.py": "d2b6b9b3388736c2a8e6d85cba253c43086dcfab7885be8b7a3973b0e7523f19",
     "test_scripted_servo.py": "f5c48f4db8c9958760f702e8a2615aeae3ef263d71477351aaa91a3962f9c1af"
   },
@@ -60,9 +60,10 @@
     "evidence/native-three-shell-026.json",
     "evidence/native-three-shell-030-031.json",
     "evidence/native-three-shell-033-035.json",
-    "evidence/native-three-shell-038-042.json"
+    "evidence/native-three-shell-038-042.json",
+    "evidence/native-six-shell-099.json"
   ],
-  "full_score_demo": false,
+  "full_score_demo": true,
   "state_assisted_scripted_demo": {
     "status": "in_development",
     "assistance": "Native barrel/plunger poses guide ordinary bounded robot joint commands; no physics/object/material writes; Dream unchanged.",
@@ -82,7 +83,7 @@
     "native080_pose_replay": "Interpolating the actual20Hz tool pose and piston trace into240Hz produces three ridged shells/47.5mm in an offline prescribed-input diagnostic. This is not robot evidence; unrecorded within-action motion and pressure are under investigation."
   },
   "cpu_checks_current": {
-    "test_count": 39,
+    "test_count": 43,
     "result": "passed",
     "command": "python -m unittest discover -s tasks/pipe-a-shell-border -p test_*.py"
   },
@@ -177,5 +178,15 @@
       4
     ],
     "material_properties_and_scoring_changed": false
+  },
+  "full_border_099": {
+    "score": 1.0,
+    "action_count": 994,
+    "simulated_seconds": 49.7,
+    "valid_shells": 6,
+    "valid_length_mm": 87.0,
+    "scoring_sha256": "744ec375c9a0b5c2e09f0190d278f74839a40d5dcc84426a58d44064afcf1601",
+    "photo_agreement": "Six-shell interpretation independently confirmed; precise ridge dimensions require the final close-ups.",
+    "outside_strip_film_maximum_height_mm": 0.09668354
   }
 }

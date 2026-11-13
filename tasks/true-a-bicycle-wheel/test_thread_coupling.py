@@ -1,5 +1,7 @@
 import math
 import unittest
+from unittest.mock import patch
+from types import SimpleNamespace
 import numpy as np
 from thread_coupling import (response,response_batch,rotation,rotation_batch,relative_thread_angle,
     relative_thread_angle_batch,ThreadTravelOutOfScope,ThreadSpec,ThreadFriction,NativeFloatAttributes)
@@ -11,6 +13,39 @@ def rotvec(vector):
 
 
 class ThreadTests(unittest.TestCase):
+    def test_sdf_batch_preserves_values_and_never_calls_usd_inside_change_block(self):
+        state={'open':False,'notices':0}
+        class ChangeBlock:
+            def __enter__(self):
+                self.assert_closed();state['open']=True
+            def __exit__(self,*args):state['open']=False;state['notices']+=1
+            @staticmethod
+            def assert_closed():
+                if state['open']:raise AssertionError('Downstream USD called inside Sdf change block')
+        class Attribute:
+            def __init__(self,name):
+                self.spec=SimpleNamespace(typeName='Float',path=name,default=0.,
+                    layer=SimpleNamespace(identifier='root',permissionToEdit=True))
+            def GetPropertyStack(self):ChangeBlock.assert_closed();return [self.spec]
+            def Get(self):ChangeBlock.assert_closed();return self.spec.default
+            def Set(self,value):raise AssertionError('Batch must edit only cached Sdf specs')
+        attrs=[[Attribute('/a'),Attribute('/b')],[Attribute('/c'),Attribute('/d')]]
+        sdf=SimpleNamespace(ChangeBlock=ChangeBlock,ValueTypeNames=SimpleNamespace(Float='Float'))
+        with patch.dict('sys.modules',{'pxr':SimpleNamespace(Sdf=sdf)}):
+            cache=NativeFloatAttributes(attrs,batch_sdf_notices=True)
+        cache.set([[.1,.2],[.3,.4]])
+        cache.set([[.1+1e-12,.2],[.3,.4]])
+        self.assertEqual(state['notices'],1)
+        cache.set([[.1+1e-7,.2],[.3,.5]])
+        self.assertEqual(state['notices'],2)
+        stats=cache.statistics()
+        self.assertEqual(stats['written'],6)
+        self.assertTrue(stats['first_sdf_readback_verified'])
+        self.assertTrue(stats['final_cached_values_match_authored'])
+        np.testing.assert_array_equal(stats['final_authored_values'],np.asarray([[.1+1e-7,.2],[.3,.5]],np.float32))
+        cache.invalidate();cache.set([[.1+1e-7,.2],[.3,.5]])
+        self.assertEqual(cache.writes,10)
+
     def test_native_cache_preserves_changed_float_values_and_invalidates_on_reset(self):
         class Attribute:
             def __init__(self):self.history=[]

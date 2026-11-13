@@ -1,0 +1,10 @@
+{
+  "captured_native_states": 526,
+  "randomized_native_geometry_states": 300,
+  "checks": 826,
+  "maximum_numeric_difference": 0.0,
+  "two_patch_seconds_per_step": {
+    "solid_contacts": 0.009203807080048136,
+    "optimized_solid_contacts": 0.0016036525001982228
+  }
+}

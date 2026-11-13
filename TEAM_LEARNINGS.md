@@ -4,6 +4,44 @@ Last updated: 2026-11-13 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-13 — physical evidence and runtime at 11:52 UTC
+
+- Cake099 completes 994 actions in 459 s. Its independent score is 1.0: six
+  ridged shells covering 87 mm, with the tool released. A scorer correction
+  excludes shoulders below the existing 2.5 mm head-height minimum before tail
+  segmentation; oversized/over-height obstructions remain. All 43 CPU checks
+  pass, including negative controls. Exact 11,928-step replay matches deposited
+  volume to numerical precision. Broad native photographs support six shapes;
+  close-up repeat105 is running to inspect the small ridge dimensions. A visible
+  outside-strip film is at most 0.097 mm thick, below the existing 0.5 mm spill
+  threshold. It is disclosed, not absent. Dream baseline remains pending.
+- Shirt098 was interrupted before its long continuation because the settled
+  garment contains actual front/back crossings. Matched104 controls confirm
+  native/authored topology correspondence and rule out rest-space filtering.
+  Native rest bending defaults to flat folds; a short rest-shape bending control
+  is queued. Do not promote hem retention until this reset defect is resolved.
+- Tie101 completes 580 actions with clean sampled cloth contact but misses the
+  handoff: the receiving finger pushes the tip aside, then lifts empty. A fully
+  open receiving-hand correction is screened locally; no knot is demonstrated.
+- Paper100's gentle brace stops at action89 on 172 µm positive aperture, with
+  no steel passage or native break notification. A one-handed386-action attempt
+  uses the remover's physical heel for opposing contact and is queued. The
+  original 150 µm passage bound and material mechanics stay unchanged.
+- Seam102 reaches action262 and first blade contact. A 249 µm outer-edge
+  constraint residual stops the diagnostic; exact native solids retain all24
+  stitch/hole links, with no measured strand crossing or guard/panel overlap.
+  This is not demonstrated tearing. A separate physically grounded passage
+  envelope is being prepared; no full cut or extraction claim yet.
+- Wheel104 retries the locally screened slow quarter-turn controller. Per-step
+  USD notice batching is being investigated to reduce runtime without changing
+  mechanics, timestep or the task; full runs are otherwise expensive.
+- At11:49 UTC, full inventory confirms one active $1.09/hour Pod, estimated
+  active compute $12.047 plus $0.319 compatibility and about $0.15 temporary disk.
+  Billing is unavailable. The verified local watchdog deadline is12:34 UTC.
+  The $18 target still reserves $2.205 for Dream and $0.30 disk. The authorized
+  Dream credential is copied privately to the Pod (0600); no requests yet.
+  No upstream PR or media upload has occurred. None of the six is ready yet.
+
 ## 2026-11-13 — manipulation progress at 11:26 UTC
 
 - Development checkpoint `388d75b` is pushed. New work remains on the same

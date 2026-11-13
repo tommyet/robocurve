@@ -48,6 +48,8 @@ def main():
     p.add_argument('--supported-clamp',action='store_true',help='Lower the fixture so the lower patch edge rests on the real tabletop; requires --passive-clamp')
     p.add_argument('--facet-cloth',action='store_true',help='Opt-in inextensible native rigid-facet shell with passive bending hinges; requires backed clamp and once-per-step forces; default remains FEM')
     p.add_argument('--box-panels',action='store_true',help='Use native rectangular boxes for the facet candidate, avoiding failed convex hull cooking')
+    p.add_argument('--geometric-panel-audit',action='store_true',help='Diagnostic: stop on 0.20 mm empty shared-edge aperture or lost overlap; retain 0.10 mm Euclidean residual telemetry and every thread, strain and blade guard')
+    p.add_argument('--panel-passage-diagnostic',action='store_true',help='Unscored native geometry diagnostic: retain 0.20 mm aperture warning, stop at 0.40 mm aperture (half thread diameter), audit actual box midplanes every substep; no change to physics, strain or swept crossing checks')
     p.add_argument('--cpu-ccd',action='store_true',help='Opt-in CPU native panel/thread candidate with sweep CCD; renderer remains on GPU')
     p.add_argument('--solver',choices=('TGS','PGS'),default='TGS')
     p.add_argument('--recenter-at-seam',action='store_true',help='Preconstruction translation of the whole world, including robot bases and fixed cameras')
@@ -87,6 +89,9 @@ def main():
     if a.facet_cloth and (not a.backed_clamp or not a.external_forces_once or a.quality_mesh or a.hole_mesh_spacing is not None or a.cloth_contact_offset!=.00025 or a.contact_refinement!='baseline' or a.max_depenetration_m_s is not None):
         p.error('Facet shell requires backed clamp, once-per-step forces and its own mesh; no quality-mesh/hole refinement/contact-offset override')
     if a.box_panels and not a.facet_cloth:p.error('Box panels require --facet-cloth')
+    if a.geometric_panel_audit and not a.box_panels:p.error('Geometric panel audit requires native box panels')
+    if a.panel_passage_diagnostic and not (a.geometric_panel_audit and a.coarse_thread and a.audit_junctions):
+        p.error('Panel passage diagnostic requires geometric box-panel audit, 0.8 mm thread and junction audits')
     if a.cpu_ccd and (not a.box_panels or a.crossing_backend!='cpu'):
         p.error('CPU CCD requires box panels and CPU geometric audits')
     if (a.solver!='TGS' or a.recenter_at_seam) and not a.cpu_ccd:
@@ -154,6 +159,8 @@ def main():
             'audit_junctions':a.audit_junctions,
             'continue_after_strain':a.continue_after_strain,
             'contact_forensics':a.contact_forensics,
+            'geometric_panel_audit':a.geometric_panel_audit,
+            'panel_passage_diagnostic':a.panel_passage_diagnostic,
             'reset_mode':'fresh-constructor-state' if a.keep_constructor_state else 'explicit-state-reset',
             'constructor_prefix_audited':False,
             'runtime':asdict(runtime_config.CONFIG),'source_sha256':hashes,
@@ -161,7 +168,7 @@ def main():
             'policy':'ordinary ready targets' if actions is None else 'frozen joint targets; no object feedback'}
     if a.pose_assisted_entry:
         report['policy']='scripted feasibility demo: frozen pickup then fixed blade path with filtered native tool-in-gripper pose compensation; ordinary bounded joint actions'
-    app=video=trace=emb=None
+    app=video=trace=emb=break_observer=None
     profiler=None
     if a.profile_steps:
         import cProfile
@@ -180,6 +187,9 @@ def main():
         import omni.physics.tensors as tensors
         import omni.usd
         from pxr import UsdPhysics,PhysxSchema,UsdUtils
+        if a.facet_cloth:
+            from joint_break_observer import JointBreakObserver
+            break_observer=JointBreakObserver()
         from yam_arena import inspect_embodiment as wrapper,scene as adapter
         wrapper._APP=app
         adapter.PHYSICS_DT=1/a.physics_hz
@@ -324,7 +334,8 @@ def main():
         thread_view=sim.create_rigid_body_view(all_paths)
         native_paths=list(thread_view.prim_paths)
         order=np.asarray([native_paths.index(path) for path in all_paths])
-        views=([FacetView(sim,shell) for shell in facet_shells] if a.facet_cloth else
+        views=([FacetView(sim,shell,geometry_aperture_m=(.0004 if a.panel_passage_diagnostic else .0002) if a.geometric_panel_audit else None)
+                for shell in facet_shells] if a.facet_cloth else
                [sim.create_surface_deformable_body_view(envroot+'/'+name) for name in ('cloth_left','cloth_right')])
         if blade.count!=1 or handle.count!=1 or any(v.count!=1 for v in views):
             raise RuntimeError('Missing native seam body')
@@ -359,6 +370,7 @@ def main():
             report['reset_observations'][label]=row
         snapshot_reset('before')
         if not a.keep_constructor_state:
+            if break_observer:break_observer.context('reset')
             emb._env.reset()
         snapshot_reset('after')
         if a.facet_cloth:
@@ -388,6 +400,14 @@ def main():
         state={'steps':0,'invalid':False,'non_strain_invalid':False,'hard_invalid':False,'previous_edge':None,
                'last_physics_step':int(base.sim._physics_step_count),'max_edge_force_n':0.,
                'timings_s':dict(readback=0.,strain=0.,crossing=0.,junctions=0.,crossing_poll=0.,blade_damage=0.,cutting=0.,control_steps_total=0.,native_step_total=0.,scene_write_total=0.,scene_update_total=0.)}
+        def panel_state():
+            data={}
+            if a.facet_cloth:
+                for index,view in enumerate(views):
+                    poses,velocity=view.native_state()
+                    data[f'facet_poses{index}']=poses
+                    data[f'facet_velocity{index}']=velocity
+            return data
         def measured():
             poses=array(thread_view.get_transforms())[order]
             nodes=[array(view.get_simulation_nodal_positions())[0,:len(mesh.rest)] for view,mesh in zip(views,cloth)]
@@ -397,6 +417,16 @@ def main():
             start=time.perf_counter()
             poses,nodes,edge,normal=measured()
             segments=capsule_endpoints(poses,lengths);t=state['steps']*dt
+            native_solid_invalid=False
+            if a.panel_passage_diagnostic:
+                for view in views:
+                    native_solid_invalid=view.audit_thread_solids(segments,runtime_config.CONFIG.thread_radius_m,t) or native_solid_invalid
+                if any(view.first_aperture_warning for view in views) and 'first_panel_aperture_warning_substep' not in report:
+                    report['first_panel_aperture_warning_substep']=state['steps']
+                    np.savez_compressed(a.out/'first-panel-aperture-warning.npz',left=nodes[0],right=nodes[1],
+                        thread=poses,thread_lengths=lengths,left_faces=cloth[0].faces,right_faces=cloth[1].faces,
+                        handle=array(handle.get_transforms())[0],blade=array(blade.get_transforms())[0],
+                        time_s=t,**panel_state())
             for index in restore_separated_cut_contacts(stage,threads,segments):
                 cut_contact_events.append(dict(time_s=t,joint=index,event='separated_cut_pair_contact_restored'))
             state['timings_s']['readback']+=time.perf_counter()-start
@@ -422,7 +452,7 @@ def main():
                           nodes,[m.faces for m in cloth],t)
             state['timings_s']['blade_damage']+=time.perf_counter()-start
             state['previous_edge']=edge.copy()
-            facet_invalid=a.facet_cloth and any(view.first_failure for view in views)
+            facet_invalid=native_solid_invalid or (a.facet_cloth and any(view.first_failure for view in views))
             state['non_strain_invalid']=bool(facet_invalid or junction_invalid or damage.crossed_faces or any(s.first_failure for s in crossing))
             state['hard_invalid']=bool(facet_invalid or junction_invalid or damage.crossed_faces or any(s.first_excursion for s in strain))
             invalid=bool(state['non_strain_invalid'] or any(s.first_excursion for s in strain))
@@ -431,7 +461,9 @@ def main():
                 if 'first_invalid_substep' not in report:
                     report['first_invalid_substep']=state['steps']
                     np.savez_compressed(a.out/'first-invalid.npz',left=nodes[0],right=nodes[1],
-                        thread=poses,left_faces=cloth[0].faces,right_faces=cloth[1].faces,time_s=t)
+                        thread=poses,left_faces=cloth[0].faces,right_faces=cloth[1].faces,time_s=t,
+                        thread_lengths=lengths,handle=array(handle.get_transforms())[0],
+                        blade=array(blade.get_transforms())[0],**panel_state())
             if apply_cut and not invalid and not a.contact_forensics:
                 start=time.perf_counter()
                 forces=array(contact.get_contact_force_matrix(dt=dt))[0,force_order]
@@ -526,6 +558,10 @@ def main():
                  'blade_pose_xyzw':array(blade.get_transforms())[0].tolist(),
                  'thread_poses_xyzw':state['poses'].tolist(),'cloth_nodes':[n.tolist() for n in state['nodes']],
                  'cut_events':cutter.events,'invalid':state['invalid']}
+            if a.facet_cloth:
+                row['facet_poses_xyzw']=[view.last_poses.tolist() for view in views]
+                row['facet_consistency']=[view.last_check for view in views]
+                row['native_joint_breaks']=break_observer.summary()
             trace.write(json.dumps(row,allow_nan=False)+'\n');trace.flush()
         snapshot(0,ready);save()
         if state['invalid']:raise RuntimeError('Authored seam reset fails material/contact audit')
@@ -552,6 +588,7 @@ def main():
                 action=np.clip(action,previous_action-limits,previous_action+limits)
             start=time.perf_counter()
             try:
+                if break_observer:break_observer.context('episode',step)
                 if profiler is not None:profiler.enable()
                 emb._env.step(torch.as_tensor(action[None],device=base.device,dtype=torch.float32))
             finally:
@@ -566,6 +603,8 @@ def main():
             raise RuntimeError('GPU crossing audit missed a native substep')
         if junctions is not None and any(audit.steps!=state['steps']+1 for audit in junctions.audits):
             raise RuntimeError('Closed-junction audit missed a native substep')
+        if a.panel_passage_diagnostic and any(view.solid_checks!=state['steps']+1 for view in views):
+            raise RuntimeError('Actual native panel audit missed a substep')
         pieces=[];start=0
         for t in threads:
             end=start+len(t['lengths']);pieces.append(state['segments'][start:end]);start=end
@@ -634,7 +673,7 @@ def main():
                     thread=state['poses'],thread_velocity=thread_velocity,
                     left_rest=cloth[0].rest,right_rest=cloth[1].rest,
                     left_faces=cloth[0].faces,right_faces=cloth[1].faces,
-                    time_s=state['steps']*dt,material_invalid=state['invalid'])
+                    time_s=state['steps']*dt,material_invalid=state['invalid'],thread_lengths=lengths,**panel_state())
                 report['last_measured_state']='last-measured-state.npz'
                 report['final_maximum_cloth_speed_m_s']=[float(np.linalg.norm(v,axis=1).max()) for v in velocities]
                 if moving_jaw is not None:
@@ -644,6 +683,9 @@ def main():
                 report['last_measured_state_error']=f'{type(exc).__name__}: {exc}'
         if trace:trace.close()
         if video:video.close()
+        if break_observer:
+            report['native_joint_breaks']=break_observer.summary()
+            break_observer.close()
         save()
         if app:app.close()
 

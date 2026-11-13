@@ -5,6 +5,10 @@ robot actions, but a requested 90° wrench turn produces only 22.86° net nipple
 rotation. Motor tracking lag loses engagement. The rim integrity checks pass
 and the 203 sampled measured poses have no unexpected hull intersections.
 A full repair, released revolution and Dream baseline are still required.
+The slower096 trial stops at177 actions before insertion because of an overly
+strict approach IK angular gate. Its jaw-point error still fits the reserved
+mouth clearance. A corrected approach check and one stable re-alignment pass
+local recorded-state replay; the native retry remains necessary.
 
 The task is to adjust the spoke nipples until the wheel runs straight, remains
 centred and spins freely. Scoring uses the resulting wheel geometry and spoke
@@ -84,7 +88,8 @@ quarter turn. Its 220 new commanded poses pass the measured-grasp offline
 collision screen. That screen cannot predict future slip or contact response.
 Trial 091 took 825 wall seconds for 10.1 simulated seconds with review cameras;
 the slower 380-action candidate is estimated at about 26minutes. No complete
-trial runtime or task seed variability has been measured. Reset is deterministic.
+trial runtime or task seed variability has been measured. The interrupted096
+trial took777seconds through177actions. Reset is deterministic.
 Read the JSON status: Isaac can exit with code zero after a Python failure.
 
 ## Controller disclosure and judging

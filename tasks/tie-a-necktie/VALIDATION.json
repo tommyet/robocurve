@@ -150,7 +150,26 @@
       "finding": "Small loose-tip variation brought the narrow strand into the0.6mm shell envelope of the final two receiving forearm poses. No receiving action was executed.",
       "correction": "Tilt the approach10degrees within the actual material plane, preserving its closing normal and20mm bite. Three recorded states(086,093,097) all pass120 cloth-approach poses even at2mm proximity inflation and300 full fixture/inter-arm poses. Runtime tries bounded measured-geometry alternatives only if necessary;2mm is a route preference, not a physical pass/fail threshold. The0.6mm shell gate remains.",
       "native_validation": "pending",
-      "score": null
+      "score": null,
+      "self_contact": {
+        "reset_transverse_pairs": 0,
+        "handoff_input_transverse_pairs": 0,
+        "scope": "Discrete full-triangle audit of the settled reset and actual280-action state; not a continuous integrity or knot certificate."
+      }
+    },
+    "handoff101": {
+      "status": "completed_but_receiving_pinch_missed",
+      "actions": 580,
+      "score": null,
+      "finding": "The receiving finger pushes the loose tip outside the closing plane. The tip drops to the table by action 460 when the original hand releases; the receiving hand then lifts empty.",
+      "robot_audit_samples": 14,
+      "max_sampled_node_overlap_m": 3.0242274528330393e-05,
+      "sampled_robot_triangle_crossings": 0,
+      "self_contact_samples": 16,
+      "sampled_self_crossings": 0,
+      "adult_fixture_audit_samples": 21,
+      "sampled_adult_fixture_crossings": 0,
+      "next": "Same physical scene and route with fully open receiving fingers (1.0 rather than 0.6), plus a broad empty-pinch stop before original-hand release. All 300 rigid/inter-arm poses and 120 measured-cloth approach poses pass on actual101 input. Native result pending."
     }
   },
   "demo": {

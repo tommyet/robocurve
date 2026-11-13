@@ -2,7 +2,7 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "61 CPU checks pass. Native091 completes202actions with clean sampled collision/integrity checks, but the requested90-degree turn achieves only22.86degrees net: motor tracking lag loses wrench engagement. The slower380action first-quarter candidate remains unvalidated.",
+  "cpu_checks": "67 CPU checks pass. Native091 completes202actions but only22.86degrees net tightening. Slower096 stops at177 before insertion on an avoidable IK angular guard. Physical jaw-envelope acceptance and stable approach re-alignment pass local measured-state replay and hull screens; native retry pending.",
   "simulator_probe": null,
   "demo": null,
   "dream": null,
@@ -65,7 +65,7 @@
       "next": "Full 130-body geometry and live thread coupling .1s at25\u00b5s."
     }
   },
-  "cpu_tests_passed": 61,
+  "cpu_tests_passed": 67,
   "native_scene": {
     "authoring_entry_point": "wheel_scene.build_scene(stage, root)",
     "material_callback": "NativeThreadCoupler.before_step before every native substep",
@@ -588,7 +588,7 @@
     "status": "short_passive_PGS_gate_passed_robot_pending"
   },
   "latest_preload_control": "evidence/native-pgs-preload-080-082-summary.json",
-  "next_native_trial": "Repeat202 ordinary robot actions with unchanged PGS128100us physics and bounded clear-approach IK; assess actual jaw contact and torque.",
+  "next_native_trial": "Retry same380-action slow contact plan with physical approach-capture acceptance and one stable approach re-alignment; CPU PGS128/4 at100us. No feedforward enabled.",
   "latest_robot_approach": "evidence/native-wrench-approach-085-summary.json",
   "full_counterfactual_plan_audit": {
     "native_reference": "085 measured frame158",
@@ -689,5 +689,42 @@
     },
     "interpretation": "Completed and bounded but under-resolves preload. Do not promote or lower the400N floor. Retain100us128iterations for native robot trials.",
     "native_report_sha256": "377dde170b40520dcbc8f430f476db62b42aa9cdcf1046cdbb25620ba85ba6ee"
+  },
+  "latest_slow_native_robot_trial": {
+    "kind": "native_wheel_slow_contact_and_local_ik_replay",
+    "submission_ready": false,
+    "task_score": null,
+    "native": {
+      "status": "failed",
+      "completed_steps": 177,
+      "wall_seconds": 776.9416494453326,
+      "error": "RuntimeError: Tool servo IK failed: position=0.0007444145836119294, rotation=0.0020857919751509236",
+      "sha256": {
+        "preview.json": "6951aa7af7b2b39e0e83123c2e81680a45d9a3fca329e9bfa5a28af7a5e3d3a9",
+        "trace.jsonl.gz": "dd6a7ddb7a9c4fcfbc88f618623d722d9d944b83a309911539070964e4182352"
+      }
+    },
+    "cause": "The approach command stopped on an IK angular threshold before the slower insertion or turn. Recorded body state177 reproduces step178 error0.7444146mm TCP,0.0020858rad,0.7253163mm jaw-centre.",
+    "physical_capture": {
+      "jaw_error_bound_m": 0.00074617422307,
+      "unchanged_reserved_envelope_m": 0.00075,
+      "mouth_half_clearance_m": 0.000885
+    },
+    "correction": "Approach-only angular cap0.01rad inside the unchanged pointwise jaw envelope. Realign once after five stable approach-settle orientation observations within0.01rad; latch orientation during insertion and tightening.",
+    "recorded_state_replay": {
+      "samples": 30,
+      "unexpected_intersections": 0,
+      "maximum_tool_ik_residual_m": 0.00038464599420006974
+    },
+    "frozen_future_screen": {
+      "samples": 203,
+      "unexpected_intersections": 0
+    },
+    "limits": [
+      "Local command replay and frozen-state collision screening are not a new native trial.",
+      "No successful slow insertion or quarter-turn is demonstrated.",
+      "Material,geometry,physics step,actuator efforts and scoring unchanged.",
+      "Optional damping feedforward source is tested but not enabled."
+    ]
   }
 }

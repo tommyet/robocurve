@@ -226,6 +226,37 @@ class MaterialTests(unittest.TestCase):
         self.assertEqual(r['valid_shells'],1)
         self.assertGreater(r['shells'][0]['length_mm'],12.)
 
+    def bumped_tail(self,bump_height=.002,bump_width=.006,disconnected=False):
+        m=Icing(dx=.0005,xlim=(.22,.25),ylim=(-.05,.05))
+        s=m.Y+.01
+        head=(s>=0)&(s<.003)&(abs(m.X-.235)<.004)
+        tail=(s>=.003)&(s<.017)&(abs(m.X-.235)<.0015)
+        m.volume[head]=.004*m.dx**2
+        m.volume[tail]=.0015*m.dx**2
+        bump=(s>=.008)&(s<.010)&(abs(m.X-.235)<bump_width/2)
+        m.volume[bump]=bump_height*m.dx**2
+        if disconnected:m.volume[(s>=.006)&(s<.007)]=0.
+        return assess(m.x,m.y,m.volume,dx=m.dx,emitted_m3=float(m.volume.sum()),
+                      completed=True,tools_clear=True)
+
+    def test_low_tail_shoulder_does_not_split_a_shell(self):
+        r=self.bumped_tail()
+        self.assertEqual(r['valid_shells'],1)
+        self.assertGreater(r['shells'][0]['length_mm'],15.)
+        self.assertFalse(r['shells'][0]['visible_ridges'])
+
+    def test_overheight_mound_cannot_be_skipped_to_borrow_a_tail(self):
+        r=self.bumped_tail(bump_height=.009)
+        self.assertEqual(r['valid_shells'],0)
+
+    def test_overwide_mound_cannot_be_skipped_to_borrow_a_tail(self):
+        r=self.bumped_tail(bump_width=.018)
+        self.assertEqual(r['valid_shells'],0)
+
+    def test_disconnected_icing_cannot_extend_a_low_shoulder_tail(self):
+        r=self.bumped_tail(disconnected=True)
+        self.assertEqual(r['valid_shells'],0)
+
     def test_perfect_looking_material_without_execution_proof_scores_zero(self):
         m=self.model()
         m.volume[abs(m.X-.235)<.004]=.006*m.dx**2

@@ -19,7 +19,7 @@ growth around a staple puncture.
 [Copy-paper characterization](https://crimsonpublishers.com/acsr/fulltext/ACSR.000566.php)
 
 Every native substep checks panel continuity, complete steel-chain continuity
-and whether steel crosses intact paper triangles. The current 25 µm paper
+and whether steel crosses intact paper triangles. The legacy 25 µm paper
 endpoint-gap guard is a numerical model boundary, **not a tear detector**.
 A small constraint error must be interpreted against the 100 µm panel thickness,
 the direction of the displacement and actual contact. Averaging vertices must
@@ -27,12 +27,30 @@ never conceal a genuine broken connection or allow a staple through intact
 paper. The task's visible damage rule remains a tear extending more than 2 mm
 from an original hole, or any new cut or puncture elsewhere.
 
-The full reset passes a passive PGS control at 500 µs and a short YAM control
-with about 4–6 µm endpoint disagreement. The first extraction attempt reaches
-45 actions, then the upper-sheet residual reaches 29.73 µm as the left hand
-braces it. Steel continuity and crossing checks remain clean. This does not
-establish a tear or a valid complete task; a higher-iteration comparison with
-endpoint-vector telemetry is pending. No successful extraction has been claimed.
+The full reset passes a passive PGS control at 500µs and a short YAM control.
+Actual bracing reaches 46 actions. The 128-iteration comparison still stops on
+29.57 µm raw error. A separate 100 µm observation diagnostic stops five native
+steps later, at 167.41 µm. Its largest raw mismatch is mostly compression and
+slip. Across every shared edge, maximum positive opening is 120.69 µm; normal
+disagreement remains within the physical paper thickness and shared edges
+still overlap. No wire crossing occurs. These are contact observations, not
+proof that the papers tore or that removal succeeded.
+
+The next diagnostic measures **empty aperture**: positive in-plane opening
+combined with any normal separation beyond the two panel half-thicknesses.
+Every shared edge must retain finite projected overlap. Its 150 µm aperture
+bound is half the 300 µm steel-wire thickness; it conservatively screens gaps
+that might compromise steel contact. It is not a new tear-size rubric.
+Compression, tangential slip and raw endpoint distances remain telemetry.
+Native finite-strength joint-break notifications are recorded separately,
+including construction, reset and episode events. No notification alone
+certifies undamaged paper. The runner marks this mode diagnostic-only and the
+assessor will not certify a task score from it.
+
+The next motion pauses 2 mm above the sheets and lowers those final 2 mm over
+1.5 seconds. This addresses the observed finger touchdown while the wrist was
+still levelling; it changes no material, motor effort or final brace pose.
+Complete extraction remains unproven.
 
 Earlier FEM and triangular-facet diagnostics remain preserved in `evidence/`.
 Their 0.3% elastic-domain and 1% strain stops were diagnostic boundaries, not

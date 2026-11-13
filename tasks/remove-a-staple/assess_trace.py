@@ -31,11 +31,17 @@ def measured_wire(row,lengths):
     return np.stack((poses[:,:3]-half,poses[:,:3]+half),axis=1)
 
 
-def paper_boxes(nodes,faces):
+def paper_boxes(nodes,faces,reconstruction_error_m=0.):
     triangles=np.asarray(nodes,float)[faces]
     # The reconstructed surface is at each100µm panel's midplane. Expanding
     # every axis by half-thickness conservatively includes arbitrary bending.
-    return triangles.min(1)-.00005,triangles.max(1)+.00005
+    if not np.isfinite(reconstruction_error_m) or reconstruction_error_m<0:
+        raise ValueError('Finite nonnegative paper reconstruction error required')
+    # Shared nodes are averages of native panel corners. Include the recorded
+    # maximum corner-to-average error so a numerical hinge residual cannot
+    # overstate final staple clearance.
+    radius=.00005+float(reconstruction_error_m)
+    return triangles.min(1)-radius,triangles.max(1)+radius
 
 
 def wire_boxes(segments):
@@ -43,10 +49,12 @@ def wire_boxes(segments):
     return segments.min(1)-radius,segments.max(1)+radius
 
 
-def clearance_lower_bound(segments,papers,faces):
+def clearance_lower_bound(segments,papers,faces,reconstruction_errors=None):
     low,high=wire_boxes(segments)
-    return min(float(box_distance(low,high,*paper_boxes(nodes,f)).min())
-               for nodes,f in zip(papers,faces))
+    errors=[0.]*len(papers) if reconstruction_errors is None else reconstruction_errors
+    if len(errors)!=len(papers):raise ValueError('One reconstruction bound per paper required')
+    return min(float(box_distance(low,high,*paper_boxes(nodes,f,error)).min())
+               for nodes,f,error in zip(papers,faces,errors))
 
 
 class RobotClearance:
@@ -78,20 +86,24 @@ def assess(directory):
     from audit_robot_plan import tool_props
     with gzip.open(directory/'trace.jsonl.gz','rt') as stream:
         rows=[json.loads(line) for line in stream]
-    samples=[];whole_run_valid=(not report.get('diagnostic_only',False) and report['status']!='invalid_model_domain' and
+    break_events=report.get('native_joint_break_events')
+    native_topology_broken=bool(break_events and break_events.get('paper_hinge_break_count',0))
+    samples=[];whole_run_valid=(not native_topology_broken and not report.get('diagnostic_only',False) and report['status']!='invalid_model_domain' and
                                all(m['valid'] for m in report.get('material',[])))
     for row in rows:
         wire=measured_wire(row,lengths);chain=wire_chain_continuity(wire)
         material=bool(row['material']) and all(m['valid'] for m in row['material'])
         whole_run_valid=whole_run_valid and material and chain['valid']
-        d=clearance_lower_bound(wire,row['paper_nodes'],faces)
+        errors=[x['maximum_vertex_average_error_m'] for x in row['paper_continuity']]
+        d=clearance_lower_bound(wire,row['paper_nodes'],faces,errors)
         sample=dict(step=row['step'],time_s=row['time_s'],material_valid=material,
-            wire_continuity=chain,minimum_staple_to_paper_clearance_lower_bound_m=d)
+            wire_continuity=chain,paper_reconstruction_bounds_m=errors,
+            minimum_staple_to_paper_clearance_lower_bound_m=d)
         # Full robot-hull clearance is only needed for a potential complete
         # extraction. Earlier frames retain measured extraction diagnostics.
         if d>=.01 and whole_run_valid:
             robot_low,robot_high=robot.boxes(np.asarray(row['joint_pos'],float))
-            paper_bounds=[paper_boxes(nodes,f) for nodes,f in zip(row['paper_nodes'],faces)]
+            paper_bounds=[paper_boxes(nodes,f,error) for nodes,f,error in zip(row['paper_nodes'],faces,errors)]
             paper_gap=min(float(box_distance(robot_low,robot_high,*p).min()) for p in paper_bounds)
             wire_gap=float(box_distance(robot_low,robot_high,*wire_boxes(wire)).min())
             index=row['hardware_names'].index('remover');pose=np.asarray(row['hardware_poses'][index])
@@ -109,6 +121,8 @@ def assess(directory):
     release_s=suffix[0]['time_s']-suffix[-1]['time_s'] if suffix else 0.
     return dict(schema='staple-native-geometric-evidence-v1',score=None,submission_certified=False,
         run_status=report['status'],whole_run_material_valid=whole_run_valid,
+        native_joint_break_events=break_events,
+        native_topology_broken=native_topology_broken,
         final_clearance_lower_bound_m=samples[-1]['minimum_staple_to_paper_clearance_lower_bound_m'],
         final_released_interval_lower_bound_s=release_s,
         complete_geometric_outcome_proven=bool(report['status']=='complete' and whole_run_valid and release_s>=3.),
@@ -116,6 +130,7 @@ def assess(directory):
         source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         review_still_required=['Starting layout and scene/source integrity','Both faces of both sheets and original puncture boundaries','Physical remover support and absence of unintended modifications'],
         limitations=['Distances are conservative enclosing-box lower bounds; zero means inconclusive.',
+                     'Paper bounds include native corner-to-reconstructed-surface error. A reported paper-hinge break invalidates the intact-topology reconstruction; it is not a new physical tear rubric.',
                      'Release evidence is sampled at20Hz; continuous video and all-substep material guards must also be reviewed.',
                      'No score or human review field is automatically marked accepted.'])
 

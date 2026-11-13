@@ -1,0 +1,37 @@
+{
+  "kind": "native_wheel_slow_contact_and_local_ik_replay",
+  "submission_ready": false,
+  "task_score": null,
+  "native": {
+    "status": "failed",
+    "completed_steps": 177,
+    "wall_seconds": 776.9416494453326,
+    "error": "RuntimeError: Tool servo IK failed: position=0.0007444145836119294, rotation=0.0020857919751509236",
+    "sha256": {
+      "preview.json": "6951aa7af7b2b39e0e83123c2e81680a45d9a3fca329e9bfa5a28af7a5e3d3a9",
+      "trace.jsonl.gz": "dd6a7ddb7a9c4fcfbc88f618623d722d9d944b83a309911539070964e4182352"
+    }
+  },
+  "cause": "The approach command stopped on an IK angular threshold before the slower insertion or turn. Recorded body state177 reproduces step178 error0.7444146mm TCP,0.0020858rad,0.7253163mm jaw-centre.",
+  "physical_capture": {
+    "jaw_error_bound_m": 0.00074617422307,
+    "unchanged_reserved_envelope_m": 0.00075,
+    "mouth_half_clearance_m": 0.000885
+  },
+  "correction": "Approach-only angular cap0.01rad inside the unchanged pointwise jaw envelope. Realign once after five stable approach-settle orientation observations within0.01rad; latch orientation during insertion and tightening.",
+  "recorded_state_replay": {
+    "samples": 30,
+    "unexpected_intersections": 0,
+    "maximum_tool_ik_residual_m": 0.00038464599420006974
+  },
+  "frozen_future_screen": {
+    "samples": 203,
+    "unexpected_intersections": 0
+  },
+  "limits": [
+    "Local command replay and frozen-state collision screening are not a new native trial.",
+    "No successful slow insertion or quarter-turn is demonstrated.",
+    "Material,geometry,physics step,actuator efforts and scoring unchanged.",
+    "Optional damping feedforward source is tested but not enabled."
+  ]
+}

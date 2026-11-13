@@ -28,5 +28,14 @@ class GeometryEvidenceTests(unittest.TestCase):
         wire=measured_wire(row,[.02])
         np.testing.assert_allclose(wire,[[[1,1.99,3],[1,2.01,3]]],atol=1e-12)
 
+    def test_native_corner_error_cannot_overstate_clearance(self):
+        wire=np.array([[[0.,0.,.011],[.01,0.,.011]]])
+        paper=np.array([[-1.,-1.,0.],[1.,-1.,0.],[0.,1.,0.]])
+        faces=[np.array([[0,1,2]])]
+        exact=clearance_lower_bound(wire,[paper],faces)
+        uncertain=clearance_lower_bound(wire,[paper],faces,[.0002])
+        self.assertAlmostEqual(exact-uncertain,.0002)
+        with self.assertRaises(ValueError):clearance_lower_bound(wire,[paper],faces,[-.0001])
+
 
 if __name__=='__main__':unittest.main()

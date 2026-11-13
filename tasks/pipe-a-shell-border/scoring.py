@@ -11,7 +11,7 @@ from pathlib import Path
 import numpy as np
 
 
-def _peaks(values, *, minimum, spacing, prominence):
+def _peaks(values, *, minimum, spacing, prominence, eligible=None):
     """Position-independent peaks; plateaus collapse to their centre."""
     a=np.asarray(values,float)
     candidates=[]
@@ -22,12 +22,19 @@ def _peaks(values, *, minimum, spacing, prominence):
         if a[i]>=minimum and a[i]>a[i-1] and j+1<len(a) and a[j]>a[j+1]:
             k=(i+j)//2
             window=a[max(0,k-spacing):min(len(a),k+spacing+1)]
-            if a[k]-float(window.min())>=prominence:candidates.append(k)
+            if (a[k]-float(window.min())>=prominence
+                    and (eligible is None or eligible(k))):candidates.append(k)
         i=max(i+1,j+1)
     chosen=[]
     for k in sorted(candidates,key=lambda k:a[k],reverse=True):
         if all(abs(k-j)>=spacing for j in chosen):chosen.append(k)
     return sorted(chosen)
+
+
+def _head_height(profile,width,k,dx):
+    region=np.arange(max(0,k-round(.002/dx)),min(len(profile),k+round(.004/dx)+1))
+    region=region[width[region]>=.75*width[k]]
+    return float(profile[region].max())
 
 
 def _ridge_length(surface, first, last, dx):
@@ -89,7 +96,12 @@ def assess(x,y,volume,*,dx,emitted_m3,lost_m3=0.,airborne_m3=0.,damage_depth_m=0
     profile=a.max(axis=0)
     width=(a>=.0005).sum(axis=0)*dx
     # Find shapes from the actual final surface, without fixed shell centres.
-    heads=_peaks(width,minimum=.006,spacing=max(1,round(.006/dx)),prominence=.002)
+    # A low shoulder on a tail is not a distinct head under the written rubric.
+    # Exclude it before spacing suppression and tail segmentation. Oversized
+    # or over-height mounds remain separators: a shell cannot borrow a tail
+    # beyond an intervening invalid deposit.
+    heads=_peaks(width,minimum=.006,spacing=max(1,round(.006/dx)),prominence=.002,
+                 eligible=lambda k:width[k]>.016 or _head_height(profile,width,k,dx)>=.0025)
     covered_by_valid_shell=np.zeros(len(yy),dtype=bool)
     for n,k in enumerate(heads):
         stop=heads[n+1] if n+1<len(heads) else len(yy)-1
@@ -104,9 +116,7 @@ def assess(x,y,volume,*,dx,emitted_m3,lost_m3=0.,airborne_m3=0.,damage_depth_m=0
         candidates=candidates[profile[candidates]>=.0005]
         if not len(candidates):continue
         head_w=float(width[k])
-        head_region=np.arange(max(0,k-round(.002/dx)),min(len(yy),k+round(.004/dx)+1))
-        head_region=head_region[width[head_region]>=.75*head_w]
-        head_h=float(profile[head_region].max())
+        head_h=_head_height(profile,width,k,dx)
         # A shell may finish in a thinner pointed tip. Inspect its qualifying
         # tapered section, not just the single narrowest occupied grid column.
         qualifying=candidates[(width[candidates]>=.001)&(width[candidates]<=.65*head_w)&

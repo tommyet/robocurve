@@ -8,13 +8,15 @@ No controller writes cloth or prop poses, adds attachments or changes forces.
 
 1. Settle the flexible two-layer shirt over the laundry support for five
    seconds. Both free spring pegs start clipped to the empty line. The regular
-   2.5 mm cloth mesh passes the passive reset check.
+   2.5 mm cloth mesh clears the rigid fixtures, but a new independent check
+   finds front/back layer intersections after passive settling. The long
+   trial is held until a physically valid self-contact reset is demonstrated.
 2. Pinch the two exposed hem corners, pull clear of the support and lift.
    Coarser-mesh carry demonstrations worked, but the regular-mesh shirt has
    passed through a finger pad when one hand releases. The current short
-   128-iteration trial retained the hem but still compressed some material
-   into a native finger collider. The next short control widens the ordinary
-   pinch target from 0.010 to 0.018, with the same physics and trajectory.
+   128-iteration trial with a wider 0.018 pinch retains the hem after the
+   other hand releases. Local pad compression is much smaller, but the
+   newly discovered layer interleaving invalidates its cloth-integrity claim.
    A full sequence stops early if the hem plainly leaves the retaining hand.
 3. Keep the shirt forward of the line. Use the free hand to squeeze a spare
    peg's handles, remove it from the line and turn its open jaws downward.

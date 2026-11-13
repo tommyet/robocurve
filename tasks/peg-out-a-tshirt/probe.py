@@ -38,6 +38,8 @@ def main():
     p.add_argument('--contact-refined',action='store_true',help='Conforming2.5mm maximum-edge garment contact band; material and3mm line unchanged')
     p.add_argument('--regular-refined',action='store_true',help='Regular2.5mm cloth grid, with the physical1.6mm seam width preserved; geometry and material unchanged')
     p.add_argument('--solver-iterations',type=int,choices=(32,128),default=32,help='Diagnostic deformable position iterations; does not change cloth material')
+    p.add_argument('--self-collision-filter-mm',type=float,default=None,help='Diagnostic rest-space self-contact filter distance; minimum is twice the0.3mm rest offset. Default preserves native automatic selection.')
+    p.add_argument('--rest-bend-angles',choices=('flatDefault','restShapeDefault'),default=None,help='Diagnostic native rest dihedral convention; default leaves the native flatDefault unchanged.')
     p.add_argument('--seconds',type=float,default=3.)
     p.add_argument('--peg-rests',action=argparse.BooleanOptionalAction,default=None,help='Ordinary handle-access rests, selected by default for task-layout; --no-peg-rests reproduces the old table-peg control')
     p.add_argument('--line-pegs',action='store_true',help='Task-layout candidate: spare pegs physically clipped to the empty line, with no peg rests')
@@ -50,6 +52,9 @@ def main():
     p.add_argument('--headless',choices=('true','false'),default='true')
     p.add_argument('--no-render',action='store_true',help='Only for diagnosing renderer failures; no RGB evidence')
     args=p.parse_args()
+    if args.rest_bend_angles is not None and args.mode!='task-layout':p.error('Rest-bend diagnostic requires task-layout')
+    if args.self_collision_filter_mm is not None and (args.mode!='task-layout' or not .6<=args.self_collision_filter_mm<=10):
+        p.error('Self-contact filter diagnostic requires task-layout and0.6–10mm')
     if args.regular_refined and (args.mode!='task-layout' or args.contact_refined):p.error('Regular mesh requires task-layout and excludes contact-refined')
     if args.contact_refined and args.mode!='task-layout':p.error('Refined garment requires task-layout')
     if not 0 < args.seconds <= 10:
@@ -155,6 +160,25 @@ def main():
         contact_prim=stage.GetPrimAtPath(cloth_path)
         _set(contact_prim,'physxDeformableBody:solverPositionIterationCount',args.solver_iterations)
         report['solver_position_iterations']=args.solver_iterations
+        bend_name='omniphysics:restBendAnglesDefault'
+        old_bend=contact_prim.GetAttribute(bend_name).Get()
+        if args.rest_bend_angles is not None:
+            _set(contact_prim,bend_name,args.rest_bend_angles)
+        report['rest_bend_angles']={'before':old_bend,'authored':contact_prim.GetAttribute(bend_name).Get(),
+            'diagnostic_override':args.rest_bend_angles,
+            'basis':'OmniPhysics flatDefault ignores rest-shape dihedral angles. restShapeDefault preserves the sewn side-strip folds while leaving the same finite bend stiffness and all cloth degrees of freedom.'}
+        filter_name='physxDeformableBody:selfCollisionFilterDistance'
+        old_filter=contact_prim.GetAttribute(filter_name).Get()
+        if args.self_collision_filter_mm is not None:
+            _set(contact_prim,filter_name,args.self_collision_filter_mm/1000)
+        current_filter=contact_prim.GetAttribute(filter_name).Get()
+        report['self_collision_filter']={
+            'diagnostic_override_mm':args.self_collision_filter_mm,
+            'before_m':float(old_filter) if np.isfinite(old_filter) else 'native_auto',
+            'authored_m':float(current_filter) if np.isfinite(current_filter) else 'native_auto',
+            'self_collision_enabled':contact_prim.GetAttribute('physxDeformableBody:selfCollision').Get(),
+            'minimum_m':2*Fabric().rest_offset,
+            'basis':'Installed PhysX110.3.2 schema: rest-space distances below this are filtered; -inf means native automatic choice. Diagnostic changes only contact filtering, not mesh, material or forces.'}
         if args.contact_refinement in ('iterations','combined'):
             _set(contact_prim,'physxDeformableBody:collisionIterationMultiplier',4)
             _set(contact_prim,'physxDeformableBody:collisionPairUpdateFrequency',4)
@@ -204,6 +228,27 @@ def main():
         velocity_max=0.
         for step in range(1,round(args.seconds*args.physics_hz)+1):
             world.step(render=(capture is not None and step % max(1,args.physics_hz//60)==0))
+            if step==1:
+                # Read-only topology check: offline surface audits must use the
+                # same node ordering as native simulation, not assume cooking
+                # preserved the authored mesh.
+                try:
+                    native_faces=cloth.get_simulation_element_indices().detach().cpu().numpy()[0,:len(mesh.faces)].copy()
+                    native_rest_faces=cloth.get_rest_element_indices().detach().cpu().numpy()[0,:len(mesh.faces)].copy()
+                    native_rest=cloth.get_rest_nodal_positions().detach().cpu().numpy()[0,:len(mesh.rest)].copy()
+                    np.savez_compressed(args.output/'native-topology.npz',simulation_faces=native_faces,
+                        rest_faces=native_rest_faces,rest_positions=native_rest,
+                        authored_faces=mesh.faces,authored_rest=mesh.rest)
+                    def canonical_faces(faces):
+                        value=np.sort(np.asarray(faces,dtype=int),axis=1)
+                        return value[np.lexsort(value.T[::-1])]
+                    report['native_topology']={
+                        'status':'recorded',
+                        'simulation_face_sets_equal':bool(np.array_equal(canonical_faces(native_faces),canonical_faces(mesh.faces))),
+                        'rest_face_sets_equal':bool(np.array_equal(canonical_faces(native_rest_faces),canonical_faces(mesh.faces))),
+                        'max_rest_node_difference_m':float(np.max(np.linalg.norm(native_rest-mesh.rest,axis=1)))}
+                except Exception as exc:
+                    report['native_topology']={'status':'getter_unavailable','error':str(exc)}
             if capture is not None and step==1:
                 # Renderer-only warmup after the first counted physics step.
                 for _ in range(6):

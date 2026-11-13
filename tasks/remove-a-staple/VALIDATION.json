@@ -2,7 +2,7 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "58 CPU checks pass. PGS500us/32iteration passive and two-action YAM controls pass. Actual robot contact084 stops at an upper-paper29.73um hinge endpoint mismatch during bracing; this exceeds a numerical envelope and does not establish a tear. PGS128 convergence control pending. Complete extraction not proven.",
+  "cpu_checks": "69 CPU checks pass. Native100 slower hand bracing stops at89 actions with171.59um positive panel aperture, zero joint-break notifications and clean steel crossings. One-handed386-action lever plan passes all commanded hull screens; complete removal is unproven.",
   "simulator_probe": "One native 3 mm steel leg with contact-driven plastic hinge, not full task.",
   "demo": null,
   "dream": null,
@@ -14,376 +14,7 @@
     "Successful robot demo, Dream baseline and final media"
   ],
   "status": "development_not_submission_ready",
-  "native_probe": {
-    "entry_point": "native_probe.py",
-    "status": "positive_negative_and_half_dt_passed",
-    "runtime_compatibility_verified": true,
-    "evidence": {
-      "positive": {
-        "file": "evidence/native-coupon-positive.json",
-        "sha256": "70eeb814c7ca56d75f2ec7ef078512e47e92e88b060a4ce6fe47bfac46c6f887",
-        "complete": true,
-        "dt": 0.0001,
-        "seconds": 1.0,
-        "residual_angle_rad": 0.8756690910702264,
-        "plastic_angle_rad": 0.8756691325887901,
-        "wall_seconds": 7.031852848827839
-      },
-      "no-contact": {
-        "file": "evidence/native-coupon-no-contact.json",
-        "sha256": "6a2677b7cf9f6dc7e215bae4f565e1ab6a0550588d14788c2ab8a6327495a4f9",
-        "complete": true,
-        "dt": 0.0001,
-        "seconds": 1.0,
-        "residual_angle_rad": 0.0,
-        "plastic_angle_rad": 0.0,
-        "wall_seconds": 7.969067448750138
-      },
-      "half-dt": {
-        "file": "evidence/native-coupon-half-dt.json",
-        "sha256": "9c66fee98e78bb491439eea6ed754f27fb7a596934af0c9e318397003d7c8fea",
-        "complete": true,
-        "dt": 5e-05,
-        "seconds": 1.0,
-        "residual_angle_rad": 0.8732157642922956,
-        "plastic_angle_rad": 0.8732157920296051,
-        "wall_seconds": 12.312306197360158
-      }
-    }
-  },
-  "cpu_tests_passed": 59,
-  "coupled_paper_probe": {
-    "entry_point": "paper_probe.py",
-    "status": "Native surface solver runs; mesh cleanup and documented bend coefficient still leave both contact trials outside provisional validity domain.",
-    "materials": "100 \u00b5m native surface FEM paper, explicit punctures and native steel plastic-hinge staple",
-    "limitations": [
-      "30\u00d724 mm coupon, not full A5 task",
-      "Fixed crown is a diagnostic fixture",
-      "Planar steel bending approximation",
-      "Isotropic paper and0.3% membrane/bending validity boundaries are provisional; exceeding them is solver invalidity, not a measured tear."
-    ],
-    "invalidity_guards": [
-      "Irreversible all-triangle membrane/bending strain bounds",
-      "Independent intact-triangle wire-crossing and swept-translation audit"
-    ],
-    "last_completed_diagnostics": {
-      "batch": "008",
-      "free": "At .129s, upper sheet reaches 0.3179% local bending and the two centroids separate by about0.8mm beyond initial gap; membrane strain remains0.0128%.",
-      "stapled": "At .010s, lower sheet reaches0.4175% local bending; membrane strain0.0823%; wire crossing audits remain clean.",
-      "next_check": "Full supported A5 scene with120\u00b5m sheet gap/20\u00b5m crown clearance, same materials and guards."
-    },
-    "native_runtime": "Isaac6.1 AppLauncher + explicit cached stage attach + DirectGPU tensors. Read nodes only after first simulation step; legacyWorld.reset is incompatible here.",
-    "evidence": {
-      "native-paper-free-008.json": "5370633d5c0af7829aadab7738b8ce6876f8e7fe6897892c4a91915afe6b8a59",
-      "native-paper-stapled-008.json": "12babdebf10ae99556cec56d31552c8ad3e791e5f8390bcd6bb61ab91ed76149"
-    },
-    "separated_control": {
-      "status": "pass",
-      "evidence": "evidence/native-paper-separated-010.json",
-      "sha256": "55ae414eccb5c66c649dc1197431d0464b0e2bd603320766cdbb632746e5ef32",
-      "seconds": 0.2,
-      "physics_hz": 2000,
-      "maximum_bending_strain": 0.0,
-      "maximum_tensile_strain": 2.853141497527467e-05,
-      "initial_gap_mm": 10.0,
-      "final_gap_mm": 9.99857485294342,
-      "interpretation": "Noncontact sheets remain flat; failure of touching pair implicates contact. Does not establish staple retention or extraction."
-    },
-    "near_separated_control": {
-      "status": "pass",
-      "evidence": "evidence/native-paper-gap120-012.json",
-      "sha256": "26a261a17f216b11a9fe977ac6cb9793d2cc4a28513360eab1a5072df74879ba",
-      "seconds": 0.2,
-      "physics_hz": 2000,
-      "maximum_bending_strain": 0.0,
-      "initial_gap_um": 120.0,
-      "final_gap_um": 119.8500394821167,
-      "interpretation": "Avoiding exactly-touching startup removes free-pair distortion. Stapled retention and handling remain untested for this clearance."
-    },
-    "stapled_clearance_control": {
-      "status": "invalid_model_domain",
-      "evidence": "evidence/native-paper-contactreset-014.json",
-      "sha256": "4b35cee044dbf85920c3586e292472ce39cfed9b6481af0d31731dfa56b3975d",
-      "sheet_gap_m": 0.00012,
-      "crown_clearance_m": 2e-05,
-      "first_invalid_step": 14,
-      "physics_hz": 2000,
-      "lower_maximum_surface_bending_strain": 0.00357696,
-      "interpretation": "Tiny local hinge reaches provisional bending-domain bound. No wire crossing. Unsupported coupon differs from full supported setup; evaluate full setup without changing thresholds."
-    }
-  },
-  "full_scene": {
-    "entry_point": "full_scene.build_scene",
-    "status": "full_size_native_contact_unresolved",
-    "setup": "Two 210\u00d7148\u00d70.1 mm FEM sheets, free native staple, forked lever remover, 20 mm flat support with accessible far edges",
-    "robot_demo": false,
-    "yam_bridge": "arena_paper.py, arena_hardware.py and task.py authored and syntax checked; native YAM initialization, guards and callbacks not runtime tested.",
-    "preview_entrypoint": "preview_yam.py --out NEW --steps 10 --physics-hz 2000; authored/syntax-checked, not run. Ordinary ready-joint hold only.",
-    "native_entrypoint": "full_probe.py --out NEW --seconds .1 --physics-hz2000",
-    "initial_midplane_gap_m": 0.00012,
-    "initial_crown_clearance_m": 2e-05,
-    "mesh_quality": {
-      "generator_sha256": "368ea7bbf3ef0c69138227828147888a80e150398a524f94e421a75a25bc0b08",
-      "numpy_version": "2.3.5",
-      "scipy_version": "1.18.1",
-      "meshes": [
-        {
-          "file": "paper_0.npz",
-          "sha256": "afe3c313c5b835d5b1617e09ff558e869bbc539f34ab3792e849dfc652803b2b",
-          "vertices": 818,
-          "triangles": 1514,
-          "surface_area_m2": 0.031079479199999996,
-          "holes": [
-            [
-              -0.09331,
-              -0.09269,
-              -0.05661000000000001,
-              -0.056190000000000004
-            ],
-            [
-              -0.09331,
-              -0.09269,
-              -0.04381,
-              -0.04339
-            ]
-          ],
-          "boundary_edges": 124,
-          "mass_kg": 0.0024863583359999997,
-          "minimum_triangle_area_m2": 9.299999999999769e-09,
-          "minimum_triangle_angle_deg": 15.076285469590196,
-          "maximum_edge_length_ratio": 3.563416410081714,
-          "puncture_perimeters_m": [
-            0.0020800000000000263,
-            0.0020800000000000263
-          ]
-        },
-        {
-          "file": "paper_1.npz",
-          "sha256": "7f20ccc85f3a52567f4b35744bb075df7449bee195c9b39c8c272e98f756d53e",
-          "vertices": 816,
-          "triangles": 1507,
-          "surface_area_m2": 0.0310794792,
-          "holes": [
-            [
-              -0.09331,
-              -0.09269,
-              -0.06861,
-              -0.06819
-            ],
-            [
-              -0.09331,
-              -0.09269,
-              -0.05581,
-              -0.055389999999999995
-            ]
-          ],
-          "boundary_edges": 127,
-          "mass_kg": 0.002486358336,
-          "minimum_triangle_area_m2": 9.299999999999769e-09,
-          "minimum_triangle_angle_deg": 15.848443375607756,
-          "maximum_edge_length_ratio": 3.2723644154044753,
-          "puncture_perimeters_m": [
-            0.0020800000000000263,
-            0.0020800000000000124
-          ]
-        }
-      ]
-    },
-    "last_observation": {
-      "batch": "018",
-      "stopped_step": 22,
-      "physics_hz": 2000,
-      "maximum_membrane_strain_lower": 0.0036847,
-      "wire_crossing": false,
-      "diagnosis": "A remote edge triangle has aspect ratio about52 and magnifies micron-scale motion into high local strain. Replace global Cartesian hole feature lines with local puncture refinement; no material or validity threshold changes."
-    },
-    "latest_refined_mesh_observation": {
-      "batch": "021",
-      "physics_hz": 2000,
-      "stop_time_s": 0.011,
-      "maximum_membrane_strain": [
-        0.004289048811962237,
-        0.003127402228203957
-      ],
-      "maximum_surface_bending_strain": [
-        0.013254014731326575,
-        0.011996775515024125
-      ],
-      "wire_crossings": false,
-      "location": "Worst membrane triangles are well-shaped and immediately beside a staple leg, not remote mesh slivers.",
-      "next": "Same full scene at10000Hz for.025s; native steel coupon was validated at100\u00b5s and50\u00b5s, unlike current500\u00b5s full-scene steps."
-    },
-    "latest_finer_step_observation": {
-      "batch": "022",
-      "physics_hz": 10000,
-      "stop_time_s": 0.002,
-      "maximum_membrane_strain": [
-        0.0018823,
-        0.0039799
-      ],
-      "wire_crossings": false,
-      "interpretation": "Fails earlier than500\u00b5s; not a converged physical response."
-    },
-    "no_staple_control": {
-      "batch": "023",
-      "report_sha256": "4c6c4f84421b13e64182e4cae616511c0dc7e916f60e21cda122cbc70c023593",
-      "status": "invalid_model_domain",
-      "physics_hz": 10000,
-      "completed_steps": 128,
-      "centroid_drop_m": [
-        0.0006643803711684493,
-        0.0006713080736703292
-      ],
-      "stop_measurements": [
-        {
-          "valid": true,
-          "steps": 128,
-          "first_failure": null,
-          "maximum_tensile_strain": 0.0001829256984002825,
-          "maximum_surface_bending_strain": 0.0023794484181391476,
-          "thresholds_calibrated": false,
-          "last_geometry_diagnostics": {
-            "worst_bending_edge": [
-              159,
-              183
-            ],
-            "worst_bending_faces": [
-              1498,
-              1499
-            ],
-            "worst_edge_dihedral_rad": 0.0030850962885682247,
-            "worst_edge_dual_width_m": 6.482797158050879e-05,
-            "worst_membrane_face": 290
-          },
-          "contact_audit": {
-            "valid": true,
-            "diagnostic": "No staple exists in this diagnostic"
-          },
-          "centroid_m": [
-            0.290669926130247,
-            -0.015765482624981342,
-            0.7675456196288316
-          ],
-          "z_span_m": 0.0001017451286315918
-        },
-        {
-          "valid": false,
-          "steps": 128,
-          "first_failure": {
-            "step": 126,
-            "reason": "outside elastic paper model",
-            "tensile_strain": 0.0018169347636265432,
-            "surface_bending_strain": 0.036323240315706246
-          },
-          "maximum_tensile_strain": 0.0033035054147760867,
-          "maximum_surface_bending_strain": 0.036323240315706246,
-          "thresholds_calibrated": false,
-          "last_geometry_diagnostics": {
-            "worst_bending_edge": [
-              153,
-              181
-            ],
-            "worst_bending_faces": [
-              400,
-              1498
-            ],
-            "worst_edge_dihedral_rad": 0.09615044453119297,
-            "worst_edge_dual_width_m": 0.00013333333333333253,
-            "worst_membrane_face": 479
-          },
-          "contact_audit": {
-            "valid": true,
-            "diagnostic": "No staple exists in this diagnostic"
-          },
-          "centroid_m": [
-            0.290826792609604,
-            -0.007436797363255869,
-            0.7676586919263297
-          ],
-          "z_span_m": 0.00017148256301879883
-        }
-      ],
-      "interpretation": "Near-flat free fall until contact with the board; upper sheet wrinkles near a hole. Steel hardware is not required for this failure."
-    },
-    "contact_refinement_candidate": "Native speculative CCD plus collisionIterationMultiplier4 and collisionPairUpdateFrequency4. Same material, geometry and guards; pending native comparison.",
-    "supported_reset_candidate": {
-      "profile": "supported-edge-candidate",
-      "status": "CPU_geometry_checked_native_pending",
-      "support_size_m": [
-        0.19,
-        0.128,
-        0.02
-      ],
-      "support_center_m": [
-        0.33,
-        -0.01,
-        0.7575
-      ],
-      "lower_paper_midplane_m": 0.76755,
-      "upper_paper_midplane_m": 0.76767,
-      "crown_underside_m": 0.76774,
-      "explanation": "Lower paper rests on board; staple8mm beyond its left edge so clinched legs hang clear. No pins or filtered paper contacts.",
-      "task_default_changed": false
-    },
-    "latest_contact_controls": [
-      {
-        "batch": "025",
-        "diagnostic": "paper-contact",
-        "report_sha256": "16849bdcaa64a85c38eb1949f6a8b992328d667d04ca094ee534cb4ef61495ae",
-        "status": "invalid_model_domain",
-        "completed_steps": 128,
-        "physics_hz": 10000,
-        "first_invalid_step": 126,
-        "maximum_tensile_strain": [
-          6.550877070909955e-05,
-          0.0045756431878525294
-        ],
-        "maximum_surface_bending_strain": [
-          0.0042445569620668784,
-          0.03755572456552688
-        ],
-        "wall_seconds": 7.89654232095927
-      },
-      {
-        "batch": "025",
-        "diagnostic": "paper-supported",
-        "report_sha256": "3555e3dd9ed5aa360eca9082875ac31732a6edabf08c6b7d9b6d6f762009af0f",
-        "status": "invalid_model_domain",
-        "completed_steps": 24,
-        "physics_hz": 10000,
-        "first_invalid_step": 14,
-        "maximum_tensile_strain": [
-          0.00273041533602858,
-          0.0030921150935958597
-        ],
-        "maximum_surface_bending_strain": [
-          0.03535057291033012,
-          0.013824353619824549
-        ],
-        "wall_seconds": 4.610518451780081
-      },
-      {
-        "batch": "026",
-        "diagnostic": "paper-no-staple",
-        "report_sha256": "e50e9a0bea1bd2d2aaeefb7146936aa77c48eab7020772fb1143b0b53a7d21f0",
-        "status": "invalid_model_domain",
-        "completed_steps": 48,
-        "physics_hz": 10000,
-        "first_invalid_step": 44,
-        "maximum_tensile_strain": [
-          0.0032939702427829953,
-          0.0038859448940942176
-        ],
-        "maximum_surface_bending_strain": [
-          0.038792247343660775,
-          0.03450954708079912
-        ],
-        "wall_seconds": 5.898839629255235
-      }
-    ],
-    "latest_diagnosis": "Supported no-staple pair still fails at4.8ms. Between4.4\u20134.8ms one upper node far from holes rises0.71mm above its initial plane while lower sheet remains supported: contact instability, not evidence of paper tearing. Isolate lower sheet and native rest-neighbor self filter before changing material/domain."
-  },
-  "material_domain": "MATERIAL_DOMAIN.md distinguishes published onset-of-nonlinearity evidence from tearing.0.3% is an approximate elastic boundary, not a calibrated damage detector.",
+  "cpu_tests_passed": 69,
   "current_paper_status": {
     "date": "2026-11-13",
     "coarse_pair030": "1000 native steps at10000Hz complete with0.272%/0.283% peak membrane strain; bend estimate reaches1.86%/1.68% locally. No hardware in this control.",
@@ -392,357 +23,31 @@
     "localization030": "Faces incident to >0.3% bending estimate cover0.078%/0.057% of each sheet area; worst hinge angles4.66deg/3.63deg cluster near punctures. This does not prove extraction validity.",
     "scoring": "Judging-v3: complete extraction of both legs, every part of the intact staple at least 10 mm from both sheets, and three seconds released. No paper transport is required; creases alone are not tears."
   },
-  "latest_material_evidence": "evidence/native-coarse-paper-030-031-summary.json",
-  "current_paper_coupling": {
-    "status": "box_coupon_contact_passes_full_size_pending",
-    "evidence": "evidence/native-paper-coupling-032-035-summary.json",
-    "next_candidate": "Native analytic100um rectangular paper panels; passive finite bending/strength hinges. Full A5 pocket-supported scene then ordinary robot removal.",
-    "cpu_tests_passed": 46
-  },
-  "current_pocket_diagnostic": {
-    "profile": "pocket-support-candidate",
-    "mesh": "coarse",
-    "physics_dt_s": 0.0001,
-    "strict_guard_stop_s": 0.0045,
-    "strict_guard_peak_membrane_strain": 0.0041117,
-    "one_percent_observation_stop_s": 0.0049,
-    "one_percent_observation_peak_membrane_strain": 0.01020425,
-    "wire_crossing": false,
-    "interpretation": "Smaller unsupported region improves the initial excursion, but strain continues to grow. Bending/creasing is not itself classified as tearing.",
-    "next_controls": [
-      "Same pocket without staple",
-      "Same pocket and staple at25us"
-    ],
-    "follow_up_042": {
-      "no_staple_stop_s": 0.0048,
-      "no_staple_peak_membrane_strains": [
-        0.003173971719492963,
-        0.011071614277278208
-      ],
-      "quarter_step_s": 2.5e-05,
-      "stapled_quarter_step_stop_s": 0.01015,
-      "stapled_quarter_step_peak_membrane_strains": [
-        0.010491125138755608,
-        0.004866984676098474
-      ],
-      "interpretation": "The pocket contact layout fails even without steel. Finer time stepping delays but does not resolve it. Do not promote this reset.",
-      "next": "Paired supported-edge controls with the geometrically wider puncture candidate; no threshold change."
-    },
-    "evidence": "evidence/native-pocket-controls-036-042-summary.json"
-  },
-  "clearance_candidate": {
-    "promoted_to_task": false,
-    "native_tested": true,
-    "puncture_size_m": [
-      0.0008,
-      0.0006
-    ],
-    "wire_size_m": [
-      0.0005,
-      0.0003
-    ],
-    "clearance_after_paper_rest_offset_m": 0.0001,
-    "mesh_quality": "Both meshes retain minimum15deg angle and maximum4 aspect ratio. Exact finite holes; no runtime opening/deletion.",
-    "retention_cpu_test": "Clinched wire shifted upward0.8mm crosses intact paper; larger holes do not release folded legs.",
-    "native_observation_042": {
-      "profile": "supported-edge-candidate",
-      "no_staple_stop_s": 0.0084,
-      "no_staple_peak_membrane_strains": [
-        0.008471535089753512,
-        0.01105776711773454
-      ],
-      "stapled_stop_s": 0.0962,
-      "stapled_peak_membrane_strains": [
-        0.007463620295767193,
-        0.003516888232611315
-      ],
-      "stapled_failure": "Lower-sheet wire centreline crosses an intact triangle next to the original puncture boundary.",
-      "interpretation": "Not a validated paper reset; the no-staple control also fails."
-    }
-  },
-  "native_contact_convergence_048": {
-    "profile": "clearance-candidate, supported-edge-candidate",
-    "physics_hz": 10000,
-    "contact_iteration_multiplier": 16,
-    "collision_pair_update_frequency": 4,
-    "speculative_ccd": true,
-    "maximum_depenetration_velocity_m_s": 0.05,
-    "staple_velocity_iterations": 4,
-    "empty": {
-      "status": "completed_diagnostic_only",
-      "seconds": 0.1,
-      "maximum_membrane_strain": [
-        0.006824957688837285,
-        0.004183584153549358
-      ]
-    },
-    "stapled": {
-      "status": "stopped_at_membrane_diagnostic_limit",
-      "seconds": 0.0307,
-      "maximum_membrane_strain": [
-        0.011419079522677178,
-        0.0028723566947450596
-      ],
-      "crossing_checks_valid": true,
-      "peak_location": "Lower sheet beside puncture, approximately0.48mm from wire-segment centre"
-    },
-    "interpretation": "Contact refinement improves empty case but coupled result is not converged. These are diagnostic limits, not observed paper tearing. No task score inferred."
-  },
-  "heavy_paper_candidate": {
-    "status": "tested_not_promoted_wire_crossing",
-    "physical_profile": "200gsm,200micrometre uncoated printing paper; native deformable surface",
-    "thickness_m": 0.0002,
-    "areal_mass_kg_m2": 0.2,
-    "youngs_modulus_pa": 2000000000.0,
-    "friction": 0.35,
-    "density_kg_m3": 1000,
-    "contact_offset_m": 0.00012,
-    "rest_offset_m": 0.0001,
-    "sheet_midplane_gap_m": 0.00022,
-    "stack_thickness_for_clinch_m": 0.0004,
-    "guard_thresholds_changed": false,
-    "sources": [
-      "https://www.mondigroup.com/products-and-solutions/uncoated-printing-paper/color-copy/",
-      "https://store.paper.co.uk/pub/pdfs/Color-Copy-data-sheet-10-19.pdf"
-    ],
-    "interpretation": "A real heavier flexible paper grade, not a rigid proxy. Datasheet supports grammage/thickness class only; isotropic elasticity remains declared approximation. Must validate native contact/extraction before promotion.",
-    "result051": "Stapled200gsm/200\u00b5m case crosses upper paper at15.1ms; positive membrane strain stays below0.6%. Empty control reaches1.0066% at48.9ms. Failure is not inferred from an elastic-onset threshold."
-  },
   "judging": "v3: complete intact staple extraction, at least10mm clearance from both sheets,3s release; no unrelated paper sliding requirement. Original-hole damage tolerance2mm; no other tear/cut/puncture.",
-  "latest_contact_result055": {
-    "status": "invalid_wire_crossing",
-    "completed_steps": 109,
-    "physics_hz": 10000,
-    "predictive_steel_contact_offset_um": 50,
-    "steel_rest_offset_um": 0,
-    "maximum_positive_membrane_strains": [
-      0.0041214,
-      0.002898
-    ],
-    "interpretation": "Increased contact margin does not prevent an intact upper triangle being crossed. Pivot to a native finite-thickness flexible-facet shell; no task-score relaxation."
-  },
-  "latest_box_candidate": {
-    "promoted_to_task": false,
-    "evidence": "evidence/native-box-paper-063-summary.json",
-    "coupons": [
-      {
-        "report_sha256": "c427b329a604857fee9bb62ac46420af54829bda85d263ea177fcac63bc64ec0",
-        "diagnostic": "paper-box-freefall",
-        "complete": true,
-        "dt": 0.0001,
-        "seconds": 0.02,
-        "completed_steps": 200,
-        "wall_seconds": 7.1422495655715466,
-        "native_mass_relative_error": 8.274037077704577e-08,
-        "maximum_recorded_hinge_gap_m": 7.689567528254941e-10,
-        "final_sample": {
-          "step": 200,
-          "time_s": 0.02,
-          "checks": [
-            {
-              "continuity": {
-                "maximum_hinge_endpoint_gap_m": 7.383258267469153e-10,
-                "maximum_vertex_average_error_m": 4.986590228042593e-10,
-                "valid": true
-              },
-              "wire_crossing": {
-                "valid": true
-              }
-            },
-            {
-              "continuity": {
-                "maximum_hinge_endpoint_gap_m": 7.383258267469153e-10,
-                "maximum_vertex_average_error_m": 4.986590228042593e-10,
-                "valid": true
-              },
-              "wire_crossing": {
-                "valid": true
-              }
-            }
-          ],
-          "paper_centroids_m": [
-            [
-              -1.7927087669283242e-12,
-              -3.676206869782403e-12,
-              0.028038805350661278
-            ],
-            [
-              -1.7927087669283242e-12,
-              -3.676206869782403e-12,
-              0.04803880304098129
-            ]
-          ],
-          "maximum_facet_speed_m_s": 0.1960986852645874
-        }
-      },
-      {
-        "report_sha256": "c86f2b5b44806ad09079cb2af3a1ba8825f1264f6909dc7e521746ba7b761117",
-        "diagnostic": "paper-empty",
-        "complete": true,
-        "dt": 0.0001,
-        "seconds": 0.1,
-        "completed_steps": 1000,
-        "wall_seconds": 28.244682973250747,
-        "native_mass_relative_error": 8.274037077704577e-08,
-        "maximum_recorded_hinge_gap_m": 6.7227046159525696e-09,
-        "final_sample": {
-          "step": 1000,
-          "time_s": 0.1,
-          "checks": [
-            {
-              "continuity": {
-                "maximum_hinge_endpoint_gap_m": 5.4562016266155155e-09,
-                "maximum_vertex_average_error_m": 3.776966606502509e-09,
-                "valid": true
-              },
-              "wire_crossing": {
-                "valid": true
-              }
-            },
-            {
-              "continuity": {
-                "maximum_hinge_endpoint_gap_m": 6.643580498728752e-09,
-                "maximum_vertex_average_error_m": 4.937121621854109e-09,
-                "valid": true
-              },
-              "wire_crossing": {
-                "valid": true
-              }
-            }
-          ],
-          "paper_centroids_m": [
-            [
-              -4.046991406151452e-11,
-              -3.23543974212501e-12,
-              0.01005000032421118
-            ],
-            [
-              -3.9549651333610336e-11,
-              -4.0926237996557416e-12,
-              0.010149999928454674
-            ]
-          ],
-          "maximum_facet_speed_m_s": 7.749422366032377e-05
-        }
-      },
-      {
-        "report_sha256": "753c0815857b1931c0667ff825cd432e9e45bbe9293ca734abc082dbf54d9a8e",
-        "diagnostic": "paper-stapled",
-        "complete": true,
-        "dt": 0.0001,
-        "seconds": 0.1,
-        "completed_steps": 1000,
-        "wall_seconds": 49.00555431377143,
-        "native_mass_relative_error": 8.274037077704577e-08,
-        "maximum_recorded_hinge_gap_m": 2.3645980067974658e-08,
-        "final_sample": {
-          "step": 1000,
-          "time_s": 0.1,
-          "checks": [
-            {
-              "continuity": {
-                "maximum_hinge_endpoint_gap_m": 1.0674983115639463e-08,
-                "maximum_vertex_average_error_m": 6.237814154011166e-09,
-                "valid": true
-              },
-              "wire_crossing": {
-                "valid": true,
-                "steps": 1000,
-                "first_failure": null
-              }
-            },
-            {
-              "continuity": {
-                "maximum_hinge_endpoint_gap_m": 1.29875317783003e-08,
-                "maximum_vertex_average_error_m": 8.282920809619657e-09,
-                "valid": true
-              },
-              "wire_crossing": {
-                "valid": true,
-                "steps": 1000,
-                "first_failure": null
-              }
-            }
-          ],
-          "paper_centroids_m": [
-            [
-              1.613169549715934e-11,
-              3.569033590079355e-11,
-              0.01005000079071888
-            ],
-            [
-              -4.83668713683389e-12,
-              -7.84876875972883e-11,
-              0.010150002684961586
-            ]
-          ],
-          "maximum_facet_speed_m_s": 0.00010331538942409679
-        }
-      }
-    ],
-    "cooking_failure_061": "378 intended100um triangular prisms cooked into4-vertex tetrahedra741\u20131030um thick despite25um minimum thickness. Replaced candidate with exact analytic Cube geometry.",
-    "full_size": "573/550 free panels per210x148mm sheet; each2.4863232g. Full-size native contact066 fails at4.7ms; coupons are not full-task evidence.",
-    "yam_bridge": "arena_panels.py, task_panels.py and preview_panels.py are source-checked CPU candidates. No native robot run; blocked on full-size contact."
-  },
-  "full_box_paper_066_068": {
-    "status": "unresolved_contact_instability",
-    "report_sha256": "7b3d09b606a81fb1cbc62df09093abfe2bbf0ccda68795a16ff1bcb4335e26d2",
-    "complete": false,
-    "completed_steps": 47,
-    "first_failure": {
-      "step": 47,
-      "time_s": 0.0047,
-      "checks": [
-        {
-          "continuity": {
-            "maximum_hinge_endpoint_gap_m": 1.6132393931612347e-05,
-            "maximum_vertex_average_error_m": 1.3347367741891049e-05,
-            "valid": true
-          },
-          "wire_crossing": {
-            "valid": true,
-            "steps": 47,
-            "first_failure": null
-          }
-        },
-        {
-          "continuity": {
-            "maximum_hinge_endpoint_gap_m": 3.372675523235709e-05,
-            "maximum_vertex_average_error_m": 2.107303797834201e-05,
-            "valid": false
-          },
-          "wire_crossing": {
-            "valid": true,
-            "steps": 47,
-            "first_failure": null
-          }
-        }
-      ],
-      "paper_centroids_m": [
-        [
-          0.3006388836448104,
-          -0.023076874186768997,
-          0.767575298097719
-        ],
-        [
-          0.3006388641416476,
-          -0.015710698636243917,
-          0.7676812481552876
-        ]
-      ],
-      "maximum_facet_speed_m_s": 7.027547359466553
-    },
-    "mixed_iteration_control": "Paper1/wire4 in068 is bit-identical to066. Next all-contact-body1 comparison is explicit.",
-    "initial_geometry_audit": "No positive solid overlap between steel/paper/support or sheets. Both collider offsets2um and rest offsets0. Lower sheet exactly touches board;20um intersheet/crown clearance.",
-    "precision_hypothesis": "At worldz0.7677, float32 ULP59.6nm; observed upper fall8.4um by4ms versus78.5um gravitational displacement despite39.3mm/s velocity. A globally translated near-zero control is pending."
-  },
   "latest_native_controls": {
     "file": "evidence/native-panel-recenter-070-074-summary.json",
     "sha256": "eecb746134e8f46dc1d9149abb2dcf227b2f9003eab5bade762423e60847f6ef",
     "status": "full_size_passive_contact_and_short_YAM_bridge_passed_robot_pending"
   },
   "latest_pgs_controls": "evidence/native-pgs-panels-080-082-summary.json",
-  "next_native_trial": "386 ordinary robot actions including physical remover release, atPGS2000Hz/32position iterations, with55 CPU checks and full-frame motion screen.",
+  "next_native_trial": {
+    "entrypoint": "preview_panels.py",
+    "steps": 386,
+    "physics_hz": 2000,
+    "solver_type": "PGS",
+    "position_iterations": 128,
+    "plan": "one_hand_plan.py compiled386-action complete plan",
+    "flags": [
+      "--recenter-at-paper",
+      "--joint-tracking",
+      "--judging-views",
+      "--geometry-aware-continuity",
+      "--tool-pose-servo"
+    ],
+    "status": "released_for_diagnostic_only",
+    "continuity": "Positive empty aperture <=150um with finite shared-edge overlap; raw endpoint errors retained. Separate native hinge-break events. Wire-crossing and steel-integrity guards unchanged.",
+    "controller": "Native remover-pose feedback only through ordinary bounded joint targets after pickup. No left brace; no physical parameter or object edits."
+  },
   "latest_robot_contact": "evidence/native-bracing-084-summary.json",
   "latest_bracing_control": {
     "batch": "093",
@@ -868,5 +173,790 @@
     "all446_hull_frames_clear": true,
     "changes": "Pause2mm above papers, then lower2mm over1.5s and settle. Same final nominal pose, materials and actuator limits.",
     "validated": false
+  },
+  "current_status": "One-handed native extraction candidate released; full-score feasibility and Dream baseline remain unproven.",
+  "historical_material_diagnostics": {
+    "meaning": "Preserved development records; superseded setup/status strings are not current task claims.",
+    "native_probe": {
+      "entry_point": "native_probe.py",
+      "status": "positive_negative_and_half_dt_passed",
+      "runtime_compatibility_verified": true,
+      "evidence": {
+        "positive": {
+          "file": "evidence/native-coupon-positive.json",
+          "sha256": "70eeb814c7ca56d75f2ec7ef078512e47e92e88b060a4ce6fe47bfac46c6f887",
+          "complete": true,
+          "dt": 0.0001,
+          "seconds": 1.0,
+          "residual_angle_rad": 0.8756690910702264,
+          "plastic_angle_rad": 0.8756691325887901,
+          "wall_seconds": 7.031852848827839
+        },
+        "no-contact": {
+          "file": "evidence/native-coupon-no-contact.json",
+          "sha256": "6a2677b7cf9f6dc7e215bae4f565e1ab6a0550588d14788c2ab8a6327495a4f9",
+          "complete": true,
+          "dt": 0.0001,
+          "seconds": 1.0,
+          "residual_angle_rad": 0.0,
+          "plastic_angle_rad": 0.0,
+          "wall_seconds": 7.969067448750138
+        },
+        "half-dt": {
+          "file": "evidence/native-coupon-half-dt.json",
+          "sha256": "9c66fee98e78bb491439eea6ed754f27fb7a596934af0c9e318397003d7c8fea",
+          "complete": true,
+          "dt": 5e-05,
+          "seconds": 1.0,
+          "residual_angle_rad": 0.8732157642922956,
+          "plastic_angle_rad": 0.8732157920296051,
+          "wall_seconds": 12.312306197360158
+        }
+      }
+    },
+    "coupled_paper_probe": {
+      "entry_point": "paper_probe.py",
+      "status": "Native surface solver runs; mesh cleanup and documented bend coefficient still leave both contact trials outside provisional validity domain.",
+      "materials": "100 \u00b5m native surface FEM paper, explicit punctures and native steel plastic-hinge staple",
+      "limitations": [
+        "30\u00d724 mm coupon, not full A5 task",
+        "Fixed crown is a diagnostic fixture",
+        "Planar steel bending approximation",
+        "Isotropic paper and0.3% membrane/bending validity boundaries are provisional; exceeding them is solver invalidity, not a measured tear."
+      ],
+      "invalidity_guards": [
+        "Irreversible all-triangle membrane/bending strain bounds",
+        "Independent intact-triangle wire-crossing and swept-translation audit"
+      ],
+      "last_completed_diagnostics": {
+        "batch": "008",
+        "free": "At .129s, upper sheet reaches 0.3179% local bending and the two centroids separate by about0.8mm beyond initial gap; membrane strain remains0.0128%.",
+        "stapled": "At .010s, lower sheet reaches0.4175% local bending; membrane strain0.0823%; wire crossing audits remain clean.",
+        "next_check": "Full supported A5 scene with120\u00b5m sheet gap/20\u00b5m crown clearance, same materials and guards."
+      },
+      "native_runtime": "Isaac6.1 AppLauncher + explicit cached stage attach + DirectGPU tensors. Read nodes only after first simulation step; legacyWorld.reset is incompatible here.",
+      "evidence": {
+        "native-paper-free-008.json": "5370633d5c0af7829aadab7738b8ce6876f8e7fe6897892c4a91915afe6b8a59",
+        "native-paper-stapled-008.json": "12babdebf10ae99556cec56d31552c8ad3e791e5f8390bcd6bb61ab91ed76149"
+      },
+      "separated_control": {
+        "status": "pass",
+        "evidence": "evidence/native-paper-separated-010.json",
+        "sha256": "55ae414eccb5c66c649dc1197431d0464b0e2bd603320766cdbb632746e5ef32",
+        "seconds": 0.2,
+        "physics_hz": 2000,
+        "maximum_bending_strain": 0.0,
+        "maximum_tensile_strain": 2.853141497527467e-05,
+        "initial_gap_mm": 10.0,
+        "final_gap_mm": 9.99857485294342,
+        "interpretation": "Noncontact sheets remain flat; failure of touching pair implicates contact. Does not establish staple retention or extraction."
+      },
+      "near_separated_control": {
+        "status": "pass",
+        "evidence": "evidence/native-paper-gap120-012.json",
+        "sha256": "26a261a17f216b11a9fe977ac6cb9793d2cc4a28513360eab1a5072df74879ba",
+        "seconds": 0.2,
+        "physics_hz": 2000,
+        "maximum_bending_strain": 0.0,
+        "initial_gap_um": 120.0,
+        "final_gap_um": 119.8500394821167,
+        "interpretation": "Avoiding exactly-touching startup removes free-pair distortion. Stapled retention and handling remain untested for this clearance."
+      },
+      "stapled_clearance_control": {
+        "status": "invalid_model_domain",
+        "evidence": "evidence/native-paper-contactreset-014.json",
+        "sha256": "4b35cee044dbf85920c3586e292472ce39cfed9b6481af0d31731dfa56b3975d",
+        "sheet_gap_m": 0.00012,
+        "crown_clearance_m": 2e-05,
+        "first_invalid_step": 14,
+        "physics_hz": 2000,
+        "lower_maximum_surface_bending_strain": 0.00357696,
+        "interpretation": "Tiny local hinge reaches provisional bending-domain bound. No wire crossing. Unsupported coupon differs from full supported setup; evaluate full setup without changing thresholds."
+      }
+    },
+    "full_scene": {
+      "entry_point": "full_scene.build_scene",
+      "status": "full_size_native_contact_unresolved",
+      "setup": "Two 210\u00d7148\u00d70.1 mm FEM sheets, free native staple, forked lever remover, 20 mm flat support with accessible far edges",
+      "robot_demo": false,
+      "yam_bridge": "arena_paper.py, arena_hardware.py and task.py authored and syntax checked; native YAM initialization, guards and callbacks not runtime tested.",
+      "preview_entrypoint": "preview_yam.py --out NEW --steps 10 --physics-hz 2000; authored/syntax-checked, not run. Ordinary ready-joint hold only.",
+      "native_entrypoint": "full_probe.py --out NEW --seconds .1 --physics-hz2000",
+      "initial_midplane_gap_m": 0.00012,
+      "initial_crown_clearance_m": 2e-05,
+      "mesh_quality": {
+        "generator_sha256": "368ea7bbf3ef0c69138227828147888a80e150398a524f94e421a75a25bc0b08",
+        "numpy_version": "2.3.5",
+        "scipy_version": "1.18.1",
+        "meshes": [
+          {
+            "file": "paper_0.npz",
+            "sha256": "afe3c313c5b835d5b1617e09ff558e869bbc539f34ab3792e849dfc652803b2b",
+            "vertices": 818,
+            "triangles": 1514,
+            "surface_area_m2": 0.031079479199999996,
+            "holes": [
+              [
+                -0.09331,
+                -0.09269,
+                -0.05661000000000001,
+                -0.056190000000000004
+              ],
+              [
+                -0.09331,
+                -0.09269,
+                -0.04381,
+                -0.04339
+              ]
+            ],
+            "boundary_edges": 124,
+            "mass_kg": 0.0024863583359999997,
+            "minimum_triangle_area_m2": 9.299999999999769e-09,
+            "minimum_triangle_angle_deg": 15.076285469590196,
+            "maximum_edge_length_ratio": 3.563416410081714,
+            "puncture_perimeters_m": [
+              0.0020800000000000263,
+              0.0020800000000000263
+            ]
+          },
+          {
+            "file": "paper_1.npz",
+            "sha256": "7f20ccc85f3a52567f4b35744bb075df7449bee195c9b39c8c272e98f756d53e",
+            "vertices": 816,
+            "triangles": 1507,
+            "surface_area_m2": 0.0310794792,
+            "holes": [
+              [
+                -0.09331,
+                -0.09269,
+                -0.06861,
+                -0.06819
+              ],
+              [
+                -0.09331,
+                -0.09269,
+                -0.05581,
+                -0.055389999999999995
+              ]
+            ],
+            "boundary_edges": 127,
+            "mass_kg": 0.002486358336,
+            "minimum_triangle_area_m2": 9.299999999999769e-09,
+            "minimum_triangle_angle_deg": 15.848443375607756,
+            "maximum_edge_length_ratio": 3.2723644154044753,
+            "puncture_perimeters_m": [
+              0.0020800000000000263,
+              0.0020800000000000124
+            ]
+          }
+        ]
+      },
+      "last_observation": {
+        "batch": "018",
+        "stopped_step": 22,
+        "physics_hz": 2000,
+        "maximum_membrane_strain_lower": 0.0036847,
+        "wire_crossing": false,
+        "diagnosis": "A remote edge triangle has aspect ratio about52 and magnifies micron-scale motion into high local strain. Replace global Cartesian hole feature lines with local puncture refinement; no material or validity threshold changes."
+      },
+      "latest_refined_mesh_observation": {
+        "batch": "021",
+        "physics_hz": 2000,
+        "stop_time_s": 0.011,
+        "maximum_membrane_strain": [
+          0.004289048811962237,
+          0.003127402228203957
+        ],
+        "maximum_surface_bending_strain": [
+          0.013254014731326575,
+          0.011996775515024125
+        ],
+        "wire_crossings": false,
+        "location": "Worst membrane triangles are well-shaped and immediately beside a staple leg, not remote mesh slivers.",
+        "next": "Same full scene at10000Hz for.025s; native steel coupon was validated at100\u00b5s and50\u00b5s, unlike current500\u00b5s full-scene steps."
+      },
+      "latest_finer_step_observation": {
+        "batch": "022",
+        "physics_hz": 10000,
+        "stop_time_s": 0.002,
+        "maximum_membrane_strain": [
+          0.0018823,
+          0.0039799
+        ],
+        "wire_crossings": false,
+        "interpretation": "Fails earlier than500\u00b5s; not a converged physical response."
+      },
+      "no_staple_control": {
+        "batch": "023",
+        "report_sha256": "4c6c4f84421b13e64182e4cae616511c0dc7e916f60e21cda122cbc70c023593",
+        "status": "invalid_model_domain",
+        "physics_hz": 10000,
+        "completed_steps": 128,
+        "centroid_drop_m": [
+          0.0006643803711684493,
+          0.0006713080736703292
+        ],
+        "stop_measurements": [
+          {
+            "valid": true,
+            "steps": 128,
+            "first_failure": null,
+            "maximum_tensile_strain": 0.0001829256984002825,
+            "maximum_surface_bending_strain": 0.0023794484181391476,
+            "thresholds_calibrated": false,
+            "last_geometry_diagnostics": {
+              "worst_bending_edge": [
+                159,
+                183
+              ],
+              "worst_bending_faces": [
+                1498,
+                1499
+              ],
+              "worst_edge_dihedral_rad": 0.0030850962885682247,
+              "worst_edge_dual_width_m": 6.482797158050879e-05,
+              "worst_membrane_face": 290
+            },
+            "contact_audit": {
+              "valid": true,
+              "diagnostic": "No staple exists in this diagnostic"
+            },
+            "centroid_m": [
+              0.290669926130247,
+              -0.015765482624981342,
+              0.7675456196288316
+            ],
+            "z_span_m": 0.0001017451286315918
+          },
+          {
+            "valid": false,
+            "steps": 128,
+            "first_failure": {
+              "step": 126,
+              "reason": "outside elastic paper model",
+              "tensile_strain": 0.0018169347636265432,
+              "surface_bending_strain": 0.036323240315706246
+            },
+            "maximum_tensile_strain": 0.0033035054147760867,
+            "maximum_surface_bending_strain": 0.036323240315706246,
+            "thresholds_calibrated": false,
+            "last_geometry_diagnostics": {
+              "worst_bending_edge": [
+                153,
+                181
+              ],
+              "worst_bending_faces": [
+                400,
+                1498
+              ],
+              "worst_edge_dihedral_rad": 0.09615044453119297,
+              "worst_edge_dual_width_m": 0.00013333333333333253,
+              "worst_membrane_face": 479
+            },
+            "contact_audit": {
+              "valid": true,
+              "diagnostic": "No staple exists in this diagnostic"
+            },
+            "centroid_m": [
+              0.290826792609604,
+              -0.007436797363255869,
+              0.7676586919263297
+            ],
+            "z_span_m": 0.00017148256301879883
+          }
+        ],
+        "interpretation": "Near-flat free fall until contact with the board; upper sheet wrinkles near a hole. Steel hardware is not required for this failure."
+      },
+      "contact_refinement_candidate": "Native speculative CCD plus collisionIterationMultiplier4 and collisionPairUpdateFrequency4. Same material, geometry and guards; pending native comparison.",
+      "supported_reset_candidate": {
+        "profile": "supported-edge-candidate",
+        "status": "CPU_geometry_checked_native_pending",
+        "support_size_m": [
+          0.19,
+          0.128,
+          0.02
+        ],
+        "support_center_m": [
+          0.33,
+          -0.01,
+          0.7575
+        ],
+        "lower_paper_midplane_m": 0.76755,
+        "upper_paper_midplane_m": 0.76767,
+        "crown_underside_m": 0.76774,
+        "explanation": "Lower paper rests on board; staple8mm beyond its left edge so clinched legs hang clear. No pins or filtered paper contacts.",
+        "task_default_changed": false
+      },
+      "latest_contact_controls": [
+        {
+          "batch": "025",
+          "diagnostic": "paper-contact",
+          "report_sha256": "16849bdcaa64a85c38eb1949f6a8b992328d667d04ca094ee534cb4ef61495ae",
+          "status": "invalid_model_domain",
+          "completed_steps": 128,
+          "physics_hz": 10000,
+          "first_invalid_step": 126,
+          "maximum_tensile_strain": [
+            6.550877070909955e-05,
+            0.0045756431878525294
+          ],
+          "maximum_surface_bending_strain": [
+            0.0042445569620668784,
+            0.03755572456552688
+          ],
+          "wall_seconds": 7.89654232095927
+        },
+        {
+          "batch": "025",
+          "diagnostic": "paper-supported",
+          "report_sha256": "3555e3dd9ed5aa360eca9082875ac31732a6edabf08c6b7d9b6d6f762009af0f",
+          "status": "invalid_model_domain",
+          "completed_steps": 24,
+          "physics_hz": 10000,
+          "first_invalid_step": 14,
+          "maximum_tensile_strain": [
+            0.00273041533602858,
+            0.0030921150935958597
+          ],
+          "maximum_surface_bending_strain": [
+            0.03535057291033012,
+            0.013824353619824549
+          ],
+          "wall_seconds": 4.610518451780081
+        },
+        {
+          "batch": "026",
+          "diagnostic": "paper-no-staple",
+          "report_sha256": "e50e9a0bea1bd2d2aaeefb7146936aa77c48eab7020772fb1143b0b53a7d21f0",
+          "status": "invalid_model_domain",
+          "completed_steps": 48,
+          "physics_hz": 10000,
+          "first_invalid_step": 44,
+          "maximum_tensile_strain": [
+            0.0032939702427829953,
+            0.0038859448940942176
+          ],
+          "maximum_surface_bending_strain": [
+            0.038792247343660775,
+            0.03450954708079912
+          ],
+          "wall_seconds": 5.898839629255235
+        }
+      ],
+      "latest_diagnosis": "Supported no-staple pair still fails at4.8ms. Between4.4\u20134.8ms one upper node far from holes rises0.71mm above its initial plane while lower sheet remains supported: contact instability, not evidence of paper tearing. Isolate lower sheet and native rest-neighbor self filter before changing material/domain."
+    },
+    "material_domain": "MATERIAL_DOMAIN.md distinguishes published onset-of-nonlinearity evidence from tearing.0.3% is an approximate elastic boundary, not a calibrated damage detector.",
+    "latest_material_evidence": "evidence/native-coarse-paper-030-031-summary.json",
+    "current_paper_coupling": {
+      "status": "box_coupon_contact_passes_full_size_pending",
+      "evidence": "evidence/native-paper-coupling-032-035-summary.json",
+      "next_candidate": "Native analytic100um rectangular paper panels; passive finite bending/strength hinges. Full A5 pocket-supported scene then ordinary robot removal.",
+      "cpu_tests_passed": 46
+    },
+    "current_pocket_diagnostic": {
+      "profile": "pocket-support-candidate",
+      "mesh": "coarse",
+      "physics_dt_s": 0.0001,
+      "strict_guard_stop_s": 0.0045,
+      "strict_guard_peak_membrane_strain": 0.0041117,
+      "one_percent_observation_stop_s": 0.0049,
+      "one_percent_observation_peak_membrane_strain": 0.01020425,
+      "wire_crossing": false,
+      "interpretation": "Smaller unsupported region improves the initial excursion, but strain continues to grow. Bending/creasing is not itself classified as tearing.",
+      "next_controls": [
+        "Same pocket without staple",
+        "Same pocket and staple at25us"
+      ],
+      "follow_up_042": {
+        "no_staple_stop_s": 0.0048,
+        "no_staple_peak_membrane_strains": [
+          0.003173971719492963,
+          0.011071614277278208
+        ],
+        "quarter_step_s": 2.5e-05,
+        "stapled_quarter_step_stop_s": 0.01015,
+        "stapled_quarter_step_peak_membrane_strains": [
+          0.010491125138755608,
+          0.004866984676098474
+        ],
+        "interpretation": "The pocket contact layout fails even without steel. Finer time stepping delays but does not resolve it. Do not promote this reset.",
+        "next": "Paired supported-edge controls with the geometrically wider puncture candidate; no threshold change."
+      },
+      "evidence": "evidence/native-pocket-controls-036-042-summary.json"
+    },
+    "clearance_candidate": {
+      "promoted_to_task": false,
+      "native_tested": true,
+      "puncture_size_m": [
+        0.0008,
+        0.0006
+      ],
+      "wire_size_m": [
+        0.0005,
+        0.0003
+      ],
+      "clearance_after_paper_rest_offset_m": 0.0001,
+      "mesh_quality": "Both meshes retain minimum15deg angle and maximum4 aspect ratio. Exact finite holes; no runtime opening/deletion.",
+      "retention_cpu_test": "Clinched wire shifted upward0.8mm crosses intact paper; larger holes do not release folded legs.",
+      "native_observation_042": {
+        "profile": "supported-edge-candidate",
+        "no_staple_stop_s": 0.0084,
+        "no_staple_peak_membrane_strains": [
+          0.008471535089753512,
+          0.01105776711773454
+        ],
+        "stapled_stop_s": 0.0962,
+        "stapled_peak_membrane_strains": [
+          0.007463620295767193,
+          0.003516888232611315
+        ],
+        "stapled_failure": "Lower-sheet wire centreline crosses an intact triangle next to the original puncture boundary.",
+        "interpretation": "Not a validated paper reset; the no-staple control also fails."
+      }
+    },
+    "native_contact_convergence_048": {
+      "profile": "clearance-candidate, supported-edge-candidate",
+      "physics_hz": 10000,
+      "contact_iteration_multiplier": 16,
+      "collision_pair_update_frequency": 4,
+      "speculative_ccd": true,
+      "maximum_depenetration_velocity_m_s": 0.05,
+      "staple_velocity_iterations": 4,
+      "empty": {
+        "status": "completed_diagnostic_only",
+        "seconds": 0.1,
+        "maximum_membrane_strain": [
+          0.006824957688837285,
+          0.004183584153549358
+        ]
+      },
+      "stapled": {
+        "status": "stopped_at_membrane_diagnostic_limit",
+        "seconds": 0.0307,
+        "maximum_membrane_strain": [
+          0.011419079522677178,
+          0.0028723566947450596
+        ],
+        "crossing_checks_valid": true,
+        "peak_location": "Lower sheet beside puncture, approximately0.48mm from wire-segment centre"
+      },
+      "interpretation": "Contact refinement improves empty case but coupled result is not converged. These are diagnostic limits, not observed paper tearing. No task score inferred."
+    },
+    "heavy_paper_candidate": {
+      "status": "tested_not_promoted_wire_crossing",
+      "physical_profile": "200gsm,200micrometre uncoated printing paper; native deformable surface",
+      "thickness_m": 0.0002,
+      "areal_mass_kg_m2": 0.2,
+      "youngs_modulus_pa": 2000000000.0,
+      "friction": 0.35,
+      "density_kg_m3": 1000,
+      "contact_offset_m": 0.00012,
+      "rest_offset_m": 0.0001,
+      "sheet_midplane_gap_m": 0.00022,
+      "stack_thickness_for_clinch_m": 0.0004,
+      "guard_thresholds_changed": false,
+      "sources": [
+        "https://www.mondigroup.com/products-and-solutions/uncoated-printing-paper/color-copy/",
+        "https://store.paper.co.uk/pub/pdfs/Color-Copy-data-sheet-10-19.pdf"
+      ],
+      "interpretation": "A real heavier flexible paper grade, not a rigid proxy. Datasheet supports grammage/thickness class only; isotropic elasticity remains declared approximation. Must validate native contact/extraction before promotion.",
+      "result051": "Stapled200gsm/200\u00b5m case crosses upper paper at15.1ms; positive membrane strain stays below0.6%. Empty control reaches1.0066% at48.9ms. Failure is not inferred from an elastic-onset threshold."
+    },
+    "latest_contact_result055": {
+      "status": "invalid_wire_crossing",
+      "completed_steps": 109,
+      "physics_hz": 10000,
+      "predictive_steel_contact_offset_um": 50,
+      "steel_rest_offset_um": 0,
+      "maximum_positive_membrane_strains": [
+        0.0041214,
+        0.002898
+      ],
+      "interpretation": "Increased contact margin does not prevent an intact upper triangle being crossed. Pivot to a native finite-thickness flexible-facet shell; no task-score relaxation."
+    },
+    "latest_box_candidate": {
+      "promoted_to_task": false,
+      "evidence": "evidence/native-box-paper-063-summary.json",
+      "coupons": [
+        {
+          "report_sha256": "c427b329a604857fee9bb62ac46420af54829bda85d263ea177fcac63bc64ec0",
+          "diagnostic": "paper-box-freefall",
+          "complete": true,
+          "dt": 0.0001,
+          "seconds": 0.02,
+          "completed_steps": 200,
+          "wall_seconds": 7.1422495655715466,
+          "native_mass_relative_error": 8.274037077704577e-08,
+          "maximum_recorded_hinge_gap_m": 7.689567528254941e-10,
+          "final_sample": {
+            "step": 200,
+            "time_s": 0.02,
+            "checks": [
+              {
+                "continuity": {
+                  "maximum_hinge_endpoint_gap_m": 7.383258267469153e-10,
+                  "maximum_vertex_average_error_m": 4.986590228042593e-10,
+                  "valid": true
+                },
+                "wire_crossing": {
+                  "valid": true
+                }
+              },
+              {
+                "continuity": {
+                  "maximum_hinge_endpoint_gap_m": 7.383258267469153e-10,
+                  "maximum_vertex_average_error_m": 4.986590228042593e-10,
+                  "valid": true
+                },
+                "wire_crossing": {
+                  "valid": true
+                }
+              }
+            ],
+            "paper_centroids_m": [
+              [
+                -1.7927087669283242e-12,
+                -3.676206869782403e-12,
+                0.028038805350661278
+              ],
+              [
+                -1.7927087669283242e-12,
+                -3.676206869782403e-12,
+                0.04803880304098129
+              ]
+            ],
+            "maximum_facet_speed_m_s": 0.1960986852645874
+          }
+        },
+        {
+          "report_sha256": "c86f2b5b44806ad09079cb2af3a1ba8825f1264f6909dc7e521746ba7b761117",
+          "diagnostic": "paper-empty",
+          "complete": true,
+          "dt": 0.0001,
+          "seconds": 0.1,
+          "completed_steps": 1000,
+          "wall_seconds": 28.244682973250747,
+          "native_mass_relative_error": 8.274037077704577e-08,
+          "maximum_recorded_hinge_gap_m": 6.7227046159525696e-09,
+          "final_sample": {
+            "step": 1000,
+            "time_s": 0.1,
+            "checks": [
+              {
+                "continuity": {
+                  "maximum_hinge_endpoint_gap_m": 5.4562016266155155e-09,
+                  "maximum_vertex_average_error_m": 3.776966606502509e-09,
+                  "valid": true
+                },
+                "wire_crossing": {
+                  "valid": true
+                }
+              },
+              {
+                "continuity": {
+                  "maximum_hinge_endpoint_gap_m": 6.643580498728752e-09,
+                  "maximum_vertex_average_error_m": 4.937121621854109e-09,
+                  "valid": true
+                },
+                "wire_crossing": {
+                  "valid": true
+                }
+              }
+            ],
+            "paper_centroids_m": [
+              [
+                -4.046991406151452e-11,
+                -3.23543974212501e-12,
+                0.01005000032421118
+              ],
+              [
+                -3.9549651333610336e-11,
+                -4.0926237996557416e-12,
+                0.010149999928454674
+              ]
+            ],
+            "maximum_facet_speed_m_s": 7.749422366032377e-05
+          }
+        },
+        {
+          "report_sha256": "753c0815857b1931c0667ff825cd432e9e45bbe9293ca734abc082dbf54d9a8e",
+          "diagnostic": "paper-stapled",
+          "complete": true,
+          "dt": 0.0001,
+          "seconds": 0.1,
+          "completed_steps": 1000,
+          "wall_seconds": 49.00555431377143,
+          "native_mass_relative_error": 8.274037077704577e-08,
+          "maximum_recorded_hinge_gap_m": 2.3645980067974658e-08,
+          "final_sample": {
+            "step": 1000,
+            "time_s": 0.1,
+            "checks": [
+              {
+                "continuity": {
+                  "maximum_hinge_endpoint_gap_m": 1.0674983115639463e-08,
+                  "maximum_vertex_average_error_m": 6.237814154011166e-09,
+                  "valid": true
+                },
+                "wire_crossing": {
+                  "valid": true,
+                  "steps": 1000,
+                  "first_failure": null
+                }
+              },
+              {
+                "continuity": {
+                  "maximum_hinge_endpoint_gap_m": 1.29875317783003e-08,
+                  "maximum_vertex_average_error_m": 8.282920809619657e-09,
+                  "valid": true
+                },
+                "wire_crossing": {
+                  "valid": true,
+                  "steps": 1000,
+                  "first_failure": null
+                }
+              }
+            ],
+            "paper_centroids_m": [
+              [
+                1.613169549715934e-11,
+                3.569033590079355e-11,
+                0.01005000079071888
+              ],
+              [
+                -4.83668713683389e-12,
+                -7.84876875972883e-11,
+                0.010150002684961586
+              ]
+            ],
+            "maximum_facet_speed_m_s": 0.00010331538942409679
+          }
+        }
+      ],
+      "cooking_failure_061": "378 intended100um triangular prisms cooked into4-vertex tetrahedra741\u20131030um thick despite25um minimum thickness. Replaced candidate with exact analytic Cube geometry.",
+      "full_size": "573/550 free panels per210x148mm sheet; each2.4863232g. Full-size native contact066 fails at4.7ms; coupons are not full-task evidence.",
+      "yam_bridge": "arena_panels.py, task_panels.py and preview_panels.py are source-checked CPU candidates. No native robot run; blocked on full-size contact."
+    },
+    "full_box_paper_066_068": {
+      "status": "unresolved_contact_instability",
+      "report_sha256": "7b3d09b606a81fb1cbc62df09093abfe2bbf0ccda68795a16ff1bcb4335e26d2",
+      "complete": false,
+      "completed_steps": 47,
+      "first_failure": {
+        "step": 47,
+        "time_s": 0.0047,
+        "checks": [
+          {
+            "continuity": {
+              "maximum_hinge_endpoint_gap_m": 1.6132393931612347e-05,
+              "maximum_vertex_average_error_m": 1.3347367741891049e-05,
+              "valid": true
+            },
+            "wire_crossing": {
+              "valid": true,
+              "steps": 47,
+              "first_failure": null
+            }
+          },
+          {
+            "continuity": {
+              "maximum_hinge_endpoint_gap_m": 3.372675523235709e-05,
+              "maximum_vertex_average_error_m": 2.107303797834201e-05,
+              "valid": false
+            },
+            "wire_crossing": {
+              "valid": true,
+              "steps": 47,
+              "first_failure": null
+            }
+          }
+        ],
+        "paper_centroids_m": [
+          [
+            0.3006388836448104,
+            -0.023076874186768997,
+            0.767575298097719
+          ],
+          [
+            0.3006388641416476,
+            -0.015710698636243917,
+            0.7676812481552876
+          ]
+        ],
+        "maximum_facet_speed_m_s": 7.027547359466553
+      },
+      "mixed_iteration_control": "Paper1/wire4 in068 is bit-identical to066. Next all-contact-body1 comparison is explicit.",
+      "initial_geometry_audit": "No positive solid overlap between steel/paper/support or sheets. Both collider offsets2um and rest offsets0. Lower sheet exactly touches board;20um intersheet/crown clearance.",
+      "precision_hypothesis": "At worldz0.7677, float32 ULP59.6nm; observed upper fall8.4um by4ms versus78.5um gravitational displacement despite39.3mm/s velocity. A globally translated near-zero control is pending."
+    }
+  },
+  "latest_gentle_brace_trial": {
+    "kind": "native_gentle_brace_diagnostic",
+    "submission_ready": false,
+    "task_score": null,
+    "status": "invalid_model_domain",
+    "completed_steps": 89,
+    "wall_seconds": 387.14565044734627,
+    "observations": 9022,
+    "upper_geometry": {
+      "maximum_positive_edge_opening_m": 0.00017158765928246782,
+      "maximum_empty_normal_clearance_m": 0.0,
+      "maximum_empty_aperture_m": 0.00017158765928246782,
+      "maximum_across_edge_compression_m": 0.00018676858283742795,
+      "maximum_along_edge_slip_m": 0.0002079145354355473,
+      "minimum_shared_edge_overlap_m": 0.0005976518563380051,
+      "edges_without_overlap": 0,
+      "worst_aperture": {
+        "panel_indices": [
+          456,
+          479
+        ],
+        "endpoint": 0,
+        "opening_m": 0.00017158765928246782,
+        "normal_clearance_m": 0.0
+      },
+      "interpretation": "Empty aperture geometry only. Compression and tangential slip are reported separately; native hinge fracture is a distinct event.",
+      "measurement": "native_edge_geometry"
+    },
+    "native_joint_break_events": {
+      "observer_installed": true,
+      "event_count": 0,
+      "paper_hinge_break_count": 0,
+      "events": [],
+      "interpretation": "Native break notifications only; no joint edits, score or no-damage certificate."
+    },
+    "steel_continuity": {
+      "maximum_endpoint_gap_m": 1.864731782306509e-06,
+      "maximum_allowed_gap_m": 3e-05,
+      "valid": true
+    },
+    "contact_audits": [
+      {
+        "valid": true,
+        "steps": 9022,
+        "first_failure": null
+      },
+      {
+        "valid": true,
+        "steps": 9022,
+        "first_failure": null
+      }
+    ],
+    "interpretation": "Slower touchdown still creates growing numerical panel opening at the distant hand brace. No native break notification or steel crossing was recorded; this is not a measured tear or a successful extraction.",
+    "next_candidate": "Remove the optional distant left-hand brace. Keep the left arm at READY and use the free remover heel as the opposing local contact during levering. Mechanics, strength, aperture and crossing guards unchanged.",
+    "native_sha256": {
+      "preview.json": "63895e400c03a06bd0e1962510562dc028b77ed5e94a8a413590564e9a2a9c51",
+      "trace.jsonl.gz": "bfeb6b8a0247bb8ed67b4f66c9ec63d11370bed099eaa78310ed1106b33ab312",
+      "first-invalid-state-0.npz": "b43ddde7af9d95ad7131bda0957452f8bb3e203ecfc2209aa6de95544ea2afde"
+    }
+  },
+  "one_hand_native_grasp_replay": {
+    "source": "native100 step84 measured remover grasp, held fixed for offline IK and hull screening",
+    "commands": 386,
+    "maximum_position_error_m": 7.1131769156750055e-09,
+    "maximum_rotation_error_rad": 2.534956740119958e-08,
+    "maximum_grasp_correction_m": 0.0009754230528179526,
+    "unintended_hull_intersections": 0,
+    "native_extraction_proven": false
   }
 }

@@ -1,0 +1,108 @@
+{
+  "date": "2026-11-13",
+  "status": "partial_robot_pickup_entry_legacy_hinge_guard_stop",
+  "score": null,
+  "archive_sha256": "3c9a7d04639106988bb751f9aab6a6016f48ee5f2e9cbf96c7565b457d33c5ac",
+  "configuration": "Same CPU TGS/sweep CCD960Hz passive-thread/box-panel candidate as097YAM2; frozen294-action path, filtered native tool-in-gripper pose compensation and ordinary bounded joint actions.",
+  "measurements": {
+    "status": "failed",
+    "completed_steps": 251,
+    "audited_physics_substeps": 12070,
+    "first_invalid_substep": 12070,
+    "maximum_edge_force_n": 0.0,
+    "cut_events": [],
+    "damage_events": [],
+    "pose_assisted_entry": {
+      "policy": "fixed blade path with filtered native tool-in-gripper pose compensation",
+      "filter_alpha": 0.1,
+      "updates": 112,
+      "maximum_grasp_position_change_m": 0.00016016962910116883,
+      "maximum_grasp_rotation_change_rad": 0.00016164959548919117,
+      "state_writes": false,
+      "hidden_forces_or_attachments": false
+    },
+    "facet_consistency": [
+      {
+        "maximum_hinge_endpoint_gap_m": 0.00011002074165854014,
+        "first_failure": {
+          "update": 12070,
+          "maximum_hinge_endpoint_gap_m": 0.00011002074165854014,
+          "maximum_vertex_average_error_m": 7.323251126291881e-05,
+          "valid": false
+        },
+        "valid": false,
+        "reads": 12071,
+        "maximum_allowed_gap_m": 0.0001
+      },
+      {
+        "maximum_hinge_endpoint_gap_m": 1.1425978234290974e-05,
+        "first_failure": null,
+        "valid": true,
+        "reads": 12071,
+        "maximum_allowed_gap_m": 0.0001
+      }
+    ],
+    "strain": [
+      {
+        "maximum_principal_stretch": 1.0096825654742152,
+        "first_validity_excursion": null,
+        "first_2pct_warning": null,
+        "maximum_stretch_limit": 1.05
+      },
+      {
+        "maximum_principal_stretch": 1.002906475845475,
+        "first_validity_excursion": null,
+        "first_2pct_warning": null,
+        "maximum_stretch_limit": 1.05
+      }
+    ],
+    "contact_audit": [
+      {
+        "valid": true,
+        "steps": 12071,
+        "first_failure": null
+      },
+      {
+        "valid": true,
+        "steps": 12071,
+        "first_failure": null
+      }
+    ],
+    "thread_joint_integrity": {
+      "maximum_closed_joint_gap_m": 1.75745039987135e-05,
+      "first_failure": null,
+      "valid": true
+    },
+    "closed_junction_contact_audit": [
+      {
+        "valid": true,
+        "steps": 12071,
+        "first_failure": null
+      },
+      {
+        "valid": true,
+        "steps": 12071,
+        "first_failure": null
+      }
+    ],
+    "wall_seconds": 175.46557208988816
+  },
+  "interpretation": "The110micron Euclidean hinge endpoint residual exceeds the old100micron numerical guard. It does not by itself identify a tear: compression, slip and empty aperture were not distinguished. Exact per-panel poses were not saved, so signed aperture cannot be recovered from the averaged mesh alone.",
+  "limits": [
+    "No blade force or cut; no stitch removed; no full task score.",
+    "All12071 native reset/substep cloth/thread and closed-junction crossing checks pass; peak cloth stretch remains below1%.",
+    "The robot physically picks up and holds the ripper, with maximum observed grasp drift0.160mm; its long point reaches the first tack.",
+    "Optional next diagnostic records actual panel geometry and stops at0.20mm empty aperture or lost shared-edge overlap. This changes observation/guard interpretation only, not physical geometry, material, controller or task scoring."
+  ],
+  "files_sha256": {
+    "entry250.png": "28de85f0d4db66096747cf493bbf22a4b535b18dfae983d65f2d6ed1341caae6",
+    "first-invalid.npz": "9e0dd9c210d0303957d8ba64b250b65b71825184b90e07e422eff3763a72c538",
+    "before-reset-state.npz": "a65682340c4826249135a7d8aa15369bab762427c818583137dac8e832e0a5bd",
+    "last-measured-state.npz": "88e8bad6f4de50fecda9f20ac4073fe4d4e67ca60ef1f7a44aac1645f86a6dd5",
+    "guard-entry-analysis.json": "ce7a9c28f3576a3e68e8623ccda7c464440ae23e101999679bbdc54de2bfc899",
+    "after-reset-state.npz": "51bfbd8f9db323738613145b2ce15d1a4100822cca886b381b513c08824fa9d4",
+    "setup.png": "a097ea96edde5dea81ee2f2bffb00931e72b195c59320d50eb6c699556e396a8",
+    "preview.mp4": "2445235f7f6fb67698a660a6d847b9bb08f78ff93335ec1a7c140605f98f34d2",
+    "preview.json": "b93f6a29b60b6bdf4cb709e4f93779e0ea1ae3c5b4ab5c3c29a3f107176c675f"
+  }
+}

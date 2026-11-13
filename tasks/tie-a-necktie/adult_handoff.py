@@ -37,9 +37,10 @@ def raise_for_transfer(start_action):
     return _compile(start_action,[(3.,'right',(.30,-.16,1.30),0.,yaw_rotation(30.),'raise and turn held wide strip for tip transfer','cartesian')])
 
 
-def receive_tip(start_action,rest,nodes,approach_tilt_degrees=10.):
+def receive_tip(start_action,rest,nodes,approach_tilt_degrees=10.,receiving_opening=1.):
     from adult_motion import grasp_frame
     from cross_motion import yaw_rotation
+    if not .6<=receiving_opening<=1.:raise ValueError('Invalid normal receiving aperture')
     grasp=grasp_frame(rest,nodes,longitudinal=.03,side='left')
     if not -20. <= approach_tilt_degrees <= 20.:
         raise ValueError('Receiving tilt exceeds the bounded planning range')
@@ -49,11 +50,11 @@ def receive_tip(start_action,rest,nodes,approach_tilt_degrees=10.):
     turn=np.array([[1.,0.,0.],[0.,np.cos(angle),-np.sin(angle)],[0.,np.sin(angle),np.cos(angle)]])
     R=np.asarray(grasp['rotation'])@turn
     target=np.asarray(grasp['center_m'])+.020*R[:,2]
-    grasp.update(rotation=R.tolist(),target_tcp_m=target.tolist(),approach_tilt_degrees=float(approach_tilt_degrees))
+    grasp.update(rotation=R.tolist(),target_tcp_m=target.tolist(),approach_tilt_degrees=float(approach_tilt_degrees),receiving_opening=float(receiving_opening))
     if not (.20<target[0]<.39 and -.25<target[1]<-.06 and .80<target[2]<1.02):raise ValueError('Measured wide tip lies outside the receiving workspace: '+repr(target.tolist()))
-    schedule=[(2.,'left',(.18,.25,1.03),.6,yaw_rotation(90.),'withdraw in front of both strands','joint'),
-        (2.,'left',(.17,-.20,.94),.6,yaw_rotation(180.),'cross open front space','cartesian'),
-        (2.,'left',target,.6,R,'insert receiving fingers around wide tip','cartesian'),
+    schedule=[(2.,'left',(.18,.25,1.03),receiving_opening,yaw_rotation(90.),'withdraw in front of both strands','joint'),
+        (2.,'left',(.17,-.20,.94),receiving_opening,yaw_rotation(180.),'cross open front space','cartesian'),
+        (2.,'left',target,receiving_opening,R,'insert receiving fingers around wide tip','cartesian'),
         (1.,'left',target,0.,R,'pinch wide tip with receiving hand','cartesian'),
         (2.,'right',(.30,-.16,1.30),1.,yaw_rotation(30.),'release original wide-strand pinch','cartesian'),
         (2.,'right',(.23,-.24,1.30),1.,yaw_rotation(30.),'withdraw original hand','cartesian'),
@@ -138,3 +139,20 @@ def select_receiving_plan(start_action, rest, nodes, faces, half_thickness):
             selected['selection']='Physical shell-clear route; extra proximity warnings retained'
             return selected
     return dict(plan=None,candidates=records)
+
+
+def receiving_material_present(rest,nodes,gripper_pose_xyzw):
+    """Stop only an obvious empty pinch before releasing the original hand.
+
+    This broad volume encloses the physical finger-pad region with generous
+    clearance. Presence permits an attempt; it is never a grasp/retention score.
+    """
+    from interpret_motion import rotation_xyzw
+    pose=np.asarray(gripper_pose_xyzw,float);R=rotation_xyzw(pose[3:])
+    tcp=pose[:3]+R@np.array((0.,0.,.134))
+    local=(np.asarray(nodes)-tcp)@R
+    tip=np.asarray(rest)[:,1]<.10
+    inside=tip&(abs(local[:,0])<.010)&(abs(local[:,1])<.025)&(local[:,2]>-.040)&(local[:,2]<.005)
+    return dict(potentially_enclosed_tip_nodes=int(inside.sum()),obvious_empty_pinch=not bool(inside.any()),
+        broad_tcp_volume_m={'x':[-.010,.010],'y':[-.025,.025],'z':[-.040,.005]},
+        meaning='A broad empty-volume stop only. Material presence does not establish physical contact or a successful transfer.')

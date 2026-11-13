@@ -7,7 +7,10 @@ required. See `JUDGING.md` for the final inspection and safe-release criteria.
 **Development package; not ready to submit.** No robot demo, Dream run, media or
 task score exists. `task.draft.json` is a draft. The current flexible-panel and
 passive-thread candidate retained every stitch for2s. Its CPU/YAM reset and
-two-action bridge pass; full robot manipulation remains unproven.
+two-action bridge pass. The robot then physically picked up the ripper and
+reached the first tack in262actions; the blade just touched the strand, but no
+thread was cut or removed. Full task
+feasibility remains unproven.
 
 ## Setup
 
@@ -69,7 +72,7 @@ From the repository root:
 .venv/bin/python -m unittest discover -s tasks/unpick-a-seam -p 'test_*.py' -v
 ```
 
-Sixty-five tests pass: connected cloth with real needle holes, needle-path clearance,
+Seventy-five tests pass: connected cloth with real needle holes, needle-path clearance,
 force direction and sustained contact for cutting, interrupted-contact rejection,
 blade damage latching, whole-thread clearance, rigid-motion-invariant strain
 inspection, moving-cloth/thread tunnelling detection, and final-state scoring. These are CPU geometry/rule
@@ -721,3 +724,71 @@ pass, and no blade damage is detected. This establishes integration only; the
 clean but too wide to inspect individual stitches. Optional `--judging-views`
 adds fixed native close-up views for recording only; camera framing has not yet
 been validated. See `evidence/native-yam-bridge-097.json`.
+
+
+## Native first-tack entry 097 and geometric panel audit
+
+The same candidate completed 251 robot actions (12.55 s) with physical pickup
+and at most 0.160 mm grasp-position drift. All 12,071 reset/substep thread/fabric
+and closed-junction checks passed. Peak cloth stretch stayed below 1%; no
+blade-damage event occurred. There was no cutting force, cut or removed stitch.
+The run stopped during entry on an upper-sheet Euclidean hinge residual of
+110.02 µm against the former 100 µm numerical cutoff. That residual alone does
+not identify a tear: it can include compression and tangential sliding. The
+recorded averaged mesh cannot reconstruct the missing individual panel poses.
+Measurements are in `evidence/native-first-cut-097.json`.
+
+The explicit `--geometric-panel-audit` comparison retains that raw residual
+as telemetry and measures actual native shared-edge geometry each substep.
+It stops if positive empty aperture exceeds 0.20 mm or the shared edge loses
+finite overlap. Normal separation includes both physical half-thicknesses;
+compression and tangential slip are reported separately. The limit is half
+the 0.4 mm panel thickness and one quarter of the 0.8 mm thread diameter. This
+is a conservative numerical continuity diagnostic, not a calibrated tear
+threshold. All existing thread/cloth, blade, strain and closed-junction checks
+remain active. Native panel poses are saved in each action trace and in the
+first-failure and terminal snapshots. A native joint-break observer is also
+installed, but the panel hinges have no calibrated finite fracture load;
+absence of a notification cannot certify intact real fabric.
+
+The next 294-action comparison uses the unchanged first-tack path, geometry,
+materials and physics with `--geometric-panel-audit --judging-views`. The extra
+native cameras only record close-ups and are excluded from policy inputs.
+This diagnostic is unscored and is not evidence of task completion.
+
+
+## Native first contact 102 and passage diagnostic
+
+The unchanged entry reached 262 actions before the lower sheet's positive
+shared-edge aperture exceeded the explicit 0.20 mm diagnostic limit. The
+248.87 µm opening was at an outer edge about 10 mm from the first tack. There
+was no empty normal clearance, loss of shared-edge overlap, thread passage or
+lost needle-hole link. All 24 links remained, the largest closed-thread joint
+gap was 46.24 µm, and peak reconstructed stretch stayed below 1.75%. The native
+panel poses show at most 15.27 µm finite thread/panel overlap at the stop. These
+measurements do not establish a fabric tear.
+
+The blade had just reached the first strand: its measured contact overlap was
+0.248 µm and peak cutting-edge force was 0.248 mN, well below the 0.25 N sustained
+cut threshold. Neither guard overlapped either panel solid at the sampled entry
+poses. No stitch was cut, and the task remains unscored. Native close-up cameras
+now show the seam and tool. See `evidence/native-first-contact-102.json`.
+
+A separately selected `--panel-passage-diagnostic` keeps the 0.20 mm aperture
+warning and uses 0.40 mm as the maximum positive empty shared-edge aperture.
+This is half the 0.80 mm thread diameter: a geometric passage bound, not a
+calibrated fracture threshold or a claim of perfectly rigid joints. Finite
+shared-edge overlap is still required. The option also checks each actual
+native box's middle plane against every capsule axis at every physics substep,
+using unaveraged panel poses. It retains the existing swept thread/fabric,
+closed-thread-junction, strain and blade-damage checks. Warning and failure
+snapshots preserve raw panel, tool and thread poses. Any real crossing or
+model-domain failure still stops the diagnostic; no score is produced.
+
+The conservative broad phase for that exact native-box audit matches all 526
+recorded patch states and 300 randomized states with zero numerical differences.
+Measured CPU time for both patches fell from 9.20 to 1.60 ms per substep; no
+physical setting or audit predicate changed. See
+`evidence/solid-broadphase-equivalence.json`. The pending 294-action trial uses
+this option with the same path, geometry and material as102. All six actual
+stitches must still be fully removed before task completion can be claimed.

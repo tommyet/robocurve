@@ -99,12 +99,19 @@ def solid_contacts(model,poses,segments,radius=.0004,thickness=.0004):
     width=np.linalg.norm(u,axis=1);height=np.linalg.norm(v,axis=1)
     basis=np.stack((u/width[:,None],v/height[:,None],model['normals']),axis=2)
     rotation=Rotation.from_quat(np.asarray(poses)[:,3:]).as_matrix()@basis
-    local=np.einsum('psed,pdk->psek',segments[None]-poses[:,None,None,:3],rotation)
     half=np.column_stack((width/2,height/2,np.full(len(points),thickness/2)))
-    low,high=local.min(axis=2),local.max(axis=2)
-    candidates=np.all((low<=half[:,None]+radius)&(high>=-half[:,None]-radius),axis=-1)
-    panel,segment=np.nonzero(candidates)
-    selected=local[panel,segment];h=half[panel]
+    # Conservative world AABBs reject distant pairs before exact local work.
+    # One-picometre padding only broadens the candidate list, not predicates.
+    world_half=np.einsum('pij,pj->pi',np.abs(rotation),half)
+    low=segments.min(axis=1)-radius-1e-12;high=segments.max(axis=1)+radius+1e-12
+    possible=np.all((poses[:,None,:3]-world_half[:,None]<=high[None])&
+                    (poses[:,None,:3]+world_half[:,None]>=low[None]),axis=-1)
+    panel,segment=np.nonzero(possible)
+    local=np.einsum('ned,ndk->nek',segments[segment]-poses[panel,None,:3],rotation[panel])
+    keep=np.all((local.min(axis=1)<=half[panel]+radius)&
+                (local.max(axis=1)>=-half[panel]-radius),axis=-1)
+    panel,segment=panel[keep],segment[keep]
+    selected=local[keep];h=half[panel]
     distance,t,closest=segment_box_distances(selected,h)
     overlapping=distance<radius
     rows=[]
@@ -124,7 +131,6 @@ def solid_contacts(model,poses,segments,radius=.0004,thickness=.0004):
                     (r['capsule_overlap_lower_bound_m'] for r in rows),default=0.),
                 native_midplane_intersections=intersections,
                 deepest_pairs=sorted(rows,key=lambda r:r['axis_to_solid_distance_m'])[:8])
-
 
 def inspect(directory):
     directory=Path(directory)

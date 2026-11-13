@@ -115,6 +115,62 @@ def mechanics(mesh,material=ShellMaterial(),primitive_boxes=False):
                 vertex_ids=vertex_ids,primitive_boxes=primitive_boxes)
 
 
+# Shared-edge geometry adapted from the team paper candidate; native poses only.
+def geometric_edge_measurements(model,world,rotations,thickness_m=.0004):
+    """Separate empty edge apertures from compression and tangential sliding.
+
+    This is observation only. It does not change the native shell or decide
+    whether a material fracture occurred; native break events report that.
+    Thickness is the authored analytic box thickness, not a rendered skin.
+    """
+    if not np.isfinite(thickness_m) or thickness_m<=0:
+        raise ValueError('Positive finite physical panel thickness required')
+    pairs=model['endpoint_pairs'].reshape(-1,2,4)
+    i,j=pairs[:,0,0],pairs[:,0,2]
+    left=world[pairs[:,:,0],pairs[:,:,1]]
+    right=world[pairs[:,:,2],pairs[:,:,3]]
+    delta=right-left
+    local_edge=model['points'][pairs[:,1,0],pairs[:,1,1]]-model['points'][pairs[:,0,0],pairs[:,0,1]]
+    local_edge/=np.linalg.norm(local_edge,axis=1)[:,None]
+    e0=np.einsum('nij,nj->ni',rotations[i],local_edge)
+    e1=np.einsum('nij,nj->ni',rotations[j],local_edge)
+    edge=e0+e1
+    edge/=np.linalg.norm(edge,axis=1)[:,None]
+    n0=np.einsum('nij,nj->ni',rotations[i],model['normals'][i])
+    n1=np.einsum('nij,nj->ni',rotations[j],model['normals'][j])
+    normal=n0+n1
+    normal-=np.sum(normal*edge,axis=1)[:,None]*edge
+    normal/=np.linalg.norm(normal,axis=1)[:,None]
+    across=np.cross(edge,normal)
+    rest_across=model['centres'][j]-model['centres'][i]
+    sign=np.sign(np.sum(np.cross(local_edge,model['normals'][i])*rest_across,axis=1))
+    across*=sign[:,None]
+    signed_opening=np.einsum('nej,nj->ne',delta,across)
+    along=np.einsum('nej,nj->ne',delta,edge)
+    normal_delta=np.einsum('nej,nj->ne',delta,normal)
+    normal_thickness=thickness_m/2*(np.abs(np.sum(n0*normal,axis=1))+np.abs(np.sum(n1*normal,axis=1)))
+    normal_clearance=np.maximum(np.abs(normal_delta)-normal_thickness[:,None],0.)
+    opening=np.maximum(signed_opening,0.)
+    aperture=np.hypot(opening,normal_clearance)
+    left_projection=np.einsum('nej,nj->ne',left,edge)
+    right_projection=np.einsum('nej,nj->ne',right,edge)
+    overlap=np.minimum(left_projection.max(1),right_projection.max(1))-np.maximum(left_projection.min(1),right_projection.min(1))
+    if not all(np.isfinite(x).all() for x in (opening,normal_clearance,aperture,overlap)):
+        raise ValueError('Folded or nonfinite fabric edge geometry')
+    worst=np.unravel_index(int(np.argmax(aperture)),aperture.shape)
+    h,k=worst
+    return dict(maximum_positive_edge_opening_m=float(opening.max()),
+        maximum_empty_normal_clearance_m=float(normal_clearance.max()),
+        maximum_empty_aperture_m=float(aperture.max()),
+        maximum_across_edge_compression_m=float(np.maximum(-signed_opening,0.).max()),
+        maximum_along_edge_slip_m=float(np.abs(along).max()),
+        minimum_shared_edge_overlap_m=float(overlap.min()),
+        edges_without_overlap=int(np.count_nonzero(overlap<=0.)),
+        worst_aperture=dict(panel_indices=[int(i[h]),int(j[h])],endpoint=int(k),
+            opening_m=float(opening[h,k]),normal_clearance_m=float(normal_clearance[h,k])),
+        interpretation='Empty aperture geometry only. Compression and tangential slip are reported separately; native hinge fracture is a distinct event.')
+
+
 def author_shell(stage,path,mesh,material=ShellMaterial(),color=(.76,.68,.47),*,primitive_boxes=False):
     """Author only before simulation. All shell facet bodies remain dynamic."""
     from pxr import Gf,Sdf,UsdGeom,UsdPhysics,PhysxSchema,UsdShade,Vt
@@ -176,13 +232,16 @@ def author_shell(stage,path,mesh,material=ShellMaterial(),color=(.76,.68,.47),*,
     return dict(bodies=bodies,joints=joints,mesh=mesh,model=model,material=material)
 
 
-def measured_surface(shell,poses):
-    """Reconstruct mean shared vertices and measure actual joint consistency.
+def measured_surface(shell,poses,*,geometry_aperture_m=None):
+    """Read native panel geometry, retaining the legacy endpoint telemetry.
 
-    Averaging never excuses gaps: maximum endpoint disagreement is separately
-    reported and must remain below the explicit0.1mm numerical envelope.
+    The optional diagnostic uses empty aperture rather than Euclidean endpoint
+    error: compression and tangential slip are not holes. This is a numerical
+    continuity guard, not a calibrated tear law or a no-damage certificate.
     """
     from scipy.spatial.transform import Rotation
+    if geometry_aperture_m is not None and (not np.isfinite(geometry_aperture_m) or geometry_aperture_m<=0):
+        raise ValueError('Positive finite empty-aperture limit required')
     poses=np.asarray(poses,float);mesh=shell['mesh'];model=shell['model']
     ids=model['vertex_ids']
     if poses.shape!=(len(ids),7) or not np.isfinite(poses).all():raise ValueError('Invalid facet poses')
@@ -193,11 +252,25 @@ def measured_surface(shell,poses):
     points=summed/count[:,None]
     disagreement=np.linalg.norm(world-points[ids],axis=-1)
     pairs=model['endpoint_pairs']
-    gap=float(np.linalg.norm(world[pairs[:,0],pairs[:,1]]-
-                             world[pairs[:,2],pairs[:,3]],axis=1).max(initial=0.))
-    return points,dict(maximum_hinge_endpoint_gap_m=gap,
-                       maximum_vertex_average_error_m=float(disagreement.max()),
-                       valid=gap<=.0001)
+    delta=world[pairs[:,0],pairs[:,1]]-world[pairs[:,2],pairs[:,3]]
+    magnitudes=np.linalg.norm(delta,axis=1);worst=int(np.argmax(magnitudes))
+    gap=float(magnitudes[worst]);pair=pairs[worst]
+    result=dict(maximum_hinge_endpoint_gap_m=gap,
+                maximum_vertex_average_error_m=float(disagreement.max()),
+                legacy_endpoint_warning=gap>.0001,valid=gap<=.0001,
+                worst_endpoint=dict(panel_indices=[int(pair[0]),int(pair[2])],
+                    positions_m=[world[pair[0],pair[1]].tolist(),world[pair[2],pair[3]].tolist()],
+                    difference_m=delta[worst].tolist()))
+    if geometry_aperture_m is not None:
+        geometry=geometric_edge_measurements(model,world,rotations,
+            shell.get('material',ShellMaterial()).thickness_m)
+        result.update(continuity_method='geometric_empty_aperture',
+            endpoint_distance_is_stop_condition=False,
+            maximum_allowed_empty_aperture_m=float(geometry_aperture_m),geometry=geometry,
+            aperture_warning=geometry['maximum_empty_aperture_m']>.0002,
+            valid=bool(geometry['maximum_empty_aperture_m']<=geometry_aperture_m and
+                       geometry['edges_without_overlap']==0))
+    return points,result
 
 
 def cooked_hull_geometry(shell,stage):
