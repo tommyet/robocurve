@@ -1,0 +1,83 @@
+{
+  "status": "passed",
+  "purpose": "platform compatibility, not a scored task",
+  "dream_calls": 0,
+  "steps_requested": 150,
+  "steps_completed": 150,
+  "initial_condition": "die lifted 0.12 m once before the diagnostic; no later object-state writes",
+  "checks": {
+    "recorded_versions": true,
+    "20_hz_control": true,
+    "gravity_drop": true,
+    "table_support": true,
+    "settled_object": true,
+    "robot_responded": true,
+    "all_states_finite": true,
+    "completed_steps": true,
+    "three_cameras_rendered": true,
+    "moving_camera_updates": true,
+    "yam_policy_rgb_matches_native": true
+  },
+  "python": "3.12.16",
+  "packages": {
+    "numpy": "2.5.4",
+    "yam-arena": "0.1.0",
+    "inspect-robots": "1.0.0",
+    "inspect-robots-yam": "0.38.0",
+    "inspect-robots-dream": "0.1.0",
+    "dreamlabs-client": "1.0.14",
+    "isaaclab": "17.0.2",
+    "isaacsim": "6.1.0.0"
+  },
+  "source_sha256": {
+    "tools/runpod_smoke/smoke.py": "6ce86212d9a3f6e178fb6ed3e0344f89950196f9557bd579de7ed96c39ab7839",
+    "tasks/roll-a-die/task.py": "e84817cc499f3f4ee3ff291be85ecec7980094e4855a94ddb87f10cae6aab341"
+  },
+  "step_dt": 0.05,
+  "gpu": "NVIDIA RTX 6000 Ada Generation",
+  "device": "cuda:0",
+  "table_top_m": 0.7475,
+  "physics": {
+    "die_drop_m": 0.12000012397766113,
+    "final_die_height_m": 0.7554998993873596,
+    "final_height_span_m": 0.0,
+    "left_yaw_excursion_rad": 0.14748046039115903,
+    "last_die_speed_m_s": 0.0001708673269077893
+  },
+  "cameras": {
+    "top_cam": {
+      "frames": 151,
+      "nonblank_frames": 151,
+      "unique_frames": 151,
+      "last_mean": 170.8506857638889,
+      "last_std": 59.01546370584833
+    },
+    "left_cam": {
+      "frames": 151,
+      "nonblank_frames": 151,
+      "unique_frames": 151,
+      "last_mean": 189.90634837962963,
+      "last_std": 48.139780825140036
+    },
+    "right_cam": {
+      "frames": 151,
+      "nonblank_frames": 151,
+      "unique_frames": 151,
+      "last_mean": 200.45806857638888,
+      "last_std": 48.94464700397457
+    }
+  },
+  "elapsed_wall_seconds": 33.32514143548906,
+  "supervisor": {
+    "exit_code": 0,
+    "timed_out": false,
+    "wall_seconds": 35.45430248696357
+  },
+  "verified_utc_date": "2026-11-13",
+  "host_driver": "595.91.07",
+  "limitations": [
+    "Rigid-body and robot/camera compatibility only; no deformable-material validation.",
+    "Exact pinned software was tested on one Runpod host.",
+    "No Dream API call was made."
+  ]
+}

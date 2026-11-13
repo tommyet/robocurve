@@ -1,6 +1,6 @@
 # Shared working notes
 
-Last updated: 2026-11-12 UTC. Read this before starting work; update it when an
+Last updated: 2026-11-13 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
@@ -59,6 +59,46 @@ developers and their agents, not a competition submission document.
   content to this log. Keep task text and submitted media anonymous.
 
 ## Review findings
+
+### 2026-11-13 — Runpod Isaac/YAM compatibility test passed
+
+- The user authorized one short GPU compatibility test. The final probe passed
+  on a full RTX 6000 Ada 48 GB, NVIDIA driver 595.91.07, Ubuntu 24.04, with
+  62 GB allocated RAM and 16 vCPUs. Two L40S requests found no matching capacity
+  and created no resources. This is runtime evidence for the tested host and
+  configuration, not a guarantee for every Runpod host.
+- [The reusable bootstrap and probe](tools/runpod_smoke/README.md) reproduce all
+  eight package versions, Python 3.12.16, source revisions and the asset-root
+  patch recorded in the magnifier environment manifest. All versions and the
+  patch hash matched. Set `NVIDIA_DRIVER_CAPABILITIES=all` at Pod creation;
+  Vulkan visibility was checked before downloading Isaac. No nested Docker.
+- Base-image uv 0.9.0 could not discover Python 3.12.16; workspace-local uv
+  0.13.8 resolved it. The base image also lacked `libXt.so.6`; add Ubuntu's
+  `libxt6` package. Both fixes are in the bootstrap. A first probe completed
+  its frames but could not serialize a NumPy boolean; the corrected probe was
+  rerun and exited successfully. Do not treat a partial result file as a pass.
+- The successful run completed 150 control steps at 20 Hz in 35.45 wall
+  seconds, producing 151 nonblank frames from each of three cameras. YAM's
+  policy images matched the resized native images. The die dropped 0.120 m,
+  settled on the table, and the arm yaw changed by 0.1475 rad. The final log
+  contained no Error entries or traceback; all three final camera images were
+  inspected locally. See the [numeric result](tools/runpod_smoke/verified-2026-11-13.json).
+  This establishes rendering and rigid-body/robot simulation, not cloth,
+  seam cutting, icing fidelity or full-score feasibility for the six drafts.
+- Pod creation and stopping worked with the saved key. The separate command
+  API returned 403; authenticated direct SSH with a newly generated key worked.
+  Billing/catalog reads remain unavailable. No Dream requests were made and no
+  Dream or Runpod API key was copied to the Pod.
+- A separate local watchdog covered the session, with a 45-minute deadline and
+  Mac sleep prevention; it is not a provider-enforced cost cap. Evidence was
+  downloaded and SHA-256 verified before stopping. A fresh complete inventory
+  confirmed the sole Pod `EXITED`, no persistent mounts and zero network
+  volumes. About 17.56 minutes elapsed to confirmed stop at $1.09/hour: estimated
+  compute $0.319, excluding temporary container-disk charges; this is not an
+  invoice. Raw logs, videos and lifecycle records are ignored under
+  `artifacts/runpod-smoke-2026-11-12/`. The install used ephemeral container
+  storage; do not assume it survives a restart. Recreate it with the bootstrap
+  or deliberately budget persistent storage for a future batch.
 
 ### 2026-11-12 — Runpod key entry and compatibility audit
 
