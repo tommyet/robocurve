@@ -32,7 +32,7 @@ def _compile(start_action,schedule,*,robust_joint=False):
                     for seed in seeds]
                 result=min(solutions,key=lambda s:np.linalg.norm(s.fun))
                 goal=result.x;pe=float(np.linalg.norm(result.fun[:3]));re=float(np.linalg.norm(result.fun[3:])/.3)
-            if pe>.004 or re>.04:raise ValueError('Measured receiving approach is unreachable')
+            if pe>.004 or re>.04:raise ValueError(f'Measured receiving approach is unreachable: {label}; position={pe:.6g}m rotation={re:.6g}rad')
         for k in range(1,round(seconds*20)+1):
             t=ik.smoothstep(k/(seconds*20))
             if goal is not None:q[side]=q0+t*(goal-q0);pe=re=0.

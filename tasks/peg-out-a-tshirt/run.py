@@ -126,6 +126,7 @@ def main():
     p.add_argument('--binary-cloth-trace',action='store_true',help='Preserve all native float32 cloth states in binary arrays, reducing diagnostic JSON overhead')
     p.add_argument('--solver-iterations',type=int,choices=(32,128),default=32,help='Native cloth numerical convergence diagnostic; material unchanged')
     p.add_argument('--physics-hz',type=int,choices=(480,960),default=480,help='Native timestep convergence diagnostic; material and control rate unchanged')
+    p.add_argument('--edge-patch-diagnostic',action='store_true',help='Use a shorter approach and left hem patch130mm from centre for the finer-timestep reset')
     p.add_argument('--external-forces-once-diagnostic',action='store_true',help='Use the ordinary once-per-step TGS force integration option for a controlled comparison')
     p.add_argument('--state-assisted-clip',action='store_true',help='Explicit scripted demo: center free peg jaws with ordinary robot actions before closure')
     p.add_argument('--joint-feedback-from',type=int,help='Enable bounded right-arm PI tracking after this many actions, using ordinary joint observations only')
@@ -184,6 +185,8 @@ def main():
         p.error('State-assisted reset grasp requires at least200 scripted motion actions')
     if args.continuous_pad_diagnostic and not (args.state_assisted_grasp and args.raised_support_diagnostic):
         p.error('Continuous-pad diagnostic requires the raised-support scripted grasp')
+    if args.edge_patch_diagnostic and not (args.continuous_pad_diagnostic and args.lift_turn_diagnostic and args.physics_hz==960):
+        p.error('Edge patch requires the finer-timestep measured lift-turn diagnostic')
     if args.contact_pinch_diagnostic and not (args.continuous_pad_diagnostic and args.surface_contact_diagnostic and args.steps==320):
         p.error('Contact pinch is restricted to the320-action surface-contact pickup diagnostic')
     if args.lift_turn_diagnostic and not (args.continuous_pad_diagnostic and args.surface_contact_diagnostic and args.steps>=320 and not args.contact_pinch_diagnostic):
@@ -327,7 +330,23 @@ def main():
                 from scripted_grasp import calibrate
             from audit_motion import audit
             reset_cloth=arena_cloth.state(emb._env,'tshirt')
-            fixed_plan,calibration=calibrate(fixed_plan,arena_cloth.SPECS['tshirt'].mesh.rest,reset_cloth.nodes)
+            options=([{'edge_patch':True,'clear_height':height} for height in (.035,.05,.02,.075,0.,.10)]
+                if args.edge_patch_diagnostic else [{}])
+            route_checks=[]
+            for option in options:
+                try:
+                    candidate,calibration=calibrate(fixed_plan,arena_cloth.SPECS['tshirt'].mesh.rest,reset_cloth.nodes,**option)
+                    rejection=audit(dict(candidate,frames=candidate['frames'][:200]))
+                    route_checks.append(dict(options=option,violations=len(rejection['violations'])))
+                    if rejection['passed_rejection_check']:
+                        fixed_plan=candidate
+                        break
+                except ValueError as exc:
+                    route_checks.append(dict(options=option,error=str(exc)))
+            else:
+                (args.out/'reset-grasp-route-checks.json').write_text(json.dumps(route_checks,indent=2)+'\n')
+                raise RuntimeError('No measured reset grasp route passed unchanged reach and fixture checks')
+            (args.out/'reset-grasp-route-checks.json').write_text(json.dumps(route_checks,indent=2)+'\n')
             # Only the first200 ordinary reference actions change. The rest
             # stays byte-for-byte identical to the reviewed fixed reference.
             prefix=dict(fixed_plan,frames=fixed_plan['frames'][:200])
@@ -428,7 +447,8 @@ def main():
                 from audit_motion import audit
                 observed=np.asarray(emb._observation().state['joint_pos'],float)
                 actual=arena_cloth.state(emb._env,'tshirt').nodes
-                candidate=reobserve(fixed_plan,observed,arena_cloth.SPECS['tshirt'].mesh.rest,actual,lift_turn=args.lift_turn_diagnostic)
+                candidate=reobserve(fixed_plan,observed,arena_cloth.SPECS['tshirt'].mesh.rest,actual,
+                    lift_turn=args.lift_turn_diagnostic,edge_patch=args.edge_patch_diagnostic)
                 rejection=audit(dict(candidate,frames=candidate['frames'][:320]))
                 (args.out/'continuous-pad-hull-audit.json').write_text(json.dumps(rejection,indent=2)+'\n')
                 if not rejection['passed_rejection_check']:

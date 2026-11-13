@@ -71,7 +71,7 @@ def classify_patch_contacts(hits,rest,faces,*,longitudinal,final_insertion_from=
     return blocked,intended
 
 
-def take_wide_along_plane(start_action,rest,nodes):
+def take_wide_along_plane(start_action,rest,nodes,*,longitudinal=.20,angle_degrees=-150.,shoulder_arc=.30,flip_fingers=False):
     """Enter along the measured wide strip, below the hand holding its tip.
 
     The fingers may brush the same continuous strip within65mm of the selected
@@ -82,10 +82,13 @@ def take_wide_along_plane(start_action,rest,nodes):
     from cross_motion import yaw_rotation
     from yam_arena import ik,station
     from yam_arena.constants import SHOULDER,WRIST,GRIPPER,FINGER_OPEN
-    grasp=grasp_frame(rest,nodes,longitudinal=.20,side='right')
-    angle=np.deg2rad(-150.)
+    if not .12<=longitudinal<=.30 or not -180.<=angle_degrees<=180. or not 0.<=shoulder_arc<=.6:
+        raise ValueError('Measured regrasp candidate outside bounded search')
+    grasp=grasp_frame(rest,nodes,longitudinal=longitudinal,side='right')
+    angle=np.deg2rad(angle_degrees)
     turn=np.array(((1.,0.,0.),(0.,np.cos(angle),-np.sin(angle)),(0.,np.sin(angle),np.cos(angle))))
     R=np.asarray(grasp['rotation'])@turn
+    if flip_fingers:R=R@np.diag((-1.,-1.,1.))
     target=np.asarray(grasp['center_m'])+.012*R[:,2];pre=target-.025*R[:,2]
     left_p,left_R=ik.tcp_pose(np.asarray(start_action)[:6],station.BASES['left'])
     schedule=[(2.,'right',(.23,-.24,1.10),.6,yaw_rotation(30.),'clear the held wide tip','joint'),
@@ -97,7 +100,7 @@ def take_wide_along_plane(start_action,rest,nodes):
         (2.,'right',target,0.,R,'hold wide patch','cartesian')]
     plan=_compile(start_action,schedule,robust_joint=True)
     for i in range(40,80):
-        plan['frames'][i]['action14'][8]-=.30*np.sin(np.pi*(i-39)/40)**2
+        plan['frames'][i]['action14'][8]-=shoulder_arc*np.sin(np.pi*(i-39)/40)**2
     actions=np.asarray([start_action]+[f['action14'] for f in plan['frames']])
     limits=np.tile([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/20],2)
     for offset in (0,7):
@@ -105,7 +108,7 @@ def take_wide_along_plane(start_action,rest,nodes):
             raise ValueError('In-plane approach exceeds ordinary joint bounds')
     if np.any(abs(np.diff(actions,axis=0))>limits*1.001):raise ValueError('In-plane approach exceeds normal joint speed')
     grasp.update(rotation=R.tolist(),target_tcp_m=target.tolist(),desired_material_tcp_depth_m=-.012,
-        inplane_angle_degrees=-150.,intended_material_half_width_m=.065)
+        inplane_angle_degrees=float(angle_degrees),finger_swap=bool(flip_fingers),intended_material_half_width_m=.065)
     plan.update(grasp=grasp,approach_steps=120,score=None,
         native_nodes_sha256=hashlib.sha256(np.ascontiguousarray(nodes).tobytes()).hexdigest())
     return plan

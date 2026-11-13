@@ -27,6 +27,51 @@ developers and their agents, not a competition submission document.
   and all GPUs are confirmed stopped, as requested. No paid tests are authorized
   for those ideas yet.
 
+## 2026-11-13 — bounded continuation and contact diagnosis, batches150–156
+
+- Cake PR1919 is still the only submitted task from this batch. The other five
+  lack a full-score native demonstration; no failed diagnostic is submission
+  evidence. No additional Dream calls have been made.
+- Shirt152 reaches a valid960Hz settled cloth state but rejects its approach
+  at0 actions: the left wrist clips the laundry board by up to4.0mm. A forward
+  waypoint35mm above the measured pregrasp passes all200 commanded-pose checks.
+  Candidate154 checks a bounded set of clear-front waypoints against each actual
+  reset before running. Fabric, collision thresholds and ordinary drive limits
+  are unchanged. Nineteen shirt tests pass. Native154 remains in progress.
+- Tie150 reaches640 actions but the next measured strip orientation differs
+  substantially from147, making the nominal20cm regrasp unreachable. Local
+  screening finds two alternatives on150's actual nodes:30cm material coordinate,
+  zero in-plane angle with opposed fingers swapped, or28cm/30degrees without
+  the shoulder arc. Both clear the rigid and material approach checks.155 uses
+  bounded actual-state selection, with the same65mm material patch allowance;
+  no approach or native contact gate was relaxed. Twenty-four tie checks pass.
+  No regrasp or knot has yet completed natively.
+- Staple145 at5000Hz stops at246 actions after2750s. Positive upper-paper edge
+  opening reaches151.83µm, beyond the unchanged150µm numerical continuity
+  envelope; the steel chain remains continuous. The finer timestep is not a
+  remedy. Actual tool descent overshoots the commanded pose at contact.156
+  tests native-drive D/K desired-velocity compensation through ordinary bounded
+  targets from119, at the earlier2000Hz. Material, effort limits, score and
+  continuity guards remain unchanged. Seventy-six staple tests pass.
+- Seam151 replays measured145/action282 contact with actual saved velocities,
+  excluding the robot and prescribing only the tool motion. These are explicitly
+  unscored reconstruction diagnostics, without native solver warm starts. Full
+  speed fails after0.1247s with5.36% cloth stretch; quarter speed fails at0.1737s
+  with a thread/panel midplane crossing. Neither cuts thread.
+- Seam153 adds speculative CCD only to the144 native thread bodies, retaining
+  sweep CCD. NVIDIA documents that this combination also covers angular motion:
+  https://nvidia-omniverse.github.io/PhysX/physx/5.4.1/_api_build/structPxRigidBodyFlag.html
+  It avoids the earlier midplane crossing during its short replay, but stops
+  after0.0878s with6.52% lower-cloth stretch and no cut. This is not a fix; no
+  full robot rerun is justified by that result. The0.25N/40ms uncalibrated
+  cutting law and every material/contact validity threshold remain unchanged.
+- Archives145-staple,150,151,152,153 are local and SHA256-verified. Native149
+  measured axial wrench withdrawal continues. The same two$1.09/hour Pods are
+  active; full inventory and watchdog identities were verified19:51UTC and
+  deadlines renewed to20:36:32UTC. New-session compute estimate$5.16, plus the
+  preserved previous$14.55=$19.71 before this session's storage. These are
+  elapsed-time estimates; invoice/balance access remains unavailable.
+
 ## 2026-11-13 — measured contact and continuation diagnostics, batches143–149
 
 - Cake PR1919 remains the only new submission. None of the other five has a

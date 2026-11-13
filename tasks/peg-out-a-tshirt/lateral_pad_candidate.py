@@ -16,7 +16,7 @@ import numpy as np
 PINCH_OPENING = .0025
 
 
-def reobserve(reference, measured_action, rest, nodes, *, lift_turn=False):
+def reobserve(reference, measured_action, rest, nodes, *, lift_turn=False,edge_patch=False):
     from yam_arena import ik, station
     from yam_arena.constants import READY, SHOULDER, WRIST, GRIPPER, FINGER_OPEN
     from fixed_motion import ROTATIONS
@@ -30,7 +30,7 @@ def reobserve(reference, measured_action, rest, nodes, *, lift_turn=False):
     arms = {}
     patches = {}
     audits = []
-    for index, (side, hx, sign) in enumerate((('left', -.12, 1.), ('right', .12, -1.))):
+    for index, (side, hx, sign) in enumerate((('left', -.13 if edge_patch else -.12, 1.), ('right', .12, -1.))):
         ids = (abs(rest[:, 0] - hx) < .011) & (rest[:, 1] < .011)
         front = ids & (rest[:, 2] > 0)
         uv = rest[front, :2]
@@ -42,7 +42,7 @@ def reobserve(reference, measured_action, rest, nodes, *, lift_turn=False):
         normal /= np.linalg.norm(normal)
         approach, closing = sign * width, sign * normal
         rotation = np.column_stack((closing, np.cross(approach, closing), approach))
-        angle = np.deg2rad(-10. if side == 'right' else 0.)
+        angle = np.deg2rad(-10. if side == 'right' or edge_patch else 0.)
         rotation = rotation @ np.array(((1., 0., 0.),
             (0., np.cos(angle), -np.sin(angle)), (0., np.sin(angle), np.cos(angle))))
         center = nodes[ids].mean(0)

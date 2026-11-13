@@ -47,6 +47,7 @@ def main():
     p.add_argument('--dream-rows-per-request',type=int,choices=(2,4,8),default=8)
     p.add_argument('--judging-views',action='store_true',help='Fixed close review cameras, never policy inputs')
     p.add_argument('--joint-tracking',action='store_true',help='Bounded ordinary-joint integral tracking, without object feedback')
+    p.add_argument('--joint-velocity-feedforward-from',type=int,help='From this scripted action, compensate native drive damping through the same bounded ordinary joint targets')
     p.add_argument('--tool-pose-servo',action='store_true',help='Disclosed scripted remover-pose feedback through ordinary joint targets; never Dream')
     p.add_argument('--tool-velocity-damping',action='store_true',help='Bounded ordinary position feedback opposes measured tool velocity during contact; no force or state writes')
     p.add_argument('--position-iterations',type=int,choices=(32,64,128),default=128)
@@ -63,6 +64,7 @@ def main():
     a=p.parse_args()
     if a.dream and (a.plan or a.joint_tracking or a.tool_pose_servo or a.paper_gap_envelope_um!=25 or a.geometry_aware_continuity):p.error('Dream cannot use scripted feedback or a diagnostic continuity envelope')
     if a.joint_tracking and not a.plan:p.error('Joint tracking requires a plan')
+    if a.joint_velocity_feedforward_from is not None and (not a.joint_tracking or not 1<=a.joint_velocity_feedforward_from<=a.steps):p.error('Feedforward needs a bounded scripted joint-tracking start')
     if a.tool_pose_servo and (not a.plan or not a.joint_tracking):p.error('Tool-pose servo requires a plan and bounded joint tracking')
     if a.tool_velocity_damping and not a.tool_pose_servo:p.error('Tool velocity damping requires scripted pose feedback')
     if not 1<=a.steps<=(600 if a.plan or a.dream else 100):p.error('Bounded preview step count exceeded')
@@ -214,6 +216,10 @@ def main():
                         tool_pose=hardware.body_poses[list(hardware.body_names).index('remover')]
                         tool_velocity=hardware.body_velocities[list(hardware.body_names).index('remover')]
                         target=tool_servo.command(step,nominal,np.asarray(observation.state['joint_pos']),tool_pose,tool_velocity)
+                    if tracker is not None and a.joint_velocity_feedforward_from is not None and step>=a.joint_velocity_feedforward_from:
+                        tracker.damping_over_stiffness_s[:]=np.tile(
+                            [SHOULDER['damping']/SHOULDER['stiffness']]*3+
+                            [WRIST['damping']/WRIST['stiffness']]*3+[0.],2)
                     issued=target if tracker is None else tracker.command(target,np.asarray(observation.state['joint_pos']))
                 action=torch.as_tensor(issued[None],device=base.device,dtype=torch.float32)
                 tick=time.perf_counter();emb._env.step(action)

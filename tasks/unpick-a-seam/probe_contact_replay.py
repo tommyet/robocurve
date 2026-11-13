@@ -27,6 +27,7 @@ def main():
     p.add_argument('--effective-contact-diagnostic',action='store_true')
     p.add_argument('--convex-capsules-diagnostic',choices=('guards','all'),help='Equivalent convex surface candidate, before native physics only; never demo evidence')
     p.add_argument('--solver',choices=('TGS','PGS'),help='Explicit contact-constraint diagnostic; defaults to the archived native solver')
+    p.add_argument('--thread-angular-ccd',action='store_true',help='Short diagnostic only: native speculative CCD for thread rotation, preserving sweep CCD and all physical parameters')
     p.add_argument('--seconds',type=float,default=.1);a=p.parse_args()
     if not .05<=a.seconds<=.4:p.error('Short contact diagnostic requires0.05–0.4seconds')
     with np.load(a.state) as archive:data={key:archive[key] for key in archive.files}
@@ -102,6 +103,18 @@ def main():
             threads.append(dict(bodies=bodies,joints=joints,lengths=data['thread_lengths'][24*i:24*(i+1)],radius_m=.0004))
             thread_paths.extend(bodies)
         for name in ('handle','blade'):initial_body(root+'/ripper_'+name,data[name],data[name+'_velocity'])
+        if a.thread_angular_ccd:
+            # PhysX sweep CCD handles translation; speculative contacts also
+            # cover rotating capsule ends. This changes collision detection,
+            # not geometry, forces, constraints or the physical cutting law.
+            report['thread_angular_ccd']=[]
+            for path in thread_paths:
+                api=PhysxSchema.PhysxRigidBodyAPI.Apply(stage.GetPrimAtPath(path))
+                api.CreateEnableSpeculativeCCDAttr(True)
+                row=dict(path=path,sweep=bool(api.GetEnableCCDAttr().Get()),
+                    speculative=bool(api.GetEnableSpeculativeCCDAttr().Get()))
+                if not row['sweep'] or not row['speculative']:raise RuntimeError('Native thread CCD settings not applied')
+                report['thread_angular_ccd'].append(row)
         if a.convex_capsules_diagnostic:
             from convex_capsule import replace_capsules
             paths_to_replace=[root+'/ripper_handle/Guard0',root+'/ripper_handle/Guard1']

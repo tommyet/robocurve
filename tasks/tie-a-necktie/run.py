@@ -388,14 +388,38 @@ def main():
                 from audit_reset_approach import screen
                 native=arena_cloth.state(emb._env,'tie');mesh=arena_cloth.SPECS['tie'].mesh
                 np.savez_compressed(args.out/f'regrasp-input-{step}.npz',nodes=native.nodes,rest=mesh.rest,faces=mesh.faces,action=fixed_actions[step-2])
-                fragment=(carry_for_regrasp(fixed_actions[step-2]) if step==581 else
-                    take_wide_along_plane(fixed_actions[step-2],mesh.rest,native.nodes))
+                if step==581:
+                    fragment=carry_for_regrasp(fixed_actions[step-2])
+                else:
+                    choices=[dict(longitudinal=.20,angle_degrees=-150.,flip_fingers=False),
+                        dict(longitudinal=.30,angle_degrees=0.,flip_fingers=True),
+                        dict(longitudinal=.30,angle_degrees=15.,flip_fingers=True),
+                        dict(longitudinal=.28,angle_degrees=15.,flip_fingers=True)]
+                    candidates=[]
+                    for choice in choices:
+                        record=dict(choice);candidates.append(record)
+                        try:
+                            candidate=take_wide_along_plane(fixed_actions[step-2],mesh.rest,native.nodes,**choice)
+                            rigid=audit(candidate);record['rigid_violations']=len(rigid['violations'])
+                            if not rigid['passed']:continue
+                            hits=screen(candidate,native.nodes,mesh.faces,steps=range(1,121),side='right',inflation=arena_cloth.SPECS['tie'].fabric.thickness/2)
+                            blocked,intended=classify_patch_contacts(hits,mesh.rest,mesh.faces,longitudinal=choice['longitudinal'],patch_half_width=.065)
+                            record['blocked_material_samples']=len(blocked)
+                            if blocked:continue
+                            fragment=candidate
+                            break
+                        except ValueError as exc:
+                            record['error']=str(exc)
+                    else:
+                        (args.out/'regrasp-candidate-checks.json').write_text(json.dumps(candidates,indent=2)+'\n')
+                        raise RuntimeError('No measured regrasp candidate passes unchanged reach, rigid and material checks')
+                    (args.out/'regrasp-candidate-checks.json').write_text(json.dumps(candidates,indent=2)+'\n')
                 rigid=audit(fragment)
                 (args.out/f'regrasp-rigid-{step}.json').write_text(json.dumps(rigid,indent=2)+'\n')
                 if not rigid['passed']:raise RuntimeError('Regrasp continuation intersects a rigid fixture or other arm')
                 if step==641:
                     hits=screen(fragment,native.nodes,mesh.faces,steps=range(1,121),side='right',inflation=arena_cloth.SPECS['tie'].fabric.thickness/2)
-                    blocked,intended=classify_patch_contacts(hits,mesh.rest,mesh.faces,longitudinal=.20,patch_half_width=.065)
+                    blocked,intended=classify_patch_contacts(hits,mesh.rest,mesh.faces,longitudinal=fragment['grasp']['material_longitudinal_m'],patch_half_width=.065)
                     (args.out/'regrasp-cloth-approach.json').write_text(json.dumps(dict(blocked=blocked,intended=intended),indent=2)+'\n')
                     if blocked:raise RuntimeError('Regrasp approach crosses material outside its selected pinch patch')
                 fixed_plan['frames'][step-1:step-1+len(fragment['frames'])]=fragment['frames']
