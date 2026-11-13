@@ -27,9 +27,13 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
     p.add_argument('--policy',choices=('diagnostic','demo','dream'),default=default_policy)
     p.add_argument('--plan',type=Path,help='Optional precompiled fixed action plan; no object feedback')
     p.add_argument('--joint-feedback',action='store_true',help='Bounded demo PI tracking from standard joint observations only')
+    p.add_argument('--tracking-proportional',type=float,default=1.5)
+    p.add_argument('--tracking-integral',type=float,default=2.)
     p.add_argument('--judging-views',action='store_true',default=default_review,help='Record close-up review views; never policy inputs')
     a=p.parse_args()
     if not 1<=a.steps<=2400:p.error('Trial limited to 2400 control steps')
+    if not 0<=a.tracking_proportional<=4 or not 0<=a.tracking_integral<=10:
+        p.error('Joint tracking gains outside the bounded diagnostic range')
     if a.policy=='demo' and a.plan is None:p.error('Demo requires a frozen joint plan')
     if a.policy=='dream' and (a.plan or a.joint_feedback):p.error('Dream uses its own ordinary actions')
     plan=None
@@ -154,7 +158,7 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
             report['dream_model']=dream_policy.info.checkpoint
         progress('fixed action preview',0)
         from joint_tracking import JointTracking
-        tracking=JointTracking()
+        tracking=JointTracking(proportional=a.tracking_proportional,integral=a.tracking_integral)
         report['joint_tracking_parameters']={k:getattr(tracking,k) for k in ('kp','ki','limit','slew')}
         for i in range(a.steps):
             observation=emb._observation()

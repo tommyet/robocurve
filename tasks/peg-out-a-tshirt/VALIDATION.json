@@ -2,7 +2,7 @@
   "status": "development_not_submission_ready",
   "checked_date": "2026-11-13",
   "local_checks": {
-    "geometry_and_rubric_tests": 12,
+    "geometry_and_rubric_tests": 15,
     "result": "passed",
     "command": ".venv/bin/python -m unittest discover -s tasks/peg-out-a-tshirt -p 'test*.py' -v",
     "scope": "CPU geometry and synthetic evidence-rubric cases only; no physics or task-success claim",
@@ -84,6 +84,42 @@
       "hidden_peg_constraint": false,
       "garment_untouched": true,
       "score": null
+    },
+    "clear_feed_trial": {
+      "batch": "037",
+      "status": "failed_peg_falls_after_sideways_feed",
+      "actions": 940,
+      "opened_gap_m": 0.00834,
+      "sampled_fixture_triangle_intersections": 0,
+      "fixture_audit_samples": 48,
+      "failure": "The opening prefix succeeds with the garment clear. Sideways cloth feeding shifts the peg at620 and it falls by660 as handles are released. The garment rests/drapes on line or nearby robot, not a retained peg. No score. Next physically removes and turns the peg jaws down before clipping from above.",
+      "sampled_cloth_jaw_intersections_at_02mm_contraction": 0,
+      "jaw_audit_samples": 48
+    },
+    "flip_clip_candidate": {
+      "status": "native043_failed_no_attachment",
+      "actions": 1220,
+      "all_commanded_hull_and_line_axis_rejection_check": "passed",
+      "max_ik_position_error_m": 8.96348e-05,
+      "plan_sha256": "65c7df7e0366b3f4f38b9d4543bc985fb7982d8c4a892347361f810402ea7ebd",
+      "technique": "Preserve observed peg-opening prefix, withdraw it downward, turn120degrees in clear space, then clip cloth and line from above/front with jaws30degrees downward. Both hands retract after release. A vertical180degree jaws-down pose is outside normal reach.",
+      "limitations": "Passive retention through the turn, actual cloth/line capture, integrity and released hang remain unproven. No score.",
+      "wall_seconds": 649.6005935808644,
+      "peg_carried_and_turned": true,
+      "held_peg_mouth_gap_m": 0.0083,
+      "actual_mouth_above_line_m": 0.02644,
+      "reference_hand_vertical_tracking_error_m": 0.02403,
+      "fixture_audit_samples": 62,
+      "sampled_fixture_triangle_intersections": 0,
+      "failure": "Free peg removal and120degree turn retained a stable hand-relative transform. Insertion missed the line and cloth crept out of the pinch before release; final peg and garment fell. No score."
+    },
+    "tracked_clip_candidate": {
+      "status": "released_native_diagnostic_pending",
+      "actions": 1220,
+      "plan_sha256": "77b2b9aa6138f9691b7b39f780c38d87bd81ced422b273d7747272fc4c9754cc",
+      "all_reference_pose_rejection_check": "passed",
+      "technique": "10mm deeper initial hem pinch; mouth reference shifted5.3mm forward1mm upward; bounded PI of ordinary right-arm joint observations afteraction700. No object-state feedback.",
+      "limitations": "No native attachment or retention claim. Corrected commanded geometry does not certify actual tracking."
     }
   },
   "demo": {

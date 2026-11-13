@@ -1,0 +1,280 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Paired standalone supported-cloth controls with passive spring jaw; no robot or cutting",
+  "controls": [
+    {
+      "physics_hz": 3840,
+      "probe_sha256": "2cd1ad2b4fbbd9076a8f7009301eabd42e7bcc1d812cb03c36a465feaac5a0e7",
+      "state_sha256": "57e7db71b6a9efad4fa6b2d4536e4dab9e5f594386109d09e772608bcaee6849",
+      "measurements": {
+        "status": "invalid_model_domain",
+        "completed_steps": 279,
+        "strain": [
+          {
+            "maximum_principal_stretch": 1.0539076550926172,
+            "first_validity_excursion": {
+              "time_s": 0.07265625,
+              "triangle": 2402,
+              "principal_stretch": 1.0539076550926172,
+              "limit": 1.05
+            },
+            "first_2pct_warning": {
+              "time_s": 0.0049479166666666664,
+              "triangle": 2570,
+              "principal_stretch": 1.021256294576579,
+              "limit": 1.02
+            },
+            "maximum_stretch_limit": 1.05
+          },
+          {
+            "maximum_principal_stretch": 1.0525653511309756,
+            "first_validity_excursion": {
+              "time_s": 0.07265625,
+              "triangle": 2524,
+              "principal_stretch": 1.0525653511309756,
+              "limit": 1.05
+            },
+            "first_2pct_warning": {
+              "time_s": 0.005208333333333333,
+              "triangle": 2169,
+              "principal_stretch": 1.0214678487474114,
+              "limit": 1.02
+            },
+            "maximum_stretch_limit": 1.05
+          }
+        ],
+        "contact_audit": [
+          {
+            "valid": true,
+            "steps": 279,
+            "first_failure": null
+          },
+          {
+            "valid": true,
+            "steps": 279,
+            "first_failure": null
+          }
+        ],
+        "right_centroid_drop_m": 9.517468899755688e-05,
+        "left_centroid_drop_m": 7.379770785320705e-05,
+        "passive_jaw_final": {
+          "pose_xyzw": [
+            0.30279985070228577,
+            9.946587824216646e-13,
+            0.8737000226974487,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "velocity": [
+            2.616189703985583e-05,
+            3.730349362740526e-13,
+            6.826894605183043e-11,
+            -1.0527280436267716e-11,
+            6.432969712477643e-08,
+            3.392420233616633e-10
+          ],
+          "gap_m": 0.000399857759475708,
+          "inferred_drive_force_x_n": -0.5000187754631042,
+          "force_note": "Computed from authored spring/damper law and measured state, not a native contact-force measurement"
+        },
+        "wall_seconds": 14.441981365904212
+      },
+      "clamp_state_samples": [
+        {
+          "time_s": 0.00026041666666666666,
+          "gap_m": 0.0005980361461639383,
+          "clamped_node_count": 84,
+          "cloth_mid_surface_x_range_m": [
+            0.2996000051498413,
+            0.2996000051498413
+          ],
+          "minimum_moving_metal_to_mid_surface_clearance_m": 0.0003980398178100586,
+          "maximum_nominal_back_contact_layer_overlap_m": 0.0,
+          "clamped_nodes_mean_displacement_m": [
+            5.149841386664633e-09,
+            0.0,
+            -9.332730080810085e-09
+          ]
+        },
+        {
+          "time_s": 0.05,
+          "gap_m": 0.00039985070228576447,
+          "clamped_node_count": 84,
+          "cloth_mid_surface_x_range_m": [
+            0.299599826335907,
+            0.2995999753475189
+          ],
+          "minimum_moving_metal_to_mid_surface_clearance_m": 0.00019988417625427246,
+          "maximum_nominal_back_contact_layer_overlap_m": 1.1920928955078125e-07,
+          "clamped_nodes_mean_displacement_m": [
+            -7.574217652279408e-08,
+            9.667641106283382e-07,
+            -8.73289824042191e-06
+          ]
+        },
+        {
+          "time_s": 0.07265625,
+          "gap_m": 0.00039985070228576447,
+          "clamped_node_count": 84,
+          "cloth_mid_surface_x_range_m": [
+            0.299599826335907,
+            0.2995999753475189
+          ],
+          "minimum_moving_metal_to_mid_surface_clearance_m": 0.00019988417625427246,
+          "maximum_nominal_back_contact_layer_overlap_m": 1.1920928955078125e-07,
+          "clamped_nodes_mean_displacement_m": [
+            -7.858049294066981e-08,
+            9.4407698183897e-07,
+            -8.686066019526959e-06
+          ]
+        }
+      ]
+    },
+    {
+      "physics_hz": 960,
+      "probe_sha256": "3545c111bd0c23459ed36f7226dc16a1ef03c1915ec91cf61fe51ed035176b31",
+      "state_sha256": "e270518e5cb0976ee339cbee13b62ed280b9f42e66cc0169429fdb56f60a5bcc",
+      "measurements": {
+        "status": "complete",
+        "completed_steps": 192,
+        "strain": [
+          {
+            "maximum_principal_stretch": 1.0071058221522613,
+            "first_validity_excursion": null,
+            "first_2pct_warning": null,
+            "maximum_stretch_limit": 1.05
+          },
+          {
+            "maximum_principal_stretch": 1.0042490959154704,
+            "first_validity_excursion": null,
+            "first_2pct_warning": null,
+            "maximum_stretch_limit": 1.05
+          }
+        ],
+        "contact_audit": [
+          {
+            "valid": true,
+            "steps": 192,
+            "first_failure": null
+          },
+          {
+            "valid": true,
+            "steps": 192,
+            "first_failure": null
+          }
+        ],
+        "right_centroid_drop_m": 7.377047243406487e-06,
+        "left_centroid_drop_m": 5.919456988323635e-05,
+        "passive_jaw_final": {
+          "pose_xyzw": [
+            0.3026757836341858,
+            1.2581304054126718e-11,
+            0.8737000226974487,
+            5.188260931987543e-11,
+            -5.617841907223919e-07,
+            3.73964109678937e-10,
+            1.0
+          ],
+          "velocity": [
+            4.301451099308906e-06,
+            8.526512829121202e-14,
+            2.6080115844706597e-10,
+            -4.452710700153517e-10,
+            2.7145761194447005e-09,
+            1.9694270519954316e-11
+          ],
+          "gap_m": 0.0002757906913757324,
+          "inferred_drive_force_x_n": -0.34476009011268616,
+          "force_note": "Computed from authored spring/damper law and measured state, not a native contact-force measurement"
+        },
+        "wall_seconds": 10.958317557349801
+      },
+      "clamp_state_samples": [
+        {
+          "time_s": 0.0010416666666666667,
+          "gap_m": 0.0005728829860687235,
+          "clamped_node_count": 84,
+          "cloth_mid_surface_x_range_m": [
+            0.2996000051498413,
+            0.2996000051498413
+          ],
+          "minimum_moving_metal_to_mid_surface_clearance_m": 0.00037288665771484375,
+          "maximum_nominal_back_contact_layer_overlap_m": 0.0,
+          "clamped_nodes_mean_displacement_m": [
+            5.149841386664633e-09,
+            0.0,
+            -7.63872726133081e-06
+          ]
+        },
+        {
+          "time_s": 0.05,
+          "gap_m": 0.0002757836341857889,
+          "clamped_node_count": 84,
+          "cloth_mid_surface_x_range_m": [
+            0.29959914088249207,
+            0.2995992600917816
+          ],
+          "minimum_moving_metal_to_mid_surface_clearance_m": 7.653236389160156e-05,
+          "maximum_nominal_back_contact_layer_overlap_m": 0.00012347102165222168,
+          "clamped_nodes_mean_displacement_m": [
+            -8.062538645735636e-07,
+            2.4253192047278085e-09,
+            -6.021641016516556e-05
+          ]
+        },
+        {
+          "time_s": 0.1,
+          "gap_m": 0.0002757836341857889,
+          "clamped_node_count": 84,
+          "cloth_mid_surface_x_range_m": [
+            0.29959914088249207,
+            0.2995992600917816
+          ],
+          "minimum_moving_metal_to_mid_surface_clearance_m": 7.653236389160156e-05,
+          "maximum_nominal_back_contact_layer_overlap_m": 0.00012347102165222168,
+          "clamped_nodes_mean_displacement_m": [
+            -8.062538645735636e-07,
+            -2.0733014458701725e-09,
+            -5.98843271442741e-05
+          ]
+        },
+        {
+          "time_s": 0.15,
+          "gap_m": 0.0002757836341857889,
+          "clamped_node_count": 84,
+          "cloth_mid_surface_x_range_m": [
+            0.29959914088249207,
+            0.2995992600917816
+          ],
+          "minimum_moving_metal_to_mid_surface_clearance_m": 7.653236389160156e-05,
+          "maximum_nominal_back_contact_layer_overlap_m": 0.00012347102165222168,
+          "clamped_nodes_mean_displacement_m": [
+            -8.062538645735636e-07,
+            -9.479533348764691e-10,
+            -5.9605462556217805e-05
+          ]
+        },
+        {
+          "time_s": 0.2,
+          "gap_m": 0.0002757836341857889,
+          "clamped_node_count": 84,
+          "cloth_mid_surface_x_range_m": [
+            0.29959914088249207,
+            0.2995992600917816
+          ],
+          "minimum_moving_metal_to_mid_surface_clearance_m": 7.653236389160156e-05,
+          "maximum_nominal_back_contact_layer_overlap_m": 0.00012347102165222168,
+          "clamped_nodes_mean_displacement_m": [
+            -8.062538645735636e-07,
+            3.015711193992978e-09,
+            -5.931737343980342e-05
+          ]
+        }
+      ]
+    }
+  ],
+  "interpretation": "At 960 Hz the 0.2 s native control completes with maximum 0.711% / 0.425% extension and no thread/fabric centreline crossing. The 84 sampled upper clamped nodes remain retained. The moving metal face stays at least 76.5 micrometres from the cloth mid-surface, but overlaps its nominal 0.2 mm back-side contact layer by about 123.5 micrometres. This finite native contact compliance is not a measured textile compression law. At 3840 Hz the jaw seats at 0.3999 mm, while strain exceeds 5% after 72.656 ms. No timestep convergence or full manipulation validity is claimed. The guarded first-cut diagnostic selects 960 Hz and retains all validity checks.",
+  "next_gate": "A complete guarded native robot pickup and first cut, followed by visual review; six-stitch removal and task scoring remain unproven."
+}

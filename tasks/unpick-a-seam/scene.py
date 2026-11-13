@@ -8,14 +8,13 @@ from yam_arena import scene as adapter
 from geometry import TABLE_TOP,patch,stitch_loop,STITCH_Y
 from arena_cloth import Cloth
 from arena_thread import Thread
-from native_cloth import Fabric
+from native_cloth import seam_fabric
 from native_cloth import ensure_gpu_scene
 from runtime_config import CONFIG
 from tool_geometry import HANDLE_SIZE,BLADE_SIZE,BLADE_OFFSET,METAL_PARTS,GUARDS
 
 SCENE='station'
-FABRIC=Fabric(thickness=.0004,density=350.,youngs_modulus=2e6,bend_modulus=8e4,
-              contact_offset=.00025,rest_offset=.0002,solver_iterations=64)
+FABRIC=seam_fabric(CONFIG.cloth_contact_offset_m)
 if CONFIG.quality_mesh:
     if abs(CONFIG.hole_half_m-.0008)>1e-12 or CONFIG.hole_mesh_spacing_m is not None:
         raise ValueError('Quality mesh requires the fixed 1.6 mm hole diagnostic')
@@ -36,7 +35,7 @@ if CONFIG.sewing_clamp:
             (not CONFIG.quality_mesh and CONFIG.hole_mesh_spacing_m!=.0004)):
         raise ValueError('Sewing clamp requires coarse thread and locally refined or graded hole mesh')
     from clamp_layout import transform
-    for mesh in MESHES:mesh.rest=transform(mesh.rest)
+    for mesh in MESHES:mesh.rest=transform(mesh.rest,lower_edge_supported=CONFIG.supported_clamp)
 if CONFIG.pre_draped_seam:
     if (not CONFIG.quality_mesh or abs(CONFIG.thread_radius_m-.0004)>1e-12 or
             abs(CONFIG.seam_lowering_m-.002)>1e-12):
@@ -52,20 +51,29 @@ def thread_nodes(y):
     nodes=stitch_loop(y);nodes[:,2]-=CONFIG.seam_lowering_m
     if CONFIG.sewing_clamp:
         from clamp_layout import transform
-        nodes=transform(nodes)
+        nodes=transform(nodes,lower_edge_supported=CONFIG.supported_clamp)
     return nodes
 
 FIXTURE=[]
 if CONFIG.passive_clamp and not CONFIG.sewing_clamp:
     raise ValueError('Passive jaw requires the sewing-clamp layout')
+if CONFIG.supported_clamp and not CONFIG.passive_clamp:
+    raise ValueError('Table-supported reset requires the passive sewing clamp')
+if CONFIG.backed_clamp and not CONFIG.supported_clamp:
+    raise ValueError('Repair backing requires the supported passive clamp layout')
 if CONFIG.sewing_clamp:
     if CONFIG.passive_clamp:
         from passive_clamp import fixture_boxes,MOVING_NAME,PARAMETERS
     else:
         from clamp_layout import fixture_boxes
+    components=fixture_boxes(lower_edge_supported=CONFIG.supported_clamp) if CONFIG.passive_clamp else fixture_boxes()
+    if CONFIG.backed_clamp:
+        from repair_backing import fixture_boxes as backing_boxes,initial_clearance
+        initial_clearance(MESHES,[thread_nodes(y) for y in STITCH_Y],CONFIG.thread_radius_m)
+        components+=backing_boxes()
     FIXTURE=[Box(name,pos=position,size=size,color=(.32,.34,.36),
                  mass=PARAMETERS.mass_kg if CONFIG.passive_clamp and name==MOVING_NAME else None)
-             for name,size,position in fixture_boxes()]
+             for name,size,position in components]
 
 OBJECTS=[
     Cloth('cloth_left',pos=(0.,0.,0.),size=(.13,.08,.004),mesh=MESHES[0],initial=INITIAL[0],

@@ -15,8 +15,8 @@ def load(path):
         raise ValueError('Unexpected motion schema or rate')
     frames=data.get('frames',[])
     actions=np.asarray([f['action14'] for f in frames],dtype=float)
-    if actions.ndim!=2 or actions.shape[1]!=14 or not 1<=len(actions)<=1200 or not np.isfinite(actions).all():
-        raise ValueError('A motion probe needs 1–1200 finite 14-D joint commands')
+    if actions.ndim!=2 or actions.shape[1]!=14 or not 1<=len(actions)<=3600 or not np.isfinite(actions).all():
+        raise ValueError('A motion probe needs 1–3600 finite 14-D joint commands')
     if np.any(actions[:,[6,13]]<0.) or np.any(actions[:,[6,13]]>1.):
         raise ValueError('Grippers must be normalized to [0,1]')
     return data,actions

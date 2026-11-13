@@ -39,7 +39,7 @@ def rx(angle):
 def compile_plan(mode='pickup',press_stroke=.006,shell_count=1,release_tool=False, *,
                  first_press_stroke=None, head_hold_seconds=1.2, first_head_hold_seconds=None,
                  tail_seconds=.75, tail_stroke_fraction=0., shell_pitch=.012, tail_distance=.012,
-                 start_y=None):
+                 start_y=None, tail_mid_stroke_fraction=1., linear_tail=False):
     if first_press_stroke is not None and not .001<=first_press_stroke<=.016:
         raise ValueError('First press stroke must be 1–16 mm')
     if not .1<=head_hold_seconds<=2. or not .2<=tail_seconds<=2. or not 0<=tail_stroke_fraction<=1:
@@ -48,6 +48,8 @@ def compile_plan(mode='pickup',press_stroke=.006,shell_count=1,release_tool=Fals
         raise ValueError('Invalid initial head hold')
     if not .010<=shell_pitch<=.020 or not .010<=tail_distance<=.020:
         raise ValueError('Shell pitch and tail distance must be 10–20 mm')
+    if not tail_stroke_fraction<=tail_mid_stroke_fraction<=1.:
+        raise ValueError('Pressure must ease monotonically through the tail')
     if start_y is not None and not -.045<=start_y<=0.:
         raise ValueError('Initial head must start on the marked section')
     if shell_count not in range(1,9) or (mode!='shell' and shell_count!=1):
@@ -57,12 +59,12 @@ def compile_plan(mode='pickup',press_stroke=.006,shell_count=1,release_tool=Fals
     state={side:{'q':np.asarray(READY,float),'finger':FINGER_OPEN} for side in ('left','right')}
     frames=[];maximum_position_error=maximum_rotation_error=0.
 
-    def transition(seconds,label,goals):
+    def transition(seconds,label,goals, *, linear=False):
         nonlocal maximum_position_error,maximum_rotation_error
         starts={side:(*ik.tcp_pose(s['q'],station.BASES[side]),s['finger']) for side,s in state.items()}
         steps=round(seconds*20)
         for i in range(1,steps+1):
-            weight=ik.smoothstep(i/steps);action=[]
+            weight=i/steps if linear else ik.smoothstep(i/steps);action=[]
             for side,s in state.items():
                 p0,r0,f0=starts[side]
                 p1,r1,f1=goals.get(side,(p0,r0,f0))
@@ -132,10 +134,10 @@ def compile_plan(mode='pickup',press_stroke=.006,shell_count=1,release_tool=Fals
                 tail_delta=np.array((0.,tail_distance,-.001))
                 transition(tail_seconds*(.35/.75),'draw tail under pressure',{
                     'right':(hand_p+tail_delta*.5,hand_r,-.0105),
-                    'left':(contact+tail_delta*.5+axis*stroke,push_rotation,0.)})
+                    'left':(contact+tail_delta*.5+axis*stroke*tail_mid_stroke_fraction,push_rotation,0.)},linear=linear_tail)
                 transition(tail_seconds*(.4/.75),'ease pressure into pointed tail',{
                     'right':(hand_p+tail_delta,hand_r,-.0105),
-                    'left':(contact+tail_delta+axis*stroke*tail_stroke_fraction,push_rotation,0.)})
+                    'left':(contact+tail_delta+axis*stroke*tail_stroke_fraction,push_rotation,0.)},linear=linear_tail)
                 contact=contact+tail_delta
                 hand_p=hand_p+tail_delta
             transition(.5,'release pressure',{'left':(contact-axis*.008,push_rotation,0.)})
@@ -158,7 +160,8 @@ def compile_plan(mode='pickup',press_stroke=.006,shell_count=1,release_tool=Fals
                 'first_press_stroke_m':first_press_stroke,'head_hold_s':head_hold_seconds,
                 'first_head_hold_s':first_head_hold_seconds,'tail_seconds':tail_seconds,
                 'tail_stroke_fraction':tail_stroke_fraction,'shell_pitch_m':shell_pitch,
-                'tail_distance_m':tail_distance,'start_y_m':start_y},'frames':frames,'shell_count':shell_count,'release_tool':release_tool,
+                'tail_distance_m':tail_distance,'start_y_m':start_y,
+                'tail_mid_stroke_fraction':tail_mid_stroke_fraction,'linear_tail':bool(linear_tail)},'frames':frames,'shell_count':shell_count,'release_tool':release_tool,
             'offline_grasp_calibration':'Native026 frames400:439 mean; fixed constants, no trial-state input' if mode in ('press','shell') else None,
             'maximum_ik_position_error_m':maximum_position_error,
             'maximum_ik_rotation_error_rad':maximum_rotation_error,
@@ -174,6 +177,8 @@ def main():
     p.add_argument('--first-head-hold-seconds',type=float)
     p.add_argument('--tail-seconds',type=float,default=.75)
     p.add_argument('--tail-stroke-fraction',type=float,default=0.)
+    p.add_argument('--tail-mid-stroke-fraction',type=float,default=1.)
+    p.add_argument('--linear-tail',action='store_true',help='Draw the tail continuously, without stopping at its midpoint')
     p.add_argument('--shell-pitch',type=float,default=.012)
     p.add_argument('--tail-distance',type=float,default=.012)
     p.add_argument('--start-y',type=float)
@@ -185,7 +190,8 @@ def main():
         first_press_stroke=args.first_press_stroke,head_hold_seconds=args.head_hold_seconds,
         first_head_hold_seconds=args.first_head_hold_seconds,tail_seconds=args.tail_seconds,
         tail_stroke_fraction=args.tail_stroke_fraction,shell_pitch=args.shell_pitch,
-        tail_distance=args.tail_distance,start_y=args.start_y)
+        tail_distance=args.tail_distance,start_y=args.start_y,
+        tail_mid_stroke_fraction=args.tail_mid_stroke_fraction,linear_tail=args.linear_tail)
     args.out.parent.mkdir(parents=True,exist_ok=True)
     args.out.write_text(json.dumps(plan,indent=2)+'\n')
     print(json.dumps({k:v for k,v in plan.items() if k!='frames'}))

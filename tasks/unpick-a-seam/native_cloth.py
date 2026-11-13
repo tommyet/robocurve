@@ -25,6 +25,19 @@ class Fabric:
     solver_iterations: int = 32
 
 
+def seam_fabric(contact_offset_m=.00025):
+    """Fixed seam material with one opt-in native contact-generation envelope.
+
+    Both envelopes preserve the 0.2 mm rest offset and physical thickness.
+    The larger value anticipates the measured substep relative motion; it is
+    not a relaxed geometric crossing threshold or a larger cloth collider.
+    """
+    if contact_offset_m not in (.00025,.00075):
+        raise ValueError('Seam contact offset must be 0.25 or 0.75 mm')
+    return Fabric(thickness=.0004,density=350.,youngs_modulus=2e6,bend_modulus=8e4,
+                  contact_offset=contact_offset_m,rest_offset=.0002,solver_iterations=64)
+
+
 @dataclass(frozen=True)
 class ContactRefinement:
     """Numerical contact controls only; not a fabric/material change.

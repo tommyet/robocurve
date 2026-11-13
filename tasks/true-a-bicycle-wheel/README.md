@@ -1,8 +1,9 @@
 # True a wobbly bicycle wheel
 
-**Development package, not ready to submit.** The native wheel now settles and
-holds its spoke adjustments in short tests. A fixture demonstrates physical wrench contact. Robot manipulation,
-a full-score demo and a Dream run are still outstanding.
+**Development package, not ready to submit.** The robot has picked up the free
+wrench. Reciprocal simulator controls identified the setting that caused
+unforced wheel acceleration; CPU PhysX now uses once-per-step external forces.
+Actual robot tightening and a full-score demonstration remain unproven.
 
 The robot adjusts spoke nipples until the wheel runs straight, remains centred
 and spins freely. Scoring measures the resulting wheel, not hidden target
@@ -28,8 +29,10 @@ The current wrench has a 175 × 10 × 4 mm steel neck and a 55 mm grip, with
 195 mm between the slot and the grasp point. Its 90 g mass includes a steel
 tang inside the polymer grip. The longer handle and shorter front axle give
 the robot room to reach the nipples. This geometry passes sampled hull checks;
-native pickup is still pending. Earlier tests establish the unchanged jaw
-contact, not the whole revised tool.
+native pickup has lifted it about 74 mm. The grasp-point translation stays within about0.8mm, but the tool rotates
+about3° in the grasp, shifting the jaws roughly10mm at the long lever arm. Earlier kinematic jaw tests
+transfer rotation, but an offline intersection check found up to 175 µm of
+persistent penetration; finite-load engagement still needs validation.
 
 A conservative 0.2 N m handle moment gives roughly 7.5 MPa weak-axis bending
 stress in this rectangular neck (M divided by section modulus). This is an
@@ -56,7 +59,7 @@ to ±3 turns. See `VALIDATION.json` for parameters, limits and test history.
 
 ## Reproducing the current checks
 
-The 41 CPU checks need NumPy, use no randomness and take under one second:
+The 47 CPU checks need NumPy, use no randomness and take under one second:
 
 ```sh
 python -m unittest discover -s tasks/true-a-bicycle-wheel -p 'test_*.py'
@@ -93,14 +96,28 @@ tensiometer. Full credit requires lateral runout ≤0.5 mm; partial credit allow
 within this fixture's 400–1000 N range, intact equipment and a complete released
 revolution. Destructive or invalid outcomes receive zero.
 
-Next verify robot-driven tightening and release, complete ordinary YAM
-joint-command manipulation, and demonstrate full score within the run limit.
-Then run Dream with the same physics and score both recordings. No media ID,
-final runtime, task score or submission certificate exists yet.
+Reciprocal controls044 identify the sustained acceleration: enabling TGS
+external forces every iteration reproduces it in the standalone scene, while
+disabling it removes it in YAM through1.5 seconds. The latter keeps all15,002
+rim checks valid. This configuration is now explicit in the wheel adapter.
+The retained constructor-state control has a small initial rotation; the next
+service trial uses the normal deterministic reset, which restores native body
+poses and velocities before the ordinary robot commands.
 
-The short YAM CPU check now works with GPU-rendered cameras. Use `--device cpu`
-(the preview default): the corresponding GPU YAM run develops unexplained wheel
-acceleration before grasping. Both isolated CPU and GPU scene controls remain
-bounded, so that discrepancy belongs to the integrated GPU path. Two CPU control
-actions take about 7.8 seconds each, excluding startup; the full trial runtime
-and cost remain unmeasured.
+PhysX documents both options as alternative ways to integrate the same external
+impulse over a step ([TGS force application](https://nvidia-omniverse.github.io/PhysX/physx/5.8.0/docs/Simulation.html#tgs-force-application)).
+The observed failure is specific to this tested scene/configuration; no claim
+is made about all PhysX scenes. Curated reciprocal measurements are in
+`evidence/native-force-integration-044-summary.json`.
+
+Next verify robot-driven tightening, final release and full-revolution judging,
+then run Dream with the same physics and score both recordings. The682-action
+service candidate uses only ordinary joint commands, with optional bounded
+integral joint tracking to compensate measured arm droop. A fixed empirical
+grip transform accounts for the observed3° tool rotation; whether that grip
+repeats under changing load still needs native evidence. It does not inspect
+object state or change actuator effort limits. See`MOTION_PLAN.md`.
+
+Use`--device cpu` with GPU-rendered cameras. The latest30-action diagnostic takes
+129 wall seconds including startup. Full repair runtime and cost remain
+unmeasured. No media ID, final task score or submission certificate exists yet.

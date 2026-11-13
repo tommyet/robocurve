@@ -14,11 +14,11 @@ flat-table resets below are retained as failed development evidence; they are
 not the current setup. The station table is at Z = 0.7475 m.
 
 Two flexible 75 × 80 × 0.4 mm cotton-canvas patches overlap by 20 mm vertically.
-The upper patch's middle surface is X = 0.2996 m, Z = 0.8225–0.8975 m; the lower
-is X = 0.3004 m, Z = 0.7675–0.8425 m. Both span Y = −0.040–+0.040 m. Six red
+The upper patch's middle surface is X = 0.2996 m, Z = 0.8027–0.8777 m; the lower
+is X = 0.3004 m, Z = 0.7477–0.8227 m. Both span Y = −0.040–+0.040 m. Six red
 0.8 mm polyester thread loops form separate tied tacking stitches at Y = −30,
 −18, −6, +6, +18 and +30 mm. Each passes through two 1.6 mm square needle holes
-in each patch, at Z = 0.8275 and 0.8375 m. This is a coarse hand-tacked lap seam,
+in each patch, at Z = 0.8077 and 0.8177 m. This is a coarse hand-tacked lap seam,
 not a machine lockstitch; the model does not resolve individual fabric yarns.
 
 The selected fixture is a bench clamp with one passive moving jaw. A fixed
@@ -33,11 +33,19 @@ travel from a closed gap to a 1.60 mm gap. The stand is bolted to the table.
 A base, rear post and overhead bridge stay clear of the moving jaw's full
 travel. Exact dimensions and positions are in `passive_clamp.py`. Every cloth
 node remains dynamic; the guide constrains the metal jaw only. The lower
-swatch begins 20 mm above the table. No cloth attachment, weld or runtime
-position target supports either patch. The first native probe seats the jaw at
-a 0.399739 mm gap, with inferred 0.49984 N load, but cloth still exceeds the
-5% operating domain at a 50 µm needle-hole sliver after 37.760 ms. The next
-comparison uses the existing graded mesh with identical holes and material.
+swatch rests its lower edge on the real table, with its middle surface
+0.20 mm above the tabletop. The table supplies ordinary contact support. The
+base plate sits behind the cloth. No cloth attachment, weld or runtime position
+target supports either patch. The jaw has seated correctly in native probes, but both hanging mesh variants
+exceeded the 5% operating domain. The table-supported reset is the current
+candidate. At 960 Hz it completed a 0.2 s standalone control with less than
+0.72% peak extension and no thread crossing. Its passive jaw closed to a
+0.276 mm gap, leaving the cloth middle surface clear of metal but overlapping
+its nominal back-side contact layer by 0.124 mm. This is finite native contact
+compliance, not a calibrated textile compression model. At 3,840 Hz the same
+setup exceeded 5% extension after 72.656 ms despite a correctly seated jaw.
+There is no timestep-convergence claim; full robot manipulation and cutting
+remain unproven. Measurements are in `evidence/native-supported-controls-041.json`.
 
 The earlier fixed-gap clamp remains available only for a diagnostic comparison.
 Its 0.30 mm gap was incompatible with the cloth's fixed 0.40 mm collision
@@ -59,7 +67,7 @@ From the repository root:
 .venv/bin/python -m unittest discover -s tasks/unpick-a-seam -p 'test_*.py' -v
 ```
 
-Forty-four tests pass: connected cloth with real needle holes, needle-path clearance,
+Forty-six tests pass: connected cloth with real needle holes, needle-path clearance,
 force direction and sustained contact for cutting, interrupted-contact rejection,
 blade damage latching, whole-thread clearance, rigid-motion-invariant strain
 inspection, moving-cloth/thread tunnelling detection, and final-state scoring. These are CPU geometry/rule
@@ -89,6 +97,7 @@ pre-cut loops are matched controls; neither is a robot demonstration.
 | Batch 029 | Same reset, strain continuation only | Thread crossed the right patch at 13.542 ms, 0.440 mm inside the mesh boundary. By the first action boundary, peak extension reached 36.4% left / 48.6% right. This reset fails substantially; it is not a usable settled state. |
 | Batch 029 | Separate tool-only coupon, 240 Hz | All 220 actions completed: 77.6 mm lift, retained grasp, then 79.6 mm drop after opening. No cloth, cut or task score. |
 | Batch 034 | Sewing clamp, rectilinear mesh, 3,840 Hz, 5% domain | Stopped after 21 substeps / 5.469 ms at 6.491% upper-patch extension near a needle hole. Zero completed actions; no crossing, cut or blade damage. |
+| Batch 041 | Passive jaw, graded mesh, supported lower edge, 960 Hz / 3,840 Hz | 960 Hz completed 0.2 s with 0.711% / 0.425% peak extension and no crossings; nominal jaw contact-layer overlap is 0.124 mm. The 3,840 Hz comparison exceeded 5% strain at 72.656 ms. No robot action or cut. |
 
 The refined mesh has 4,407 vertices / 8,490 triangles per patch, hole boundary
 edges at most 0.4 mm, the same 0.00596928 m² area, and thirteen boundary loops.
@@ -121,9 +130,16 @@ Deformable speculative CCD is separate from unsupported rigid-body CCD in this
 GPU mode. Pair updates concern surface-to-surface contact; schema support alone
 does not prove an improvement in rigid-thread contact.
 
-The full cloth scene has not completed a valid action. A separate tool-only
-coupon demonstrates pickup, retention and release; approach and cutting remain
-unrun.
+The supported 960 Hz full cloth scene completed eight actions before a
+near-hole contact guard stopped the trial at 0.410417 s. The axis crossed
+45.79 µm inside the hole boundary; a neighbouring vertex lay 243.59 µm inside
+the nominal capsule radius. At the retained 0.45 s terminal state, static
+intersections were absent and each uncut tack retained its original links
+through both patches. This is evidence of transient edge penetration with
+recovery, not a successful trial or permanent unthreading. The original
+invalidity stays latched. See `evidence/native-reset-first-cut-041.json`.
+A separate tool-only coupon demonstrates pickup, retention and release; no
+thread cut or full manipulation has been demonstrated.
 `preview_yam.py` records ordinary robot actions, every-substep audits, native
 blade/thread force events, video and cloth/thread traces. It stays unscored.
 The draft setup remains fixed, with no random jitter, seed 0 and a limit of
@@ -303,8 +319,8 @@ python tasks/unpick-a-seam/preview_yam.py --sewing-clamp --coarse-thread --hole-
 
 ## Mechanics and limitations
 
-Each selected refined patch is a native PhysX surface FEM mesh with 4,407
-vertices, 8,490 triangles and twelve genuine holes. Six separate 28-link capsule chains pass through those
+Each selected graded patch is a native PhysX surface FEM mesh with 1,582
+vertices, 2,888 triangles and twelve genuine holes. Six separate 28-link capsule chains pass through those
 holes. Native spherical joints make each thread continuous; the closed joint
 approximates a hand-tied tack. Contacts with the cloth, table, tool and other
 nonadjacent thread links remain active. There are no hidden stitch welds to cut.
@@ -402,11 +418,12 @@ python tasks/unpick-a-seam/probe_native.py --mode intact --sewing-clamp --passiv
 The probe records jaw poses/velocities alongside cloth and thread. Its reported
 spring force is inferred from the fixed spring law and measured jaw state; it
 is not a measured cloth contact force. The same `--passive-clamp` flag selects
-the fixture in `preview_yam.py`. For the separate initialization comparison,
-`--keep-constructor-state` retains the fresh scene's physical startup state
-instead of rewinding it. Constructor-internal steps are explicitly reported as
-unobserved, and every subsequent substep is audited; it requires a newly built
-scene per trial. Neither option disables material, crossing or blade guards.
+the fixture in `preview_yam.py`. Use its normal `env.reset()` episode lifecycle.
+The historical `--keep-constructor-state` experiment failed before stepping
+because Gym requires reset before step; it is now rejected before simulator
+startup. That API failure says nothing about physical task feasibility.
+Constructor-internal steps remain explicitly reported as unobserved; every
+subsequent control substep is audited. See `evidence/native-first-cut-api-041.json`.
 
 Batch 037 confirms the passive jaw seats without forcing a sub-thickness gap.
 It does not establish cloth stability: the upper patch reaches 5.232% local
@@ -416,3 +433,68 @@ combined with the same clamp by replacing `--hole-mesh-spacing .0004` with
 `--quality-mesh`. This retains every hole and the material surface, replacing
 25 µm minimum edges / 3.8° minimum angles with 0.4 mm / 17.3°. No failure limit
 is relaxed.
+
+### Table-supported starting layout
+
+The graded hanging control 038 still stops at 22.917 ms on 5.181% local extension
+after the lower patch falls 2.323 mm into the stitches. Its correctly seated jaw
+does not solve that impact. The selected reset now adds `--supported-clamp`: it
+lowers the cloth and upper fixture by 19.8 mm, putting the lower edge at table top
+plus the 0.2 mm cloth rest offset. The base moves behind the fabric so it cannot
+intersect the newly lowered bottom. Every vertex remains free and the real
+table supplies support. Material and all guards remain unchanged.
+
+```bash
+python tasks/unpick-a-seam/probe_native.py --mode intact --sewing-clamp --passive-clamp --supported-clamp --coarse-thread --quality-mesh --contact-refinement combined --physics-hz 3840 --seconds .2 --maximum-stretch 1.05 --out artifacts/seam-supported-clamp
+```
+
+Source geometry and the updated first-cut plan pass 45 CPU checks and complete
+arm/fixture/nominal-cloth screening. This is not a native stability or cut result.
+The plan requires this supported layout and cannot run accidentally against the
+earlier hanging fixture. See `evidence/supported-clamp-cpu.json` and
+`evidence/clamp-cut-full-arm-clearance-cpu.json`.
+
+### Bounded contact forensics
+
+The supported reset's first YAM trial had a temporary needle-hole-edge
+intersection and recovered its original tack-to-hole linking by the final
+retained snapshot. To measure the event rather than assume harmlessness,
+`--contact-forensics` records static/swept intersections and boundary-vertex
+capsule overlap at every native substep. It permits at most one second of
+ordinary ready-hold actions, rejects a controller plan and strain continuation,
+and requires the closed-junction audit. Cutting is disabled. Original crossing
+invalidity stays latched; strain, blade damage or disjoint uncut joints still
+stop the diagnostic. This does not change the ordinary preview's validity
+thresholds or provide a task score. Native045 stopped at0.525 s: early1–3 ms upper-edge contacts recovered, but a
+later lower-patch axis crossing reached0.878 mm inside intact cloth. That is a
+substantial contact failure, so these measurements do not justify accepting
+all near-hole penetrations. See `evidence/native-contact-forensics-045.json`.
+
+```bash
+python tasks/unpick-a-seam/preview_yam.py --sewing-clamp --passive-clamp --supported-clamp --coarse-thread --quality-mesh --contact-refinement combined --physics-hz 960 --steps 20 --maximum-stretch 1.05 --audit-junctions --crossing-backend warp --contact-forensics --profile-steps --out artifacts/seam-supported-contact-forensics
+```
+
+### Contact-generation correction
+
+`--cloth-contact-offset .00075` is an opt-in numerical correction for both the
+standalone probe and YAM preview. It changes only native contact generation:
+cloth rest offset stays0.20 mm, material thickness stays0.40 mm, and geometry,
+material, thread parameters and every validity guard remain unchanged. The
+combined contact-to-rest discovery margin becomes0.60 mm instead of0.10 mm.
+In the recorded041 failure, the capsule endpoint moved0.317 mm relative to the
+adjacent triangle in one native step, beyond the previous margin.
+
+NVIDIA describes contact offset as the distance for predictive contact creation,
+while rest offset controls the resting separation, and recommends a larger
+contact envelope for fast or thin objects. Larger envelopes may add contacts
+and artifacts, so this remains a measured candidate rather than a claim of
+physical accuracy. [Official contact-offset documentation](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/110.0/dev_guide/rigid_bodies_articulations/collision.html).
+
+The guarded first-cut candidate uses this option with the unchanged frozen
+294-action plan and normal episode reset. Native047 failed before pickup at
+0.167708 s on an upper-hole axis intersection. Peak extension stayed below1%,
+but normal-to-cloth velocity reached0.700/0.560 m/s with unlimited native
+depenetration velocity. The larger generation envelope alone does not fix
+contact stability. See `evidence/native-predictive-contact-047.json`.
+The next bounded candidate adds the existing `--max-depenetration-m-s .05`
+option, keeping every geometric and material guard unchanged.

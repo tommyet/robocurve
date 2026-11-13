@@ -7,7 +7,7 @@ lever remover must act through collisions and its tabletop fulcrum.
 import math
 from pathlib import Path
 import numpy as np
-from paper import PaperMesh
+from paper import PaperMesh,paper_material
 from native_paper import author_paper,author_staple
 
 
@@ -22,8 +22,11 @@ PAPER_CENTRE_HEIGHTS=(PAPER_TOP-.00005-CROWN_GAP-SHEET_GAP,
                       PAPER_TOP-.00005-CROWN_GAP)
 
 
+MESH_PROFILES=('baseline','coarse','clearance-candidate')
+
+
 def paper_mesh(index,profile="baseline"):
-    if profile not in ("baseline","coarse"):raise ValueError("Unknown paper mesh profile")
+    if profile not in MESH_PROFILES:raise ValueError("Unknown paper mesh profile")
     cx,cy=SHEET_CENTRES[index]
     holes=[(STAPLE_XY[0]-cx,STAPLE_XY[1]+side*.0064-cy) for side in (-1,1)]
     directory=Path(__file__).with_name('assets')
@@ -39,22 +42,25 @@ def paper_mesh(index,profile="baseline"):
 RESET_PROFILES=('floating-reference','supported-edge-candidate','pocket-support-candidate')
 
 
-def scene_layout(profile='floating-reference'):
+def scene_layout(profile='floating-reference',material=None):
     """Fixed physical reset choices; no runtime pose edits or paper constraints."""
+    material=material or paper_material()
+    half=material.thickness_m/2
+    gap=material.thickness_m+.00002
     if profile == 'floating-reference':
         return dict(profile=profile, support_center=(.32,-.010,TABLE_TOP+.010),
-                    support_size=(.21,.128,.020), paper_centres_z=PAPER_CENTRE_HEIGHTS,
+                    support_size=(.21,.128,.020), paper_centres_z=(PAPER_TOP-half-CROWN_GAP-gap,PAPER_TOP-half-CROWN_GAP),
                     crown_underside_z=PAPER_TOP)
     if profile == 'supported-edge-candidate':
-        lower=SUPPORT_TOP+.00005
+        lower=SUPPORT_TOP+half
         return dict(profile=profile, support_center=(.33,-.010,TABLE_TOP+.010),
-                    support_size=(.19,.128,.020), paper_centres_z=(lower,lower+SHEET_GAP),
-                    crown_underside_z=lower+SHEET_GAP+.00005+CROWN_GAP)
+                    support_size=(.19,.128,.020), paper_centres_z=(lower,lower+gap),
+                    crown_underside_z=lower+gap+half+CROWN_GAP)
     if profile == 'pocket-support-candidate':
-        lower=SUPPORT_TOP+.00005
+        lower=SUPPORT_TOP+half
         return dict(profile=profile, support_center=(.32,-.010,TABLE_TOP+.010),
-                    support_size=(.21,.128,.020), paper_centres_z=(lower,lower+SHEET_GAP),
-                    crown_underside_z=lower+SHEET_GAP+.00005+CROWN_GAP,
+                    support_size=(.21,.128,.020), paper_centres_z=(lower,lower+gap),
+                    crown_underside_z=lower+gap+half+CROWN_GAP,
                     clinch_clearance_pocket={'center_m':(*STAPLE_XY,SUPPORT_TOP-.004),
                                             'size_m':(.0015,.016,.008)})
     raise ValueError('Unknown paper reset profile: '+profile)
@@ -75,10 +81,11 @@ def support_parts(layout):
     return [(name,tuple((a+b)/2),tuple(b-a)) for name,a,b in blocks]
 
 
-def build_scene(stage,root='/StapleTask', *, include_table=True, include_papers=True, reset_profile='floating-reference', mesh_profile='baseline', fixed_crown_diagnostic=False):
+def build_scene(stage,root='/StapleTask', *, include_table=True, include_papers=True, reset_profile='floating-reference', mesh_profile='baseline', fixed_crown_diagnostic=False,paper_profile='office-80gsm'):
     from pxr import Gf,PhysxSchema,UsdGeom,UsdPhysics,Vt
     UsdGeom.Xform.Define(stage,root)
-    layout=scene_layout(reset_profile)
+    material=paper_material(paper_profile)
+    layout=scene_layout(reset_profile,material)
     def collision(prim):
         UsdPhysics.CollisionAPI.Apply(prim)
         p=PhysxSchema.PhysxCollisionAPI.Apply(prim)
@@ -97,8 +104,8 @@ def build_scene(stage,root='/StapleTask', *, include_table=True, include_papers=
     paths=[]
     for i,(mesh,(x,y)) in enumerate(zip(meshes,SHEET_CENTRES)):
         path=f'{root}/paper_{i}';paths.append(path)
-        if include_papers:author_paper(stage,path,mesh,(x,y,layout['paper_centres_z'][i]))
-    staple=author_staple(stage,root+'/staple',origin=(*STAPLE_XY,layout['crown_underside_z']),yaw=math.pi/2,fixed_crown=fixed_crown_diagnostic)
+        if include_papers:author_paper(stage,path,mesh,(x,y,layout['paper_centres_z'][i]),material)
+    staple=author_staple(stage,root+'/staple',origin=(*STAPLE_XY,layout['crown_underside_z']),yaw=math.pi/2,fixed_crown=fixed_crown_diagnostic,paper_stack_m=2*material.thickness_m)
     tool=root+'/remover'
     xf=UsdGeom.Xform.Define(stage,tool)
     xf.AddTranslateOp().Set(Gf.Vec3d(.28,-.20,TABLE_TOP+.003))
@@ -120,9 +127,9 @@ def build_scene(stage,root='/StapleTask', *, include_table=True, include_papers=
         g.CreateFaceVertexIndicesAttr(faces.ravel().tolist());g.CreateSubdivisionSchemeAttr('none')
         g.CreateDisplayColorAttr([Gf.Vec3f(.65,.67,.70)]);collision(g.GetPrim())
         UsdPhysics.MeshCollisionAPI.Apply(g.GetPrim()).CreateApproximationAttr('convexHull')
-    return dict(root=root,mesh_profile=mesh_profile,paper_paths=paths,paper_meshes=meshes,staple=staple,remover_path=tool,
+    return dict(root=root,mesh_profile=mesh_profile,paper_profile=paper_profile,paper_material=material,paper_paths=paths,paper_meshes=meshes,staple=staple,remover_path=tool,
                 support_top_m=SUPPORT_TOP,initial_paper_top_m=layout['crown_underside_z']-CROWN_GAP,staple_xy_m=list(STAPLE_XY),
                 reset_layout=layout,
-                initial_sheet_midplane_gap_m=SHEET_GAP,initial_crown_clearance_m=CROWN_GAP,
+                initial_sheet_midplane_gap_m=material.thickness_m+.00002,initial_crown_clearance_m=CROWN_GAP,
                 limitations=['Proposed setup; no full robot trial yet','Planar staple bending approximation',
                              'Conservative elastic paper validity termination; no rendered post-fracture topology'])

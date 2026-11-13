@@ -12,7 +12,7 @@ from physx_material import PhysxPlasticHinge
 
 def author_paper(stage, path, mesh, center=(0.,0.,0.), material=None):
     from pxr import Gf, PhysxSchema, UsdGeom, UsdPhysics, UsdShade, Vt
-    material=material or PaperMaterial();audit=mesh.audit()
+    material=material or PaperMaterial();audit=mesh.audit(material)
     shape=UsdGeom.Mesh.Define(stage,path)
     points=mesh.rest+np.asarray(center)
     shape.CreatePointsAttr(Vt.Vec3fArray(points.tolist()))
@@ -55,7 +55,7 @@ def author_paper(stage, path, mesh, center=(0.,0.,0.), material=None):
     return shape
 
 
-def author_staple(stage,root,origin=(0.,0.,0.),sample_m=.0005, fixed_crown=False, yaw=0.):
+def author_staple(stage,root,origin=(0.,0.,0.),sample_m=.0005, fixed_crown=False, yaw=0., paper_stack_m=.0002):
     """Discrete rectangular wire; all hinge rotations are measured from physics.
 
     Bending around local Y follows elastoplastic steel. Twist and orthogonal
@@ -64,7 +64,7 @@ def author_staple(stage,root,origin=(0.,0.,0.),sample_m=.0005, fixed_crown=False
     """
     from pxr import Gf, PhysxSchema, Sdf, UsdGeom, UsdPhysics
     from dataclasses import replace
-    local=clinched_staple_centerline(sample_m=sample_m)
+    local=clinched_staple_centerline(sample_m=sample_m,paper_stack_m=paper_stack_m)
     delta=np.diff(local,axis=0);lengths=np.linalg.norm(delta,axis=1)
     angles=np.arctan2(-delta[:,2],delta[:,0])
     Rz=np.array(((math.cos(yaw),-math.sin(yaw),0.),(math.sin(yaw),math.cos(yaw),0.),(0.,0.,1.)))

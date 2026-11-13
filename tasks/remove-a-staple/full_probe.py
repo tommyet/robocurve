@@ -6,7 +6,7 @@ from pathlib import Path
 import time
 import traceback
 import numpy as np
-from paper import ElasticDomainGuard
+from paper import ElasticDomainGuard,PAPER_PROFILES
 from contact_guard import PaperWireCrossingGuard
 from full_scene import build_scene,RESET_PROFILES,SHEET_CENTRES
 
@@ -15,7 +15,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--out',type=Path,required=True)
     p.add_argument('--seconds',type=float,default=.5)
-    p.add_argument('--physics-hz',type=int,choices=(2000,5000,10000),default=2000)
+    p.add_argument('--physics-hz',type=int,choices=(2000,5000,10000,20000,40000),default=2000)
     p.add_argument('--observe-bending-diagnostic',action='store_true',help='Keep recording after bending boundary; still stop for tensile/crossing failures, no task validity claim')
     p.add_argument('--lower-sheet-only-diagnostic',action='store_true',help='Keep only the lower sheet; requires the no-staple control')
     p.add_argument('--max-depenetration-m-s',type=float,help='Bound native numerical contact correction speed; diagnostic only')
@@ -23,14 +23,17 @@ def main():
     p.add_argument('--staple-max-depenetration-m-s',type=float,help='Separate correction cap on the native wire bodies; diagnostic only')
     p.add_argument('--observe-strain-diagnostic',action='store_true',help='Record beyond elastic-domain failure up to1% membrane strain; never a task validity claim')
     p.add_argument('--surface-iterations',type=int,choices=(64,128,255),default=64)
-    p.add_argument('--mesh-profile',choices=('baseline','coarse'),default='baseline')
+    p.add_argument('--paper-profile',choices=PAPER_PROFILES,default='office-80gsm',help='Explicit physical paper grade candidate; changes thickness, mass, contact thickness and clinch depth together')
+    p.add_argument('--mesh-profile',choices=('baseline','coarse','clearance-candidate'),default='baseline')
     p.add_argument('--self-filter-distance-um',type=float,help='Explicit native rest-neighbor self-collision filter, diagnostic only')
     p.add_argument('--reset-profile',choices=RESET_PROFILES,default='floating-reference')
-    p.add_argument('--refined-contact-diagnostic',action='store_true',help='Native speculative CCD and4x contact/pair updates; material/mesh unchanged')
+    p.add_argument('--refined-contact-diagnostic',action='store_true',help='Native speculative CCD and refined contact/pair updates; material/mesh unchanged')
+    p.add_argument('--contact-iteration-multiplier',type=int,choices=(4,8,16),default=4,help='Native contact subiterations; requires --refined-contact-diagnostic for nondefault values')
     p.add_argument('--fixed-crown-diagnostic',action='store_true',help='Explicit diagnostic fixture; not available in the task')
     p.add_argument('--remove-staple-diagnostic',action='store_true',help='Remove the staple before physics to isolate full-paper solver/contact behavior; never task evidence')
     a=p.parse_args()
     if not 0<a.seconds<=2:p.error('Diagnostic limited to two seconds')
+    if a.contact_iteration_multiplier!=4 and not a.refined_contact_diagnostic:p.error('Contact multiplier requires --refined-contact-diagnostic')
     if a.fixed_crown_diagnostic and a.remove_staple_diagnostic:p.error('Cannot fix a removed staple')
     if a.lower_sheet_only_diagnostic and not a.remove_staple_diagnostic:p.error('Single-sheet isolation requires --remove-staple-diagnostic')
     if a.max_depenetration_m_s is not None and not .01<=a.max_depenetration_m_s<=1.:p.error('Contact correction speed must be .01–1m/s')
@@ -45,8 +48,9 @@ def main():
             'fixed_crown_diagnostic':a.fixed_crown_diagnostic,
             'staple_velocity_iterations':a.staple_velocity_iterations,
             'refined_contact_diagnostic':a.refined_contact_diagnostic,
+            'contact_iteration_multiplier':a.contact_iteration_multiplier,
             'reset_profile':a.reset_profile,
-            'self_filter_distance_um':a.self_filter_distance_um,'surface_iterations':a.surface_iterations,'mesh_profile':a.mesh_profile,
+            'self_filter_distance_um':a.self_filter_distance_um,'surface_iterations':a.surface_iterations,'mesh_profile':a.mesh_profile,'paper_profile':a.paper_profile,
             'lower_sheet_only_diagnostic':a.lower_sheet_only_diagnostic,
             'max_depenetration_m_s':a.max_depenetration_m_s,
             'staple_max_depenetration_m_s':a.staple_max_depenetration_m_s,
@@ -72,7 +76,7 @@ def main():
         UsdGeom.SetStageMetersPerUnit(stage,1.);UsdGeom.SetStageUpAxis(stage,UsdGeom.Tokens.z)
         ps=UsdPhysics.Scene.Define(stage,'/physicsScene');ps.CreateGravityDirectionAttr(Gf.Vec3f(0.,0.,-1.));ps.CreateGravityMagnitudeAttr(9.80665)
         api=PhysxSchema.PhysxSceneAPI.Apply(ps.GetPrim());api.CreateSolverTypeAttr('TGS');api.CreateEnableGPUDynamicsAttr(True);api.CreateBroadphaseTypeAttr('GPU');api.CreateEnableCCDAttr(False)
-        metadata=build_scene(stage,reset_profile=a.reset_profile,mesh_profile=a.mesh_profile,fixed_crown_diagnostic=a.fixed_crown_diagnostic);meshes=metadata['paper_meshes'];staple=metadata['staple']
+        metadata=build_scene(stage,reset_profile=a.reset_profile,mesh_profile=a.mesh_profile,fixed_crown_diagnostic=a.fixed_crown_diagnostic,paper_profile=a.paper_profile);meshes=metadata['paper_meshes'];staple=metadata['staple']
         if a.remove_staple_diagnostic:
             stage.RemovePrim(metadata['root']+'/staple');staple=None
             report['kind']='full_size_paper_without_staple_diagnostic'
@@ -92,7 +96,7 @@ def main():
             if not attr or not attr.Set(a.surface_iterations):raise RuntimeError('Native surface iteration control unavailable')
         if a.refined_contact_diagnostic:
             attributes={'physxDeformableBody:enableSpeculativeCCD':True,
-                        'physxDeformableBody:collisionIterationMultiplier':4,
+                        'physxDeformableBody:collisionIterationMultiplier':a.contact_iteration_multiplier,
                         'physxDeformableBody:collisionPairUpdateFrequency':4}
             for path in metadata['paper_paths']:
                 prim=stage.GetPrimAtPath(path)
@@ -120,8 +124,8 @@ def main():
         for row in report['native_surface_contact']:
             for key,value in row.items():
                 if isinstance(value,float) and not np.isfinite(value):row[key]=str(value)
-        guards=[ElasticDomainGuard(m) for m in meshes];crossing=[PaperWireCrossingGuard(m.faces) for m in meshes]
-        report.update(meshes=[m.audit() for m in meshes],limitations=metadata['limitations'],
+        guards=[ElasticDomainGuard(m,metadata['paper_material']) for m in meshes];crossing=[PaperWireCrossingGuard(m.faces) for m in meshes]
+        report.update(paper_material=vars(metadata['paper_material']),meshes=[m.audit(metadata['paper_material']) for m in meshes],limitations=metadata['limitations'],
             initial_sheet_midplane_gap_m=metadata['initial_sheet_midplane_gap_m'],
             initial_crown_clearance_m=metadata['initial_crown_clearance_m'],reset_layout=metadata['reset_layout'])
         stage.GetRootLayer().Export(str(a.out/'initial.usda'))
@@ -140,6 +144,9 @@ def main():
         physics=Physics();frames=[[] for _ in meshes];samples=[];report['phase']='simulate'
         def save_nodes(path,nodes,wire):
             fields={'wire_segments':wire}
+            if staple:
+                fields.update(wire_poses_xyzw=np.asarray([physics.frames[path] for path in staple['paths']]),
+                              wire_segment_lengths_m=np.asarray(staple['lengths_m']))
             for i,(points,mesh) in enumerate(zip(nodes,meshes)):
                 fields.update({f'paper{i}':points,f'faces{i}':mesh.faces,f'rest{i}':mesh.rest})
             np.savez_compressed(path,**fields)

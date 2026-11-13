@@ -97,6 +97,7 @@ def main():
     samples=[];grasp_assumed=False
     for index in range(0,len(actions),args.stride):
         action=actions[index];stage=plan['frames'][index]['stage'];robots={}
+        props=wheel_props(np.deg2rad(plan['frames'][index].get('nominal_wheel_clocking_deg',plan['wheel_clocking_deg'])),np.deg2rad(plan['nipple_flat_phase_deg']))
         if stage=='Lift the free wrench':grasp_assumed=True
         for side,offset in (('left',0),('right',7)):
             q=dict(zip(ARM_JOINTS,action[offset:offset+6]));q.update({name:action[offset+6]*FINGER_OPEN for name in FINGER_JOINTS})
@@ -107,7 +108,12 @@ def main():
                     robot.append(dict(name=f'{side}/{name}/{hi}',vertices=verts,planes=np.c_[normals,-h.planes[:,3]-normals@T[:3,3]],low=verts.min(0),high=verts.max(0)))
             robots[side]=robot
         if grasp_assumed:
-            pos,R=ik.tcp_pose(action[7:13],station.BASES['right']);R=R@GRIP.T;center=pos-R@TOOL_TCP
+            pos,R=ik.tcp_pose(action[7:13],station.BASES['right'])
+            calibration=plan.get('held_grasp_calibration',{})
+            calibrated=index+1>=calibration.get('applies_from_step',float('inf'))
+            grip=np.asarray(calibration['tcp_rotation_in_tool']) if calibrated else GRIP
+            tcp=np.asarray(calibration['tcp_position_in_tool_m']) if calibrated else TOOL_TCP
+            R=R@grip.T;center=pos-R@tcp
         else:center=np.array(WRENCH_ORIGIN_M);R=np.eye(3)
         wrench=tool_props(center,R);hits=[];expected=[]
         for side,robot in robots.items():

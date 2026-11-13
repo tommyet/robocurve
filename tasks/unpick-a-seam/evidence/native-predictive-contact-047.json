@@ -1,0 +1,128 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Guarded first-cut candidate with larger native contact generation offset; no cut reached",
+  "report_sha256": "b6812e6ec96af6c43ab5f40eb5aa49c09a91b90406790ebb37635b4b3f1dcd22",
+  "state_sha256": "6fbd01ce48648fdfac38de8f5e1476d3cfe800c7bb08130a03398a7e3044cf54",
+  "measurements": {
+    "status": "failed",
+    "error": "RuntimeError: Native thread/fabric crossing detected",
+    "completed_steps": 3,
+    "audited_physics_substeps": 192,
+    "contact_audit": [
+      {
+        "valid": false,
+        "steps": 162,
+        "first_failure": {
+          "step": 162,
+          "time_s": 0.16770833333333332,
+          "reason": "thread crosses intact fabric",
+          "static_intersections": 1,
+          "swept_intersections": 0,
+          "static_crossing_details": [
+            {
+              "segment_index": 84,
+              "face_index": 2498,
+              "coordinate_frame": "current",
+              "intersection_m": [
+                0.2974132615356491,
+                -0.005995175355092571,
+                0.8168712750408732
+              ],
+              "barycentric": [
+                0.0744432092727958,
+                0.042164161512603854,
+                0.8833926292146004
+              ],
+              "segment_parameter": 0.5489794400184406,
+              "strictly_inside_triangle": true,
+              "strictly_inside_segment": true,
+              "distance_to_mesh_boundary_m": 2.974930626118655e-05,
+              "closest_boundary_edge": [
+                872,
+                873
+              ],
+              "closest_boundary_point_m": [
+                0.2974101151836307,
+                -0.005995076097905744,
+                0.8169008573301695
+              ],
+              "closest_boundary_edge_length_m": 0.0004012385872631986,
+              "closest_boundary_vertices_distance_to_thread_axis_m": [
+                3.0101668096909733e-05,
+                0.0003852332594068832
+              ],
+              "nearest_mesh_vertex_distance_to_thread_axis_m": 3.0101668096909733e-05
+            }
+          ],
+          "swept_crossing_details": [],
+          "native_substep": 161
+        }
+      },
+      {
+        "valid": true,
+        "steps": 162,
+        "first_failure": null
+      }
+    ],
+    "strain": [
+      {
+        "maximum_principal_stretch": 1.0093877290697932,
+        "first_validity_excursion": null,
+        "first_2pct_warning": null,
+        "maximum_stretch_limit": 1.05
+      },
+      {
+        "maximum_principal_stretch": 1.007002031214298,
+        "first_validity_excursion": null,
+        "first_2pct_warning": null,
+        "maximum_stretch_limit": 1.05
+      }
+    ],
+    "thread_joint_integrity": {
+      "maximum_closed_joint_gap_m": 1.9675282898993088e-05,
+      "first_failure": null,
+      "valid": true
+    },
+    "native_surface_contact": [
+      {
+        "physxCollision:restOffset": 0.00019999999494757503,
+        "physxCollision:contactOffset": 0.000750000006519258,
+        "physxDeformableBody:selfCollisionFilterDistance": "-inf",
+        "physxDeformableBody:maxDepenetrationVelocity": "inf",
+        "physxDeformableBody:maxLinearVelocity": "inf",
+        "physxDeformableBody:enableSpeculativeCCD": true,
+        "physxDeformableBody:collisionIterationMultiplier": 4,
+        "physxDeformableBody:collisionPairUpdateFrequency": 4
+      },
+      {
+        "physxCollision:restOffset": 0.00019999999494757503,
+        "physxCollision:contactOffset": 0.000750000006519258,
+        "physxDeformableBody:selfCollisionFilterDistance": "-inf",
+        "physxDeformableBody:maxDepenetrationVelocity": "inf",
+        "physxDeformableBody:maxLinearVelocity": "inf",
+        "physxDeformableBody:enableSpeculativeCCD": true,
+        "physxDeformableBody:collisionIterationMultiplier": 4,
+        "physxDeformableBody:collisionPairUpdateFrequency": 4
+      }
+    ],
+    "cut_events": [],
+    "final_maximum_cloth_speed_m_s": [
+      0.708865761756897,
+      0.56100994348526
+    ]
+  },
+  "max_abs_cloth_velocity_components_m_s": {
+    "left": [
+      0.6998522281646729,
+      0.07814794778823853,
+      0.2384779304265976
+    ],
+    "right": [
+      0.5597484707832336,
+      0.10571244359016418,
+      0.13418395817279816
+    ]
+  },
+  "interpretation": "The selected0.75mm contact generation offset is correctly authored, but an upper-hole axis intersection occurs at0.167708s, before tool pickup. The upper/lower material stays below1% extension, yet normal-to-sheet speed reaches0.700/0.560m/s. Cloth collision correction velocity is unlimited. Larger discovery margin alone does not solve native contact stability.",
+  "next_correction": "Use the existing optional native maxDepenetrationVelocity0.05m/s with the same0.75mm contact-generation envelope and unchanged strict audits; no geometry/material/score change. No result claimed."
+}

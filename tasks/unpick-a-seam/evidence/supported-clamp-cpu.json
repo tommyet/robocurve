@@ -1,0 +1,100 @@
+{
+  "status": "CPU-authored supported reset; native result pending",
+  "support": "Lower cloth edge is tangent to the real table at its 0.2 mm cloth rest offset; no cloth attachments or runtime state writes",
+  "fixture_downward_translation_m": 0.0198,
+  "parameters": {
+    "mass_kg": 0.012,
+    "initial_gap_m": 0.0006,
+    "stiffness_n_m": 1250.0,
+    "damping_n_s_m": 8.0,
+    "force_limit_n": 0.6,
+    "opening_travel_m": 0.001,
+    "guide": "world-fixed X-axis prismatic bearing",
+    "target_displacement_m": -0.0006,
+    "lower_limit_m": -0.0006,
+    "upper_limit_m": 0.001,
+    "nominal_seated_load_n": 0.5,
+    "contact_thickness_m": 0.0004,
+    "cloth_attachments": false,
+    "runtime_target_changes": false
+  },
+  "fixture": [
+    {
+      "name": "clamp_front_jaw",
+      "size_m": [
+        0.006,
+        0.085,
+        0.016
+      ],
+      "center_m": [
+        0.2964,
+        0.0,
+        0.8777
+      ],
+      "mass_kg": null
+    },
+    {
+      "name": "clamp_moving_jaw",
+      "size_m": [
+        0.006,
+        0.085,
+        0.008
+      ],
+      "center_m": [
+        0.303,
+        0.0,
+        0.8737
+      ],
+      "mass_kg": 0.012
+    },
+    {
+      "name": "clamp_base",
+      "size_m": [
+        0.08,
+        0.11,
+        0.01
+      ],
+      "center_m": [
+        0.35,
+        0.0,
+        0.7525000000000001
+      ],
+      "mass_kg": null
+    },
+    {
+      "name": "clamp_post",
+      "size_m": [
+        0.012,
+        0.012,
+        0.12819999999999998
+      ],
+      "center_m": [
+        0.32,
+        0.0,
+        0.8216
+      ],
+      "mass_kg": null
+    },
+    {
+      "name": "clamp_top_bridge",
+      "size_m": [
+        0.0326,
+        0.012,
+        0.004
+      ],
+      "center_m": [
+        0.3097,
+        0.0,
+        0.8837
+      ],
+      "mass_kg": null
+    }
+  ],
+  "cpu_tests_passed": 45,
+  "source_sha256": {
+    "clamp_layout.py": "08041172ba3f93a669826449293af9c187edf46dc4b0e6ef3c5468d2aa741c1e",
+    "passive_clamp.py": "460f523e0c01d5c1a2f5d4c508343617e5a801408af7a55e2554bdb9bdd47e03",
+    "scene.py": "69511629985b9ecefa2fd70f735262d2b4840352c0391184404566730219be83",
+    "plan_clamp.py": "683e32be9b1204a2ec401adb78d17050682fc3b9b9eb572e2679205158345e33"
+  }
+}

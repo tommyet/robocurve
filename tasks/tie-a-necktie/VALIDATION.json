@@ -83,6 +83,19 @@
       "failure": "Shoulder contact is clear. The15mm narrow-tail bite slips upward during crossing960\u2013980 and escapes by1000, allowing the wrap to unwind. Next uses40mm of tail below the physical pinch, with the same clear front-space route. No material or fixture changes.",
       "sampled_max_robot_full_triangle_penetration_m": 0.0009628105163574218,
       "robot_contact_interpretation": "Full-triangle clipping detects interior overlap missed by node-only depth. Maximum0.963mm at the failed pass; this is not valid contact proof."
+    },
+    "deeper_bite_wrap_trial": {
+      "batch": "039",
+      "status": "failed_narrow_tail_slips_no_knot",
+      "completed_actions": 1180,
+      "sampled_fixture_triangle_intersections": 0,
+      "fixture_audit_samples": 60,
+      "max_sampled_abs_edge_strain": 0.16890625690899452,
+      "max_sampled_p99_abs_edge_strain": 0.057102599809708554,
+      "trace_sha256": "7d26ad276233d34cbe89ec577414c56d97348f315508253d7aa8110410b4a493",
+      "failure": "A40mm narrow-tail bite also slips during the rear pass. Material patch s1.06 moves29mm outward from its previous finger-depth coordinate between960 and980 and125mm by1000. Narrow tip rises fromz0.856 to0.913m and is swept around the wrapping hand. No retained wrap or knot.",
+      "length_diagnosis": "The0.50m wide segment between the helds0.08 patch and collar ats0.58 retains0.493\u20130.498m centerline arc while endpoint separation falls0.388\u21920.154m through880\u20131000. It is not globally taut during the failed rear pass. This does not establish slack for later neck/front-loop threading.",
+      "next": "A sideways single-hand continuation is rejected by CPU whole-arm/recorded-strand screens. Next examine a physical wide-tip handoff so the first arm can withdraw before rear passage; no fixture or material change has been made."
     }
   },
   "demo": {

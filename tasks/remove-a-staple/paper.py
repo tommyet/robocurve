@@ -23,13 +23,30 @@ class PaperMaterial:
     rest_offset_m: float = .00005
 
 
+PAPER_PROFILES=('office-80gsm','heavy-200gsm-candidate')
+
+
+def paper_material(profile='office-80gsm'):
+    """Declared physical paper grades; not solver-only stiffness tuning.
+
+    Heavy uncoated printing paper at200gsm and200µm is a real material class.
+    Its isotropic2GPa modulus remains an engineering approximation. The native
+    sheet remains deformable with the same integrity assessment.
+    """
+    if profile=='office-80gsm':return PaperMaterial()
+    if profile=='heavy-200gsm-candidate':
+        return PaperMaterial(thickness_m=.0002,areal_mass_kg_m2=.200,
+                             contact_offset_m=.00012,rest_offset_m=.00010)
+    raise ValueError('Unknown physical paper profile: '+profile)
+
+
 @dataclass
 class PaperMesh:
     rest: np.ndarray
     faces: np.ndarray
     holes: list
 
-    def audit(self):
+    def audit(self,material=None):
         if self.rest.ndim != 2 or self.rest.shape[1] != 3 or not np.isfinite(self.rest).all():
             raise ValueError('Invalid paper vertices')
         if self.faces.ndim != 2 or self.faces.shape[1] != 3:
@@ -46,7 +63,7 @@ class PaperMesh:
             raise ValueError('Nonmanifold sheet')
         return {'vertices':len(self.rest),'triangles':len(self.faces),'surface_area_m2':float(areas.sum()),
                 'holes':self.holes,'boundary_edges':int(np.sum(counts==1)),
-                'mass_kg':float(areas.sum()*PaperMaterial().areal_mass_kg_m2),
+                'mass_kg':float(areas.sum()*(material or PaperMaterial()).areal_mass_kg_m2),
                 'minimum_triangle_area_m2':float(areas.min())}
 
 

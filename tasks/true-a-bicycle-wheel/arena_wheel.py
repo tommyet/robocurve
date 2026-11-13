@@ -2,7 +2,8 @@
 
 The authored assembly contains independently simulated bodies. Reset writes are
 confined to the reset event; the material callback only applies measured-angle
-thread shortening and reaction torques. This integration is awaiting GPU tests.
+thread shortening and reaction torques. Native CPU PhysX uses once-per-step
+external-force integration, verified by reciprocal momentum controls.
 """
 from dataclasses import dataclass, field
 import importlib.abc
@@ -35,6 +36,10 @@ RESET_PROFILE_OVERRIDE = None
 SOLVER_ITERATIONS_OVERRIDE = None
 CLOCKING_RAD_OVERRIDE = 0.
 FLAT_PHASE_RAD_OVERRIDE = 0.
+CONTACT_AUDIT_DIAGNOSTIC = False
+NO_REWIND_DIAGNOSTIC = False
+FROZEN_MATERIAL_DIAGNOSTIC = False
+RESET_DIAGNOSTICS = []
 
 
 def _spawn(path, cfg, translation=None, orientation=None, **kwargs):
@@ -54,6 +59,11 @@ def _spawn(path, cfg, translation=None, orientation=None, **kwargs):
             from thread_coupling import body_paths
             for body_path in body_paths(metadata):
                 PhysxSchema.PhysxRigidBodyAPI.Get(stage,body_path).CreateSolverPositionIterationCountAttr(SOLVER_ITERATIONS_OVERRIDE)
+        if CONTACT_AUDIT_DIAGNOSTIC:
+            from pxr import PhysxSchema
+            from thread_coupling import body_paths
+            for body_path in body_paths(metadata):
+                PhysxSchema.PhysxContactReportAPI.Apply(stage.GetPrimAtPath(body_path)).CreateThresholdAttr(0.)
         cache = UsdGeom.XformCache()
         poses = []
         for relative in BODY_NAMES:
@@ -78,6 +88,12 @@ def reset_assembly(env, env_ids, assembly_name):
     if len(origins) != 1:
         raise ValueError('The validated target is one deterministic wheel environment')
     item = ASSEMBLIES[assembly_name]
+    RESET_DIAGNOSTICS.append({'assembly':assembly_name,'native_pose_rewind':not NO_REWIND_DIAGNOSTIC,
+                              'material_installed':item['coupling'] is not None})
+    if NO_REWIND_DIAGNOSTIC:
+        # Isolate constructor warm-start state. This is not a task reset: all
+        # native constructor evolution is retained and reported by the probe.
+        return
     pose = torch.as_tensor(item['reset_poses'], device=origins.device, dtype=origins.dtype)[None].repeat(len(ids), 1, 1)
     pose[:, :, :3] += origins[ids, None, :]
     obj.write_body_link_pose_to_sim_index(body_poses=pose, env_ids=ids)
@@ -172,7 +188,7 @@ def install_material_hook(base, stage):
     def before_substep(*args, **kwargs):
         result = original(*args, **kwargs)
         for item in ASSEMBLIES.values():
-            item['coupling'].before_step()
+            item['coupling'].before_step(frozen_material_diagnostic=FROZEN_MATERIAL_DIAGNOSTIC)
         return result
     base.scene.write_data_to_sim = before_substep
     return original
@@ -182,6 +198,23 @@ def _patch(scene):
     if getattr(scene, '_native_wheel_installed', False):
         return
     original_object, original_states = scene.task_object, scene.object_states
+    original_configuration = scene.env_cfg_callback
+    def configure_callback(*args, **kwargs):
+        configure = original_configuration(*args, **kwargs)
+        def configure_wheel(cfg):
+            cfg = configure(cfg)
+            from isaaclab_physx.physics import PhysxCfg
+            if cfg.sim.physics is None:
+                cfg.sim.physics = PhysxCfg()
+            if not isinstance(cfg.sim.physics, PhysxCfg):
+                raise ValueError('Wheel assembly requires native PhysX')
+            # Reciprocal controls044 reproduce unforced angular acceleration
+            # with TGS external forces every iteration and eliminate it when
+            # the same external impulse is integrated once per physics step.
+            cfg.sim.physics.enable_external_forces_every_iteration = False
+            return cfg
+        return configure_wheel
+    scene.env_cfg_callback = configure_callback
     def task_object(spec):
         return asset(spec) if isinstance(spec, WheelAssembly) else original_object(spec)
     def object_states(env, names):

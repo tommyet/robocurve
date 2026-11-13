@@ -18043,5 +18043,6 @@
     "closed_jaw_gap_m": 0.00272,
     "released_line_retention": true,
     "source_trace_sha256": "9f28446c910a3db7419f48390aa5974356d5d30e86c8522acd87ebce22502d49"
-  }
+  },
+  "do_not_run_reason": "Native037 opens the peg, but sideways cloth feeding dislodges it and release drops it. Preserve failed evidence; use jaws-down clipping candidate."
 }

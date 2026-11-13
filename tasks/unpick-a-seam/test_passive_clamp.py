@@ -32,5 +32,15 @@ class PassiveClampGeometry(unittest.TestCase):
         critical=2*np.sqrt(PARAMETERS.mass_kg*PARAMETERS.stiffness_n_m)
         self.assertGreaterEqual(PARAMETERS.damping_n_s_m,critical)
 
+    def test_table_supported_lower_patch_does_not_intersect_the_stand(self):
+        from geometry import TABLE_TOP
+        lower=transform(patch(False,hole_half=.0008).rest,lower_edge_supported=True)
+        self.assertAlmostEqual(float(lower[:,2].min()),TABLE_TOP+.0002,places=12)
+        lo=lower.min(0);hi=lower.max(0);lo[0]-=.0002;hi[0]+=.0002
+        for name,size,position in fixture_boxes(lower_edge_supported=True):
+            other_lo=np.array(position)-np.array(size)/2
+            other_hi=np.array(position)+np.array(size)/2
+            self.assertFalse(np.all(np.minimum(hi,other_hi)-np.maximum(lo,other_lo)>1e-12),name)
+
 
 if __name__=='__main__':unittest.main()

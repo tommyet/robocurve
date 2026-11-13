@@ -7,7 +7,7 @@ demonstrate actual load, retention and stability before this fixture is used.
 """
 from dataclasses import asdict,dataclass
 from geometry import TABLE_TOP
-from clamp_layout import PLANE_X,TOP
+from clamp_layout import PLANE_X,TOP,SUPPORT_SHIFT
 
 
 @dataclass(frozen=True)
@@ -27,14 +27,19 @@ MOVING_SIZE=(.006,.085,.008)
 MOVING_POSITION=(FRONT_FACE+PARAMETERS.initial_gap_m+.003,0.,TOP-.004)
 
 
-def fixture_boxes():
+def fixture_boxes(*,lower_edge_supported=False):
     """Fixed front jaw and overhead frame leave the rear jaw's travel clear."""
+    shift=SUPPORT_SHIFT if lower_edge_supported else 0.
+    top=TOP-shift
+    moving=(MOVING_POSITION[0],0.,MOVING_POSITION[2]-shift)
     return [
-        ('clamp_front_jaw',(.006,.085,.016),(FRONT_FACE-.003,0.,TOP)),
-        (MOVING_NAME,MOVING_SIZE,MOVING_POSITION),
-        ('clamp_base',(.080,.110,.010),(.320,0.,TABLE_TOP+.005)),
-        ('clamp_post',(.012,.012,.148),(.320,0.,TABLE_TOP+.084)),
-        ('clamp_top_bridge',(.0326,.012,.004),(.3097,0.,TOP+.006)),
+        ('clamp_front_jaw',(.006,.085,.016),(FRONT_FACE-.003,0.,top)),
+        (MOVING_NAME,MOVING_SIZE,moving),
+        # Move the bolted foot behind the lower fabric when its edge rests on
+        # the table; otherwise the old foot would penetrate its bottom 10 mm.
+        ('clamp_base',(.080,.110,.010),(.350 if lower_edge_supported else .320,0.,TABLE_TOP+.005)),
+        ('clamp_post',(.012,.012,.148-shift),(.320,0.,TABLE_TOP+.084-shift/2)),
+        ('clamp_top_bridge',(.0326,.012,.004),(.3097,0.,top+.006)),
     ]
 
 

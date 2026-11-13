@@ -27,6 +27,7 @@ def main():
     p.add_argument('--wheel-clocking-deg',type=float,choices=(0.,10.,20.,50.),default=0.)
     p.add_argument('--solver-position-iterations',type=int,choices=(16,32,64,128),default=128)
     p.add_argument('--gpu-physics',action='store_true',help='Compare native GPU rigid physics with the CPU reference')
+    p.add_argument('--external-forces-every-iteration',action='store_true',help='Match the YAM TGS external-force integration option; diagnostic only')
     p.add_argument('--freeze-thread-diagnostic',action='store_true',help='No runtime material writes/lead torque; isolates native assembly')
     args=p.parse_args()
     if not .00001<=args.dt<=.0001 or not .025<=args.seconds<=2.:
@@ -40,6 +41,7 @@ def main():
             'initial_turn_offsets':starting_turn_errors(profile=args.reset_profile).tolist(),
             'frozen_material_diagnostic':args.freeze_thread_diagnostic,
             'gpu_physics':args.gpu_physics,
+            'external_forces_every_iteration':args.external_forces_every_iteration,
             'first_step':'Initializes native tensor state; authored spring rest lengths/friction already present, lead torque begins on step2.',
             'source_sha256':{n:hashlib.sha256(Path(__file__).with_name(n).read_bytes()).hexdigest()
                              for n in ('scene_probe.py','wheel_scene.py','native_probe.py','thread_coupling.py','mechanics.py','integrity.py','momentum.py')}}
@@ -66,6 +68,7 @@ def main():
         phys=PhysxSchema.PhysxSceneAPI.Apply(scene.GetPrim())
         phys.CreateSolverTypeAttr('TGS');phys.CreateEnableGPUDynamicsAttr(args.gpu_physics)
         phys.CreateBroadphaseTypeAttr('GPU' if args.gpu_physics else 'MBP');phys.CreateEnableCCDAttr(not args.gpu_physics)
+        phys.CreateEnableExternalForcesEveryIterationAttr(args.external_forces_every_iteration)
         if args.gpu_physics:
             import carb.settings
             carb.settings.get_settings().set_bool('/physics/suppressReadback',True)

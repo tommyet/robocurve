@@ -74,9 +74,12 @@ missed a thin line passing through a convex hull; it now clips the finite line
 axis against every convex face. The old plan is blocked. Batch033 confirms that a tilted approach keeps the
 wrist below the line and reaches the handles; a deeper ordinary hem grasp
 also retains the shirt. However, dangling fabric brushes the peg off before
-the squeeze. The next short trial isolates opening an empty peg with the
-shirt untouched. A subsequent candidate holds the shirt clear until opening.
-Neither is a hanging demonstration.
+the squeeze. The isolated empty-peg trial035 opens its mouth to8.32mm, closes it and
+leaves it on the line. Trial037 then opens the peg with the garment held
+clear, but sideways fabric entry dislodges the upward-facing peg. It falls
+on release, so that trial also earns no score. The next candidate withdraws
+the held peg downward, turns its jaws downward in free space and clips the
+cloth and line from above/front. No hanging demonstration exists yet.
 The runner refuses plans still marked as awaiting their collision audit.
 
 Line-clamp coupons exposed loaded jaw penetration. Halving the timestep or
@@ -117,3 +120,12 @@ failed for rigid cloth, automatic clips and proximity scoring. This design
 addresses those omissions, but ownership and novelty still need review.
 [BEHAVIOR clothesline hanging](https://behavior.stanford.edu/knowledgebase/tasks/hanging_clothes_on_clothesline-0.html)
 is relevant prior work; its draping task does not establish novelty here.
+
+Trial043 physically removes and turns the opened spare peg by120degrees.
+The hand deflects24mm upward under load, so its mouth misses the line;
+the hem also creeps out before closure. Both props fall, with no score.
+The revised1,220-action candidate deepens the hem bite10mm and corrects
+the clipping target using ordinary right-arm joint observations. Its bounded
+PI changes only ordinary joint targets; it never reads cloth or peg state.
+All reference poses pass the rigid-hull and finite-line-axis rejection check.
+Actual capture, contact integrity and released retention still need native proof.

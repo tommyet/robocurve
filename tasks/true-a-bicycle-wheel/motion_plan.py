@@ -22,6 +22,7 @@ class Compiler:
         from yam_arena import ik,station
         from yam_arena.constants import READY
         self.ik,self.station=ik,station
+        self.tool_tcp=TOOL_TCP.copy();self.grip=GRIP.copy()
         self.q={side:np.asarray(READY,float).copy() for side in ('left','right')}
         self.opening={side:1. for side in self.q};self.frames=[];self.audit=[]
 
@@ -42,7 +43,7 @@ class Compiler:
                 if side in goals:self.q[side]=q0[side]+u*(goals[side]-q0[side])
                 elif side in targets or (side=='right' and tool_path is not None):
                     if side=='right' and tool_path is not None:
-                        center,R=tool_path(u);p=center+R@TOOL_TCP;R=R@GRIP
+                        center,R=tool_path(u);p=center+R@self.tool_tcp;R=R@self.grip
                     else:
                         p0,R0=start[side];p1,R1=targets[side]
                         p=p0+u*(np.asarray(p1)-p0);R=ik.slerp_matrix(R0,R1,u)

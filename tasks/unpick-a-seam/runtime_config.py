@@ -22,6 +22,9 @@ class SeamRuntime:
     drape_shape: str = 'gaussian'
     sewing_clamp: bool = False
     passive_clamp: bool = False
+    supported_clamp: bool = False
+    cloth_contact_offset_m: float = .00025
+    backed_clamp: bool = False
 
 
 CONFIG=SeamRuntime()

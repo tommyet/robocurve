@@ -1,0 +1,327 @@
+{
+  "kind": "native-pocket-paper-development-evidence",
+  "date": "2026-11-13",
+  "submission_ready": false,
+  "task_score": null,
+  "interpretation": "The narrow pocket reset fails even without the staple. Quartering the step delays, but does not resolve, local membrane strain growth. These diagnostic bounds are not a claim that elastic onset equals tearing. The pocket is not promoted to the task.",
+  "runs": {
+    "pocket_stapled": {
+      "status": "invalid_model_domain",
+      "physics_hz": 10000,
+      "completed_steps": 49,
+      "wall_seconds": 5.367719674482942,
+      "reset_profile": "pocket-support-candidate",
+      "mesh_profile": "coarse",
+      "staple_removed_diagnostic": false,
+      "membrane_diagnostic_stop_strain": 0.01,
+      "native_surface_contact": [
+        {
+          "physxCollision:restOffset": 4.999999873689376e-05,
+          "physxCollision:contactOffset": 5.999999848427251e-05,
+          "physxDeformableBody:selfCollisionFilterDistance": "-inf",
+          "physxDeformableBody:maxDepenetrationVelocity": 0.05000000074505806,
+          "physxDeformableBody:enableSpeculativeCCD": true,
+          "physxDeformableBody:collisionIterationMultiplier": 4,
+          "physxDeformableBody:collisionPairUpdateFrequency": 4
+        },
+        {
+          "physxCollision:restOffset": 4.999999873689376e-05,
+          "physxCollision:contactOffset": 5.999999848427251e-05,
+          "physxDeformableBody:selfCollisionFilterDistance": "-inf",
+          "physxDeformableBody:maxDepenetrationVelocity": 0.05000000074505806,
+          "physxDeformableBody:enableSpeculativeCCD": true,
+          "physxDeformableBody:collisionIterationMultiplier": 4,
+          "physxDeformableBody:collisionPairUpdateFrequency": 4
+        }
+      ],
+      "source_sha256": {
+        "paper.py": "ac511ebe6049ccdb2abf3b0654ec31054dc2abab397eccadada7fd020ec0ffc6",
+        "full_scene.py": "b240e2589fa85e3b5492ad808ed608c5d2671bf4212006b995a4fdd8e447b5c6",
+        "full_probe.py": "18c9c45513090a873963690a7d8669b3d33bc825d3720e51aabff685d6d55244",
+        "native_paper.py": "fb920b9a7ce24b15c30b5355a45135e3f9587439877bb497d2920c604304b021",
+        "materials.py": "9840b118f8a908b85260cf767025ec1a009162e99820c540032e2171d085aa83",
+        "physx_material.py": "b4efc3dfc7671b3a5e57933cc066cdc5ac4e655301c9f595e97db97b47be8524",
+        "contact_guard.py": "95cba1bacf521fcde76ef639cb03968eb29dac81f49fac40115eb97e8a50a133"
+      },
+      "asset_sha256": {
+        "coarse/mesh-manifest.json": "e763b0bfb08f24911b5f9c68651087b6876ce25281a77f117a178c0c85ddbc9c",
+        "coarse/paper_0.npz": "035aa15493591f7e8c8e9cd94fd48168a0293661739677bf0f5e99b1060ba0ad",
+        "coarse/paper_1.npz": "03bc4a370bb3328ee953875262bc89ddc06330fced7f7ab03a4897d8b73414c8",
+        "mesh-manifest.json": "bebe9b86e18633ce072d21a9010e2b90e63ca1c2322007971e3fde4175ff5681",
+        "paper_0.npz": "afe3c313c5b835d5b1617e09ff558e869bbc539f34ab3792e849dfc652803b2b",
+        "paper_1.npz": "7f20ccc85f3a52567f4b35744bb075df7449bee195c9b39c8c272e98f756d53e"
+      },
+      "contact_audit": [
+        {
+          "valid": true,
+          "steps": 49,
+          "first_failure": null
+        },
+        {
+          "valid": true,
+          "steps": 49,
+          "first_failure": null
+        }
+      ],
+      "report_sha256": "5f67bdc4647eef4cc9497d799e46bc2020b4f0f03b48f19bdaee1982a3787e7a",
+      "stop_state_sha256": "8e549e6f5ca2a3bdad136b43c8b926da4047e6eca5cfc7f0439203d7bdb2d2dd",
+      "stop_time_s": 0.0049,
+      "stop_measurements": [
+        {
+          "maximum_tensile_strain": 0.010204251750305371,
+          "maximum_surface_bending_strain": 0.04615374953696667,
+          "z_span_m": 0.00010019540786743164,
+          "last_geometry_diagnostics": {
+            "current_tensile_strain": 0.010204251750305371,
+            "current_surface_bending_strain": 0.03745394591043821,
+            "worst_bending_edge": [
+              114,
+              122
+            ],
+            "worst_bending_faces": [
+              327,
+              347
+            ],
+            "worst_edge_dihedral_rad": 0.1367461969386868,
+            "worst_edge_dual_width_m": 0.00018255245691025626,
+            "worst_membrane_face": 327
+          }
+        },
+        {
+          "maximum_tensile_strain": 0.0020023838292946294,
+          "maximum_surface_bending_strain": 0.022474412830561185,
+          "z_span_m": 0.00011837482452392578,
+          "last_geometry_diagnostics": {
+            "current_tensile_strain": 0.0012100808157249343,
+            "current_surface_bending_strain": 0.022474412830561185,
+            "worst_bending_edge": [
+              154,
+              162
+            ],
+            "worst_bending_faces": [
+              329,
+              330
+            ],
+            "worst_edge_dihedral_rad": 0.0847024994024619,
+            "worst_edge_dual_width_m": 0.0001884420741957753,
+            "worst_membrane_face": 347
+          }
+        }
+      ]
+    },
+    "pocket_without_staple": {
+      "status": "invalid_model_domain",
+      "physics_hz": 10000,
+      "completed_steps": 48,
+      "wall_seconds": 5.117755960673094,
+      "reset_profile": "pocket-support-candidate",
+      "mesh_profile": "coarse",
+      "staple_removed_diagnostic": true,
+      "membrane_diagnostic_stop_strain": 0.01,
+      "native_surface_contact": [
+        {
+          "physxCollision:restOffset": 4.999999873689376e-05,
+          "physxCollision:contactOffset": 5.999999848427251e-05,
+          "physxDeformableBody:selfCollisionFilterDistance": "-inf",
+          "physxDeformableBody:maxDepenetrationVelocity": 0.05000000074505806,
+          "physxDeformableBody:enableSpeculativeCCD": true,
+          "physxDeformableBody:collisionIterationMultiplier": 4,
+          "physxDeformableBody:collisionPairUpdateFrequency": 4
+        },
+        {
+          "physxCollision:restOffset": 4.999999873689376e-05,
+          "physxCollision:contactOffset": 5.999999848427251e-05,
+          "physxDeformableBody:selfCollisionFilterDistance": "-inf",
+          "physxDeformableBody:maxDepenetrationVelocity": 0.05000000074505806,
+          "physxDeformableBody:enableSpeculativeCCD": true,
+          "physxDeformableBody:collisionIterationMultiplier": 4,
+          "physxDeformableBody:collisionPairUpdateFrequency": 4
+        }
+      ],
+      "source_sha256": {
+        "paper.py": "ac511ebe6049ccdb2abf3b0654ec31054dc2abab397eccadada7fd020ec0ffc6",
+        "full_scene.py": "802aff92574e55c1c50ee01d004450d3ba29282c758431cd58fcdf2be7a36079",
+        "full_probe.py": "2f84d35836829df0297744b2bf4702e772d9165fc996925b85f7e3a54c8001f4",
+        "native_paper.py": "fb920b9a7ce24b15c30b5355a45135e3f9587439877bb497d2920c604304b021",
+        "materials.py": "9840b118f8a908b85260cf767025ec1a009162e99820c540032e2171d085aa83",
+        "physx_material.py": "b4efc3dfc7671b3a5e57933cc066cdc5ac4e655301c9f595e97db97b47be8524",
+        "contact_guard.py": "95cba1bacf521fcde76ef639cb03968eb29dac81f49fac40115eb97e8a50a133"
+      },
+      "asset_sha256": {
+        "clearance-candidate/mesh-manifest.json": "4eba8edd73db9bde24c906f20d164be05927b1b7f0ab3d5cb1d0514e212c200c",
+        "clearance-candidate/paper_0.npz": "f176980ed9ae81f7c29e1e023a477fc79984b933b696050aeece474ab33f424b",
+        "clearance-candidate/paper_1.npz": "ed664e69c1fd6be7d40c35f1687ddf1b401a46fc49fe9aefb88539a886dce12b",
+        "coarse/mesh-manifest.json": "e763b0bfb08f24911b5f9c68651087b6876ce25281a77f117a178c0c85ddbc9c",
+        "coarse/paper_0.npz": "035aa15493591f7e8c8e9cd94fd48168a0293661739677bf0f5e99b1060ba0ad",
+        "coarse/paper_1.npz": "03bc4a370bb3328ee953875262bc89ddc06330fced7f7ab03a4897d8b73414c8",
+        "mesh-manifest.json": "bebe9b86e18633ce072d21a9010e2b90e63ca1c2322007971e3fde4175ff5681",
+        "paper_0.npz": "afe3c313c5b835d5b1617e09ff558e869bbc539f34ab3792e849dfc652803b2b",
+        "paper_1.npz": "7f20ccc85f3a52567f4b35744bb075df7449bee195c9b39c8c272e98f756d53e"
+      },
+      "contact_audit": [
+        {
+          "valid": true,
+          "steps": 0,
+          "first_failure": null
+        },
+        {
+          "valid": true,
+          "steps": 0,
+          "first_failure": null
+        }
+      ],
+      "report_sha256": "919944e00ad4243527328594473573520d83440d05c3039f2ef505a82d385cba",
+      "stop_state_sha256": "7de1fcc07aca741a339c5591a7e9b54b82d70574fc39c3c8eec86abde0c54261",
+      "stop_time_s": 0.0048,
+      "stop_measurements": [
+        {
+          "maximum_tensile_strain": 0.003173971719492963,
+          "maximum_surface_bending_strain": 0.02707036557938546,
+          "z_span_m": 8.857250213623047e-05,
+          "last_geometry_diagnostics": {
+            "current_tensile_strain": 0.003173971719492963,
+            "current_surface_bending_strain": 0.02499139267849904,
+            "worst_bending_edge": [
+              114,
+              122
+            ],
+            "worst_bending_faces": [
+              327,
+              347
+            ],
+            "worst_edge_dihedral_rad": 0.09124480270137979,
+            "worst_edge_dual_width_m": 0.00018255245691025626,
+            "worst_membrane_face": 327
+          }
+        },
+        {
+          "maximum_tensile_strain": 0.011071614277278208,
+          "maximum_surface_bending_strain": 0.028325156188891216,
+          "z_span_m": 0.00018173456192016602,
+          "last_geometry_diagnostics": {
+            "current_tensile_strain": 0.011071614277278208,
+            "current_surface_bending_strain": 0.027830228449864755,
+            "worst_bending_edge": [
+              106,
+              120
+            ],
+            "worst_bending_faces": [
+              346,
+              347
+            ],
+            "worst_edge_dihedral_rad": 0.16698137069918945,
+            "worst_edge_dual_width_m": 0.00030000000000000165,
+            "worst_membrane_face": 242
+          }
+        }
+      ]
+    },
+    "pocket_quarter_step": {
+      "status": "invalid_model_domain",
+      "physics_hz": 40000,
+      "completed_steps": 406,
+      "wall_seconds": 22.31279344856739,
+      "reset_profile": "pocket-support-candidate",
+      "mesh_profile": "coarse",
+      "staple_removed_diagnostic": false,
+      "membrane_diagnostic_stop_strain": 0.01,
+      "native_surface_contact": [
+        {
+          "physxCollision:restOffset": 4.999999873689376e-05,
+          "physxCollision:contactOffset": 5.999999848427251e-05,
+          "physxDeformableBody:selfCollisionFilterDistance": "-inf",
+          "physxDeformableBody:maxDepenetrationVelocity": 0.05000000074505806,
+          "physxDeformableBody:enableSpeculativeCCD": true,
+          "physxDeformableBody:collisionIterationMultiplier": 4,
+          "physxDeformableBody:collisionPairUpdateFrequency": 4
+        },
+        {
+          "physxCollision:restOffset": 4.999999873689376e-05,
+          "physxCollision:contactOffset": 5.999999848427251e-05,
+          "physxDeformableBody:selfCollisionFilterDistance": "-inf",
+          "physxDeformableBody:maxDepenetrationVelocity": 0.05000000074505806,
+          "physxDeformableBody:enableSpeculativeCCD": true,
+          "physxDeformableBody:collisionIterationMultiplier": 4,
+          "physxDeformableBody:collisionPairUpdateFrequency": 4
+        }
+      ],
+      "source_sha256": {
+        "paper.py": "ac511ebe6049ccdb2abf3b0654ec31054dc2abab397eccadada7fd020ec0ffc6",
+        "full_scene.py": "802aff92574e55c1c50ee01d004450d3ba29282c758431cd58fcdf2be7a36079",
+        "full_probe.py": "2f84d35836829df0297744b2bf4702e772d9165fc996925b85f7e3a54c8001f4",
+        "native_paper.py": "fb920b9a7ce24b15c30b5355a45135e3f9587439877bb497d2920c604304b021",
+        "materials.py": "9840b118f8a908b85260cf767025ec1a009162e99820c540032e2171d085aa83",
+        "physx_material.py": "b4efc3dfc7671b3a5e57933cc066cdc5ac4e655301c9f595e97db97b47be8524",
+        "contact_guard.py": "95cba1bacf521fcde76ef639cb03968eb29dac81f49fac40115eb97e8a50a133"
+      },
+      "asset_sha256": {
+        "clearance-candidate/mesh-manifest.json": "4eba8edd73db9bde24c906f20d164be05927b1b7f0ab3d5cb1d0514e212c200c",
+        "clearance-candidate/paper_0.npz": "f176980ed9ae81f7c29e1e023a477fc79984b933b696050aeece474ab33f424b",
+        "clearance-candidate/paper_1.npz": "ed664e69c1fd6be7d40c35f1687ddf1b401a46fc49fe9aefb88539a886dce12b",
+        "coarse/mesh-manifest.json": "e763b0bfb08f24911b5f9c68651087b6876ce25281a77f117a178c0c85ddbc9c",
+        "coarse/paper_0.npz": "035aa15493591f7e8c8e9cd94fd48168a0293661739677bf0f5e99b1060ba0ad",
+        "coarse/paper_1.npz": "03bc4a370bb3328ee953875262bc89ddc06330fced7f7ab03a4897d8b73414c8",
+        "mesh-manifest.json": "bebe9b86e18633ce072d21a9010e2b90e63ca1c2322007971e3fde4175ff5681",
+        "paper_0.npz": "afe3c313c5b835d5b1617e09ff558e869bbc539f34ab3792e849dfc652803b2b",
+        "paper_1.npz": "7f20ccc85f3a52567f4b35744bb075df7449bee195c9b39c8c272e98f756d53e"
+      },
+      "contact_audit": [
+        {
+          "valid": true,
+          "steps": 406,
+          "first_failure": null
+        },
+        {
+          "valid": true,
+          "steps": 406,
+          "first_failure": null
+        }
+      ],
+      "report_sha256": "97f1a5b93ea1f36f693227000786f9b79612b85aca5f4898312c983c468ff805",
+      "stop_state_sha256": "f3f804a5b3e8655e2a0ad946c886324a8d9bccc21e51f3eb1f75210752a2608e",
+      "stop_time_s": 0.01015,
+      "stop_measurements": [
+        {
+          "maximum_tensile_strain": 0.010491125138755608,
+          "maximum_surface_bending_strain": 0.07126302662619007,
+          "z_span_m": 3.707408905029297e-05,
+          "last_geometry_diagnostics": {
+            "current_tensile_strain": 0.010491125138755608,
+            "current_surface_bending_strain": 0.07126302662619007,
+            "worst_bending_edge": [
+              140,
+              144
+            ],
+            "worst_bending_faces": [
+              309,
+              1376
+            ],
+            "worst_edge_dihedral_rad": 0.26460903588603407,
+            "worst_edge_dual_width_m": 0.00018565660793081368,
+            "worst_membrane_face": 324
+          }
+        },
+        {
+          "maximum_tensile_strain": 0.004866984676098474,
+          "maximum_surface_bending_strain": 0.026135352218451036,
+          "z_span_m": 1.996755599975586e-05,
+          "last_geometry_diagnostics": {
+            "current_tensile_strain": 0.004100307390010549,
+            "current_surface_bending_strain": 0.026135352218451036,
+            "worst_bending_edge": [
+              148,
+              158
+            ],
+            "worst_bending_faces": [
+              264,
+              307
+            ],
+            "worst_edge_dihedral_rad": 0.07944797208490655,
+            "worst_edge_dual_width_m": 0.00015199330665384696,
+            "worst_membrane_face": 236
+          }
+        }
+      ]
+    }
+  }
+}

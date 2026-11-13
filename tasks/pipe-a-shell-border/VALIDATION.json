@@ -9,7 +9,7 @@
   "scores": null,
   "paid_compute_used_usd": null,
   "remaining_gates": [
-    "Native035 completed its three-shell candidate, with conserved material and released tool. Independent current scoring gives0.25: two valid shell shapes, only one meeting continuous-ridge criterion. Full border and consistent shape remain unproven.",
+    "Latest038 and042 native trials remain incomplete and uneven (scores0.25,0,0). No full-score shell border exists. Continuous-tail technique is the next bounded candidate.",
     "Complete joined border, visible continuous ridges, and agreement with photographs remain unverified.",
     "Dream baseline and final rescoring are pending. No API requests or media upload made."
   ],
@@ -20,8 +20,8 @@
     "joint_tracking.py": "a5e2cee60f6a84e0a46d95240f1a098794e95a12c1ac166b3c7d5be184ff3a44",
     "material.py": "a82fb1cb242a02990707a3c08a6466f304cf757541a663a974765eebb984d525",
     "native.py": "bd7399d45e89f4955aaa0d945b518f98f81e4ac31eafb618cdc615e909b95fef",
-    "plan.py": "664b1838f75a6ce0e23741b07c0b7dc90c2362677838b49ad2096670333db977",
-    "preview_yam.py": "02d00005f5402810665120653445a7bcb152b6d05782522057bc0f625aba2975",
+    "plan.py": "6b6e974474e1fb07c89c9acd8e57a9296897a069baf1c5f0c713766839592784",
+    "preview_yam.py": "3cd49d04d5e6ba8f45629f7edc346351d728ada935660065bdc1aabcb5e1a338",
     "probe.py": "dc2421d3342eda2052d7340d10bbf856493ad5b30b121ad839fddda7c7a57c17",
     "probe_native.py": "1d5d47f963be39660c32dec7b626a26080d7d290da69cfc06e5e8e9f1945b4e8",
     "probe_shell_shape.py": "a4e2ab3a31c23b0acc9baeef718887a8d9e74c8fca1f2ed91659c2aa9732289e",
@@ -53,7 +53,8 @@
     "evidence/native-single-shell-021.json",
     "evidence/native-three-shell-026.json",
     "evidence/native-three-shell-030-031.json",
-    "evidence/native-three-shell-033-035.json"
+    "evidence/native-three-shell-033-035.json",
+    "evidence/native-three-shell-038-042.json"
   ],
   "full_score_demo": false
 }

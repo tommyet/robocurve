@@ -1,0 +1,100 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Graded mesh with passive jaw; lower hanging cloth still fails before any task action",
+  "report_sha256": "70dd3560189d69a24b5d90874fe0834b1b83b5aaf94f026dd65c1fe30808954c",
+  "state_sha256": "b9803cc1d4c225e58e78e079fcf989585b29620928a8965379e915a0b890916e",
+  "measurements": {
+    "status": "invalid_model_domain",
+    "completed_steps": 88,
+    "strain": [
+      {
+        "maximum_principal_stretch": 1.0421676402372568,
+        "first_validity_excursion": null,
+        "first_2pct_warning": {
+          "time_s": 0.005208333333333333,
+          "triangle": 2378,
+          "principal_stretch": 1.0246821131452486,
+          "limit": 1.02
+        },
+        "maximum_stretch_limit": 1.05
+      },
+      {
+        "maximum_principal_stretch": 1.0518146010939464,
+        "first_validity_excursion": {
+          "time_s": 0.022916666666666665,
+          "triangle": 2820,
+          "principal_stretch": 1.0518146010939464,
+          "limit": 1.05
+        },
+        "first_2pct_warning": {
+          "time_s": 0.01484375,
+          "triangle": 1951,
+          "principal_stretch": 1.02164001882674,
+          "limit": 1.02
+        },
+        "maximum_stretch_limit": 1.05
+      }
+    ],
+    "contact_audit": [
+      {
+        "valid": true,
+        "steps": 88,
+        "first_failure": null
+      },
+      {
+        "valid": true,
+        "steps": 88,
+        "first_failure": null
+      }
+    ],
+    "right_centroid_drop_m": 0.002323188967409573,
+    "passive_jaw_final": {
+      "pose_xyzw": [
+        0.30279985070228577,
+        -9.237294956720987e-12,
+        0.8934999704360962,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "velocity": [
+        -0.00045900128316134214,
+        -6.483702463810914e-13,
+        -1.4171419593367318e-10,
+        -1.7633194904220773e-10,
+        5.3971334068592114e-08,
+        -4.298130185098614e-10
+      ],
+      "gap_m": 0.000399857759475708,
+      "inferred_drive_force_x_n": -0.49613749980926514,
+      "force_note": "Computed from authored spring/damper law and measured state, not a native contact-force measurement"
+    }
+  },
+  "failure_triangle": {
+    "index": 2820,
+    "rest_m": [
+      [
+        0.30039999999999994,
+        -0.0192,
+        0.8279000000000001
+      ],
+      [
+        0.30039999999999994,
+        -0.0188,
+        0.8283
+      ],
+      [
+        0.30039999999999994,
+        -0.0188,
+        0.8279000000000001
+      ]
+    ],
+    "edge_lengths_m": [
+      0.0005656854249492052,
+      0.00039999999999995595,
+      0.0003999999999999976
+    ]
+  },
+  "interpretation": "The jaw seats at the correct thickness. The lower patch falls 2.323 mm before the 5% domain excursion at 22.917 ms near a needle hole; no centreline crossing. The next reset rests the lower edge on the real table, preserving free cloth, physical contact, material and validity limits."
+}

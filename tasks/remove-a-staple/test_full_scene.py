@@ -8,7 +8,7 @@ from contact_guard import PaperWireCrossingGuard
 from full_scene import paper_mesh,SHEET_CENTRES,PAPER_CENTRE_HEIGHTS,STAPLE_XY,PAPER_TOP,scene_layout,SUPPORT_TOP,support_parts
 from generate_meshes import quality
 from materials import clinched_staple_centerline
-from paper import ElasticDomainGuard,PaperMesh
+from paper import ElasticDomainGuard,PaperMesh,paper_material
 
 
 class FullPaperTests(unittest.TestCase):
@@ -51,6 +51,25 @@ class FullPaperTests(unittest.TestCase):
             self.assertTrue(PaperWireCrossingGuard(mesh.faces).update(world,wire)['valid'])
         with self.assertRaises(ValueError):scene_layout('unknown')
 
+    def test_heavy_paper_candidate_keeps_physical_clearance_and_retention(self):
+        material=paper_material('heavy-200gsm-candidate')
+        layout=scene_layout('supported-edge-candidate',material)
+        self.assertAlmostEqual(layout['paper_centres_z'][0]-material.thickness_m/2,SUPPORT_TOP)
+        self.assertAlmostEqual(layout['paper_centres_z'][1]-layout['paper_centres_z'][0]-.0002,.00002)
+        points=clinched_staple_centerline(paper_stack_m=2*material.thickness_m)
+        points=points@np.array([[0.,1.,0.],[-1.,0.,0.],[0.,0.,1.]])+[*STAPLE_XY,layout['crown_underside_z']]
+        wire=np.stack((points[:-1],points[1:]),axis=1)
+        for i,xy in enumerate(SHEET_CENTRES):
+            mesh=paper_mesh(i,'clearance-candidate')
+            self.assertAlmostEqual(mesh.audit(material)['mass_kg'],mesh.audit()['mass_kg']*2.5)
+            for x0,x1,y0,y1 in mesh.holes:
+                self.assertAlmostEqual(((x1-x0)-.0005)/2-material.rest_offset_m,.00005)
+                self.assertGreater(((x1-x0)-.0005)/2-material.contact_offset_m-.000002,0.)
+            world=mesh.rest+[*xy,layout['paper_centres_z'][i]]
+            guard=PaperWireCrossingGuard(mesh.faces)
+            self.assertTrue(guard.update(world,wire)['valid'])
+            self.assertFalse(guard.update(world,wire+[0.,0.,.001])['valid'])
+
     def test_full_mesh_rigid_motion_is_not_strain(self):
         angle=.61;c=np.cos(angle);s=np.sin(angle)
         rotation=np.array([[c,0.,s],[0.,1.,0.],[-s,0.,c]])
@@ -79,6 +98,25 @@ class FullPaperTests(unittest.TestCase):
         mesh=paper_mesh(0)
         damaged=PaperMesh(mesh.rest,mesh.faces[1:],mesh.holes)
         with self.assertRaises(ValueError):quality(damaged,(.21,.148))
+
+    def test_clearance_candidate_keeps_punctures_small_and_clinched_retention(self):
+        layout=scene_layout('pocket-support-candidate')
+        points=clinched_staple_centerline()@np.array([[0.,1.,0.],[-1.,0.,0.],[0.,0.,1.]])+[*STAPLE_XY,layout['crown_underside_z']]
+        wire=np.stack((points[:-1],points[1:]),axis=1)
+        for i,xy in enumerate(SHEET_CENTRES):
+            mesh=paper_mesh(i,'clearance-candidate');metrics=quality(mesh,(.21,.148))
+            self.assertGreaterEqual(metrics['minimum_triangle_angle_deg'],15.)
+            for x0,x1,y0,y1 in mesh.holes:
+                self.assertAlmostEqual(x1-x0,.0008)
+                self.assertAlmostEqual(y1-y0,.0006)
+                # Native surface contact rounds the edge by its half-thickness.
+                self.assertAlmostEqual(((x1-x0)-.0005)/2-.00005,.0001)
+                self.assertAlmostEqual(((y1-y0)-.0003)/2-.00005,.0001)
+            world=mesh.rest+[*xy,layout['paper_centres_z'][i]]
+            guard=PaperWireCrossingGuard(mesh.faces)
+            self.assertTrue(guard.update(world,wire)['valid'])
+            # The folded 6mm legs cannot be lifted intact through these openings.
+            self.assertFalse(guard.update(world,wire+[0.,0.,.0008])['valid'])
 
 
 if __name__=='__main__':unittest.main()

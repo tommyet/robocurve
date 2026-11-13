@@ -23,11 +23,15 @@ def main():
     p.add_argument('--coarse-thread',action='store_true',help='Diagnostic 0.8 mm thread / 1.6 mm holes; does not change task reset')
     p.add_argument('--contact-refinement',choices=('baseline','iterations','speculative','combined'),
                    default='baseline',help='Diagnostic native deformable contact settings only; geometry/material/audit unchanged')
+    p.add_argument('--cloth-contact-offset',type=float,choices=(.00025,.00075),default=.00025,
+                   help='Native contact generation distance only; preserves physical rest offset and all geometry')
     p.add_argument('--hole-mesh-spacing',type=float,default=None,
                    help='Diagnostic local collision/simulation mesh refinement in metres; same holes, area and material')
     p.add_argument('--quality-mesh',action='store_true',help='Opt-in graded 0.4 mm hole-boundary triangulation; requires coarse thread and no hole-mesh-spacing')
     p.add_argument('--sewing-clamp',action='store_true',help='Use exactly the YAM candidate rigid transform, connected fixture and table, without the YAM loader/reset or robot')
     p.add_argument('--passive-clamp',action='store_true',help='Use the force-limited spring jaw with --sewing-clamp')
+    p.add_argument('--supported-clamp',action='store_true',help='Rest the lower patch edge on the real tabletop; requires --passive-clamp')
+    p.add_argument('--backed-clamp',action='store_true',help='Add the same passive repair board and open-window guide rails as the YAM candidate')
     p.add_argument('--maximum-stretch',type=float,choices=(1.02,1.05),default=1.02,
                    help='Same explicit engineering domain as preview_yam; 2%% warnings remain visible')
     p.add_argument('--continue-after-invalid',action='store_true',help='Bounded failure investigation only; invalid evidence never passes')
@@ -42,21 +46,26 @@ def main():
     if a.sewing_clamp and (not a.coarse_thread or (not a.quality_mesh and a.hole_mesh_spacing!=.0004)):
         p.error('Sewing clamp requires --coarse-thread and either --hole-mesh-spacing .0004 or --quality-mesh')
     if a.passive_clamp and not a.sewing_clamp:p.error('Passive clamp requires --sewing-clamp')
+    if a.supported_clamp and not a.passive_clamp:p.error('Supported reset requires --passive-clamp')
+    if a.backed_clamp and not a.supported_clamp:p.error('Repair backing requires --supported-clamp')
     if a.record_contact_history and not a.continue_after_invalid:
         p.error('Contact history requires --continue-after-invalid')
     a.out.mkdir(parents=True,exist_ok=False)
     started=time.monotonic();report={'status':'running','robot_demo':False,'mode':a.mode,'geometry':audit_scene(),
                                    'physics_hz':a.physics_hz,'requested_seconds':a.seconds,
                                    'contact_refinement':a.contact_refinement,
+                                   'cloth_contact_offset_m':a.cloth_contact_offset,
                                    'hole_mesh_spacing_m':a.hole_mesh_spacing,
                                    'mesh_method':'graded_delaunay' if a.quality_mesh else 'rectilinear',
                                    'sewing_clamp':a.sewing_clamp,'maximum_stretch':a.maximum_stretch,
                                    'passive_clamp':a.passive_clamp,
+                                   'supported_clamp':a.supported_clamp,
+                                   'backed_clamp':a.backed_clamp,
                                    'continue_after_strain':a.continue_after_strain,
                                    'continue_after_invalid':a.continue_after_invalid,
                                    'record_contact_history':a.record_contact_history,
                                    'source_sha256':{name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
-                                                    for name in ('probe_native.py','native_stitches.py','native_cloth.py','geometry.py','quality_mesh.py','contact_audit.py','contact_history.py','inspection.py','clamp_layout.py','scene_snapshot.py','passive_clamp.py')}}
+                                                    for name in ('probe_native.py','native_stitches.py','native_cloth.py','geometry.py','quality_mesh.py','contact_audit.py','contact_history.py','inspection.py','clamp_layout.py','scene_snapshot.py','passive_clamp.py','repair_backing.py')}}
     app=None;attached=False;stage=None;cache=None;physics=None
     phase='launch'
     try:
@@ -84,6 +93,9 @@ def main():
         fixture_roots={}
         if a.sewing_clamp:
             from clamp_layout import transform,fixture_boxes
+            if a.supported_clamp:
+                from functools import partial
+                transform=partial(transform,lower_edge_supported=True)
             if a.passive_clamp:
                 from passive_clamp import fixture_boxes,author_guide,description,PARAMETERS,MOVING_NAME
                 report['passive_clamp_description']=description()
@@ -99,7 +111,8 @@ def main():
             pair_update_frequency=4 if refined else 1)
         cloth,threads=author_pair(stage,transform=transform,open_diagnostic=a.mode=='open',
                                  thread_radius=radius,hole_half=hole_half,contact_refinement=contact_settings,
-                                 hole_mesh_spacing=a.hole_mesh_spacing,quality_mesh=a.quality_mesh)
+                                 hole_mesh_spacing=a.hole_mesh_spacing,quality_mesh=a.quality_mesh,
+                                 cloth_contact_offset_m=a.cloth_contact_offset)
         report.update(thread_radius_m=radius,hole_width_m=2*hole_half,
                       cloth_geometry=[mesh.audit() for mesh in cloth],
                       authored_contact_settings=[{name:stage.GetPrimAtPath(f'/World/Cloth_{i}').GetAttribute(name).Get()
@@ -107,7 +120,13 @@ def main():
         # Clamp upper edge with physical surfaces. The gap is 0.30 mm for the
         # 0.40 mm cloth; all native vertices stay dynamic.
         if a.sewing_clamp:
-            for name,size,position in fixture_boxes():
+            components=fixture_boxes(lower_edge_supported=a.supported_clamp) if a.passive_clamp else fixture_boxes()
+            if a.backed_clamp:
+                from repair_backing import fixture_boxes as backing_boxes,initial_clearance,description
+                report['repair_backing']=description()
+                report['repair_backing_reset_clearance_m']=initial_clearance(cloth,[t['nodes'] for t in threads],radius)
+                components+=backing_boxes()
+            for name,size,position in components:
                 fixture_roots[name]=f'/World/{name}'
                 moving=a.passive_clamp and name==MOVING_NAME
                 author_box(stage,fixture_roots[name],size,position,friction=.8,

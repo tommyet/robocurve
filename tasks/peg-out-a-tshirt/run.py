@@ -106,6 +106,7 @@ def main():
     p.add_argument('--steps',type=int,default=None)
     p.add_argument('--plan',type=Path,help='Precomputed ordinary joint commands; required for motion-probe')
     p.add_argument('--seed',type=int,default=0)
+    p.add_argument('--joint-feedback-from',type=int,help='Enable bounded right-arm PI tracking after this many actions, using ordinary joint observations only')
     p.add_argument('--judging-views',action='store_true',help='Record additional native960×720 front/rear assessor videos')
     p.add_argument('--out',type=Path)
     p.add_argument('--check-only',action='store_true',help='Compile source and check JSON without loading a simulator')
@@ -140,6 +141,10 @@ def main():
         args.steps=60 if args.steps is None else args.steps
         if not 1<=args.steps<=MAX_SMOKE_STEPS:
             p.error('Smoke runs are limited to 1–200 control steps')
+    if args.joint_feedback_from is not None and (args.mode!='motion-probe' or not 0<=args.joint_feedback_from<args.steps):
+        p.error('Joint feedback requires a motion probe and a start before its last action')
+    if fixed_plan is not None and fixed_plan.get('requires_joint_feedback_from')!=args.joint_feedback_from:
+        p.error('Joint feedback option must exactly match the frozen plan')
     if not 0<=args.seed<2**32:
         p.error('Seed must be an unsigned 32-bit integer')
     source_hashes=sources()
@@ -167,7 +172,9 @@ def main():
             'source_sha256':source_hashes,'versions':versions,'seed':args.seed,
             'control_hz':CONTROL_HZ,'requested_steps':args.steps,'completed_steps':0,
             'policy':('constant adapter-ready joint targets' if fixed_plan is None else 'frozen fixed joint trajectory')+'; no object/assessor feedback',
-            'instruction':draft['instruction']}
+            'instruction':draft['instruction'],'joint_feedback_from':args.joint_feedback_from}
+    if args.joint_feedback_from is not None:
+        report['policy']='frozen joint reference with bounded right-arm PI from ordinary joint observations; no object/assessor feedback'
     def save():
         report['wall_seconds']=time.monotonic()-started
         temporary=args.out/'run.json.tmp'
@@ -245,7 +252,10 @@ def main():
                 [WRIST['velocity']/CONTROL_HZ]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/CONTROL_HZ]),2)
             if np.any(np.abs(np.diff(np.vstack((ready,fixed_actions)),axis=0))>delta_limit*1.001):
                 raise ValueError('Fixed trajectory exceeds normal joint/gripper speed limits')
-        active_action=ready.copy()
+        from joint_tracking import JointTracking
+        tracking=JointTracking()
+        report['joint_tracking_parameters']={k:getattr(tracking,k) for k in ('kp','ki','limit','slew')}
+        active_action=ready.copy();reference_action=ready.copy();requested_action=ready.copy()
         def arr(value):
             return getattr(value,'torch',value).detach().cpu().numpy()
         def snapshot(step):
@@ -253,6 +263,8 @@ def main():
             state=scene.object_states(emb._env,names)
             record={'step':step,'time_s':step/CONTROL_HZ,'action14':active_action.tolist(),
                     'measured_joint_pos':encode(np.asarray(observation.state['joint_pos'])),
+                    'reference_action14':reference_action.tolist(),'requested_action14':requested_action.tolist(),
+                    'right_tracking_bias6':tracking.bias.tolist(),
                     'objects':encode(state),'physics_step_count':int(base.sim._physics_step_count),
                     'robot_links':{name:{'names':list(base.scene[name].body_names),
                          'poses_xyzw':arr(base.scene[name].data.body_link_pose_w)[0].tolist()}
@@ -279,7 +291,11 @@ def main():
         command=torch.as_tensor(ready[None,:],device=base.device,dtype=torch.float32)
         for step in range(1,args.steps+1):
             if fixed_actions is not None:
-                active_action=fixed_actions[step-1].copy()
+                reference_action=fixed_actions[step-1].copy()
+                observed=np.asarray(emb._observation().state['joint_pos'],float)
+                requested_action=tracking.action(reference_action,observed,enabled=args.joint_feedback_from is not None and step>args.joint_feedback_from)
+                bounded=np.clip(requested_action,emb._low,emb._high)
+                active_action=active_action+np.clip(bounded-active_action,-delta_limit,delta_limit)
                 command=torch.as_tensor(active_action[None,:],device=base.device,dtype=torch.float32)
             emb._env.step(command)
             emb._t=step/CONTROL_HZ

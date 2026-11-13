@@ -12,11 +12,13 @@ from geometry import TABLE_TOP
 ROTATION=np.array(((0.,0.,-1.),(0.,-1.,0.),(-1.,0.,0.)))
 TOP=TABLE_TOP+.150
 PLANE_X=.300
+SUPPORT_SHIFT=.0198  # Lower edge centre becomes table top + cloth rest offset.
 
 
-def transform(points):
+def transform(points,*,lower_edge_supported=False):
     """Rigidly relocate the exact 020 vertical retention-probe geometry."""
-    return (np.asarray(points)-(.235,0.,.7511))@ROTATION.T+(PLANE_X,0.,TOP)
+    top=TOP-SUPPORT_SHIFT if lower_edge_supported else TOP
+    return (np.asarray(points)-(.235,0.,.7511))@ROTATION.T+(PLANE_X,0.,top)
 
 
 def fixture_boxes():

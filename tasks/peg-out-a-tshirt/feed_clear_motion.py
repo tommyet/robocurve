@@ -22,12 +22,12 @@ def tilted_side_rotation(degrees):
     return rx@side_rotation(degrees)
 
 
-def compile_feed():
+def compile_feed(grasp_x=.220):
     from fixed_motion import compile_grasp,front_rotation
     from yam_arena import ik,station
     from yam_arena.constants import READY,SHOULDER,WRIST,GRIPPER,FINGER_OPEN
     from scene import PHYSICS_HZ,SUPPORT_BOARD_THICKNESS
-    frames=compile_grasp(grasp_x=.220)['frames'][:200];a=np.asarray(frames[-1]['action14'])
+    frames=compile_grasp(grasp_x=grasp_x)['frames'][:200];a=np.asarray(frames[-1]['action14'])
     q={s:a[7*i:7*i+6].copy() for i,s in enumerate(('left','right'))};opening={'left':0.,'right':0.};audits=[]
     def both(x,z):return {s:((x,sign*.115,z),0.,'front') for s,sign in [('left',1),('right',-1)]}
     schedule=[

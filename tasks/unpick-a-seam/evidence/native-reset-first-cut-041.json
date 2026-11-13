@@ -1,0 +1,1796 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Normal-reset supported-cloth first-cut attempt, stopped during initial pickup",
+  "report_sha256": "7a7d3565a7684a11914630b849f211a642f85fb48533e7894713f0f71573f9eb",
+  "first_crossing_sha256": "e0b77d5298a01f0525286c1f3566d440fe1b73d6ad1a2f6f9e2f9513fbbc78d9",
+  "last_state_sha256": "c0519e826cb22fd8d24a8023c7486f272fd6a53e78354b4e5da75b7a7cb4c2a0",
+  "measurements": {
+    "completed_steps": 8,
+    "audited_physics_substeps": 432,
+    "contact_audit": [
+      {
+        "valid": false,
+        "steps": 395,
+        "first_failure": {
+          "step": 395,
+          "time_s": 0.41041666666666665,
+          "reason": "thread crosses intact fabric",
+          "static_intersections": 1,
+          "swept_intersections": 0,
+          "static_crossing_details": [
+            {
+              "segment_index": 140,
+              "face_index": 2561,
+              "coordinate_frame": "current",
+              "intersection_m": [
+                0.3032375078399755,
+                -0.02983807534309547,
+                0.8169852999805621
+              ],
+              "barycentric": [
+                0.27478425342766877,
+                0.11464701895023179,
+                0.6105687276220995
+              ],
+              "segment_parameter": 0.3554046259351905,
+              "strictly_inside_triangle": true,
+              "strictly_inside_segment": true,
+              "distance_to_mesh_boundary_m": 4.579134443541032e-05,
+              "closest_boundary_edge": [
+                885,
+                886
+              ],
+              "closest_boundary_point_m": [
+                0.30324153849181273,
+                -0.029837979035228793,
+                0.8170309134850949
+              ],
+              "closest_boundary_edge_length_m": 0.0004005733801096182,
+              "closest_boundary_vertices_distance_to_thread_axis_m": [
+                0.0002478555487739346,
+                0.00015640698745280132
+              ],
+              "nearest_mesh_vertex_distance_to_thread_axis_m": 0.00015640698745280132
+            }
+          ],
+          "swept_crossing_details": [],
+          "native_substep": 394
+        }
+      },
+      {
+        "valid": true,
+        "steps": 395,
+        "first_failure": null
+      }
+    ],
+    "thread_joint_integrity": {
+      "maximum_closed_joint_gap_m": 4.346554576439857e-05,
+      "first_failure": null,
+      "valid": true
+    },
+    "closed_junction_contact_audit": [
+      {
+        "valid": true,
+        "steps": 433,
+        "first_failure": null
+      },
+      {
+        "valid": true,
+        "steps": 433,
+        "first_failure": null
+      }
+    ],
+    "strain": [
+      {
+        "maximum_principal_stretch": 1.0173223281061414,
+        "first_validity_excursion": null,
+        "first_2pct_warning": null,
+        "maximum_stretch_limit": 1.05
+      },
+      {
+        "maximum_principal_stretch": 1.014392509640951,
+        "first_validity_excursion": null,
+        "first_2pct_warning": null,
+        "maximum_stretch_limit": 1.05
+      }
+    ],
+    "cut_events": [],
+    "damage_events": [],
+    "maximum_edge_force_n": 0.0
+  },
+  "terminal_static_crossings_both_patches": [
+    0,
+    0
+  ],
+  "terminal_time_s": 0.45,
+  "first_hit_boundary_vertex_capsule_overlap_m": 0.0002435930125471987,
+  "first_hit_axis_endpoints_signed_plane_distances_m": [
+    -0.00029170767411047663,
+    0.000529068570269839
+  ],
+  "hole_link_diagnostic": {
+    "method": "Algebraic intersections of closed tack axes plus native-junction connectors with oriented centroid-fan surfaces spanning each real needle-hole boundary; assessment only",
+    "before_time_s": 0.409375,
+    "first_intersection_time_s": 0.41041666666666665,
+    "terminal_time_s": 0.45,
+    "all_before_terminal_links_match": true,
+    "states": {
+      "before": {
+        "left": [
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              -0.030000000000000002,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              3
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              -0.030000000000000002,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              -1
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              -0.018,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              -0.018,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              -1,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              -0.005999999999999999,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              -0.005999999999999999,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              0.006,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              0.006,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              -1,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              0.017999999999999995,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              0.017999999999999995,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              -1,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              0.03,
+              0.8077000000000001
+            ],
+            "links": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              0.03,
+              0.8177000000000001
+            ],
+            "links": [
+              -1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "right": [
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              -0.030000000000000002,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              -0.030000000000000002,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              -1
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              -0.018,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              -0.018,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              -1,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              -0.005999999999999999,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              -0.005999999999999999,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              0.006,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              0.006,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              -1,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              0.017999999999999995,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              0.017999999999999995,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              -1,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              0.03,
+              0.8077000000000001
+            ],
+            "links": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              0.03,
+              0.8177000000000001
+            ],
+            "links": [
+              -1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "first": {
+        "left": [
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              -0.030000000000000002,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              3
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              -0.030000000000000002,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              -0.018,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              -0.018,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              -1,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              -0.005999999999999999,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              -0.005999999999999999,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              0.006,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              0.006,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              -1,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              0.017999999999999995,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              0.017999999999999995,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              -1,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              0.03,
+              0.8077000000000001
+            ],
+            "links": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              0.03,
+              0.8177000000000001
+            ],
+            "links": [
+              -1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "right": [
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              -0.030000000000000002,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              -0.030000000000000002,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              -1
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              -0.018,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              -0.018,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              -1,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              -0.005999999999999999,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              -0.005999999999999999,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              0.006,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              0.006,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              -1,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              0.017999999999999995,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              0.017999999999999995,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              -1,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              0.03,
+              0.8077000000000001
+            ],
+            "links": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              0.03,
+              0.8177000000000001
+            ],
+            "links": [
+              -1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "terminal": {
+        "left": [
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              -0.030000000000000002,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              -0.030000000000000002,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              -1
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              -0.018,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              -0.018,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              -1,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              -0.005999999999999999,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              -0.005999999999999999,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              0.006,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              0.006,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              -1,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              0.017999999999999995,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              0.017999999999999995,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              -1,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              0.03,
+              0.8077000000000001
+            ],
+            "links": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.2995999999999999,
+              0.03,
+              0.8177000000000001
+            ],
+            "links": [
+              -1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "right": [
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              -0.030000000000000002,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              -0.030000000000000002,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              -1
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              -0.018,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              -0.018,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              0,
+              -1,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              -0.005999999999999999,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              -0.005999999999999999,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              0.006,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              0.006,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              0,
+              -1,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              0.017999999999999995,
+              0.8077000000000001
+            ],
+            "links": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              0.017999999999999995,
+              0.8177000000000001
+            ],
+            "links": [
+              0,
+              -1,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              0.03,
+              0.8077000000000001
+            ],
+            "links": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "rest_centre_m": [
+              0.3003999999999999,
+              0.03,
+              0.8177000000000001
+            ],
+            "links": [
+              -1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "intersection_counts": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    "limitation": "Sparse recorded states establish retained linking at terminal, not continuous-time recovery duration. Unvalidated as a runtime scorer; no validity flag is cleared."
+  },
+  "interpretation": "One axis intersects45.79 micrometres inside a needle-hole edge at0.410417 s. This exceeds roundoff and includes243.59 micrometres nominal capsule overlap at a nearby boundary vertex. At0.45 s no static intersections remain, and each closed tack has the same link through each original hole as before. Evidence supports transient edge interpenetration with recovery rather than permanent unthreading in this interval. The ordinary guard remains invalid; no cut, demo, or score is claimed."
+}

@@ -22539,5 +22539,11 @@
     }
   ],
   "waypoint_evidence": "First680 actions preserve native035 front crossing. The narrow pinch moves25mm farther from its tip, leaving about40mm of material below it, and returns to the already clear holding pose with a60mm forward/15mm downward motion. This is an ordinary contact technique candidate, with no online cloth feedback.",
-  "do_not_run_reason": "Awaiting full commanded collision-hull rejection audit."
+  "offline_rejection_audit": {
+    "passed": true,
+    "checked_frames": 1180,
+    "check": "all commanded collision-hull poses against fixed fixtures and opposite arm",
+    "limitation": "Rejection only; not continuous collision freedom, tracking, cloth contact or knot success"
+  },
+  "do_not_run_reason": "Native039 loses the deeper narrow-tail bite during the rear pass and the wrap unwinds. Preserve failed evidence; next candidate changes wrapping wrist orientation."
 }

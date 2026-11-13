@@ -1,0 +1,30 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "First-cut attempt stopped before any native physics action",
+  "report_sha256": "6f84a7c1d3a1457268a310207f4e88ccc36115a8436aca1d64d7669819cf3715",
+  "status": "failed",
+  "error": "ResetNeeded: Cannot call env.step() before calling env.reset()",
+  "completed_steps": 0,
+  "audited_physics_substeps": 0,
+  "strain": [
+    {
+      "maximum_principal_stretch": 1.0002162368543968,
+      "first_validity_excursion": null,
+      "first_2pct_warning": null,
+      "maximum_stretch_limit": 1.05
+    },
+    {
+      "maximum_principal_stretch": 1.0021603707372764,
+      "first_validity_excursion": null,
+      "first_2pct_warning": null,
+      "maximum_stretch_limit": 1.05
+    }
+  ],
+  "thread_joint_integrity": {
+    "maximum_closed_joint_gap_m": 5.053698251089284e-08,
+    "first_failure": null,
+    "valid": true
+  },
+  "interpretation": "Skipping explicit episode reset violates Gym OrderEnforcing lifecycle. This is an integration error, not physical success or failure. The selected supported 960 Hz trial will use the normal existing env.reset() path. Historical skip-reset option now rejects locally before simulator initialization.",
+  "cpu_check": "Unsupported reset option exits2 before output creation or Isaac imports"
+}

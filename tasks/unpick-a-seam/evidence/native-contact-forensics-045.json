@@ -1,0 +1,421 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Bounded ready-hold contact forensics, no policy or cutting",
+  "report_sha256": "98d3e883abc27657c705ebb918686f00f7084d8d74ab748b6fbae0cdf6fbdc15",
+  "history_sha256": "575a0352387468bc5d0fc4cc29de9c2b6d09a5d124912d90bda2a877e16753be",
+  "measurements": {
+    "status": "failed",
+    "error": "RuntimeError: Native seam material/contact validity boundary crossed",
+    "completed_steps": 10,
+    "audited_physics_substeps": 504,
+    "strain": [
+      {
+        "maximum_principal_stretch": 1.0271919616724978,
+        "first_validity_excursion": null,
+        "first_2pct_warning": {
+          "time_s": 0.33541666666666664,
+          "triangle": 2452,
+          "principal_stretch": 1.0271919616724978,
+          "limit": 1.02
+        },
+        "maximum_stretch_limit": 1.05
+      },
+      {
+        "maximum_principal_stretch": 1.0448485232894749,
+        "first_validity_excursion": null,
+        "first_2pct_warning": {
+          "time_s": 0.5208333333333334,
+          "triangle": 2550,
+          "principal_stretch": 1.0448485232894749,
+          "limit": 1.02
+        },
+        "maximum_stretch_limit": 1.05
+      }
+    ],
+    "thread_joint_integrity": {
+      "maximum_closed_joint_gap_m": 2.9790776555510892e-05,
+      "first_failure": null,
+      "valid": true
+    },
+    "closed_junction_contact_audit": [
+      {
+        "valid": true,
+        "steps": 505,
+        "first_failure": null
+      },
+      {
+        "valid": false,
+        "steps": 505,
+        "first_failure": {
+          "step": 505,
+          "time_s": 0.525,
+          "reason": "thread crosses intact fabric",
+          "static_intersections": 0,
+          "swept_intersections": 1,
+          "static_crossing_details": [],
+          "swept_crossing_details": [
+            {
+              "segment_index": 166,
+              "face_index": 2789,
+              "coordinate_frame": "previous_triangle_endpoint_0",
+              "intersection_m": [
+                0.3059440105412627,
+                -0.029922959998441852,
+                0.8147342400286566
+              ],
+              "barycentric": [
+                0.11780773230498076,
+                0.09573994696603806,
+                0.7864523207289812
+              ],
+              "segment_parameter": 0.34705759452632007,
+              "strictly_inside_triangle": true,
+              "strictly_inside_segment": true,
+              "distance_to_mesh_boundary_m": 0.00036016308869272974,
+              "closest_boundary_edge": [
+                366,
+                367
+              ],
+              "closest_boundary_point_m": [
+                0.30598321497873854,
+                -0.02991094256201272,
+                0.8150920612741976
+              ],
+              "closest_boundary_edge_length_m": 0.00040233468388862917,
+              "closest_boundary_vertices_distance_to_thread_axis_m": [
+                0.0003545614533944563,
+                0.0004915256162510302
+              ],
+              "nearest_mesh_vertex_distance_to_thread_axis_m": 5.6570714933205934e-05
+            },
+            {
+              "segment_index": 166,
+              "face_index": 2789,
+              "coordinate_frame": "previous_triangle_endpoint_1",
+              "intersection_m": [
+                0.30594683108632165,
+                -0.029926801822245795,
+                0.8147487143876694
+              ],
+              "barycentric": [
+                0.1288977787368245,
+                0.13236260796794386,
+                0.7387396132952316
+              ],
+              "segment_parameter": 0.266691523349704,
+              "strictly_inside_triangle": true,
+              "strictly_inside_segment": true,
+              "distance_to_mesh_boundary_m": 0.00034560401646837745,
+              "closest_boundary_edge": [
+                366,
+                367
+              ],
+              "closest_boundary_point_m": [
+                0.30598450603346,
+                -0.02991525361973727,
+                0.8150920646076723
+              ],
+              "closest_boundary_edge_length_m": 0.00040233468388862917,
+              "closest_boundary_vertices_distance_to_thread_axis_m": [
+                0.0003416014308443017,
+                0.0004783820166197447
+              ],
+              "nearest_mesh_vertex_distance_to_thread_axis_m": 6.715446059588992e-05
+            }
+          ],
+          "joint_indices_in_segment_order": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160,
+            161,
+            162,
+            163,
+            164,
+            165,
+            166,
+            167
+          ]
+        }
+      }
+    ],
+    "forensic_contact_history": [
+      {
+        "steps": 505,
+        "dt_s": 0.0010416666666666667,
+        "static_intersection_intervals": [
+          {
+            "first_step": 330,
+            "last_step": 331,
+            "sample_count": 2,
+            "sampled_duration_s": 0.0020833333333333333,
+            "recovered_before_end": true
+          },
+          {
+            "first_step": 333,
+            "last_step": 333,
+            "sample_count": 1,
+            "sampled_duration_s": 0.0010416666666666667,
+            "recovered_before_end": true
+          },
+          {
+            "first_step": 346,
+            "last_step": 347,
+            "sample_count": 2,
+            "sampled_duration_s": 0.0020833333333333333,
+            "recovered_before_end": true
+          },
+          {
+            "first_step": 356,
+            "last_step": 357,
+            "sample_count": 2,
+            "sampled_duration_s": 0.0020833333333333333,
+            "recovered_before_end": true
+          },
+          {
+            "first_step": 387,
+            "last_step": 389,
+            "sample_count": 3,
+            "sampled_duration_s": 0.003125,
+            "recovered_before_end": true
+          },
+          {
+            "first_step": 466,
+            "last_step": 467,
+            "sample_count": 2,
+            "sampled_duration_s": 0.0020833333333333333,
+            "recovered_before_end": true
+          },
+          {
+            "first_step": 469,
+            "last_step": 469,
+            "sample_count": 1,
+            "sampled_duration_s": 0.0010416666666666667,
+            "recovered_before_end": true
+          },
+          {
+            "first_step": 488,
+            "last_step": 488,
+            "sample_count": 1,
+            "sampled_duration_s": 0.0010416666666666667,
+            "recovered_before_end": true
+          },
+          {
+            "first_step": 501,
+            "last_step": 505,
+            "sample_count": 5,
+            "sampled_duration_s": 0.005208333333333333,
+            "recovered_before_end": false
+          }
+        ],
+        "swept_intersection_intervals": [],
+        "maximum_sampled_boundary_distance_m": 8.193959750534411e-05,
+        "maximum_sampled_boundary_vertex_capsule_overlap_m": 0.0003978588985306593,
+        "note": "At most eight static details per step; maxima are sampled lower bounds. Intervals describe sampled occupancy, not continuous-time residence or proof of permanent unthreading."
+      },
+      {
+        "steps": 505,
+        "dt_s": 0.0010416666666666667,
+        "static_intersection_intervals": [
+          {
+            "first_step": 490,
+            "last_step": 494,
+            "sample_count": 5,
+            "sampled_duration_s": 0.005208333333333333,
+            "recovered_before_end": true
+          },
+          {
+            "first_step": 499,
+            "last_step": 505,
+            "sample_count": 7,
+            "sampled_duration_s": 0.007291666666666667,
+            "recovered_before_end": false
+          }
+        ],
+        "swept_intersection_intervals": [
+          {
+            "first_step": 505,
+            "last_step": 505,
+            "sample_count": 1,
+            "sampled_duration_s": 0.0010416666666666667,
+            "recovered_before_end": false
+          }
+        ],
+        "maximum_sampled_boundary_distance_m": 0.000878294770997775,
+        "maximum_sampled_boundary_vertex_capsule_overlap_m": 0.0003837438974569535,
+        "note": "At most eight static details per step; maxima are sampled lower bounds. Intervals describe sampled occupancy, not continuous-time residence or proof of permanent unthreading."
+      }
+    ],
+    "wall_seconds": 53.48575734347105
+  },
+  "interpretation": "The first upper-edge contacts are brief1\u20133ms events with recovery, but the later lower-patch crossing reaches0.878mm inside intact cloth by0.525s. That is more than twice the0.4mm thread radius and is not a harmless microscopic boundary overlap. A connector sweep also crosses0.36mm inside. Original invalidity remains latched; this does not support weakening the geometric guard.",
+  "next_correction": {
+    "cloth_contact_offset_m": 0.00075,
+    "previous_cloth_contact_offset_m": 0.00025,
+    "unchanged_rest_offset_m": 0.0002,
+    "unchanged_thread_contact_offset_m": 5e-05,
+    "old_combined_discovery_margin_m": 0.0001,
+    "new_combined_discovery_margin_m": 0.0006,
+    "measured_previous_failing_substep_max_local_relative_travel_m": 0.00031736572699704656,
+    "evidence": "Native041 retained before/after crossing state: capsule140 relative to face2561",
+    "meaning": "Earlier native contact generation, preserving rendered/physical geometry and all rest distances, material and validity limits; opt-in until a native result exists",
+    "official_source": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/110.0/dev_guide/rigid_bodies_articulations/collision.html"
+  }
+}

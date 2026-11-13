@@ -1,0 +1,339 @@
+{
+  "kind": "native-wheel-integration-development-evidence",
+  "date": "2026-11-13",
+  "submission_ready": false,
+  "task_score": null,
+  "interpretation": "Pickup mechanically succeeds, but the unheld wheel accelerates without explained physical torque. No-rewind and frozen custom-thread controls preserve nearly identical runaway. Neither is a successful truing demonstration.",
+  "runs": {
+    "pickup": {
+      "status": "complete",
+      "physics_dt_s": 0.0001,
+      "completed_actions": 82,
+      "sim_seconds": 4.1,
+      "wall_seconds": 393.82045474275947,
+      "report_sha256": "6fa9f3a8f84428eebfe4d2b394435e0e46d32cc83aae714d4ae7d479bb6d285e",
+      "trace_sha256": "2a8c568dd7bf88ac3b0370f4a17551c46a3a109f6f7ee915816c6d644b79b553",
+      "source_sha256": {
+        "plan_reach.py": "94260a69aa2e3905a7004822d7b685e861139d07307dd01ddc541ffe6f918d79",
+        "test_thread_coupling.py": "4465e568cbb8721461275b04742307e82c7d7007d27c880dfdedbd6ba4ba612f",
+        "preview_yam.py": "d15b04aa0cebb2994cc0d55c5eaefe49ebd206ce8877d5da276e0e72d66c7d5c",
+        "scene_probe.py": "3c1d04bbbf70723f862213b610ca7c143806fba76896245a1806ec646f7ff4f2",
+        "task.py": "53caa329e14ba64409dbc212de42aef5098cd3fc82ecb76fca91f8f81c142919",
+        "arena_wheel.py": "6e64931652760a0a980987ccbbcea8c3f82143e92a1c82b41bf2dab3059b177a",
+        "test_authoring_flow.py": "406197ab68a74fdbfb667cefb29c557479716cea392adc8b13988d8929908042",
+        "rim_geometry.py": "a680a16b8f4d285ba0216ce06afcb1459c2e579d4194dd0c407102df3eefe835",
+        "motion_plan.py": "82ea54843a44dcf4fa8b39cc262c3ce591e4aa66d3aeb9f321aa3f9daff77803",
+        "wheel_scene.py": "6f0ce6e2647a3998b39db902af686aa82ebd50f02e8ace46534c2a57e4c5d6fc",
+        "scoring.py": "f82f46580c3317e4f747e0b3abb8fa465d028c0b35a4653622e7f1974ddcdd78",
+        "audit_robot_plan.py": "d9874b6c056bed08830c661217483c3865557842f2aea1b77bd0c42af27088e7",
+        "test_integrity.py": "9970f3416c020fb59d5a428b24954c953310dc03c5816d563fddecb8faadbc6a",
+        "mechanics.py": "a0bc89a7b61ae46ed0ecf555c1f45cc12b52972392cd6b69292907b3c995ba87",
+        "analyze_scene.py": "6473a08267b0e5946d6b618d1038e0e63d7a501cc15a8d73afc84d1996deb9b3",
+        "spring_probe.py": "f122bc62256685cea6596d48fa1d0155261a66f4678c70bcee82ad5f974e4175",
+        "test_scoring.py": "d58789463cd0fc894dd280023093b07b0f1b80cb6efe511be4ca95bdc22229e9",
+        "wrench_contact_probe.py": "f43f4b98169e2e9cc7d58ec31f1f538658b007fbd3765f33f6c29b69d9ce5d95",
+        "native_probe.py": "11e7c3dddc7f4726099f6977b0db80c54f4b438b6e26a4adbcceca914e3503f7",
+        "plan_turns.py": "ad5f5a154099f057119a6e607062e0846b0ba4d958978ddd45d1ede4c0a4bcc8",
+        "probe.py": "fa83750ed32549c2d3af55ee6efa1f12514faa50d2051c46819c6cab94661dd1",
+        "thread_coupling.py": "4023f373f81f3c98420d58c5dc9b395aed0c8c96ed644d278f3799fac4933a0c",
+        "test_mechanics.py": "45229058d0a180439f0e32ae2eac07e4090827233eb9c49b61929ab043885048",
+        "test_rim_geometry.py": "53d001f47683adc1eb05765be9671f10519a42215aca44f9cdbbcc552269a9e2",
+        "momentum.py": "b6c12bcbdd75d9931f4fee37d3971c0cd02c8c077e72299d1a310ef3ac35493e",
+        "integrity.py": "8c917dd46bd126c023c04439b303f5d9fafb1d31289014ed99fe0a5aac28a90b"
+      },
+      "rim_integrity": {
+        "valid": true,
+        "steps": 41002,
+        "first_failure": null,
+        "maximum_axial_bending_strain": 0.0011579950061802518,
+        "maximum_twist_rad": 0.0009640091943904128,
+        "maximum_locked_joint_gap_m": 8.52330579781107e-06,
+        "peaks": {
+          "maximum_axial_bending_strain": 0.001549180988238549,
+          "maximum_twist_rad": 0.0034289864626290655,
+          "maximum_locked_joint_gap_m": 1.864257388440625e-05
+        }
+      },
+      "hub_omega_x_samples": [
+        {
+          "time_s": 0.0,
+          "omega_x_rad_s": 0.0
+        },
+        {
+          "time_s": 0.25,
+          "omega_x_rad_s": -1.7984720468521118
+        },
+        {
+          "time_s": 0.5,
+          "omega_x_rad_s": -3.4263148307800293
+        },
+        {
+          "time_s": 0.75,
+          "omega_x_rad_s": -5.245852470397949
+        },
+        {
+          "time_s": 1.0,
+          "omega_x_rad_s": -6.810838222503662
+        },
+        {
+          "time_s": 1.25,
+          "omega_x_rad_s": -8.462265968322754
+        },
+        {
+          "time_s": 1.5,
+          "omega_x_rad_s": -10.051348686218262
+        },
+        {
+          "time_s": 1.75,
+          "omega_x_rad_s": -11.610373497009277
+        },
+        {
+          "time_s": 2.0,
+          "omega_x_rad_s": -13.031774520874023
+        },
+        {
+          "time_s": 2.25,
+          "omega_x_rad_s": -14.41280460357666
+        },
+        {
+          "time_s": 2.5,
+          "omega_x_rad_s": -15.876874923706055
+        },
+        {
+          "time_s": 2.75,
+          "omega_x_rad_s": 0.28117862343788147
+        },
+        {
+          "time_s": 3.0,
+          "omega_x_rad_s": 0.027146385982632637
+        },
+        {
+          "time_s": 3.25,
+          "omega_x_rad_s": 0.001488702604547143
+        },
+        {
+          "time_s": 3.5,
+          "omega_x_rad_s": -0.009122142568230629
+        },
+        {
+          "time_s": 3.75,
+          "omega_x_rad_s": 0.01719457469880581
+        },
+        {
+          "time_s": 4.0,
+          "omega_x_rad_s": 0.021735887974500656
+        }
+      ],
+      "maximum_abs_hub_omega_x_rad_s": 16.132911682128906,
+      "wrench_displacement_m": [
+        0.0006441771984100342,
+        -0.0007686568424105644,
+        0.06822830438613892
+      ]
+    },
+    "no_rewind": {
+      "status": "complete",
+      "physics_dt_s": 0.0001,
+      "completed_actions": 30,
+      "sim_seconds": 1.5,
+      "wall_seconds": 155.89330071397126,
+      "report_sha256": "a5a3e2728d54a7ab6890db28082f9347a321e4ea1df004245d431e81bbc9478b",
+      "trace_sha256": "429bf2ad011c29aea188acb83fa5fa660c6afaf6285510fb633a4078c7dfea4d",
+      "source_sha256": {
+        "plan_reach.py": "94260a69aa2e3905a7004822d7b685e861139d07307dd01ddc541ffe6f918d79",
+        "test_thread_coupling.py": "4465e568cbb8721461275b04742307e82c7d7007d27c880dfdedbd6ba4ba612f",
+        "preview_yam.py": "ad3286f94e9f3a87ea5a432764392a43d193867b28d5edbf23da53715a27fb4b",
+        "scene_probe.py": "3c1d04bbbf70723f862213b610ca7c143806fba76896245a1806ec646f7ff4f2",
+        "task.py": "53caa329e14ba64409dbc212de42aef5098cd3fc82ecb76fca91f8f81c142919",
+        "arena_wheel.py": "2a35f2d46517cebece40d94326331e3b251acf9d1ed9a7a7dfce13c26a2d4ae3",
+        "test_authoring_flow.py": "406197ab68a74fdbfb667cefb29c557479716cea392adc8b13988d8929908042",
+        "rim_geometry.py": "a680a16b8f4d285ba0216ce06afcb1459c2e579d4194dd0c407102df3eefe835",
+        "motion_plan.py": "82ea54843a44dcf4fa8b39cc262c3ce591e4aa66d3aeb9f321aa3f9daff77803",
+        "wheel_scene.py": "6f0ce6e2647a3998b39db902af686aa82ebd50f02e8ace46534c2a57e4c5d6fc",
+        "scoring.py": "f82f46580c3317e4f747e0b3abb8fa465d028c0b35a4653622e7f1974ddcdd78",
+        "audit_robot_plan.py": "d9874b6c056bed08830c661217483c3865557842f2aea1b77bd0c42af27088e7",
+        "wrench_fixture.py": "b1ed6d997888027f223d84b3917576962b121170df98be92f35ce541ae364ddd",
+        "test_integrity.py": "9970f3416c020fb59d5a428b24954c953310dc03c5816d563fddecb8faadbc6a",
+        "mechanics.py": "a0bc89a7b61ae46ed0ecf555c1f45cc12b52972392cd6b69292907b3c995ba87",
+        "analyze_scene.py": "6473a08267b0e5946d6b618d1038e0e63d7a501cc15a8d73afc84d1996deb9b3",
+        "spring_probe.py": "f122bc62256685cea6596d48fa1d0155261a66f4678c70bcee82ad5f974e4175",
+        "test_scoring.py": "d58789463cd0fc894dd280023093b07b0f1b80cb6efe511be4ca95bdc22229e9",
+        "wrench_contact_probe.py": "7a274a0abb39fe96d80039b6aa77c6aca0444bd537c13397371357031a1be7fa",
+        "test_wrench_fixture.py": "475da4627999339f5cf16ba0d2e27dace4e94ed27ea397a6041c2f7d3c49930f",
+        "native_probe.py": "11e7c3dddc7f4726099f6977b0db80c54f4b438b6e26a4adbcceca914e3503f7",
+        "plan_turns.py": "ad5f5a154099f057119a6e607062e0846b0ba4d958978ddd45d1ede4c0a4bcc8",
+        "probe.py": "fa83750ed32549c2d3af55ee6efa1f12514faa50d2051c46819c6cab94661dd1",
+        "thread_coupling.py": "5e9973334c2ee517204487ec64609aed09a5cce18c9e7559ff0a1728e0ba525b",
+        "test_mechanics.py": "45229058d0a180439f0e32ae2eac07e4090827233eb9c49b61929ab043885048",
+        "test_rim_geometry.py": "53d001f47683adc1eb05765be9671f10519a42215aca44f9cdbbcc552269a9e2",
+        "momentum.py": "b6c12bcbdd75d9931f4fee37d3971c0cd02c8c077e72299d1a310ef3ac35493e",
+        "integrity.py": "8c917dd46bd126c023c04439b303f5d9fafb1d31289014ed99fe0a5aac28a90b"
+      },
+      "rim_integrity": {
+        "valid": true,
+        "steps": 15002,
+        "first_failure": null,
+        "maximum_axial_bending_strain": 0.0011555070015284992,
+        "maximum_twist_rad": 0.0009592085277228131,
+        "maximum_locked_joint_gap_m": 8.414484361186853e-06,
+        "peaks": {
+          "maximum_axial_bending_strain": 0.0012075830186814547,
+          "maximum_twist_rad": 0.0009649093858363903,
+          "maximum_locked_joint_gap_m": 1.1019038233216363e-05
+        }
+      },
+      "hub_omega_x_samples": [
+        {
+          "time_s": 0.0,
+          "omega_x_rad_s": -0.4852132499217987
+        },
+        {
+          "time_s": 0.25,
+          "omega_x_rad_s": -2.076477527618408
+        },
+        {
+          "time_s": 0.5,
+          "omega_x_rad_s": -3.8558707237243652
+        },
+        {
+          "time_s": 0.75,
+          "omega_x_rad_s": -5.619241714477539
+        },
+        {
+          "time_s": 1.0,
+          "omega_x_rad_s": -7.224771976470947
+        },
+        {
+          "time_s": 1.25,
+          "omega_x_rad_s": -8.836175918579102
+        },
+        {
+          "time_s": 1.5,
+          "omega_x_rad_s": -10.299572944641113
+        }
+      ],
+      "maximum_abs_hub_omega_x_rad_s": 10.299572944641113,
+      "wrench_displacement_m": [
+        -2.6494264602661133e-05,
+        8.940696716308594e-08,
+        -1.4901161193847656e-06
+      ],
+      "final_momentum": {
+        "angular_momentum_kg_m2_s": [
+          -0.23045784839335737,
+          0.00019247825058611937,
+          0.00012309997270234165
+        ],
+        "gravity_torque_about_axle_nm": [
+          0.00017550673548572676,
+          0.002978721826145997,
+          0.0
+        ],
+        "maximum_angular_speed_rad_s": 10.63485937178799,
+        "note": "Excludes wrench. Compare changes against external contact/bearing torque; no score is inferred."
+      }
+    },
+    "frozen_thread": {
+      "status": "complete",
+      "physics_dt_s": 0.0001,
+      "completed_actions": 30,
+      "sim_seconds": 1.5,
+      "wall_seconds": 89.24064371362329,
+      "report_sha256": "b2772dd07a7c7c1337fa9993e0f277d3ceb04aa00174810d7afde0c2b987e864",
+      "trace_sha256": "67490482b43a7473f10cb2a60f43efd34cc4b4c3daa499ad6ea02bda796e8344",
+      "source_sha256": {
+        "plan_reach.py": "94260a69aa2e3905a7004822d7b685e861139d07307dd01ddc541ffe6f918d79",
+        "test_thread_coupling.py": "4465e568cbb8721461275b04742307e82c7d7007d27c880dfdedbd6ba4ba612f",
+        "preview_yam.py": "ad3286f94e9f3a87ea5a432764392a43d193867b28d5edbf23da53715a27fb4b",
+        "scene_probe.py": "3c1d04bbbf70723f862213b610ca7c143806fba76896245a1806ec646f7ff4f2",
+        "task.py": "53caa329e14ba64409dbc212de42aef5098cd3fc82ecb76fca91f8f81c142919",
+        "arena_wheel.py": "2a35f2d46517cebece40d94326331e3b251acf9d1ed9a7a7dfce13c26a2d4ae3",
+        "test_authoring_flow.py": "406197ab68a74fdbfb667cefb29c557479716cea392adc8b13988d8929908042",
+        "rim_geometry.py": "a680a16b8f4d285ba0216ce06afcb1459c2e579d4194dd0c407102df3eefe835",
+        "motion_plan.py": "82ea54843a44dcf4fa8b39cc262c3ce591e4aa66d3aeb9f321aa3f9daff77803",
+        "wheel_scene.py": "6f0ce6e2647a3998b39db902af686aa82ebd50f02e8ace46534c2a57e4c5d6fc",
+        "scoring.py": "f82f46580c3317e4f747e0b3abb8fa465d028c0b35a4653622e7f1974ddcdd78",
+        "audit_robot_plan.py": "d9874b6c056bed08830c661217483c3865557842f2aea1b77bd0c42af27088e7",
+        "wrench_fixture.py": "b1ed6d997888027f223d84b3917576962b121170df98be92f35ce541ae364ddd",
+        "test_integrity.py": "9970f3416c020fb59d5a428b24954c953310dc03c5816d563fddecb8faadbc6a",
+        "mechanics.py": "a0bc89a7b61ae46ed0ecf555c1f45cc12b52972392cd6b69292907b3c995ba87",
+        "analyze_scene.py": "6473a08267b0e5946d6b618d1038e0e63d7a501cc15a8d73afc84d1996deb9b3",
+        "spring_probe.py": "f122bc62256685cea6596d48fa1d0155261a66f4678c70bcee82ad5f974e4175",
+        "test_scoring.py": "d58789463cd0fc894dd280023093b07b0f1b80cb6efe511be4ca95bdc22229e9",
+        "wrench_contact_probe.py": "7a274a0abb39fe96d80039b6aa77c6aca0444bd537c13397371357031a1be7fa",
+        "test_wrench_fixture.py": "475da4627999339f5cf16ba0d2e27dace4e94ed27ea397a6041c2f7d3c49930f",
+        "native_probe.py": "11e7c3dddc7f4726099f6977b0db80c54f4b438b6e26a4adbcceca914e3503f7",
+        "plan_turns.py": "ad5f5a154099f057119a6e607062e0846b0ba4d958978ddd45d1ede4c0a4bcc8",
+        "probe.py": "fa83750ed32549c2d3af55ee6efa1f12514faa50d2051c46819c6cab94661dd1",
+        "thread_coupling.py": "5e9973334c2ee517204487ec64609aed09a5cce18c9e7559ff0a1728e0ba525b",
+        "test_mechanics.py": "45229058d0a180439f0e32ae2eac07e4090827233eb9c49b61929ab043885048",
+        "test_rim_geometry.py": "53d001f47683adc1eb05765be9671f10519a42215aca44f9cdbbcc552269a9e2",
+        "momentum.py": "b6c12bcbdd75d9931f4fee37d3971c0cd02c8c077e72299d1a310ef3ac35493e",
+        "integrity.py": "8c917dd46bd126c023c04439b303f5d9fafb1d31289014ed99fe0a5aac28a90b"
+      },
+      "rim_integrity": {
+        "valid": true,
+        "steps": 15002,
+        "first_failure": null,
+        "maximum_axial_bending_strain": 0.001154019594651623,
+        "maximum_twist_rad": 0.0009606655708932876,
+        "maximum_locked_joint_gap_m": 8.329782018205779e-06,
+        "peaks": {
+          "maximum_axial_bending_strain": 0.0012080200833035379,
+          "maximum_twist_rad": 0.0009653880665128335,
+          "maximum_locked_joint_gap_m": 1.0892199419460337e-05
+        }
+      },
+      "hub_omega_x_samples": [
+        {
+          "time_s": 0.0,
+          "omega_x_rad_s": -0.4852132499217987
+        },
+        {
+          "time_s": 0.25,
+          "omega_x_rad_s": -2.074463367462158
+        },
+        {
+          "time_s": 0.5,
+          "omega_x_rad_s": -3.851900577545166
+        },
+        {
+          "time_s": 0.75,
+          "omega_x_rad_s": -5.5447797775268555
+        },
+        {
+          "time_s": 1.0,
+          "omega_x_rad_s": -7.216735363006592
+        },
+        {
+          "time_s": 1.25,
+          "omega_x_rad_s": -8.867518424987793
+        },
+        {
+          "time_s": 1.5,
+          "omega_x_rad_s": -10.398386001586914
+        }
+      ],
+      "maximum_abs_hub_omega_x_rad_s": 10.398386001586914,
+      "wrench_displacement_m": [
+        -2.6494264602661133e-05,
+        8.940696716308594e-08,
+        -1.4901161193847656e-06
+      ],
+      "final_momentum": {
+        "angular_momentum_kg_m2_s": [
+          -0.2306988704268665,
+          0.0002236639354462687,
+          0.00010528568508886894
+        ],
+        "gravity_torque_about_axle_nm": [
+          0.00017643802642152893,
+          0.0029739956714082694,
+          0.0
+        ],
+        "maximum_angular_speed_rad_s": 10.644986877535235,
+        "note": "Excludes wrench. Compare changes against external contact/bearing torque; no score is inferred."
+      }
+    }
+  }
+}

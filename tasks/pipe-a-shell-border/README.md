@@ -137,3 +137,11 @@ The physical technique follows [Wilton’s shell-border guide](https://wilton.co
 build a head with a star nozzle, reduce pressure while drawing a tail, and overlap
 the next head with that tail. This supports the intended technique and shape,
 not the simulation's numerical material properties. Checked 2026-11-13.
+
+Native038 and042 longer-tail and pressure-taper trials remain uneven (0.25,0,0
+under the current scorer). They conserve material and release the dispenser,
+but do not demonstrate a full border. See
+[evidence/native-three-shell-038-042.json](evidence/native-three-shell-038-042.json).
+The next fixed trajectory uses continuous tail motion: two smoothstep segments
+had unintentionally stopped the nozzle halfway through the tail. The material
+and scoring thresholds are unchanged.

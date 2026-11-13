@@ -68,9 +68,13 @@ The shoulder penetration reached 0.713 mm and sampled local strain reached
 lower on the narrow tail and brings it forward before wrapping in the space
 ahead of the shoulder. Batch035 completes the clear route: 60 sampled fixture and self-crossing
 audits pass. The narrow tip nevertheless slips out during crossing and the
-wrap unwinds. The next candidate pinches 40 mm above the narrow tip, leaving
-more material below the grip while preserving the clear route. No knot or
-partial score is claimed. A simpler under/over knot route is CPU-only and
+wrap unwinds. Batch039 also loses the deeper 40 mm bite during the rear pass.
+The wide strip retains considerable slack: its held-to-collar segment has
+about 497 mm arc length but only 183 mm endpoint separation as the grip fails.
+The narrow strand is swept around the wrapping hand. Whole-arm screening rejects a sideways continuation too. A further physical
+wide-tip handoff is being checked so the first arm can leave the crossing
+before the opposite arm carries the tip through. No knot or partial score
+is claimed. A simpler under/over knot route is CPU-only and
 has passed its 1,200-pose hull screen. Its explicit `--inside-out-reset` option
 reverses the initial material face before the same physical settling; the
 default task remains unchanged. No native simple-knot trial has run.

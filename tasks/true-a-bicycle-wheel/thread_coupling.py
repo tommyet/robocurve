@@ -307,6 +307,8 @@ class NativeThreadCoupler:
             torque=gradient*state['lead_torque_nm'][:,None]
             # These are disjoint body indices, one nipple and outer half per spoke.
             io.torques[nipple]+=torque;io.torques[outer]-=torque
+            self.custom_torque_audit={'net_world_torque_nm':io.torques.sum(0).tolist(),
+                                     'maximum_single_body_torque_nm':float(np.linalg.norm(io.torques,axis=1).max())}
             io.flush_torques()
         self._state_arrays=dict(turns=turns,length_m=length,endpoint_distance_m=np.linalg.norm(endpoints-anchors,axis=1),
             axial_joint_gap_m=gap,**state)
@@ -372,4 +374,4 @@ class TensorNativeIO:
     def flush_torques(self):
         import torch
         values=torch.as_tensor(self.torques,dtype=torch.float32,device=self.device)
-        self.view.apply_forces_and_torques_at_position(None,values,None,self.indices,True)
+        self.view.apply_forces_and_torques_at_position(force_data=None,torque_data=values,position_data=None,indices=self.indices,is_global=True)

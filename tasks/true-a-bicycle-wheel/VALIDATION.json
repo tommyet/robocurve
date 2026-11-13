@@ -2,14 +2,15 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "41 CPU checks pass. Native exposed-flat wrench contact and no-contact controls establish causal rotation; corrected straight slot passes its 45-degree transfer gate. Full-turn robot plan is blocked by the offline collision screen. Pickup integration is pending.",
+  "cpu_checks": "47 CPU checks pass. Free-wrench pickup verified. Reciprocal native force-integration controls identify and remove sustained unforced acceleration; normal-reset manipulation with the corrected setting remains to be tested.",
   "simulator_probe": null,
   "demo": null,
   "dream": null,
   "media": null,
   "blocking_items": [
-    "Verify YAM bridge and real free-wrench pickup",
-    "Replace the collision-rejected full-turn plan; demonstrate sufficient physical nipple adjustment",
+    "Verify normal-reset robot service with once-per-step external forces and ordinary joint tracking",
+    "Validate finite-load wrench engagement without excessive jaw penetration",
+    "Run the collision-screened replacement service route with ordinary robot joint-state tracking",
     "Complete released-wheel revolution and final spoke-tension judging",
     "Full-score ordinary robot demo, Dream baseline and final media"
   ],
@@ -66,18 +67,17 @@
       "next": "Full 130-body geometry and live thread coupling .1s at25\u00b5s."
     }
   },
-  "cpu_tests_passed": 41,
+  "cpu_tests_passed": 47,
   "native_scene": {
     "authoring_entry_point": "wheel_scene.build_scene(stage, root)",
     "material_callback": "NativeThreadCoupler.before_step before every native substep",
-    "status": "full_assembly_short_settling_and_thread_holding_passed",
+    "status": "force_integration_cause_identified_and_corrected_configuration_awaiting_service",
     "geometry": "free hub, stand, compliant curved-sector rim, two-half tension-only steel spokes, rotating square nipples, physical open-slot wrench",
     "limitations": [
-      "YAM asset/reset bridge and camera preview remain unrun; no robot manipulation demo.",
-      "Elastic Coulomb thread holding passes short settling; wrench-driven slip and reversal remain untested.",
-      "Thread travel is bounded to \u00b13 turns. A latched rim guard checks every material substep; earlier geometry passes 0.3 s at 25/50 \u00b5s.",
-      "32-iteration solver passes0.3s; longer duration, physical wrench contact and task scoring remain outstanding.",
-      "Earlier settling reports do not validate the latest exposed nipple and thin-neck geometry."
+      "Forces-once YAM remains bounded through1.5s after a constructor transient; normal-reset service and longer task validity remain unproven.",
+      "Native free-wrench pickup works, but no real robot nipple adjustment or repair is demonstrated.",
+      "Kinematic wrench transfer involves up to 175 micrometres reconstructed jaw penetration; finite-load engagement remains untested.",
+      "Elastic rim and simplified thread mechanics remain limited to their declared validity domain."
     ],
     "preview_entry_point": "preview_yam.py --out OUTPUT --steps 2 --physics-hz 40000",
     "wrench_contact_diagnostic": "wrench_contact_probe.py --out OUTPUT --dt .000025 --turn-deg -90; .9s explicit kinematic fixture, not robot demo",
@@ -262,7 +262,7 @@
       },
       "evidence": "evidence/native-two-quarterturn-target-026-summary.json"
     },
-    "grasp_planning": "BLOCKED: 499-action plan is IK-reachable but intersects wheel/hub by up to15.4mm. Do not run it. Replanning grip and layout.",
+    "grasp_planning": "82-action pickup demonstrated. Replacement 682-action route has zero unintended intersections at all sampled commanded poses, but remains offline and lacks final release/spin.",
     "latest_geometry_revision": {
       "status": "native_pending",
       "nipple_center_inset_m": 0.016,
@@ -274,6 +274,52 @@
         0.004
       ],
       "reason": "Old square flats lay inside the solid rim collider. Thick handle also obstructed wrench access. Current exposed flats and thin steel neck preserve physical external collisions."
+    },
+    "force_integration_controls": {
+      "batch": "044",
+      "evidence": "evidence/native-force-integration-044-summary.json",
+      "supported_configuration": "CPU PhysX, once-per-step external forces,100us,32 position iterations",
+      "reciprocal_control": "Every-iteration setting reproduces sustained angular momentum injection in standalone; disabling it removes sustained injection in YAM.",
+      "native_yam_rim_integrity": {
+        "valid": true,
+        "steps": 15002,
+        "first_failure": null,
+        "maximum_axial_bending_strain": 0.0011626439282776332,
+        "maximum_twist_rad": 0.0009601353872625504,
+        "maximum_locked_joint_gap_m": 8.104781220522574e-06,
+        "peaks": {
+          "maximum_axial_bending_strain": 0.0011961491855373785,
+          "maximum_twist_rad": 0.0009662026983952554,
+          "maximum_locked_joint_gap_m": 9.411993246901708e-06
+        }
+      },
+      "first_service_candidate": "service-plan.json:682 ordinary actions; first202 include pickup, quarter turn and withdrawal. PI uses joint state only; not yet run."
+    },
+    "service_hull_screen": {
+      "kind": "wheel_service_nominal_convex_screen",
+      "plan_sha256": "434c89c83d1eab4a83b6c855586373464cb2d3da2e3505b9cd0ad09a5c2548c4",
+      "screen_sha256": "dcd4f6d841c95cfda7ad07718ec8fd9e05da283da399b489c9166a608dc41a8c",
+      "source_sha256": "f705bb059c36800727028f2ebba429ff0df6ee21944e85380c568601dbe92bb3",
+      "urdf_sha256": "d6cc3fca8d6848aad36c0d2bb8798de391fcf5ef8f41180fe7618eda141f0bef",
+      "samples": 682,
+      "stride": 1,
+      "margin_m": 0.0002,
+      "unintended_intersections": 0,
+      "limitations": [
+        "Desired joints and an assumed fixed wrench grasp, not measured native poses",
+        "Nominal rigid wheel geometry, before elastic deflection",
+        "Spoke colliders use conservative square enclosures",
+        "Inter-arm hulls checked; no within-arm self-collision or continuous-time audit",
+        "Recorded URDF and collider sources must match the pinned native runtime"
+      ],
+      "physical_success": false,
+      "calibration": "Fixed036 measured tool-to-hand transform; native repetition remains unproven."
+    },
+    "grasp_calibration": {
+      "translation_error_at_grasp_m": 0.000847,
+      "rotation_error_rad": 0.05245885,
+      "jaw_error_from_grip_rotation_m": 0.009858,
+      "interpretation": "The original12mm jaw-position error was mainly tool rotation, not robot joint droop. Static measured calibration is in service-plan.json; new native trial is pending."
     }
   },
   "judging": "v2: pointer/feeler-gauge runout and dish; mechanical spoke tensiometer, all32 spokes 400\u20131000N for this fixture; no separate hanging-weight trials.",
@@ -301,17 +347,24 @@
   },
   "current_manipulation_status": {
     "date": "2026-11-13",
-    "pickup": "82 actions; sampled commanded-pose hull screen has zero unintended intersections with the latest cantilever stand. Native grasp unproven.",
-    "turns": "BLOCKED: 499-action plan is IK-reachable but intersects wheel/hub by up to15.4mm. Do not run it. Replanning grip and layout.",
-    "fixture": "031 corrected straight-slot held-hub fixture transfers32.9043deg from45deg command, with all16000 rim checks valid. It is a diagnostic fixture, not robot success.",
-    "latest_geometry": "Single-sided stand and straight working slot are explicit authored geometry; no collision filters hide robot/tool interference."
+    "pickup": "036 CPU100us:82 actions complete and74mm wrench lift. Grasp-point translation error below0.8mm, but3deg grip rotation shifts jaws about10mm; calibrated service plan awaiting native result.",
+    "turns": "Old499-action route remains rejected. Calibrated682-action route passes all-frame stride1 hull screen;049 first202 actions queued.",
+    "fixture": "031 kinematic straight-slot fixture transfers32.9043deg, but offline reconstruction finds175um jaw intersection. Finite-force10N/0.35Nm fixture is prepared, not run.",
+    "latest_geometry": "Single-sided stand and straight working slot are explicit authored geometry; no collision filters hide robot/tool interference.",
+    "joint_tracking_candidate": "Optional bounded integral offsets from robot joint observations only; no effort-limit change. CPU limit/speed/failure checks pass. Native test pending."
   },
   "wrench_contact_evidence": "evidence/native-wrench-contact-029-031-summary.json",
   "current_runtime_status": {
     "task_success": false,
-    "native_yam_cpu_035": "2 actions completed, effective cpu;7.78/7.73 seconds per action. Hub angular speed declined from .280 to .140rad/s; no runaway in this short control.",
+    "native_yam_cpu_035": "2actions completed; too short to reveal later CPU runaway.",
     "native_yam_gpu_034": "Interrupted before grasp. Recoverable trace reaches23 actions/1.15s and shows uncommanded hub speed37rad/s. GPU YAM is unsuitable until this is diagnosed. Truncated gzip is partial evidence, not a completed trial.",
-    "standalone_pair_035": "Both CPU/GPU0.1s scenes pass rim integrity and rotate only about0.2degrees; difference lies in YAM GPU integration/configuration.",
-    "next": "CPU100us convergence and ordinary pickup; no successful repair yet."
+    "standalone_pair_035": "BothCPU/GPU0.1s standalone scenes pass rim integrity. Later long CPU YAM evidence rules out a GPU-only cause.",
+    "next": "Run normal-reset calibrated service with once-per-step external forces and ordinary joint-state PI.",
+    "native_yam_cpu_036": "82actions complete in393.82s; unheld hub reaches14.413rad/s before rim grip. CPU delays rather than fixes the runaway.",
+    "native_yam_no_rewind_040": "30actions complete in155.89s; hub reaches10.2996rad/s at1.5s, Lx changes\u22120.22251kgm2/s despite custom torque sum0 and small gravity axle torque.",
+    "frozen_thread_040": "30actions complete in89.24s, no custom torques or material writes; hub reaches10.3984rad/s at1.5s, nearly the live-coupling trajectory. Native scene configuration/contacts remain under investigation.",
+    "native_mass_property_comparison": "All130 masses, COM offsets and inertia tensors match standalone036 and YAM040 within1e-5 relative tolerance.",
+    "evidence": "evidence/native-yam-pickup-and-spin-036-040-summary.json",
+    "native_yam_forces_once_044": "30 actions1.5s complete, rim guard valid at all15002 substeps; no sustained acceleration. Reciprocal standalone flag-on control reproduces the prior runaway."
   }
 }

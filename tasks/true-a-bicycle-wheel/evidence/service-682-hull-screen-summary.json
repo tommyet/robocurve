@@ -1,0 +1,20 @@
+{
+  "kind": "wheel_service_nominal_convex_screen",
+  "plan_sha256": "434c89c83d1eab4a83b6c855586373464cb2d3da2e3505b9cd0ad09a5c2548c4",
+  "screen_sha256": "dcd4f6d841c95cfda7ad07718ec8fd9e05da283da399b489c9166a608dc41a8c",
+  "source_sha256": "f705bb059c36800727028f2ebba429ff0df6ee21944e85380c568601dbe92bb3",
+  "urdf_sha256": "d6cc3fca8d6848aad36c0d2bb8798de391fcf5ef8f41180fe7618eda141f0bef",
+  "samples": 682,
+  "stride": 1,
+  "margin_m": 0.0002,
+  "unintended_intersections": 0,
+  "limitations": [
+    "Desired joints and an assumed fixed wrench grasp, not measured native poses",
+    "Nominal rigid wheel geometry, before elastic deflection",
+    "Spoke colliders use conservative square enclosures",
+    "Inter-arm hulls checked; no within-arm self-collision or continuous-time audit",
+    "Recorded URDF and collider sources must match the pinned native runtime"
+  ],
+  "physical_success": false,
+  "calibration": "Fixed036 measured tool-to-hand transform; native repetition remains unproven."
+}

@@ -18,7 +18,7 @@ difference. The three unedited reports are in `evidence/native-coupon-*.json`;
 `VALIDATION.json` records their hashes. These are contact/material tests, not
 paper extraction or robot demonstrations. Material parameters are approximate.
 
-There are 38 passing CPU checks for the steel law, punctured meshes,
+There are 40 passing CPU checks for the steel law, punctured meshes,
 latched membrane/contact guards, tool approach geometry and photo-based judging.
 The older CPU cohesive-opening model remains a research probe; it does not
 supply tearing physics in the native scene.
@@ -122,4 +122,28 @@ steel volumes; no mass clamp explains this. A separate pocket-support candidate
 uses a 1.5 × 16 × 8 mm recess below the clinched legs. Its five solid plate pieces
 leave the whole intended 6 mm planar leg sweep clear while supporting the paper
 near the punctures. It adds no attachment or collision filter. This candidate
-has geometry checks only and is not yet a validated task reset.
+reaches 0.411% lower-sheet membrane strain after 4.5 ms at a 100 µs step.
+A separate diagnostic allowing up to 1% still stops at 4.9 ms (1.020% lower
+sheet strain), so the local excursion is not yet shown to be bounded. No
+wire centreline crosses intact paper, but that alone does not validate contact.
+Those controls also fail: the unstapled pocket reaches 1.107% strain after
+4.8 ms, and the stapled 25 µs control reaches 1.049% after 10.15 ms. The
+pocket introduces an independently unstable support edge; it is not promoted.
+
+A separate `clearance-candidate` mesh uses 0.8 × 0.6 mm initial punctures to
+represent opened staple holes. This leaves 100 µm of clearance per side after
+the paper collision thickness, compared with 10 µm in the earlier mesh. It
+retains the full clinched-leg obstruction and passes the same mesh-quality
+checks. The supported-edge trial with these holes lasts 96.2 ms before a wire crosses
+a lower-sheet triangle; its matched no-staple control exceeds 1% local membrane
+strain after 8.4 ms. This remains a diagnostic geometry candidate, not a
+promoted reset or a change to the damage rubric.
+
+An unrun fallback explicitly uses heavier flexible printing paper via
+`--paper-profile heavy-200gsm-candidate`:200g/m² and200µm, with matching mass,
+contact thickness, sheet spacing and staple-clinch depth. Both sheets remain
+native deformable surfaces. [Mondi’s printing-paper range](https://www.mondigroup.com/products-and-solutions/uncoated-printing-paper/color-copy/)
+and the[manufacturer datasheet](https://store.paper.co.uk/pub/pdfs/Color-Copy-data-sheet-10-19.pdf)
+support this material class. They do not calibrate the declared isotropic2GPa
+elastic approximation. This candidate has not replaced the task setup or
+passed native extraction; scoring and strain guards are unchanged.

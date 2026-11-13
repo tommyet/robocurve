@@ -60,6 +60,47 @@ developers and their agents, not a competition submission document.
 
 ## Review findings
 
+### 2026-11-13 — native batches038–047, ongoing completion
+
+- Full inventory at07:16UTC confirms one activeRTX6000Ada at$1.09/hour.
+  Current-session compute estimate$7.09, plus the earlier compatibility test
+  and temporary disk. Local watchdog verified; deadline08:01UTC. Billing
+  balance remains unavailable. No Dream requests or submission actions.
+- Wheel044 identifies a causal configuration fault: enabling PhysX external
+  forces every solver iteration makes the standalone wheel gain angular
+  momentum (~0.156Nm unexplained torque); disabling it in YAM removes sustained
+  acceleration. CPU physics with once-per-step forces is now the supported
+  candidate. All15,002 guarded substeps pass. A small reset transient remains.
+- A later independent grasp audit corrects the prior wheel interpretation:
+  hand-to-tool translation was stable, but a3-degree rotational grip offset
+  shifts the long wrench tip about10mm. Ordinary joint PI alone cannot fix
+  that. Cancel the uncalibrated insertion, use measured fixed grasp calibration
+  and rescreen the complete path before testing torque transfer.
+- Shirt043 physically carries and turns the free peg with a stable grasp and
+  an8.3mm opening. It misses attachment because the hand remains24mm above its
+  insertion target; the garment hem then slips. Correct joint tracking and a
+  deeper ordinary hem bite are pending. This is not a hanging-shirt demo.
+- Paper042 rules out the narrow support pocket: the empty sheets are unstable
+  there too. Returning to the old support and using0.8×0.6mm puncture holes
+  delays the stapled failure to96.2ms, but finite wire crosses the lower sheet.
+  No staple-removal success exists. More contact iterations are a controlled
+  numerical comparison, with material and guards unchanged.
+- Seam045 finds both transient grazing and a later0.878mm penetration into
+  intact fabric. The crossing guard must remain. Increasing contact generation
+  offset to0.75mm in047 is correctly authored but fails sooner; the untouched
+  cloth reaches0.7m/s transverse speed. A bounded contact-correction-velocity
+  comparison is next. Do not call these faults harmless or claim cutting.
+- Icing038/042 remains uneven (current scores0.25,0,0), despite conserved
+  material and clean release. Native photographs do not show a full shell
+  border. The next candidate removes an unintended pause at the midpoint of
+  each tail; no material or score relaxation. CPU prescribed replay is only a
+  diagnostic, never robot feasibility evidence.
+- Keep fixed source archives separate from each running process. Curated
+  summaries are committed, full logs/media remain in ignored local artifacts.
+  All completed downloads through047 are SHA-verified; current trials still
+  need collection before stopping the ephemeral Pod.
+
+
 ### 2026-11-13 — native batches033–037, active completion session
 
 - One RTX6000Ada Pod is active at $1.09/hour. At06:29UTC its elapsed
@@ -70,10 +111,12 @@ developers and their agents, not a competition submission document.
   combined use was12GB VRAM,22GB host memory and about10 CPU cores. Never
   overwrite a running snapshot. Use at most two simulator processes and keep
   both bounded; this supersedes the earlier sequential-only starting policy.
-- CPU PhysX removes the wheel's YAM-only free-spin instability while retaining
-  GPU rendering. At100microsecond steps, the0.3-second gate keeps all integrity
-  checks valid and gives0.916mm lateral runout versus0.902mm at50microseconds.
-  Two YAM actions take about5seconds each. Full pickup remains under test.
+- CPU PhysX passes the short wheel gate while retaining GPU rendering, but the
+  longer036 pickup disproves stability: unforced hub speed reaches10.05rad/s at
+  1.5seconds and14.41rad/s at2.25seconds before the left grasp arrests it. The
+  wrench lifts74mm, but repair trials must wait for the momentum diagnosis.
+  The0.3-second100microsecond gate gives0.916mm runout versus0.902mm at50microseconds;
+  it was too short to establish stability. Two YAM actions take about5seconds each.
 - Shirt035 physically opens a passive peg from2.72mm to8.32mm, holds it open,
   closes it and leaves it on the line. The preceding carried-shirt approach
   brushed the peg away. The next plan keeps the shirt260mm forward until the

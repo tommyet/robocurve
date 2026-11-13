@@ -11,6 +11,18 @@ from inspection import StrainAudit,point_triangle_distance
 
 
 class DrapeTests(unittest.TestCase):
+    def test_contact_envelope_preserves_physical_material_and_rest_distance(self):
+        from dataclasses import asdict
+        from native_cloth import seam_fabric
+        baseline=asdict(seam_fabric());expanded=asdict(seam_fabric(.00075))
+        self.assertEqual(baseline.pop('contact_offset'),.00025)
+        self.assertEqual(expanded.pop('contact_offset'),.00075)
+        self.assertEqual(baseline,expanded)
+        self.assertEqual(expanded['rest_offset'],.0002)
+        self.assertEqual(expanded['thickness'],.0004)
+        for value in (0.,.0002,.001,float('nan'),float('inf')):
+            with self.assertRaises(ValueError):seam_fabric(value)
+
     def test_native_contact_correction_bound_is_explicit_and_fail_closed(self):
         from native_cloth import ContactRefinement
         baseline=ContactRefinement(True,4,4).attributes(64)
@@ -80,6 +92,22 @@ result=runpy.run_path('scene.py')
 assert all(len(mesh.rest)==1582 and len(mesh.faces)==2888 for mesh in result['MESHES'])
 assert len(result['FIXTURE'])==5
 assert abs(result['MESHES'][1].rest[:,2].min()-(.7475+.020))<1e-12
+runtime_config.CONFIG=runtime_config.SeamRuntime(thread_radius_m=.0004,hole_half_m=.0008,
+    quality_mesh=True,sewing_clamp=True,passive_clamp=True,supported_clamp=True)
+result=runpy.run_path('scene.py')
+assert abs(result['MESHES'][1].rest[:,2].min()-(.7475+.0002))<1e-12
+assert len(result['FIXTURE'])==5
+baseline=result
+from dataclasses import replace,asdict
+runtime_config.CONFIG=replace(runtime_config.CONFIG,cloth_contact_offset_m=.00075)
+result=runpy.run_path('scene.py')
+assert result['FABRIC'].contact_offset==.00075
+assert baseline['FABRIC'].contact_offset==.00025
+for before,after in zip(baseline['MESHES'],result['MESHES']):
+    np.testing.assert_array_equal(before.rest,after.rest)
+    np.testing.assert_array_equal(before.faces,after.faces)
+assert baseline['FIXTURE']==result['FIXTURE']
+np.testing.assert_array_equal(baseline['thread_nodes'](0.),result['thread_nodes'](0.))
 '''
         result=subprocess.run([sys.executable,'-c',script],cwd=Path(__file__).resolve().parent,
                               text=True,capture_output=True)

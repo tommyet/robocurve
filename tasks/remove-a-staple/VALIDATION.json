@@ -2,7 +2,7 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "38 CPU checks pass. Native steel coupon passes positive/negative/time-step tests. Coarse unstapled full sheets settle for0.1s with membrane strain below0.3%; stapled scene exceeds the membrane approximation at5.6ms. No extraction demo exists.",
+  "cpu_checks": "41 CPU checks pass. Steel coupon controls pass.16x native contact subiterations allow empty supported sheets to finish0.1s below0.7% membrane strain; stapled scene reaches1.14% beside a puncture at30.7ms. No extraction or robot demo exists.",
   "simulator_probe": "One native 3 mm steel leg with contact-driven plastic hinge, not full task.",
   "demo": null,
   "dream": null,
@@ -51,7 +51,7 @@
       }
     }
   },
-  "cpu_tests_passed": 38,
+  "cpu_tests_passed": 41,
   "coupled_paper_probe": {
     "entry_point": "paper_probe.py",
     "status": "Native surface solver runs; mesh cleanup and documented bend coefficient still leave both contact trials outside provisional validity domain.",
@@ -398,5 +398,113 @@
     "evidence": "evidence/native-paper-coupling-032-035-summary.json",
     "next_candidate": "Explicit support plate with 1.5x16x8mm clinch-clearance pocket; no constraints or filters on paper.",
     "cpu_tests_passed": 39
+  },
+  "current_pocket_diagnostic": {
+    "profile": "pocket-support-candidate",
+    "mesh": "coarse",
+    "physics_dt_s": 0.0001,
+    "strict_guard_stop_s": 0.0045,
+    "strict_guard_peak_membrane_strain": 0.0041117,
+    "one_percent_observation_stop_s": 0.0049,
+    "one_percent_observation_peak_membrane_strain": 0.01020425,
+    "wire_crossing": false,
+    "interpretation": "Smaller unsupported region improves the initial excursion, but strain continues to grow. Bending/creasing is not itself classified as tearing.",
+    "next_controls": [
+      "Same pocket without staple",
+      "Same pocket and staple at25us"
+    ],
+    "follow_up_042": {
+      "no_staple_stop_s": 0.0048,
+      "no_staple_peak_membrane_strains": [
+        0.003173971719492963,
+        0.011071614277278208
+      ],
+      "quarter_step_s": 2.5e-05,
+      "stapled_quarter_step_stop_s": 0.01015,
+      "stapled_quarter_step_peak_membrane_strains": [
+        0.010491125138755608,
+        0.004866984676098474
+      ],
+      "interpretation": "The pocket contact layout fails even without steel. Finer time stepping delays but does not resolve it. Do not promote this reset.",
+      "next": "Paired supported-edge controls with the geometrically wider puncture candidate; no threshold change."
+    },
+    "evidence": "evidence/native-pocket-controls-036-042-summary.json"
+  },
+  "clearance_candidate": {
+    "promoted_to_task": false,
+    "native_tested": true,
+    "puncture_size_m": [
+      0.0008,
+      0.0006
+    ],
+    "wire_size_m": [
+      0.0005,
+      0.0003
+    ],
+    "clearance_after_paper_rest_offset_m": 0.0001,
+    "mesh_quality": "Both meshes retain minimum15deg angle and maximum4 aspect ratio. Exact finite holes; no runtime opening/deletion.",
+    "retention_cpu_test": "Clinched wire shifted upward0.8mm crosses intact paper; larger holes do not release folded legs.",
+    "native_observation_042": {
+      "profile": "supported-edge-candidate",
+      "no_staple_stop_s": 0.0084,
+      "no_staple_peak_membrane_strains": [
+        0.008471535089753512,
+        0.01105776711773454
+      ],
+      "stapled_stop_s": 0.0962,
+      "stapled_peak_membrane_strains": [
+        0.007463620295767193,
+        0.003516888232611315
+      ],
+      "stapled_failure": "Lower-sheet wire centreline crosses an intact triangle next to the original puncture boundary.",
+      "interpretation": "Not a validated paper reset; the no-staple control also fails."
+    }
+  },
+  "native_contact_convergence_048": {
+    "profile": "clearance-candidate, supported-edge-candidate",
+    "physics_hz": 10000,
+    "contact_iteration_multiplier": 16,
+    "collision_pair_update_frequency": 4,
+    "speculative_ccd": true,
+    "maximum_depenetration_velocity_m_s": 0.05,
+    "staple_velocity_iterations": 4,
+    "empty": {
+      "status": "completed_diagnostic_only",
+      "seconds": 0.1,
+      "maximum_membrane_strain": [
+        0.006824957688837285,
+        0.004183584153549358
+      ]
+    },
+    "stapled": {
+      "status": "stopped_at_membrane_diagnostic_limit",
+      "seconds": 0.0307,
+      "maximum_membrane_strain": [
+        0.011419079522677178,
+        0.0028723566947450596
+      ],
+      "crossing_checks_valid": true,
+      "peak_location": "Lower sheet beside puncture, approximately0.48mm from wire-segment centre"
+    },
+    "interpretation": "Contact refinement improves empty case but coupled result is not converged. These are diagnostic limits, not observed paper tearing. No task score inferred."
+  },
+  "heavy_paper_candidate": {
+    "status": "authored_unrun",
+    "physical_profile": "200gsm,200micrometre uncoated printing paper; native deformable surface",
+    "thickness_m": 0.0002,
+    "areal_mass_kg_m2": 0.2,
+    "youngs_modulus_pa": 2000000000.0,
+    "friction": 0.35,
+    "density_kg_m3": 1000,
+    "contact_offset_m": 0.00012,
+    "rest_offset_m": 0.0001,
+    "sheet_midplane_gap_m": 0.00022,
+    "stack_thickness_for_clinch_m": 0.0004,
+    "guard_thresholds_changed": false,
+    "sources": [
+      "https://www.mondigroup.com/products-and-solutions/uncoated-printing-paper/color-copy/",
+      "https://store.paper.co.uk/pub/pdfs/Color-Copy-data-sheet-10-19.pdf"
+    ],
+    "interpretation": "A real heavier flexible paper grade, not a rigid proxy. Datasheet supports grammage/thickness class only; isotropic elasticity remains declared approximation. Must validate native contact/extraction before promotion."
   }
 }

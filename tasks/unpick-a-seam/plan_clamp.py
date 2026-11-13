@@ -52,7 +52,7 @@ def compile_plan(pickup):
     # Gain vertical clearance before rotating; stay well in front of the cloth.
     position,orientation=ik.tcp_pose(state['right']['q'],station.BASES['right'])
     transition(1.,'raise ripper before turning',{'right':(position+[0.,0.,.04],orientation,-.0055)})
-    blade=np.array((.276,.046,float(transform([[.300,0.,TABLE_TOP+.004]])[0,2])+.04))
+    blade=np.array((.276,.046,float(transform([[.300,0.,TABLE_TOP+.004]],lower_edge_supported=True)[0,2])+.04))
     transition(2.,'orient ripper clear of clamped seam',{'right':(tcp(blade),tool_rotation@DOWN,-.0055)})
     blade[2]-=.04
     transition(1.,'approach first tack clear of fabric',{'right':(tcp(blade),tool_rotation@DOWN,-.0055)})
@@ -75,6 +75,7 @@ def compile_plan(pickup):
     if np.max(ratio)>1.001:raise RuntimeError('Clamped-seam plan exceeds ordinary action rate limits')
     return {'schema':'fixed-joint-plan-v1','status':'unrun first-tack probe; no removal or score claim',
             'control_hz':20,'no_object_feedback':True,'requires_sewing_clamp':True,'requires_passive_clamp':True,
+            'requires_supported_clamp':True,
             'requires_junction_audit':True,'frames':frames,
             'maximum_ik_position_error_m':position_error,'maximum_ik_rotation_error_rad':rotation_error,
             'maximum_action_rate_fraction':float(ratio.max()),'grasp_offset_in_tool_frame_m':GRASP_OFFSET.tolist(),

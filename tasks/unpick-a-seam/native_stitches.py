@@ -7,7 +7,7 @@ Whether 0.4 mm thread/hole contact is stable is the purpose of the native probe.
 import math
 import numpy as np
 from geometry import patch,stitch_loop,STITCH_Y
-from native_cloth import Fabric,author_cloth
+from native_cloth import author_cloth,seam_fabric
 
 
 def x_quat(direction):
@@ -66,10 +66,10 @@ def author_thread(stage,path,nodes,*,radius=.0002,density=1400.,open_diagnostic=
 
 
 def author_pair(stage,*,transform=lambda p:p,open_diagnostic=False,root_path='/World',
-                thread_radius=.0002,hole_half=.0006,contact_refinement=None,hole_mesh_spacing=None,quality_mesh=False):
+                thread_radius=.0002,hole_half=.0006,contact_refinement=None,hole_mesh_spacing=None,quality_mesh=False,
+                cloth_contact_offset_m=.00025):
     cloth=[]
-    material=Fabric(thickness=.0004,density=350.,youngs_modulus=2e6,bend_modulus=8e4,
-                    contact_offset=.00025,rest_offset=.0002,solver_iterations=64)
+    material=seam_fabric(cloth_contact_offset_m)
     for i,left in enumerate((True,False)):
         if quality_mesh:
             if abs(hole_half-.0008)>1e-12 or hole_mesh_spacing is not None:
