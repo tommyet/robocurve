@@ -3,7 +3,8 @@
 The plunger is a free rigid body constrained by an ordinary prismatic joint.
 There are no motor targets. Equal and opposite material-pressure forces resist
 compression. Only emitted material geometry is authored from material state.
-This adapter is implemented but has not yet been executed on the team GPU.
+Native pressure controls and robot pickup/extrusion diagnostics have run.
+A completed border has not yet been demonstrated.
 """
 from __future__ import annotations
 from dataclasses import dataclass

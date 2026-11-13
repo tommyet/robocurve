@@ -13,7 +13,9 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--out', type=Path, required=True)
     p.add_argument('--steps', type=int, default=2)
-    p.add_argument('--physics-hz', type=int, choices=(40000,80000), default=40000)
+    p.add_argument('--physics-hz', type=int, choices=(20000,40000,80000), default=40000)
+    p.add_argument('--reset-profile',choices=('four-defect-reference','two-defect-candidate'),default='two-defect-candidate')
+    p.add_argument('--solver-position-iterations',type=int,choices=(32,64,128),default=32)
     a = p.parse_args()
     if not 1 <= a.steps <= 100:
         p.error('Preview is limited to 100 control steps')
@@ -21,6 +23,7 @@ def main():
     started = time.monotonic()
     report = {'kind': 'wheel_yam_integration_preview', 'status': 'running', 'score': None,
         'robot_demo': False, 'dream_requests': 0, 'requested_steps': a.steps,
+        'reset_profile':a.reset_profile,'solver_position_iterations':a.solver_position_iterations,
         'source_sha256': {f.name: hashlib.sha256(f.read_bytes()).hexdigest()
                          for f in Path(__file__).parent.glob('*.py')}}
     app = video = trace = None
@@ -31,6 +34,8 @@ def main():
         from PIL import Image
         import omni.usd
         import arena_wheel
+        arena_wheel.RESET_PROFILE_OVERRIDE=a.reset_profile
+        arena_wheel.SOLVER_ITERATIONS_OVERRIDE=a.solver_position_iterations
         from yam_arena import inspect_embodiment as wrapper, scene as adapter
         wrapper._APP = app
         emb = wrapper.YamArenaEmbodiment(task=str(Path(__file__).with_name('task.py')),
@@ -63,6 +68,7 @@ def main():
             video.append_data(frame)
             if step in (0, a.steps):
                 Image.fromarray(frame).save(a.out/('setup.png' if step == 0 else 'final.png'))
+        report['rim_integrity']=arena_wheel.ASSEMBLIES['wheel_station']['coupling'].audit_integrity()
         report.update(status='complete', completed_steps=a.steps, bodies=len(state.body_names),
                       physics_dt_s=float(base.sim.get_physics_dt()))
     except BaseException as error:

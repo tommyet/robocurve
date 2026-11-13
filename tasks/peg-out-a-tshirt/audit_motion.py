@@ -21,6 +21,8 @@ def audit(plan):
     vertices={k:np.concatenate([h.vertices for h in hs])
               for k,hs in local_hulls.items() if k!='base'}
     boxes={**support_geometry(),**rack_geometry()}
+    from peg_rests import geometry
+    boxes.update(geometry())
     boxes['Table']=dict(kind='box',center=(.36,0.,TABLE-.03),size=(1.1,1.3,.06))
     violations=[]
     closest={}
@@ -87,6 +89,7 @@ def main():
     plan,_=load(args.plan)
     result=audit(plan)
     result['motion_sha256']=hashlib.sha256(args.plan.read_bytes()).hexdigest()
+    result['peg_rest_source_sha256']=hashlib.sha256(Path(__file__).with_name('peg_rests.py').read_bytes()).hexdigest()
     result['fixture_source_sha256']=hashlib.sha256(Path(__file__).with_name('scene.py').read_bytes()).hexdigest()
     args.out.write_text(json.dumps(result,indent=2)+'\n')
     print(json.dumps(dict(passed=result['passed_rejection_check'],penetrating_samples=len(result['violations']),

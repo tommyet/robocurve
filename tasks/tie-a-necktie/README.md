@@ -1,157 +1,97 @@
 # Tie a necktie on a collar form
 
-**Development package; not ready to submit.** The flat-fabric model, native
-cloth bridge and a settled collar reset run natively. A functional robot knot,
-final scoring evidence and Dream run are still missing. There is no task score or media ID.
+**Development only; not ready to submit.** Native cloth reset, grasp and a retained handoff work. A complete four-in-hand knot, Dream run,
+final score and uploaded media are still missing.
 
-The proposed task is to tie a four-in-hand necktie on a fixed collar form and
-leave it ready to wear. The defining differences from a round rope knot are
-the broad fabric's face orientation, folding, front-loop threading and final
-fit. A centreline knot invariant alone cannot establish success.
+Tie a child-sized necktie on a collar form and leave it ready to wear. The task
+requires a broad fabric strip to face correctly, wrap and thread through its
+front loop, tighten and retain a wearable fit. A centreline knot invariant
+alone does not establish success.
 
-On 13 November, the plain neck failed to retain an untied tie. Adding ordinary
-shoulders produced a plausible drape with no final triangle/fixture
-intersections. The same geometry passed the YAM reset audit. The first robot
-pinch missed because the YAM drape differed from the standalone diagnostic;
-the revised contact trajectory uses the measured YAM reset. In batch015 it
-raised the grasped patch 197 mm, retained it through a two-second hold, and
-let it drop when the fingers opened. No knot has been demonstrated yet.
+## Run
 
-## Local checks
-
+Use the pinned Isaac Sim 6.1 / IsaacLab / YAM environment in `ENVIRONMENT.json`.
 From the repository root:
 
 ```bash
-.venv/bin/python -m unittest discover -s tasks/tie-a-necktie -p test_local.py -v
+# CPU checks; these do not prove simulation or task success.
+.venv/bin/python -m unittest discover -s tasks/tie-a-necktie -p test_local.py
 .venv/bin/python tasks/tie-a-necktie/run.py --check-only
-```
 
-The child-sized 1.10 m mesh is a tapered two-dimensional strip, 35–70 mm wide with
-pointed ends. It has 1,973 vertices and 3,504 triangles. These tests verify
-topology and that the diagnostic reset distorts edge lengths by less than
-0.03%. A full triangle/solid audit also checks at least 1 mm initial clearance
-from the neck, shoulders, mounting post, base and collar points; its regression detects
-the former rear-post intersection. These checks do not test knot tying or
-retention.
-
-Pale and gold markings run along opposite material edges. With its wide tip
-down, a front-facing tie has pale on the viewer's left and gold on the right.
-This makes face orientation visible despite a two-sided cloth renderer.
-
-## First GPU checks
-
-Activate the retained Isaac Sim 6.1 / pinned IsaacLab environment:
-
-```bash
+# Native drape and contact diagnostics.
 python tasks/tie-a-necktie/probe.py --mode collar-drape --seconds 3 --output /tmp/tie-drape
-python tasks/tie-a-necktie/probe.py --mode free-fall --seconds 3 --output /tmp/tie-free-fall
-python tasks/tie-a-necktie/run.py --mode smoke --steps 60 --out /tmp/tie-yam-smoke
+python tasks/tie-a-necktie/probe.py --mode free-fall --seconds 3 --output /tmp/tie-fall
+python tasks/tie-a-necktie/run.py --mode motion-probe \
+  --plan tasks/tie-a-necktie/handoff-plan.json --judging-views --out /tmp/tie-handoff
 ```
 
-The diagnostic begins with an untied half-wrap around the back of the collar
-and two uncrossed, initially horizontal free ends. Gravity must form the hanging
-shape. This is a physics diagnostic, **not the final task setup**; the final
-reset must be a photographed, physically reproducible settled drape, within
-both arms' reach. Never replace this with an animated or preset knot path.
+The station runs at 240 Hz physics and 20 Hz control. `reset_scene.py` resets
+once and advances exactly 100 ready-position control steps (5 seconds) before
+the first policy observation. The initial uncrossed half-wrap settles through
+gravity and collar contact, with no attachment. Every policy must use this
+same reset. The proposed task limit is 3,600 actions, including the final
+five-second released hold; settling is recorded separately. The seed defaults
+to zero.
 
-The YAM smoke recorder uses the full `task.py` station and collar scene, holds
-the ordinary ready joint targets, and saves policy camera video plus native
-nodes and robot-link geometry. Those assessor readings never control the arms.
-The shared `reset_scene.py` resets the raw environment once and then advances
-exactly 100 control steps (5 seconds) with ordinary ready-position joint targets
-before the first policy observation. This declared physical settling period is
-recorded separately and must be identical for the demo and Dream. No cloth
-state is edited during settling; stability still requires measured evidence.
-It rejects a rigid substitute or software attachment and always leaves the
-task score null. The first policy observation shows the physically settled
-untied drape; its source pose is never a policy observation.
+The runner saves ordinary camera images, optional native 960×720 judging
+views, source hashes, runtime and assessor telemetry. Frozen plans contain
+ordinary joint commands only; no object or mesh readings feed the policy.
+Native self-contact and the absence of attachments are checked. All current
+diagnostic scores are null; interrupted runs are recorded as interrupted.
 
-The probe logs native node positions, material parameters, source hashes and
-actual runtime. It also saves native-rendered diagnostic MP4 and initial/final
-PNG images, maximum transient edge strain and maximum nodal speed. Start at 240 Hz. Inspect fabric/neck contact, self-contact and
-whether the tie remains accessible on the table. Passing a drape probe is only
-the first gate. Next prove finger friction, threading, knot tightening and
-retention, then build a controller using camera observations and robot state.
-Do not spend Dream calls on an unvalidated scene. Runtime and an approximately
-$3 total task cost are not yet established.
+## What has been demonstrated
 
-## Physics and fit
+A bare neck form let the untied fabric fall. Ordinary rigid shoulders support
+the selected reset through contact. Initial and settled full-triangle audits
+clear the neck, shoulders, collar points, post and base.
 
-The native surface FEM mesh has stretch, bend and self-contact. It represents
-the sewn/interlined tie as one effective fabric shell, not every textile layer.
-The nominal 1.2 mm thickness and 500 kg/m³ effective density give approximately
-28.5 g. Friction, bending and elasticity remain uncalibrated. Native deformables
-use dynamic friction; independent static friction is not supported. No vertex
-targets, runtime rest-shape edits, attachments or artificial tightening occur.
+Batch015 physically raised the grasped wide-strand patch by 197 mm, retained
+it through a two-second hold and dropped it when the fingers opened. The held
+patch stayed within 3 mm of the actual gripper centre; eleven sampled
+triangle/fixture audits were clear. Batch020's receiving hand pushed the
+fabric sideways and missed, so that handoff failed. The revised 640-action
+approach aligns insertion with the receiving finger gap and passes sampled
+robot hull checks. Batch022 then transferred the tip, lifted it 167 mm and held it for two
+seconds. Fabric still snags or rests on the hand during its later open-finger
+withdrawal. Nine actual robot-hull audits found no triangle intersection after
+a 0.2 mm hull contraction; the deepest sampled node penetration was 0.119 mm.
+Clean release remains unproven. `cross-plan.json` uses the measured narrow-end
+position for the next grip and front crossing; its 900 poses clear the sampled
+hull checks. `wrap-plan.json` is unreleased planning only.
 
-`layout.py` defines a 110 mm diameter, 65 mm high collar/neck form with fixed
-collar points, a 160 × 280 × 45 mm shoulder block with its top at z=1.0875 m,
-and a 25 mm square post centred beneath the neck at x=0.50,y=0. The shoulders
-model an ordinary rigid collar jig and support the untied neckband through
-contact alone. They do not attach the tie or form any part of the knot.
-The post rises from the 0.7475 m tabletop to z=1.12 m; the 180 x 160 x 12 mm
-base is centred at x=0.50,y=0,z=0.7535 m. This keeps the support clear of the
-tie's rear half-wrap. `arena_cloth.py` implements the cloth bridge for
-YAM, and `arena_props.py` registers the fixed collar geometry. A guarded smoke
-runner exists; the observation-based demonstration and final scored runner
-remain to be completed after the native checks. Only reset events may restore
-nodal state.
+`MOTION_PLAN.md` describes the remaining wrap, neck-loop passage, front-loop
+threading and tightening. No in-progress knot may be carried across resets.
 
-`JUDGING.md` requires a retained four-in-hand, correctly facing ends and measured
-collar/length fit. No unseen simulator flag proves that a tie is ready to wear.
+## Setup, physics and scoring
 
-## Sources and overlap
+`task.draft.json` and `layout.py` specify every prop and fixed position. The
+1.10 m tie is a tapered 35–70 mm strip, represented by 1,973 nodes and 3,504
+triangles. Its nominal 1.2 mm thickness and 500 kg/m³ effective density give
+28.5 g mass. Pale and gold edge markings make face orientation visible.
 
-[NVIDIA surface deformables](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/deformables_beta/deformable_beta.html)
-and [the pinned native runtime](https://github.com/isaac-sim/IsaacLab/blob/91a0906f93802eb859192dcb0bca879f891e92d6/source/isaaclab_physx/isaaclab_physx/assets/deformable_object/deformable_object.py)
-establish the supported API, not the validity of our material parameters.
-[TieBot](https://tiebots.github.io/) is direct prior robotics research. The
-wearable fit and flat-fabric distinctions may matter to review, but novelty
-relative to existing knot tasks is not guaranteed.
+Surface FEM models stretch, bend, gravity and self-contact. The strip is an
+effective shell, not every sewn textile layer. Friction, bending and elasticity
+remain uncalibrated. The collar and shoulders are rigid and do not form any
+part of the knot. There are no vertex targets, cloth attachments, runtime
+rest-shape edits or artificial tightening forces.
 
-## Reproduce a reviewed score
-
-Complete the measurements and visual decisions in a judging JSON record after
-reviewing the specified views. Include `evidence_files` and matching
-`evidence_sha256` maps for the required photographs and released video, with
-paths relative to the evidence directory. Then run:
+The child-sized tie matches the short form: a roughly 346 mm neckband and
+200 mm of extra knot take-up leave about 554 mm for both ends. This length
+budget is planning, not proof. Full credit requires a retained four-in-hand,
+correct front face, measured collar fit, a 280–320 mm wide-end drop and a
+narrow tip at least 10 mm above the wide tip. `JUDGING.md` specifies the photo,
+video and ruler checks; simulator geometry alone cannot certify a wearable tie.
 
 ```bash
 python tasks/tie-a-necktie/judge.py /path/to/judging.json \
   --evidence-dir /path/to/trial --out /path/to/reviewed-score.json
 ```
 
-This checks every evidence file's digest before applying the rubric. Missing
-measurements, unknown integrity or changed media produce an error, not an
-invented score. No completed judging record exists yet.
+The judge verifies evidence-file digests before applying the rubric. Missing
+measurements or unknown integrity produce an error. No completed judging
+record exists yet.
 
-## Fixed contact diagnostics
-
-`run.py --mode motion-probe --plan <frozen-plan.json> --out <trial-dir>` replays
-a precomputed joint trajectory and records the same native scene audit,
-ordinary camera observations and assessor-only cloth nodes as smoke mode.
-It checks normal adapter joint and speed limits, freezes the exact action
-file and reads no object state into the policy. A motion probe remains
-unscored. The current `grasp-plan.json` is a 16-second right-arm pinch, lift and
-release of the wide hanging strand, compiled from the offline native drape
-evidence. Its maximum IK error is 0.085 mm/0.017°. The revised pinch ran physically in batch015; retained lift and release were
-visible, with zero fixture intersections in 11 sampled full-triangle audits.
-No successful tie trajectory exists. A collar geometry digest prevents
-replaying it silently against a different fixture.
-
-The short collar form uses a child-sized tie deliberately. A 346 mm neckband
-and roughly 200 mm of extra knot take-up leave about 554 mm for both ends; a 304/250 mm split
-fits the proposed drop and keeps the narrow tip above the wide tip. This is a
-planning budget, not proof of a successful knot. The full-score rubric also
-requires the narrow tip to be at least 10 mm higher than the wide tip.
-
-`handoff_motion.py` compiles a separate 30-second two-hand transfer candidate.
-It preserves the demonstrated first 240 actions, grasps 80 mm from the wide
-tip with the left hand, releases the original grip, then lifts, holds and
-releases with the receiving hand. This candidate requires native validation;
-it is not a knot demonstration. `interpret_motion.py` measures actual patch
-motion and gripper-relative positions offline, with full triangle/fixture
-checks. Those measurements never feed into the joint trajectory.
-
-Both native recorders finalize videos and traces on SIGTERM and mark the run
-interrupted. A wall timeout is not successful completion.
+Native authoring follows [NVIDIA surface deformables](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/deformables_beta/deformable_beta.html).
+[TieBot](https://tiebots.github.io/) is relevant prior robotics research. Its
+results do not supply a YAM controller or validate this model; novelty relative
+to existing knot tasks remains a review question.

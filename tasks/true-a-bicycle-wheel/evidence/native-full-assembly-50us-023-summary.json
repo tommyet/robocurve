@@ -1,0 +1,27 @@
+{
+  "complete_native_execution": true,
+  "frozen_material_diagnostic": false,
+  "seconds": 0.1,
+  "dt": 5e-05,
+  "wall_seconds": 11.483913411386311,
+  "maximum_runout_m": 0.0036419928073883057,
+  "final_runout_m": 0.002048015594482422,
+  "late_maximum_rim_displacement_m": 5.1738691844654033e-05,
+  "late_maximum_thread_rate_turns_s": 6.819105358891515e-07,
+  "late_tension_range_n": [
+    56.96309738210236,
+    637.6012069187898
+  ],
+  "peak_rim_domain": {
+    "maximum_axial_bending_strain": 0.0015930102007603861,
+    "maximum_twist_rad": 0.0015875830836898888,
+    "maximum_locked_joint_gap_m": 2.9296466429301475e-06
+  },
+  "robot_demo": false,
+  "task_score": null,
+  "interpretation": "Short settling gate only. Does not test wrench interaction, full-duration stability or robot feasibility.",
+  "geometry_gate_pass": false,
+  "thread_holding_gate_pass": true,
+  "physical_gate_pass": false,
+  "native_report_sha256": "d4068d011c84ab81d5fa44c1464571b7eb9fc736d53f305966ced30b8f7d0027"
+}

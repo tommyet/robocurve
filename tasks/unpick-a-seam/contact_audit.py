@@ -56,6 +56,7 @@ def _hits(start,end,triangles):
 class ThreadClothAudit:
     def __init__(self,faces):
         self.faces=np.asarray(faces,int);self.previous=None;self.previous_triangles=None
+        self.previous_bounds=None
         self.previous_points=None
         self.first_failure=None;self.steps=0
         counts=Counter(tuple(sorted((int(a),int(b)))) for face in self.faces
@@ -105,11 +106,17 @@ class ThreadClothAudit:
         if (segments.ndim!=3 or segments.shape[1:]!=(2,3) or
                 not np.isfinite(segments).all() or not np.isfinite(triangles).all()):
             raise ValueError('Invalid measured thread/fabric geometry')
-        low,high=segments.min(1),segments.max(1)
-        tl,th=triangles.min(1),triangles.max(1)
+        # Explicit minima over two endpoints / three triangle corners avoid
+        # the expensive tiny-axis reductions at every native substep. These
+        # bounds are numerically identical to min/max(axis=1).
+        low,high=np.minimum(segments[:,0],segments[:,1]),np.maximum(segments[:,0],segments[:,1])
+        current_low=np.minimum(np.minimum(triangles[:,0],triangles[:,1]),triangles[:,2])
+        current_high=np.maximum(np.maximum(triangles[:,0],triangles[:,1]),triangles[:,2])
+        tl,th=current_low,current_high
         if self.previous is not None:
-            low=np.minimum(low,self.previous.min(1));high=np.maximum(high,self.previous.max(1))
-            tl=np.minimum(tl,self.previous_triangles.min(1));th=np.maximum(th,self.previous_triangles.max(1))
+            low=np.minimum(low,np.minimum(self.previous[:,0],self.previous[:,1]))
+            high=np.maximum(high,np.maximum(self.previous[:,0],self.previous[:,1]))
+            tl=np.minimum(tl,self.previous_bounds[0]);th=np.maximum(th,self.previous_bounds[1])
         # Two-level exact AABB broad phase. Consecutive blocks cover one
         # authored 28-link tack; broad bounds never discard a possible hit.
         # This avoids allocating all 168 x 2492 x 3 candidate comparisons on
@@ -117,7 +124,9 @@ class ThreadClothAudit:
         segment_ids=[];face_ids=[]
         for start in range(0,len(low),28):
             stop=min(start+28,len(low));lo=low[start:stop].min(0);hi=high[start:stop].max(0)
-            candidates=np.flatnonzero(np.all((hi>=tl-1e-10)&(lo<=th+1e-10),axis=1))
+            candidates=np.flatnonzero((hi[0]>=tl[:,0]-1e-10)&(lo[0]<=th[:,0]+1e-10)&
+                                     (hi[1]>=tl[:,1]-1e-10)&(lo[1]<=th[:,1]+1e-10)&
+                                     (hi[2]>=tl[:,2]-1e-10)&(lo[2]<=th[:,2]+1e-10))
             if not len(candidates):continue
             hit=np.all((high[start:stop,None]>=tl[candidates][None]-1e-10)&
                        (low[start:stop,None]<=th[candidates][None]+1e-10),axis=2)
@@ -152,7 +161,8 @@ class ThreadClothAudit:
                                 'static_crossing_details':self._details(segments[segment,0],segments[segment,1],
                                     current,segment,face,points,'current') if static.any() else [],
                                 'swept_crossing_details':swept_details[:8]}
-        self.previous=segments.copy();self.previous_triangles=triangles.copy();self.previous_points=points.copy()
+        self.previous=segments.copy();self.previous_triangles=triangles;self.previous_points=points.copy()
+        self.previous_bounds=(current_low,current_high)
         return self.first_failure is None
 
     def summary(self):

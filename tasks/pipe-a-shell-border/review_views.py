@@ -37,3 +37,26 @@ def capture_final(base,output):
         Image.fromarray(pixels[:,:,:3].astype(np.uint8)).save(output/(name.replace('_','-')+'.png'))
         metadata.append({'name':name,'eye_m':eye,'target_m':target,'resolution':resolution,'policy_input':False})
     return metadata
+
+
+def composite_frame(base):
+    """One simultaneous review frame, downsampled from three native cameras.
+
+    The robot view provides context; close views make the deposited shape
+    inspectable. This never changes observations supplied to a policy.
+    """
+    from PIL import Image
+    canvas=Image.new('RGB',(1280,720),(24,24,24))
+    for name,size,position in (
+            ('top_cam',(640,360),(0,0)),
+            ('judging_side',(640,360),(0,360)),
+            ('judging_top',(640,480),(640,120))):
+        value=getattr(base.scene[name].data.output['rgb'],'torch',base.scene[name].data.output['rgb'])
+        pixels=value.detach().cpu().numpy()[0,:,:,:3].astype(np.uint8)
+        # A moving arm may fully occlude a close camera with a uniform surface.
+        # Keep that genuine frame. Only missing/malformed output is an error;
+        # final unobstructed photographs receive a separate content check.
+        if pixels.ndim!=3 or pixels.shape[2]!=3 or min(pixels.shape[:2])<1:
+            raise RuntimeError(f'Missing review camera output: {name}')
+        canvas.paste(Image.fromarray(pixels).resize(size,Image.Resampling.LANCZOS),position)
+    return np.asarray(canvas)

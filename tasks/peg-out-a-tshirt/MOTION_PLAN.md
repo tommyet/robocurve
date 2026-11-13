@@ -13,7 +13,7 @@ standard camera/joint observation for online corrections.
    grasp/release diagnostic tests only this contact stage; it is not a hanging
    demonstration. The selected 8 mm support uses 480 Hz physics. The five-second YAM reset
    and all 420 sampled approach poses pass their geometric audits; the first
-   physical grasp/lift trial is next.
+   physical grasp/lift has now succeeded in batches016 and020.
 3. Lift the garment high enough to clear the board and carry the hem toward
    the line. Keep one corner supported while positioning the first fastening
    site; do not rely on an invented cloth-to-hand attachment.

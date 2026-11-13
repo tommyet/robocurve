@@ -19,7 +19,9 @@ the trial; this is a development damage guard, not validated cloth fracture.
 The `scoring.assess` function checks these supplied final measurements. It does
 not infer that cutting six native joints released six stitches. `inspection.py`
 provides a conservative geometric removal test for measured thread capsules and
-cloth surfaces. Strain beyond the declared 2% simulation envelope also invalidates
-a trial; this is not a claim that 2% is a measured cotton failure threshold.
+cloth surfaces. Strain beyond the declared simulation envelope also invalidates
+a trial. The preview defaults to 2%; an explicit 5% operating-domain option
+retains independent 2% warning telemetry. Neither limit is a measured cotton
+failure threshold or a substitute for inspecting both fabric surfaces.
 Native damage telemetry and agreement with photo judgment remain to be validated
 before submission.

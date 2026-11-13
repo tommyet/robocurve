@@ -3,7 +3,7 @@
 The cut input must come from a PhysX blade-vs-thread contact-force matrix. Blade
 pose or distance alone never cuts thread. A true contact event disables one
 native joint within the contacted thread loop; the cloth is never detached.
-Parameters are uncalibrated starting values, requiring a real thread/tool test.
+Parameters are an explicitly approximate cutting law, not measured tool data.
 """
 from dataclasses import dataclass
 import numpy as np
@@ -73,22 +73,49 @@ class DamageAudit:
         if (before.shape!=now.shape or now.ndim!=2 or now.shape[1]!=3 or
                 not np.isfinite(before).all() or not np.isfinite(now).all()):
             raise ValueError('Blade samples must be Nx3')
+        blade_low=np.minimum(before.min(0),now.min(0))
+        blade_high=np.maximum(before.max(0),now.max(0))
         for layer,(p,f) in enumerate(zip(cloth_vertices,cloth_faces)):
+            p=np.asarray(p);f=np.asarray(f,int)
+            global_low=p.min(0);global_high=p.max(0)
+            if self.previous_cloth is not None:
+                previous=np.asarray(self.previous_cloth[layer])
+                # This bound contains current/old triangles and their endpoint
+                # translations without first expanding all mesh faces.
+                travel=np.abs(p-previous).max(0)
+                global_low=np.minimum(global_low,previous.min(0))-travel
+                global_high=np.maximum(global_high,previous.max(0))+travel
+            if np.any((blade_high<global_low-1e-9)|(blade_low>global_high+1e-9)):continue
+            current=p[f];low=current.min(1);high=current.max(1)
+            old=None;displacement=None
+            if self.previous_cloth is not None:
+                old=np.asarray(self.previous_cloth[layer])[f]
+                displacement=current[:,0]-old[:,0]
+                # Bound every triangle used by both translation-relative
+                # sweeps, including each translated endpoint shape. Keeping
+                # all four shapes also covers rotating/deforming faces.
+                for shape in (old,old+displacement[:,None],current-displacement[:,None]):
+                    low=np.minimum(low,shape.min(1));high=np.maximum(high,shape.max(1))
+            # Conservative broad phase only. The original exact intersection
+            # tests and tolerances still decide every candidate; 1 nm padding
+            # exceeds their tolerance band at this task's sub-metre scale.
+            candidates=np.flatnonzero(np.all((blade_high>=low-1e-9)&(blade_low<=high+1e-9),axis=1))
+            if not len(candidates):continue
+            subset=f[candidates]
             hits=set()
-            for a,b in zip(before,now):hits.update(segment_triangle_intersections(a,b,p,f).tolist())
+            for a,b in zip(before,now):hits.update(candidates[segment_triangle_intersections(a,b,p,subset)].tolist())
             # Include the physical blade edge itself, not only its moving tips.
-            for a,b in zip(now[:-1],now[1:]):hits.update(segment_triangle_intersections(a,b,p,f).tolist())
+            for a,b in zip(now[:-1],now[1:]):hits.update(candidates[segment_triangle_intersections(a,b,p,subset)].tolist())
             if self.previous_cloth is not None:
                 # Cloth may move through a stationary blade. Reuse the same
                 # strict, translation-relative sweep guard as thread contact.
                 from contact_audit import _hits
-                old=np.asarray(self.previous_cloth[layer])[f];current=np.asarray(p)[f]
-                displacement=current[:,0]-old[:,0]
+                old=old[candidates];current=current[candidates];displacement=displacement[candidates]
                 for a,b in zip(before,now):
                     old_start=np.broadcast_to(a,displacement.shape)
                     new_end=np.broadcast_to(b,displacement.shape)
                     hit=_hits(old_start,new_end-displacement,old)|_hits(old_start+displacement,new_end,current)
-                    hits.update(np.flatnonzero(hit).tolist())
+                    hits.update(candidates[np.flatnonzero(hit)].tolist())
             fresh={(layer,int(i)) for i in hits}-self.crossed_faces
             if fresh:self.events.append({'time_s':float(time_s),'layer':layer,'triangles':sorted(i for _,i in fresh)})
             self.crossed_faces.update(fresh)

@@ -9,7 +9,7 @@
   ],
   "instruction": "Pipe a joined shell border between the two marks on the cake. Leave distinct ridged heads and tapered tails, and keep the cake board clean.",
   "context": "Cake decorators coordinate pressure and nozzle motion to shape icing, stop cleanly, and join successive shells.",
-  "setup": "A 180 x 140 x 50 mm crumb-coated cake on a 200 x 160 x 3 mm board; a 90 mm marked border; a filled 20 ml hand-operated icing syringe with a 25 mm piston and a six-point star nozzle; a 50 x 40 x 15 mm tool rest. The tool starts on its rest, unheld. Exact coordinates and starting orientation are in README.md.",
+  "setup": "A 180 x 140 x 50 mm crumb-coated cake on a 200 x 160 x 3 mm aluminium board; a 90 mm edible guide with two end marks; a filled 20 ml plastic icing syringe with a 25 mm sliding piston and stainless steel six-point star nozzle; a 50 x 40 x 15 mm plastic rest. The tool starts unheld on its rest. Exact dimensions and fixed coordinates are in README.md.",
   "scoring": "Draft: 0.25 / 0.5 / 0.75 for 20 / 40 / 60 mm of valid shell shapes. Full credit requires at least 80 mm, five or more ridged shells, gaps no greater than 2 mm and the dispenser released. Shell head and tail dimensions, visible spill and cake-damage gates are in JUDGING.md.",
   "run_limit": "2,400 control steps (2 minutes at 20 Hz); proposed, not yet demonstrated.",
   "reset_notes": "Replace or clean the cake surface and refill the dispenser. Rebuild the simulation scene and reset the material reservoir for each trial.",

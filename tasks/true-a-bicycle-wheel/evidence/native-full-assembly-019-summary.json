@@ -1,0 +1,30 @@
+{
+  "kind": "derived_full_assembly_settling_summary",
+  "native_report_sha256": "3ea6c08cbd4c460fec52d8bdd2234eaab696cc80caaf6087275074c8c6db7eea",
+  "source_sha256": {
+    "scene_probe.py": "7a5282784a0807ccb1603acfba8dfef7e6940eaba9dcaf6892c9c7eed0137a79",
+    "wheel_scene.py": "3dcf59b02b81cb1599424dddc4ce980d06b0b525adf7f103f9f5d645fd59b86d",
+    "native_probe.py": "11e7c3dddc7f4726099f6977b0db80c54f4b438b6e26a4adbcceca914e3503f7",
+    "thread_coupling.py": "f78e91c2ffadb920ed4a1e0ec4e93f7ae9af9682c8bf9f18b4e3ab2200068840"
+  },
+  "measurements": {
+    "batch": "019",
+    "seconds": 0.1,
+    "dt": 2.5e-05,
+    "wall_seconds": 36.427094333805144,
+    "final_lateral_runout_m": 0.002017408609390259,
+    "final_20ms_rim_drift_m": 7.174395100376846e-07,
+    "maximum_uncommanded_turns": 0.004127761936608942,
+    "final_tension_range_n": [
+      43.07115321802988,
+      666.7673325577597
+    ],
+    "interpretation": "Corrected internal eyelet contact filtering removes assembly explosion. Shape bounded; viscous thread friction still creeps and cannot support a full trial."
+  },
+  "rim_integrity_from_recorded_frames": {
+    "maximum_axial_bending_strain": 0.0014285946631776608,
+    "maximum_twist_rad": 0.0010065584869257199,
+    "maximum_locked_joint_gap_m": 1.1216734364451133e-05
+  },
+  "limitation": "0.1s native assembly diagnostic only. No robot, wrench-contact success, task score or proof of full-duration stability. Native source was viscous friction; current elastic Coulomb candidate differs."
+}

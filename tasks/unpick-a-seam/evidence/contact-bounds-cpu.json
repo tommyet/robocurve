@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-13",
+  "native_run": false,
+  "kind": "CPU exact-equivalence and timing",
+  "reference_sha256": "167c12d11f82faadbc88fc8d9fc2dc74278eccd2ee692783da096b7ed21c61fc",
+  "candidate_sha256": "319323f3b4fbc3660e28b158cab743e192809d03291b603137e5c04d60530065",
+  "random_cases": 200,
+  "steps_per_case": 4,
+  "seed": 492,
+  "equal_failure_details": true,
+  "sparse_native_replays": [
+    "artifacts/six-task-completion-2026-11-13/native-batch-020/results/native-batch-020/seam-intact-strain/state.npz",
+    "artifacts/six-task-completion-2026-11-13/native-batch-020/results/native-batch-020/seam-open-strain/state.npz"
+  ],
+  "sparse_replay_note": "Comparator equivalence only; sparse samples do not replace native every-substep audits.",
+  "seconds_per_pair_step": {
+    "oldcontact": 0.010884722500341013,
+    "contact_audit": 0.006220653339987621
+  }
+}

@@ -1,7 +1,7 @@
 {
   "status": "development_not_submission_ready",
   "checked_utc": "2026-11-13",
-  "cpu_tests_passed": 20,
+  "cpu_tests_passed": 24,
   "native_simulator_run": true,
   "robot_demo_run": false,
   "dream_run": false,
@@ -9,23 +9,29 @@
   "scores": null,
   "paid_compute_used_usd": null,
   "remaining_gates": [
-    "Physical robot pickup and pressure-driven extrusion verified. Develop sustained tail flow from frozen robot actions; current deposit is a mound, not a shell.",
+    "Joint-angle feedback produces an elongated head and tail; native024 reached a6.11mm-high head and15mm qualifying length, but visible ridges remain inadequate. A three-shell lower-nozzle and physical-release candidate is compiled only.",
     "Full shell shape, ridges, complete joined border, released dispenser and photo/scorer agreement remain unverified.",
-    "Robot full-score demo, Dream baseline, final rescoring and media absent."
+    "Robot full-score demo, Dream baseline, final rescoring and media absent.",
+    "Shared demo/Dream runner is implemented but its Dream branch has not been executed. No API requests made."
   ],
   "sources_sha256": {
-    "preview_yam.py": "02701f3a40bffbcf8d492003f399ebd4dfbd25d6c9bbc4e35361446b0a03c21b",
-    "plan.py": "b410364a170023b8e4475edfa320941d27d9ebe36373404e531569c6f76e1699",
-    "material.py": "0e74b6efca877cda5b470ea53f5b09a1fbb465912cdaa1ea7309c5a9d00b6e0b",
+    "preview_yam.py": "8229a9ff01838fb4e10cde262d43058bc8d684489652bb377e7f3863be0a3d6b",
+    "plan.py": "52f22a2c8dd88c0ff661755e7ef316915f1c8fe6238043f880d99083e0ba9028",
+    "material.py": "1f868533773f7e3e8651eb250f2166c062df46e3112c4f1ab12cad743b1447d7",
     "probe_native.py": "1d5d47f963be39660c32dec7b626a26080d7d290da69cfc06e5e8e9f1945b4e8",
-    "scoring.py": "6da41134132c9d42bcfaa5458d51792ca59bfcb46ff896a2a90d591324024180",
-    "test_material.py": "217b848fe94d15ffb733750e093e5f0c00256e8f420ee58418e4c495b36a0421",
-    "scene.py": "a339330f13e04878c8cc6981168feae2d0f91409b43a0647589388d6c7ea0bb4",
-    "native.py": "0fbf2bb36adb6b175b3a0cafff2c490c75c4b01698d97efde756036878e1f455",
+    "scoring.py": "fd9f74c7a06d79a04391be2bc6773efa7c5eaf9b0d289b6eae86f2787fa04c85",
+    "test_material.py": "8bb256a620793291943dc050f18671429ffb550a7ca1dea695f6782433015731",
+    "scene.py": "893a2016851d05ec62ca47f22cb3aca3c11fc19a2ef81333372132dd856dfcf5",
+    "native.py": "26103b5ffdc45ea9dd7fef69397219853a1a950e38897b63d2c5994b1d296f55",
     "probe_shell_shape.py": "3c7adab4072a8cd3e714724b4bbb81bb403297da2644fc6fe572a97e46cd38d4",
     "probe.py": "dc2421d3342eda2052d7340d10bbf856493ad5b30b121ad839fddda7c7a57c17",
-    "contact_audit.py": "480e538193264fa16ad2cf640aa87c61d7eb881c2d9c076905d9eee98ebf1105",
-    "review_views.py": "e47fdf1b6d74172d54076a3f28976482065c36a8ef7f3d46fb497511f948a197"
+    "contact_audit.py": "789e5285c8283d915fee82c2a5deab0519e44005edba0085d6f37f3a6062f147",
+    "review_views.py": "91fff198f4643babe15e10ca1d72cfb068ee8521e556e3d3e49fda0a2b9c804d",
+    "joint_tracking.py": "0191721fa72220af46fceda470b00e3ea9a5d2a05619d6f56cf2dd7a99136f13",
+    "run.py": "3f23a922f9bba0e959c19624107defc95f13e580f0cd9efee832e4ae1b88b893",
+    "dream_policy.py": "ad92ac9ddcf4c1d48c9985fcd0a0fc116144a995d8d4b0368e476b3f432b611b",
+    "audit_run.py": "a4928491421b5e3b6f78c3f805e94ebb2607139e6edb47b2ab3d419074cd34e5",
+    "test_release.py": "d2b6b9b3388736c2a8e6d85cba253c43086dcfab7885be8b7a3973b0e7523f19"
   },
   "cpu_probe": {
     "simulated_seconds": 1.500000000000022,
@@ -44,6 +50,7 @@
   "native_mechanism_evidence": "evidence/native-passive-2026-11-13.json",
   "native_robot_diagnostics": [
     "evidence/native-press-011.json",
-    "evidence/native-robot-extrusion-014-015.json"
+    "evidence/native-robot-extrusion-014-015.json",
+    "evidence/native-single-shell-021.json"
   ]
 }

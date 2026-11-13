@@ -37,6 +37,10 @@ def main():
     p.add_argument('--coarse-thread',action='store_true')
     p.add_argument('--hole-mesh-spacing',type=float)
     p.add_argument('--contact-refinement',choices=('baseline','iterations','speculative','combined'),default='baseline')
+    p.add_argument('--maximum-stretch',type=float,choices=(1.02,1.05),default=1.02,
+                   help='Explicit engineering domain; 2% telemetry remains recorded, neither limit is a calibrated tear law')
+    p.add_argument('--crossing-backend',choices=('cpu','warp-shadow','warp'),default='cpu')
+    p.add_argument('--profile-steps',action='store_true',help='CPU call profile around the bounded control steps; does not alter physics or audit cadence')
     a=p.parse_args()
     if not 1<=a.steps<=2400:p.error('Use 1 to 2400 control steps')
     if a.plan is None and a.steps>200:p.error('Ready-hold preview limited to 200 steps')
@@ -54,7 +58,7 @@ def main():
     settings=ContactRefinement(a.contact_refinement in ('speculative','combined'),4 if refined else 1,4 if refined else 1)
     runtime_config.CONFIG=runtime_config.SeamRuntime(
         .0004 if a.coarse_thread else .0002,.0008 if a.coarse_thread else .0006,
-        a.hole_mesh_spacing,a.physics_hz,settings)
+        a.hole_mesh_spacing,a.physics_hz,settings,a.maximum_stretch)
     a.out.mkdir(parents=True,exist_ok=False)
     frozen=a.out/'task-source';frozen.mkdir()
     hashes={}
@@ -68,9 +72,14 @@ def main():
     started=time.monotonic()
     report={'status':'running','robot_demo':False,'score':None,'dream_requests':0,
             'requested_steps':a.steps,'completed_steps':0,'control_hz':20,
+            'crossing_backend':a.crossing_backend,
             'runtime':asdict(runtime_config.CONFIG),'source_sha256':hashes,
             'policy':'ordinary ready targets' if actions is None else 'frozen joint targets; no object feedback'}
     app=video=trace=emb=None
+    profiler=None
+    if a.profile_steps:
+        import cProfile
+        profiler=cProfile.Profile()
     def save():
         report['wall_seconds']=time.monotonic()-started
         (a.out/'preview.json').write_text(json.dumps(report,indent=2,allow_nan=False)+'\n')
@@ -87,11 +96,18 @@ def main():
         from yam_arena import inspect_embodiment as wrapper,scene as adapter
         wrapper._APP=app
         adapter.PHYSICS_DT=1/a.physics_hz
-        carb.settings.get_settings().set_bool('/physics/disableContactProcessing',False)
         emb=wrapper.YamArenaEmbodiment(task=str(HERE/'scene.py'),object_jitter=0.,
                                       control_hz=20,cam_width=224,cam_height=224)
         emb._ensure_sim(None)
         base=emb._base;stage=omni.usd.get_context().get_stage()
+        # SimulationContext sets this to True while constructing the scene.
+        # Use the same post-construction setting as IsaacLab's ContactSensor
+        # before creating our directly filtered native sensor view. Setting it
+        # before _ensure_sim is overwritten; this flag alone is not evidence
+        # that GPU contact forces are absent (legacy CPU-only behavior).
+        from isaaclab.app.settings_manager import get_settings_manager
+        report['contact_processing_setting_before_sensor']=carb.settings.get_settings().get('/physics/disableContactProcessing')
+        get_settings_manager().set_bool('/physics/disableContactProcessing',False)
         namespace=adapter.task_object.__globals__
         roots,cloth=namespace['ROOTS'],namespace['MESHES']
         from arena_thread import SPAWNED
@@ -109,7 +125,7 @@ def main():
         envroot=roots['ripper_handle'].rsplit('/',1)[0]
         for name in ('cloth_left','cloth_right'):
             prim=stage.GetPrimAtPath(envroot+'/'+name)
-            if not prim.HasAPI('OmniPhysicsSurfaceDeformableSimAPI') or prim.HasAPI(UsdPhysics.RigidBodyAPI):
+            if 'OmniPhysicsSurfaceDeformableSimAPI' not in prim.GetAppliedSchemas() or prim.HasAPI(UsdPhysics.RigidBodyAPI):
                 raise RuntimeError('Cloth is not native surface FEM')
         sim=tensors.create_simulation_view('torch');sim.set_subspace_roots('/')
         blade=sim.create_rigid_body_view(roots['ripper_blade'])
@@ -133,24 +149,40 @@ def main():
         emb._env.reset()
         # Every following substep, including settling, is audited after reset.
         cutter=ThreadCutter([len(t['bodies']) for t in threads],CutParameters(thread_radius_m=runtime_config.CONFIG.thread_radius_m))
-        damage=DamageAudit();strain=[StrainAudit(m.rest,m.faces) for m in cloth]
+        damage=DamageAudit();strain=[StrainAudit(m.rest,m.faces,maximum_stretch=a.maximum_stretch) for m in cloth]
         crossing=[ThreadClothAudit(m.faces) for m in cloth]
         lengths=np.concatenate([t['lengths'] for t in threads])
+        gpu_crossing=None
+        if a.crossing_backend!='cpu':
+            from warp_contact import PersistentCrossingAudit
+            gpu_crossing=PersistentCrossingAudit(cloth,len(lengths),dt,device=base.device)
         edge_local=np.column_stack((np.full(9,.0005),np.linspace(-.002,.002,9),np.zeros(9)))
         state={'steps':0,'invalid':False,'previous_edge':None,
-               'last_physics_step':int(base.sim._physics_step_count),'max_edge_force_n':0.}
+               'last_physics_step':int(base.sim._physics_step_count),'max_edge_force_n':0.,
+               'timings_s':dict(readback=0.,strain=0.,crossing=0.,crossing_poll=0.,blade_damage=0.,cutting=0.,control_steps_total=0.)}
         def measured():
             poses=array(thread_view.get_transforms())[order]
             nodes=[array(view.get_simulation_nodal_positions())[0,:len(mesh.rest)] for view,mesh in zip(views,cloth)]
             pose=array(blade.get_transforms())[0];R=rotation(pose[3:])
             return poses,nodes,edge_local@R.T+pose[:3],R[:,0]
         def assess_step(apply_cut=True):
+            start=time.perf_counter()
             poses,nodes,edge,normal=measured()
             segments=capsule_endpoints(poses,lengths);t=state['steps']*dt
+            state['timings_s']['readback']+=time.perf_counter()-start
+            start=time.perf_counter()
             for j,points in enumerate(nodes):
-                strain[j].update(points,t);crossing[j].update(points,segments,t)
+                strain[j].update(points,t)
+            state['timings_s']['strain']+=time.perf_counter()-start
+            start=time.perf_counter()
+            if a.crossing_backend!='warp':
+                for j,points in enumerate(nodes):crossing[j].update(points,segments,t)
+            if gpu_crossing is not None:gpu_crossing.update(nodes,segments,state['steps'])
+            state['timings_s']['crossing']+=time.perf_counter()-start
+            start=time.perf_counter()
             damage.update(edge if state['previous_edge'] is None else state['previous_edge'],edge,
                           nodes,[m.faces for m in cloth],t)
+            state['timings_s']['blade_damage']+=time.perf_counter()-start
             state['previous_edge']=edge.copy()
             invalid=bool(damage.crossed_faces or any(s.first_excursion for s in strain) or any(s.first_failure for s in crossing))
             if invalid:
@@ -160,11 +192,36 @@ def main():
                     np.savez_compressed(a.out/'first-invalid.npz',left=nodes[0],right=nodes[1],
                         thread=poses,left_faces=cloth[0].faces,right_faces=cloth[1].faces,time_s=t)
             if apply_cut and not invalid:
+                start=time.perf_counter()
                 forces=array(contact.get_contact_force_matrix(dt=dt))[0,force_order]
                 state['max_edge_force_n']=max(state['max_edge_force_n'],float(np.max(-forces@normal)))
                 sever_contacted_joints(stage,threads,cutter.update(forces,normal,dt))
+                state['timings_s']['cutting']+=time.perf_counter()-start
             state.update(poses=poses,nodes=nodes,segments=segments)
+        def crossing_summaries():
+            if gpu_crossing is None:return [audit.summary() for audit in crossing]
+            summaries=gpu_crossing.summaries()
+            if a.crossing_backend=='warp-shadow':
+                for cpu,gpu in zip(crossing,summaries,strict=True):
+                    f,g=cpu.first_failure,gpu['first_failure']
+                    if (f is None)!=(g is None):raise RuntimeError('Full-substep CPU/Warp crossing mismatch')
+                    if f is not None and any(f[key]!=g[key] for key in ('time_s','static_intersections','swept_intersections')):
+                        raise RuntimeError('CPU/Warp first-failure diagnostics mismatch')
+            return summaries
+        def check_crossing_boundary():
+            start=time.perf_counter()
+            try:summaries=crossing_summaries()
+            finally:state['timings_s']['crossing_poll']+=time.perf_counter()-start
+            failures=[s['first_failure'] for s in summaries if not s['valid']]
+            if failures:
+                state['invalid']=True
+                if gpu_crossing is not None:
+                    first=min(f['native_substep'] for f in failures)
+                    report['first_invalid_substep']=min(first,report.get('first_invalid_substep',first))
+                    gpu_crossing.save_failure(a.out/'first-crossing-pair.npz')
+                raise RuntimeError('Native thread/fabric crossing detected')
         assess_step(False)
+        check_crossing_boundary()
         original_update=base.scene.update
         def after_physics(*args,**kwargs):
             result=original_update(*args,**kwargs)
@@ -198,10 +255,19 @@ def main():
         if state['invalid']:raise RuntimeError('Authored seam reset fails material/contact audit')
         for step in range(1,a.steps+1):
             action=ready if actions is None else actions[step-1]
-            emb._env.step(torch.as_tensor(action[None],device=base.device,dtype=torch.float32))
+            start=time.perf_counter()
+            try:
+                if profiler is not None:profiler.enable()
+                emb._env.step(torch.as_tensor(action[None],device=base.device,dtype=torch.float32))
+            finally:
+                if profiler is not None:profiler.disable()
+                state['timings_s']['control_steps_total']+=time.perf_counter()-start
+            check_crossing_boundary()
             snapshot(step,action);report['completed_steps']=step
             if step%20==0:save()
         if state['steps']!=round(a.steps*a.physics_hz/20):raise RuntimeError('Every-substep audit coverage mismatch')
+        if gpu_crossing is not None and gpu_crossing.updates!=state['steps']+1:
+            raise RuntimeError('GPU crossing audit missed a native substep')
         pieces=[];start=0
         for t in threads:
             end=start+len(t['lengths']);pieces.append(state['segments'][start:end]);start=end
@@ -214,11 +280,31 @@ def main():
         report.update(status='failed',error=f'{type(exc).__name__}: {exc}',traceback=traceback.format_exc())
         raise
     finally:
+        if profiler is not None:
+            import pstats
+            profiler.disable()
+            entries=[]
+            for (filename,line,function),(primitive,calls,own,total,callers) in pstats.Stats(profiler).stats.items():
+                entries.append(dict(filename=filename,line=line,function=function,primitive_calls=primitive,calls=calls,
+                                    self_seconds=own,cumulative_seconds=total))
+            (a.out/'control-profile.json').write_text(json.dumps(sorted(entries,key=lambda e:-e['cumulative_seconds']),indent=2)+'\n')
+            report['control_profile']='control-profile.json'
         if 'state' in locals():
+            try:
+                cross_report=crossing_summaries()
+                if gpu_crossing is not None:
+                    report['gpu_crossing_updates']=gpu_crossing.updates
+                    if any(not s['valid'] for s in cross_report):gpu_crossing.save_failure(a.out/'first-crossing-pair.npz')
+            except BaseException as exc:
+                state['invalid']=True;report['status']='failed'
+                report['crossing_backend_error']=f'{type(exc).__name__}: {exc}'
+                cross_report=[audit.summary() for audit in crossing]
             report.update(audited_physics_substeps=state['steps'],maximum_edge_force_n=state['max_edge_force_n'],
+                measured_wall_timings_s=state['timings_s'],
                 material_invalid=state['invalid'],cut_events=cutter.events,damage_events=damage.events,
-                contact_audit=[audit.summary() for audit in crossing],
-                strain=[{'maximum_principal_stretch':s.maximum_observed,'first_validity_excursion':s.first_excursion} for s in strain])
+                contact_audit=cross_report,
+                strain=[{'maximum_principal_stretch':s.maximum_observed,'first_validity_excursion':s.first_excursion,
+                         'first_2pct_warning':s.first_warning,'maximum_stretch_limit':s.limit} for s in strain])
         if trace:trace.close()
         if video:video.close()
         save()

@@ -9,6 +9,10 @@ from cloth_mesh import tshirt
 from native_cloth import Fabric
 from scene import initial_layout,TABLE,LINE_X,LINE_Z,LINE_HALF_SPAN,SUPPORT_SIZE,SUPPORT_CENTER,SUPPORT_TOP
 
+from peg_rests import peg_positions
+PEG_RESTS_ENABLED=True
+PEG_POSITIONS=peg_positions()
+
 SCENE='station'
 SCORE_OVER='end'
 SUCCESS_HOLD_S=0.
@@ -22,8 +26,9 @@ OBJECTS=[
     Fixture('rack',pos=(LINE_X,0.,(TABLE+LINE_Z)/2),
             size=(.15,2*LINE_HALF_SPAN+.095,LINE_Z-TABLE),kind='clothesline'),
     Fixture('laundry_support',pos=SUPPORT_CENTER,size=SUPPORT_SIZE,kind='laundry_support'),
-    SpringPeg('left_peg',pos=(.12,.20,TABLE+.014),size=(.070,.010,.022)),
-    SpringPeg('right_peg',pos=(.12,-.20,TABLE+.014),size=(.070,.010,.022)),
+    Fixture('peg_rests',pos=(.335,0.,TABLE+.0625),size=(.09,.66,.125),kind='peg_rests'),
+    SpringPeg('left_peg',pos=PEG_POSITIONS['Left'],size=(.070,.010,.022)),
+    SpringPeg('right_peg',pos=PEG_POSITIONS['Right'],size=(.070,.010,.022)),
 ]
 
 

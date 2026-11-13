@@ -2,7 +2,7 @@ import math
 import unittest
 import numpy as np
 from thread_coupling import (response,response_batch,rotation,rotation_batch,relative_thread_angle,
-    relative_thread_angle_batch,ThreadTravelOutOfScope,ThreadSpec)
+    relative_thread_angle_batch,ThreadTravelOutOfScope,ThreadSpec,ThreadFriction,NativeFloatAttributes)
 
 
 def rotvec(vector):
@@ -11,6 +11,55 @@ def rotvec(vector):
 
 
 class ThreadTests(unittest.TestCase):
+    def test_native_cache_preserves_changed_float_values_and_invalidates_on_reset(self):
+        class Attribute:
+            def __init__(self):self.history=[]
+            def Set(self,value):self.history.append(value);return True
+        attr=Attribute();cache=NativeFloatAttributes([[attr]])
+        cache.set([[.1]]);cache.set([[.1+1e-12]])
+        self.assertEqual(len(attr.history),1)
+        cache.set([[.1+1e-7]])
+        self.assertEqual(len(attr.history),2)
+        self.assertEqual(attr.history[-1],float(np.float32(.1+1e-7)))
+        cache.invalidate();cache.set([[.1+1e-7]])
+        self.assertEqual(len(attr.history),3)
+        with self.assertRaises(ValueError):cache.set([[np.nan]])
+
+    def test_native_cache_rejects_failed_physics_attribute_write(self):
+        class Failed:
+            def Set(self,value):return False
+        with self.assertRaises(RuntimeError):NativeFloatAttributes([[Failed()]]).set([[1.]])
+
+    def test_static_friction_holds_with_finite_elastic_deflection(self):
+        friction=ThreadFriction(1,20.)
+        result=friction.advance([.002],[.1])
+        self.assertEqual(result['friction_target_rad'][0],0.)
+        self.assertAlmostEqual(result['friction_elastic_torque_nm'][0],-.04)
+        self.assertEqual(result['friction_dissipated_work_j'][0],0.)
+        held=friction.advance([.002],[.1])
+        np.testing.assert_array_equal(held['friction_target_rad'],result['friction_target_rad'])
+
+    def test_sliding_friction_dissipates_and_does_not_restore_initial_angle(self):
+        friction=ThreadFriction(1,20.)
+        result=friction.advance([1.],[.1])
+        self.assertAlmostEqual(result['friction_target_rad'][0],.995)
+        self.assertAlmostEqual(result['friction_elastic_torque_nm'][0],-.1)
+        self.assertAlmostEqual(result['friction_dissipated_work_j'][0],.0995)
+        released=friction.advance([.995],[.1])
+        self.assertAlmostEqual(released['friction_elastic_torque_nm'][0],0.)
+        self.assertAlmostEqual(released['friction_target_rad'][0],.995)
+        reverse=friction.advance([.8],[.1])
+        self.assertAlmostEqual(reverse['friction_elastic_torque_nm'][0],.1)
+        self.assertGreater(reverse['friction_dissipated_work_j'][0],result['friction_dissipated_work_j'][0])
+
+    def test_unloaded_thread_has_no_friction_or_stored_energy(self):
+        friction=ThreadFriction(1,20.)
+        friction.advance([.02],[.1])
+        result=friction.advance([.02],[0.])
+        self.assertEqual(result['friction_elastic_torque_nm'][0],0.)
+        self.assertEqual(result['friction_elastic_energy_j'][0],0.)
+        self.assertEqual(result['friction_target_rad'][0],.02)
+
     def test_batch_material_preserves_slack_tension_and_travel_boundary(self):
         length=np.array((.189,.19,.1901,.1902));nominal=.1898
         turns=np.array((-1.,0.,.25,2.9));stiffness=2e6;spec=ThreadSpec()

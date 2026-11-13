@@ -129,9 +129,22 @@ class WheelModel:
         raise RuntimeError("Equilibrium did not converge")
 
 
-def starting_turn_errors(spec: WheelSpec | None = None):
-    """Deterministic development imbalance; not a calibrated physical reset."""
+RESET_PROFILES = ("four-defect-reference", "two-defect-candidate")
+
+
+def starting_turn_errors(spec: WheelSpec | None = None, profile="four-defect-reference"):
+    """Published deterministic resets; neither is a calibrated product.
+
+    The historical four-defect reset stays the default so old comparisons remain
+    reproducible. The shorter candidate requires native verification before it
+    is promoted to the actual task reset.
+    """
     s = spec or WheelSpec()
     turns = np.zeros(s.spokes)
-    turns[[0,2,4,6]] = -1.1
+    if profile == "four-defect-reference":
+        turns[[0, 2, 4, 6]] = -1.1
+    elif profile == "two-defect-candidate":
+        turns[[0, 2]] = -.75
+    else:
+        raise ValueError(f"Unknown wheel reset profile: {profile}")
     return turns

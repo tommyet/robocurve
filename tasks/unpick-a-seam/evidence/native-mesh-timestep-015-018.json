@@ -1,0 +1,244 @@
+{
+  "date": "2026-11-13",
+  "status": "mechanism_development_only",
+  "runs": {
+    "015_intact": {
+      "status": "complete",
+      "mode": "intact",
+      "physics_hz": 960,
+      "requested_seconds": 0.2,
+      "thread_radius_m": 0.0004,
+      "hole_width_m": 0.0016,
+      "hole_mesh_spacing_m": 0.0004,
+      "contact_refinement": "combined",
+      "completed_steps": 192,
+      "right_centroid_drop_m": 0.002372878456916472,
+      "strain": [
+        {
+          "maximum_principal_stretch": 1.009134090477149,
+          "first_validity_excursion": null
+        },
+        {
+          "maximum_principal_stretch": 1.0137242754503748,
+          "first_validity_excursion": null
+        }
+      ],
+      "contact_audit": [
+        {
+          "valid": true,
+          "steps": 192,
+          "first_failure": null
+        },
+        {
+          "valid": true,
+          "steps": 192,
+          "first_failure": null
+        }
+      ],
+      "source_sha256": {
+        "probe_native.py": "56af71421846bf6682f0dcb879816c41f14db9026cccc428dbed32141005ffb4",
+        "native_stitches.py": "2cd3655b33adcdb7bf91a32e61f293be60c615d647589a728f5d54b6afe54425",
+        "native_cloth.py": "68fe76ee7954ec2c1a4a204b95aee6519013964b7625173a08be4cda55b50a08",
+        "geometry.py": "13f5e255dc50bd92498a06c2a8f5d2647faa3f8eb1a2db0fbf01ba689b130e47",
+        "contact_audit.py": "167c12d11f82faadbc88fc8d9fc2dc74278eccd2ee692783da096b7ed21c61fc",
+        "inspection.py": "8bd0c2cb65afdef57d3387bbfaf521b6dc219537392cfa82d69717bf78744489"
+      },
+      "files": {
+        "artifacts/six-task-completion-2026-11-13/native-batch-015/results/native-batch-015/seam-refined-mesh/state.npz": "dbbdd0175a5a991b4f84bc72ce4b9c6398bb185cc1e8c180033116e87046dd99",
+        "artifacts/six-task-completion-2026-11-13/native-batch-015/results/native-batch-015/seam-refined-mesh/probe.json": "a3679b952ea60801bc16305a9ec75b5a164d84d7167a6c0a2293c78fc07cfaed"
+      }
+    },
+    "015_open": {
+      "status": "invalid_model_domain",
+      "mode": "open",
+      "physics_hz": 960,
+      "requested_seconds": 0.2,
+      "thread_radius_m": 0.0004,
+      "hole_width_m": 0.0016,
+      "hole_mesh_spacing_m": 0.0004,
+      "contact_refinement": "combined",
+      "completed_steps": 41,
+      "right_centroid_drop_m": 0.007339137459602019,
+      "strain": [
+        {
+          "maximum_principal_stretch": 1.010329854585938,
+          "first_validity_excursion": null
+        },
+        {
+          "maximum_principal_stretch": 1.0051487515511477,
+          "first_validity_excursion": null
+        }
+      ],
+      "contact_audit": [
+        {
+          "valid": true,
+          "steps": 41,
+          "first_failure": null
+        },
+        {
+          "valid": false,
+          "steps": 41,
+          "first_failure": {
+            "step": 41,
+            "time_s": 0.042708333333333334,
+            "reason": "thread crosses intact fabric",
+            "static_intersections": 1,
+            "swept_intersections": 0,
+            "static_crossing_details": [
+              {
+                "segment_index": 71,
+                "face_index": 4010,
+                "coordinate_frame": "current",
+                "intersection_m": [
+                  -0.0012305889967862737,
+                  -0.006123677009993814,
+                  0.4235497371923945
+                ],
+                "barycentric": [
+                  0.25650921527982185,
+                  0.6640368222652303,
+                  0.07945396245494782
+                ],
+                "segment_parameter": 0.3444859002127301,
+                "strictly_inside_triangle": true,
+                "strictly_inside_segment": true,
+                "distance_to_mesh_boundary_m": 2.1817580636404193e-05,
+                "closest_boundary_edge": [
+                  1707,
+                  2261
+                ],
+                "closest_boundary_point_m": [
+                  -0.0012291186406455405,
+                  -0.006123868444699739,
+                  0.42352797005591775
+                ],
+                "closest_boundary_edge_length_m": 0.0004004008466251266,
+                "closest_boundary_vertices_distance_to_thread_axis_m": [
+                  0.00012057313788780928,
+                  0.00028263392350700103
+                ],
+                "nearest_mesh_vertex_distance_to_thread_axis_m": 0.00012057313788780928
+              }
+            ],
+            "swept_crossing_details": []
+          }
+        }
+      ],
+      "source_sha256": {
+        "probe_native.py": "56af71421846bf6682f0dcb879816c41f14db9026cccc428dbed32141005ffb4",
+        "native_stitches.py": "2cd3655b33adcdb7bf91a32e61f293be60c615d647589a728f5d54b6afe54425",
+        "native_cloth.py": "68fe76ee7954ec2c1a4a204b95aee6519013964b7625173a08be4cda55b50a08",
+        "geometry.py": "13f5e255dc50bd92498a06c2a8f5d2647faa3f8eb1a2db0fbf01ba689b130e47",
+        "contact_audit.py": "167c12d11f82faadbc88fc8d9fc2dc74278eccd2ee692783da096b7ed21c61fc",
+        "inspection.py": "8bd0c2cb65afdef57d3387bbfaf521b6dc219537392cfa82d69717bf78744489"
+      },
+      "files": {
+        "artifacts/six-task-completion-2026-11-13/native-batch-015/results/native-batch-015/seam-open-mesh/state.npz": "9f1ffb89d0b93a7f885271fd736c7843e9c27035d7a264dc7e819d66729ca842",
+        "artifacts/six-task-completion-2026-11-13/native-batch-015/results/native-batch-015/seam-open-mesh/probe.json": "180f98739ac6e4f8decccbfc64eeabb5d8d46c73c3bb0d4b46ad2b92b820bcb9"
+      }
+    },
+    "018_open_fine": {
+      "status": "invalid_model_domain",
+      "mode": "open",
+      "physics_hz": 3840,
+      "requested_seconds": 0.2,
+      "thread_radius_m": 0.0004,
+      "hole_width_m": 0.0016,
+      "hole_mesh_spacing_m": 0.0004,
+      "contact_refinement": "combined",
+      "completed_steps": 63,
+      "right_centroid_drop_m": 0.0012809213646313156,
+      "strain": [
+        {
+          "maximum_principal_stretch": 1.0209625807142289,
+          "first_validity_excursion": {
+            "time_s": 0.01640625,
+            "triangle": 6943,
+            "principal_stretch": 1.0209625807142289,
+            "limit": 1.02
+          }
+        },
+        {
+          "maximum_principal_stretch": 1.016789548456236,
+          "first_validity_excursion": null
+        }
+      ],
+      "contact_audit": [
+        {
+          "valid": true,
+          "steps": 63,
+          "first_failure": null
+        },
+        {
+          "valid": true,
+          "steps": 63,
+          "first_failure": null
+        }
+      ],
+      "source_sha256": {
+        "probe_native.py": "9638e4ef910288cc18bbf43a82acc8be4429c3cc7168f18235a3de2e9a211aa6",
+        "native_stitches.py": "2cd3655b33adcdb7bf91a32e61f293be60c615d647589a728f5d54b6afe54425",
+        "native_cloth.py": "75398dce1057a25e6700171903dfa69d49c2cd988a660f058a9528ce3a572ca8",
+        "geometry.py": "13f5e255dc50bd92498a06c2a8f5d2647faa3f8eb1a2db0fbf01ba689b130e47",
+        "contact_audit.py": "167c12d11f82faadbc88fc8d9fc2dc74278eccd2ee692783da096b7ed21c61fc",
+        "inspection.py": "8bd0c2cb65afdef57d3387bbfaf521b6dc219537392cfa82d69717bf78744489"
+      },
+      "files": {
+        "artifacts/six-task-completion-2026-11-13/native-batch-018/results/native-batch-018/seam-open-fine/state.npz": "ffed0746e36aaec932f619781958981f07ee2862693a5989bbdf4476becc553c",
+        "artifacts/six-task-completion-2026-11-13/native-batch-018/results/native-batch-018/seam-open-fine/probe.json": "20ce8cd40ebfc0f5305738df52de8f6040fc0bb9610a5441786a27a9a6eeec40",
+        "artifacts/six-task-completion-2026-11-13/native-batch-018/results/native-batch-018/seam-open-fine/first-invalid-pair.npz": "7e1933e53d1f7f0e05a4f931ca976a3e75c5a82f2d9200f3defe8609fe5e2acb"
+      }
+    }
+  },
+  "strained_face_diagnostic": {
+    "layer": "left",
+    "face": 6943,
+    "vertex_ids": [
+      3674,
+      2232,
+      2231
+    ],
+    "rest_vertices_m": [
+      [
+        0.00040000000000006697,
+        -0.005175,
+        0.4301999999999999
+      ],
+      [
+        0.00040000000000006697,
+        -0.00515,
+        0.43039999999999995
+      ],
+      [
+        0.00040000000000006697,
+        -0.0052,
+        0.43039999999999995
+      ]
+    ],
+    "rest_edges_m": [
+      0.00020155644370749697,
+      4.99999999999997e-05,
+      0.00020155644370749697
+    ],
+    "deformed_edges_m": [
+      0.00020350453269202262,
+      5.00718888361007e-05,
+      0.00020474866323638707
+    ],
+    "preceding_step_vertex_motion_m": [
+      5.0835719775932375e-06,
+      8.563063602196053e-06,
+      1.0809966624947265e-05
+    ],
+    "previous_maximum_principal_stretch": 1.014218121283826,
+    "location": "Near the needle opening at original horizontal (x,y)=(0.305,-0.006) m; not the physical clamp.",
+    "interpretation": "A real local strain excursion, not evidence of a tear. Both strict thread/fabric contact audits remain valid through this stopped run."
+  },
+  "material_interpretation": {
+    "existing_limit": 1.02,
+    "changed": false,
+    "evidence": "Published woven pure-cotton fabrics of 124.4\u2013126.5 g/m\u00b2 have 7.1\u201319.3% mean elongation at maximum tensile force; the present FEM surface is 140 g/m\u00b2. The study supports rejecting 2% as a universal tear threshold, not equating peak-force elongation with reversible elasticity.",
+    "source": "https://www.mdpi.com/2673-7248/5/4/67",
+    "next_probe": "Continue only strain excursions, retain invalid-model status, and stop immediately on any strict static/swept thread crossing. This isolates contact performance before deciding a revised engineering domain."
+  }
+}

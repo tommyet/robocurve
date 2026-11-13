@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-13",
+  "type": "CPU broad-phase equivalence and timing only",
+  "native_run": false,
+  "reference_source_sha256": "af63f367c2c326b12a6ac0f3000922cb4a3fc4112fdaf33b9ce806e862961af2",
+  "candidate_source_sha256": "97c169fafc372b8f5b5a48f5b0a8115210eaddbda3ccab40e0b60a7e78159090",
+  "random_seed": 492,
+  "random_moving_mesh_cases": 200,
+  "steps_per_case": 4,
+  "same_crossed_face_sets": true,
+  "timing_scene": "two refined 8490-face patches; blade clear of fabric; 30 repeated steps",
+  "seconds_per_step": {
+    "old_cutting": 0.04738670416603175,
+    "cutting": 0.00047281250008381905
+  },
+  "limitation": "Timing is local CPU-only and varies; it is not GPU runtime or task feasibility evidence."
+}

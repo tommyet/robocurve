@@ -15,6 +15,7 @@ class SeamRuntime:
     hole_mesh_spacing_m: float | None = None
     physics_hz: int = 960
     contact_refinement: ContactRefinement = ContactRefinement()
+    maximum_stretch: float = 1.02
 
 
 CONFIG=SeamRuntime()

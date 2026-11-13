@@ -6,7 +6,7 @@
     "result": "passed",
     "command": ".venv/bin/python -m unittest discover -s tasks/tie-a-necktie -p test_local.py -v",
     "scope": "CPU geometry and synthetic evidence-rubric cases only; no physics or task-success claim",
-    "python_source_files": 22,
+    "python_source_files": 24,
     "syntax_and_json_check": {
       "result": "passed",
       "command": ".venv/bin/python tasks/tie-a-necktie/run.py --check-only",
@@ -28,7 +28,8 @@
     "yam_reset": "Batch013 uses explicit5-second native reset; zero fixture intersections and p99 strain0.013157 at first policy frame.",
     "contact_trial": "Batch015 native grasp320 actions: material patch lifts197.2 mm, holds193.5 mm above start after2 seconds, and drops187 mm after fingers open. Held patch stays within3 mm of actual TCP. All11 sampled full-triangle fixture audits clear; largest sampled edge strain7.16% during draw.",
     "diagnostics_not_task_success": true,
-    "judging_views": "Native960x720 front/rear recordings verified; cameras registered before scene construction and excluded from policy observations."
+    "judging_views": "Native960x720 front/rear recordings verified; cameras registered before scene construction and excluded from policy observations.",
+    "handoff": "Batch022 corrected640-action handoff retains wide-tip region after original grip release, lifts~167 mm and holds2 seconds. Fully open withdrawal still supports/snags fabric. Nine actual robot-hull triangle checks have no intersections with0.2 mm solid contraction; deepest sampled node penetration0.119 mm. Clean final release and a knot remain unproven."
   },
   "demo": {
     "status": "not_implemented"
@@ -53,16 +54,19 @@
     "JUDGING.md": "4ef2abf693410d763fafdf7ec612d234c8f6f9f393d50bff3a791372ce2c0260",
     "LICENSE": "a71ddeb012ff1961bf252489309b565ffd0443632819aa9c88eef4377f9f9f7a",
     "MOTION_PLAN.md": "c07a2d29769c41beed2ecf8313b1b19ea23bbb8ef64190b14b943eb7104c113f",
-    "README.md": "a38ba4e03b2d5302fa186e9394e9435612c47855fd8fe0901c81e8c5d15aae83",
+    "README.md": "624b64fb5c26c45eb3678eb8d4fb680518a981ac85fcf71d8ad8cc16b1e0334f",
     "arena_cloth.py": "d6c4574249c9eb9a5772288c7ce0f03afccc5b8637f44ec923c7522ea4f387c6",
     "arena_props.py": "5f2b6d710f1e8144d99a8c956db134b68b0e37996f4171415019a82ad67be9c4",
     "audit_motion.py": "2d68ec6f2498d250e644baef3868780af03457414962878415e21e0eb68387be",
+    "audit_robot_contact.py": "395e56794ed65d56c0d4d64bcc3c49d8375a3e2c56ed1356446df83c2eb4ba48",
     "cloth_mesh.py": "8fd32902163bf9429ec524d1a619d1640dca979f43f68307444530e52a548bde",
+    "cross-plan.json": "9c9a1dd2980c9b3466e0490f451ea6057198c61e9e4ca73e00589350be773fea",
+    "cross_motion.py": "a8333c59ec4f7a3b4baf2d9a29fda48b94ee2857c937630d885403c16e075973",
     "fixed_motion.py": "6d86a61f4950487e56e3a2d292e85b40b95ecebc38b53292fe6b9ded2a8cafb4",
     "fixture_clearance.py": "a872e448c64c1d2d9acbb0b89d9b39e1c7ec0bcdbf2f2b890175ca15aab96fc0",
     "grasp-plan.json": "dbc3835deb90b3521b3c0981443a4811ce9b4acea19a6a04457f0d3a2956f58d",
-    "handoff-plan.json": "c53206b27839e20113eae271c0331e0c14a50c586eca762515f8ec7caeb7fb98",
-    "handoff_motion.py": "35f40d0def7c18087a1c080ddd05cd9d4b3b000af127520dc8f2eb97a6ffcdfd",
+    "handoff-plan.json": "c3254d1cd9fa7411a36325d3cd332354c4c850f8295085ee8cbcc3ac677f8384",
+    "handoff_motion.py": "13c249d4d87e2a313c7386d6471927af04c61e86887c4e6e4690e81fd21247ee",
     "interpret_motion.py": "cc095e8cd42e80d97e02bfb9a1b5f5235be0743615a5cd5a980272e569c0c79a",
     "interpret_probe.py": "bfc58a7df7587e4938b2090bd3bfb538d5f7d6a89c6926b4b4cf3d7989d1863d",
     "judge.py": "c6c7cfcc493010a6f3508f4146fbdedee33b35d13ebfb156779d1c092a486ded",
@@ -73,19 +77,20 @@
     "probe_runtime.py": "1092025de87ae5168b0d0c519388b6cec65d6ebddf756f5407b7ef4c3b6dbd11",
     "reset_asset.py": "0826ba4d97a0067cb810e529470db0802ade98c7f22971fc7dbb483c0c745697",
     "reset_scene.py": "34cc8d09c5f225917797a34553fefa5cd735b22951508866f2bd7a2b66a5a108",
-    "review_views.py": "1b215db8b0d89ad05b761c9a74e84db2892a7e9c421f2f482aeae8f0a98d7a42",
-    "run.py": "0e35ed082cf5f247a4c8f461bf5f12455c1665bd1be29a3a97cf8a5870b39cc5",
+    "review_views.py": "9e68e6943d1ba20d916f17ac9fe4a6ed793742fafb55a0fa269d0fb16749e54b",
+    "run.py": "674f29ce5579aac7fd830e00171bce0451ac49f14375ec16ab7b187fefe19835",
     "scoring.py": "6246958397ca8936182f6b1cdc8b9aef423f0ba20f8871a2129d38ddbc481ce7",
     "task.draft.json": "8d521ad0296a3fd47108e342665429e88cb28c8a304f0f3e3b8c31a91e894daa",
     "task.py": "86ec5877a99f367f0fedf51c45901181dc016099d48df0ac6717ee8940544eb0",
-    "test_local.py": "e06afeb1efc1fd79f8cfc8fceb54cb3eb2c874be8c5f0ae089570fa9cf65de6e"
+    "test_local.py": "e06afeb1efc1fd79f8cfc8fceb54cb3eb2c874be8c5f0ae089570fa9cf65de6e",
+    "wrap_motion.py": "b7566d3be00a0581b3510818b40af42b29886556912e1aae7f35e8050ae1be16"
   },
   "implementation_checkpoint": {
     "native_surface_cloth": "Native GPU surface FEM and Fabric rendering exercised in standalone diagnostics; garment/peg or knot interaction remains unvalidated.",
     "arena_scene": "Native YAM cloth/collar scene, five-second physical reset and contact-only retained grasp/lift/release verified.",
     "passive_pegs": "Not applicable",
     "runner": "Smoke and fixed-joint motion probes share explicit raw reset plus exactly100 ready-position control steps of native settling; all setup physics counts/time recorded separately.",
-    "controller": "Native retained pickup/lift/release demonstrated as a contact diagnostic.600-action physical handoff candidate compiles0.093 mm/.019 degrees and passes complete sampled hull audit with verified unchanged240-action prefix. Native handoff pending; no knot controller.",
+    "controller": "Retained physical tip handoff demonstrated in batch022. Narrow-strand grasp/front-cross continuation uses offline measured pose. Full knot, clean release and wearable fit remain unproven.",
     "judging": "Evidence-bound manual photo/video/ruler rubric with adversarial local tests; final thresholds need runtime validation"
   }
 }

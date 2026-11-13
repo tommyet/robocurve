@@ -1,0 +1,71 @@
+{
+  "checked_utc": "2026-11-13",
+  "native_run": false,
+  "runner_enabled": false,
+  "source_sha256": "03f72a04f7d296ca99044709462ec178804647914887a4db1dde860ae550059b",
+  "current": [
+    {
+      "vertices": 4407,
+      "triangles": 8490,
+      "surface_area_m2": 0.005969280000000001,
+      "boundary_loops": 13,
+      "connected": true,
+      "minimum_edge_m": 2.4999999999997247e-05,
+      "maximum_edge_m": 0.0039051248379533307,
+      "minimum_angle_degrees": 3.8140748342900914,
+      "maximum_triangle_edge_ratio": 15.033296378373565
+    },
+    {
+      "vertices": 4407,
+      "triangles": 8490,
+      "surface_area_m2": 0.005969280000000001,
+      "boundary_loops": 13,
+      "connected": true,
+      "minimum_edge_m": 2.4999999999997247e-05,
+      "maximum_edge_m": 0.0039051248379533307,
+      "minimum_angle_degrees": 3.8140748342900914,
+      "maximum_triangle_edge_ratio": 15.033296378373565
+    }
+  ],
+  "candidate": [
+    {
+      "vertices": 1582,
+      "triangles": 2888,
+      "surface_area_m2": 0.005969280000000001,
+      "boundary_loops": 13,
+      "connected": true,
+      "minimum_edge_m": 0.00039999999999995595,
+      "maximum_edge_m": 0.00421653287905001,
+      "minimum_angle_degrees": 17.33676167080073,
+      "maximum_triangle_edge_ratio": 3.3457366092436205
+    },
+    {
+      "vertices": 1582,
+      "triangles": 2888,
+      "surface_area_m2": 0.00596928,
+      "boundary_loops": 13,
+      "connected": true,
+      "minimum_edge_m": 0.00039999999999995595,
+      "maximum_edge_m": 0.00421653287905001,
+      "minimum_angle_degrees": 17.33676167080073,
+      "maximum_triangle_edge_ratio": 3.3457366092436205
+    }
+  ],
+  "rest_strain": [
+    1.0000000000000007,
+    1.0000000000000007
+  ],
+  "initial_crossings": [
+    {
+      "valid": true,
+      "steps": 1,
+      "first_failure": null
+    },
+    {
+      "valid": true,
+      "steps": 1,
+      "first_failure": null
+    }
+  ],
+  "interpretation": "Same exact physical holes and surface; fewer, better-conditioned numerical elements. Native contact, deformation and runtime remain untested; this candidate is not a new material."
+}

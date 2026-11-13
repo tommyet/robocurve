@@ -1,126 +1,86 @@
 # True a wobbly bicycle wheel
 
-**Development package; not submission-ready.** The CPU mechanics checks pass.
-The isolated native ring passes a two-second fine-step response test. Full
-wheel/thread/contact integration remains unproven. No truing demo, Dream run or media ID exists.
+**Development package, not ready to submit.** The native wheel now settles and
+holds its spoke adjustments in short tests. Wrench contact, robot manipulation,
+a full-score demo and a Dream run are still outstanding.
 
-The robot adjusts spoke nipples to leave a wheel straight, centred and freely
-rotating. Finding the wobble and redistributing tension is the task; matching a
-hidden target nipple angle is not a scoring criterion.
+The robot adjusts spoke nipples until the wheel runs straight, remains centred
+and spins freely. Scoring measures the resulting wheel, not hidden target
+nipple angles.
 
-## Current implementation
+## Scene and mechanics
 
-The 420 mm centreline-diameter rim has 32 independent curved sectors connected
-by compliant native joints. The tension-only steel spokes pull on both sides
-of a freely rotating hub. Four neighbouring same-side nipples start 1.1 turns
-looser than the balanced reference. Measured physical nipple rotation changes
-spoke rest length by the thread pitch and applies an opposing thread torque.
-The native wrench must transfer that torque through contact.
+The 420 mm rim has 32 curved sectors with compliant native joints. Steel spokes
+pull from alternating sides of a freely rotating hub. Actual nipple rotation
+relative to its spoke changes rest length by the 0.454 mm thread pitch; the
+material applies equal and opposite reaction torques to those bodies. Rotating
+the whole wheel does not tighten a spoke. Clockwise rotation viewed from the
+rim tightens the right-hand thread.
 
-The curved rim avoids the 1.06 mm radial scallop of the earlier 32-box geometry;
-its six arc subdivisions per sector keep geometric chord error below 0.03 mm.
-The full scene includes a stand, colliding spoke rods, rotating square brass
-nipples and an open-slot wrench. The spoke heads can tilt but cannot freely
-spin; thread advance uses the nipple's measured rotation relative to the outer
-spoke. Lead and friction torques act between those two actual bodies. A common
-wheel/spoke/nipple rotation does not shorten a spoke. Clockwise nipple rotation
-viewed from the rim tightens the right-hand thread. Midspan bending is
-compliant, so a real
-tension-gauge measurement has a corresponding physical response.
+The free wrench has a 3.25 mm working slot and a 5 mm flared mouth. Its physical
+lead-in guides engagement; there is no automatic attachment or pose correction.
+The jaws must turn the 3.23 mm nipple flats through collision. Internal bearing
+and eyelet interfaces are represented by joints and filtered only against their
+own connected bodies. External wrench contacts remain active.
 
-A YAM asset bridge registers the 130 native bodies and resets them only at an
-episode reset. A before-substep material callback reads actual body state and
-applies thread torques; it does not write object poses. The DirectGPU version
-uses native tensor pose/force views. This bridge and the full scene are not yet
-runtime validated.
+An implicit elastic Coulomb drive models thread friction. It holds an adjustment
+without restoring the nipple to its starting angle. All material torques are
+applied every physics step. A cache skips only identical native float32
+attribute writes. Object poses are written only during episode reset.
 
-The simplified material properties, thread friction and geometry are disclosed
-engineering choices. They are not measurements of a specific commercial wheel.
-Thread travel outside ±3 turns invalidates model scope. Detailed thread
-stripping, permanent rim damage and unrestricted spoke buckling are not yet
-represented. Native damage-domain, contact and stability checks remain needed.
+The historical reset loosens nipples 0, 2, 4 and 6 by 1.1 turns. A shorter
+candidate loosens nipples 0 and 2 by 0.75 turn. Its linear CPU estimate starts
+at 0.697 mm runout and 354 N minimum tension; two quarter-turn corrections per
+nipple predict 0.232 mm runout and 585–777 N tension. This candidate needs native
+verification before becoming the task reset. It does not require restoring an
+arbitrary reference tension exactly.
 
-## Evidence and commands
+These are declared engineering approximations, not measurements of a commercial
+wheel. The model uses elastic rim compliance, tension-only spokes and simplified
+thread friction. A latched guard checks rim strain, twist and joint integrity
+at every material substep; leaving its declared domain ends the trial. It does
+not render permanent rim damage or stripped threads. Thread travel is limited
+to ±3 turns. See `VALIDATION.json` for parameters, limits and test history.
 
-The 29 CPU checks use NumPy, take under one second and use no randomness:
+## Reproducing the current checks
 
-```sh
-python -m unittest discover -s tasks/true-a-bicycle-wheel -p 'test_*.py' -v
-python tasks/true-a-bicycle-wheel/probe.py --out artifacts/wheel-cpu-probe.json
-```
-
-The small-displacement CPU model predicts 1.663 mm starting lateral runout and
-about 0.125 mm lateral response to a single quarter turn. These are model
-outputs, not robot evidence. Its frozen prestress approximation makes load
-predictions invalid after a spoke becomes slack.
-
-In the pinned Isaac 6.1 environment, run the isolated ring gate first:
+The 38 CPU checks need NumPy, use no randomness and take under one second:
 
 ```sh
-python tasks/true-a-bicycle-wheel/native_probe.py --out artifacts/wheel-ring --seconds 2 --dt .000025 --adjust-at .1
+python -m unittest discover -s tasks/true-a-bicycle-wheel -p 'test_*.py'
 ```
 
-This diagnostic fixes the hub, disables gravity and changes one spring rest
-length halfway through. It is not a robot or wrench demonstration. The first
-native DistanceJoint version did not respond at this scale. A D6 soft distance
-limit produced a response; a 100 microsecond, damped run initially settled to
-about 0.160 mm lateral runout but later developed an unstable translation/twist
-mode. Reducing TGS velocity iterations from 32 to 4 did not fix it. Read both
-`complete` and `bounded_small_response`; a completed process alone is not a
-physical pass. A failed Isaac run may still leave exit code zero.
-
-An isolated D6 spring under a known 700 N diagnostic load responds to a
-quarter-turn rest-length change by 0.113398 mm, versus 0.1135 mm expected. Its
-absolute equilibrium position is about 46 µm too short at a 100 µs step, so
-the constitutive check fails. `spring_probe.py` separates this timestep/solver
-question from the full ring. Its saved report is `evidence/native-spring-008.json`.
-At a 25 µs step, the same isolated spring passes: static error falls to 2.8 µm
-and the observed rest-length response is 0.113487 mm. This supports a timestep
-convergence diagnosis.
-The attempted four-second fine-step ring test hit a 240-second wall limit;
-its old runner did not preserve motion samples. The runner now writes atomic
-checkpoints and finalizes on termination. The subsequent 0.8-second test passes:
-131 µm maximum adjustment response, 10.2 µm late drift and locked joint gaps
-below 0.59 µm. Rim strain energy stays bounded after the adjustment. Its 50.8
-seconds of wall time informed a two-second follow-up, with the adjustment at
-0.1 seconds. That follow-up remains bounded throughout the earlier instability
-window: 138 µm maximum response, 5.72 µm final drift and stable rim energy. It
-takes 130 wall seconds. This validates the isolated ring gate, not the full
-130-body scene or a truing action.
-
-The next bounded diagnostic is the full scene:
+In the pinned Isaac 6.1 environment, use a new output directory for each run:
 
 ```sh
-python tasks/true-a-bicycle-wheel/scene_probe.py --out artifacts/wheel-scene --dt .000025 --seconds .1
-python tasks/true-a-bicycle-wheel/wrench_contact_probe.py --out artifacts/wheel-contact --dt .000025 --turn-deg -90
-python tasks/true-a-bicycle-wheel/wrench_contact_probe.py --out artifacts/wheel-no-contact --dt .000025 --turn-deg -90 --no-contact
-python tasks/true-a-bicycle-wheel/preview_yam.py --out artifacts/wheel-yam-preview --steps 2 --physics-hz 40000
+python tasks/true-a-bicycle-wheel/scene_probe.py --out OUTPUT --seconds .3 --dt .000025 --solver-position-iterations 32 --reset-profile two-defect-candidate
+python tasks/true-a-bicycle-wheel/wrench_contact_probe.py --out OUTPUT --dt .000025 --turn-deg -90
+python tasks/true-a-bicycle-wheel/wrench_contact_probe.py --out OUTPUT --dt .000025 --turn-deg -90 --no-contact
+python tasks/true-a-bicycle-wheel/preview_yam.py --out OUTPUT --steps 2 --physics-hz 40000
 ```
 
-The wrench test uses an explicitly kinematic diagnostic fixture. The no-contact
-control offsets it 40 mm along the nipple axis. Neither is a robot demo. The
-YAM preview holds the ready pose and records cameras and measured body state;
-it is unscored. Each output directory must be new. Native trial runtime, final
-physics rate and total task cost remain unestablished.
+The wrench tests are explicit kinematic fixtures, not robot demos. Their
+no-contact control moves the wrench 40 mm off the nipple. The YAM preview only
+holds the ready pose and records cameras and native state. Read the JSON status
+and physical checks: Isaac may exit with code zero after a Python failure.
 
-## Judging and remaining work
+An isolated spring passes the expected quarter-turn displacement check at a
+25 µs step. The isolated rim remains bounded for two seconds. The full assembly
+with elastic Coulomb friction passes 0.3 seconds at 25 µs and 32 solver
+iterations: final runout 2.033 mm, final 20 ms rim drift 0.364 µm and thread drift
+1.41e-6 turns/second. That run took 56 wall seconds. A 50 µs comparison still
+had a small settling transient at 0.1 seconds; it is not yet a validated runtime
+choice. Curated reports are in `evidence/`; none demonstrates robot truing.
 
-`JUDGING.md` uses the stand pointer, feeler gauges and a basic mechanical spoke
-tensiometer. Full credit requires at most 0.5 mm lateral runout; partial credit
-allows 1.5 mm. Both require radial runout at most 1 mm, dish error at most 0.5 mm,
-every spoke within this fixture's 400–1000 N range, a complete released
-revolution and intact equipment. The old eight rim weight tests and 32 separate
-hanging-weight/caliper tests have been removed.
+## Scoring and remaining evidence
 
-Next establish stable mechanics and smaller-step agreement, contact-driven
-nipple rotation with a no-contact control, thread friction/creep and invalid
-outcome handling. Then complete collision-safe YAM manipulation, show a full
-score within the run limit and run Dream on the same scene. A simple physically
-reproducible assessor must score both recordings before media is finalized.
+`JUDGING.md` uses a pointer, feeler gauges, a ruler and a mechanical spoke
+tensiometer. Full credit requires lateral runout ≤0.5 mm; partial credit allows
+≤1.5 mm. Both require radial runout ≤1 mm, dish error ≤0.5 mm, all 32 spokes
+within this fixture's 400–1000 N range, intact equipment and a complete released
+revolution. Destructive or invalid outcomes receive zero.
 
-Accepted [filing](https://github.com/robocurve/benchmark-tasks/tree/main/tasks/file-a-steel-block-flat-down-to-a-scribed-line)
-and [cord cutting](https://github.com/robocurve/benchmark-tasks/tree/main/tasks/cut-taut-cord)
-informed the causal before-substep material structure. NVIDIA documents the
-[D6 joint and soft-limit formulation](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/joints.html)
-and [native tensor force interface](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/extensions/runtime/source/omni.physics.tensors/docs/api/python.html).
-Their existence does not substitute for this task's own runtime evidence.
+Next verify contact-driven tightening and release, complete ordinary YAM
+joint-command manipulation, and demonstrate full score within the run limit.
+Then run Dream with the same physics and score both recordings. No media ID,
+final runtime, task score or submission certificate exists yet.

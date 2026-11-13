@@ -116,6 +116,8 @@ def main():
             p.error('motion-probe requires a precomputed --plan')
         from fixed_motion import load
         fixed_plan,fixed_actions=load(args.plan)
+        if fixed_plan.get('do_not_run_reason'):
+            p.error(fixed_plan['do_not_run_reason'])
         expected=hashlib.sha256((HERE/'layout.py').read_bytes()).hexdigest()
         if fixed_plan.get('fixture_source_sha256')!=expected:
             p.error('Frozen motion does not match current collar geometry; recompile and audit first')

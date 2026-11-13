@@ -1,7 +1,8 @@
-"""Unscored YAM integration preview. Robot stays at its ordinary ready pose.
+"""Record native YAM diagnostics, frozen-plan demos or direct Dream trials.
 
-Requires the pinned team simulator. No Dream call, privileged demo controller,
-or object-state writes. This is an integration check, not task completion.
+Requires the pinned team simulator. Policies receive standard observations;
+measured tool state is used only by physical coupling and assessment. Saved
+execution must be independently judged before claiming task completion.
 """
 import argparse
 import hashlib
@@ -10,6 +11,7 @@ from pathlib import Path
 import time
 import traceback
 import signal
+import shutil
 import numpy as np
 
 
@@ -18,14 +20,18 @@ def array(value):
     return value.detach().cpu().numpy() if hasattr(value,'detach') else np.asarray(value)
 
 
-def main():
+def main(*, default_policy='diagnostic', default_steps=60, default_review=False):
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--out',type=Path,required=True)
-    p.add_argument('--steps',type=int,default=60)
+    p.add_argument('--steps',type=int,default=default_steps)
+    p.add_argument('--policy',choices=('diagnostic','demo','dream'),default=default_policy)
     p.add_argument('--plan',type=Path,help='Optional precompiled fixed action plan; no object feedback')
-    p.add_argument('--judging-views',action='store_true',help='Render final close-up photos after motion; never policy inputs')
+    p.add_argument('--joint-feedback',action='store_true',help='Bounded demo PI tracking from standard joint observations only')
+    p.add_argument('--judging-views',action='store_true',default=default_review,help='Record close-up review views; never policy inputs')
     a=p.parse_args()
-    if not 1<=a.steps<=800:p.error('Preview limited to 800 control steps')
+    if not 1<=a.steps<=2400:p.error('Trial limited to 2400 control steps')
+    if a.policy=='demo' and a.plan is None:p.error('Demo requires a frozen joint plan')
+    if a.policy=='dream' and (a.plan or a.joint_feedback):p.error('Dream uses its own ordinary actions')
     plan=None
     if a.plan:
         plan=json.loads(a.plan.read_text())
@@ -35,11 +41,16 @@ def main():
         if actions.shape!=(len(plan['frames']),14) or not np.isfinite(actions).all():p.error('Invalid plan actions')
         a.steps=min(a.steps,len(actions))
     a.out.mkdir(parents=True,exist_ok=False);start=time.monotonic()
-    report={'status':'running','robot_demo':False,'preview_steps':a.steps,
+    frozen=a.out/'task-source';frozen.mkdir()
+    for source in Path(__file__).parent.glob('*.py'):shutil.copyfile(source,frozen/source.name)
+    if a.plan:shutil.copyfile(a.plan,frozen/'fixed-plan.json')
+    report={'status':'running','robot_demo':a.policy=='demo','policy':a.policy,
+            'full_score_demonstrated':False,'preview_steps':a.steps,
             'source_sha256':{n:hashlib.sha256(Path(__file__).with_name(n).read_bytes()).hexdigest()
-                             for n in ('scene.py','native.py','material.py','preview_yam.py','contact_audit.py','review_views.py')},
-            'plan_sha256':hashlib.sha256(a.plan.read_bytes()).hexdigest() if a.plan else None}
-    app=None;video=None;trace=[]
+                             for n in ('scene.py','native.py','material.py','preview_yam.py','contact_audit.py','review_views.py','joint_tracking.py')},
+            'plan_sha256':hashlib.sha256(a.plan.read_bytes()).hexdigest() if a.plan else None,
+            'joint_feedback':a.joint_feedback}
+    app=None;video=None;trace=[];dream_policy=None;request_audit=[];session_audit={'session_count':0}
     def progress(phase,step=0):
         report.update(phase=phase,completed_control_steps=step,wall_seconds=time.monotonic()-start)
         (a.out/'preview.json').write_text(json.dumps(report,indent=2)+'\n')
@@ -80,6 +91,7 @@ def main():
         from yam_arena import scene as adapter
         namespace=adapter.task_object.__globals__
         roots,coupling=namespace['ROOTS'],namespace['COUPLING']
+        report['tool_body_paths']={name:roots[name] for name in ('barrel','plunger')}
         sim=tensors.create_simulation_view('torch');sim.set_subspace_roots('/')
         barrel=sim.create_rigid_body_view(roots['barrel']);plunger=sim.create_rigid_body_view(roots['plunger'])
         import omni.usd
@@ -108,21 +120,49 @@ def main():
                                 ffmpeg_params=['-movflags','+faststart'],macro_block_size=1)
         def snapshot(step):
             rgb=array(base.scene['top_cam'].data.output['rgb'])[0,:,:,:3].astype(np.uint8)
+            if a.judging_views:
+                from review_views import composite_frame
+                rgb=composite_frame(base)
             video.append_data(rgb)
             if not step:Image.fromarray(rgb).save(a.out/'setup.png')
             trace.append({'step':step,
+                          'time_s':step/20,
+                          'observed_action14':np.asarray(emb._observation().state['joint_pos'],float).tolist(),
                           'robot_joints':{name:array(base.scene[name].data.joint_pos)[0].tolist() for name in ('left_robot','right_robot')},
                           'robot_links_xyzw':{name:array(base.scene[name].data.body_link_pose_w)[0].tolist() for name in ('left_robot','right_robot')},
+                          'rigid_bounds_m':dict(other_contact.world_bounds),
                           'barrel_pose_xyzw':array(barrel.get_transforms())[0].tolist(),
                           'plunger_pose_xyzw':array(plunger.get_transforms())[0].tolist(),
                           'piston_m':coupling.last_piston_m,'pressure_reaction_n':coupling.last_reaction_n,
                           'emitted_ml':coupling.material.emitted_m3*1e6,
                           'material_contact_invalid':bool(other_contact.events)})
         snapshot(0)
+        if a.policy=='dream':
+            from inspect_robots import Scene
+            from dream_policy import make_policy
+            instruction=json.loads(Path(__file__).with_name('task.draft.json').read_text())['instruction']
+            dream_policy=make_policy(request_audit,session_audit,rows_per_request=8)
+            dream_policy.bind(emb.info)
+            dream_policy.reset(Scene(id='pipe-shell-border',instruction=instruction))
+            report['dream_model']=dream_policy.info.checkpoint
         progress('fixed action preview',0)
+        from joint_tracking import JointTracking
+        tracking=JointTracking()
         for i in range(a.steps):
-            action=emb._ready if plan is None else torch.tensor([actions[i]],device=base.device,dtype=torch.float32)
-            emb._env.step(action);coupling.update_surface();snapshot(i+1)
+            observation=emb._observation()
+            if dream_policy is not None:
+                chunk=dream_policy.act(observation)
+                if len(chunk.actions)!=1:raise RuntimeError('Expected one ordinary Dream control action')
+                reference=np.asarray(chunk.actions[0].data,float)
+            else:
+                reference=emb._ready[0].detach().cpu().numpy() if plan is None else actions[i]
+            observed=np.asarray(observation.state['joint_pos'],float)
+            requested=tracking.action(reference,observed,enabled=a.joint_feedback and i>=340)
+            applied=np.clip(requested,emb._low,emb._high)
+            action=torch.tensor([applied],device=base.device,dtype=torch.float32)
+            emb._env.step(action);emb._t=(i+1)/20;coupling.update_surface();snapshot(i+1)
+            trace[-1].update(reference_action14=reference.tolist(),requested_action14=requested.tolist(),
+                             applied_action14=applied.tolist(),joint_tracking_bias12=tracking.bias.tolist())
             if (i+1)%20==0 or i+1==a.steps:progress('fixed action preview',i+1)
         video.close();video=None
         for name in ('top_cam','left_cam','right_cam'):
@@ -136,11 +176,16 @@ def main():
             report['judging_cameras']=capture_final(base,a.out)
         report.update(status='complete',balance=coupling.material.balance(),score=None,
                       other_contact=other_contact.summary(),
-                      note='Unscored integration preview; no full task, Dream trial or media evidence.')
+                      note='Execution complete; independently rescore saved material and trajectory before any task-success claim.')
     except BaseException as exc:
         report.update(status='failed',error=f'{type(exc).__name__}: {exc}',traceback=traceback.format_exc());raise
     finally:
         if video is not None:video.close()
+        if dream_policy is not None:
+            from dream_policy import public_transcript
+            (a.out/'dream-transcript.json').write_text(json.dumps(public_transcript(dream_policy),indent=2)+'\n')
+        report.update(dream_requests=len(request_audit),dream_session_audit=session_audit)
+        if request_audit:(a.out/'dream-requests.json').write_text(json.dumps(request_audit,indent=2)+'\n')
         report['wall_seconds']=time.monotonic()-start
         (a.out/'preview.json').write_text(json.dumps(report,indent=2)+'\n')
         if trace:(a.out/'trace.json').write_text(json.dumps(trace,indent=2)+'\n')

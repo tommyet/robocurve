@@ -1,172 +1,101 @@
 # Peg a T-shirt onto a clothesline
 
-**Development package; not ready to submit.** No robot demo, Dream run, measured
-score or uploaded media exists yet. Native cloth and passive peg contact have
-passed bounded GPU diagnostics; full garment manipulation remains unproven. Do not turn this draft into `task.json` until the gates
-in `VALIDATION.json` pass.
+**Development only; not ready to submit.** Native cloth pickup/carry and physical peg pickup/opening work. Fastening the
+shirt to the line and leaving it hanging remain unproven. No
+full-score demo, Dream run, final score or uploaded media exists.
 
-The task is ordinary laundry fastening: hang a small cotton T-shirt using two
-spring pegs and leave it supported only by the line and pegs. The shirt is an
-original two-layer sewn surface mesh with open neck, cuffs and bottom hem. It
-is not a rigid outline. `scene.py` authors the proposed full prop layout;
-`arena_cloth.py` implements the native cloth bridge for the pinned YAM adapter.
-`arena_props.py` registers both dynamic peg jaws and resets their actual poses
-and velocities. `task.py` assembles the complete station scene; `run.py` records
-a bounded no-op robot smoke run. Standalone native drape physics and rendering
-now run, including the robot bridge; a successful hanging controller remains
-to be demonstrated.
+Hang a small T-shirt using two spring pegs, then let go. The shirt has two sewn
+fabric layers and open neck, cuffs and hem. Each peg has two dynamic wooden
+jaws, a hinge and a constant closing spring. Squeezing the handles must open
+the jaws through physical contact. There are no cloth attachments, proximity
+grasps, animated object paths or runtime changes to spring targets.
 
-On 13 November, native cloth rendering, the YAM bridge and passive peg controls
-ran successfully. The closed peg retained the cloth coupon; the open peg let
-it fall. The 8 mm support needed 480 Hz physics to avoid initial tunneling;
-that layout has no final cloth/fixture intersections. A full hanging demo,
-material calibration and independent scoring still remain.
+## Run
 
-## Local checks
-
+Use the pinned Isaac Sim 6.1 / IsaacLab / YAM environment in `ENVIRONMENT.json`.
 From the repository root:
 
 ```bash
-.venv/bin/python -m unittest discover -s tasks/peg-out-a-tshirt -p test_local.py -v
+# CPU checks; these do not prove simulation or task success.
+.venv/bin/python -m unittest discover -s tasks/peg-out-a-tshirt -p test_local.py
 .venv/bin/python tasks/peg-out-a-tshirt/run.py --check-only
-```
 
-These check mesh topology, the unstrained starting pose and adversarial cases
-in the provisional rubric. They do not simulate cloth or demonstrate success.
+# Bounded native physics controls.
+python tasks/peg-out-a-tshirt/probe.py --mode clamp --seconds 3 --output /tmp/closed-peg
+python tasks/peg-out-a-tshirt/probe.py --mode open-clamp --seconds 3 --output /tmp/open-peg
+python tasks/peg-out-a-tshirt/probe.py --mode task-layout --seconds 3 --output /tmp/shirt-reset
 
-## First GPU checks
-
-Use the retained Isaac Sim 6.1 interpreter, with the pinned IsaacLab/Arena
-environment already activated. No additional installation is required by these
-scripts. Do not call Dream until native contact has passed.
-
-```bash
-python tasks/peg-out-a-tshirt/probe.py --mode drape --seconds 3 --output /tmp/tshirt-drape
-python tasks/peg-out-a-tshirt/probe.py --mode clamp --seconds 3 --output /tmp/tshirt-clamp
-python tasks/peg-out-a-tshirt/probe.py --mode open-clamp --seconds 3 --output /tmp/tshirt-open-clamp
-python tasks/peg-out-a-tshirt/probe.py --mode task-layout --seconds 3 --output /tmp/tshirt-layout
-python tasks/peg-out-a-tshirt/run.py --mode smoke --steps 60 --out /tmp/tshirt-yam-smoke
-```
-
-Each process records source hashes, actual runtime and native node trajectories.
-By default it also records native-rendered diagnostic video and initial/final
-PNGs. Use `--no-render` only to isolate a physics-startup failure. Native
-physics advances through an explicit cached-stage attachment and fixed steps;
-the deprecated `World.reset()` path failed to attach a PhysX stage under the
-verified Isaac Sim 6.1 installation. Maximum transient edge strain and nodal speed are
-recorded alongside the final shape.
-Inspect the drape for sag/folding and no penetrations. Compare the closed and
-open jaw fixtures: only actual spring pressure and friction may retain the free
-cloth coupon. A valid result needs visual review as well as the numeric report.
-The diagnostic peg's lower jaw is fixed to its test stand; both jaws are free in
-the actual task, and the robot must pick up and operate the peg physically.
-
-The YAM runner holds the ordinary ready joint targets. It checks that the shirt
-is a native self-contact deformable, that each peg has two non-kinematic jaws
-and one free hinge, and that no attachment appears in the scene. It records
-policy camera video, joints, native cloth nodes, actual jaw poses/velocities,
-source files and runtime. Geometry is assessor-only data and never feeds back
-into the constant policy. A completed smoke run always has `score: null`.
-The shared `reset_scene.py` resets the raw environment once, then advances exactly
-100 control steps (5 seconds) of native physics while the arms hold their
-ordinary ready posture. Cloth and passive pegs settle together. The first
-policy observation follows this declared setup period, recorded separately
-from the task limit. Every policy must use the same reset helper. This is
-deterministic initialization, not a certificate that the layout is stable.
-
-The shirt now uses 480 Hz native physics and 20 Hz control, matching the
-validated 8 mm board diagnostic. At 240 Hz the original thin board allowed
-initial cloth tunneling; 480 Hz eliminated it without a material or fixture change. Do not run ten full robot attempts to diagnose a failed three-second cloth
-probe. Runtime and the approximately $3 task budget cannot be confirmed before
-the first measured GPU process.
-
-## First robot contact probe
-
-The current `grasp-plan.json` is a 21-second bimanual approach, vertical pinch
-across both hem layers, lift and release. Its pinch coordinates come from the
-measured five-second YAM reset in batch015, at 480 Hz. The maximum IK error is 0.091 mm and 0.017°.
-All 420 sampled poses clear the actual YAM collision hulls against the support,
-table and opposite arm. Native tracking and cloth contact still need a trial. A previous side approach was discarded
-because it did not match the actual two-layer hem geometry.
-
-```bash
+# Contact diagnostic, not a submission demo.
 python tasks/peg-out-a-tshirt/run.py --mode motion-probe \
-  --plan tasks/peg-out-a-tshirt/grasp-plan.json --out /tmp/tshirt-grasp
+  --plan tasks/peg-out-a-tshirt/peg-plan.json --judging-views --out /tmp/peg-pickup
 ```
 
-The same runner still records assessor-only nodes, jaw poses and ordinary
-camera images. Motion-probe is explicitly unscored and cannot be submitted as
-a full task demo. The checked reset has no full-triangle fixture intersections and 1.01% maximum
-edge strain. Physical grasp and retained lift remain untested. Do not spend Dream calls on this diagnostic.
+The full station runs at 480 Hz physics and 20 Hz control. The shared
+`reset_scene.py` resets once and advances exactly 100 ready-position control
+steps (5 seconds) before the first policy observation. Cloth and free pegs
+settle together. Every policy must use this same reset. The task limit is
+2,400 actions, including the final five-second released hold; settling is
+recorded separately. The seed defaults to zero.
 
-## Model and judging limits
+The runner saves ordinary camera images, native 960×720 judging views when
+requested, source hashes, actual runtime and assessor telemetry. It checks
+native deformable/self-contact registration and rejects attachments or
+kinematic peg jaws. Frozen plans supply ordinary joint commands only; object
+and mesh readings never control the robot. Interrupted runs remain marked as
+interrupted. All current diagnostic scores are null.
 
-Native surface FEM handles stretch, bending, gravity and self-contact. A
-constant revolute spring closes each peg; no controller changes the drive,
-attaches cloth, suppresses collisions or writes cloth positions. The initial
-front/back gap is 1.6 mm; each surface's contact/rest offsets are 0.8/0.3 mm and
-must be checked for artificial inflation in the clamp probe.
+## What has been demonstrated
 
-Mass is set from 180 g/m² fabric and mesh area, giving approximately 33.9 g.
-The 400 mm sleeve span, 280 mm body width and 300 mm length describe a small
-child's garment. Material stiffness, friction and peg torque are engineering
-starting values, not calibrated cotton/wood measurements. The isotropic model
-does not reproduce yarns, wet fabric, seam failure or tearing. Edge strain is a
-diagnostic, not a tear detector. Visible damage, unphysical penetration or
-unreviewed integrity prevents certifying a score.
+The passive closed-peg control retains a cloth coupon; the open control drops
+it. The actual task has free pegs, so that control alone does not prove pickup
+or line capture. The thin laundry board required 480 Hz physics: the selected
+reset has no sampled initial tunneling or final triangle/fixture intersections.
 
-`JUDGING.md` defines simple photo/video/ruler assessment. `scoring.py` applies
-that rubric to a complete reviewed record; it does not invent capture from
-closeness. Numeric thresholds are provisional until a feasible full-score run
-and physical prop checks exist.
+Batch020 completed the 620-action garment carry in 308.6 wall-clock seconds.
+Both hem layers followed the grippers through a 331 mm lift. During the
+one-handed line hold, the whole garment cleared the board by at least 35 mm.
+It fell back onto the board after both hands opened. Seventeen sampled full
+triangle/fixture audits were clear. This establishes contact and transport,
+not successful hanging.
 
-## Sources and overlap
+The selected ordinary peg rests expose 20 mm of each handle. Their native
+passive check settled about 1 mm; final half-second position range was below
+0.24 µm. Raw constrained-jaw velocities were not equally quiet, so this is a
+pose-stability observation. The 300-action native pickup opens the mouth to 8.9 mm, lifts the peg 136 mm
+and holds it for two seconds. It drifts about 8 mm and yaws 28° in the fingers;
+replacement on the narrow rest fails. `attach-plan.json` uses the measured
+held transform to attempt line capture and a five-second released hold. Its
+1,160 actions pass the sampled hull checks; native fastening remains untested.
 
-Native authoring follows [NVIDIA surface deformables](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/deformables_beta/deformable_beta.html)
-and [the installed IsaacLab runtime](https://github.com/isaac-sim/IsaacLab/blob/91a0906f93802eb859192dcb0bca879f891e92d6/source/isaaclab_physx/isaaclab_physx/assets/deformable_object/deformable_object.py).
-The native rigid/deformable solver supports dynamic friction; no claim of
-separate static friction is made.
+## Setup, physics and scoring
 
-The earlier [sock-pegging submission](https://github.com/robocurve/benchmark-tasks/pull/760)
-failed for rigid cloth, automatic clip operation and proximity-based scoring.
-A fixed low plastic laundry board gives the starting hem a real 65 mm overhang;
-the robot still has to lift the flexible garment and operate both pegs. Its
-200 x 440 × 8 mm top is 100 mm above the table. The 480 Hz standalone diagnostic
-had no sampled node penetration, no final triangle penetration and less than
-0.78% maximum final edge strain; the YAM reset also cleared all fixtures. A 20 mm board at 240 Hz also recovered to a
-valid final state, but allowed initial penetration, so it was not selected. The current diagnostic starts the
-shirt flat above that support so gravity can establish the drape. A successful
-settling probe must supply the final reset; no pose is changed during control.
+`task.draft.json` lists the proposed prop sizes and positions. The shirt is
+400 mm across its sleeves, 280 mm across its body and 300 mm long, with nominal
+180 g/m² fabric and 33.9 g mass. Surface FEM handles stretch, bend, gravity and
+self-contact; the taut 3 mm line is rigid. Cotton anisotropy, yarns, tearing and
+wetness are omitted. Material stiffness, friction and peg torque are
+engineering estimates, not calibrated physical measurements. Native strain
+alone cannot certify intact fabric.
 
-This implementation addresses those physical omissions, but claim ownership
-and novelty still require organizer review. [BEHAVIOR clothesline hanging](https://behavior.stanford.edu/knowledgebase/tasks/hanging_clothes_on_clothesline-0.html)
-uses draping, without a peg. This comparison is not advance acceptance.
-
-## Reproduce a reviewed score
-
-Complete the measurements and visual decisions in a judging JSON record after
-reviewing the specified views. Include `evidence_files` and matching
-`evidence_sha256` maps for the required photographs and released video, with
-paths relative to the evidence directory. Then run:
+`JUDGING.md` defines visible capture, released retention and simple ruler
+measurements. One valid peg earns partial credit; two separated by at least
+180 mm earn full credit. The shirt must remain supported only by the line and
+pegs for five seconds with at least 20 mm table/floor clearance. A peg merely
+near the line earns nothing. Unknown integrity or contact leaves the result
+unscored.
 
 ```bash
 python tasks/peg-out-a-tshirt/judge.py /path/to/judging.json \
   --evidence-dir /path/to/trial --out /path/to/reviewed-score.json
 ```
 
-This checks every evidence file's digest before applying the rubric. Missing
-measurements, unknown integrity or changed media produce an error, not an
-invented score. No completed judging record exists yet.
+The judge verifies the evidence-file digests before applying the rubric.
+`interpret_motion.py` and `interpret_peg.py` provide offline diagnostics, never
+success flags. No completed judging record exists yet.
 
-Batch016 reached action365 before its wall cap. Both front/back hem layers
-were pinched, lifted and held, then began dropping when the fingers opened.
-The videos survived, but the trace lacks a gzip footer and the run is incomplete.
-The garment's lower edge still touched the support at a 1.10 m hem height.
-The next `drape-plan.json` preserves the first200 pickup actions, lifts to1.20 m
-for board clearance, then carries the hem across the line and tests released
-draping. This is an unvalidated physical candidate and does not operate the pegs.
-
-`interpret_motion.py` reads complete records from diagnostic traces, explicitly
-flags truncation and reports both layer positions. It never assigns a task score.
-Both runners now catch SIGTERM and finalize their evidence with an interrupted
-status; a bounded wall timeout is not completion.
+Native authoring follows [NVIDIA surface deformables](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/deformables_beta/deformable_beta.html).
+The earlier [sock-pegging submission](https://github.com/robocurve/benchmark-tasks/pull/760)
+failed for rigid cloth, automatic clips and proximity scoring. This design
+addresses those omissions, but ownership and novelty still need review.
+[BEHAVIOR clothesline hanging](https://behavior.stanford.edu/knowledgebase/tasks/hanging_clothes_on_clothesline-0.html)
+is relevant prior work; its draping task does not establish novelty here.

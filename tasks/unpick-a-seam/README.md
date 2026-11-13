@@ -5,7 +5,7 @@ without cutting or tearing either one.
 
 **Development package; not ready to submit.** No robot demo, Dream run, media or
 task score exists. `task.draft.json` is a draft. Native probes are being checked;
-contact stability at this scale remains unresolved.
+short native contact controls now pass at 3,840 Hz, but full manipulation is unproven.
 
 ## Setup
 
@@ -35,72 +35,90 @@ From the repository root:
 .venv/bin/python -m unittest discover -s tasks/unpick-a-seam -p 'test_*.py' -v
 ```
 
-Twenty-four tests pass: connected cloth with real needle holes, needle-path clearance,
+Twenty-seven tests pass: connected cloth with real needle holes, needle-path clearance,
 force direction and sustained contact for cutting, interrupted-contact rejection,
 blade damage latching, whole-thread clearance, rigid-motion-invariant strain
 inspection, moving-cloth/thread tunnelling detection, and final-state scoring. These are CPU geometry/rule
 checks, not proof that cloth or thread dynamics work.
 
-## Next native probes
+## Native validation status
 
-Use the pinned team Isaac Sim environment:
+The coupon probe rotates the sewn pair vertically and holds only the top edge
+between physical clamp jaws. All cloth vertices stay dynamic. Intact and
+pre-cut loops are matched controls; neither is a robot demonstration.
 
-```bash
-python tasks/unpick-a-seam/probe_native.py --mode intact --seconds 3 --out artifacts/seam-intact
-python tasks/unpick-a-seam/probe_native.py --mode open --seconds 3 --out artifacts/seam-open
-python tasks/unpick-a-seam/preview_yam.py --steps 60 --out artifacts/seam-yam-preview
-```
+| Evidence | Settings | Result |
+|---|---|---|
+| Original thread | 0.4 mm thread, 1.2 mm holes | Crossed intact fabric after 19–20 ms. |
+| Batch 009 | 0.8 mm thread, 1.6 mm holes | Intact crossed at 67.708 ms; open at 28.125 ms. |
+| Batch 013 | Same geometry, combined native contact refinement | Intact crossed at 48.958 ms; open at 28.125 ms. |
+| Batch 015 | Same geometry, 0.4 mm local mesh, 960 Hz | Intact completed 0.2 s without crossing or strain excursion; hanging patch dropped 2.373 mm. Open crossed at 42.708 ms. |
+| Batch 018 | Same refined mesh, open control, 3,840 Hz | No crossing through 16.406 ms. Stopped on 2.096% local principal extension near a needle hole, exceeding the 2% engineering domain. This was a strain stop, not a contact failure. |
+| Batch 020 | Matched intact/open controls, same refined mesh, 3,840 Hz | Both completed 0.2 s without a crossing. Original 2% strain invalidity stayed latched: maximum extensions 2.624% intact and 4.429% open. Physical fragment extraction remains unproven. |
+| Batch 021 | First YAM two-action smoke | Stopped before stepping on a contact-setting assertion; no robot physics result. The installed official sensor setup is now applied after simulation creation. |
+| Batch 022 | Standalone CUDA audit | 445 cases / 224,045 segment–face pairs matched CPU. Two-patch kernel benchmark: 0.359 ms per substep. This excludes native physics and other audits. |
+| Batch 024 | Persistent CUDA check and native CPU shadow | Snapshot retention passed. All 88 reset/substep checks agreed before a 2.086% right-patch strain stop at 22.656 ms; no crossing or blade damage. Contact configuration now works. |
 
-The retention probes rotate the sewn pair vertically and grip only the top edge
-between declared physical clamp jaws. Compare retained intact stitches with
-deliberately pre-cut loops; the latter are a negative control, never a demo.
-All cloth vertices remain dynamic. The YAM preview uses the horizontal task
-layout, an ordinary ready robot pose and native blade/thread contact forces.
-It stays unscored. No probe uses Dream, object-motion animation or pose feedback
-to a policy. The initial 0.4 mm thread failed the crossing audit after 19–20 ms.
-A 0.8 mm thread / 1.6 mm hole diagnostic retained the hanging patch for 0.1 s
-with a 2.47 mm drop and maximum principal extension below 0.7%; this short
-result does not certify sustained retention. Its 96 substeps took 7.74 s
-including startup. Repeated coarse-thread runs then failed the strict crossing
-audit at 67.708 ms (intact) and 28.125 ms (open). Offline inspection places those
-centreline intersections 17.3 nm and 21.2 µm inside the nearest genuine cloth
-boundary, respectively; both lie inside the intersected triangle. The first
-distance is near the precision scale of native coordinates, but it remains a
-failure. These distances are geometric diagnostics, not tear measurements or
-permission to ignore a crossing. See `evidence/native-crossings-009.json`.
-Initial layout is fixed,
-with no random jitter; intended task seed is 0 and limit is 2,400 actions at 20 Hz.
+The refined mesh has 4,407 vertices / 8,490 triangles per patch, hole boundary
+edges at most 0.4 mm, the same 0.00596928 m² area, and thirteen boundary loops.
+It adds no colliders, attachments or enlarged openings. Earlier crossing
+locations and later mesh/timestep evidence are recorded in
+`evidence/native-crossings-009.json`, `evidence/native-contact-refinement-013.json`
+`evidence/native-mesh-timestep-015-018.json` and
+`evidence/native-controls-020-022.json`. Full release is still unproven.
 
-A contact-settings diagnostic also failed: combined deformable speculative CCD
-and four collision subiterations produced crossings at 48.958 ms (intact) and
-28.125 ms (open). The intact failure crossed a 1.601 mm hole edge between vertices
-0.866 and 0.677 mm from the thread axis. That edge is underresolved relative to
-the 0.8 mm thread; the native implementation's exact edge handling is not
-established. Contact settings alone did not solve the problem.
-
-The next bounded diagnostic refines the actual FEM/collision mesh locally:
+The following commands reproduce the strain-continuation contact controls.
+They retain invalid-model status above 2% and stop at the first crossing:
 
 ```bash
-python tasks/unpick-a-seam/probe_native.py --mode intact --coarse-thread --contact-refinement combined --hole-mesh-spacing .0004 --physics-hz 960 --seconds .2 --out artifacts/seam-hole-mesh-refined
+python tasks/unpick-a-seam/probe_native.py --mode intact --coarse-thread --contact-refinement combined --hole-mesh-spacing .0004 --physics-hz 3840 --seconds .2 --continue-after-strain --out artifacts/seam-intact-contact-control
+python tasks/unpick-a-seam/probe_native.py --mode open --coarse-thread --contact-refinement combined --hole-mesh-spacing .0004 --physics-hz 3840 --seconds .2 --continue-after-strain --out artifacts/seam-open-contact-control
 ```
+
+These are diagnostic commands for the pinned Isaac Sim environment. They do
+not authorize a score, weaken a crossing predicate, or certify a new material
+limit. Reports include both failure types, every-step displacement maxima and
+source hashes; first-invalid and first-contact snapshots retain both sides of
+the relevant native physics step. No probe uses Dream or animated object motion.
 
 `--contact-refinement iterations` sets the native deformable collision multiplier
 and pair update frequency to 4; `speculative` enables only deformable speculative
-CCD; `combined` enables both. `baseline` preserves their native defaults. All
-options preserve geometry, fabric properties and strict audit tolerances. The
-report records the authored settings. These controls are documented in the
-[native deformable schema](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/deformables_beta/physx_deformable_schema.html)
-and were checked against installed PhysxSchemaAddition 110.3.2. Deformable
-speculative CCD is separate from unsupported rigid-body CCD in this GPU mode.
-Pair updates concern surface-to-surface contact; schema support alone does not
-establish an improvement in rigid-thread contact. `--hole-mesh-spacing .0004`
-uses conforming midpoint refinement near the same hole boundaries. It creates
-4,407 vertices / 8,490 triangles per patch, with hole edges at most 0.4 mm,
-unchanged 0.00596928 m² area and all thirteen boundary loops. There are no added
-colliders, attachments or enlarged openings. This refinement is unrun; a
-successful short probe would still need a longer intact/open comparison. See
-`evidence/native-contact-refinement-013.json` for the measured failure and CPU
-geometry checks.
+CCD; `combined` enables both. `baseline` preserves native defaults. These
+controls were checked against installed PhysxSchemaAddition 110.3.2 and its
+[native deformable schema](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/deformables_beta/physx_deformable_schema.html).
+Deformable speculative CCD is separate from unsupported rigid-body CCD in this
+GPU mode. Pair updates concern surface-to-surface contact; schema support alone
+does not prove an improvement in rigid-thread contact.
+
+The YAM integration completed 87 native substeps before the unchanged 2% strain
+stop; no complete action or pickup is demonstrated. The frozen pickup/approach
+plan remains unrun.
+`preview_yam.py` records ordinary robot actions, every-substep audits, native
+blade/thread force events, video and cloth/thread traces. It stays unscored.
+The draft setup remains fixed, with no random jitter, seed 0 and a limit of
+2,400 actions at 20 Hz. The larger diagnostic thread has not been adopted as
+the final task specification.
+
+## Audit performance check
+
+The opt-in `warp-shadow` backend evaluates the same double-precision crossing
+predicates on both CPU and CUDA at every native physics substep. It checks
+agreement and preserves the first failing states before polling at each 20 Hz
+action boundary. No physics step is skipped. `warp` omits the duplicate CPU
+crossing calculation after equivalence is established; strain and blade-damage
+audits remain active every substep. The CPU backend remains the default.
+
+```bash
+python tasks/unpick-a-seam/check_warp_contact.py --device cuda:0 --benchmark --out artifacts/seam-warp-check.json
+python tasks/unpick-a-seam/preview_yam.py --coarse-thread --hole-mesh-spacing .0004 --contact-refinement combined --physics-hz 3840 --steps 2 --crossing-backend warp-shadow --out artifacts/seam-yam-shadow
+```
+
+These checks use the unchanged 2% default. The standalone checker also verifies
+that later updates cannot overwrite the first-failure snapshot. Native shadow
+integration agreed through 87 substeps (`evidence/native-warp-shadow-024.json`).
+`--profile-steps` optionally records CPU call timings to locate remaining cost.
+Runtime reports separate control wall time from
+readback, strain, crossing, damage and cutting costs.
 
 ## Mechanics and limitations
 
@@ -122,13 +140,22 @@ the intact/open differential probe must resolve that before robot development.
 
 Native FEM cannot change cloth topology at runtime. `DamageAudit` therefore
 conservatively invalidates blade crossings rather than claiming intact fabric
-survived cutting. It does not simulate tear propagation. `StrainAudit` also
-latches any triangle exceeding 2% principal extension as outside the intended
-low-strain simulation envelope. That engineering cutoff is not a calibrated
-canvas tear strain. [Cotton tensile measurements](https://www.mdpi.com/2673-7248/5/4/67)
+survived cutting. It does not simulate tear propagation. `StrainAudit` records
+a warning above 2% local principal extension and latches failure above the
+declared operating limit. The preview defaults to 2%; `--maximum-stretch 1.05`
+selects an explicit 5% approximate operating domain while retaining 2% telemetry.
+Neither cutoff is a calibrated canvas tear strain. [Cotton tensile measurements](https://www.mdpi.com/2673-7248/5/4/67)
 show substantial fabric and warp/weft dependence; they do not validate one
-universal failure threshold. Both audits are wired to the preview, with native
-validation pending.
+universal failure threshold. The cited pure-cotton fabrics reached 7.1–19.3% mean elongation at maximum
+force; those values are not reversible elastic limits. A 2.096% local excursion
+alone therefore does not demonstrate damage. The matched continuation controls
+peaked below 4.43%, then relaxed below 1.7% at their last samples. This supports
+testing a modest 5% operating domain; it does not prove undamaged real cotton.
+Blade crossings and excursions above the declared limit still invalidate the
+trial, and eventual judging must also show intact fabric in ordinary images.
+Both audits are wired to the preview, with native validation pending. The blade audit uses conservative
+bounds to avoid testing distant triangles; 200 randomized moving-mesh cases
+matched the prior exhaustive audit (`evidence/damage-broad-phase-cpu.json`).
 
 `inspection.py` checks actual thread-capsule clearance from both measured cloth
 surfaces. It includes segment interiors and subtracts a sampling-error bound;

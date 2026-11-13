@@ -37,7 +37,9 @@ def rx(angle):
     return np.array([[1.,0.,0.],[0.,c,-s],[0.,s,c]])
 
 
-def compile_plan(mode='pickup',press_stroke=.006):
+def compile_plan(mode='pickup',press_stroke=.006,shell_count=1,release_tool=False):
+    if shell_count not in range(1,9) or (mode!='shell' and shell_count!=1):
+        raise ValueError('One to eight shell deposits; other probes use one press')
     from yam_arena import ik,station
     from yam_arena.constants import READY,FINGER_OPEN
     state={side:{'q':np.asarray(READY,float),'finger':FINGER_OPEN} for side in ('left','right')}
@@ -81,7 +83,8 @@ def compile_plan(mode='pickup',press_stroke=.006):
     transition(2.,'hold for pickup inspection',{})
     if mode in ('press','shell'):
         axis=np.array((0.,-np.sqrt(.5),-np.sqrt(.5)))
-        tip=np.array((.235,-.035 if mode=='shell' else -.040,.8065 if mode=='shell' else .8035));centre=tip-axis*.080
+        start_y=(-.039 if shell_count>1 else -.035) if mode=='shell' else -.040
+        tip=np.array((.235,start_y,.8032 if mode=='shell' else .8035));centre=tip-axis*.080
         push_rotation=rx(-np.pi/4)@DOWN@np.diag((-1.,-1.,1.))
         # The closed finger tips extend 13 mm beyond TCP. Position them behind
         # the actual 5 mm plunger face; no grasp/latch is added to the pusher.
@@ -94,29 +97,50 @@ def compile_plan(mode='pickup',press_stroke=.006):
             transition(1.,'firm barrel grasp for pressure',{'right':(hand_p,hand_r,-.0105)})
         transition(1.,'close pressing fingers',{'left':(contact-axis*.04,push_rotation,0.)})
         transition(1.,'approach plunger face',{'left':(contact,push_rotation,0.)})
-        transition(.5,'press passive plunger',{'left':(contact+axis*press_stroke,push_rotation,0.)})
-        transition(.6 if mode=='shell' else .4,'hold first pressure pulse',{})
-        if mode=='shell':
-            # Both hands translate the real dispenser while pressure is eased.
-            # This is one frozen technique trial, not a material shape command.
-            tail_delta=np.array((0.,.014,.002))
-            transition(.35,'draw first tail under pressure',{
-                'right':(hand_p+tail_delta*.5,hand_r,-.0105),
-                'left':(contact+tail_delta*.5+axis*press_stroke,push_rotation,0.)})
-            transition(.4,'ease pressure into pointed tail',{
-                'right':(hand_p+tail_delta,hand_r,-.0105),
-                'left':(contact+tail_delta+axis*.008,push_rotation,0.)})
-            contact=contact+tail_delta
-            hand_p=hand_p+tail_delta
-        transition(.5,'release pressure',{'left':(contact-axis*.008,push_rotation,0.)})
+        initial_contact,initial_hand=contact.copy(),hand_p.copy()
+        for shell in range(shell_count):
+            if shell:
+                # Fixed technique and nominal consumed-volume allowance, never
+                # live material state. 0.45 mm is about 0.22 ml per deposit.
+                shift=np.array((0.,shell*.013,0.))
+                contact=initial_contact+shift+axis*(shell*.00045)
+                hand_p=initial_hand+shift
+                transition(1.,f'position for shell {shell+1}',{
+                    'right':(hand_p,hand_r,-.0105),
+                    'left':(contact-axis*.008,push_rotation,0.)})
+                transition(.5,f'contact plunger for shell {shell+1}',{
+                    'left':(contact,push_rotation,0.)})
+            transition(.5,'press passive plunger',{'left':(contact+axis*press_stroke,push_rotation,0.)})
+            transition(1.2 if mode=='shell' else .4,'hold first pressure pulse',{})
+            if mode=='shell':
+                # Both hands move a physical dispenser; material is produced
+                # solely by actual piston pressure and aperture geometry.
+                tail_delta=np.array((0.,.012,-.002))
+                transition(.35,'draw first tail under pressure',{
+                    'right':(hand_p+tail_delta*.5,hand_r,-.0105),
+                    'left':(contact+tail_delta*.5+axis*press_stroke,push_rotation,0.)})
+                transition(.4,'ease pressure into pointed tail',{
+                    'right':(hand_p+tail_delta,hand_r,-.0105),
+                    'left':(contact+tail_delta,push_rotation,0.)})
+                contact=contact+tail_delta
+                hand_p=hand_p+tail_delta
+            transition(.5,'release pressure',{'left':(contact-axis*.008,push_rotation,0.)})
         transition(1.,'withdraw pressing hand',{'left':(contact-axis*.04,push_rotation,0.)})
         if mode=='shell':
             transition(1.,'lift nozzle clear',{'right':(hand_p+np.array((0.,0.,.025)),hand_r,-.0105)})
             parked_p,parked_r=calibrated_hand_pose(np.array((.18,-.16,.95)),tool_rotation@np.diag((-1.,-1.,1.)))
             transition(2.,'move clear of judging views',{'right':(parked_p,parked_r,-.0105)})
-        transition(1.,'observe deposited material',{})
+        if release_tool and mode=='shell':
+            horizontal=np.diag((-1.,-1.,1.))
+            raised_p,raised_r=calibrated_hand_pose(p+np.array((0.,0.,.12)),horizontal)
+            rest_p,rest_r=calibrated_hand_pose(p+np.array((0.,0.,.004)),horizontal)
+            transition(2.,'turn dispenser above rest',{'right':(raised_p,raised_r,-.0105)})
+            transition(2.,'lower dispenser to rest',{'right':(rest_p,rest_r,-.0105)})
+            transition(1.,'release dispenser',{'right':(rest_p,rest_r,FINGER_OPEN)})
+            transition(2.,'withdraw empty hand',{'right':(raised_p,raised_r,FINGER_OPEN)})
+        transition(2. if release_tool else 1.,'observe deposited material',{})
     return {'schema':'fixed-joint-plan-v1','control_hz':20,'status':'development '+mode+' only',
-            'no_object_feedback':True,'frames':frames,
+            'no_object_feedback':True,'frames':frames,'shell_count':shell_count,'release_tool':release_tool,
             'offline_grasp_calibration':'Native pickup009 final one-second mean; fixed constants, no trial-state input' if mode in ('press','shell') else None,
             'maximum_ik_position_error_m':maximum_position_error,
             'maximum_ik_rotation_error_rad':maximum_rotation_error,
@@ -127,9 +151,11 @@ def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True)
     p.add_argument('--mode',choices=('pickup','press','shell'),default='pickup')
     p.add_argument('--press-stroke',type=float,default=.006)
+    p.add_argument('--shell-count',type=int,choices=range(1,9),default=1)
+    p.add_argument('--release-tool',action='store_true')
     args=p.parse_args()
     if not .001<=args.press_stroke<=.016:p.error('Pressure diagnostic stroke limited to 1–16 mm')
-    plan=compile_plan(args.mode,args.press_stroke)
+    plan=compile_plan(args.mode,args.press_stroke,args.shell_count,args.release_tool)
     args.out.parent.mkdir(parents=True,exist_ok=True)
     args.out.write_text(json.dumps(plan,indent=2)+'\n')
     print(json.dumps({k:v for k,v in plan.items() if k!='frames'}))

@@ -30,6 +30,9 @@ BODY_NAMES = tuple([f'wheel/rim_{i:02d}' for i in range(32)] + ['wheel/hub'] +
                    [f'wheel/spoke_{i:02d}_{half}' for i in range(32) for half in ('inner', 'outer')] +
                    [f'wheel/nipple_{i:02d}' for i in range(32)] + ['wrench'])
 ASSEMBLIES = {}
+# Explicit diagnostic overrides are set before environment construction only.
+RESET_PROFILE_OVERRIDE = None
+SOLVER_ITERATIONS_OVERRIDE = None
 
 
 def _spawn(path, cfg, translation=None, orientation=None, **kwargs):
@@ -42,7 +45,12 @@ def _spawn(path, cfg, translation=None, orientation=None, **kwargs):
     # Paths contain nested wheel/rim entries; strip the complete known suffix.
     root = str(path)[:-len(cfg.body_name)-1]
     if name not in ASSEMBLIES:
-        metadata = build_scene(stage, root=root)
+        metadata = build_scene(stage, root=root, reset_profile=RESET_PROFILE_OVERRIDE or 'four-defect-reference')
+        if SOLVER_ITERATIONS_OVERRIDE is not None:
+            from pxr import PhysxSchema
+            from thread_coupling import body_paths
+            for body_path in body_paths(metadata):
+                PhysxSchema.PhysxRigidBodyAPI.Get(stage,body_path).CreateSolverPositionIterationCountAttr(SOLVER_ITERATIONS_OVERRIDE)
         cache = UsdGeom.XformCache()
         poses = []
         for relative in BODY_NAMES:
@@ -73,9 +81,22 @@ def reset_assembly(env, env_ids, assembly_name):
     obj.write_body_link_velocity_to_sim_index(body_velocities=torch.zeros((len(ids), len(BODY_NAMES), 6),
          device=origins.device, dtype=origins.dtype), env_ids=ids)
     if item['coupling'] is not None:
+        from integrity import RimDomainGuard
+        item['coupling'].integrity=RimDomainGuard()
         item['coupling'].previous[:] = 0.
         item['coupling'].unwrapped[:] = 0.
+        item['coupling'].friction.rest[:] = 0.
+        item['coupling'].friction.dissipated[:] = 0.
+        item['coupling'].parameters.invalidate()
         item['coupling'].last = []
+        from mechanics import WheelSpec
+        spec=item['coupling'].spec
+        for spoke in item['metadata']['spokes']:
+            spoke['rest_target_attribute'].Set(spoke['nominal_rest_m']-
+                spoke['initial_turn_offset']*spec.pitch_m_per_turn-spoke['rest_target_origin_m'])
+            spoke['friction_drive'].GetTargetPositionAttr().Set(0.)
+            spoke['friction_drive'].GetMaxForceAttr().Set(spec.friction_coefficient*
+                WheelSpec().baseline_tension_n*spec.thread_mean_radius_m)
 
 
 def asset(spec):

@@ -1,0 +1,130 @@
+{
+  "checked_utc": "2026-11-13",
+  "status": "audit_integration_partially_validated_not_task_ready",
+  "records": [
+    {
+      "artifact": "artifacts/six-task-completion-2026-11-13/native-batch-024/results/native-batch-024/seam-warp-persistent.json",
+      "sha256": "a26a0572d04648bafcfdc7fa7d9c703b607cd810a548b88ebe930b7d5a9089a6",
+      "status": "pass",
+      "wall_seconds": 1.6045523285865784,
+      "checks": 445,
+      "pair_tests": 224045,
+      "mismatches": [],
+      "persistent_first_failure_snapshot_passed": true,
+      "full_mesh_benchmark": {
+        "repeats": 50,
+        "faces_per_patch": 8490,
+        "segments": 168,
+        "seconds_per_pair_step": 0.0003586536459624767,
+        "initial_scene_crossings": 0,
+        "scope": "Persistent-buffer kernel and launch timing only; excludes scene stepping, tensor preparation, damage and strain audits."
+      },
+      "source_sha256": {
+        "warp_contact.py": "47f1cf9f27d957564eca3673327c59a65147e63a42680b9d8b6f0128cd63477d",
+        "contact_audit.py": "319323f3b4fbc3660e28b158cab743e192809d03291b603137e5c04d60530065",
+        "check_warp_contact.py": "ebfc43b64ab1d3e58d737bdb9d2cd79c09e1329aac7f8197fa8ca85248613052"
+      }
+    },
+    {
+      "artifact": "artifacts/six-task-completion-2026-11-13/native-batch-024/results/native-batch-024/seam-yam-shadow/preview.json",
+      "sha256": "a248b6abfc2f16e267a3c0956008827c6cd25c3568a80aa81a088793e8588a14",
+      "status": "failed",
+      "completed_steps": 0,
+      "requested_steps": 2,
+      "crossing_backend": "warp-shadow",
+      "runtime": {
+        "thread_radius_m": 0.0004,
+        "hole_half_m": 0.0008,
+        "hole_mesh_spacing_m": 0.0004,
+        "physics_hz": 3840,
+        "contact_refinement": {
+          "speculative_ccd": true,
+          "collision_iterations": 4,
+          "pair_update_frequency": 4
+        },
+        "maximum_stretch": 1.02
+      },
+      "audited_physics_substeps": 87,
+      "gpu_crossing_updates": 88,
+      "first_invalid_substep": 87,
+      "material_invalid": true,
+      "strain": [
+        {
+          "maximum_principal_stretch": 1.0064784300748237,
+          "first_validity_excursion": null,
+          "first_2pct_warning": null,
+          "maximum_stretch_limit": 1.02
+        },
+        {
+          "maximum_principal_stretch": 1.0208637149073276,
+          "first_validity_excursion": {
+            "time_s": 0.02265625,
+            "triangle": 2404,
+            "principal_stretch": 1.0208637149073276,
+            "limit": 1.02
+          },
+          "first_2pct_warning": {
+            "time_s": 0.02265625,
+            "triangle": 2404,
+            "principal_stretch": 1.0208637149073276,
+            "limit": 1.02
+          },
+          "maximum_stretch_limit": 1.02
+        }
+      ],
+      "contact_audit": [
+        {
+          "valid": true,
+          "steps": 88,
+          "first_failure": null
+        },
+        {
+          "valid": true,
+          "steps": 88,
+          "first_failure": null
+        }
+      ],
+      "damage_events": [],
+      "cut_events": [],
+      "contact_processing_disabled": false,
+      "measured_wall_timings_s": {
+        "readback": 0.07317343726754189,
+        "strain": 0.2860458567738533,
+        "crossing": 0.868303238414228,
+        "crossing_poll": 9.781122207641602e-05,
+        "blade_damage": 0.28217511903494596,
+        "cutting": 0.03566061332821846,
+        "control_steps_total": 6.31165224686265
+      },
+      "wall_seconds": 29.19110664911568,
+      "source_sha256": {
+        "inspection.py": "4290f7f32c2e3925417f4c6917b059fe21aa3e787e55b50955e0fda42fdd303b",
+        "check_warp_contact.py": "ebfc43b64ab1d3e58d737bdb9d2cd79c09e1329aac7f8197fa8ca85248613052",
+        "native_stitches.py": "2cd3655b33adcdb7bf91a32e61f293be60c615d647589a728f5d54b6afe54425",
+        "test_mesh_refinement.py": "9604ad8cce0d2cf67cf32e30e62b70c44651b7878d1236eb9a656cfb1237c49f",
+        "warp_contact.py": "47f1cf9f27d957564eca3673327c59a65147e63a42680b9d8b6f0128cd63477d",
+        "runtime_config.py": "ffeba4d16c3a7de6ce5af294a2614639a9fcc5de95ff0c2e703577c6f34640a0",
+        "probe_native.py": "cb5b968892fff8954eba35b14be676adc84df9cb5dc0b685438beb85cdb75978",
+        "scoring.py": "8690167a5404134907425a352f0beb838156c112aae4b234261e4dabde17b89c",
+        "arena_cloth.py": "845c229b418e5306f02b3c0fecb98ddd8b5f5d0ca805f892c3fcc173f215bf5f",
+        "scene.py": "6f304c0eb35ec4b867d866ee2106cdaa439183f934e87ab735a8ab5677683342",
+        "test_contact_audit.py": "8dcfed3daab8bf70ad53f830dbe744fb7462d5900f4fe2e225e38936c6aee49a",
+        "native_cloth.py": "75398dce1057a25e6700171903dfa69d49c2cd988a660f058a9528ce3a572ca8",
+        "contact_audit.py": "319323f3b4fbc3660e28b158cab743e192809d03291b603137e5c04d60530065",
+        "arena_thread.py": "2d69f2c5e59509442d5e9e372cd5e19ccbb9783a0697cabb29b428b6e24fe60b",
+        "preview_yam.py": "e0efffd2bc2a8a0d8ddf5b5e0e73a11242637bde8b0d787571ccb6c0693acf65",
+        "plan.py": "96515fba8a322e72189a6542edcf7e6b0264845ed4c2f254bc1c6b5752f9adbf",
+        "test_mechanism.py": "6f674de8cac14ed2d090b827b22b0b8127866bf15762615ffd86cbd45c255b70",
+        "cutting.py": "c23ebf001df44a3254192359940d678f09edb2f60299ec79ece2e0c088486858",
+        "geometry.py": "13f5e255dc50bd92498a06c2a8f5d2647faa3f8eb1a2db0fbf01ba689b130e47"
+      }
+    }
+  ],
+  "interpretation": [
+    "Persistent CUDA snapshot lifecycle and all 445 standalone equivalence cases passed.",
+    "The installed contact configuration is corrected. YAM ran 87 native substeps (0.02265625 s); reset plus all 87 steps agreed between CPU and Warp, without crossings or blade damage.",
+    "Original 2% material cutoff stopped the run on 2.08637% extension in the right patch. No completed control action or pickup is demonstrated.",
+    "CPU-control wall time is 6.312 s. Audits account for about 1.55 s; native solver, scene updates, writeback and other control overhead have not yet been separated. Optional cProfile instrumentation is prepared."
+  ],
+  "next_gate": "Two-action preview at the explicitly declared 5% model domain, Warp backend and CPU call profiling, with identical geometry/material/strict crossing and damage predicates."
+}

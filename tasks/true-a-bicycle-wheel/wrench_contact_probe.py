@@ -6,6 +6,7 @@ reads measured nipple angle. A no-contact control moves the wrench 40mm beyond
 the nipple along its axis. No wheel, spoke or nipple pose is commanded.
 """
 import argparse
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -14,6 +15,7 @@ import time
 import traceback
 import numpy as np
 from wheel_scene import build_scene,quat
+from mechanics import RESET_PROFILES,starting_turn_errors
 from thread_coupling import NativeThreadCoupler,TensorNativeIO,rotation,body_paths
 
 
@@ -26,7 +28,9 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--out',type=Path,required=True)
     p.add_argument('--dt',type=float,default=.000025)
-    p.add_argument('--settle-seconds',type=float,default=.15)
+    p.add_argument('--solver-position-iterations',type=int,choices=(16,32,64,128),default=32)
+    p.add_argument('--reset-profile',choices=RESET_PROFILES,default='two-defect-candidate')
+    p.add_argument('--settle-seconds',type=float,default=.3)
     p.add_argument('--insert-seconds',type=float,default=.15)
     p.add_argument('--turn-seconds',type=float,default=.5)
     p.add_argument('--hold-seconds',type=float,default=.1)
@@ -38,7 +42,11 @@ def main():
     if any(not .025<=v<=1. for v in durations):p.error('Each diagnostic phase must be .025–1s')
     a.out.mkdir(parents=True,exist_ok=False);started=time.monotonic()
     report={'kind':'wrench_contact_fixture','complete':False,'robot_demo':False,'score':None,
-            'negative_control':a.no_contact,'dt':a.dt,'commanded_wrench_turn_deg':a.turn_deg,'samples':[]}
+            'negative_control':a.no_contact,'dt':a.dt,'commanded_wrench_turn_deg':a.turn_deg,'samples':[],
+            'solver_position_iterations':a.solver_position_iterations,'reset_profile':a.reset_profile,
+            'initial_turn_offsets':starting_turn_errors(profile=a.reset_profile).tolist(),
+            'source_sha256':{n:hashlib.sha256(Path(__file__).with_name(n).read_bytes()).hexdigest()
+                             for n in ('wrench_contact_probe.py','wheel_scene.py','thread_coupling.py','mechanics.py','integrity.py')}}
     report.update(phase_seconds=dict(zip(('settle','insert','turn','hold'),durations)),completed_steps=0)
     def save():
         report['wall_seconds']=time.monotonic()-started
@@ -60,7 +68,10 @@ def main():
         scene=UsdPhysics.Scene.Define(stage,'/physicsScene');scene.CreateGravityDirectionAttr(Gf.Vec3f(0.,0.,-1.));scene.CreateGravityMagnitudeAttr(9.80665)
         ps=PhysxSchema.PhysxSceneAPI.Apply(scene.GetPrim());ps.CreateSolverTypeAttr('TGS');ps.CreateEnableGPUDynamicsAttr(False);ps.CreateBroadphaseTypeAttr('MBP');ps.CreateEnableCCDAttr(True)
         table=UsdGeom.Cube.Define(stage,'/Bench');table.CreateSizeAttr(1.);table.AddTranslateOp().Set(Gf.Vec3d(.3,0.,.7275));table.AddScaleOp().Set(Gf.Vec3f(1.,1.,.04));UsdPhysics.CollisionAPI.Apply(table.GetPrim())
-        metadata=build_scene(stage);wrench_prim=stage.GetPrimAtPath(metadata['wrench_path'])
+        metadata=build_scene(stage,reset_profile=a.reset_profile)
+        for path in body_paths(metadata):
+            PhysxSchema.PhysxRigidBodyAPI.Get(stage,path).CreateSolverPositionIterationCountAttr(a.solver_position_iterations)
+        wrench_prim=stage.GetPrimAtPath(metadata['wrench_path'])
         UsdPhysics.RigidBodyAPI(wrench_prim).CreateKinematicEnabledAttr(True)
         ops=UsdGeom.Xform(wrench_prim).GetOrderedXformOps()
         position_op=next(op for op in ops if op.GetOpType()==UsdGeom.XformOp.TypeTranslate)
@@ -104,7 +115,12 @@ def main():
         report['measured_tightening_turn_deg']=measured
         report['measured_nipple_turn_deg']=measured*coupling.spec.tightening_sign
         report['contact_response_observed']=bool(abs(measured)>.1)
-        report['expected_response_pass']=bool(abs(measured)<=.1 if a.no_contact else measured>=5.)
+        expected_tightening=a.turn_deg*coupling.spec.tightening_sign
+        report['expected_tightening_deg']=expected_tightening
+        report['expected_response_pass']=bool(abs(measured)<=.1 if a.no_contact else
+            .7*abs(expected_tightening)<=measured*np.sign(expected_tightening)<=1.3*abs(expected_tightening))
+        report['response_gate']='No-contact: <=0.1deg. Contact: correct sign and70–130% of fixture turn, with valid native rim domain.'
+        report['rim_integrity']=coupling.audit_integrity()
         report['complete']=True
         report['interpretation']='Inspect measured torque/angle and repeat convergence; complete means executed, not full task feasibility.'
         stage.GetRootLayer().Export(str(a.out/'final-authored-parameters.usda'))

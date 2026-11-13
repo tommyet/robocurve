@@ -36,6 +36,10 @@ def main():
     TABLE=scene.TABLE
     fixtures=scene.support_geometry()
     if hasattr(scene,'rack_geometry'):fixtures.update(scene.rack_geometry())
+    task_text=(source/'task.py').read_text()
+    if 'PEG_RESTS_ENABLED=True' in task_text:
+        from peg_rests import geometry
+        fixtures.update(geometry())
     fixtures['Table']=dict(kind='box',center=(.36,0.,TABLE-.03),size=(1.1,1.3,.06))
     meshes=json.loads((args.trial/'meshes.json').read_text())
     mesh=meshes['tshirt'];rest=np.asarray(mesh['rest']);faces=np.asarray(mesh['faces'])
@@ -72,6 +76,7 @@ def main():
             strain=np.abs(edge_strain(rest,nodes,faces))
             hits=fixture_intersections(nodes,faces,fixtures,margin=-.00005)
             samples.append(dict(step=step,time_s=row['time_s'],stage='reset' if step==0 else frames[step-1]['stage'] if frames else 'ready',
+                cloth_bounds_m=dict(low=nodes.min(0).tolist(),high=nodes.max(0).tolist()),
                 patch_mean_m=mean.tolist(),patch_displacement_m=(mean-initial).tolist(),
                 layer_means_m={layer:nodes[patch[rest[patch,2]*sign>0]].mean(0).tolist() for layer,sign in [('front',1),('back',-1)]},
                 actual_tcp_m=tcp.tolist(),patch_relative_to_gripper_m=((mean-tcp)@rotation).tolist(),

@@ -31,7 +31,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--mode',choices=('drop','drape','clamp','open-clamp','task-layout'),default='drape')
     p.add_argument('--seconds',type=float,default=3.)
-    p.add_argument('--peg-rests',action='store_true',help='Inactive candidate ordinary handle-access rests; task-layout diagnostic only')
+    p.add_argument('--peg-rests',action=argparse.BooleanOptionalAction,default=None,help='Ordinary handle-access rests, selected by default for task-layout; --no-peg-rests reproduces the old table-peg control')
     p.add_argument('--board-thickness-mm',type=float,default=None,
                    help='Task-layout diagnostic override for support thickness; task default is 8 mm')
     p.add_argument('--physics-hz',type=int,choices=(240,480,960),default=480)
@@ -45,7 +45,8 @@ def main():
         p.error('a diagnostic is limited to ten simulated seconds')
     if args.board_thickness_mm is not None and (args.mode!='task-layout' or not 8<=args.board_thickness_mm<=40):
         p.error('board thickness diagnostics require task-layout and 8–40 mm')
-    if args.peg_rests and args.mode!='task-layout':p.error('--peg-rests requires task-layout')
+    if args.peg_rests is True and args.mode!='task-layout':p.error('--peg-rests requires task-layout')
+    args.peg_rests=args.mode=='task-layout' and args.peg_rests is not False
     args.output.mkdir(parents=True,exist_ok=True)
     started=time.monotonic()
     # Application must precede all simulator imports.
@@ -140,6 +141,14 @@ def main():
         cloth=simview.create_surface_deformable_body_view(cloth_path)
         if cloth.count != 1:
             raise RuntimeError('Native cloth view did not register exactly one body')
+        peg_view=None
+        peg_poses=[]
+        peg_velocities=[]
+        if args.mode=='task-layout':
+            peg_paths=[f'/World/{side}Peg/{jaw}' for side in ('Left','Right') for jaw in ('lower','upper')]
+            peg_view=simview.create_rigid_body_view(peg_paths)
+            if peg_view.count!=4:raise RuntimeError('Expected four actual free peg-jaw bodies')
+            report['peg_body_paths']=peg_paths
         report['phase']='simulate'
         report['initial_native_sample_time_s']=1/args.physics_hz
         report['initial_sample_note']='GPU native getters require one step; this is counted within the requested duration, not an extra warmup'
@@ -161,11 +170,21 @@ def main():
                 frames.append(points)
                 velocities=cloth.get_simulation_nodal_velocities().detach().cpu().numpy()[0,:len(mesh.rest)]
                 velocity_max=max(velocity_max,float(np.linalg.norm(velocities,axis=1).max()))
+                if peg_view is not None:
+                    peg_poses.append(peg_view.get_transforms().detach().cpu().numpy().copy())
+                    peg_velocities.append(peg_view.get_velocities().detach().cpu().numpy().copy())
             if capture is not None and step and step % max(1,args.physics_hz//capture.fps)==0:
                 capture.capture('final' if step==int(args.seconds*args.physics_hz) else None)
         frames=np.asarray(frames)
         np.savez_compressed(args.output/'nodes.npz',positions=frames,faces=mesh.faces,
                             rest=mesh.rest,initial=initial,times_s=np.asarray(times))
+        if peg_view is not None:
+            np.savez_compressed(args.output/'pegs.npz',poses_xyzw=np.asarray(peg_poses),
+                                velocities=np.asarray(peg_velocities),times_s=np.asarray(times))
+            report['final_peg_poses_xyzw']=peg_poses[-1].tolist()
+            late=np.asarray(peg_velocities)[np.asarray(times)>=times[-1]-.5-1e-9]
+            report['last_half_second_max_peg_linear_speed_m_s']=float(np.linalg.norm(late[:,:,:3],axis=-1).max())
+            report['last_half_second_max_peg_angular_speed_rad_s']=float(np.linalg.norm(late[:,:,3:],axis=-1).max())
         final=frames[-1]
         strain=edge_strain(mesh.rest,final,mesh.faces)
         # Native dynamics diagnostics only: none is a task success score.

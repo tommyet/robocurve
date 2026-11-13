@@ -199,6 +199,85 @@ developers and their agents, not a competition submission document.
   Container disk is estimated separately; billing and balance remain unreadable.
   Continue active bounded batches, then save evidence and verify shutdown.
 
+### 2026-11-13 — second checkpoint and simulator cost controls
+
+- Development checkpoint `9af337d` is pushed to the fork branch; 123 CPU checks
+  passed, with no competition PR. Work after it remains on the same branch.
+- Full wheel instability came from collision at a constrained eyelet: a spoke
+  and nipple were filtered against only one of the two incident rim sectors.
+  Filtering both internal bearing interfaces stabilized the native full scene.
+  After 0.1 s, runout was about 2.017 mm and last-20-ms rim drift 0.717 µm.
+  Slow thread creep still needs static friction; no wrench demo exists yet.
+- The paper's next failure occurred in roughly 52:1 mesh slivers away from the
+  staple holes. Locally refined, quality-controlled meshes are being tested
+  without changing the paper material or strain thresholds.
+- At 3,840 Hz, both seam controls completed 0.2 s without strict static or swept
+  crossings. Transient peak strains reached 2.62% intact / 4.43% open and later
+  fell below 1.7%. The original 2% domain guard remains latched in this evidence;
+  do not describe it as a measured tear threshold. Open cut ends separated,
+  but a released, fully extracted seam is still unproved.
+- Icing flux can be calculated only around positive-volume cells plus their
+  neighbours. The 400-step full-grid/cropped comparison is bit-identical and
+  reduced local material computation from 6.11 s to 0.285 s. Whole native
+  trials include physics/rendering and do not gain the same speed factor.
+- The original shell shape rubric could count a round mound because a dome
+  narrows beyond its centre. Require an elongated head-to-tail footprint and
+  preserve the round-mound regression; do not count short ridged blobs.
+- Paid-session estimates at 03:26 UTC: $2.92 compute, no Dream calls, one active
+  Pod and watchdog verified. These are elapsed-time estimates, not billing.
+  Native full-wheel and seam callbacks are still too slow for economical long
+  trials; profile and optimize while preserving physical forces and contact
+  checks before attempting the final Dream baselines.
+
+### 2026-11-13 — manipulation diagnostics and faster audits
+
+- Operator: repository agent on the same six-task branch. Batches 017–022 are
+  downloaded, SHA-256 verified and indexed locally. All remain diagnostics;
+  no full-score task demonstration, Dream baseline or submission exists yet.
+- The flexible shirt cleared its board by at least 35 mm while held across
+  the line. It fell when both hands opened, correctly preventing a hanging
+  score. A separate physical peg grasp opened the jaws to about 8.9 mm and
+  lifted the free peg 136 mm. Line-and-fabric capture remains to demonstrate.
+- A static-friction element stopped wheel thread creep: late rotation fell
+  from about 0.041 to 0.000007 turns/s. Reducing native position iterations
+  from 128 to 32 nearly halved the short probe runtime, but changed transient
+  rim drift. Longer settling and timestep comparisons are still required.
+  Exact float32 caching skips only identical USD parameter writes; it does
+  not reduce the rate of force application or introduce a tolerance.
+- The improved paper mesh removed slender triangles, but local strain beside
+  a staple leg still exceeded the declared elastic domain. A smaller timestep
+  did not fix it. Isolate paper/support contact before changing parameters;
+  elastic-domain excursions are not measurements of visible tearing.
+- A fused double-precision GPU thread/cloth predicate matched 445 adversarial
+  and randomized checks (224,045 segment/triangle pairs), including moving
+  cloth, with no mismatches. Its two-patch kernel benchmark was 0.359 ms per
+  step. This excludes simulator stepping, buffer preparation and other audits;
+  native integration and first-failure recording still need validation.
+- Explicit vector formulas for seam strain matched 24 recorded native meshes
+  and 200 randomized meshes to 3.4e-15, preserving first-invalid triangle and
+  latching. They reduced local per-patch calculation from about 0.96 to 0.44 ms.
+- Ordinary joint-angle PI feedback let the robot pipe one elongated deposit:
+  14.5 mm of qualifying length, an 8 mm wide / 3.58 mm high head, and closed
+  volume balance. Ridges remain inadequate; no complete border is claimed.
+  The next technique holds pressure longer, then lowers the tip while easing
+  pressure, following [Wilton's shell method](https://wilton.com/how-to-pipe-a-shell-border/wltech-131/).
+  The icing law receives measured physical inputs, never the target design.
+- The next piping diagnostic produced a larger elongated head/tail but still
+  lacked adequate ridges. A local replay of measured pressures predicts a
+  1 mm lower nozzle may preserve them; this is a technique hypothesis, not
+  native robot evidence. Several-shell and physical tool-release plans are
+  compiled, with a separate saved-record scorer and conservative release checks.
+- The seam's native CPU/GPU shadow audit agreed through all 88 checked
+  substeps, before the 2% strain-domain stop. The following 5% probe also stopped
+  on strain (5.15%, no crossing) before a full action. A quality-controlled mesh
+  candidate preserves hole boundaries while removing tiny/slender triangles;
+  its native behavior remains untested. Do not loosen the guard again to hide it.
+- At 03:56 UTC, a complete Pod inventory, fresh detail query and watchdog check
+  confirmed one running GPU, the old compatibility Pod stopped, and estimated
+  session compute $3.46. No Dream requests. The 45-minute watchdog was renewed
+  for the active queue. A later transient missing SSH mapping resolved on a
+  fresh read; no additional Pod or restart was used.
+
 ### 2026-11-13 — Runpod Isaac/YAM compatibility test passed
 
 - The user authorized one short GPU compatibility test. The final probe passed

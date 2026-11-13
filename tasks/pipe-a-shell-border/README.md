@@ -12,16 +12,18 @@ not named `task.json`. See `VALIDATION.json` for the remaining gates.
 
 The YAM station table is at Z = 0.7475 m. A 180 × 140 × 50 mm rectangular,
 crumb-coated cake has its centre at (0.300, 0, 0.7755) m. Its top is Z = 0.8005 m.
-A 200 × 160 × 3 mm board is centred at (0.300, 0, 0.749) m. The marked border is
-the 90 mm line from (0.235, −0.045) to (0.235, +0.045) m on the cake top.
+A 200 × 160 × 3 mm aluminium cake board is centred at (0.300, 0, 0.749) m. The marked border is
+the 90 mm edible guide line from (0.235, −0.045) to (0.235, +0.045) m on the cake top.
+The line is 0.5 mm wide; its two transverse end marks are 10 × 0.5 mm.
+All guide marks are 0.1 mm thick.
 
-Use a hand-operated 20 ml icing syringe with a passive sliding piston and a
-six-point star nozzle. Nominal barrel grip: 30 × 80 × 30 mm; piston diameter:
+Use a hand-operated 20 ml plastic icing syringe with a passive sliding piston
+and a stainless steel six-point star nozzle. Nominal barrel grip: 30 × 80 × 30 mm; piston diameter:
 25 mm; maximum stroke: 40.74 mm. The nozzle is 40 mm long, tapering to a hollow
 star aperture with a 2.5 mm mean radius. The model starts with 20 ml of icing.
 Its barrel begins at (0.180, −0.160, 0.7775) m, nozzle along −Y; the plunger centre
 is at (0.180, −0.100, 0.7775) m, 60 mm behind it. Both bodies start at yaw 180°.
-A 50 × 40 × 15 mm rest supports the dispenser. The tool starts
+A 50 × 40 × 15 mm plastic rest supports the dispenser. The tool starts
 on the table, outside both hands. The 80 g barrel and 25 g plunger are dynamic.
 
 This is a proposed reproducible prop specification. No real dispenser or recipe
@@ -44,7 +46,7 @@ on the development machine; that is not a GPU trial-runtime estimate. It produce
 0.567 ml of icing with volume-balance error below 6 × 10⁻²² m³. The resulting
 single deposit is a blob, not evidence of a complete shell border.
 
-Twenty CPU tests cover finite volume, pressure causality, passive seal-force
+Twenty-one CPU tests cover finite volume, pressure causality, passive seal-force
 direction, contact/damage gates, incomplete evidence, and rubric invariance.
 
 The 13 November native positive/negative controls exercised the free piston in
@@ -85,6 +87,21 @@ Its native judging photos show a ridged mound, but the pressure ended too early
 to form a tail. It is not a qualifying shell. See
 `evidence/native-robot-extrusion-014-015.json`. The next frozen plan sustains
 pressure during the first part of the draw. A complete border remains untested.
+The latest pressure trials revealed several millimetres of ordinary wrist
+deflection under load. Bounded PI tracking from standard joint-angle observations
+then produced one elongated deposit: 14.5 mm of qualifying length, with an 8.0 mm
+wide, 3.58 mm high head. Its ridges remain inadequate and the full border is
+unfinished. See `evidence/native-single-shell-021.json`. The controller changes
+ordinary action targets, never native motor gains or task-object state.
+The next frozen plan holds pressure longer, then lowers the tip while easing
+pressure, following [Wilton’s shell technique](https://wilton.com/how-to-pipe-a-shell-border/wltech-131/).
+
+The material solver now crops flux calculation to the occupied icing region,
+including empty neighbour cells. A 400-step comparison against the previous
+full grid produced bit-identical volume cells and extrusion, with local solver
+time falling from 6.11 to 0.285 seconds. Native end-to-end trials still include
+robot physics, rendering and recording; this is not a 21× overall speed claim.
+
 CPU and native probes use deterministic starting values and no random jitter; intended
 task seed is 0. Intended task limit: 2,400 actions at 20 Hz.
 
@@ -106,7 +123,8 @@ the discrete friction update cannot reverse motion and introduce chatter.
 This is an approximation, not a calibrated cream simulation. It cannot model
 overhangs, suspended strings or voids. Offline shape probes produce rounded
 heads and tapered tails; ridge retention still needs inspection in the native
-robot render. Full scoring requires visible ridges, so a smooth bead cannot pass.
+robot render. Full scoring requires visible ridges and an elongated head-to-tail shape.
+A round mound cannot pass merely because it narrows at its edge.
 `contact_audit.py` conservatively rejects non-nozzle body overlap with icing or
 cake, using every dynamic collision shape and measured rigid-body transforms.
 This boundary prevents omitted finger smearing from earning credit; it may

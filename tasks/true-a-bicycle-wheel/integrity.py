@@ -1,6 +1,6 @@
 """Latched elastic-domain diagnostic for the native rim (not a tear renderer).
 
-This is not yet connected to the task. The proposed0.3% axial/bending bound
+The native material callback checks this at every substep. The0.3% axial/bending bound
 corresponds to207MPa with E=69GPa, below Hydro's240MPa minimum0.2% proof stress
 for6061-T6 extrusions. It is a conservative engineering validity choice, not a
 commercial wheel calibration. Torsion is limited separately; the simplified
@@ -39,7 +39,15 @@ def rim_strain(centres,rotations,spec=None):
 
 
 class RimDomainGuard:
-    def __init__(self):self.failed=False;self.first_failure=None;self.steps=0
+    def __init__(self):
+        self.failed=False;self.first_failure=None;self.steps=0
+        self.peaks={name:0. for name in ('maximum_axial_bending_strain',
+            'maximum_twist_rad','maximum_locked_joint_gap_m')}
+        self.latest={}
+
+    def summary(self):
+        return {'valid':not self.failed,'steps':self.steps,'first_failure':self.first_failure,
+                **self.latest,'peaks':dict(self.peaks)}
     def update(self,centres,rotations):
         self.steps+=1
         try:
@@ -48,6 +56,9 @@ class RimDomainGuard:
                    values['maximum_twist_rad']<=.01 and values['maximum_locked_joint_gap_m']<=.0001)
         except ValueError as error:
             values={'error':str(error)};valid=False
+        self.latest=values
+        for name in self.peaks:
+            if name in values:self.peaks[name]=max(self.peaks[name],values[name])
         if not valid:
             self.failed=True;self.first_failure=self.first_failure or {'step':self.steps,**values}
-        return {'valid':not self.failed,'steps':self.steps,'first_failure':self.first_failure,**values}
+        return self.summary()

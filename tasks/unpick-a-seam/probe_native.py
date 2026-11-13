@@ -26,6 +26,8 @@ def main():
     p.add_argument('--hole-mesh-spacing',type=float,default=None,
                    help='Diagnostic local collision/simulation mesh refinement in metres; same holes, area and material')
     p.add_argument('--continue-after-invalid',action='store_true',help='Bounded failure investigation only; invalid evidence never passes')
+    p.add_argument('--continue-after-strain',action='store_true',
+                   help='Diagnostic only: latch the 2% material-domain excursion but continue to the first geometric crossing; never valid task evidence')
     a=p.parse_args()
     if not 0<a.seconds<=10:p.error('Diagnostic limited to ten simulated seconds')
     a.out.mkdir(parents=True,exist_ok=False)
@@ -33,6 +35,8 @@ def main():
                                    'physics_hz':a.physics_hz,'requested_seconds':a.seconds,
                                    'contact_refinement':a.contact_refinement,
                                    'hole_mesh_spacing_m':a.hole_mesh_spacing,
+                                   'continue_after_strain':a.continue_after_strain,
+                                   'continue_after_invalid':a.continue_after_invalid,
                                    'source_sha256':{name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
                                                     for name in ('probe_native.py','native_stitches.py','native_cloth.py','geometry.py','contact_audit.py','inspection.py')}}
     app=None;attached=False;stage=None;cache=None;physics=None
@@ -124,25 +128,33 @@ def main():
             thread_step=float(np.linalg.norm(segments-previous_segments,axis=2).max())
             maximum_node_step_m=max(maximum_node_step_m,node_step)
             maximum_thread_endpoint_step_m=max(maximum_thread_endpoint_step_m,thread_step)
-            invalid=any(audit.first_excursion is not None for audit in strain) or any(audit.first_failure is not None for audit in contact)
+            strain_invalid=any(audit.first_excursion is not None for audit in strain)
+            contact_invalid=any(audit.first_failure is not None for audit in contact)
+            invalid=strain_invalid or contact_invalid
+            def save_pair(filename):
+                np.savez_compressed(a.out/filename,
+                    previous_left=previous_measured[0],previous_right=previous_measured[1],
+                    current_left=measured[0],current_right=measured[1],
+                    previous_thread_segments=previous_segments,current_thread_segments=segments,
+                    left_faces=cloth[0].faces,right_faces=cloth[1].faces,
+                    time_s=step/a.physics_hz,dt=1/a.physics_hz)
             if invalid:
                 report.update(status='invalid_model_domain')
                 if 'first_invalid_step' not in report:
                     report.update(first_invalid_step=step,first_invalid_node_step_m=node_step,
                                   first_invalid_thread_endpoint_step_m=thread_step)
-                    np.savez_compressed(a.out/'first-invalid-pair.npz',
-                        previous_left=previous_measured[0],previous_right=previous_measured[1],
-                        current_left=measured[0],current_right=measured[1],
-                        previous_thread_segments=previous_segments,current_thread_segments=segments,
-                        left_faces=cloth[0].faces,right_faces=cloth[1].faces,
-                        time_s=step/a.physics_hz,dt=1/a.physics_hz)
-                sample=True
+                    save_pair('first-invalid-pair.npz');sample=True
+            if contact_invalid and 'first_contact_failure_step' not in report:
+                report['first_contact_failure_step']=step
+                save_pair('first-contact-pair.npz');sample=True
+            stop=invalid and not a.continue_after_invalid and (contact_invalid or not a.continue_after_strain)
+            if stop:sample=True
             if sample:
                 for j,points in enumerate(measured):frames[j].append(points)
             if sample:thread_frames.append(poses);sample_times.append(step/a.physics_hz)
             previous_measured=[points.copy() for points in measured]
             previous_segments=segments.copy()
-            if invalid and not a.continue_after_invalid:break
+            if stop:break
         np.savez_compressed(a.out/'state.npz',left=frames[0],right=frames[1],
                             left_faces=cloth[0].faces,right_faces=cloth[1].faces,thread=thread_frames,
                             sample_times_s=sample_times,authored_left=cloth[0].rest,authored_right=cloth[1].rest)

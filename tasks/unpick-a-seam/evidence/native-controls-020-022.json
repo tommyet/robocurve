@@ -1,0 +1,144 @@
+{
+  "status": "diagnostic_only_not_task_feasibility",
+  "checked_utc": "2026-11-13",
+  "records": [
+    {
+      "artifact": "artifacts/six-task-completion-2026-11-13/native-batch-020/results/native-batch-020/seam-intact-strain/probe.json",
+      "sha256": "b346b2a802a7aba71082ecab0257936de9205ec379e0be539aff5de516708305",
+      "status": "invalid_model_domain",
+      "robot_demo": false,
+      "mode": "intact",
+      "physics_hz": 3840,
+      "completed_steps": 768,
+      "wall_seconds": 46.08186558447778,
+      "right_centroid_drop_m": 0.002459126377906462,
+      "strain": [
+        {
+          "maximum_principal_stretch": 1.0262430238146192,
+          "first_validity_excursion": {
+            "time_s": 0.09453125,
+            "triangle": 7097,
+            "principal_stretch": 1.0217438902106648,
+            "limit": 1.02
+          }
+        },
+        {
+          "maximum_principal_stretch": 1.024482111688865,
+          "first_validity_excursion": {
+            "time_s": 0.016145833333333335,
+            "triangle": 4888,
+            "principal_stretch": 1.0206452830144324,
+            "limit": 1.02
+          }
+        }
+      ],
+      "contact_audit": [
+        {
+          "valid": true,
+          "steps": 768,
+          "first_failure": null
+        },
+        {
+          "valid": true,
+          "steps": 768,
+          "first_failure": null
+        }
+      ]
+    },
+    {
+      "artifact": "artifacts/six-task-completion-2026-11-13/native-batch-020/results/native-batch-020/seam-open-strain/probe.json",
+      "sha256": "c4369d32212cc6486dfeaea6031cfd1c16a7b0688d25d2aa74678138aa35bcfd",
+      "status": "invalid_model_domain",
+      "robot_demo": false,
+      "mode": "open",
+      "physics_hz": 3840,
+      "completed_steps": 768,
+      "wall_seconds": 44.34492801874876,
+      "right_centroid_drop_m": 0.0026582356937786544,
+      "strain": [
+        {
+          "maximum_principal_stretch": 1.0226231460919293,
+          "first_validity_excursion": {
+            "time_s": 0.021614583333333333,
+            "triangle": 7094,
+            "principal_stretch": 1.021675481945125,
+            "limit": 1.02
+          }
+        },
+        {
+          "maximum_principal_stretch": 1.0442948774304472,
+          "first_validity_excursion": {
+            "time_s": 0.019270833333333334,
+            "triangle": 1514,
+            "principal_stretch": 1.0223906054007066,
+            "limit": 1.02
+          }
+        }
+      ],
+      "contact_audit": [
+        {
+          "valid": true,
+          "steps": 768,
+          "first_failure": null
+        },
+        {
+          "valid": true,
+          "steps": 768,
+          "first_failure": null
+        }
+      ]
+    },
+    {
+      "artifact": "artifacts/six-task-completion-2026-11-13/native-batch-021/results/native-batch-021/seam-yam/preview.json",
+      "sha256": "1a677b2828569e1c8196ae8f864ff13eb6f71c481f62b17bf375fd89420ea325",
+      "status": "failed",
+      "robot_demo": false,
+      "completed_steps": 0,
+      "wall_seconds": 22.020600016228855,
+      "error": "RuntimeError: Native contact reporting is disabled",
+      "physics_dt_s": 0.00026041666666666666
+    },
+    {
+      "artifact": "artifacts/six-task-completion-2026-11-13/native-batch-022/results/native-batch-022/seam-warp.json",
+      "sha256": "81477f506c7757d52c960ea55ec454c24907051754ea557b4990af682e5b5b3f",
+      "status": "pass",
+      "native_physics_run": false,
+      "warp_version": "1.16.0",
+      "device": "cuda:0",
+      "seed": 231119,
+      "checks": 445,
+      "pair_tests": 224045,
+      "mismatches": [],
+      "wall_seconds": 1.5041544567793608,
+      "source_sha256": {
+        "warp_contact.py": "7cb03ac55925fad9901d0b438f0e487ce74cf15d2d7b0c2bd889b88d2fa2f928",
+        "contact_audit.py": "319323f3b4fbc3660e28b158cab743e192809d03291b603137e5c04d60530065",
+        "check_warp_contact.py": "d22d00561e2766033a70a720a71cbbc957b095b502ebe08e210142ac16ee2dac"
+      },
+      "scope": "Standalone predicate equivalence only; GPU runner integration and first-failure snapshots remain unvalidated.",
+      "full_mesh_benchmark": {
+        "repeats": 50,
+        "faces_per_patch": 8490,
+        "segments": 168,
+        "seconds_per_pair_step": 0.000358548816293478,
+        "initial_scene_crossings": 0,
+        "scope": "Persistent-buffer kernel and launch timing only; excludes scene stepping, tensor preparation, damage and strain audits."
+      }
+    }
+  ],
+  "interpretation": [
+    "Both 3840 Hz matched controls completed 768 native steps (0.2 s) without a thread/cloth audit crossing. The original 2% strain domain remained latched invalid; these are not retrospective task passes.",
+    "Peak local principal extensions were 2.6243% intact and 4.4295% open. A 5% approximate operating domain is now available explicitly in the robot preview, with independent 2% warning telemetry; neither threshold is a calibrated cotton tear law.",
+    "Opening the native thread joints did not itself remove all fragments or substantially release the hanging patch; physical extraction remains unproven.",
+    "Batch 021 stopped before native stepping on a contact-setting assertion. Installed IsaacLab ContactSensor uses settings_manager.set_bool after SimulationContext creation; that official sequence is now used. This is not evidence of a contact physics failure.",
+    "Batch 022 validated only standalone CUDA predicates and persistent-buffer kernel timing. The later runner integration and first-failure snapshot implementation require a new native shadow comparison."
+  ],
+  "no_claims": [
+    "robot pickup",
+    "blade cutting",
+    "stitch extraction",
+    "fabric intact photo agreement",
+    "task score",
+    "submission readiness"
+  ]
+}

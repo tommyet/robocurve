@@ -18,7 +18,7 @@ difference. The three unedited reports are in `evidence/native-coupon-*.json`;
 `VALIDATION.json` records their hashes. These are contact/material tests, not
 paper extraction or robot demonstrations. Material parameters are approximate.
 
-There are 27 passing CPU checks for the steel law, punctured sheet meshes,
+There are 31 passing CPU checks for the steel law, punctured sheet meshes,
 irreversible validity guards, contact auditing and photo-based judging.
 The older CPU cohesive-opening model remains a research probe; it does not
 supply tearing physics in the proposed native scene.
@@ -33,8 +33,20 @@ passes 0.2 seconds with zero bending and a 9.9986 mm final gap from 10 mm;
 this implicates contact. The 120 µm midplane-gap control also passes with zero
 bending and 119.85 µm final separation. The stapled coupon with that gap and
 20 µm of crown clearance still crosses the bending-domain boundary after
-0.007 seconds. The next diagnostic tests the actual supported A5 setup,
-without changing material parameters or validity thresholds.
+0.007 seconds. The actual supported A5 scene also runs, but its original mesh
+crosses the bending boundary after 0.009 seconds and the membrane boundary
+after 0.011 seconds. The worst stretched triangle is far from the staple; its
+52:1 aspect ratio magnifies micron-scale motion into local strain.
+
+The replacement A5 meshes refine only the puncture regions. Frozen assets
+preserve the exact 620 × 420 µm holes, sheet outline, area and mass. Minimum
+triangle angles are 15.08° and 15.85°, with edge ratios below 3.57. Geometry,
+wire-hole alignment and rigid-motion checks pass. At the original 0.5 ms step,
+the refined native scene still reaches 0.429% membrane strain after 0.011 seconds,
+now beside a staple leg. The next comparison uses the wire coupon's validated
+0.1 ms step. Material parameters and validity thresholds have not changed. The task loads
+NumPy assets; SciPy is only required to regenerate them with
+`generate_meshes.py`. `assets/mesh-manifest.json` records hashes and quality.
 
 ## Reproduce the checks
 
@@ -76,7 +88,8 @@ validity bounds. Passing that test does not establish extraction.
 `full_scene.py` authors two 210 × 148 mm sheets, a **free** staple, a forked lever
 remover and a 20 mm-high document support. The upper sheet is offset by 12 mm;
 the far edges overhang by 20 and 32 mm to make later separation accessible.
-The staple and remover fulcrum are over the support. This scene is unrun;
+The staple and remover fulcrum are over the support. This scene runs but has
+not passed its material/contact validity gate;
 `setup.json` and `task.draft.json` are provisional until the geometry is tested.
 The YAM bridge in `arena_paper.py`, `arena_hardware.py` and `task.py` is authored
 but unrun. It exposes measured geometry to an assessor, writes poses only on

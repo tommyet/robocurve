@@ -26,3 +26,18 @@ class RimGeometryTests(unittest.TestCase):
 
 
 if __name__=='__main__':unittest.main()
+
+
+class WrenchLeadInTests(unittest.TestCase):
+    def test_mouth_is_wider_but_working_slot_unchanged(self):
+        from wheel_scene import wrench_jaw_mesh
+        for side in (-1,1):
+            points,faces=wrench_jaw_mesh(side)
+            self.assertEqual(points.shape,(10,3))
+            self.assertEqual(faces.shape,(16,3))
+            self.assertAlmostEqual(np.min(np.abs(points[:,0])),.00325/2)
+            self.assertAlmostEqual(np.min(np.abs(points[np.isclose(points[:,1],.004),0])),.005/2)
+            self.assertAlmostEqual(np.ptp(points[:,2]),.004)
+            triangles=points[faces]
+            volume=np.einsum('ij,ij->i',triangles[:,0],np.cross(triangles[:,1],triangles[:,2])).sum()/6
+            self.assertGreater(volume,0.)

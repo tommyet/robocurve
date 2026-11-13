@@ -3,16 +3,18 @@
 The current native probe uses 100 µm surface-FEM paper, explicit puncture holes,
 and a contact-capable steel staple with plastic bending joints. Its two small
 sheets are supported only by the staple; a fixed crown is an explicit coupon
-fixture, not part of the proposed robot task. The full A5 scene and remover
-controller remain unfinished.
+fixture, not part of the proposed robot task. The full A5 scene is authored; its native contact gate and remover controller
+remain unfinished.
 
 A complete post-fracture animation is not necessary to reject damaged outcomes.
 The chosen development route instead ends a trial irreversibly when measured
 triangle stretch or outer-surface bending strain leaves the paper model's
 elastic range. No later flat pose can restore validity or earn partial credit.
 This is a validity boundary, not a claim to predict a crack's exact length.
-The proposed 0.3% limits are conservative numerical choices and still require
-an evidence-supported interpretation and a non-damaging extraction trial.
+The proposed0.3% limits are an elastic-domain approximation consistent with
+the approximate onset of nonlinearity in published copy-paper tensile curves;
+they are not a tear threshold. See [material interpretation](MATERIAL_DOMAIN.md).
+A non-damaging extraction trial remains necessary.
 A commercial-paper calibration is not claimed.
 
 Published copy-paper tests find directional elastic and plastic behaviour;
@@ -35,8 +37,16 @@ The diagnostic sequence is:
 3. Add a release diagnostic that straightens and withdraws the wire through the
    existing holes by tool contact. Pulling a still-clinched leg destructively
    must reach the irreversible invalid state, not pass through intact paper.
-4. The A5 scene is authored. Next test it on its actual document support, then
-   integrate the free staple and passive remover with ordinary YAM. Allow native
+4. The A5 scene runs on its actual support but has not passed its validity gate.
+   A local puncture mesh removes the original long, thin triangles; the same
+   0.5 ms step still reaches 0.429% membrane strain by 0.011 seconds near a leg.
+   At0.1ms the full scene fails sooner, after0.002s. Removing the staple
+   isolates a second issue: the pair stays nearly flat until it lands on the
+   support, then its upper sheet wrinkles locally. Compare native contact
+   refinement before interpreting either trace as physical paper damage.
+   A supported-edge reset is a separate candidate: lower sheet on the board,
+   clinched legs beyond its edge, with no pins or hidden collision filtering.
+   Then integrate the free staple and passive remover with ordinary YAM. Allow native
    contact settling before control.
    There must be no paper pins, automatic attachments or collision disabling.
 5. Make a successful ordinary joint-command demo, then a Dream trial with the

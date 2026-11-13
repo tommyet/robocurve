@@ -97,6 +97,18 @@ class MechanismTests(unittest.TestCase):
         d=point_triangle_distance([[.2,.2,.3],[.6,.6,0],[2,0,0]],v,[[0,1,2]])
         np.testing.assert_allclose(d,[.3,np.sqrt(.02),1.])
 
+    def test_declared_five_percent_domain_keeps_warning_and_failure_separate(self):
+        v=np.array(((0.,0.,0.),(1.,0.,0.),(0.,1.,0.)))
+        audit=StrainAudit(v,[[0,1,2]],maximum_stretch=1.05)
+        self.assertFalse(audit.update(v*np.array((1.04,1.,1.)),.1))
+        self.assertAlmostEqual(audit.first_warning['principal_stretch'],1.04)
+        self.assertIsNone(audit.first_excursion)
+        self.assertTrue(audit.update(v*np.array((1.06,1.,1.)),.2))
+        self.assertAlmostEqual(audit.first_excursion['principal_stretch'],1.06)
+        self.assertTrue(audit.update(v,.3))
+        self.assertEqual(audit.first_warning['time_s'],.1)
+        self.assertEqual(audit.first_excursion['time_s'],.2)
+
     def test_strain_gate_is_rigid_motion_invariant_and_latches(self):
         v=np.array(((0.,0.,0.),(1.,0.,0.),(0.,1.,0.)))
         audit=StrainAudit(v,[[0,1,2]])

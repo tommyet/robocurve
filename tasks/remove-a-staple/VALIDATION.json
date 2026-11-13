@@ -2,7 +2,7 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "27 NumPy-only checks passed. Native wire coupon passed positive, no-contact and time-step checks; coupled sheets and robot unvalidated.",
+  "cpu_checks": "32 NumPy checks pass. Native steel coupon passes positive/negative/time-step tests. Full-size paper contact remains unresolved; finer step and no-staple controls do not pass.",
   "simulator_probe": "One native 3 mm steel leg with contact-driven plastic hinge, not full task.",
   "demo": null,
   "dream": null,
@@ -51,7 +51,7 @@
       }
     }
   },
-  "cpu_tests_passed": 27,
+  "cpu_tests_passed": 32,
   "coupled_paper_probe": {
     "entry_point": "paper_probe.py",
     "status": "Native surface solver runs; mesh cleanup and documented bend coefficient still leave both contact trials outside provisional validity domain.",
@@ -114,13 +114,217 @@
   },
   "full_scene": {
     "entry_point": "full_scene.build_scene",
-    "status": "first_authoring_attempt_failed_invalid_fork_identifier_fixed_retry_pending",
+    "status": "full_size_native_contact_unresolved",
     "setup": "Two 210\u00d7148\u00d70.1 mm FEM sheets, free native staple, forked lever remover, 20 mm flat support with accessible far edges",
     "robot_demo": false,
     "yam_bridge": "arena_paper.py, arena_hardware.py and task.py authored and syntax checked; native YAM initialization, guards and callbacks not runtime tested.",
     "preview_entrypoint": "preview_yam.py --out NEW --steps 10 --physics-hz 2000; authored/syntax-checked, not run. Ordinary ready-joint hold only.",
     "native_entrypoint": "full_probe.py --out NEW --seconds .1 --physics-hz2000",
     "initial_midplane_gap_m": 0.00012,
-    "initial_crown_clearance_m": 2e-05
-  }
+    "initial_crown_clearance_m": 2e-05,
+    "mesh_quality": {
+      "generator_sha256": "368ea7bbf3ef0c69138227828147888a80e150398a524f94e421a75a25bc0b08",
+      "numpy_version": "2.3.5",
+      "scipy_version": "1.18.1",
+      "meshes": [
+        {
+          "file": "paper_0.npz",
+          "sha256": "afe3c313c5b835d5b1617e09ff558e869bbc539f34ab3792e849dfc652803b2b",
+          "vertices": 818,
+          "triangles": 1514,
+          "surface_area_m2": 0.031079479199999996,
+          "holes": [
+            [
+              -0.09331,
+              -0.09269,
+              -0.05661000000000001,
+              -0.056190000000000004
+            ],
+            [
+              -0.09331,
+              -0.09269,
+              -0.04381,
+              -0.04339
+            ]
+          ],
+          "boundary_edges": 124,
+          "mass_kg": 0.0024863583359999997,
+          "minimum_triangle_area_m2": 9.299999999999769e-09,
+          "minimum_triangle_angle_deg": 15.076285469590196,
+          "maximum_edge_length_ratio": 3.563416410081714,
+          "puncture_perimeters_m": [
+            0.0020800000000000263,
+            0.0020800000000000263
+          ]
+        },
+        {
+          "file": "paper_1.npz",
+          "sha256": "7f20ccc85f3a52567f4b35744bb075df7449bee195c9b39c8c272e98f756d53e",
+          "vertices": 816,
+          "triangles": 1507,
+          "surface_area_m2": 0.0310794792,
+          "holes": [
+            [
+              -0.09331,
+              -0.09269,
+              -0.06861,
+              -0.06819
+            ],
+            [
+              -0.09331,
+              -0.09269,
+              -0.05581,
+              -0.055389999999999995
+            ]
+          ],
+          "boundary_edges": 127,
+          "mass_kg": 0.002486358336,
+          "minimum_triangle_area_m2": 9.299999999999769e-09,
+          "minimum_triangle_angle_deg": 15.848443375607756,
+          "maximum_edge_length_ratio": 3.2723644154044753,
+          "puncture_perimeters_m": [
+            0.0020800000000000263,
+            0.0020800000000000124
+          ]
+        }
+      ]
+    },
+    "last_observation": {
+      "batch": "018",
+      "stopped_step": 22,
+      "physics_hz": 2000,
+      "maximum_membrane_strain_lower": 0.0036847,
+      "wire_crossing": false,
+      "diagnosis": "A remote edge triangle has aspect ratio about52 and magnifies micron-scale motion into high local strain. Replace global Cartesian hole feature lines with local puncture refinement; no material or validity threshold changes."
+    },
+    "latest_refined_mesh_observation": {
+      "batch": "021",
+      "physics_hz": 2000,
+      "stop_time_s": 0.011,
+      "maximum_membrane_strain": [
+        0.004289048811962237,
+        0.003127402228203957
+      ],
+      "maximum_surface_bending_strain": [
+        0.013254014731326575,
+        0.011996775515024125
+      ],
+      "wire_crossings": false,
+      "location": "Worst membrane triangles are well-shaped and immediately beside a staple leg, not remote mesh slivers.",
+      "next": "Same full scene at10000Hz for.025s; native steel coupon was validated at100\u00b5s and50\u00b5s, unlike current500\u00b5s full-scene steps."
+    },
+    "latest_finer_step_observation": {
+      "batch": "022",
+      "physics_hz": 10000,
+      "stop_time_s": 0.002,
+      "maximum_membrane_strain": [
+        0.0018823,
+        0.0039799
+      ],
+      "wire_crossings": false,
+      "interpretation": "Fails earlier than500\u00b5s; not a converged physical response."
+    },
+    "no_staple_control": {
+      "batch": "023",
+      "report_sha256": "4c6c4f84421b13e64182e4cae616511c0dc7e916f60e21cda122cbc70c023593",
+      "status": "invalid_model_domain",
+      "physics_hz": 10000,
+      "completed_steps": 128,
+      "centroid_drop_m": [
+        0.0006643803711684493,
+        0.0006713080736703292
+      ],
+      "stop_measurements": [
+        {
+          "valid": true,
+          "steps": 128,
+          "first_failure": null,
+          "maximum_tensile_strain": 0.0001829256984002825,
+          "maximum_surface_bending_strain": 0.0023794484181391476,
+          "thresholds_calibrated": false,
+          "last_geometry_diagnostics": {
+            "worst_bending_edge": [
+              159,
+              183
+            ],
+            "worst_bending_faces": [
+              1498,
+              1499
+            ],
+            "worst_edge_dihedral_rad": 0.0030850962885682247,
+            "worst_edge_dual_width_m": 6.482797158050879e-05,
+            "worst_membrane_face": 290
+          },
+          "contact_audit": {
+            "valid": true,
+            "diagnostic": "No staple exists in this diagnostic"
+          },
+          "centroid_m": [
+            0.290669926130247,
+            -0.015765482624981342,
+            0.7675456196288316
+          ],
+          "z_span_m": 0.0001017451286315918
+        },
+        {
+          "valid": false,
+          "steps": 128,
+          "first_failure": {
+            "step": 126,
+            "reason": "outside elastic paper model",
+            "tensile_strain": 0.0018169347636265432,
+            "surface_bending_strain": 0.036323240315706246
+          },
+          "maximum_tensile_strain": 0.0033035054147760867,
+          "maximum_surface_bending_strain": 0.036323240315706246,
+          "thresholds_calibrated": false,
+          "last_geometry_diagnostics": {
+            "worst_bending_edge": [
+              153,
+              181
+            ],
+            "worst_bending_faces": [
+              400,
+              1498
+            ],
+            "worst_edge_dihedral_rad": 0.09615044453119297,
+            "worst_edge_dual_width_m": 0.00013333333333333253,
+            "worst_membrane_face": 479
+          },
+          "contact_audit": {
+            "valid": true,
+            "diagnostic": "No staple exists in this diagnostic"
+          },
+          "centroid_m": [
+            0.290826792609604,
+            -0.007436797363255869,
+            0.7676586919263297
+          ],
+          "z_span_m": 0.00017148256301879883
+        }
+      ],
+      "interpretation": "Near-flat free fall until contact with the board; upper sheet wrinkles near a hole. Steel hardware is not required for this failure."
+    },
+    "contact_refinement_candidate": "Native speculative CCD plus collisionIterationMultiplier4 and collisionPairUpdateFrequency4. Same material, geometry and guards; pending native comparison.",
+    "supported_reset_candidate": {
+      "profile": "supported-edge-candidate",
+      "status": "CPU_geometry_checked_native_pending",
+      "support_size_m": [
+        0.19,
+        0.128,
+        0.02
+      ],
+      "support_center_m": [
+        0.33,
+        -0.01,
+        0.7575
+      ],
+      "lower_paper_midplane_m": 0.76755,
+      "upper_paper_midplane_m": 0.76767,
+      "crown_underside_m": 0.76774,
+      "explanation": "Lower paper rests on board; staple8mm beyond its left edge so clinched legs hang clear. No pins or filtered paper contacts.",
+      "task_default_changed": false
+    }
+  },
+  "material_domain": "MATERIAL_DOMAIN.md distinguishes published onset-of-nonlinearity evidence from tearing.0.3% is an approximate elastic boundary, not a calibrated damage detector."
 }

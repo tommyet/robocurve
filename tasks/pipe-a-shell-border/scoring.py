@@ -87,13 +87,17 @@ def assess(x,y,volume,*,dx,emitted_m3,lost_m3=0.,airborne_m3=0.,damage_depth_m=0
         ridges=_peaks(transverse,minimum=.001,spacing=max(1,round(.0015/dx)),prominence=.0003)
         tapered=(.0025<=head_h<=.008 and .006<=head_w<=.016 and
                  .0005<=tail_h<=min(.003,.65*head_h) and .001<=tail_w<=.65*head_w)
-        ridged=len(ridges)>=2
+        ridged=any(min(transverse[a],transverse[b])-float(transverse[a:b+1].min())>=.0003
+                   for a,b in zip(ridges,ridges[1:]))
         # Locate the leading rise in the measured footprint. Union the observed
         # intervals so adjacent shapes cannot double-count the same length.
         previous=np.arange(max(0,k-round(.006/dx)),k+1)
         narrow=previous[width[previous]<=.65*head_w]
         beginning=int(narrow[-1]) if len(narrow) else k
-        length=float(yy[tail]-yy[beginning]) if tapered else 0.
+        length=float(yy[tail]-yy[beginning])
+        # A round mound also narrows beyond its centre. Require a visibly
+        # elongated footprint so that taper alone cannot certify a shell.
+        tapered=tapered and length>=1.25*head_w
         if tapered:covered_by_valid_shell[beginning:tail+1]=True
         result["shells"].append({"valid":bool(tapered),"visible_ridges":bool(ridged),
                                   "head_y_mm":float(yy[k]*1e3),"head_height_mm":head_h*1e3,

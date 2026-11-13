@@ -40,13 +40,37 @@ def x_frame(direction):
     return np.column_stack((x,y,np.cross(x,y)))
 
 
-def build_scene(stage, root="/WheelTask"):
-    from pxr import Gf, PhysxSchema, Sdf, UsdGeom, UsdPhysics
+def stand_boxes():
+    """Open-front truing stand: offset uprights with top arms to the axle."""
+    boxes=[('base',(.35,.10,.7575),(.18,.50,.02))]
+    for i,x in enumerate((.285,.415)):
+        boxes.append((f'upright_{i}',(x,.24,.88625),(.015,.025,.2375)))
+        boxes.append((f'axle_arm_{i}',(x,.12,1.005),(.015,.24,.015)))
+    return boxes
+
+
+def wrench_jaw_mesh(side):
+    """A real flared mouth guides the3.23mm nipple into a3.25mm working slot."""
+    if side not in (-1,1):raise ValueError('Jaw side must be -1 or1')
+    outline=np.array(((.001625,-.004),(.003625,-.004),(.003625,.004),
+                      (.0025,.004),(.001625,-.002)))
+    outline[:,0]*=side
+    if side<0:outline=outline[::-1]
+    points=np.array([(x,y,z) for z in (-.002,.002) for x,y in outline])
+    n=len(outline);faces=[]
+    for i in range(1,n-1):faces.extend(((0,i+1,i),(n,n+i,n+i+1)))
+    for i in range(n):
+        j=(i+1)%n;faces.extend(((i,j,n+j),(i,n+j,n+i)))
+    return points,np.array(faces,int)
+
+
+def build_scene(stage, root="/WheelTask", *, reset_profile="four-defect-reference"):
+    from pxr import Gf, PhysxSchema, Sdf, UsdGeom, UsdPhysics, Vt
     spec,thread=WheelSpec(),ThreadSpec()
     wheel=root+"/wheel"
     n=spec.spokes
     UsdGeom.Xform.Define(stage,root)
-    initial=starting_turn_errors(spec)
+    initial=starting_turn_errors(spec, profile=reset_profile)
     rim_paths,old_spokes,_=build_ring(stage,initial,root=wheel,configure_physics=False)
     wheel_xf=UsdGeom.Xform.Define(stage,wheel)
     wheel_xf.AddTranslateOp().Set(Gf.Vec3d(.35,0.,1.005))
@@ -102,9 +126,8 @@ def build_scene(stage, root="/WheelTask"):
     I=np.eye(3)
     stand=root+"/stand"
     body(stand,(0.,0.,0.),I)
-    shape(stand,"base",(.35,0.,.7575),(.18,.28,.02),color=(.18,.2,.22))
-    for i,x in enumerate((.285,.415)):
-        shape(stand,f"upright_{i}",(x,0.,.88625),(.015,.025,.2375),color=(.18,.2,.22))
+    for name,center,size in stand_boxes():
+        shape(stand,name,center,size,color=(.18,.2,.22))
     shape(stand,"pointer",(.373,0.,.785),(.020,.002,.002),color=(.85,.25,.12))
 
     hub=wheel+"/hub"
@@ -130,7 +153,8 @@ def build_scene(stage, root="/WheelTask"):
     theta=np.arange(n)*2*math.pi/n
     vertices=np.column_stack((spec.rim_radius_m*np.cos(theta),spec.rim_radius_m*np.sin(theta),np.zeros(n)))
     chord=2*spec.rim_radius_m*math.sin(math.pi/n)
-    metadata={"hub_path":hub,"spokes":[],"wrench_path":root+"/wrench"}
+    metadata={"hub_path":hub,"spokes":[],"wrench_path":root+"/wrench",
+              "reset_profile":reset_profile,"initial_turn_offsets":initial.tolist()}
     for i in range(n):
         old_spokes[i].CreateJointEnabledAttr(False)
         side=1 if i%2==0 else -1
@@ -218,8 +242,9 @@ def build_scene(stage, root="/WheelTask"):
         thread_joint.CreateBody1Rel().SetTargets([Sdf.Path(nipple)])
         friction=UsdPhysics.DriveAPI.Apply(thread_joint.GetPrim(),"rotX")
         friction.CreateTypeAttr("force")
-        friction.CreateStiffnessAttr(0.)
+        friction.CreateStiffnessAttr(thread.friction_stiffness_nm_per_rad*math.pi/180.)
         friction.CreateDampingAttr(thread.viscous_friction_nm_s_per_rad*math.pi/180.)
+        friction.CreateTargetPositionAttr(0.)
         friction.CreateTargetVelocityAttr(0.)
         friction.CreateMaxForceAttr(thread.friction_coefficient*spec.baseline_tension_n*thread.thread_mean_radius_m)
         metadata["spokes"].append({"nipple_path":nipple,"rim_path":rim_paths[i],
@@ -233,8 +258,15 @@ def build_scene(stage, root="/WheelTask"):
     wrench=metadata["wrench_path"]
     body(wrench,(.20,-.155,.7555),I,.045)
     shape(wrench,"handle",(0.,-.045,0.),(.016,.080,.016),color=(.13,.28,.4))
-    half_slot=.00325/2
     for side in (-1,1):
-        shape(wrench,f"jaw_{'left' if side<0 else 'right'}",(side*(half_slot+.001),0.,0.),(.002,.008,.004))
+        points,faces=wrench_jaw_mesh(side)
+        jaw=UsdGeom.Mesh.Define(stage,wrench+f"/jaw_{'left' if side<0 else 'right'}")
+        jaw.CreatePointsAttr(Vt.Vec3fArray(points.tolist()))
+        jaw.CreateFaceVertexCountsAttr([3]*len(faces));jaw.CreateFaceVertexIndicesAttr(faces.ravel().tolist())
+        jaw.CreateSubdivisionSchemeAttr('none');jaw.CreateDisplayColorAttr([Gf.Vec3f(.45,.47,.5)])
+        UsdPhysics.CollisionAPI.Apply(jaw.GetPrim())
+        UsdPhysics.MeshCollisionAPI.Apply(jaw.GetPrim()).CreateApproximationAttr('convexHull')
+        contact=PhysxSchema.PhysxCollisionAPI.Apply(jaw.GetPrim())
+        contact.CreateContactOffsetAttr(.000002);contact.CreateRestOffsetAttr(0.)
     shape(wrench,"jaw_back",(0.,-.005,0.),(.00725,.002,.004))
     return metadata

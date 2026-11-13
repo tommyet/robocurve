@@ -97,20 +97,30 @@ class StrainAudit:
         self.inverse[:,1,1]=1/across
         self.limit=float(maximum_stretch)
         if not 1<self.limit<2:raise ValueError('Invalid cloth-stretch envelope')
-        self.maximum_observed=1.;self.first_excursion=None
+        self.maximum_observed=1.;self.first_excursion=None;self.first_warning=None
+        self.warning_limit=min(1.02,self.limit)
 
     def update(self,vertices,time_s):
         p=np.asarray(vertices,float)
         if p.ndim!=2 or p.shape[1]!=3 or not np.isfinite(p).all():raise ValueError('Invalid measured cloth')
         a,b,c=(p[self.faces[:,i]] for i in range(3))
-        deformed=np.stack((b-a,c-a),axis=-1)@self.inverse
-        gram=np.swapaxes(deformed,-1,-2)@deformed
-        # Exact larger eigenvalue of a symmetric 2x2 Gram matrix. Avoid a
-        # general eigen-solver for every triangle on every physics step.
-        largest=(gram[:,0,0]+gram[:,1,1]+np.hypot(gram[:,0,0]-gram[:,1,1],2*gram[:,0,1]))/2
+        # The rest inverse is upper triangular. Explicit deformation columns
+        # avoid thousands of tiny general matrix products without changing the
+        # metric or its principal-stretch threshold.
+        first=b-a
+        column0=first*self.inverse[:,0,0,None]
+        column1=first*self.inverse[:,0,1,None]+(c-a)*self.inverse[:,1,1,None]
+        g00=np.einsum('ij,ij->i',column0,column0)
+        g01=np.einsum('ij,ij->i',column0,column1)
+        g11=np.einsum('ij,ij->i',column1,column1)
+        # Exact larger eigenvalue of the symmetric2x2 Gram matrix.
+        largest=(g00+g11+np.hypot(g00-g11,2*g01))/2
         stretch=np.sqrt(np.maximum(0,largest))
         current=float(stretch.max())
         self.maximum_observed=max(self.maximum_observed,current)
+        if current>self.warning_limit and self.first_warning is None:
+            self.first_warning={'time_s':float(time_s),'triangle':int(stretch.argmax()),
+                                'principal_stretch':current,'limit':self.warning_limit}
         if current>self.limit and self.first_excursion is None:
             self.first_excursion={'time_s':float(time_s),'triangle':int(stretch.argmax()),
                                   'principal_stretch':current,'limit':self.limit}

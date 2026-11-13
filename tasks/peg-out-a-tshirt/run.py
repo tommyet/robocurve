@@ -116,6 +116,13 @@ def main():
             p.error('motion-probe requires a precomputed --plan')
         from fixed_motion import load
         fixed_plan,fixed_actions=load(args.plan)
+        if fixed_plan.get('peg_rests_required') or fixed_plan.get('peg_rests_candidate'):
+            import hashlib
+            expected=hashlib.sha256(Path(__file__).with_name('peg_rests.py').read_bytes()).hexdigest()
+            if fixed_plan.get('peg_rest_source_sha256')!=expected:
+                p.error('Peg motion does not match the current rest source; recompile and audit first')
+            if not 'PEG_RESTS_ENABLED=True' in Path(__file__).with_name('task.py').read_text():
+                p.error('Peg motion requires the declared raised-rest task reset')
         from scene import SUPPORT_BOARD_THICKNESS
         if fixed_plan.get('fixture_board_thickness_m')!=SUPPORT_BOARD_THICKNESS:
             p.error('Frozen motion was not compiled for the current support thickness; recompile and audit first')

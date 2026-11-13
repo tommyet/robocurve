@@ -1,0 +1,18 @@
+{
+  "status": "pass",
+  "native_physics_run": false,
+  "warp_version": "1.19.0",
+  "device": "cpu",
+  "seed": 231119,
+  "checks": 445,
+  "pair_tests": 224045,
+  "mismatches": [],
+  "wall_seconds": 0.2885536669928115,
+  "source_sha256": {
+    "warp_contact.py": "47f1cf9f27d957564eca3673327c59a65147e63a42680b9d8b6f0128cd63477d",
+    "contact_audit.py": "319323f3b4fbc3660e28b158cab743e192809d03291b603137e5c04d60530065",
+    "check_warp_contact.py": "ebfc43b64ab1d3e58d737bdb9d2cd79c09e1329aac7f8197fa8ca85248613052"
+  },
+  "scope": "Standalone predicate equivalence only; GPU runner integration and first-failure snapshots remain unvalidated.",
+  "persistent_first_failure_snapshot_passed": true
+}

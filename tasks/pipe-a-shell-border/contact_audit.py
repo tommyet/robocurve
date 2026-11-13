@@ -56,6 +56,7 @@ class NativeContactAudit:
         """
         from pxr import Gf,UsdGeom,UsdPhysics
         self.material=material;self.bodies=[];self.events=[];self.time_s=0.;self.body_bounds={}
+        self.world_bounds={}
         excluded=set(excluded_body_paths);allowed=set(allowed_shape_paths)
         cache=UsdGeom.XformCache()
         grouped={}
@@ -106,6 +107,7 @@ class NativeContactAudit:
             pose=poses[row]
             r=rotation(pose[3:])
             bounds=self.body_bounds[path]@r.T+pose[:3]
+            self.world_bounds[path]=[bounds.min(0).tolist(),bounds.max(0).tolist()]
             if np.any(bounds.max(0)<low-padding) or np.any(bounds.min(0)>high+padding):continue
             for collider in shapes:
                 corners=collider.local_corners@r.T+pose[:3]

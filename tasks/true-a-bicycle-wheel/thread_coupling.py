@@ -2,8 +2,9 @@
 
 Only measured nipple rotation changes spoke rest length. The energy-conjugate
 lead torque is applied equally/oppositely to nipple and threaded spoke. Native capped
-angular damping supplies an approximate thread-friction law; no pose writes,
-proximity grasps or score triggers occur here. Not runtime validated.
+implicit elastic Coulomb drive supplies thread friction; no pose writes,
+proximity grasps or score triggers occur here. Short native holding is verified;
+physical wrench sliding and robot manipulation remain untested.
 """
 from dataclasses import dataclass
 import math
@@ -26,12 +27,67 @@ class ThreadSpec:
     pitch_m_per_turn: float = .000454
     friction_coefficient: float = .15
     thread_mean_radius_m: float = .001
-    viscous_friction_nm_s_per_rad: float = 1000.
+    friction_stiffness_nm_per_rad: float = 20.
+    viscous_friction_nm_s_per_rad: float = .002
     minimum_turns: float = -3.
     maximum_turns: float = 3.
     # +X points hub→rim. A right-hand nipple tightens clockwise when viewed
     # from the rim toward the hub, hence negative measured axial rotation.
     tightening_sign: int = -1
+
+
+class ThreadFriction:
+    """Elastic Coulomb friction history, driven only by measured relative angle.
+
+    The native implicit drive supplies the actual torque. Its rest angle moves
+    only when the measured elastic trial torque exceeds µ*T*r. This small
+    preslip compliance holds a load at rest but never pulls an adjusted nipple
+    all the way back to its starting angle. Loss of normal load releases it.
+    """
+    def __init__(self,count,stiffness):
+        if not isinstance(count,int) or count<1 or not math.isfinite(stiffness) or stiffness<=0:
+            raise ValueError('Positive count and friction stiffness required')
+        self.stiffness=stiffness
+        self.rest=np.zeros(count)
+        self.dissipated=np.zeros(count)
+
+    def advance(self,angle,limit):
+        angle,limit=np.broadcast_arrays(np.asarray(angle,float),np.asarray(limit,float))
+        if angle.shape!=self.rest.shape or not np.isfinite(angle).all() or not np.isfinite(limit).all() or np.any(limit<0):
+            raise ValueError('Finite angle and nonnegative Coulomb limit required')
+        elastic=np.clip(angle-self.rest,-limit/self.stiffness,limit/self.stiffness)
+        new_rest=angle-elastic
+        self.dissipated+=limit*np.abs(new_rest-self.rest)
+        self.rest[:]=new_rest
+        return dict(friction_target_rad=new_rest.copy(),friction_elastic_torque_nm=-self.stiffness*elastic,
+                    friction_elastic_energy_j=.5*self.stiffness*elastic**2,
+                    friction_dissipated_work_j=self.dissipated.copy())
+
+
+class NativeFloatAttributes:
+    """Skip only identical USD float values, never approximate changed forces.
+
+    USD joint limits/drive attributes are float32. Keeping their already-authored
+    values avoids unnecessary scene notices and repeated schema lookups. There
+    is no position/force tolerance or time decimation. Invalidate after reset
+    or any external attribute edit.
+    """
+    def __init__(self,attributes):
+        self.attributes=attributes
+        self.values=np.full((len(attributes),len(attributes[0])),np.nan,dtype=np.float32)
+        self.attempts=0;self.writes=0
+
+    def invalidate(self):self.values.fill(np.nan)
+
+    def set(self,values):
+        values=np.asarray(values,dtype=np.float32)
+        if values.shape!=self.values.shape or not np.isfinite(values).all():
+            raise ValueError('Finite native float attributes with matching shape required')
+        self.attempts+=values.size
+        for row,column in np.argwhere(values!=self.values):
+            if not self.attributes[row][column].Set(float(values[row,column])):
+                raise RuntimeError('Native material attribute update failed')
+            self.values[row,column]=values[row,column];self.writes+=1
 
 
 def response(length_m, nominal_rest_m, turns, stiffness_n_per_m, spec=None):
@@ -131,6 +187,8 @@ class NativeThreadCoupler:
     def __init__(self, stage_id, metadata, spec=None, native_io=None):
         from omni.physx import get_physx_interface, get_physx_simulation_interface
         from pxr import PhysicsSchemaTools, Sdf
+        from integrity import RimDomainGuard
+        self.integrity=RimDomainGuard()
         self.native_io=native_io
         self.physics=get_physx_interface()
         self.sim=get_physx_simulation_interface()
@@ -141,6 +199,10 @@ class NativeThreadCoupler:
                   [path for s in metadata["spokes"] for path in (s["nipple_path"],s["outer_path"])]}
         self.previous=np.zeros(len(metadata["spokes"]))
         self.unwrapped=np.zeros(len(metadata["spokes"]))
+        self.friction=ThreadFriction(len(metadata['spokes']),self.spec.friction_stiffness_nm_per_rad)
+        self.parameters=NativeFloatAttributes([[s['rest_target_attribute'],
+            s['friction_drive'].GetMaxForceAttr(),s['friction_drive'].GetTargetPositionAttr()]
+            for s in metadata['spokes']])
         self.last=[]
         self._batch=None
         if native_io is not None:
@@ -174,9 +236,11 @@ class NativeThreadCoupler:
         import carb
         if self.native_io is not None:
             self.native_io.begin_step()
+            self.audit_integrity(refresh=False)
             self._before_tensor_step(frozen_material_diagnostic=frozen_material_diagnostic)
             return
         if frozen_material_diagnostic:raise ValueError('Frozen diagnostic requires tensor state')
+        self.audit_integrity(refresh=False)
         hp,hR=self.frame(self.meta["hub_path"])
         self.last=[]
         for i,s in enumerate(self.meta["spokes"]):
@@ -201,8 +265,6 @@ class NativeThreadCoupler:
             # spoke and give the wrong thread reaction torque.
             length=s["rest_target_origin_m"]+gap
             state=response(length,s["nominal_rest_m"],turns,s["stiffness_n_per_m"],self.spec)
-            s["rest_target_attribute"].Set(state["rest_length_m"]-s["rest_target_origin_m"])
-            s["friction_drive"].GetMaxForceAttr().Set(state["friction_limit_nm"])
             torque=torque_gradient*state["lead_torque_nm"]
             if self.native_io is None:
                 self.sim.apply_torque(self.stage_id,self.ids[s["nipple_path"]],carb.Float3(*map(float,torque)))
@@ -211,6 +273,12 @@ class NativeThreadCoupler:
                 self.native_io.add_torque(s["nipple_path"],torque)
                 self.native_io.add_torque(s["outer_path"],-torque)
             self.last.append({"spoke":i,"turns":turns,"length_m":length,"endpoint_distance_m":endpoint_length,"axial_joint_gap_m":gap,**state})
+        friction=self.friction.advance(self.unwrapped,np.array([s['friction_limit_nm'] for s in self.last]))
+        targets=np.degrees((friction['friction_target_rad']+math.pi)%(2*math.pi)-math.pi)
+        self.parameters.set([[state['rest_length_m']-s['rest_target_origin_m'],state['friction_limit_nm'],target]
+            for s,state,target in zip(self.meta['spokes'],self.last,targets)])
+        for i,s in enumerate(self.meta['spokes']):
+            self.last[i].update({key:float(value[i]) for key,value in friction.items()})
         if self.native_io is not None:
             self.native_io.flush_torques()
 
@@ -232,17 +300,34 @@ class NativeThreadCoupler:
         material_turns=b['initial_turn_offset'] if frozen_material_diagnostic else turns
         state=response_batch(length,b['nominal_rest_m'],material_turns,b['stiffness_n_per_m'],self.spec)
         if not frozen_material_diagnostic:
-            for i,s in enumerate(self.meta['spokes']):
-                s['rest_target_attribute'].Set(float(state['rest_length_m'][i]-b['rest_target_origin_m'][i]))
-                s['friction_drive'].GetMaxForceAttr().Set(float(state['friction_limit_nm'][i]))
+            friction=self.friction.advance(self.unwrapped,state['friction_limit_nm'])
+            targets=np.degrees((friction['friction_target_rad']+math.pi)%(2*math.pi)-math.pi)
+            self.parameters.set(np.column_stack((state['rest_length_m']-b['rest_target_origin_m'],
+                                                state['friction_limit_nm'],targets)))
             torque=gradient*state['lead_torque_nm'][:,None]
             # These are disjoint body indices, one nipple and outer half per spoke.
             io.torques[nipple]+=torque;io.torques[outer]-=torque
             io.flush_torques()
         self._state_arrays=dict(turns=turns,length_m=length,endpoint_distance_m=np.linalg.norm(endpoints-anchors,axis=1),
             axial_joint_gap_m=gap,**state)
+        if not frozen_material_diagnostic:self._state_arrays.update(friction)
         if frozen_material_diagnostic:self._state_arrays['frozen_material_turns']=material_turns
         self._last=None
+
+    def audit_integrity(self, *, refresh=True):
+        """Latch unsupported rim deformation; no physics edits or score awards."""
+        if self.native_io is not None:
+            if refresh:self.native_io.begin_step()
+            indices=self._batch['rim_path']
+            centres=self.native_io.transforms[indices,:3]
+            matrices=self.native_io.rotations[indices]
+        else:
+            frames=[self.frame(s['rim_path']) for s in self.meta['spokes']]
+            centres=np.asarray([f[0] for f in frames]);matrices=np.asarray([f[1] for f in frames])
+        state=self.integrity.update(centres,matrices)
+        if not state['valid']:
+            raise ThreadTravelOutOfScope('Native rim left elastic model domain: '+str(state['first_failure']))
+        return state
 
     def observation_for_assessor(self):
         """Material telemetry only; never feed this into a robot policy/demo."""

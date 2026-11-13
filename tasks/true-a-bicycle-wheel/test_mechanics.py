@@ -54,6 +54,20 @@ class MechanicsTests(unittest.TestCase):
         result = self.m.equilibrium(np.full(self.m.spec.spokes, -4.))
         self.assertFalse(result["load_prediction_in_scope"])
 
+    def test_minimal_candidate_starts_untrue_then_four_quarter_turns_suffice_in_linear_model(self):
+        turns = starting_turn_errors(profile="two-defect-candidate")
+        self.assertEqual(np.count_nonzero(turns), 2)
+        initial = self.m.equilibrium(turns)
+        self.assertGreater(initial["lateral_peak_to_peak_m"], .0005)
+        self.assertLess(np.min(initial["tension_n"]), 400.)
+        turns[[0, 2]] += .5
+        corrected = self.m.equilibrium(turns)
+        self.assertLess(corrected["lateral_peak_to_peak_m"], .0005)
+        self.assertGreater(np.min(corrected["tension_n"]), 400.)
+        self.assertLess(np.max(corrected["tension_n"]), 1000.)
+        with self.assertRaises(ValueError):
+            starting_turn_errors(profile="unknown")
+
     def test_bad_inputs_fail(self):
         for turns in ([0], np.full(32, np.nan)):
             with self.assertRaises(ValueError):

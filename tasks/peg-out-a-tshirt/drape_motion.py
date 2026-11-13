@@ -23,9 +23,9 @@ def compile_drape():
         (4.,(.560,1.200),(0.,0.),'carry held hem across the line'),
         (3.,(.560,1.145),(0.,0.),'lower hem beyond line'),
         (2.,(.560,1.145),(0.,0.),'hold physical line drape'),
-        (2.,(.560,1.145),(0.,1.),'release right hem for drape test'),
-        (2.,(.560,1.145),(0.,1.),'hold one-handed line drape'),
-        (2.,(.560,1.145),(1.,1.),'release remaining hem'),
+        (2.,(.560,1.145),(0.,.5),'release right hem for drape test'),
+        (2.,(.560,1.145),(0.,.5),'hold one-handed line drape'),
+        (2.,(.560,1.145),(.5,.5),'release remaining hem'),
         (3.,(.480,1.220),(1.,1.),'withdraw and observe free drape'),
     ]
     for seconds,(x,z),grippers,label in schedule:

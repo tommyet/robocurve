@@ -2,7 +2,7 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "29 CPU tests pass; isolated native ring is bounded across1.9s after adjustment at25\u00b5s. Full wheel/thread/contact remains unrun.",
+  "cpu_checks": "38 CPU tests pass. Full130-body assembly with elastic Coulomb threads passes0.3s settling at25\u00b5s/32iterations; physical wrench and YAM integration remain untested.",
   "simulator_probe": null,
   "demo": null,
   "dream": null,
@@ -66,24 +66,91 @@
       "next": "Full 130-body geometry and live thread coupling .1s at25\u00b5s."
     }
   },
-  "cpu_tests_passed": 29,
+  "cpu_tests_passed": 38,
   "native_scene": {
     "authoring_entry_point": "wheel_scene.build_scene(stage, root)",
     "material_callback": "NativeThreadCoupler.before_step before every native substep",
-    "status": "authored_not_run",
+    "status": "full_assembly_short_settling_and_thread_holding_passed",
     "geometry": "free hub, stand, compliant curved-sector rim, two-half tension-only steel spokes, rotating square nipples, physical open-slot wrench",
     "limitations": [
-      "YAM asset/reset bridge and ready-pose camera preview authored, not runtime validated; no manipulation policy yet",
-      "Native capped damping approximates thread friction; static creep and work balance unvalidated; DirectGPU tensor bridge authored.",
-      "Thread travel outside +/-3 turns invalidates model scope; no stripping/plastic rim damage model yet",
-      "All native contact and reset coupling unvalidated"
+      "YAM asset/reset bridge and camera preview remain unrun; no robot manipulation demo.",
+      "Elastic Coulomb thread holding passes short settling; wrench-driven slip and reversal remain untested.",
+      "Thread travel is bounded to\u00b13turns. Rim guard now checks every material substep and the final pose; native guarded retry pending.",
+      "32-iteration solver passes0.3s; longer duration, physical wrench contact and task scoring remain outstanding."
     ],
     "preview_entry_point": "preview_yam.py --out OUTPUT --steps 2 --physics-hz 40000",
     "wrench_contact_diagnostic": "wrench_contact_probe.py --out OUTPUT --dt .000025 --turn-deg -90; .9s explicit kinematic fixture, not robot demo",
-    "thread_coupling": "Nipple angle measured relative to outer spoke; equal/opposite lead torque and capped angular friction act on that pair. Head constraint blocks free axial spin while allowing tilt. Native runtime untested.",
+    "thread_coupling": "Measured nipple rotation relative to outer spoke drives rest length and equal/opposite lead torque; native elastic Coulomb friction holds after settling.",
     "tensor_pose_conversion": "Batched native poses, relative thread/energy algebra and torques. Lazy assessor snapshots; exact per-joint rest/friction attributes. CPU equivalence checks pass; full native integration pending.",
     "scene_probe": "scene_probe.py --out OUTPUT --dt .000025 --seconds .1",
-    "geometry_authoring_check": "x_frame preserves metric input vectors; regression protects actual half-spoke centre placement."
+    "geometry_authoring_check": "x_frame preserves metric input vectors; regression protects actual half-spoke centre placement.",
+    "latest_observation": {
+      "complete_native_execution": true,
+      "frozen_material_diagnostic": false,
+      "seconds": 0.3,
+      "dt": 2.5e-05,
+      "wall_seconds": 56.14623703062534,
+      "maximum_runout_m": 0.0035982131958007812,
+      "final_runout_m": 0.002032667398452759,
+      "late_maximum_rim_displacement_m": 3.6356922388419017e-07,
+      "late_maximum_thread_rate_turns_s": 1.4082491527878744e-06,
+      "late_tension_range_n": [
+        56.033693034061265,
+        654.0410571550273
+      ],
+      "peak_rim_domain": {
+        "maximum_axial_bending_strain": 0.0014816209963632073,
+        "maximum_twist_rad": 0.0012771377165662096,
+        "maximum_locked_joint_gap_m": 1.9165418554643694e-06
+      },
+      "robot_demo": false,
+      "task_score": null,
+      "interpretation": "Short settling gate only. Does not test wrench interaction, full-duration stability or robot feasibility.",
+      "geometry_gate_pass": true,
+      "thread_holding_gate_pass": true,
+      "physical_gate_pass": true,
+      "native_report_sha256": "2d261948dcaa31853cca238e14f005a1433061e22db7f71e487ae3a6fd08e331",
+      "evidence": "evidence/native-full-assembly-023-summary.json"
+    },
+    "thread_friction_candidate": "Implicit elastic Coulomb drive with20Nm/rad preslip stiffness,0.002Nms/rad damping, force cap\u00b5Tr and measured-slip return mapping; short native holding passes.",
+    "usd_write_cache": "Caches nativefloat32 attributes; only identical values skipped. Material torques applied everyphysicsstep. At0.1s/32iterations totalwall16.17s vs30.42s/128iterations uncached; this comparison changes two settings.",
+    "larger_timestep_diagnostic": {
+      "complete_native_execution": true,
+      "frozen_material_diagnostic": false,
+      "seconds": 0.1,
+      "dt": 5e-05,
+      "wall_seconds": 11.483913411386311,
+      "maximum_runout_m": 0.0036419928073883057,
+      "final_runout_m": 0.002048015594482422,
+      "late_maximum_rim_displacement_m": 5.1738691844654033e-05,
+      "late_maximum_thread_rate_turns_s": 6.819105358891515e-07,
+      "late_tension_range_n": [
+        56.96309738210236,
+        637.6012069187898
+      ],
+      "peak_rim_domain": {
+        "maximum_axial_bending_strain": 0.0015930102007603861,
+        "maximum_twist_rad": 0.0015875830836898888,
+        "maximum_locked_joint_gap_m": 2.9296466429301475e-06
+      },
+      "robot_demo": false,
+      "task_score": null,
+      "interpretation": "Short settling gate only. Does not test wrench interaction, full-duration stability or robot feasibility.",
+      "geometry_gate_pass": false,
+      "thread_holding_gate_pass": true,
+      "physical_gate_pass": false,
+      "native_report_sha256": "d4068d011c84ab81d5fa44c1464571b7eb9fc736d53f305966ced30b8f7d0027"
+    },
+    "reset_candidate": {
+      "profile": "two-defect-candidate",
+      "offsets": {
+        "0": -0.75,
+        "2": -0.75
+      },
+      "status": "CPU_only_native_pending",
+      "reason": "Minimal realistic repair; CPU predicts fourquarterturn corrections suffice without exactreference restoration.",
+      "task_default_changed": false
+    }
   },
   "judging": "v2: pointer/feeler-gauge runout and dish; mechanical spoke tensiometer, all32 spokes 400\u20131000N for this fixture; no separate hanging-weight trials.",
   "single_spring_probe": {

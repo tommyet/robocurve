@@ -37,12 +37,12 @@
     "material": "steel",
     "base_center_m": [
       0.35,
-      0.0,
+      0.1,
       0.7575
     ],
     "base_size_m": [
       0.18,
-      0.28,
+      0.5,
       0.02
     ],
     "upright_x_m": [
@@ -54,8 +54,26 @@
       0.025,
       0.2375
     ],
-    "attachment": "Base bolted to table; hub axle clamped in stand; hub rotates on its bearings.",
-    "pointer": "Steel20\u00d72\u00d72mm pointer beside the bottom rim; the gap is measured with feeler gauges. No initial rim contact."
+    "attachment": "Base bolted to table; uprights stand240mm behind axle, with top arms extending forward to clamp axle ends. Hub rotates on its bearings; bottom nipple/tool sweep remains open.",
+    "pointer": "Steel20\u00d72\u00d72mm pointer beside the bottom rim; the gap is measured with feeler gauges. No initial rim contact.",
+    "upright_y_m": 0.24,
+    "axle_arm_centres_m": [
+      [
+        0.285,
+        0.12,
+        1.005
+      ],
+      [
+        0.415,
+        0.12,
+        1.005
+      ]
+    ],
+    "axle_arm_size_m": [
+      0.015,
+      0.24,
+      0.015
+    ]
   },
   "wrench": {
     "material": "steel jaw, polymer handle",
@@ -73,7 +91,10 @@
       1.0,
       0.0
     ],
-    "start": "Lying flat, jaw toward +y; not attached to the robot or nipple."
+    "start": "Lying flat, jaw toward +y; not attached to the robot or nipple.",
+    "mouth_width_m": 0.005,
+    "lead_in_length_m": 0.006,
+    "jaw_thickness_m": 0.004
   },
   "assessor_tools": "0.1 mm feeler gauges, millimetre ruler, camera and mechanical spoke tensiometer with2mm round-steel conversion chart; used for judging, not available to the policy."
 }

@@ -82,7 +82,7 @@ def author_rack(stage,path='/World/Rack'):
     return line
 
 
-def author_props(stage,with_peg_rests=False):
+def author_props(stage,with_peg_rests=True):
     from native_cloth import author_cloth,author_peg
     mesh=tshirt()
     author_cloth(stage,'/World/Tshirt',mesh,Fabric(),points=initial_layout(mesh))

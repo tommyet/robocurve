@@ -1,0 +1,58 @@
+{
+  "comparison": "Explicit deformation columns versus original batched small matrices",
+  "native_recorded_mesh_samples": 24,
+  "randomized_meshes": 200,
+  "maximum_stretch_difference": 3.3306690738754696e-15,
+  "same_latched_state_and_first_triangle": true,
+  "timings": [
+    {
+      "mode": "intact",
+      "side": "left",
+      "implementation": "matrix",
+      "seconds_per_update": 0.0009999941650312395
+    },
+    {
+      "mode": "intact",
+      "side": "left",
+      "implementation": "vector",
+      "seconds_per_update": 0.00044743062506313435
+    },
+    {
+      "mode": "intact",
+      "side": "right",
+      "implementation": "matrix",
+      "seconds_per_update": 0.0009482393749931362
+    },
+    {
+      "mode": "intact",
+      "side": "right",
+      "implementation": "vector",
+      "seconds_per_update": 0.0004354452098777983
+    },
+    {
+      "mode": "open",
+      "side": "left",
+      "implementation": "matrix",
+      "seconds_per_update": 0.0009429647898650728
+    },
+    {
+      "mode": "open",
+      "side": "left",
+      "implementation": "vector",
+      "seconds_per_update": 0.00043996770997182464
+    },
+    {
+      "mode": "open",
+      "side": "right",
+      "implementation": "matrix",
+      "seconds_per_update": 0.0009811916650505736
+    },
+    {
+      "mode": "open",
+      "side": "right",
+      "implementation": "vector",
+      "seconds_per_update": 0.0004470060399034992
+    }
+  ],
+  "source_sha256": "578c6b77fc4e3ff933525539cbb1834d4f85f6a10d90a99977ac6e4d5337e590"
+}

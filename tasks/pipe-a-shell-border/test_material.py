@@ -128,15 +128,25 @@ class MaterialTests(unittest.TestCase):
         r=assess(m.x,m.y,m.volume,dx=m.dx,emitted_m3=float(m.volume.sum()),completed=True,tools_clear=True)
         self.assertEqual(r['score'],0.)
 
+    def test_round_mounds_do_not_become_shells_by_narrowing(self):
+        m=Icing(dx=.0005,xlim=(.22,.25),ylim=(-.05,.05))
+        for centre in (-.035,-.0175,0.,.0175,.035):
+            radius=np.hypot(m.X-.235,m.Y-centre)
+            height=.004*np.maximum(0.,1-(radius/.005)**2)
+            m.volume=np.maximum(m.volume,height*m.dx**2)
+        r=assess(m.x,m.y,m.volume,dx=m.dx,emitted_m3=float(m.volume.sum()),completed=True,tools_clear=True)
+        self.assertEqual(r['valid_shells'],0)
+        self.assertEqual(r['score'],0.)
+
     def test_fine_point_does_not_invalidate_a_qualifying_tail(self):
         m=Icing(dx=.0005,xlim=(.22,.25),ylim=(-.05,.05))
         for start in (-.04,-.025,-.01,.005,.02,.035):
             s=m.Y-start
-            width=np.where(s<.002,.008,np.maximum(.002,.008-(s-.002)))
-            height=np.where(s<.002,.004,np.maximum(.001,.004-.5*(s-.002)))
-            shape=(s>=0)&(s<.009)&(abs(m.X-.235)<width/2)
+            width=np.where(s<.002,.008,np.maximum(.002,.008-.6*(s-.002)))
+            height=np.where(s<.002,.004,np.maximum(.001,.004-.3*(s-.002)))
+            shape=(s>=0)&(s<.013)&(abs(m.X-.235)<width/2)
             m.volume[shape]=height[shape]*m.dx**2
-            tip=(s>=.009)&(s<.010)&(abs(m.X-.235)<.0003)
+            tip=(s>=.013)&(s<.014)&(abs(m.X-.235)<.0003)
             m.volume[tip]=.0006*m.dx**2
         r=assess(m.x,m.y,m.volume,dx=m.dx,emitted_m3=float(m.volume.sum()),completed=True,tools_clear=True)
         self.assertGreaterEqual(r['valid_shells'],5)
@@ -161,7 +171,7 @@ class MaterialTests(unittest.TestCase):
         # these samples are never presented as simulated icing or demo evidence.
         for start in (-.045,-.030,-.015,0.,.015,.030):
             s=(m.Y-start)/.015
-            width=np.where(s<.2,.002+.05*np.maximum(s,0),.012-.012*(s-.2))
+            width=np.where(s<.2,.002+.03*np.maximum(s,0),.008-.008*(s-.2))
             height=np.where(s<.2,.001+.02*np.maximum(s,0),.005-.005*(s-.2))
             mask=(s>=0)&(s<=1)&(abs(m.X-.235)<width/2)
             m.volume[mask]=np.maximum(m.volume[mask],height[mask]*m.dx**2)

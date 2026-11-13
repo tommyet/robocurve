@@ -13,6 +13,7 @@ import time
 import traceback
 import numpy as np
 from wheel_scene import build_scene
+from mechanics import RESET_PROFILES, starting_turn_errors
 from thread_coupling import NativeThreadCoupler,TensorNativeIO,rotation,body_paths
 
 
@@ -21,6 +22,8 @@ def main():
     p.add_argument('--out',type=Path,required=True)
     p.add_argument('--dt',type=float,default=.000025)
     p.add_argument('--seconds',type=float,default=.1)
+    p.add_argument('--reset-profile',choices=RESET_PROFILES,default='four-defect-reference')
+    p.add_argument('--solver-position-iterations',type=int,choices=(16,32,64,128),default=128)
     p.add_argument('--freeze-thread-diagnostic',action='store_true',help='No runtime material writes/lead torque; isolates native assembly')
     args=p.parse_args()
     if not .00001<=args.dt<=.0001 or not .025<=args.seconds<=2.:
@@ -29,10 +32,13 @@ def main():
     record={'schema':'native-wheel-scene-diagnostic-v2','complete':False,'calibrated':False,
             'evidence_type':'Native full scene with live thread coupling; no robot or task score',
             'dt':args.dt,'seconds':args.seconds,'samples':[],'completed_steps':0,'phase':'launch',
+            'solver_position_iterations':args.solver_position_iterations,
+            'reset_profile':args.reset_profile,
+            'initial_turn_offsets':starting_turn_errors(profile=args.reset_profile).tolist(),
             'frozen_material_diagnostic':args.freeze_thread_diagnostic,
             'first_step':'Initializes native tensor state; authored spring rest lengths/friction already present, lead torque begins on step2.',
             'source_sha256':{n:hashlib.sha256(Path(__file__).with_name(n).read_bytes()).hexdigest()
-                             for n in ('scene_probe.py','wheel_scene.py','native_probe.py','thread_coupling.py')}}
+                             for n in ('scene_probe.py','wheel_scene.py','native_probe.py','thread_coupling.py','mechanics.py','integrity.py')}}
     def save():
         record['wall_seconds']=time.monotonic()-started
         temporary=args.out/'scene-diagnostic.json.tmp'
@@ -60,7 +66,11 @@ def main():
         table.AddTranslateOp().Set(Gf.Vec3d(.3,0.,.7275));table.AddScaleOp().Set(Gf.Vec3f(1.,1.,.04))
         UsdPhysics.CollisionAPI.Apply(table.GetPrim())
         PhysxSchema.PhysxCollisionAPI.Apply(table.GetPrim()).CreateContactOffsetAttr(.000002)
-        metadata=build_scene(stage);stage.GetRootLayer().Export(str(args.out/'initial.usda'))
+        metadata=build_scene(stage,reset_profile=args.reset_profile)
+        for path in body_paths(metadata):
+            rb=PhysxSchema.PhysxRigidBodyAPI.Get(stage,path)
+            rb.CreateSolverPositionIterationCountAttr(args.solver_position_iterations)
+        stage.GetRootLayer().Export(str(args.out/'initial.usda'))
         cache_xf=UsdGeom.XformCache();authored={}
         for path in body_paths(metadata):
             matrix=cache_xf.GetLocalToWorldTransform(stage.GetPrimAtPath(path))
@@ -87,13 +97,19 @@ def main():
         record['native_body_paths']=io.paths
         if io.view.count!=130:raise RuntimeError('Expected 130 native wheel/wrench bodies')
         coupling=NativeThreadCoupler(stage_id,metadata,native_io=io)
+        timings={'material_s':0.,'native_simulation_s':0.,'observation_s':0.,'checkpoint_s':0.}
+        record['timing']=timings
         steps=round(args.seconds/args.dt);record['phase']='simulate';last_checkpoint=time.monotonic()
         for step in range(1,steps+1):
             if step>1:
+                tick=time.perf_counter()
                 coupling.before_step(frozen_material_diagnostic=args.freeze_thread_diagnostic)
+                timings['material_s']+=time.perf_counter()-tick;tick=time.perf_counter()
                 sim.simulate(args.dt,(step-1)*args.dt);sim.fetch_results()
+                timings['native_simulation_s']+=time.perf_counter()-tick
             record['completed_steps']=step
             if step==1 or step%max(1,round(.001/args.dt))==0 or step==steps:
+                tick=time.perf_counter()
                 io.begin_step();hp,hR=io.frame(metadata['hub_path']);wp,_=io.frame(metadata['wrench_path'])
                 points=np.array([io.frame(s['rim_path'])[0] for s in metadata['spokes']]);local=(points-hp)@hR
                 if not np.isfinite(local).all() or np.max(np.linalg.norm(local,axis=1))>.35:
@@ -104,8 +120,14 @@ def main():
                     'native_body_poses':io.transforms.tolist(),
                     'lateral_runout_m':float(np.ptp(local[:,2])),'wrench_position_m':wp.tolist(),
                     'thread_state':state})
-                if time.monotonic()-last_checkpoint>=5.:save();last_checkpoint=time.monotonic()
+                timings['observation_s']+=time.perf_counter()-tick
+                if time.monotonic()-last_checkpoint>=5.:
+                    tick=time.perf_counter();save();last_checkpoint=time.monotonic()
+                    timings['checkpoint_s']+=time.perf_counter()-tick
+        record['rim_integrity']=coupling.audit_integrity()
         record['complete']=True
+        record['native_parameter_updates']={'attempted':coupling.parameters.attempts,'written':coupling.parameters.writes,
+            'skipping_rule':'Only float32-identical values; no material tolerance or update decimation'}
         record['interpretation']='Execution only; assess geometry, tension and uncommanded thread drift before advancing.'
         stage.GetRootLayer().Export(str(args.out/'final-authored-parameters.usda'))
     except BaseException as error:

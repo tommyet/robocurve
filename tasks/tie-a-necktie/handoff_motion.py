@@ -25,7 +25,8 @@ def compile_handoff():
     rotations={'right':right_rotation,'left':right_rotation@np.diag((-1.,1.,-1.))}
     # A None target preserves the exact ordinary command of that hand.
     schedule=[
-        (3.,'approach below held wide strand',{'left':((.278,-.1104,.863),.6,'joint')}),
+        (3.,'approach clear of collar shoulders',{'left':((.250,-.060,.863),.6,'joint')}),
+        (2.,'align receiving fingers with wide strand',{'left':((.328,-.1104,.863),.6,'Cartesian')}),
         (2.,'receive wide tip region',{'left':((.278,-.197,.863),.6,'Cartesian')}),
         (1.,'pinch wide tip region',{'left':((.278,-.197,.863),0.,'Cartesian')}),
         (2.,'release original strand grasp',{'right':((.300,-.160,1.080),1.,'Cartesian')}),
