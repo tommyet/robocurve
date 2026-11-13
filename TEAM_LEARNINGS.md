@@ -60,6 +60,32 @@ developers and their agents, not a competition submission document.
 
 ## Review findings
 
+### 2026-11-13 — unboxing submission authorized and opened
+
+- Operator: root agent; development branch `codex/unbox-parcel`. The user
+  explicitly authorized submission despite the disclosed overlap with pending
+  carton-cutting PR #1856, then supplied the missing upload credential.
+- The token file previously described above was absent on this checkout. The
+  supplied credential was used only in the upload process environment; no token
+  was saved in source, artifacts, Git or these notes. Do not assume a persistent
+  `.env.robocurve` exists on this machine.
+- Uploaded the complete Dream video (0.0; 3,600 actions), scripted demo (1.0;
+  2,045 actions), and anonymous setup PNG as **M-HLP8KZ**. Both H.264/yuv420p
+  videos are below 50 MB. Raw media remains ignored under
+  `artifacts/unbox-plain-20261113/review/`.
+- Separate worktree `/private/tmp/robocurve-submit-unbox`, branch
+  `codex/submit-unbox-delivery`, starts from fresh upstream `a0afa6c` and contains
+  only `tasks/unbox-delivery/`; historical tabbed evidence and team notes were
+  excluded. Final submission commit `639183f` is pushed to the team fork.
+- Opened [PR #1953](https://github.com/robocurve/benchmark-tasks/pull/1953).
+  Its body discloses #1856 overlap and tape/friction fidelity approximations.
+  Automated receipt confirmed **TK-TE6M37**, waiting for review:
+  https://github.com/robocurve/benchmark-tasks/pull/1953#issuecomment-6867327432.
+  Receipt does not mean acceptance; do not merge the competition PR ourselves.
+- No new GPU work after the audited Dream run. VM was confirmed STOPPED at
+  23:08:46 UTC. Runtime/scorer hashes remain unchanged from the validated demo.
+
+
 ### 2026-11-13 — Runpod Isaac/YAM compatibility test passed
 
 - The user authorized one short GPU compatibility test. The final probe passed
