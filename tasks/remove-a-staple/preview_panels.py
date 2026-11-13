@@ -50,7 +50,7 @@ def main():
     p.add_argument('--joint-velocity-feedforward-from',type=int,help='From this scripted action, compensate native drive damping through the same bounded ordinary joint targets')
     p.add_argument('--tool-pose-servo',action='store_true',help='Disclosed scripted remover-pose feedback through ordinary joint targets; never Dream')
     p.add_argument('--tool-velocity-damping',action='store_true',help='Bounded ordinary position feedback opposes measured tool velocity during contact; no force or state writes')
-    p.add_argument('--position-iterations',type=int,choices=(32,64,128),default=128)
+    p.add_argument('--position-iterations',type=int,choices=(32,64,128,255),default=128)
     p.add_argument('--paper-gap-envelope-um',type=int,choices=(25,100),default=25,
         help='100 is an explicitly unscored continuity diagnostic; it does not change contact or forces')
     p.add_argument('--geometry-aware-continuity',action='store_true',

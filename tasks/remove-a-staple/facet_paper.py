@@ -222,7 +222,7 @@ def author_shell(stage,path,mesh,material=ShellMaterial(),color=(.94,.94,.91),*,
     """Author only before simulation. All shell facet bodies remain dynamic."""
     from pxr import Gf,Sdf,UsdGeom,UsdPhysics,PhysxSchema,UsdShade,Vt
     if velocity_iterations not in (1,4,32):raise ValueError('Unsupported diagnostic velocity iterations')
-    if position_iterations not in (32,64,128):raise ValueError('Unsupported diagnostic position iterations')
+    if position_iterations not in (32,64,128,255):raise ValueError('Unsupported diagnostic position iterations')
     model=mechanics(mesh,material,primitive_boxes);bodies=[];joints=[]
     mat=UsdShade.Material.Define(stage,path+'/Material')
     pm=UsdPhysics.MaterialAPI.Apply(mat.GetPrim())

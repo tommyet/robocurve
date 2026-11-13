@@ -30,7 +30,8 @@ def clear_for_narrow(start_action):
 
 
 def take_narrow(start_action, rest, nodes, *, longitudinal=1.25,
-                closing_tilt_degrees=20., shoulder_arc=.30, approach_opening=.6):
+                closing_tilt_degrees=20., shoulder_arc=.30, approach_opening=.6,
+                alignment_seconds=2.):
     """Measure and pinch the narrow end after the separate clearing motion.
 
     The shoulder arc avoids brushing the strip during joint-space alignment.
@@ -41,7 +42,8 @@ def take_narrow(start_action, rest, nodes, *, longitudinal=1.25,
     from yam_arena import ik
     from yam_arena.constants import SHOULDER, WRIST, GRIPPER, FINGER_OPEN
     if not (1.20 <= longitudinal <= 1.30 and 15. <= closing_tilt_degrees <= 30.
-            and 0. <= shoulder_arc <= .40 and approach_opening in (.6, 1.)):
+            and 0. <= shoulder_arc <= .40 and approach_opening in (.6, 1.)
+            and alignment_seconds in (2.,4.,6.)):
         raise ValueError('Narrow-end approach is outside its bounded choices')
     grasp = grasp_frame(rest, nodes, longitudinal=longitudinal, side='left')
     tilt = np.deg2rad(closing_tilt_degrees)
@@ -51,13 +53,14 @@ def take_narrow(start_action, rest, nodes, *, longitudinal=1.25,
     target = np.asarray(grasp['center_m']) + .012 * rotation[:, 2]
     pre = target - .035 * rotation[:, 2]
     plan = _compile(start_action, [
-        (2., 'left', pre, approach_opening, rotation, 'align outside measured narrow strand', 'joint'),
+        (alignment_seconds, 'left', pre, approach_opening, rotation, 'align outside measured narrow strand', 'joint'),
         (2., 'left', target, approach_opening, rotation, 'insert around narrow strand', 'cartesian'),
         (1., 'left', target, 0., rotation, 'pinch narrow strand', 'cartesian'),
         (2., 'left', target, 0., rotation, 'hold both strands', 'cartesian')],
         robust_joint=True)
-    for i in range(40):
-        plan['frames'][i]['action14'][0] += shoulder_arc * np.sin(np.pi * (i + 1) / 40) ** 2
+    alignment_steps=round(alignment_seconds*20)
+    for i in range(alignment_steps):
+        plan['frames'][i]['action14'][0] += shoulder_arc * np.sin(np.pi * (i + 1) / alignment_steps) ** 2
     actions = np.asarray([start_action] + [f['action14'] for f in plan['frames']])
     limits = np.tile([SHOULDER['velocity']/20]*3 + [WRIST['velocity']/20]*3 +
                     [GRIPPER['velocity']/abs(FINGER_OPEN)/20], 2)
@@ -69,8 +72,9 @@ def take_narrow(start_action, rest, nodes, *, longitudinal=1.25,
             raise ValueError('Narrow approach exceeds normal joint bounds')
     grasp.update(rotation=rotation.tolist(), target_tcp_m=target.tolist(),
                  closing_tilt_degrees=float(closing_tilt_degrees),
-                 shoulder_arc_rad=float(shoulder_arc),approach_opening=float(approach_opening))
-    plan.update(grasp=grasp, approach_steps=80,
+                 shoulder_arc_rad=float(shoulder_arc),approach_opening=float(approach_opening),
+                 alignment_seconds=float(alignment_seconds))
+    plan.update(grasp=grasp, approach_steps=alignment_steps+40,
                 native_nodes_sha256=hashlib.sha256(np.ascontiguousarray(nodes).tobytes()).hexdigest())
     return plan
 

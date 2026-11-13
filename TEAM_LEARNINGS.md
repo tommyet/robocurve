@@ -27,6 +27,62 @@ developers and their agents, not a competition submission document.
   and all GPUs are confirmed stopped, as requested. No paid tests are authorized
   for those ideas yet.
 
+## 2026-11-13 — measured contact outcomes and short motion comparisons
+
+- Shirt161 archive is verified and extracted locally. Fourteen sampled cloth
+  self-crossing checks and fifteen fixture checks are clear. Twelve robot
+  contact samples expose up to0.864mm penetration into the native cooked finger
+  hulls during the lift/turn, so the retained hem is not a valid pickup demo.
+  The same contact audit is clear through action200. Native166 starts from
+  that measured state and compares a180-action lift with unchanged finger
+  orientation, then right release;700s cap. All180 commanded poses pass the
+  actual315 cooked-hull fixture/inter-arm screen. This is an unscored reset-only
+  reconstruction; a complete fresh-start trial remains required.
+- Tie163 comparisons finish140 actions each (130.78/124.65s); both.6 and1.0
+  openings miss the narrow strand. Its final closing-axis offset is14.26/14.22mm.
+  Actual alignment overshoot reaches30.7mm before the fingers displace the cloth.
+  Native165 slows only alignment from2 to6 seconds, keeps the.6 opening and
+  original physics, and has a500s cap. The220-action candidate passes local
+  fixture and measured-material approach screens. No knot or narrow grasp yet.
+  Archive163 SHA256:53d04ca788ce4ffb3e6288794ff600f71686853082f77361e020733d6a085333.
+- Seam164 at255 position iterations fails after14 substeps/3.65ms:8.25% upper
+  cloth strain exceeds the unchanged5% domain. Peak edge force0.403N, zero cuts.
+  The reconstructed checkpoint omits solver warm starts; it does not establish
+  a full fresh-start255-iteration outcome. No material or scoring relaxation.
+- At22:01UTC the fully paginated inventory contains exactly two running Pods:
+  A406j5r534r2o9ghj andRTXc9rp6c7dpr908a; all four previous Pods are EXITED.
+  Both independent local shutdown watchdogs were verified alive. Wheel162
+  and staple164 are still running. Nineteen shirt and24 tie local tests pass;
+  these are not native task validation. No new Dream calls or upstream PRs.
+
+## 2026-11-13 — second GPU and numerical-resolution comparison
+
+- Restarting zzbxdyticazlm9 again returned explicit no-capacity400 and it was
+  verified EXITED. One replacement RTX6000Ada **c9rp6c7dpr908a** started at
+  **21:42:31UTC**, **$1.09/hour**,16vCPU/188GB host RAM/100GB container disk.
+  Its separate lifecycle/watchdog is in
+  `artifacts/six-task-material255-new-2026-11-13/`; the75-minute shutdown
+  deadline is approximately**22:57UTC**. A40**6j5r534r2o9ghj** remains active
+  with its separate22:55UTC deadline. These are the only two intended active Pods.
+- Native164 installs the exact pinned stack with a750s setup cap, then compares
+ 255 native solver position iterations without changing geometry, masses,
+  material or validity limits. Seam replays the same measured145/action282
+  state as153,3840Hz/.25speed/angular CCD, capped300s. Staple repeats the584-action
+  plan at2000HzPGS with the same feedforward, capped3200s. No outcome yet.
+  Native PhysX documents a maximum255 position iterations and improved joint
+  resolution with higher counts:
+  https://nvidia-omniverse.github.io/PhysX/physx/5.4.0/_api_build/class_px_rigid_dynamic.html
+- Shirt161 completed320 actions in1327.68s. The selected left hem rises roughly
+ 323mm and remains near its continuous pads after right release; native contact
+  audits are pending. The garment still partly rests on the support, so this is
+  a retained-grasp diagnostic, not hanging or peg success. Archive hash:
+  `677d1fc416b348d9115477c9dea16d00cd8e9853644a18cfc58366d7156432b9`.
+- Tie checkpoint baseline163/open0.6 completed140 actions in130.78s; the
+  full-opening comparison is running. Neither is submission evidence.
+- New fixed wheel layout also passes sampled whole-quarter reach and cooked
+  collision screens for nipple2. Physical wheel indexing is not automatically
+  needed; a complete direct second-nipple route still requires validation.
+
 ## 2026-11-13 — native160 contact audit and bounded follow-ups
 
 - Native160 completes1,180 tie actions in1,648.04s.31 sampled self-crossing,

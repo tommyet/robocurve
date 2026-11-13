@@ -426,21 +426,19 @@
   },
   "submission_ready": false,
   "latest_review_2026_11_13": {
-    "status": "Native160 completes1180 actions with no sampled self/fixture/robot intersections, but narrow pinch misses. No knot or task success.",
-    "batch": "160",
-    "actions": 1180,
-    "wall_seconds": 1648.0401206288952,
-    "right_patch_final_tcp_distance_m": 0.00964,
-    "left_patch_final_tcp_distance_m": 0.01481,
-    "left_patch_final_closing_axis_offset_m": 0.01428,
-    "self_audit_samples": 31,
-    "self_crossing_pairs": 0,
-    "native_robot_audit_samples": 14,
-    "native_robot_intersections": 0,
-    "fixture_audit_samples": 40,
-    "fixture_intersections": 0,
-    "archive_sha256": "2c34d5ac5e85053219dc0fa731df1f8244d8a43bd6677345fe0d879f16d2619f",
-    "latest_candidate": "Unscored checkpoint reconstruction compares .6 and fully open approaches; both pass local rigid/material screens. No new native outcome yet.",
-    "submission_ready": false
+    "status": "Both native163 narrow-grasp openings miss; no knot.",
+    "batch": "163",
+    "actions_per_comparison": 140,
+    "openings": [
+      0.6,
+      1.0
+    ],
+    "final_patch_closing_axis_offset_m": [
+      0.0142578004,
+      0.0142244106
+    ],
+    "cause": "Native joint alignment overshoots and pushes the strip outside the approaching fingers.",
+    "cpu_tests": 24,
+    "next": "Native165 tests the same measured-state trajectory with six-second alignment; a full fresh-start run remains required."
   }
 }

@@ -28,6 +28,8 @@ def main():
     p.add_argument('--convex-capsules-diagnostic',choices=('guards','all'),help='Equivalent convex surface candidate, before native physics only; never demo evidence')
     p.add_argument('--solver',choices=('TGS','PGS'),help='Explicit contact-constraint diagnostic; defaults to the archived native solver')
     p.add_argument('--thread-angular-ccd',action='store_true',help='Short diagnostic only: native speculative CCD for thread rotation, preserving sweep CCD and all physical parameters')
+    p.add_argument('--position-iterations',type=int,choices=(128,255),default=128,
+        help='Native constraint-resolution comparison only; no geometry, mass, material or validity changes')
     p.add_argument('--seconds',type=float,default=.1);a=p.parse_args()
     if not .05<=a.seconds<=.4:p.error('Short contact diagnostic requires0.05–0.4seconds')
     with np.load(a.state) as archive:data={key:archive[key] for key in archive.files}
@@ -127,7 +129,10 @@ def main():
         for prim in stage.Traverse():
             if prim.HasAPI(UsdPhysics.RigidBodyAPI):
                 api=PhysxSchema.PhysxRigidBodyAPI.Apply(prim)
+                api.CreateSolverPositionIterationCountAttr(a.position_iterations)
                 api.CreateSolverVelocityIterationCountAttr(1)
+        report['position_iterations']=a.position_iterations
+        for prim in stage.Traverse():
             if prim.IsA(UsdPhysics.Scene):
                 api=PhysxSchema.PhysxSceneAPI.Apply(prim)
                 api.CreateTimeStepsPerSecondAttr(a.physics_hz)
