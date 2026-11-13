@@ -55,6 +55,7 @@ def main():
     p.add_argument('--recenter-at-seam',action='store_true',help='Preconstruction translation of the whole world, including robot bases and fixed cameras')
     p.add_argument('--clear-thread-sampling',action='store_true',help='Use the same centreline with24 capsules per loop')
     p.add_argument('--passive-thread-bending',action='store_true',help='Disclosed passive straight-rest D6 thread bending; no task-aware forces')
+    p.add_argument('--convex-capsules-diagnostic',action='store_true',help='Matched scaled convex thread/guard colliders; preserves dimensions and mass, avoids native tiny-capsule contact fallback')
     p.add_argument('--external-forces-once',action='store_true',help='Configure TGS external forces once per physics step before scene construction; measured wheel control motivates this diagnostic')
     p.add_argument('--velocity-iterations',type=int,choices=(1,32),default=None,
                    help='Explicit scene-level velocity iteration count, including robot articulations; preserves ordinary joint/action limits')
@@ -74,6 +75,8 @@ def main():
     p.add_argument('--contact-forensics',action='store_true',
                    help='Unscored ready hold only, at most 1 s: record every-step crossing depth while retaining invalidity; no cutting, and strain, blade damage or disjoint joints still stop the run')
     a=p.parse_args()
+    import os
+    os.environ['ROBOCURVE_SEAM_CONVEX_CAPSULE_DIAGNOSTIC']='1' if a.convex_capsules_diagnostic else '0'
     if a.keep_constructor_state:
         p.error('Keeping constructor state is unsupported: Gym requires env.reset() before env.step(). Omit --keep-constructor-state for the normal episode lifecycle.')
     if not 1<=a.steps<=2400:p.error('Use 1 to 2400 control steps')

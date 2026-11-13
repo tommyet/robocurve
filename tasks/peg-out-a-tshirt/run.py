@@ -74,6 +74,8 @@ def native_audit(stage,cloth_names,peg_names):
                 result['cloth'][name]={'path':path,'schemas':list(schemas),
                      'rigid_body':prim.HasAPI(UsdPhysics.RigidBodyAPI),
                      'self_collision':prim.GetAttribute('physxDeformableBody:selfCollision').Get(),
+                     'speculative_ccd':prim.GetAttribute('physxDeformableBody:enableSpeculativeCCD').Get(),
+                     'collision_pair_update_frequency':prim.GetAttribute('physxDeformableBody:collisionPairUpdateFrequency').Get(),
                      'rest_bend_angles_default':prim.GetAttribute('omniphysics:restBendAnglesDefault').Get(),
                      'solver_position_iterations':prim.GetAttribute('physxDeformableBody:solverPositionIterationCount').Get()}
         for name in peg_names:
@@ -116,6 +118,7 @@ def main():
     p.add_argument('--regular-refined',action='store_true',help='Use the regular2.5mm cloth grid for every policy reset, preserving1.6mm seam width')
     p.add_argument('--raised-support-diagnostic',action='store_true',help='Use an explicitly180mm laundry support and a measured lateral grasp; otherwise100mm')
     p.add_argument('--continuous-pad-diagnostic',action='store_true',help='Reobserve the garment at action100 and target the continuous finger pads with ordinary joint commands')
+    p.add_argument('--surface-contact-diagnostic',action='store_true',help='Native speculative cloth CCD and eight collision-pair updates; unchanged cloth material and thickness')
     p.add_argument('--reset-diagnostic',action='store_true',help='Read-only early reset native nodes and topology; unchanged reset physics')
     p.add_argument('--binary-cloth-trace',action='store_true',help='Preserve all native float32 cloth states in binary arrays, reducing diagnostic JSON overhead')
     p.add_argument('--solver-iterations',type=int,choices=(32,128),default=32,help='Native cloth numerical convergence diagnostic; material unchanged')
@@ -127,6 +130,7 @@ def main():
     p.add_argument('--check-only',action='store_true',help='Compile source and check JSON without loading a simulator')
     args=p.parse_args()
     os.environ['ROBOCURVE_SHIRT_RAISED_SUPPORT']='1' if args.raised_support_diagnostic else '0'
+    os.environ['ROBOCURVE_SHIRT_SURFACE_CONTACT_DIAGNOSTIC']='1' if args.surface_contact_diagnostic else '0'
     if args.regular_refined and args.contact_refined:p.error('Select one garment mesh')
     fixed_plan=fixed_actions=None
     if args.mode=='motion-probe':
@@ -282,6 +286,10 @@ def main():
         if not names:
             raise RuntimeError('Task custom assets were not registered')
         report['native_scene_audit']=native_audit(stage,list(arena_cloth.SPECS),list(PEG_SPECS))
+        if args.surface_contact_diagnostic:
+            actual=report['native_scene_audit']['cloth']['tshirt']
+            if actual['speculative_ccd'] is not True or actual['collision_pair_update_frequency']!=8:
+                raise RuntimeError('Requested contact settings did not reach the native garment')
         if report['native_scene_audit']['cloth']['tshirt']['solver_position_iterations']!=args.solver_iterations:
             raise RuntimeError('Cloth iteration request did not reach native scene')
         if args.external_forces_once_diagnostic and any(p['settings']['enableExternalForcesEveryIteration'] for p in report['native_scene_audit']['physics_scenes']):

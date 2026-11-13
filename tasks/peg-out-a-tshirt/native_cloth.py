@@ -72,6 +72,10 @@ def author_cloth(stage, path, mesh, material=Fabric(), points=None, color=(.08,.
     _set(prim,'omniphysics:restBendAnglesDefault','restShapeDefault')
     _set(prim,'omniphysics:mass',mesh.audit()['surface_area_m2']*material.thickness*material.density)
     _set(prim,'physxDeformableBody:selfCollision',True)
+    import os
+    if os.environ.get('ROBOCURVE_SHIRT_SURFACE_CONTACT_DIAGNOSTIC') == '1':
+        _set(prim,'physxDeformableBody:enableSpeculativeCCD',True)
+        _set(prim,'physxDeformableBody:collisionPairUpdateFrequency',8)
     _set(prim,'physxDeformableBody:disableGravity',False)
     _set(prim,'physxDeformableBody:solverPositionIterationCount',material.solver_iterations)
     UsdPhysics.CollisionAPI.Apply(prim)

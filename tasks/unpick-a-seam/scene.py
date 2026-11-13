@@ -177,6 +177,10 @@ def task_object(spec):
             UsdPhysics.CollisionAPI.Apply(guard.GetPrim())
             collision=PhysxSchema.PhysxCollisionAPI.Apply(guard.GetPrim())
             collision.CreateContactOffsetAttr(.00005);collision.CreateRestOffsetAttr(0.)
+        import os
+        if os.environ.get('ROBOCURVE_SEAM_CONVEX_CAPSULE_DIAGNOSTIC')=='1':
+            from convex_capsule import replace_capsules
+            replace_capsules(stage,[h+'/Guard0',h+'/Guard1'])
         return prim
     obj.spawner_cfg.func=physical_spawn
     obj.object_cfg.spawn.func=physical_spawn

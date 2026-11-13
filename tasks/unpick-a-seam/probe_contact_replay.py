@@ -25,6 +25,8 @@ def main():
     p.add_argument('--physics-hz',type=int,choices=(960,1920,3840),default=960)
     p.add_argument('--speed',type=float,choices=(.25,1.),default=1.)
     p.add_argument('--effective-contact-diagnostic',action='store_true')
+    p.add_argument('--convex-capsules-diagnostic',choices=('guards','all'),help='Equivalent convex surface candidate, before native physics only; never demo evidence')
+    p.add_argument('--solver',choices=('TGS','PGS'),help='Explicit contact-constraint diagnostic; defaults to the archived native solver')
     p.add_argument('--seconds',type=float,default=.1);a=p.parse_args()
     if not .05<=a.seconds<=.4:p.error('Short contact diagnostic requires0.05–0.4seconds')
     with np.load(a.state) as archive:data={key:archive[key] for key in archive.files}
@@ -100,6 +102,11 @@ def main():
             threads.append(dict(bodies=bodies,joints=joints,lengths=data['thread_lengths'][24*i:24*(i+1)],radius_m=.0004))
             thread_paths.extend(bodies)
         for name in ('handle','blade'):initial_body(root+'/ripper_'+name,data[name],data[name+'_velocity'])
+        if a.convex_capsules_diagnostic:
+            from convex_capsule import replace_capsules
+            paths_to_replace=[root+'/ripper_handle/Guard0',root+'/ripper_handle/Guard1']
+            if a.convex_capsules_diagnostic=='all':paths_to_replace += [path+'/Shape' for path in thread_paths]
+            report['convex_capsule_candidate']=replace_capsules(stage,paths_to_replace)
         initial_body(root+'/clamp_moving_jaw',data['jaw'],data['jaw_velocity'])
         UsdPhysics.RigidBodyAPI(stage.GetPrimAtPath(root+'/ripper_handle')).CreateKinematicEnabledAttr(True)
         if a.effective_contact_diagnostic:
@@ -111,6 +118,7 @@ def main():
             if prim.IsA(UsdPhysics.Scene):
                 api=PhysxSchema.PhysxSceneAPI.Apply(prim)
                 api.CreateTimeStepsPerSecondAttr(a.physics_hz)
+                if a.solver is not None:api.CreateSolverTypeAttr(a.solver)
                 report['native_scene']=dict(solver=api.GetSolverTypeAttr().Get(),gpu=api.GetEnableGPUDynamicsAttr().Get(),
                     ccd=api.GetEnableCCDAttr().Get(),force_each_iteration=api.GetEnableExternalForcesEveryIterationAttr().Get())
         carb.settings.get_settings().set_bool('/physics/disableContactProcessing',False)
@@ -167,8 +175,15 @@ def main():
                 if step==1:
                     from effective_tool_contact import query_guards
                     report['effective_guard_rays']=query_guards(array(handle.get_transforms())[0],root+'/ripper_handle')
+                    from effective_tool_contact import query_native_bounds
+                    report['effective_tool_bounds']=query_native_bounds(stage_id,root+'/ripper_handle',app)
+                    if a.convex_capsules_diagnostic=='all':
+                        report['effective_thread_bounds']=query_native_bounds(stage_id,thread_paths[0],app)
                 hf=np.zeros((144,3)) if not step else array(handle_contact.get_contact_force_matrix(dt=dt))[0,handle_order]
                 report.setdefault('handle_contact_history',[]).append(dict(time_s=t,maximum_force_n=float(np.linalg.norm(hf,axis=1).max()),force_by_thread_link=hf.tolist()))
+                if step:
+                    from effective_tool_contact import tool_contacts
+                    report.setdefault('native_contact_points',[]).append(dict(time_s=t,pairs=tool_contacts(physics,root)))
             forces=np.zeros((144,3)) if not step else array(contact.get_contact_force_matrix(dt=dt))[0,force_order]
             edge_force=-forces@br[:,0];peak_force=max(peak_force,float(edge_force.max()))
             restore_separated_cut_contacts(stage,threads,segments)

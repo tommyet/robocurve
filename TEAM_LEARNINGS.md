@@ -27,6 +27,42 @@ developers and their agents, not a competition submission document.
   and all GPUs are confirmed stopped, as requested. No paid tests are authorized
   for those ideas yet.
 
+## 2026-11-13 — contact fixes during authorized completion
+
+- A second Pod x6benni8rtvknu started17:31UTC, also$1.09/hour. Both run
+  bounded jobs with independent local stop watchdogs. At17:57, full inventory
+  contains only these two active Pods; new-session estimated compute is$1.00.
+  Both watchdog deadlines were renewed to18:42UTC for useful active work.
+  Old$14.55 incurred estimate is separate and preserved; billing is unavailable.
+- Tie131 completes the580-action handoff in622s. The receiving hand retains
+  the wide tip;30 sampled states have no transverse cloth crossings,12 robot
+  checks have no shrunken-hull intersections (deepest node96µm), and31 fixture
+  checks are clear. Native speculative cloth CCD plus8 pair updates resolves
+  the earlier sampled crossings without changing material/thickness. This is
+  a handoff, not a knot. A reachable carry before near-tip regrasp is screened.
+- Shirt129 misses its pinch. Actual URDF hull sections at local y=-8mm,z=-10mm
+  have a0.8302mm residual gap at zero command, so normalized0.018 gives2.5204mm,
+  wider than two0.6mm layers. Candidate135 uses0.0025 (1.0650mm gap), retains
+  the hem and lifts307.8mm, but has102 sampled self-crossings after the turn and
+  up to1.78mm robot penetration. It is invalid.139 tests the native collision
+  settings that passed tie131; do not call grip retention task success.
+- Staple127 stops at272 during slow heel descent: upper-paper positive opening
+  reaches153.57µm, above the unchanged150µm model-domain limit. Native heel
+  drops about0.9mm across three control frames despite a slow target. A bounded
+  ordinary tool-velocity damping candidate opposes that overshoot; no new force,
+  object-state write, threshold relaxation or extraction success is involved.
+- Seam134 records native guard contacts at exactly-0.9mm separation with an
+  axial normal. NVIDIA's public PCM capsule/capsule routine uses an absolute
+  squared-distance1e-6 fallback, matching these submillimetre contacts:
+  https://raw.githubusercontent.com/NVIDIA-Omniverse/PhysX/main/physx/source/geomutils/src/pcm/GuPCMContactCapsuleCapsule.cpp
+  Guard-only convex136 removes the immediate failure, but tiny metre-space
+  convex thread cooking137 produces a distorted asymmetric hull.138 cooks
+  vertices in millimetres with an ordinary0.001 mesh scale. Parsed dimensions
+  and volume now match the intended242-vertex capsule approximation;384 steps
+  at960Hz complete with no cut or model-domain failure. It remains an unscored
+  reconstructed contact diagnostic. A fresh native reset and robot first cut
+  are required before promotion. All source/results stay immutable by batch.
+
 ## 2026-11-13 — paired cake runs and remaining contact failures
 
 - Cake111 now has both complete native episodes: scripted demo1.0 in1,114

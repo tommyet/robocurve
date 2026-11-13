@@ -48,6 +48,7 @@ def main():
     p.add_argument('--judging-views',action='store_true',help='Fixed close review cameras, never policy inputs')
     p.add_argument('--joint-tracking',action='store_true',help='Bounded ordinary-joint integral tracking, without object feedback')
     p.add_argument('--tool-pose-servo',action='store_true',help='Disclosed scripted remover-pose feedback through ordinary joint targets; never Dream')
+    p.add_argument('--tool-velocity-damping',action='store_true',help='Bounded ordinary position feedback opposes measured tool velocity during contact; no force or state writes')
     p.add_argument('--position-iterations',type=int,choices=(32,64,128),default=128)
     p.add_argument('--paper-gap-envelope-um',type=int,choices=(25,100),default=25,
         help='100 is an explicitly unscored continuity diagnostic; it does not change contact or forces')
@@ -63,6 +64,7 @@ def main():
     if a.dream and (a.plan or a.joint_tracking or a.tool_pose_servo or a.paper_gap_envelope_um!=25 or a.geometry_aware_continuity):p.error('Dream cannot use scripted feedback or a diagnostic continuity envelope')
     if a.joint_tracking and not a.plan:p.error('Joint tracking requires a plan')
     if a.tool_pose_servo and (not a.plan or not a.joint_tracking):p.error('Tool-pose servo requires a plan and bounded joint tracking')
+    if a.tool_velocity_damping and not a.tool_pose_servo:p.error('Tool velocity damping requires scripted pose feedback')
     if not 1<=a.steps<=(600 if a.plan or a.dream else 100):p.error('Bounded preview step count exceeded')
     import runtime_config
     import coordinate_frame
@@ -192,7 +194,7 @@ def main():
             report['tracking_disclosure']='Only robot joint observations; no native object poses, attachments, forces or actuator-effort changes.'
         if a.tool_pose_servo:
             from tool_pose_servo import RemoverPoseServo
-            tool_servo=RemoverPoseServo(plan)
+            tool_servo=RemoverPoseServo(plan,velocity_damping_s=.1 if a.tool_velocity_damping else 0.)
             report['tool_servo_disclosure']='The scripted demo reads native remover pose and observed robot joints to compensate grasp slip after pickup. It issues only ordinary bounded joint targets; no object pose, force, material, attachment or effort-limit writes. Dream cannot use this controller.'
         hardware=arena_hardware.hardware_state(emb._env,'hardware')
         for step in range(a.steps+1):
@@ -210,7 +212,8 @@ def main():
                     target=nominal
                     if tool_servo is not None:
                         tool_pose=hardware.body_poses[list(hardware.body_names).index('remover')]
-                        target=tool_servo.command(step,nominal,np.asarray(observation.state['joint_pos']),tool_pose)
+                        tool_velocity=hardware.body_velocities[list(hardware.body_names).index('remover')]
+                        target=tool_servo.command(step,nominal,np.asarray(observation.state['joint_pos']),tool_pose,tool_velocity)
                     issued=target if tracker is None else tracker.command(target,np.asarray(observation.state['joint_pos']))
                 action=torch.as_tensor(issued[None],device=base.device,dtype=torch.float32)
                 tick=time.perf_counter();emb._env.step(action)

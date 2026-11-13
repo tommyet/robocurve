@@ -89,6 +89,10 @@ def author_thread(stage,path,nodes,*,radius=.0002,density=1400.,open_diagnostic=
         result['bending']={'rigidity_nm2':bending.rigidity_nm2,'damping_ratio':bending.damping_ratio,
                           'stiffness_nm_rad':bend_stiffness.tolist(),'damping_nms_rad':bend_damping.tolist(),
                           'straight_rest':True,'axial_twist_free':True,'hard_angular_limits':False}
+    import os
+    if os.environ.get('ROBOCURVE_SEAM_CONVEX_CAPSULE_DIAGNOSTIC')=='1':
+        from convex_capsule import replace_capsules
+        result['convex_capsule_candidate']=replace_capsules(stage,[body+'/Shape' for body in bodies])
     if open_diagnostic:set_joint_enabled(stage,result,0,False)
     return result
 

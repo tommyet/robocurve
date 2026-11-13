@@ -30,14 +30,17 @@ def compensate_grasp(nominal_tcp, nominal_rotation, measured_tcp, measured_rotat
 
 
 class RemoverPoseServo:
-    def __init__(self,plan):
+    def __init__(self,plan,velocity_damping_s=0.):
         self.plan=plan
         stages=[f['stage'] for f in plan['frames']]
         self.first=stages.index('Orient above the crown')+1
         self.release=stages.index('Release the remover and extracted staple')+1
+        self.velocity_damping_s=float(velocity_damping_s)
+        if not 0.<=self.velocity_damping_s<=.1:raise ValueError('Bounded tool damping required')
+        self.contact_first=next((i+1 for i,s in enumerate(stages) if s=='Settle the heel6mm above paper'),self.first)
         self.last={'active':False}
 
-    def command(self,step,nominal,measured_joint_positions,native_remover_pose):
+    def command(self,step,nominal,measured_joint_positions,native_remover_pose,native_remover_velocity=None):
         if step<self.first or step>=self.release:
             self.last={'active':False}
             return np.asarray(nominal,float).copy()
@@ -51,6 +54,14 @@ class RemoverPoseServo:
         p,R=ik.tcp_pose(target[7:13],station.BASES['right'])
         current_p,current_R=ik.tcp_pose(observed[7:13],station.BASES['right'])
         desired_p,desired_R,report=compensate_grasp(p,R,current_p,current_R,pose,TOOL_TCP,GRIP)
+        correction=np.zeros(3)
+        if self.velocity_damping_s and step>=self.contact_first:
+            velocity=np.asarray(native_remover_velocity,float)
+            if velocity.shape!=(6,) or not np.isfinite(velocity).all():raise ValueError('Native rigid velocity required for damping')
+            correction=np.clip(-self.velocity_damping_s*velocity[:3],-.001,.001)
+            desired_p=desired_p+correction
+        report['velocity_damping_s']=self.velocity_damping_s
+        report['bounded_velocity_correction_m']=correction.tolist()
         if report['tcp_grasp_correction_m']>.02:
             raise RuntimeError('Remover grasp changed by more than20mm')
         q,pe,re=ik.solve(desired_p,ik.matrix_to_quat_xyzw(desired_R),target[7:13],

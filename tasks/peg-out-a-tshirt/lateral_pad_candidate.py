@@ -8,6 +8,13 @@ import copy
 import hashlib
 import numpy as np
 
+# At local (y=-8 mm, z=-10 mm), the actual collision hulls retain an
+# 0.8302 mm gap even at zero command. A normalized 0.018 command therefore
+# leaves 2.5204 mm, wider than the two 0.6 mm fabric layers. This candidate
+# commands a 1.0650 mm aperture through ordinary finger drives. Retention and
+# native contact integrity still have to be demonstrated.
+PINCH_OPENING = .0025
+
 
 def reobserve(reference, measured_action, rest, nodes):
     from yam_arena import ik, station
@@ -48,11 +55,11 @@ def reobserve(reference, measured_action, rest, nodes):
         frames = []
         schedule = [
             (2., target, .2, rotation, 're-observed insertion at continuous pads'),
-            (1., target, .018, rotation, 'ordinary finite pinch at continuous pads'),
-            (1., np.array((.1494, target[1], target[2])), .018, rotation,
+            (1., target, PINCH_OPENING, rotation, 'ordinary finite pinch at continuous pads'),
+            (1., np.array((.1494, target[1], target[2])), PINCH_OPENING, rotation,
              'pull forward clear of support'),
             (1., np.array((.1494, sign * .115, .898 if side == 'left' else .902)),
-             .018, ROTATIONS[side], 'turn held hem in clear space')]
+             PINCH_OPENING, ROTATIONS[side], 'turn held hem in clear space')]
         for seconds, position, grip, orientation, label in schedule:
             p0, r0 = ik.tcp_pose(q, station.BASES[side])
             opening0 = opening
@@ -78,6 +85,13 @@ def reobserve(reference, measured_action, rest, nodes):
     result = copy.deepcopy(reference)
     result['frames'][100:200] = [dict(action14=a['action'] + b['action'], stage=a['stage'])
                                for a, b in zip(arms['left'], arms['right'])]
+    # Preserve the new pinch during the lift and preserve the original smooth
+    # release timing. Merely changing the closure phase would reopen the jaws.
+    for frame in result['frames'][200:]:
+        for index in (6, 13):
+            original = float(frame['action14'][index])
+            fraction = np.clip((original - .018) / (.6 - .018), 0., 1.)
+            frame['action14'][index] = float(PINCH_OPENING + fraction * (.6 - PINCH_OPENING))
     actions = np.array([np.r_[READY, 1., READY, 1.]] +
                        [f['action14'] for f in result['frames']])
     limits = np.tile([SHOULDER['velocity'] / 20] * 3 + [WRIST['velocity'] / 20] * 3 +
@@ -87,6 +101,8 @@ def reobserve(reference, measured_action, rest, nodes):
     result['candidate_status'] = 'diagnostic; native retention not yet established'
     result['reobservation_at_action'] = 100
     result['pad_candidate_calibration'] = dict(patches=patches, kinematics=audits,
+        normalized_pinch_opening=PINCH_OPENING,
+        nominal_pad_aperture_m=.0008302080055186407 + .0939 * PINCH_OPENING,
         input_nodes_sha256=hashlib.sha256(np.ascontiguousarray(nodes).tobytes()).hexdigest(),
         state_writes=False)
     return result

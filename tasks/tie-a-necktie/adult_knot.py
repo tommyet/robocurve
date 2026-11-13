@@ -9,6 +9,12 @@ import numpy as np
 from adult_handoff import _compile
 
 
+def carry_for_regrasp(start_action):
+    from cross_motion import yaw_rotation
+    return _compile(start_action,[(3.,'left',(.32,-.14,1.25),0.,yaw_rotation(150.),
+        'carry wide tip into reachable regrasp area','cartesian')])
+
+
 def take_wide_with_right(start_action,rest,nodes,longitudinal=.15,tilt_degrees=0.):
     """Move the right pinch nearer the tip while the left hand holds it.
 
@@ -24,12 +30,16 @@ def take_wide_with_right(start_action,rest,nodes,longitudinal=.15,tilt_degrees=0
     angle=np.deg2rad(tilt_degrees)
     turn=np.array([[1.,0.,0.],[0.,np.cos(angle),-np.sin(angle)],[0.,np.sin(angle),np.cos(angle)]])
     R=np.asarray(grasp['rotation'])@turn
+    # The transferred strip can face either way. Swapping opposed fingers
+    # preserves the closing plane while keeping the wrist above the cloth.
+    if R[2,1]>0.:
+        R=R@np.diag((-1.,-1.,1.))
     target=np.asarray(grasp['center_m'])+.020*R[:,2]
     if not (.15<target[0]<.45 and -.30<target[1]<.15 and .85<target[2]<1.35):
         raise ValueError('Measured near-tip patch lies outside the planned workspace')
     left_p,left_R=ik.tcp_pose(np.asarray(start_action)[:6],station.BASES['left'])
     schedule=[
-        (2.,'right',(.17,-.28,1.28),.6,yaw_rotation(30.),'clear the held wide tip','cartesian'),
+        (2.,'right',(.27,-.24,1.20),.6,yaw_rotation(30.),'clear the held wide tip','cartesian'),
         (2.,'right',target-.065*R[:,2],.6,R,'align outside the measured near-tip patch','cartesian'),
         (2.,'right',target,.6,R,'insert right fingers around the wide strip','cartesian'),
         (1.,'right',target,0.,R,'pinch the wide strip near its tip','cartesian'),

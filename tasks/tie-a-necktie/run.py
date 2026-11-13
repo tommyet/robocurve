@@ -116,6 +116,7 @@ def main():
     p.add_argument('--adult-collar',action='store_true',help='Explicit diagnostic145cm tie and standalone folded-collar form')
     p.add_argument('--state-assisted-grasp',action='store_true',help='Disclosed scripted adult pickup: use measured reset cloth to select ordinary finger targets')
     p.add_argument('--state-assisted-handoff',action='store_true',help='Disclosed scripted adult tip transfer: measure the held free tip before ordinary receiving-finger actions')
+    p.add_argument('--state-assisted-regrasp',action='store_true',help='Extend the verified handoff with a screened carry and measured ordinary near-tip regrasp')
     p.add_argument('--surface-contact-diagnostic',action='store_true',help='Native speculative cloth contact and eight within-step collision-pair updates; no material or rest-gap changes')
     p.add_argument('--judging-views',action='store_true',help='Record additional native960×720 front/rear assessor videos')
     p.add_argument('--out',type=Path)
@@ -128,6 +129,11 @@ def main():
             p.error('motion-probe requires a precomputed --plan')
         from fixed_motion import load
         fixed_plan,fixed_actions=load(args.plan)
+        if args.state_assisted_regrasp:
+            import copy
+            if len(fixed_actions)!=580:p.error('Regrasp diagnostic requires the580-action handoff prefix')
+            fixed_plan['frames'] += [copy.deepcopy(fixed_plan['frames'][-1]) for _ in range(300)]
+            fixed_actions=np.asarray([f['action14'] for f in fixed_plan['frames']],float)
         if bool(fixed_plan.get('requires_inside_out_reset')) != args.inside_out_reset:
             p.error('Motion and explicitly selected initial face do not match')
         if fixed_plan.get('do_not_run_reason'):
@@ -152,9 +158,10 @@ def main():
     if args.mode=='dream' and not(args.adult_collar and args.inside_out_reset):p.error('Current Dream candidate requires the adult inside-out reset matching its demo')
     if not 0<=args.seed<2**32:
         p.error('Seed must be an unsigned 32-bit integer')
-    if args.state_assisted_grasp and (args.mode!='motion-probe' or not args.adult_collar or args.steps not in ((280,580) if args.state_assisted_handoff else (220,))):
+    if args.state_assisted_grasp and (args.mode!='motion-probe' or not args.adult_collar or args.steps not in ((880,) if args.state_assisted_regrasp else (280,580) if args.state_assisted_handoff else (220,))):
         p.error('Adult scripted pickup requires 220 actions; the transfer permits a 280-action held-pose diagnostic or 580 actions')
     if args.state_assisted_handoff and not args.state_assisted_grasp:p.error('Tip transfer requires the measured adult pickup prefix')
+    if args.state_assisted_regrasp and not (args.state_assisted_handoff and args.surface_contact_diagnostic):p.error('Regrasp requires the validated surface-contact handoff')
     if args.state_assisted_handoff and args.steps>280:
         from adult_handoff import RECEIVING_ROUTE_RELEASED
         if not RECEIVING_ROUTE_RELEASED:
@@ -267,6 +274,9 @@ def main():
             if args.state_assisted_handoff:
                 from adult_handoff import template
                 fixed_plan=template(fixed_plan)
+                if args.state_assisted_regrasp:
+                    import copy
+                    fixed_plan['frames'] += [copy.deepcopy(fixed_plan['frames'][-1]) for _ in range(300)]
                 raised_clearance=audit(dict(frames=fixed_plan['frames'][220:280]))
                 if not raised_clearance['passed']:raise RuntimeError('Raised transfer pose fails commanded hull rejection check')
             fixed_plan.pop('do_not_run_reason',None)
@@ -358,7 +368,7 @@ def main():
                 (args.out/'handoff-hull-audit.json').write_text(json.dumps(selected['rigid'],indent=2)+'\n')
                 (args.out/'handoff-cloth-approach-audit.json').write_text(json.dumps(selected['approach'],indent=2)+'\n')
                 report['handoff_route_selection']=selected['selection']
-                fixed_plan['frames'][280:]=continuation['frames'];fixed_plan['handoff_calibration']=continuation['grasp']
+                fixed_plan['frames'][280:580]=continuation['frames'];fixed_plan['handoff_calibration']=continuation['grasp']
                 fixed_actions=np.asarray([f['action14'] for f in fixed_plan['frames']],float)
                 if np.any(fixed_actions<emb._low) or np.any(fixed_actions>emb._high):raise ValueError('Receiving trajectory exceeds normal joint limits')
                 if np.any(np.abs(np.diff(fixed_actions[279:],axis=0))>delta_limit*1.001):raise ValueError('Receiving trajectory exceeds normal action speeds')
@@ -367,6 +377,28 @@ def main():
                 receiving_check_steps={280+continuation['release_original_from'],281+continuation['release_original_through']}
                 report['receiving_check_steps']=sorted(receiving_check_steps)
                 report['state_assisted_handoff']=continuation['grasp'];save()
+            if args.state_assisted_regrasp and step in (581,641):
+                from adult_knot import carry_for_regrasp,take_wide_with_right,classify_patch_contacts
+                from audit_adult_motion import audit
+                from audit_reset_approach import screen
+                native=arena_cloth.state(emb._env,'tie');mesh=arena_cloth.SPECS['tie'].mesh
+                np.savez_compressed(args.out/f'regrasp-input-{step}.npz',nodes=native.nodes,rest=mesh.rest,faces=mesh.faces,action=fixed_actions[step-2])
+                fragment=(carry_for_regrasp(fixed_actions[step-2]) if step==581 else
+                    take_wide_with_right(fixed_actions[step-2],mesh.rest,native.nodes))
+                rigid=audit(fragment)
+                (args.out/f'regrasp-rigid-{step}.json').write_text(json.dumps(rigid,indent=2)+'\n')
+                if not rigid['passed']:raise RuntimeError('Regrasp continuation intersects a rigid fixture or other arm')
+                if step==641:
+                    hits=screen(fragment,native.nodes,mesh.faces,steps=range(1,121),side='right',inflation=arena_cloth.SPECS['tie'].fabric.thickness/2)
+                    blocked,intended=classify_patch_contacts(hits,mesh.rest,mesh.faces,longitudinal=.15)
+                    (args.out/'regrasp-cloth-approach.json').write_text(json.dumps(dict(blocked=blocked,intended=intended),indent=2)+'\n')
+                    if blocked:raise RuntimeError('Regrasp approach crosses material outside its selected pinch patch')
+                fixed_plan['frames'][step-1:step-1+len(fragment['frames'])]=fragment['frames']
+                fixed_actions=np.asarray([f['action14'] for f in fixed_plan['frames']],float)
+                if np.any(fixed_actions<emb._low) or np.any(fixed_actions>emb._high):raise ValueError('Regrasp exceeds joint bounds')
+                if np.any(abs(np.diff(fixed_actions,axis=0))>delta_limit*1.001):raise ValueError('Regrasp exceeds ordinary action speeds')
+                (frozen/'fixed-motion.json').write_text(json.dumps(fixed_plan,indent=2)+'\n')
+                report['executed_plan_sha256']=hashlib.sha256((frozen/'fixed-motion.json').read_bytes()).hexdigest();save()
             if args.state_assisted_handoff and step in receiving_check_steps:
                 from adult_handoff import receiving_material_present
                 native=arena_cloth.state(emb._env,'tie');mesh=arena_cloth.SPECS['tie'].mesh
