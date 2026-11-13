@@ -26,17 +26,25 @@ class HardwareState(ObjectState):
 
 BODY_NAMES=tuple(f'staple/wire_{i:03d}' for i in range(len(clinched_staple_centerline(sample_m=.0005))-1))+('remover',)
 ASSEMBLIES={}
+PANEL_CONTACT_CANDIDATE=False
 
 
 def _spawn(path,cfg,translation=None,orientation=None,**kwargs):
     from isaaclab.sim.utils.stage import get_current_stage
-    from pxr import UsdGeom
+    from pxr import Gf,UsdGeom,PhysxSchema
     from full_scene import build_scene
     import runtime_config
     stage=get_current_stage();root=str(path)[:-len(cfg.body_name)-1]
     if cfg.assembly_name not in ASSEMBLIES:
         metadata=build_scene(stage,root=root,include_table=False,include_papers=False,
             reset_profile=runtime_config.RESET_PROFILE,mesh_profile=runtime_config.MESH_PROFILE)
+        if PANEL_CONTACT_CANDIDATE:
+            from coordinate_frame import OFFSET_M
+            UsdGeom.Xform.Define(stage,root).AddTranslateOp().Set(Gf.Vec3d(*OFFSET_M))
+            for body_path in metadata['staple']['paths']:
+                rigid=PhysxSchema.PhysxRigidBodyAPI.Get(stage,body_path)
+                rigid.CreateSolverVelocityIterationCountAttr(4)
+                rigid.CreateMaxDepenetrationVelocityAttr(.05)
         cache=UsdGeom.XformCache();poses=[]
         for name in BODY_NAMES:
             matrix=cache.GetLocalToWorldTransform(stage.GetPrimAtPath(root+'/'+name))

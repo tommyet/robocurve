@@ -68,7 +68,8 @@ def main():
         for line in complete_lines(handle):
             row=json.loads(line);step=row['step'];last=row
             if step%args.every and step not in endpoints and step!=report['completed_steps']:continue
-            nodes=np.asarray(row['objects']['tshirt']['nodes']);mean=nodes[patch].mean(0)
+            from trace_data import cloth_array
+            nodes=cloth_array(args.trial,row,'tshirt');mean=nodes[patch].mean(0)
             if initial is None:initial=mean.copy()
             robot=row['robot_links'][args.side+'_robot']
             grip=np.asarray(robot['poses_xyzw'][robot['names'].index('gripper')])

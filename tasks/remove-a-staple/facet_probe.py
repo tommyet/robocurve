@@ -23,21 +23,27 @@ def main():
     p.add_argument('--seconds',type=float,default=.1)
     p.add_argument('--dt',type=float,default=.0001)
     p.add_argument('--full-size-candidate',action='store_true',help='Use both established210×148mm sheets and the real support/staple/remover scene')
+    p.add_argument('--recenter-at-paper-diagnostic',action='store_true',help='Rigidly translate the entire full scene near zero to diagnose float32 position quantization')
     p.add_argument('--primitive-box-panels',action='store_true')
     p.add_argument('--no-staple',action='store_true')
     p.add_argument('--separated-free-fall-diagnostic',action='store_true',help='No support; separate sheets by20mm to isolate unloaded hinge behavior')
     p.add_argument('--external-forces-every-iteration',action='store_true')
     p.add_argument('--velocity-iterations',type=int,choices=(1,4,32),default=4)
+    p.add_argument('--position-iterations',type=int,choices=(32,64,128),default=128)
+    p.add_argument('--wire-velocity-iterations',type=int,choices=(1,4,32),default=4,
+                   help='Separate explicit wire control; connected islands use the highest requested count')
     args=p.parse_args()
     if not .001<=args.seconds<=.2 or not .000025<=args.dt<=.001:p.error('Bounded contact coupon only')
     if args.full_size_candidate and (not args.primitive_box_panels or args.separated_free_fall_diagnostic):p.error('Full-size candidate requires box panels and the supported scene')
+    if args.recenter_at_paper_diagnostic and not args.full_size_candidate:p.error('Recentering diagnostic requires the full-size scene')
     if args.separated_free_fall_diagnostic and not args.no_staple:p.error('Separated free fall requires --no-staple')
     args.out.mkdir(parents=True,exist_ok=False);started=time.monotonic()
     record=dict(schema='paper-facet-coupon-v1',complete=False,robot_demo=False,task_score=None,
         no_staple=args.no_staple,dt=args.dt,seconds=args.seconds,samples=[],completed_steps=0,phase='launch',
         separated_free_fall_diagnostic=args.separated_free_fall_diagnostic,
         external_forces_every_iteration=args.external_forces_every_iteration,
-        velocity_iterations=args.velocity_iterations,primitive_box_panels=args.primitive_box_panels,full_size_candidate=args.full_size_candidate,
+        position_iterations=args.position_iterations,velocity_iterations=args.velocity_iterations,wire_velocity_iterations=args.wire_velocity_iterations,
+        primitive_box_panels=args.primitive_box_panels,full_size_candidate=args.full_size_candidate,
         source_sha256={name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
                        for name in ('facet_probe.py','facet_paper.py','native_paper.py','contact_guard.py')})
     app=sim=cache=stage=None;attached=False
@@ -87,12 +93,25 @@ def main():
         for index,origin in enumerate(origins):
             mesh=box_task_mesh(index) if args.full_size_candidate else (box_coupon_mesh() if args.primitive_box_panels else coupon_mesh())
             mesh=PaperMesh(mesh.rest+np.array(origin),mesh.faces,mesh.holes)
-            shell=author_shell(stage,f'/Paper{index}',mesh,material,velocity_iterations=args.velocity_iterations,primitive_boxes=args.primitive_box_panels)
+            shell=author_shell(stage,f'/Paper{index}',mesh,material,velocity_iterations=args.velocity_iterations,position_iterations=args.position_iterations,primitive_boxes=args.primitive_box_panels)
             shells.append(shell);guards.append(PaperWireCrossingGuard(mesh.faces))
         if staple:
             for path in staple['paths']:
                 rb=PhysxSchema.PhysxRigidBodyAPI.Get(stage,path)
-                rb.CreateSolverVelocityIterationCountAttr(4);rb.CreateMaxDepenetrationVelocityAttr(.05)
+                rb.CreateSolverVelocityIterationCountAttr(args.wire_velocity_iterations);rb.CreateMaxDepenetrationVelocityAttr(.05)
+                rb.CreateSolverPositionIterationCountAttr(args.position_iterations)
+        record['authored_solver_velocity_counts']={path:int(PhysxSchema.PhysxRigidBodyAPI.Get(stage,path).GetSolverVelocityIterationCountAttr().Get())
+            for path in ([path for shell in shells for path in shell['bodies']]+(staple['paths'] if staple else []))}
+        record['authored_solver_position_counts']={path:int(PhysxSchema.PhysxRigidBodyAPI.Get(stage,path).GetSolverPositionIterationCountAttr().Get())
+            for path in ([path for shell in shells for path in shell['bodies']]+(staple['paths'] if staple else []))}
+        offset=np.array((-.32,0.,-.7675)) if args.recenter_at_paper_diagnostic else np.zeros(3)
+        record['world_coordinate_offset_m']=offset.tolist()
+        if args.recenter_at_paper_diagnostic:
+            # Coordinate change before attachment, not a physical reset or a
+            # constraint. Every paper, steel body, tool and support moves by
+            # the same vector; all relative geometry and gravity are unchanged.
+            for root in (metadata['root'],'/Paper0','/Paper1'):
+                UsdGeom.Xform.Define(stage,root).AddTranslateOp().Set(Gf.Vec3d(*offset))
         record['meshes']=[s['mesh'].audit() for s in shells]
         record['native_break_force_range_n']=[min(h['break_force_n'] for h in shells[0]['model']['hinges']),max(h['break_force_n'] for h in shells[0]['model']['hinges'])]
         stage.GetRootLayer().Export(str(args.out/'initial.usda'))
@@ -103,10 +122,16 @@ def main():
         indices=[[list(rigid.prim_paths).index(path) for path in shell['bodies']] for shell in shells]
         if rigid.count!=len(bodies):raise RuntimeError('Incomplete native facet collection')
         steps=round(args.seconds/args.dt);record['phase']='simulate'
+        timing={'material_s':0.,'native_simulation_s':0.,'readback_s':0.,'guard_s':0.}
+        record['timing']=timing
         for step in range(1,steps+1):
+            tick=time.perf_counter()
             if step>1 and staple:update_staple(physics,staple)
+            timing['material_s']+=time.perf_counter()-tick;tick=time.perf_counter()
             sim.simulate(args.dt,(step-1)*args.dt);sim.fetch_results();record['completed_steps']=step
+            timing['native_simulation_s']+=time.perf_counter()-tick;tick=time.perf_counter()
             poses=rigid.get_transforms().detach().cpu().numpy()
+            timing['readback_s']+=time.perf_counter()-tick
             if step==1:
                 if args.primitive_box_panels:
                     # Native Cube colliders are analytic boxes, not cooked hulls.
@@ -132,12 +157,14 @@ def main():
                 masses=rigid.get_masses().detach().cpu().numpy().reshape(-1)
                 record['native_mass_relative_error']=max(float(np.max(np.abs(masses[ids]/shell['model']['masses']-1))) for shell,ids in zip(shells,indices))
                 if record['native_mass_relative_error']>1e-4:raise RuntimeError('Native facet masses differ from paper mass')
+            tick=time.perf_counter()
             segments=measured_wire_segments(physics,staple) if staple else None
             points=[];checks=[]
             for shell,ids,guard in zip(shells,indices,guards):
                 nodes,continuity=measured_surface(shell,poses[ids]);points.append(nodes)
                 crossing=guard.update(nodes,segments) if staple else {'valid':True}
                 checks.append(dict(continuity=continuity,wire_crossing=crossing))
+            timing['guard_s']+=time.perf_counter()-tick
             valid=all(x['continuity']['valid'] and x['wire_crossing']['valid'] for x in checks)
             if step==1 or step%max(1,round(.002/args.dt))==0 or step==steps or not valid:
                 record['samples'].append(dict(step=step,time_s=step*args.dt,checks=checks,

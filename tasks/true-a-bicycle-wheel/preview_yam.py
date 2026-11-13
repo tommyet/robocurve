@@ -21,12 +21,13 @@ def main():
     p.add_argument('--freeze-thread-diagnostic',action='store_true',help='Isolate native assembly without custom thread writes or torques')
     p.add_argument('--joint-tracking-diagnostic',action='store_true',help='Bounded integral tracking from ordinary robot joint measurements only; requires --plan')
     p.add_argument('--central-spring-candidate',action='store_true')
+    p.add_argument('--solver-type',choices=('TGS','PGS'),default='TGS')
     p.add_argument('--distance-tolerance-compensation-m',type=float,choices=(0.,.025),default=0.)
     p.add_argument('--preloaded-reset-candidate',action='store_true',help='Use the measured loaded internal shape only when constructing/resetting the scene')
     p.add_argument('--tool-pose-servo-diagnostic',action='store_true',help='Disclosed scripted-demo tool-pose feedback; ordinary joint commands only, never used by Dream')
     p.add_argument('--nipple-target-servo-diagnostic',action='store_true',help='Also latch measured square-nipple frame before each ordinary quarter-turn; requires tool servo')
     p.add_argument('--plan',type=Path,help='Frozen ordinary14-D joint commands; remains a diagnostic')
-    p.add_argument('--wheel-clocking-deg',type=float,choices=(0.,10.,20.,50.),default=0.)
+    p.add_argument('--wheel-clocking-deg',type=float,choices=(0.,10.,20.,50.,55.),default=0.)
     p.add_argument('--nipple-flat-phase-deg',type=float,choices=(0.,45.),default=0.)
     p.add_argument('--physics-hz', type=int, choices=(2000,10000,20000,40000,80000), default=40000)
     p.add_argument('--reset-profile',choices=('four-defect-reference','two-defect-candidate'),default='two-defect-candidate')
@@ -34,6 +35,8 @@ def main():
     a = p.parse_args()
     if a.distance_tolerance_compensation_m and not a.central_spring_candidate:p.error('Distance tolerance requires central-spring candidate')
     if a.central_spring_candidate and a.device!='cpu':p.error('Native DistanceJoint is CPU only')
+    if a.solver_type=='PGS' and (not a.central_spring_candidate or a.external_forces_once_diagnostic):
+        p.error('PGS candidate requires the central spring and has no TGS force-integration override')
     if a.joint_tracking_diagnostic and a.plan is None:p.error('Joint tracking requires a frozen nominal plan')
     if a.tool_pose_servo_diagnostic and (a.plan is None or not a.joint_tracking_diagnostic):
         p.error('Tool pose servo requires a plan and bounded joint tracking')
@@ -59,6 +62,7 @@ def main():
         'no_rewind_diagnostic':a.no_rewind_diagnostic,'freeze_thread_diagnostic':a.freeze_thread_diagnostic,
         'preloaded_reset_candidate':a.preloaded_reset_candidate,
         'central_spring_candidate':a.central_spring_candidate,
+        'solver_type':a.solver_type,
         'distance_tolerance_compensation_m':a.distance_tolerance_compensation_m,
         'tool_pose_servo_diagnostic':a.tool_pose_servo_diagnostic,
         'nipple_target_servo_diagnostic':a.nipple_target_servo_diagnostic,
@@ -91,6 +95,7 @@ def main():
         arena_wheel.FROZEN_MATERIAL_DIAGNOSTIC=a.freeze_thread_diagnostic
         arena_wheel.PRELOADED_RESET_CANDIDATE=a.preloaded_reset_candidate
         arena_wheel.CENTRAL_SPRING_CANDIDATE=a.central_spring_candidate
+        arena_wheel.SOLVER_TYPE=a.solver_type
         arena_wheel.DISTANCE_TOLERANCE_COMPENSATION_M=a.distance_tolerance_compensation_m
         report['phase']='build';save()
         from yam_arena import inspect_embodiment as wrapper, scene as adapter
@@ -134,7 +139,9 @@ def main():
         if len(scenes)!=1:raise RuntimeError('Expected one native physics scene')
         phys=PhysxSchema.PhysxSceneAPI(scenes[0])
         report['effective_external_forces_every_iteration']=bool(phys.GetEnableExternalForcesEveryIterationAttr().Get())
-        expected_forces_every_iteration=a.central_spring_candidate and not a.external_forces_once_diagnostic
+        report['effective_solver_type']=str(phys.GetSolverTypeAttr().Get())
+        if report['effective_solver_type']!=a.solver_type:raise RuntimeError('Requested native solver did not reach scene')
+        expected_forces_every_iteration=a.central_spring_candidate and not a.external_forces_once_diagnostic and a.solver_type=='TGS'
         if report['effective_external_forces_every_iteration'] != expected_forces_every_iteration:
             raise RuntimeError('Requested external-force integration did not reach native scene')
         stage.GetRootLayer().Export(str(a.out/'initial.usda'))

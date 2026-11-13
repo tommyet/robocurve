@@ -2,7 +2,7 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "52 CPU checks pass. Real robot202-action service049 did not turn a nipple. Preloaded frozen-thread055 still gains unforced angular momentum. Native central DistanceJoint057 removes that large bias but has a25mm numerical tolerance; its uncorrected response is invalid. Compensated isolated spring is pending.",
+  "cpu_checks": "53 CPU checks pass. Clean CPU PGS central spring matches its isolated constitutive law and full live-coupling wheel remains bounded for 0.3 s. No robot tightening or corrected tension proof yet.",
   "simulator_probe": null,
   "demo": null,
   "dream": null,
@@ -71,10 +71,10 @@
   "native_scene": {
     "authoring_entry_point": "wheel_scene.build_scene(stage, root)",
     "material_callback": "NativeThreadCoupler.before_step before every native substep",
-    "status": "force_integration_cause_identified_and_corrected_configuration_awaiting_service",
+    "status": "unforced_native_axle_torque_unresolved",
     "geometry": "free hub, stand, compliant curved-sector rim, two-half tension-only steel spokes, rotating square nipples, physical open-slot wrench",
     "limitations": [
-      "Forces-once YAM remains bounded through1.5s after a constructor transient; normal-reset service and longer task validity remain unproven.",
+      "Free-bearing and frozen-thread controls retain approximately0.405Nm unexplained axle torque. One TGS velocity iteration does not remove it.",
       "Native free-wrench pickup works, but no real robot nipple adjustment or repair is demonstrated.",
       "Kinematic wrench transfer involves up to 175 micrometres reconstructed jaw penetration; finite-load engagement remains untested.",
       "Elastic rim and simplified thread mechanics remain limited to their declared validity domain."
@@ -502,5 +502,91 @@
         "unexplained_mean_axle_torque_nm": -0.40540528724976016
       }
     ]
+  },
+  "native_isolation_066_068": {
+    "status": "does_not_resolve_torque",
+    "controls": [
+      {
+        "report_sha256": "e912e15ad38112f046b0aff271a359f8fa2fdc05bc80e43f28987bcb968799eb",
+        "complete": true,
+        "dt": 0.0001,
+        "seconds": 0.05,
+        "frozen_material": true,
+        "omitted_bearing": true,
+        "velocity_iterations": 4,
+        "final_momentum": {
+          "angular_momentum_kg_m2_s": [
+            -0.020312673854707797,
+            0.0001602975970250397,
+            1.6628562487854492e-05
+          ],
+          "gravity_torque_about_axle_nm": [
+            -0.00018367650345440666,
+            0.0030698820563167324,
+            0.0
+          ],
+          "maximum_angular_speed_rad_s": 1.091048868565104,
+          "note": "Excludes wrench. Compare changes against external contact/bearing torque; no score is inferred."
+        },
+        "rim_integrity": {
+          "valid": true,
+          "steps": 500,
+          "first_failure": null,
+          "maximum_axial_bending_strain": 0.001217397242474093,
+          "maximum_twist_rad": 0.000939077580764629,
+          "maximum_locked_joint_gap_m": 9.569831736121326e-06,
+          "peaks": {
+            "maximum_axial_bending_strain": 0.0015185631846942125,
+            "maximum_twist_rad": 0.0013633037675799555,
+            "maximum_locked_joint_gap_m": 1.5580492176425666e-05
+          }
+        }
+      },
+      {
+        "report_sha256": "3ecae51dc79af3fd4f007bfc6610eff72ca204522398afc8f0d58d03b5bc65e2",
+        "complete": true,
+        "dt": 0.0001,
+        "seconds": 0.1,
+        "frozen_material": true,
+        "omitted_bearing": false,
+        "velocity_iterations": 1,
+        "final_momentum": {
+          "angular_momentum_kg_m2_s": [
+            -0.040539913852880555,
+            0.00010020293001700304,
+            0.00014009137870306992
+          ],
+          "gravity_torque_about_axle_nm": [
+            -0.00017929441984612605,
+            0.0028675387183243637,
+            0.0
+          ],
+          "maximum_angular_speed_rad_s": 1.955463815537303,
+          "note": "Excludes wrench. Compare changes against external contact/bearing torque; no score is inferred."
+        },
+        "rim_integrity": {
+          "valid": true,
+          "steps": 1000,
+          "first_failure": null,
+          "maximum_axial_bending_strain": 0.0012199124578611612,
+          "maximum_twist_rad": 0.0009391091344087717,
+          "maximum_locked_joint_gap_m": 9.336808325223366e-06,
+          "peaks": {
+            "maximum_axial_bending_strain": 0.0016356661532316852,
+            "maximum_twist_rad": 0.0013618095823742019,
+            "maximum_locked_joint_gap_m": 1.5409687463669962e-05
+          }
+        }
+      }
+    ],
+    "proposed_controls": [
+      "PGS, unchanged material",
+      "Inextensible hoop with retained rim bending/torsion; approximately67um mean radial compliance omitted"
+    ]
+  },
+  "latest_native_controls": {
+    "file": "evidence/native-pgs-071-074-summary.json",
+    "sha256": "6ecbe5fe4094355cdbe7d661b254205e122523014c1071e8e42f889fe30fcf25",
+    "status": "short_passive_PGS_gate_passed_robot_pending"
   }
 }

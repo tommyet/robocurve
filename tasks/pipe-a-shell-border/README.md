@@ -87,7 +87,7 @@ Run CPU checks without renting a GPU:
 python -m unittest discover -s tasks/pipe-a-shell-border -p 'test_*.py' -v
 ```
 
-Thirty-two tests cover pressure causality, finite volume, contact and damage,
+Thirty-five tests cover pressure causality, finite volume, contact and damage,
 shape scoring and released-tool evidence. Native tests have demonstrated a
 physical pickup, passive plunger extrusion and an elongated head and tail.
 Native035 released the tool cleanly and scored0.25 under its recorded independent
@@ -96,6 +96,14 @@ uneven finish is not submission quality. Later pose-assisted trials058/062
 complete 838 actions and release cleanly, but score zero under the current
 scorer: pressure falls during tail travel, leaving rounded deposits. A full
 joined border remains pending.
+
+Later controller trials065–073 remain below submission quality. Increasing
+feedback gain caused oscillation and spill; restoring moderate gains keeps the
+surface clean but still leaves short, weakly ridged deposits. The next diagnostic
+uses `learn_tracking.py` to compile bounded right-arm joint-target compensation
+from a completed physical trial. It records the calibration hashes and preserves
+the nozzle/piston recipe. Only ordinary joint targets change; this candidate has
+not yet demonstrated a full border.
 
 The passive mechanism control emitted 0.1587 ml under an 8 N load and nothing
 under zero load; flow stopped after release and volume balance closed. Those
@@ -135,8 +143,9 @@ final trial.
 Cake damage is a conservative penetration audit,
 not a cake-fracture simulation. The complete trial still needs independent photo scoring.
 
-Demo and Dream must use the same scene, material, starting layout, observations
-and run limit, followed by final rescoring. Scores and media stay unset until
+Demo and Dream use the same scene, material, starting layout, actuator limits
+and run limit, followed by final rescoring. Disclosed scripted pose feedback is
+not supplied to Dream. Scores and media stay unset until
 those runs are complete.
 
 ## Review calibration

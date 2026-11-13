@@ -1,0 +1,125 @@
+{
+  "date": "2026-11-13",
+  "status": "invalid_retention_no_demo_or_score",
+  "source": "artifacts/six-task-completion-2026-11-13/native-batch-068-seam/seam-settle2",
+  "files_sha256": {
+    "probe.json": "5814c21d2b6c8f3dc2f12264ee1053b1a9985e60c1683694ea1974631e1149f3",
+    "state.npz": "5ad532274db1fedd3e32232ab8a279d964886db9d05abf76dfc2d580d713f1ba",
+    "initial.usda": "b94e36fa2ff04eb6bc59a5b54d91fac1477a788154c1991214fc947cdda620ad"
+  },
+  "native_completed_steps": 1920,
+  "duration_s": 2.0,
+  "physics_hz": 960,
+  "expected_initial_links": 24,
+  "final_retained_links": 20,
+  "first_warning_s": 0.3489583333333333,
+  "link_changes": [
+    {
+      "side": 1,
+      "hole": 6,
+      "thread": 0,
+      "samples": 39,
+      "start_s": 0.3489583333333333,
+      "end_s": 0.3885416666666667
+    },
+    {
+      "side": 1,
+      "hole": 10,
+      "thread": 4,
+      "samples": 101,
+      "start_s": 0.39895833333333336,
+      "end_s": 2.0
+    },
+    {
+      "side": 1,
+      "hole": 8,
+      "thread": 2,
+      "samples": 17,
+      "start_s": 0.41770833333333335,
+      "end_s": 0.434375
+    },
+    {
+      "side": 0,
+      "hole": 4,
+      "thread": 4,
+      "samples": 1023,
+      "start_s": 0.9354166666666667,
+      "end_s": 2.0
+    },
+    {
+      "side": 1,
+      "hole": 4,
+      "thread": 4,
+      "samples": 1002,
+      "start_s": 0.9572916666666667,
+      "end_s": 2.0
+    },
+    {
+      "side": 0,
+      "hole": 7,
+      "thread": 1,
+      "samples": 4,
+      "start_s": 1.3625,
+      "end_s": 1.365625
+    },
+    {
+      "side": 0,
+      "hole": 10,
+      "thread": 4,
+      "samples": 95,
+      "start_s": 1.9020833333333333,
+      "end_s": 2.0
+    },
+    {
+      "side": 1,
+      "hole": 11,
+      "thread": 5,
+      "samples": 33,
+      "start_s": 1.9447916666666667,
+      "end_s": 1.9916666666666667
+    },
+    {
+      "side": 0,
+      "hole": 11,
+      "thread": 5,
+      "samples": 10,
+      "start_s": 1.9791666666666667,
+      "end_s": 1.9885416666666667
+    }
+  ],
+  "final": {
+    "time_s": 2.0,
+    "patches": [
+      {
+        "maximum_hinge_endpoint_gap_m": 1.4465806028157269e-05,
+        "maximum_vertex_average_error_m": 9.639902637922015e-06,
+        "maximum_capsule_overlap_lower_bound_m": 7.41846753686476e-05,
+        "overlapping_pairs": 6,
+        "native_midplane_intersections": 0,
+        "retained_initial_links": 10,
+        "ambiguous_links": 0
+      },
+      {
+        "maximum_hinge_endpoint_gap_m": 1.2963228776710086e-05,
+        "maximum_vertex_average_error_m": 8.632352881125992e-06,
+        "maximum_capsule_overlap_lower_bound_m": 5.889190963812431e-05,
+        "overlapping_pairs": 14,
+        "native_midplane_intersections": 0,
+        "retained_initial_links": 10,
+        "ambiguous_links": 0
+      }
+    ]
+  },
+  "finding": "One intact thread loop(thread4) loses all four of its needle-hole links by1.9021 s. Actual native-box midplane intersections persist through most of the final second. The0.5 s apparent reseating did not establish a stable reset.",
+  "first_permanent_escape": {
+    "time_s": 0.9354166666666667,
+    "thread": 4,
+    "maximum_thread_endpoint_speed_m_s": 0.39274470099279946,
+    "endpoint_motion_per_substep_m": 0.0004091090635341661,
+    "cloth_thickness_m": 0.0004
+  },
+  "next_control": "Same box/thread/fixture geometry and material on CPU PhysX with scene sweepCCD and all dynamic bodies sweep+speculativeCCD. No holes, material, state or audit changes.",
+  "ccd_reference": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/latest/dev_guide/rigid_bodies_articulations/rigid_bodies.html",
+  "reference_fact": "Neither sweep-based nor speculativeCCD works in DirectGPU API mode.",
+  "passive_settled_reset_validated": false
+}

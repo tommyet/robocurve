@@ -13,18 +13,21 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--out',type=Path,required=True);p.add_argument('--axis',choices=('distance','transX','native-distance'),default='distance')
     p.add_argument('--external-forces-every-iteration',action='store_true')
+    p.add_argument('--solver-type',choices=('TGS','PGS'),default='TGS')
     p.add_argument('--distance-tolerance-compensation-m',type=float,default=0.,help='Subtract documented native DistanceJoint tolerance from its numerical maximum; physical spring rest remains unchanged')
     p.add_argument('--dt',type=float,default=.0001);p.add_argument('--seconds',type=float,default=1.)
     a=p.parse_args()
     if not .00001<=a.dt<=.001 or not .2<=a.seconds<=2:p.error('Bounded diagnostic only')
     if a.distance_tolerance_compensation_m not in (0.,.025) or (a.distance_tolerance_compensation_m and a.axis!='native-distance'):p.error('Compensation applies only to the native distance candidate')
+    if a.solver_type=='PGS' and a.external_forces_every_iteration:p.error('External forces every iteration is TGS-only; omit it with PGS')
     a.out.mkdir(parents=True,exist_ok=False);start=time.monotonic()
     s=WheelSpec();mass=.42/32
     anchor=np.array((s.hub_flange_radius_m*math.cos(s.cross_angle_rad),s.hub_flange_radius_m*math.sin(s.cross_angle_rad),s.hub_half_width_m))
     L=float(np.linalg.norm(np.array((s.rim_radius_m,0.,0.))-anchor));k=s.spoke_modulus_pa*math.pi*(s.spoke_diameter_m/2)**2/L
     rest=L-s.baseline_tension_n/k;shortening=.25*s.nipple_pitch_m_per_turn
     r={'kind':'native_d6_spring_unit_check','complete':False,'axis':a.axis,'dt':a.dt,'seconds':a.seconds,'mass_kg':mass,'constant_load_n':s.baseline_tension_n,
-       'external_forces_every_iteration':a.external_forces_every_iteration,
+       'external_forces_every_iteration':a.external_forces_every_iteration if a.solver_type=='TGS' else None,
+       'solver_type':a.solver_type,
        'distance_tolerance_compensation_m':a.distance_tolerance_compensation_m,
        'stiffness_n_m':k,'damping_ns_m':100.,'initial_rest_m':rest,'expected_baseline_x_m':L,'expected_final_x_m':L-shortening,'samples':[],'phase':'launch'}
     from isaaclab.app import AppLauncher
@@ -35,8 +38,8 @@ def main():
     try:
         r['phase']='build';UsdGeom.SetStageMetersPerUnit(stage,1.)
         scene=UsdPhysics.Scene.Define(stage,'/physicsScene');scene.CreateGravityDirectionAttr(Gf.Vec3f(1.,0.,0.));scene.CreateGravityMagnitudeAttr(s.baseline_tension_n/mass)
-        ps=PhysxSchema.PhysxSceneAPI.Apply(scene.GetPrim());ps.CreateEnableGPUDynamicsAttr(False);ps.CreateBroadphaseTypeAttr('MBP');ps.CreateSolverTypeAttr('TGS')
-        ps.CreateEnableExternalForcesEveryIterationAttr(a.external_forces_every_iteration)
+        ps=PhysxSchema.PhysxSceneAPI.Apply(scene.GetPrim());ps.CreateEnableGPUDynamicsAttr(False);ps.CreateBroadphaseTypeAttr('MBP');ps.CreateSolverTypeAttr(a.solver_type)
+        if a.solver_type=='TGS':ps.CreateEnableExternalForcesEveryIterationAttr(a.external_forces_every_iteration)
         b=UsdGeom.Cube.Define(stage,'/Body');b.CreateSizeAttr(.01);b.AddTranslateOp().Set(Gf.Vec3d(L,0.,0.))
         UsdPhysics.RigidBodyAPI.Apply(b.GetPrim());UsdPhysics.MassAPI.Apply(b.GetPrim()).CreateMassAttr(mass);UsdPhysics.CollisionAPI.Apply(b.GetPrim())
         rb=PhysxSchema.PhysxRigidBodyAPI.Apply(b.GetPrim());rb.CreateSleepThresholdAttr(0.);rb.CreateSolverPositionIterationCountAttr(128);rb.CreateSolverVelocityIterationCountAttr(4)

@@ -57,7 +57,12 @@ class AuthoringFlowTests(unittest.TestCase):
             Sdf=types.SimpleNamespace(Path=str),Vt=types.SimpleNamespace(Vec3fArray=lambda value:value),
             UsdGeom=SchemaNamespace(),UsdPhysics=SchemaNamespace(),PhysxSchema=SchemaNamespace())
         with patch.dict(sys.modules,{'pxr':stub}):
-            stage=Stage();metadata=build_scene(stage,central_spring_candidate=True,distance_spring_tolerance_m=.025)
+            stage=Stage();metadata=build_scene(stage,central_spring_candidate=True,distance_spring_tolerance_m=.025,inextensible_rim_candidate=True)
+        self.assertTrue(metadata['inextensible_rim_candidate'])
+        for i in range(32):
+            joint=stage.prims[f'/WheelTask/wheel/rim_joint_{i:02d}']
+            self.assertEqual(joint.attributes['StiffnessAttr'].value,0.)
+            self.assertGreater(joint.attributes['LowAttr'].value,joint.attributes['HighAttr'].value)
         for i,spoke in enumerate(metadata['spokes']):
             spring=stage.prims[f'/WheelTask/wheel/spoke_{i:02d}_central_spring']
             self.assertIn('PhysxPhysicsDistanceJointAPI',spring.apis)

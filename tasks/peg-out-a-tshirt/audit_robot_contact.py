@@ -35,7 +35,8 @@ def main():
         for line in f:
             row=json.loads(line)
             if row['step'] not in wanted:continue
-            nodes=np.asarray(row['objects'][name]['nodes']);triangles=nodes[faces];low=triangles.min(1);high=triangles.max(1);hits=[];deepest=0.
+            from trace_data import cloth_array
+            nodes=cloth_array(args.trial,row,name);triangles=nodes[faces];low=triangles.min(1);high=triangles.max(1);hits=[];deepest=0.
             for side in ('left_robot','right_robot'):
                 robot=row['robot_links'][side];poses=dict(zip(robot['names'],robot['poses_xyzw']))
                 for link,parts in hulls.items():

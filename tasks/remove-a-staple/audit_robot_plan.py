@@ -14,7 +14,7 @@ import numpy as np
 from scipy.optimize import linprog
 from scipy.spatial import ConvexHull
 from motion_plan import load, TOOL_TCP, GRIP
-from full_scene import scene_layout,TABLE_TOP
+from full_scene import scene_layout,support_parts,TABLE_TOP
 from plan_reach import TOOL_TCP,GRIP
 
 
@@ -50,10 +50,10 @@ def candidate_pairs(a,b,margin):
     return np.argwhere(np.all(np.minimum(high_a[:,None,:],high_b[None,:,:])-np.maximum(low_a[:,None,:],low_b[None,:,:])>=2*margin,axis=2))
 
 
-def scene_props():
-    layout=scene_layout('supported-edge-candidate')
+def scene_props(reset_profile):
+    layout=scene_layout(reset_profile)
     return [box('table',(.3,0.,TABLE_TOP-.02),(1.,1.,.04)),
-            box('support',layout['support_center'],layout['support_size'])]
+            *[box('support/'+name,center,size) for name,center,size in support_parts(layout)]]
 
 
 def tool_props(center,R):
@@ -73,7 +73,7 @@ def main():
     from yam_arena import ik,station,YAM_URDF
     from yam_arena.analysis import link_hulls,fk_link_poses_world
     from yam_arena.constants import ARM_JOINTS,FINGER_JOINTS,FINGER_OPEN
-    hulls=link_hulls();props=scene_props()
+    hulls=link_hulls();props=scene_props(plan['reset_profile'])
     samples=[];grasp_assumed=False
     for index in range(0,len(actions),args.stride):
         action=actions[index];stage=plan['frames'][index]['stage'];robots={}
@@ -109,7 +109,7 @@ def main():
             depth=overlap(h,prop,args.margin)
             if depth is None:continue
             record=dict(body=h['name'],prop=prop['name'],intersection_ball_radius_m=depth)
-            intended=h['name']=='remover/heel' and prop['name']=='support'
+            intended=h['name']=='remover/heel' and prop['name'].startswith('support/')
             (expected if intended else hits).append(record)
         samples.append(dict(step=index+1,stage=stage,unintended_intersections=hits,intended_contact_targets=expected))
     report=dict(kind='offline_commanded_pose_collision_screen',plan_sha256=hashlib.sha256(args.plan.read_bytes()).hexdigest(),

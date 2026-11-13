@@ -82,9 +82,14 @@ def author_rack(stage,path='/World/Rack'):
     return line
 
 
-def author_props(stage,with_peg_rests=True,line_pegs=False):
+def author_props(stage,with_peg_rests=True,line_pegs=False,contact_refined=False,regular_refined=False):
     from native_cloth import author_cloth,author_peg
-    mesh=tshirt()
+    if contact_refined and regular_refined:raise ValueError('Select one garment mesh')
+    if regular_refined:mesh=tshirt(spacing=.0025)
+    elif contact_refined:
+        from refined_cloth import contact_band_mesh
+        mesh=contact_band_mesh()
+    else:mesh=tshirt()
     author_cloth(stage,'/World/Tshirt',mesh,Fabric(),points=initial_layout(mesh))
     author_rack(stage)
     author_support(stage)

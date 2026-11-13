@@ -119,6 +119,14 @@
       "failure": "Reset pinch outside planned workspace; no physical pickup attempted. Reset capture now precedes calibration so future failures retain geometry.",
       "candidate": "Source-authored native058 gravity shape; unchanged flat rest mesh/material; same five-second reset for every policy. Full triangles clear both ready robots at1mm inflation. Not native tested.",
       "pending064": "200-action actual-cloth pickup using source-authored native058 settled gravity shape; whole READY-robot triangle clearance and200 commanded-pose screens pass. Native result pending."
+    },
+    "adult_pickup064": {
+      "status": "missed_grasp_no_lift",
+      "completed_actions": 200,
+      "wall_seconds": 180.49373027589172,
+      "finding": "Initial direct joint sweep contacts wide strip at31\u201340, moving patch57mm sideways before intended pinch. Patch remainsz0.877m during commanded lift.",
+      "reset": "Source-authored gravity drape stays untied and accessible; guard passes.",
+      "candidate": "Ordinary clear staging pose followed by Cartesian approach, screened against the actual reset cloth before insertion; no state writes."
     }
   },
   "demo": {
@@ -204,5 +212,28 @@
     "limitations": "No adult YAM grasp, knot, fit or final score evidence.",
     "outer_collar": "15 rigid3\u00d715\u00d760mm tangential segments on79mm radius, rear140degrees, front open",
     "native051": "Five seconds complete,51/51 nonblank frames; tie slipped off neck and draped rear support. No usable task reset. Final full triangles clear fixtures and late max speed5.4mm/s."
+  },
+  "adult_pickup070": {
+    "status": "physical_pickup_retained_no_knot",
+    "completed_actions": 220,
+    "wall_seconds": 228.7479619225487,
+    "marked_patch_lift_m": 0.3187005213,
+    "final_patch_local_depth_m": -0.02230768845,
+    "hold_s": 1.0,
+    "sampled_fixture_hits_200um_contraction": 0,
+    "sampled_robot_hits_200um_contraction": 0,
+    "max_sampled_robot_node_penetration_m": 4.81227625e-06,
+    "final_max_abs_edge_strain": 0.04706436962581728,
+    "final_p99_abs_edge_strain": 0.012812910379314561,
+    "next": "Native560-action ordinary physical tip handoff, pending. No knot score."
+  },
+  "current_draft": {
+    "target": "adult1.45m tie on standalone folded collar; simpleOriental knot",
+    "wide_tip_drop_band_mm": [
+      400,
+      440
+    ],
+    "reference_edge_z_m": 1.2,
+    "fit_status": "provisional before final demo; all fit and narrow-tip ordering conditions require actual reviewed evidence"
   }
 }

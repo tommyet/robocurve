@@ -20,6 +20,7 @@ def grasp_frame(rest,nodes,longitudinal=.45,side='right'):
     tangent=nodes[rows[2]].mean(0)-nodes[rows[0]].mean(0);tangent/=np.linalg.norm(tangent)
     normal=np.cross(width,tangent);normal/=np.linalg.norm(normal)
     approach=width*(1. if side=='right' else -1.)
+    if side=='left':normal=-normal  # symmetric closing plane, wrist stays upright
     rotation=np.column_stack((normal,np.cross(approach,normal),approach))
     center=nodes[row].mean(0)
     return dict(material_longitudinal_m=float(levels[j]),node_ids=row.tolist(),center_m=center.tolist(),
@@ -34,7 +35,8 @@ def compile_pickup(rest,nodes):
     if not (.22<target[0]<.39 and -.22<target[1]<-.05 and .79<target[2]<.93):
         raise ValueError('Measured adult wide-strand pinch is outside planned workspace: '+repr(target.tolist()))
     q=np.asarray(READY,float);opening=1.;frames=[];audits=[]
-    schedule=[(3.,target-.06*R[:,2],.6,yaw_rotation(110.),'approach outside measured wide strand','joint'),
+    schedule=[(2.,(.20,-.28,1.00),.6,yaw_rotation(110.),'align away from hanging material','joint'),
+              (2.,target-.06*R[:,2],.6,yaw_rotation(110.),'approach outside measured wide strand','cartesian'),
               (2.,target,.6,R,'insert fingers around measured wide strand','cartesian'),
               (1.,target,0.,R,'close ordinary fingers on wide strand','cartesian'),
               (3.,(.30,-.16,1.20),0.,yaw_rotation(120.),'lift wide end for tip handoff','cartesian'),

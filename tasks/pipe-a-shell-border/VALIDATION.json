@@ -1,7 +1,7 @@
 {
   "status": "development_not_submission_ready",
   "checked_utc": "2026-11-13",
-  "cpu_tests_passed": 32,
+  "cpu_tests_passed": 35,
   "native_simulator_run": true,
   "robot_demo_run": true,
   "dream_run": false,
@@ -9,7 +9,7 @@
   "scores": null,
   "paid_compute_used_usd": null,
   "remaining_gates": [
-    "Latest state-assisted native058/062 complete838 ordinary robot actions and release cleanly, but score0.0 under the current scorer: piston pressure falls during tail travel and deposits remain blobs.",
+    "Native073 completes838 ordinary actions, preserves the cake and releases cleanly, but scores0.0: one short unridged valid shell. Native070 high-gain feedback spills; it is not promoted. Bounded learned joint-target feedforward is an untested next controller candidate.",
     "Complete joined border, visible continuous ridges and agreement with photographs remain unverified.",
     "Dream baseline and final rescoring pending; no API requests or media uploads."
   ],
@@ -18,10 +18,11 @@
     "contact_audit.py": "789e5285c8283d915fee82c2a5deab0519e44005edba0085d6f37f3a6062f147",
     "dream_policy.py": "ad92ac9ddcf4c1d48c9985fcd0a0fc116144a995d8d4b0368e476b3f432b611b",
     "joint_tracking.py": "a5e2cee60f6a84e0a46d95240f1a098794e95a12c1ac166b3c7d5be184ff3a44",
+    "learn_tracking.py": "b7a41b2f1bbbc69f9778c33a319f44acbdc45fede8a64633a56cc4264b5a17b9",
     "material.py": "a82fb1cb242a02990707a3c08a6466f304cf757541a663a974765eebb984d525",
     "native.py": "bd7399d45e89f4955aaa0d945b518f98f81e4ac31eafb618cdc615e909b95fef",
     "plan.py": "d30d85b075a439865d750dee90a7a059637f21f9330a8e0aa0924ce4e0eb9c2b",
-    "preview_yam.py": "44f3ad5d93bd9634d23edd0a8e381d4c18ac8617abe3882b87c103525b7e76b4",
+    "preview_yam.py": "937d4cb052ba5befcf583e6c179a8e8ace60bc73f0d70cb03c8cd14ddcb1c6ee",
     "probe.py": "dc2421d3342eda2052d7340d10bbf856493ad5b30b121ad839fddda7c7a57c17",
     "probe_native.py": "1d5d47f963be39660c32dec7b626a26080d7d290da69cfc06e5e8e9f1945b4e8",
     "probe_shell_shape.py": "a4e2ab3a31c23b0acc9baeef718887a8d9e74c8fca1f2ed91659c2aa9732289e",
@@ -31,6 +32,7 @@
     "scoring.py": "96408e0ee9e663fb799c6f91572f900794aa4f304d505ccbb9c778524b658073",
     "scripted_plan.py": "27a6c93162569cc520c8949fe67780e8a77afdcdb82f224bdda249ec47300b32",
     "scripted_servo.py": "485d391accda6b836864334bb2d074d7695e27bc6b6c3b111aefae902c320a55",
+    "test_learn_tracking.py": "e6c8af0d8ec9e91edbacbaf9dbb728e8534af7e4d4288d2cbda00e6a3bc7fd74",
     "test_material.py": "183250183f5f42ec16e9bd6e92737c85ac43dbf4a5ac06a47a9ee289446db230",
     "test_release.py": "d2b6b9b3388736c2a8e6d85cba253c43086dcfab7885be8b7a3973b0e7523f19",
     "test_scripted_servo.py": "f5c48f4db8c9958760f702e8a2615aeae3ef263d71477351aaa91a3962f9c1af"
@@ -72,10 +74,12 @@
       "evidence": "Local ignored cake-recipe-cpu artifacts"
     },
     "integration_control055": "Once-per-step integration disrupts pickup; default iteration mode retained. Instantaneous coupled pose correction also destabilized pressure; filtered grasp estimate retained.",
-    "native058_062": "Complete838 actions; clean release; current score0.0. Next bounded correction filters measured common barrel translation into the pressing-arm reference."
+    "native058_062": "Complete838 actions; clean release; current score0.0. Next bounded correction filters measured common barrel translation into the pressing-arm reference.",
+    "native065_073": "Measured common-motion correction alone leaves delayed tail travel. Higher feedback gains oscillate; moderate gains with faster slew stay clean but still score0.0. Prior applied-minus-observed right-arm joint offsets are compiled into an openly recorded feedforward plan, with unchanged nozzle/piston recipe and motor limits.",
+    "measured_piston_counterfactual": "Actual065 piston motion plus intended nozzle path produces3 ridged shells/46mm in a local prescribed-input replay. This diagnoses motion tracking and is not robot feasibility evidence."
   },
   "cpu_checks_current": {
-    "test_count": 32,
+    "test_count": 35,
     "result": "passed",
     "command": "python -m unittest discover -s tasks/pipe-a-shell-border -p test_*.py"
   },

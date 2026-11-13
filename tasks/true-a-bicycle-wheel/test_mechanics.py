@@ -65,6 +65,7 @@ class MechanicsTests(unittest.TestCase):
         self.assertLess(corrected["lateral_peak_to_peak_m"], .0005)
         self.assertGreater(np.min(corrected["tension_n"]), 400.)
         self.assertLess(np.max(corrected["tension_n"]), 1000.)
+        np.testing.assert_array_equal(starting_turn_errors(profile="zero-defect-control"), np.zeros(32))
         with self.assertRaises(ValueError):
             starting_turn_errors(profile="unknown")
 

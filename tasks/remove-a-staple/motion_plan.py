@@ -8,7 +8,7 @@ import hashlib
 import json
 from pathlib import Path
 import numpy as np
-from full_scene import TABLE_TOP,scene_layout
+from full_scene import TABLE_TOP,scene_layout,RESET_PROFILES
 from plan_reach import TOOL_TCP,GRIP,insertion_pitch,heel_supported_pose,tool_frame
 
 
@@ -49,10 +49,10 @@ class Compiler:
         self.audit.append(dict(stage=label,seconds=count/20,interpolation='joint' if joint else 'Cartesian/tool',maximum_position_error_m=maximum_position,maximum_rotation_error_rad=maximum_rotation))
 
 
-def compile_plan(stage='pickup'):
+def compile_plan(stage='pickup',reset_profile='pocket-support-candidate'):
     from yam_arena import YAM_URDF
     from yam_arena.constants import READY,SHOULDER,WRIST,GRIPPER,FINGER_OPEN
-    layout=scene_layout('supported-edge-candidate');paper_top=layout['paper_centres_z'][1]+.00005
+    layout=scene_layout(reset_profile);paper_top=layout['paper_centres_z'][1]+.00005
     # Brace the far supported corner to keep the wrists on opposite sides.
     left_R=np.diag((-1.,1.,-1.));left=np.array((.405,.050,paper_top+.0129))
     initial=np.array((.28,-.20,TABLE_TOP+.003));tcp=lambda root,R:(root+R@TOOL_TCP,R@GRIP)
@@ -62,7 +62,7 @@ def compile_plan(stage='pickup'):
     c.segment('Lift the free remover',.8,{'right':tcp(initial+[0.,0.,.06],np.eye(3))})
     c.segment('Hold pickup for inspection',.5)
     if stage=='lever':
-        pitch=insertion_pitch();R=tool_frame(pitch);root=heel_supported_pose(pitch)
+        pitch=insertion_pitch(reset_profile);R=tool_frame(pitch);root=heel_supported_pose(pitch)
         c.segment('Orient above the crown',1.,{'right':tcp(root+[0.,0.,.06],R)},joint=True)
         c.segment('Approach supported side of crown',.7,{'right':tcp(root+[.012,0.,.006],R)})
         c.segment('Lower the heel to its support',.6,{'right':tcp(root+[.012,0.,0.],R)})
@@ -78,11 +78,11 @@ def compile_plan(stage='pickup'):
     fraction=float(np.max(np.abs(np.diff(actions,axis=0))/limits))
     if fraction>1.001:raise ValueError(f'Ordinary actuator speed limit exceeded: {fraction}')
     return dict(schema='staple-fixed-motion-v1',kind='diagnostic_joint_commands_not_task_demo',control_hz=20,requested_stage=stage,
-        reset_profile='supported-edge-candidate',mesh_profile='coarse',robot_success=False,task_score=None,
+        reset_profile=reset_profile,mesh_profile='clearance-candidate' if reset_profile=='pocket-support-candidate' else 'coarse',robot_success=False,task_score=None,
         source_sha256={name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest() for name in ('motion_plan.py','plan_reach.py','full_scene.py')},
         urdf_sha256=hashlib.sha256(Path(YAM_URDF).read_bytes()).hexdigest(),action_count=len(c.frames),seconds=len(c.frames)/20,
-        max_speed_fraction=fraction,insertion_pitch_deg=float(np.degrees(insertion_pitch())),frames=c.frames,kinematic_audit=c.audit,
-        limitations=['No native grip, paper contact or extraction proof','Candidate paper model still under contact diagnosis','Final independent-sheet slide not yet implemented'])
+        max_speed_fraction=fraction,insertion_pitch_deg=float(np.degrees(insertion_pitch(reset_profile))),frames=c.frames,kinematic_audit=c.audit,
+        limitations=['No native grip, paper contact or extraction proof','Candidate paper model still under contact diagnosis','Complete staple release and final10mm clearance not yet demonstrated'])
 
 
 def load(path):
@@ -96,5 +96,6 @@ def load(path):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--stage',choices=('pickup','lever'),default='pickup');p.add_argument('--out',type=Path,required=True)
-    a=p.parse_args();plan=compile_plan(a.stage);a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(plan,indent=2)+'\n')
+    p.add_argument('--reset-profile',choices=RESET_PROFILES,default='pocket-support-candidate')
+    a=p.parse_args();plan=compile_plan(a.stage,a.reset_profile);a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(plan,indent=2)+'\n')
     print(json.dumps({key:plan[key] for key in ('requested_stage','action_count','seconds','max_speed_fraction','insertion_pitch_deg')}))

@@ -43,6 +43,7 @@ FROZEN_MATERIAL_DIAGNOSTIC = False
 PRELOADED_RESET_CANDIDATE = False
 CENTRAL_SPRING_CANDIDATE = False
 DISTANCE_TOLERANCE_COMPENSATION_M = 0.
+SOLVER_TYPE = 'TGS'
 RESET_DIAGNOSTICS = []
 
 
@@ -221,7 +222,8 @@ def _patch(scene):
             # The059 isolated constitutive test passes only with ordinary
             # proportional forces and compensated central DistanceJoint. The
             # older D6 reference retains its historical comparison setting.
-            cfg.sim.physics.enable_external_forces_every_iteration = CENTRAL_SPRING_CANDIDATE
+            cfg.sim.physics.solver_type = 0 if SOLVER_TYPE=='PGS' else 1
+            cfg.sim.physics.enable_external_forces_every_iteration = CENTRAL_SPRING_CANDIDATE and SOLVER_TYPE=='TGS'
             return cfg
         return configure_wheel
     scene.env_cfg_callback = configure_callback

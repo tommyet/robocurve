@@ -2,11 +2,13 @@
 
 Use front and rear photographs, the tying video and a ruler. The collar form
 has a marked centre. Measure tip length downward from the neck form's
-lower edge at z=1.0875 m; the acceptable 280–320 mm band stays above the table. Inspect the knot's fabric path: the wide end must pass through the neck
-loop and then the front wrap to form a retained four-in-hand. A loose drape,
+lower edge at z=1.200 m; the proposed 400–440 mm band stays above the table.
+Inspect the knot's fabric path: the wide end passes under the narrow end,
+across its front, up through the neck loop and down through the front loop
+to form a retained simple (Oriental) knot. A loose drape,
 preformed knot, attached strip or mere visual overlap does not count.
 
-- **0:** no valid four-in-hand remains after both grippers release for five
+- **0:** no valid simple knot remains after both grippers release for five
   seconds, or cloth/contact integrity fails.
 - **0.5:** a valid knot remains for five seconds but one or more dressing
   conditions below fail.
@@ -14,7 +16,7 @@ preformed knot, attached strip or mere visual overlap does not count.
   neckband's greatest gap from the form is no more than 10 mm; the wide end's
   face points outward without an axial half-twist; the narrow end is behind the
   wide end with its tip at least 10 mm above the wide tip; and the wide tip lies
-  280–320 mm below the marked collar edge.
+  400–440 mm below the collar's lower edge.
 
 With the wide tip pointing down, its front face shows the pale edge mark on
 the viewer's left and the gold edge mark on the right. The reverse pattern is

@@ -1,0 +1,577 @@
+{
+  "schema": "native-pgs-wheel-controls-v1",
+  "task_success": false,
+  "unit": {
+    "source": {
+      "path": "artifacts/six-task-completion-2026-11-13/native-batch-071-wheel/wheel-pgs-unit/spring-probe.json",
+      "sha256": "c25411d0a408210d4098a0934d4a6a061563051ec2187fcc6a1e400c7e2bca80"
+    },
+    "result": {
+      "kind": "native_d6_spring_unit_check",
+      "complete": true,
+      "axis": "native-distance",
+      "dt": 0.0001,
+      "seconds": 0.2,
+      "mass_kg": 0.013125,
+      "constant_load_n": 700.0,
+      "external_forces_every_iteration": null,
+      "solver_type": "PGS",
+      "distance_tolerance_compensation_m": 0.025,
+      "stiffness_n_m": 3280512.279857034,
+      "damping_ns_m": 100.0,
+      "initial_rest_m": 0.19131723254677482,
+      "expected_baseline_x_m": 0.1915306138544133,
+      "expected_final_x_m": 0.19141711385441332,
+      "samples": [
+        {
+          "step": 1,
+          "position_m": [
+            0.19153061509132385,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19131723940372466,
+          "native_limit_m": 0.16631723940372467
+        },
+        {
+          "step": 51,
+          "position_m": [
+            0.19153061509132385,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19131723940372466,
+          "native_limit_m": 0.16631723940372467
+        },
+        {
+          "step": 101,
+          "position_m": [
+            0.19153061509132385,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19131723940372466,
+          "native_limit_m": 0.16631723940372467
+        },
+        {
+          "step": 151,
+          "position_m": [
+            0.19153061509132385,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19131723940372466,
+          "native_limit_m": 0.16631723940372467
+        },
+        {
+          "step": 201,
+          "position_m": [
+            0.19153061509132385,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19131723940372466,
+          "native_limit_m": 0.16631723940372467
+        },
+        {
+          "step": 251,
+          "position_m": [
+            0.19153061509132385,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19131723940372466,
+          "native_limit_m": 0.16631723940372467
+        },
+        {
+          "step": 301,
+          "position_m": [
+            0.19153061509132385,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19131723940372466,
+          "native_limit_m": 0.16631723940372467
+        },
+        {
+          "step": 351,
+          "position_m": [
+            0.19153061509132385,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19131723940372466,
+          "native_limit_m": 0.16631723940372467
+        },
+        {
+          "step": 401,
+          "position_m": [
+            0.19153061509132385,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19131723940372466,
+          "native_limit_m": 0.16631723940372467
+        },
+        {
+          "step": 451,
+          "position_m": [
+            0.19153061509132385,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19131723940372466,
+          "native_limit_m": 0.16631723940372467
+        },
+        {
+          "step": 501,
+          "position_m": [
+            0.19153061509132385,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19131723940372466,
+          "native_limit_m": 0.16631723940372467
+        },
+        {
+          "step": 551,
+          "position_m": [
+            0.19153061509132385,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19131723940372466,
+          "native_limit_m": 0.16631723940372467
+        },
+        {
+          "step": 601,
+          "position_m": [
+            0.19153061509132385,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19131723940372466,
+          "native_limit_m": 0.16631723940372467
+        },
+        {
+          "step": 651,
+          "position_m": [
+            0.19153061509132385,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19131723940372466,
+          "native_limit_m": 0.16631723940372467
+        },
+        {
+          "step": 701,
+          "position_m": [
+            0.19153061509132385,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19131723940372466,
+          "native_limit_m": 0.16631723940372467
+        },
+        {
+          "step": 751,
+          "position_m": [
+            0.19153061509132385,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19131723940372466,
+          "native_limit_m": 0.16631723940372467
+        },
+        {
+          "step": 801,
+          "position_m": [
+            0.19153061509132385,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19131723940372466,
+          "native_limit_m": 0.16631723940372467
+        },
+        {
+          "step": 851,
+          "position_m": [
+            0.19153061509132385,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19131723940372466,
+          "native_limit_m": 0.16631723940372467
+        },
+        {
+          "step": 901,
+          "position_m": [
+            0.19153061509132385,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19131723940372466,
+          "native_limit_m": 0.16631723940372467
+        },
+        {
+          "step": 951,
+          "position_m": [
+            0.19153061509132385,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19131723940372466,
+          "native_limit_m": 0.16631723940372467
+        },
+        {
+          "step": 1001,
+          "position_m": [
+            0.19146405160427094,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19120373725891113,
+          "native_limit_m": 0.16620373725891113
+        },
+        {
+          "step": 1051,
+          "position_m": [
+            0.19141711294651031,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19120373725891113,
+          "native_limit_m": 0.16620373725891113
+        },
+        {
+          "step": 1101,
+          "position_m": [
+            0.19141711294651031,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19120373725891113,
+          "native_limit_m": 0.16620373725891113
+        },
+        {
+          "step": 1151,
+          "position_m": [
+            0.19141711294651031,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19120373725891113,
+          "native_limit_m": 0.16620373725891113
+        },
+        {
+          "step": 1201,
+          "position_m": [
+            0.19141711294651031,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19120373725891113,
+          "native_limit_m": 0.16620373725891113
+        },
+        {
+          "step": 1251,
+          "position_m": [
+            0.19141711294651031,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19120373725891113,
+          "native_limit_m": 0.16620373725891113
+        },
+        {
+          "step": 1301,
+          "position_m": [
+            0.19141711294651031,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19120373725891113,
+          "native_limit_m": 0.16620373725891113
+        },
+        {
+          "step": 1351,
+          "position_m": [
+            0.19141711294651031,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19120373725891113,
+          "native_limit_m": 0.16620373725891113
+        },
+        {
+          "step": 1401,
+          "position_m": [
+            0.19141711294651031,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19120373725891113,
+          "native_limit_m": 0.16620373725891113
+        },
+        {
+          "step": 1451,
+          "position_m": [
+            0.19141711294651031,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19120373725891113,
+          "native_limit_m": 0.16620373725891113
+        },
+        {
+          "step": 1501,
+          "position_m": [
+            0.19141711294651031,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19120373725891113,
+          "native_limit_m": 0.16620373725891113
+        },
+        {
+          "step": 1551,
+          "position_m": [
+            0.19141711294651031,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19120373725891113,
+          "native_limit_m": 0.16620373725891113
+        },
+        {
+          "step": 1601,
+          "position_m": [
+            0.19141711294651031,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19120373725891113,
+          "native_limit_m": 0.16620373725891113
+        },
+        {
+          "step": 1651,
+          "position_m": [
+            0.19141711294651031,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19120373725891113,
+          "native_limit_m": 0.16620373725891113
+        },
+        {
+          "step": 1701,
+          "position_m": [
+            0.19141711294651031,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19120373725891113,
+          "native_limit_m": 0.16620373725891113
+        },
+        {
+          "step": 1751,
+          "position_m": [
+            0.19141711294651031,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19120373725891113,
+          "native_limit_m": 0.16620373725891113
+        },
+        {
+          "step": 1801,
+          "position_m": [
+            0.19141711294651031,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19120373725891113,
+          "native_limit_m": 0.16620373725891113
+        },
+        {
+          "step": 1851,
+          "position_m": [
+            0.19141711294651031,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19120373725891113,
+          "native_limit_m": 0.16620373725891113
+        },
+        {
+          "step": 1901,
+          "position_m": [
+            0.19141711294651031,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19120373725891113,
+          "native_limit_m": 0.16620373725891113
+        },
+        {
+          "step": 1951,
+          "position_m": [
+            0.19141711294651031,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19120373725891113,
+          "native_limit_m": 0.16620373725891113
+        },
+        {
+          "step": 2000,
+          "position_m": [
+            0.19141711294651031,
+            0.0,
+            0.0
+          ],
+          "physical_rest_m": 0.19120373725891113,
+          "native_limit_m": 0.16620373725891113
+        }
+      ],
+      "phase": "simulate",
+      "baseline_error_m": 1.2369105462095575e-09,
+      "final_error_m": -9.079030027780988e-10,
+      "observed_displacement_m": -0.0001135021448135376,
+      "constitutive_pass": true,
+      "wall_seconds": 3.8342753099277616
+    }
+  },
+  "full_scene": {
+    "source": {
+      "path": "artifacts/six-task-completion-2026-11-13/native-batch-074-controls/wheel-pgs-live/scene-diagnostic.json",
+      "sha256": "400a084334866dd36f4953483c07c0689b15a7d59c91e6b71d812dd1d3011b67"
+    },
+    "complete": true,
+    "dt_s": 0.0001,
+    "seconds": 0.3,
+    "solver_type": "PGS",
+    "position_iterations": 32,
+    "velocity_iterations": 4,
+    "clocking_deg": 55,
+    "wall_seconds": 13.400784474797547,
+    "rim_integrity": {
+      "valid": true,
+      "steps": 3000,
+      "first_failure": null,
+      "maximum_axial_bending_strain": 0.0017044058546651342,
+      "maximum_twist_rad": 0.0008412412333785215,
+      "maximum_locked_joint_gap_m": 1.7204431277512563e-05,
+      "peaks": {
+        "maximum_axial_bending_strain": 0.0017484007958215152,
+        "maximum_twist_rad": 0.0011003951640986233,
+        "maximum_locked_joint_gap_m": 1.9753875281586802e-05
+      }
+    },
+    "samples": [
+      {
+        "time_s": 0.0001,
+        "angular_momentum_kg_m2_s": [
+          -4.6169999221222933e-07,
+          0.0007758459495767919,
+          0.0017916591907394092
+        ],
+        "hub_rotation_about_axle_deg": 2.4361552853484984e-15,
+        "lateral_runout_m": 1.6182661056518555e-05,
+        "tension_range_n": null,
+        "loose_nipple_turns": null
+      },
+      {
+        "time_s": 0.01,
+        "angular_momentum_kg_m2_s": [
+          2.1598522412853386e-05,
+          0.00013057179245295933,
+          0.001597116514650961
+        ],
+        "hub_rotation_about_axle_deg": 0.012628486008606877,
+        "lateral_runout_m": 0.0007433891296386719,
+        "tension_range_n": [
+          0.0,
+          472.40971704065026
+        ],
+        "loose_nipple_turns": [
+          -0.7498835706710888,
+          -0.7498654039602128
+        ]
+      },
+      {
+        "time_s": 0.05,
+        "angular_momentum_kg_m2_s": [
+          -0.00012901449393533203,
+          1.0113310212497525e-06,
+          -3.9895990414960775e-05
+        ],
+        "hub_rotation_about_axle_deg": 0.02775853955117001,
+        "lateral_runout_m": 0.0008533000946044922,
+        "tension_range_n": [
+          25.83944978822999,
+          478.56810517246817
+        ],
+        "loose_nipple_turns": [
+          -0.7498908910003624,
+          -0.7498738776424541
+        ]
+      },
+      {
+        "time_s": 0.1,
+        "angular_momentum_kg_m2_s": [
+          -0.00021529937460166163,
+          -2.1640848476284557e-07,
+          -4.301332730303012e-06
+        ],
+        "hub_rotation_about_axle_deg": -0.004039523493635948,
+        "lateral_runout_m": 0.0008521080017089844,
+        "tension_range_n": [
+          25.64389262079886,
+          478.3481396566436
+        ],
+        "loose_nipple_turns": [
+          -0.7498908953024596,
+          -0.7498738933528507
+        ]
+      },
+      {
+        "time_s": 0.2,
+        "angular_momentum_kg_m2_s": [
+          -0.00024068088207512974,
+          -5.928757543214078e-06,
+          -6.31155096276582e-06
+        ],
+        "hub_rotation_about_axle_deg": -0.059759180431694404,
+        "lateral_runout_m": 0.0008523166179656982,
+        "tension_range_n": [
+          25.570584537371445,
+          478.3236945778511
+        ],
+        "loose_nipple_turns": [
+          -0.7498908952178759,
+          -0.7498738818847959
+        ]
+      },
+      {
+        "time_s": 0.3,
+        "angular_momentum_kg_m2_s": [
+          -0.0002420690245826221,
+          -1.9428965545048164e-06,
+          -8.892895789876794e-06
+        ],
+        "hub_rotation_about_axle_deg": -0.12255074749722789,
+        "lateral_runout_m": 0.0008522868156433105,
+        "tension_range_n": [
+          25.497244590028277,
+          478.2014755347098
+        ],
+        "loose_nipple_turns": [
+          -0.7498908897488663,
+          -0.7498738918111656
+        ]
+      }
+    ]
+  },
+  "next": "Verify YAM reset, nominal corrected tension, finite-force real wrench tightening and complete released revolution."
+}

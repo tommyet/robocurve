@@ -91,7 +91,7 @@ def wrench_jaw_mesh(side):
     return points,np.array(faces,int)
 
 
-def build_scene(stage, root="/WheelTask", *, reset_profile="two-defect-candidate", nipple_flat_phase_rad=0., wheel_clocking_rad=0., central_spring_candidate=False, distance_spring_tolerance_m=0.):
+def build_scene(stage, root="/WheelTask", *, reset_profile="two-defect-candidate", nipple_flat_phase_rad=0., wheel_clocking_rad=0., central_spring_candidate=False, distance_spring_tolerance_m=0., inextensible_rim_candidate=False):
     from pxr import Gf, PhysxSchema, Sdf, UsdGeom, UsdPhysics, Vt
     spec,thread=WheelSpec(),ThreadSpec()
     if distance_spring_tolerance_m not in (0.,.025) or (distance_spring_tolerance_m and not central_spring_candidate):
@@ -102,6 +102,17 @@ def build_scene(stage, root="/WheelTask", *, reset_profile="two-defect-candidate
     UsdGeom.Xform.Define(stage,root)
     initial=starting_turn_errors(spec, profile=reset_profile)
     rim_paths,old_spokes,_=build_ring(stage,initial,root=wheel,configure_physics=False)
+    if inextensible_rim_candidate:
+        # Explicit inextensible-hoop approximation: native D6 axial spring
+        # forces across non-collinear endpoint gaps produced a net moment in
+        # the diagnostic. Keep every bending/torsion spring and all collisions.
+        # The omitted measured hoop contraction was approximately67 micrometres.
+        for i in range(n):
+            prim=stage.GetPrimAtPath(f'{wheel}/rim_joint_{i:02d}')
+            drive=UsdPhysics.DriveAPI.Apply(prim,'transX')
+            drive.CreateStiffnessAttr(0.);drive.CreateDampingAttr(0.)
+            limit=UsdPhysics.LimitAPI.Apply(prim,'transX')
+            limit.CreateLowAttr(1.);limit.CreateHighAttr(-1.)
     wheel_xf=UsdGeom.Xform.Define(stage,wheel)
     wheel_xf.AddTranslateOp().Set(Gf.Vec3d(.35,0.,1.005))
     wheel_xf.AddRotateYOp().Set(90.)
@@ -190,7 +201,8 @@ def build_scene(stage, root="/WheelTask", *, reset_profile="two-defect-candidate
               "reset_profile":reset_profile,"initial_turn_offsets":initial.tolist(),
               "nipple_flat_phase_rad":float(nipple_flat_phase_rad),
               "wheel_clocking_rad":float(wheel_clocking_rad),
-              "central_spring_candidate":bool(central_spring_candidate)}
+              "central_spring_candidate":bool(central_spring_candidate),
+              "inextensible_rim_candidate":bool(inextensible_rim_candidate)}
     for i in range(n):
         old_spokes[i].CreateJointEnabledAttr(False)
         side=1 if i%2==0 else -1

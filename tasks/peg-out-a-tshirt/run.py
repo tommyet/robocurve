@@ -105,17 +105,21 @@ def native_audit(stage,cloth_names,peg_names):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--mode',choices=('smoke','motion-probe'),default='smoke')
+    p.add_argument('--mode',choices=('smoke','motion-probe','dream'),default='smoke')
     p.add_argument('--steps',type=int,default=None)
     p.add_argument('--plan',type=Path,help='Precomputed ordinary joint commands; required for motion-probe')
     p.add_argument('--seed',type=int,default=0)
     p.add_argument('--state-assisted-grasp',action='store_true',help='Explicit scripted feasibility demo: measure reset cloth once to place ordinary fingers; never used by Dream')
+    p.add_argument('--contact-refined',action='store_true',help='Use the explicitly refined cloth contact band for every policy reset')
+    p.add_argument('--regular-refined',action='store_true',help='Use the regular2.5mm cloth grid for every policy reset, preserving1.6mm seam width')
+    p.add_argument('--binary-cloth-trace',action='store_true',help='Preserve all native float32 cloth states in binary arrays, reducing diagnostic JSON overhead')
     p.add_argument('--state-assisted-clip',action='store_true',help='Explicit scripted demo: center free peg jaws with ordinary robot actions before closure')
     p.add_argument('--joint-feedback-from',type=int,help='Enable bounded right-arm PI tracking after this many actions, using ordinary joint observations only')
     p.add_argument('--judging-views',action='store_true',help='Record additional native960×720 front/rear assessor videos')
     p.add_argument('--out',type=Path)
     p.add_argument('--check-only',action='store_true',help='Compile source and check JSON without loading a simulator')
     args=p.parse_args()
+    if args.regular_refined and args.contact_refined:p.error('Select one garment mesh')
     fixed_plan=fixed_actions=None
     if args.mode=='motion-probe':
         if args.plan is None:
@@ -143,9 +147,10 @@ def main():
     else:
         if args.plan is not None:
             p.error('smoke mode has no movement plan')
-        args.steps=60 if args.steps is None else args.steps
-        if not 1<=args.steps<=MAX_SMOKE_STEPS:
-            p.error('Smoke runs are limited to 1–200 control steps')
+        maximum=2400 if args.mode=='dream' else MAX_SMOKE_STEPS
+        args.steps=maximum if args.mode=='dream' and args.steps is None else 60 if args.steps is None else args.steps
+        if not 1<=args.steps<=maximum:p.error(f'This mode permits1–{maximum} control steps')
+    if args.mode=='dream' and (args.state_assisted_grasp or args.state_assisted_clip or args.joint_feedback_from is not None):p.error('Dream receives ordinary observations and its own actions only')
     if args.joint_feedback_from is not None and (args.mode!='motion-probe' or not 0<=args.joint_feedback_from<args.steps):
         p.error('Joint feedback requires a motion probe and a start before its last action')
     if fixed_plan is not None and fixed_plan.get('requires_joint_feedback_from')!=args.joint_feedback_from:
@@ -181,7 +186,7 @@ def main():
             'source_sha256':source_hashes,'versions':versions,'seed':args.seed,
             'control_hz':CONTROL_HZ,'requested_steps':args.steps,'completed_steps':0,
             'policy':('constant adapter-ready joint targets' if fixed_plan is None else 'frozen fixed joint trajectory')+'; no object/assessor feedback',
-            'instruction':draft['instruction'],'joint_feedback_from':args.joint_feedback_from,'state_assisted_grasp':args.state_assisted_grasp}
+            'instruction':draft['instruction'],'joint_feedback_from':args.joint_feedback_from,'state_assisted_grasp':args.state_assisted_grasp,'contact_refined':args.contact_refined,'regular_refined':args.regular_refined}
     if args.joint_feedback_from is not None:
         report['policy']='frozen joint reference with bounded right-arm PI from ordinary joint observations; no object/assessor feedback'
     if args.state_assisted_grasp:
@@ -195,12 +200,15 @@ def main():
         temporary.write_text(json.dumps(report,indent=2,allow_nan=False)+'\n')
         temporary.replace(args.out/'run.json')
     save()
-    app=video=trace=emb=None
+    app=video=trace=emb=dense_trace=dream=None
+    request_audit=[];session_audit={'session_count':0}
     judging_videos={}
     def terminate(signum,frame):
         raise SystemExit('SIGTERM: bounded diagnostic interrupted')
     previous_sigterm=signal.signal(signal.SIGTERM,terminate)
     try:
+        os.environ['ROBOCURVE_SHIRT_CONTACT_REFINED']='1' if args.contact_refined else '0'
+        os.environ['ROBOCURVE_SHIRT_REGULAR_REFINED']='1' if args.regular_refined else '0'
         os.environ.setdefault('OMNI_KIT_ACCEPT_EULA','YES')
         from isaaclab.app import AppLauncher
         app=AppLauncher(headless=True,enable_cameras=True).app
@@ -270,6 +278,10 @@ def main():
                     args.out/(camera['name'].replace('_','-')+'.mp4'),fps=CONTROL_HZ,
                     codec='libx264',pixelformat='yuv420p',ffmpeg_params=['-movflags','+faststart'],macro_block_size=1)
         trace=gzip.open(args.out/'trace.jsonl.gz','wt',compresslevel=1)
+        if args.binary_cloth_trace:
+            from trace_data import DenseClothTrace
+            dense_trace=DenseClothTrace(args.out,arena_cloth.SPECS,args.steps+1)
+            report['cloth_trace_format']='All control-step float32 nodes and velocities in named .npy arrays, referenced by trace JSON; no state sampling or precision reduction'
         ready=emb._ready.detach().cpu().numpy()[0].copy()
         if ready.shape!=(14,) or not np.isfinite(ready).all():
             raise RuntimeError('Invalid ready action')
@@ -278,10 +290,10 @@ def main():
         report['initial_action14']=ready.tolist()
         if fixed_actions is not None and (np.any(fixed_actions<emb._low) or np.any(fixed_actions>emb._high)):
             raise ValueError('Fixed trajectory exceeds ordinary adapter action limits')
+        from yam_arena.constants import SHOULDER,WRIST,GRIPPER,FINGER_OPEN
+        delta_limit=np.tile(np.array([SHOULDER['velocity']/CONTROL_HZ]*3+
+            [WRIST['velocity']/CONTROL_HZ]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/CONTROL_HZ]),2)
         if fixed_actions is not None:
-            from yam_arena.constants import SHOULDER,WRIST,GRIPPER,FINGER_OPEN
-            delta_limit=np.tile(np.array([SHOULDER['velocity']/CONTROL_HZ]*3+
-                [WRIST['velocity']/CONTROL_HZ]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/CONTROL_HZ]),2)
             if np.any(np.abs(np.diff(np.vstack((ready,fixed_actions)),axis=0))>delta_limit*1.001):
                 raise ValueError('Fixed trajectory exceeds normal joint/gripper speed limits')
         from joint_tracking import JointTracking
@@ -296,11 +308,12 @@ def main():
         def snapshot(step):
             observation=emb._observation()
             state=scene.object_states(emb._env,names)
+            recorded_state=dense_trace.record(state,step,encode) if dense_trace is not None else encode(state)
             record={'step':step,'time_s':step/CONTROL_HZ,'action14':active_action.tolist(),
                     'measured_joint_pos':encode(np.asarray(observation.state['joint_pos'])),
                     'reference_action14':reference_action.tolist(),'requested_action14':requested_action.tolist(),
                     'right_tracking_bias6':tracking.bias.tolist(),
-                    'objects':encode(state),'physics_step_count':int(base.sim._physics_step_count),
+                    'objects':recorded_state,'physics_step_count':int(base.sim._physics_step_count),
                     'robot_links':{name:{'names':list(base.scene[name].body_names),
                          'poses_xyzw':arr(base.scene[name].data.body_link_pose_w)[0].tolist()}
                          for name in ('left_robot','right_robot')}}
@@ -321,6 +334,12 @@ def main():
                 for camera,rgb in observation.images.items():
                     Image.fromarray(np.asarray(rgb,dtype=np.uint8)).save(args.out/f'diagnostic-{label}-{camera}.png')
         snapshot(0)
+        if args.mode=='dream':
+            from inspect_robots import Scene
+            from dream_policy import make_policy
+            dream=make_policy(request_audit,session_audit,rows_per_request=8)
+            dream.bind(emb.info);dream.reset(Scene(id='peg-out-a-tshirt',instruction=draft['instruction']))
+            report.update(dream_model=dream.info.checkpoint,policy='Dream: ordinary camera/joint observations only, no material-state or scripted controller input')
         report['status']='running'
         save()
         command=torch.as_tensor(ready[None,:],device=base.device,dtype=torch.float32)
@@ -337,6 +356,14 @@ def main():
                 bounded=np.clip(requested_action,emb._low,emb._high)
                 active_action=active_action+np.clip(bounded-active_action,-delta_limit,delta_limit)
                 command=torch.as_tensor(active_action[None,:],device=base.device,dtype=torch.float32)
+            elif dream is not None:
+                chunk=dream.act(emb._observation())
+                if len(chunk.actions)!=1:raise RuntimeError('Expected one ordinary Dream action')
+                reference_action=np.asarray(chunk.actions[0].data,float)
+                if reference_action.shape!=(14,) or not np.isfinite(reference_action).all():raise ValueError('Invalid Dream joint action')
+                requested_action=reference_action.copy();bounded=np.clip(requested_action,emb._low,emb._high)
+                active_action=active_action+np.clip(bounded-active_action,-delta_limit,delta_limit)
+                command=torch.as_tensor(active_action[None,:],device=base.device,dtype=torch.float32)
             emb._env.step(command)
             emb._t=step/CONTROL_HZ
             snapshot(step)
@@ -349,9 +376,17 @@ def main():
         report.update(status='interrupted' if isinstance(exc,SystemExit) else 'failed',error_type=type(exc).__name__,error_message=str(exc))
         raise
     finally:
+        if dense_trace is not None:
+            dense_trace.flush()
+            report['recorded_cloth_frames']=dense_trace.count
         if trace is not None:trace.close()
         if video is not None:video.close()
         for recorder in judging_videos.values():recorder.close()
+        if dream is not None:
+            from dream_policy import public_transcript
+            (args.out/'dream-transcript.json').write_text(json.dumps(public_transcript(dream),indent=2)+'\n')
+        report.update(dream_requests=len(request_audit),dream_session_audit=session_audit)
+        if request_audit:(args.out/'dream-requests.json').write_text(json.dumps(request_audit,indent=2)+'\n')
         save()
         if app is not None:app.close()
         signal.signal(signal.SIGTERM,previous_sigterm)

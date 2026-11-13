@@ -9,6 +9,7 @@ from dataclasses import asdict
 import hashlib
 import json
 from pathlib import Path
+import signal
 import time
 import traceback
 import numpy as np
@@ -47,11 +48,18 @@ def main():
     p.add_argument('--velocity-iterations',type=int,choices=(1,32),default=None,
                    help='Optional native rigid-body solver comparison; default preserves authored settings')
     p.add_argument('--box-panels',action='store_true',help='Merge each triangle pair into one native rectangular box panel; no convex mesh cooking')
+    p.add_argument('--cpu-ccd',action='store_true',help='Same rigid box/thread scene on CPU PhysX with native sweep and speculative CCD; DirectGPU supports neither CCD mode')
+    p.add_argument('--ccd-mode',choices=('hybrid','sweep'),default='hybrid',help='CPU comparison only: sweep omits speculative contacts while preserving linear CCD')
+    p.add_argument('--recenter-at-seam',action='store_true',help='Coordinate-only comparison: translate every authored object and world-fixed jaw anchor so the seam is near the origin')
     p.add_argument('--seconds',type=float,default=.5)
     p.add_argument('--record-every-step',action='store_true',help='Save raw native body poses at every substep for geometry diagnosis')
-    p.add_argument('--continue-after-audit-warning',action='store_true',help='Unscored forensic recording only: retain the first invalidity and continue to the bounded duration')
+    p.add_argument('--continue-after-audit-warning',action='store_true',help='Unscored forensic recording only: retain contact/hinge warnings through the bounded duration; physically disjoint closed thread ends still stop')
     a=p.parse_args()
     if not .05<=a.seconds<=2:p.error('Bounded shell coupon requires0.05–2seconds')
+    if a.cpu_ccd and not a.box_panels:p.error('CPU CCD comparison requires native box panels')
+    if a.ccd_mode!='hybrid' and not a.cpu_ccd:p.error('CCD mode requires the CPU CCD comparison')
+    if a.recenter_at_seam and (not a.box_panels or a.mode not in ('intact','open')):
+        p.error('Seam recentering requires a box-panel intact/open comparison')
     a.out.mkdir(parents=True,exist_ok=False)
     report=dict(status='running',mode=a.mode,physics_hz=a.physics_hz,seconds=a.seconds,
                 score=None,robot_demo=False,dream_requests=0,
@@ -59,7 +67,13 @@ def main():
     app=physics=stage=cache=None;attached=False;started=time.monotonic();phase='startup'
     def save():
         report['wall_seconds']=time.monotonic()-started
-        (a.out/'probe.json').write_text(json.dumps(report,indent=2,allow_nan=False)+'\n')
+        report['phase']=phase
+        temporary=a.out/'probe.tmp.json'
+        temporary.write_text(json.dumps(report,indent=2,allow_nan=False)+'\n')
+        temporary.replace(a.out/'probe.json')
+    def terminated(signum,frame):raise TimeoutError('Probe stopped by external watchdog')
+    signal.signal(signal.SIGTERM,terminated)
+    save()
     try:
         from isaaclab.app import AppLauncher
         app=AppLauncher(headless=True,enable_cameras=False).app
@@ -84,16 +98,23 @@ def main():
         ensure_gpu_scene(stage)
         native=PhysxSchema.PhysxSceneAPI(scene.GetPrim())
         native.CreateEnableExternalForcesEveryIterationAttr(False)
+        if a.cpu_ccd:
+            native.CreateEnableGPUDynamicsAttr(False)
+            native.CreateBroadphaseTypeAttr('MBP')
+            native.CreateEnableCCDAttr(True)
         report['effective_external_forces_every_iteration']=bool(native.GetEnableExternalForcesEveryIterationAttr().Get())
         material=ShellMaterial();report['shell_material']=asdict(material)
         report['shell_bending_rigidity_nm']=material.rigidity_nm
         report['membrane_model']='Approximately inextensible rigid facets; finite hinge bending, not FEM'
         report['box_panels']=a.box_panels
+        report['ccd_mode']=a.ccd_mode if a.cpu_ccd else 'direct_gpu_unsupported'
         isolated=a.mode in ('bend','freefall')
+        offset=np.array((-.300,0.,-.8127)) if a.recenter_at_seam else np.zeros(3)
+        report['world_coordinate_offset_m']=offset.tolist()
         meshes=[shell_mesh(True)] if isolated else [shell_mesh(True),shell_mesh(False)]
         shells=[];threads=[]
         for i,mesh in enumerate(meshes):
-            if not isolated:mesh.rest=transform(mesh.rest,lower_edge_supported=True)
+            if not isolated:mesh.rest=transform(mesh.rest,lower_edge_supported=True)+offset
             shells.append(author_shell(stage,f'/World/Shell_{i}',mesh,material,
                                        (.76,.68,.47) if i==0 else (.25,.42,.66),primitive_boxes=a.box_panels))
         report['shell_geometry']=[m.audit() for m in meshes]
@@ -112,25 +133,50 @@ def main():
             author_box(stage,'/World/UpperJaw',(.010,.090,.008),(.240,0.,centre_z+.004+.0002))
             report['bend_fixture']='First10mm of horizontal upper patch held between ordinary fixed jaws,0.4mm gap; no vertex or facet attachment'
         elif a.mode!='freefall':
-            author_box(stage,'/World/Table',(1.1,1.3,.06),(.36,0.,.7175))
+            author_box(stage,'/World/Table',(1.1,1.3,.06),np.array((.36,0.,.7175))+offset)
             for name,size,position in [*fixture_boxes(lower_edge_supported=True),*backing_boxes()]:
                 path=f'/World/{name}'
+                position=np.asarray(position)+offset
                 author_box(stage,path,size,position,dynamic=name==MOVING_NAME,mass=PARAMETERS.mass_kg,friction=.8)
                 if name==MOVING_NAME:author_guide(stage,path,position)
-            threads=[author_thread(stage,f'/World/Stitch_{i}',transform(stitch_loop(y),lower_edge_supported=True),
+            threads=[author_thread(stage,f'/World/Stitch_{i}',transform(stitch_loop(y),lower_edge_supported=True)+offset,
                                    radius=.0004,open_diagnostic=a.mode=='open') for i,y in enumerate(STITCH_Y)]
         if a.velocity_iterations is not None:
             for prim in stage.Traverse():
                 if prim.HasAPI(UsdPhysics.RigidBodyAPI):
                     PhysxSchema.PhysxRigidBodyAPI.Apply(prim).CreateSolverVelocityIterationCountAttr(a.velocity_iterations)
+        if a.cpu_ccd:
+            for prim in stage.Traverse():
+                if prim.HasAPI(UsdPhysics.RigidBodyAPI):
+                    body=PhysxSchema.PhysxRigidBodyAPI.Apply(prim)
+                    body.CreateEnableCCDAttr(True)
+                    body.CreateEnableSpeculativeCCDAttr(a.ccd_mode=='hybrid')
+        report['effective_scene_physics']={
+            'gpu_dynamics':bool(native.GetEnableGPUDynamicsAttr().Get()),
+            'broadphase':str(native.GetBroadphaseTypeAttr().Get()),
+            'sweep_ccd':bool(native.GetEnableCCDAttr().Get()),
+            'solver':str(native.GetSolverTypeAttr().Get()),
+        }
+        report['effective_body_ccd']=[dict(path=str(prim.GetPath()),
+            sweep=bool(PhysxSchema.PhysxRigidBodyAPI(prim).GetEnableCCDAttr().Get()),
+            speculative=bool(PhysxSchema.PhysxRigidBodyAPI(prim).GetEnableSpeculativeCCDAttr().Get()))
+            for prim in stage.Traverse() if prim.HasAPI(UsdPhysics.RigidBodyAPI)]
+        if a.cpu_ccd and (report['effective_scene_physics']!={
+                'gpu_dynamics':False,'broadphase':'MBP','sweep_ccd':True,'solver':'TGS'} or
+                not all(row['sweep'] and row['speculative']==(a.ccd_mode=='hybrid') for row in report['effective_body_ccd'])):
+            raise RuntimeError('CPU CCD settings did not reach every native body and the scene')
         report['rigid_solver_velocity_iterations']=sorted(set(int(
             PhysxSchema.PhysxRigidBodyAPI(prim).GetSolverVelocityIterationCountAttr().Get())
             for prim in stage.Traverse() if prim.HasAPI(UsdPhysics.RigidBodyAPI)))
         if a.mode=='freefall':
             report['freefall_fixture']='None: one free shell in gravity with no jaws, backing, table or thread'
         stage.GetRootLayer().Export(str(a.out/'initial.usda'))
+        phase='attach';save()
         physics=get_physx_simulation_interface();physics.attach_stage(stage_id);attached=True
         sim=tensors.create_simulation_view('torch',stage_id);sim.set_subspace_roots('/')
+        report['native_tensor_device']=str(sim.device)
+        if a.cpu_ccd and str(sim.device)!='cpu':
+            raise RuntimeError('CPU CCD scene unexpectedly exposes a GPU simulation tensor device')
         views=[sim.create_rigid_body_view(f'/World/Shell_{i}/facet_*') for i in range(len(shells))]
         if any(view.count!=len(shell['bodies']) for view,shell in zip(views,shells)):
             raise RuntimeError('Missing native facet bodies')
@@ -155,6 +201,15 @@ def main():
             array(thread_view.get_transforms())[thread_order] if threads else None,lengths)
         report['forensic_continue_after_warning']=a.continue_after_audit_warning
         gap_peak=0.;deformation_peak=0.;phase='stepping'
+        def save_state():
+            arrays={'sample_times_s':times}
+            for i,(rows,mesh) in enumerate(zip(frames,meshes)):
+                arrays.update({f'patch_{i}':rows,f'rest_{i}':mesh.rest,f'faces_{i}':mesh.faces,
+                               f'facet_poses_{i}':facet_frames[i],f'facet_velocities_{i}':velocity_frames[i]})
+            if threads:arrays.update(thread=thread_frames,thread_lengths=lengths)
+            temporary=a.out/'state.tmp.npz';np.savez_compressed(temporary,**arrays)
+            temporary.replace(a.out/'state.npz')
+        last_checkpoint=time.monotonic();save()
         for step in range(1,round(a.seconds*a.physics_hz)+1):
             physics.simulate(1/a.physics_hz,(step-1)/a.physics_hz);physics.fetch_results()
             if step==1 and not a.box_panels:
@@ -197,15 +252,18 @@ def main():
             report.update(completed_steps=step,maximum_hinge_endpoint_gap_m=gap_peak,
                           maximum_rms_nonplanarity_m=deformation_peak,
                           last_facet_checks=checks,contact_audit=[c.summary() for c in contact])
+            if integrity:report['thread_joint_integrity']=integrity.summary()
+            if junctions:report['closed_junction_contact_audit']=junctions.summary()
             previous_native=current_native
+            if step==1 or time.monotonic()-last_checkpoint>=5.:
+                save_state();save();last_checkpoint=time.monotonic()
+                print(json.dumps({'step':step,'simulated_s':step/a.physics_hz,
+                                  'wall_s':report['wall_seconds'],'status':report['status']}),flush=True)
+            if integrity and integrity.first_failure is not None:
+                report['stopped_on_disjoint_closed_thread']=True
+                break
             if invalid and not a.continue_after_audit_warning:break
-        arrays={'sample_times_s':times}
-        for i,(rows,mesh) in enumerate(zip(frames,meshes)):
-            arrays.update({f'patch_{i}':rows,f'rest_{i}':mesh.rest,f'faces_{i}':mesh.faces,
-                           f'facet_poses_{i}':facet_frames[i]})
-            arrays[f'facet_velocities_{i}']=velocity_frames[i]
-        if threads:arrays.update(thread=thread_frames,thread_lengths=lengths)
-        np.savez_compressed(a.out/'state.npz',**arrays)
+        save_state()
         if integrity:report['thread_joint_integrity']=integrity.summary()
         if junctions:report['closed_junction_contact_audit']=junctions.summary()
         if a.mode=='bend':
@@ -225,6 +283,9 @@ def main():
         report.update(status='failed',error=f'{type(exc).__name__}: {exc}',error_phase=phase,traceback=traceback.format_exc())
         raise
     finally:
+        if 'save_state' in locals():
+            try:save_state()
+            except Exception as exc:report['state_checkpoint_error']=f'{type(exc).__name__}: {exc}'
         save()
         if attached:physics.detach_stage()
         if stage and cache:cache.Erase(stage)

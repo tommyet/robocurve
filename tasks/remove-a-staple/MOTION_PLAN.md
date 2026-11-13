@@ -5,7 +5,7 @@ poses from `plan_reach.py` pass offline inverse kinematics. The current 236-acti
 lever plan also passes every-action sampled hull screening against the robot,
 tool and support, with the left brace at (0.405, 0.050) m. Flexible paper and
 wire contacts remain native-test requirements. This is not a successful grasp
-or extraction, and the final sheet slide is not yet planned.
+or extraction. The full-size panel reset currently fails before robot actions.
 
 1. Pick up the remover across its 18 mm grip width and lift it clear of the
    table. The gripper closes across the handle, not against its two ends.
@@ -20,14 +20,11 @@ or extraction, and the final sheet slide is not yet planned.
 5. Lift the held remover about 12 mm, continuing to hold the sheets down. The
    staple legs must straighten and leave the original holes through contact.
    A bent crown, floating stack or still-threaded leg is not extraction.
-6. Clear the remover and staple. Slide the top sheet away under gentle fingertip
-   contact, then release both papers for three seconds. Thin-edge pinching is
-   not assumed feasible merely because an inverse-kinematics target exists.
+6. Leave the complete staple at least10mm clear of both sheets, then release
+   the tool and papers for three seconds. Both legs must be present and clear
+   of the original holes. Moving or separating the sheets is unnecessary.
 
-The final slide needs at least30 mm of additional relative movement beyond
-the initial12 mm sheet stagger. The sheets can still overlap; shifting the
-whole stack together earns no separation credit. This avoids an unrelated
-full-sheet transport while demonstrating that the fastener no longer joins them.
-
-Every substep keeps the paper strain and wire-crossing guards active. A stopped
-trial remains invalid even if a later continuation could look successful.
+Every substep keeps the selected material's continuity and wire-crossing guards
+active. A stopped trial remains invalid even if a later continuation could look
+successful. The panel candidate uses finite native hinge strength; the older
+surface-FEM path has separate membrane validity limits.

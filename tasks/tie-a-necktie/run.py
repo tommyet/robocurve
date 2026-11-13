@@ -106,13 +106,14 @@ def native_audit(stage,cloth_names,peg_names):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--mode',choices=('smoke','motion-probe'),default='smoke')
+    p.add_argument('--mode',choices=('smoke','motion-probe','dream'),default='smoke')
     p.add_argument('--steps',type=int,default=None)
     p.add_argument('--plan',type=Path,help='Precomputed ordinary joint commands; required for motion-probe')
     p.add_argument('--seed',type=int,default=0)
     p.add_argument('--inside-out-reset',action='store_true',help='Explicit diagnostic reset for a simple (Oriental) knot; default remains front-face drape')
     p.add_argument('--adult-collar',action='store_true',help='Explicit diagnostic145cm tie and standalone folded-collar form')
     p.add_argument('--state-assisted-grasp',action='store_true',help='Disclosed scripted adult pickup: use measured reset cloth to select ordinary finger targets')
+    p.add_argument('--state-assisted-handoff',action='store_true',help='Disclosed scripted adult tip transfer: measure the held free tip before ordinary receiving-finger actions')
     p.add_argument('--judging-views',action='store_true',help='Record additional native960×720 front/rear assessor videos')
     p.add_argument('--out',type=Path)
     p.add_argument('--check-only',action='store_true',help='Compile source and check JSON without loading a simulator')
@@ -129,6 +130,8 @@ def main():
             p.error(fixed_plan['do_not_run_reason'])
         if bool(fixed_plan.get('requires_adult_collar')) != args.adult_collar:
             p.error('Motion and selected collar form do not match')
+        if bool(fixed_plan.get('requires_state_assisted_handoff')) != args.state_assisted_handoff:
+            p.error('Motion and selected tip-transfer controller do not match')
         expected=hashlib.sha256((HERE/('adult_layout.py' if args.adult_collar else 'layout.py')).read_bytes()).hexdigest()
         if fixed_plan.get('fixture_source_sha256')!=expected:
             p.error('Frozen motion does not match current collar geometry; recompile and audit first')
@@ -138,13 +141,16 @@ def main():
     else:
         if args.plan is not None:
             p.error('smoke mode has no movement plan')
-        args.steps=60 if args.steps is None else args.steps
-        if not 1<=args.steps<=MAX_SMOKE_STEPS:
-            p.error('Smoke runs are limited to 1–200 control steps')
+        maximum=3600 if args.mode=='dream' else MAX_SMOKE_STEPS
+        args.steps=maximum if args.mode=='dream' and args.steps is None else 60 if args.steps is None else args.steps
+        if not 1<=args.steps<=maximum:p.error(f'This mode permits1–{maximum} control steps')
+    if args.mode=='dream' and (args.state_assisted_grasp or args.state_assisted_handoff):p.error('Dream receives ordinary observations and its own actions only')
+    if args.mode=='dream' and not(args.adult_collar and args.inside_out_reset):p.error('Current Dream candidate requires the adult inside-out reset matching its demo')
     if not 0<=args.seed<2**32:
         p.error('Seed must be an unsigned 32-bit integer')
-    if args.state_assisted_grasp and (args.mode!='motion-probe' or not args.adult_collar or args.steps!=200):
-        p.error('Adult state-assisted pickup currently requires the bounded200-action adult motion probe')
+    if args.state_assisted_grasp and (args.mode!='motion-probe' or not args.adult_collar or args.steps!=(560 if args.state_assisted_handoff else 220)):
+        p.error('Adult scripted pickup requires220 actions, or560 with the explicit tip transfer')
+    if args.state_assisted_handoff and not args.state_assisted_grasp:p.error('Tip transfer requires the measured adult pickup prefix')
     source_hashes=sources()
     if args.check_only:
         print(json.dumps({'status':'local_syntax_and_json_passed','source_sha256':source_hashes,
@@ -164,8 +170,8 @@ def main():
         shutil.copyfile(args.plan,frozen/'fixed-motion.json')
         source_hashes['fixed-motion.json']=hashlib.sha256(args.plan.read_bytes()).hexdigest()
     draft=json.loads((HERE/'task.draft.json').read_text())
-    if args.inside_out_reset:
-        draft['instruction']='Tie a simple (Oriental) necktie knot on the collar form and leave it ready to wear.'
+    if not args.adult_collar:
+        draft['instruction']=('Tie a simple (Oriental) necktie knot' if args.inside_out_reset else 'Tie a four-in-hand necktie')+' on the child collar form and leave it ready to wear.'
     started=time.monotonic()
     report={'kind':'diagnostic_yam_'+args.mode+'_not_submission_evidence','status':'initializing',
             'score':None,'demo':False,'dream_requests':0,'started_utc':datetime.now(timezone.utc).isoformat(),
@@ -177,13 +183,15 @@ def main():
             'instruction':draft['instruction']}
     if args.state_assisted_grasp:
         report['policy']='Explicit state-assisted scripted feasibility demonstration: measured reset cloth selects an ordinary pinch and lift. No physical state writes; Dream receives no material state.'
+    if args.mode=='dream':report['policy']='Dream: ordinary camera/joint observations only, no material-state or scripted controller input'
     def save():
         report['wall_seconds']=time.monotonic()-started
         temporary=args.out/'run.json.tmp'
         temporary.write_text(json.dumps(report,indent=2,allow_nan=False)+'\n')
         temporary.replace(args.out/'run.json')
     save()
-    app=video=trace=emb=None
+    app=video=trace=emb=dream=None
+    request_audit=[];session_audit={'session_count':0}
     judging_videos={}
     def terminate(signum,frame):
         raise SystemExit('SIGTERM: bounded diagnostic interrupted')
@@ -237,9 +245,18 @@ def main():
             np.savez_compressed(args.out/'reset-cloth.npz',positions=nodes,
                 rest=arena_cloth.SPECS['tie'].mesh.rest,faces=arena_cloth.SPECS['tie'].mesh.faces)
             fixed_plan=compile_pickup(arena_cloth.SPECS['tie'].mesh.rest,nodes)
+            from audit_reset_approach import screen
+            approach_hits=screen(fixed_plan,nodes,arena_cloth.SPECS['tie'].mesh.faces)
+            (args.out/'reset-cloth-approach-audit.json').write_text(json.dumps(dict(samples=80,inflation_m=.001,violations=approach_hits),indent=2)+'\n')
+            if approach_hits:raise RuntimeError('Measured reset cloth intersects the pre-grasp robot approach')
             clearance=audit(fixed_plan)
             (args.out/'reset-grasp-hull-audit.json').write_text(json.dumps(clearance,indent=2)+'\n')
             if not clearance['passed']:raise RuntimeError('Measured adult pickup fails commanded hull rejection check')
+            if args.state_assisted_handoff:
+                from adult_handoff import template
+                fixed_plan=template(fixed_plan)
+                raised_clearance=audit(dict(frames=fixed_plan['frames'][220:280]))
+                if not raised_clearance['passed']:raise RuntimeError('Raised transfer pose fails commanded hull rejection check')
             fixed_plan.pop('do_not_run_reason',None)
             (frozen/'fixed-motion.json').rename(frozen/'requested-fixed-motion.json')
             (frozen/'fixed-motion.json').write_text(json.dumps(fixed_plan,indent=2)+'\n')
@@ -266,10 +283,10 @@ def main():
         report['initial_action14']=ready.tolist()
         if fixed_actions is not None and (np.any(fixed_actions<emb._low) or np.any(fixed_actions>emb._high)):
             raise ValueError('Fixed trajectory exceeds ordinary adapter action limits')
+        from yam_arena.constants import SHOULDER,WRIST,GRIPPER,FINGER_OPEN
+        delta_limit=np.tile(np.array([SHOULDER['velocity']/CONTROL_HZ]*3+
+            [WRIST['velocity']/CONTROL_HZ]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/CONTROL_HZ]),2)
         if fixed_actions is not None:
-            from yam_arena.constants import SHOULDER,WRIST,GRIPPER,FINGER_OPEN
-            delta_limit=np.tile(np.array([SHOULDER['velocity']/CONTROL_HZ]*3+
-                [WRIST['velocity']/CONTROL_HZ]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/CONTROL_HZ]),2)
             if np.any(np.abs(np.diff(np.vstack((ready,fixed_actions)),axis=0))>delta_limit*1.001):
                 raise ValueError('Fixed trajectory exceeds normal joint/gripper speed limits')
         active_action=ready.copy()
@@ -301,12 +318,46 @@ def main():
                 for camera,rgb in observation.images.items():
                     Image.fromarray(np.asarray(rgb,dtype=np.uint8)).save(args.out/f'diagnostic-{label}-{camera}.png')
         snapshot(0)
+        if args.mode=='dream':
+            from inspect_robots import Scene
+            from dream_policy import make_policy
+            dream=make_policy(request_audit,session_audit,rows_per_request=8)
+            dream.bind(emb.info);dream.reset(Scene(id='tie-a-necktie',instruction=draft['instruction']))
+            report['dream_model']=dream.info.checkpoint
         report['status']='running'
         save()
         command=torch.as_tensor(ready[None,:],device=base.device,dtype=torch.float32)
         for step in range(1,args.steps+1):
+            if args.state_assisted_handoff and step==281:
+                from adult_handoff import receive_tip
+                from audit_adult_motion import audit
+                from audit_reset_approach import screen
+                native=arena_cloth.state(emb._env,'tie');mesh=arena_cloth.SPECS['tie'].mesh
+                np.savez_compressed(args.out/'handoff-input-cloth.npz',positions=native.nodes,rest=mesh.rest,faces=mesh.faces)
+                continuation=receive_tip(fixed_actions[279],mesh.rest,native.nodes)
+                clearance=audit(continuation)
+                (args.out/'handoff-hull-audit.json').write_text(json.dumps(clearance,indent=2)+'\n')
+                if not clearance['passed']:raise RuntimeError('Measured receiving trajectory intersects a fixture or opposite arm')
+                approach_hits=screen(continuation,native.nodes,mesh.faces,steps=range(1,101),side='left')
+                (args.out/'handoff-cloth-approach-audit.json').write_text(json.dumps(dict(samples=100,inflation_m=.001,violations=approach_hits),indent=2)+'\n')
+                if approach_hits:raise RuntimeError('Receiving approach intersects the actual held cloth before the intended pinch')
+                fixed_plan['frames'][280:]=continuation['frames'];fixed_plan['handoff_calibration']=continuation['grasp']
+                fixed_actions=np.asarray([f['action14'] for f in fixed_plan['frames']],float)
+                if np.any(fixed_actions<emb._low) or np.any(fixed_actions>emb._high):raise ValueError('Receiving trajectory exceeds normal joint limits')
+                if np.any(np.abs(np.diff(fixed_actions[279:],axis=0))>delta_limit*1.001):raise ValueError('Receiving trajectory exceeds normal action speeds')
+                (frozen/'fixed-motion.json').write_text(json.dumps(fixed_plan,indent=2)+'\n')
+                report['executed_plan_sha256']=hashlib.sha256((frozen/'fixed-motion.json').read_bytes()).hexdigest()
+                report['state_assisted_handoff']=continuation['grasp'];save()
             if fixed_actions is not None:
                 active_action=fixed_actions[step-1].copy()
+                command=torch.as_tensor(active_action[None,:],device=base.device,dtype=torch.float32)
+            elif dream is not None:
+                chunk=dream.act(emb._observation())
+                if len(chunk.actions)!=1:raise RuntimeError('Expected one ordinary Dream action')
+                requested=np.asarray(chunk.actions[0].data,float)
+                if requested.shape!=(14,) or not np.isfinite(requested).all():raise ValueError('Invalid Dream joint action')
+                bounded=np.clip(requested,emb._low,emb._high)
+                active_action=active_action+np.clip(bounded-active_action,-delta_limit,delta_limit)
                 command=torch.as_tensor(active_action[None,:],device=base.device,dtype=torch.float32)
             emb._env.step(command)
             emb._t=step/CONTROL_HZ
@@ -323,6 +374,11 @@ def main():
         if trace is not None:trace.close()
         if video is not None:video.close()
         for recorder in judging_videos.values():recorder.close()
+        if dream is not None:
+            from dream_policy import public_transcript
+            (args.out/'dream-transcript.json').write_text(json.dumps(public_transcript(dream),indent=2)+'\n')
+        report.update(dream_requests=len(request_audit),dream_session_audit=session_audit)
+        if request_audit:(args.out/'dream-requests.json').write_text(json.dumps(request_audit,indent=2)+'\n')
         save()
         if app is not None:app.close()
         signal.signal(signal.SIGTERM,previous_sigterm)

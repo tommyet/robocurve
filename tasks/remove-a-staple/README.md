@@ -1,9 +1,11 @@
 # Remove a staple without tearing the papers
 
-**Development package; not submission-ready.** Native steel plasticity and
-flexible100µm box-panel paper contact coupons pass. Full-size paper contact,
-complete extraction and robot feasibility remain unverified. There is no demo,
-Dream run or media ID.
+**Development package; not submission-ready.** Full-size flexible 100 µm box-panel
+paper now passes passive contact and a short YAM integration check. A fixed
+translation of the whole station near the paper origin resolves the earlier
+large-coordinate numerical failure without changing relative geometry or
+material. Complete extraction and loaded robot feasibility remain unverified.
+There is no demo, Dream run or media ID.
 
 The robot removes a clinched staple without tearing either sheet and leaves the
 complete staple at least10mm clear. The difficulty is engaging a remover under
@@ -20,12 +22,12 @@ difference. The three unedited reports are in `evidence/native-coupon-*.json`;
 `VALIDATION.json` records their hashes. These are contact/material tests, not
 paper extraction or robot demonstrations. Material parameters are approximate.
 
-There are 46 passing CPU checks for the steel law, punctured meshes,
+There are 49 passing CPU checks for the steel law, punctured meshes,
 latched membrane/contact guards, tool approach geometry and photo-based judging.
 The older CPU cohesive-opening model remains a research probe; it does not
 supply tearing physics in the native scene.
 
-The current supported-edge candidate uses fixed 620 × 420 µm punctures in
+An earlier surface-FEM supported-edge candidate used fixed620 ×420µm punctures in
 coarser, better-conditioned local meshes. An unstapled pair completes 0.1 s at
 10,000 Hz with peak membrane strain of 0.272% and 0.283%. The full stapled
 control still exceeds the conservative 0.3% membrane boundary at 5.6 ms
@@ -63,7 +65,7 @@ leave a zero process exit status after a reported error. The three steel runs
 took about 7, 8 and 12 seconds respectively, excluding installation. Full trial
 runtime and cost are not established. All setups are deterministic; no seeds.
 
-## Proposed native task
+## Historical surface-FEM candidate
 
 `paper.py` creates genuine 0.1 mm, 80 gsm sheets with explicit puncture holes.
 `native_paper.py` supplies surface-FEM paper and independently simulated steel
@@ -96,10 +98,10 @@ is reported separately; harmless creases are allowed by the task. No post-fractu
 wire/triangle crossing audit also fails closed. These limits need contact and
 adversarial checks before any score can be claimed. See `PAPER_SOLVER_PLAN.md`.
 
-## Remaining acceptance gates
+## Remaining acceptance gates (current panel candidate)
 
-1. Show that real-scale flexible paper contacts and retains the clinched wire;
-   test a free-sheet control and smaller time steps.
+1. Verify flexible loaded contact during remover insertion and extraction;
+   the full-size passive contact and short native YAM gates now pass.
 2. Settle the full scene without fixtures, show contact-driven extraction and
    reject damaging or out-of-plane manipulation that exceeds model scope.
 3. Implement ordinary YAM manipulation and demonstrate full score within the
@@ -200,3 +202,38 @@ use reset-only pose writes and inspect paper continuity/crossing every substep.
 They have not yet run. Paper remains a discretely flexible shell, not one rigid
 sheet; anisotropy, permanent crease memory and detailed post-fracture topology
 are not represented. Any broken/gaping hinge invalidates the candidate trial.
+
+### Current box-panel candidate, 13 November
+
+The active candidate uses `facet_paper.py`, `arena_panels.py`, `task_panels.py`
+and `preview_panels.py`. The lower and upper A5 sheets have 573 and 550 free
+analytic boxes, each genuinely 100 µm thick, joined by passive finite-strength
+bending hinges. It is an approximately inextensible flexible sheet, not a
+rigid paper prop. Explicit 0.8 × 0.6 mm holes surround the clinched wire. The
+physical document plate has a 1.5 × 16 × 8 mm pocket below the folded legs.
+
+The original full scene failed at 4.7 ms despite no initial solid overlap.
+Translating the entire scene by (−0.32, 0, −0.7675) m before physics attachment
+resolves that failure at the same 100 µs step. The 0.1-second native control
+keeps maximum hinge gaps below 0.173 µm and all wire-crossing audits clean.
+The identical coordinate change includes both robot bases, the table, fixed
+cameras and hardware in the YAM bridge; wrist camera transforms remain relative
+to their arms. Its two-action gate also passes, with final gaps of 0.599 and
+0.643 µm. No task object is moved during control except through physics.
+
+Increasing the step to 500 µs fails by 5.5 ms and is not used. The two-action
+bridge took 113.6 wall seconds including initialization. Runtime reductions
+need matched mechanical checks before a full robot trial. The 236-action
+pocket-support lever plan has a clean whole-arm collision screen, but has not
+yet grasped the remover or extracted the staple in this model.
+
+Run the current integration gate in the pinned environment:
+
+```sh
+python tasks/remove-a-staple/preview_panels.py --out OUTPUT --steps 2 --physics-hz 10000 --recenter-at-paper
+```
+
+The coordinate translation is a numerical choice, not an altered physical
+setup. Ordinary creases are allowed. Broken or gaping hinges and intact-paper
+wire crossings invalidate evidence. See
+`evidence/native-panel-recenter-070-074-summary.json` for measured controls.

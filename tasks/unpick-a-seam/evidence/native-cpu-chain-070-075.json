@@ -1,0 +1,185 @@
+{
+  "date": "2026-11-13",
+  "status": "failed_native_closed_thread_continuity_no_demo_or_score",
+  "controls": [
+    {
+      "batch": "070",
+      "source": "artifacts/six-task-completion-2026-11-13/native-batch-070-controls/seam-cpu-ccd",
+      "files_sha256": {
+        "first-event-native.npz": "2283b8eeec60ac9b8ae086a14201900dd7c3151ac1eaac23de490b36b1ad5ea1",
+        "initial.usda": "3d1b10ac437e93f50e2ac36b30dd5cd424c0c6b8ece5f09038e905bcb611d7a5"
+      },
+      "report_available": false,
+      "status": "timeout_without_final_report",
+      "first_saved_failure_s": 0.003125,
+      "first_saved_closed_joint_gap_m": 0.001156821,
+      "interpretation": "First-event native state proves physically disjoint uncut thread caps. The old probe did not checkpoint its final report before timeout."
+    },
+    {
+      "batch": "072",
+      "source": "artifacts/six-task-completion-2026-11-13/native-batch-072-seam/seam-cpu-recenter",
+      "files_sha256": {
+        "state.npz": "2e96f854cdf05ca1490e0e1f872640d21f92287b4130f302fc755feb8ee252bb",
+        "probe.json": "8de5b99c450d609157661541b765c731f4026b502c85096964eda6319cd47128",
+        "first-event-native.npz": "21d422578b432c26648361cd6cde69e74941924d7fb491e279b2c936740a65d3",
+        "initial.usda": "b37bff347623a24d40e60760576a4ec352ec0d907135f3843b3b8dd91de32b8a"
+      },
+      "report_available": true,
+      "status": "invalid_model_domain",
+      "completed_steps": 3,
+      "physics_hz": 960,
+      "world_coordinate_offset_m": [
+        -0.3,
+        0.0,
+        -0.8127
+      ],
+      "effective_scene_physics": {
+        "gpu_dynamics": false,
+        "broadphase": "MBP",
+        "sweep_ccd": true,
+        "solver": "TGS"
+      },
+      "native_tensor_device": "cpu",
+      "initial_facet_state": [
+        {
+          "maximum_hinge_endpoint_gap_m": 2.086162576020456e-09,
+          "maximum_vertex_average_error_m": 1.1531804494319383e-09,
+          "valid": true,
+          "maximum_authored_vertex_error_m": 1.4694502286460314e-09,
+          "maximum_body_speed_m_s": 0.0
+        },
+        {
+          "maximum_hinge_endpoint_gap_m": 2.086162576020456e-09,
+          "maximum_vertex_average_error_m": 1.1531804494319383e-09,
+          "valid": true,
+          "maximum_authored_vertex_error_m": 1.469450126557252e-09,
+          "maximum_body_speed_m_s": 0.0
+        }
+      ],
+      "thread_joint_integrity": {
+        "maximum_closed_joint_gap_m": 0.0009678322856773015,
+        "first_failure": {
+          "time_s": 0.003125,
+          "joint": 53,
+          "gap_m": 0.0009678322856773015,
+          "maximum_connected_endcap_gap_m": 0.0008,
+          "reason": "unsevered native joint has physically disjoint end caps"
+        },
+        "valid": false
+      },
+      "final_maximum_body_speed_m_s": [
+        6.102250576019287,
+        1.3632911443710327
+      ],
+      "wall_seconds": 4.641267622821033,
+      "ccd_mode": "hybrid",
+      "exact_solid_final": {
+        "time_s": 0.003125,
+        "patches": [
+          {
+            "maximum_hinge_endpoint_gap_m": 0.0001299045409575703,
+            "maximum_vertex_average_error_m": 8.589718717456092e-05,
+            "maximum_capsule_overlap_lower_bound_m": 9.987759111230896e-05,
+            "overlapping_pairs": 12,
+            "native_midplane_intersections": 0,
+            "retained_initial_links": 12,
+            "ambiguous_links": 0
+          },
+          {
+            "maximum_hinge_endpoint_gap_m": 7.028846298408308e-05,
+            "maximum_vertex_average_error_m": 6.440942821106395e-05,
+            "maximum_capsule_overlap_lower_bound_m": 0.00010859344402587182,
+            "overlapping_pairs": 19,
+            "native_midplane_intersections": 0,
+            "retained_initial_links": 12,
+            "ambiguous_links": 0
+          }
+        ]
+      }
+    },
+    {
+      "batch": "075",
+      "source": "artifacts/six-task-completion-2026-11-13/native-batch-075-seam/seam-sweep-only",
+      "files_sha256": {
+        "state.npz": "c3a3ce413afd11fffc41d450acd62d56b751f8c35849e954cdcf067d8e3526ab",
+        "probe.json": "586006df0f7e1f86b61ce3099147394796676c9612100bd296f3d2d4f4d0e5d6",
+        "first-event-native.npz": "5cef036c56ce346663f3aab91f6a4242ffad0e55f1cd0803204feb2c51d59f3f",
+        "initial.usda": "eef103f14962883d7274d6b1e1343dc7eab312dda8ad6572c497a3c1352ae4dc"
+      },
+      "report_available": true,
+      "status": "invalid_model_domain",
+      "completed_steps": 3,
+      "physics_hz": 960,
+      "world_coordinate_offset_m": [
+        -0.3,
+        0.0,
+        -0.8127
+      ],
+      "effective_scene_physics": {
+        "gpu_dynamics": false,
+        "broadphase": "MBP",
+        "sweep_ccd": true,
+        "solver": "TGS"
+      },
+      "native_tensor_device": "cpu",
+      "initial_facet_state": [
+        {
+          "maximum_hinge_endpoint_gap_m": 2.086162576020456e-09,
+          "maximum_vertex_average_error_m": 1.1531804494319383e-09,
+          "valid": true,
+          "maximum_authored_vertex_error_m": 1.4694502286460314e-09,
+          "maximum_body_speed_m_s": 0.0
+        },
+        {
+          "maximum_hinge_endpoint_gap_m": 2.086162576020456e-09,
+          "maximum_vertex_average_error_m": 1.1531804494319383e-09,
+          "valid": true,
+          "maximum_authored_vertex_error_m": 1.469450126557252e-09,
+          "maximum_body_speed_m_s": 0.0
+        }
+      ],
+      "thread_joint_integrity": {
+        "maximum_closed_joint_gap_m": 0.0013720945769361993,
+        "first_failure": {
+          "time_s": 0.003125,
+          "joint": 53,
+          "gap_m": 0.0013720945769361993,
+          "maximum_connected_endcap_gap_m": 0.0008,
+          "reason": "unsevered native joint has physically disjoint end caps"
+        },
+        "valid": false
+      },
+      "final_maximum_body_speed_m_s": [
+        2.017225980758667,
+        8.606400489807129
+      ],
+      "wall_seconds": 4.991083542816341,
+      "ccd_mode": "sweep",
+      "exact_solid_final": {
+        "time_s": 0.003125,
+        "patches": [
+          {
+            "maximum_hinge_endpoint_gap_m": 0.00022195779338854226,
+            "maximum_vertex_average_error_m": 0.00015078248922472474,
+            "maximum_capsule_overlap_lower_bound_m": 0.00024040430991908082,
+            "overlapping_pairs": 29,
+            "native_midplane_intersections": 0,
+            "retained_initial_links": 12,
+            "ambiguous_links": 0
+          },
+          {
+            "maximum_hinge_endpoint_gap_m": 0.00041865110169640827,
+            "maximum_vertex_average_error_m": 0.0002840691371045781,
+            "maximum_capsule_overlap_lower_bound_m": 0.00021645135755904156,
+            "overlapping_pairs": 17,
+            "native_midplane_intersections": 0,
+            "retained_initial_links": 12,
+            "ambiguous_links": 0
+          }
+        ]
+      }
+    }
+  ],
+  "finding": "Both hybrid and sweep-only CPU CCD lose uncut thread continuity within3.125ms. Recentering reduces initial panel coordinate error to1.5nm but does not cure the failure. All24 thread/hole links remain at the072 and075 stop; their closed thread geometry is already invalid. No settled reset, cut, task score or feasibility result.",
+  "next_control": "Single28-link loop at the origin, no cloth or fixture; native masses/inertia/initial closure and full motion recorded. Compare spherical joints with equivalent translation-locked D6 joints used by the validated knot rope; optional no-self-contact mode is diagnostic only."
+}

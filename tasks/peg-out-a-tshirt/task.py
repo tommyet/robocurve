@@ -3,6 +3,7 @@
 Development scene. The full-score controller and final evidence are not yet
 available. Neither fixture nor peg ever attaches to cloth in software.
 """
+import os
 from arena_cloth import Cloth
 from arena_props import SpringPeg,Fixture
 from cloth_mesh import tshirt
@@ -19,7 +20,14 @@ SCORE_OVER='end'
 SUCCESS_HOLD_S=0.
 INSTRUCTION='Hang the T-shirt from the clothesline using the two pegs, then let go and leave it secure and clear of the table.'
 DEVELOPMENT_ONLY=True
+CONTACT_REFINED=os.environ.get('ROBOCURVE_SHIRT_CONTACT_REFINED','0')=='1'
+REGULAR_REFINED=os.environ.get('ROBOCURVE_SHIRT_REGULAR_REFINED','0')=='1'
+if CONTACT_REFINED and REGULAR_REFINED:raise ValueError('Select one garment mesh')
 MESH=tshirt()
+if REGULAR_REFINED:MESH=tshirt(spacing=.0025)
+elif CONTACT_REFINED:
+    from refined_cloth import contact_band_mesh
+    MESH=contact_band_mesh()
 INITIAL=initial_layout(MESH)
 OBJECTS=[
     Cloth('tshirt',pos=(.345,0.,SUPPORT_TOP+.003),size=(.30,.40,.0016),

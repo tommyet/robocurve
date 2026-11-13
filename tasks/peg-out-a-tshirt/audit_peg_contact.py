@@ -31,7 +31,8 @@ def main():
         for line in f:
             row=json.loads(line);step=row['step']
             if step%args.every and step not in endpoints:continue
-            nodes=np.asarray(row['objects']['tshirt']['nodes']);hits={}
+            from trace_data import cloth_array
+            nodes=cloth_array(args.trial,row,'tshirt');hits={}
             for side in ('left_peg','right_peg'):
                 poses=np.asarray(row['objects'][side]['body_poses'])
                 for index,label in enumerate(('lower','upper')):

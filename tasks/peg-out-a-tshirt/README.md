@@ -138,11 +138,22 @@ The next scripted candidate can use `--state-assisted-grasp` to handle measured
 reset variation. Both observed043 and050 reset shapes pass the200-action
 collision rejection check after this calibration. All later reference actions
 remain unchanged. The actual executed plan, input-state hash and grasp targets
-are saved with the trial; no state-assisted native result exists yet.
+are saved with the trial. This calibration physically retained the shirt in
+later trials; it does not establish correct clipping or hanging.
 
 Batch058 retained the unused peg throughout the corrected approach. The first
 clip was withheld after830 actions when the mouth controller could not produce
 a reachable target. Its corrected outer loop integrates the desired TCP instead
 of adding measured hand compliance repeatedly; all11 available recorded input
 states pass the local hull screen. Batch064 tests six seconds of alignment
-before closure. Neither trial is a scored hanging demonstration.
+before closure. Its mouth alignment converged to1.47mm and the peg closed.
+However, eight garment faces crossed the3mm line axis and remained there
+after both hands withdrew. That retention is invalid and receives no score.
+
+A denser mesh is under test with the same garment, mass, material and line.
+Adaptive refinement introduced0.2mm seam features; its069 reset moved some
+sleeve nodes through the support board. The regular2.5mm-grid candidate keeps
+the1.6mm seam width, has30,538nodes, and changes no physical geometry. Select
+it explicitly with `--regular-refined` in either the passive probe or YAM
+runner. A valid passive reset and real released line capture are still needed
+before this candidate can replace the coarse mesh.

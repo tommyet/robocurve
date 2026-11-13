@@ -3,7 +3,7 @@ import math
 
 
 def score(j):
-    required=('evidence_sha256','integrity_checked','intact','four_in_hand_verified',
+    required=('evidence_sha256','integrity_checked','intact','simple_knot_verified',
               'released_hold_s','wide_face_out','narrow_end_hidden','knot_zone_offset_mm',
               'neckband_gap_mm','wide_tip_below_collar_mm','narrow_tip_above_wide_tip_mm')
     if any(k not in j for k in required):
@@ -20,13 +20,13 @@ def score(j):
         value=j[field]
         if type(value) not in (int,float) or not math.isfinite(value) or (value < 0 and field!='narrow_tip_above_wide_tip_mm'):
             raise ValueError('invalid measurement: '+field)
-    for field in ('intact','four_in_hand_verified','wide_face_out','narrow_end_hidden'):
+    for field in ('intact','simple_knot_verified','wide_face_out','narrow_end_hidden'):
         if type(j[field]) is not bool:
             raise ValueError('visual assessment must be known: '+field)
-    if j['intact'] is not True or j['four_in_hand_verified'] is not True or j['released_hold_s'] < 5.:
+    if j['intact'] is not True or j['simple_knot_verified'] is not True or j['released_hold_s'] < 5.:
         return 0.
     fitted=(0 <= j['neckband_gap_mm'] <= 10. and 0 <= j['knot_zone_offset_mm'] <= 15.
-            and 280. <= j['wide_tip_below_collar_mm'] <= 320.
+            and 400. <= j['wide_tip_below_collar_mm'] <= 440.
             and j['narrow_tip_above_wide_tip_mm'] >= 10.)
     dressed=j['wide_face_out'] is True and j['narrow_end_hidden'] is True
     return 1. if fitted and dressed else .5

@@ -164,10 +164,11 @@ def mechanics(mesh,material=ShellMaterial(),primitive_boxes=False):
                 vertex_ids=vertex_ids,primitive_boxes=primitive_boxes)
 
 
-def author_shell(stage,path,mesh,material=ShellMaterial(),color=(.94,.94,.91),*,primitive_boxes=False,velocity_iterations=4):
+def author_shell(stage,path,mesh,material=ShellMaterial(),color=(.94,.94,.91),*,primitive_boxes=False,velocity_iterations=4,position_iterations=128):
     """Author only before simulation. All shell facet bodies remain dynamic."""
     from pxr import Gf,Sdf,UsdGeom,UsdPhysics,PhysxSchema,UsdShade,Vt
     if velocity_iterations not in (1,4,32):raise ValueError('Unsupported diagnostic velocity iterations')
+    if position_iterations not in (32,64,128):raise ValueError('Unsupported diagnostic position iterations')
     model=mechanics(mesh,material,primitive_boxes);bodies=[];joints=[]
     mat=UsdShade.Material.Define(stage,path+'/Material')
     pm=UsdPhysics.MaterialAPI.Apply(mat.GetPrim())
@@ -179,7 +180,7 @@ def author_shell(stage,path,mesh,material=ShellMaterial(),color=(.94,.94,.91),*,
         root.AddTranslateOp().Set(Gf.Vec3d(*centre));prim=root.GetPrim()
         UsdPhysics.RigidBodyAPI.Apply(prim);UsdPhysics.MassAPI.Apply(prim).CreateMassAttr(float(mass))
         rb=PhysxSchema.PhysxRigidBodyAPI.Apply(prim)
-        rb.CreateSolverPositionIterationCountAttr(128);rb.CreateSolverVelocityIterationCountAttr(velocity_iterations)
+        rb.CreateSolverPositionIterationCountAttr(position_iterations);rb.CreateSolverVelocityIterationCountAttr(velocity_iterations)
         rb.CreateMaxDepenetrationVelocityAttr(.05)
         rb.CreateEnableCCDAttr(True);rb.CreateSleepThresholdAttr(0.)
         rb.CreateLinearDampingAttr(0.);rb.CreateAngularDampingAttr(0.)

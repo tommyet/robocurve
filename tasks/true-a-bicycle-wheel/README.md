@@ -1,11 +1,12 @@
 # True a wobbly bicycle wheel
 
 **Development package, not ready to submit.** The robot has picked up the free
-wrench, but no valid tightening demonstration exists. The latest central-spring
-unit matches the physical load law; the full wheel still develops unexplained
-axle torque even with its material callback frozen. Once-per-step integration
-and preloaded geometry did not resolve this. Native bearing/constraint isolation
-is pending; no Dream run or submission media exists.
+wrench, but no valid tightening demonstration exists. A clean CPU PGS central
+spring control now matches the isolated load law and remains bounded for 0.3 s
+with live thread coupling. The wheel's angular momentum settles, rather than
+continuously accelerating as in earlier TGS trials. Corrected spoke tension,
+loaded robot engagement and a complete released revolution remain unverified.
+No Dream run or submission media exists.
 
 The robot adjusts spoke nipples until the wheel runs straight, remains centred
 and spins freely. Scoring measures the resulting wheel, not hidden target
@@ -144,3 +145,19 @@ fails the unchanged100µm validity bound. See
 `evidence/native-central-spring-063-summary.json`. The optional candidate bridge
 and pose-assisted controller remain unvalidated; older successful short-settle
 or offline hull screens do not establish a truing demonstration.
+
+### Latest controls, 13 November
+
+The compensated native DistanceJoint passes a clean PGS load-law test at a
+100 µs step: a quarter-turn changes length by −113.502 µm, versus −113.500 µm
+expected. Both equilibrium errors are below 1.3 nm. The full 55°-clocked wheel
+with live thread coupling completes 0.3 s in 13.4 wall seconds at 32 position
+and four velocity iterations. Runout is 0.852 mm; the loose nipples remain
+stable. Axle angular momentum reaches −0.000242 kg m²/s and changes by only
+−1.39×10⁻⁶ kg m²/s during the last 0.1 s. This is a passive-mechanics gate,
+not a robot repair. Spoke tension is 25–478 N, so a nominal-rest-length control
+must establish that the planned repair can satisfy the 400 N floor.
+
+The inextensible-rim TGS diagnostic still develops artificial axle torque and
+is not promoted. Historical TGS settling numbers above are not the current
+PGS task baseline. See `evidence/native-pgs-071-074-summary.json`.

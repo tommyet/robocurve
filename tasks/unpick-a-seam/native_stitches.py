@@ -16,8 +16,9 @@ def x_quat(direction):
     q=np.array((0.,-d[2],d[1],1+d[0]));return q/np.linalg.norm(q)
 
 
-def author_thread(stage,path,nodes,*,radius=.0002,density=1400.,open_diagnostic=False):
+def author_thread(stage,path,nodes,*,radius=.0002,density=1400.,open_diagnostic=False,joint_kind='spherical'):
     from pxr import Gf,Sdf,UsdGeom,UsdPhysics,PhysxSchema,UsdShade
+    if joint_kind not in ('spherical','d6'):raise ValueError('Unknown native thread joint kind')
     nodes=np.asarray(nodes,float);d=np.roll(nodes,-1,axis=0)-nodes
     lengths=np.linalg.norm(d,axis=1);centres=(nodes+np.roll(nodes,-1,axis=0))/2
     if np.any(lengths<2*radius):raise ValueError('Thread links too short for their radius')
@@ -51,11 +52,19 @@ def author_thread(stage,path,nodes,*,radius=.0002,density=1400.,open_diagnostic=
         bodies.append(str(root.GetPath()))
     for i in range(n):
         before=(i-1)%n
-        joint=UsdPhysics.SphericalJoint.Define(stage,f'{path}/joint_{i:03d}')
+        joint=(UsdPhysics.SphericalJoint if joint_kind=='spherical' else UsdPhysics.Joint).Define(stage,f'{path}/joint_{i:03d}')
         joint.CreateBody0Rel().SetTargets([Sdf.Path(bodies[before])])
         joint.CreateBody1Rel().SetTargets([Sdf.Path(bodies[i])])
         joint.CreateLocalPos0Attr(Gf.Vec3f(float(lengths[before]/2),0.,0.))
         joint.CreateLocalPos1Attr(Gf.Vec3f(float(-lengths[i]/2),0.,0.))
+        if joint_kind=='d6':
+            # Equivalent free-angular connector using the translation-lock
+            # mechanism of the validated overhand-knot rope. No angular drive.
+            joint.CreateLocalRot0Attr(Gf.Quatf(1.))
+            joint.CreateLocalRot1Attr(Gf.Quatf(1.))
+            for axis in ('transX','transY','transZ'):
+                limit=UsdPhysics.LimitAPI.Apply(joint.GetPrim(),axis)
+                limit.CreateLowAttr(1.);limit.CreateHighAttr(-1.)
         joint.CreateCollisionEnabledAttr(False)
         joint.CreateJointEnabledAttr(not (open_diagnostic and i==0))
         joints.append(str(joint.GetPath()))

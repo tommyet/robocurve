@@ -35,6 +35,9 @@ def main():
     p.add_argument('--coupon-spacing-mm',type=float,choices=(2.5,5.,10.),default=10.,help='Line-clamp diagnostic only')
     p.add_argument('--spring-stiffness-scale',type=float,choices=(.1,.25,1.),default=1.,help='Line-clamp force diagnostic only; task spring is unchanged')
     p.add_argument('--spring-damping',type=float,choices=(.003,.0085),default=.003,help='Line-clamp damping diagnostic in Nm s/rad; .0085 is five times the fixed-jaw critical estimate')
+    p.add_argument('--contact-refined',action='store_true',help='Conforming2.5mm maximum-edge garment contact band; material and3mm line unchanged')
+    p.add_argument('--regular-refined',action='store_true',help='Regular2.5mm cloth grid, with the physical1.6mm seam width preserved; geometry and material unchanged')
+    p.add_argument('--solver-iterations',type=int,choices=(32,128),default=32,help='Diagnostic deformable position iterations; does not change cloth material')
     p.add_argument('--seconds',type=float,default=3.)
     p.add_argument('--peg-rests',action=argparse.BooleanOptionalAction,default=None,help='Ordinary handle-access rests, selected by default for task-layout; --no-peg-rests reproduces the old table-peg control')
     p.add_argument('--line-pegs',action='store_true',help='Task-layout candidate: spare pegs physically clipped to the empty line, with no peg rests')
@@ -47,6 +50,8 @@ def main():
     p.add_argument('--headless',choices=('true','false'),default='true')
     p.add_argument('--no-render',action='store_true',help='Only for diagnosing renderer failures; no RGB evidence')
     args=p.parse_args()
+    if args.regular_refined and (args.mode!='task-layout' or args.contact_refined):p.error('Regular mesh requires task-layout and excludes contact-refined')
+    if args.contact_refined and args.mode!='task-layout':p.error('Refined garment requires task-layout')
     if not 0 < args.seconds <= 10:
         p.error('a diagnostic is limited to ten simulated seconds')
     if args.board_thickness_mm is not None and (args.mode!='task-layout' or not 8<=args.board_thickness_mm<=40):
@@ -66,7 +71,7 @@ def main():
             'mode':args.mode,'material':asdict(Fabric()),'physics_hz':args.physics_hz,
             'seconds':args.seconds,'provenance':{},'phase':'build',
             'render_bridge':None if args.no_render else 'native PhysX Fabric'}
-    for name in ('probe.py','cloth_mesh.py','native_cloth.py','scene.py','probe_capture.py','probe_runtime.py','peg_rests.py','line_pegs.py'):
+    for name in ('probe.py','cloth_mesh.py','refined_cloth.py','native_cloth.py','scene.py','probe_capture.py','probe_runtime.py','peg_rests.py','line_pegs.py'):
         report['provenance'][name]=hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
     capture=None
     world=None
@@ -89,7 +94,9 @@ def main():
             author_box(stage,'/World/Table',(1.1,1.3,.06),(.36,0.,TABLE-.03),(.58,.39,.25))
             report['peg_rests_candidate']=bool(args.peg_rests)
             report['line_pegs_candidate']=bool(args.line_pegs)
-            mesh=author_props(stage,with_peg_rests=args.peg_rests,line_pegs=args.line_pegs)
+            mesh=author_props(stage,with_peg_rests=args.peg_rests,line_pegs=args.line_pegs,contact_refined=args.contact_refined,regular_refined=args.regular_refined)
+            report['contact_refined']=args.contact_refined
+            report['regular_refined']=args.regular_refined
             initial=initial_layout(mesh)
             cloth_path='/World/Tshirt'
         elif args.mode in ('drop','drape'):
@@ -146,6 +153,8 @@ def main():
         # Native body contact options only; no global GPU-incompatible scene CCD.
         from native_cloth import _set
         contact_prim=stage.GetPrimAtPath(cloth_path)
+        _set(contact_prim,'physxDeformableBody:solverPositionIterationCount',args.solver_iterations)
+        report['solver_position_iterations']=args.solver_iterations
         if args.contact_refinement in ('iterations','combined'):
             _set(contact_prim,'physxDeformableBody:collisionIterationMultiplier',4)
             _set(contact_prim,'physxDeformableBody:collisionPairUpdateFrequency',4)

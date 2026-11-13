@@ -30,11 +30,12 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
     p.add_argument('--state-assisted-demo',action='store_true',help='Disclosed native tool-pose feedback for the scripted demo only')
     p.add_argument('--tracking-proportional',type=float,default=1.5)
     p.add_argument('--tracking-integral',type=float,default=2.)
+    p.add_argument('--tracking-slew',type=float,default=.006,help='Maximum change of demo joint-feedback bias per action, radians; ordinary action bounds still apply')
     p.add_argument('--external-forces-once-diagnostic',action='store_true',help='Matched PhysX force-integration control; material and actuator settings stay unchanged')
     p.add_argument('--judging-views',action='store_true',default=default_review,help='Record close-up review views; never policy inputs')
     a=p.parse_args()
     if not 1<=a.steps<=2400:p.error('Trial limited to 2400 control steps')
-    if not 0<=a.tracking_proportional<=4 or not 0<=a.tracking_integral<=10:
+    if not 0<=a.tracking_proportional<=4 or not 0<=a.tracking_integral<=10 or not 0<a.tracking_slew<=.04:
         p.error('Joint tracking gains outside the bounded diagnostic range')
     if a.policy=='demo' and a.plan is None:p.error('Demo requires a frozen joint plan')
     if a.policy=='dream' and (a.plan or a.joint_feedback or a.state_assisted_demo):p.error('Dream uses its own ordinary actions')
@@ -48,6 +49,12 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
             p.error('Expected fixed 20 Hz plan, or an explicitly enabled state-assisted recipe')
         actions=np.asarray([f['action14'] for f in plan['frames']],float)
         if actions.shape!=(len(plan['frames']),14) or not np.isfinite(actions).all():p.error('Invalid plan actions')
+        feedforward=np.asarray([f.get('joint_feedforward14',[0.]*14) for f in plan['frames']],float)
+        if (feedforward.shape!=actions.shape or not np.isfinite(feedforward).all()
+                or np.max(np.abs(feedforward))>.16 or np.any(feedforward[:,[6,13]]!=0)):
+            p.error('Invalid bounded joint feedforward')
+        if np.any(feedforward) and (a.policy!='demo' or not a.state_assisted_demo):
+            p.error('Calibrated feedforward is limited to the disclosed scripted demo')
         a.steps=min(a.steps,len(actions))
     a.out.mkdir(parents=True,exist_ok=False);start=time.monotonic()
     frozen=a.out/'task-source';frozen.mkdir()
@@ -64,6 +71,7 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
             'joint_feedback':a.joint_feedback,
             'state_assisted_demo':a.state_assisted_demo,
             'controller_assistance':plan.get('assistance') if plan and a.state_assisted_demo else None,
+            'joint_feedforward':plan.get('joint_feedforward') if plan else None,
             'external_forces_once_diagnostic':a.external_forces_once_diagnostic}
     app=None;video=None;trace=[];dream_policy=None;request_audit=[];session_audit={'session_count':0}
     def progress(phase,step=0):
@@ -188,7 +196,7 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
             report['dream_model']=dream_policy.info.checkpoint
         progress('fixed action preview',0)
         from joint_tracking import JointTracking
-        tracking=JointTracking(proportional=a.tracking_proportional,integral=a.tracking_integral)
+        tracking=JointTracking(proportional=a.tracking_proportional,integral=a.tracking_integral,slew_limit=a.tracking_slew)
         from scripted_servo import ScriptedServo
         servo=ScriptedServo() if a.state_assisted_demo else None
         from yam_arena.constants import SHOULDER,WRIST,GRIPPER,FINGER_OPEN
@@ -208,11 +216,14 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
             assisted=reference if servo is None else servo.command(plan['frames'][i],reference,observed,
                 array(barrel.get_transforms())[0],array(plunger.get_transforms())[0])
             requested=tracking.action(assisted,observed,enabled=a.joint_feedback and i>=340)
+            joint_feedforward=np.zeros(14) if plan is None else feedforward[i]
+            requested+=joint_feedforward
             applied=np.clip(np.clip(requested,previous_applied-step_limit,previous_applied+step_limit),emb._low,emb._high)
             previous_applied=applied.copy()
             action=torch.tensor([applied],device=base.device,dtype=torch.float32)
             emb._env.step(action);emb._t=(i+1)/20;coupling.update_surface();snapshot(i+1)
             trace[-1].update(reference_action14=reference.tolist(),requested_action14=requested.tolist(),
+                             assisted_action14=assisted.tolist(),joint_feedforward14=joint_feedforward.tolist(),
                              applied_action14=applied.tolist(),joint_tracking_bias12=tracking.bias.tolist())
             if servo is not None:trace[-1]['scripted_servo']=servo.last
             if (i+1)%20==0 or i+1==a.steps:progress('fixed action preview',i+1)

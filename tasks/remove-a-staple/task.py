@@ -7,7 +7,7 @@ import runtime_config
 
 SCENE='station'
 SCORE_OVER='end'
-INSTRUCTION='Remove the staple without tearing either sheet. Leave the complete staple at least10mm clear of both sheets.'
+INSTRUCTION='Remove the staple without tearing either sheet. Leave the complete staple at least 10 mm clear of both sheets.'
 DEVELOPMENT_ONLY=True
 OBJECTS=[]
 layout=scene_layout(runtime_config.RESET_PROFILE)

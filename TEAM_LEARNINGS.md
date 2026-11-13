@@ -4,6 +4,44 @@ Last updated: 2026-11-13 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-13 — coordinate precision, cloth resolution and controller evidence
+
+- Operator: repository agent, branch `codex/six-task-completion-2026-11-13`.
+  Full A5 paper with exact 100 µm box panels passes 1,000 native steps at
+  100 µs after translating the entire standalone scene by (−0.32, 0, −0.7675) m.
+  Maximum hinge gap is 0.173 µm, with clean wire crossings. This changes the
+  coordinate origin, not relative geometry or material. The matched 500 µs
+  control fails after 5.5 ms; do not claim timestep convergence or use it for
+  the robot demo. The YAM integration is being checked separately.
+- Clean PGS reproduces the isolated spoke's 113.5 µm quarter-turn response
+  within 0.91 nm. The full wheel must pass independently. Making the rim
+  inextensible did not fix the unexplained TGS rotation and was not promoted.
+- Shirt adaptive refinement introduced 0.2 mm seam edges and actual cloth
+  escape through the support board. A regular 2.5 mm mesh preserves 1.6 mm
+  seam widths and passes the five-second passive contact check. It has 30,538
+  nodes, no final fixture crossings, p99 strain 1.53% and maximum strain 13.98%
+  near an armpit. The complete clipping motion remains unvalidated. Binary
+  float32 traces preserve every node/velocity at every action without enormous
+  JSON overhead; this is a recording change, not a simulation change.
+- Adult tie070 physically lifts the marked fabric patch 318.7 mm, with less
+  than 0.6 mm local drift during its final one-second hold. Actual cloth and
+  robot contact checks pass. This establishes pickup only, not a knot. The
+  next handoff uses the actual measured strip pose and ordinary robot targets.
+- Seam GPU contact eventually lets an intact stitch escape. Recentring CPU
+  hybrid CCD still leaves thread endpoints physically disjoint after 3.125 ms.
+  These are real integrity failures, not merely strict diagnostic tolerances.
+  A sweep-only CCD comparison isolates speculative-contact handling next.
+- Cake070's faster high-gain feedback reduces tail lag but produces oscillation,
+  spill and a zero score. Do not promote it. A local counterfactual using the
+  earlier measured piston motion and intended nozzle path makes three valid
+  ridged shells; this helps diagnose control but is not robot evidence.
+- Inventory at09:38 UTC verified exactly one running Pod at $1.09/hour;
+  elapsed active-compute estimate $9.677, plus about $0.319 earlier compatibility
+  work and temporary disk. This is not an invoice or a readable account balance.
+  The shutdown watchdog was renewed to10:23 UTC. Sources and completed controls
+  are SHA-verified locally under `artifacts/six-task-completion-2026-11-13/`.
+  No Dream requests, media uploads or PRs; none of the six is submission-ready.
+
 ## 2026-11-13 — scripted feasibility assistance and ongoing six-task controls
 
 - Operator: repository agent, branch `codex/six-task-completion-2026-11-13`.

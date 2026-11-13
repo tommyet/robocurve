@@ -129,7 +129,7 @@ class WheelModel:
         raise RuntimeError("Equilibrium did not converge")
 
 
-RESET_PROFILES = ("four-defect-reference", "two-defect-candidate", "two-defect-corrected-control")
+RESET_PROFILES = ("four-defect-reference", "two-defect-candidate", "two-defect-corrected-control", "zero-defect-control")
 
 
 def starting_turn_errors(spec: WheelSpec | None = None, profile="four-defect-reference"):
@@ -147,6 +147,8 @@ def starting_turn_errors(spec: WheelSpec | None = None, profile="four-defect-ref
         turns[[0, 2]] = -.75
     elif profile == "two-defect-corrected-control":
         turns[[0, 2]] = -.25
+    elif profile == "zero-defect-control":
+        pass  # Native control for restoring both loose nipples by three quarter-turns.
     else:
         raise ValueError(f"Unknown wheel reset profile: {profile}")
     return turns

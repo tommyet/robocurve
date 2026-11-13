@@ -53,7 +53,7 @@ manipulation is a substantial robotics problem, not a reliable consequence of
 having a cloth simulator. Its teacher/student/residual-learning pipeline does
 not supply a ready YAM policy or validate our contact model.
 
-## Length budget
+## Historical child-tie length budget
 
 The explicitly child-sized tie is 1.10 m long. A 110 mm diameter neckband
 uses approximately 346 mm; allowing about 200 mm of extra four-in-hand take-up beyond the hanging
@@ -66,7 +66,7 @@ recorded final fit remains mandatory. The initial half-wrap uses a 65 mm centrel
 and 204 mm of material, leaving a 580 mm wide end and a 316 mm narrow end.
 The longer wide end supplies the front crossing and knot wraps.
 
-A 1.40 m adult tie was incompatible with the short form's 280–320 mm final
+A 1.40 m adult tie was incompatible with the old short form's 280–320 mm final
 drop: the same rough budget would leave 854 mm for two ends, more than two
 320 mm drops can accommodate. The shorter tie is an explicit prop choice,
 not hidden slack or relaxed narrow-end judging.
@@ -80,16 +80,25 @@ up through the neck loop and down through the front loop. This removes one
 initial crossing from the four-in-hand route; it does not remove threading or
 tightening.
 
-The CPU candidate parks the wide hand high, stabilizes the narrow tip and
+The historical child-layout CPU candidate parks the wide hand high, stabilizes the narrow tip and
 routes the wide end at 1.12 m height. Its 1,200 commanded poses pass the
 fixture/opposite-arm rejection screen. The optional inside-out reset reverses
 the material width direction before physics; it has no crossing or knot and
 passes the same initial triangle-clearance and strain tests. Both still need
-native validation. The four-in-hand default, rubric and historical evidence
-have not been relabeled.
+native validation. Those historical child trials have not been relabeled as adult evidence.
 
 After any retained wrap, the next physical milestones are: hold the front
 opening with an ordinary pinch near the junction; raise the wide tip through
 the neck loop; feed that tip down the front opening to a receiving hand; pull
 through and adjust the knot on the narrow tail. The large grippers may require
 a handoff. No part of the front opening will be fixed or animated.
+
+## Current adult candidate
+
+The current draft uses a 1.45 m tie and standalone collar centred at z=1.25 m.
+The lower reference edge is z=1.20 m; a proposed 400–440 mm wide-tip drop leaves
+12.5–52.5 mm above the table. Fit and narrow-tip ordering still need a complete
+physical knot; these dimensions are design targets, not demonstrated success.
+The simple-knot route starts inside-out and removes the extra four-in-hand
+crossing. The preserved native070 pickup is followed by a measured physical
+wide-tip handoff, then narrow-strand stabilization and actual loop threading.

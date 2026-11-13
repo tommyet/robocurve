@@ -550,9 +550,11 @@ provides support. Neighbouring material facets sharing a vertex have collision
 exclusions; thread-to-fabric and distant self-contact remain enabled.
 
 The measured shared-vertex mesh feeds the existing crossing and damage checks.
-Every native substep also measures physical hinge-endpoint gaps; any gap over
-0.1 mm invalidates the candidate. This prevents averaged vertices hiding a
-disconnected sheet. The first native pair (056) stopped on first-step hinge gaps. Its hull cooking
+Every native substep also measures physical hinge-endpoint gaps. The current
+0.1 mm stop is a conservative engineering warning, not a competition criterion
+or proof that a 0.8 mm thread can escape. Exact solid geometry and persistence
+must distinguish contact error from loss of retention; averaging alone cannot
+establish either. The first native pair (056) stopped on first-step hinge gaps. Its hull cooking
 left the PhysX minimum thickness at1mm, exceeding the actual0.4mm shell and
 clamp gap. Explicitly reducing that cooking minimum in057 produced exactly
 the same measured states, so it did not establish the cause. The supported
@@ -580,7 +582,7 @@ iterations, but its queried collision hulls are1.076–1.099mm thick instead of
 0.4mm. The opt-in `--box-panels` candidate merges each rectangular triangle
 pair into a native box:118 dynamic panels and189 bending hinges per patch,
 with the same physical area, thickness, mass and needle openings. This avoids
-convex cooking. Its actual bending/contact gates are pending; see
+convex cooking. The results below supersede the initially pending gates; see
 `evidence/native-facet-freefall-061.json` and `evidence/box-panels-cpu.json`.
 
 `--pose-assisted-entry` is a disclosed scripted-demo option. It preserves the
@@ -589,3 +591,52 @@ tool-in-gripper poses filtered with alpha0.1. It commands only bounded robot
 joint targets. No tool or cloth pose is written, and large grasp slip stops
 the diagnostic. Native entry remains unvalidated. Dream would keep its normal
 camera/joint observations. See `evidence/tool-entry-cpu.json`.
+
+The native box bending coupon (063) completed 0.5 s with a 52.37 mm mean
+free-tip drop and only 5.72 µm peak hinge disagreement. This demonstrates
+flexibility, not a static material calibration. With one velocity iteration,
+all hinge gaps stayed below 34.36 µm, but a zero-thickness crossing warning
+appeared beside a needle hole. Exact native-box analysis of the corrected
+067 recording confirms three transient thread passages that subsequently
+reseated. All 24 initial thread/hole links are restored after 0.4354 s. At
+0.5 s there are no box-midplane intersections and the largest remaining
+capsule overlaps are 1.06 and 1.25 µm in the two patches. A longer stability
+interval is still required before starting a trial from a passively settled
+reset. No task score or successful cut is claimed.
+
+The older 063 sparse `thread` snapshot field accidentally contained panel
+poses; runtime crossing checks were unaffected. The recorder now asserts
+thread body count and saves previous/current raw poses at the first warning.
+`--record-every-step --continue-after-audit-warning` is an explicitly unscored
+forensic option that preserves the original warning while observing its
+persistence. `panel_diagnostics.py` reads these traces to measure actual
+capsule/box overlap and hole/thread linking without changing physics or scores.
+See `evidence/native-box-panels-063-067.json`.
+
+The longer 068 test **did not settle into a valid retained seam**. One intact
+stitch passed through both patches and lost all four hole links by 1.9021 s;
+only 20 of the initial 24 links remained. This supersedes the apparent
+short-term recovery in 067. Actual thread endpoint motion at the first
+permanent escape was 0.409 mm per step, comparable to the 0.4 mm cloth thickness.
+The GPU scene has no working continuous collision detection. The new
+`--cpu-ccd` coupon option keeps the same geometry and material while selecting
+CPU PhysX, sweep CCD and speculative CCD on every dynamic body. Its native
+scene/body flags and tensor device are checked explicitly. The CPU results
+below are failures, not a feasibility claim. See `evidence/native-box-retention-068.json`
+and NVIDIA's [CCD documentation](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/latest/dev_guide/rigid_bodies_articulations/rigid_bodies.html).
+
+
+The 070/072/075 CPU controls lose uncut thread continuity within 3.125 ms.
+Moving the whole scene near the origin lowers initial panel coordinate error
+to 1.5 nm, but does not cure the failure. Both hybrid and sweep-only CCD fail.
+This precedes loss of the 24 hole/thread links, so the next diagnostic isolates
+one free loop with no cloth, table or fixture. It records native mass, inertia,
+initial closure and every body pose. An equivalent translation-locked D6
+connector follows the working knot rope's implementation; all angular motion
+remains free. Disabling self-contact is available only for causal diagnosis
+and is not a task setting. See `evidence/native-cpu-chain-070-075.json`.
+
+```bash
+python tasks/unpick-a-seam/probe_thread.py --joint-kind spherical --ccd sweep --seconds .05 --out artifacts/seam-loop-spherical
+python tasks/unpick-a-seam/probe_thread.py --joint-kind d6 --ccd sweep --seconds .05 --out artifacts/seam-loop-d6
+```

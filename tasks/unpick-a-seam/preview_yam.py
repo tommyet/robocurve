@@ -1,7 +1,8 @@
 """Unscored YAM seam diagnostic with every-substep material/contact audits.
 
-Ordinary ready targets or a frozen joint plan drive the robot. Native state
-feeds assessment and force-qualified cutting, never the action policy.
+Ordinary ready targets or a frozen joint plan drive the robot. An explicitly
+selected scripted-entry option compensates the measured tool grasp using only
+bounded robot joint targets. Native state also feeds assessment and cutting.
 """
 import argparse
 from dataclasses import asdict

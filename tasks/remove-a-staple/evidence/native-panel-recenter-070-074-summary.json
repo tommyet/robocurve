@@ -1,0 +1,542 @@
+{
+  "schema": "native-panel-paper-recenter-controls-v1",
+  "task_success": false,
+  "description": "Same full-size free thin sheets, physical staple and pocket support. The whole scene receives a constant origin translation before attachment.",
+  "recenter100us": {
+    "source": {
+      "path": "artifacts/six-task-completion-2026-11-13/native-batch-070-controls/paper-recentred/facet-probe.json",
+      "sha256": "8dc637b518069d7e723456df5e6d5c59fc496c79dd5d2ff51d85c4c22575fc99"
+    },
+    "complete": true,
+    "dt": 0.0001,
+    "seconds": 0.1,
+    "completed_steps": 1000,
+    "wall_seconds": 67.71613913029432,
+    "world_coordinate_offset_m": [
+      -0.32,
+      0.0,
+      -0.7675
+    ],
+    "first_sample": {
+      "step": 1,
+      "time_s": 0.0001,
+      "checks": [
+        {
+          "continuity": {
+            "maximum_hinge_endpoint_gap_m": 7.37755311429172e-09,
+            "maximum_vertex_average_error_m": 4.028377853112968e-09,
+            "valid": true
+          },
+          "wire_crossing": {
+            "valid": true,
+            "steps": 1,
+            "first_failure": null
+          }
+        },
+        {
+          "continuity": {
+            "maximum_hinge_endpoint_gap_m": 5.463760515820308e-09,
+            "maximum_vertex_average_error_m": 3.6516790997858765e-09,
+            "valid": true
+          },
+          "wire_crossing": {
+            "valid": true,
+            "steps": 1,
+            "first_failure": null
+          }
+        }
+      ],
+      "paper_centroids_m": [
+        [
+          -0.019361110953792223,
+          -0.023076923418980818,
+          4.999699936340514e-05
+        ],
+        [
+          -0.01936111095761329,
+          -0.015710769432031424,
+          0.00016995058103930205
+        ]
+      ],
+      "maximum_facet_speed_m_s": 0.00098416639957577
+    },
+    "final_sample": {
+      "step": 1000,
+      "time_s": 0.1,
+      "checks": [
+        {
+          "continuity": {
+            "maximum_hinge_endpoint_gap_m": 1.722293884313316e-07,
+            "maximum_vertex_average_error_m": 8.61146942180286e-08,
+            "valid": true
+          },
+          "wire_crossing": {
+            "valid": true,
+            "steps": 1000,
+            "first_failure": null
+          }
+        },
+        {
+          "continuity": {
+            "maximum_hinge_endpoint_gap_m": 1.7273002588207517e-07,
+            "maximum_vertex_average_error_m": 8.705300045602779e-08,
+            "valid": true
+          },
+          "wire_crossing": {
+            "valid": true,
+            "steps": 1000,
+            "first_failure": null
+          }
+        }
+      ],
+      "paper_centroids_m": [
+        [
+          -0.01936110974577386,
+          -0.023076924748237422,
+          4.8228354159826994e-05
+        ],
+        [
+          -0.01936111241602558,
+          -0.01571077365720842,
+          0.00014411660536143173
+        ]
+      ],
+      "maximum_facet_speed_m_s": 0.004561938811093569
+    }
+  },
+  "recenter500us": {
+    "source": {
+      "path": "artifacts/six-task-completion-2026-11-13/native-batch-072-paper/paper-recenter-500us/facet-probe.json",
+      "sha256": "7c1f2dcdee5910c2fe3ac560d20f462d0b993d6178cf27571716a35b15094dc5"
+    },
+    "complete": false,
+    "dt": 0.0005,
+    "seconds": 0.1,
+    "completed_steps": 11,
+    "wall_seconds": 7.873802529647946,
+    "world_coordinate_offset_m": [
+      -0.32,
+      0.0,
+      -0.7675
+    ],
+    "first_sample": {
+      "step": 1,
+      "time_s": 0.0005,
+      "checks": [
+        {
+          "continuity": {
+            "maximum_hinge_endpoint_gap_m": 9.202906880428926e-09,
+            "maximum_vertex_average_error_m": 5.57028905567686e-09,
+            "valid": true
+          },
+          "wire_crossing": {
+            "valid": true,
+            "steps": 1,
+            "first_failure": null
+          }
+        },
+        {
+          "continuity": {
+            "maximum_hinge_endpoint_gap_m": 5.463038141307671e-09,
+            "maximum_vertex_average_error_m": 3.65087636885882e-09,
+            "valid": true
+          },
+          "wire_crossing": {
+            "valid": true,
+            "steps": 1,
+            "first_failure": null
+          }
+        }
+      ],
+      "paper_centroids_m": [
+        [
+          -0.01936111095239118,
+          -0.02307692341945738,
+          4.99213502972997e-05
+        ],
+        [
+          -0.01936111095761133,
+          -0.01571076943252113,
+          0.00016876458539627492
+        ]
+      ],
+      "maximum_facet_speed_m_s": 0.004903349094092846
+    },
+    "final_sample": {
+      "step": 11,
+      "time_s": 0.0055,
+      "checks": [
+        {
+          "continuity": {
+            "maximum_hinge_endpoint_gap_m": 2.2310526181344808e-05,
+            "maximum_vertex_average_error_m": 1.521730578377331e-05,
+            "valid": true
+          },
+          "wire_crossing": {
+            "valid": true,
+            "steps": 11,
+            "first_failure": null
+          }
+        },
+        {
+          "continuity": {
+            "maximum_hinge_endpoint_gap_m": 3.088750888509736e-05,
+            "maximum_vertex_average_error_m": 2.3221011226220244e-05,
+            "valid": false
+          },
+          "wire_crossing": {
+            "valid": true,
+            "steps": 11,
+            "first_failure": null
+          }
+        }
+      ],
+      "paper_centroids_m": [
+        [
+          -0.019361111563240625,
+          -0.023076927931162745,
+          4.707352190739078e-05
+        ],
+        [
+          -0.019361112254564355,
+          -0.015710796285471288,
+          0.00014050036505855378
+        ]
+      ],
+      "maximum_facet_speed_m_s": 0.45989495515823364
+    }
+  },
+  "yam_bridge": {
+    "source": {
+      "path": "artifacts/six-task-completion-2026-11-13/native-batch-074-controls/paper-yam-recenter/preview.json",
+      "sha256": "cfaa6f749dee3e800d947bcd49c202dc90a1e279a9a72c285f0fb3e170a0b01b"
+    },
+    "trace_sha256": "c70a0eebb84645a0edd2f054bd4257a2dad6bf6bb55abb48b28a454aef011e24",
+    "status": "complete",
+    "completed_steps": 2,
+    "wall_seconds": 113.58488707151264,
+    "physics_dt_s": 0.0001,
+    "native_physics": {
+      "solver_type": "TGS",
+      "gpu": false,
+      "ccd": true,
+      "external_forces_every_iteration": true
+    },
+    "world_coordinate_offset_m": [
+      -0.32,
+      0.0,
+      -0.7675
+    ],
+    "native_audit": {
+      "paper": {
+        "paper_0": {
+          "dynamic_panels": 573,
+          "passive_hinges": 1094,
+          "surface_area_m2": 0.031079039999999992
+        },
+        "paper_1": {
+          "dynamic_panels": 550,
+          "passive_hinges": 1049,
+          "surface_area_m2": 0.031079039999999995
+        }
+      },
+      "dynamic_hardware_bodies": 61,
+      "attachments": [],
+      "fixed_material_joints": []
+    },
+    "coordinate_configuration_audit": [
+      {
+        "name": "floor",
+        "prim_path": "{ENV_REGEX_NS}/floor",
+        "kind": "root_asset",
+        "original_position_m": [
+          0.0,
+          0.0,
+          -0.02250000000000007
+        ],
+        "native_position_m": [
+          -0.32,
+          0.0,
+          -0.79
+        ]
+      },
+      {
+        "name": "light",
+        "prim_path": "/World/Light",
+        "kind": "root_asset",
+        "original_position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "native_position_m": [
+          -0.32,
+          0.0,
+          -0.7675
+        ]
+      },
+      {
+        "name": "lamp",
+        "prim_path": "{ENV_REGEX_NS}/lamp",
+        "kind": "root_asset",
+        "original_position_m": [
+          0.03999999999999998,
+          -0.8,
+          2.6875
+        ],
+        "native_position_m": [
+          -0.28,
+          -0.8,
+          1.92
+        ]
+      },
+      {
+        "name": "table",
+        "prim_path": "{ENV_REGEX_NS}/table",
+        "kind": "root_asset",
+        "original_position_m": [
+          0.36,
+          0.0,
+          0.7174999999999999
+        ],
+        "native_position_m": [
+          0.03999999999999998,
+          0.0,
+          -0.050000000000000044
+        ]
+      },
+      {
+        "name": "stand_foot",
+        "prim_path": "{ENV_REGEX_NS}/stand_foot",
+        "kind": "root_asset",
+        "original_position_m": [
+          -0.23649487853050233,
+          -0.008999999612569809,
+          0.7555
+        ],
+        "native_position_m": [
+          -0.5564948785305024,
+          -0.008999999612569809,
+          -0.01200000000000001
+        ]
+      },
+      {
+        "name": "stand_mast",
+        "prim_path": "{ENV_REGEX_NS}/stand_mast",
+        "kind": "root_asset",
+        "original_position_m": [
+          -0.23649487853050233,
+          -0.008999999612569809,
+          1.2276602749824523
+        ],
+        "native_position_m": [
+          -0.5564948785305024,
+          -0.008999999612569809,
+          0.4601602749824524
+        ]
+      },
+      {
+        "name": "stand_arm",
+        "prim_path": "{ENV_REGEX_NS}/stand_arm",
+        "kind": "root_asset",
+        "original_position_m": [
+          -0.2114948785305023,
+          -0.008999999612569809,
+          1.7018205499649046
+        ],
+        "native_position_m": [
+          -0.5314948785305023,
+          -0.008999999612569809,
+          0.9343205499649047
+        ]
+      },
+      {
+        "name": "camera_housing",
+        "prim_path": "{ENV_REGEX_NS}/camera_housing",
+        "kind": "root_asset",
+        "original_position_m": [
+          -0.1734948130126891,
+          -0.008999999612569809,
+          1.7039449434443779
+        ],
+        "native_position_m": [
+          -0.4934948130126891,
+          -0.008999999612569809,
+          0.9364449434443779
+        ]
+      },
+      {
+        "name": "left_robot",
+        "prim_path": "{ENV_REGEX_NS}/LeftArm",
+        "kind": "root_asset",
+        "original_position_m": [
+          0.0,
+          0.305,
+          0.75
+        ],
+        "native_position_m": [
+          -0.32,
+          0.305,
+          -0.01749999999999996
+        ]
+      },
+      {
+        "name": "right_robot",
+        "prim_path": "{ENV_REGEX_NS}/RightArm",
+        "kind": "root_asset",
+        "original_position_m": [
+          0.0,
+          -0.305,
+          0.75
+        ],
+        "native_position_m": [
+          -0.32,
+          -0.305,
+          -0.01749999999999996
+        ]
+      },
+      {
+        "name": "top_cam",
+        "prim_path": "{ENV_REGEX_NS}/TopCam",
+        "kind": "fixed_world_camera",
+        "original_position_m": [
+          -0.16649487853050232,
+          -0.008999999612569809,
+          1.6918205499649046
+        ],
+        "native_position_m": [
+          -0.48649487853050233,
+          -0.008999999612569809,
+          0.9243205499649046
+        ]
+      },
+      {
+        "name": "left_cam",
+        "prim_path": "{ENV_REGEX_NS}/LeftArm/Geometry/base/link1/link2/link3/link4/link5/gripper/left_wrist_cam",
+        "kind": "unchanged_relative_wrist_camera"
+      },
+      {
+        "name": "right_cam",
+        "prim_path": "{ENV_REGEX_NS}/RightArm/Geometry/base/link1/link2/link3/link4/link5/gripper/right_wrist_cam",
+        "kind": "unchanged_relative_wrist_camera"
+      }
+    ],
+    "sampled_material": [
+      {
+        "step": 0,
+        "time_s": 0.0,
+        "material": [
+          {
+            "observations": 1,
+            "paper": [
+              {
+                "continuity": {
+                  "maximum_hinge_endpoint_gap_m": 5.412101752866327e-09,
+                  "maximum_vertex_average_error_m": 3.6080683776538326e-09,
+                  "valid": true
+                },
+                "contact_audit": {
+                  "valid": true,
+                  "steps": 1,
+                  "first_failure": null
+                },
+                "valid": true
+              },
+              {
+                "continuity": {
+                  "maximum_hinge_endpoint_gap_m": 5.412101752866327e-09,
+                  "maximum_vertex_average_error_m": 3.6080683776538326e-09,
+                  "valid": true
+                },
+                "contact_audit": {
+                  "valid": true,
+                  "steps": 1,
+                  "first_failure": null
+                },
+                "valid": true
+              }
+            ],
+            "valid": true
+          }
+        ]
+      },
+      {
+        "step": 1,
+        "time_s": 0.05,
+        "material": [
+          {
+            "observations": 502,
+            "paper": [
+              {
+                "continuity": {
+                  "maximum_hinge_endpoint_gap_m": 5.985989147073768e-07,
+                  "maximum_vertex_average_error_m": 3.192786573828632e-07,
+                  "valid": true
+                },
+                "contact_audit": {
+                  "valid": true,
+                  "steps": 502,
+                  "first_failure": null
+                },
+                "valid": true
+              },
+              {
+                "continuity": {
+                  "maximum_hinge_endpoint_gap_m": 6.427353372342398e-07,
+                  "maximum_vertex_average_error_m": 3.95715856725263e-07,
+                  "valid": true
+                },
+                "contact_audit": {
+                  "valid": true,
+                  "steps": 502,
+                  "first_failure": null
+                },
+                "valid": true
+              }
+            ],
+            "valid": true
+          }
+        ]
+      },
+      {
+        "step": 2,
+        "time_s": 0.1,
+        "material": [
+          {
+            "observations": 1003,
+            "paper": [
+              {
+                "continuity": {
+                  "maximum_hinge_endpoint_gap_m": 5.987207863920479e-07,
+                  "maximum_vertex_average_error_m": 3.194928860862663e-07,
+                  "valid": true
+                },
+                "contact_audit": {
+                  "valid": true,
+                  "steps": 1003,
+                  "first_failure": null
+                },
+                "valid": true
+              },
+              {
+                "continuity": {
+                  "maximum_hinge_endpoint_gap_m": 6.42976080363893e-07,
+                  "maximum_vertex_average_error_m": 3.9585336604266163e-07,
+                  "valid": true
+                },
+                "contact_audit": {
+                  "valid": true,
+                  "steps": 1003,
+                  "first_failure": null
+                },
+                "valid": true
+              }
+            ],
+            "valid": true
+          }
+        ]
+      }
+    ]
+  },
+  "remaining": "Loaded flexible contact, remover pickup, complete extraction without damage, released final state, Dream and final media."
+}

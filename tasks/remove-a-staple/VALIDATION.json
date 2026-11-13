@@ -2,13 +2,13 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "46 CPU checks pass. Native steel coupon and thin-box flexible-paper freefall/contact coupons pass. Full-size flexible-paper and actual robot extraction are still unverified.",
+  "cpu_checks": "49 CPU checks pass. Full-size native flexible box-panel sheets and free staple pass 0.1 s contact and two-action YAM integration after a fixed station-origin shift. A 500 us control fails, so the validated step remains 100 us. No robot extraction yet.",
   "simulator_probe": "One native 3 mm steel leg with contact-driven plastic hinge, not full task.",
   "demo": null,
   "dream": null,
   "media": null,
   "blocking_items": [
-    "Validate full-size panel-paper flexibility, contact and staple retention; native coupons alone are not task feasibility.",
+    "Validate loaded full-size flexible paper contact during actual remover insertion and extraction",
     "Validate free staple extraction with the passive remover and ordinary YAM actions",
     "Verify final original-hole clearance, minimum10mm whole-staple clearance, paper preservation and release",
     "Successful robot demo, Dream baseline and final media"
@@ -51,7 +51,7 @@
       }
     }
   },
-  "cpu_tests_passed": 46,
+  "cpu_tests_passed": 49,
   "coupled_paper_probe": {
     "entry_point": "paper_probe.py",
     "status": "Native surface solver runs; mesh cleanup and documented bend coefficient still leave both contact trials outside provisional validity domain.",
@@ -681,7 +681,64 @@
       }
     ],
     "cooking_failure_061": "378 intended100um triangular prisms cooked into4-vertex tetrahedra741\u20131030um thick despite25um minimum thickness. Replaced candidate with exact analytic Cube geometry.",
-    "full_size": "573/550 dynamic panels per210x148mm sheet; each sheet2.4863232g. Independent full scene gate pending.",
-    "yam_bridge": "arena_panels.py and task_panels.py are source-checked candidates; runtime preview integration is being added. No robot trial."
+    "full_size": "573/550 free panels per210x148mm sheet; each2.4863232g. Full-size native contact066 fails at4.7ms; coupons are not full-task evidence.",
+    "yam_bridge": "arena_panels.py, task_panels.py and preview_panels.py are source-checked CPU candidates. No native robot run; blocked on full-size contact."
+  },
+  "full_box_paper_066_068": {
+    "status": "unresolved_contact_instability",
+    "report_sha256": "7b3d09b606a81fb1cbc62df09093abfe2bbf0ccda68795a16ff1bcb4335e26d2",
+    "complete": false,
+    "completed_steps": 47,
+    "first_failure": {
+      "step": 47,
+      "time_s": 0.0047,
+      "checks": [
+        {
+          "continuity": {
+            "maximum_hinge_endpoint_gap_m": 1.6132393931612347e-05,
+            "maximum_vertex_average_error_m": 1.3347367741891049e-05,
+            "valid": true
+          },
+          "wire_crossing": {
+            "valid": true,
+            "steps": 47,
+            "first_failure": null
+          }
+        },
+        {
+          "continuity": {
+            "maximum_hinge_endpoint_gap_m": 3.372675523235709e-05,
+            "maximum_vertex_average_error_m": 2.107303797834201e-05,
+            "valid": false
+          },
+          "wire_crossing": {
+            "valid": true,
+            "steps": 47,
+            "first_failure": null
+          }
+        }
+      ],
+      "paper_centroids_m": [
+        [
+          0.3006388836448104,
+          -0.023076874186768997,
+          0.767575298097719
+        ],
+        [
+          0.3006388641416476,
+          -0.015710698636243917,
+          0.7676812481552876
+        ]
+      ],
+      "maximum_facet_speed_m_s": 7.027547359466553
+    },
+    "mixed_iteration_control": "Paper1/wire4 in068 is bit-identical to066. Next all-contact-body1 comparison is explicit.",
+    "initial_geometry_audit": "No positive solid overlap between steel/paper/support or sheets. Both collider offsets2um and rest offsets0. Lower sheet exactly touches board;20um intersheet/crown clearance.",
+    "precision_hypothesis": "At worldz0.7677, float32 ULP59.6nm; observed upper fall8.4um by4ms versus78.5um gravitational displacement despite39.3mm/s velocity. A globally translated near-zero control is pending."
+  },
+  "latest_native_controls": {
+    "file": "evidence/native-panel-recenter-070-074-summary.json",
+    "sha256": "eecb746134e8f46dc1d9149abb2dcf227b2f9003eab5bade762423e60847f6ef",
+    "status": "full_size_passive_contact_and_short_YAM_bridge_passed_robot_pending"
   }
 }

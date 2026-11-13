@@ -1,0 +1,212 @@
+{
+  "date": "2026-11-13",
+  "status": "development_only_no_task_score",
+  "native_runs": {
+    "bend_32": {
+      "status": "complete",
+      "completed_steps": 480,
+      "physics_hz": 960,
+      "seconds": 0.5,
+      "maximum_hinge_endpoint_gap_m": 5.724653132328896e-06,
+      "maximum_rms_nonplanarity_m": 0.008722995621048507,
+      "last_facet_checks": [
+        {
+          "maximum_hinge_endpoint_gap_m": 5.360085946631657e-07,
+          "maximum_vertex_average_error_m": 3.5441610373030187e-07,
+          "valid": true
+        }
+      ],
+      "final_maximum_body_speed_m_s": [
+        0.48888105154037476
+      ],
+      "wall_seconds": 8.184489889070392,
+      "source": "artifacts/six-task-completion-2026-11-13/native-batch-063-panels/seam-box-bend",
+      "files_sha256": {
+        "probe.json": "263bff2c5635e0b470a849bca07b5fcd6087dc0873af732d203be036da85ae51",
+        "state.npz": "475dc97a47ece00a8e2e174457c1142cb2e53e1a9613644973a2cd8b75c78d2b",
+        "initial.usda": "3f0033977d73e742015a2d2853247bb775ee44e30d5b19dc23822a2f9ee8916c"
+      },
+      "free_tip_mean_drop_m": 0.05237434346296361,
+      "clamped_region_maximum_displacement_m": 0.00019984339503292158
+    },
+    "intact_32": {
+      "status": "invalid_model_domain",
+      "completed_steps": 263,
+      "physics_hz": 960,
+      "seconds": 0.5,
+      "maximum_hinge_endpoint_gap_m": 0.0001488470289487473,
+      "maximum_rms_nonplanarity_m": 0.0007168057092435906,
+      "last_facet_checks": [
+        {
+          "maximum_hinge_endpoint_gap_m": 0.0001488470289487473,
+          "maximum_vertex_average_error_m": 0.00010675062147721009,
+          "valid": false
+        },
+        {
+          "maximum_hinge_endpoint_gap_m": 0.00014654914870827746,
+          "maximum_vertex_average_error_m": 9.860732465702838e-05,
+          "valid": false
+        }
+      ],
+      "final_maximum_body_speed_m_s": [
+        0.7455832958221436,
+        0.6110289096832275
+      ],
+      "wall_seconds": 10.27726059872657,
+      "source": "artifacts/six-task-completion-2026-11-13/native-batch-063-panels/seam-box-intact",
+      "files_sha256": {
+        "probe.json": "fca4eba630b28dd1c5b363b70f63adb8b8cae3768f03d7859f11a4af09aed5ce",
+        "state.npz": "c4eef571c46984d2d240620704deaad7d3061f4eb36e7a8c54efa65c1733abe1",
+        "initial.usda": "41a49fe7cb557fca0bed646bed5f2492686d1afbfde10f58ea00fdbf78b5d703"
+      },
+      "first_invalid_step": 263,
+      "thread_joint_integrity": {
+        "maximum_closed_joint_gap_m": 0.0007099609796971455,
+        "first_failure": null,
+        "valid": true
+      }
+    },
+    "intact_1": {
+      "status": "invalid_model_domain",
+      "completed_steps": 335,
+      "physics_hz": 960,
+      "seconds": 0.5,
+      "maximum_hinge_endpoint_gap_m": 3.4357469932347874e-05,
+      "maximum_rms_nonplanarity_m": 0.0007139877347973039,
+      "last_facet_checks": [
+        {
+          "maximum_hinge_endpoint_gap_m": 1.216813578589329e-05,
+          "maximum_vertex_average_error_m": 8.09242538328293e-06,
+          "valid": true
+        },
+        {
+          "maximum_hinge_endpoint_gap_m": 1.1389969190768394e-05,
+          "maximum_vertex_average_error_m": 7.5781345385565956e-06,
+          "valid": true
+        }
+      ],
+      "final_maximum_body_speed_m_s": [
+        0.017428772523999214,
+        0.03699004277586937
+      ],
+      "wall_seconds": 12.280834498815238,
+      "source": "artifacts/six-task-completion-2026-11-13/native-batch-063-seam-velocity/seam-box-velocity1",
+      "files_sha256": {
+        "probe.json": "a8924070b584a95899834726ed4dc0fc640db6a9e95f7d0e7924dc5cfb087048",
+        "state.npz": "869f522b059398352f18cb53b6b059ea2daeaa81addfbb2e493bf9ba75c11a1a",
+        "initial.usda": "b94e36fa2ff04eb6bc59a5b54d91fac1477a788154c1991214fc947cdda620ad"
+      },
+      "first_invalid_step": 335,
+      "thread_joint_integrity": {
+        "maximum_closed_joint_gap_m": 0.00011182550633792845,
+        "first_failure": null,
+        "valid": true
+      }
+    },
+    "forensic_1": {
+      "status": "invalid_model_domain",
+      "completed_steps": 480,
+      "physics_hz": 960,
+      "seconds": 0.5,
+      "maximum_hinge_endpoint_gap_m": 3.4357469932347874e-05,
+      "maximum_rms_nonplanarity_m": 0.0007139877347973039,
+      "last_facet_checks": [
+        {
+          "maximum_hinge_endpoint_gap_m": 2.816063539509562e-06,
+          "maximum_vertex_average_error_m": 1.8617976405817393e-06,
+          "valid": true
+        },
+        {
+          "maximum_hinge_endpoint_gap_m": 1.6409640412538608e-06,
+          "maximum_vertex_average_error_m": 1.1700907121985536e-06,
+          "valid": true
+        }
+      ],
+      "final_maximum_body_speed_m_s": [
+        0.010258718393743038,
+        0.023298321291804314
+      ],
+      "wall_seconds": 15.047793127596378,
+      "source": "artifacts/six-task-completion-2026-11-13/native-batch-067-seam/seam-exact-contact",
+      "files_sha256": {
+        "probe.json": "d1073f8e6a18a74a4c8da5deb9a9513c2b990f7667269da2d16258abc8d46b91",
+        "state.npz": "e91ba6029b7b525527f679bdbfdd4a2e72c41c520f34873000a04f9ffb3436d2",
+        "initial.usda": "b94e36fa2ff04eb6bc59a5b54d91fac1477a788154c1991214fc947cdda620ad"
+      },
+      "first_invalid_step": 335,
+      "thread_joint_integrity": {
+        "maximum_closed_joint_gap_m": 0.00011284551305951963,
+        "first_failure": null,
+        "valid": true
+      }
+    }
+  },
+  "conclusions": [
+    "Native box panels bend freely:52.374 mm mean free-tip drop and8.723 mm peak RMS nonplanarity in0.5 s. This is transient flexibility evidence, not a calibrated static bending test.",
+    "The32-iteration intact control stops on a149 \u00b5m hinge warning and a swept-only reconstructed-surface crossing. That report alone does not prove persistent passage.",
+    "One velocity iteration keeps hinge gaps below34.36 \u00b5m; the first static crossing at0.348958 s is a real native-box penetration beside a needle hole, not just averaged-vertex error.",
+    "The0.5 s forensic shows three transient lower-hole linking losses that all reseat. All24 initial hole/thread links are restored from0.435417 s. No permanent escape was observed in this interval.",
+    "At0.5 s, no actual native box-midplane intersections remain and maximum capsule/box overlap is1.06/1.25 \u00b5m. A longer stability interval is required before using a passive settled reset.",
+    "Old063 sparse thread arrays were incorrectly populated with lower-panel poses. Runtime audits were unaffected. Fixed recording stores168 native thread poses and lengths plus first-event previous/current raw states;067 has complete correct substep traces."
+  ],
+  "expected_initial_link_count": 24,
+  "transient_link_changes": [
+    {
+      "side": 1,
+      "thread": 0,
+      "hole": 6,
+      "samples": 39,
+      "start_s": 0.3489583333333333,
+      "end_s": 0.3885416666666667
+    },
+    {
+      "side": 1,
+      "thread": 4,
+      "hole": 10,
+      "samples": 6,
+      "start_s": 0.39895833333333336,
+      "end_s": 0.4041666666666667
+    },
+    {
+      "side": 1,
+      "thread": 2,
+      "hole": 8,
+      "samples": 17,
+      "start_s": 0.41770833333333335,
+      "end_s": 0.434375
+    }
+  ],
+  "final_measurements": {
+    "time_s": 0.5,
+    "patches": [
+      {
+        "maximum_hinge_endpoint_gap_m": 2.816063539509562e-06,
+        "maximum_vertex_average_error_m": 1.8617976405817393e-06,
+        "maximum_capsule_overlap_lower_bound_m": 1.057977421761475e-06,
+        "overlapping_pairs": 15,
+        "native_midplane_intersections": 0,
+        "retained_initial_links": 12,
+        "ambiguous_links": 0
+      },
+      {
+        "maximum_hinge_endpoint_gap_m": 1.6409640412538608e-06,
+        "maximum_vertex_average_error_m": 1.1700907121985536e-06,
+        "maximum_capsule_overlap_lower_bound_m": 1.2474669071312408e-06,
+        "overlapping_pairs": 3,
+        "native_midplane_intersections": 0,
+        "retained_initial_links": 12,
+        "ambiguous_links": 0
+      }
+    ]
+  },
+  "analysis_sha256": "739ff11dd41629f53eda5dbe2ba1c6c093bfc41746bb9d4b5baefa887df1b542",
+  "analysis_method": "Exact matched segment/OBB distances; actual native box midplane intersections; signed polygon linking in two independent projections. Linking uses continuous averaged hole boundaries, with actual hinge disagreement reported separately.",
+  "no_physics_or_guard_changes": true,
+  "full_robot_cut": false,
+  "dream_run": false,
+  "limitations": [
+    "The0.1 mm hinge stop is an engineering warning; it is not itself proof of a physically open route for0.8 mm thread.",
+    "The original zero-thickness swept test uses translated endpoint/triangle frames and may conservatively flag motion; actual box solids and retained topology are separately measured.",
+    "The settled interval observed so far is only65 ms. Longer stability, YAM integration and manipulation remain unproven."
+  ]
+}

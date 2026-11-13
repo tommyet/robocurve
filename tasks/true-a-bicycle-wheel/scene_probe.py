@@ -24,8 +24,9 @@ def main():
     p.add_argument('--seconds',type=float,default=.1)
     p.add_argument('--reset-profile',choices=RESET_PROFILES,default='four-defect-reference')
     p.add_argument('--nipple-flat-phase-deg',type=float,choices=(0.,45.),default=0.)
-    p.add_argument('--wheel-clocking-deg',type=float,choices=(0.,10.,20.,50.),default=0.)
+    p.add_argument('--wheel-clocking-deg',type=float,choices=(0.,10.,20.,50.,55.),default=0.)
     p.add_argument('--solver-velocity-iterations',type=int,choices=(1,4),default=4)
+    p.add_argument('--solver-type',choices=('TGS','PGS'),default='TGS',help='Native solver diagnostic with unchanged geometry and material')
     p.add_argument('--solver-position-iterations',type=int,choices=(16,32,64,128),default=128)
     p.add_argument('--gpu-physics',action='store_true',help='Compare native GPU rigid physics with the CPU reference')
     p.add_argument('--external-forces-every-iteration',action='store_true',help='Match the YAM TGS external-force integration option; diagnostic only')
@@ -33,12 +34,14 @@ def main():
     p.add_argument('--freeze-thread-diagnostic',action='store_true',help='No runtime material writes/lead torque; isolates native assembly')
     p.add_argument('--preloaded-reset-candidate',action='store_true',help='Author the measured loaded wheel shape before physics attaches')
     p.add_argument('--central-spring-candidate',action='store_true',help='CPU native DistanceJoint spoke tension; compare against D6 reference')
+    p.add_argument('--inextensible-rim-candidate',action='store_true',help='Lock hoop extension while retaining all rim bending/torsion; explicit approximation diagnostic')
     p.add_argument('--distance-tolerance-compensation-m',type=float,choices=(0.,.025),default=0.,help='Compensate native DistanceJoint numerical tolerance, preserving physical rest length')
     args=p.parse_args()
     if not .00001<=args.dt<=.0005 or not .025<=args.seconds<=2.:
         p.error('Use 0.00001 <= dt <= 0.0005 and 0.025 <= seconds <= 2')
     if args.omit_bearing_diagnostic and args.seconds>.05:p.error('Free-bearing diagnostic is limited to50ms before bench approach')
     if args.central_spring_candidate and args.gpu_physics:p.error('Native DistanceJoint is supported on CPU only')
+    if args.solver_type=='PGS' and args.external_forces_every_iteration:p.error('External forces every iteration is a TGS-only option; omit it with PGS')
     if args.distance_tolerance_compensation_m and not args.central_spring_candidate:p.error('Distance tolerance compensation requires central-spring candidate')
     args.out.mkdir(parents=True,exist_ok=False);started=time.monotonic()
     record={'schema':'native-wheel-scene-diagnostic-v2','complete':False,'calibrated':False,
@@ -46,13 +49,15 @@ def main():
             'dt':args.dt,'seconds':args.seconds,'samples':[],'completed_steps':0,'phase':'launch',
             'solver_position_iterations':args.solver_position_iterations,
             'solver_velocity_iterations':args.solver_velocity_iterations,
+            'solver_type':args.solver_type,
             'reset_profile':args.reset_profile,'nipple_flat_phase_deg':args.nipple_flat_phase_deg,'wheel_clocking_deg':args.wheel_clocking_deg,
             'initial_turn_offsets':starting_turn_errors(profile=args.reset_profile).tolist(),
             'frozen_material_diagnostic':args.freeze_thread_diagnostic,
             'omitted_bearing_diagnostic':args.omit_bearing_diagnostic,
             'gpu_physics':args.gpu_physics,
-            'external_forces_every_iteration':args.external_forces_every_iteration,
+            'external_forces_every_iteration':args.external_forces_every_iteration if args.solver_type=='TGS' else None,
             'central_spring_candidate':args.central_spring_candidate,
+            'inextensible_rim_candidate':args.inextensible_rim_candidate,
             'distance_tolerance_compensation_m':args.distance_tolerance_compensation_m,
             'first_step':'Initializes native tensor state; authored spring rest lengths/friction already present, lead torque begins on step2.',
             'source_sha256':{n:hashlib.sha256(Path(__file__).with_name(n).read_bytes()).hexdigest()
@@ -78,9 +83,9 @@ def main():
         scene=UsdPhysics.Scene.Define(stage,'/physicsScene')
         scene.CreateGravityDirectionAttr(Gf.Vec3f(0.,0.,-1.));scene.CreateGravityMagnitudeAttr(9.80665)
         phys=PhysxSchema.PhysxSceneAPI.Apply(scene.GetPrim())
-        phys.CreateSolverTypeAttr('TGS');phys.CreateEnableGPUDynamicsAttr(args.gpu_physics)
+        phys.CreateSolverTypeAttr(args.solver_type);phys.CreateEnableGPUDynamicsAttr(args.gpu_physics)
         phys.CreateBroadphaseTypeAttr('GPU' if args.gpu_physics else 'MBP');phys.CreateEnableCCDAttr(not args.gpu_physics)
-        phys.CreateEnableExternalForcesEveryIterationAttr(args.external_forces_every_iteration)
+        if args.solver_type=='TGS':phys.CreateEnableExternalForcesEveryIterationAttr(args.external_forces_every_iteration)
         if args.gpu_physics:
             import carb.settings
             carb.settings.get_settings().set_bool('/physics/suppressReadback',True)
@@ -89,7 +94,7 @@ def main():
         table.AddTranslateOp().Set(Gf.Vec3d(.3,0.,.7275));table.AddScaleOp().Set(Gf.Vec3f(1.,1.,.04))
         UsdPhysics.CollisionAPI.Apply(table.GetPrim())
         PhysxSchema.PhysxCollisionAPI.Apply(table.GetPrim()).CreateContactOffsetAttr(.000002)
-        metadata=build_scene(stage,reset_profile=args.reset_profile,nipple_flat_phase_rad=np.deg2rad(args.nipple_flat_phase_deg),wheel_clocking_rad=np.deg2rad(args.wheel_clocking_deg),central_spring_candidate=args.central_spring_candidate,distance_spring_tolerance_m=args.distance_tolerance_compensation_m)
+        metadata=build_scene(stage,reset_profile=args.reset_profile,nipple_flat_phase_rad=np.deg2rad(args.nipple_flat_phase_deg),wheel_clocking_rad=np.deg2rad(args.wheel_clocking_deg),central_spring_candidate=args.central_spring_candidate,distance_spring_tolerance_m=args.distance_tolerance_compensation_m,inextensible_rim_candidate=args.inextensible_rim_candidate)
         if args.omit_bearing_diagnostic:
             if not stage.RemovePrim(metadata['hub_path'].rsplit('/',1)[0]+'/hub_bearing'):
                 raise RuntimeError('World bearing removal failed')

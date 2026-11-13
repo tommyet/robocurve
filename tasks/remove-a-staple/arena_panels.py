@@ -39,7 +39,10 @@ def _spawn(path,cfg,translation=None,orientation=None,**kwargs):
     spec=SPECS[cfg.paper_name];stage=get_current_stage()
     root=str(path).rsplit('/',1)[0]
     if cfg.paper_name not in SHELLS:
-        shell=author_shell(stage,root,spec.mesh,spec.material,primitive_boxes=True,velocity_iterations=4)
+        from coordinate_frame import to_native
+        from paper import PaperMesh
+        mesh=PaperMesh(to_native(spec.mesh.rest),spec.mesh.faces,spec.mesh.holes)
+        shell=author_shell(stage,root,mesh,spec.material,primitive_boxes=True,velocity_iterations=4)
         model=shell['model'];shell['reset_poses']=np.c_[model['centres'],np.tile((0.,0.,0.,1.),(len(model['centres']),1))]
         SHELLS[cfg.paper_name]=shell
     prim=stage.GetPrimAtPath(str(path))

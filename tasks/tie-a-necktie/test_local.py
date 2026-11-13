@@ -59,13 +59,13 @@ class Geometry(unittest.TestCase):
 class Judging(unittest.TestCase):
     def record(self):
         return dict(evidence_sha256={k:'0'*64 for k in ('released_video','front_photo','rear_photo')},
-                    integrity_checked=True,intact=True,four_in_hand_verified=True,released_hold_s=5.,
+                    integrity_checked=True,intact=True,simple_knot_verified=True,released_hold_s=5.,
                     wide_face_out=True,narrow_end_hidden=True,knot_zone_offset_mm=10.,
-                    neckband_gap_mm=5.,wide_tip_below_collar_mm=320.,narrow_tip_above_wide_tip_mm=50.)
+                    neckband_gap_mm=5.,wide_tip_below_collar_mm=420.,narrow_tip_above_wide_tip_mm=50.)
     def test_complete_and_retained_but_undressed_knot(self):
         j=self.record();self.assertEqual(score(j),1.)
         j['wide_face_out']=False;self.assertEqual(score(j),.5)
-        j['four_in_hand_verified']=False;self.assertEqual(score(j),0.)
+        j['simple_knot_verified']=False;self.assertEqual(score(j),0.)
     def test_physical_invalidity_erases_credit(self):
         j=self.record();j['intact']=False;self.assertEqual(score(j),0.)
         j=self.record();j['released_hold_s']=4.9;self.assertEqual(score(j),0.)
@@ -74,8 +74,11 @@ class Judging(unittest.TestCase):
         j=self.record();j['wide_tip_below_collar_mm']=100.;self.assertEqual(score(j),.5)
     def test_narrow_tip_below_wide_is_not_ready_to_wear(self):
         j=self.record();j['narrow_tip_above_wide_tip_mm']=-5.;self.assertEqual(score(j),.5)
+    def test_adult_tip_length_band_is_inclusive(self):
+        for length,expected in ((399.9,.5),(400.,1.),(440.,1.),(440.1,.5)):
+            j=self.record();j['wide_tip_below_collar_mm']=length;self.assertEqual(score(j),expected)
     def test_missing_assessment_raises(self):
-        j=self.record();del j['four_in_hand_verified']
+        j=self.record();del j['simple_knot_verified']
         with self.assertRaises(ValueError):score(j)
     def test_unknown_fit_measurement_cannot_score(self):
         j=self.record();j['neckband_gap_mm']=float('nan')
