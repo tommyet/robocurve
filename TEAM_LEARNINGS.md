@@ -27,6 +27,35 @@ developers and their agents, not a competition submission document.
   and all GPUs are confirmed stopped, as requested. No paid tests are authorized
   for those ideas yet.
 
+## 2026-11-13 — retained narrow grip and continuing diagnostics
+
+- Tie165's six-second alignment keeps the narrow strand between the pads.
+  Ten sampled robot-hull checks, twelve self and twelve fixture checks are
+  clear. Tie167 repeats that approach and physically lifts the narrow patch
+ 37.43mm while retaining the wide patch; six robot, nine self and eleven fixture
+  samples are clear. Both are explicit measured-state probes, not fresh-start
+  task demos or knots. Archive167 is verified locally:
+  `406f5cfb030577a6ffcd56dadee4d5255723a0a1bc7b5831619e38ac92a1fe4f`.
+  Archive165 is verified locally:
+  `7af800d92e6a478b23f83a242e18fadfb20665fee13cc8f1c646f87cc140a1d9`.
+- A240-action first underpass from167/action320 passes the local full rigid
+  fixture/inter-arm screen: left narrow grip moves forward to x=.31, then the
+  right wide grip moves through(.38,-.13,1.16) to(.38,.10,1.16). Wider y=.12
+  collides and was rejected. Native169 is the next bounded test; no native
+  crossing or wrapping result yet. Future tie probes use lossless float32
+  node/velocity arrays to reduce recording/transfer overhead. Legacy trace
+  readers remain supported;27 local tests pass, including exact recording
+  round-trip and refusal to silently downcast data.
+- Shirt166's partial sample at0,20,38 is free of native cooked robot contact.
+  It is unusually slow (about8–10s/action including reconstruction overhead).
+  A verified process monitor now caps it at22:35UTC; the RTX Pod deadline stays
+ 22:57UTC. Do not splice this reconstruction into a task demo. The stationary
+  seam controls168 are queued after this job,180s each, no third simulator.
+- Seam168 holds the measured handle target at its initial position at128/255
+  iterations while retaining recorded dynamic velocities. This isolates
+  checkpoint relaxation from new tool motion; it does not alter cut thresholds
+  or physical material. All80 seam local tests pass after adding zero-speed.
+
 ## 2026-11-13 — measured contact outcomes and short motion comparisons
 
 - Shirt161 archive is verified and extracted locally. Fourteen sampled cloth
@@ -49,6 +78,14 @@ developers and their agents, not a competition submission document.
   cloth strain exceeds the unchanged5% domain. Peak edge force0.403N, zero cuts.
   The reconstructed checkpoint omits solver warm starts; it does not establish
   a full fresh-start255-iteration outcome. No material or scoring relaxation.
+- Wheel162 costs about7s per control action on the A40. Its initial4,800s
+  process cap would expire before the second turn. At22:03UTC a verified
+  process-identity monitor replaced that estimate with a23:55UTC hard deadline;
+  the independent local Pod watchdog is verified and now ends00:05UTC Nov14,
+  allowing evidence transfer. Stop earlier when finished. RTX deadline stays
+ 22:57UTC. The old timeout wrapper is paused while this monitor owns the limit;
+  its eventual124 exit is not the native episode status. Preserve run.json and
+  extended-limit.json together. This changes wall-clock bounds only.
 - At22:01UTC the fully paginated inventory contains exactly two running Pods:
   A406j5r534r2o9ghj andRTXc9rp6c7dpr908a; all four previous Pods are EXITED.
   Both independent local shutdown watchdogs were verified alive. Wheel162

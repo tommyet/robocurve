@@ -8,6 +8,7 @@ import argparse,gzip,hashlib,json
 from collections import defaultdict
 from pathlib import Path
 import numpy as np
+from trace_data import cloth_array
 
 
 def crossing_pairs(nodes,faces,tolerance=1e-6,cell=.02):
@@ -57,7 +58,7 @@ def main():
         for line in f:
             row=json.loads(line)
             if row['step']%args.every and row['step']!=report['completed_steps']:continue
-            pairs=crossing_pairs(row['objects']['tie']['nodes'],faces)
+            pairs=crossing_pairs(cloth_array(args.trial,row,'tie'),faces)
             rows.append(dict(step=row['step'],time_s=row['time_s'],transversely_crossing_triangle_pairs=pairs))
     result=dict(kind='offline_native_cloth_self_crossing_rejection_audit',score=None,
         run_status=report['status'],sample_count=len(rows),samples=rows,

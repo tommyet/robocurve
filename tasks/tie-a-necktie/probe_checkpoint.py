@@ -60,7 +60,7 @@ def main():
         tmp.replace(args.out/'run.json')
     def terminated(signum,frame):raise TimeoutError('Bounded diagnostic interrupted')
     signal.signal(signal.SIGTERM,terminated);save()
-    app=trace=video=None
+    app=trace=video=dense=None
     try:
         os.environ['ROBOCURVE_TIE_INSIDE_OUT_RESET']='1'
         os.environ['ROBOCURVE_TIE_ADULT_COLLAR']='1'
@@ -112,11 +112,13 @@ def main():
         video=imageio.get_writer(args.out/'diagnostic.mp4',fps=20,codec='libx264',
             pixelformat='yuv420p',ffmpeg_params=['-movflags','+faststart'],macro_block_size=1)
         def array(value):return getattr(value,'torch',value).detach().cpu().numpy()
+        from trace_data import DenseClothTrace
+        dense=DenseClothTrace(args.out,arena_cloth.SPECS,len(actions)+1)
         def snapshot(step,action):
             obs=emb._observation()
             row=dict(step=step,time_s=step/20,action14=action.tolist(),
                 measured_joint_pos=encode(np.asarray(obs.state['joint_pos'])),
-                objects=encode(scene.object_states(emb._env,['tie'])),
+                objects=dense.record(scene.object_states(emb._env,['tie']),step,encode),
                 robot_links={name:{'names':list(base.scene[name].body_names),
                     'poses_xyzw':array(base.scene[name].data.body_link_pose_w)[0].tolist()}
                     for name in ('left_robot','right_robot')})
@@ -134,6 +136,7 @@ def main():
     except BaseException as error:
         report.update(status='failed',error=str(error),traceback=traceback.format_exc())
     finally:
+        if dense is not None:dense.flush()
         if trace is not None:trace.close()
         if video is not None:video.close()
         save()

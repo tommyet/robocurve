@@ -10,10 +10,13 @@ its normal camera and joint observations. No controller may reposition cloth,
 attach it, change its rest shape or apply hidden forces.
 
 Native155 and160 establish the pickup, tip handoff and right-hand regrasp of
-the wide strand. Native160 then approaches the narrow strand, but pushes it
-aside and closes beside it. Sampled self, robot and fixture checks are clear;
-that does not establish grasp success. A fully open approach passes local
-screens and awaits a short native comparison.
+the wide strand. Native163 shows that opening the narrow-grasp fingers further
+does not fix an overshooting alignment. Native165 slows that alignment from
+2 to6 seconds and keeps the narrow strand between the pads. Native167 then
+carries it upward38mm while the other hand retains the wide strand. Sampled
+self, robot and fixture checks are clear. These last comparisons reconstruct
+recorded states; the improved sequence still needs a complete fresh-start run.
+A locally screened first underpass is prepared; no crossing or knot is proven.
 
 Remaining work:
 

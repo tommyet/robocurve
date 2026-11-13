@@ -23,7 +23,8 @@ def main():
     p.add_argument('--stage',type=Path,required=True);p.add_argument('--state',type=Path,required=True)
     p.add_argument('--out',type=Path,required=True)
     p.add_argument('--physics-hz',type=int,choices=(960,1920,3840),default=960)
-    p.add_argument('--speed',type=float,choices=(.25,1.),default=1.)
+    p.add_argument('--speed',type=float,choices=(0.,.25,1.),default=1.,
+        help='Zero holds the initial handle target; measured dynamic-body velocities remain unchanged')
     p.add_argument('--effective-contact-diagnostic',action='store_true')
     p.add_argument('--convex-capsules-diagnostic',choices=('guards','all'),help='Equivalent convex surface candidate, before native physics only; never demo evidence')
     p.add_argument('--solver',choices=('TGS','PGS'),help='Explicit contact-constraint diagnostic; defaults to the archived native solver')
