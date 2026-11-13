@@ -29,8 +29,9 @@ class IcingParameters:
     star_depth: float = .28
     star_lobes: int = 6
     density_kg_m3: float = 850.
-    yield_slope: float = .75
-    surface_mobility_m_per_s: float = .0003
+    shear_yield_pa: float = 800.
+    consistency_pa_sn: float = 4_000.
+    flow_index: float = .5
     pressure_transfer_depth_m: float = .002
     maximum_substep_s: float = 1 / 480
 
@@ -48,6 +49,27 @@ class IcingParameters:
             raise ValueError("All material parameters must be finite and positive")
         if self.star_depth >= 1 or int(self.star_lobes) != self.star_lobes:
             raise ValueError("Invalid star nozzle")
+        if self.flow_index > 1:
+            raise ValueError("This icing model requires a shear-thinning or linear flow law")
+
+
+def surface_flux(pressure_gradient_pa_m, depth_m, *, yield_pa, consistency_pa_sn, flow_index):
+    """No-slip Herschel-Bulkley film flux per unit width, in m²/s.
+
+    Integrate u(z) through a film with zero surface shear. The yielded depth is
+    Y = max(h - tau_y / |grad(p)|, 0). The unyielded surface plug moves with
+    the yielded lower layer. This is a shallow-film approximation; it cannot
+    represent unsupported overhangs. No decoration geometry enters the law.
+    """
+    gradient=np.asarray(pressure_gradient_pa_m,float)
+    h=np.asarray(depth_m,float)
+    magnitude=np.abs(gradient)
+    yielded=np.maximum(h-yield_pa/np.maximum(magnitude,1e-30),0.)
+    power=1./flow_index
+    flux=(magnitude/consistency_pa_sn)**power*(
+        yielded**(2+power)/(2+power)
+        +(h-yielded)*yielded**(1+power)/(1+power))
+    return np.sign(gradient)*flux
 
 
 class Icing:
@@ -71,14 +93,21 @@ class Icing:
         self.cake_top = cake_top
         self.table_top = table_top
         self.reset()
-        # Equal-area polar quadrature of an ordinary six-point star aperture.
-        # Weights are exact for this discretisation and normalised once.
-        theta = np.arange(24) * 2*math.pi/24
+        # Resolve the aperture at the material-grid scale. A fixed set of 72
+        # parcel origins leaves artificial gaps when the grid is refined.
+        # Polar annuli include the centre; their exact area weights preserve
+        # flow volume even though each cell is represented by one centroid.
+        maximum_radius=self.p.nozzle_radius_m*(1+self.p.star_depth)
+        angles=max(48,24*math.ceil(2*math.pi*maximum_radius/self.dx/24))
+        rings=max(3,math.ceil(maximum_radius/self.dx))
+        theta = np.arange(angles) * 2*math.pi/angles
         outer = self.p.nozzle_radius_m*(1 + self.p.star_depth*np.cos(self.p.star_lobes*theta))
-        radial = np.sqrt((np.arange(3)+.5)/3)
+        edges=np.linspace(0.,1.,rings+1)
+        radial_area=np.diff(edges**2)
+        radial=(2./3.)*np.diff(edges**3)/radial_area
         self.nozzle_xy = np.array([[r*o*math.cos(t), r*o*math.sin(t)]
                                   for t, o in zip(theta, outer) for r in radial])
-        self.weights = np.repeat(outer**2, 3)
+        self.weights = (outer[:,None]**2*radial_area[None,:]).ravel()
         self.weights /= self.weights.sum()
         self.aperture_area_m2 = float(math.pi*np.mean(outer**2))
 
@@ -95,6 +124,8 @@ class Icing:
         self.time_s = 0.
         self.nozzle_position = None
         self.nozzle_rotation = None
+        self.surface_transport_m3=0.
+        self.implicit_surface_edges=0
 
     @property
     def height(self):
@@ -164,9 +195,18 @@ class Icing:
         surface[ix] = self.base[ij[ix,0],ij[ix,1]]+self.volume[ij[ix,0],ij[ix,1]]/self.dx**2
         landed = valid & (self.air_pos[:,2] <= surface)
         if landed.any():
-            # Local volume accumulation, independent of intended decoration.
-            # Star-aperture cross sections are preserved by parcel locations.
-            np.add.at(self.volume, (ij[landed,0],ij[landed,1]), self.air_volume[landed])
+            # Conservative cloud-in-cell deposition avoids snapping the entire
+            # parcel onto a single cell as the nozzle crosses grid boundaries.
+            # The kernel spans one cell; no desired shape enters this transfer.
+            xy=(self.air_pos[landed,:2]-np.array((self.x[0],self.y[0])))/self.dx
+            lower=np.floor(xy).astype(int);fraction=xy-lower
+            volumes=self.air_volume[landed]
+            for di,dj in ((0,0),(1,0),(0,1),(1,1)):
+                i,j=(lower+np.array((di,dj))).T
+                weight=(fraction[:,0] if di else 1-fraction[:,0])*(fraction[:,1] if dj else 1-fraction[:,1])
+                inside=(i>=0)&(i<len(self.x))&(j>=0)&(j<len(self.y))
+                np.add.at(self.volume,(i[inside],j[inside]),volumes[inside]*weight[inside])
+                self.lost_m3+=float((volumes[~inside]*weight[~inside]).sum())
         escaped = (~valid & (self.air_pos[:,2]<self.table_top)) | (self.air_pos[:,2]<self.table_top-.2)
         self.lost_m3 += float(self.air_volume[escaped & ~landed].sum())
         keep = ~(landed|escaped)
@@ -191,12 +231,12 @@ class Icing:
         return self.pressure_pa*submerged/(self.p.density_kg_m3*9.81)
 
     def _relax(self, dt):
-        """Conservative nearest-cell viscoplastic flow with a yield slope.
+        """Implicit, conservative neighbouring-cell film transport.
 
-        A donor sends at most one quarter of its current volume per face. The
-        cap enforces positivity without adding/removing material. Flux uses
-        actual gravity/pressure head, including cake-edge spill. No material is
-        generated by spreading, even when the surface touches an idle nozzle.
+        Solve each disjoint pair for its end-of-substep flux. This avoids the
+        explicit donor limiter that made spreading depend strongly on cell size.
+        Alternating axes reduce splitting bias. Pressure footprint is frozen
+        within each pair solve; submergence varies with the candidate depth.
         """
         occupied_rows=np.flatnonzero(np.any(self.volume>0,axis=1))
         if not len(occupied_rows):return
@@ -208,18 +248,58 @@ class Icing:
                 slice(max(0,int(occupied_cols[0])-2),min(len(self.y),int(occupied_cols[-1])+3)))
         volume=self.volume[region]
         base=self.base[region]
-        pressure_head=self._pressure_head(region)
-        for axis in (0, 1):
-            left = (slice(None,-1),slice(None)) if axis == 0 else (slice(None),slice(None,-1))
-            right = (slice(1,None),slice(None)) if axis == 0 else (slice(None),slice(1,None))
-            surface = base+volume/self.dx**2+pressure_head
-            gradient = (surface[left]-surface[right])/self.dx
-            excess = np.maximum(np.abs(gradient)-self.p.yield_slope, 0.)
-            donor = np.where(gradient>0, volume[left], volume[right])
-            flux = self.p.surface_mobility_m_per_s*dt*self.dx**2*excess
-            flux = np.minimum(flux, donor*.24)*np.sign(gradient)
-            volume[left] -= flux
-            volume[right] += flux
+        area=self.dx**2
+        rho_g=self.p.density_kg_m3*9.81
+        axes=(0,1) if round(self.time_s/dt)%2==0 else (1,0)
+        for axis in axes:
+            for parity in (0,1):
+                h=volume/area
+                scale=np.zeros_like(volume);intercept=np.zeros_like(volume);slope=0.
+                # A downward outlet can compress a supported surface. Upward
+                # ejection remains ballistic; this height field has no ceiling.
+                if (self.nozzle_position is not None and self.pressure_pa>0
+                        and self.nozzle_rotation[2,2]<0):
+                    displacement=np.stack((self.X[region]-self.nozzle_position[0],
+                        self.Y[region]-self.nozzle_position[1],
+                        base+h-self.nozzle_position[2]),axis=-1)
+                    local=displacement@self.nozzle_rotation
+                    radius=np.hypot(local[:,:,0],local[:,:,1])
+                    angle=np.arctan2(local[:,:,1],local[:,:,0])
+                    aperture=self.p.nozzle_radius_m*(1+self.p.star_depth*np.cos(self.p.star_lobes*angle))
+                    scale=self.pressure_pa/rho_g*(radius<aperture)
+                    slope=-self.nozzle_rotation[2,2]/self.p.pressure_transfer_depth_m
+                    intercept=-local[:,:,2]/self.p.pressure_transfer_depth_m-slope*h
+                left=((slice(parity,-1,2),slice(None)) if axis==0
+                      else (slice(None),slice(parity,-1,2)))
+                right=((slice(parity+1,None,2),slice(None)) if axis==0
+                       else (slice(None),slice(parity+1,None,2)))
+                vl,vr=volume[left],volume[right]
+                surface=base+h+scale*np.clip(intercept+slope*h,0,1)
+                gradient=rho_g*(surface[left]-surface[right])/self.dx
+                donor_depth=np.where(gradient>0,vl,vr)/area
+                active=(np.abs(gradient)*donor_depth>self.p.shear_yield_pa)&(donor_depth>0)
+                if not np.any(active):continue
+                self.implicit_surface_edges+=int(active.sum())
+                vl0,vr0=vl[active].copy(),vr[active].copy()
+                bl,br,al,ar,sl,sr=(a[active] for a in
+                    (base[left],base[right],intercept[left],intercept[right],scale[left],scale[right]))
+                # These bounds enforce finite volume and positivity directly.
+                low,high=-vr0,vl0
+                for _ in range(26):
+                    flux=(low+high)/2
+                    hl,hr=(vl0-flux)/area,(vr0+flux)/area
+                    g=rho_g*(bl+hl+sl*np.clip(al+slope*hl,0,1)
+                        -br-hr-sr*np.clip(ar+slope*hr,0,1))/self.dx
+                    predicted=surface_flux(g,np.where(g>0,hl,hr),
+                        yield_pa=self.p.shear_yield_pa,
+                        consistency_pa_sn=self.p.consistency_pa_sn,
+                        flow_index=self.p.flow_index)*dt*self.dx
+                    residual=flux-predicted
+                    low=np.where(residual<0,flux,low)
+                    high=np.where(residual>=0,flux,high)
+                flux=(low+high)/2
+                vl[active],vr[active]=vl0-flux,vr0+flux
+                self.surface_transport_m3+=float(np.abs(flux).sum())
         if self.volume.min(initial=0.) < -1e-18:
             raise ArithmeticError("Material solver produced negative volume")
 
@@ -234,23 +314,36 @@ class Icing:
         p, v = np.asarray(points,float), np.asarray(velocities,float)
         if p.ndim!=2 or p.shape[1]!=3 or v.shape!=p.shape or not np.isfinite(p).all() or not np.isfinite(v).all():
             raise ValueError("Contact points/velocities must be finite N by 3 arrays")
+        stiffness=np.broadcast_to(np.asarray(stiffness_n_m,float),(len(p),))
+        damping=np.broadcast_to(np.asarray(damping_ns_m,float),(len(p),))
+        if not np.isfinite(stiffness).all() or not np.isfinite(damping).all() or np.any(stiffness<0) or np.any(damping<0):
+            raise ValueError('Contact coefficients must be finite and nonnegative')
         ij, valid = self._indices(p[:,:2])
         reactions = np.zeros_like(p)
-        for k in np.flatnonzero(valid):
-            i,j=ij[k]
-            top=self.base[i,j]+self.volume[i,j]/self.dx**2
-            depth=top-p[k,2]
-            if depth<=0:
-                continue
-            reactions[k,2]=max(0.,stiffness_n_m*depth-damping_ns_m*v[k,2])
-            if self.on_cake[i,j]:
-                self.cake_damage_depth_m=max(self.cake_damage_depth_m,self.base[i,j]-p[k,2])
-            moved=min(self.volume[i,j],depth*self.dx**2)
-            neighbours=[(a,b) for a,b in ((i-1,j),(i+1,j),(i,j-1),(i,j+1))
-                        if 0<=a<len(self.x) and 0<=b<len(self.y)]
-            self.volume[i,j]-=moved
-            for a,b in neighbours:
-                self.volume[a,b]+=moved/len(neighbours)
+        ks=np.flatnonzero(valid)
+        if not len(ks):return reactions
+        i,j=ij[ks].T
+        top=self.base[i,j]+self.volume[i,j]/self.dx**2
+        depth=top-p[ks,2]
+        reactions[ks,2]=np.where(depth>0,np.maximum(0.,stiffness[ks]*depth-damping[ks]*v[ks,2]),0.)
+        # Project each covered column once, using the lowest sampled metal
+        # surface. Repeating displacement for duplicate samples creates an
+        # artificial dependence on quadrature density and iteration order.
+        occupied,inverse=np.unique(i*len(self.y)+j,return_inverse=True)
+        lowest=np.full(len(occupied),np.inf)
+        np.minimum.at(lowest,inverse,p[ks,2])
+        i,j=np.divmod(occupied,len(self.y))
+        depth=np.maximum(0.,self.base[i,j]+self.volume[i,j]/self.dx**2-lowest)
+        on_cake=self.on_cake[i,j]
+        self.cake_damage_depth_m=max(self.cake_damage_depth_m,
+            float(np.max((self.base[i,j]-lowest)[on_cake],initial=0.)))
+        moved=np.minimum(self.volume[i,j],depth*self.dx**2)
+        self.volume[i,j]-=moved
+        neighbour_count=(i>0).astype(int)+(i+1<len(self.x))+(j>0)+(j+1<len(self.y))
+        for di,dj in ((-1,0),(1,0),(0,-1),(0,1)):
+            a,b=i+di,j+dj
+            inside=(a>=0)&(a<len(self.x))&(b>=0)&(b<len(self.y))
+            np.add.at(self.volume,(a[inside],b[inside]),moved[inside]/neighbour_count[inside])
         return reactions
 
     def balance(self):
@@ -259,6 +352,8 @@ class Icing:
         return {"initial_m3":self.p.initial_volume_m3,
                 "reservoir_m3":self.p.initial_volume_m3-self.emitted_m3,
                 "deposited_m3":retained,"airborne_m3":airborne,"lost_m3":self.lost_m3,
+                "surface_transport_m3":self.surface_transport_m3,
+                "implicit_surface_edges":self.implicit_surface_edges,
                 "error_m3":self.emitted_m3-retained-airborne-self.lost_m3}
 
     def save(self, path):

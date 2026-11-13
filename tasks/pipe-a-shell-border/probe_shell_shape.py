@@ -6,12 +6,13 @@ The material sees only the nozzle aperture, reservoir pressure and deposited
 surface. The prescribed motion is separate and never part of the material law.
 """
 import argparse
+from dataclasses import replace
 import hashlib
 import json
 from pathlib import Path
 import time
 import numpy as np
-from material import Icing
+from material import Icing, IcingParameters
 from native import Coupling,rotation
 from scoring import assess
 
@@ -21,13 +22,21 @@ def main():
     p.add_argument('--out',type=Path,required=True)
     p.add_argument('--force',type=float,default=7.)
     p.add_argument('--head-fraction',type=float,default=.4)
+    p.add_argument('--dx',type=float,choices=(.001,.0005,.00025),default=.0005)
+    p.add_argument('--physics-hz',type=int,choices=(240,480,960),default=240)
+    p.add_argument('--material-hz',type=int,choices=(480,960,1920,3840),default=480)
+    p.add_argument('--star-depth',type=float,choices=(.28,.4,.5),default=.28)
+    p.add_argument('--shear-yield-pa',type=float,choices=(800.,1200.),default=800.)
+    p.add_argument('--density-kg-m3',type=float,choices=(850.,1000.),default=850.)
     a=p.parse_args()
     if not 4<=a.force<=10 or not .2<=a.head_fraction<=.6:p.error('Use bounded material-probe parameters')
     a.out.mkdir(parents=True,exist_ok=False);started=time.monotonic()
-    m=Icing(dx=.0005,xlim=(.22,.25),ylim=(-.06,.06))
+    m=Icing(replace(IcingParameters(),maximum_substep_s=1/a.material_hz,star_depth=a.star_depth,
+                    shear_yield_pa=a.shear_yield_pa,density_kg_m3=a.density_kg_m3),
+            dx=a.dx,xlim=(.22,.25),ylim=(-.06,.06))
     coupling=Coupling(m)
     quat=np.array((0.,-np.sin(np.pi/8),np.cos(np.pi/8),0.));R=rotation(quat);axis=R[:,1]
-    dt=1/240;trace=[];previous=None
+    dt=1/a.physics_hz;trace=[];previous=None
     def prescribed_sample(tip,force):
         nonlocal previous
         q=(m.emitted_m3+force/m.p.piston_area_m2*m.p.initial_volume_m3/m.p.bulk_modulus_pa)/m.p.piston_area_m2
@@ -50,7 +59,8 @@ def main():
     report={'kind':'offline_constitutive_candidate','robot_demo':False,
             'status':'Uncalibrated shape experiment; no task feasibility claim',
             'wall_seconds':time.monotonic()-started,'balance':m.balance(),
-            'assumptions':{'pressure_transfer_depth_m':.002,'surface_mobility_m_per_s':.0003},
+            'cell_size_m':m.dx,'physics_hz':a.physics_hz,
+            'assumptions':vars(m.p),
             'source_sha256':{name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
                              for name in ('probe_shell_shape.py','material.py','native.py','scoring.py')},
             'shape_diagnostic':assess(m.x,m.y,m.volume,dx=m.dx,emitted_m3=m.emitted_m3,

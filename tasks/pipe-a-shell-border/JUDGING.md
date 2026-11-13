@@ -10,9 +10,12 @@ high. Within 4–22 mm after that head, its tail must include a section 1 mm or 
 wide, at least 0.5 mm high, at most 3 mm high, and no wider or higher than 65% of
 the head. Its leading edge to qualifying tail must span at least 1.25 times its head width;
 a round mound does not count. A finer point beyond this section is allowed. Head-to-tail motion can vary; shells have no fixed
-centres. For full credit, each counted head needs at least two ridges at least
+centres. For full credit, each counted shell needs at least two ridges at least
 1 mm high, separated by 1.5 mm or more, with a dip of at least 0.3 mm between
-them. Check a close side view across the widest part of the head.
+them. Both ridges must continue for at least 2 mm on the shell, including its
+tapered shoulder; an isolated bump does not count. Top and close side photographs
+show their length, separation and depth. Measure head height within 2 mm before
+to 4 mm after its widest point, where width is at least 75% of the maximum.
 
 Measure the total marked length occupied by valid head-and-tail shapes:
 

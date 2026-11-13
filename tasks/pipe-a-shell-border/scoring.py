@@ -30,6 +30,29 @@ def _peaks(values, *, minimum, spacing, prominence):
     return sorted(chosen)
 
 
+def _ridge_length(surface, first, last, dx):
+    """Continuous visible ridge pair anywhere on the measured shell body.
+
+    The ridges may run down its tapered shoulder. Track every qualifying pair,
+    so a third crest appearing between them does not erase two real ridges.
+    Neighboring crests may move at most twice the cross-section spacing.
+    """
+    previous=[];longest=0.
+    for column in range(max(0,first),min(surface.shape[1],last+1)):
+        v=surface[:,column]
+        peaks=_peaks(v,minimum=.001,spacing=max(1,round(.0015/dx)),prominence=.0003)
+        current=[]
+        for i,left in enumerate(peaks):
+            for right in peaks[i+1:]:
+                if min(v[left],v[right])-float(v[left:right+1].min())<.0003:continue
+                length=dx+max((length for a,b,length in previous
+                    if abs(a-left)*dx<=2*dx+1e-12
+                    and abs(b-right)*dx<=2*dx+1e-12),default=0.)
+                current.append((left,right,length));longest=max(longest,length)
+        previous=current
+    return longest
+
+
 def assess(x,y,volume,*,dx,emitted_m3,lost_m3=0.,airborne_m3=0.,damage_depth_m=0.,
            completed=False,tools_clear=False,other_tool_contact=False,_reverse_checked=False):
     try:x,y,volume=(np.asarray(a,float) for a in (x,y,volume))
@@ -75,7 +98,10 @@ def assess(x,y,volume,*,dx,emitted_m3,lost_m3=0.,airborne_m3=0.,damage_depth_m=0
         candidates=np.arange(lower,upper+1)
         candidates=candidates[profile[candidates]>=.0005]
         if not len(candidates):continue
-        head_h,head_w=float(profile[k]),float(width[k])
+        head_w=float(width[k])
+        head_region=np.arange(max(0,k-round(.002/dx)),min(len(yy),k+round(.004/dx)+1))
+        head_region=head_region[width[head_region]>=.75*head_w]
+        head_h=float(profile[head_region].max())
         # A shell may finish in a thinner pointed tip. Inspect its qualifying
         # tapered section, not just the single narrowest occupied grid column.
         qualifying=candidates[(width[candidates]>=.001)&(width[candidates]<=.65*head_w)&
@@ -83,23 +109,22 @@ def assess(x,y,volume,*,dx,emitted_m3,lost_m3=0.,airborne_m3=0.,damage_depth_m=0
                               (profile[candidates]<=min(.003,.65*head_h))]
         tail=int(qualifying[np.argmin(width[qualifying])]) if len(qualifying) else int(candidates[np.argmin(width[candidates])])
         tail_h,tail_w=float(profile[tail]),float(width[tail])
-        transverse=a[:,k]
-        ridges=_peaks(transverse,minimum=.001,spacing=max(1,round(.0015/dx)),prominence=.0003)
         tapered=(.0025<=head_h<=.008 and .006<=head_w<=.016 and
                  .0005<=tail_h<=min(.003,.65*head_h) and .001<=tail_w<=.65*head_w)
-        ridged=any(min(transverse[a],transverse[b])-float(transverse[a:b+1].min())>=.0003
-                   for a,b in zip(ridges,ridges[1:]))
         # Locate the leading rise in the measured footprint. Union the observed
         # intervals so adjacent shapes cannot double-count the same length.
         previous=np.arange(max(0,k-round(.006/dx)),k+1)
         narrow=previous[width[previous]<=.65*head_w]
         beginning=int(narrow[-1]) if len(narrow) else k
         length=float(yy[tail]-yy[beginning])
+        ridge_length=_ridge_length(a,beginning,tail,dx)
+        ridged=ridge_length>=.002-1e-12
         # A round mound also narrows beyond its centre. Require a visibly
         # elongated footprint so that taper alone cannot certify a shell.
         tapered=tapered and length>=1.25*head_w
         if tapered:covered_by_valid_shell[beginning:tail+1]=True
         result["shells"].append({"valid":bool(tapered),"visible_ridges":bool(ridged),
+                                  "continuous_ridge_length_mm":ridge_length*1e3,
                                   "head_y_mm":float(yy[k]*1e3),"head_height_mm":head_h*1e3,
                                   "head_width_mm":head_w*1e3,"tail_height_mm":tail_h*1e3,
                                   "tail_width_mm":tail_w*1e3,"length_mm":length*1e3})

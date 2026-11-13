@@ -1,31 +1,30 @@
 {
   "status": "development_not_submission_ready",
   "checked_utc": "2026-11-13",
-  "cpu_tests_passed": 24,
+  "cpu_tests_passed": 29,
   "native_simulator_run": true,
-  "robot_demo_run": false,
+  "robot_demo_run": true,
   "dream_run": false,
   "media_uploaded": false,
   "scores": null,
   "paid_compute_used_usd": null,
   "remaining_gates": [
-    "Native026 complete957-action three-deposit trial scores0; released-tool audit passes but shapes are smooth mounds. New fixed calibration and bounded joint-tracking candidate is not yet tested.",
-    "Full shell shape, ridges, complete joined border, released dispenser and photo/scorer agreement remain unverified.",
-    "Robot full-score demo, Dream baseline, final rescoring and media absent.",
-    "Shared demo/Dream runner is implemented but its Dream branch has not been executed. No API requests made."
+    "Native031 completed957 actions with released tool and conserved material, but rough deposits score0. Final whole-face nozzle contact and bilinear material deposition remain untested in a robot run.",
+    "Complete joined border, visible continuous ridges, and agreement with photographs remain unverified.",
+    "Dream baseline and final rescoring are pending. No API requests or media upload made."
   ],
   "sources_sha256": {
     "test_release.py": "d2b6b9b3388736c2a8e6d85cba253c43086dcfab7885be8b7a3973b0e7523f19",
     "preview_yam.py": "02d00005f5402810665120653445a7bcb152b6d05782522057bc0f625aba2975",
     "plan.py": "5b4ed5b56c728acefca0a5db3cc0a485e1fdb96debd1ca22d1c76b9f68761cfb",
     "run.py": "3f23a922f9bba0e959c19624107defc95f13e580f0cd9efee832e4ae1b88b893",
-    "material.py": "1f868533773f7e3e8651eb250f2166c062df46e3112c4f1ab12cad743b1447d7",
+    "material.py": "a82fb1cb242a02990707a3c08a6466f304cf757541a663a974765eebb984d525",
     "probe_native.py": "1d5d47f963be39660c32dec7b626a26080d7d290da69cfc06e5e8e9f1945b4e8",
-    "scoring.py": "fd9f74c7a06d79a04391be2bc6773efa7c5eaf9b0d289b6eae86f2787fa04c85",
-    "test_material.py": "8bb256a620793291943dc050f18671429ffb550a7ca1dea695f6782433015731",
+    "scoring.py": "713f7bbfcb0fdcb4fdccef004bf726c1e9a5fa1e860185fdc676fca4053ba65c",
+    "test_material.py": "3a7fb1893d4c46df15d31eab9f2a7adedc804af2fe2578e82388a1555f870037",
     "scene.py": "893a2016851d05ec62ca47f22cb3aca3c11fc19a2ef81333372132dd856dfcf5",
-    "native.py": "26103b5ffdc45ea9dd7fef69397219853a1a950e38897b63d2c5994b1d296f55",
-    "probe_shell_shape.py": "3c7adab4072a8cd3e714724b4bbb81bb403297da2644fc6fe572a97e46cd38d4",
+    "native.py": "bd7399d45e89f4955aaa0d945b518f98f81e4ac31eafb618cdc615e909b95fef",
+    "probe_shell_shape.py": "a4e2ab3a31c23b0acc9baeef718887a8d9e74c8fca1f2ed91659c2aa9732289e",
     "probe.py": "dc2421d3342eda2052d7340d10bbf856493ad5b30b121ad839fddda7c7a57c17",
     "joint_tracking.py": "a5e2cee60f6a84e0a46d95240f1a098794e95a12c1ac166b3c7d5be184ff3a44",
     "dream_policy.py": "ad92ac9ddcf4c1d48c9985fcd0a0fc116144a995d8d4b0368e476b3f432b611b",
@@ -52,6 +51,8 @@
     "evidence/native-press-011.json",
     "evidence/native-robot-extrusion-014-015.json",
     "evidence/native-single-shell-021.json",
-    "evidence/native-three-shell-026.json"
-  ]
+    "evidence/native-three-shell-026.json",
+    "evidence/native-three-shell-030-031.json"
+  ],
+  "full_score_demo": false
 }

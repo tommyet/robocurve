@@ -1,8 +1,8 @@
 """Mechanism regressions, including negative controls. No robot trial claims."""
 import unittest
 import numpy as np
-from material import Icing
-from scoring import assess
+from material import Icing, surface_flux
+from scoring import assess, _ridge_length
 from native import Coupling
 from contact_audit import intersects_columns
 
@@ -10,6 +10,44 @@ DOWN=np.diag((1.,-1.,-1.))
 
 
 class MaterialTests(unittest.TestCase):
+    def test_ridges_must_continue_beyond_one_fortunate_cross_section(self):
+        dx=.0005;x=np.arange(-.004,.0041,dx);y=np.arange(-.005,.0051,dx)
+        profile=.002+.002*(np.exp(-((x-.002)/.0005)**2)+np.exp(-((x+.002)/.0005)**2))
+        surface=np.full((len(x),len(y)),.002)
+        head=int(np.argmin(abs(y)))
+        surface[:,head]=profile
+        self.assertLess(_ridge_length(surface,0,len(y)-1,dx),.002)
+        surface[:,head-1:head+4]=profile[:,None]
+        self.assertGreaterEqual(_ridge_length(surface,0,len(y)-1,dx),.002)
+
+    def test_duplicate_contact_samples_do_not_displace_extra_volume(self):
+        a,b=self.model(),self.model()
+        for m in (a,b):m.volume[:]=.003*m.dx**2;m.emitted_m3=float(m.volume.sum())
+        p=[.235,0.,a.cake_top+.002]
+        force_a=a.tool_contact([p],[[0.,0.,0.]],1/240)
+        force_b=b.tool_contact([p,p],[[0.,0.,0.]]*2,1/240,
+            stiffness_n_m=np.array([750.,750.]),damping_ns_m=np.array([.5,.5]))
+        np.testing.assert_array_equal(a.volume,b.volume)
+        np.testing.assert_allclose(force_a.sum(axis=0),force_b.sum(axis=0))
+
+    def test_film_flux_reduces_to_newtonian_solution(self):
+        gradient=np.array([-1000.,0.,1000.]);h=.003;viscosity=20.
+        flux=surface_flux(gradient,h,yield_pa=0.,consistency_pa_sn=viscosity,flow_index=1.)
+        np.testing.assert_allclose(flux,gradient*h**3/(3*viscosity),atol=1e-20)
+
+    def test_yield_depends_on_depth_and_stress_not_slope_alone(self):
+        flux=surface_flux(np.array([100_000.,100_000.]),np.array([.002,.010]),
+                          yield_pa=800.,consistency_pa_sn=4000.,flow_index=.5)
+        self.assertEqual(flux[0],0.)
+        self.assertGreater(flux[1],0.)
+
+    def test_small_icing_ridge_does_not_slump_below_yield(self):
+        m=Icing(dx=.0005,xlim=(.225,.245),ylim=(-.01,.01))
+        m.volume[15:25,15:25]=.003*m.dx**2
+        before=m.volume.copy()
+        for _ in range(480):m._relax(1/480)
+        np.testing.assert_array_equal(m.volume,before)
+
     def model(self):
         return Icing(dx=.002)
 

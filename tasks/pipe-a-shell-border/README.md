@@ -1,11 +1,11 @@
 # Pipe a shell border
 
 Pipe a joined shell border between two marks on a cake. Each shell should have
-a rounded, ridged head and a tapered tail. Leave the cake and surrounding board
+a rounded head, visible ridges and a tapered tail. Leave the cake and surrounding board
 clean.
 
-**Development package; not ready to submit.** There is no robot demonstration,
-Dream run, media upload or measured task score. `task.draft.json` is deliberately
+**Development package; not ready to submit.** Partial robot trials exist, but no
+full-score demo, Dream run or media upload. `task.draft.json` is deliberately
 not named `task.json`. See `VALIDATION.json` for the remaining gates.
 
 ## Setup
@@ -37,7 +37,7 @@ Use the pinned Linux/NVIDIA environment in `ENVIRONMENT.json`. From the reposito
 root, compile the fixed plan, run it, then score the saved physical record:
 
 ```bash
-python tasks/pipe-a-shell-border/plan.py --mode shell --press-stroke .003 --shell-count 3 --release-tool --out artifacts/piping-plan.json
+python tasks/pipe-a-shell-border/plan.py --mode shell --press-stroke .007 --shell-count 3 --release-tool --out artifacts/piping-plan.json
 python tasks/pipe-a-shell-border/run.py --policy demo --joint-feedback --plan artifacts/piping-plan.json --steps 2400 --out artifacts/piping-demo
 python tasks/pipe-a-shell-border/audit_run.py artifacts/piping-demo --out artifacts/piping-demo/audit.json
 ```
@@ -63,7 +63,7 @@ Do not use the generic scene runner's placeholder score; this task requires
 
 Trials use a fixed starting layout, no object jitter and 20 Hz control. The limit
 is 2,400 actions, or 120 simulated seconds. The latest three-deposit
-trial took 342.7 wall seconds for 957 actions on an RTX 6000 Ada. Full demo and
+trial took 382.8 wall seconds for 957 actions on an RTX 6000 Ada. Full demo and
 Dream runtimes remain unmeasured. Each run saves its exact Python source, plan,
 video, photographs, joint actions, material state and contact audit.
 
@@ -75,11 +75,11 @@ Run CPU checks without renting a GPU:
 python -m unittest discover -s tasks/pipe-a-shell-border -p 'test_*.py' -v
 ```
 
-Twenty-four tests cover pressure causality, finite volume, contact and damage,
+Twenty-nine tests cover pressure causality, finite volume, contact and damage,
 shape scoring and released-tool evidence. Native tests have demonstrated a
 physical pickup, passive plunger extrusion and an elongated head and tail.
-The latest three-deposit trial released the tool cleanly, but produced smooth
-mounds and scored zero. A full joined shell border remains pending.
+The latest three-deposit trial released the tool cleanly, but produced rough, uneven
+deposits and scored zero. A full joined shell border remains pending.
 
 The passive mechanism control emitted 0.1587 ml under an 8 N load and nothing
 under zero load; flow stopped after release and volume balance closed. Those
@@ -89,6 +89,9 @@ controls are not robot task scores. Dated evidence is listed in `VALIDATION.json
 
 `material.py` contains a finite reservoir, compression pressure, yield pressure,
 nozzle resistance, ballistic parcels and conservative viscoplastic surface flow.
+The surface now uses a depth-dependent shear yield and Herschel–Bulkley flow law;
+see [MATERIAL.md](MATERIAL.md) for equations, sources and numerical limits.
+This revision still needs fresh native validation.
 When icing submerges the star aperture, local pressure spreads it sideways over
 a declared 2 mm transfer depth. The pressure law sees the nozzle and existing
 material, without shell coordinates or templates. The 0.5 mm grid preserves
@@ -109,8 +112,9 @@ A round mound cannot pass merely because it narrows at its edge.
 cake, using every dynamic collision shape and measured rigid-body transforms.
 This boundary prevents omitted finger smearing from earning credit; it may
 reject a near miss because bounding boxes overestimate occupied volume.
-Unknown collider types fail the preview. The completed manipulation diagnostics have passed this audit; deliberate
-invalid-contact controls and final-trial checks remain necessary.
+Unknown collider types fail the preview. Negative CPU controls exercise this
+check; completed manipulation diagnostics pass it. Repeat the audit on each
+final trial.
 Cake damage is a conservative penetration audit,
 not a cake-fracture simulation. The complete trial still needs independent photo scoring.
 

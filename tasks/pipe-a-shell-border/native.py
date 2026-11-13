@@ -9,7 +9,7 @@ A completed border has not yet been demonstrated.
 from __future__ import annotations
 from dataclasses import dataclass
 import numpy as np
-from material import Icing
+from material import Icing, IcingParameters
 
 
 @dataclass(frozen=True)
@@ -39,6 +39,7 @@ def author_dispenser(stage,barrel_path,plunger_path,*,diagnostic_fixture=False):
     The bare barrel/plunger boxes remain the normal grip/contact surfaces.
     """
     from pxr import Gf,Sdf,UsdGeom,UsdPhysics,PhysxSchema
+    icing=IcingParameters()
     b,p=stage.GetPrimAtPath(barrel_path),stage.GetPrimAtPath(plunger_path)
     for prim in (b,p):
         if not prim or not prim.HasAPI(UsdPhysics.RigidBodyAPI):
@@ -57,7 +58,7 @@ def author_dispenser(stage,barrel_path,plunger_path,*,diagnostic_fixture=False):
     joint.CreateLocalPos0Attr(Gf.Vec3f(0.,-.060,0.))
     joint.CreateLocalPos1Attr(Gf.Vec3f(0.,0.,0.))
     joint.CreateLowerLimitAttr(0.)
-    joint.CreateUpperLimitAttr(Icing().p.stroke_m)
+    joint.CreateUpperLimitAttr(icing.stroke_m)
     # A hollow metal frustum, with an actual six-point aperture. Each sector is
     # one convex contact piece. Icing is emitted through this same aperture.
     for i in range(24):
@@ -66,7 +67,7 @@ def author_dispenser(stage,barrel_path,plunger_path,*,diagnostic_fixture=False):
         for y,outer in ((.040,.010),(.080,.004)):
             for inner in (False,True):
                 for angle in angles:
-                    radius=(.008 if y==.040 else .0025*(1+.28*np.cos(6*angle))) if inner else outer
+                    radius=(.008 if y==.040 else icing.nozzle_radius_m*(1+icing.star_depth*np.cos(icing.star_lobes*angle))) if inner else outer
                     pts.append((radius*np.cos(angle),y,radius*np.sin(angle)))
         faces=((0,1,3,2),(4,6,7,5),(0,4,5,1),(2,3,7,6),(0,2,6,4),(1,5,7,3))
         mesh=UsdGeom.Mesh.Define(stage,f'{barrel_path}/NozzleSector{i:02d}')
@@ -101,6 +102,23 @@ class Coupling:
         self.last_contact_force=np.zeros(3)
         self.last_contact_torque=np.zeros(3)
         self.mesh=None
+        # Area-weighted samples of the entire metal outlet face. Resolve it
+        # with the material grid; two fixed circular rows leave growing gaps
+        # when cell size is reduced and omit metal beside the star recesses.
+        n=max(48,24*int(np.ceil(2*np.pi*.004/self.material.dx/24)))
+        minimum_radius=self.material.p.nozzle_radius_m*(1-self.material.p.star_depth)
+        rings=max(2,int(np.ceil((.004-minimum_radius)/self.material.dx)))
+        samples=[];weights=[]
+        for angle in np.arange(n)*2*np.pi/n:
+            inner=self.material.p.nozzle_radius_m*(1+self.material.p.star_depth*np.cos(self.material.p.star_lobes*angle))
+            edges=np.linspace(inner,.004,rings+1)
+            areas=np.diff(edges**2)
+            radii=(2/3)*np.diff(edges**3)/areas
+            for radius,area in zip(radii,areas):
+                samples.append((radius*np.cos(angle),.080,radius*np.sin(angle)))
+                weights.append(area)
+        self.contact_samples=np.asarray(samples)
+        self.contact_weights=np.asarray(weights)/sum(weights)
 
     def advance(self,barrel_pose,barrel_velocity,plunger_pose,dt):
         """Return world pressure wrenches from measured native body state."""
@@ -123,13 +141,11 @@ class Coupling:
               self.dispenser.seal_friction_n*np.tanh(speed/self.dispenser.friction_regularization_m_s))
         stopping_force=self.dispenser.seal_effective_mass_kg*abs(speed)/dt
         seal=float(np.clip(seal,-stopping_force,stopping_force))
-        angles=np.arange(24)*2*np.pi/24
-        samples=np.array([(radius*np.cos(a),.080,radius*np.sin(a))
-                          for radius in (.0035,.004) for a in angles])
-        world=samples@r.T+b[:3]
+        world=self.contact_samples@r.T+b[:3]
         velocities=v[:3]+np.cross(np.broadcast_to(v[3:],world.shape),world-b[:3])
         contact=self.material.tool_contact(world,velocities,dt,
-                                          stiffness_n_m=1500./len(world),damping_ns_m=1./len(world))
+                                          stiffness_n_m=1500.*self.contact_weights,
+                                          damping_ns_m=self.contact_weights)
         self.last_contact_force=contact.sum(axis=0)
         self.last_contact_torque=np.cross(world-b[:3],contact).sum(axis=0)
         self.last_piston_m,self.last_reaction_n=q,reaction

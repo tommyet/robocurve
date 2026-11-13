@@ -60,6 +60,48 @@ developers and their agents, not a competition submission document.
 
 ## Review findings
 
+### 2026-11-13 — native batches 028–032 and numerical corrections
+
+- All results through 032 are downloaded and SHA-256 verified, either as full
+  archives or indexed component archives. No task is yet submission-ready;
+  no Dream requests, media uploads or upstream PRs have been made.
+- The straight 3.25 mm wrench slot transfers 32.90 degrees of a 45-degree
+  physical turn (73.1%), with all 16,000 rim checks valid. Its earlier flared
+  seat wasted about 20 degrees in clearance. The two-action YAM integration
+  completes but reveals free-wheel rotation; it is not a successful repair.
+- Shirt 031 fails because the forearm meets the clothesline before grasping
+  the peg. A vertex-only collision check missed a line crossing the inside
+  of a convex hull. The corrected audit clips the whole line axis against
+  every hull; the new tilted approach passes all 1,040 commanded frames.
+  Native confirmation remains pending. Do not raise friction to hide a
+  blocked approach. Cloth also slid beyond the finger pad during the old
+  hold; the new ordinary grasp inserts 10 mm farther into the hem.
+- Tie 030 physically retains its wide end but the free narrow end follows it,
+  so the wrap unwinds. The next ordinary two-hand plan stabilizes the narrow
+  end while routing the wide end. The completed 032 result awaits review.
+- Coarse paper without a staple settles for 0.1 seconds with membrane strain
+  below 0.3%. Adding the staple drives local puncture strain past 1% within
+  6.3 ms; this is not yet valid extraction evidence. The 0.3% elastic-domain
+  limit is not a tearing threshold. Curvature warnings are separate from
+  visible damage and membrane failure; do not call every local crease a tear.
+- Seam quality meshes still fail at needle-hole contact. An arc-length-preserving
+  cylindrical initial drape removes almost all initial prestretch and delays
+  the failure, but does not solve it. A bounded correction-speed comparison
+  precedes any cutting run. A real sewing clamp is the alternative reset.
+- Icing 031 completes 957 actions, conserves its 0.536 ml extrusion and releases
+  the dispenser more than 100 mm from the robot, but the rough deposits score
+  zero. Its two-ring metal contact samples miss parts of the nozzle face.
+  New area-weighted full-face contact and conservative bilinear deposition
+  improve grid agreement in CPU controls; those corrections need native
+  validation. Ridges are judged on the actual shell, including its tapered
+  shoulder, not one favorable cross-section at its widest point.
+- At 05:36 UTC the sole live RTX 6000 Ada estimated $5.27 compute, plus temporary
+  disk and prior compatibility overhead. Inventory, rate and local watchdog
+  were verified; the bounded deadline was renewed to 06:21 UTC. This is an
+  elapsed-time estimate, not account billing. Preserve evidence before stopping
+  the ephemeral Pod and confirm its final EXITED state.
+
+
 ### 2026-11-13 — contact failures, released piping tool and next corrections
 
 - Operator: repository agent on `codex/six-task-completion-2026-11-13`.
@@ -68,7 +110,7 @@ developers and their agents, not a competition submission document.
   submission-ready, and no Dream calls or upstream PRs have been made.
 - Wheel: the native two-defect reset settles at 0.889 mm runout. A 50 µs timestep
   gives 0.902 mm, a 1.4% difference, with valid all-substep rim integrity and roughly
-  half the runtime. Fourquarter-turn corrections give 0.297 mm but 374.9 N minimum
+  half the runtime. Four quarter-turn corrections give 0.297 mm but 374.9 N minimum
   tension, below the 400 N rubric floor; plan six quarter-turns instead. A wrench
   access test exposed nipple flats inside the solid rim collider. The next
   source exposes the flats and adds a thin steel tool neck; external contacts
@@ -91,7 +133,7 @@ developers and their agents, not a competition submission document.
   YAM reset instead reaches 6.33% strain in a 50 µm-wide triangle. Neither is
   valid task evidence. Next combine the quality mesh with the physically resting
   reset; optional forensic runs retain failed status and cannot earn scores.
-- Cake 026:957 actions completed in 342.7 seconds. The measured released tool
+- Cake 026: 957 actions completed in 342.7 seconds. The measured released tool
   stays 82.0 mm clear of robot bodies and 46.9 mm from the border, moving less
   than 0.001 mm in the final second. Volume balance closes and the collider audit
   passes, but the three smooth deposits score 0 and visually agree with that
