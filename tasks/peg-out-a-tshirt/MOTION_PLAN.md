@@ -8,15 +8,22 @@ No controller writes cloth or prop poses, adds attachments or changes forces.
 
 1. Settle the flexible two-layer shirt over the laundry support for five
    seconds. Both free spring pegs start clipped to the empty line. The regular
-   2.5 mm cloth mesh clears the rigid fixtures, but a new independent check
-   finds front/back layer intersections after passive settling. The long
-   trial is held until a physically valid self-contact reset is demonstrated.
+   2.5 mm mesh preserves the sewn edges' actual rest bends. Matched YAM
+   control121 additionally uses once-per-step force integration: eight reset
+   samples have no transverse self-crossings and the final rigid-fixture
+   check is clear. Earlier YAM113 and118 resets are invalid and cannot
+   support a task-success claim.
 2. Pinch the two exposed hem corners, pull clear of the support and lift.
-   Coarser-mesh carry demonstrations worked, but the regular-mesh shirt has
-   passed through a finger pad when one hand releases. The current short
-   128-iteration trial with a wider 0.018 pinch retains the hem after the
-   other hand releases. Local pad compression is much smaller, but the
-   newly discovered layer interleaving invalidates its cloth-integrity claim.
+   Diagnostic125 explicitly raises the support from 100 to 180 mm and uses
+   a measured lateral entry, with ordinary 0.018 finger targets. Its actual
+   settled shirt must pass self-contact and fixture checks before any motion;
+   all commanded grasp poses receive a rigid-hull screen. It finishes 320
+   actions with clean sampled integrity but misses the pickup. The left
+   target lies in the pad notch and the right hem moves aside during entry.
+   A local candidate re-observes action100 cloth and targets continuous pads
+   8 mm off the notch. Its commanded rigid and sampled cloth checks pass;
+   it is not wired or native tested. Earlier093 retained pickup had an invalid
+   reset. No valid pickup on the current setting has been demonstrated.
    A full sequence stops early if the hem plainly leaves the retaining hand.
 3. Keep the shirt forward of the line. Use the free hand to squeeze a spare
    peg's handles, remove it from the line and turn its open jaws downward.

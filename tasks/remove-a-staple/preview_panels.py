@@ -229,6 +229,12 @@ def main():
                 'tool_pose_servo':None if tool_servo is None else tool_servo.last,
                 'native_joint_break_events':break_observer.summary(),
                 'paper_nodes':[x.nodes.tolist() for x in paper],
+                # Preserve exact native solids, not only averaged shared nodes,
+                # so successful trials can receive the same independent contact
+                # audit as a saved first-invalid snapshot. These poses are
+                # already read by state(); recording adds no physics operation.
+                'paper_facet_poses':[x.facet_poses.tolist() for x in paper],
+                'paper_facet_velocities':[x.facet_velocities.tolist() for x in paper],
                 'paper_continuity':[x.continuity for x in paper],'hardware_names':list(hardware.body_names),
                 'hardware_poses':hardware.body_poses.tolist(),'hardware_velocities':hardware.body_velocities.tolist(),'material':[m.last for m in monitors]})+'\n')
             rgb=base.scene['top_cam'].data.output['rgb'];rgb=getattr(rgb,'torch',rgb)

@@ -1,0 +1,23 @@
+{
+  "date": "2026-11-13",
+  "trial": "116 contact replay baseline",
+  "status": "simulator startup crash; no physics executed",
+  "source_action": 265,
+  "physics_hz_requested": 960,
+  "requested_seconds": 0.1,
+  "observed_physics_steps": 0,
+  "log_sha256": "ace2e8cd7dfae0df0dd3ca1242410d7b663d22e68134f6b0630189c935822107",
+  "native_backtrace": [
+    "pthread_join",
+    "libscipy_openblas blas_thread_shutdown_",
+    "__register_atfork",
+    "__libc_fork",
+    "libomni.platforminfo.plugin",
+    "libomni.kit.telemetry.plugin"
+  ],
+  "diagnosis": "The stack implicates SciPy OpenBLAS thread shutdown during a Kit startup fork. Earlier duplicate grpc registration warnings are not sufficient to establish the crash cause.",
+  "correction": "Delay scipy.spatial.transform import until AppLauncher has completed; preserve geometry, material, initialized poses, cutting rules and every guard. Save explicit startup phase.",
+  "retry_status": "not yet run",
+  "robot_demo": false,
+  "score": null
+}

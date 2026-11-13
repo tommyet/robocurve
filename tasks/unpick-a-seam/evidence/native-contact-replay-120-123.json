@@ -1,0 +1,202 @@
+{
+  "date": "2026-11-13",
+  "status": "contact failure; not a successful cut or robot demonstration",
+  "robot_demo": false,
+  "score": null,
+  "initialization": "Same valid110 action265 measured poses, estimated20Hz velocities and original-stage physical properties. Diagnostic kinematic tool path; solver warm-start absent. This state is never an episode reset.",
+  "integrity_interpretation": "The fine-rate report says complete because its existing cloth crossing/strain/joint-gap guards pass. Independent native capsule geometry finds the thread axis nearly coincident with the metal guard axis. This is gross solid penetration, not a shallow contact tolerance or physical cut. No candidate is promoted.",
+  "method": "Transform actual native capsule axes into the measured handle frame and compute finite axis distance, subtracting the0.5mm guard and0.4mm thread radii. The degenerate axis is represented by a2-femtometre transverse box, bounding distance error below3femtometres.",
+  "trials": [
+    {
+      "trial": "120_baseline",
+      "runtime_status": "invalid_model_domain",
+      "physical_contact_result": "failed independent finite guard integrity audit",
+      "physics_hz": 960,
+      "speed": 1.0,
+      "simulated_seconds": 0.052083333333333336,
+      "wall_seconds": 6.4559624176472425,
+      "cut_events": [],
+      "maximum_edge_force_n": 0.008975872060832439,
+      "maximum_closed_joint_gap_m": 0.0009986950254065466,
+      "joint_failure": {
+        "time_s": 0.052083333333333336,
+        "joint": 7,
+        "gap_m": 0.0009986950254065466,
+        "maximum_connected_endcap_gap_m": 0.0008,
+        "reason": "unsevered native joint has physically disjoint end caps"
+      },
+      "maximum_long_guard_overlap_m": 0.0008355831962835396,
+      "combined_thread_guard_radii_m": 0.0009,
+      "closest_axis_distance_m": 6.441680371646033e-05,
+      "worst_guard_contact": {
+        "step": 22,
+        "time_s": 0.022916666666666665,
+        "guards": [
+          {
+            "minimum_surface_separation_m": -0.0008355831962835396,
+            "link": 7
+          },
+          {
+            "minimum_surface_separation_m": 0.0031142189955358445,
+            "link": 29
+          }
+        ],
+        "blade": {
+          "minimum_surface_separation_m": 5.647477418949332e-05,
+          "link": 6
+        },
+        "largest_joint_gap": {
+          "joint": 12,
+          "gap_m": 0.00010188599463417948
+        },
+        "maximum_edge_force_n": 0.006164929727097713
+      },
+      "terminal_long_guard_overlap_m": 1.3536829931599058e-05,
+      "maximum_blade_overlap_m": 7.697699084594861e-05,
+      "maximum_principal_stretch": [
+        1.0250455942615917,
+        1.0268086044130846
+      ],
+      "initial_pose_error_m": {
+        "thread": 0.0,
+        "panels": [
+          0.0,
+          0.0
+        ]
+      },
+      "initial_velocity_error_m_s": 6.917442547660357e-07,
+      "source_sha256": "532b1a0ebd54ab8d8e391881f76fde96da41c7ecbf493fcd0c2a6ffe372bb220",
+      "evidence_sha256": {
+        "probe.json": "6658dcd849bcb062bdf57639a703056d79932493f79aeba2a980a55ce8e5f12d",
+        "states.npz": "17f153d2f5e2eba90052efab3349e37b3eb7c81bdea382d8828960c8c9feb6ee",
+        "tool-contact-audit.json": "722eadc868d791173e2dc22c2e26ca3bae3ad93fd09a62e39cec3e0d5ba42bc0"
+      }
+    },
+    {
+      "trial": "123_finer_step",
+      "runtime_status": "complete",
+      "physical_contact_result": "failed independent finite guard integrity audit",
+      "physics_hz": 3840,
+      "speed": 1.0,
+      "simulated_seconds": 0.1,
+      "wall_seconds": 16.96031450945884,
+      "cut_events": [],
+      "maximum_edge_force_n": 0.0663346481383808,
+      "maximum_closed_joint_gap_m": 0.0007192063871504334,
+      "joint_failure": null,
+      "maximum_long_guard_overlap_m": 0.0008939217344925193,
+      "combined_thread_guard_radii_m": 0.0009,
+      "closest_axis_distance_m": 6.0782655074806576e-06,
+      "worst_guard_contact": {
+        "step": 40,
+        "time_s": 0.010416666666666666,
+        "guards": [
+          {
+            "minimum_surface_separation_m": -0.0008939217344925193,
+            "link": 6
+          },
+          {
+            "minimum_surface_separation_m": 0.003159822568699923,
+            "link": 28
+          }
+        ],
+        "blade": {
+          "minimum_surface_separation_m": 6.714627796653794e-05,
+          "link": 6
+        },
+        "largest_joint_gap": {
+          "joint": 11,
+          "gap_m": 2.6703571996487086e-05
+        },
+        "maximum_edge_force_n": 0.0
+      },
+      "terminal_long_guard_overlap_m": 0.0003190432953241868,
+      "maximum_blade_overlap_m": 6.203030092416658e-06,
+      "maximum_principal_stretch": [
+        1.0214105092311374,
+        1.011351425764586
+      ],
+      "initial_pose_error_m": {
+        "thread": 0.0,
+        "panels": [
+          0.0,
+          0.0
+        ]
+      },
+      "initial_velocity_error_m_s": 6.917442547660357e-07,
+      "source_sha256": "532b1a0ebd54ab8d8e391881f76fde96da41c7ecbf493fcd0c2a6ffe372bb220",
+      "evidence_sha256": {
+        "probe.json": "9f26163dced76b41d7885790e436de8c60d7e6024203fc81238b45225f7ae006",
+        "states.npz": "deece9de891fa8a1ea91fe63073525ebb382aa51b2db1e04baa4e1a260c7792b",
+        "tool-contact-audit.json": "7daf46c3b1267567ab40caa018e3874dd6d8d100de25236e2f6181be8cd23f1c"
+      }
+    },
+    {
+      "trial": "123_quarter_speed",
+      "runtime_status": "invalid_model_domain",
+      "physical_contact_result": "failed independent finite guard integrity audit",
+      "physics_hz": 960,
+      "speed": 0.25,
+      "simulated_seconds": 0.06354166666666666,
+      "wall_seconds": 6.699398374184966,
+      "cut_events": [],
+      "maximum_edge_force_n": 0.021843252538495714,
+      "maximum_closed_joint_gap_m": 0.0012390322884495665,
+      "joint_failure": {
+        "time_s": 0.06354166666666666,
+        "joint": 14,
+        "gap_m": 0.0012390322884495665,
+        "maximum_connected_endcap_gap_m": 0.0008,
+        "reason": "unsevered native joint has physically disjoint end caps"
+      },
+      "maximum_long_guard_overlap_m": 0.000870397857852663,
+      "combined_thread_guard_radii_m": 0.0009,
+      "closest_axis_distance_m": 2.960214214733697e-05,
+      "worst_guard_contact": {
+        "step": 57,
+        "time_s": 0.059375,
+        "guards": [
+          {
+            "minimum_surface_separation_m": -0.000870397857852663,
+            "link": 7
+          },
+          {
+            "minimum_surface_separation_m": 0.0031215052709565494,
+            "link": 28
+          }
+        ],
+        "blade": {
+          "minimum_surface_separation_m": 0.0001341599686990941,
+          "link": 7
+        },
+        "largest_joint_gap": {
+          "joint": 11,
+          "gap_m": 0.00012288124496585647
+        },
+        "maximum_edge_force_n": 0.0
+      },
+      "terminal_long_guard_overlap_m": 0.0006291566225753933,
+      "maximum_blade_overlap_m": 0.00018439192848035237,
+      "maximum_principal_stretch": [
+        1.0128712827958188,
+        1.0112117062490267
+      ],
+      "initial_pose_error_m": {
+        "thread": 0.0,
+        "panels": [
+          0.0,
+          0.0
+        ]
+      },
+      "initial_velocity_error_m_s": 6.917442547660357e-07,
+      "source_sha256": "532b1a0ebd54ab8d8e391881f76fde96da41c7ecbf493fcd0c2a6ffe372bb220",
+      "evidence_sha256": {
+        "probe.json": "98eae2b43cfbd96811a833bbbbd9cec49245d8cf759198b3abdd8388df009935",
+        "states.npz": "8684d25b79f9a75e7e2fb0a21d4fccfbe33759326d55b641e76d83b6288230d9",
+        "tool-contact-audit.json": "c66b5ef01389c11af0dd57f128616159e0e06a4d02e83f0adba9467c4dcf5269"
+      }
+    }
+  ],
+  "conclusion": "The short baseline reproduces the tool-loading failure class. Quarter speed is ineffective. Finer stepping delays joint disconnection but does not preserve actual tool/thread solids. No further full trial is justified on these results.",
+  "next_question": "Before another dynamics sweep, verify effective native compound guard colliders and handle/thread contact pairs, then correct the demonstrated contact mechanism. Authored USD guard radii/axis and parent scale are correct, but effective native shape dimensions/contact pairs have not been queried."
+}

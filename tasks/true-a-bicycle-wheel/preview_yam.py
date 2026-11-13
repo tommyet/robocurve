@@ -21,12 +21,14 @@ def main():
     p.add_argument('--freeze-thread-diagnostic',action='store_true',help='Isolate native assembly without custom thread writes or torques')
     p.add_argument('--joint-tracking-diagnostic',action='store_true',help='Bounded integral tracking from ordinary robot joint measurements only; requires --plan')
     p.add_argument('--central-spring-candidate',action='store_true')
+    p.add_argument('--batch-sdf-notices',action='store_true',help='Batch identical native Float updates; standalone paired501-state trajectory verified identical')
     p.add_argument('--solver-type',choices=('TGS','PGS'),default='TGS')
     p.add_argument('--distance-tolerance-compensation-m',type=float,choices=(0.,.025),default=0.)
     p.add_argument('--preloaded-reset-candidate',action='store_true',help='Use the measured loaded internal shape only when constructing/resetting the scene')
     p.add_argument('--tool-pose-servo-diagnostic',action='store_true',help='Disclosed scripted-demo tool-pose feedback; ordinary joint commands only, never used by Dream')
     p.add_argument('--nipple-target-servo-diagnostic',action='store_true',help='Also latch measured square-nipple frame before each ordinary quarter-turn; requires tool servo')
     p.add_argument('--plan',type=Path,help='Frozen ordinary14-D joint commands; remains a diagnostic')
+    p.add_argument('--relocated-fixture-diagnostic',action='store_true',help='Explicit10mm-forward/50mm-right/10mm-lower wheel with a10mm shorter stand; unvalidated layout')
     p.add_argument('--dream',action='store_true',help='Ordinary Dream policy without demo plans or state feedback')
     p.add_argument('--dream-rows-per-request',type=int,choices=(2,4,8),default=8)
     p.add_argument('--judging-views',action='store_true',help='Fixed close key/gauge cameras, never policy inputs')
@@ -36,6 +38,8 @@ def main():
     p.add_argument('--reset-profile',choices=('four-defect-reference','two-defect-candidate'),default='two-defect-candidate')
     p.add_argument('--solver-position-iterations',type=int,choices=(32,64,128),default=32)
     a = p.parse_args()
+    from fixture_layout import REFERENCE,RELOCATED,axle_position
+    fixture_layout=RELOCATED if a.relocated_fixture_diagnostic else REFERENCE
     if a.dream and (a.plan or a.joint_tracking_diagnostic or a.tool_pose_servo_diagnostic or a.nipple_target_servo_diagnostic):
         p.error('Dream cannot use a scripted plan or demo feedback')
     if a.distance_tolerance_compensation_m and not a.central_spring_candidate:p.error('Distance tolerance requires central-spring candidate')
@@ -50,6 +54,10 @@ def main():
     if a.plan is not None:
         from motion_plan import load
         plan,actions=load(a.plan)
+        if plan.get('native_compatible') is False:
+            p.error('This offline layout candidate has no matching native scene implementation')
+        if plan.get('fixture_layout',REFERENCE)!=fixture_layout:
+            p.error('Plan and explicit fixture layout flag must match')
         for name,expected in plan['source_sha256'].items():
             if hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()!=expected:
                 p.error('Plan geometry/source changed; recompile: '+name)
@@ -68,6 +76,8 @@ def main():
         'no_rewind_diagnostic':a.no_rewind_diagnostic,'freeze_thread_diagnostic':a.freeze_thread_diagnostic,
         'preloaded_reset_candidate':a.preloaded_reset_candidate,
         'central_spring_candidate':a.central_spring_candidate,
+        'fixture_layout':fixture_layout,
+        'batch_sdf_notices':a.batch_sdf_notices,
         'solver_type':a.solver_type,
         'distance_tolerance_compensation_m':a.distance_tolerance_compensation_m,
         'tool_pose_servo_diagnostic':a.tool_pose_servo_diagnostic,
@@ -84,7 +94,7 @@ def main():
     def interrupted(signum,frame):raise RuntimeError('Interrupted by '+signal.Signals(signum).name)
     previous={s:signal.signal(s,interrupted) for s in (signal.SIGTERM,signal.SIGINT)}
     save()
-    app = video = trace = dream_policy = None
+    app = video = trace = dream_policy = coupling = None
     request_audit=[];session_audit={'session_count':0}
     try:
         from isaaclab.app import AppLauncher
@@ -102,7 +112,9 @@ def main():
         arena_wheel.FROZEN_MATERIAL_DIAGNOSTIC=a.freeze_thread_diagnostic
         arena_wheel.PRELOADED_RESET_CANDIDATE=a.preloaded_reset_candidate
         arena_wheel.CENTRAL_SPRING_CANDIDATE=a.central_spring_candidate
+        arena_wheel.BATCH_SDF_NOTICES=a.batch_sdf_notices
         arena_wheel.SOLVER_TYPE=a.solver_type
+        arena_wheel.FIXTURE_LAYOUT=fixture_layout
         arena_wheel.DISTANCE_TOLERANCE_COMPENSATION_M=a.distance_tolerance_compensation_m
         report['phase']='build';save()
         from yam_arena import inspect_embodiment as wrapper, scene as adapter
@@ -128,7 +140,7 @@ def main():
         if a.judging_views:
             from review_views import configure
             def make_env(embodiment,**kwargs):
-                configure(embodiment)
+                configure(embodiment,fixture_layout=fixture_layout)
                 return original_make_env(embodiment,**kwargs)
             adapter.make_env=make_env
         try:
@@ -240,8 +252,9 @@ def main():
                 'body_names': list(state.body_names), 'body_poses': state.body_poses.tolist(),
                 'body_velocities': state.body_velocities.tolist(), 'materials': materials,
                 'custom_torque_audit':getattr(coupling,'custom_torque_audit',None),
-                'fixed_contacts':contact_audit.measure(1/a.physics_hz,np.array((.35,0.,1.005))) if contact_audit and step else None,
-                'momentum':momentum.measure(native_transforms,np.array((.35,0.,1.005)))})+'\n')
+                'fixture_layout':fixture_layout,
+                'fixed_contacts':contact_audit.measure(1/a.physics_hz,axle_position(fixture_layout)) if contact_audit and step else None,
+                'momentum':momentum.measure(native_transforms,axle_position(fixture_layout))})+'\n')
             rgb = base.scene['top_cam'].data.output['rgb']
             rgb = getattr(rgb, 'torch', rgb)
             frame = rgb.detach().cpu().numpy()[0, :, :, :3].astype(np.uint8)
@@ -256,7 +269,7 @@ def main():
         report['rim_integrity']=arena_wheel.ASSEMBLIES['wheel_station']['coupling'].audit_integrity()
         if a.judging_views:
             from review_views import capture_final
-            report['judging_views']=capture_final(base,a.out)
+            report['judging_views']=capture_final(base,a.out,fixture_layout=fixture_layout)
         report.update(status='complete', completed_steps=a.steps, bodies=len(state.body_names),
                       physics_dt_s=float(base.sim.get_physics_dt()))
     except BaseException as error:
@@ -265,6 +278,9 @@ def main():
     finally:
         if trace: trace.close()
         if video: video.close()
+        if coupling is not None:
+            report['native_parameter_updates']=coupling.parameters.statistics()
+            report['rim_integrity']=coupling.integrity.summary()
         if dream_policy is not None:
             from dream_policy import public_transcript
             (a.out/'dream-transcript.json').write_text(json.dumps(public_transcript(dream_policy),indent=2)+'\n')

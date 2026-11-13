@@ -1,0 +1,607 @@
+{
+  "date": "2026-11-13",
+  "status": "native_thread_constraint_failure_under_tool_load",
+  "score": null,
+  "report_sha256": "f2d71a0f04c990bcc3e95e4bea7646e119e1739c443411448f5a0fc5cbf0fd65",
+  "measurements": {
+    "status": "failed",
+    "completed_steps": 265,
+    "audited_physics_substeps": 12762,
+    "first_invalid_substep": 12762,
+    "maximum_edge_force_n": 0.04710624151687255,
+    "cut_events": [],
+    "damage_events": [],
+    "thread_joint_integrity": {
+      "maximum_closed_joint_gap_m": 0.001341775718661068,
+      "first_failure": {
+        "time_s": 13.29375,
+        "joint": 7,
+        "gap_m": 0.001341775718661068,
+        "maximum_connected_endcap_gap_m": 0.0008,
+        "reason": "unsevered native joint has physically disjoint end caps"
+      },
+      "valid": false
+    },
+    "facet_consistency": [
+      {
+        "maximum_hinge_endpoint_gap_m": 0.0002058111479018803,
+        "first_failure": null,
+        "valid": true,
+        "reads": 12763,
+        "legacy_endpoint_warning_m": 0.0001,
+        "endpoint_distance_is_stop_condition": false,
+        "maximum_allowed_empty_aperture_m": 0.0004,
+        "first_endpoint_warning": {
+          "update": 12070,
+          "maximum_hinge_endpoint_gap_m": 0.00011002074165854014,
+          "maximum_vertex_average_error_m": 7.323251126291881e-05,
+          "legacy_endpoint_warning": true,
+          "valid": true,
+          "worst_endpoint": {
+            "panel_indices": [
+              85,
+              86
+            ],
+            "positions_m": [
+              [
+                -0.0008500580964120748,
+                0.03078681090843613,
+                -0.004174623946931037
+              ],
+              [
+                -0.0007947933060864557,
+                0.030881313243882217,
+                -0.004163684333565119
+              ]
+            ],
+            "difference_m": [
+              -5.526479032561915e-05,
+              -9.450233544608735e-05,
+              -1.0939613365917693e-05
+            ]
+          },
+          "continuity_method": "geometric_empty_aperture",
+          "endpoint_distance_is_stop_condition": false,
+          "maximum_allowed_empty_aperture_m": 0.0004,
+          "geometry": {
+            "maximum_positive_edge_opening_m": 8.433848045315119e-05,
+            "maximum_empty_normal_clearance_m": 0.0,
+            "maximum_empty_aperture_m": 8.433848045315119e-05,
+            "maximum_across_edge_compression_m": 9.426508195983686e-05,
+            "maximum_along_edge_slip_m": 7.587582454467853e-06,
+            "minimum_shared_edge_overlap_m": 0.001598386014645031,
+            "edges_without_overlap": 0,
+            "worst_aperture": {
+              "panel_indices": [
+                86,
+                87
+              ],
+              "endpoint": 1,
+              "opening_m": 8.433848045315119e-05,
+              "normal_clearance_m": 0.0
+            },
+            "interpretation": "Empty aperture geometry only. Compression and tangential slip are reported separately; native hinge fracture is a distinct event."
+          },
+          "aperture_warning": false
+        },
+        "first_aperture_warning": null,
+        "native_thread_solid_audit": {
+          "checks": 12763,
+          "first_failure": null,
+          "maximum_capsule_overlap_m": 0.00030128453011257696,
+          "interpretation": "Exact current capsule axes against actual box midplanes; finite overlap is reported separately. The independent swept mesh/junction guards remain active."
+        },
+        "geometry_maxima": {
+          "maximum_positive_edge_opening_m": 0.00012475642394340326,
+          "maximum_empty_normal_clearance_m": 0.0,
+          "maximum_empty_aperture_m": 0.00012475642394340326,
+          "maximum_across_edge_compression_m": 0.0001278607207217571,
+          "maximum_along_edge_slip_m": 6.174180753695322e-05
+        },
+        "last_check": {
+          "maximum_hinge_endpoint_gap_m": 9.473160071173914e-05,
+          "maximum_vertex_average_error_m": 6.979186832541305e-05,
+          "legacy_endpoint_warning": false,
+          "valid": true,
+          "worst_endpoint": {
+            "panel_indices": [
+              87,
+              99
+            ],
+            "positions_m": [
+              [
+                -0.000836545389313997,
+                0.029182428024246875,
+                -0.0041676072940479095
+              ],
+              [
+                -0.0008126047649418217,
+                0.02916939747652074,
+                -0.004076881732577971
+              ]
+            ],
+            "difference_m": [
+              -2.3940624372175345e-05,
+              1.303054772613596e-05,
+              -9.072556146993895e-05
+            ]
+          },
+          "continuity_method": "geometric_empty_aperture",
+          "endpoint_distance_is_stop_condition": false,
+          "maximum_allowed_empty_aperture_m": 0.0004,
+          "geometry": {
+            "maximum_positive_edge_opening_m": 7.780141729317458e-05,
+            "maximum_empty_normal_clearance_m": 0.0,
+            "maximum_empty_aperture_m": 7.780141729317458e-05,
+            "maximum_across_edge_compression_m": 9.124212803587423e-05,
+            "maximum_along_edge_slip_m": 1.9131366177450168e-05,
+            "minimum_shared_edge_overlap_m": 0.0015959955758692457,
+            "edges_without_overlap": 0,
+            "worst_aperture": {
+              "panel_indices": [
+                99,
+                107
+              ],
+              "endpoint": 0,
+              "opening_m": 7.780141729317458e-05,
+              "normal_clearance_m": 0.0
+            },
+            "interpretation": "Empty aperture geometry only. Compression and tangential slip are reported separately; native hinge fracture is a distinct event."
+          },
+          "aperture_warning": false
+        }
+      },
+      {
+        "maximum_hinge_endpoint_gap_m": 0.00029125885180056267,
+        "first_failure": null,
+        "valid": true,
+        "reads": 12763,
+        "legacy_endpoint_warning_m": 0.0001,
+        "endpoint_distance_is_stop_condition": false,
+        "maximum_allowed_empty_aperture_m": 0.0004,
+        "first_endpoint_warning": {
+          "update": 12563,
+          "maximum_hinge_endpoint_gap_m": 0.00016974476526408712,
+          "maximum_vertex_average_error_m": 0.00011268993277274058,
+          "legacy_endpoint_warning": true,
+          "valid": true,
+          "worst_endpoint": {
+            "panel_indices": [
+              22,
+              23
+            ],
+            "positions_m": [
+              [
+                -0.0002081111660722052,
+                0.018800096508440466,
+                -0.00443928340834854
+              ],
+              [
+                -0.0002719102420136287,
+                0.018644427631504895,
+                -0.004461870218596974
+              ]
+            ],
+            "difference_m": [
+              6.37990759414235e-05,
+              0.00015566887693557047,
+              2.2586810248433238e-05
+            ]
+          },
+          "continuity_method": "geometric_empty_aperture",
+          "endpoint_distance_is_stop_condition": false,
+          "maximum_allowed_empty_aperture_m": 0.0004,
+          "geometry": {
+            "maximum_positive_edge_opening_m": 0.00015375696581977535,
+            "maximum_empty_normal_clearance_m": 0.0,
+            "maximum_empty_aperture_m": 0.00015375696581977535,
+            "maximum_across_edge_compression_m": 0.0001550356081890435,
+            "maximum_along_edge_slip_m": 2.1271700270136054e-05,
+            "minimum_shared_edge_overlap_m": 0.0015988738024705317,
+            "edges_without_overlap": 0,
+            "worst_aperture": {
+              "panel_indices": [
+                22,
+                23
+              ],
+              "endpoint": 1,
+              "opening_m": 0.00015375696581977535,
+              "normal_clearance_m": 0.0
+            },
+            "interpretation": "Empty aperture geometry only. Compression and tangential slip are reported separately; native hinge fracture is a distinct event."
+          },
+          "aperture_warning": false
+        },
+        "first_aperture_warning": {
+          "update": 12623,
+          "maximum_hinge_endpoint_gap_m": 0.00025114675756802865,
+          "maximum_vertex_average_error_m": 0.00012557337878401465,
+          "legacy_endpoint_warning": true,
+          "valid": true,
+          "worst_endpoint": {
+            "panel_indices": [
+              13,
+              20
+            ],
+            "positions_m": [
+              [
+                -0.0005590967635162748,
+                0.04003260861870056,
+                0.004186526180250484
+              ],
+              [
+                -0.0005679327373923461,
+                0.04000918697068522,
+                0.003936630110239687
+              ]
+            ],
+            "difference_m": [
+              8.835973876071372e-06,
+              2.342164801533847e-05,
+              0.00024989607001079696
+            ]
+          },
+          "continuity_method": "geometric_empty_aperture",
+          "endpoint_distance_is_stop_condition": false,
+          "maximum_allowed_empty_aperture_m": 0.0004,
+          "geometry": {
+            "maximum_positive_edge_opening_m": 0.0002488688520764983,
+            "maximum_empty_normal_clearance_m": 0.0,
+            "maximum_empty_aperture_m": 0.0002488688520764983,
+            "maximum_across_edge_compression_m": 0.00021659487858820395,
+            "maximum_along_edge_slip_m": 2.8889816152513133e-05,
+            "minimum_shared_edge_overlap_m": 0.0015992817687220627,
+            "edges_without_overlap": 0,
+            "worst_aperture": {
+              "panel_indices": [
+                13,
+                20
+              ],
+              "endpoint": 0,
+              "opening_m": 0.0002488688520764983,
+              "normal_clearance_m": 0.0
+            },
+            "interpretation": "Empty aperture geometry only. Compression and tangential slip are reported separately; native hinge fracture is a distinct event."
+          },
+          "aperture_warning": true
+        },
+        "native_thread_solid_audit": {
+          "checks": 12763,
+          "first_failure": null,
+          "maximum_capsule_overlap_m": 0.00024591973174957547,
+          "interpretation": "Exact current capsule axes against actual box midplanes; finite overlap is reported separately. The independent swept mesh/junction guards remain active."
+        },
+        "geometry_maxima": {
+          "maximum_positive_edge_opening_m": 0.0002488688520764983,
+          "maximum_empty_normal_clearance_m": 0.0,
+          "maximum_empty_aperture_m": 0.0002488688520764983,
+          "maximum_across_edge_compression_m": 0.0002885624303987836,
+          "maximum_along_edge_slip_m": 7.67711303555095e-05
+        },
+        "last_check": {
+          "maximum_hinge_endpoint_gap_m": 6.581917160403445e-05,
+          "maximum_vertex_average_error_m": 5.6625277926796703e-05,
+          "legacy_endpoint_warning": false,
+          "valid": true,
+          "worst_endpoint": {
+            "panel_indices": [
+              13,
+              20
+            ],
+            "positions_m": [
+              [
+                -0.000766795255728806,
+                0.030807216786585444,
+                0.004004167723161733
+              ],
+              [
+                -0.0008091181458336933,
+                0.030803626124891122,
+                0.003953888070493801
+              ]
+            ],
+            "difference_m": [
+              4.232289010488728e-05,
+              3.590661694322095e-06,
+              5.027965266793215e-05
+            ]
+          },
+          "continuity_method": "geometric_empty_aperture",
+          "endpoint_distance_is_stop_condition": false,
+          "maximum_allowed_empty_aperture_m": 0.0004,
+          "geometry": {
+            "maximum_positive_edge_opening_m": 5.1084890050471273e-05,
+            "maximum_empty_normal_clearance_m": 0.0,
+            "maximum_empty_aperture_m": 5.1084890050471273e-05,
+            "maximum_across_edge_compression_m": 4.7528995931547663e-05,
+            "maximum_along_edge_slip_m": 2.07885887475986e-05,
+            "minimum_shared_edge_overlap_m": 0.0015961042187298893,
+            "edges_without_overlap": 0,
+            "worst_aperture": {
+              "panel_indices": [
+                13,
+                20
+              ],
+              "endpoint": 1,
+              "opening_m": 5.1084890050471273e-05,
+              "normal_clearance_m": 0.0
+            },
+            "interpretation": "Empty aperture geometry only. Compression and tangential slip are reported separately; native hinge fracture is a distinct event."
+          },
+          "aperture_warning": false
+        }
+      }
+    ],
+    "contact_audit": [
+      {
+        "valid": true,
+        "steps": 12763,
+        "first_failure": null
+      },
+      {
+        "valid": true,
+        "steps": 12763,
+        "first_failure": null
+      }
+    ],
+    "closed_junction_contact_audit": [
+      {
+        "valid": true,
+        "steps": 12763,
+        "first_failure": null
+      },
+      {
+        "valid": true,
+        "steps": 12763,
+        "first_failure": null
+      }
+    ],
+    "strain": [
+      {
+        "maximum_principal_stretch": 1.0187250962719214,
+        "first_validity_excursion": null,
+        "first_2pct_warning": null,
+        "maximum_stretch_limit": 1.05
+      },
+      {
+        "maximum_principal_stretch": 1.031777345609621,
+        "first_validity_excursion": null,
+        "first_2pct_warning": {
+          "time_s": 13.192708333333334,
+          "triangle": 0,
+          "principal_stretch": 1.0314552531446652,
+          "limit": 1.02
+        },
+        "maximum_stretch_limit": 1.05
+      }
+    ],
+    "native_joint_breaks": {
+      "observer_installed": true,
+      "event_count": 0,
+      "cloth_hinge_break_count": 0,
+      "events": [],
+      "interpretation": "Native break notifications only; no joint edits, score or no-damage certificate."
+    },
+    "pose_assisted_entry": {
+      "policy": "fixed blade path with filtered native tool-in-gripper pose compensation",
+      "filter_alpha": 0.1,
+      "updates": 126,
+      "maximum_grasp_position_change_m": 0.00016182027082888852,
+      "maximum_grasp_rotation_change_rad": 0.00016164959548919117,
+      "state_writes": false,
+      "hidden_forces_or_attachments": false
+    },
+    "wall_seconds": 277.3812189446762
+  },
+  "finite_tool_geometry": [
+    {
+      "action": 260,
+      "blade_contacts": [],
+      "guards": [
+        {
+          "minimum_surface_clearance_m": 0.0012652893231026024,
+          "nearest_link": 6
+        },
+        {
+          "minimum_surface_clearance_m": 0.002079565115391662,
+          "nearest_link": 5
+        }
+      ],
+      "max_joint": 19,
+      "max_joint_gap_m": 3.197893249014227e-06,
+      "joint7_endpoints_m": [
+        [
+          -0.0038225247743264917,
+          0.02954165861081464,
+          -0.002294497941367342
+        ],
+        [
+          -0.003822621561866069,
+          0.029541658072144903,
+          -0.002294784164503044
+        ]
+      ]
+    },
+    {
+      "action": 261,
+      "blade_contacts": [],
+      "guards": [
+        {
+          "minimum_surface_clearance_m": 0.0012259436329963883,
+          "nearest_link": 6
+        },
+        {
+          "minimum_surface_clearance_m": 0.002129652162119252,
+          "nearest_link": 5
+        }
+      ],
+      "max_joint": 15,
+      "max_joint_gap_m": 2.5588584614282943e-06,
+      "joint7_endpoints_m": [
+        [
+          -0.003785298971663954,
+          0.029457997238913233,
+          -0.0023014285644788893
+        ],
+        [
+          -0.003785435824380157,
+          0.029458022977024562,
+          -0.002301643372460315
+        ]
+      ]
+    },
+    {
+      "action": 262,
+      "blade_contacts": [
+        {
+          "link": 6,
+          "axis_solid_distance_m": 0.0003997520913000196,
+          "overlap_m": 2.4790869998042803e-07
+        }
+      ],
+      "guards": [
+        {
+          "minimum_surface_clearance_m": 0.0011191137795934232,
+          "nearest_link": 6
+        },
+        {
+          "minimum_surface_clearance_m": 0.002236564693104438,
+          "nearest_link": 5
+        }
+      ],
+      "max_joint": 22,
+      "max_joint_gap_m": 5.014494231890388e-06,
+      "joint7_endpoints_m": [
+        [
+          -0.00374355827042664,
+          0.029384987127316443,
+          -0.002243841610758552
+        ],
+        [
+          -0.0037441272145313934,
+          0.029385342575192343,
+          -0.0022426418081245058
+        ]
+      ]
+    },
+    {
+      "action": 263,
+      "blade_contacts": [],
+      "guards": [
+        {
+          "minimum_surface_clearance_m": 0.0009449550550236496,
+          "nearest_link": 6
+        },
+        {
+          "minimum_surface_clearance_m": 0.0023949643049573518,
+          "nearest_link": 5
+        }
+      ],
+      "max_joint": 12,
+      "max_joint_gap_m": 4.876493888398235e-06,
+      "joint7_endpoints_m": [
+        [
+          -0.003509434177969712,
+          0.028756291870327317,
+          -0.0021430930293402923
+        ],
+        [
+          -0.003509661488228591,
+          0.0287563835969297,
+          -0.0021430618822907686
+        ]
+      ]
+    },
+    {
+      "action": 264,
+      "blade_contacts": [
+        {
+          "link": 6,
+          "axis_solid_distance_m": 0.000399987166087711,
+          "overlap_m": 1.2833912289020658e-08
+        }
+      ],
+      "guards": [
+        {
+          "minimum_surface_clearance_m": 0.0006219807049769011,
+          "nearest_link": 6
+        },
+        {
+          "minimum_surface_clearance_m": 0.00267919952078663,
+          "nearest_link": 5
+        }
+      ],
+      "max_joint": 11,
+      "max_joint_gap_m": 8.873618190178365e-06,
+      "joint7_endpoints_m": [
+        [
+          -0.003216603961915653,
+          0.028308778656791368,
+          -0.0019526141397160578
+        ],
+        [
+          -0.003215885364464602,
+          0.02830986296076977,
+          -0.0019543394676063753
+        ]
+      ]
+    },
+    {
+      "action": 265,
+      "blade_contacts": [],
+      "guards": [
+        {
+          "minimum_surface_clearance_m": 0.00036832325262955594,
+          "nearest_link": 6
+        },
+        {
+          "minimum_surface_clearance_m": 0.0028764419591011813,
+          "nearest_link": 5
+        }
+      ],
+      "max_joint": 11,
+      "max_joint_gap_m": 7.835847956752238e-06,
+      "joint7_endpoints_m": [
+        [
+          -0.002911572179253093,
+          0.027791433066625914,
+          -0.0017969642398543582
+        ],
+        [
+          -0.0029102505620066037,
+          0.02779347995472261,
+          -0.001800202635003991
+        ]
+      ]
+    },
+    {
+      "action": 265.875,
+      "blade_contacts": [],
+      "guards": [
+        {
+          "minimum_surface_clearance_m": -0.000882918090850397,
+          "nearest_link": 8
+        },
+        {
+          "minimum_surface_clearance_m": 0.002874553114061147,
+          "nearest_link": 28
+        }
+      ],
+      "max_joint": 7,
+      "max_joint_gap_m": 0.001341775718661068,
+      "joint7_endpoints_m": [
+        [
+          -0.002225329334768733,
+          0.029311834401110615,
+          -0.0002748619413841433
+        ],
+        [
+          -0.002365167261741832,
+          0.02817888857827963,
+          0.0004302913723697645
+        ]
+      ]
+    }
+  ],
+  "interpretation": "At action265 all thread joints were within8micrometres and the long guard had368micrometres clearance.43.75ms later link8 deeply overlapped that guard and uncut joint7 had a1.342mm physical gap. Cloth and thread-crossing guards passed; no thread was cut or extracted. A short approximate native contact replay will compare resolution and speed before another full trajectory. Cutting force and mass stay unchanged."
+}

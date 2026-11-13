@@ -257,6 +257,46 @@ class MaterialTests(unittest.TestCase):
         r=self.bumped_tail(disconnected=True)
         self.assertEqual(r['valid_shells'],0)
 
+    def test_laterally_disconnected_heads_and_tails_do_not_count(self):
+        m=Icing(dx=.0005,xlim=(.22,.25),ylim=(-.05,.05))
+        for start in (-.043,-.013,.017):
+            s=m.Y-start
+            head=(s>=0)&(s<.003)&(abs(m.X-.233)<.004)
+            tail=(s>=.003)&(s<.026)&(abs(m.X-.242)<.0015)
+            m.volume[head]=.004*m.dx**2
+            m.volume[tail]=.0015*m.dx**2
+        r=assess(m.x,m.y,m.volume,dx=m.dx,emitted_m3=float(m.volume.sum()),
+                 completed=True,tools_clear=True)
+        self.assertEqual(r['valid_shells'],0)
+        self.assertEqual(r['score'],0.)
+
+    def test_detached_side_blob_cannot_supply_head_dimensions(self):
+        m=Icing(dx=.0005,xlim=(.22,.25),ylim=(-.05,.05));s=m.Y+.02
+        # The genuine connected head is too narrow. A separate lobe would
+        # incorrectly make the projected width pass the six-millimetre rule.
+        head=(s>=0)&(s<.003)&(abs(m.X-.233)<.0025)
+        tail=(s>=.003)&(s<.026)&(abs(m.X-.233)<.001)
+        blob=(s>=0)&(s<.003)&(abs(m.X-.241)<.0015)
+        m.volume[head|blob]=.004*m.dx**2;m.volume[tail]=.0015*m.dx**2
+        r=assess(m.x,m.y,m.volume,dx=m.dx,emitted_m3=float(m.volume.sum()),
+                 completed=True,tools_clear=True)
+        self.assertEqual(r['valid_shells'],0)
+
+    def test_detached_side_speck_does_not_change_a_real_shell(self):
+        m=Icing(dx=.0005,xlim=(.22,.25),ylim=(-.05,.05));s=m.Y+.02
+        head=(s>=0)&(s<.003)&(abs(m.X-.233)<.004)
+        tail=(s>=.003)&(s<.026)&(abs(m.X-.233)<.0015)
+        m.volume[head]=.004*m.dx**2;m.volume[tail]=.0015*m.dx**2
+        judge=lambda:assess(m.x,m.y,m.volume,dx=m.dx,emitted_m3=float(m.volume.sum()),
+                            completed=True,tools_clear=True)
+        before=judge()
+        blob=(s>=0)&(s<.003)&(abs(m.X-.241)<.001)
+        m.volume[blob]=.007*m.dx**2
+        after=judge()
+        self.assertEqual(before['valid_shells'],1)
+        self.assertEqual(after['shells'],before['shells'])
+        self.assertEqual(after['score'],before['score'])
+
     def test_perfect_looking_material_without_execution_proof_scores_zero(self):
         m=self.model()
         m.volume[abs(m.X-.235)<.004]=.006*m.dx**2

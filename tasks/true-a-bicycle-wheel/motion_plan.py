@@ -102,7 +102,7 @@ def compile_plan(stage='pickup'):
     return dict(schema='wheel-fixed-motion-v1',kind='diagnostic_joint_commands_not_task_demo',control_hz=20,
         requested_stage=stage,robot_success=False,task_score=None,wheel_clocking_deg=CLOCKING_DEG,nipple_flat_phase_deg=FLAT_PHASE_DEG,
         reset_profile='two-defect-candidate',source_sha256={name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
-          for name in ('motion_plan.py','wheel_scene.py','plan_turns.py')},urdf_sha256=hashlib.sha256(Path(YAM_URDF).read_bytes()).hexdigest(),
+          for name in ('motion_plan.py','wheel_scene.py','plan_turns.py','fixture_layout.py')},urdf_sha256=hashlib.sha256(Path(YAM_URDF).read_bytes()).hexdigest(),
         action_count=len(c.frames),seconds=len(c.frames)/20,max_speed_fraction=float(ratio),
         limitations=['No native grasp or collision proof','Turns stage does not yet include a released revolution judging demonstration'],
         frames=c.frames,kinematic_audit=c.audit)

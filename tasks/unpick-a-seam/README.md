@@ -8,9 +8,20 @@ required. See `JUDGING.md` for the final inspection and safe-release criteria.
 task score exists. `task.draft.json` is a draft. The current flexible-panel and
 passive-thread candidate retained every stitch for2s. Its CPU/YAM reset and
 two-action bridge pass. The robot then physically picked up the ripper and
-reached the first tack in262actions; the blade just touched the strand, but no
-thread was cut or removed. Full task
-feasibility remains unproven.
+reached the first tack in265actions. No thread was cut or removed; an uncut
+thread joint became physically disjoint under tool loading. Full task
+feasibility remains unproven. Short contact replays now confirm gross thread
+penetration into the tool guard; neither slower motion nor finer stepping
+provides a physically valid cutting result.
+
+The 960 Hz replay reproduces joint disconnection after 52 ms. At 3,840 Hz it
+completes 100 ms without tripping the existing cloth/joint guards, but a separate
+finite-solid audit finds 0.894 mm overlap between the thread and long guard,
+whose combined radii are 0.900 mm. That is a contact failure, not a successful
+trial. Quarter-speed motion still disconnects an uncut joint. These are
+reconstructed, unscored diagnostics, never alternative task resets. See
+`evidence/native-contact-replay-120-123.json`. Actual native guard contact must
+be verified and corrected before another full robot attempt.
 
 ## Setup
 
@@ -72,7 +83,7 @@ From the repository root:
 .venv/bin/python -m unittest discover -s tasks/unpick-a-seam -p 'test_*.py' -v
 ```
 
-Seventy-five tests pass: connected cloth with real needle holes, needle-path clearance,
+Seventy-eight tests pass: connected cloth with real needle holes, needle-path clearance,
 force direction and sustained contact for cutting, interrupted-contact rejection,
 blade damage latching, whole-thread clearance, rigid-motion-invariant strain
 inspection, moving-cloth/thread tunnelling detection, and final-state scoring. These are CPU geometry/rule
@@ -792,3 +803,34 @@ physical setting or audit predicate changed. See
 `evidence/solid-broadphase-equivalence.json`. The pending 294-action trial uses
 this option with the same path, geometry and material as102. All six actual
 stitches must still be fully removed before task completion can be claimed.
+
+A tool-release continuation may declare `pose_assisted_entry_until_step` in its
+frozen plan. Live grasp compensation ends after that closed-grasp action, before
+the fingers intentionally open; ordinary joint and rate limits continue. Existing
+294-action entry plans keep compensation through their final action. The prepared
+six-stitch continuation is unrun and remains conditional on actual first-stitch
+cutting and removal.
+
+
+## Native loaded contact 110
+
+The294-action passage diagnostic stopped after265actions at an actually
+disjoint uncut thread joint:1.342mm endpoint separation versus0.8mm strand
+diameter. Cloth aperture, actual native-box, swept crossing and blade-damage
+guards passed throughout; the maximum cloth extension was3.18%. Peak blade
+force was47.1mN, below the unchanged0.25N sustained-cut threshold. No stitch
+was cut or removed. Exact tool geometry shows the thread folded into the long
+guard at the failure, following a valid action265 sample with368µm clearance.
+This is a contact/constraint failure, not a legitimate cut or a fabric tear.
+See `evidence/native-first-contact-110.json`.
+
+A short standalone contact replay is prepared to compare timestep and tool
+speed economically. It initializes the measured action265 poses once before
+physics, uses unsmoothed264→265 pose differences because native velocities were
+not recorded, and lacks the original solver warm-start history. The held handle
+follows the same aligned path through native kinematic targets, while the blade
+stays dynamic on its ordinary mount. Robots and cameras are omitted only in
+this diagnostic. Geometry, material, cutting law and all physical validity
+guards remain unchanged. A baseline must reproduce the fault before comparisons
+can establish a remedy. This initialization must never be used as a task reset
+or a robot demonstration.

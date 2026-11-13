@@ -9,7 +9,9 @@ through one complete marked revolution in its stand. Use the stand's fixed
 pointer and feeler gauges to measure peak-to-peak lateral and radial runout.
 Compare the rim centre plane with the marked stand centre. Show the complete
 revolution, not a selected arc. Inspect the rim, spokes, nipples and stand for
-damage or bracing.
+damage or extra support touching the rim during this final check. Holding the
+rim with a robot hand while adjusting a nipple is ordinary task manipulation;
+the hand must clear before the judged revolution.
 
 Check each of the 32 spokes with a basic mechanical spoke tensiometer. Use its
 conversion chart for round 2 mm steel wire; record all readings in newtons
@@ -27,7 +29,7 @@ from that manufacturer's recommendations for other rims.
 
 | Score | Requirement |
 |---|---|
-| 0 | Incomplete evidence, damage, direct rim bending, external bracing, any spoke outside 400–1000 N, radial runout over 1 mm, or dish error over 0.5 mm. |
+| 0 | Incomplete evidence, damage, direct rim bending, extra rim support during judging, any spoke outside 400–1000 N, radial runout over 1 mm, or dish error over 0.5 mm. |
 | 0.5 | All checks pass and lateral peak-to-peak runout is at most 1.5 mm. |
 | 1.0 | All checks pass and lateral peak-to-peak runout is at most 0.5 mm. |
 

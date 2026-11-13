@@ -37,6 +37,51 @@ def _head_height(profile,width,k,dx):
     return float(profile[region].max())
 
 
+def _footprint_components(mask):
+    """Visible icing connected across finite grid-cell edges, not projection.
+
+    A corner-only touch has zero contact width and cannot join a tail. Detached
+    specks remain separate; they do not invalidate a neighboring real shell.
+    """
+    mask=np.asarray(mask,bool);seen=np.zeros(mask.shape,dtype=bool)
+    for row,column in np.argwhere(mask):
+        if seen[row,column]:continue
+        pending=[(int(row),int(column))];seen[row,column]=True;cells=[]
+        while pending:
+            i,j=pending.pop();cells.append((i,j))
+            for x,y in ((i-1,j),(i+1,j),(i,j-1),(i,j+1)):
+                if 0<=x<mask.shape[0] and 0<=y<mask.shape[1] and mask[x,y] and not seen[x,y]:
+                    seen[x,y]=True;pending.append((x,y))
+        component=np.zeros(mask.shape,dtype=bool)
+        indices=np.asarray(cells);component[indices[:,0],indices[:,1]]=True
+        yield component
+
+
+def _connected_candidates(surface,dx):
+    """Measure each candidate using one connected head-and-tail footprint."""
+    spacing=max(1,round(.006/dx));candidates=[]
+    for component in _footprint_components(surface>=.0005):
+        a=np.where(component,surface,0.)
+        profile=a.max(axis=0);width=component.sum(axis=0)*dx
+        heads=_peaks(width,minimum=.006,spacing=spacing,prominence=.002,
+                     eligible=lambda k:width[k]>.016 or _head_height(profile,width,k,dx)>=.0025)
+        for n,k in enumerate(heads):
+            stop=heads[n+1] if n+1<len(heads) else surface.shape[1]-1
+            start=max(0,k-round(.006/dx))
+            # A remote connection outside this shell cannot connect its head
+            # to an otherwise separate tail inside the measured interval.
+            for local in _footprint_components(component[:,start:stop+1]):
+                if local[:,k-start].sum()*dx<.006:continue
+                one=np.zeros_like(surface)
+                one[:,start:stop+1]=np.where(local,surface[:,start:stop+1],0.)
+                candidates.append((k,stop,one))
+    # Head spacing applies across components as well as within one component.
+    chosen=[]
+    for item in sorted(candidates,key=lambda item:(item[2][:,item[0]]>=.0005).sum(),reverse=True):
+        if all(abs(item[0]-other[0])>=spacing for other in chosen):chosen.append(item)
+    return sorted(chosen,key=lambda item:item[0])
+
+
 def _ridge_length(surface, first, last, dx):
     """Continuous visible ridge pair anywhere on the measured shell body.
 
@@ -77,7 +122,7 @@ def assess(x,y,volume,*,dx,emitted_m3,lost_m3=0.,airborne_m3=0.,damage_depth_m=0
     X,Y=np.meshgrid(x,y,indexing="ij")
     target=(np.abs(X-.235)<=.009)&(Y>=-.047)&(Y<=.047)
     spill_area=float(((h>=.0005)&~target).sum()*dx**2)
-    result={"score":0.,"status":"draft rubric; not submission evidence",
+    result={"score":0.,"status":"geometric assessment; complete trial and contact evidence required",
             "valid_shells":0,"shells":[],"spill_area_mm2":spill_area*1e6,
             "damage_mm":damage_depth_m*1e3}
     balance_error=emitted_m3-float(volume.sum())-lost_m3-airborne_m3
@@ -93,18 +138,15 @@ def assess(x,y,volume,*,dx,emitted_m3,lost_m3=0.,airborne_m3=0.,damage_depth_m=0
     if cross.sum()<3 or active.sum()<3:
         return {"score":0.,"reason":"material grid does not resolve the marked strip"}
     yy=y[active];a=h[cross][:,active]
-    profile=a.max(axis=0)
-    width=(a>=.0005).sum(axis=0)*dx
     # Find shapes from the actual final surface, without fixed shell centres.
     # A low shoulder on a tail is not a distinct head under the written rubric.
     # Exclude it before spacing suppression and tail segmentation. Oversized
     # or over-height mounds remain separators: a shell cannot borrow a tail
     # beyond an intervening invalid deposit.
-    heads=_peaks(width,minimum=.006,spacing=max(1,round(.006/dx)),prominence=.002,
-                 eligible=lambda k:width[k]>.016 or _head_height(profile,width,k,dx)>=.0025)
     covered_by_valid_shell=np.zeros(len(yy),dtype=bool)
-    for n,k in enumerate(heads):
-        stop=heads[n+1] if n+1<len(heads) else len(yy)-1
+    for k,stop,shape_surface in _connected_candidates(a,dx):
+        profile=shape_surface.max(axis=0)
+        width=(shape_surface>=.0005).sum(axis=0)*dx
         # A later disconnected deposit cannot supply this head's tail. End the
         # candidate interval at the first break in the visible footprint.
         following=np.arange(k+1,stop+1)
@@ -135,7 +177,7 @@ def assess(x,y,volume,*,dx,emitted_m3,lost_m3=0.,airborne_m3=0.,damage_depth_m=0
         narrow=previous[width[previous]<=.65*head_w]
         beginning=int(narrow[-1]) if len(narrow) else k
         length=float(yy[tail]-yy[beginning])
-        ridge_length=_ridge_length(a,beginning,tail,dx)
+        ridge_length=_ridge_length(shape_surface,beginning,tail,dx)
         ridged=ridge_length>=.002-1e-12
         # A round mound also narrows beyond its centre. Require a visibly
         # elongated footprint so that taper alone cannot certify a shell.

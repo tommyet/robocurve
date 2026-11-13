@@ -148,9 +148,13 @@ def main():
     if args.mode=='dream' and not(args.adult_collar and args.inside_out_reset):p.error('Current Dream candidate requires the adult inside-out reset matching its demo')
     if not 0<=args.seed<2**32:
         p.error('Seed must be an unsigned 32-bit integer')
-    if args.state_assisted_grasp and (args.mode!='motion-probe' or not args.adult_collar or args.steps!=(580 if args.state_assisted_handoff else 220)):
-        p.error('Adult scripted pickup requires220 actions, or580 with the explicit tip transfer')
+    if args.state_assisted_grasp and (args.mode!='motion-probe' or not args.adult_collar or args.steps not in ((280,580) if args.state_assisted_handoff else (220,))):
+        p.error('Adult scripted pickup requires 220 actions; the transfer permits a 280-action held-pose diagnostic or 580 actions')
     if args.state_assisted_handoff and not args.state_assisted_grasp:p.error('Tip transfer requires the measured adult pickup prefix')
+    if args.state_assisted_handoff and args.steps>280:
+        from adult_handoff import RECEIVING_ROUTE_RELEASED
+        if not RECEIVING_ROUTE_RELEASED:
+            p.error('Receiving route is held until the forward-carried cloth is measured and its new approach is screened')
     source_hashes=sources()
     if args.check_only:
         print(json.dumps({'status':'local_syntax_and_json_passed','source_sha256':source_hashes,
@@ -303,6 +307,7 @@ def main():
                          for name in ('left_robot','right_robot')}}
             trace.write(json.dumps(record,allow_nan=False)+'\n')
             trace.flush()
+            report['last_recorded_native_step']=step
             image=np.asarray(observation.images['top_cam'],dtype=np.uint8)
             video.append_data(image)
             if args.judging_views:
@@ -325,8 +330,12 @@ def main():
             dream.bind(emb.info);dream.reset(Scene(id='tie-a-necktie',instruction=draft['instruction']))
             report['dream_model']=dream.info.checkpoint
         report['status']='running'
+        # Kit may replace process handlers during startup. Re-arm after setup
+        # so a bounded trial preserves its partial evidence on termination.
+        signal.signal(signal.SIGTERM,terminate)
         save()
         command=torch.as_tensor(ready[None,:],device=base.device,dtype=torch.float32)
+        receiving_check_steps=set()
         for step in range(1,args.steps+1):
             if args.state_assisted_handoff and step==281:
                 from adult_handoff import select_receiving_plan
@@ -347,8 +356,10 @@ def main():
                 if np.any(np.abs(np.diff(fixed_actions[279:],axis=0))>delta_limit*1.001):raise ValueError('Receiving trajectory exceeds normal action speeds')
                 (frozen/'fixed-motion.json').write_text(json.dumps(fixed_plan,indent=2)+'\n')
                 report['executed_plan_sha256']=hashlib.sha256((frozen/'fixed-motion.json').read_bytes()).hexdigest()
+                receiving_check_steps={280+continuation['release_original_from'],281+continuation['release_original_through']}
+                report['receiving_check_steps']=sorted(receiving_check_steps)
                 report['state_assisted_handoff']=continuation['grasp'];save()
-            if args.state_assisted_handoff and step in (421,461):
+            if args.state_assisted_handoff and step in receiving_check_steps:
                 from adult_handoff import receiving_material_present
                 native=arena_cloth.state(emb._env,'tie');mesh=arena_cloth.SPECS['tie'].mesh
                 robot=base.scene['left_robot'];index=list(robot.body_names).index('gripper')
@@ -386,6 +397,8 @@ def main():
         report.update(status='interrupted' if isinstance(exc,SystemExit) else 'failed',error_type=type(exc).__name__,error_message=str(exc))
         raise
     finally:
+        # Preserve status even if an interrupted encoder cannot finish closing.
+        save()
         if trace is not None:trace.close()
         if video is not None:video.close()
         for recorder in judging_videos.values():recorder.close()

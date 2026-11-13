@@ -8,6 +8,8 @@ import copy,hashlib,json
 from pathlib import Path
 import numpy as np
 
+RECEIVING_ROUTE_RELEASED = True
+
 
 def _compile(start_action,schedule):
     from yam_arena import ik,station
@@ -34,33 +36,37 @@ def _compile(start_action,schedule):
 
 def raise_for_transfer(start_action):
     from cross_motion import yaw_rotation
-    return _compile(start_action,[(3.,'right',(.30,-.16,1.30),0.,yaw_rotation(30.),'raise and turn held wide strip for tip transfer','cartesian')])
+    return _compile(start_action,[(3.,'right',(.23,-.16,1.30),0.,yaw_rotation(30.),'bring held wide strip in front of collar for transfer','cartesian')])
 
 
-def receive_tip(start_action,rest,nodes,approach_tilt_degrees=10.,receiving_opening=1.):
+def receive_tip(start_action,rest,nodes,approach_tilt_degrees=0.,receiving_opening=1.):
     from adult_motion import grasp_frame
     from cross_motion import yaw_rotation
-    if not .6<=receiving_opening<=1.:raise ValueError('Invalid normal receiving aperture')
+    if receiving_opening!=1. or approach_tilt_degrees!=0.:
+        raise ValueError('This released route uses a full opening and the measured material plane')
     grasp=grasp_frame(rest,nodes,longitudinal=.03,side='left')
-    if not -20. <= approach_tilt_degrees <= 20.:
-        raise ValueError('Receiving tilt exceeds the bounded planning range')
-    angle=np.deg2rad(approach_tilt_degrees)
-    # Rotate the approach within the material plane. The closing normal is
-    # unchanged; this moves the forearm clear of the loose narrow strand.
-    turn=np.array([[1.,0.,0.],[0.,np.cos(angle),-np.sin(angle)],[0.,np.sin(angle),np.cos(angle)]])
-    R=np.asarray(grasp['rotation'])@turn
-    target=np.asarray(grasp['center_m'])+.020*R[:,2]
-    grasp.update(rotation=R.tolist(),target_tcp_m=target.tolist(),approach_tilt_degrees=float(approach_tilt_degrees),receiving_opening=float(receiving_opening))
-    if not (.20<target[0]<.39 and -.25<target[1]<-.06 and .80<target[2]<1.02):raise ValueError('Measured wide tip lies outside the receiving workspace: '+repr(target.tolist()))
-    schedule=[(2.,'left',(.18,.25,1.03),receiving_opening,yaw_rotation(90.),'withdraw in front of both strands','joint'),
-        (2.,'left',(.17,-.20,.94),receiving_opening,yaw_rotation(180.),'cross open front space','cartesian'),
-        (2.,'left',target,receiving_opening,R,'insert receiving fingers around wide tip','cartesian'),
-        (1.,'left',target,0.,R,'pinch wide tip with receiving hand','cartesian'),
-        (2.,'right',(.30,-.16,1.30),1.,yaw_rotation(30.),'release original wide-strand pinch','cartesian'),
+    R=np.asarray(grasp['rotation'])
+    target=np.asarray(grasp['center_m'])+.010*R[:,2]
+    pre=target-.090*R[:,2]
+    align=np.array((.16,.02,max(.94,target[2]+.04)))
+    grasp.update(rotation=R.tolist(),target_tcp_m=target.tolist(),desired_material_tcp_depth_m=-.010,
+        receiving_opening=1.,approach='Orient outside the wide edge, then enter along the finger axis')
+    if not (.17<target[0]<.34 and -.27<target[1]<-.06 and .80<target[2]<1.02):
+        raise ValueError('Measured wide tip lies outside the receiving workspace: '+repr(target.tolist()))
+    schedule=[(1.5,'left',(.18,.25,1.03),1.,yaw_rotation(90.),'withdraw in front of both strands','joint'),
+        (1.5,'left',align,1.,yaw_rotation(180.),'move around the wide-strip edge','cartesian'),
+        (1.,'left',align,1.,R,'orient outside the cloth','cartesian'),
+        (2.,'left',pre,1.,R,'align outside the wide-tip edge','cartesian'),
+        (2.,'left',target,1.,R,'insert along the open finger axis','cartesian'),
+        (1.,'left',target,0.,R,'pinch the wide tip','cartesian'),
+        (2.,'left',(.24,-.14,1.16),0.,yaw_rotation(150.),'raise receiving tip while both hands retain the strip','cartesian'),
+        (1.,'right',(.23,-.16,1.30),1.,yaw_rotation(30.),'release original pinch after raising the tip','cartesian'),
         (2.,'right',(.23,-.24,1.30),1.,yaw_rotation(30.),'withdraw original hand','cartesian'),
-        (3.,'left',(.24,-.14,1.16),0.,yaw_rotation(150.),'lift wide tip clear for knotting','cartesian'),
         (1.,'left',(.24,-.14,1.16),0.,yaw_rotation(150.),'hold transferred wide tip','cartesian')]
-    plan=_compile(start_action,schedule);plan['grasp']=grasp;plan['approach_steps']=120;plan['native_nodes_sha256']=hashlib.sha256(np.ascontiguousarray(nodes).tobytes()).hexdigest();return plan
+    plan=_compile(start_action,schedule)
+    plan.update(grasp=grasp,approach_steps=160,release_original_from=221,release_original_through=240,
+        native_nodes_sha256=hashlib.sha256(np.ascontiguousarray(nodes).tobytes()).hexdigest())
+    return plan
 
 
 def template(pickup):
@@ -68,77 +74,51 @@ def template(pickup):
 
 
 def classify_receiving_contacts(hits,rest,faces):
-    """Separate intended fingertip contact from forbidden body/strand crossings.
+    """Classify static-material predictions without claiming actual penetration.
 
-    Only the final insertion may touch the first10cm of the wide end with
-    finger links. Forearm, palm and narrow-strand intersections stay blocked.
-    The full raw screen remains in evidence; permission to attempt contact is
-    not evidence that contact, the receiving pinch or the handoff succeeds.
+    The final open-finger insertion may touch the selected wide-tip patch.
+    Link4/link5 may brush the loose, unheld final25cm of the narrow tail. That
+    warning requires actual native integrity review; the cloth must respond
+    physically. Contact with the held wide strip or neck band stays blocked.
     """
-    rest=np.asarray(rest);faces=np.asarray(faces);blocked=[];intended=[]
+    rest=np.asarray(rest);faces=np.asarray(faces);blocked=[];intended=[];loose=[]
     for sample in hits:
-        good=[];bad=[]
+        good=[];bad=[];tail=[]
         for hit in sample['hits']:
             material=rest[faces[np.asarray(hit['faces'],int)],1]
-            allowed=sample['step']>80 and hit['link'] in ('tip_left','tip_right') and material.min()>=0. and material.max()<=.10000001
-            (good if allowed else bad).append(hit)
+            if sample['step']>120 and hit['link'] in ('tip_left','tip_right') and material.min()>=0. and material.max()<=.10000001:
+                good.append(hit)
+            elif hit['link'] in ('link4','link5') and material.min()>=1.20:
+                tail.append(hit)
+            else:bad.append(hit)
         if good:intended.append(dict(sample,hits=good))
+        if tail:loose.append(dict(sample,hits=tail))
         if bad:blocked.append(dict(sample,hits=bad))
-    return blocked,intended
+    return blocked,intended,loose
 
 
-def select_receiving_plan(start_action, rest, nodes, faces, half_thickness):
-    """Choose a clear ordinary approach from the measured loose cloth.
-
-    Two millimetres is a route preference, never an acceptance threshold. The
-    blocking check uses the actual shell half-thickness. A fallback may use
-    closer surface clearance; all proximity warnings remain in the audit.
-    """
+def select_receiving_plan(start_action,rest,nodes,faces,half_thickness):
+    """Measure the held strip once, then use ordinary axial receiving actions."""
     from audit_adult_motion import audit
     from audit_reset_approach import screen
-    if not 0. < half_thickness <= .002:
-        raise ValueError('Invalid material half-thickness')
-    records=[];fallback=[]
-    def validate(plan, entry):
-        rigid=audit(plan)
-        entry['rigid_intersections']=len(rigid['violations'])
-        if not rigid['passed']:
-            return None
-        steps=range(1,plan['approach_steps']+1)
-        hits=screen(plan,nodes,faces,steps=steps,side='left',inflation=half_thickness)
-        blocked,intended=classify_receiving_contacts(hits,rest,faces)
-        entry['forbidden_shell_contact_samples']=len(blocked)
-        if blocked:
-            return None
-        proximity=screen(plan,nodes,faces,steps=steps,side='left',inflation=.001)
-        approach=dict(samples=plan['approach_steps'],inflation_m=half_thickness,
-            proximity_inflation_m=.001,proximity_warnings=proximity,
-            raw_intersections=hits,blocked_intersections=blocked,
-            intended_finger_contact=intended)
-        return dict(plan=plan,rigid=rigid,approach=approach,candidates=records)
-    for tilt in (10.,-10.,-20.,0.):
-        entry=dict(approach_tilt_degrees=tilt);records.append(entry)
-        try:
-            plan=receive_tip(start_action,rest,nodes,approach_tilt_degrees=tilt)
-        except ValueError as exc:
-            entry['kinematic_error']=str(exc)
-            continue
-        near=screen(plan,nodes,faces,steps=range(116,121),side='left',inflation=.002)
-        blocked,_=classify_receiving_contacts(near,rest,faces)
-        entry['two_mm_final_approach_warning_samples']=len(blocked)
-        if blocked:
-            fallback.append((plan,entry))
-            continue
-        selected=validate(plan,entry)
-        if selected is not None:
-            selected['selection']='Clear physical route with additional final-approach separation'
-            return selected
-    for plan,entry in fallback:
-        selected=validate(plan,entry)
-        if selected is not None:
-            selected['selection']='Physical shell-clear route; extra proximity warnings retained'
-            return selected
-    return dict(plan=None,candidates=records)
+    if not 0.<half_thickness<=.002:raise ValueError('Invalid material half-thickness')
+    entry=dict(approach='axial, full opening,10mm bite');records=[entry]
+    try:plan=receive_tip(start_action,rest,nodes)
+    except ValueError as exc:
+        entry['kinematic_error']=str(exc)
+        return dict(plan=None,candidates=records)
+    rigid=audit(plan);entry['rigid_intersections']=len(rigid['violations'])
+    if not rigid['passed']:return dict(plan=None,candidates=records)
+    hits=screen(plan,nodes,faces,steps=range(1,plan['approach_steps']+1),side='left',inflation=half_thickness)
+    blocked,intended,loose=classify_receiving_contacts(hits,rest,faces)
+    entry.update(blocked_static_contact_samples=len(blocked),loose_narrow_tail_warning_samples=len(loose))
+    if blocked:return dict(plan=None,candidates=records)
+    approach=dict(samples=plan['approach_steps'],inflation_m=half_thickness,raw_intersections=hits,
+        blocked_intersections=blocked,intended_finger_contact=intended,
+        permitted_loose_tail_contact_warnings=loose,
+        meaning='Static cloth predicts loose narrow-tail contact. Native cloth response and actual integrity must be reviewed; this is not contact, transfer or knot proof.')
+    return dict(plan=plan,rigid=rigid,approach=approach,candidates=records,
+        selection='Axial receiving route; disclosed incidental loose narrow-tail contact remains subject to native review')
 
 
 def receiving_material_present(rest,nodes,gripper_pose_xyzw):

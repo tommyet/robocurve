@@ -24,11 +24,11 @@ python tasks/tie-a-necktie/run.py --mode motion-probe \
   --adult-collar --inside-out-reset --state-assisted-grasp \
   --judging-views --out /tmp/adult-tie-pickup
 
-# Receiving-tip diagnostic, with a checked calibration before the handoff.
+# Bring the held wide strand forward; this shorter diagnostic is validated.
 python tasks/tie-a-necktie/run.py --mode motion-probe \
-  --plan tasks/tie-a-necktie/adult-handoff-plan.json --steps 580 \
+  --plan tasks/tie-a-necktie/adult-handoff-plan.json --steps 280 \
   --adult-collar --inside-out-reset --state-assisted-grasp \
-  --state-assisted-handoff --judging-views --out /tmp/adult-tie-handoff
+  --state-assisted-handoff --judging-views --out /tmp/adult-tie-forward-carry
 ```
 
 The station uses 240 Hz physics and 20 Hz control. Every policy receives the
@@ -52,13 +52,28 @@ node penetration was 4.8 µm. Twelve fixture checks were clear. Final maximum
 edge strain was 4.71%, with 99% of edges below 1.29%. These are diagnostic
 measurements, not calibrated textile accuracy or a knot score.
 
-Batch076 raised the held strip and measured the wide tip. Its proposed
-receiving swing crossed the narrow strand with a forearm, so the guard
-correctly stopped before that motion. The revised580-action candidate
-approaches through clear front space. It permits intended fingertip contact
-with the wide tip while rejecting palm, forearm and other-strand crossings.
-Handoff retention and knotting remain unproven. Earlier child-tie trials and failed routes are preserved in
-`VALIDATION.json`; they do not establish adult-task feasibility.
+Batch101 completes 580 actions but misses the handoff. The receiving finger
+pushes the tip aside, then lifts empty. Sampled robot, fixture and cloth
+self-contact checks are clean; none establishes a grasp. Batch115 then carries the held wide strand 70 mm forward and retains it
+23 mm inside the fingers, with 419 mm lift and clean sampled contact checks.
+The released receiving attempt enters along the finger axis with a 10 mm
+bite. Its commanded rigid checks pass; static cloth predicts a brush against
+the loose narrow tip, which requires native integrity review. A broad empty-
+pinch check stops the original release when the receiving hand is empty.
+Batch119 retains the transfer and lifts the tip 279 mm, but the falling middle
+section crosses the wide strip after release. It is not valid knot evidence.
+The next attempt raises the receiving tip while both hands retain the strip,
+then releases the original pinch to avoid that uncontrolled fold. Batch126
+reaches native action549 before its 480-second cap. The tip remains in the
+receiving fingers, but two wide-strip crossings and transient fingertip
+penetration still invalidate contact integrity. Its interrupted trace was
+recovered separately; the original archive remains unchanged. Earlier trials
+and failed routes remain in `VALIDATION.json`; no knot is demonstrated.
+
+The interrupted transfer used the same command above with `--steps 580`.
+It remains unscored and stops before knot construction. Another run needs a
+corrected material route, not merely a longer cap. Use a fresh output directory;
+running requires an active, authorized compute session.
 
 ## Setup and judging
 
@@ -91,4 +106,6 @@ The revised receiving approach reached action308 in batch086 before an arm
 occluded an optional judging camera. The original cloth pinch remained held;
 seven sampled robot/cloth checks found no deep intersections. Recording now
 keeps and flags occluded review frames rather than stopping physical execution.
-The receiving pinch, transfer and knot still require native evidence.
+This historical camera interruption is superseded by batch119: the receiving
+pinch retained, but strip self-crossing invalidates transfer integrity. A
+complete valid handoff and knot still require native evidence.

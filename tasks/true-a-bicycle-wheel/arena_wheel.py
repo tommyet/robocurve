@@ -43,7 +43,9 @@ FROZEN_MATERIAL_DIAGNOSTIC = False
 PRELOADED_RESET_CANDIDATE = False
 CENTRAL_SPRING_CANDIDATE = False
 DISTANCE_TOLERANCE_COMPENSATION_M = 0.
+BATCH_SDF_NOTICES = False
 SOLVER_TYPE = 'TGS'
+FIXTURE_LAYOUT = 'reference'
 RESET_DIAGNOSTICS = []
 
 
@@ -60,7 +62,8 @@ def _spawn(path, cfg, translation=None, orientation=None, **kwargs):
         metadata = build_scene(stage, root=root, reset_profile=RESET_PROFILE_OVERRIDE or 'two-defect-candidate',
             wheel_clocking_rad=CLOCKING_RAD_OVERRIDE,nipple_flat_phase_rad=FLAT_PHASE_RAD_OVERRIDE,
             central_spring_candidate=CENTRAL_SPRING_CANDIDATE,
-            distance_spring_tolerance_m=DISTANCE_TOLERANCE_COMPENSATION_M)
+            distance_spring_tolerance_m=DISTANCE_TOLERANCE_COMPENSATION_M,
+            fixture_layout=FIXTURE_LAYOUT)
         if PRELOADED_RESET_CANDIDATE:
             from preloaded_reset import author_preloaded_configuration
             author_preloaded_configuration(stage,metadata)
@@ -194,7 +197,8 @@ def install_material_hook(base, stage):
     for item in ASSEMBLIES.values():
         item['tensor_view']=tensor_view
         io=TensorNativeIO(tensor_view,body_paths(item['metadata']))
-        item['coupling'] = NativeThreadCoupler(stage_id, item['metadata'],native_io=io)
+        item['coupling'] = NativeThreadCoupler(stage_id, item['metadata'],native_io=io,
+            batch_sdf_notices=BATCH_SDF_NOTICES)
     original = base.scene.write_data_to_sim
     def before_substep(*args, **kwargs):
         result = original(*args, **kwargs)

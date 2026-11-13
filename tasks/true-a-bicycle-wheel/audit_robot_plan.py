@@ -54,18 +54,19 @@ def candidate_pairs(a,b,margin):
     return np.argwhere(np.all(np.minimum(high_a[:,None,:],high_b[None,:,:])-np.maximum(low_a[:,None,:],low_b[None,:,:])>=2*margin,axis=2))
 
 
-def wheel_props(clocking,flat_phase):
-    s=WheelSpec();W=wheel_world_frame(clocking);origin=np.array((.35,0.,1.005));props=[]
+def wheel_props(clocking,flat_phase,fixture_layout='reference'):
+    from fixture_layout import axle_position,pointer_position
+    s=WheelSpec();W=wheel_world_frame(clocking);origin=axle_position(fixture_layout);props=[]
     props.append(box('table',(.35,0.,.7175),(1.10,1.30,.06)))
-    props.extend(box('stand/'+name,center,size) for name,center,size in stand_boxes())
-    props.append(box('stand/pointer',(.373,0.,.785),(.020,.002,.002)))
+    props.extend(box('stand/'+name,center,size) for name,center,size in stand_boxes(fixture_layout))
+    props.append(box('stand/pointer',pointer_position(fixture_layout),(.020,.002,.002)))
     theta=np.arange(s.spokes)*2*np.pi/s.spokes
     verts=np.c_[s.rim_radius_m*np.cos(theta),s.rim_radius_m*np.sin(theta),np.zeros(s.spokes)]
     for i in range(s.spokes):
         center=(verts[i]+verts[(i+1)%s.spokes])/2;R=x_frame(verts[(i+1)%s.spokes]-verts[i])
         points,_=sector_mesh(index=i)
         props.append(convex(f'rim/{i}',(points@R.T+center)@W.T+origin))
-        pos,rot=nominal_nipple(i,flat_phase,clocking)
+        pos,rot=nominal_nipple(i,flat_phase,clocking,fixture_layout=fixture_layout)
         props.append(box(f'nipple/{i}',pos,(.006,.00323,.00323),rot))
         side=1 if i%2==0 else -1;angle=theta[i]+side*s.cross_angle_rad
         anchor=np.array((s.hub_flange_radius_m*np.cos(angle),s.hub_flange_radius_m*np.sin(angle),side*s.hub_half_width_m))
@@ -94,12 +95,13 @@ def main():
     from yam_arena import ik,station,YAM_URDF
     from yam_arena.analysis import link_hulls,fk_link_poses_world
     from yam_arena.constants import ARM_JOINTS,FINGER_JOINTS,FINGER_OPEN
-    hulls=link_hulls();props=wheel_props(np.deg2rad(plan['wheel_clocking_deg']),np.deg2rad(plan['nipple_flat_phase_deg']))
+    fixture_layout=plan.get('fixture_layout','reference')
+    hulls=link_hulls();props=wheel_props(np.deg2rad(plan['wheel_clocking_deg']),np.deg2rad(plan['nipple_flat_phase_deg']),fixture_layout)
     if not 1<=args.from_step<=len(actions):p.error('Start step outside plan')
     samples=[];grasp_assumed=any(f['stage']=='Lift the free wrench' for f in plan['frames'][:args.from_step-1])
     for index in range(args.from_step-1,len(actions),args.stride):
         action=actions[index];stage=plan['frames'][index]['stage'];robots={}
-        props=wheel_props(np.deg2rad(plan['frames'][index].get('nominal_wheel_clocking_deg',plan['wheel_clocking_deg'])),np.deg2rad(plan['nipple_flat_phase_deg']))
+        props=wheel_props(np.deg2rad(plan['frames'][index].get('nominal_wheel_clocking_deg',plan['wheel_clocking_deg'])),np.deg2rad(plan['nipple_flat_phase_deg']),fixture_layout)
         if stage=='Lift the free wrench':grasp_assumed=True
         for side,offset in (('left',0),('right',7)):
             q=dict(zip(ARM_JOINTS,action[offset:offset+6]));q.update({name:action[offset+6]*FINGER_OPEN for name in FINGER_JOINTS})

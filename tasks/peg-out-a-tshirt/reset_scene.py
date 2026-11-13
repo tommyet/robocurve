@@ -11,12 +11,14 @@ RESET_SETTLE_STEPS=100
 RESET_CONTROL_HZ=20
 
 
-def reset_and_settle(emb):
+def reset_and_settle(emb,observer=None):
     import torch
     base=emb._base
     start=time.monotonic()
     before=int(base.sim._physics_step_count)
+    if observer is not None:observer("before_raw_reset",0.)
     emb._env.reset()
+    if observer is not None:observer("after_raw_reset",0.)
     after_raw=int(base.sim._physics_step_count)
     ready=emb._ready.detach().clone()
     values=ready.detach().cpu().numpy()
@@ -24,8 +26,10 @@ def reset_and_settle(emb):
         raise ValueError('Invalid ordinary ready action during reset')
     if np.any(values[0]<emb._low) or np.any(values[0]>emb._high):
         raise ValueError('Ready action exceeds normal adapter limits')
-    for _ in range(RESET_SETTLE_STEPS):
+    for step in range(1,RESET_SETTLE_STEPS+1):
         emb._env.step(ready)
+        if observer is not None and step in (1,2,10,20,40,100):
+            observer("settle",step/RESET_CONTROL_HZ)
     emb._t=0.
     return dict(method='raw environment reset followed by fixed native settling',
                 status='completed',physics_step_count_before=before,

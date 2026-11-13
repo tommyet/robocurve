@@ -4,6 +4,105 @@ Last updated: 2026-11-13 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-13 — paired cake runs and remaining contact failures
+
+- Cake111 now has both complete native episodes: scripted demo1.0 in1,114
+  actions/55.7s and Dream0.0 in2,400actions/120s. Dream deposits no icing; its
+  one session uses296 successful eight-action requests plus two transient
+  server-error retries. The final connected-footprint scorer excludes detached
+  head/tail fragments without changing thresholds;46 tests pass, including the
+  isolated review package. Nine additional photo-coordinate checks now pass
+  (55 cake checks total). Physics/controller sources match the native pair;
+  the scorer changed afterward and both saved episodes were rescored. The
+  0.3 mm ridge dip is independently verified by native profiles. The physical
+  judging procedure now specifies calibrated projected-section photographs,
+  an independent0.30mm reference step, uncertainty allowances and retakes for
+  unresolved evidence. This is prescribed per-trial calibration; no physical
+  icing experiment or measured real-world camera precision is claimed. The
+  guide does not require us to perform that extra physical experiment first.
+  Cake is ready for user review; media upload and PR still await authorization.
+- Shirt121 resolves the YAM reset defect using once-per-step force integration
+  with native rest-shape bending: eight sampled reset states have no transverse
+  crossings, final fixtures are clear, maximum strain4.447%. Raised180mm support
+  and lateral pickup125 completes320 actions with clean sampled self/fixture/robot
+  contact, but misses the grasp (hem lift0.73mm). The old100mm setup and invalid113
+  run must not be described as validated garment manipulation.
+- Tie119 achieves physical tip retention but its wide strip crosses itself
+  after the original hand opens (up to1.95mm penetration). Corrected126 raises
+  the receiving tip while both hands retain the strip, before release. This is
+  still a handoff diagnostic, not a knot.126 is interrupted:550 flushed rows
+  are recovered through action549, but two deep wide-strip crossings and a
+  transient fingertip penetration remain. No valid transfer or knot exists.
+- Wheel112 rotates the native nipple90.54deg, but approach/release corrupt the
+  adjustment. Wheel122 fails before insertion: actual approach overshoot hits
+  the nipple and its new orientation makes the long-handle realignment
+  unreachable. Compensated TGS once-per-step124 reduces the momentum error66%
+  but still has unexplained startup momentum; it is not a valid PGS replacement.
+  A lower, laterally shifted stand with a slower approach is being screened
+  locally. The final 652-action route and two measured-grasp cases pass local
+  hull/IK checks with a 10 mm lower, 50 mm rightward, 10 mm forward fixture.
+  Its explicit native diagnostic layout still needs a run; no truing demo exists.
+- Paper114 has real heel/paper and inter-sheet intersections, distinct from its
+  small positive-aperture guard residual. The slower584-action descent preserves
+  mechanics and passes nominal/measured-grasp hull checks; native testing remains
+  outstanding. Future traces retain exact panel poses for independent crossing
+  checks. Paper70 tests pass; no extraction demonstration exists.
+- Seam123 finer timestep completes its runner but reaches0.894mm thread/guard
+  overlap (combined radii0.900mm), so it is invalid. Slower motion also fails.
+  Do not launch another timestep sweep. Inspect effective native compound
+  shapes and contact pairs first. No legitimate cut/extraction demo exists.
+- Fresh13:27UTC novelty check covers559 visible board entries and1,901 PR
+  titles, with92 accepted. No new direct duplicate of the six is found. Shirt
+  PR760 is closed/finally rejected with no revision permitted; its appeal window
+  ends Nov14 07:07:29UTC. This is an ownership caution, not a verified active
+  revision hold. Recheck before any authorized submission.
+- The Pod is confirmed EXITED at13:16:38UTC, and the complete API inventory
+  contains zero active Pods. A brief preservation-only deadline extension
+  stayed within the$18 target, including all remaining Dream/storage reserves.
+  All191 result archives and119 source archives are local, plus8 different or
+  previously remote-only older archives with verified hashes. The temporary
+  Dream credential was deleted before shutdown. Estimated incurred spend is
+  $14.55: compute including compatibility$13.96, Dream$0.42 and disk$0.17.
+  Billing remains unavailable; these are elapsed-time estimates, not invoices.
+  The proposed$25 cap remains unanswered. No media upload or PR has occurred.
+
+## 2026-11-13 — clean icing finish and contact diagnostics at 12:25 UTC
+
+- Cake111 demonstrates six ridged shells across 87 mm in 1,114 actions (55.7 s),
+  with full score, zero cake damage and zero deposited material outside the
+  permitted strip. Independent native top/side/detail photo review agrees with
+  six heads and connected tapered tails; exact dimensions also use measured
+  profiles. Slower ordinary dispenser return prevents the old pressure pulse.
+  The material remains visibly faceted. Dream111 is running without assistance.
+- Shirt107 adopts native rest-shape bending for its sewn folds. Seven samples
+  over a five-second reset have zero transverse self-crossings; maximum strain
+  is 4.64%. Shirt113 then completes320 actions but misses the lower, drooped hem
+  and lifts empty. Its subsequent full audit finds1,255 transverse pairs in the
+  initial YAM state despite the matching standalone reset passing. The native
+  asset/reset lifecycle difference must be resolved before more manipulation;
+  neither a new support height nor another pickup run is released.
+- Wheel112 passes the prior IK stops and is now turning. Per-step USD notice
+  batching reproduces 501 native states bit-for-bit and reduces the short
+  combined callback/physics runtime by6.7%; it does not change mechanics.
+  Actual quarter-turn engagement and a full corrected revolution remain unproven.
+- Paper106 exposed a concrete heel-placement error: the intended lowest corner
+  penetrated the sheet stack by about0.51 mm. Corrected114 targets put all heel
+  corners above the upper sheet while the fork fits under the crown;386 planned
+  and measured-grasp IK/hull checks pass. Its native test is queued.
+- Seam110 stops on an actual uncut thread junction opening1.342 mm, exceeding
+  the0.8 mm strand diameter, after the strand is driven into the tool guard.
+  Cloth aperture/crossing checks pass and no legitimate cut occurs. A short
+  reconstructed native contact replay will compare numerical resolution only
+  if its960Hz baseline reproduces this failure. It is never demo evidence.
+- Tie115's280-action forward carry is queued to expose the real cloth state
+  for a new receiving-hand route. No handoff or knot is demonstrated yet.
+- Full inventory at12:23 confirms one active$1.09/hour Pod. Estimated active
+  compute is$12.673, plus$0.319 compatibility and about$0.16 temporary storage.
+  Billing remains unavailable. The live local watchdog deadline is13:08 UTC;
+  preserve all results before shutdown. The existing$18 target reserves$3.675
+  for Dream and$0.30 disk. A proposed$25 cap awaits the user's answer; no answer
+  is approval. No PR or media upload has occurred.
+
 ## 2026-11-13 — physical evidence and runtime at 11:52 UTC
 
 - Cake099 completes 994 actions in 459 s. Its independent score is 1.0: six

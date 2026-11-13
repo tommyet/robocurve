@@ -30,6 +30,8 @@ def main():
     p.add_argument('--solver-position-iterations',type=int,choices=(16,32,64,128,255),default=128)
     p.add_argument('--gpu-physics',action='store_true',help='Compare native GPU rigid physics with the CPU reference')
     p.add_argument('--batch-sdf-notices',action='store_true',help='Write identical Float defaults through cached Sdf specs in one notice batch per native substep')
+    p.add_argument('--recenter-at-axle',action='store_true',help='Translate the entire fixture and world joint anchors before attachment; coordinate precision diagnostic only')
+    p.add_argument('--relocated-fixture-diagnostic',action='store_true',help='Explicit10mm-forward/50mm-right/10mm-lower wheel and10mm shorter stand')
     p.add_argument('--external-forces-every-iteration',action='store_true',help='Match the YAM TGS external-force integration option; diagnostic only')
     p.add_argument('--omit-bearing-diagnostic',action='store_true',help='Remove only the world bearing before attachment; short free-fall momentum isolation')
     p.add_argument('--freeze-thread-diagnostic',action='store_true',help='No runtime material writes/lead torque; isolates native assembly')
@@ -38,6 +40,9 @@ def main():
     p.add_argument('--inextensible-rim-candidate',action='store_true',help='Lock hoop extension while retaining all rim bending/torsion; explicit approximation diagnostic')
     p.add_argument('--distance-tolerance-compensation-m',type=float,choices=(0.,.025),default=0.,help='Compensate native DistanceJoint numerical tolerance, preserving physical rest length')
     args=p.parse_args()
+    from fixture_layout import REFERENCE,RELOCATED
+    fixture_layout=RELOCATED if args.relocated_fixture_diagnostic else REFERENCE
+    if args.relocated_fixture_diagnostic and args.recenter_at_axle:p.error('Do not combine two separate layout/precision diagnostics')
     if not .00001<=args.dt<=.0005 or not .025<=args.seconds<=2.:
         p.error('Use 0.00001 <= dt <= 0.0005 and 0.025 <= seconds <= 2')
     if args.omit_bearing_diagnostic and args.seconds>.05:p.error('Free-bearing diagnostic is limited to50ms before bench approach')
@@ -52,6 +57,8 @@ def main():
             'solver_velocity_iterations':args.solver_velocity_iterations,
             'solver_type':args.solver_type,
             'batch_sdf_notices':args.batch_sdf_notices,
+            'recenter_at_axle':args.recenter_at_axle,
+            'fixture_layout':fixture_layout,
             'reset_profile':args.reset_profile,'nipple_flat_phase_deg':args.nipple_flat_phase_deg,'wheel_clocking_deg':args.wheel_clocking_deg,
             'initial_turn_offsets':starting_turn_errors(profile=args.reset_profile).tolist(),
             'frozen_material_diagnostic':args.freeze_thread_diagnostic,
@@ -63,7 +70,7 @@ def main():
             'distance_tolerance_compensation_m':args.distance_tolerance_compensation_m,
             'first_step':'Initializes native tensor state; authored spring rest lengths/friction already present, lead torque begins on step2.',
             'source_sha256':{n:hashlib.sha256(Path(__file__).with_name(n).read_bytes()).hexdigest()
-                             for n in ('scene_probe.py','wheel_scene.py','native_probe.py','thread_coupling.py','mechanics.py','integrity.py','momentum.py')}}
+                             for n in ('scene_probe.py','recenter_probe.py','fixture_layout.py','wheel_scene.py','native_probe.py','thread_coupling.py','mechanics.py','integrity.py','momentum.py')}}
     def save():
         record['wall_seconds']=time.monotonic()-started
         temporary=args.out/'scene-diagnostic.json.tmp'
@@ -96,13 +103,16 @@ def main():
         table.AddTranslateOp().Set(Gf.Vec3d(.3,0.,.7275));table.AddScaleOp().Set(Gf.Vec3f(1.,1.,.04))
         UsdPhysics.CollisionAPI.Apply(table.GetPrim())
         PhysxSchema.PhysxCollisionAPI.Apply(table.GetPrim()).CreateContactOffsetAttr(.000002)
-        metadata=build_scene(stage,reset_profile=args.reset_profile,nipple_flat_phase_rad=np.deg2rad(args.nipple_flat_phase_deg),wheel_clocking_rad=np.deg2rad(args.wheel_clocking_deg),central_spring_candidate=args.central_spring_candidate,distance_spring_tolerance_m=args.distance_tolerance_compensation_m,inextensible_rim_candidate=args.inextensible_rim_candidate)
+        metadata=build_scene(stage,reset_profile=args.reset_profile,nipple_flat_phase_rad=np.deg2rad(args.nipple_flat_phase_deg),wheel_clocking_rad=np.deg2rad(args.wheel_clocking_deg),central_spring_candidate=args.central_spring_candidate,distance_spring_tolerance_m=args.distance_tolerance_compensation_m,inextensible_rim_candidate=args.inextensible_rim_candidate,fixture_layout=fixture_layout)
         if args.omit_bearing_diagnostic:
             if not stage.RemovePrim(metadata['hub_path'].rsplit('/',1)[0]+'/hub_bearing'):
                 raise RuntimeError('World bearing removal failed')
         if args.preloaded_reset_candidate:
             from preloaded_reset import author_preloaded_configuration
             record['preloaded_reset']=author_preloaded_configuration(stage,metadata)
+        if args.recenter_at_axle:
+            from recenter_probe import recenter
+            record['coordinate_frame_audit']=recenter(stage,metadata)
         for path in body_paths(metadata):
             rb=PhysxSchema.PhysxRigidBodyAPI.Get(stage,path)
             rb.CreateSolverPositionIterationCountAttr(args.solver_position_iterations)

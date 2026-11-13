@@ -51,7 +51,7 @@ def compensated_tcp(nominal_tcp, nominal_rotation, measured_tcp, measured_rotati
         tcp_correction_m=float(np.linalg.norm(desired_tcp-nominal_tcp)))
 
 
-def ik_acceptance(stage, tcp_error_m, rotation_error_rad, tool_error_m):
+def ik_acceptance(stage, tcp_error_m, rotation_error_rad, tool_error_m, *, solved_mouth_clearance_m=None):
     """Bound a clear approach by the physical jaw lead-in, not an exact TCP.
 
     The 5 mm mouth admits a 3.23 mm nipple with 0.885 mm half-clearance.
@@ -60,7 +60,9 @@ def ik_acceptance(stage, tcp_error_m, rotation_error_rad, tool_error_m):
     Up to0.01rad approach orientation error is allowed only inside that same
     pointwise bound; a separate near-zero angular threshold would reject a
     command that still fits the real lead-in. Native contact establishes fit.
-    Insertion, turning and withdrawal retain the original stricter gate. This
+    With the explicit longer-lead-in diagnostic, an insertion point still
+    outside the mouth can use the same capture bound. Turning and seated
+    insertion retain the original stricter gate. This
     is a command-quality check; only native contact can establish engagement.
     """
     values=np.asarray((tcp_error_m,rotation_error_rad,tool_error_m),float)
@@ -68,9 +70,20 @@ def ik_acceptance(stage, tcp_error_m, rotation_error_rad, tool_error_m):
         return False,{'mode':'invalid','jaw_error_bound_m':None}
     jaw_error=tool_error_m+2*.010*np.sin(rotation_error_rad/2)
     exact=tcp_error_m<=.0002 and rotation_error_rad<=.002
-    capture=(stage.startswith('Approach nipple ') and tcp_error_m<=.001
+    capture_stage=(stage.startswith('Approach nipple ') or
+        (stage.endswith(' insert') and solved_mouth_clearance_m is not None and
+         np.isfinite(solved_mouth_clearance_m) and solved_mouth_clearance_m>=0.))
+    capture=(capture_stage and tcp_error_m<=.001
              and rotation_error_rad<=.01 and jaw_error<=.00075)
-    return bool(exact or capture),dict(mode='strict' if exact else 'lead_in' if capture else 'rejected',
+    # The longer diagnostic lead-in remains outside the mouth. Its command
+    # may be approximate only if the solved full square is still at least2mm
+    # beyond the jaw ends; the tight-slot capture allowance need not apply
+    # before physical contact. Native/hull checks remain independently required.
+    clear_lead=(solved_mouth_clearance_m is not None and
+        np.isfinite(solved_mouth_clearance_m) and solved_mouth_clearance_m>=.002 and
+        (stage.startswith('Approach nipple ') or stage.endswith(' insert')) and tcp_error_m<=.002 and
+        tool_error_m<=.002 and rotation_error_rad<=.01)
+    return bool(exact or capture or clear_lead),dict(mode='strict' if exact else 'lead_in' if capture else 'clear_lead_in' if clear_lead else 'rejected',
         jaw_error_bound_m=float(jaw_error),lead_in_half_clearance_m=.000885)
 
 
@@ -90,6 +103,41 @@ def engagement_key(spoke,stage):
     """
     quarter=re.search(r'quarter (\d+)',stage)
     return int(spoke),1 if quarter is None else int(quarter.group(1))
+
+
+def nipple_mouth_clearance_m(tool_pose,nipple_pose):
+    """Signed clearance of the entire square flats beyond the open jaw ends."""
+    tool=np.asarray(tool_pose,float);nipple=np.asarray(nipple_pose,float)
+    if tool.shape!=(7,) or nipple.shape!=(7,) or not np.isfinite([tool,nipple]).all():
+        raise ValueError('Finite tool and nipple poses required')
+    R=rotation(tool[3:]);N=rotation(nipple[3:])
+    relative=R.T@(nipple[:3]-tool[:3]);orientation=R.T@N
+    half=np.array((.006,.00323,.00323))/2
+    return float(relative[1]-np.abs(orientation[1])@half-.008)
+
+
+def blended_nipple_target(position, orientation, nominal_centre, actual_centre,
+                          correction, fraction=1.):
+    """Smooth an optional clear-space correction without changing object state.
+
+    A relocation diagnostic can blend measured nipple alignment along its
+    clear-front transition, instead of demanding the entire correction at the
+    first parked waypoint. Contact and turn waypoints use fraction1. The
+    existing route is exactly preserved when the optional field is absent.
+    """
+    if not np.isfinite(fraction) or not 0.<=fraction<=1.:
+        raise ValueError('Nipple feedback fraction must be between0 and1')
+    position=np.asarray(position,float);orientation=np.asarray(orientation,float)
+    nominal_centre=np.asarray(nominal_centre,float)
+    if fraction == 0.:
+        return np.asarray(position).copy(), np.asarray(orientation).copy()
+    C = np.asarray(correction)
+    if fraction != 1.:
+        from scipy.spatial.transform import Rotation
+        C = Rotation.from_rotvec(Rotation.from_matrix(C).as_rotvec()*fraction).as_matrix()
+    centre = (np.asarray(actual_centre) if fraction == 1. else
+              np.asarray(nominal_centre)+fraction*(np.asarray(actual_centre)-nominal_centre))
+    return centre+C@(position-nominal_centre), C@orientation
 
 
 class ToolPoseServo:
@@ -122,8 +170,14 @@ class ToolPoseServo:
             if measured_nipple_pose is None:raise ValueError('Native nipple feedback requested but missing')
             from plan_turns import nominal_nipple
             frame=self.plan['frames'][step-1]
+            clear_margin=self.plan.get('require_clear_mouth_before_cross_plane_m')
+            if clear_margin is not None and frame['stage'].endswith(' clear front'):
+                clearance=nipple_mouth_clearance_m(measured_tool_pose,measured_nipple_pose)
+                if clearance<float(clear_margin):
+                    raise RuntimeError(f'Wrench remains engaged before cross-plane withdrawal: mouth clearance={clearance}m')
             centre,nR=nominal_nipple(spoke,np.deg2rad(self.plan['nipple_flat_phase_deg']),
-                                   np.deg2rad(frame['nominal_wheel_clocking_deg']))
+                                   np.deg2rad(frame['nominal_wheel_clocking_deg']),
+                                   fixture_layout=self.plan.get('fixture_layout','reference'))
             key=engagement_key(spoke,frame['stage'])
             clear_settle=frame['stage'].startswith('Approach nipple ') and frame['stage'].endswith(' settle')
             realign=False
@@ -141,9 +195,13 @@ class ToolPoseServo:
             else:
                 nipple_diagnostic={'latched_from_earlier_frame':True}
             original_p=p.copy();original_R=R.copy()
-            p=np.asarray(measured_nipple_pose)[:3]+self.nipple_rotation@(p-centre)
-            R=self.nipple_rotation@R
+            feedback_fraction=float(frame.get('nipple_feedback_fraction',1.))
+            if feedback_fraction!=1. and not frame['stage'].startswith('Clear approach nipple '):
+                raise ValueError('Only the clear-front transition may blend nipple feedback')
+            p,R=blended_nipple_target(p,R,centre,np.asarray(measured_nipple_pose)[:3],
+                                     self.nipple_rotation,feedback_fraction)
             nipple_diagnostic.update(spoke=spoke,quarter=key[1],rotation_is_latched=True,
+                feedback_fraction=feedback_fraction,
                 realigned_after_stable_approach=realign,
                 target_translation_correction_m=float(np.linalg.norm(p-original_p)),
                 target_orientation_correction_rad=float(np.arccos(np.clip((np.trace(R@original_R.T)-1)/2,-1,1))))
@@ -157,7 +215,14 @@ class ToolPoseServo:
         solved_tool_R=solved_R@np.asarray(diagnostic['measured_grasp_rotation_in_tool']).T
         solved_tool_p=solved_p-solved_tool_R@np.asarray(diagnostic['measured_grasp_position_in_tool_m'])
         tool_error=float(np.linalg.norm(solved_tool_p-diagnostic['desired_tool_position_m']))
-        accepted,quality=ik_acceptance(self.plan['frames'][step-1]['stage'],pe,rotation_error,tool_error)
+        solved_clearance=None
+        if (measured_nipple_pose is not None and
+            self.plan.get('require_clear_mouth_before_cross_plane_m') is not None):
+            from wheel_scene import quat
+            solved_clearance=nipple_mouth_clearance_m(np.r_[solved_tool_p,quat(solved_tool_R)],measured_nipple_pose)
+        accepted,quality=ik_acceptance(self.plan['frames'][step-1]['stage'],pe,rotation_error,tool_error,
+            solved_mouth_clearance_m=solved_clearance)
+        quality['solved_mouth_clearance_m']=solved_clearance
         if not accepted:
             raise RuntimeError(f'Tool servo IK failed: position={pe}, rotation={rotation_error}')
         target[7:13]=solution

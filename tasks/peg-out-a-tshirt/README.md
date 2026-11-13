@@ -1,7 +1,7 @@
 # Peg a T-shirt onto a clothesline
 
-**Development only; not ready to submit.** The latest pickup retains the hem,
-but an independent audit found front/back fabric intersections in its reset.
+**Development only; not ready to submit.** The latest pickup misses the hem,
+and an independent audit finds front/back fabric intersections in its reset.
 The longer trial is held. A valid two-peg hang, full-score demo, Dream run and
 submission media are still missing; no score is claimed.
 
@@ -30,10 +30,10 @@ python tasks/peg-out-a-tshirt/run.py --mode motion-probe \
   --plan tasks/peg-out-a-tshirt/peg-open-plan.json --steps 340 \
   --judging-views --out /tmp/peg-opening
 
-# Short rest-bending diagnostic; this override is not adopted in task physics.
+# Passive reset with the validated sewn-seam rest angles.
 python tasks/peg-out-a-tshirt/probe.py --mode task-layout --line-pegs \
-  --regular-refined --solver-iterations 128 --physics-hz 480 --seconds 1 \
-  --rest-bend-angles restShapeDefault --no-render --output /tmp/shirt-rest-bend
+  --regular-refined --solver-iterations 128 --physics-hz 480 --seconds 5 \
+  --rest-bend-angles restShapeDefault --output /tmp/shirt-rest-bend
 python tasks/peg-out-a-tshirt/audit_self_contact.py /tmp/shirt-rest-bend \
   --out /tmp/shirt-rest-bend-audit.json
 ```
@@ -69,11 +69,45 @@ pairs in that trial's reset. The authored garment has none. Independent
 edge/plane checks confirm sampled crossings away from sewn edges; separated,
 coincident and shared-vertex controls are not flagged. This invalidates the
 reset's layer-integrity claim. Native topology is verified to match the audit.
-A matched contact-filter control did not resolve it. The next bounded control
-tests the documented rest-bending convention: the default tries to flatten
-the garment's sewn side folds instead of preserving their rest angles. The
-longer clipping sequence must wait for a valid reset. `VALIDATION.json` preserves earlier
-results and failures; `MOTION_PLAN.md` describes the unfinished sequence.
+A matched contact-filter control did not resolve it. The default bending
+convention tries to flatten the sewn side folds. Matched one- and five-second controls preserving their actual rest angles
+have zero sampled self-crossings, gravity-consistent initial motion and no
+final fixture intersections. The corrected rest convention is now adopted.
+The follow-up YAM trial113 still has 1,255 transverse pairs at reset and misses
+the garment. The standalone result does not validate the integrated reset.
+A matched YAM control121 changes only the supported force-integration option
+to once per step. All eight recorded reset states have zero transverse
+self-crossings, final fixture checks are clear, and maximum edge strain is
+4.45%. This isolates a numerical instability; it does not establish its exact
+underlying cause.
+
+Diagnostic125 uses that setting with an explicitly taller, 180 mm laundry
+support and a measured lateral hem approach. It completes 320 actions in
+549.94 seconds, but misses the pickup: the hem rises less than 1 mm and remains
+on the support. Eight sampled self-contact states, fifteen fixture checks and
+twelve robot checks are clear. The left target lies in the native fingers'
+central notch; the right hem moves aside during entry.
+
+The local-only `lateral_pad_candidate.py` instead re-observes the hem just
+before insertion and aims at continuous pad surfaces, 8 mm off that notch.
+All 320 commanded rigid checks and fourteen sampled cloth-approach checks
+pass. It is not wired into the runner or tested physically; finger contact
+and retention remain unproven. The draft still specifies the 100 mm support.
+`VALIDATION.json` preserves the evidence and failures.
+
+To reproduce the unsuccessful short pickup diagnostic125:
+
+```bash
+python tasks/peg-out-a-tshirt/run.py --mode motion-probe \
+  --plan tasks/peg-out-a-tshirt/gentle-wide-grasp-plan.json --steps 320 \
+  --regular-refined --solver-iterations 128 \
+  --external-forces-once-diagnostic --raised-support-diagnostic \
+  --state-assisted-grasp --reset-diagnostic --binary-cloth-trace \
+  --judging-views --out /tmp/shirt-lateral-pickup
+```
+
+Use a new output directory for each trial. This is a diagnostic command, not
+an instruction to spend compute automatically.
 
 ## Setup and judging
 

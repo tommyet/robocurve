@@ -1,0 +1,27 @@
+{
+  "kind": "native-wheel-104-approach-controller-failure",
+  "native_complete": false,
+  "completed_actions": 190,
+  "wall_seconds": 790.3254828089848,
+  "error": "RuntimeError: Tool servo IK failed: position=0.03200753051347272, rotation=0.011145970971189113",
+  "nipple0_initial_turns": -0.7500000026694886,
+  "nipple0_final_turns": -0.775599992335275,
+  "net_turn_deg": -9.21599627968309,
+  "measured_hull_samples": 191,
+  "measured_unexpected_intersections": 0,
+  "cause": "Approach latch key0 changed to key1 at first insertion. Early native mouth contact rotated the nipple, so this artificial relatch demanded an unreachable long-handle target.",
+  "correction": "Approach and first insertion share engagement key1; preserve the stable approach orientation through contact. No physics or score change.",
+  "offline_future_check": {
+    "commands": 190,
+    "maximum_tcp_residual_m": 7.039774217902987e-08,
+    "maximum_jaw_residual_m": 6.843031577295568e-08,
+    "unexpected_intersections": 0,
+    "limitation": "Measured190 grasp/nipple held fixed; no native future slip or deformation predicted."
+  },
+  "source_hashes": {
+    "preview.json": "21d2d59cd1a44e12cbe857272556bdd0a57a8b92f421edfba5d5f844c97be344",
+    "trace.jsonl.gz": "32d5e31cc0e44a8f2bcc206dcb94387851a14e5b06278c3682af4dca9c5c54e2"
+  },
+  "score": 0,
+  "next": "Same380-action ordinary slow-quarter route with fixed latch; optionally identical-value notice batching."
+}

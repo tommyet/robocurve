@@ -14,14 +14,15 @@ from mechanics import WheelSpec
 from wheel_scene import x_frame,spoke_phase,wheel_world_frame,NIPPLE_CENTER_INSET_M,WRENCH_TCP_M
 
 
-def nominal_nipple(spoke,flat_phase=0.,clocking=0.):
+def nominal_nipple(spoke,flat_phase=0.,clocking=0.,fixture_layout='reference'):
+    from fixture_layout import axle_position
     spec=WheelSpec();theta=spoke*2*math.pi/spec.spokes;side=1 if spoke%2==0 else -1
     anchor=np.array((spec.hub_flange_radius_m*math.cos(theta+side*spec.cross_angle_rad),
                      spec.hub_flange_radius_m*math.sin(theta+side*spec.cross_angle_rad),side*spec.hub_half_width_m))
     end=np.array((spec.rim_radius_m*math.cos(theta),spec.rim_radius_m*math.sin(theta),0.))
     wheel_R=wheel_world_frame(clocking)
     frame=x_frame(end-anchor)
-    return np.array((.35,0.,1.005))+wheel_R@(end-frame[:,0]*NIPPLE_CENTER_INSET_M),wheel_R@frame@spoke_phase(flat_phase)
+    return axle_position(fixture_layout)+wheel_R@(end-frame[:,0]*NIPPLE_CENTER_INSET_M),wheel_R@frame@spoke_phase(flat_phase)
 
 
 def rz(angle):

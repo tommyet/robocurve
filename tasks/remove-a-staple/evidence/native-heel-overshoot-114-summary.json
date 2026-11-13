@@ -1,0 +1,972 @@
+{
+  "kind": "native_corrected_heel114_contact_failure",
+  "submission_ready": false,
+  "task_score": null,
+  "completed_actions": 129,
+  "wall_seconds": 572.5195919275284,
+  "error": "MaterialDomainError: Paper hinge continuity or staple crossing failed; no task score is valid",
+  "native_material": [
+    {
+      "observations": 13049,
+      "paper": [
+        {
+          "continuity": {
+            "maximum_hinge_endpoint_gap_m": 4.9030857376197535e-05,
+            "maximum_vertex_average_error_m": 3.2204281355704494e-05,
+            "maximum_allowed_gap_m": 2.4999999999999998e-05,
+            "valid": true,
+            "continuity_method": "geometric_empty_aperture",
+            "endpoint_distance_is_stop_condition": false,
+            "maximum_allowed_empty_aperture_m": 0.00015,
+            "geometry": {
+              "measurement": "conservative_endpoint_bound",
+              "maximum_empty_aperture_upper_bound_m": 4.9030857376197535e-05,
+              "shared_edge_overlap_proven": true
+            },
+            "worst_endpoint": {
+              "panel_indices": [
+                123,
+                124
+              ],
+              "positions_m": [
+                [
+                  -0.04666940138742402,
+                  -0.054460816686446326,
+                  1.594559891672895e-05
+                ],
+                [
+                  -0.04666774166663084,
+                  -0.05449739947764809,
+                  4.8548814859666684e-05
+                ]
+              ],
+              "difference_m": [
+                -1.6597207931831615e-06,
+                3.658279120176411e-05,
+                -3.260321594293774e-05
+              ]
+            }
+          },
+          "contact_audit": {
+            "valid": true,
+            "steps": 13049,
+            "first_failure": null
+          },
+          "valid": true
+        },
+        {
+          "continuity": {
+            "maximum_hinge_endpoint_gap_m": 0.00015808453889501342,
+            "maximum_vertex_average_error_m": 0.00010764262634667808,
+            "maximum_allowed_gap_m": 2.4999999999999998e-05,
+            "valid": false,
+            "continuity_method": "geometric_empty_aperture",
+            "endpoint_distance_is_stop_condition": false,
+            "maximum_allowed_empty_aperture_m": 0.00015,
+            "geometry": {
+              "maximum_positive_edge_opening_m": 0.0001514619931982942,
+              "maximum_empty_normal_clearance_m": 9.734551622302319e-08,
+              "maximum_empty_aperture_m": 0.0001514619931982942,
+              "maximum_across_edge_compression_m": 0.00010859374801638228,
+              "maximum_along_edge_slip_m": 0.00011594746968749995,
+              "minimum_shared_edge_overlap_m": 0.0004812262714169943,
+              "edges_without_overlap": 0,
+              "worst_aperture": {
+                "panel_indices": [
+                  215,
+                  237
+                ],
+                "endpoint": 0,
+                "opening_m": 0.0001514619931982942,
+                "normal_clearance_m": 0.0
+              },
+              "interpretation": "Empty aperture geometry only. Compression and tangential slip are reported separately; native hinge fracture is a distinct event.",
+              "measurement": "native_edge_geometry"
+            },
+            "worst_endpoint": {
+              "panel_indices": [
+                215,
+                237
+              ],
+              "positions_m": [
+                [
+                  -0.05835094682272168,
+                  -0.04392248389233315,
+                  5.3259958431310566e-05
+                ],
+                [
+                  -0.05831458997720336,
+                  -0.043769109690931195,
+                  4.1207756727131654e-05
+                ]
+              ],
+              "difference_m": [
+                -3.63568455183233e-05,
+                -0.0001533742014019554,
+                1.2052201704178912e-05
+              ]
+            }
+          },
+          "contact_audit": {
+            "valid": true,
+            "steps": 13049,
+            "first_failure": null
+          },
+          "valid": false
+        }
+      ],
+      "wire_continuity": {
+        "maximum_endpoint_gap_m": 1.9721089449381817e-06,
+        "maximum_allowed_gap_m": 3e-05,
+        "valid": true
+      },
+      "peak_wire_endpoint_gap_m": 7.356660338368023e-06,
+      "peak_paper_hinge_gaps_m": [
+        5.616170934139818e-05,
+        0.00015808453889501342
+      ],
+      "valid": false
+    }
+  ],
+  "native_joint_break_events": {
+    "observer_installed": true,
+    "event_count": 0,
+    "paper_hinge_break_count": 0,
+    "events": [],
+    "interpretation": "Native break notifications only; no joint edits, score or no-damage certificate."
+  },
+  "geometry_diagnostic": {
+    "geometry": [
+      {
+        "maximum_positive_edge_opening_m": 1.8937743648391023e-05,
+        "maximum_empty_normal_clearance_m": 0.0,
+        "maximum_empty_aperture_m": 1.8937743648391023e-05,
+        "maximum_across_edge_compression_m": 3.18881796808074e-05,
+        "maximum_along_edge_slip_m": 3.676773848439097e-05,
+        "minimum_shared_edge_overlap_m": 0.0005427809015818019,
+        "edges_without_overlap": 0,
+        "worst_aperture": {
+          "panel_indices": [
+            100,
+            123
+          ],
+          "endpoint": 1,
+          "opening_m": 1.8937743648391023e-05,
+          "normal_clearance_m": 0.0
+        },
+        "interpretation": "Empty aperture geometry only. Compression and tangential slip are reported separately; native hinge fracture is a distinct event."
+      },
+      {
+        "maximum_positive_edge_opening_m": 0.00015146199319829407,
+        "maximum_empty_normal_clearance_m": 9.734551622298253e-08,
+        "maximum_empty_aperture_m": 0.00015146199319829407,
+        "maximum_across_edge_compression_m": 0.00010859374801638918,
+        "maximum_along_edge_slip_m": 0.0001159474696875023,
+        "minimum_shared_edge_overlap_m": 0.0004812262714169943,
+        "edges_without_overlap": 0,
+        "worst_aperture": {
+          "panel_indices": [
+            215,
+            237
+          ],
+          "endpoint": 0,
+          "opening_m": 0.00015146199319829407,
+          "normal_clearance_m": 0.0
+        },
+        "interpretation": "Empty aperture geometry only. Compression and tangential slip are reported separately; native hinge fracture is a distinct event."
+      }
+    ],
+    "worst_finite_common_edge_length_m": 0.011630330861966957,
+    "worst_finite_edge_samples": [
+      {
+        "common_edge_coordinate_m": -0.05823136920237076,
+        "endpoint_distance_m": 0.00015368176877667624,
+        "points_m": [
+          [
+            -0.058314929034215555,
+            -0.04392229937929407,
+            5.349150509456255e-05
+          ],
+          [
+            -0.05831458997720336,
+            -0.043769109690931195,
+            4.1207756727130285e-05
+          ]
+        ]
+      },
+      {
+        "common_edge_coordinate_m": -0.0466010383404038,
+        "endpoint_distance_m": 6.698267937645667e-05,
+        "points_m": [
+          [
+            -0.04668467430176873,
+            -0.04386271955124456,
+            0.00012825863510895118
+          ],
+          [
+            -0.046684420534314715,
+            -0.04387250992432918,
+            6.199579836472178e-05
+          ]
+        ]
+      }
+    ],
+    "inter_sheet_midplane_crossings": [
+      {
+        "lower_panel": 54,
+        "upper_panel": 32,
+        "points": [
+          [
+            -0.05833513723449679,
+            -0.0584302367003369,
+            5.145771588840653e-05
+          ],
+          [
+            -0.058393293111306976,
+            -0.0584341684043861,
+            5.145474541965484e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 77,
+        "upper_panel": 55,
+        "points": [
+          [
+            -0.05833409284158193,
+            -0.0578522776187428,
+            5.151757161084429e-05
+          ],
+          [
+            -0.058380827354315594,
+            -0.057815480417847294,
+            5.1459015849484224e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 78,
+        "upper_panel": 32,
+        "points": [
+          [
+            -0.057281786167221425,
+            -0.05829181510824599,
+            4.9037815338099856e-05
+          ],
+          [
+            -0.057169687559567986,
+            -0.05827751569628855,
+            4.8796170841778385e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 78,
+        "upper_panel": 55,
+        "points": [
+          [
+            -0.05818946572602404,
+            -0.05822949634144132,
+            5.061495262860227e-05
+          ],
+          [
+            -0.05821233602159012,
+            -0.05820614675421036,
+            5.060828428332733e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 78,
+        "upper_panel": 55,
+        "points": [
+          [
+            -0.058333360609835815,
+            -0.05808258585959188,
+            5.057299686262715e-05
+          ],
+          [
+            -0.05821233602159012,
+            -0.05820614675421036,
+            5.060828428332734e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 100,
+        "upper_panel": 55,
+        "points": [
+          [
+            -0.05650749054233612,
+            -0.05668843459960347,
+            6.451529082250146e-05
+          ],
+          [
+            -0.057172902668278174,
+            -0.05663273531555305,
+            6.175452604505866e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 100,
+        "upper_panel": 77,
+        "points": [
+          [
+            -0.05655816034232188,
+            -0.05659731306724055,
+            5.888178454531404e-05
+          ],
+          [
+            -0.055794988284961634,
+            -0.05666060213004208,
+            6.201111195727888e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 100,
+        "upper_panel": 77,
+        "points": [
+          [
+            -0.05655816034232188,
+            -0.05659731306724055,
+            5.8881784545314044e-05
+          ],
+          [
+            -0.05676760072356593,
+            -0.05657994439485024,
+            5.802299062082686e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 100,
+        "upper_panel": 77,
+        "points": [
+          [
+            -0.05676760072356593,
+            -0.05657994439485024,
+            5.802299062082685e-05
+          ],
+          [
+            -0.05831669180218491,
+            -0.056451479887253984,
+            5.167106364813339e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 122,
+        "upper_panel": 100,
+        "points": [
+          [
+            -0.058334347507383186,
+            -0.05540688703951795,
+            5.2199598226563426e-05
+          ],
+          [
+            -0.05838194218667978,
+            -0.0553944459302808,
+            5.20982006204553e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 123,
+        "upper_panel": 77,
+        "points": [
+          [
+            -0.05725763667692743,
+            -0.05608255337433603,
+            5.381149388532118e-05
+          ],
+          [
+            -0.0572736241407323,
+            -0.05605911318333301,
+            5.3639318536327536e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 123,
+        "upper_panel": 100,
+        "points": [
+          [
+            -0.05728120173583316,
+            -0.055938361492374876,
+            5.2586394856254756e-05
+          ],
+          [
+            -0.056997521861815746,
+            -0.05604833853631664,
+            5.2931100628437995e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 123,
+        "upper_panel": 100,
+        "points": [
+          [
+            -0.05728120173583316,
+            -0.055938361492374876,
+            5.2586394856254756e-05
+          ],
+          [
+            -0.05735933434294919,
+            -0.05590807103487998,
+            5.2491454174396716e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 123,
+        "upper_panel": 100,
+        "points": [
+          [
+            -0.05833384136270096,
+            -0.05553027404909093,
+            5.1307308855998504e-05
+          ],
+          [
+            -0.05735933434294919,
+            -0.05590807103487998,
+            5.249145417439671e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 145,
+        "upper_panel": 123,
+        "points": [
+          [
+            -0.058334658801356104,
+            -0.05348193323988299,
+            5.160897857709584e-05
+          ],
+          [
+            -0.058370038998735975,
+            -0.053456615087828875,
+            5.161241276855699e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 146,
+        "upper_panel": 123,
+        "points": [
+          [
+            -0.057512120963260395,
+            -0.054315607964838204,
+            4.989270678998517e-05
+          ],
+          [
+            -0.05735853912915236,
+            -0.054440516690234295,
+            4.977760130990933e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 146,
+        "upper_panel": 123,
+        "points": [
+          [
+            -0.057512120963260395,
+            -0.054315607964838204,
+            4.989270678998517e-05
+          ],
+          [
+            -0.057563255473038366,
+            -0.0542740200617036,
+            4.993103073845615e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 146,
+        "upper_panel": 123,
+        "points": [
+          [
+            -0.058334098406854926,
+            -0.053647090393212464,
+            5.050875691600405e-05
+          ],
+          [
+            -0.057563255473038366,
+            -0.0542740200617036,
+            4.993103073845616e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 191,
+        "upper_panel": 169,
+        "points": [
+          [
+            -0.05833521522943816,
+            -0.04986239790614836,
+            5.1928032480581736e-05
+          ],
+          [
+            -0.058356653553546765,
+            -0.04989907460281416,
+            5.19065285986038e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 192,
+        "upper_panel": 146,
+        "points": [
+          [
+            -0.058178708345788234,
+            -0.05122214716005359,
+            5.1559722424682676e-05
+          ],
+          [
+            -0.05813598104989259,
+            -0.05116524185773637,
+            5.132181303047623e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 192,
+        "upper_panel": 146,
+        "points": [
+          [
+            -0.058135981049892586,
+            -0.05116524185773637,
+            5.132181303047622e-05
+          ],
+          [
+            -0.05769938455583226,
+            -0.050583771512741474,
+            4.8890804813428305e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 192,
+        "upper_panel": 192,
+        "points": [
+          [
+            -0.05817955300717865,
+            -0.04789138692743746,
+            4.205884288789534e-05
+          ],
+          [
+            -0.058160079056991,
+            -0.047903292364869426,
+            4.2058368297140835e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 214,
+        "upper_panel": 192,
+        "points": [
+          [
+            -0.058334898267918,
+            -0.04664170672716387,
+            5.209352627080174e-05
+          ],
+          [
+            -0.05834255047749017,
+            -0.046636838739544745,
+            5.209536149240794e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 215,
+        "upper_panel": 169,
+        "points": [
+          [
+            -0.056000344618263885,
+            -0.04788686872453533,
+            5.825591156752327e-05
+          ],
+          [
+            -0.056028201775430775,
+            -0.047874838597252854,
+            5.811013224113794e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 215,
+        "upper_panel": 192,
+        "points": [
+          [
+            -0.05522278798687465,
+            -0.0478856501533587,
+            5.773934918350776e-05
+          ],
+          [
+            -0.05656102114142814,
+            -0.04752972327962106,
+            5.375681733039819e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 215,
+        "upper_panel": 192,
+        "points": [
+          [
+            -0.05657552703740288,
+            -0.047525865178969846,
+            5.371364832611765e-05
+          ],
+          [
+            -0.05656102114142814,
+            -0.04752972327962106,
+            5.37568173303982e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 215,
+        "upper_panel": 192,
+        "points": [
+          [
+            -0.05657552703740288,
+            -0.047525865178969846,
+            5.371364832611765e-05
+          ],
+          [
+            -0.05833568762423422,
+            -0.04705771921141898,
+            4.8475476203575446e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 237,
+        "upper_panel": 215,
+        "points": [
+          [
+            -0.058333704468437046,
+            -0.045472715049577235,
+            5.1835338176241514e-05
+          ],
+          [
+            -0.05834315535906889,
+            -0.04544158794454013,
+            5.180545829530718e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 238,
+        "upper_panel": 215,
+        "points": [
+          [
+            -0.056565133069813534,
+            -0.04548127532919325,
+            6.318745769304352e-05
+          ],
+          [
+            -0.05703532719623508,
+            -0.04533632750539358,
+            6.031067709329702e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 238,
+        "upper_panel": 215,
+        "points": [
+          [
+            -0.057107745107175985,
+            -0.04531400306958046,
+            5.9867603840012275e-05
+          ],
+          [
+            -0.05703532719623508,
+            -0.04533632750539358,
+            6.0310677093297015e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 238,
+        "upper_panel": 215,
+        "points": [
+          [
+            -0.057107745107175985,
+            -0.04531400306958046,
+            5.986760384001228e-05
+          ],
+          [
+            -0.05833532755986166,
+            -0.04493557340605904,
+            5.235690732971761e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 260,
+        "upper_panel": 237,
+        "points": [
+          [
+            -0.05575394790131322,
+            -0.0437454796301001,
+            5.512639461964684e-05
+          ],
+          [
+            -0.047800793647095566,
+            -0.043862584596844695,
+            6.000036649543236e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 260,
+        "upper_panel": 237,
+        "points": [
+          [
+            -0.05575394790131322,
+            -0.0437454796301001,
+            5.512639461964684e-05
+          ],
+          [
+            -0.057223872825378386,
+            -0.04372383595215202,
+            5.422557307005718e-05
+          ]
+        ]
+      },
+      {
+        "lower_panel": 260,
+        "upper_panel": 237,
+        "points": [
+          [
+            -0.057223872825378386,
+            -0.04372383595215202,
+            5.4225573070057205e-05
+          ],
+          [
+            -0.05831406681975494,
+            -0.04370778356244904,
+            5.355746395285709e-05
+          ]
+        ]
+      }
+    ],
+    "heel_intersections": [
+      {
+        "sheet": 0,
+        "panel": 55,
+        "intersection_ball_radius_m": 3.415991301542562e-05
+      },
+      {
+        "sheet": 0,
+        "panel": 78,
+        "intersection_ball_radius_m": 3.4982221618924416e-05
+      },
+      {
+        "sheet": 0,
+        "panel": 100,
+        "intersection_ball_radius_m": 4.347393492674933e-05
+      },
+      {
+        "sheet": 0,
+        "panel": 123,
+        "intersection_ball_radius_m": 3.8339683365345295e-05
+      },
+      {
+        "sheet": 0,
+        "panel": 146,
+        "intersection_ball_radius_m": 3.7661486440049297e-05
+      },
+      {
+        "sheet": 0,
+        "panel": 169,
+        "intersection_ball_radius_m": 4.3126497217094856e-05
+      },
+      {
+        "sheet": 0,
+        "panel": 192,
+        "intersection_ball_radius_m": 4.053888319768481e-05
+      },
+      {
+        "sheet": 0,
+        "panel": 215,
+        "intersection_ball_radius_m": 4.817692275309462e-05
+      },
+      {
+        "sheet": 0,
+        "panel": 238,
+        "intersection_ball_radius_m": 5.000000000000003e-05
+      },
+      {
+        "sheet": 0,
+        "panel": 260,
+        "intersection_ball_radius_m": 3.976546011095691e-05
+      },
+      {
+        "sheet": 1,
+        "panel": 32,
+        "intersection_ball_radius_m": 4.759547637580783e-05
+      },
+      {
+        "sheet": 1,
+        "panel": 55,
+        "intersection_ball_radius_m": 4.884408400688059e-05
+      },
+      {
+        "sheet": 1,
+        "panel": 77,
+        "intersection_ball_radius_m": 4.575766468187915e-05
+      },
+      {
+        "sheet": 1,
+        "panel": 100,
+        "intersection_ball_radius_m": 5.000000000000837e-05
+      },
+      {
+        "sheet": 1,
+        "panel": 123,
+        "intersection_ball_radius_m": 4.999999999999797e-05
+      },
+      {
+        "sheet": 1,
+        "panel": 146,
+        "intersection_ball_radius_m": 5.0000000000000145e-05
+      },
+      {
+        "sheet": 1,
+        "panel": 169,
+        "intersection_ball_radius_m": 5.00000000000049e-05
+      },
+      {
+        "sheet": 1,
+        "panel": 192,
+        "intersection_ball_radius_m": 4.999999999999797e-05
+      },
+      {
+        "sheet": 1,
+        "panel": 215,
+        "intersection_ball_radius_m": 4.999999999999797e-05
+      },
+      {
+        "sheet": 1,
+        "panel": 237,
+        "intersection_ball_radius_m": 9.906209230943883e-06
+      }
+    ],
+    "heel_minimum_z_m": -6.361042969920891e-08,
+    "limitation": "Saved first-invalid native state only; no dynamics or changed threshold."
+  },
+  "heel_descent": [
+    {
+      "step": 100,
+      "actual_lowest_heel_z_m": 0.05808880419343835,
+      "desired_lowest_heel_z_m": 0.058878596223646135,
+      "tool_position_error_m": 0.011812220121935927
+    },
+    {
+      "step": 110,
+      "actual_lowest_heel_z_m": 0.04411193962626222,
+      "desired_lowest_heel_z_m": 0.038966351777506666,
+      "tool_position_error_m": 0.013374213321406796
+    },
+    {
+      "step": 115,
+      "actual_lowest_heel_z_m": 0.012350729792968201,
+      "desired_lowest_heel_z_m": 0.012596076778520994,
+      "tool_position_error_m": 0.015841288225371196
+    },
+    {
+      "step": 118,
+      "actual_lowest_heel_z_m": 0.0019964242941066077,
+      "desired_lowest_heel_z_m": 0.006220002990059768,
+      "tool_position_error_m": 0.014470125619205354
+    },
+    {
+      "step": 120,
+      "actual_lowest_heel_z_m": 0.0014531869675253684,
+      "desired_lowest_heel_z_m": 0.005775560464302839,
+      "tool_position_error_m": 0.012370746367292754
+    },
+    {
+      "step": 125,
+      "actual_lowest_heel_z_m": 0.0030304266914436833,
+      "desired_lowest_heel_z_m": 0.002476949779037267,
+      "tool_position_error_m": 0.0024998801583485776
+    },
+    {
+      "step": 129,
+      "actual_lowest_heel_z_m": -2.3422619888947838e-07,
+      "desired_lowest_heel_z_m": 0.0003380576457998534,
+      "tool_position_error_m": 0.001421266865023237
+    }
+  ],
+  "interpretation": [
+    "The151.462um aperture alone is not a tear or steel passage; it is below the300um wire section and the2mm tear rubric.",
+    "Independent exact native solids show the heel crossing both100um sheets and34 transverse inter-sheet midplane triangle pairs. Contact validity fails independently of the conservative aperture threshold.",
+    "The desired lowest heel corner was corrected to the upper sheet. The measured tool nevertheless overshot during the0.6s final descent before insertion; this motivates a timing-only correction.",
+    "The next584-action candidate preserves geometry, material, integrity guards and the extraction/release suffix. Slow descent still needs native validation."
+  ],
+  "evidence_sha256": {
+    "preview.json": "e5af4314ad2d9bbc6d78daa6a185af5e887da30a508373ec9516f18f6ad86f0e",
+    "trace.jsonl.gz": "4948c9abd2ec48233b40e1879e5749e7e8c8ffed5ec346c8781380547c16936e",
+    "first-invalid-state-0.npz": "d1f294f54551130d3e43c53892e126ee931829042467499b7bbeeeddcbaeff89"
+  },
+  "geometry_analysis_sha256": "53985e39476b342f13b408ef96680efc10e0a48edb0fafb9293a28555836e931",
+  "source_sha256": {
+    "plan_reach.py": "9bfa2fbdc8ada8e424fe2ff90417116eb225be3a4b778a17df98c29bcb86e1fe",
+    "generate_meshes.py": "55e8e16af515f20404b65af09fd669d2ccafad45510104b68ee3a57017b2307b",
+    "test_contact_probe.py": "38aa6d75f81425208aa79d8deec5dea2f916879977390e9641059768d2654260",
+    "preview_yam.py": "1b649c99cf30a284cb096a5f9610f626e32b6a78de19534d548aa13482e4ce02",
+    "runtime_config.py": "8c57effa052bb7afd3bf94f8e6bbe0e7c58f789dd17a7ab63101236911f946cf",
+    "task.py": "0e851ccf183f82612f3744712143cd6e91611a6c244bfbe884e278a7d62775dd",
+    "test_contact_guard.py": "abcc44cf37a71e81a469e2c006f45887ac6515ee3d2069004f9a68a353ffe55d",
+    "test_assess_trace.py": "296c8033e0e174ba20933e1fb608fc6785a2f950f46f51ff1708c9a0778a5da7",
+    "contact_guard.py": "91cda642829dd6adc6def86bc9810684e4cf8a1b4d895f8d9c815d277e44842d",
+    "tool_pose_servo.py": "b08008117bd5d960d65da7aa7bce843a03b31a0bc315a9107974b594a2ab9f95",
+    "preview_panels.py": "f540540109720f2fc978b52d37ca22cbe485941d2a49d514bd60caa831e00d70",
+    "test_facet_paper.py": "dbbd65fa47716524708a8c7d751203be03c45c59fbbb1f6a6f446aaf8b28c582",
+    "contact_probe.py": "72b43b627c779262bddb0c91fb76901333f8884375b2a2e4d08a59a160d48c6c",
+    "gentle_touchdown_plan.py": "da95100d8708e59edad170ff6d4de20b7955ea0f644eee52cf559ba6019f2183",
+    "arena_hardware.py": "0968977d3adbadd99114d1454fcc7902417ae4208f49f9908760af8a2a664921",
+    "physx_material.py": "8ceacfce6157cff3158c37c0da573061f54ed1a43fdb9093b779d01cef3b46fc",
+    "native_paper.py": "c9e94b931a94c6672c15028c5486ebd5b5acf74ce6c99a3b25a6bfb096d4ce94",
+    "motion_plan.py": "cbd36490e052e63b6e4caf784dee2ae142e59d7e8773a1bcd46b28b93004407f",
+    "scoring.py": "7c08b3c98f35a9b7361f244a378e1f8906cf1f5d04eef93584fbfe83cfa62578",
+    "audit_robot_plan.py": "42cae4b94d61b33d70d79e3cf48385616fc958907c81a975f7334d891d3ad2c2",
+    "materials.py": "9840b118f8a908b85260cf767025ec1a009162e99820c540032e2171d085aa83",
+    "test_tool_approach.py": "32ec64eba601c8dac32840fe573dc8e2429d099c1c3da283d1d68136d0ec2743",
+    "finalize_plan.py": "9b3527132092db9193b5a58832f283cabc6759e73f68116f2859acad00652a8c",
+    "paper.py": "5d67f9dbf4ae8cd9cdc6c716d55fe48f6859cf4ae85cd20ecdfc8b62205db47b",
+    "one_hand_plan.py": "8ec20e14e3686c36196e6960b74cacd7b5b1281f56e1b4f8e9a369e9ca33e61a",
+    "facet_paper.py": "218cc13aad5f1d90d78ced0175bd1910ad7ad26d5ab52283af1d9c283fd57261",
+    "coordinate_frame.py": "2de2d7a89ce3d4280bdc7595180cda439d2a1a42655feadeec892af020df0e99",
+    "full_probe.py": "cf0e79b731277ed4cf7b803f7f05cf80a442adc77ee1523b8d566c3dccd57cad",
+    "test_full_scene.py": "42e39092df183f02393525983a0ff3d5b2c99d9bb605985c6349732a040be689",
+    "test_dream_policy.py": "41692ccc9998a627af3b083345059314513a3f444062265d1c0645b6cbdf2a7c",
+    "test_scoring.py": "57223cba16d592c6acee7accd1bd91cfb79e5580bbb071a61782f903a9bd16ce",
+    "paper_probe.py": "8962e5a20c69cf21c11078435cbf5b5b9e4513118caedcfdb05a1944ac57c339",
+    "task_panels.py": "b73c4c72ad9f50e1b6948b814451af6883edd1696355e58f894310793a0b94b6",
+    "arena_paper.py": "27423244e37da25fe6fb12a63b2f55cd616a98567a346be96ee2ca21382c1de5",
+    "test_tool_pose_servo.py": "4d1718993a763186a0d2b14cfafe5dce165bca60de99ee34e2385ab27d98a1a2",
+    "native_probe.py": "7e9b5ba2f4e35cff8f12d897f164ad2a4c49c43e7861e34810ac70282df154ca",
+    "test_physx_material.py": "f8435ff35413d4a63daf9b566915c363f61e1975962b65777e0082de5a0faf23",
+    "test_coordinate_frame.py": "10e20c5c5982d32f774f58b077f35262b5289f46ae7156a784660aa8da4f1d5e",
+    "facet_probe.py": "964578259e8a86b4710950e6bf99f5ce1b0cd0367b2ee64fab07050ee87f2c55",
+    "probe.py": "eb14c8070c257b22b32811860824f74a08b82cb7819777053ce272e7d6f1e377",
+    "full_scene.py": "1815f5d88830e775a89f119a68cd7e05e350932ab9af4671e9d14209760cde9e",
+    "joint_tracking.py": "7f59427da3c855a98b5846ef1960c51f291fc86aaa5256538a239b021428f17e",
+    "dream_policy.py": "e26692272eaf90cb82bf795bdc4f99ae30cc521c0cf273ea187fb0b841b65691",
+    "joint_break_observer.py": "6e72c4cde484916cd3b3cc5c12366a4a9d97a5c0fce6a00ee2f3f3b52ddb0f2b",
+    "arena_panels.py": "c2213a36c70b7825dd337c00ffadff0b1dd3542d0fc6cc89e40ad353a163985a",
+    "review_views.py": "c3dec02a8e896b4c7a126de1edccc79227264ad986c864f17d21074892173dfc",
+    "test_paper.py": "31698450d668ff1fa78a6bb3960905fa70810ca9ef270aa624ccdec75f37ae6d",
+    "test_materials.py": "62701546d805fe657a3bcbd8c1b3bfc03a19f44fd3b7d60ea908e1d20d473149",
+    "assess_trace.py": "68ccb7e01c487fa19f4e5abff119f866db9993af346adc48e4531de703b5409d"
+  }
+}

@@ -1,10 +1,21 @@
 import unittest
 import numpy as np
 from scipy.spatial.transform import Rotation
-from tool_entry import ToolEntryCompensation
+from tool_entry import ToolEntryCompensation,assistance_stop_step
 
 
 class EntryTests(unittest.TestCase):
+    def test_assistance_ends_before_intentional_release(self):
+        prefix={'frames':[{}]*294}
+        self.assertEqual(assistance_stop_step(prefix),294)
+        release={'frames':[{}]*954,'pose_assisted_entry_until_step':894,
+                 'requires_pose_compensation_release_boundary':True}
+        self.assertEqual(assistance_stop_step(release),894)
+        for stop in (True,140,955,894.,None):
+            with self.assertRaises(ValueError):assistance_stop_step(dict(release,pose_assisted_entry_until_step=stop))
+        del release['pose_assisted_entry_until_step']
+        with self.assertRaises(ValueError):assistance_stop_step(release)
+
     def test_measured_grasp_maps_target_without_moving_object(self):
         rng=np.random.default_rng(31)
         for _ in range(100):

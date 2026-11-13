@@ -1,0 +1,78 @@
+{
+  "kind": "local_relocated_wheel_route_screen",
+  "date": "2026-11-13",
+  "native_validated": false,
+  "task_score": null,
+  "fixture_layout": "forward10-right50-lower10",
+  "fixture_translation_m": [
+    0.01,
+    -0.05,
+    -0.01
+  ],
+  "stand_change": "Base remains on the tabletop; upright is 10 mm shorter. Wheel/axle/pointer move together. Wrench pickup is unchanged.",
+  "action_count": 652,
+  "seconds": 32.6,
+  "max_command_speed_fraction": 0.7162625976562506,
+  "nominal_frames": 652,
+  "nominal_unexpected_intersections": 0,
+  "measured_cases": [
+    {
+      "fixture_reference_action": 148,
+      "grasp_reference_action": 84,
+      "frames": 570,
+      "failure": null,
+      "unexpected_intersections": 0,
+      "maximum_ik_position_error_m": 7.146513836534373e-08
+    },
+    {
+      "fixture_reference_action": 174,
+      "grasp_reference_action": 174,
+      "frames": 570,
+      "failure": null,
+      "unexpected_intersections": 0,
+      "maximum_ik_position_error_m": 7.896480961840015e-08
+    }
+  ],
+  "feedback_change": "Blend measured nipple alignment during the clear-front transition only; retain full feedback and unchanged guards during contact and turning.",
+  "sha256": {
+    "plan": "fa32f49970ab4949344928fbd549382d602ee5911c79ecfba556c02b1829619e",
+    "audited_plan": "038fb0536d81de834e04df8aa63f4d800932ec9fd0df3392acde8044d2ddf89a",
+    "nominal_screen": "2a318d048d0851438c98f367be51ef3ccef40afba01b0d8880206ad831582ea8",
+    "measured_screen": "3da2678db38d7bef61655acb549ed1e3c83534177df60b500a6a1c156e08c57c"
+  },
+  "source_sha256": {
+    "relocated_plan.py": "2ac031e5a14eb39f86799447d3c5e60cd04867bb677c1e607c66771b06cc7ae9",
+    "fixture_layout.py": "70937421ce232a3355b7ccea6b6d92dbd9ca7f1f01e637a3a9cbf3e5c13601bf",
+    "wheel_scene.py": "05dd021b25fc8ceada9b8bb7b8cbd9722beee4c3c7b2869ca3fb5461e1d62cb8",
+    "motion_plan.py": "7f27c17f4f88f44135c43c6c64229ed2c057624867586a387f803a757af34ec2",
+    "plan_turns.py": "c0407bbe8526259290e81a229fbcb7aee3466ca8ce90a213080816423118876c",
+    "tool_pose_servo.py": "41f0f971f3857419db29db87740f27cf10194e9d6dd498d1852a0dc89cc6f22f"
+  },
+  "measured_trace_sha256": "07e45f0be7703bcccea4e5a98d15e32f1fd50c5845e16541fbc8b3c6c6424396",
+  "recompiled_plan_equivalence": "After the screens, added source-angle/reset validation and fixture dependency pinning. Recompiled plan is identical in every field except source_sha256, including all 652 commands and feedback fractions. Original audited plan and reports are preserved.",
+  "rejected_alternatives": [
+    {
+      "translation_m": [
+        0.0,
+        -0.03,
+        -0.01
+      ],
+      "reason": "Measured action 174 orientation leaves the clear-front transition at a wrist limit; endpoint reach alone was insufficient."
+    },
+    {
+      "translation_m": [
+        0.02,
+        -0.03,
+        -0.025
+      ],
+      "reason": "Nominal route has 145 unintended wrench-handle/table overlaps, up to 3.869 mm intersection-ball radius."
+    }
+  ],
+  "limitations": [
+    "Counterfactual commanded poses and fixed measured grasp/fixture snapshots; no prediction of actual slip, tracking or settling.",
+    "Actual rim/jaw hulls and robot hulls; conservative round-shaft enclosures. Sampled poses, not continuous-time clearance.",
+    "Intended finger/rim and jaw/nipple overlaps are recorded, not certified as physically valid contacts.",
+    "One quarter cycle only. Native reset, contact, withdrawal, full repair, final revolution and Dream remain unproved."
+  ],
+  "next": "Run the explicit relocated passive gate, then the matching two-action YAM gate. Only after both pass attempt the 652-action diagnostic; see RELOCATION_DIAGNOSTIC.md."
+}

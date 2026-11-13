@@ -5,7 +5,14 @@ CONFIGS=[('judging_key',(.650,.270,1.010),(.351,.170,.925),(0.,0.,1.),50.,(1280,
          ('judging_gauge',(.480,-.150,.900),(.360,0.,.800),(0.,0.,1.),65.,(1280,720))]
 
 
-def configure(embodiment):
+def configs(fixture_layout='reference'):
+    from fixture_layout import offset
+    delta=offset(fixture_layout)
+    return [(name,tuple(np.asarray(eye)+delta),tuple(np.asarray(target)+delta),up,focal,resolution)
+            for name,eye,target,up,focal,resolution in CONFIGS]
+
+
+def configure(embodiment,fixture_layout='reference'):
     """Register with the native YAM renderer before the environment is built."""
     import isaaclab.sim as sim_utils
     from isaaclab.sensors import CameraCfg
@@ -15,7 +22,7 @@ def configure(embodiment):
     from yam_arena.embodiment import RENDERER
     fields=[(name,CameraCfg,value) for name,value in vars(embodiment.camera_config).items()
             if isinstance(value,CameraCfg)]
-    for name,eye,target,up,focal,resolution in CONFIGS:
+    for name,eye,target,up,focal,resolution in configs(fixture_layout):
         q=Gf.Matrix4d().SetLookAt(Gf.Vec3d(*eye),Gf.Vec3d(*target),Gf.Vec3d(*up)).GetInverse().ExtractRotationQuat()
         config=CameraCfg(prim_path='{ENV_REGEX_NS}/'+name,height=resolution[1],width=resolution[0],
             data_types=['rgb'],spawn=sim_utils.PinholeCameraCfg(focal_length=focal,horizontal_aperture=20.955,
@@ -25,10 +32,10 @@ def configure(embodiment):
     embodiment.camera_config=make_configclass('WheelJudgingCameraCfg',fields,bases=(ArenaCameraCfg,))()
 
 
-def capture_final(base,output):
+def capture_final(base,output,fixture_layout='reference'):
     from PIL import Image
     metadata=[]
-    for name,eye,target,up,focal,resolution in CONFIGS:
+    for name,eye,target,up,focal,resolution in configs(fixture_layout):
         value=base.scene[name].data.output['rgb']
         value=getattr(value,'torch',value)
         pixels=value.detach().cpu().numpy()[0] if hasattr(value,'detach') else np.asarray(value)[0]

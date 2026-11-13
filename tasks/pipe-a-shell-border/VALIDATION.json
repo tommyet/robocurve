@@ -1,42 +1,47 @@
 {
-  "status": "development_not_submission_ready",
-  "checked_utc": "2026-11-13T11:52:00Z",
-  "cpu_tests_passed": 43,
+  "status": "ready_for_user_review",
+  "checked_utc": "2026-11-13T13:30:09.718740+00:00",
+  "cpu_tests_passed": 55,
   "native_simulator_run": true,
   "robot_demo_run": true,
-  "dream_run": false,
+  "dream_run": true,
   "media_uploaded": false,
-  "scores": null,
+  "scores": {
+    "demo": 1.0,
+    "dream": 0.0
+  },
   "paid_compute_used_usd": null,
   "remaining_gates": [
-    "Native099 independently scores1.0 with six ridged shells over87mm; final close-up repeat105 is running.",
-    "Exact small-ridge photo agreement, uninterrupted Dream baseline and final paired rescoring remain pending.",
-    "No media upload or PR; user review is required before submission."
+    "User review; no media upload or PR is authorized in this request."
   ],
   "sources_sha256": {
-    "audit_run.py": "27a34c14178caa3e6d76689437917d9d40503eb38a75453536d94778ca50a6a9",
-    "contact_audit.py": "789e5285c8283d915fee82c2a5deab0519e44005edba0085d6f37f3a6062f147",
-    "dream_policy.py": "ad92ac9ddcf4c1d48c9985fcd0a0fc116144a995d8d4b0368e476b3f432b611b",
-    "joint_tracking.py": "a5e2cee60f6a84e0a46d95240f1a098794e95a12c1ac166b3c7d5be184ff3a44",
-    "learn_tracking.py": "1cb75143d727ed3977c66c7fa1f58a836a0c5001fd6621cba6ecece0c8709663",
-    "material.py": "49a59537b8b3c7e26808715b68e12c5f1cddbc30c6387d825936aac28ab6ea54",
-    "native.py": "449756a20db7a7f585a5d5a7a702209e57c55ba2c8b55092ffaf4f9bdd2f73cc",
-    "plan.py": "d30d85b075a439865d750dee90a7a059637f21f9330a8e0aa0924ce4e0eb9c2b",
-    "preview_yam.py": "d4bb3bf7b30da1088bde94a707936f76d29d727dcbf45935d5ae1a2892b00f22",
-    "probe.py": "dc2421d3342eda2052d7340d10bbf856493ad5b30b121ad839fddda7c7a57c17",
-    "probe_native.py": "8aa6cc9d6ee650d364e2681896e360d08c03d768053a568377a5d7e2dab38515",
-    "probe_shell_shape.py": "a4e2ab3a31c23b0acc9baeef718887a8d9e74c8fca1f2ed91659c2aa9732289e",
-    "replay_material.py": "fffc379bd85001fabb01bde5ae425701dce38cd2f32f5670446065ceff6ff680",
-    "review_views.py": "e0530fb097624103fd40f8bff6be89ee0c604189252231b43e1aafe8ec901f07",
-    "run.py": "3f23a922f9bba0e959c19624107defc95f13e580f0cd9efee832e4ae1b88b893",
-    "scene.py": "893a2016851d05ec62ca47f22cb3aca3c11fc19a2ef81333372132dd856dfcf5",
-    "scoring.py": "744ec375c9a0b5c2e09f0190d278f74839a40d5dcc84426a58d44064afcf1601",
-    "scripted_plan.py": "27a6c93162569cc520c8949fe67780e8a77afdcdb82f224bdda249ec47300b32",
-    "scripted_servo.py": "485d391accda6b836864334bb2d074d7695e27bc6b6c3b111aefae902c320a55",
-    "test_learn_tracking.py": "e6c8af0d8ec9e91edbacbaf9dbb728e8534af7e4d4288d2cbda00e6a3bc7fd74",
-    "test_material.py": "e586febb3611a550ce05f3ea6cad6371f69eb77c4505c63d66457185ddbe7249",
     "test_release.py": "d2b6b9b3388736c2a8e6d85cba253c43086dcfab7885be8b7a3973b0e7523f19",
-    "test_scripted_servo.py": "f5c48f4db8c9958760f702e8a2615aeae3ef263d71477351aaa91a3962f9c1af"
+    "preview_yam.py": "d4bb3bf7b30da1088bde94a707936f76d29d727dcbf45935d5ae1a2892b00f22",
+    "plan.py": "d30d85b075a439865d750dee90a7a059637f21f9330a8e0aa0924ce4e0eb9c2b",
+    "run.py": "3f23a922f9bba0e959c19624107defc95f13e580f0cd9efee832e4ae1b88b893",
+    "test_learn_tracking.py": "e6c8af0d8ec9e91edbacbaf9dbb728e8534af7e4d4288d2cbda00e6a3bc7fd74",
+    "material.py": "49a59537b8b3c7e26808715b68e12c5f1cddbc30c6387d825936aac28ab6ea54",
+    "probe_native.py": "8aa6cc9d6ee650d364e2681896e360d08c03d768053a568377a5d7e2dab38515",
+    "scripted_plan.py": "27a6c93162569cc520c8949fe67780e8a77afdcdb82f224bdda249ec47300b32",
+    "scoring.py": "4c3af236413ef7ca851b46203e74e0e4c1c53bf9734d693bd0581782fbf7f2d4",
+    "test_photo_profile.py": "82f9d24f858fc8a5c9e0276739b4f9425dc90a2404a7b3bdd70afe0e7debf0e3",
+    "test_material.py": "93515a0b290a4095b6aead10e6f5a9ac664fae6516cc077844e30d44f2eb9334",
+    "photo_profile.py": "e60fd0215eeef154e4fcb46d05a0ad8477a81acdf1e0037992c99c8d45b58fe6",
+    "replay_material.py": "fffc379bd85001fabb01bde5ae425701dce38cd2f32f5670446065ceff6ff680",
+    "scene.py": "893a2016851d05ec62ca47f22cb3aca3c11fc19a2ef81333372132dd856dfcf5",
+    "native.py": "449756a20db7a7f585a5d5a7a702209e57c55ba2c8b55092ffaf4f9bdd2f73cc",
+    "test_scripted_servo.py": "f5c48f4db8c9958760f702e8a2615aeae3ef263d71477351aaa91a3962f9c1af",
+    "probe_shell_shape.py": "a4e2ab3a31c23b0acc9baeef718887a8d9e74c8fca1f2ed91659c2aa9732289e",
+    "plot_judging.py": "9103ca615f3dcfa3e6985ac116bbd1d7f9353a307a6ed46c50a4a7410bfaf592",
+    "probe.py": "dc2421d3342eda2052d7340d10bbf856493ad5b30b121ad839fddda7c7a57c17",
+    "joint_tracking.py": "a5e2cee60f6a84e0a46d95240f1a098794e95a12c1ac166b3c7d5be184ff3a44",
+    "scripted_servo.py": "485d391accda6b836864334bb2d074d7695e27bc6b6c3b111aefae902c320a55",
+    "dream_policy.py": "ad92ac9ddcf4c1d48c9985fcd0a0fc116144a995d8d4b0368e476b3f432b611b",
+    "contact_audit.py": "789e5285c8283d915fee82c2a5deab0519e44005edba0085d6f37f3a6062f147",
+    "audit_run.py": "27a34c14178caa3e6d76689437917d9d40503eb38a75453536d94778ca50a6a9",
+    "learn_tracking.py": "1cb75143d727ed3977c66c7fa1f58a836a0c5001fd6621cba6ecece0c8709663",
+    "review_views.py": "e0530fb097624103fd40f8bff6be89ee0c604189252231b43e1aafe8ec901f07",
+    "finish_plan.py": "7367e11702d3ddbaa8083bc3406107105819f17734e4c2b9a3eca487cff2c758"
   },
   "cpu_probe": {
     "simulated_seconds": 1.500000000000022,
@@ -61,11 +66,12 @@
     "evidence/native-three-shell-030-031.json",
     "evidence/native-three-shell-033-035.json",
     "evidence/native-three-shell-038-042.json",
-    "evidence/native-six-shell-099.json"
+    "evidence/native-six-shell-099.json",
+    "evidence/native-six-shell-111.json"
   ],
   "full_score_demo": true,
   "state_assisted_scripted_demo": {
-    "status": "in_development",
+    "status": "native_full_score_demo_verified",
     "assistance": "Native barrel/plunger poses guide ordinary bounded robot joint commands; no physics/object/material writes; Dream unchanged.",
     "fixed_recipe_constitutive_probe": {
       "kind": "prescribed-input material diagnostic, not robot evidence",
@@ -83,7 +89,7 @@
     "native080_pose_replay": "Interpolating the actual20Hz tool pose and piston trace into240Hz produces three ridged shells/47.5mm in an offline prescribed-input diagnostic. This is not robot evidence; unrecorded within-action motion and pressure are under investigation."
   },
   "cpu_checks_current": {
-    "test_count": 43,
+    "test_count": 55,
     "result": "passed",
     "command": "python -m unittest discover -s tasks/pipe-a-shell-border -p test_*.py"
   },
@@ -121,7 +127,7 @@
     "recording_limitation": "First substep recorder rounded scalar outputs tofloat32 via NumPy weak-scalar promotion. Native float32 poses/velocities are exact; replay uses exact native timestep from report. Future recorder preserves scalar float64 precision."
   },
   "boundary_motion_correction": {
-    "status": "CPU controls passed; native test pending",
+    "status": "CPU controls and native111 full-score demo verified",
     "date": "2026-11-13",
     "method": "Unsmoothed measured point displacement per preceding native step, including rotation; reset primed; no clamping or smoothing. Forces applied at body origin with moments about same origin.",
     "material_and_scoring_changed": false,
@@ -171,7 +177,7 @@
     ],
     "metal_outer_radius_mm": 4,
     "minimum_wall_mm": 0.625,
-    "native_status": "not_yet_tested",
+    "native_status": "Verified in native099,105 and111",
     "local_095_input_counterfactual_ridge_mm": [
       10.5,
       3.5,
@@ -188,5 +194,37 @@
     "scoring_sha256": "744ec375c9a0b5c2e09f0190d278f74839a40d5dcc84426a58d44064afcf1601",
     "photo_agreement": "Six-shell interpretation independently confirmed; precise ridge dimensions require the final close-ups.",
     "outside_strip_film_maximum_height_mm": 0.09668354
+  },
+  "final_demo_evidence": "evidence/native-six-shell-111.json",
+  "full_border_111": {
+    "score": 1.0,
+    "actions": 1114,
+    "simulated_seconds": 55.7,
+    "valid_shells": 6,
+    "valid_length_mm": 87.0,
+    "outside_strip_material_m3": 0.0
+  },
+  "connectivity_correction": {
+    "two_dimensional_connected_footprint": true,
+    "thresholds_changed": false,
+    "tests": 46,
+    "demo_score_unchanged": true
+  },
+  "dream_evidence": {
+    "control_steps": 2400,
+    "preroll_steps": 32,
+    "successful_requests": 296,
+    "transient_same_session_server_errors": 2,
+    "session_count": 1,
+    "wall_seconds": 1041.89968881011,
+    "deposited_volume_m3": 0.0
+  },
+  "physical_photo_judging": {
+    "method": "Calibrated projected-section photographs, independently checked against a0.30mm step in three images.",
+    "real_icing_test_performed": false,
+    "thresholds_changed": false,
+    "unclear_evidence": "Retake photographs; no assumed ridge credit.",
+    "optional_helper": "photo_profile.py",
+    "synthetic_geometry_tests": 9
   }
 }

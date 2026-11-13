@@ -1,8 +1,9 @@
 # Remove a staple without tearing the papers
 
 **Development package; not submission-ready.** The flexible-paper reset and
-short YAM integration pass. A one-handed lever attempt is prepared; complete
-removal, a full-score demo, a Dream run and media are still missing.
+short YAM integration pass. A one-handed lever attempt reaches the paper but
+overshoots its contact target. Complete removal, a full-score demo, a Dream run
+and media are still missing.
 
 The robot uses a forked remover to release a clinched staple while preserving
 the thin paper around its holes. This is a document-preparation task. The
@@ -47,10 +48,23 @@ to avoid single-precision errors near the tabletop; relative geometry is unchang
   no native hinge-break events and clean wire crossings. The next candidate
   keeps the spare arm at READY and uses the remover's physical heel to oppose
   the lift. All 386 commanded hull frames pass the offline rejection screen.
+- The first one-handed attempt reaches130 actions, then stops at153µm aperture
+  under the heel, with no wire crossing or native hinge break. Its planner used
+  the tilted heel's bottom-centre and bare support height, pushing its lowest
+  corner through the paper. The corrected plan references the upper sheet and
+  all eight heel corners; its386 nominal and measured-grasp frames pass local
+  reach and hull checks.
+- The corrected114 attempt stops at129 actions. Its151.46µm aperture is not by
+  itself a tear, but independent native solid checks show the heel crossing both
+  sheets and34 transverse inter-sheet triangle pairs. The actual tool overshoots
+  during the0.6-second final descent. A584-action candidate changes only descent
+  timing: it settles above the paper and takes five seconds for the final1mm.
+  All584 nominal and measured-grasp IK/hull frames pass locally; physical contact
+  and extraction remain unproven.
 
 `VALIDATION.json` and `evidence/` preserve the measured reports and hashes.
 Historical FEM and triangular-prism attempts are clearly separated from the
-active panel model. There are 69 passing CPU checks.
+active panel model. There are 70 passing CPU checks.
 
 ## Reproduce
 
@@ -64,14 +78,15 @@ python tasks/remove-a-staple/preview_panels.py \
   --position-iterations 128 --recenter-at-paper --judging-views
 ```
 
-The next bounded 386-action extraction diagnostic adds:
+The next bounded584-action extraction diagnostic adds:
 
 ```sh
 --plan ONE_HAND_PLAN.json --joint-tracking --geometry-aware-continuity --tool-pose-servo
 ```
 
-`one_hand_plan.py` compiles that plan from the existing complete extraction
-and release plan. The scripted controller may compensate the measured remover
+`slow_heel_plan.py` compiles that plan from the corrected386-action one-hand
+extraction and release plan. It retains the first118 actions and the insertion,
+extraction and release suffix unchanged. The scripted controller may compensate the measured remover
 grasp through normal bounded robot joint targets after pickup. It never changes
 object state or forces, and Dream cannot use it.
 
@@ -84,7 +99,7 @@ the visible tear rubric.
 
 Each output directory must be new. Read the JSON result rather than trusting
 process exit status: simulator shutdown can return zero after a reported error.
-The recent 89-action brace diagnostic took 387 seconds excluding installation.
+The129-action corrected-heel diagnostic took572.52 seconds excluding installation.
 Full runtime is not yet measured. Layouts are fixed; no random seeds are used.
 
 ## Judging and remaining work

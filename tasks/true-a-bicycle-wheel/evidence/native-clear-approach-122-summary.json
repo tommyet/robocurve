@@ -1,0 +1,513 @@
+{
+  "kind": "native-wheel122-clear-approach-overshoot",
+  "submission_ready": false,
+  "task_score": null,
+  "completed_actions": 174,
+  "wall_seconds": 595.7137060277164,
+  "error": "RuntimeError: Tool servo IK failed: position=0.057304814896676555, rotation=0.013675230036598804",
+  "rim_integrity": {
+    "valid": true,
+    "steps": 87001,
+    "first_failure": null,
+    "maximum_axial_bending_strain": 0.0011477597591764924,
+    "maximum_twist_rad": 0.0006534226320036901,
+    "maximum_locked_joint_gap_m": 3.486295126121676e-06,
+    "peaks": {
+      "maximum_axial_bending_strain": 0.001447618407474323,
+      "maximum_twist_rad": 0.001138482175650244,
+      "maximum_locked_joint_gap_m": 1.968611917256832e-05
+    }
+  },
+  "approach_samples": [
+    {
+      "step": 148,
+      "whole_flat_mouth_clearance_m": 0.02589518265614879,
+      "nipple_orientation_change_since148_rad": 2.9802322387695312e-08,
+      "tool_position_error_m": 0.008340717845868416,
+      "nipple_target": {
+        "latched_from_earlier_frame": true,
+        "spoke": 0,
+        "quarter": 1,
+        "rotation_is_latched": true,
+        "realigned_after_stable_approach": false,
+        "target_translation_correction_m": 0.00953044147699962,
+        "target_orientation_correction_rad": 0.046373978189457175
+      }
+    },
+    {
+      "step": 154,
+      "whole_flat_mouth_clearance_m": 0.026413938154782088,
+      "nipple_orientation_change_since148_rad": 0.0009352401187060273,
+      "tool_position_error_m": 0.007606448639385205,
+      "nipple_target": {
+        "latched_from_earlier_frame": true,
+        "spoke": 0,
+        "quarter": 1,
+        "rotation_is_latched": true,
+        "realigned_after_stable_approach": false,
+        "target_translation_correction_m": 0.009431399696236142,
+        "target_orientation_correction_rad": 0.04637397818946196
+      }
+    },
+    {
+      "step": 160,
+      "whole_flat_mouth_clearance_m": 0.012491854871059308,
+      "nipple_orientation_change_since148_rad": 0.0019451345452540317,
+      "tool_position_error_m": 0.0018593171340855644,
+      "nipple_target": {
+        "latched_from_earlier_frame": true,
+        "spoke": 0,
+        "quarter": 1,
+        "rotation_is_latched": true,
+        "realigned_after_stable_approach": false,
+        "target_translation_correction_m": 0.009372329622540173,
+        "target_orientation_correction_rad": 0.04637397818946196
+      }
+    },
+    {
+      "step": 168,
+      "whole_flat_mouth_clearance_m": -0.0017215162278649034,
+      "nipple_orientation_change_since148_rad": 0.09326525475262752,
+      "tool_position_error_m": 0.0054225018155306835,
+      "nipple_target": {
+        "latched_from_earlier_frame": true,
+        "spoke": 0,
+        "quarter": 1,
+        "rotation_is_latched": true,
+        "realigned_after_stable_approach": false,
+        "target_translation_correction_m": 0.009296232326205616,
+        "target_orientation_correction_rad": 0.046373978189457175
+      }
+    },
+    {
+      "step": 170,
+      "whole_flat_mouth_clearance_m": 0.0004738621374224313,
+      "nipple_orientation_change_since148_rad": 0.11073081396328625,
+      "tool_position_error_m": 0.0050523815941894345,
+      "nipple_target": {
+        "latched_from_earlier_frame": true,
+        "spoke": 0,
+        "quarter": 1,
+        "rotation_is_latched": true,
+        "realigned_after_stable_approach": false,
+        "target_translation_correction_m": 0.009598609569659536,
+        "target_orientation_correction_rad": 0.046373978189457175
+      }
+    },
+    {
+      "step": 174,
+      "whole_flat_mouth_clearance_m": 0.0025544603346323268,
+      "nipple_orientation_change_since148_rad": 0.11039486811570429,
+      "tool_position_error_m": 0.004774577793508396,
+      "nipple_target": {
+        "latched_from_earlier_frame": true,
+        "spoke": 0,
+        "quarter": 1,
+        "rotation_is_latched": true,
+        "realigned_after_stable_approach": false,
+        "target_translation_correction_m": 0.009288420570821692,
+        "target_orientation_correction_rad": 0.046373978189457175
+      }
+    }
+  ],
+  "local_reach_analysis": {
+    "records": [
+      {
+        "seed": "nominal",
+        "damping": 0.008,
+        "pe": 0.02241611231183686,
+        "re": 0.002558664805987804,
+        "q": [
+          1.0495504492576442,
+          2.48984082529315,
+          2.9483029249699806,
+          -1.321562913523526,
+          -0.483042178994983,
+          2.067961352932199
+        ]
+      },
+      {
+        "seed": "nominal",
+        "damping": 0.003,
+        "pe": 0.5936981088552873,
+        "re": 1.3480777633233358,
+        "q": [
+          1.0481700510157832,
+          3.66519,
+          3.14159,
+          -1.69297,
+          -0.48653753285456575,
+          2.0612292660183713
+        ]
+      },
+      {
+        "seed": "nominal",
+        "damping": 0.001,
+        "pe": 0.5939529990732382,
+        "re": 1.350240862029287,
+        "q": [
+          1.0492542722951308,
+          3.66519,
+          3.14159,
+          -1.69297,
+          -0.4836471414428228,
+          2.0658807131203623
+        ]
+      },
+      {
+        "seed": "nominal",
+        "damping": 0.02,
+        "pe": 0.018795507986710175,
+        "re": 0.02578696358348658,
+        "q": [
+          1.05078991375655,
+          2.3729377528114295,
+          2.7075495522929125,
+          -1.1710347009429638,
+          -0.4811820652283291,
+          2.081155678042262
+        ]
+      },
+      {
+        "seed": "actual",
+        "damping": 0.008,
+        "pe": 0.02250969122421262,
+        "re": 0.0026256676237073366,
+        "q": [
+          1.0495558615456542,
+          2.4975161992914034,
+          2.963988624044787,
+          -1.329495567807255,
+          -0.4830346136606627,
+          2.068000765474555
+        ]
+      },
+      {
+        "seed": "actual",
+        "damping": 0.003,
+        "pe": 0.5936981090454939,
+        "re": 1.348077762399428,
+        "q": [
+          1.0481700493808672,
+          3.66519,
+          3.14159,
+          -1.69297,
+          -0.48653752973175673,
+          2.061229264037547
+        ]
+      },
+      {
+        "seed": "actual",
+        "damping": 0.001,
+        "pe": 0.5939529991918194,
+        "re": 1.3502408615245987,
+        "q": [
+          1.0492542716716118,
+          3.66519,
+          3.14159,
+          -1.69297,
+          -0.4836471396427679,
+          2.0658807120345206
+        ]
+      },
+      {
+        "seed": "actual",
+        "damping": 0.02,
+        "pe": 0.01879550803917027,
+        "re": 0.025786963468320264,
+        "q": [
+          1.0507899137303762,
+          2.37293775248209,
+          2.707549551371524,
+          -1.1710347004898891,
+          -0.48118206526715895,
+          2.0811556779480367
+        ]
+      },
+      {
+        "seed": "previous_command",
+        "damping": 0.008,
+        "pe": 0.032121468025094455,
+        "re": 0.03336604140446716,
+        "q": [
+          1.0514219461619239,
+          2.2110373392115026,
+          2.3763814791118305,
+          -0.9929844397016323,
+          -0.4803961968265993,
+          2.0856899954814745
+        ]
+      },
+      {
+        "seed": "previous_command",
+        "damping": 0.003,
+        "pe": 0.5936981088425289,
+        "re": 1.3480777619173665,
+        "q": [
+          1.048170049256169,
+          3.66519,
+          3.14159,
+          -1.69297,
+          -0.4865375323201311,
+          2.0612292630021196
+        ]
+      },
+      {
+        "seed": "previous_command",
+        "damping": 0.001,
+        "pe": 0.5939529987635512,
+        "re": 1.3502408617482822,
+        "q": [
+          1.049254272615243,
+          3.66519,
+          3.14159,
+          -1.69297,
+          -0.48364714562054584,
+          2.0658807125156833
+        ]
+      },
+      {
+        "seed": "previous_command",
+        "damping": 0.02,
+        "pe": 0.018795508022435486,
+        "re": 0.02578696354778094,
+        "q": [
+          1.0507899137153451,
+          2.372937752371567,
+          2.7075495512441203,
+          -1.1710347003884183,
+          -0.48118206528815394,
+          2.0811556779761684
+        ]
+      }
+    ],
+    "target_position": [
+      0.2237381105827006,
+      0.24272135122259197,
+      1.0293704571370321
+    ],
+    "target_quaternion": [
+      -0.32852853389916575,
+      0.854012510021661,
+      0.3947216891781288,
+      0.08322513582405236
+    ]
+  },
+  "local_relocation_endpoint_screen": {
+    "kind": "single175target IK only; no collision or native proof",
+    "candidates": [
+      {
+        "fixture_translation_m": [
+          0,
+          -0.01,
+          0
+        ],
+        "position_error_m": 0.016309043640692935,
+        "rotation_error_rad": 0.002103071631874812,
+        "q": [
+          1.0391114893699356,
+          2.421597528046952,
+          2.8294022898342837,
+          -1.2756221552437754,
+          -0.4898679186216164,
+          2.0587429211257158
+        ]
+      },
+      {
+        "fixture_translation_m": [
+          0,
+          -0.02,
+          0
+        ],
+        "position_error_m": 0.00969817188444543,
+        "rotation_error_rad": 0.00262355685374994,
+        "q": [
+          1.0284320402307607,
+          2.4710067463397274,
+          2.9512038408363117,
+          -1.3518126662658818,
+          -0.4966957848149523,
+          2.049748695340926
+        ]
+      },
+      {
+        "fixture_translation_m": [
+          0,
+          -0.03,
+          0
+        ],
+        "position_error_m": 0.0034221486541573826,
+        "rotation_error_rad": 0.0042299677702138825,
+        "q": [
+          1.0174015955105544,
+          2.478203769816064,
+          2.987323353428376,
+          -1.383527058447929,
+          -0.5036822816737054,
+          2.0409854379710843
+        ]
+      },
+      {
+        "fixture_translation_m": [
+          -0.01,
+          -0.02,
+          0
+        ],
+        "position_error_m": 0.005660600156563885,
+        "rotation_error_rad": 0.0040597935914069355,
+        "q": [
+          1.0468780613816449,
+          2.4994360243614353,
+          3.021981748774902,
+          -1.385018198492008,
+          -0.484735417861451,
+          2.066454021476136
+        ]
+      },
+      {
+        "fixture_translation_m": [
+          -0.02,
+          -0.02,
+          0
+        ],
+        "position_error_m": 0.0008515601473691518,
+        "rotation_error_rad": 0.002388294817257285,
+        "q": [
+          1.0655064567612702,
+          2.434416841276616,
+          2.9014178796744643,
+          -1.324027117348097,
+          -0.47270317542056867,
+          2.0814905114537026
+        ]
+      },
+      {
+        "fixture_translation_m": [
+          -0.03,
+          -0.02,
+          0
+        ],
+        "position_error_m": 2.276512210289296e-07,
+        "rotation_error_rad": 0.0019360431421960205,
+        "q": [
+          1.084505167199504,
+          2.5282229356155055,
+          3.105708251281423,
+          -1.4299653625281026,
+          -0.4603434996323502,
+          2.0944
+        ]
+      },
+      {
+        "fixture_translation_m": [
+          -0.02,
+          -0.03,
+          0
+        ],
+        "position_error_m": 0.01066280855591646,
+        "rotation_error_rad": 0.03458711457912547,
+        "q": [
+          1.0546641693584882,
+          2.557262913013308,
+          3.14159,
+          -1.4829150221684493,
+          -0.4798615850174681,
+          2.0709050485683953
+        ]
+      },
+      {
+        "fixture_translation_m": [
+          0,
+          -0.03,
+          -0.01
+        ],
+        "position_error_m": 1.8051612057738756e-08,
+        "rotation_error_rad": 4.9161554993237296e-08,
+        "q": [
+          1.017124357236452,
+          2.545364303275862,
+          3.09435827226899,
+          -1.4283460283270137,
+          -0.5040155678318252,
+          2.0384113996439606
+        ]
+      },
+      {
+        "fixture_translation_m": [
+          -0.02,
+          -0.03,
+          -0.01
+        ],
+        "position_error_m": 0.09561197837259691,
+        "rotation_error_rad": 0.3450431663829731,
+        "q": [
+          1.0545218896329502,
+          2.70017226471715,
+          3.14159,
+          -1.6509340911071522,
+          -0.48006790065494664,
+          2.0698798798744837
+        ]
+      }
+    ]
+  },
+  "interpretation": [
+    "The nominal14mm mouth lead-in is clear, but native tracking overshoots into the square before intended insertion, causing more than6deg nipple orientation change.",
+    "The clear-settle relatch follows the measured new orientation; the195mm handle then places the required wrist outside the present workspace. This is not a tiny IK residual.",
+    "Local replay with three seeds/four damping choices remains at least18.8mm from the relatching target. A single-endpoint30mm rightward/10mm lower fixture candidate solves, but no full route or hull/native validation exists.",
+    "No physical setup has been changed. Slow final approach and a separately screened fixture relocation remain next candidates."
+  ],
+  "evidence_sha256": {
+    "wheel122-preview.json": "6bdb575e7b1a3815d5c61df3420828fdfae01652c0145ff4a367fcfd8a5c29c5",
+    "wheel122-partial-trace.jsonl.gz": "07e45f0be7703bcccea4e5a98d15e32f1fd50c5845e16541fbc8b3c6c6424396"
+  },
+  "source_sha256": {
+    "recenter_probe.py": "344cd1694f20970400a9d37c1365c2acb7c5ab5f6e9850e49248667a26f62a17",
+    "plan_reach.py": "94260a69aa2e3905a7004822d7b685e861139d07307dd01ddc541ffe6f918d79",
+    "test_thread_coupling.py": "eb0f0f6c3fefe8fd30c79f4e3cd32321b14fa4c727508d377c867a7949e75bc2",
+    "preview_yam.py": "65cb601223de7465d5ac52ca8f2903ad8b3750721cf186b1f9af17d0d7221d6e",
+    "scene_probe.py": "4b77d3377d9ddd47aab28a171a0450033804e49e3340f975150acde752d69f77",
+    "service_plan.py": "34edc49e398cd9b884816c15db5942877511d917e6bddac18be8fee93f4c1e52",
+    "task.py": "53caa329e14ba64409dbc212de42aef5098cd3fc82ecb76fca91f8f81c142919",
+    "arena_wheel.py": "7696ce51eb56709edff3c17e1b2bade10195e343b5aaf7be96c2dcee146c41dc",
+    "test_assess_trace.py": "90a5bcc439fd91c680627173da2bf557729025c5c4b606e3467914ad0427f6a3",
+    "test_authoring_flow.py": "1d6efdcce529d4d5ccdfba9177084db128e068f4dfc5bb5d5ab59f29d33a58b8",
+    "tool_pose_servo.py": "8544d41dce71ab65c3340f2b49177d1a6a3424117145a0b122949cd6c4d0fc89",
+    "rim_geometry.py": "a680a16b8f4d285ba0216ce06afcb1459c2e579d4194dd0c407102df3eefe835",
+    "motion_plan.py": "487a6e824ab8cb3f315615c42c6bc36ab83c4e4915f2b76904b127e6e8a22dd1",
+    "slow_contact_plan.py": "1d67cf5dc33e2baaf9ebda5c56d08581a404eee70147d3e2b69ebdb9a7909ac0",
+    "wheel_scene.py": "864afc8820a1e31d82de01efdecf2f385cc46455771cc7f89c02b478a7390b12",
+    "scoring.py": "f82f46580c3317e4f747e0b3abb8fa465d028c0b35a4653622e7f1974ddcdd78",
+    "audit_robot_plan.py": "59f0ba21aac50a0b8325297825189c519eebad68e73a2aaf7706d42680c733d3",
+    "test_preloaded_reset.py": "e8489fdfa0009902eec9dec7c32ae185a61f232ca27bb6409f1d4a61f9e9dade",
+    "wrench_fixture.py": "b1ed6d997888027f223d84b3917576962b121170df98be92f35ce541ae364ddd",
+    "test_integrity.py": "9970f3416c020fb59d5a428b24954c953310dc03c5816d563fddecb8faadbc6a",
+    "finalize_plan.py": "20f15e57c474627ea0251698ce9d71ba2b4cc41aeb2b1f1da56fe274f5c5af90",
+    "mechanics.py": "727e694b8d3e654815cb705e45b52266f07c0a40570a57c5c67dae716e3d2edc",
+    "analyze_scene.py": "6473a08267b0e5946d6b618d1038e0e63d7a501cc15a8d73afc84d1996deb9b3",
+    "test_dream_policy.py": "41692ccc9998a627af3b083345059314513a3f444062265d1c0645b6cbdf2a7c",
+    "spring_probe.py": "d5ac13fb44c4c5d5997ee1d0b23220e24658cf1fd4b0febba08d96f05f0e58a7",
+    "test_scoring.py": "d58789463cd0fc894dd280023093b07b0f1b80cb6efe511be4ca95bdc22229e9",
+    "test_joint_tracking.py": "6bb720210650a2c5664a899ff5aff4c5a21e7e46468cb9fd05e91b327407eb76",
+    "wrench_contact_probe.py": "56e55822ade9737095730d24e47496f4acb4418e89488851018a975bdba35c6a",
+    "test_tool_pose_servo.py": "9472e335cf1dc7194df7798274f0c512a84ddef87da7e94bfe802c90866c373b",
+    "test_wrench_fixture.py": "475da4627999339f5cf16ba0d2e27dace4e94ed27ea397a6041c2f7d3c49930f",
+    "native_probe.py": "11e7c3dddc7f4726099f6977b0db80c54f4b438b6e26a4adbcceca914e3503f7",
+    "plan_turns.py": "ad5f5a154099f057119a6e607062e0846b0ba4d958978ddd45d1ede4c0a4bcc8",
+    "clearance_contact_plan.py": "9ec69d94c43ff1119de52efd352491006ad6b9f9bcfaf5320472e37984e35dfe",
+    "probe.py": "fa83750ed32549c2d3af55ee6efa1f12514faa50d2051c46819c6cab94661dd1",
+    "joint_tracking.py": "3939afd1737072ed11583074c6a0aff1bb97aec2002062ed37b38dea12d3b9ca",
+    "dream_policy.py": "e26692272eaf90cb82bf795bdc4f99ae30cc521c0cf273ea187fb0b841b65691",
+    "thread_coupling.py": "5e302ae7a91d86d0e0bad2f546c598d02709c80c84ad5c43261b909cca4d7c2b",
+    "audit_native_trace.py": "e7ca1bc89c7f1051b5020b6938f4c8aa15b6cd3c9022f618c7263ad9fbced005",
+    "contact_audit.py": "e64259df12157407a3d0a909d91f8dc60ce870c3ea318117a9e425ff4b05d4f7",
+    "slow_service_plan.py": "5c8a0094294f07168a244fab04e21101fde6101cdaf81778bcf60af0aadbeb15",
+    "test_mechanics.py": "4e01bd77c54abc07e3482cbb2f84f3a6426c43386db88b50634b27d5c58ccea7",
+    "test_rim_geometry.py": "53d001f47683adc1eb05765be9671f10519a42215aca44f9cdbbcc552269a9e2",
+    "momentum.py": "b6c12bcbdd75d9931f4fee37d3971c0cd02c8c077e72299d1a310ef3ac35493e",
+    "review_views.py": "4da989eb1484ace2fb158fa7eb467924a12720a71dfb666394d3db54176365ed",
+    "integrity.py": "8c917dd46bd126c023c04439b303f5d9fafb1d31289014ed99fe0a5aac28a90b",
+    "preloaded_reset.py": "65f235e52e2f5c6e3d34c1d967b016f472fc8c5491a386a575189fbd0b2951c5",
+    "assess_trace.py": "a62b14405b380bc5599e19437d70c8aef99d6c5decc44c9216eaa1ce8670deef"
+  }
+}

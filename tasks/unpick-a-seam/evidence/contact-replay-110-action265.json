@@ -1,0 +1,15 @@
+{
+  "status": "unscored approximate contact initialization; never a demo/reset",
+  "source_action": 265,
+  "source_time_s": 13.25,
+  "velocity_interval_s": 0.05000000000000071,
+  "velocities": "Unsmoothed20Hz pose differences; native endpoint velocities and warm-start history were not recorded.",
+  "moving_jaw": "Only available final native readback;43.75ms after the selected action in110. This slight time mismatch is disclosed.",
+  "tool_motion": "Original fixed path, rigidly aligned to measured handle pose; native kinematic target, dynamic mounted blade. Robot removed only in diagnostic.",
+  "source_sha256": {
+    "preview.json": "f2d71a0f04c990bcc3e95e4bea7646e119e1739c443411448f5a0fc5cbf0fd65",
+    "trace.jsonl.gz": "88cb924f858ed26fd4eb11c5d1be16557e7f43cfcc31af6a07ec00665a202035",
+    "initial.usda": "10c1f667fcf70b788d13bf5b52177267038779ac3f352eb1a1592d92e4784b1b"
+  },
+  "data_sha256": "eecc65bf54e668d710a11d35f4d73e1b7e45fb2651a310cfd4739226c2b52fd5"
+}

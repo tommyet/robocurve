@@ -81,7 +81,6 @@ Pressure and contact forces are applied at each body origin, with contact
 moments about that same origin. PhysX therefore transfers the wrench to the
 actual centre of mass; it is not assumed to coincide with the body origin.
 Stationary, translation, rotation and reset controls pass. This correction does
-not change the reservoir, material law, nozzle geometry or scoring. A recorded
-input replay restores ridges, but a fresh robot run is still required; neither
-replay nor these kinematic controls prove energy conservation of the coupled
-approximation.
+not change the reservoir, material law, nozzle geometry or scoring. Native trial111 demonstrates a complete full-score border with this coupling.
+Neither that successful run nor the replay and kinematic controls prove energy
+conservation of the coupled approximation.

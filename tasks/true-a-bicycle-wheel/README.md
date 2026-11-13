@@ -1,14 +1,18 @@
 # True a wobbly bicycle wheel
 
-**Development package. Not ready to submit.** Native trial 091 completes 202
-robot actions, but a requested 90° wrench turn produces only 22.86° net nipple
-rotation. Motor tracking lag loses engagement. The rim integrity checks pass
-and the 203 sampled measured poses have no unexpected hull intersections.
-A full repair, released revolution and Dream baseline are still required.
-The slower096 trial stops at177 actions before insertion because of an overly
-strict approach IK angular gate. Its jaw-point error still fits the reserved
-mouth clearance. A corrected approach check and one stable re-alignment pass
-local recorded-state replay; the native retry remains necessary.
+**Development package. Not ready to submit.** Native112 rotates one nipple
+90.54° during its tightening stroke, but early contact loosens it and withdrawal
+stays engaged. The trial stops at379/380 actions. Rim integrity and the sampled
+unintended-collision screen pass; intended jaw contact has up to0.451mm authored
+solid overlap and still needs improvement. The clearer122 entry stops at174/448:
+native tracking overshoots into the nipple, and re-alignment then exceeds the
+wrist workspace. A full repair, released revolution and Dream baseline are
+still required. No further manipulation run is released.
+
+A locally screened alternative now moves the fixture 10 mm forward / 50 mm toward
+the right arm and shortens the stand 10 mm. Its slower 652-action first-quarter
+route and matching explicit native flag are described in
+`RELOCATION_DIAGNOSTIC.md`. Native reset, contact and withdrawal remain untested.
 
 The task is to adjust the spoke nipples until the wheel runs straight, remains
 centred and spins freely. Scoring uses the resulting wheel geometry and spoke
@@ -90,7 +94,45 @@ Trial 091 took 825 wall seconds for 10.1 simulated seconds with review cameras;
 the slower 380-action candidate is estimated at about 26minutes. No complete
 trial runtime or task seed variability has been measured. The interrupted096
 trial took777seconds through177actions. Reset is deterministic.
+Native104 subsequently reached190 actions before a stage-boundary orientation
+relatch requested an unreachable handle pose. The corrected latch passes local
+measured-state replay and future hull checks; a native retry remains necessary.
 Read the JSON status: Isaac can exit with code zero after a Python failure.
+
+The optional `--batch-sdf-notices` changes only how identical native Float
+updates are notified. A matched5000-step control preserved all501 sampled
+states and final attributes exactly, with material-plus-physics time6.7% lower.
+It does not lower the physics rate or skip material updates. The two-action YAM gate also passes, with matching final authored/cache
+values. Native112 then turns the nipple90.54° during the intended tightening
+stroke. Entry loosens it before seating, and withdrawal stays engaged; the
+trial stops at379/380 actions during clearance. All380 sampled hull checks and
+all native rim-integrity checks pass, but this is not a completed repair cycle.
+
+The `clearance_contact_plan.py` diagnostic uses a14mm lead-in and
+16mm withdrawal, with longer settling and a measured whole-square mouth-clearance
+guard before moving across the wheel plane. It changes only ordinary robot
+commands. Native122 nevertheless overshoots: actual whole-square clearance
+changes from12.49mm to−1.72mm before intended insertion, rotating the nipple
+over6°. Re-alignment stops with a57.3mm native-run IK residual. Local alternative
+seeds/damping do not solve this workspace issue. Slower approach and a modest
+fixture relocation need full local screening before another manipulation trial.
+The complete1630-action service route passes its nominal hull screen,
+but is not released for a native run until entry and withdrawal work.
+
+`scene_probe.py --recenter-at-axle` is a separate coordinate precision
+diagnostic. Before native attachment, it translates the complete fixture, bench
+and world-ended joint anchors by the same offset. It audits all authored world
+transforms; body-local anchors, material values and rotations are unchanged.
+Native poses are reported in that translated frame, with the station origin
+recorded explicitly. Native117 passes the geometry audit but retains the same
+unexplained TGS axle momentum; the precision hypothesis is rejected. This
+option has not been promoted into the robot runner.
+
+The matched124 TGS control instead applies external forces once per step. At
+100ms, axle momentum falls66% versus117 and its late growth rate decays, while
+rim geometry/tensions remain similar. Startup momentum still greatly exceeds
+the integrated gravity impulse. This short control does not establish long-run
+validity; it has not replaced PGS or been used for a robot run.
 
 ## Controller disclosure and judging
 

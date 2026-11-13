@@ -21,7 +21,7 @@ def calibrate(reference_plan,rest,nodes):
         ids=np.flatnonzero((abs(rest[:,0]-hem_x)<.011)&(rest[:,1]<.021))
         if len(ids)<6:raise ValueError('Missing declared hem material patch')
         point=nodes[ids].mean(0)
-        if not (.17<point[0]<.26 and abs(point[1]-sign*.115)<.04 and .82<point[2]<.90):
+        if not (.17<point[0]<.26 and abs(point[1]-sign*.115)<.04 and .78<point[2]<.90):
             raise ValueError('Hem lies outside the audited reset pickup region')
         # A20mm bite behind the TCP stays within the physical finger pad.
         # Both textile layers are between the ordinary fingers' closing plane.

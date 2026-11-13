@@ -25,6 +25,19 @@ def clipped_triangle(tri,planes,shrink):
     return bool(len(poly))
 
 
+def clipped_triangles(triangles,planes,shrink):
+    """Exact scalar clipping with vectorized separating/contained fast paths."""
+    triangles=np.asarray(triangles)
+    if not len(triangles):return np.zeros(0,dtype=bool)
+    distances=triangles@planes[:,:3].T-planes[:,3]+shrink
+    separated=(distances>0.).all(axis=1).any(axis=1)
+    contained=(distances<=0.).all(axis=2).any(axis=1)
+    result=contained&~separated
+    for index in np.flatnonzero(~separated&~contained):
+        result[index]=clipped_triangle(triangles[index],planes,shrink)
+    return result
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('trial',type=Path);p.add_argument('--out',type=Path,required=True)
     p.add_argument('--steps',default='240,380,400,440,480,520,560,600,640');p.add_argument('--shrink',type=float,default=.0002)

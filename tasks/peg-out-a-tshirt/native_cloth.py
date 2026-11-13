@@ -66,6 +66,10 @@ def author_cloth(stage, path, mesh, material=Fabric(), points=None, color=(.08,.
             raise RuntimeError(f'Native surface cloth API unavailable: {schema}')
     _set(prim,'omniphysics:restShapePoints',Vt.Vec3fArray(mesh.rest.tolist()))
     _set(prim,'omniphysics:restTriVtxIndices',[Gf.Vec3i(*map(int,t)) for t in mesh.faces])
+    # The sewn side strips have non-flat rest bends. Native flatDefault would
+    # try to unfold those seams even though restShapePoints describes them.
+    # This sets their physical rest angles, with unchanged finite stiffness.
+    _set(prim,'omniphysics:restBendAnglesDefault','restShapeDefault')
     _set(prim,'omniphysics:mass',mesh.audit()['surface_area_m2']*material.thickness*material.density)
     _set(prim,'physxDeformableBody:selfCollision',True)
     _set(prim,'physxDeformableBody:disableGravity',False)

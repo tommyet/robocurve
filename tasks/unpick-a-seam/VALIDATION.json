@@ -1,7 +1,7 @@
 {
   "status": "development_not_submission_ready",
   "checked_utc": "2026-11-13",
-  "cpu_tests_passed": 75,
+  "cpu_tests_passed": 78,
   "native_simulator_run": true,
   "robot_demo_run": false,
   "dream_run": false,
@@ -9,8 +9,9 @@
   "scores": null,
   "paid_compute_used_usd": null,
   "remaining_gates": [
-    "The passive box-panel and bending-thread setup retained all24 hole links for2s; its CPU/YAM reset and two-action bridge pass. Physical tool pickup and blade entry reached262actions, but force-qualified cutting and fragment removal remain unproven.",
-    "The102 entry stopped on a248.87micrometre positive shared-edge aperture, without lost finite overlap, empty normal clearance, native solid passage or lost link. The explicitly selected400micrometre passage diagnostic retains200micrometre warnings and all independent guards; a fresh294-action trial is pending.",
+    "The passive box-panel and bending-thread setup retained all24 hole links for2s; its CPU/YAM reset and two-action bridge pass. Physical pickup and first blade contact reached265actions, then an uncut thread joint became physically disjoint under tool loading. No force-qualified cut or removal has occurred.",
+    "Short120/123 native contact replays reproduce gross thread/metal-guard interpenetration. Finer3840Hz stepping completes0.1s but reaches0.894mm overlap for0.900mm combined radii; this is not usable contact integrity despite passing the existing joint-gap guard. Slowing toquarter speed still disconnects an uncut joint. Correct and verify native tool/thread contact before another full robot trial.",
+    "The400micrometre geometric passage diagnostic passed all12763 reset/substep checks in110; the actual failure was1.342mm separation of an uncut thread joint, not the former signed aperture warning.",
     "The current no-damage model uses blade intersection, actual panel/thread geometry and an explicit5% strain operating domain with2% warnings; these are not a calibrated fabric fracture law. Final ordinary images must support intact fabric.",
     "Force-qualified blade cutting, native thread-fragment clearance and simple photographic inspection must agree.",
     "Complete six-stitch removal, safe tool release, a full robot demo, Dream, final scoring and media remain absent.",
@@ -40,7 +41,9 @@
     "plan.py": "732a527ff4850c6a07e024762e95cd11f163b5d30ea23bb65096c20954f73da1",
     "plan_clamp.py": "683e32be9b1204a2ec401adb78d17050682fc3b9b9eb572e2679205158345e33",
     "plan_cut.py": "15b1d3c2e54ae4cc6cf6eccdc42dd001305c94f47b4a0ac895f07851eba88a7d",
-    "preview_yam.py": "dd507bf35883c3b417edc38b17c729668e5e9ca3bd0f4c4767709bc81244abdf",
+    "prepare_contact_replay.py": "c07b49a75c640181a3e829ead55209c35ccedec10d874413f7ff5d0d96cfdad3",
+    "preview_yam.py": "f3402d33e9c079e4535df70e1ee4607c023aebe8695d71aa3467a88f6c4c86c1",
+    "probe_contact_replay.py": "532b1a0ebd54ab8d8e391881f76fde96da41c7ecbf493fcd0c2a6ffe372bb220",
     "probe_facets.py": "ad1bce67d796fdb070183afd8fc354d8147e990d21894b0c0a08df0787b5047b",
     "probe_native.py": "d26b8d365e07996e5be406b405c79d36985e33a11c3a72953e19c4d464bdae41",
     "probe_thread.py": "13112ca19e209cb7b87ba6dc435a5e745bcdf69066784849d6c713622cc097d3",
@@ -54,6 +57,7 @@
     "scoring.py": "1847b3b36c84c63a4357e41a9c36d387dd4f14c99a8ae57f47db2f51360fd790",
     "test_contact_audit.py": "8dcfed3daab8bf70ad53f830dbe744fb7462d5900f4fe2e225e38936c6aee49a",
     "test_contact_history.py": "561d6038b387bdaf91aed9c576f8ba4ea7ba5cc67bb2937bdad90a5adfdeb1e0",
+    "test_contact_replay.py": "e4f325e972daa0df8cbff62dcb796825bbac1afb04a564b9da6bd2da6498e787",
     "test_coordinate_frame.py": "e14ae16b388b4c7e90226a20bda39067556de3443eea1400e8e20814c1d4192a",
     "test_cut_contacts.py": "9ed7e6e6d9cbbd8f55382b92a5ae8c4d7d58faaaf30b142f54b931454d0187ba",
     "test_draped_reset.py": "1f19c083b33e727d3a8373d7ea5b823f88d23c586857a1bc871833204b2d7e5e",
@@ -67,10 +71,10 @@
     "test_thread_bending.py": "2355faf66f58b9c7bafbea131e28d44cecd1a05cc24519184d8efb3f925d44de",
     "test_thread_discretization.py": "420f2de39bfb212947ebae982d46dd2ebe29b7c39b820241eb644032ea178889",
     "test_thread_integrity.py": "5ac32d4d0a39a65eee315de7bcde650943048681df0ae6f2dfda133e88f607d2",
-    "test_tool_entry.py": "161bbf4edf43f16cba093263d8dfaedc0913ffb52c258e456815e283323fbc6e",
+    "test_tool_entry.py": "851d2d9b62f2c5845aff9e5dd6a423a562b2e4c3c2a82e2091216be97051b297",
     "thread_bending.py": "6711e80f4b6883b8f35f2b573298965a1d37dbecd7ebe3d5415e6cb656b5037b",
     "thread_integrity.py": "1f1a94c6abb6590984947042e17c56d423f377ea6606af0f5bfaeb62faaf8e64",
-    "tool_entry.py": "88e58e0d003fb0fba71fae5b6aa9c2be0fba36b54967ba053c056386ed1b520c",
+    "tool_entry.py": "3a13b9fdbac8f0999b50e0e370d66580737c54c7a1b24c32cc5ac9b3615fc640",
     "tool_geometry.py": "3972bd467f38ad64308577db9bc7d706a68927b03dd8f986134e570c3a314953",
     "tool_scene.py": "6e603497b0638b2d45229a89a86e54f5eef097afc4f051527e02bd1881e50299",
     "warp_contact.py": "47f1cf9f27d957564eca3673327c59a65147e63a42680b9d8b6f0128cd63477d"
@@ -111,7 +115,7 @@
   "native_supported_clamp": "evidence/native-supported-controls-041.json",
   "native_first_cut_api": "evidence/native-first-cut-api-041.json",
   "native_normal_reset_first_cut": "evidence/native-reset-first-cut-041.json",
-  "next_contact_diagnostic": "Unchanged294-action first-tack entry with400micrometre signed aperture passage bound,200micrometre warning, finite shared-edge overlap and an actual native-box/capsule-axis check every substep; no physics/controller/scoring changes.",
+  "next_contact_diagnostic": "Short standalone replay from measured110 action265 geometry with disclosed20Hz finite-difference velocities, no recorded warm-start history and prescribed native kinematic handle motion. Baseline960Hz should reproduce before timestep/speed comparison. Never a task reset/demo; same physical geometry/material and0.25N/40ms cut law.",
   "native_contact_forensics": "evidence/native-contact-forensics-045.json",
   "native_predictive_contact": "evidence/native-predictive-contact-047.json",
   "native_capped_contact": "evidence/native-capped-contact-047.json",
@@ -149,7 +153,7 @@
   "native_yam_bridge": "evidence/native-yam-bridge-097.json",
   "native_first_cut_diagnostic": "evidence/native-first-cut-097.json",
   "geometry_audit_candidate": {
-    "status": "102 measured first physical blade contact without cutting; fresh400micrometre passage diagnostic pending",
+    "status": "110 passed the cloth geometric passage checks; short120/123 replays expose separate gross thread/tool guard interpenetration, so no cut is validated",
     "empty_shared_edge_aperture_warning_m": 0.0002,
     "empty_shared_edge_aperture_limit_m": 0.0004,
     "legacy_endpoint_residual_warning_m": 0.0001,
@@ -158,5 +162,10 @@
     "description": "The explicitly selected passage diagnostic bounds positive empty aperture to half the thread diameter and requires finite shared-edge overlap. Actual unaveraged native-box middle-plane/capsule-axis intersections are checked every substep, alongside unchanged swept crossings, blade damage, strain and closed-junction guards. No physics/scoring changes or calibrated tear-law claim."
   },
   "native_first_contact_diagnostic": "evidence/native-first-contact-102.json",
-  "native_solid_audit_cpu_equivalence": "evidence/solid-broadphase-equivalence.json"
+  "native_solid_audit_cpu_equivalence": "evidence/solid-broadphase-equivalence.json",
+  "tool_release_compensation_boundary": "Explicit frozen-plan end action stops live grasp compensation before intentional release; ordinary joint/rate clipping continues. Existing294-action entry interval is unchanged. Full continuation is unrun and conditional on a demonstrated first cut/extraction.",
+  "native_latest_robot_contact": "evidence/native-first-contact-110.json",
+  "replay_evidence_note": "Future20Hz native traces include panel/thread/tool/jaw velocities and jaw pose. Earlier110 replay uses explicitly identified pose-difference velocity estimates and cannot recover solver warm-start history.",
+  "native_short_contact_replay_startup": "evidence/native-contact-replay-startup-116.json",
+  "native_short_contact_replay": "evidence/native-contact-replay-120-123.json"
 }

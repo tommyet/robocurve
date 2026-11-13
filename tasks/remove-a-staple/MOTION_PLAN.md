@@ -1,50 +1,45 @@
 # Proposed robot sequence
 
 The current candidate uses one hand. The left arm stays at READY; the free
-remover's 15 mm-wide heel supplies the opposing local contact on the sheets
-while the forks lift the crown. This removes an optional distant hand brace,
-not the paper or steel mechanics. All 386 nominal hull frames are clear. The
-native extraction still needs demonstration. After pickup, an explicit scripted
-servo may use the measured remover grasp to correct ordinary joint targets.
+remover's15mm-wide heel supplies opposing local contact while the forks lift
+the crown. After pickup, a disclosed scripted servo uses the measured remover
+grasp to correct ordinary bounded robot joint targets. It cannot change object
+poses, forces, attachments, materials or actuator limits. Dream cannot use it.
 
-The earlier braced candidate below remains as a development record. Its slower
-touchdown still stops at 89 actions with 171.59 µm positive panel aperture,
-no native hinge-break notification and no steel crossing. That is a numerical
-contact observation, not a demonstrated tear.
+The584-action candidate lasts29.2 seconds within the600-action limit. All584
+nominal hull frames and584 frames corrected for the native114 pickup grasp pass
+local IK/hull screening. This is planning evidence; complete physical extraction
+is not demonstrated.
 
-This is a planning note, not a demonstrated extraction. Full-size passive
-panel-paper reset and short YAM integration pass. Actual bracing reaches 46
-control actions; the next trial changes touchdown speed and records geometric
-continuity and native break events.
+1. Pick up the remover across its18mm handle width and lift it clear.
+2. Orient at6.651° downward pitch and approach with the heel6mm above the paper.
+3. Pause1.5 seconds, lower to1mm above in2 seconds and pause1 second. Creep the
+   final1mm over5 seconds, then settle for1 second. The lowest of all eight heel
+   corners targets the upper paper surface; the fork fits below the crown.
+4. Slide the fork under the crown and lever to level. Lift12mm so both legs
+   straighten and leave both sheets through native contact.
+5. Carry the complete staple at least10mm clear, set the remover on the table,
+   release it and observe for3.2 seconds. The staple may rest on the remover.
 
-1. Approach the remover and paper brace. Pause with the left fingertips 2 mm
-   above the sheets, let the wrist level, then lower 2 mm over 1.5 seconds. The
-   final nominal brace pose is unchanged.
-2. Pick up the remover across its 18 mm handle width and lift it clear of the
-   tabletop. Keep the papers held by ordinary left-finger contact.
-3. Approach the staple from its right side, with the heel over the support
-   and fork tips under the crown, inside both legs.
-4. Insert at about 5.54° downward pitch, then pivot to level using contact
-   with the support. Further rotation would drive the handle into the board.
-5. Lift the held remover 12 mm. Both legs must unbend and leave their holes
-   through physical contact. A floating stack or retained leg is not removal.
-6. Keep the complete staple at least 10 mm clear of both sheets, put down and
-   release the remover, then leave staple and papers released for 3.2 seconds.
-   The staple may remain on the remover. Sheet separation is unnecessary.
+`slow_heel_plan.py` replaces only the12-action final descent in the corrected
+386-action plan. Its first118 commands and insertion/extraction/release suffix
+remain bit-identical. The final1mm descent has0.375mm/s peak commanded speed;
+materials, scene geometry and integrity checks are unchanged.
 
-The 446-action candidate lasts 22.3 seconds within the proposed 600-action limit.
-Its first 30commands match the earlier 386-action plan; it adds a slower brace
-and settling holds. All 446commanded hull frames pass the offline rejection
-screen. Flexible contact and actual motor tracking require the native trial.
+Native106 exposed a placement error: the tilted heel's lowest corner was below
+the paper because the planner referenced its bottom-centre and bare support.
+The corrected114 trial targets the upper sheet, but still stops at129 actions.
+The151.46µm positive aperture alone is not a tear. Exact native solid checks show
+that the tool overshot through both sheets, with34 transverse inter-sheet
+triangle intersections, before insertion. Slower touchdown tests this dynamic
+cause before adding a new fixture. It has not run yet.
 
-The next 144-action prefix ends after pickup and before tool alignment over
-the staple. The later nominal poses pass inverse kinematics and geometry
-screening, but physical grasp rotation may require a disclosed pose-assisted
-scripted controller. Such feedback may issue only normal bounded robot joint
-targets; it cannot edit object poses, forces, attachments or actuator limits.
-Dream will receive ordinary camera and joint observations only.
+Earlier braced plans stopped on local paper aperture while the spare hand
+pressed the stack. They remain historical diagnostics. No bracing, extraction,
+full-score or no-damage claim follows from those recordings.
 
-Every native substep retains steel continuity and wire-crossing checks.
-The next geometric paper diagnostic records positive empty aperture, finite
-shared-edge overlap, raw endpoint errors and separate native break events.
-A diagnostic recording is not automatically a valid task demonstration.
+Every native substep checks steel continuity and wire crossings. The paper
+monitor records positive empty aperture, finite edge overlap, raw endpoint
+errors and native break events separately. Diagnostic mode cannot automatically
+certify a task score. Actual contact, complete extraction, paper preservation
+and final released clearance must pass before this becomes a demo.

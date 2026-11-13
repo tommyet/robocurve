@@ -3,10 +3,15 @@
 Pipe a joined row of ridged icing shells between two marks on a cake, then set
 the dispenser down. The task tests coordinated pressure and tool motion.
 
-**Awaiting final review evidence and Dream baseline.** Native trial 099 scores 1.0:
-six ridged shells covering 87 mm, with the dispenser released. Its broad photographs
-support the shape, but close-ups are being recorded to inspect the small ridges.
-No media has been uploaded and no PR has been opened.
+**Ready for user review.** Native trial 111 scores 1.0:
+six ridged shells covering 87 mm, with the dispenser released and no icing outside
+the permitted strip. Independent review of the native top, side and detail
+photographs agrees with the six-shell result.
+Dream completes the full 2,400-action episode and scores 0.0: it deposits no icing.
+The judging guide specifies calibrated projected-section photographs for the
+small ridge-depth check, including independent reference-step checks and retakes
+for unresolved measurements. This physical judging procedure has not been tested
+on real icing here. No media has been uploaded and no PR has been opened.
 
 ## Setup
 
@@ -52,8 +57,9 @@ score is not this task's score; `run.py` performs the material coupling and
 
 Both policies get the same fixed layout,240 Hz physics,20 Hz controls, motor limits
 and 2,400-action limit (120 simulated seconds). There is no object jitter or
-randomized scene seed. The demo ends after 994 actions (49.7 s); trial 099 took 459 s
-on an RTX 6000 Ada. Dream wall time remains unmeasured.
+randomized scene seed. The demo ends after 1,114 actions (55.7 s); trial 111 took 502 s
+on an RTX 6000 Ada while another task shared the GPU. Dream takes 1,042 s on the same GPU: one session, 32 client preroll steps,
+296 successful eight-action requests and two transient server-error retries.
 
 The scripted demo openly uses native barrel/plunger poses and joint angles to
 command bounded ordinary joint targets. A fixed pressure/motion recipe and
@@ -78,24 +84,32 @@ actual raised heads, tapered tails and continuous ridges; a plain line or row of
 round blobs cannot pass. The scorer uses the final material surface, not intended
 shell locations. Full credit also requires a joined finish and released tool.
 
-Trial 099's exact 11,928-step input replay reproduces deposited volume to numerical
-precision. Its independent audit finds 87 mm of valid decoration, six ridged shells,
-no qualifying spill or cake gouge, and more than 63 mm clearance from the border
-at release. A visible film outside the strip is at most 0.097 mm thick; the rubric
-counts spill from 0.5 mm. This film is present in the photographs and is not hidden.
-See [the recorded evidence](evidence/native-six-shell-099.json).
+Trial 111's independent audit finds 87 mm of valid decoration, six ridged shells,
+zero icing outside the permitted strip, no cake gouge, and more than 56 mm
+clearance from the border at release. Native top, side and close-up photographs
+show the raised heads and tapered, ridged tails. Exact millimetre criteria should
+be checked with the measured profiles as well as the photographs; the material
+surface is visibly faceted. See [the recorded evidence](evidence/native-six-shell-111.json).
+
+The preceding trial 099's exact 11,928-step input replay reproduces deposited
+volume to numerical precision. Trial 111 retains its shell-making motion and
+slows the return of the dispenser to prevent an unintended final pressure pulse.
+No scoring threshold or material parameter changed for this cleaner finish.
 
 The scorer originally treated a low tail shoulder as a separate head and
 truncated the last shell. Its correction applies the existing 2.5 mm head-height
 minimum before segmentation. Over-height and oversized mounds still obstruct a
-shell; disconnected icing cannot supply a tail. No judging threshold changed.
+shell. A second correction measures each head and tail on the same connected
+visible footprint, so detached lateral blobs cannot inflate its width. Both final
+records were rescored: demo 1.0, Dream 0.0. No judging threshold changed.
 
 ```bash
 python -m unittest discover -s tasks/pipe-a-shell-border -p 'test_*.py'
 ```
 
-The 43 CPU checks cover pressure causality, finite volume, physical contact,
-damage, negative shape controls, segmentation and released-tool evidence.
+The 55 CPU checks cover pressure causality, finite volume, physical contact,
+damage, negative shape controls, segmentation, released-tool evidence and
+projective photo measurement with calibration rejection.
 Older experiments remain in `evidence/` and `VALIDATION.json`; their scores are
 historical and should not be substituted for the final pair of runs.
 

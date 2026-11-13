@@ -1,0 +1,150 @@
+{
+  "kind": "native-compensated-TGS-integration-124-comparison",
+  "promoted": false,
+  "score": null,
+  "runs": {
+    "each_iteration": {
+      "complete": true,
+      "wall_seconds": 8.56634143460542,
+      "sample_count": 101,
+      "dt_s": 0.0001,
+      "seconds": 0.1,
+      "solver_type": "TGS",
+      "position_iterations": 32,
+      "velocity_iterations": 4,
+      "external_forces_every_iteration": true,
+      "distance_tolerance_compensation_m": 0.025,
+      "final_axle_angular_momentum_kg_m2_s": -0.04048386367579185,
+      "axle_momentum_change_kg_m2_s": -0.0404598349854767,
+      "integrated_gravity_axle_impulse_kg_m2_s": -1.9509879623325546e-05,
+      "late_momentum_slope_nm": -0.4040900889942436,
+      "final_lateral_runout_m": 0.0009067654609680176,
+      "final_tension_range_n": [
+        201.36938698480233,
+        598.569858179197
+      ],
+      "rim_integrity": {
+        "valid": true,
+        "steps": 1000,
+        "first_failure": null,
+        "maximum_axial_bending_strain": 0.0012177607586050091,
+        "maximum_twist_rad": 0.0009390165159411617,
+        "maximum_locked_joint_gap_m": 9.704912130207431e-06,
+        "peaks": {
+          "maximum_axial_bending_strain": 0.001627809632145471,
+          "maximum_twist_rad": 0.0013617056627391328,
+          "maximum_locked_joint_gap_m": 1.5506741070377183e-05
+        }
+      },
+      "report_sha256": "494ca14ef08d1916014e05f896b97d1a50f81b130805c7cdaca84a7ce1163733",
+      "momentum_samples": [
+        {
+          "time_s": 0.0001,
+          "axle_angular_momentum_kg_m2_s": -2.4028690315144898e-05
+        },
+        {
+          "time_s": 0.001,
+          "axle_angular_momentum_kg_m2_s": -0.0003935048087365385
+        },
+        {
+          "time_s": 0.01,
+          "axle_angular_momentum_kg_m2_s": -0.004039560094368259
+        },
+        {
+          "time_s": 0.025,
+          "axle_angular_momentum_kg_m2_s": -0.010141345228853028
+        },
+        {
+          "time_s": 0.05,
+          "axle_angular_momentum_kg_m2_s": -0.020274727187670736
+        },
+        {
+          "time_s": 0.075,
+          "axle_angular_momentum_kg_m2_s": -0.030390173576563397
+        },
+        {
+          "time_s": 0.1,
+          "axle_angular_momentum_kg_m2_s": -0.04048386367579185
+        }
+      ]
+    },
+    "once_per_step": {
+      "complete": true,
+      "wall_seconds": 8.738736043684185,
+      "sample_count": 101,
+      "dt_s": 0.0001,
+      "seconds": 0.1,
+      "solver_type": "TGS",
+      "position_iterations": 32,
+      "velocity_iterations": 4,
+      "external_forces_every_iteration": false,
+      "distance_tolerance_compensation_m": 0.025,
+      "final_axle_angular_momentum_kg_m2_s": -0.01380053047579328,
+      "axle_momentum_change_kg_m2_s": -0.013776497952197545,
+      "integrated_gravity_axle_impulse_kg_m2_s": -1.963162936166836e-05,
+      "late_momentum_slope_nm": -0.05578853628704541,
+      "final_lateral_runout_m": 0.0009058117866516113,
+      "final_tension_range_n": [
+        202.24449019111728,
+        600.8989152913932
+      ],
+      "rim_integrity": {
+        "valid": true,
+        "steps": 1000,
+        "first_failure": null,
+        "maximum_axial_bending_strain": 0.001236577584786745,
+        "maximum_twist_rad": 0.0009388482677155507,
+        "maximum_locked_joint_gap_m": 9.851781738740326e-06,
+        "peaks": {
+          "maximum_axial_bending_strain": 0.0016260756272829554,
+          "maximum_twist_rad": 0.001355456959557933,
+          "maximum_locked_joint_gap_m": 1.5346405869810327e-05
+        }
+      },
+      "report_sha256": "85b8adfda0e17caeddb7ac1c71e96776c262e5104ac13f62690b551b61f3c30f",
+      "momentum_samples": [
+        {
+          "time_s": 0.0001,
+          "axle_angular_momentum_kg_m2_s": -2.4032523595735538e-05
+        },
+        {
+          "time_s": 0.001,
+          "axle_angular_momentum_kg_m2_s": -0.00026439596404165575
+        },
+        {
+          "time_s": 0.01,
+          "axle_angular_momentum_kg_m2_s": -0.0035337725667548116
+        },
+        {
+          "time_s": 0.025,
+          "axle_angular_momentum_kg_m2_s": -0.007401977531409677
+        },
+        {
+          "time_s": 0.05,
+          "axle_angular_momentum_kg_m2_s": -0.010942123947685902
+        },
+        {
+          "time_s": 0.075,
+          "axle_angular_momentum_kg_m2_s": -0.012857927103012435
+        },
+        {
+          "time_s": 0.1,
+          "axle_angular_momentum_kg_m2_s": -0.01380053047579328
+        }
+      ]
+    }
+  },
+  "source_hashes_identical": true,
+  "source_sha256": {
+    "scene_probe.py": "4b77d3377d9ddd47aab28a171a0450033804e49e3340f975150acde752d69f77",
+    "recenter_probe.py": "344cd1694f20970400a9d37c1365c2acb7c5ab5f6e9850e49248667a26f62a17",
+    "wheel_scene.py": "864afc8820a1e31d82de01efdecf2f385cc46455771cc7f89c02b478a7390b12",
+    "native_probe.py": "11e7c3dddc7f4726099f6977b0db80c54f4b438b6e26a4adbcceca914e3503f7",
+    "thread_coupling.py": "5e302ae7a91d86d0e0bad2f546c598d02709c80c84ad5c43261b909cca4d7c2b",
+    "mechanics.py": "727e694b8d3e654815cb705e45b52266f07c0a40570a57c5c67dae716e3d2edc",
+    "integrity.py": "8c917dd46bd126c023c04439b303f5d9fafb1d31289014ed99fe0a5aac28a90b",
+    "momentum.py": "b6c12bcbdd75d9931f4fee37d3971c0cd02c8c077e72299d1a310ef3ac35493e"
+  },
+  "conclusion": "Once-per-step integration reduces final axle momentum66% and its late slope is decaying, but startup momentum remains far above gravity impulse. This100ms control does not prove long-run stability or justify replacing supported PGS robot physics.",
+  "next_diagnostic": "If later compute is authorized, passive .5-1.5s same-configuration continuation distinguishes a finite startup transient from sustained torque; retain constitutive and integrity checks. No further run launched here."
+}

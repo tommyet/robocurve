@@ -1,8 +1,8 @@
 {
   "schema": "runtime-evidence-v1",
-  "status": "native_diagnostics_executed_full_task_unverified",
-  "scope": "Native passive-piston controls, physical YAM pickup, extrusion, state-assisted three-deposit trajectories and released-tool evidence executed on this stack. Full-score shell border and Dream baseline remain unverified.",
-  "current_task_runtime_verified": false,
+  "status": "paired_native_runs_verified_ready_for_user_review",
+  "scope": "Native111 demo: 1.0, six ridged shells across 87 mm, 1114 actions, 55.7 simulated seconds, 501.57 wall seconds. Dream111: 0.0, 2400 actions, 120 simulated seconds, 1041.90 wall seconds, one session. Physical judging uses prescribed per-trial calibrated photographs; real icing precision is not claimed.",
+  "current_task_runtime_verified": true,
   "python": "3.12.16",
   "packages": {
     "numpy": "2.5.4",

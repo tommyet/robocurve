@@ -1,0 +1,39 @@
+{
+  "kind": "native-wheel-109-identical-value-notice-batching",
+  "physics": "CPU PGS128/4 at100us; zero-defect control;5000steps",
+  "both_complete": true,
+  "sampled_states": 501,
+  "all_sampled_states_exactly_equal": true,
+  "authored_values_exactly_equal": true,
+  "same_attribute_writes": true,
+  "written_per_run": 131196,
+  "sdf_batches": 4999,
+  "readback_verified": true,
+  "baseline_timing": {
+    "material_s": 11.537834054790437,
+    "native_simulation_s": 12.93362487014383,
+    "observation_s": 0.9803649075329304,
+    "checkpoint_s": 5.750344113446772
+  },
+  "batched_timing": {
+    "material_s": 9.445096021518111,
+    "native_simulation_s": 13.39628772996366,
+    "observation_s": 1.0036268653348088,
+    "checkpoint_s": 4.218643356114626
+  },
+  "baseline_wall_s": 34.73168739583343,
+  "batched_wall_s": 31.89915099181235,
+  "material_speedup_fraction": 0.18138049336941486,
+  "material_plus_native_speedup_fraction": 0.06661127881474993,
+  "tension_range_n": [
+    410.44951913910126,
+    423.25693642600663
+  ],
+  "integrity_identical": true,
+  "integrity_valid": true,
+  "limitation": "One matched short standalone pair; performance includes concurrentGPU work and checkpoint variability. No reduction in native timestep, force updates or physical material. YAM bridge gate remains next.",
+  "sha256": {
+    "wheel-baseline": "1c53d10fda6a83ca306d65168c9a5832e033de2b5123876d6a224cb723acc035",
+    "wheel-batched": "c53b674f0e86c7b20b67610ee4cdf9ac089ebd59f36c7bf44551934973600e72"
+  }
+}

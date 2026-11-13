@@ -11,7 +11,7 @@ def screen(plan,nodes,faces,steps=range(1,81),side='right',inflation=.001):
  from yam_arena.analysis import link_hulls,fk_link_poses_world
  from yam_arena import station
  from yam_arena.constants import ARM_JOINTS,FINGER_OPEN
- from audit_robot_contact import clipped_triangle
+ from audit_robot_contact import clipped_triangles
  if not 0.<=inflation<=.002:raise ValueError('Unexpected approach inflation')
  hulls=link_hulls();tri=nodes[faces];low=tri.min(1);high=tri.max(1);out=[]
  for i,f in enumerate(plan['frames']):
@@ -22,7 +22,7 @@ def screen(plan,nodes,faces,steps=range(1,81),side='right',inflation=.001):
    R=ps[name][:3,:3];t=ps[name][:3,3]
    for j,h in enumerate(hs):
     w=h.vertices@R.T+t;ids=np.flatnonzero(np.all(high>=w.min(0)-inflation,1)&np.all(low<=w.max(0)+inflation,1));local=(tri[ids]-t)@R
-    touched=[int(ix) for ix,v in zip(ids,local) if clipped_triangle(v,h.planes,-inflation)]
+    touched=ids[clipped_triangles(local,h.planes,-inflation)].astype(int).tolist()
     if touched:hits.append(dict(link=name,hull=j,faces=touched))
   if hits:out.append(dict(step=i+1,stage=f['stage'],hits=hits))
  return out

@@ -8,6 +8,22 @@ import numpy as np
 from scipy.spatial.transform import Rotation,Slerp
 
 
+def assistance_stop_step(plan):
+    """Last assisted action in a frozen plan; intentional release is unassisted.
+
+    Old pickup/entry prefixes use compensation until their final action. A plan
+    that puts the tool down must declare the final closed-grasp action, rather
+    than asking the controller to follow a freely released handle.
+    """
+    count=len(plan['frames'])
+    stop=plan.get('pose_assisted_entry_until_step',count)
+    if plan.get('requires_pose_compensation_release_boundary') and 'pose_assisted_entry_until_step' not in plan:
+        raise ValueError('Tool-release plan must declare the last assisted action')
+    if type(stop) is not int or not 140<stop<=count:
+        raise ValueError('Last assisted action must follow pickup and lie within the frozen plan')
+    return stop
+
+
 class ToolEntryCompensation:
     def __init__(self,tcp_offset,alpha=.1):
         self.offset=np.asarray(tcp_offset,float)

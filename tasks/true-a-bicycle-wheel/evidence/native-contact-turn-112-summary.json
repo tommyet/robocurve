@@ -1,0 +1,51 @@
+{
+  "kind": "native-wheel-112-contact-turn-and-failed-release",
+  "native_complete": false,
+  "completed_actions": 379,
+  "wall_seconds": 1337.9922102345154,
+  "error": "RuntimeError: Tool servo IK failed: position=0.027401585916684266, rotation=0.11452455648905378",
+  "tightening_stroke": {
+    "from_action": 249,
+    "to_action": 329,
+    "nipple0_start_turns": -0.800835671421213,
+    "nipple0_end_turns": -0.5493349407429903,
+    "actual_rotation_degrees": 90.5402630441602,
+    "tension_start_n": 102.38238574627897,
+    "tension_end_n": 256.7357391362688
+  },
+  "initial_turns": -0.7500000026694886,
+  "final_turns": -0.6041573173718351,
+  "early_approach_loosen_degrees": -18.300840750620786,
+  "measured_hull_samples": 380,
+  "unintended_hull_intersections": 0,
+  "rim_integrity": {
+    "valid": true,
+    "steps": 189501,
+    "first_failure": null,
+    "maximum_axial_bending_strain": 0.0011106614603138359,
+    "maximum_twist_rad": 0.0015234452227630394,
+    "maximum_locked_joint_gap_m": 8.892828670282342e-06,
+    "peaks": {
+      "maximum_axial_bending_strain": 0.001447618407474323,
+      "maximum_twist_rad": 0.0016254056900548864,
+      "maximum_locked_joint_gap_m": 1.968611917256832e-05
+    }
+  },
+  "interpretation": "Native contact genuinely rotates the nipple90.54degrees during the intended tightening stroke. Initial approach and failed final release lose some progress. This is not a full task demonstration or a successful quarter-turn cycle.",
+  "cause": "The10mm approach barely clears the8mm jaw end plus1.615mm square half-width. Contact loosens the nipple before seating. During withdrawal the nipple remains at tool-local y1.78mm; the tool is still engaged when the route moves across the wheel plane.",
+  "next_candidate": "16mm clear approach, stable orientation before insertion, slower16mm withdrawal, settling hold and an observed whole-square mouth-clearance guard before cross-plane movement. Physics and effort limits unchanged.",
+  "source_hashes": {
+    "preview.json": "17df3b9e558e03bdc5b9f3ed8ce20da6f00b87a8205469b4d03beba2abf9ca04",
+    "trace.jsonl.gz": "d8ec8b970f71cd3a294236e2a44d33694265a111e22f11561c37e0ec34963921"
+  },
+  "score": 0,
+  "intended_contact_qualification": {
+    "maximum_sampled_jaw_nipple_separation_translation_m": 0.0004509300648715131,
+    "typical_tightening_overlap_m": [
+      0.000349,
+      0.000378
+    ],
+    "method": "Exact separating-axis convex translation distance for authored solids at20Hz",
+    "not_certified": "The skewed square overlaps the jaw during contact. Native rotation alone does not certify physical contact fidelity; clearer entry and release require validation."
+  }
+}

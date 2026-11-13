@@ -112,7 +112,7 @@ def main():
         p.error('Contact forensics requires at most20 ready-hold steps, no plan, and no strain continuation')
     if a.contact_forensics and not a.audit_junctions:
         p.error('Contact forensics requires --audit-junctions to retain native joint-continuity checks')
-    actions=None
+    actions=None;entry_stop=None
     if a.plan is not None:
         plan=json.loads(a.plan.read_text())
         if plan.get('control_hz')!=20 or plan.get('no_object_feedback') is not True:
@@ -130,6 +130,9 @@ def main():
         actions=np.asarray([row['action14'] for row in plan['frames']],float)
         if actions.ndim!=2 or actions.shape[1]!=14 or not np.isfinite(actions).all() or len(actions)<a.steps:
             raise ValueError('Incomplete/invalid fixed action sequence')
+        if a.pose_assisted_entry:
+            from tool_entry import assistance_stop_step
+            entry_stop=assistance_stop_step(plan)
     from native_cloth import ContactRefinement
     import runtime_config
     import coordinate_frame
@@ -168,6 +171,8 @@ def main():
             'policy':'ordinary ready targets' if actions is None else 'frozen joint targets; no object feedback'}
     if a.pose_assisted_entry:
         report['policy']='scripted feasibility demo: frozen pickup then fixed blade path with filtered native tool-in-gripper pose compensation; ordinary bounded joint actions'
+        report['pose_assistance_actions']={'first':141,'last':entry_stop,
+            'after_last':'frozen joint targets with ordinary position/rate limits; no live tool-pose compensation'}
     app=video=trace=emb=break_observer=None
     profiler=None
     if a.profile_steps:
@@ -556,19 +561,27 @@ def main():
                  'handle_position_in_gripper_m':(hand_rotation.T@(handle_pose[:3]-hand[:3])).tolist(),
                  'handle_rotation_in_gripper':(hand_rotation.T@rotation(handle_pose[3:])).tolist(),
                  'blade_pose_xyzw':array(blade.get_transforms())[0].tolist(),
-                 'thread_poses_xyzw':state['poses'].tolist(),'cloth_nodes':[n.tolist() for n in state['nodes']],
+                 'thread_poses_xyzw':state['poses'].tolist(),
+                 'thread_velocity_m_s_rad_s':array(thread_view.get_velocities())[order].tolist(),
+                 'handle_velocity_m_s_rad_s':array(handle.get_velocities())[0].tolist(),
+                 'blade_velocity_m_s_rad_s':array(blade.get_velocities())[0].tolist(),
+                 'cloth_nodes':[n.tolist() for n in state['nodes']],
                  'cut_events':cutter.events,'invalid':state['invalid']}
             if a.facet_cloth:
                 row['facet_poses_xyzw']=[view.last_poses.tolist() for view in views]
+                row['facet_velocity_m_s_rad_s']=[array(view.view.get_velocities())[view.order].tolist() for view in views]
                 row['facet_consistency']=[view.last_check for view in views]
                 row['native_joint_breaks']=break_observer.summary()
+            if moving_jaw is not None:
+                row['moving_jaw_pose_xyzw']=array(moving_jaw.get_transforms())[0].tolist()
+                row['moving_jaw_velocity_m_s_rad_s']=array(moving_jaw.get_velocities())[0].tolist()
             trace.write(json.dumps(row,allow_nan=False)+'\n');trace.flush()
         snapshot(0,ready);save()
         if state['invalid']:raise RuntimeError('Authored seam reset fails material/contact audit')
         previous_action=ready.copy()
         for step in range(1,a.steps+1):
             action=ready.copy() if actions is None else actions[step-1].copy()
-            if entry is not None and step>140:
+            if entry is not None and 140<step<=entry_stop:
                 nominal_tcp,nominal_hand_r=ik.tcp_pose(action[7:13],station.BASES['right'])
                 nominal_tool_r=nominal_hand_r@DOWN.T
                 nominal_tool_p=nominal_tcp-nominal_tool_r@GRASP_OFFSET
@@ -584,6 +597,9 @@ def main():
                 if position_error>.001 or rotation_error>np.deg2rad(.5):
                     raise RuntimeError('Pose-assisted entry target is not reachable within the ordinary robot limits')
                 action[7:13]=q
+            if entry is not None and step>140:
+                # Also retain rate limits when the plan deliberately releases
+                # the handle and returns to frozen, unassisted targets.
                 action=np.clip(action,emb._low,emb._high)
                 action=np.clip(action,previous_action-limits,previous_action+limits)
             start=time.perf_counter()

@@ -1,5 +1,5 @@
 {
-  "status": "development_not_submission_ready",
+  "status": "development_only_not_submission_ready",
   "checked_date": "2026-11-13",
   "local_checks": {
     "geometry_and_rubric_tests": 17,
@@ -20,7 +20,10 @@
     "fixture_clearance": {
       "result": "passed",
       "scope": "All3504 initial cloth triangles clear neck, shoulder block, post, base and collar points by at least1 mm. Batch011 settled standalone and batch013 YAM reset also have zero final full-triangle/fixture intersections."
-    }
+    },
+    "latest_run": "2026-11-13T13:28:44.467277+00:00",
+    "current_tests_passed": 18,
+    "syntax_and_json": "passed"
   },
   "native_gpu_checks": {
     "status": "mechanism_incomplete",
@@ -170,10 +173,92 @@
       "adult_fixture_audit_samples": 21,
       "sampled_adult_fixture_crossings": 0,
       "next": "Same physical scene and route with fully open receiving fingers (1.0 rather than 0.6), plus a broad empty-pinch stop before original-hand release. All 300 rigid/inter-arm poses and 120 measured-cloth approach poses pass on actual101 input. Native result pending."
+    },
+    "adult_forward_carry115": {
+      "status": "retained_wide_strip_no_transfer_or_knot",
+      "completed_actions": 280,
+      "wall_seconds": 241.02862296812236,
+      "patch_lift_m": 0.41924171277454925,
+      "final_patch_tcp_depth_m": -0.02304391939730449,
+      "sampled_fixture_intersections": 0,
+      "sampled_robot_hull_intersections": 0,
+      "maximum_sampled_robot_node_penetration_m": 1.4431186419590347e-05,
+      "sampled_self_crossings": 0,
+      "self_contact_samples": 8,
+      "final_maximum_edge_strain": 0.046178083516955404,
+      "final_p99_edge_strain": 0.011962536285271833,
+      "trace_sha256": "b2b9cfd445e2310ff7baeac3a45d5b7e3e3f138fe2c826994120ddcc1ea193b6",
+      "evidence": "artifacts/six-task-completion-2026-11-13/native-batch-115-tie/tie-carry280",
+      "next": "Released580-action attempt preserves pickup/carry then uses an axial receiving approach. All300 continuation commanded hull checks clear;29 static loose narrow-tail forearm contact warnings remain explicitly disclosed. Empty-pinch guard prevents original release when receiving volume is empty. Actual contact and transfer are unproven."
+    },
+    "adult_axial_transfer119": {
+      "status": "physical_transfer_retained_but_wide_strip_self_crosses_after_original_release",
+      "completed_actions": 580,
+      "wall_seconds": 470.73558485973626,
+      "receiving_patch_depth_final_m": -0.009440973136740674,
+      "tip_lift_after_transfer_m": 0.2788596057125547,
+      "sampled_fixture_intersections": 0,
+      "fixture_samples": 21,
+      "sampled_robot_hull_intersections": 0,
+      "robot_contact_samples": 11,
+      "maximum_robot_node_penetration_m": 6.0387021296459675e-05,
+      "maximum_self_crossing_pairs": 66,
+      "first_sample_with_self_crossings": 480,
+      "self_crossing_material_range_m": [
+        0.045,
+        0.45
+      ],
+      "maximum_two_sided_plane_penetration_m": 0.0019502129745756296,
+      "finding": "The narrow-tail forearm brush does not produce the observed defect. Wide material folds through itself after the original high pinch opens while the received tip is low. No valid handoff integrity or knot claim.",
+      "next": "Same580 actions, receiving tip raises while both hands still retain the strip; original hand releases afterward. Same material/physics. All300 commanded continuation rigid checks pass; actual result pending."
+    },
+    "adult_reordered_transfer126": {
+      "status": "bounded_interruption_retained_tip_but_contact_integrity_invalid",
+      "completed_actions": null,
+      "controller_change": "Raise receiving tip with both pinches closed, then release and withdraw original hand. Preserves prior axial approach and physical settings.",
+      "commanded_continuation_hull_frames": 300,
+      "commanded_continuation_hull_violations": 0,
+      "source_adult_handoff_sha256": "3f254be054180996c766d2d246d0faf0c42203d40e2e9547a107b45193b1e8bd",
+      "score": null,
+      "original_report_completed_actions": 540,
+      "last_complete_native_trace_action": 549,
+      "wall_cap_seconds": 480,
+      "recovery": "550 complete flushed JSON rows recovered into a separate derivative; original incomplete gzip and running run.json unchanged.",
+      "original_trace_sha256": "3b0a9ddc0b6fdfd489b26c9d294c5b6c1e1f2b9068f62a6d0ea087a56801691a",
+      "recovered_trace_sha256": "93c8daa78e68742ffe71dc28806336714c8943eaaf65bdb7d2c2a3f20df20f32",
+      "final_receiving_patch_tcp_depth_m": -0.01121,
+      "sampled_self_contact_pairs": 2,
+      "first_sample_with_crossings": 549,
+      "self_crossing_plane_depth_m": [
+        0.0009148835828007215,
+        0.0011342646645442702
+      ],
+      "self_crossing_material_regions_m": [
+        [
+          0.245,
+          0.25
+        ],
+        [
+          0.54,
+          0.545
+        ]
+      ],
+      "sampled_fixture_intersections": 0,
+      "fixture_samples": 21,
+      "robot_contact_samples": 13,
+      "maximum_sampled_robot_node_penetration_m": 0.0018452590421232675,
+      "robot_defect": "At520 a different wide-strip region(s0.14-0.16 m) enters the receiving fingertip; final recorded robot hull checks are clear. A transient full-material passage still invalidates integrity.",
+      "finding": "Raises and retains received tip after original release, reducing prior66 crossings to2 in the sampled endpoint; still no valid complete transfer or knot.",
+      "next": "Route the unsupported middle fold away from the receiving fingertips and collar-side strand before original release; screen against measured500-state. No further native motion released."
+    },
+    "interruption_recording_fix": {
+      "status": "CPU_checked_native_unrun",
+      "change": "Re-arm SIGTERM handler after Kit startup; save interruption metadata before encoder cleanup and record last native trace step.",
+      "limitation": "Exact cause of handler/finalizer interruption is not established; the archived126 remains incomplete."
     }
   },
   "demo": {
-    "status": "not_implemented"
+    "status": "full_score_not_demonstrated"
   },
   "dream": {
     "status": "not_run"
@@ -192,38 +277,68 @@
   ],
   "source_sha256": {
     "ENVIRONMENT.json": "894a573dafa0d1ef4380e51a3e61f984e80cbbcfdf4988d3b1cc96e2f9eeb16e",
-    "JUDGING.md": "4ef2abf693410d763fafdf7ec612d234c8f6f9f393d50bff3a791372ce2c0260",
+    "JUDGING.md": "6e1ebba58d1a7cfb91148712dcc81fdf8c3ebc58506d24600728217def74543c",
     "LICENSE": "a71ddeb012ff1961bf252489309b565ffd0443632819aa9c88eef4377f9f9f7a",
-    "MOTION_PLAN.md": "c07a2d29769c41beed2ecf8313b1b19ea23bbb8ef64190b14b943eb7104c113f",
-    "README.md": "624b64fb5c26c45eb3678eb8d4fb680518a981ac85fcf71d8ad8cc16b1e0334f",
-    "arena_cloth.py": "d6c4574249c9eb9a5772288c7ce0f03afccc5b8637f44ec923c7522ea4f387c6",
-    "arena_props.py": "5f2b6d710f1e8144d99a8c956db134b68b0e37996f4171415019a82ad67be9c4",
-    "audit_motion.py": "2d68ec6f2498d250e644baef3868780af03457414962878415e21e0eb68387be",
-    "audit_robot_contact.py": "395e56794ed65d56c0d4d64bcc3c49d8375a3e2c56ed1356446df83c2eb4ba48",
-    "cloth_mesh.py": "8fd32902163bf9429ec524d1a619d1640dca979f43f68307444530e52a548bde",
+    "MOTION_PLAN.md": "a2f3b13d76061ac2d1cbfd4d2d8b36d4009bb4937029b5ca68ce8fcbc0e6940e",
+    "README.md": "74afafd18dab51f5410d0df75a1dcc092782338a681e8cc717ff477f1ff247f9",
+    "adult-handoff-plan.json": "8e4e90b822b36ae8ca78d0bd2994117a71b12b3b9075feb0dfec5625ca8eed28",
+    "adult-pickup-plan.json": "1d4422542587cf6492aca7586fabced8105f3dcd97c5632a14aa6341c2f9ab5a",
+    "adult-settled-reset.json": "2882fa51d911906652ffdc74395ed79d14fe71a535d3096d80be5e24903e391e",
+    "adult-settled-reset.npz": "429998f05faa82fb7a1c3c2fdba7270cb0cd00447e42f6f2d213d739bfa83bd7",
+    "adult_handoff.py": "3f254be054180996c766d2d246d0faf0c42203d40e2e9547a107b45193b1e8bd",
+    "adult_knot.py": "0603405bb91da6121e9f0b082631c88a7d7cd233563f43b3f5ed2c27bff55723",
+    "adult_layout.py": "067a38c48603e61e282f0a008adf85d1d0673eb35eea8afe6fc05588fec04830",
+    "adult_motion.py": "da07a2dc6d1ab160d9e9c31daa2af175035552f7f1f0ced61423bcba53f05f2a",
+    "arena_cloth.py": "88fc0b4d7a364133ef4aabcd1eb040125dc23f89097b38ddf890f7f9391892a1",
+    "arena_props.py": "b58b88bc4e5ecf450a62e5ae47c70a93b73946a31a252ff2775d0343bfa3c34c",
+    "audit_adult_motion.py": "a019fdd776c3e3f5a2ed982aec68291c58aa31779b28317be63b8d85df01e34b",
+    "audit_motion.py": "ba10ebceca432c501c10bad51c97959be47b6c0210e3d09bd23799d2801b322a",
+    "audit_reset_approach.py": "6cf791bff8dd41fc0ab62a935cdf47845a29459f3fb4c20671dcd5f3dd70be4c",
+    "audit_robot_contact.py": "f7bd33744c8a4c50af515a2286d49fc5dd648189d4d2c5fe10f74dae4137e48a",
+    "audit_self_contact.py": "6c084b0887a13646e2b69a224f5687b46848be8c5740d30aa2bccc26f6b31807",
+    "cloth_mesh.py": "b2a6350188434b05b078df78176b353a79a8d279e6e5cddd87d09bd5bc2611d1",
     "cross-plan.json": "9c9a1dd2980c9b3466e0490f451ea6057198c61e9e4ca73e00589350be773fea",
     "cross_motion.py": "a8333c59ec4f7a3b4baf2d9a29fda48b94ee2857c937630d885403c16e075973",
-    "fixed_motion.py": "6d86a61f4950487e56e3a2d292e85b40b95ecebc38b53292fe6b9ded2a8cafb4",
-    "fixture_clearance.py": "a872e448c64c1d2d9acbb0b89d9b39e1c7ec0bcdbf2f2b890175ca15aab96fc0",
+    "deeper-bite-wrap-plan.json": "4edd9c337d852622c37d8049b61dc808d3ba15effee2e9a5a2ae275857aa0d14",
+    "deeper_bite_wrap_motion.py": "8afbe82bbb68e9cf6f332d75d5c9951d3c468b07496955b4382b39f2d4daf731",
+    "dream_policy.py": "ad92ac9ddcf4c1d48c9985fcd0a0fc116144a995d8d4b0368e476b3f432b611b",
+    "fixed_motion.py": "241b5b8b698f2e7c6950cbe4e7aa3934500608b242e5c7205ef1b6f25a85838f",
+    "fixture_clearance.py": "5f8d7b857415f073450ac666a4b01b595cf74bbea194685bf581dcc482332448",
+    "free-wrap-plan.json": "fcfb92baf6e7ac0f4896c369a459f9a2a217f3fa37f8c08b393858e20e147630",
+    "free_wrap_motion.py": "a2d9dc328ef428933436b959841ecb40bead924a6bbdc1a38beaafda4f77a1a7",
+    "front-space-wrap-plan.json": "f34958a562ab2dfc70ce0639d1e3eb27ed2e37d779ab9765214bba4620c74c2a",
+    "front_space_wrap_motion.py": "b08f68c4a2ffd78c187a55dd767260b3e3a6e676ddc749fbaf478fb6ddc6edb3",
     "grasp-plan.json": "dbc3835deb90b3521b3c0981443a4811ce9b4acea19a6a04457f0d3a2956f58d",
     "handoff-plan.json": "c3254d1cd9fa7411a36325d3cd332354c4c850f8295085ee8cbcc3ac677f8384",
     "handoff_motion.py": "13c249d4d87e2a313c7386d6471927af04c61e86887c4e6e4690e81fd21247ee",
-    "interpret_motion.py": "cc095e8cd42e80d97e02bfb9a1b5f5235be0743615a5cd5a980272e569c0c79a",
-    "interpret_probe.py": "bfc58a7df7587e4938b2090bd3bfb538d5f7d6a89c6926b4b4cf3d7989d1863d",
+    "interpret_motion.py": "19da0dee40e2c44cbc7fbb6d50cac40f1964219da0d4c25ddab87a3b0f49f423",
+    "interpret_probe.py": "1128d108b6146a8ca1b4614c53518d2c5dcd1714dc0fb5414b0be1b16dc86ad9",
     "judge.py": "c6c7cfcc493010a6f3508f4146fbdedee33b35d13ebfb156779d1c092a486ded",
-    "layout.py": "ec9c3f9098af5a444967ce9aff1358ce2af53b593320114dde65e53ac0faac28",
+    "layout.py": "0a6f990586761eb79d052f70a6123f69c6776fcb03305953cd96281cff4d8fcc",
     "native_cloth.py": "c87884160c87d0ddc8295eaed48fb49a705823ab20b069506d9716c523191530",
-    "probe.py": "b264946e5ea402f9bf2f4f795186ca6ec8de9a748215c05e20e6fb1656163852",
+    "neck-loop-plan.json": "c655f0c27f65d25dac47edfe88da28199101b2efd7c9a1065583fea6ed0f400f",
+    "neck_loop_motion.py": "4cf65f88f34df62868b9fb553438527865b4fe8c9d43067ad69e33202ee1ca02",
+    "probe.py": "f5631820fcbce7b0101fc03aa146965acb0da4dc50b98e988ee2d5a9d95c1de2",
     "probe_capture.py": "55ec10d9bb92a177751d790d16bfc9ef6a4cd08d4934735d1c223548ef8adb67",
     "probe_runtime.py": "1092025de87ae5168b0d0c519388b6cec65d6ebddf756f5407b7ef4c3b6dbd11",
     "reset_asset.py": "0826ba4d97a0067cb810e529470db0802ade98c7f22971fc7dbb483c0c745697",
     "reset_scene.py": "34cc8d09c5f225917797a34553fefa5cd735b22951508866f2bd7a2b66a5a108",
-    "review_views.py": "9e68e6943d1ba20d916f17ac9fe4a6ed793742fafb55a0fa269d0fb16749e54b",
-    "run.py": "674f29ce5579aac7fd830e00171bce0451ac49f14375ec16ab7b187fefe19835",
-    "scoring.py": "6246958397ca8936182f6b1cdc8b9aef423f0ba20f8871a2129d38ddbc481ce7",
-    "task.draft.json": "8d521ad0296a3fd47108e342665429e88cb28c8a304f0f3e3b8c31a91e894daa",
-    "task.py": "86ec5877a99f367f0fedf51c45901181dc016099d48df0ac6717ee8940544eb0",
-    "test_local.py": "e06afeb1efc1fd79f8cfc8fceb54cb3eb2c874be8c5f0ae089570fa9cf65de6e",
+    "review_views.py": "71a553d33f844d97ab3abe3fcdc6677d5a706f009e46a6122c9ea3d50f9d3da6",
+    "run.py": "ed955e129df558ab8d8fc342c79b65acc3d5e3eaa2711a772fb29656f511a590",
+    "scoring.py": "7dc5291460f2d2dc4e286c2c8591f194f2dbac60e7c5b17d7df2d586d4475ab7",
+    "side-wrap-plan.json": "53f96cec505bffe171c5d0290caa0768b967ecc12e21f4e5d779b14dfdc28648",
+    "side_wrap_motion.py": "62472c1e0a3f11f1297701382e282e0605c54753529a6dbfc4bf47b679e9182d",
+    "simple-wrap-plan.json": "5bbf0a828748233baa5926caadb482defc09f8dd4272c8b93ff651fceb5c83ab",
+    "simple_wrap_motion.py": "c25edd1cc316c752dadaec51d799729667e67ee77da077db0504cd28e0528e7d",
+    "stabilized-wrap-plan.json": "b4523e5441928fa1f7dd3f21faa322f99572bfca465cd607828e581d801c9fe8",
+    "stabilized_wrap_motion.py": "7f9d1bceecb8db79177458c41ad932131149a5f53723c279b909ede6da0d0f0d",
+    "task.draft.json": "57b2e710a2ead133754f144927c3cd14560e26172fd4be1614ea7fde5aa6f1f3",
+    "task.py": "bf37661c1681d3f2d5d722579bd7b72f34f27b800baceb718dfe05df6b045fe0",
+    "test_local.py": "5f5a8df6d5f1352a401952783c4adaa7ce6880f010859ce0baf7388cd860fb7a",
+    "test_self_contact.py": "ca9f0a29f395dabf4e245de52c7d4ba515447747f484c9046a3148f4ba9bd8ae",
+    "wrap-handoff-plan.json": "310173919eb850191157d94c7988f79af50e8589b7161b2f0053862d31d20c95",
+    "wrap-plan.json": "c285b7147b47c8dcc00d62335a7935edef25310ec407c0fb36f35cc8a5592843",
+    "wrap_handoff_motion.py": "fed45a4206f649047a851c780557c8b64879fce0433565627850513578f79283",
     "wrap_motion.py": "b7566d3be00a0581b3510818b40af42b29886556912e1aae7f35e8050ae1be16"
   },
   "implementation_checkpoint": {
@@ -231,7 +346,7 @@
     "arena_scene": "Native YAM cloth/collar scene, five-second physical reset and contact-only retained grasp/lift/release verified.",
     "passive_pegs": "Not applicable",
     "runner": "Smoke and fixed-joint motion probes share explicit raw reset plus exactly100 ready-position control steps of native settling; all setup physics counts/time recorded separately.",
-    "controller": "Retained physical tip handoff demonstrated in batch022. Narrow-strand grasp/front-cross continuation uses offline measured pose. Full knot, clean release and wearable fit remain unproven.",
+    "controller": "Adult pickup and forward carry retain. Transfer119 self-crosses; reordered126 retains the receiving tip but has residual self-crossing and transient pad penetration. No valid complete transfer or knot.",
     "judging": "Evidence-bound manual photo/video/ruler rubric with adversarial local tests; final thresholds need runtime validation"
   },
   "adult_collar_candidate": {
@@ -252,7 +367,7 @@
     "max_initial_abs_edge_strain": 0.00024653008830077816,
     "constraints": "none",
     "purpose": "Remove broad shoulder obstruction and provide realistic slack for one under/over simple knot. Existing child reset remains unchanged until native passive support and robot clearance are established.",
-    "limitations": "No adult YAM grasp, knot, fit or final score evidence.",
+    "limitations": "Adult pickup and forward carry proven. Complete valid transfer, knot, wearable fit and final score remain unproven.",
     "outer_collar": "15 rigid3\u00d715\u00d760mm tangential segments on79mm radius, rear140degrees, front open",
     "native051": "Five seconds complete,51/51 nonblank frames; tie slipped off neck and draped rear support. No usable task reset. Final full triangles clear fixtures and late max speed5.4mm/s."
   },
@@ -301,5 +416,12 @@
     "recorder_fix": "Optional low-variance judging frames are now retained unchanged and flagged for review instead of stopping physics. Malformed image data remain errors. Policy camera inputs and physics are unchanged.",
     "next": "Same580-action handoff with recorder fix, pending; no knot or score.",
     "last_native_trace_step": 309
+  },
+  "forward_carry_candidate": {
+    "status": "native115_retained",
+    "change": "Carry the held wide strip from x0.30 to x0.23m at z1.30 before receiving. Unchanged setup, material and ordinary robot limits.",
+    "cpu_check": "All60 new carry actions clear fixed fixtures and opposite robot; maximum IK position error77.53\u00b5m.",
+    "reason": "Original handoff sweeps cloth aside; direct axial receiving poses place the forearm near the separate narrow strand. Moving the held material into front space is a normal technique.",
+    "receiving_continuation": "126 reordered transfer retained through recovered549, but residual self-contact and pad penetration invalidate it; no knot."
   }
 }

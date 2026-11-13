@@ -19,10 +19,12 @@ from thread_coupling import rotation
 
 
 def measured_props(row):
+    from fixture_layout import pointer_position
+    fixture_layout=row.get('fixture_layout','reference')
     poses=dict(zip(row['body_names'],np.asarray(row['body_poses'],float)))
     props=[box('table',(.35,0.,.7175),(1.10,1.30,.06))]
-    props.extend(box('stand/'+name,center,size) for name,center,size in stand_boxes())
-    props.append(box('stand/pointer',(.373,0.,.785),(.020,.002,.002)))
+    props.extend(box('stand/'+name,center,size) for name,center,size in stand_boxes(fixture_layout))
+    props.append(box('stand/pointer',pointer_position(fixture_layout),(.020,.002,.002)))
     spec=WheelSpec()
     for i in range(spec.spokes):
         pose=poses[f'wheel/rim_{i:02d}'];points,_=sector_mesh(index=i)
@@ -104,7 +106,7 @@ def main():
     from yam_arena.analysis import link_hulls
     native_report=json.loads((a.run/'preview.json').read_text())
     geometry_hashes={name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
-        for name in ('wheel_scene.py','rim_geometry.py','mechanics.py')}
+        for name in ('wheel_scene.py','fixture_layout.py','rim_geometry.py','mechanics.py')}
     if any(native_report.get('source_sha256',{}).get(name)!=digest for name,digest in geometry_hashes.items()):
         raise ValueError('Native run and current wheel geometry differ; use its frozen geometry source')
     hulls=link_hulls();trace=a.run/'trace.jsonl.gz';samples=[]

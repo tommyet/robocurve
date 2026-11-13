@@ -1,8 +1,9 @@
 # Wheel manipulation plan
 
-This is a development plan. Native 091 reaches the first wrench turn but loses
-engagement:90° commanded produces 22.86° net tightening. The wheel remains
-within its integrity limits. No full-score demonstration exists.
+This is a development plan. Native112 turns one nipple90.54° during tightening,
+but entry loosens it and withdrawal stays engaged. The clearer122 approach
+overshoots before insertion, then stops on an unreachable re-aligned wrist
+target. No full-score demonstration or complete repair cycle exists.
 
 The fixed service route uses the published 55° wheel layout and robot URDF.
 The left hand steadies the rim while the right picks up the free wrench,
@@ -23,6 +24,11 @@ During the clear approach's settling hold, one re-alignment is allowed after
 five successive20Hz orientations remain within0.01rad. This avoids chasing
 the brief nipple wobble seen in096 while preventing a stale approach frame.
 Insertion and tightening retain a fixed orientation target for that quarter.
+Native104 exposed a stage-boundary bug: first insertion relatched the nipple
+after early mouth contact, requesting an unreachable handle pose. The approach
+and first insertion now share one engagement latch. Replaying the measured
+190th-frame grasp through all190 remaining commands passes IK and the sampled
+hull screen. This correction still needs a native retry.
 
 The joint tracker adds bounded integral compensation, at most 0.12 rad, using
 only robot joint observations. Native 091 showed why the old 0.9 s turn was too
@@ -50,7 +56,33 @@ no unexpected intersections. This is local evidence, not a completed retry.
 Compile and run commands are in `README.md`. Plans carry source and URDF hashes.
 `audit_robot_plan.py` screens nominal targets; `audit_native_trace.py` checks
 measured states. Both use real robot hulls, but neither certifies continuous-time
-clearance or task success. The 1073-action complete candidate has a screened
-released-spin finale, but its fast service prefix remains superseded until the
-slower physical turn succeeds. The final run limit must cover a validated full
-sequence; the proposed 60 s limit is not yet final.
+clearance or task success. The old1073-action fast candidate is superseded.
+The slower1630-action service plus391-action released-spin finale would require
+2021 actions; the proposed2400-action/120s limit leaves time for the complete
+task. All1630 nominal service poses pass the hull screen, but no full service
+or released revolution has been demonstrated.
+
+Native112 physically turns the first nipple90.54° during its intended stroke,
+but the10mm lead-in touches the square early and withdrawal never clears the
+jaws. The clearer448-action diagnostic uses a14mm lead-in,16mm withdrawal and
+a settling hold. Its state-assisted controller checks the full measured square
+is beyond the jaw ends before crossing the wheel plane. Approximate IK is
+allowed only while the solved square remains clearly outside the mouth; the
+seated turn retains its stricter bound. These are controller safeguards, not
+task scoring conditions or object-state interventions.
+
+Native122 stops at174/448 actions before intended insertion. Its14mm nominal
+lead-in does not prevent dynamic overshoot: actual whole-square clearance falls
+from12.49mm at160 to−1.72mm at168. The nipple rotates over6° from early contact.
+The settled re-alignment shifts the long-handle wrist target outside reach;
+three local seeds and four damping values cannot solve it. An endpoint-only relocation was insufficient: one candidate still hit a wrist
+limit during the transition, and a lower candidate intersected the table.
+
+The explicit `forward10-right50-lower10` diagnostic now moves the fixture
+10 mm forward and 50 mm toward the right arm, and shortens its upright 10 mm.
+The base remains on the tabletop. Its 652-action route slows the last approach,
+pauses before insertion, and blends measured alignment only while clear of the
+wheel. All 652 nominal frames and both 570-frame measured-state routes pass
+IK and unintended-hull screens. Native physics has not run on this layout;
+actual grip, contact, withdrawal and the rest of the repair remain unproved.
+See `RELOCATION_DIAGNOSTIC.md` for exact geometry, evidence and future gates.

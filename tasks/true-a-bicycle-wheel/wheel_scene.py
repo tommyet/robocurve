@@ -62,16 +62,15 @@ def wheel_world_frame(clocking_rad=0.):
     return spoke_phase(clocking_rad)@np.array(((0.,0.,1.),(0.,1.,0.),(-1.,0.,0.)))
 
 
-def stand_boxes():
+def stand_boxes(fixture_layout='reference'):
     """Single-sided bench stand, clamped to the axle's far end.
 
     The former front upright intersected the standard open READY hand. This
     rigid cantilever fixture leaves the ordinary robot reset and rim access
     clear; it does not lock the rotating hub or remove external contacts.
     """
-    return [('base',(.48,.02,.7575),(.14,.25,.02)),
-            ('upright',(.48,0.,.88625),(.025,.025,.2375)),
-            ('axle_arm',(.4475,0.,1.005),(.065,.025,.015))]
+    from fixture_layout import stand_parts
+    return stand_parts(fixture_layout)
 
 
 def wrench_jaw_mesh(side):
@@ -91,8 +90,10 @@ def wrench_jaw_mesh(side):
     return points,np.array(faces,int)
 
 
-def build_scene(stage, root="/WheelTask", *, reset_profile="two-defect-candidate", nipple_flat_phase_rad=0., wheel_clocking_rad=0., central_spring_candidate=False, distance_spring_tolerance_m=0., inextensible_rim_candidate=False):
+def build_scene(stage, root="/WheelTask", *, reset_profile="two-defect-candidate", nipple_flat_phase_rad=0., wheel_clocking_rad=0., central_spring_candidate=False, distance_spring_tolerance_m=0., inextensible_rim_candidate=False, fixture_layout='reference'):
     from pxr import Gf, PhysxSchema, Sdf, UsdGeom, UsdPhysics, Vt
+    from fixture_layout import axle_position, pointer_position
+    axle=tuple(map(float,axle_position(fixture_layout)))
     spec,thread=WheelSpec(),ThreadSpec()
     if distance_spring_tolerance_m not in (0.,.025) or (distance_spring_tolerance_m and not central_spring_candidate):
         raise ValueError('Distance tolerance compensation is only a native central-spring diagnostic')
@@ -114,7 +115,7 @@ def build_scene(stage, root="/WheelTask", *, reset_profile="two-defect-candidate
             limit=UsdPhysics.LimitAPI.Apply(prim,'transX')
             limit.CreateLowAttr(1.);limit.CreateHighAttr(-1.)
     wheel_xf=UsdGeom.Xform.Define(stage,wheel)
-    wheel_xf.AddTranslateOp().Set(Gf.Vec3d(.35,0.,1.005))
+    wheel_xf.AddTranslateOp().Set(Gf.Vec3d(*axle))
     wheel_xf.AddRotateYOp().Set(90.)
     wheel_xf.AddRotateZOp().Set(math.degrees(wheel_clocking_rad))
 
@@ -168,9 +169,9 @@ def build_scene(stage, root="/WheelTask", *, reset_profile="two-defect-candidate
     I=np.eye(3)
     stand=root+"/stand"
     body(stand,(0.,0.,0.),I)
-    for name,center,size in stand_boxes():
+    for name,center,size in stand_boxes(fixture_layout):
         shape(stand,name,center,size,color=(.18,.2,.22))
-    shape(stand,"pointer",(.373,0.,.785),(.020,.002,.002),color=(.85,.25,.12))
+    shape(stand,"pointer",pointer_position(fixture_layout),(.020,.002,.002),color=(.85,.25,.12))
 
     hub=wheel+"/hub"
     body(hub,(0.,0.,0.),I,.18)
@@ -183,7 +184,7 @@ def build_scene(stage, root="/WheelTask", *, reset_profile="two-defect-candidate
     bearing=UsdPhysics.RevoluteJoint.Define(stage,wheel+"/hub_bearing")
     bearing.CreateAxisAttr("Z")
     bearing.CreateBody1Rel().SetTargets([Sdf.Path(hub)])
-    bearing.CreateLocalPos0Attr(Gf.Vec3f(.35,0.,1.005))
+    bearing.CreateLocalPos0Attr(Gf.Vec3f(*axle))
     bearing.CreateLocalRot0Attr(qgf(wheel_world_frame(wheel_clocking_rad)))
     bearing.CreateLocalPos1Attr(Gf.Vec3f(0.,0.,0.))
     visc=UsdPhysics.DriveAPI.Apply(bearing.GetPrim(),"angular")
@@ -199,6 +200,7 @@ def build_scene(stage, root="/WheelTask", *, reset_profile="two-defect-candidate
     chord=2*spec.rim_radius_m*math.sin(math.pi/n)
     metadata={"hub_path":hub,"spokes":[],"wrench_path":root+"/wrench",
               "reset_profile":reset_profile,"initial_turn_offsets":initial.tolist(),
+              "fixture_layout":fixture_layout,"axle_position_m":list(axle),
               "nipple_flat_phase_rad":float(nipple_flat_phase_rad),
               "wheel_clocking_rad":float(wheel_clocking_rad),
               "central_spring_candidate":bool(central_spring_candidate),

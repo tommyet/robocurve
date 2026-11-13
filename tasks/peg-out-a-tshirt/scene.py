@@ -1,4 +1,5 @@
 """Candidate complete prop layout. YAM integration and reach remain unvalidated."""
+import os
 import numpy as np
 from cloth_mesh import tshirt
 from native_cloth import Fabric
@@ -7,7 +8,7 @@ TABLE=.7475
 LINE_X=.52
 LINE_Z=1.09
 LINE_HALF_SPAN=.25
-SUPPORT_SIZE=(.20,.44,.10)
+SUPPORT_SIZE=(.20,.44,.18 if os.environ.get('ROBOCURVE_SHIRT_RAISED_SUPPORT')=='1' else .10)
 SUPPORT_BOARD_THICKNESS=.008
 PHYSICS_HZ=480
 SUPPORT_CENTER=(.36,0.,TABLE+SUPPORT_SIZE[2]/2)

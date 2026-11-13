@@ -2,7 +2,7 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "69 CPU checks pass. Native100 slower hand bracing stops at89 actions with171.59um positive panel aperture, zero joint-break notifications and clean steel crossings. One-handed386-action lever plan passes all commanded hull screens; complete removal is unproven.",
+  "cpu_checks": "70 CPU checks pass. Native114 reaches129 actions but measured heel overshoot causes actual contact-through-sheet and34 inter-sheet triangle crossings. The584-action slower descent candidate passes all nominal and measured-grasp local IK/hull screens; no extraction success.",
   "simulator_probe": "One native 3 mm steel leg with contact-driven plastic hinge, not full task.",
   "demo": null,
   "dream": null,
@@ -14,7 +14,7 @@
     "Successful robot demo, Dream baseline and final media"
   ],
   "status": "development_not_submission_ready",
-  "cpu_tests_passed": 69,
+  "cpu_tests_passed": 70,
   "current_paper_status": {
     "date": "2026-11-13",
     "coarse_pair030": "1000 native steps at10000Hz complete with0.272%/0.283% peak membrane strain; bend estimate reaches1.86%/1.68% locally. No hardware in this control.",
@@ -30,25 +30,8 @@
     "status": "full_size_passive_contact_and_short_YAM_bridge_passed_robot_pending"
   },
   "latest_pgs_controls": "evidence/native-pgs-panels-080-082-summary.json",
-  "next_native_trial": {
-    "entrypoint": "preview_panels.py",
-    "steps": 386,
-    "physics_hz": 2000,
-    "solver_type": "PGS",
-    "position_iterations": 128,
-    "plan": "one_hand_plan.py compiled386-action complete plan",
-    "flags": [
-      "--recenter-at-paper",
-      "--joint-tracking",
-      "--judging-views",
-      "--geometry-aware-continuity",
-      "--tool-pose-servo"
-    ],
-    "status": "released_for_diagnostic_only",
-    "continuity": "Positive empty aperture <=150um with finite shared-edge overlap; raw endpoint errors retained. Separate native hinge-break events. Wire-crossing and steel-integrity guards unchanged.",
-    "controller": "Native remover-pose feedback only through ordinary bounded joint targets after pickup. No left brace; no physical parameter or object edits."
-  },
-  "latest_robot_contact": "evidence/native-bracing-084-summary.json",
+  "next_native_trial": "Slow heel584-action one-hand plan, same geometry/material/PGS128/4 at500us, geometric aperture checks. No launch authorized by this record.",
+  "latest_robot_contact": "evidence/native-heel-overshoot-114-summary.json",
   "latest_bracing_control": {
     "batch": "093",
     "position_iterations": 128,
@@ -958,5 +941,161 @@
     "maximum_grasp_correction_m": 0.0009754230528179526,
     "unintended_hull_intersections": 0,
     "native_extraction_proven": false
+  },
+  "native_heel_contact_106": {
+    "kind": "native-one-hand106-heel-contact-failure",
+    "native_complete": false,
+    "score": null,
+    "completed_actions": 130,
+    "wall_seconds": 615.4962285980582,
+    "error": "MaterialDomainError: Paper hinge continuity or staple crossing failed; no task score is valid",
+    "paper_continuity": [
+      {
+        "continuity": {
+          "maximum_hinge_endpoint_gap_m": 0.00011458853919647597,
+          "maximum_vertex_average_error_m": 8.526132930428112e-05,
+          "maximum_allowed_gap_m": 2.4999999999999998e-05,
+          "valid": true,
+          "continuity_method": "geometric_empty_aperture",
+          "endpoint_distance_is_stop_condition": false,
+          "maximum_allowed_empty_aperture_m": 0.00015,
+          "geometry": {
+            "measurement": "conservative_endpoint_bound",
+            "maximum_empty_aperture_upper_bound_m": 0.00011458853919647597,
+            "shared_edge_overlap_proven": true
+          },
+          "worst_endpoint": {
+            "panel_indices": [
+              168,
+              169
+            ],
+            "positions_m": [
+              [
+                -0.0583220099687868,
+                -0.05119101062090918,
+                0.00014930936838510912
+              ],
+              [
+                -0.058339831572830625,
+                -0.05121635319531953,
+                3.8988574031808015e-05
+              ]
+            ],
+            "difference_m": [
+              1.7821604043823103e-05,
+              2.534257441035026e-05,
+              0.00011032079435330111
+            ]
+          }
+        },
+        "contact_audit": {
+          "valid": true,
+          "steps": 13156,
+          "first_failure": null
+        },
+        "valid": true
+      },
+      {
+        "continuity": {
+          "maximum_hinge_endpoint_gap_m": 0.0001975647294199078,
+          "maximum_vertex_average_error_m": 0.00011994091865360195,
+          "maximum_allowed_gap_m": 2.4999999999999998e-05,
+          "valid": false,
+          "continuity_method": "geometric_empty_aperture",
+          "endpoint_distance_is_stop_condition": false,
+          "maximum_allowed_empty_aperture_m": 0.00015,
+          "geometry": {
+            "maximum_positive_edge_opening_m": 0.00015288230321190525,
+            "maximum_empty_normal_clearance_m": 3.898851233210597e-06,
+            "maximum_empty_aperture_m": 0.00015288230321190525,
+            "maximum_across_edge_compression_m": 0.00017915025622494506,
+            "maximum_along_edge_slip_m": 0.0001718825610143392,
+            "minimum_shared_edge_overlap_m": 0.0005612798485136669,
+            "edges_without_overlap": 0,
+            "worst_aperture": {
+              "panel_indices": [
+                215,
+                216
+              ],
+              "endpoint": 1,
+              "opening_m": 0.00015288230321190525,
+              "normal_clearance_m": 0.0
+            },
+            "interpretation": "Empty aperture geometry only. Compression and tangential slip are reported separately; native hinge fracture is a distinct event.",
+            "measurement": "native_edge_geometry"
+          },
+          "worst_endpoint": {
+            "panel_indices": [
+              168,
+              169
+            ],
+            "positions_m": [
+              [
+                -0.058327335649829226,
+                -0.04789369105943347,
+                0.00012233899816893755
+              ],
+              [
+                -0.058506481810876816,
+                -0.04785303672163853,
+                4.963617765193614e-05
+              ]
+            ],
+            "difference_m": [
+              0.00017914616104759,
+              -4.065433779493893e-05,
+              7.270282051700141e-05
+            ]
+          }
+        },
+        "contact_audit": {
+          "valid": true,
+          "steps": 13156,
+          "first_failure": null
+        },
+        "valid": false
+      }
+    ],
+    "wire_continuity": {
+      "maximum_endpoint_gap_m": 2.0454590872959043e-06,
+      "maximum_allowed_gap_m": 3e-05,
+      "valid": true
+    },
+    "native_joint_break_events": {
+      "observer_installed": true,
+      "event_count": 0,
+      "paper_hinge_break_count": 0,
+      "events": [],
+      "interpretation": "Native break notifications only; no joint edits, score or no-damage certificate."
+    },
+    "planning_error": {
+      "old_commanded_lowest_heel_corner_below_support_m": 0.0002894240142605753,
+      "ignored_paper_stack_height_m": 0.00022,
+      "measured_lowest_heel_corner_below_support_m": 3.398283142530545e-05,
+      "cause": "Planner constrained the tilted heel bottom-centre to bare support, rather than its lowest corner to the upper paper."
+    },
+    "correction": {
+      "geometry_or_material_changed": false,
+      "insertion_pitch_deg": -6.651261063896851,
+      "first84_commands_identical": true,
+      "nominal_hull_frames": 386,
+      "measured_grasp_hull_frames": 386,
+      "unintended_intersections": 0,
+      "maximum_servo_ik_residual_m": 9.082794167671988e-09,
+      "native_extraction_proven": false
+    },
+    "sha256": {
+      "preview.json": "1b7066ef120ae6cfe5d8960b2ed84f8c7616d03e5147b914156f14ae96dd8e2e",
+      "trace.jsonl.gz": "4b3c847d3a471c3f217dbb489ac46083c3d05c01603a3fbfe9cfb0a3b0e80bf8"
+    }
+  },
+  "latest_touchdown_candidate": {
+    "actions": 584,
+    "seconds": 29.2,
+    "maximum_nominal_final_descent_speed_m_s": 0.000375,
+    "native_validated": false,
+    "nominal_hull_samples": 584,
+    "measured_grasp_hull_samples": 584,
+    "unintended_intersections": 0
   }
 }

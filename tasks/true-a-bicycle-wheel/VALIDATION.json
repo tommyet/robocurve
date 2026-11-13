@@ -2,7 +2,7 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "67 CPU checks pass. Native091 completes202actions but only22.86degrees net tightening. Slower096 stops at177 before insertion on an avoidable IK angular guard. Physical jaw-envelope acceptance and stable approach re-alignment pass local measured-state replay and hull screens; native retry pending.",
+  "cpu_checks": "77 CPU checks pass. Native 112 shows causal nipple rotation but invalid entry/withdrawal; 122 stops before insertion. A relocated 652-action quarter cycle now passes all nominal and two measured-state route screens, but has no native validation. No complete repair/demo/Dream.",
   "simulator_probe": null,
   "demo": null,
   "dream": null,
@@ -65,7 +65,7 @@
       "next": "Full 130-body geometry and live thread coupling .1s at25\u00b5s."
     }
   },
-  "cpu_tests_passed": 67,
+  "cpu_tests_passed": 77,
   "native_scene": {
     "authoring_entry_point": "wheel_scene.build_scene(stage, root)",
     "material_callback": "NativeThreadCoupler.before_step before every native substep",
@@ -73,8 +73,8 @@
     "geometry": "free hub, stand, compliant curved-sector rim, two-half tension-only steel spokes, rotating square nipples, physical open-slot wrench",
     "limitations": [
       "Historical TGS configurations exhibit unforced axle torque; current PGS128100us controls are bounded. Loaded task feasibility remains unproven.",
-      "Native free-wrench pickup works, but no real robot nipple adjustment or repair is demonstrated.",
-      "Kinematic wrench transfer involves up to 175 micrometres reconstructed jaw penetration; finite-load engagement remains untested.",
+      "Native 112 causes 90.54 degrees of nipple rotation during the intended stroke, but early loosening and invalid withdrawal prevent a validated repair.",
+      "Native 112 intended jaw contact includes up to 0.451 mm authored-solid overlap; precise finite-load engagement remains unverified.",
       "Elastic rim and simplified thread mechanics remain limited to their declared validity domain."
     ],
     "preview_entry_point": "preview_yam.py --out OUTPUT --steps 2 --physics-hz 40000",
@@ -344,14 +344,7 @@
       "interpretation": "Static equilibrium error falls about16.4\u00d7 for a4\u00d7 smaller step; quarterturn response also agrees."
     }
   },
-  "current_manipulation_status": {
-    "date": "2026-11-13",
-    "pickup": "036 CPU100us:82 actions complete and74mm wrench lift. Grasp-point translation error below0.8mm, but3deg grip rotation shifts jaws about10mm; calibrated service plan awaiting native result.",
-    "turns": "Old499-action route remains rejected. Calibrated682-action route passes all-frame stride1 hull screen;049 first202 actions queued.",
-    "fixture": "031 kinematic straight-slot fixture transfers32.9043deg, but offline reconstruction finds175um jaw intersection. Finite-force10N/0.35Nm fixture is prepared, not run.",
-    "latest_geometry": "Single-sided stand and straight working slot are explicit authored geometry; no collision filters hide robot/tool interference.",
-    "joint_tracking_candidate": "Optional bounded integral offsets from robot joint observations only; no effort-limit change. CPU limit/speed/failure checks pass. Native test pending."
-  },
+  "current_manipulation_status": "Native112 turns one nipple90.54degrees during the tightening stroke, but approach loosens it and withdrawal stays engaged;379/380actions completed. No full repair, released revolution or Dream trial.",
   "wrench_contact_evidence": "evidence/native-wrench-contact-029-031-summary.json",
   "current_runtime_status": {
     "task_success": false,
@@ -588,7 +581,7 @@
     "status": "short_passive_PGS_gate_passed_robot_pending"
   },
   "latest_preload_control": "evidence/native-pgs-preload-080-082-summary.json",
-  "next_native_trial": "Retry same380-action slow contact plan with physical approach-capture acceptance and one stable approach re-alignment; CPU PGS128/4 at100us. No feedforward enabled.",
+  "next_native_trial": "Explicit relocated passive and two-action YAM gates, then the 652-action quarter-cycle diagnostic only if both pass. No new paid run is authorized by this record.",
   "latest_robot_approach": "evidence/native-wrench-approach-085-summary.json",
   "full_counterfactual_plan_audit": {
     "native_reference": "085 measured frame158",
@@ -726,5 +719,554 @@
       "Material,geometry,physics step,actuator efforts and scoring unchanged.",
       "Optional damping feedforward source is tested but not enabled."
     ]
+  },
+  "native_approach_latch_104": {
+    "kind": "native-wheel-104-approach-controller-failure",
+    "native_complete": false,
+    "completed_actions": 190,
+    "wall_seconds": 790.3254828089848,
+    "error": "RuntimeError: Tool servo IK failed: position=0.03200753051347272, rotation=0.011145970971189113",
+    "nipple0_initial_turns": -0.7500000026694886,
+    "nipple0_final_turns": -0.775599992335275,
+    "net_turn_deg": -9.21599627968309,
+    "measured_hull_samples": 191,
+    "measured_unexpected_intersections": 0,
+    "cause": "Approach latch key0 changed to key1 at first insertion. Early native mouth contact rotated the nipple, so this artificial relatch demanded an unreachable long-handle target.",
+    "correction": "Approach and first insertion share engagement key1; preserve the stable approach orientation through contact. No physics or score change.",
+    "offline_future_check": {
+      "commands": 190,
+      "maximum_tcp_residual_m": 7.039774217902987e-08,
+      "maximum_jaw_residual_m": 6.843031577295568e-08,
+      "unexpected_intersections": 0,
+      "limitation": "Measured190 grasp/nipple held fixed; no native future slip or deformation predicted."
+    },
+    "source_hashes": {
+      "preview.json": "21d2d59cd1a44e12cbe857272556bdd0a57a8b92f421edfba5d5f844c97be344",
+      "trace.jsonl.gz": "32d5e31cc0e44a8f2bcc206dcb94387851a14e5b06278c3682af4dca9c5c54e2"
+    },
+    "score": 0,
+    "next": "Same380-action ordinary slow-quarter route with fixed latch; optionally identical-value notice batching."
+  },
+  "native_notice_batch_109": {
+    "kind": "native-wheel-109-identical-value-notice-batching",
+    "physics": "CPU PGS128/4 at100us; zero-defect control;5000steps",
+    "both_complete": true,
+    "sampled_states": 501,
+    "all_sampled_states_exactly_equal": true,
+    "authored_values_exactly_equal": true,
+    "same_attribute_writes": true,
+    "written_per_run": 131196,
+    "sdf_batches": 4999,
+    "readback_verified": true,
+    "baseline_timing": {
+      "material_s": 11.537834054790437,
+      "native_simulation_s": 12.93362487014383,
+      "observation_s": 0.9803649075329304,
+      "checkpoint_s": 5.750344113446772
+    },
+    "batched_timing": {
+      "material_s": 9.445096021518111,
+      "native_simulation_s": 13.39628772996366,
+      "observation_s": 1.0036268653348088,
+      "checkpoint_s": 4.218643356114626
+    },
+    "baseline_wall_s": 34.73168739583343,
+    "batched_wall_s": 31.89915099181235,
+    "material_speedup_fraction": 0.18138049336941486,
+    "material_plus_native_speedup_fraction": 0.06661127881474993,
+    "tension_range_n": [
+      410.44951913910126,
+      423.25693642600663
+    ],
+    "integrity_identical": true,
+    "integrity_valid": true,
+    "limitation": "One matched short standalone pair; performance includes concurrentGPU work and checkpoint variability. No reduction in native timestep, force updates or physical material. YAM bridge gate remains next.",
+    "sha256": {
+      "wheel-baseline": "1c53d10fda6a83ca306d65168c9a5832e033de2b5123876d6a224cb723acc035",
+      "wheel-batched": "c53b674f0e86c7b20b67610ee4cdf9ac089ebd59f36c7bf44551934973600e72"
+    }
+  },
+  "native_yam_notice_batch_112_gate": {
+    "status": "complete",
+    "completed_steps": 2,
+    "wall_seconds": 24.95665477681905,
+    "control_step_wall_seconds": [
+      2.738709623925388,
+      2.8790746750310063
+    ],
+    "rim_integrity": {
+      "valid": true,
+      "steps": 1002,
+      "first_failure": null,
+      "maximum_axial_bending_strain": 0.0011049670755388134,
+      "maximum_twist_rad": 0.0004511246968070051,
+      "maximum_locked_joint_gap_m": 3.6097137945986615e-06,
+      "peaks": {
+        "maximum_axial_bending_strain": 0.0011642387949663152,
+        "maximum_twist_rad": 0.0006022485902036234,
+        "maximum_locked_joint_gap_m": 4.311802374536144e-06
+      }
+    },
+    "native_parameter_updates": {
+      "attempted": 96096,
+      "written": 30516,
+      "sdf_notice_batches": 1000,
+      "first_sdf_readback_verified": true,
+      "final_cached_values_match_authored": true,
+      "skipping_rule": "Only float32-identical values; no material tolerance or update decimation"
+    },
+    "report_sha256": "bb2647c7af1c54199578940100df0de1ef6ef3a569d4dd5f50bf6e068953b910",
+    "limitation": "Two READY control actions, no loaded wrench turn. Full slow380 retry remains in progress."
+  },
+  "native_contact_turn_112": {
+    "kind": "native-wheel-112-contact-turn-and-failed-release",
+    "native_complete": false,
+    "completed_actions": 379,
+    "wall_seconds": 1337.9922102345154,
+    "error": "RuntimeError: Tool servo IK failed: position=0.027401585916684266, rotation=0.11452455648905378",
+    "tightening_stroke": {
+      "from_action": 249,
+      "to_action": 329,
+      "nipple0_start_turns": -0.800835671421213,
+      "nipple0_end_turns": -0.5493349407429903,
+      "actual_rotation_degrees": 90.5402630441602,
+      "tension_start_n": 102.38238574627897,
+      "tension_end_n": 256.7357391362688
+    },
+    "initial_turns": -0.7500000026694886,
+    "final_turns": -0.6041573173718351,
+    "early_approach_loosen_degrees": -18.300840750620786,
+    "measured_hull_samples": 380,
+    "unintended_hull_intersections": 0,
+    "rim_integrity": {
+      "valid": true,
+      "steps": 189501,
+      "first_failure": null,
+      "maximum_axial_bending_strain": 0.0011106614603138359,
+      "maximum_twist_rad": 0.0015234452227630394,
+      "maximum_locked_joint_gap_m": 8.892828670282342e-06,
+      "peaks": {
+        "maximum_axial_bending_strain": 0.001447618407474323,
+        "maximum_twist_rad": 0.0016254056900548864,
+        "maximum_locked_joint_gap_m": 1.968611917256832e-05
+      }
+    },
+    "interpretation": "Native contact genuinely rotates the nipple90.54degrees during the intended tightening stroke. Initial approach and failed final release lose some progress. This is not a full task demonstration or a successful quarter-turn cycle.",
+    "cause": "The10mm approach barely clears the8mm jaw end plus1.615mm square half-width. Contact loosens the nipple before seating. During withdrawal the nipple remains at tool-local y1.78mm; the tool is still engaged when the route moves across the wheel plane.",
+    "next_candidate": "16mm clear approach, stable orientation before insertion, slower16mm withdrawal, settling hold and an observed whole-square mouth-clearance guard before cross-plane movement. Physics and effort limits unchanged.",
+    "source_hashes": {
+      "preview.json": "17df3b9e558e03bdc5b9f3ed8ce20da6f00b87a8205469b4d03beba2abf9ca04",
+      "trace.jsonl.gz": "d8ec8b970f71cd3a294236e2a44d33694265a111e22f11561c37e0ec34963921"
+    },
+    "score": 0,
+    "intended_contact_qualification": {
+      "maximum_sampled_jaw_nipple_separation_translation_m": 0.0004509300648715131,
+      "typical_tightening_overlap_m": [
+        0.000349,
+        0.000378
+      ],
+      "method": "Exact separating-axis convex translation distance for authored solids at20Hz",
+      "not_certified": "The skewed square overlaps the jaw during contact. Native rotation alone does not certify physical contact fidelity; clearer entry and release require validation."
+    }
+  },
+  "full_slow_service_candidate": {
+    "action_count": 1630,
+    "seconds": 81.5,
+    "nominal_hull_samples": 1630,
+    "unexpected_intersections": 0,
+    "physical_validated": false,
+    "finale_additional_actions": 391,
+    "limitation": "Full1630 service is not promoted: first native quarter cycle still needs reliable clear entry and release."
+  },
+  "native_recenter_117": {
+    "kind": "native-wheel-117-origin-precision-negative-control",
+    "promoted": false,
+    "seconds": 0.1,
+    "dt": 0.0001,
+    "solver": "CPU TGS32/4, external forces each iteration, unchanged central spring and materials",
+    "runs": {
+      "wheel-original": {
+        "complete": true,
+        "wall_seconds": 8.56634143460542,
+        "axle_angular_momentum_kg_m2_s": -0.04048386367579185,
+        "gravity_axle_torque_nm": -0.0001893851088527285,
+        "final_runout_m": 0.0009067654609680176,
+        "rim_valid": true,
+        "native_report_sha256": "494ca14ef08d1916014e05f896b97d1a50f81b130805c7cdaca84a7ce1163733"
+      },
+      "wheel-recentered": {
+        "complete": true,
+        "wall_seconds": 8.241082608699799,
+        "axle_angular_momentum_kg_m2_s": -0.04049589917800979,
+        "gravity_axle_torque_nm": -0.00018898621908952813,
+        "final_runout_m": 0.0009056363633135334,
+        "rim_valid": true,
+        "native_report_sha256": "c5b8b6d6a05ba080b927a0b3498f4b5d187c340b4fbe6792caef0b047ab80373"
+      }
+    },
+    "coordinate_transform_audit": {
+      "native_origin_in_station_m": [
+        0.35,
+        0.0,
+        1.005
+      ],
+      "transformable_prims_checked": 307,
+      "maximum_world_matrix_error": 1.942890293094024e-16,
+      "maximum_rotation_matrix_error": 0.0
+    },
+    "conclusion": "Moving the entire fixture near the axle origin does not remove the unexplained\u22480.405Nm mean torque. Reject origin precision as the primary cause; keep the supported PGS128/100us configuration."
+  },
+  "native_clear_approach_122": {
+    "kind": "native-wheel122-clear-approach-overshoot",
+    "submission_ready": false,
+    "task_score": null,
+    "completed_actions": 174,
+    "wall_seconds": 595.7137060277164,
+    "error": "RuntimeError: Tool servo IK failed: position=0.057304814896676555, rotation=0.013675230036598804",
+    "rim_integrity": {
+      "valid": true,
+      "steps": 87001,
+      "first_failure": null,
+      "maximum_axial_bending_strain": 0.0011477597591764924,
+      "maximum_twist_rad": 0.0006534226320036901,
+      "maximum_locked_joint_gap_m": 3.486295126121676e-06,
+      "peaks": {
+        "maximum_axial_bending_strain": 0.001447618407474323,
+        "maximum_twist_rad": 0.001138482175650244,
+        "maximum_locked_joint_gap_m": 1.968611917256832e-05
+      }
+    },
+    "approach_samples": [
+      {
+        "step": 148,
+        "whole_flat_mouth_clearance_m": 0.02589518265614879,
+        "nipple_orientation_change_since148_rad": 2.9802322387695312e-08,
+        "tool_position_error_m": 0.008340717845868416,
+        "nipple_target": {
+          "latched_from_earlier_frame": true,
+          "spoke": 0,
+          "quarter": 1,
+          "rotation_is_latched": true,
+          "realigned_after_stable_approach": false,
+          "target_translation_correction_m": 0.00953044147699962,
+          "target_orientation_correction_rad": 0.046373978189457175
+        }
+      },
+      {
+        "step": 154,
+        "whole_flat_mouth_clearance_m": 0.026413938154782088,
+        "nipple_orientation_change_since148_rad": 0.0009352401187060273,
+        "tool_position_error_m": 0.007606448639385205,
+        "nipple_target": {
+          "latched_from_earlier_frame": true,
+          "spoke": 0,
+          "quarter": 1,
+          "rotation_is_latched": true,
+          "realigned_after_stable_approach": false,
+          "target_translation_correction_m": 0.009431399696236142,
+          "target_orientation_correction_rad": 0.04637397818946196
+        }
+      },
+      {
+        "step": 160,
+        "whole_flat_mouth_clearance_m": 0.012491854871059308,
+        "nipple_orientation_change_since148_rad": 0.0019451345452540317,
+        "tool_position_error_m": 0.0018593171340855644,
+        "nipple_target": {
+          "latched_from_earlier_frame": true,
+          "spoke": 0,
+          "quarter": 1,
+          "rotation_is_latched": true,
+          "realigned_after_stable_approach": false,
+          "target_translation_correction_m": 0.009372329622540173,
+          "target_orientation_correction_rad": 0.04637397818946196
+        }
+      },
+      {
+        "step": 168,
+        "whole_flat_mouth_clearance_m": -0.0017215162278649034,
+        "nipple_orientation_change_since148_rad": 0.09326525475262752,
+        "tool_position_error_m": 0.0054225018155306835,
+        "nipple_target": {
+          "latched_from_earlier_frame": true,
+          "spoke": 0,
+          "quarter": 1,
+          "rotation_is_latched": true,
+          "realigned_after_stable_approach": false,
+          "target_translation_correction_m": 0.009296232326205616,
+          "target_orientation_correction_rad": 0.046373978189457175
+        }
+      },
+      {
+        "step": 170,
+        "whole_flat_mouth_clearance_m": 0.0004738621374224313,
+        "nipple_orientation_change_since148_rad": 0.11073081396328625,
+        "tool_position_error_m": 0.0050523815941894345,
+        "nipple_target": {
+          "latched_from_earlier_frame": true,
+          "spoke": 0,
+          "quarter": 1,
+          "rotation_is_latched": true,
+          "realigned_after_stable_approach": false,
+          "target_translation_correction_m": 0.009598609569659536,
+          "target_orientation_correction_rad": 0.046373978189457175
+        }
+      },
+      {
+        "step": 174,
+        "whole_flat_mouth_clearance_m": 0.0025544603346323268,
+        "nipple_orientation_change_since148_rad": 0.11039486811570429,
+        "tool_position_error_m": 0.004774577793508396,
+        "nipple_target": {
+          "latched_from_earlier_frame": true,
+          "spoke": 0,
+          "quarter": 1,
+          "rotation_is_latched": true,
+          "realigned_after_stable_approach": false,
+          "target_translation_correction_m": 0.009288420570821692,
+          "target_orientation_correction_rad": 0.046373978189457175
+        }
+      }
+    ],
+    "interpretation": [
+      "The nominal14mm mouth lead-in is clear, but native tracking overshoots into the square before intended insertion, causing more than6deg nipple orientation change.",
+      "The clear-settle relatch follows the measured new orientation; the195mm handle then places the required wrist outside the present workspace. This is not a tiny IK residual.",
+      "Local replay with three seeds/four damping choices remains at least18.8mm from the relatching target. A single-endpoint30mm rightward/10mm lower fixture candidate solves, but no full route or hull/native validation exists.",
+      "No physical setup has been changed. Slow final approach and a separately screened fixture relocation remain next candidates."
+    ],
+    "evidence_sha256": {
+      "wheel122-preview.json": "6bdb575e7b1a3815d5c61df3420828fdfae01652c0145ff4a367fcfd8a5c29c5",
+      "wheel122-partial-trace.jsonl.gz": "07e45f0be7703bcccea4e5a98d15e32f1fd50c5845e16541fbc8b3c6c6424396"
+    }
+  },
+  "latest_contact_evidence": "evidence/native-clear-approach-122-summary.json",
+  "native_force_integration_124": {
+    "kind": "native-compensated-TGS-integration-124-comparison",
+    "promoted": false,
+    "score": null,
+    "runs": {
+      "each_iteration": {
+        "complete": true,
+        "wall_seconds": 8.56634143460542,
+        "sample_count": 101,
+        "dt_s": 0.0001,
+        "seconds": 0.1,
+        "solver_type": "TGS",
+        "position_iterations": 32,
+        "velocity_iterations": 4,
+        "external_forces_every_iteration": true,
+        "distance_tolerance_compensation_m": 0.025,
+        "final_axle_angular_momentum_kg_m2_s": -0.04048386367579185,
+        "axle_momentum_change_kg_m2_s": -0.0404598349854767,
+        "integrated_gravity_axle_impulse_kg_m2_s": -1.9509879623325546e-05,
+        "late_momentum_slope_nm": -0.4040900889942436,
+        "final_lateral_runout_m": 0.0009067654609680176,
+        "final_tension_range_n": [
+          201.36938698480233,
+          598.569858179197
+        ],
+        "rim_integrity": {
+          "valid": true,
+          "steps": 1000,
+          "first_failure": null,
+          "maximum_axial_bending_strain": 0.0012177607586050091,
+          "maximum_twist_rad": 0.0009390165159411617,
+          "maximum_locked_joint_gap_m": 9.704912130207431e-06,
+          "peaks": {
+            "maximum_axial_bending_strain": 0.001627809632145471,
+            "maximum_twist_rad": 0.0013617056627391328,
+            "maximum_locked_joint_gap_m": 1.5506741070377183e-05
+          }
+        },
+        "report_sha256": "494ca14ef08d1916014e05f896b97d1a50f81b130805c7cdaca84a7ce1163733",
+        "momentum_samples": [
+          {
+            "time_s": 0.0001,
+            "axle_angular_momentum_kg_m2_s": -2.4028690315144898e-05
+          },
+          {
+            "time_s": 0.001,
+            "axle_angular_momentum_kg_m2_s": -0.0003935048087365385
+          },
+          {
+            "time_s": 0.01,
+            "axle_angular_momentum_kg_m2_s": -0.004039560094368259
+          },
+          {
+            "time_s": 0.025,
+            "axle_angular_momentum_kg_m2_s": -0.010141345228853028
+          },
+          {
+            "time_s": 0.05,
+            "axle_angular_momentum_kg_m2_s": -0.020274727187670736
+          },
+          {
+            "time_s": 0.075,
+            "axle_angular_momentum_kg_m2_s": -0.030390173576563397
+          },
+          {
+            "time_s": 0.1,
+            "axle_angular_momentum_kg_m2_s": -0.04048386367579185
+          }
+        ]
+      },
+      "once_per_step": {
+        "complete": true,
+        "wall_seconds": 8.738736043684185,
+        "sample_count": 101,
+        "dt_s": 0.0001,
+        "seconds": 0.1,
+        "solver_type": "TGS",
+        "position_iterations": 32,
+        "velocity_iterations": 4,
+        "external_forces_every_iteration": false,
+        "distance_tolerance_compensation_m": 0.025,
+        "final_axle_angular_momentum_kg_m2_s": -0.01380053047579328,
+        "axle_momentum_change_kg_m2_s": -0.013776497952197545,
+        "integrated_gravity_axle_impulse_kg_m2_s": -1.963162936166836e-05,
+        "late_momentum_slope_nm": -0.05578853628704541,
+        "final_lateral_runout_m": 0.0009058117866516113,
+        "final_tension_range_n": [
+          202.24449019111728,
+          600.8989152913932
+        ],
+        "rim_integrity": {
+          "valid": true,
+          "steps": 1000,
+          "first_failure": null,
+          "maximum_axial_bending_strain": 0.001236577584786745,
+          "maximum_twist_rad": 0.0009388482677155507,
+          "maximum_locked_joint_gap_m": 9.851781738740326e-06,
+          "peaks": {
+            "maximum_axial_bending_strain": 0.0016260756272829554,
+            "maximum_twist_rad": 0.001355456959557933,
+            "maximum_locked_joint_gap_m": 1.5346405869810327e-05
+          }
+        },
+        "report_sha256": "85b8adfda0e17caeddb7ac1c71e96776c262e5104ac13f62690b551b61f3c30f",
+        "momentum_samples": [
+          {
+            "time_s": 0.0001,
+            "axle_angular_momentum_kg_m2_s": -2.4032523595735538e-05
+          },
+          {
+            "time_s": 0.001,
+            "axle_angular_momentum_kg_m2_s": -0.00026439596404165575
+          },
+          {
+            "time_s": 0.01,
+            "axle_angular_momentum_kg_m2_s": -0.0035337725667548116
+          },
+          {
+            "time_s": 0.025,
+            "axle_angular_momentum_kg_m2_s": -0.007401977531409677
+          },
+          {
+            "time_s": 0.05,
+            "axle_angular_momentum_kg_m2_s": -0.010942123947685902
+          },
+          {
+            "time_s": 0.075,
+            "axle_angular_momentum_kg_m2_s": -0.012857927103012435
+          },
+          {
+            "time_s": 0.1,
+            "axle_angular_momentum_kg_m2_s": -0.01380053047579328
+          }
+        ]
+      }
+    },
+    "source_hashes_identical": true,
+    "source_sha256": {
+      "scene_probe.py": "4b77d3377d9ddd47aab28a171a0450033804e49e3340f975150acde752d69f77",
+      "recenter_probe.py": "344cd1694f20970400a9d37c1365c2acb7c5ab5f6e9850e49248667a26f62a17",
+      "wheel_scene.py": "864afc8820a1e31d82de01efdecf2f385cc46455771cc7f89c02b478a7390b12",
+      "native_probe.py": "11e7c3dddc7f4726099f6977b0db80c54f4b438b6e26a4adbcceca914e3503f7",
+      "thread_coupling.py": "5e302ae7a91d86d0e0bad2f546c598d02709c80c84ad5c43261b909cca4d7c2b",
+      "mechanics.py": "727e694b8d3e654815cb705e45b52266f07c0a40570a57c5c67dae716e3d2edc",
+      "integrity.py": "8c917dd46bd126c023c04439b303f5d9fafb1d31289014ed99fe0a5aac28a90b",
+      "momentum.py": "b6c12bcbdd75d9931f4fee37d3971c0cd02c8c077e72299d1a310ef3ac35493e"
+    },
+    "conclusion": "Once-per-step integration reduces final axle momentum66% and its late slope is decaying, but startup momentum remains far above gravity impulse. This100ms control does not prove long-run stability or justify replacing supported PGS robot physics.",
+    "next_diagnostic": "If later compute is authorized, passive .5-1.5s same-configuration continuation distinguishes a finite startup transient from sustained torque; retain constitutive and integrity checks. No further run launched here."
+  },
+  "local_relocated_route": {
+    "evidence": "evidence/local-relocated-route-summary.json",
+    "kind": "local_relocated_wheel_route_screen",
+    "date": "2026-11-13",
+    "native_validated": false,
+    "task_score": null,
+    "fixture_layout": "forward10-right50-lower10",
+    "fixture_translation_m": [
+      0.01,
+      -0.05,
+      -0.01
+    ],
+    "stand_change": "Base remains on the tabletop; upright is 10 mm shorter. Wheel/axle/pointer move together. Wrench pickup is unchanged.",
+    "action_count": 652,
+    "seconds": 32.6,
+    "max_command_speed_fraction": 0.7162625976562506,
+    "nominal_frames": 652,
+    "nominal_unexpected_intersections": 0,
+    "measured_cases": [
+      {
+        "fixture_reference_action": 148,
+        "grasp_reference_action": 84,
+        "frames": 570,
+        "failure": null,
+        "unexpected_intersections": 0,
+        "maximum_ik_position_error_m": 7.146513836534373e-08
+      },
+      {
+        "fixture_reference_action": 174,
+        "grasp_reference_action": 174,
+        "frames": 570,
+        "failure": null,
+        "unexpected_intersections": 0,
+        "maximum_ik_position_error_m": 7.896480961840015e-08
+      }
+    ],
+    "feedback_change": "Blend measured nipple alignment during the clear-front transition only; retain full feedback and unchanged guards during contact and turning.",
+    "sha256": {
+      "plan": "fa32f49970ab4949344928fbd549382d602ee5911c79ecfba556c02b1829619e",
+      "audited_plan": "038fb0536d81de834e04df8aa63f4d800932ec9fd0df3392acde8044d2ddf89a",
+      "nominal_screen": "2a318d048d0851438c98f367be51ef3ccef40afba01b0d8880206ad831582ea8",
+      "measured_screen": "3da2678db38d7bef61655acb549ed1e3c83534177df60b500a6a1c156e08c57c"
+    },
+    "source_sha256": {
+      "relocated_plan.py": "2ac031e5a14eb39f86799447d3c5e60cd04867bb677c1e607c66771b06cc7ae9",
+      "fixture_layout.py": "70937421ce232a3355b7ccea6b6d92dbd9ca7f1f01e637a3a9cbf3e5c13601bf",
+      "wheel_scene.py": "05dd021b25fc8ceada9b8bb7b8cbd9722beee4c3c7b2869ca3fb5461e1d62cb8",
+      "motion_plan.py": "7f27c17f4f88f44135c43c6c64229ed2c057624867586a387f803a757af34ec2",
+      "plan_turns.py": "c0407bbe8526259290e81a229fbcb7aee3466ca8ce90a213080816423118876c",
+      "tool_pose_servo.py": "41f0f971f3857419db29db87740f27cf10194e9d6dd498d1852a0dc89cc6f22f"
+    },
+    "measured_trace_sha256": "07e45f0be7703bcccea4e5a98d15e32f1fd50c5845e16541fbc8b3c6c6424396",
+    "recompiled_plan_equivalence": "After the screens, added source-angle/reset validation and fixture dependency pinning. Recompiled plan is identical in every field except source_sha256, including all 652 commands and feedback fractions. Original audited plan and reports are preserved.",
+    "rejected_alternatives": [
+      {
+        "translation_m": [
+          0.0,
+          -0.03,
+          -0.01
+        ],
+        "reason": "Measured action 174 orientation leaves the clear-front transition at a wrist limit; endpoint reach alone was insufficient."
+      },
+      {
+        "translation_m": [
+          0.02,
+          -0.03,
+          -0.025
+        ],
+        "reason": "Nominal route has 145 unintended wrench-handle/table overlaps, up to 3.869 mm intersection-ball radius."
+      }
+    ],
+    "limitations": [
+      "Counterfactual commanded poses and fixed measured grasp/fixture snapshots; no prediction of actual slip, tracking or settling.",
+      "Actual rim/jaw hulls and robot hulls; conservative round-shaft enclosures. Sampled poses, not continuous-time clearance.",
+      "Intended finger/rim and jaw/nipple overlaps are recorded, not certified as physically valid contacts.",
+      "One quarter cycle only. Native reset, contact, withdrawal, full repair, final revolution and Dream remain unproved."
+    ],
+    "next": "Run the explicit relocated passive gate, then the matching two-action YAM gate. Only after both pass attempt the 652-action diagnostic; see RELOCATION_DIAGNOSTIC.md."
   }
 }

@@ -66,7 +66,7 @@ def native_audit(stage,cloth_names,peg_names):
         path=str(prim.GetPath())
         schemas=prim.GetAppliedSchemas()
         if prim.IsA(UsdPhysics.Scene):
-            result['physics_scenes'].append(dict(path=path,settings={name:prim.GetAttribute('physxScene:'+name).Get() for name in ('enableGPUDynamics','enableEnhancedDeterminism','enableExternalForcesEveryIteration')}))
+            result['physics_scenes'].append(dict(path=path,settings={name:prim.GetAttribute('physxScene:'+name).Get() for name in ('enableGPUDynamics','enableEnhancedDeterminism','enableExternalForcesEveryIteration','enableStabilization','enableCCD','solverType','frictionOffsetThreshold','frictionCorrelationDistance','gpuMaxSoftBodyContacts')}))
         if 'Attachment' in prim.GetTypeName() or any('Attachment' in s for s in schemas):
             result['attachments'].append(path)
         for name in cloth_names:
@@ -74,6 +74,7 @@ def native_audit(stage,cloth_names,peg_names):
                 result['cloth'][name]={'path':path,'schemas':list(schemas),
                      'rigid_body':prim.HasAPI(UsdPhysics.RigidBodyAPI),
                      'self_collision':prim.GetAttribute('physxDeformableBody:selfCollision').Get(),
+                     'rest_bend_angles_default':prim.GetAttribute('omniphysics:restBendAnglesDefault').Get(),
                      'solver_position_iterations':prim.GetAttribute('physxDeformableBody:solverPositionIterationCount').Get()}
         for name in peg_names:
             if '/'+name+'/' in path:
@@ -113,6 +114,8 @@ def main():
     p.add_argument('--state-assisted-grasp',action='store_true',help='Explicit scripted feasibility demo: measure reset cloth once to place ordinary fingers; never used by Dream')
     p.add_argument('--contact-refined',action='store_true',help='Use the explicitly refined cloth contact band for every policy reset')
     p.add_argument('--regular-refined',action='store_true',help='Use the regular2.5mm cloth grid for every policy reset, preserving1.6mm seam width')
+    p.add_argument('--raised-support-diagnostic',action='store_true',help='Use an explicitly180mm laundry support and a measured lateral grasp; otherwise100mm')
+    p.add_argument('--reset-diagnostic',action='store_true',help='Read-only early reset native nodes and topology; unchanged reset physics')
     p.add_argument('--binary-cloth-trace',action='store_true',help='Preserve all native float32 cloth states in binary arrays, reducing diagnostic JSON overhead')
     p.add_argument('--solver-iterations',type=int,choices=(32,128),default=32,help='Native cloth numerical convergence diagnostic; material unchanged')
     p.add_argument('--external-forces-once-diagnostic',action='store_true',help='Use the ordinary once-per-step TGS force integration option for a controlled comparison')
@@ -122,6 +125,7 @@ def main():
     p.add_argument('--out',type=Path)
     p.add_argument('--check-only',action='store_true',help='Compile source and check JSON without loading a simulator')
     args=p.parse_args()
+    os.environ['ROBOCURVE_SHIRT_RAISED_SUPPORT']='1' if args.raised_support_diagnostic else '0'
     if args.regular_refined and args.contact_refined:p.error('Select one garment mesh')
     fixed_plan=fixed_actions=None
     if args.mode=='motion-probe':
@@ -195,7 +199,7 @@ def main():
             'source_sha256':source_hashes,'versions':versions,'seed':args.seed,
             'control_hz':CONTROL_HZ,'requested_steps':args.steps,'completed_steps':0,
             'policy':('constant adapter-ready joint targets' if fixed_plan is None else 'frozen fixed joint trajectory')+'; no object/assessor feedback',
-            'instruction':draft['instruction'],'joint_feedback_from':args.joint_feedback_from,'state_assisted_grasp':args.state_assisted_grasp,'contact_refined':args.contact_refined,'regular_refined':args.regular_refined,'solver_iterations':args.solver_iterations,'external_forces_once_diagnostic':args.external_forces_once_diagnostic}
+            'instruction':draft['instruction'],'joint_feedback_from':args.joint_feedback_from,'state_assisted_grasp':args.state_assisted_grasp,'contact_refined':args.contact_refined,'regular_refined':args.regular_refined,'support_height_m':.18 if args.raised_support_diagnostic else .10,'solver_iterations':args.solver_iterations,'external_forces_once_diagnostic':args.external_forces_once_diagnostic}
     if args.joint_feedback_from is not None:
         report['policy']='frozen joint reference with bounded right-arm PI from ordinary joint observations; no object/assessor feedback'
     if args.state_assisted_grasp:
@@ -264,7 +268,12 @@ def main():
         from reset_scene import reset_and_settle
         report['reset']={'method':'raw reset plus five seconds of fixed native settling','status':'requested'}
         save()
-        report['reset']=reset_and_settle(emb)
+        reset_observer=None
+        if args.reset_diagnostic:
+            from reset_diagnostic import ResetDiagnostic
+            reset_observer=ResetDiagnostic(emb,args.out)
+            report['native_scene_before_reset']=native_audit(omni.usd.get_context().get_stage(),list(arena_cloth.SPECS),list(PEG_SPECS))
+        report['reset']=reset_and_settle(emb,observer=reset_observer)
         stage=omni.usd.get_context().get_stage()
         names=list(arena_cloth.SPECS)+list(PEG_SPECS)
         if not names:
@@ -277,8 +286,24 @@ def main():
         report['physics_dt_s']=float(base.sim.get_physics_dt())
         report['initial_physics_step_count']=int(base.sim._physics_step_count)
         report['initial_snapshot']='After one raw reset and the declared five-second native cloth/peg settling period'
+        if args.raised_support_diagnostic:
+            from audit_self_contact import crossing_pairs
+            from fixture_clearance import fixture_intersections
+            from scene import support_geometry,rack_geometry,TABLE
+            actual=arena_cloth.state(emb._env,'tshirt').nodes
+            spec=arena_cloth.SPECS['tshirt']
+            pairs=crossing_pairs(actual,spec.mesh.faces,cell=.005)
+            fixtures=support_geometry()|rack_geometry()
+            fixtures['Table']=dict(kind='box',center=(.36,0.,TABLE-.03),size=(1.1,1.3,.06))
+            hits=fixture_intersections(actual,spec.mesh.faces,fixtures,margin=-.00005)
+            report['raised_reset_integrity']=dict(transverse_pairs=len(pairs),fixture_hits={k:len(v) for k,v in hits.items()})
+            save()
+            if pairs or any(hits.values()):raise RuntimeError('Raised-support reset fails actual material/fixture integrity')
         if args.state_assisted_grasp:
-            from scripted_grasp import calibrate
+            if args.raised_support_diagnostic:
+                from lateral_grasp import calibrate
+            else:
+                from scripted_grasp import calibrate
             from audit_motion import audit
             reset_cloth=arena_cloth.state(emb._env,'tshirt')
             fixed_plan,calibration=calibrate(fixed_plan,arena_cloth.SPECS['tshirt'].mesh.rest,reset_cloth.nodes)
@@ -346,6 +371,7 @@ def main():
                          for name in ('left_robot','right_robot')}}
             trace.write(json.dumps(record,allow_nan=False)+'\n')
             trace.flush()
+            report['last_recorded_native_step']=step
             image=np.asarray(observation.images['top_cam'],dtype=np.uint8)
             video.append_data(image)
             if args.judging_views:
@@ -368,6 +394,9 @@ def main():
             dream.bind(emb.info);dream.reset(Scene(id='peg-out-a-tshirt',instruction=draft['instruction']))
             report.update(dream_model=dream.info.checkpoint,policy='Dream: ordinary camera/joint observations only, no material-state or scripted controller input')
         report['status']='running'
+        # Kit may replace process handlers during startup. Re-arm after setup
+        # so a bounded trial preserves its partial evidence on termination.
+        signal.signal(signal.SIGTERM,terminate)
         save()
         command=torch.as_tensor(ready[None,:],device=base.device,dtype=torch.float32)
         for step in range(1,args.steps+1):
@@ -418,6 +447,8 @@ def main():
         report.update(status='interrupted' if isinstance(exc,SystemExit) else 'failed',error_type=type(exc).__name__,error_message=str(exc))
         raise
     finally:
+        # Preserve status even if an interrupted encoder cannot finish closing.
+        save()
         if dense_trace is not None:
             dense_trace.flush()
             report['recorded_cloth_frames']=dense_trace.count

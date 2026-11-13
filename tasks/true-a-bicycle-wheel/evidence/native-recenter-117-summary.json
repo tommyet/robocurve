@@ -1,0 +1,38 @@
+{
+  "kind": "native-wheel-117-origin-precision-negative-control",
+  "promoted": false,
+  "seconds": 0.1,
+  "dt": 0.0001,
+  "solver": "CPU TGS32/4, external forces each iteration, unchanged central spring and materials",
+  "runs": {
+    "wheel-original": {
+      "complete": true,
+      "wall_seconds": 8.56634143460542,
+      "axle_angular_momentum_kg_m2_s": -0.04048386367579185,
+      "gravity_axle_torque_nm": -0.0001893851088527285,
+      "final_runout_m": 0.0009067654609680176,
+      "rim_valid": true,
+      "native_report_sha256": "494ca14ef08d1916014e05f896b97d1a50f81b130805c7cdaca84a7ce1163733"
+    },
+    "wheel-recentered": {
+      "complete": true,
+      "wall_seconds": 8.241082608699799,
+      "axle_angular_momentum_kg_m2_s": -0.04049589917800979,
+      "gravity_axle_torque_nm": -0.00018898621908952813,
+      "final_runout_m": 0.0009056363633135334,
+      "rim_valid": true,
+      "native_report_sha256": "c5b8b6d6a05ba080b927a0b3498f4b5d187c340b4fbe6792caef0b047ab80373"
+    }
+  },
+  "coordinate_transform_audit": {
+    "native_origin_in_station_m": [
+      0.35,
+      0.0,
+      1.005
+    ],
+    "transformable_prims_checked": 307,
+    "maximum_world_matrix_error": 1.942890293094024e-16,
+    "maximum_rotation_matrix_error": 0.0
+  },
+  "conclusion": "Moving the entire fixture near the axle origin does not remove the unexplained\u22480.405Nm mean torque. Reject origin precision as the primary cause; keep the supported PGS128/100us configuration."
+}
