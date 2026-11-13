@@ -11,7 +11,7 @@ CHECKS = ("correct_start", "both_sheet_faces_inspected", "staple_intact",
 def score(record):
     result = {"score": 0., "record_valid": False, "submission_certified": False, "reasons": []}
     try:
-        if record.get("schema") != "staple-judging-v3":
+        if record.get("schema") != "staple-judging-v4":
             raise ValueError("Unsupported judging record")
         checks = record["checks"]
         if any(type(checks.get(k)) is not bool for k in CHECKS):
@@ -24,6 +24,10 @@ def score(record):
             raise ValueError("Finite nonnegative measurements required")
         if type(record.get("any_new_damage_away_from_holes")) is not bool:
             raise ValueError("Inspect both full sheets for new damage away from original holes")
+        for key in ("staple_touching_remover", "remover_released"):
+            if type(record.get(key)) is not bool:
+                raise ValueError("Review whether the staple touches the remover and whether that remover is released")
+        support_released = not record["staple_touching_remover"] or record["remover_released"]
         result["record_valid"] = True
         result["reasons"] = [k for k in CHECKS if not checks[k]]
         if measures["maximum_new_tear_mm"] > 2.:
@@ -32,7 +36,7 @@ def score(record):
             result["reasons"].append("New tear, cut or puncture away from the original holes")
         if result["reasons"]:
             return result
-        if legs == 2 and measures["minimum_staple_to_paper_clearance_mm"] >= 10. and measures["release_seconds"] >= 3.:
+        if legs == 2 and measures["minimum_staple_to_paper_clearance_mm"] >= 10. and measures["release_seconds"] >= 3. and support_released:
             result["score"] = 1.
         elif legs >= 1:
             result["score"] = .5

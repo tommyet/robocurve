@@ -148,8 +148,8 @@ def main():
     if args.mode=='dream' and not(args.adult_collar and args.inside_out_reset):p.error('Current Dream candidate requires the adult inside-out reset matching its demo')
     if not 0<=args.seed<2**32:
         p.error('Seed must be an unsigned 32-bit integer')
-    if args.state_assisted_grasp and (args.mode!='motion-probe' or not args.adult_collar or args.steps!=(560 if args.state_assisted_handoff else 220)):
-        p.error('Adult scripted pickup requires220 actions, or560 with the explicit tip transfer')
+    if args.state_assisted_grasp and (args.mode!='motion-probe' or not args.adult_collar or args.steps!=(580 if args.state_assisted_handoff else 220)):
+        p.error('Adult scripted pickup requires220 actions, or580 with the explicit tip transfer')
     if args.state_assisted_handoff and not args.state_assisted_grasp:p.error('Tip transfer requires the measured adult pickup prefix')
     source_hashes=sources()
     if args.check_only:
@@ -329,7 +329,7 @@ def main():
         command=torch.as_tensor(ready[None,:],device=base.device,dtype=torch.float32)
         for step in range(1,args.steps+1):
             if args.state_assisted_handoff and step==281:
-                from adult_handoff import receive_tip
+                from adult_handoff import receive_tip,classify_receiving_contacts
                 from audit_adult_motion import audit
                 from audit_reset_approach import screen
                 native=arena_cloth.state(emb._env,'tie');mesh=arena_cloth.SPECS['tie'].mesh
@@ -338,9 +338,11 @@ def main():
                 clearance=audit(continuation)
                 (args.out/'handoff-hull-audit.json').write_text(json.dumps(clearance,indent=2)+'\n')
                 if not clearance['passed']:raise RuntimeError('Measured receiving trajectory intersects a fixture or opposite arm')
-                approach_hits=screen(continuation,native.nodes,mesh.faces,steps=range(1,101),side='left')
-                (args.out/'handoff-cloth-approach-audit.json').write_text(json.dumps(dict(samples=100,inflation_m=.001,violations=approach_hits),indent=2)+'\n')
-                if approach_hits:raise RuntimeError('Receiving approach intersects the actual held cloth before the intended pinch')
+                approach_steps=continuation['approach_steps']
+                approach_hits=screen(continuation,native.nodes,mesh.faces,steps=range(1,approach_steps+1),side='left')
+                blocked,intended=classify_receiving_contacts(approach_hits,mesh.rest,mesh.faces)
+                (args.out/'handoff-cloth-approach-audit.json').write_text(json.dumps(dict(samples=approach_steps,inflation_m=.001,raw_intersections=approach_hits,blocked_intersections=blocked,intended_finger_contact=intended),indent=2)+'\n')
+                if blocked:raise RuntimeError('Receiving approach intersects a body or cloth region outside the intended finger contact')
                 fixed_plan['frames'][280:]=continuation['frames'];fixed_plan['handoff_calibration']=continuation['grasp']
                 fixed_actions=np.asarray([f['action14'] for f in fixed_plan['frames']],float)
                 if np.any(fixed_actions<emb._low) or np.any(fixed_actions>emb._high):raise ValueError('Receiving trajectory exceeds normal joint limits')

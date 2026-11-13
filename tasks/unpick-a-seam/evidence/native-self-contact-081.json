@@ -1,0 +1,56 @@
+{
+  "date": "2026-11-13",
+  "status": "self_contact_failure_isolated_no_task_score",
+  "controls": [
+    {
+      "name": "seam-loop-no-ccd",
+      "files_sha256": {
+        "initial-native.npz": "2ddfdaefe04ecb9462bb627823c68eb2db2a47192be82d2dd668c77ec31cf9c7",
+        "state.npz": "48439a012ac5a513204813921b12e0cdbe3c803cc99ac3712d800d41e1f1c076",
+        "probe.json": "8528609b4b767b2d1c19eae7c58f72f5f7cf3600930ac4866495dd413474a186",
+        "initial.usda": "a09ac34a95fb0350ee97ad3e8685d04d9b062c70c1cc519e1a2d2345c0ce4f18"
+      },
+      "status": "invalid_closed_chain",
+      "ccd": "none",
+      "self_contact": "normal",
+      "completed_steps": 11,
+      "thread_integrity": {
+        "maximum_closed_joint_gap_m": 0.0014821235696305679,
+        "first_failure": {
+          "time_s": 0.011458333333333333,
+          "joint": 0,
+          "gap_m": 0.0014821235696305679,
+          "maximum_connected_endcap_gap_m": 0.0008,
+          "reason": "unsevered native joint has physically disjoint end caps"
+        },
+        "valid": false
+      },
+      "maximum_nontranslation_m": 0.004637495614588261,
+      "maximum_body_speed_m_s": 7.806728363037109
+    },
+    {
+      "name": "seam-loop-no-contact",
+      "files_sha256": {
+        "initial-native.npz": "2ddfdaefe04ecb9462bb627823c68eb2db2a47192be82d2dd668c77ec31cf9c7",
+        "state.npz": "1cb0dcc4a334ec00403836a6d56f76a2ca83e6a4d5ab47151f985973e18110d9",
+        "probe.json": "7e3946869e9b7c622ced9956ca819aaef86516cdd0bec6e6a0f143fc881a3918",
+        "initial.usda": "df80f18e7d077b4bf9738fa229d0cf2747039bf2c1deb683c5df263291c550a6"
+      },
+      "status": "complete",
+      "ccd": "none",
+      "self_contact": "none",
+      "completed_steps": 48,
+      "thread_integrity": {
+        "maximum_closed_joint_gap_m": 9.213662077410145e-08,
+        "first_failure": null,
+        "valid": true
+      },
+      "maximum_nontranslation_m": 1.0011717677116394e-07,
+      "maximum_body_speed_m_s": 0.49000075459480286
+    }
+  ],
+  "finding": "With CCD disabled, normal self-contact fails by11.458ms, while excluding all self-contact gives48stablesteps with92.14nm maximum joint gap. The constraint and mass model work in isolation. Six non-neighbour capsule pairs are tangent at the original reset.",
+  "next_candidate": "Keep all ordinary self-contact and resample the same10\u00d72.4mm closed centreline with ten1mm links per long side and two1.2mm links per short side. Diameter, total length, mass and material are unchanged; minimum non-neighbour capsule gap is0.2mm instead of zero. This is unvalidated until native replay.",
+  "cpu_geometry_regression": "test_thread_discretization.py",
+  "cpu_tests_passed": 58
+}

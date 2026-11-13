@@ -1,0 +1,180 @@
+{
+  "kind": "native_flexible_panel_passive_and_yam_controls",
+  "score": null,
+  "submission_ready": false,
+  "controls": [
+    {
+      "batch": "080",
+      "report_sha256": "4aadda2ccbd0ca7e93af5a3b02e0255e37841e5d1cfec820f35ec03da73545dc",
+      "status": null,
+      "complete": true,
+      "wall_seconds": 16.878973147831857,
+      "solver_type": "PGS",
+      "position_iterations": 32,
+      "dt": 0.0005,
+      "completed_steps": 200,
+      "final_sample": {
+        "step": 200,
+        "time_s": 0.1,
+        "checks": [
+          {
+            "continuity": {
+              "maximum_hinge_endpoint_gap_m": 5.554870431388583e-06,
+              "maximum_vertex_average_error_m": 3.763745998169425e-06,
+              "valid": true
+            },
+            "wire_crossing": {
+              "valid": true,
+              "steps": 200,
+              "first_failure": null
+            }
+          },
+          {
+            "continuity": {
+              "maximum_hinge_endpoint_gap_m": 4.56614889243727e-06,
+              "maximum_vertex_average_error_m": 3.2002867023011845e-06,
+              "valid": true
+            },
+            "wire_crossing": {
+              "valid": true,
+              "steps": 200,
+              "first_failure": null
+            }
+          }
+        ],
+        "paper_centroids_m": [
+          [
+            -0.019361131260977365,
+            -0.023076975374432065,
+            3.416998163991457e-05
+          ],
+          [
+            -0.019361144641043677,
+            -0.01571117836347169,
+            0.00010604801535392257
+          ]
+        ],
+        "maximum_facet_speed_m_s": 0.031773641705513
+      }
+    },
+    {
+      "batch": "082",
+      "report_sha256": "cd38b02e7f4bd36bd2608d260d06d6b61b103b4aa349b5af237bd63a67b3ee20",
+      "status": "complete",
+      "complete": null,
+      "wall_seconds": 64.6286057997495,
+      "solver_type": "PGS",
+      "position_iterations": 32,
+      "physics_dt_s": 0.0005,
+      "completed_steps": 2,
+      "control_step_wall_seconds": [
+        4.893252763897181,
+        4.522537617012858
+      ],
+      "native_audit": {
+        "paper": {
+          "paper_0": {
+            "dynamic_panels": 573,
+            "passive_hinges": 1094,
+            "surface_area_m2": 0.031079039999999992
+          },
+          "paper_1": {
+            "dynamic_panels": 550,
+            "passive_hinges": 1049,
+            "surface_area_m2": 0.031079039999999995
+          }
+        },
+        "dynamic_hardware_bodies": 61,
+        "attachments": [],
+        "fixed_material_joints": []
+      },
+      "judging_views": [
+        {
+          "name": "judging_top",
+          "eye_m": [
+            0.227,
+            -0.05,
+            0.95
+          ],
+          "target_m": [
+            0.227,
+            -0.05,
+            0.7677
+          ],
+          "resolution": [
+            1280,
+            960
+          ],
+          "policy_input": false,
+          "pixel_standard_deviation": 16.360081406359296
+        },
+        {
+          "name": "judging_side",
+          "eye_m": [
+            0.115,
+            -0.085,
+            0.82
+          ],
+          "target_m": [
+            0.227,
+            -0.05,
+            0.768
+          ],
+          "resolution": [
+            1280,
+            720
+          ],
+          "policy_input": false,
+          "pixel_standard_deviation": 58.587722934617
+        }
+      ],
+      "final_material": [
+        {
+          "observations": 203,
+          "paper": [
+            {
+              "continuity": {
+                "maximum_hinge_endpoint_gap_m": 5.823045090680634e-06,
+                "maximum_vertex_average_error_m": 3.9217111031403095e-06,
+                "valid": true
+              },
+              "contact_audit": {
+                "valid": true,
+                "steps": 203,
+                "first_failure": null
+              },
+              "valid": true
+            },
+            {
+              "continuity": {
+                "maximum_hinge_endpoint_gap_m": 4.3515737863360395e-06,
+                "maximum_vertex_average_error_m": 2.89771337831124e-06,
+                "valid": true
+              },
+              "contact_audit": {
+                "valid": true,
+                "steps": 203,
+                "first_failure": null
+              },
+              "valid": true
+            }
+          ],
+          "valid": true
+        }
+      ],
+      "final_continuity": [
+        {
+          "maximum_hinge_endpoint_gap_m": 5.823045090680634e-06,
+          "maximum_vertex_average_error_m": 3.9217111031403095e-06,
+          "valid": true
+        },
+        {
+          "maximum_hinge_endpoint_gap_m": 4.3515737863360395e-06,
+          "maximum_vertex_average_error_m": 2.89771337831124e-06,
+          "valid": true
+        }
+      ]
+    }
+  ],
+  "interpretation": "PGS500us with32 position iterations passes passive full-size contact and two-action YAM integration. TGS500us failure remains historical; loaded removal is not yet demonstrated."
+}

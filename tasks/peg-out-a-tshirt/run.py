@@ -73,7 +73,8 @@ def native_audit(stage,cloth_names,peg_names):
             if path.endswith('/'+name) and 'OmniPhysicsDeformableBodyAPI' in schemas:
                 result['cloth'][name]={'path':path,'schemas':list(schemas),
                      'rigid_body':prim.HasAPI(UsdPhysics.RigidBodyAPI),
-                     'self_collision':prim.GetAttribute('physxDeformableBody:selfCollision').Get()}
+                     'self_collision':prim.GetAttribute('physxDeformableBody:selfCollision').Get(),
+                     'solver_position_iterations':prim.GetAttribute('physxDeformableBody:solverPositionIterationCount').Get()}
         for name in peg_names:
             if '/'+name+'/' in path:
                 entry=result['pegs'].setdefault(name,{'bodies':[],'joints':[],'kinematic_bodies':[]})
@@ -113,6 +114,8 @@ def main():
     p.add_argument('--contact-refined',action='store_true',help='Use the explicitly refined cloth contact band for every policy reset')
     p.add_argument('--regular-refined',action='store_true',help='Use the regular2.5mm cloth grid for every policy reset, preserving1.6mm seam width')
     p.add_argument('--binary-cloth-trace',action='store_true',help='Preserve all native float32 cloth states in binary arrays, reducing diagnostic JSON overhead')
+    p.add_argument('--solver-iterations',type=int,choices=(32,128),default=32,help='Native cloth numerical convergence diagnostic; material unchanged')
+    p.add_argument('--external-forces-once-diagnostic',action='store_true',help='Use the ordinary once-per-step TGS force integration option for a controlled comparison')
     p.add_argument('--state-assisted-clip',action='store_true',help='Explicit scripted demo: center free peg jaws with ordinary robot actions before closure')
     p.add_argument('--joint-feedback-from',type=int,help='Enable bounded right-arm PI tracking after this many actions, using ordinary joint observations only')
     p.add_argument('--judging-views',action='store_true',help='Record additional native960×720 front/rear assessor videos')
@@ -186,7 +189,7 @@ def main():
             'source_sha256':source_hashes,'versions':versions,'seed':args.seed,
             'control_hz':CONTROL_HZ,'requested_steps':args.steps,'completed_steps':0,
             'policy':('constant adapter-ready joint targets' if fixed_plan is None else 'frozen fixed joint trajectory')+'; no object/assessor feedback',
-            'instruction':draft['instruction'],'joint_feedback_from':args.joint_feedback_from,'state_assisted_grasp':args.state_assisted_grasp,'contact_refined':args.contact_refined,'regular_refined':args.regular_refined}
+            'instruction':draft['instruction'],'joint_feedback_from':args.joint_feedback_from,'state_assisted_grasp':args.state_assisted_grasp,'contact_refined':args.contact_refined,'regular_refined':args.regular_refined,'solver_iterations':args.solver_iterations,'external_forces_once_diagnostic':args.external_forces_once_diagnostic}
     if args.joint_feedback_from is not None:
         report['policy']='frozen joint reference with bounded right-arm PI from ordinary joint observations; no object/assessor feedback'
     if args.state_assisted_grasp:
@@ -209,6 +212,7 @@ def main():
     try:
         os.environ['ROBOCURVE_SHIRT_CONTACT_REFINED']='1' if args.contact_refined else '0'
         os.environ['ROBOCURVE_SHIRT_REGULAR_REFINED']='1' if args.regular_refined else '0'
+        os.environ['ROBOCURVE_SHIRT_SOLVER_ITERATIONS']=str(args.solver_iterations)
         os.environ.setdefault('OMNI_KIT_ACCEPT_EULA','YES')
         from isaaclab.app import AppLauncher
         app=AppLauncher(headless=True,enable_cameras=True).app
@@ -222,6 +226,19 @@ def main():
         from yam_arena import inspect_embodiment as wrapper,scene
         # The normal callback derives decimation from this timestep and20 Hz.
         scene.PHYSICS_DT=1/PHYSICS_HZ
+        if args.external_forces_once_diagnostic:
+            original_cfg_callback=scene.env_cfg_callback
+            def configure_callback(*values,**kwargs):
+                configure=original_cfg_callback(*values,**kwargs)
+                def override(cfg):
+                    cfg=configure(cfg)
+                    if cfg.sim.physics is None:
+                        from isaaclab_physx.physics import PhysxCfg
+                        cfg.sim.physics=PhysxCfg()
+                    cfg.sim.physics.enable_external_forces_every_iteration=False
+                    return cfg
+                return override
+            scene.env_cfg_callback=configure_callback
         if args.judging_views:
             from review_views import configure,metadata
             original_make_env=scene.make_env
@@ -247,6 +264,10 @@ def main():
         if not names:
             raise RuntimeError('Task custom assets were not registered')
         report['native_scene_audit']=native_audit(stage,list(arena_cloth.SPECS),list(PEG_SPECS))
+        if report['native_scene_audit']['cloth']['tshirt']['solver_position_iterations']!=args.solver_iterations:
+            raise RuntimeError('Cloth iteration request did not reach native scene')
+        if args.external_forces_once_diagnostic and any(p['settings']['enableExternalForcesEveryIteration'] for p in report['native_scene_audit']['physics_scenes']):
+            raise RuntimeError('Force integration diagnostic did not reach native scene')
         report['physics_dt_s']=float(base.sim.get_physics_dt())
         report['initial_physics_step_count']=int(base.sim._physics_step_count)
         report['initial_snapshot']='After one raw reset and the declared five-second native cloth/peg settling period'

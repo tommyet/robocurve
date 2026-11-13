@@ -23,6 +23,8 @@ DEVELOPMENT_ONLY=True
 CONTACT_REFINED=os.environ.get('ROBOCURVE_SHIRT_CONTACT_REFINED','0')=='1'
 REGULAR_REFINED=os.environ.get('ROBOCURVE_SHIRT_REGULAR_REFINED','0')=='1'
 if CONTACT_REFINED and REGULAR_REFINED:raise ValueError('Select one garment mesh')
+SOLVER_ITERATIONS=int(os.environ.get('ROBOCURVE_SHIRT_SOLVER_ITERATIONS','32'))
+if SOLVER_ITERATIONS not in (32,128):raise ValueError('Unsupported cloth solver diagnostic')
 MESH=tshirt()
 if REGULAR_REFINED:MESH=tshirt(spacing=.0025)
 elif CONTACT_REFINED:
@@ -31,7 +33,7 @@ elif CONTACT_REFINED:
 INITIAL=initial_layout(MESH)
 OBJECTS=[
     Cloth('tshirt',pos=(.345,0.,SUPPORT_TOP+.003),size=(.30,.40,.0016),
-          color=(.08,.35,.72),mesh=MESH,initial=INITIAL,fabric=Fabric()),
+          color=(.08,.35,.72),mesh=MESH,initial=INITIAL,fabric=Fabric(solver_iterations=SOLVER_ITERATIONS)),
     Fixture('rack',pos=(LINE_X,0.,(TABLE+LINE_Z)/2),
             size=(.15,2*LINE_HALF_SPAN+.095,LINE_Z-TABLE),kind='clothesline'),
     Fixture('laundry_support',pos=SUPPORT_CENTER,size=SUPPORT_SIZE,kind='laundry_support'),

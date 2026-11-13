@@ -24,8 +24,10 @@ slipped off an embedded leg does not satisfy that condition.
 
 Measure the shortest metal-to-paper clearance in the final state with a ruler
 and overhead/side photographs. Include both bent tails, not just the crown.
-The three-second release interval starts when neither robot hand nor the
-remover touches the staple or papers. The sheets may stay in their original
+The three-second release interval starts when neither robot hand touches the
+staple or papers. The intact staple may rest in or on the remover, provided
+the robot has released that remover onto the work surface. An actively held
+remover supporting the staple does not satisfy release. The sheets may stay in their original
 stack; no separate paper-transport action is required. Wrinkles and creases
 alone are not tears.
 
@@ -34,7 +36,8 @@ straight or neatly placed in a tray. Both tool-assisted methods and successful
 direct manipulation are valid; the result and preservation matter. Score from
 continuous trial video, after-trial photographs and a ruler. The scorer's
 boolean observations are review fields, not automatic claims by the simulator.
-The record schema is `staple-judging-v3`.
+The record schema is `staple-judging-v4`. Record `staple_touching_remover` and
+`remover_released` explicitly; release of an unused remover elsewhere is irrelevant.
 
-The 2 mm damage allowance and proposed 120-second run limit remain development
+The 2 mm damage allowance and proposed 30-second run limit remain development
 choices. Check their suitability with the selected real paper and remover.

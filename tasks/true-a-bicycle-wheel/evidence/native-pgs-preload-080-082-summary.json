@@ -1,0 +1,106 @@
+{
+  "kind": "matched_native_corrected_reset_controls",
+  "score": null,
+  "submission_ready": false,
+  "controls": [
+    {
+      "batch": "080",
+      "report_sha256": "4294948467a8e8614edafb214d58e9a8bf1398d2e2d579c3623187f97dbd3255",
+      "complete": true,
+      "solver": "PGS",
+      "position_iterations": 32,
+      "dt_s": 0.0001,
+      "seconds": 0.5,
+      "reset_profile": "zero-defect-control",
+      "final_runout_m": 9.179115295410156e-06,
+      "final_tension_range_n": [
+        239.0401308216128,
+        290.58766187214337
+      ],
+      "rim_integrity": {
+        "valid": true,
+        "steps": 5000,
+        "first_failure": null,
+        "maximum_axial_bending_strain": 0.0010964882191506929,
+        "maximum_twist_rad": 1.1799254050826996e-05,
+        "maximum_locked_joint_gap_m": 1.4639537231506934e-05,
+        "peaks": {
+          "maximum_axial_bending_strain": 0.0011940711786131038,
+          "maximum_twist_rad": 1.3558220110633233e-05,
+          "maximum_locked_joint_gap_m": 1.524183012985303e-05
+        }
+      },
+      "final_momentum": {
+        "angular_momentum_kg_m2_s": [
+          -0.00028437737352623993,
+          -1.3813062739280525e-05,
+          -1.5297813969123236e-05
+        ],
+        "gravity_torque_about_axle_nm": [
+          5.420186157243604e-06,
+          0.0031823697260429575,
+          0.0
+        ],
+        "maximum_angular_speed_rad_s": 2.8720704910007897,
+        "note": "Excludes wrench. Compare changes against external contact/bearing torque; no score is inferred."
+      },
+      "timing": {
+        "material_s": 5.9072318486869335,
+        "native_simulation_s": 5.382261091843247,
+        "observation_s": 0.5404954720288515,
+        "checkpoint_s": 2.2506070993840694
+      },
+      "wall_seconds": 17.868133941665292
+    },
+    {
+      "batch": "082",
+      "report_sha256": "fb6f26a33cb10ea6962f2e7f685109cd1e272842923a8dea33e56f58b2494735",
+      "complete": true,
+      "solver": "PGS",
+      "position_iterations": 128,
+      "dt_s": 0.0001,
+      "seconds": 0.5,
+      "reset_profile": "zero-defect-control",
+      "final_runout_m": 2.682209014892578e-06,
+      "final_tension_range_n": [
+        410.44951913910126,
+        423.25693642600663
+      ],
+      "rim_integrity": {
+        "valid": true,
+        "steps": 5000,
+        "first_failure": null,
+        "maximum_axial_bending_strain": 0.0005877006757535222,
+        "maximum_twist_rad": 1.1599213531313578e-06,
+        "maximum_locked_joint_gap_m": 3.7134462090448954e-06,
+        "peaks": {
+          "maximum_axial_bending_strain": 0.000623776057930743,
+          "maximum_twist_rad": 1.4299446713961192e-06,
+          "maximum_locked_joint_gap_m": 3.945230139480671e-06
+        }
+      },
+      "final_momentum": {
+        "angular_momentum_kg_m2_s": [
+          -1.780078329557398e-05,
+          -1.3588070417078684e-05,
+          -9.265908596088593e-08
+        ],
+        "gravity_torque_about_axle_nm": [
+          1.360872289058639e-06,
+          0.003181921741950803,
+          0.0
+        ],
+        "maximum_angular_speed_rad_s": 0.8879089076205774,
+        "note": "Excludes wrench. Compare changes against external contact/bearing torque; no score is inferred."
+      },
+      "timing": {
+        "material_s": 9.929983021691442,
+        "native_simulation_s": 10.943319411948323,
+        "observation_s": 0.8499141559004784,
+        "checkpoint_s": 4.493715091608465
+      },
+      "wall_seconds": 30.027610030956566
+    }
+  ],
+  "interpretation": "PGS128 preserves400N minimum preload at zero-defect rest lengths;32 iterations underresolve this preload. This is a passive corrected-state control, not robot repair evidence."
+}

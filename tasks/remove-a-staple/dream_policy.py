@@ -66,3 +66,14 @@ def public_transcript(policy):
     transcript["requests"] = [{k: v for k, v in row.items() if k != "session_id"}
                                for row in transcript.get("requests", [])]
     return transcript
+
+
+def bounded_action(requested, previous, low, high, step_limit):
+    """Apply ordinary joint position/speed limits; reject malformed policy data."""
+    import numpy as np
+    values=[np.asarray(x,float) for x in (requested,previous,low,high,step_limit)]
+    if any(x.shape!=(14,) or not np.isfinite(x).all() for x in values):
+        raise ValueError("Expected finite14-D joint vectors")
+    requested,previous,low,high,step_limit=values
+    if np.any(low>high) or np.any(step_limit<=0):raise ValueError("Invalid ordinary joint limits")
+    return np.clip(np.clip(requested,previous-step_limit,previous+step_limit),low,high)

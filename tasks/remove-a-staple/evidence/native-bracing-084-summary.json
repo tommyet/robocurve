@@ -1,0 +1,57 @@
+{
+  "kind": "staple_panel_yam_integration_preview",
+  "status": "invalid_model_domain",
+  "completed_steps": 45,
+  "requested_steps": 386,
+  "wall_seconds": 243.1618672348559,
+  "material": [
+    {
+      "observations": 4647,
+      "paper": [
+        {
+          "continuity": {
+            "maximum_hinge_endpoint_gap_m": 6.91015271127178e-06,
+            "maximum_vertex_average_error_m": 4.301075116224693e-06,
+            "valid": true
+          },
+          "contact_audit": {
+            "valid": true,
+            "steps": 4647,
+            "first_failure": null
+          },
+          "valid": true
+        },
+        {
+          "continuity": {
+            "maximum_hinge_endpoint_gap_m": 2.972976437876082e-05,
+            "maximum_vertex_average_error_m": 1.9212195245764182e-05,
+            "valid": false
+          },
+          "contact_audit": {
+            "valid": true,
+            "steps": 4647,
+            "first_failure": null
+          },
+          "valid": false
+        }
+      ],
+      "wire_continuity": {
+        "maximum_endpoint_gap_m": 1.8311010437687773e-06,
+        "maximum_allowed_gap_m": 3e-05,
+        "valid": true
+      },
+      "peak_wire_endpoint_gap_m": 7.331388825262641e-06,
+      "peak_paper_hinge_gaps_m": [
+        9.966428412993873e-06,
+        2.972976437876082e-05
+      ],
+      "valid": false
+    }
+  ],
+  "error": "MaterialDomainError: Paper hinge continuity or staple crossing failed; no task score is valid",
+  "position_iterations": 32,
+  "physics_dt_s": 0.0005,
+  "plan_sha256": "42b06f2459eb60fa95d995fbf1466fc1f16edfcb18d613c829f857465f30bfdd",
+  "report_sha256": "87f2d7e5afdb5f3a05d08c198c75aa746c1eb21a5a7a36eee85e8c7d41410c03",
+  "interpretation": "Stops at first left-finger bracing contact, before remover grip. A29.73um upper-panel endpoint mismatch exceeds the25um numerical envelope. This does not establish a paper tear; native crossings remain clean. MatchingPGS128 contact trial is queued without changing material or scoring."
+}

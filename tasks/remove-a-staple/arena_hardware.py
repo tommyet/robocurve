@@ -27,6 +27,7 @@ class HardwareState(ObjectState):
 BODY_NAMES=tuple(f'staple/wire_{i:03d}' for i in range(len(clinched_staple_centerline(sample_m=.0005))-1))+('remover',)
 ASSEMBLIES={}
 PANEL_CONTACT_CANDIDATE=False
+PANEL_POSITION_ITERATIONS=128
 
 
 def _spawn(path,cfg,translation=None,orientation=None,**kwargs):
@@ -43,6 +44,7 @@ def _spawn(path,cfg,translation=None,orientation=None,**kwargs):
             UsdGeom.Xform.Define(stage,root).AddTranslateOp().Set(Gf.Vec3d(*OFFSET_M))
             for body_path in metadata['staple']['paths']:
                 rigid=PhysxSchema.PhysxRigidBodyAPI.Get(stage,body_path)
+                rigid.CreateSolverPositionIterationCountAttr(PANEL_POSITION_ITERATIONS)
                 rigid.CreateSolverVelocityIterationCountAttr(4)
                 rigid.CreateMaxDepenetrationVelocityAttr(.05)
         cache=UsdGeom.XformCache();poses=[]

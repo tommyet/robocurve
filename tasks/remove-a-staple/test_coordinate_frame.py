@@ -15,6 +15,7 @@ class CoordinateFrameTests(unittest.TestCase):
             right_robot=NS(prim_path='/env/RightArm',init_state=shared),
             table=NS(prim_path='/env/table',init_state=NS(pos=(.3,0.,.7275))),
             top_cam=NS(prim_path='/env/TopCam',offset=NS(pos=(.4,0.,1.2))),
+            judging_top=NS(prim_path='/env/judging_top',offset=NS(pos=(.227,-.05,.95))),
             left_cam=NS(prim_path='/env/LeftArm/gripper/cam',offset=NS(pos=(.02,.01,0.))),
             right_cam=NS(prim_path='/env/RightArm/gripper/cam',offset=NS(pos=(.02,.01,0.))),
             hardware=NS(rigid_objects={}))
@@ -22,6 +23,7 @@ class CoordinateFrameTests(unittest.TestCase):
         frame.shift_scene_config(cfg)
         np.testing.assert_allclose(cfg.scene.left_robot.init_state.pos,(-.22,.2,.0325))
         np.testing.assert_allclose(cfg.scene.top_cam.offset.pos,(.08,0.,.4325))
+        np.testing.assert_allclose(cfg.scene.judging_top.offset.pos,(-.093,-.05,.1825))
         self.assertEqual(shared.pos,(.1,.2,.8))
         self.assertEqual(cfg.scene.left_cam.offset.pos,(.02,.01,0.))
         points=np.array(((.227,-.05,.76774),(.32,0.,.76755)))

@@ -45,7 +45,7 @@ def shift_scene_config(cfg):
             asset.init_state.pos=tuple(to_native(old))
             kind='root_asset'
         elif camera is not None and hasattr(camera,'pos'):
-            if name not in ('top_cam','overview_cam'):
+            if name not in ('top_cam','overview_cam','judging_top','judging_side'):
                 raise ValueError('Unclassified camera coordinate frame: '+name)
             old=np.asarray(camera.pos,float)
             asset.offset=copy.deepcopy(camera)

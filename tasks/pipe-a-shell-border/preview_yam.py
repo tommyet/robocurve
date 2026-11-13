@@ -24,6 +24,10 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--out',type=Path,required=True)
     p.add_argument('--steps',type=int,default=default_steps)
+    p.add_argument('--physics-hz',type=int,choices=(240,480,960),default=240,
+                   help='Native integration rate; control and cameras remain at20Hz')
+    p.add_argument('--tool-substep-trace',action='store_true',
+                   help='Record every native tool/material input for independent replay')
     p.add_argument('--policy',choices=('diagnostic','demo','dream'),default=default_policy)
     p.add_argument('--plan',type=Path,help='Optional precompiled fixed action plan; no object feedback')
     p.add_argument('--joint-feedback',action='store_true',help='Bounded demo PI tracking from standard joint observations only')
@@ -73,7 +77,7 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
             'controller_assistance':plan.get('assistance') if plan and a.state_assisted_demo else None,
             'joint_feedforward':plan.get('joint_feedforward') if plan else None,
             'external_forces_once_diagnostic':a.external_forces_once_diagnostic}
-    app=None;video=None;trace=[];dream_policy=None;request_audit=[];session_audit={'session_count':0}
+    app=None;video=None;trace=[];substep_trace=[];dream_policy=None;request_audit=[];session_audit={'session_count':0}
     def progress(phase,step=0):
         report.update(phase=phase,completed_control_steps=step,wall_seconds=time.monotonic()-start)
         (a.out/'preview.json').write_text(json.dumps(report,indent=2)+'\n')
@@ -98,6 +102,8 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
         from yam_arena import scene as adapter
         original_make_env=adapter.make_env
         original_cfg_callback=adapter.env_cfg_callback
+        original_dt=adapter.PHYSICS_DT
+        adapter.PHYSICS_DT=1/a.physics_hz
         if a.external_forces_once_diagnostic:
             def configure_callback(*args,**kwargs):
                 configure=original_cfg_callback(*args,**kwargs)
@@ -121,6 +127,7 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
         finally:
             adapter.make_env=original_make_env
             adapter.env_cfg_callback=original_cfg_callback
+            adapter.PHYSICS_DT=original_dt
         progress('native tensor and contact views')
         import sys
         # The task loader may give scene.py a generated module name. Its hook
@@ -146,11 +153,20 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
             allowed_shape_paths=[roots['barrel']+f'/NozzleSector{i:02d}' for i in range(24)])
         base=emb._base;write=base.scene.write_data_to_sim
         report['physics_dt_s']=float(base.physics_dt)
+        if not np.isclose(base.physics_dt,1/a.physics_hz,rtol=0,atol=1e-10):
+            raise RuntimeError('Requested native integration rate did not reach the simulator')
+        report['tool_substep_trace']=a.tool_substep_trace
         report['robot_body_names']={name:list(base.scene[name].body_names) for name in ('left_robot','right_robot')}
         def step_material(*args,**kwargs):
             out=write(*args,**kwargs)
-            fb,fp=coupling.advance(array(barrel.get_transforms())[0],array(barrel.get_velocities())[0],
-                                   array(plunger.get_transforms())[0],float(base.physics_dt))
+            bp=array(barrel.get_transforms())[0].copy()
+            bv=array(barrel.get_velocities())[0].copy()
+            pp=array(plunger.get_transforms())[0].copy()
+            fb,fp=coupling.advance(bp,bv,pp,float(base.physics_dt))
+            if a.tool_substep_trace:
+                substep_trace.append(np.r_[coupling.material.time_s,float(base.physics_dt),bp,bv,pp,
+                    coupling.last_piston_m,coupling.last_piston_velocity_m_s,coupling.last_reaction_n,
+                    coupling.last_seal_force_n,coupling.material.emitted_m3])
             for view,force,torque in ((barrel,fb,coupling.last_contact_torque),(plunger,fp,np.zeros(3))):
                 view.apply_forces_and_torques_at_position(force_data=torch.as_tensor(force,dtype=torch.float32,device=base.device).reshape(1,3),
                     torque_data=torch.as_tensor(torque,dtype=torch.float32,device=base.device).reshape(1,3),position_data=None,
@@ -161,6 +177,7 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
         progress('episode reset')
         emb._env.reset()
         coupling.reset()
+        substep_trace.clear()
         other_contact.events.clear()
         video=imageio.get_writer(a.out/'preview.mp4',fps=20,codec='libx264',pixelformat='yuv420p',
                                 ffmpeg_params=['-movflags','+faststart'],macro_block_size=1)
@@ -252,6 +269,13 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
         report['wall_seconds']=time.monotonic()-start
         (a.out/'preview.json').write_text(json.dumps(report,indent=2)+'\n')
         if trace:(a.out/'trace.json').write_text(json.dumps(trace,indent=2)+'\n')
+        if substep_trace:
+            np.savez_compressed(a.out/'tool-substeps.npz',values=np.asarray(substep_trace,dtype=np.float64),
+                columns=np.asarray(['time_after_s','dt_s']+
+                    ['barrel_'+x for x in ('x','y','z','qx','qy','qz','qw')]+
+                    ['barrel_'+x for x in ('vx','vy','vz','wx','wy','wz')]+
+                    ['plunger_'+x for x in ('x','y','z','qx','qy','qz','qw')]+
+                    ['piston_m','piston_velocity_m_s','pressure_reaction_n','seal_force_n','emitted_m3']))
         if app:app.close()
 
 

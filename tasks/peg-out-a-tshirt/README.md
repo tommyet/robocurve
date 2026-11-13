@@ -155,5 +155,9 @@ Adaptive refinement introduced0.2mm seam features; its069 reset moved some
 sleeve nodes through the support board. The regular2.5mm-grid candidate keeps
 the1.6mm seam width, has30,538nodes, and changes no physical geometry. Select
 it explicitly with `--regular-refined` in either the passive probe or YAM
-runner. A valid passive reset and real released line capture are still needed
-before this candidate can replace the coarse mesh.
+runner. Batch072 completed the five-second passive reset with no sampled
+board/leg/table triangle intersections. Batch075 lifted the shirt but lost it
+when one hand released: material passed through the remaining finger pads
+by3.36mm. It never reached the line. The next320-action diagnostic uses an
+ordinary finite pinch target (0.939mm commanded jaw gap) with unchanged
+physics. Real intact grasp and released line capture remain unproved.

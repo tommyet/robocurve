@@ -235,5 +235,13 @@
     ],
     "reference_edge_z_m": 1.2,
     "fit_status": "provisional before final demo; all fit and narrow-tip ordering conditions require actual reviewed evidence"
+  },
+  "adult_handoff_076": {
+    "status": "stopped before receiving motion; no knot or handoff score",
+    "actions_completed": 280,
+    "wall_seconds": 357.1859,
+    "evidence": "artifacts/six-task-completion-2026-11-13/native-batch-076-tie/tie-handoff",
+    "finding": "Raised held wide strand and measured its30mm tip at(.28761,-.19513,.87975)m. Proposed left joint-space receiving swing would cross the actual narrow end with forearm links3/4 (material1.295\u20131.45m); runtime guard correctly withheld it.",
+    "next": "Clear front-space staged receiving route under CPU audit; no added cloth constraints."
   }
 }

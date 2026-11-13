@@ -4,6 +4,31 @@ Last updated: 2026-11-13 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-13 — higher accuracy controls and remaining manipulation failures
+
+- Wheel PGS at128 position iterations passes the corrected-state physical
+  control:2.682µm lateral runout,410.45–423.26N spoke tension and3.713µm
+  maximum rim hinge gap.32 iterations under-resolved preload. The robot's
+  wrench trial is separate and remains unproven.
+- Full A5 paper PGS at2,000Hz passes the short native/YAM control with
+  approximately4–6µm hinge gaps. The complete084 removal attempt stops after
+  45 actions when an upper-sheet hinge gap reaches29.73µm. Wire crossings
+  remain clean; this early failure needs diagnosis before any success claim.
+- Shirt075 loses its cloth through the fully closed finger pads during the
+  one-hand handoff. A gentler0.01 normalized pinch completes320 actions in084;
+  actual retention and contact are being independently inspected.
+- Seam24-link rediscretization removes initially tangent non-neighbor capsules
+  without changing thread size, centreline or mass. The isolated loop passes,
+  but the full sweep-CCD scene fails after0.167s; hybrid CCD fails after34steps.
+  Neither is evidence of a physically valid intact seam or removal.
+- Cake080 learned bounded joint feedforward reaches0.5, three valid shapes
+  across45mm, with clean tool release. It does not produce qualifying ridges.
+  Replaying only20Hz measured pose/piston inputs gives ridges, so a finer native
+  timestep and full substep trace will test the omitted pressure/motion response.
+  Prescribed-input replay is diagnostic, never a robot demonstration.
+- All six remain development tasks. No Dream requests, uploads or upstream PRs
+  have been made. Completed source/result archives are SHA-verified locally.
+
 ## 2026-11-13 — coordinate precision, cloth resolution and controller evidence
 
 - Operator: repository agent, branch `codex/six-task-completion-2026-11-13`.

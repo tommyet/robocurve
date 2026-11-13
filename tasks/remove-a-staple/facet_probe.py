@@ -28,11 +28,13 @@ def main():
     p.add_argument('--no-staple',action='store_true')
     p.add_argument('--separated-free-fall-diagnostic',action='store_true',help='No support; separate sheets by20mm to isolate unloaded hinge behavior')
     p.add_argument('--external-forces-every-iteration',action='store_true')
+    p.add_argument('--solver-type',choices=('TGS','PGS'),default='TGS')
     p.add_argument('--velocity-iterations',type=int,choices=(1,4,32),default=4)
     p.add_argument('--position-iterations',type=int,choices=(32,64,128),default=128)
     p.add_argument('--wire-velocity-iterations',type=int,choices=(1,4,32),default=4,
                    help='Separate explicit wire control; connected islands use the highest requested count')
     args=p.parse_args()
+    if args.solver_type=='PGS' and args.external_forces_every_iteration:p.error('TGS force-iteration attribute is unsupported by PGS')
     if not .001<=args.seconds<=.2 or not .000025<=args.dt<=.001:p.error('Bounded contact coupon only')
     if args.full_size_candidate and (not args.primitive_box_panels or args.separated_free_fall_diagnostic):p.error('Full-size candidate requires box panels and the supported scene')
     if args.recenter_at_paper_diagnostic and not args.full_size_candidate:p.error('Recentering diagnostic requires the full-size scene')
@@ -41,7 +43,7 @@ def main():
     record=dict(schema='paper-facet-coupon-v1',complete=False,robot_demo=False,task_score=None,
         no_staple=args.no_staple,dt=args.dt,seconds=args.seconds,samples=[],completed_steps=0,phase='launch',
         separated_free_fall_diagnostic=args.separated_free_fall_diagnostic,
-        external_forces_every_iteration=args.external_forces_every_iteration,
+        solver_type=args.solver_type,external_forces_every_iteration=args.external_forces_every_iteration if args.solver_type=='TGS' else None,
         position_iterations=args.position_iterations,velocity_iterations=args.velocity_iterations,wire_velocity_iterations=args.wire_velocity_iterations,
         primitive_box_panels=args.primitive_box_panels,full_size_candidate=args.full_size_candidate,
         source_sha256={name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
@@ -60,9 +62,9 @@ def main():
         UsdGeom.SetStageMetersPerUnit(stage,1.);UsdGeom.SetStageUpAxis(stage,UsdGeom.Tokens.z)
         scene=UsdPhysics.Scene.Define(stage,'/physicsScene')
         scene.CreateGravityDirectionAttr(Gf.Vec3f(0.,0.,-1.));scene.CreateGravityMagnitudeAttr(9.80665)
-        ps=PhysxSchema.PhysxSceneAPI.Apply(scene.GetPrim());ps.CreateSolverTypeAttr('TGS')
+        ps=PhysxSchema.PhysxSceneAPI.Apply(scene.GetPrim());ps.CreateSolverTypeAttr(args.solver_type)
         ps.CreateEnableGPUDynamicsAttr(False);ps.CreateBroadphaseTypeAttr('MBP');ps.CreateEnableCCDAttr(True)
-        ps.CreateEnableExternalForcesEveryIterationAttr(args.external_forces_every_iteration)
+        if args.solver_type=='TGS':ps.CreateEnableExternalForcesEveryIterationAttr(args.external_forces_every_iteration)
         material=ShellMaterial();record['paper_material']=asdict(material)
         if args.full_size_candidate:
             from full_scene import build_scene,SHEET_CENTRES

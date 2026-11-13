@@ -27,12 +27,17 @@ def main():
     p.add_argument('--tool-pose-servo-diagnostic',action='store_true',help='Disclosed scripted-demo tool-pose feedback; ordinary joint commands only, never used by Dream')
     p.add_argument('--nipple-target-servo-diagnostic',action='store_true',help='Also latch measured square-nipple frame before each ordinary quarter-turn; requires tool servo')
     p.add_argument('--plan',type=Path,help='Frozen ordinary14-D joint commands; remains a diagnostic')
+    p.add_argument('--dream',action='store_true',help='Ordinary Dream policy without demo plans or state feedback')
+    p.add_argument('--dream-rows-per-request',type=int,choices=(2,4,8),default=8)
+    p.add_argument('--judging-views',action='store_true',help='Fixed close key/gauge cameras, never policy inputs')
     p.add_argument('--wheel-clocking-deg',type=float,choices=(0.,10.,20.,50.,55.),default=0.)
     p.add_argument('--nipple-flat-phase-deg',type=float,choices=(0.,45.),default=0.)
     p.add_argument('--physics-hz', type=int, choices=(2000,10000,20000,40000,80000), default=40000)
     p.add_argument('--reset-profile',choices=('four-defect-reference','two-defect-candidate'),default='two-defect-candidate')
     p.add_argument('--solver-position-iterations',type=int,choices=(32,64,128),default=32)
     a = p.parse_args()
+    if a.dream and (a.plan or a.joint_tracking_diagnostic or a.tool_pose_servo_diagnostic or a.nipple_target_servo_diagnostic):
+        p.error('Dream cannot use a scripted plan or demo feedback')
     if a.distance_tolerance_compensation_m and not a.central_spring_candidate:p.error('Distance tolerance requires central-spring candidate')
     if a.central_spring_candidate and a.device!='cpu':p.error('Native DistanceJoint is CPU only')
     if a.solver_type=='PGS' and (not a.central_spring_candidate or a.external_forces_once_diagnostic):
@@ -51,12 +56,13 @@ def main():
         a.wheel_clocking_deg=plan['wheel_clocking_deg'];a.nipple_flat_phase_deg=plan['nipple_flat_phase_deg']
         a.reset_profile=plan['reset_profile']
         if a.steps>len(actions):p.error('Requested steps exceed frozen plan')
-    if not 1 <= a.steps <= (1200 if plan else 100):
+    if not 1 <= a.steps <= (1200 if plan or a.dream else 100):
         p.error('Preview is limited to 100 control steps')
     a.out.mkdir(parents=True, exist_ok=False)
     started = time.monotonic()
     report = {'kind': 'wheel_yam_integration_preview', 'status': 'running', 'score': None,
         'robot_demo': False, 'dream_requests': 0, 'requested_steps': a.steps,
+        'policy':'Dream with ordinary camera/joint observations' if a.dream else 'scripted or ready joint targets',
         'requested_device':a.device,'joint_tracking_diagnostic':a.joint_tracking_diagnostic,
         'external_forces_once_diagnostic':a.external_forces_once_diagnostic,
         'no_rewind_diagnostic':a.no_rewind_diagnostic,'freeze_thread_diagnostic':a.freeze_thread_diagnostic,
@@ -78,7 +84,8 @@ def main():
     def interrupted(signum,frame):raise RuntimeError('Interrupted by '+signal.Signals(signum).name)
     previous={s:signal.signal(s,interrupted) for s in (signal.SIGTERM,signal.SIGINT)}
     save()
-    app = video = trace = None
+    app = video = trace = dream_policy = None
+    request_audit=[];session_audit={'session_count':0}
     try:
         from isaaclab.app import AppLauncher
         app = AppLauncher(headless=True, enable_cameras=True,device=a.device).app
@@ -117,11 +124,19 @@ def main():
                 return override
             adapter.env_cfg_callback=configure_callback
         adapter.PHYSICS_DT = 1/a.physics_hz
+        original_make_env=adapter.make_env
+        if a.judging_views:
+            from review_views import configure
+            def make_env(embodiment,**kwargs):
+                configure(embodiment)
+                return original_make_env(embodiment,**kwargs)
+            adapter.make_env=make_env
         try:
             emb._ensure_sim(None)
         finally:
             adapter.PHYSICS_DT = original_dt
             adapter.env_cfg_callback=original_cfg_callback
+            adapter.make_env=original_make_env
         base = emb._base
         report['effective_device']=str(base.device)
         report['physics_step_s']=float(base.sim.get_physics_dt())
@@ -152,13 +167,13 @@ def main():
             report['fixed_contact_audit_filters']=contact_audit.filters
         import torch
         ready=emb._ready.detach().cpu().numpy()[0].copy()
+        from yam_arena.constants import SHOULDER,WRIST,GRIPPER,FINGER_OPEN
+        limit=np.tile(np.array([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/20]),2)
         if actions is not None:
-            from yam_arena.constants import SHOULDER,WRIST,GRIPPER,FINGER_OPEN
             from yam_arena import YAM_URDF
             if hashlib.sha256(Path(YAM_URDF).read_bytes()).hexdigest()!=plan['urdf_sha256']:
                 raise ValueError('Plan URDF differs from pinned runtime; recompile before physics trial')
             if np.any(actions<emb._low) or np.any(actions>emb._high):raise ValueError('Plan exceeds adapter limits')
-            limit=np.tile(np.array([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/20]),2)
             if np.any(np.abs(np.diff(np.vstack((ready,actions)),axis=0))>limit*1.001):raise ValueError('Plan exceeds ordinary speed limits')
         tracker=None
         tool_servo=None
@@ -173,20 +188,38 @@ def main():
                 'input':'Observed robot joints only; no object state or contact','actuator_efforts_changed':False}
         issued=ready.copy()
         observation=emb._observation()
+        if a.dream:
+            from inspect_robots import Scene
+            from dream_policy import make_policy
+            instruction=json.loads(Path(__file__).with_name('task.draft.json').read_text())['instruction']
+            emb._instruction=instruction;observation=emb._observation()
+            dream_policy=make_policy(request_audit,session_audit,rows_per_request=a.dream_rows_per_request)
+            dream_policy.bind(emb.info);dream_policy.reset(Scene(id='true-a-bicycle-wheel',instruction=instruction))
+            report['dream_model']=dream_policy.info.checkpoint
+            report['dream_rows_per_request']=a.dream_rows_per_request
         state=arena_wheel.state(emb._env,'wheel_station')
         report['phase']='simulate';save()
         trace = gzip.open(a.out/'trace.jsonl.gz', 'wt')
         video = imageio.get_writer(a.out/'preview.mp4', fps=20, codec='libx264', pixelformat='yuv420p',
                                   ffmpeg_params=['-movflags', '+faststart'], macro_block_size=1)
         for step in range(a.steps+1):
+            requested=None
             if step:
-                nominal=ready if actions is None else actions[step-1]
+                if dream_policy is not None:
+                    chunk=dream_policy.act(observation)
+                    if len(chunk.actions)!=1:raise RuntimeError('Expected one ordinary Dream control action')
+                    requested=np.asarray(chunk.actions[0].data,float)
+                    nominal=requested
+                else:nominal=ready if actions is None else actions[step-1]
                 target=nominal.copy()
                 if tool_servo is not None:
                     spoke=tool_servo.target_spoke(step)
                     nipple_pose=None if spoke is None else state.body_poses[list(state.body_names).index(f'wheel/nipple_{spoke:02d}')]
                     target=tool_servo.command(step,target,np.asarray(observation.state['joint_pos']),state.body_poses[list(state.body_names).index('wrench')],nipple_pose)
-                issued=target if tracker is None else tracker.command(target,np.asarray(observation.state['joint_pos']))
+                if dream_policy is not None:
+                    from dream_policy import bounded_action
+                    issued=bounded_action(target,issued,emb._low,emb._high,limit)
+                else:issued=target if tracker is None else tracker.command(target,np.asarray(observation.state['joint_pos']))
                 command=torch.as_tensor(issued[None],device=base.device,dtype=torch.float32)
                 tick=time.perf_counter();emb._env.step(command)
                 report['control_step_wall_seconds'].append(time.perf_counter()-tick)
@@ -199,6 +232,7 @@ def main():
             trace.write(json.dumps({'step': step, 'time_s': step/20,
                 'joint_pos': np.asarray(observation.state['joint_pos']).tolist(),
                 'action14':issued.tolist(),
+                'dream_requested_action14':None if requested is None else requested.tolist(),
                 'nominal_action14':(ready if step==0 or actions is None else actions[step-1]).tolist(),
                 'joint_tracking':None if tracker is None else tracker.last,
                 'tool_pose_servo':None if tool_servo is None else tool_servo.last,
@@ -211,12 +245,18 @@ def main():
             rgb = base.scene['top_cam'].data.output['rgb']
             rgb = getattr(rgb, 'torch', rgb)
             frame = rgb.detach().cpu().numpy()[0, :, :, :3].astype(np.uint8)
+            if a.judging_views:
+                from review_views import composite_frame
+                frame=composite_frame(base)
             video.append_data(frame)
             trace.flush()
             if step%10==0:save()
             if step in (0, a.steps):
                 Image.fromarray(frame).save(a.out/('setup.png' if step == 0 else 'final.png'))
         report['rim_integrity']=arena_wheel.ASSEMBLIES['wheel_station']['coupling'].audit_integrity()
+        if a.judging_views:
+            from review_views import capture_final
+            report['judging_views']=capture_final(base,a.out)
         report.update(status='complete', completed_steps=a.steps, bodies=len(state.body_names),
                       physics_dt_s=float(base.sim.get_physics_dt()))
     except BaseException as error:
@@ -225,6 +265,11 @@ def main():
     finally:
         if trace: trace.close()
         if video: video.close()
+        if dream_policy is not None:
+            from dream_policy import public_transcript
+            (a.out/'dream-transcript.json').write_text(json.dumps(public_transcript(dream_policy),indent=2)+'\n')
+        report.update(dream_requests=len(request_audit),dream_session_audit=session_audit)
+        if request_audit:(a.out/'dream-requests.json').write_text(json.dumps(request_audit,indent=2)+'\n')
         save()
         for sig,handler in previous.items():signal.signal(sig,handler)
         if app: app.close()

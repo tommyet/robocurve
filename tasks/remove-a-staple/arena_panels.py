@@ -3,7 +3,8 @@
 Each analytic100µm box is dynamic and edge-connected by a passive finite
 bending hinge. Only reset writes poses. Inspection reconstructs paper vertices
 and rejects broken/gaping material or staple crossings on every physics step.
-This bridge is source-checked only until its own native preview succeeds.
+Its two-action passive integration gate passes at100µs near the paper origin.
+Loaded manipulation remains unverified.
 """
 from dataclasses import dataclass,field
 import importlib.abc
@@ -32,6 +33,7 @@ class PanelState(ObjectState):
 
 SPECS={}
 SHELLS={}
+POSITION_ITERATIONS=128
 
 
 def _spawn(path,cfg,translation=None,orientation=None,**kwargs):
@@ -42,7 +44,7 @@ def _spawn(path,cfg,translation=None,orientation=None,**kwargs):
         from coordinate_frame import to_native
         from paper import PaperMesh
         mesh=PaperMesh(to_native(spec.mesh.rest),spec.mesh.faces,spec.mesh.holes)
-        shell=author_shell(stage,root,mesh,spec.material,primitive_boxes=True,velocity_iterations=4)
+        shell=author_shell(stage,root,mesh,spec.material,primitive_boxes=True,velocity_iterations=4,position_iterations=POSITION_ITERATIONS)
         model=shell['model'];shell['reset_poses']=np.c_[model['centres'],np.tile((0.,0.,0.,1.),(len(model['centres']),1))]
         SHELLS[cfg.paper_name]=shell
     prim=stage.GetPrimAtPath(str(path))
@@ -123,6 +125,7 @@ class PanelMonitor:
         from contact_guard import PaperWireCrossingGuard
         self.crossing=[PaperWireCrossingGuard(s['mesh'].faces) for s in self.shells]
         self.steps=0;self.last=None;self.frames={};self.failed=False
+        self.peak_wire_gap_m=0.;self.peak_paper_gaps_m=[0.,0.]
     def get_rigidbody_transformation(self,path):
         row=self.frames.get(path)
         return {'ret_val':False} if row is None else {'ret_val':True,'position':row[:3],'rotation':row[3:]}
@@ -131,13 +134,18 @@ class PanelMonitor:
         from arena_hardware import MaterialDomainError
         self.frames=dict(zip(self.rigid.prim_paths,self.rigid.get_transforms().detach().cpu().numpy()))
         staple=self.item['metadata']['staple'];wire=measured_wire_segments(self,staple);values=[]
+        from contact_guard import wire_chain_continuity
+        chain=wire_chain_continuity(wire)
+        self.peak_wire_gap_m=max(self.peak_wire_gap_m,chain['maximum_endpoint_gap_m'])
         for shell,view,ids,audit in zip(self.shells,self.views,self.indices,self.crossing):
             poses=view.get_transforms().detach().cpu().numpy()[ids]
             nodes,continuity=measured_surface(shell,poses);crossing=audit.update(nodes,wire)
             values.append(dict(continuity=continuity,contact_audit=crossing,
                 valid=continuity['valid'] and crossing['valid']))
-        self.steps+=1;self.failed=self.failed or not all(x['valid'] for x in values)
-        self.last={'observations':self.steps,'paper':values,'valid':not self.failed}
+        self.steps+=1;self.failed=self.failed or not chain['valid'] or not all(x['valid'] for x in values)
+        self.peak_paper_gaps_m=[max(old,x['continuity']['maximum_hinge_endpoint_gap_m']) for old,x in zip(self.peak_paper_gaps_m,values)]
+        self.last={'observations':self.steps,'paper':values,'wire_continuity':chain,
+            'peak_wire_endpoint_gap_m':self.peak_wire_gap_m,'peak_paper_hinge_gaps_m':list(self.peak_paper_gaps_m),'valid':not self.failed}
         if self.failed:raise MaterialDomainError('Paper hinge continuity or staple crossing failed; no task score is valid')
         if update_material:self.last['steel']=update_staple(self,staple)
         return self.last

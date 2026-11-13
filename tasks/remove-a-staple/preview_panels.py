@@ -43,13 +43,21 @@ def main():
     p.add_argument('--out',type=Path,required=True);p.add_argument('--steps',type=int,default=10)
     p.add_argument('--physics-hz',type=int,choices=(2000,5000,10000),default=10000)
     p.add_argument('--plan',type=Path)
+    p.add_argument('--dream',action='store_true',help='Ordinary Dream policy; mutually exclusive with scripted feedback')
+    p.add_argument('--dream-rows-per-request',type=int,choices=(2,4,8),default=8)
+    p.add_argument('--judging-views',action='store_true',help='Fixed close review cameras, never policy inputs')
+    p.add_argument('--joint-tracking',action='store_true',help='Bounded ordinary-joint integral tracking, without object feedback')
+    p.add_argument('--position-iterations',type=int,choices=(32,64,128),default=128)
+    p.add_argument('--solver-type',choices=('TGS','PGS'),default='TGS')
     p.add_argument('--recenter-at-paper',action='store_true',help='Fixed global origin shift including robot bases and fixed cameras before construction')
     p.add_argument('--reset-profile',choices=('pocket-support-candidate',),default='pocket-support-candidate')
     p.add_argument('--mesh-profile',choices=('clearance-candidate',),default='clearance-candidate')
     p.add_argument('--refined-contact-diagnostic',action='store_true')
     p.add_argument('--max-depenetration-m-s',type=float)
     a=p.parse_args()
-    if not 1<=a.steps<=(2400 if a.plan else 100):p.error('Bounded preview step count exceeded')
+    if a.dream and (a.plan or a.joint_tracking):p.error('Dream cannot use a scripted plan or demo tracking')
+    if a.joint_tracking and not a.plan:p.error('Joint tracking requires a plan')
+    if not 1<=a.steps<=(600 if a.plan or a.dream else 100):p.error('Bounded preview step count exceeded')
     import runtime_config
     import coordinate_frame
     coordinate_frame.configure(a.recenter_at_paper)
@@ -67,8 +75,9 @@ def main():
     if not version('isaacsim').startswith('6.1.'):raise RuntimeError('Use the pinned Isaac6.1 environment')
     a.out.mkdir(parents=True,exist_ok=False);started=time.monotonic()
     report={'kind':'staple_panel_yam_integration_preview','status':'running','score':None,'robot_demo':False,
+        'joint_tracking':a.joint_tracking,'solver_type':a.solver_type,'position_iterations':a.position_iterations,
         'dream_requests':0,'requested_steps':a.steps,'control_hz':20,'phase':'launch',
-        'policy':'ordinary fixed joint commands; no object state feedback',
+        'policy':'Dream with ordinary camera/joint observations' if a.dream else 'ordinary fixed joint commands; no object state feedback',
         'paper_model':'native analytic100um box panels with passive bending/strength hinges',
         'world_coordinate_offset_m':coordinate_frame.OFFSET_M.tolist(),
         'plan_sha256':hashlib.sha256(a.plan.read_bytes()).hexdigest() if a.plan else None,
@@ -80,7 +89,7 @@ def main():
         temporary=a.out/'preview.tmp.json';temporary.write_text(json.dumps(report,indent=2,allow_nan=False)+'\n');temporary.replace(a.out/'preview.json')
     def terminated(signum,frame):raise TimeoutError('Preview stopped by external watchdog')
     signal.signal(signal.SIGTERM,terminated);checkpoint()
-    app=video=trace=None;monitors=[]
+    app=video=trace=dream_policy=None;monitors=[];request_audit=[];session_audit={'session_count':0}
     try:
         from isaaclab.app import AppLauncher
         app=AppLauncher(headless=True,enable_cameras=True,device='cpu').app
@@ -90,6 +99,8 @@ def main():
         import omni.usd
         import arena_panels,arena_hardware
         arena_hardware.PANEL_CONTACT_CANDIDATE=True
+        arena_hardware.PANEL_POSITION_ITERATIONS=a.position_iterations
+        arena_panels.POSITION_ITERATIONS=a.position_iterations
         from yam_arena import inspect_embodiment as wrapper,scene as adapter
         wrapper._APP=app;report['phase']='build'
         emb=wrapper.YamArenaEmbodiment(task=str(Path(__file__).with_name('task_panels.py')),object_jitter=0.,control_hz=20,cam_width=224,cam_height=224,device='cpu')
@@ -101,16 +112,24 @@ def main():
                 cfg=coordinate_frame.shift_scene_config(configure(cfg))
                 from isaaclab_physx.physics import PhysxCfg
                 if cfg.sim.physics is None:cfg.sim.physics=PhysxCfg()
-                cfg.sim.physics.solver_type=1
+                cfg.sim.physics.solver_type=1 if a.solver_type=='TGS' else 0
                 cfg.sim.physics.enable_ccd=True
-                cfg.sim.physics.enable_external_forces_every_iteration=True
+                cfg.sim.physics.enable_external_forces_every_iteration=a.solver_type=='TGS'
                 return cfg
             return override
         adapter.env_cfg_callback=configure_callback
+        original_make_env=adapter.make_env
+        if a.judging_views:
+            from review_views import configure
+            def make_env(embodiment,**kwargs):
+                configure(embodiment)
+                return original_make_env(embodiment,**kwargs)
+            adapter.make_env=make_env
         try:emb._ensure_sim(None)
         finally:
             adapter.PHYSICS_DT=original_dt
             adapter.env_cfg_callback=original_configuration
+            adapter.make_env=original_make_env
         report['coordinate_configuration_audit']=list(coordinate_frame.CONFIG_AUDIT)
         base=emb._base;stage=omni.usd.get_context().get_stage()
         report['phase']='reset';emb._env.reset()
@@ -127,16 +146,49 @@ def main():
         report['native_physics']={'solver_type':str(phys.GetSolverTypeAttr().Get()),
             'gpu':bool(phys.GetEnableGPUDynamicsAttr().Get()),'ccd':bool(phys.GetEnableCCDAttr().Get()),
             'external_forces_every_iteration':bool(phys.GetEnableExternalForcesEveryIterationAttr().Get())}
-        if report['native_physics']!={'solver_type':'TGS','gpu':False,'ccd':True,'external_forces_every_iteration':True}:
+        if report['native_physics']!={'solver_type':a.solver_type,'gpu':False,'ccd':True,'external_forces_every_iteration':a.solver_type=='TGS'}:
             raise RuntimeError('Native settings differ from the passing panel-paper control')
+        report['wire_segment_lengths_m']=next(iter(arena_hardware.ASSEMBLIES.values()))['metadata']['staple']['lengths_m']
+        report['judging_schema']='staple-judging-v4'
         stage.GetRootLayer().Export(str(a.out/'initial.usda'))
         trace=gzip.open(a.out/'trace.jsonl.gz','wt')
         video=imageio.get_writer(a.out/'preview.mp4',fps=20,codec='libx264',pixelformat='yuv420p',ffmpeg_params=['-movflags','+faststart'],macro_block_size=1)
         report['phase']='record'
+        report['control_step_wall_seconds']=[]
+        tracker=None
+        observation=emb._observation()
+        issued=emb._ready.detach().cpu().numpy()[0].copy()
+        from yam_arena.constants import SHOULDER,WRIST,GRIPPER,FINGER_OPEN
+        limits=np.tile(np.array([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/20]),2)
+        if a.dream:
+            from inspect_robots import Scene
+            from dream_policy import make_policy
+            instruction=json.loads(Path(__file__).with_name('task.draft.json').read_text())['instruction']
+            emb._instruction=instruction;observation=emb._observation()
+            dream_policy=make_policy(request_audit,session_audit,rows_per_request=a.dream_rows_per_request)
+            dream_policy.bind(emb.info);dream_policy.reset(Scene(id='remove-a-staple',instruction=instruction))
+            report['dream_model']=dream_policy.info.checkpoint
+            report['dream_rows_per_request']=a.dream_rows_per_request
+        if a.joint_tracking:
+            from joint_tracking import JointTracker
+            tracker=JointTracker(issued,emb._low,emb._high,limits)
+            report['tracking_disclosure']='Only robot joint observations; no native object poses, attachments, forces or actuator-effort changes.'
         for step in range(a.steps+1):
+            requested=None
             if step:
-                action=emb._ready if actions is None else torch.as_tensor(actions[step-1][None],device=base.device,dtype=torch.float32)
-                emb._env.step(action)
+                if dream_policy is not None:
+                    from dream_policy import bounded_action
+                    chunk=dream_policy.act(observation)
+                    if len(chunk.actions)!=1:raise RuntimeError('Expected one ordinary Dream control action')
+                    requested=np.asarray(chunk.actions[0].data,float)
+                    issued=bounded_action(requested,issued,emb._low,emb._high,limits)
+                else:
+                    nominal=emb._ready.detach().cpu().numpy()[0] if actions is None else actions[step-1]
+                    issued=nominal if tracker is None else tracker.command(nominal,np.asarray(observation.state['joint_pos']))
+                action=torch.as_tensor(issued[None],device=base.device,dtype=torch.float32)
+                tick=time.perf_counter();emb._env.step(action)
+                report['control_step_wall_seconds'].append(time.perf_counter()-tick)
+                emb._t=step/20
             # Observe every final substep too; the material callback inspects
             # preceding states before all intermediate native substeps.
             for monitor in monitors:monitor.inspect(update_material=False)
@@ -144,15 +196,24 @@ def main():
             paper=[arena_panels.state(emb._env,'paper_'+str(i)) for i in range(2)]
             hardware=arena_hardware.hardware_state(emb._env,'hardware')
             trace.write(json.dumps({'step':step,'time_s':step/20,'joint_pos':np.asarray(observation.state['joint_pos']).tolist(),
-                'commanded_action14':None if step==0 or actions is None else actions[step-1].tolist(),
+                'commanded_action14':None if step==0 else issued.tolist(),
+                'dream_requested_action14':None if requested is None else requested.tolist(),
+                'joint_tracking':None if tracker is None else tracker.last,
                 'paper_nodes':[x.nodes.tolist() for x in paper],
                 'paper_continuity':[x.continuity for x in paper],'hardware_names':list(hardware.body_names),
-                'hardware_poses':hardware.body_poses.tolist(),'material':[m.last for m in monitors]})+'\n')
+                'hardware_poses':hardware.body_poses.tolist(),'hardware_velocities':hardware.body_velocities.tolist(),'material':[m.last for m in monitors]})+'\n')
             rgb=base.scene['top_cam'].data.output['rgb'];rgb=getattr(rgb,'torch',rgb)
-            frame=rgb.detach().cpu().numpy()[0,:,:,:3].astype(np.uint8);video.append_data(frame)
+            frame=rgb.detach().cpu().numpy()[0,:,:,:3].astype(np.uint8)
+            if a.judging_views:
+                from review_views import composite_frame
+                frame=composite_frame(base)
+            video.append_data(frame)
             if step in (0,a.steps):Image.fromarray(frame).save(a.out/('setup.png' if not step else 'final.png'))
             report['completed_steps']=step
             if step%5==0:trace.flush();checkpoint()
+        if a.judging_views:
+            from review_views import capture_final
+            report['judging_views']=capture_final(base,a.out)
         report.update(status='complete',meaning='Unscored integration only; no successful extraction demonstrated')
     except BaseException as error:
         report.update(status='invalid_model_domain' if type(error).__name__=='MaterialDomainError' else 'failed',
@@ -160,6 +221,11 @@ def main():
     finally:
         if trace:trace.close()
         if video:video.close()
+        if dream_policy is not None:
+            from dream_policy import public_transcript
+            (a.out/'dream-transcript.json').write_text(json.dumps(public_transcript(dream_policy),indent=2)+'\n')
+        report.update(dream_requests=len(request_audit),dream_session_audit=session_audit)
+        if request_audit:(a.out/'dream-requests.json').write_text(json.dumps(request_audit,indent=2)+'\n')
         report['wall_seconds']=time.monotonic()-started
         checkpoint()
         if app:app.close()

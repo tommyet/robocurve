@@ -22,7 +22,7 @@ difference. The three unedited reports are in `evidence/native-coupon-*.json`;
 `VALIDATION.json` records their hashes. These are contact/material tests, not
 paper extraction or robot demonstrations. Material parameters are approximate.
 
-There are 49 passing CPU checks for the steel law, punctured meshes,
+There are 55 passing CPU checks for the steel law, punctured meshes,
 latched membrane/contact guards, tool approach geometry and photo-based judging.
 The older CPU cohesive-opening model remains a research probe; it does not
 supply tearing physics in the native scene.
@@ -221,7 +221,7 @@ cameras and hardware in the YAM bridge; wrist camera transforms remain relative
 to their arms. Its two-action gate also passes, with final gaps of 0.599 and
 0.643 µm. No task object is moved during control except through physics.
 
-Increasing the step to 500 µs fails by 5.5 ms and is not used. The two-action
+Increasing the TGS step to 500 µs fails by 5.5 ms; that configuration is not used. The two-action
 bridge took 113.6 wall seconds including initialization. Runtime reductions
 need matched mechanical checks before a full robot trial. The 236-action
 pocket-support lever plan has a clean whole-arm collision screen, but has not
@@ -237,3 +237,25 @@ The coordinate translation is a numerical choice, not an altered physical
 setup. Ordinary creases are allowed. Broken or gaping hinges and intact-paper
 wire crossings invalidate evidence. See
 `evidence/native-panel-recenter-070-074-summary.json` for measured controls.
+
+The intact extracted staple may remain in or on a released remover resting
+on the work surface. Holding the tool with the staple still in it does not
+start the three-second release interval. Judging v4 records this explicitly.
+
+### PGS and complete motion candidate
+
+The matched PGS control at 500 µs and 32 position iterations passes full-size
+passive contact and the two-action YAM bridge. Final panel hinge gaps are
+5.82 and4.35 µm with no staple crossings. Each rendered control action takes
+about4.5–4.9 wall seconds. See `evidence/native-pgs-panels-080-082-summary.json`.
+This is integration evidence; loaded extraction remains unverified.
+
+A386-action candidate includes the unchanged236-action lever sequence, physical
+placement and release of the remover, and3.2 seconds of hands-free observation.
+Its full-frame offline hull audit has no unintended intersections; this does not
+prove native grasp or extraction. The proposed600-action limit is30 simulated
+seconds. The native trial records measured paper/steel geometry and all-substep
+continuity/crossing checks. `assess_trace.py` supplies conservative geometric
+distance/release evidence after a run; it does not fill human review fields or
+certify a score. The staple may remain in the released remover, at least10mm
+from both papers.

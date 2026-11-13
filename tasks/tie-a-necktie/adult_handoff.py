@@ -42,15 +42,36 @@ def receive_tip(start_action,rest,nodes):
     from cross_motion import yaw_rotation
     grasp=grasp_frame(rest,nodes,longitudinal=.03,side='left');target=np.asarray(grasp['target_tcp_m']);R=np.asarray(grasp['rotation'])
     if not (.20<target[0]<.39 and -.25<target[1]<-.06 and .80<target[2]<1.02):raise ValueError('Measured wide tip lies outside the receiving workspace: '+repr(target.tolist()))
-    schedule=[(3.,'left',target-.07*R[:,2],.6,R,'approach measured wide tip','joint'),
+    schedule=[(2.,'left',(.18,.25,1.03),.6,yaw_rotation(90.),'withdraw in front of both strands','joint'),
+        (2.,'left',(.17,-.20,.94),.6,yaw_rotation(180.),'cross open front space','cartesian'),
         (2.,'left',target,.6,R,'insert receiving fingers around wide tip','cartesian'),
         (1.,'left',target,0.,R,'pinch wide tip with receiving hand','cartesian'),
         (2.,'right',(.30,-.16,1.30),1.,yaw_rotation(30.),'release original wide-strand pinch','cartesian'),
         (2.,'right',(.23,-.24,1.30),1.,yaw_rotation(30.),'withdraw original hand','cartesian'),
         (3.,'left',(.24,-.14,1.16),0.,yaw_rotation(150.),'lift wide tip clear for knotting','cartesian'),
         (1.,'left',(.24,-.14,1.16),0.,yaw_rotation(150.),'hold transferred wide tip','cartesian')]
-    plan=_compile(start_action,schedule);plan['grasp']=grasp;plan['native_nodes_sha256']=hashlib.sha256(np.ascontiguousarray(nodes).tobytes()).hexdigest();return plan
+    plan=_compile(start_action,schedule);plan['grasp']=grasp;plan['approach_steps']=120;plan['native_nodes_sha256']=hashlib.sha256(np.ascontiguousarray(nodes).tobytes()).hexdigest();return plan
 
 
 def template(pickup):
-    plan=copy.deepcopy(pickup);plan['frames']+=raise_for_transfer(plan['frames'][-1]['action14'])['frames'];hold=copy.deepcopy(plan['frames'][-1]);hold['stage']='placeholder awaiting measured tip handoff';plan['frames'] += [copy.deepcopy(hold) for _ in range(280)];plan['action_count']=len(plan['frames']);plan['requires_state_assisted_handoff']=True;plan['do_not_run_reason']='Awaiting full handoff hull and receiving-cloth approach checks';return plan
+    plan=copy.deepcopy(pickup);plan['frames']+=raise_for_transfer(plan['frames'][-1]['action14'])['frames'];hold=copy.deepcopy(plan['frames'][-1]);hold['stage']='placeholder awaiting measured tip handoff';plan['frames'] += [copy.deepcopy(hold) for _ in range(300)];plan['action_count']=len(plan['frames']);plan['requires_state_assisted_handoff']=True;plan['do_not_run_reason']='Awaiting full handoff hull and receiving-cloth approach checks';return plan
+
+
+def classify_receiving_contacts(hits,rest,faces):
+    """Separate intended fingertip contact from forbidden body/strand crossings.
+
+    Only the final insertion may touch the first10cm of the wide end with
+    finger links. Forearm, palm and narrow-strand intersections stay blocked.
+    The full raw screen remains in evidence; permission to attempt contact is
+    not evidence that contact, the receiving pinch or the handoff succeeds.
+    """
+    rest=np.asarray(rest);faces=np.asarray(faces);blocked=[];intended=[]
+    for sample in hits:
+        good=[];bad=[]
+        for hit in sample['hits']:
+            material=rest[faces[np.asarray(hit['faces'],int)],1]
+            allowed=sample['step']>80 and hit['link'] in ('tip_left','tip_right') and material.min()>=0. and material.max()<=.10000001
+            (good if allowed else bad).append(hit)
+        if good:intended.append(dict(sample,hits=good))
+        if bad:blocked.append(dict(sample,hits=bad))
+    return blocked,intended

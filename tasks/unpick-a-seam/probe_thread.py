@@ -24,16 +24,18 @@ def main():
     p.add_argument('--joint-kind',choices=('spherical','d6'),default='spherical')
     p.add_argument('--ccd',choices=('none','sweep','hybrid'),default='sweep')
     p.add_argument('--self-contact',choices=('normal','none'),default='normal')
+    p.add_argument('--clear-thread-sampling',action='store_true',help='Same centreline and diameter with24links; no non-neighbour tangent capsules at reset')
     p.add_argument('--physics-hz',type=int,choices=(960,3840),default=960)
     p.add_argument('--velocity-iterations',type=int,choices=(1,4,32),default=1)
+    p.add_argument('--solver',choices=('TGS','PGS'),default='TGS',help='Native CPU contact-solver comparison; geometry and material unchanged')
     p.add_argument('--seconds',type=float,default=.05)
     a=p.parse_args()
     if not .01<=a.seconds<=.2:p.error('Single-loop isolation is bounded to0.01–0.2s')
     a.out.mkdir(parents=True,exist_ok=False)
     started=time.monotonic();app=physics=stage=cache=None;attached=False
     report=dict(status='running',score=None,robot_demo=False,dream_requests=0,
-                joint_kind=a.joint_kind,ccd=a.ccd,self_contact=a.self_contact,
-                physics_hz=a.physics_hz,seconds=a.seconds,
+                joint_kind=a.joint_kind,ccd=a.ccd,self_contact=a.self_contact,clear_thread_sampling=a.clear_thread_sampling,
+                physics_hz=a.physics_hz,seconds=a.seconds,solver=a.solver,
                 source_sha256={f.name:hashlib.sha256(f.read_bytes()).hexdigest()
                                for f in Path(__file__).parent.glob('*.py')})
     frames=[];velocities=[];times=[]
@@ -63,8 +65,9 @@ def main():
         scene.CreateGravityDirectionAttr(Gf.Vec3f(0.,0.,-1.));scene.CreateGravityMagnitudeAttr(9.81)
         ensure_gpu_scene(stage);native=PhysxSchema.PhysxSceneAPI(scene.GetPrim())
         native.CreateEnableGPUDynamicsAttr(False);native.CreateBroadphaseTypeAttr('MBP')
+        native.CreateSolverTypeAttr(a.solver)
         native.CreateEnableCCDAttr(a.ccd!='none');native.CreateEnableExternalForcesEveryIterationAttr(False)
-        nodes=transform(stitch_loop(0.),lower_edge_supported=True);nodes-=nodes.mean(0)
+        nodes=transform(stitch_loop(0.,clear_capsules=a.clear_thread_sampling),lower_edge_supported=True);nodes-=nodes.mean(0)
         thread=author_thread(stage,'/World/Thread',nodes,radius=.0004,joint_kind=a.joint_kind)
         for path in thread['bodies']:
             prim=stage.GetPrimAtPath(path);body=PhysxSchema.PhysxRigidBodyAPI(prim)
@@ -79,9 +82,10 @@ def main():
             body_ccd=[dict(sweep=bool(PhysxSchema.PhysxRigidBodyAPI(stage.GetPrimAtPath(path)).GetEnableCCDAttr().Get()),
                            speculative=bool(PhysxSchema.PhysxRigidBodyAPI(stage.GetPrimAtPath(path)).GetEnableSpeculativeCCDAttr().Get()))
                       for path in thread['bodies']])
-        if report['native_configuration']['gpu_dynamics'] or any(
+        if (report['native_configuration']['gpu_dynamics'] or
+                report['native_configuration']['solver']!=a.solver or any(
                 row!={'sweep':a.ccd!='none','speculative':a.ccd=='hybrid'}
-                for row in report['native_configuration']['body_ccd']):
+                for row in report['native_configuration']['body_ccd'])):
             raise RuntimeError('Native diagnostic settings differ from requested settings')
         stage.GetRootLayer().Export(str(a.out/'initial.usda'))
         physics=get_physx_simulation_interface();physics.attach_stage(stage_id);attached=True

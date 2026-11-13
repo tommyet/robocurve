@@ -37,3 +37,12 @@ class CrossingTests(unittest.TestCase):
 
 
 if __name__=='__main__':unittest.main()
+
+
+class SteelContinuityTests(unittest.TestCase):
+    def test_a_disconnected_leg_is_not_an_intact_staple(self):
+        from contact_guard import wire_chain_continuity
+        chain=np.array([[[0.,0.,0.],[.001,0.,0.]],[[.001,0.,0.],[.001,.001,0.]]])
+        self.assertTrue(wire_chain_continuity(chain)['valid'])
+        chain[1,:,2]+=.000031
+        self.assertFalse(wire_chain_continuity(chain)['valid'])

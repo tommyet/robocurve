@@ -1,0 +1,85 @@
+{
+  "date": "2026-11-13",
+  "status": "invalid_contact_constraint_dynamics_no_task_score",
+  "source_archive_sha256": "31ca5f86db506a5809dbe66f6da419ba11a184985371878473a700f3fee10a35",
+  "files_sha256": {
+    "state.npz": "3e2545aa8e89197aa5636e2c75da42fd9845f3c616e981917dd713b53bccb8d5",
+    "probe.json": "0146caf887e502f8d117e5e90308550abd6db8d85655afb8610bd9a2607bee1c",
+    "first-event-native.npz": "352184c840f94752fbf73337084de795699b455ef2de673e6a5f1ea757c16977",
+    "initial.usda": "189676e496163e3e5a2a30215d46e9f8612be850612c0ac97f4b85c155e58b71"
+  },
+  "completed_steps": 34,
+  "physics_hz": 960,
+  "effective_scene_physics": {
+    "gpu_dynamics": false,
+    "broadphase": "MBP",
+    "sweep_ccd": true,
+    "solver": "TGS"
+  },
+  "ccd_mode": "hybrid",
+  "clear_thread_sampling": true,
+  "thread_joint_integrity": {
+    "maximum_closed_joint_gap_m": 0.001039547639804053,
+    "first_failure": {
+      "time_s": 0.035416666666666666,
+      "joint": 143,
+      "gap_m": 0.001039547639804053,
+      "maximum_connected_endcap_gap_m": 0.0008,
+      "reason": "unsevered native joint has physically disjoint end caps"
+    },
+    "valid": false
+  },
+  "first_invalid_step": 18,
+  "wall_seconds": 7.511446065269411,
+  "actual_box_midplane_crossings": null,
+  "hole_link_changes": [],
+  "expected_initial_hole_links": 24,
+  "full_trace_summary": {
+    "start_s": 0.0010416666666666667,
+    "end_s": 0.035416666666666666,
+    "frames": 34,
+    "patches": [
+      {
+        "expected_links": 12,
+        "all_initial_links_retained": true,
+        "minimum_retained_initial_links": 12,
+        "native_midplane_intersection_frames": 0,
+        "maximum_capsule_overlap_lower_bound_m": 0.0004,
+        "maximum_hinge_endpoint_gap_m": 0.0006722695697363375
+      },
+      {
+        "expected_links": 12,
+        "all_initial_links_retained": true,
+        "minimum_retained_initial_links": 12,
+        "native_midplane_intersection_frames": 0,
+        "maximum_capsule_overlap_lower_bound_m": 0.00032677279622873444,
+        "maximum_hinge_endpoint_gap_m": 0.00044967764168478923
+      }
+    ]
+  },
+  "final_exact_contact": {
+    "time_s": 0.035416666666666666,
+    "patches": [
+      {
+        "maximum_hinge_endpoint_gap_m": 0.0005437285289046733,
+        "maximum_vertex_average_error_m": 0.0003427838144587875,
+        "maximum_capsule_overlap_lower_bound_m": 0.0002991652395234865,
+        "overlapping_pairs": 16,
+        "native_midplane_intersections": 0,
+        "retained_initial_links": 12,
+        "ambiguous_links": 0
+      },
+      {
+        "maximum_hinge_endpoint_gap_m": 0.00044967764168478923,
+        "maximum_vertex_average_error_m": 0.00030428723465416116,
+        "maximum_capsule_overlap_lower_bound_m": 0.00032677279622873444,
+        "overlapping_pairs": 14,
+        "native_midplane_intersections": 0,
+        "retained_initial_links": 12,
+        "ambiguous_links": 0
+      }
+    ]
+  },
+  "finding": "Hybrid CCD fails after 34 steps rather than 160 for matched sweep-only. No actual box-midplane passage or hole-link loss precedes the physically disjoint uncut thread joint. This rejects hybrid CCD for this scene; it does not establish task feasibility.",
+  "next_control": "Same 24-link CPU sweep-CCD intact scene, replacing only TGS with native PGS. All contacts and continuity guards preserved; record every step for 2 seconds or the first disjoint uncut joint."
+}

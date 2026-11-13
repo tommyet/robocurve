@@ -81,8 +81,27 @@ first202 actions include pickup, one quarter turn and withdrawal:
 python tasks/true-a-bicycle-wheel/preview_yam.py --out NEW --steps 202 --physics-hz 10000 --device cpu --plan tasks/true-a-bicycle-wheel/service-plan.json --joint-tracking-diagnostic
 ```
 
-This command uses the normal reset and corrected once-per-step force integration.
+This historical command is superseded by the PGS configuration below. The once-per-step force override did not resolve the original TGS assembly problem.
 The optional PI controller reads only measured robot joints, bounds compensation
 to0.12rad, and enforces the same position, speed and native effort limits. Its
 native tracking performance and the first real wrench engagement remain to be
 measured; this is not yet a successful task demo.
+
+## Current PGS candidate
+
+The matched zero-defect PGS128 control preserves410–423N spoke tensions and
+2.68µm lateral runout. PGS32 underresolves preload and is not used for the
+current robot trial. Run the screened682-action service candidate with
+`--solver-type PGS --solver-position-iterations 128 --central-spring-candidate
+--distance-tolerance-compensation-m .025 --physics-hz 10000 --device cpu`.
+The optional scripted tool/nipple pose servo reads native poses only to issue
+ordinary bounded joint targets; it never changes object state or effort limits.
+Dream receives ordinary camera/joint observations and none of that feedback.
+
+The separate `finalize_plan.py` appends physical key release, an ordinary
+left-hand rim-spin attempt and12 seconds of hands-free observation. Its
+1073 actions fit the proposed60-second budget. The first807 targets match a
+fully screened prefix; all266 revised suffix targets pass the same hull screen.
+The hand first withdraws30mm radially before crossing the wheel plane, avoiding
+a spoke contact found in the earlier axial-only withdrawal. A full native
+repair and released revolution remain unproven.

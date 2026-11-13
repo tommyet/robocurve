@@ -13,7 +13,7 @@ from pathlib import Path
 import numpy as np
 
 
-def compile_feedforward(plan, trace, *, limit=.16):
+def compile_feedforward(plan, trace, *, limit=.16, anticipate_tail_load=False):
     frames=plan['frames']
     if len(trace)!=len(frames)+1:
         raise ValueError('Calibration must contain the complete matching trial')
@@ -49,11 +49,26 @@ def compile_feedforward(plan, trace, *, limit=.16):
             if following==5:break
         filtered[i]*=min(previous,following,5)/5
     filtered=np.clip(filtered,-limit,limit)
+    if anticipate_tail_load:
+        # The calibration stalls early in each tail while its feedback builds
+        # sufficient motor load. Use the measured moving half's median offset
+        # at the start of that same fixed phase; do not repeat the learned lag.
+        i=0
+        while i<len(frames):
+            if frames[i].get('phase')!='draw tapered shell tail':i+=1;continue
+            end=i+1
+            while end<len(frames) and frames[end].get('phase')=='draw tapered shell tail':end+=1
+            load=np.clip(np.median(offsets[i+(end-i)//2:end],axis=0),-limit,limit)
+            for j in range(i,end):
+                blend=min((j-i+1)/2,1.)
+                filtered[j]=(1-blend)*filtered[j]+blend*load
+            i=end
     result=json.loads(json.dumps(plan))
     for frame,offset in zip(result['frames'],filtered):
         frame['joint_feedforward14']=offset.tolist()
     result['joint_feedforward']={'method':'five-sample-smoothed previous applied-minus-measured right-arm joint offsets',
-        'bound_rad':limit,'changes_motor_settings':False,'uses_material_or_score':False}
+        'bound_rad':limit,'changes_motor_settings':False,'uses_material_or_score':False,
+        'anticipate_tail_load':anticipate_tail_load}
     return result
 
 
@@ -62,8 +77,9 @@ if __name__=='__main__':
     p.add_argument('--plan',type=Path,required=True)
     p.add_argument('--trace',type=Path,required=True)
     p.add_argument('--out',type=Path,required=True)
+    p.add_argument('--anticipate-tail-load',action='store_true')
     a=p.parse_args()
-    result=compile_feedforward(json.loads(a.plan.read_text()),json.loads(a.trace.read_text()))
+    result=compile_feedforward(json.loads(a.plan.read_text()),json.loads(a.trace.read_text()),anticipate_tail_load=a.anticipate_tail_load)
     result['joint_feedforward']['calibration_sha256']={
         'plan':hashlib.sha256(a.plan.read_bytes()).hexdigest(),
         'trace':hashlib.sha256(a.trace.read_bytes()).hexdigest()}

@@ -289,5 +289,13 @@
     "maximum_strain_location": "2.5mm planar edge beside armpit atrestx\u2212.14,y.1975\u2013.20; disclosed material approximation, no board escape",
     "measured_200_action_grasp_prefix_hull_check": "pass",
     "next": "Native1280-action full firstclip, with regular mesh and dense float32 telemetry; pending."
+  },
+  "regular_first_clip_075": {
+    "status": "failed before peg closure; no score",
+    "actions_completed": 940,
+    "wall_seconds": 570.9157,
+    "evidence": "artifacts/six-task-completion-2026-11-13/native-batch-075-shirt/shirt-regular-clip",
+    "finding": "The regular2.5mm cloth physically lifted in both hands, then passed through the left pads when the right grip released. Max sampled node penetration3.357mm; garment fell to table by300. No line crossings at sampled times, because the garment never reached the line. The later1.5mm nominal peg-alignment guard is not the decisive failure.",
+    "next": "Short320-action ordinary finite-pinch target0.01 with unchanged physics, pending native evidence."
   }
 }

@@ -105,6 +105,14 @@ from a completed physical trial. It records the calibration hashes and preserves
 the nozzle/piston recipe. Only ordinary joint targets change; this candidate has
 not yet demonstrated a full border.
 
+Native080's learned feedforward improves the result to0.5: three valid shapes
+across45mm, clean release and no recorded damage, but no qualifying ridges.
+A prescribed-input replay using the20Hz measured tool trajectory produces ridges;
+this is diagnostic and does not establish native robot feasibility. The next
+comparison changes only native integration from240 to960Hz, retaining20Hz control,
+and records every physical tool/material input with `--tool-substep-trace`.
+The default remains240Hz until the comparison is assessed.
+
 The passive mechanism control emitted 0.1587 ml under an 8 N load and nothing
 under zero load; flow stopped after release and volume balance closed. Those
 controls are not robot task scores. Dated evidence is listed in `VALIDATION.json`.

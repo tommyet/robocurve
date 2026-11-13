@@ -78,3 +78,17 @@ class PaperWireCrossingGuard:
 
     def summary(self):
         return {'valid':not self.failed,'steps':self.steps,'first_failure':self.first_failure}
+
+
+def wire_chain_continuity(segments, maximum_gap_m=.00003):
+    """Check the intact steel chain independently of paper contact.
+
+    The30µm numerical envelope is one tenth of the300µm wire thickness. A
+    disconnected chain cannot count as an intact extracted staple. This is
+    an assessor guard, not a force, joint repair or a break/release controller.
+    """
+    segments=np.asarray(segments,float)
+    if segments.ndim!=3 or segments.shape[1:]!=(2,3) or len(segments)<2 or not np.isfinite(segments).all():
+        raise ValueError('A finite ordered chain of steel segments is required')
+    gap=float(np.linalg.norm(segments[:-1,1]-segments[1:,0],axis=1).max(initial=0.))
+    return dict(maximum_endpoint_gap_m=gap,maximum_allowed_gap_m=maximum_gap_m,valid=gap<=maximum_gap_m)

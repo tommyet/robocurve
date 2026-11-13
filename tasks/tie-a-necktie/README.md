@@ -26,7 +26,7 @@ python tasks/tie-a-necktie/run.py --mode motion-probe \
 
 # Receiving-tip diagnostic, with a checked calibration before the handoff.
 python tasks/tie-a-necktie/run.py --mode motion-probe \
-  --plan tasks/tie-a-necktie/adult-handoff-plan.json --steps 560 \
+  --plan tasks/tie-a-necktie/adult-handoff-plan.json --steps 580 \
   --adult-collar --inside-out-reset --state-assisted-grasp \
   --state-assisted-handoff --judging-views --out /tmp/adult-tie-handoff
 ```
@@ -52,10 +52,12 @@ node penetration was 4.8 µm. Twelve fixture checks were clear. Final maximum
 edge strain was 4.71%, with 99% of edges below 1.29%. These are diagnostic
 measurements, not calibrated textile accuracy or a knot score.
 
-The next handoff raises the held strip, measures the wide tip, takes it with
-the opposite fingers and releases the first grasp. Geometry checks must pass
-before the receiving arm moves. Handoff retention and knotting remain
-unproven. Earlier child-tie trials and failed routes are preserved in
+Batch076 raised the held strip and measured the wide tip. Its proposed
+receiving swing crossed the narrow strand with a forearm, so the guard
+correctly stopped before that motion. The revised580-action candidate
+approaches through clear front space. It permits intended fingertip contact
+with the wide tip while rejecting palm, forearm and other-strand crossings.
+Handoff retention and knotting remain unproven. Earlier child-tie trials and failed routes are preserved in
 `VALIDATION.json`; they do not establish adult-task feasibility.
 
 ## Setup and judging

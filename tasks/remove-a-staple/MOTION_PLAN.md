@@ -28,3 +28,10 @@ Every substep keeps the selected material's continuity and wire-crossing guards
 active. A stopped trial remains invalid even if a later continuation could look
 successful. The panel candidate uses finite native hinge strength; the older
 surface-FEM path has separate membrane validity limits.
+
+A separate `finalize_plan.py` appends ordinary remover placement, release and
+3.2 seconds of final observation. The resulting candidate has 386 actions
+(19.3 seconds) within a proposed 600-action/30-second limit. It can leave the
+intact staple on the released remover, at least10mm from the paper, as allowed
+by judging v4. The old236-action lever plan remains available for the first
+contact test; neither plan is a completed native extraction demonstration.

@@ -89,6 +89,9 @@ def main():
         if grasp_assumed:
             pos,R=ik.tcp_pose(action[7:13],station.BASES['right']);R=R@GRIP.T;center=pos-R@TOOL_TCP
         else:center=np.array((.28,-.20,TABLE_TOP+.003));R=np.eye(3)
+        released=plan.get('released_tool',{})
+        if index+1>=released.get('from_step',float('inf')):
+            center=np.asarray(released['position_m']);R=np.asarray(released['rotation'])
         remover=tool_props(center,R);hits=[];expected=[]
         for side,robot in robots.items():
             all_props=props+remover
@@ -105,7 +108,7 @@ def main():
         # Tool/support clearance is essential even when hand reach is good.
         for hi,pi in candidate_pairs(remover,props,args.margin):
             h,prop=remover[hi],props[pi]
-            if prop['name']=='table' and not grasp_assumed:continue
+            if prop['name']=='table' and (not grasp_assumed or index+1>=released.get('from_step',float('inf'))):continue
             depth=overlap(h,prop,args.margin)
             if depth is None:continue
             record=dict(body=h['name'],prop=prop['name'],intersection_ball_radius_m=depth)

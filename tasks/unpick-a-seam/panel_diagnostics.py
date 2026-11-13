@@ -137,7 +137,8 @@ def inspect(directory):
     if 'thread_lengths' not in a:raise ValueError('Corrected native thread recording with lengths required')
     lengths=a['thread_lengths'];times=a['sample_times_s']
     if a['thread'].shape!=(len(times),len(lengths),7):raise ValueError('Invalid raw native thread shape')
-    if len(lengths)!=168:raise ValueError('Expected six 28-link stitch loops')
+    if len(lengths) not in (144,168):raise ValueError('Expected six24-link or28-link stitch loops')
+    links_per_loop=len(lengths)//6
     shells=[];holes=[]
     for side in range(2):
         mesh=Mesh(a[f'rest_{side}'],a[f'faces_{side}']);model=mechanics(mesh,primitive_boxes=True)
@@ -148,7 +149,7 @@ def inspect(directory):
     expected=[];series=[];changes=[];first_solid=None
     for frame,time in enumerate(times):
         segments=capsule_endpoints(a['thread'][frame],lengths)
-        thread_loops=[segments[i:i+28].reshape(-1,3) for i in range(0,168,28)]
+        thread_loops=[segments[i:i+links_per_loop].reshape(-1,3) for i in range(0,len(lengths),links_per_loop)]
         row=dict(time_s=float(time),patches=[])
         for side,shell in enumerate(shells):
             poses=a[f'facet_poses_{side}'][frame]

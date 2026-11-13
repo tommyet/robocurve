@@ -68,7 +68,7 @@ From the repository root:
 .venv/bin/python -m unittest discover -s tasks/unpick-a-seam -p 'test_*.py' -v
 ```
 
-Fifty tests pass: connected cloth with real needle holes, needle-path clearance,
+Fifty-eight tests pass: connected cloth with real needle holes, needle-path clearance,
 force direction and sustained contact for cutting, interrupted-contact rejection,
 blade damage latching, whole-thread clearance, rigid-motion-invariant strain
 inspection, moving-cloth/thread tunnelling detection, and final-state scoring. These are CPU geometry/rule
@@ -640,3 +640,25 @@ and is not a task setting. See `evidence/native-cpu-chain-070-075.json`.
 python tasks/unpick-a-seam/probe_thread.py --joint-kind spherical --ccd sweep --seconds .05 --out artifacts/seam-loop-spherical
 python tasks/unpick-a-seam/probe_thread.py --joint-kind d6 --ccd sweep --seconds .05 --out artifacts/seam-loop-d6
 ```
+
+The isolated 080 spherical and D6 loops fail identically. In 081, removing
+self-contact makes the loop stable, while turning CCD off alone does not.
+The original sampling has six exactly tangent non-neighbour capsule pairs.
+The opt-in `--clear-thread-sampling` keeps the same centreline, diameter and
+mass but uses 24 links, leaving 0.2 mm between non-neighbours at reset. All
+ordinary self-contact stays enabled. This is a discretization correction,
+not a validated physical fix; the free-loop gate must pass before the intact
+seam is tested. See `evidence/native-self-contact-081.json`.
+
+The 24-link free loop passes 48 native steps, but the intact scene still develops
+rotational self-contact and loses an uncut joint after 166.7 ms with sweep CCD.
+Hybrid CCD fails earlier, after 35.4 ms, with a 1.040 mm uncut joint gap. In both
+traces all 24 needle-hole links remain and no actual box midplane passage occurs
+before the chain becomes disjoint. This is an unstable contact/constraint
+response, not a successful unpicking. See `evidence/native-clear-thread-083.json`
+and `evidence/native-hybrid-thread-085.json`.
+
+A matched native PGS control is prepared with the same 24-link geometry, mass,
+material, all self-contact and sweep CCD. It changes the contact solver only,
+retains every-step evidence and stops on a disjoint uncut joint. No PGS result
+or valid manipulation reset is claimed yet.

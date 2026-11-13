@@ -50,7 +50,9 @@ def main():
     p.add_argument('--box-panels',action='store_true',help='Merge each triangle pair into one native rectangular box panel; no convex mesh cooking')
     p.add_argument('--cpu-ccd',action='store_true',help='Same rigid box/thread scene on CPU PhysX with native sweep and speculative CCD; DirectGPU supports neither CCD mode')
     p.add_argument('--ccd-mode',choices=('hybrid','sweep'),default='hybrid',help='CPU comparison only: sweep omits speculative contacts while preserving linear CCD')
+    p.add_argument('--solver',choices=('TGS','PGS'),default='TGS',help='Native CPU contact-solver comparison; geometry and material unchanged')
     p.add_argument('--recenter-at-seam',action='store_true',help='Coordinate-only comparison: translate every authored object and world-fixed jaw anchor so the seam is near the origin')
+    p.add_argument('--clear-thread-sampling',action='store_true',help='Same centreline and diameter with24links per loop; no non-neighbour tangent capsules at reset')
     p.add_argument('--seconds',type=float,default=.5)
     p.add_argument('--record-every-step',action='store_true',help='Save raw native body poses at every substep for geometry diagnosis')
     p.add_argument('--continue-after-audit-warning',action='store_true',help='Unscored forensic recording only: retain contact/hinge warnings through the bounded duration; physically disjoint closed thread ends still stop')
@@ -58,6 +60,7 @@ def main():
     if not .05<=a.seconds<=2:p.error('Bounded shell coupon requires0.05–2seconds')
     if a.cpu_ccd and not a.box_panels:p.error('CPU CCD comparison requires native box panels')
     if a.ccd_mode!='hybrid' and not a.cpu_ccd:p.error('CCD mode requires the CPU CCD comparison')
+    if a.solver!='TGS' and not a.cpu_ccd:p.error('PGS comparison requires CPU PhysX')
     if a.recenter_at_seam and (not a.box_panels or a.mode not in ('intact','open')):
         p.error('Seam recentering requires a box-panel intact/open comparison')
     a.out.mkdir(parents=True,exist_ok=False)
@@ -102,12 +105,14 @@ def main():
             native.CreateEnableGPUDynamicsAttr(False)
             native.CreateBroadphaseTypeAttr('MBP')
             native.CreateEnableCCDAttr(True)
+            native.CreateSolverTypeAttr(a.solver)
         report['effective_external_forces_every_iteration']=bool(native.GetEnableExternalForcesEveryIterationAttr().Get())
         material=ShellMaterial();report['shell_material']=asdict(material)
         report['shell_bending_rigidity_nm']=material.rigidity_nm
         report['membrane_model']='Approximately inextensible rigid facets; finite hinge bending, not FEM'
         report['box_panels']=a.box_panels
         report['ccd_mode']=a.ccd_mode if a.cpu_ccd else 'direct_gpu_unsupported'
+        report['clear_thread_sampling']=a.clear_thread_sampling
         isolated=a.mode in ('bend','freefall')
         offset=np.array((-.300,0.,-.8127)) if a.recenter_at_seam else np.zeros(3)
         report['world_coordinate_offset_m']=offset.tolist()
@@ -139,7 +144,7 @@ def main():
                 position=np.asarray(position)+offset
                 author_box(stage,path,size,position,dynamic=name==MOVING_NAME,mass=PARAMETERS.mass_kg,friction=.8)
                 if name==MOVING_NAME:author_guide(stage,path,position)
-            threads=[author_thread(stage,f'/World/Stitch_{i}',transform(stitch_loop(y),lower_edge_supported=True)+offset,
+            threads=[author_thread(stage,f'/World/Stitch_{i}',transform(stitch_loop(y,clear_capsules=a.clear_thread_sampling),lower_edge_supported=True)+offset,
                                    radius=.0004,open_diagnostic=a.mode=='open') for i,y in enumerate(STITCH_Y)]
         if a.velocity_iterations is not None:
             for prim in stage.Traverse():
@@ -162,7 +167,7 @@ def main():
             speculative=bool(PhysxSchema.PhysxRigidBodyAPI(prim).GetEnableSpeculativeCCDAttr().Get()))
             for prim in stage.Traverse() if prim.HasAPI(UsdPhysics.RigidBodyAPI)]
         if a.cpu_ccd and (report['effective_scene_physics']!={
-                'gpu_dynamics':False,'broadphase':'MBP','sweep_ccd':True,'solver':'TGS'} or
+                'gpu_dynamics':False,'broadphase':'MBP','sweep_ccd':True,'solver':a.solver} or
                 not all(row['sweep'] and row['speculative']==(a.ccd_mode=='hybrid') for row in report['effective_body_ccd'])):
             raise RuntimeError('CPU CCD settings did not reach every native body and the scene')
         report['rigid_solver_velocity_iterations']=sorted(set(int(

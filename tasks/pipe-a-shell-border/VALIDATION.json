@@ -9,7 +9,7 @@
   "scores": null,
   "paid_compute_used_usd": null,
   "remaining_gates": [
-    "Native073 completes838 ordinary actions, preserves the cake and releases cleanly, but scores0.0: one short unridged valid shell. Native070 high-gain feedback spills; it is not promoted. Bounded learned joint-target feedforward is an untested next controller candidate.",
+    "Native080 completes838 ordinary actions, releases cleanly and scores0.5: three valid shell shapes across45mm, but no qualifying ridges. Full-score feasibility remains unproven.",
     "Complete joined border, visible continuous ridges and agreement with photographs remain unverified.",
     "Dream baseline and final rescoring pending; no API requests or media uploads."
   ],
@@ -18,11 +18,11 @@
     "contact_audit.py": "789e5285c8283d915fee82c2a5deab0519e44005edba0085d6f37f3a6062f147",
     "dream_policy.py": "ad92ac9ddcf4c1d48c9985fcd0a0fc116144a995d8d4b0368e476b3f432b611b",
     "joint_tracking.py": "a5e2cee60f6a84e0a46d95240f1a098794e95a12c1ac166b3c7d5be184ff3a44",
-    "learn_tracking.py": "b7a41b2f1bbbc69f9778c33a319f44acbdc45fede8a64633a56cc4264b5a17b9",
+    "learn_tracking.py": "1cb75143d727ed3977c66c7fa1f58a836a0c5001fd6621cba6ecece0c8709663",
     "material.py": "a82fb1cb242a02990707a3c08a6466f304cf757541a663a974765eebb984d525",
     "native.py": "bd7399d45e89f4955aaa0d945b518f98f81e4ac31eafb618cdc615e909b95fef",
     "plan.py": "d30d85b075a439865d750dee90a7a059637f21f9330a8e0aa0924ce4e0eb9c2b",
-    "preview_yam.py": "937d4cb052ba5befcf583e6c179a8e8ace60bc73f0d70cb03c8cd14ddcb1c6ee",
+    "preview_yam.py": "962b1f6d8eca05bdaeb8212ab4046ae51fd72cda9e5c31e2a08cafad48b75351",
     "probe.py": "dc2421d3342eda2052d7340d10bbf856493ad5b30b121ad839fddda7c7a57c17",
     "probe_native.py": "1d5d47f963be39660c32dec7b626a26080d7d290da69cfc06e5e8e9f1945b4e8",
     "probe_shell_shape.py": "a4e2ab3a31c23b0acc9baeef718887a8d9e74c8fca1f2ed91659c2aa9732289e",
@@ -76,7 +76,9 @@
     "integration_control055": "Once-per-step integration disrupts pickup; default iteration mode retained. Instantaneous coupled pose correction also destabilized pressure; filtered grasp estimate retained.",
     "native058_062": "Complete838 actions; clean release; current score0.0. Next bounded correction filters measured common barrel translation into the pressing-arm reference.",
     "native065_073": "Measured common-motion correction alone leaves delayed tail travel. Higher feedback gains oscillate; moderate gains with faster slew stay clean but still score0.0. Prior applied-minus-observed right-arm joint offsets are compiled into an openly recorded feedforward plan, with unchanged nozzle/piston recipe and motor limits.",
-    "measured_piston_counterfactual": "Actual065 piston motion plus intended nozzle path produces3 ridged shells/46mm in a local prescribed-input replay. This diagnoses motion tracking and is not robot feasibility evidence."
+    "measured_piston_counterfactual": "Actual065 piston motion plus intended nozzle path produces3 ridged shells/46mm in a local prescribed-input replay. This diagnoses motion tracking and is not robot feasibility evidence.",
+    "learned_feedforward": "Frozen080 smoothed right-arm joint offsets, bounded0.16rad with tail-load anticipation, improves to three valid shapes/45mm (score0.5). Unchanged nozzle, recipe, motors and scoring. Ridges still fail.",
+    "native080_pose_replay": "Interpolating the actual20Hz tool pose and piston trace into240Hz produces three ridged shells/47.5mm in an offline prescribed-input diagnostic. This is not robot evidence; unrecorded within-action motion and pressure are under investigation."
   },
   "cpu_checks_current": {
     "test_count": 35,
@@ -90,5 +92,12 @@
     "round_mound_and_plain_line_rejection": "passed",
     "six_shell_constitutive_probe": "83 mm, six ridged elongated shells; not robot evidence",
     "source_sha256": "96408e0ee9e663fb799c6f91572f900794aa4f304d505ccbb9c778524b658073"
+  },
+  "native_integration_diagnostic": {
+    "status": "candidate_unrun",
+    "physics_hz": 960,
+    "control_hz": 20,
+    "material_changes": false,
+    "purpose": "Resolve passive pressure/seal response and record every native tool/material input. Default remains240Hz pending evidence."
   }
 }

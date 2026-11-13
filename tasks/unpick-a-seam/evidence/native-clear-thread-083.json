@@ -1,0 +1,104 @@
+{
+  "date": "2026-11-13",
+  "status": "free_loop_passes_intact_contact_fails_no_task_score",
+  "controls": [
+    {
+      "name": "seam-clear-loop",
+      "files_sha256": {
+        "initial-native.npz": "ebf2b7049cf8080c574143f47e3a7f7157b06ece24a4caeb61a7df48569aeea9",
+        "state.npz": "eb80aa53f5ff63b3b52213c99a2f5009b48ff9de08778444191c69543a1ea2bf",
+        "probe.json": "87605b57d4d47f11e695dd7929d07b69692c5c3fdc8fba8aa65e05001e323832",
+        "initial.usda": "17e0dd5667ea60c9dba6d00c93963cb938243fa023b597c39eed66fb709fbc5f"
+      },
+      "status": "complete",
+      "completed_steps": 48,
+      "physics_hz": 960,
+      "clear_thread_sampling": true,
+      "thread_integrity": {
+        "maximum_closed_joint_gap_m": 9.389981859074131e-08,
+        "first_failure": null,
+        "valid": true
+      },
+      "thread_joint_integrity": null,
+      "maximum_nontranslation_m": 7.078051567077637e-08,
+      "maximum_body_speed_m_s": 0.4900008738040924,
+      "first_invalid_step": null,
+      "wall_seconds": 3.40152167622
+    },
+    {
+      "name": "seam-clear-intact",
+      "files_sha256": {
+        "state.npz": "e017bb7f81009ad6d0d00e19bf3cae0b2e412b31eb36f5731359e1de79fbdf9a",
+        "probe.json": "2ee37d6ea3c3088cd234190f57241eb14df2aa0eff6bf01f151584a742b8c5bb",
+        "first-event-native.npz": "4d519d3ea3299cb163fc003180e957faac23b7ca8523b0e6e042dcb3f5477894",
+        "initial.usda": "8d10acd6d7ec93b10c2862f12327d2db3f1f60801261f91621220cae06e6df3c"
+      },
+      "status": "invalid_model_domain",
+      "completed_steps": 160,
+      "physics_hz": 960,
+      "clear_thread_sampling": true,
+      "thread_integrity": null,
+      "thread_joint_integrity": {
+        "maximum_closed_joint_gap_m": 0.001347177769106391,
+        "first_failure": {
+          "time_s": 0.16666666666666666,
+          "joint": 82,
+          "gap_m": 0.001347177769106391,
+          "maximum_connected_endcap_gap_m": 0.0008,
+          "reason": "unsevered native joint has physically disjoint end caps"
+        },
+        "valid": false
+      },
+      "maximum_nontranslation_m": null,
+      "maximum_body_speed_m_s": null,
+      "first_invalid_step": 104,
+      "wall_seconds": 10.462531960569322
+    }
+  ],
+  "actual_box_midplane_crossings": null,
+  "hole_link_changes": [],
+  "expected_initial_hole_links": 24,
+  "final_exact_contact": {
+    "time_s": 0.16666666666666666,
+    "patches": [
+      {
+        "maximum_hinge_endpoint_gap_m": 0.00010529888448107075,
+        "maximum_vertex_average_error_m": 7.074106577855642e-05,
+        "maximum_capsule_overlap_lower_bound_m": 0.00032094071658722275,
+        "overlapping_pairs": 11,
+        "native_midplane_intersections": 0,
+        "retained_initial_links": 12,
+        "ambiguous_links": 0
+      },
+      {
+        "maximum_hinge_endpoint_gap_m": 3.1078625431663913e-05,
+        "maximum_vertex_average_error_m": 2.3689404337367302e-05,
+        "maximum_capsule_overlap_lower_bound_m": 8.325651750160632e-05,
+        "overlapping_pairs": 8,
+        "native_midplane_intersections": 0,
+        "retained_initial_links": 12,
+        "ambiguous_links": 0
+      }
+    ]
+  },
+  "first_non_neighbour_thread_overlap": {
+    "step": 88,
+    "time_s": 0.09166666666666666,
+    "thread": 4,
+    "links_within_loop": [
+      8,
+      10
+    ],
+    "capsule_overlap_m": 4.133095426601106e-06,
+    "affected_link_angular_speeds_rad_s": [
+      144.79449473,
+      73.77431987
+    ],
+    "affected_link_centre_speeds_m_s": [
+      0.04270927,
+      0.02814529
+    ]
+  },
+  "finding": "24-link resampling removes initial tangencies and the free loop passes48steps. The intact seam first develops rotating thread self-contact; subsequent cloth speeds and joint gaps grow. No needle-hole link is lost and no native cloth-box midplane crossing occurs before the uncut thread caps become disjoint.",
+  "next_control": "Clear-sampling hybrid CCD on the same frozen scene, to cover angular contact missed by sweep CCD. Native CPU PGS remains a separate opt-in solver comparison, motivated by independent wheel evidence; neither is claimed validated."
+}

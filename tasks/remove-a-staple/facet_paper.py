@@ -246,11 +246,17 @@ def measured_surface(shell,poses):
     points=summed/count[:,None]
     disagreement=np.linalg.norm(world-points[ids],axis=-1)
     pairs=model['endpoint_pairs']
-    gap=float(np.linalg.norm(world[pairs[:,0],pairs[:,1]]-
-                             world[pairs[:,2],pairs[:,3]],axis=1).max(initial=0.))
-    return points,dict(maximum_hinge_endpoint_gap_m=gap,
-                       maximum_vertex_average_error_m=float(disagreement.max()),
-                       valid=gap<=.000025)
+    delta=world[pairs[:,0],pairs[:,1]]-world[pairs[:,2],pairs[:,3]]
+    magnitudes=np.linalg.norm(delta,axis=1);worst=int(np.argmax(magnitudes))
+    gap=float(magnitudes[worst])
+    result=dict(maximum_hinge_endpoint_gap_m=gap,
+                maximum_vertex_average_error_m=float(disagreement.max()),valid=gap<=.000025)
+    if gap>.0000125:
+        pair=pairs[worst]
+        result['worst_endpoint']=dict(panel_indices=[int(pair[0]),int(pair[2])],
+            positions_m=[world[pair[0],pair[1]].tolist(),world[pair[2],pair[3]].tolist()],
+            difference_m=delta[worst].tolist())
+    return points,result
 
 
 def cooked_hull_geometry(shell,stage):

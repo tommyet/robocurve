@@ -2,7 +2,7 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "49 CPU checks pass. Full-size native flexible box-panel sheets and free staple pass 0.1 s contact and two-action YAM integration after a fixed station-origin shift. A 500 us control fails, so the validated step remains 100 us. No robot extraction yet.",
+  "cpu_checks": "55 CPU checks pass. Full-size flexible100um box-panel paper passes passive contact and two-action native YAM integration with PGS32 at500us after a fixed station-origin shift. Complete robot extraction and release remain unverified.",
   "simulator_probe": "One native 3 mm steel leg with contact-driven plastic hinge, not full task.",
   "demo": null,
   "dream": null,
@@ -51,7 +51,7 @@
       }
     }
   },
-  "cpu_tests_passed": 49,
+  "cpu_tests_passed": 55,
   "coupled_paper_probe": {
     "entry_point": "paper_probe.py",
     "status": "Native surface solver runs; mesh cleanup and documented bend coefficient still leave both contact trials outside provisional validity domain.",
@@ -740,5 +740,7 @@
     "file": "evidence/native-panel-recenter-070-074-summary.json",
     "sha256": "eecb746134e8f46dc1d9149abb2dcf227b2f9003eab5bade762423e60847f6ef",
     "status": "full_size_passive_contact_and_short_YAM_bridge_passed_robot_pending"
-  }
+  },
+  "latest_pgs_controls": "evidence/native-pgs-panels-080-082-summary.json",
+  "next_native_trial": "386 ordinary robot actions including physical remover release, atPGS2000Hz/32position iterations, with55 CPU checks and full-frame motion screen."
 }

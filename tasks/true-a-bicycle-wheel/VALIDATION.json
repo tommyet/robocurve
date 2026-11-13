@@ -588,5 +588,7 @@
     "file": "evidence/native-pgs-071-074-summary.json",
     "sha256": "6ecbe5fe4094355cdbe7d661b254205e122523014c1071e8e42f889fe30fcf25",
     "status": "short_passive_PGS_gate_passed_robot_pending"
-  }
+  },
+  "latest_preload_control": "evidence/native-pgs-preload-080-082-summary.json",
+  "next_native_trial": "202 ordinary robot actions with PGS128, calibrated key/nipple pose servo, then assess actual torque transfer and rim integrity."
 }

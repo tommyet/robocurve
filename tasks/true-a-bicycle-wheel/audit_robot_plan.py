@@ -89,13 +89,15 @@ def tool_props(center,R):
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('plan',type=Path);p.add_argument('--out',type=Path,required=True)
     p.add_argument('--stride',type=int,default=1);p.add_argument('--margin',type=float,default=.0002)
+    p.add_argument('--from-step',type=int,default=1,help='One-based start for independently checking an unchanged-plan suffix')
     args=p.parse_args();plan,actions=load(args.plan)
     from yam_arena import ik,station,YAM_URDF
     from yam_arena.analysis import link_hulls,fk_link_poses_world
     from yam_arena.constants import ARM_JOINTS,FINGER_JOINTS,FINGER_OPEN
     hulls=link_hulls();props=wheel_props(np.deg2rad(plan['wheel_clocking_deg']),np.deg2rad(plan['nipple_flat_phase_deg']))
-    samples=[];grasp_assumed=False
-    for index in range(0,len(actions),args.stride):
+    if not 1<=args.from_step<=len(actions):p.error('Start step outside plan')
+    samples=[];grasp_assumed=any(f['stage']=='Lift the free wrench' for f in plan['frames'][:args.from_step-1])
+    for index in range(args.from_step-1,len(actions),args.stride):
         action=actions[index];stage=plan['frames'][index]['stage'];robots={}
         props=wheel_props(np.deg2rad(plan['frames'][index].get('nominal_wheel_clocking_deg',plan['wheel_clocking_deg'])),np.deg2rad(plan['nipple_flat_phase_deg']))
         if stage=='Lift the free wrench':grasp_assumed=True
@@ -142,7 +144,7 @@ def main():
             (expected if intended else hits).append(record)
         samples.append(dict(step=index+1,stage=stage,unintended_intersections=hits,intended_contact_targets=expected))
     report=dict(kind='offline_commanded_pose_collision_screen',plan_sha256=hashlib.sha256(args.plan.read_bytes()).hexdigest(),
-        urdf_sha256=hashlib.sha256(Path(YAM_URDF).read_bytes()).hexdigest(),margin_m=args.margin,stride=args.stride,
+        urdf_sha256=hashlib.sha256(Path(YAM_URDF).read_bytes()).hexdigest(),margin_m=args.margin,stride=args.stride,from_step=args.from_step,
         source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),samples=samples,score=None,
         limitations=['Desired joints and an assumed fixed wrench grasp, not measured native poses','Nominal rigid wheel geometry, before elastic deflection',
                      'Spoke colliders use conservative square enclosures','Inter-arm hulls checked; no within-arm self-collision or continuous-time audit',
