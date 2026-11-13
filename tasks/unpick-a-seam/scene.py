@@ -35,11 +35,15 @@ def task_object(spec):
     spawn=obj.spawner_cfg.func
     def physical_spawn(prim_path,cfg,*a,**kw):
         import omni.usd
-        from pxr import Gf,Sdf,UsdGeom,UsdPhysics
+        from pxr import Gf,Sdf,UsdGeom,UsdPhysics,PhysxSchema
         stage=omni.usd.get_context().get_stage()
         ROOTS[spec.name]=str(prim_path)
         prim=spawn(prim_path,cfg,*a,**kw)
         if spec.name=='ripper_handle':return prim
+        # Tensor contact forces require contact reporting before simulation
+        # starts. Enable it on the actual blade body, never infer contact from
+        # the handle/TCP distance.
+        PhysxSchema.PhysxContactReportAPI.Apply(prim).CreateThresholdAttr(0.)
         h,b=ROOTS['ripper_handle'],ROOTS['ripper_blade']
         joint=UsdPhysics.FixedJoint.Define(stage,h+'/BladeMount')
         joint.CreateBody0Rel().SetTargets([Sdf.Path(h)])

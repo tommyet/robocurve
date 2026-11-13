@@ -58,8 +58,22 @@ fetch_pin https://github.com/robocurve/inspect-robots.git fc5ace923ce85117f9c86f
 # Inspect uses git tags to derive its package version.
 git -C "$INSPECT" fetch --tags origin
 uv python install 3.12.16
-(cd "$ARENA" && uv sync --frozen --inexact --python 3.12.16)
+# uv's ordinary Git fetch can pull unnecessary robomimic history very slowly.
+# Keep the frozen dependency graph, then install this exact locked commit from
+# its independently hashed source archive (its version is not Git-derived).
+ROBOMIMIC_COMMIT=7c66e7a41b5d9dcc905b1a68346bfee1b49b79c9
+ROBOMIMIC_SHA256=bdfe5d73fa5722212ebcc97a9c456cd4887924b6a079cca47734c028995d8391
+mkdir -p "$PREFIX/source-archives"
+ROBOMIMIC_ARCHIVE="$PREFIX/source-archives/robomimic-$ROBOMIMIC_COMMIT.tar.gz"
+if [[ ! -f "$ROBOMIMIC_ARCHIVE" ]]; then
+  curl --connect-timeout 15 --max-time 90 -fsSL \
+    "https://codeload.github.com/ARISE-Initiative/robomimic/tar.gz/$ROBOMIMIC_COMMIT" \
+    -o "$ROBOMIMIC_ARCHIVE"
+fi
+printf '%s  %s\n' "$ROBOMIMIC_SHA256" "$ROBOMIMIC_ARCHIVE" | sha256sum -c -
+(cd "$ARENA" && uv sync --frozen --inexact --python 3.12.16 --no-install-package robomimic)
 PYTHON="$ARENA/.venv/bin/python"
+uv pip install --python "$PYTHON" --no-deps "$ROBOMIMIC_ARCHIVE"
 uv pip install --python "$PYTHON" --override "$ADAPTER/overrides.txt" \
   -e "$INSPECT" -e "$ADAPTER" 'inspect-robots-yam==0.38.0' \
   'inspect-robots-dream[client] @ git+https://github.com/kairosiann/inspect-robots-dream@b5e936a201cec66c54c297e522c920d98445e339' \
@@ -81,7 +95,10 @@ if actual_hash != manifest['arena_asset_path_patch']['sha256']:
     raise SystemExit('Arena asset-path patch hash mismatch')
 actual = {name:importlib.metadata.version(name) for name in manifest['packages']}
 mismatches = {name:{'expected':wanted,'actual':actual[name]} for name,wanted in manifest['packages'].items() if actual[name]!=wanted}
-report = {'python':platform.python_version(),'packages':actual,'expected_manifest':'tasks/use-a-magnifying-glass/ENVIRONMENT.json','package_mismatches':mismatches,'asset_patch_sha256':actual_hash,'runtime_tested':False}
+robomimic = {'commit':'7c66e7a41b5d9dcc905b1a68346bfee1b49b79c9','archive_sha256':'bdfe5d73fa5722212ebcc97a9c456cd4887924b6a079cca47734c028995d8391','version':importlib.metadata.version('robomimic'),'transport':'GitHub exact-commit source archive; frozen dependency graph unchanged'}
+if robomimic['version'] != '0.4.0':
+    raise SystemExit('Unexpected robomimic archive package version')
+report = {'python':platform.python_version(),'packages':actual,'expected_manifest':'tasks/use-a-magnifying-glass/ENVIRONMENT.json','package_mismatches':mismatches,'asset_patch_sha256':actual_hash,'source_archive_overrides':{'robomimic':robomimic},'runtime_tested':False}
 (prefix/'installation.json').write_text(json.dumps(report,indent=2)+'\n')
 if mismatches or platform.python_version()!=manifest['python']:
     raise SystemExit('Recorded Python/package version check failed; inspect installation.json')

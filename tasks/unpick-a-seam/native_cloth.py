@@ -129,7 +129,7 @@ def author_peg(stage,path,pos=(0.,0.,0.),*,fixed_lower=False,spring=True,open_an
         body=UsdGeom.Xform.Define(stage,path+'/'+side)
         body.AddTranslateOp().Set(Gf.Vec3d(*pos))
         angle=open_angle if side=='upper' else 0.
-        body.AddOrientOp().Set(Gf.Quatd(math.cos(angle/2),0.,math.sin(angle/2),0.))
+        body.AddOrientOp(UsdGeom.XformOp.PrecisionDouble).Set(Gf.Quatd(math.cos(angle/2),0.,math.sin(angle/2),0.))
         p=body.GetPrim()
         UsdPhysics.RigidBodyAPI.Apply(p)
         UsdPhysics.MassAPI.Apply(p).CreateMassAttr(.004)

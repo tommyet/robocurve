@@ -10,7 +10,8 @@ import math
 
 def score(j):
     required=('evidence_sha256','integrity_checked','intact','unsupported_hold_s',
-              'minimum_clearance_mm','retained_pegs','peg_separation_mm')
+              'minimum_clearance_mm','retained_pegs','peg_separation_mm',
+              'supported_only_by_line_and_pegs')
     if any(k not in j for k in required):
         raise ValueError('incomplete judging record')
     evidence=j['evidence_sha256']
@@ -27,6 +28,10 @@ def score(j):
             raise ValueError('invalid measurement: '+field)
     if type(j['intact']) is not bool:
         raise ValueError('integrity outcome must be known')
+    if type(j['supported_only_by_line_and_pegs']) is not bool:
+        raise ValueError('support sources require a visible assessment')
+    if not j['supported_only_by_line_and_pegs']:
+        return 0.
     if j['intact'] is not True:
         return 0.
     if j['unsupported_hold_s'] < 5. or j['minimum_clearance_mm'] < 20.:

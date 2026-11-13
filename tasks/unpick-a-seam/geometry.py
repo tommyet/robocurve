@@ -45,11 +45,11 @@ class Mesh:
                 'boundary_loops':len(components(boundary)),'connected':True}
 
 
-def patch(left=True):
+def patch(left=True,*,hole_half=HOLE_HALF):
     xmin,xmax=(.235,.310) if left else (.290,.365)
     xs=np.unique(np.round(np.r_[np.linspace(xmin,xmax,26),
-                                 .295-HOLE_HALF,.295+HOLE_HALF,.305-HOLE_HALF,.305+HOLE_HALF],9))
-    ys=np.unique(np.round(np.r_[np.linspace(-.040,.040,33),STITCH_Y-HOLE_HALF,STITCH_Y+HOLE_HALF],9))
+                                 .295-hole_half,.295+hole_half,.305-hole_half,.305+hole_half],9))
+    ys=np.unique(np.round(np.r_[np.linspace(-.040,.040,33),STITCH_Y-hole_half,STITCH_Y+hole_half],9))
     vertices=[];faces=[];ids={}
     def vertex(i,j):
         if (i,j) not in ids:
@@ -59,7 +59,7 @@ def patch(left=True):
     for i in range(len(xs)-1):
         for j in range(len(ys)-1):
             x,y=(xs[i]+xs[i+1])/2,(ys[j]+ys[j+1])/2
-            hole=any(abs(x-hx)<HOLE_HALF and abs(y-hy)<HOLE_HALF for hx in (.295,.305) for hy in STITCH_Y)
+            hole=any(abs(x-hx)<hole_half and abs(y-hy)<hole_half for hx in (.295,.305) for hy in STITCH_Y)
             if hole:continue
             a,b,c,d=vertex(i,j),vertex(i+1,j),vertex(i+1,j+1),vertex(i,j+1)
             faces.extend(((a,b,c),(a,c,d)))

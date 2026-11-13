@@ -7,7 +7,7 @@ from arena_cloth import Cloth
 from arena_props import SpringPeg,Fixture
 from cloth_mesh import tshirt
 from native_cloth import Fabric
-from scene import initial_layout,TABLE,LINE_X,LINE_Z,LINE_HALF_SPAN
+from scene import initial_layout,TABLE,LINE_X,LINE_Z,LINE_HALF_SPAN,SUPPORT_SIZE,SUPPORT_CENTER,SUPPORT_TOP
 
 SCENE='station'
 SCORE_OVER='end'
@@ -17,10 +17,11 @@ DEVELOPMENT_ONLY=True
 MESH=tshirt()
 INITIAL=initial_layout(MESH)
 OBJECTS=[
-    Cloth('tshirt',pos=(.33,0.,TABLE+.003),size=(.30,.40,.0016),
+    Cloth('tshirt',pos=(.345,0.,SUPPORT_TOP+.003),size=(.30,.40,.0016),
           color=(.08,.35,.72),mesh=MESH,initial=INITIAL,fabric=Fabric()),
     Fixture('rack',pos=(LINE_X,0.,(TABLE+LINE_Z)/2),
             size=(.15,2*LINE_HALF_SPAN+.095,LINE_Z-TABLE),kind='clothesline'),
+    Fixture('laundry_support',pos=SUPPORT_CENTER,size=SUPPORT_SIZE,kind='laundry_support'),
     SpringPeg('left_peg',pos=(.12,.20,TABLE+.014),size=(.070,.010,.022)),
     SpringPeg('right_peg',pos=(.12,-.20,TABLE+.014),size=(.070,.010,.022)),
 ]

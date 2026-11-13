@@ -1,0 +1,234 @@
+{
+  "kind": "coupled_paper_staple_coupon",
+  "status": "invalid_model_domain",
+  "mode": "stapled",
+  "score": null,
+  "robot_demo": false,
+  "mesh": {
+    "vertices": 782,
+    "triangles": 1444,
+    "surface_area_m2": 0.0007194791999999999,
+    "holes": [
+      [
+        -0.00661,
+        -0.00619,
+        -0.00031,
+        0.00031
+      ],
+      [
+        0.00619,
+        0.00661,
+        -0.00031,
+        0.00031
+      ]
+    ],
+    "boundary_edges": 122,
+    "mass_kg": 5.755833599999999e-05,
+    "minimum_triangle_area_m2": 8.249999999999986e-09
+  },
+  "thickness_m": 0.0001,
+  "physics_hz": 2000,
+  "seconds": 0.2,
+  "limitations": [
+    "uncalibrated isotropic paper",
+    "planar steel hinge model",
+    "crown fixed for diagnostic only"
+  ],
+  "source_sha256": {
+    "paper.py": "5bcb3af0136ebfb3ad332bc27b588478e78bd4b9bac331bd213eb8a43dde657a",
+    "native_paper.py": "fb920b9a7ce24b15c30b5355a45135e3f9587439877bb497d2920c604304b021",
+    "paper_probe.py": "d64aca230fa852647d310bd2d745151a628211e86b2f87bbda2cc3880488ad46",
+    "materials.py": "9840b118f8a908b85260cf767025ec1a009162e99820c540032e2171d085aa83",
+    "physx_material.py": "1248cd374d3386e99116be60a2717c5ac564bca57af184d0c8c8b76330326e33",
+    "contact_guard.py": "95cba1bacf521fcde76ef639cb03968eb29dac81f49fac40115eb97e8a50a133"
+  },
+  "phase": "simulate",
+  "first_invalid_step": 20,
+  "first_invalid_measurements": [
+    {
+      "valid": false,
+      "steps": 20,
+      "first_failure": {
+        "step": 20,
+        "reason": "outside elastic paper model",
+        "tensile_strain": 0.0008229587785135717,
+        "surface_bending_strain": 0.004175022256962084
+      },
+      "maximum_tensile_strain": 0.0008229587785135717,
+      "maximum_surface_bending_strain": 0.004175022256962084,
+      "thresholds_calibrated": false,
+      "last_geometry_diagnostics": {
+        "worst_bending_edge": [
+          417,
+          452
+        ],
+        "worst_bending_faces": [
+          802,
+          803
+        ],
+        "worst_edge_dihedral_rad": 0.005904373099005306,
+        "worst_edge_dual_width_m": 7.071067811865473e-05,
+        "worst_membrane_face": 800
+      },
+      "contact_audit": {
+        "valid": true,
+        "steps": 20,
+        "first_failure": null
+      }
+    },
+    {
+      "valid": true,
+      "steps": 20,
+      "first_failure": null,
+      "maximum_tensile_strain": 0.0001630715780625014,
+      "maximum_surface_bending_strain": 0.0021855415539236795,
+      "thresholds_calibrated": false,
+      "last_geometry_diagnostics": {
+        "worst_bending_edge": [
+          417,
+          452
+        ],
+        "worst_bending_faces": [
+          802,
+          803
+        ],
+        "worst_edge_dihedral_rad": 0.0030908225066888354,
+        "worst_edge_dual_width_m": 7.071067811865473e-05,
+        "worst_membrane_face": 394
+      },
+      "contact_audit": {
+        "valid": true,
+        "steps": 20,
+        "first_failure": null
+      }
+    }
+  ],
+  "completed_steps": 20,
+  "centroid_drop_m": [
+    0.0002827237606048416,
+    0.0002595209598541537
+  ],
+  "paper": [
+    {
+      "valid": false,
+      "steps": 20,
+      "first_failure": {
+        "step": 20,
+        "reason": "outside elastic paper model",
+        "tensile_strain": 0.0008229587785135717,
+        "surface_bending_strain": 0.004175022256962084
+      },
+      "maximum_tensile_strain": 0.0008229587785135717,
+      "maximum_surface_bending_strain": 0.004175022256962084,
+      "thresholds_calibrated": false,
+      "last_geometry_diagnostics": {
+        "worst_bending_edge": [
+          417,
+          452
+        ],
+        "worst_bending_faces": [
+          802,
+          803
+        ],
+        "worst_edge_dihedral_rad": 0.005904373099005306,
+        "worst_edge_dual_width_m": 7.071067811865473e-05,
+        "worst_membrane_face": 800
+      }
+    },
+    {
+      "valid": true,
+      "steps": 20,
+      "first_failure": null,
+      "maximum_tensile_strain": 0.0001630715780625014,
+      "maximum_surface_bending_strain": 0.0021855415539236795,
+      "thresholds_calibrated": false,
+      "last_geometry_diagnostics": {
+        "worst_bending_edge": [
+          417,
+          452
+        ],
+        "worst_bending_faces": [
+          802,
+          803
+        ],
+        "worst_edge_dihedral_rad": 0.0030908225066888354,
+        "worst_edge_dual_width_m": 7.071067811865473e-05,
+        "worst_membrane_face": 394
+      }
+    }
+  ],
+  "contact_audit": [
+    {
+      "valid": true,
+      "steps": 20,
+      "first_failure": null
+    },
+    {
+      "valid": true,
+      "steps": 20,
+      "first_failure": null
+    }
+  ],
+  "samples": [
+    {
+      "step": 1,
+      "time_s": 0.0005,
+      "paper": [
+        {
+          "valid": true,
+          "steps": 1,
+          "first_failure": null,
+          "maximum_tensile_strain": 5.149232330747822e-06,
+          "maximum_surface_bending_strain": 0.0,
+          "thresholds_calibrated": false,
+          "last_geometry_diagnostics": {
+            "worst_bending_edge": [
+              1,
+              35
+            ],
+            "worst_bending_faces": [
+              0,
+              3
+            ],
+            "worst_edge_dihedral_rad": 0.0,
+            "worst_edge_dual_width_m": 0.001333333333333333,
+            "worst_membrane_face": 179
+          },
+          "contact_audit": {
+            "valid": true,
+            "steps": 1,
+            "first_failure": null
+          }
+        },
+        {
+          "valid": true,
+          "steps": 1,
+          "first_failure": null,
+          "maximum_tensile_strain": 5.149232330747822e-06,
+          "maximum_surface_bending_strain": 0.0,
+          "thresholds_calibrated": false,
+          "last_geometry_diagnostics": {
+            "worst_bending_edge": [
+              1,
+              35
+            ],
+            "worst_bending_faces": [
+              0,
+              3
+            ],
+            "worst_edge_dihedral_rad": 0.0,
+            "worst_edge_dual_width_m": 0.001333333333333333,
+            "worst_membrane_face": 179
+          },
+          "contact_audit": {
+            "valid": true,
+            "steps": 1,
+            "first_failure": null
+          }
+        }
+      ]
+    }
+  ],
+  "note": "A supported coupon must retain sheets with intact elastic-domain checks; free control must fall. Neither proves extraction or robot feasibility.",
+  "wall_seconds": 4.158029502257705
+}

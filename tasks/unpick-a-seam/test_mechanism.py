@@ -3,6 +3,7 @@ import numpy as np
 from geometry import audit_scene,patch,stitch_loop
 from cutting import ThreadCutter,DamageAudit,segment_triangle_intersections
 from scoring import assess
+from inspection import point_triangle_distance,inspect_removed_threads,StrainAudit
 
 
 class MechanismTests(unittest.TestCase):
@@ -50,18 +51,47 @@ class MechanismTests(unittest.TestCase):
 
     def test_intact_separation_and_damage_gate(self):
         kw=dict(released_stitches=6,minimum_patch_gap_m=.03,blade_crossed_fabric=False,
-                maximum_new_tear_m=0,complete=True,thread_bridge_present=False,tools_clear=True)
+                maximum_new_tear_m=0,complete=True,thread_bridge_present=False,tools_clear=True,material_valid=True)
         self.assertEqual(assess(**kw)['score'],1.)
         kw['blade_crossed_fabric']=True
         self.assertEqual(assess(**kw)['score'],0.)
 
     def test_invalid_judgment_types_fail_closed(self):
         base=dict(released_stitches=6,minimum_patch_gap_m=.03,blade_crossed_fabric=False,
-                  maximum_new_tear_m=0,complete=True,thread_bridge_present=False,tools_clear=True)
+                  maximum_new_tear_m=0,complete=True,thread_bridge_present=False,tools_clear=True,material_valid=True)
         for field,value in [('complete','false'),('tools_clear',1),('released_stitches',True),
                             ('minimum_patch_gap_m',None),('maximum_new_tear_m',float('nan'))]:
             data=dict(base);data[field]=value
             self.assertEqual(assess(**data)['score'],0.)
+
+    def test_invalid_material_cannot_earn_partial_or_full_credit(self):
+        for count in (2,4,6):
+            r=assess(released_stitches=count,minimum_patch_gap_m=.04,blade_crossed_fabric=False,
+                     maximum_new_tear_m=0.,complete=True,thread_bridge_present=False,tools_clear=True,material_valid=False)
+            self.assertEqual(r['score'],0.)
+
+    def test_thread_clearance_checks_segment_interiors(self):
+        vertices=np.array(((0.,0.,0.),(1.,0.,0.),(0.,1.,0.)))
+        faces=np.array(((0,1,2),))
+        crossing=np.array([[[.2,.2,-.01],[.2,.2,.01]]])
+        away=np.array([[[.2,.2,.003],[.3,.2,.003]]])
+        r=inspect_removed_threads([crossing,away],[vertices],[faces])
+        self.assertEqual(r['removed_count'],1)
+        self.assertFalse(r['threads'][0]['removed'])
+
+    def test_mesh_distance_uses_edges_and_faces(self):
+        v=np.array(((0.,0.,0.),(1.,0.,0.),(0.,1.,0.)))
+        d=point_triangle_distance([[.2,.2,.3],[.6,.6,0],[2,0,0]],v,[[0,1,2]])
+        np.testing.assert_allclose(d,[.3,np.sqrt(.02),1.])
+
+    def test_strain_gate_is_rigid_motion_invariant_and_latches(self):
+        v=np.array(((0.,0.,0.),(1.,0.,0.),(0.,1.,0.)))
+        audit=StrainAudit(v,[[0,1,2]])
+        moved=v@np.array(((0.,1.,0.),(-1.,0.,0.),(0.,0.,1.)))+[2,3,4]
+        self.assertFalse(audit.update(moved,0.))
+        self.assertTrue(audit.update(v*np.array((1.2,1.,1.)),.1))
+        self.assertTrue(audit.update(v,.2))
+        self.assertAlmostEqual(audit.maximum_observed,1.2)
 
 
 if __name__=='__main__':unittest.main()

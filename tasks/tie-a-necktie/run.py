@@ -1,7 +1,8 @@
 """Bounded YAM/Arena smoke recorder. No task demo, Dream call or scored success.
 
-The policy holds the adapter's ordinary ready joint targets throughout. Measured
-cloth/peg geometry is assessor evidence only and never changes those targets.
+Smoke mode holds the ordinary ready joint targets. Motion-probe mode replays a
+frozen ordinary joint trajectory. Measured cloth/prop geometry is assessor
+evidence only and never changes either policy's targets.
 """
 import argparse
 from dataclasses import fields,is_dataclass
@@ -100,14 +101,28 @@ def native_audit(stage,cloth_names,peg_names):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--mode',choices=('smoke',),default='smoke')
-    p.add_argument('--steps',type=int,default=60)
+    p.add_argument('--mode',choices=('smoke','motion-probe'),default='smoke')
+    p.add_argument('--steps',type=int,default=None)
+    p.add_argument('--plan',type=Path,help='Precomputed ordinary joint commands; required for motion-probe')
     p.add_argument('--seed',type=int,default=0)
     p.add_argument('--out',type=Path)
     p.add_argument('--check-only',action='store_true',help='Compile source and check JSON without loading a simulator')
     args=p.parse_args()
-    if not 1<=args.steps<=MAX_SMOKE_STEPS:
-        p.error('Smoke runs are limited to 1–200 control steps')
+    fixed_plan=fixed_actions=None
+    if args.mode=='motion-probe':
+        if args.plan is None:
+            p.error('motion-probe requires a precomputed --plan')
+        from fixed_motion import load
+        fixed_plan,fixed_actions=load(args.plan)
+        args.steps=len(fixed_actions) if args.steps is None else args.steps
+        if not 1<=args.steps<=len(fixed_actions):
+            p.error('--steps exceeds the frozen action sequence')
+    else:
+        if args.plan is not None:
+            p.error('smoke mode has no movement plan')
+        args.steps=60 if args.steps is None else args.steps
+        if not 1<=args.steps<=MAX_SMOKE_STEPS:
+            p.error('Smoke runs are limited to 1–200 control steps')
     if not 0<=args.seed<2**32:
         p.error('Seed must be an unsigned 32-bit integer')
     source_hashes=sources()
@@ -125,13 +140,16 @@ def main():
     frozen.mkdir()
     for name in source_hashes:
         shutil.copyfile(HERE/name,frozen/name)
+    if args.plan is not None:
+        shutil.copyfile(args.plan,frozen/'fixed-motion.json')
+        source_hashes['fixed-motion.json']=hashlib.sha256(args.plan.read_bytes()).hexdigest()
     draft=json.loads((HERE/'task.draft.json').read_text())
     started=time.monotonic()
-    report={'kind':'diagnostic_yam_smoke_not_submission_evidence','status':'initializing',
+    report={'kind':'diagnostic_yam_'+args.mode+'_not_submission_evidence','status':'initializing',
             'score':None,'demo':False,'dream_requests':0,'started_utc':datetime.now(timezone.utc).isoformat(),
             'source_sha256':source_hashes,'versions':versions,'seed':args.seed,
             'control_hz':CONTROL_HZ,'requested_steps':args.steps,'completed_steps':0,
-            'policy':'constant adapter-ready joint targets; no object/assessor feedback',
+            'policy':('constant adapter-ready joint targets' if fixed_plan is None else 'frozen fixed joint trajectory')+'; no object/assessor feedback',
             'instruction':draft['instruction']}
     def save():
         report['wall_seconds']=time.monotonic()-started
@@ -184,13 +202,22 @@ def main():
             raise RuntimeError('Invalid ready action')
         if np.any(ready<emb._low) or np.any(ready>emb._high):
             raise RuntimeError('Ready action exceeds normal adapter limits')
-        report['constant_action14']=ready.tolist()
+        report['initial_action14']=ready.tolist()
+        if fixed_actions is not None and (np.any(fixed_actions<emb._low) or np.any(fixed_actions>emb._high)):
+            raise ValueError('Fixed trajectory exceeds ordinary adapter action limits')
+        if fixed_actions is not None:
+            from yam_arena.constants import SHOULDER,WRIST,GRIPPER,FINGER_OPEN
+            delta_limit=np.tile(np.array([SHOULDER['velocity']/CONTROL_HZ]*3+
+                [WRIST['velocity']/CONTROL_HZ]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/CONTROL_HZ]),2)
+            if np.any(np.abs(np.diff(np.vstack((ready,fixed_actions)),axis=0))>delta_limit*1.001):
+                raise ValueError('Fixed trajectory exceeds normal joint/gripper speed limits')
+        active_action=ready.copy()
         def arr(value):
             return getattr(value,'torch',value).detach().cpu().numpy()
         def snapshot(step):
             observation=emb._observation()
             state=scene.object_states(emb._env,names)
-            record={'step':step,'time_s':step/CONTROL_HZ,'action14':ready.tolist(),
+            record={'step':step,'time_s':step/CONTROL_HZ,'action14':active_action.tolist(),
                     'measured_joint_pos':encode(np.asarray(observation.state['joint_pos'])),
                     'objects':encode(state),'physics_step_count':int(base.sim._physics_step_count),
                     'robot_links':{name:{'names':list(base.scene[name].body_names),
@@ -209,6 +236,9 @@ def main():
         save()
         command=torch.as_tensor(ready[None,:],device=base.device,dtype=torch.float32)
         for step in range(1,args.steps+1):
+            if fixed_actions is not None:
+                active_action=fixed_actions[step-1].copy()
+                command=torch.as_tensor(active_action[None,:],device=base.device,dtype=torch.float32)
             emb._env.step(command)
             emb._t=step/CONTROL_HZ
             snapshot(step)
@@ -216,7 +246,7 @@ def main():
             if step%20==0:
                 save()
         report['status']='complete'
-        report['meaning']='Smoke execution completed; no task success or contact fidelity certified'
+        report['meaning']='Bounded diagnostic execution completed; no task success or contact fidelity certified'
     except BaseException as exc:
         report.update(status='failed',error_type=type(exc).__name__,error_message=str(exc))
         raise

@@ -2,7 +2,7 @@
 
 **Development package; not ready to submit.** No robot demo, Dream run, measured
 score or uploaded media exists yet. The native cloth and spring-peg code has not
-run on the retained GPU. Do not turn this draft into `task.json` until the gates
+yet completed GPU validation. Do not turn this draft into `task.json` until the gates
 in `VALIDATION.json` pass.
 
 The task is ordinary laundry fastening: hang a small cotton T-shirt using two
@@ -12,8 +12,14 @@ is not a rigid outline. `scene.py` authors the proposed full prop layout;
 `arena_cloth.py` implements the native cloth bridge for the pinned YAM adapter.
 `arena_props.py` registers both dynamic peg jaws and resets their actual poses
 and velocities. `task.py` assembles the complete station scene; `run.py` records
-a bounded no-op robot smoke run. Native execution and a successful controller
-remain to be demonstrated.
+a bounded no-op robot smoke run. Standalone native drape physics and rendering
+now run; the robot bridge and a successful controller remain to be demonstrated.
+
+On 13 November, the three-second standalone drape rendered 31 nonblank frames.
+The one-second contact audit found no triangle intersections with the rail,
+but the cloth was still moving. Clamp and robot probes stopped at a peg
+quaternion authoring error; its precision is corrected and awaits rerun.
+This is mechanism evidence, not task success.
 
 ## Local checks
 
@@ -42,6 +48,12 @@ python tasks/peg-out-a-tshirt/run.py --mode smoke --steps 60 --out /tmp/tshirt-y
 ```
 
 Each process records source hashes, actual runtime and native node trajectories.
+By default it also records native-rendered diagnostic video and initial/final
+PNGs. Use `--no-render` only to isolate a physics-startup failure. Native
+physics advances through an explicit cached-stage attachment and fixed steps;
+the deprecated `World.reset()` path failed to attach a PhysX stage under the
+verified Isaac Sim 6.1 installation. Maximum transient edge strain and nodal speed are
+recorded alongside the final shape.
 Inspect the drape for sag/folding and no penetrations. Compare the closed and
 open jaw fixtures: only actual spring pressure and friction may retain the free
 cloth coupon. A valid result needs visual review as well as the numeric report.
@@ -62,6 +74,28 @@ Run at 240 Hz first. Increase to 480 or 960 only if contact convergence justifie
 it. Do not run ten full robot attempts to diagnose a failed three-second cloth
 probe. Runtime and the approximately $3 task budget cannot be confirmed before
 the first measured GPU process.
+
+## First robot contact probe
+
+After the native drape/clamp checks and settled reset are verified, the frozen
+`grasp-plan.json` runs a 21-second bimanual approach, pinch, lift and release.
+`fixed_motion.py` generates it from the declared support coordinates and YAM
+URDF kinematics without loading a simulator. It reads no cloth state. The
+maximum offline IK residual is 3.55 mm and 1.87 degrees. The sampled official
+YAM collision-hull vertices stay outside the table, laundry support and
+opposite arm. This
+is a useful clearance check, not a continuous collision proof or successful
+cloth retention; both require the recorded robot trial.
+
+```bash
+python tasks/peg-out-a-tshirt/run.py --mode motion-probe \
+  --plan tasks/peg-out-a-tshirt/grasp-plan.json --out /tmp/tshirt-grasp
+```
+
+The same runner still records assessor-only nodes, jaw poses and ordinary
+camera images. Motion-probe is explicitly unscored and cannot be submitted as
+a full task demo. Its current waypoint positions remain provisional until the
+measured settled drape is checked. Do not spend Dream calls on this diagnostic.
 
 ## Model and judging limits
 
@@ -93,6 +127,28 @@ separate static friction is made.
 
 The earlier [sock-pegging submission](https://github.com/robocurve/benchmark-tasks/pull/760)
 failed for rigid cloth, automatic clip operation and proximity-based scoring.
+A fixed low plastic laundry board gives the starting hem a real 65 mm overhang;
+the robot still has to lift the flexible garment and operate both pegs. Its
+200 x 440 mm top is 100 mm above the table. The current diagnostic starts the
+shirt flat above that support so gravity can establish the drape. A successful
+settling probe must supply the final reset; no pose is changed during control.
+
 This implementation addresses those physical omissions, but claim ownership
 and novelty still require organizer review. [BEHAVIOR clothesline hanging](https://behavior.stanford.edu/knowledgebase/tasks/hanging_clothes_on_clothesline-0.html)
 uses draping, without a peg. This comparison is not advance acceptance.
+
+## Reproduce a reviewed score
+
+Complete the measurements and visual decisions in a judging JSON record after
+reviewing the specified views. Include `evidence_files` and matching
+`evidence_sha256` maps for the required photographs and released video, with
+paths relative to the evidence directory. Then run:
+
+```bash
+python tasks/peg-out-a-tshirt/judge.py /path/to/judging.json \
+  --evidence-dir /path/to/trial --out /path/to/reviewed-score.json
+```
+
+This checks every evidence file's digest before applying the rubric. Missing
+measurements, unknown integrity or changed media produce an error, not an
+invented score. No completed judging record exists yet.

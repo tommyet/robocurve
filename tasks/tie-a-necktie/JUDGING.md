@@ -1,8 +1,8 @@
 # Proposed judging rubric
 
 Use front and rear photographs, the tying video and a ruler. The collar form
-has a marked centre, collar edge and a 280–360 mm tip-length band below that
-edge. Inspect the knot's fabric path: the wide end must pass through the neck
+has a marked centre. Measure tip length downward from the neck form's
+lower edge at z=1.0875 m; the acceptable 280–320 mm band stays above the table. Inspect the knot's fabric path: the wide end must pass through the neck
 loop and then the front wrap to form a retained four-in-hand. A loose drape,
 preformed knot, attached strip or mere visual overlap does not count.
 
@@ -13,7 +13,8 @@ preformed knot, attached strip or mere visual overlap does not count.
 - **1:** the retained knot is within 15 mm of the marked collar centre; the
   neckband's greatest gap from the form is no more than 10 mm; the wide end's
   face points outward without an axial half-twist; the narrow end is behind the
-  wide end; and the wide tip lies 280–360 mm below the marked collar edge.
+  wide end with its tip at least 10 mm above the wide tip; and the wide tip lies
+  280–320 mm below the marked collar edge.
 
 With the wide tip pointing down, its front face shows the pale edge mark on
 the viewer's left and the gold edge mark on the right. The reverse pattern is

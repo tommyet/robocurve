@@ -1,90 +1,106 @@
 # Remove a staple without tearing the papers
 
-**Development package — not ready to submit.** A contact/material probe exists;
-a complete deformable paper/staple scene and successful robot trial do not. No
-simulator or Dream run has occurred, and a $3 completion cost is not established.
+**Development package; not submission-ready.** The native steel coupon works.
+Paper contact, complete extraction and robot feasibility remain unproven. There
+is no demo, Dream run or media ID.
 
-The task is to remove a clinched staple from two sheets, keeping both sheets
-usable. The robot must support thin paper, engage a remover under the fastener,
-unbend its legs and withdraw them through the existing holes.
+The robot removes a clinched staple, then separates two flexible office-paper
+sheets. The central difficulty is engaging a remover under the crown and
+unbending the legs without damaging the thin paper around their holes.
 
-## Implemented and checked locally
+## Evidence so far
 
-- Rectangular steel wire bending with irreversible plastic set and hardening.
-- A unilateral jaw-contact probe: a moving diagnostic jaw bends one 3 mm
-  clinched leg. A jaw passing outside the leg has no effect; withdrawing the
-  jaw leaves a permanent bend. Doubling wire thickness increases resistance.
-- An irreversible paper cohesive-opening law whose force/opening integral
-  equals its specified fracture energy. Closing a torn bond does not heal it.
-- An installed staple centreline with a 12.8 mm crown and two inward-bent ends.
-- A lazy native PhysX angular-drive material hook. It uses measured joint angle
-  to update the plastic rest angle; it has not been exercised in Isaac.
-- A native diagnostic scene with the 3 mm wire leg, physical hinge and a
-  contacting jaw; it is authored but not yet run.
-- A photo/ruler judging procedure and fail-closed scorer.
+The native 3 mm steel-leg coupon bends only when its diagnostic jaw touches it.
+After the jaw withdraws, it retains 0.87567 rad of plastic bend. Moving the jaw
+3 mm away produces no motion or plastic set. Halving the physics step from
+100 to 50 microseconds changes the residual angle to 0.87322 rad, a 0.28%
+difference. The three unedited reports are in `evidence/native-coupon-*.json`;
+`VALIDATION.json` records their hashes. These are contact/material tests, not
+paper extraction or robot demonstrations. Material parameters are approximate.
 
-These are **separate, uncalibrated probes**, not a coupled extraction simulation.
-The jaw probe fixes its root instead of modelling the paper hole. It cannot
-show whether paper survives, whether a whole staple is removed, or whether a
-robot can do it. Its 5.865 N peak jaw force and residual 0.928 rad bend are outputs
-of the chosen numerical parameters, not measured properties of a real staple.
+There are 27 passing CPU checks for the steel law, punctured sheet meshes,
+irreversible validity guards, contact auditing and photo-based judging.
+The older CPU cohesive-opening model remains a research probe; it does not
+supply tearing physics in the proposed native scene.
 
-## Reproduce the CPU checks
+The latest paper tests still fail the provisional elastic-domain guard. With
+cleaned meshes and the documented shell bend coefficient, the touching free
+sheets gain about 0.8 mm of separation; one exceeds 0.3% local bending after
+0.129 seconds. The stapled coupon exceeds that boundary after 0.010 seconds.
+Wire-crossing audits stay clean. These are failed contact/validity tests, not
+evidence of a tear or successful retention. An explicitly separated-sheet
+free-fall control is the next diagnostic.
 
-```sh
-.venv/bin/python -m unittest discover -s tasks/remove-a-staple -p 'test_*.py' -v
-.venv/bin/python tasks/remove-a-staple/probe.py --out tasks/remove-a-staple/evidence/material-probe.json
-.venv/bin/python tasks/remove-a-staple/contact_probe.py --out tasks/remove-a-staple/evidence/contact-probe.json
-```
+## Reproduce the checks
 
-The NumPy-only checks take under one second on the development machine, use no
-GPU/API/network and contain no randomness. Full trial runtime is unknown.
-
-On the funded existing Isaac environment, from the repository root:
+From the repository root, with NumPy installed:
 
 ```sh
-python tasks/remove-a-staple/native_probe.py --out artifacts/staple-native-001 --dt 0.0001 --seconds 2
+python -m unittest discover -s tasks/remove-a-staple -p 'test_*.py' -v
 ```
 
-This native coupon has no paper. A kinematic diagnostic jaw contacts a dynamic
-steel leg; only contact can move it. The measured joint angle updates a plastic
-rest angle after yield. Compare the recovered angle at half the time step
-before trusting the material coupling. Kinematic jaw motion is a diagnostic
-test fixture, not a robot demo. No full-task success is claimed by this entry
-point. Native [stepping](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/simulation_control/simulation_control.html)
-and [drive units](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/joints.html)
-follow NVIDIA's documentation; compatibility with the retained installation
-still needs an actual run.
+In the pinned Isaac 6.1 environment:
 
-## Blocking work before a robot or Dream trial
+```sh
+python tasks/remove-a-staple/native_probe.py --out artifacts/staple-positive --dt .0001 --seconds 1
+python tasks/remove-a-staple/native_probe.py --out artifacts/staple-negative --dt .0001 --seconds 1 --no-contact
+python tasks/remove-a-staple/native_probe.py --out artifacts/staple-half-dt --dt .00005 --seconds 1
+python tasks/remove-a-staple/paper_probe.py --out artifacts/paper-free --mode free --seconds .2 --physics-hz 2000
+python tasks/remove-a-staple/paper_probe.py --out artifacts/paper-separated --mode free-separated --seconds .2 --physics-hz 2000
+python tasks/remove-a-staple/paper_probe.py --out artifacts/paper-stapled --mode stapled --seconds .2 --physics-hz 2000
+```
 
-The defining interaction needs a coupled 3D solver with thin deformable sheets,
-four original puncture holes, steel-wire plasticity, jaw leverage, self-contact
-and irreversible crack growth around those holes. Rigid paper plates or a
-staple that detaches when a remover is nearby would omit the task.
+Each output directory must be new. Read the JSON result: Isaac shutdown may
+leave a zero process exit status after a reported error. The three steel runs
+took about 7, 8 and 12 seconds respectively, excluding installation. Full trial
+runtime and cost are not established. All setups are deterministic; no seeds.
 
-The existing native PhysX chain pattern can represent a bending wire, but does
-not by itself provide tearable 100 µm paper. A coarse panel sheet risks leaving
-gaps larger than the staple, and ordinary millimetre-scale collision offsets
-are larger than the entire two-sheet stack. This contact-scale issue must be
-resolved without enlarging paper thickness or replacing paper by rigid cards.
-The plastic drive hook also needs time-step convergence checks and contact
-force/energy checks before use.
+## Proposed native task
 
-`PAPER_SOLVER_PLAN.md` specifies the remaining thin-shell, puncture-contact and
-irreversible crack-propagation work, including contact resolution and destructive
-control cases. The nominal reset starts the flat stapled stack 0.5 mm above the
-table, keeping the clinch clear, then requires physical settling before control.
-No rigid-paper replacement or interpenetrating tabletop reset is acceptable.
+`paper.py` creates genuine 0.1 mm, 80 gsm sheets with explicit puncture holes.
+`native_paper.py` supplies surface-FEM paper and independently simulated steel
+segments joined by measured-angle plastic hinges. Contact, rather than an
+attachment or release trigger, retains the sheets on the staple.
 
-The deterministic proposed geometry and layout are in `setup.json`. Select and
-measure matching actual staple/remover and paper; calibrate wire yield,
-paper bending, tear propagation and friction. Then establish a matching reset,
-robot reach, a camera/joint-feedback or open-loop successful demo, and an
-ordinary Dream baseline. Final scoring must inspect both faces of both sheets.
+`paper_probe.py` first tests 30 × 24 mm coupons. A fixed crown is an explicit
+diagnostic fixture: the free sheets should fall, while the clinched fixture
+should support them without crossing intact triangles or exceeding the elastic
+validity bounds. Passing that test does not establish extraction.
+
+`full_scene.py` authors two 210 × 148 mm sheets, a **free** staple, a forked lever
+remover and a 20 mm-high document support. The upper sheet is offset by 12 mm;
+the far edges overhang by 20 and 32 mm to make later separation accessible.
+The staple and remover fulcrum are over the support. This scene is unrun;
+`setup.json` and `task.draft.json` are provisional until the geometry is tested.
+The YAM bridge in `arena_paper.py`, `arena_hardware.py` and `task.py` is authored
+but unrun. It exposes measured geometry to an assessor, writes poses only on
+reset and fails closed when the material/contact validity guard trips.
+
+The steel currently bends in its original plane. The paper model is isotropic
+and uses a conservative, provisional 0.3% membrane/surface-bending strain
+boundary. A breach irreversibly invalidates the trial, even if the paper later
+looks flat. No post-fracture topology or visible tear is simulated. A separate
+wire/triangle crossing audit also fails closed. These limits need contact and
+adversarial checks before any score can be claimed. See `PAPER_SOLVER_PLAN.md`.
+
+## Remaining acceptance gates
+
+1. Show that real-scale flexible paper contacts and retains the clinched wire;
+   test a free-sheet control and smaller time steps.
+2. Settle the full scene without fixtures, show contact-driven extraction and
+   reject damaging or out-of-plane manipulation that exceeds model scope.
+3. Implement ordinary YAM manipulation and demonstrate full score within the
+   run limit, including releasing and separating the sheets.
+4. Run Dream, score both recordings, verify the concise final setup and upload
+   media only after the user authorizes submission.
+
+The proposed judging uses before/after photographs, a millimetre ruler and
+backlighting. It awards 0.5 for one leg entirely clear of both sheets, and 1.0
+for both legs clear plus sheets separated by 30 mm and released for three
+seconds. Excess damage or invalid simulation evidence overrides all credit.
 
 Accepted [cord cutting](https://github.com/robocurve/benchmark-tasks/tree/main/tasks/cut-taut-cord)
-uses measured blade/cord contact force to drive material failure. Accepted
-[filing](https://github.com/robocurve/benchmark-tasks/tree/main/tasks/file-a-steel-block-flat-down-to-a-scribed-line)
-uses a before-substep material model. Their causal contact structure informed
-this package; neither establishes that our uncalibrated paper model is valid.
+and [steel filing](https://github.com/robocurve/benchmark-tasks/tree/main/tasks/file-a-steel-block-flat-down-to-a-scribed-line)
+informed the causal material-hook structure. Neither validates this paper
+model. Native [joint and drive documentation](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/joints.html)
+explains the PhysX coupling used here.

@@ -1,8 +1,7 @@
 {
-  "schema": "proposed-runtime-v1",
-  "status": "target_environment_not_tested_for_this_task",
-  "scope": "Target for the next native probe. This records the retained installation verified on 2026-11-09 for another task; no simulator or robot run has verified this development package.",
-  "reference_checked_utc": "2026-11-09T16:35:42.659934+00:00",
+  "schema": "runtime-evidence-v1",
+  "status": "native_diagnostics_executed_full_task_unverified",
+  "scope": "Native GPU surface-FEM/thread probes executed on this stack. The 0.4 mm thread failed the independent crossing audit; a 0.8 mm diagnostic passed 0.1 s. Full retention, YAM integration and robot manipulation remain unverified.",
   "current_task_runtime_verified": false,
   "python": "3.12.16",
   "packages": {
@@ -45,11 +44,14 @@
     "sha256": "991c3d0dcfc331bc4177379b538646407f78b7dbb6e21b7f6e310518c13aa33d"
   },
   "platform": {
-    "gpu": "NVIDIA L40S",
-    "vram_gib": 48,
-    "compute_instance": "g6e.xlarge",
-    "ram_gib": 32,
-    "vcpus": 4
+    "gpu": "NVIDIA RTX 6000 Ada Generation",
+    "vram_mib": 49140,
+    "driver": "595.91.07",
+    "os": "Ubuntu 24.04.3 LTS",
+    "kernel": "6.8.0-138-generic",
+    "cpu": "AMD EPYC 75F3",
+    "ram_mib": 59127
   },
-  "before_running": "Check installed versions/source revisions and save a fresh per-run manifest. A source/API inspection is not runtime validation."
+  "before_running": "Check installed versions/source revisions and save a fresh per-run manifest. A source/API inspection is not runtime validation.",
+  "reference_checked_utc_date": "2026-11-13"
 }

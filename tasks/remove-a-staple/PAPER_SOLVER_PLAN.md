@@ -1,46 +1,46 @@
-# Remaining coupled-paper solver
+# Paper validity boundary and remaining work
 
-This is a precise implementation plan, not completed functionality or a claim
-that the physics fits the $3 trial budget. The native steel coupon must pass
-before spending on the complete scene.
+The current native probe uses 100 µm surface-FEM paper, explicit puncture holes,
+and a contact-capable steel staple with plastic bending joints. Its two small
+sheets are supported only by the staple; a fixed crown is an explicit coupon
+fixture, not part of the proposed robot task. The full A5 scene and remover
+controller remain unfinished.
 
-1. Represent each A5 sheet by a triangular thin shell with 80 g/m² areal mass,
-   in-plane stretch/shear energy and bending energy. Preserve the nominal
-   100 µm material thickness. A rigid plate, articulated stiff cards or enlarged
-   paper thickness cannot substitute for this model. Use approximately 3 mm
-   triangle edges away from the fastener and 0.1–0.25 mm edges around the two
-   punctures in each layer; refine contact/tear convergence before judging.
-2. Construct the four initial holes from the actual installed wire cross-section
-   and clinched geometry. Record their boundaries as immutable judging references.
-   Do not provide a large extraction slot, suppress wire/sheet collision after a
-   grasp, or create an artificial attachment between paper and staple.
-3. Use swept wire-capsule / triangle and remover-edge / triangle contacts with
-   each sheet's physical half-thickness. Solve normal non-penetration and
-   friction with equal/opposite impulses on tool/wire bodies. The native
-   millimetre-scale default contact offset is unsuitable here. A contact-scale
-   coupon must show both resistance and withdrawal without tunnelling.
-4. Replace the current scalar `PaperBond` coupon with calibrated mixed-mode
-   cohesive edges. Opening/shear work weakens bonds irreversibly; completely
-   failed edges split mesh topology so a crack can extend and the sheets can
-   separate. Cohesive failure is caused by stress/work, never tool proximity or
-   a task phase. Preserve total mass and audit released elastic/fracture energy
-   when splitting vertices. Calibrate along/across fibre directions separately.
-5. Couple steel axial/bending elements with the tested plastic-hinge law. A
-   complete clinch must remain geometrically engaged through both sheets until
-   each leg actually unbends and passes out. Both paper and wire need self-contact.
-   Tool gripper forces must come from the normal YAM fingers and remover contacts.
-6. Spawn the stapled flat sheets 0.5 mm above the table, with the wire underside
-   0.2 mm clear. Let gravity/contact settle the deformable sheets over the clinch;
-   record the actual settled reset and match the setup image. Do not start inside
-   the tabletop and rely on a large depenetration impulse to rearrange the staple.
-7. Local regression cases must include: remover hovering (no extraction), pull
-   on a still-clinched staple (load or damage), selective unclinching (leg clears),
-   destructive sideways extraction (tear and score zero), tear closure (no
-   healing), and successful withdrawal followed by independent sheet separation.
-   Check finer mesh/time step and force/work balance before a robot trial.
+A complete post-fracture animation is not necessary to reject damaged outcomes.
+The chosen development route instead ends a trial irreversibly when measured
+triangle stretch or outer-surface bending strain leaves the paper model's
+elastic range. No later flat pose can restore validity or earn partial credit.
+This is a validity boundary, not a claim to predict a crack's exact length.
+The proposed 0.3% limits are conservative numerical choices and still require
+comparison with the selected paper and a non-damaging extraction trial.
 
-The retained native rigid-body adapter does not supply this topology-changing
-thin-shell solver. A custom bidirectional shell/contact solver or a verified
-supported deformable backend is required. Updating a visible mesh is acceptable
-only as rendering of that physical state; an animated mesh with rigid collisions
-would not establish paper preservation. No complete solver is implemented yet.
+Published copy-paper tests find directional elastic and plastic behaviour;
+matching nominal grammage alone is not full calibration. Useful references are
+[Yoshihara and Yoshinobu's tensile tests](https://doi.org/10.1007/s10086-014-1398-y)
+and [their practical test method](https://doi.org/10.2472/jsms.64.350).
+The native isotropic elasticity and planar wire-hinge coupon are approximations;
+neither is presented as a measured commercial product.
+
+The next checks, in order, are:
+
+1. Compare the native plastic-wire coupon with a jaw passing beside it, then
+   halve the time step. Contact must produce permanent bending; hovering must
+   not. The coupon has no paper and cannot demonstrate extraction.
+2. Compare free and stapled paper coupons. The free pair must fall; the fixed
+   crown and clinched legs must retain the stapled pair by contact alone while
+   both sheets remain inside the elastic validity boundary. Inspect the actual
+   hole/wire contacts and check a finer time step and mesh before interpreting
+   a positive result.
+3. Add a release diagnostic that straightens and withdraws the wire through the
+   existing holes by tool contact. Pulling a still-clinched leg destructively
+   must reach the irreversible invalid state, not pass through intact paper.
+4. Assemble the A5 sheets, free staple and passive remover in the ordinary YAM
+   station. Fix the starting geometry and allow contact settling before control.
+   There must be no paper pins, automatic attachments or collision disabling.
+5. Make a successful ordinary joint-command demo, then a Dream trial with the
+   same physics. Score both from the saved images/state and independently review
+   all sheet surfaces. A guard failure overrides every partial or full score.
+
+The native backend has a fixed mesh topology. A trial that leaves its valid
+material range stops; the software does not pretend to render physical tearing
+beyond that point. This limitation must be explicit in the eventual submission.

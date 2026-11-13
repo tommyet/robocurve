@@ -1,12 +1,12 @@
 {
   "status": "development_not_submission_ready",
-  "checked_date": "2026-11-12",
+  "checked_date": "2026-11-13",
   "local_checks": {
-    "geometry_and_rubric_tests": 10,
+    "geometry_and_rubric_tests": 11,
     "result": "passed",
     "command": ".venv/bin/python -m unittest discover -s tasks/tie-a-necktie -p test_local.py -v",
     "scope": "CPU geometry and synthetic evidence-rubric cases only; no physics or task-success claim",
-    "python_source_files": 11,
+    "python_source_files": 17,
     "syntax_and_json_check": {
       "result": "passed",
       "command": ".venv/bin/python tasks/tie-a-necktie/run.py --check-only",
@@ -19,12 +19,14 @@
     },
     "fixture_clearance": {
       "result": "passed",
-      "scope": "All 4464 initial cloth triangles clear neck cylinder, central post, base and both collar points by a conservative 1 mm margin. Includes former rear-post collision and triangle-only intersection regressions. Static geometry only; native gravity settling remains untested."
+      "scope": "All 3504 initial cloth triangles clear the current neck cylinder, central post, base and both collar points by a conservative 1 mm margin. Static clearance only; the GPU drape fell off this incomplete collar form."
     }
   },
   "native_gpu_checks": {
-    "status": "not_run",
-    "reason": "Shared GPU balance/access unavailable at this development checkpoint"
+    "status": "mechanism_incomplete",
+    "collar_drape": "Three-second native GPU surface FEM and Fabric rendering completed in batch009. All cloth fell onto the table (z 0.7481\u20130.8179 m); plain neck needs realistic shoulder/collar support. No settled task reset or knot success.",
+    "evidence_batch": "native-batch-009",
+    "report": "tie-collar/probe.json"
   },
   "demo": {
     "status": "not_implemented"
@@ -47,27 +49,34 @@
   ],
   "source_sha256": {
     "ENVIRONMENT.json": "894a573dafa0d1ef4380e51a3e61f984e80cbbcfdf4988d3b1cc96e2f9eeb16e",
-    "JUDGING.md": "bb8f8c787b5e6628fd5bb35883d671239fa533327307451ca5d3426fdbf3ce6a",
+    "JUDGING.md": "4ef2abf693410d763fafdf7ec612d234c8f6f9f393d50bff3a791372ce2c0260",
     "LICENSE": "a71ddeb012ff1961bf252489309b565ffd0443632819aa9c88eef4377f9f9f7a",
-    "README.md": "d8d429168565965450b5c057b9d6428d732f06de51abd9792d061e4c09c1f6cf",
+    "MOTION_PLAN.md": "80507bbbb09fa1058683aec0cc62b68afa572e9f2e49bd0e54b53311f6a1c988",
+    "README.md": "3bb71ae40c11a88044df895e6a73d25eb877b8c37882325731c4019e2c16be26",
     "arena_cloth.py": "d6c4574249c9eb9a5772288c7ce0f03afccc5b8637f44ec923c7522ea4f387c6",
     "arena_props.py": "5f2b6d710f1e8144d99a8c956db134b68b0e37996f4171415019a82ad67be9c4",
-    "cloth_mesh.py": "44a8d8027e7694edfae1b4d82eefad0add3f809899c61913ba3c6b0b7cea410c",
+    "cloth_mesh.py": "8fd32902163bf9429ec524d1a619d1640dca979f43f68307444530e52a548bde",
+    "fixed_motion.py": "ee3fbcaa7f826ee4eceff5e528e8302e71eba3c513ca2da145ab488ca3d1489c",
     "fixture_clearance.py": "a872e448c64c1d2d9acbb0b89d9b39e1c7ec0bcdbf2f2b890175ca15aab96fc0",
-    "layout.py": "18bf90899ad1fc6ce10a67399b667046c443d1890017bd5bf6c1f2ed4e2235ad",
-    "native_cloth.py": "1cf8812ced06fb4a75fb2ea231bb4a780aff07a44298ea235a5cd0d094d7506b",
-    "probe.py": "79e2d2f08ffac9063d1a9bdcf785c43221e0f31d47d7a065068e549c8efac5b1",
-    "run.py": "8f7dbb05bf3b853b71fdc518f1860aa74e300074d2a21c62ffa0471c5554f0c7",
-    "scoring.py": "e38ba3b60cd283a432529e76757ee6d93b4223b53fa7cb45982fd66bac56d85a",
-    "task.draft.json": "7951d461f96e0ebcd7b122f8a27c2741eb9ce1bff0b8a7bfba18554933524f0e",
+    "interpret_probe.py": "84fdacdec07dddc982e7e5883c51e31f1e669cc79aaccd575bc153c943b976b4",
+    "judge.py": "c6c7cfcc493010a6f3508f4146fbdedee33b35d13ebfb156779d1c092a486ded",
+    "layout.py": "90ba4cf640c28f39257bd6d2f49b27bc169500748c44f0d337e7a2273ee424bf",
+    "native_cloth.py": "c87884160c87d0ddc8295eaed48fb49a705823ab20b069506d9716c523191530",
+    "probe.py": "b264946e5ea402f9bf2f4f795186ca6ec8de9a748215c05e20e6fb1656163852",
+    "probe_capture.py": "55ec10d9bb92a177751d790d16bfc9ef6a4cd08d4934735d1c223548ef8adb67",
+    "probe_runtime.py": "1092025de87ae5168b0d0c519388b6cec65d6ebddf756f5407b7ef4c3b6dbd11",
+    "reset_asset.py": "ce170a1d31a12f628140ccd4cf0c3723fb47fa264b0b74c27355bc0858c3ac2d",
+    "run.py": "e08f0a49504146531e807d2250c6057067771993908187e5f54611c81057172c",
+    "scoring.py": "6246958397ca8936182f6b1cdc8b9aef423f0ba20f8871a2129d38ddbc481ce7",
+    "task.draft.json": "8f04ba2259a15076b9a8059778eb8cbd90cefa9dc4abb2471c21e3ef40362a45",
     "task.py": "6e93d3c714586b03f577142d645281e9c07b57cc834a2696cb3db560df498706",
-    "test_local.py": "ee6ec138e5b2b4ff5daedaeffc7164b33a5462bc88cf79ffe5ab72068e45ba17"
+    "test_local.py": "e06afeb1efc1fd79f8cfc8fceb54cb3eb2c874be8c5f0ae089570fa9cf65de6e"
   },
   "implementation_checkpoint": {
-    "native_surface_cloth": "Implemented; native API/source checked, execution untested",
+    "native_surface_cloth": "Native GPU surface FEM and Fabric rendering exercised in standalone diagnostics; garment/peg or knot interaction remains unvalidated.",
     "arena_scene": "Full declared station scene registered with native deformable asset and custom fixtures; execution untested",
     "passive_pegs": "Not applicable",
-    "runner": "Guarded bounded no-op YAM smoke recorder with explicit raw environment reset, reset physics-step provenance, source snapshots, normal camera video, native-node/robot/prop assessor traces; execution untested, no success claim",
+    "runner": "Bounded smoke and fixed-joint motion-probe with camera-only controller interface and assessor-only node traces; native YAM startup remains unvalidated.",
     "controller": "No observation-based successful task controller yet",
     "judging": "Evidence-bound manual photo/video/ruler rubric with adversarial local tests; final thresholds need runtime validation"
   }

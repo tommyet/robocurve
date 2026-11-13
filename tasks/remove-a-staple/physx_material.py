@@ -1,4 +1,4 @@
-"""Lazy native PhysX revolute-drive material hook (not yet runtime validated).
+"""Native PhysX plastic-hinge hook; one-leg coupon controls passed.
 
 Call from the same before-substep hook used by accepted cordkit/filekit tasks.
 The scene must supply the MEASURED joint angle, radians relative to its authored

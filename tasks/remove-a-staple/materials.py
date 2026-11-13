@@ -153,8 +153,11 @@ def clinched_staple_centerline(crown_width_m=.0128, leg_length_m=.006,
         positive(name, v)
     radius = .00035
     above = .00015
-    below = -(paper_stack_m+.00015)
-    vertical = above-below
+    # Bend begins below the lower sheet; the old draft began the quarter
+    # circle at the top sheet and cut diagonally through the paper stack.
+    bend_start = -(paper_stack_m+.00005)
+    below = bend_start-radius
+    vertical = above-bend_start
     horizontal = leg_length_m-vertical-math.pi*radius/2
     if horizontal <= 0:
         raise ValueError("Leg is too short for this stack and clinch radius")

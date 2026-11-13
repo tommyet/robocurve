@@ -1,13 +1,14 @@
 # Draft judging
 
 Use a top photo, a low side photo and a millimetre ruler. Judge the finished icing,
-not the nozzle path or the number of squeezes. Numerical thresholds still need a
-real reference decoration and a full robot demonstration.
+not the nozzle path or the number of squeezes. A full robot demonstration and
+agreement between its photographs and automatic measurements remain pending.
 
 The marked section is 90 mm long. Its permitted strip extends 9 mm on either
 side and 2 mm beyond each end mark. A shell has a head 6–16 mm wide and 2.5–8 mm
-high, followed by a tail at least 0.5 mm high, no wider than 65% of its head and
-no higher than 65% of its head. Head-to-tail motion can vary; shells have no fixed
+high. Within 4–22 mm after that head, its tail must include a section 1 mm or more
+wide, at least 0.5 mm high, at most 3 mm high, and no wider or higher than 65% of
+the head. A finer point beyond this section is allowed. Head-to-tail motion can vary; shells have no fixed
 centres. Fine ridges from the star tip must be visible for full credit.
 
 Measure the total marked length occupied by valid head-and-tail shapes:

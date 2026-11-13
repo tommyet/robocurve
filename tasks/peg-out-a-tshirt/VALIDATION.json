@@ -1,12 +1,12 @@
 {
   "status": "development_not_submission_ready",
-  "checked_date": "2026-11-12",
+  "checked_date": "2026-11-13",
   "local_checks": {
-    "geometry_and_rubric_tests": 7,
+    "geometry_and_rubric_tests": 8,
     "result": "passed",
     "command": ".venv/bin/python -m unittest discover -s tasks/peg-out-a-tshirt -p test_local.py -v",
     "scope": "CPU geometry and synthetic evidence-rubric cases only; no physics or task-success claim",
-    "python_source_files": 10,
+    "python_source_files": 18,
     "syntax_and_json_check": {
       "result": "passed",
       "command": ".venv/bin/python tasks/peg-out-a-tshirt/run.py --check-only",
@@ -19,8 +19,13 @@
     }
   },
   "native_gpu_checks": {
-    "status": "not_run",
-    "reason": "Shared GPU balance/access unavailable at this development checkpoint"
+    "status": "mechanism_incomplete",
+    "drape": "One-second native drape in batch007 completed; zero final triangle/rail penetration, final maximum edge strain 0.05926, late maximum speed 0.1843 m/s (not settled). Three-second rendered drape in batch009 completed with 31 nonblank frames.",
+    "peg_controls": "Batch009 clamp, open-clamp, task-layout and YAM initialization failed at peg xform quaternion precision. Precision corrected; rerun pending.",
+    "evidence_batches": [
+      "native-batch-007",
+      "native-batch-009"
+    ]
   },
   "demo": {
     "status": "not_implemented"
@@ -43,26 +48,36 @@
   ],
   "source_sha256": {
     "ENVIRONMENT.json": "894a573dafa0d1ef4380e51a3e61f984e80cbbcfdf4988d3b1cc96e2f9eeb16e",
-    "JUDGING.md": "41c9d146bf7a5a75426b865e31ae0bce6d8ee4de075a406b39748f57dfbe1e16",
+    "JUDGING.md": "5c25da08d83fbe546add001f2f0f6fd76afbc87413b957cf84e662be7afc4c07",
     "LICENSE": "a71ddeb012ff1961bf252489309b565ffd0443632819aa9c88eef4377f9f9f7a",
-    "README.md": "72b6a4765f6c3b82e5f4f97fc29b0c3ce27d3de8062aabd29c79bc1455e9ce88",
+    "MOTION_PLAN.md": "7ef67b45b8b15135d9b108b3682c343577c9448fab084bd76450a5e7e5cb8587",
+    "README.md": "4c1411eb0ae18c8c7abbe2cb09151a91a8f936d87eb75a5f1a9298ea1459af6c",
     "arena_cloth.py": "d6c4574249c9eb9a5772288c7ce0f03afccc5b8637f44ec923c7522ea4f387c6",
-    "arena_props.py": "5f2b6d710f1e8144d99a8c956db134b68b0e37996f4171415019a82ad67be9c4",
+    "arena_props.py": "f911f52c69e6afbab20f8f264cdef0534cc1f35a67452594c952c5c93dc74963",
+    "audit_motion.py": "38e6a8133f31ae487f35fd9512e76ce25fbd4d4c63782fc4f2d78c11a7968a44",
     "cloth_mesh.py": "44a8d8027e7694edfae1b4d82eefad0add3f809899c61913ba3c6b0b7cea410c",
-    "native_cloth.py": "1cf8812ced06fb4a75fb2ea231bb4a780aff07a44298ea235a5cd0d094d7506b",
-    "probe.py": "e2475344f5ef09b48a004c3aa08b1b65a0e447836f47bea019c3e286ddbfef8d",
-    "run.py": "8f7dbb05bf3b853b71fdc518f1860aa74e300074d2a21c62ffa0471c5554f0c7",
-    "scene.py": "4540d1bce2b578bc7fac75dc9bbc2a69035280a2bcbdf7ede229ca8f7954dfb6",
-    "scoring.py": "6b744179b54b2093989cadd7b802f478d2c1bf19c2269d8c5ae8238db919418c",
-    "task.draft.json": "981d74485944a5e5d968f45976fb3a5c444dc1064b13c0f21a60269e39e4b554",
-    "task.py": "554d878b392a5e12c6fadf3afaa4af3be226cd2d9a9897d4354335398490ec90",
-    "test_local.py": "fa281fadc06299433f119a1b018e30bac181f3988a8828d3ff730dc81059f3b3"
+    "fixed_motion.py": "25bf79136af88a7414806b06dc9c515ec5638eaeddd0c5ec62d4b0feff7fef45",
+    "fixture_clearance.py": "a872e448c64c1d2d9acbb0b89d9b39e1c7ec0bcdbf2f2b890175ca15aab96fc0",
+    "grasp-plan.json": "83b7b2a4fd4325fee6179c52df897419c8e9acd4c8a58daa91e4a69ec1566975",
+    "interpret_probe.py": "84fdacdec07dddc982e7e5883c51e31f1e669cc79aaccd575bc153c943b976b4",
+    "judge.py": "c6c7cfcc493010a6f3508f4146fbdedee33b35d13ebfb156779d1c092a486ded",
+    "native_cloth.py": "c87884160c87d0ddc8295eaed48fb49a705823ab20b069506d9716c523191530",
+    "probe.py": "c144333d67dd134337da7ef450ac089bff1c1cd5dec54f4e35e4dba4601ba994",
+    "probe_capture.py": "55ec10d9bb92a177751d790d16bfc9ef6a4cd08d4934735d1c223548ef8adb67",
+    "probe_runtime.py": "1092025de87ae5168b0d0c519388b6cec65d6ebddf756f5407b7ef4c3b6dbd11",
+    "reset_asset.py": "ce170a1d31a12f628140ccd4cf0c3723fb47fa264b0b74c27355bc0858c3ac2d",
+    "run.py": "cba31f80aa5e9e8a238ad9af2e90a15f6b4d3a0c3b9d839fea7e7d04c1c66d77",
+    "scene.py": "01a284442b982890b794755945e3769cac293dbc1ce8b67d3934920bd77ec13f",
+    "scoring.py": "12ad7d87302c5b9b31f1e9241f91a74904f02e017bdcd05e4cb14b5a23d095e1",
+    "task.draft.json": "1d5cded5f04af810d00eddb159581b4fe42b4c2243928a2f02eb34ca23a8b75d",
+    "task.py": "f436cf9778cac36d52b69b013079e96a5721bc6a00ce86cb5688c7ca6b486ecb",
+    "test_local.py": "9a0eb627d4f049f00f89d9bc6d5f0e26607e2af9239ebd739250ad94991b6229"
   },
   "implementation_checkpoint": {
-    "native_surface_cloth": "Implemented; native API/source checked, execution untested",
+    "native_surface_cloth": "Native GPU surface FEM and Fabric rendering exercised in standalone diagnostics; garment/peg or knot interaction remains unvalidated.",
     "arena_scene": "Full declared station scene registered with native deformable asset and custom fixtures; execution untested",
     "passive_pegs": "Two dynamic rigid jaws per peg, passive revolute spring and collection reset; execution untested",
-    "runner": "Guarded bounded no-op YAM smoke recorder with explicit raw environment reset, reset physics-step provenance, source snapshots, normal camera video, native-node/robot/prop assessor traces; execution untested, no success claim",
+    "runner": "Bounded smoke and fixed-joint motion-probe with camera-only controller interface and assessor-only node traces; native YAM startup remains unvalidated.",
     "controller": "No observation-based successful task controller yet",
     "judging": "Evidence-bound manual photo/video/ruler rubric with adversarial local tests; final thresholds need runtime validation"
   }

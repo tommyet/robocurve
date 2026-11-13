@@ -2,7 +2,7 @@
 import unittest
 import numpy as np
 from cloth_mesh import tshirt,edge_strain
-from scene import initial_layout,TABLE
+from scene import initial_layout,TABLE,support_geometry
 from scoring import score
 
 
@@ -18,18 +18,25 @@ class Geometry(unittest.TestCase):
         self.assertLess(np.abs(edge_strain(m.rest,p,m.faces)).max(),1e-10)
         self.assertGreater(p[:,2].min(),TABLE+.001)
 
+    def test_support_clearance_checks_triangles_not_only_nodes(self):
+        from fixture_clearance import fixture_intersections
+        mesh=tshirt(); p=initial_layout(mesh)
+        self.assertFalse(any(fixture_intersections(p,mesh.faces,support_geometry(),margin=.001).values()))
+        lowered=p.copy();lowered[:,2]-=.005
+        self.assertTrue(any(fixture_intersections(lowered,mesh.faces,support_geometry(),margin=0.).values()))
+
 
 class Judging(unittest.TestCase):
     def record(self):
         return dict(evidence_sha256={k:'0'*64 for k in ('released_video','left_jaw_photo','right_jaw_photo')},
                     integrity_checked=True,intact=True,unsupported_hold_s=5.,minimum_clearance_mm=20.,
-                    retained_pegs=[True,True],peg_separation_mm=200.)
+                    retained_pegs=[True,True],peg_separation_mm=200.,supported_only_by_line_and_pegs=True)
     def test_visible_retention_drives_credit(self):
         j=self.record(); self.assertEqual(score(j),1.)
         j['retained_pegs']=[True,False];self.assertEqual(score(j),.5)
         j['retained_pegs']=[False,False];self.assertEqual(score(j),0.)
     def test_held_or_resting_garment_fails(self):
-        for field,value in [('unsupported_hold_s',4.99),('minimum_clearance_mm',19.99),('intact',False)]:
+        for field,value in [('unsupported_hold_s',4.99),('minimum_clearance_mm',19.99),('intact',False),('supported_only_by_line_and_pegs',False)]:
             j=self.record();j[field]=value;self.assertEqual(score(j),0.)
     def test_missing_integrity_or_evidence_cannot_score(self):
         for field in ('integrity_checked','evidence_sha256'):

@@ -3,13 +3,13 @@ import math
 
 
 def assess(*,released_stitches,minimum_patch_gap_m,blade_crossed_fabric,
-           maximum_new_tear_m,complete,thread_bridge_present,tools_clear):
+           maximum_new_tear_m,complete,thread_bridge_present,tools_clear,material_valid=False):
     vals=[minimum_patch_gap_m,maximum_new_tear_m]
     if (type(released_stitches) is not int or not 0<=released_stitches<=6
             or not all(type(v) in (float,int) and math.isfinite(v) and v>=0 for v in vals)
-            or not all(type(v) is bool for v in (blade_crossed_fabric,complete,thread_bridge_present,tools_clear))):
+            or not all(type(v) is bool for v in (blade_crossed_fabric,complete,thread_bridge_present,tools_clear,material_valid))):
         return {'score':0.,'reason':'invalid measurements'}
-    if not complete or blade_crossed_fabric or maximum_new_tear_m>.002:
+    if not complete or not material_valid or blade_crossed_fabric or maximum_new_tear_m>.002:
         return {'score':0.,'reason':'incomplete evidence or fabric damage'}
     if released_stitches==6 and minimum_patch_gap_m>=.030 and not thread_bridge_present and tools_clear:
         return {'score':1.,'reason':'both intact patches separated by at least 30 mm'}

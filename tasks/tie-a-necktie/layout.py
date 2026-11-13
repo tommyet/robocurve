@@ -49,7 +49,7 @@ def initial_layout(mesh=None):
     """
     mesh=necktie() if mesh is None else mesh
     r=.065
-    arc_start=.65
+    arc_start=.58
     arc_end=arc_start+np.pi*r
     current=np.empty_like(mesh.rest)
     for row in mesh.markers['row_nodes']:
@@ -67,7 +67,7 @@ def initial_layout(mesh=None):
 
 def author_collar(stage,path='/World/Collar'):
     """Rigid collar form, with a 110 mm neck and two shirt-collar points."""
-    from pxr import Gf,UsdGeom,UsdPhysics
+    from pxr import Gf,UsdGeom,UsdPhysics,PhysxSchema
     from native_cloth import author_box
     fixtures=fixture_geometry()
     neck=fixtures['Neck']
@@ -78,6 +78,14 @@ def author_collar(stage,path='/World/Collar'):
     cylinder.AddTranslateOp().Set(Gf.Vec3d(*neck['center']))
     cylinder.CreateDisplayColorAttr([Gf.Vec3f(.82,.80,.75)])
     UsdPhysics.CollisionAPI.Apply(cylinder.GetPrim())
+    collision=PhysxSchema.PhysxCollisionAPI.Apply(cylinder.GetPrim())
+    collision.CreateContactOffsetAttr(.0005)
+    collision.CreateRestOffsetAttr(0.)
+    # A small painted centre mark is visual only; it does not alter contact.
+    mark=UsdGeom.Sphere.Define(stage,path+'/CentreMark')
+    mark.CreateRadiusAttr(.0015)
+    mark.AddTranslateOp().Set(Gf.Vec3d(NECK[0]-NECK_RADIUS-.0001,0.,NECK[2]))
+    mark.CreateDisplayColorAttr([Gf.Vec3f(.08,.08,.08)])
     # Central support stays inside the neck footprint, clear of the rear drape.
     for name,spec in fixtures.items():
         if name=='Neck':continue

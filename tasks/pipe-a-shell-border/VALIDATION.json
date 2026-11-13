@@ -1,29 +1,33 @@
 {
   "status": "development_not_submission_ready",
-  "checked_utc": "2026-11-12",
-  "cpu_tests_passed": 14,
-  "native_simulator_run": false,
+  "checked_utc": "2026-11-13",
+  "cpu_tests_passed": 20,
+  "native_simulator_run": true,
   "robot_demo_run": false,
   "dream_run": false,
   "media_uploaded": false,
   "scores": null,
-  "paid_compute_used_usd": 0.0,
+  "paid_compute_used_usd": null,
   "remaining_gates": [
-    "Native passive-plunger and nozzle contact unexecuted",
-    "No demonstrated shell shape or star-ridge preservation",
-    "Complete robot/material collision and reset not validated",
-    "Draft scorer lacks physical/photo agreement",
-    "Robot demo, Dream, media and real recipe/dispenser reference absent"
+    "Passive native pressure controls and 20-action YAM ready preview pass; robot pickup/pressure control pending",
+    "Offline pressure-spreading deposits have rounded heads and tails; native ridge retention and robot manipulation pending",
+    "Non-nozzle collider audit completed the ready preview; manipulation and damage rejection still need evidence",
+    "Fixed pickup and first-press plans pass CPU IK; no native retention or press evidence yet",
+    "Robot full-score demo, Dream, media and photo agreement absent"
   ],
   "sources_sha256": {
-    "material.py": "863f1bcf7f8f8493f912af3fab3deb3156e45a45da2ef23082630ff9c89b1242",
-    "native.py": "57a82d80b39eb50bba35a6306c0a5c38c5ce94d7b07b714b82d3053383cf6a5c",
-    "preview_yam.py": "b180a4f2d46f670d9f3f0ed4633dddd3772c65b05d657327b673bcfd5d954b8b",
+    "contact_audit.py": "480e538193264fa16ad2cf640aa87c61d7eb881c2d9c076905d9eee98ebf1105",
+    "material.py": "0e74b6efca877cda5b470ea53f5b09a1fbb465912cdaa1ea7309c5a9d00b6e0b",
+    "native.py": "0fbf2bb36adb6b175b3a0cafff2c490c75c4b01698d97efde756036878e1f455",
+    "plan.py": "28ca395eb52a5b781f4f499e2b2078b93ffb0c2a57bf7f9a62f7745576f63f1b",
+    "preview_yam.py": "5d3f72cc3d59ca44b8f09e93986118f23ca7ee14501dc6e327ceaa150eb14ec2",
     "probe.py": "dc2421d3342eda2052d7340d10bbf856493ad5b30b121ad839fddda7c7a57c17",
-    "probe_native.py": "4ae085c9d2151b6df952a6e6f03f454022991f0e6e2267165eee15f1d1f021b9",
-    "scene.py": "2a2348ce361b8c1ba4894988f26126bf1972050dd8ab35fdbf961edb2139abad",
-    "scoring.py": "f6215455e67f481836d18b754607ae6334f9009e85f7d749212390f2ccb787f5",
-    "test_material.py": "bd738f10cd79bb7625908498ad8e3d0ba87a0fdda75759eb88750229dd0dd02e"
+    "probe_native.py": "1d5d47f963be39660c32dec7b626a26080d7d290da69cfc06e5e8e9f1945b4e8",
+    "probe_shell_shape.py": "3c7adab4072a8cd3e714724b4bbb81bb403297da2644fc6fe572a97e46cd38d4",
+    "review_views.py": "10f4baf1538ac832097c06eb462b5e27782cef5a6c6c06bf6926463e8e960c80",
+    "scene.py": "a339330f13e04878c8cc6981168feae2d0f91409b43a0647589388d6c7ea0bb4",
+    "scoring.py": "6da41134132c9d42bcfaa5458d51792ca59bfcb46ff896a2a90d591324024180",
+    "test_material.py": "217b848fe94d15ffb733750e093e5f0c00256e8f420ee58418e4c495b36a0421"
   },
   "cpu_probe": {
     "simulated_seconds": 1.500000000000022,
@@ -37,5 +41,7 @@
       "error_m3": -4.235164736271502e-22
     },
     "meaning": "one prescribed-motion material deposit, not robot or shell demonstration"
-  }
+  },
+  "compute_note": "Shared bounded native session; allocation recorded by batch orchestrator.",
+  "native_mechanism_evidence": "evidence/native-passive-2026-11-13.json"
 }

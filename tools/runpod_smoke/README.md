@@ -39,6 +39,15 @@ old separate Isaac 5.1 environment, desktop services, a Dream key or launchable
 autostart jobs. Dream client packages are installed solely to match the recorded
 environment and are never instantiated.
 
+The frozen `robomimic` commit is installed from a SHA-256-checked GitHub source
+archive rather than fetching its full Git history. `uv sync` keeps the frozen
+dependency graph but excludes that one package from its Git install; the archive
+is then installed without resolving dependencies again. Its constant package
+version, commit and archive hash are recorded in `installation.json`. This
+changes transport, not the selected source revision. A November 13 full-history
+fetch was slow enough to dominate setup, while the 55.5 MB exact-commit archive
+downloaded in 2.43 seconds on the same host.
+
 The diagnostic uses the existing die scene and bimanual YAM hardware. It raises
 the die's initial pose by 12 cm once, observes its gravity-driven fall and table
 contact, and commands a small smooth arm-yaw excursion with open grippers. All

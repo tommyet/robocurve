@@ -2,35 +2,58 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "Actual NumPy-only probes and unittest checks passed locally; native/robot checks not run.",
+  "cpu_checks": "21 CPU checks pass; native isolated ring responds but latest completed test is unstable.",
   "simulator_probe": null,
   "demo": null,
   "dream": null,
   "media": null,
-  "paid_compute_usd": 0,
   "blocking_items": [
-    "Native scene/contact/reset wrapper and measured-angle thread coupling need runtime validation",
-    "Thread friction/creep, physical stripping/rim damage and spoke buckling model or explicit failure domain",
-    "Selected real prop and calibrated force/deflection response and judging limits",
-    "YAM reach, full trial runner, successful demo, Dream baseline and final media"
+    "Runtime stability of curved-sector native scene, thread coupling and YAM bridge",
+    "Contact-driven wrench rotation, creep, slip and convergence checks",
+    "Practical integrity judging and full released-wheel spin measurement",
+    "Collision-safe YAM manipulation, full-score demo, Dream baseline and final media"
   ],
   "status": "development_not_submission_ready",
   "native_probe": {
     "entry_point": "native_probe.py",
-    "status": "authored_not_run",
-    "runtime_compatibility_verified": false
+    "status": "responds_but_unstable",
+    "runtime_compatibility_verified": true,
+    "last_observation": {
+      "physics_dt_s": 0.0001,
+      "seconds": 4,
+      "velocity_iterations": 4,
+      "bounded_small_response": false,
+      "post_adjustment_displacement_mm": 49.0,
+      "final_0p2s_drift_mm": 84.8,
+      "next_check": "A single D6 spring transfers rest-length changes accurately but shows static-load bias; compare25\u00b5s to100\u00b5s before another full ring run."
+    }
   },
-  "cpu_tests_passed": 19,
+  "cpu_tests_passed": 21,
   "native_scene": {
     "authoring_entry_point": "wheel_scene.build_scene(stage, root)",
     "material_callback": "NativeThreadCoupler.before_step before every native substep",
     "status": "authored_not_run",
-    "geometry": "free hub, stand, compliant rim, two-half tension-only steel spokes, rotating square nipples, physical open-slot wrench",
+    "geometry": "free hub, stand, compliant curved-sector rim, two-half tension-only steel spokes, rotating square nipples, physical open-slot wrench",
     "limitations": [
-      "No YAM trial runner or policy yet",
-      "Native capped damping approximates thread friction; static creep and work balance unvalidated",
+      "YAM asset/reset bridge and ready-pose camera preview authored, not runtime validated; no manipulation policy yet",
+      "Native capped damping approximates thread friction; static creep and work balance unvalidated; DirectGPU tensor bridge authored.",
       "Thread travel outside +/-3 turns invalidates model scope; no stripping/plastic rim damage model yet",
       "All native contact and reset coupling unvalidated"
-    ]
+    ],
+    "preview_entry_point": "preview_yam.py --out OUTPUT --steps 40 --physics-hz 1000",
+    "wrench_contact_diagnostic": "wrench_contact_probe.py --out OUTPUT --dt .001 --turn-deg 90; explicit kinematic fixture, not robot demo"
+  },
+  "judging": "v2: pointer/feeler-gauge runout and dish; mechanical spoke tensiometer, all32 spokes 400\u20131000N for this fixture; no separate hanging-weight trials.",
+  "single_spring_probe": {
+    "entry_point": "spring_probe.py",
+    "status": "constitutive_check_failed",
+    "evidence": "evidence/native-spring-008.json",
+    "sha256": "d0eeb2a1fc421dc25b0ffe6089e30f2a4a56288f83a57f9badd2b1c49a102ffd",
+    "axis": "distance",
+    "dt": 0.0001,
+    "baseline_error_m": -4.579003143814764e-05,
+    "final_error_m": -4.568786812333969e-05,
+    "observed_displacement_m": -0.00011339783668518066,
+    "constitutive_pass": false
   }
 }

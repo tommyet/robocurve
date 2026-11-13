@@ -60,6 +60,69 @@ developers and their agents, not a competition submission document.
 
 ## Review findings
 
+### 2026-11-13 — six-task continuation and first material-test session
+
+- User authorized developing all six drafts through review readiness, keeping
+  upstream PRs pending their review. Work starts from fresh `origin/main` on
+  `codex/six-task-completion-2026-11-13`; the approximate $18 batch target remains.
+- Read-only refresh at 00:43 UTC covered 510 board entries (92 accepted,
+  216 pending, 112 rejected/revision entries and 90 pilots) and 1,841 all-state
+  PRs. Five selected objectives had no direct match in the search. Clothes
+  pegging still has finally rejected #760, reviewed November 12 07:07 UTC,
+  with no appeal comment. Recheck the 48-hour claim/appeal status before any
+  submission. Title searches are a novelty screen, not a novelty guarantee.
+- The live category list uses **Societal relatability**, whereas older local
+  instructions still say Societal relevance. Use the live list for new tasks.
+  The linked v21 review prompt remains inaccessible (GitHub 404); the current
+  authenticated guide and public review feedback were available. Do not claim
+  to have read an inaccessible prompt.
+- Operator: repository agent. Restarting the old stopped Runpod Pod was
+  refused for unavailable GPU capacity; a follow-up GET confirmed `EXITED`.
+  One replacement RTX 6000 Ada was allocated at $1.09/hour at 00:45:59 UTC,
+  without persistent volumes, with a 45-minute local stop watchdog. This is
+  an active-session record; add the verified shutdown and measured costs after
+  completion. Private lifecycle/source/log records are under ignored
+  `artifacts/six-task-completion-2026-11-13/`. No Dream calls yet.
+- Installation optimization: fetching the exact locked robomimic commit as a
+  SHA-256-verified source archive took 2.43 seconds; the full-history Git fetch
+  had stalled for about 15 minutes. The bootstrap now excludes only robomimic
+  from the frozen `uv sync`, then installs that verified archive with
+  `--no-deps`. Its commit, archive hash and installed version are recorded in
+  the installation manifest. This preserves the source revision, not a claim
+  that every unrecorded transitive package is identical.
+- Bounded native tests established steel-leg plastic bending: residual angle
+  0.87567 rad with jaw contact, zero without contact, and 0.87322 rad at half
+  the timestep. This is a diagnostic coupon, not staple extraction evidence.
+  The passive icing plunger emitted 0.15870 ml under an 8 N test load and zero
+  under no load; flow stopped after release and mass balance closed. Shell
+  shape and full robot manipulation are separate outstanding checks.
+- Native surface-FEM probes need the GPU tensor pipeline as well as GPU
+  dynamics: `/physics/suppressReadback=true`, `/physics/cudaDevice=0`. GPU
+  nodal readback must follow at least one explicit physics step. Do not rely
+  on a successful process exit: this Isaac application can close with exit
+  zero after a Python exception. Read the result status, logs and physical
+  measurements. Legacy `World.reset()` failed to attach the stage in these
+  probes; the explicit cached-stage attach/simulate/fetch lifecycle works.
+- The shirt's three-second native drape produced 31 nonblank RGB frames; the
+  final image shows actual folded fabric around the rail, consistent with
+  nodal telemetry. Native Fabric rendering needs the extension enabled before
+  stage creation, its own stage attachment, and `force_update(0,0)` when the
+  timeline is stopped. Importing the legacy SimulationManager without loading
+  its extension failed; the Kit extension manager works directly. Quaternion
+  xform ops must explicitly request double precision when assigning `Gf.Quatd`.
+- Full native tests remain diagnostic. The plain neck cylinder let the entire
+  untied tie fall to the table, so a realistic collar/shoulder support is still
+  needed. The thicker seam thread passed one short contact probe but failed
+  another, so retention is not established. Thin paper contact/strain and the
+  native wheel's growing oscillation also remain unresolved. These failures
+  must not be hidden by a success score or an animated demonstration.
+- Cake integration cost fell after batching native rigid-body reads and
+  rendering only deposited icing triangles. A 340-action fixed pickup
+  trajectory then completed in 116.9 wall seconds with no unintended flow or
+  invalid material contacts. It is a pickup diagnostic, not a shell-border
+  demonstration. Every control action is independent of privileged object
+  state; measured poses feed only physics coupling and assessment.
+
 ### 2026-11-13 — Runpod Isaac/YAM compatibility test passed
 
 - The user authorized one short GPU compatibility test. The final probe passed

@@ -1,0 +1,3230 @@
+{
+  "schema": "native-staple-contact-probe-v1",
+  "complete": true,
+  "calibrated": false,
+  "evidence_type": "Native wire/kinematic-jaw contact coupon; no paper, extraction or robot evidence",
+  "dt": 0.0001,
+  "seconds": 1.0,
+  "samples": [
+    {
+      "step": 1,
+      "jaw_bottom_z_m": 0.0004999997039118777,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 51,
+      "jaw_bottom_z_m": 0.0004992299406655355,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 101,
+      "jaw_bottom_z_m": 0.0004969806184719806,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 151,
+      "jaw_bottom_z_m": 0.0004932539571406542,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 201,
+      "jaw_bottom_z_m": 0.0004880536344363651,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 251,
+      "jaw_bottom_z_m": 0.00048138478244977973,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 301,
+      "jaw_bottom_z_m": 0.00047325398253266865,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 351,
+      "jaw_bottom_z_m": 0.00046366925880290667,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 401,
+      "jaw_bottom_z_m": 0.00045264007022563735,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 451,
+      "jaw_bottom_z_m": 0.0004401773012784164,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 501,
+      "jaw_bottom_z_m": 0.0004262932512095464,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 551,
+      "jaw_bottom_z_m": 0.00041100162190020357,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 601,
+      "jaw_bottom_z_m": 0.00039431750434233557,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 651,
+      "jaw_bottom_z_m": 0.00037625736374567395,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 701,
+      "jaw_bottom_z_m": 0.0003568390232885606,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 751,
+      "jaw_bottom_z_m": 0.0003360816465286218,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 801,
+      "jaw_bottom_z_m": 0.0003140057184906513,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 851,
+      "jaw_bottom_z_m": 0.0002906330254503636,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 901,
+      "jaw_bottom_z_m": 0.0002659866334339698,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 951,
+      "jaw_bottom_z_m": 0.00024009086545479516,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1001,
+      "jaw_bottom_z_m": 0.00021297127750940137,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1051,
+      "jaw_bottom_z_m": 0.0001846546333569027,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1101,
+      "jaw_bottom_z_m": 0.00015516887810636802,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1151,
+      "jaw_bottom_z_m": 0.0001245431106383712,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1201,
+      "jaw_bottom_z_m": 9.280755488790926e-05,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1251,
+      "jaw_bottom_z_m": 5.9993530017028035e-05,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1301,
+      "jaw_bottom_z_m": 2.6133419506589746e-05,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1351,
+      "jaw_bottom_z_m": -8.739360802312518e-06,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1401,
+      "jaw_bottom_z_m": -4.4590395685755705e-05,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1451,
+      "jaw_bottom_z_m": -8.138430450065754e-05,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1501,
+      "jaw_bottom_z_m": -0.0001190847761012,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1551,
+      "jaw_bottom_z_m": -0.00015765460467354693,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1601,
+      "jaw_bottom_z_m": -0.00019705572645348896,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1651,
+      "jaw_bottom_z_m": -0.00023724925729078474,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1701,
+      "jaw_bottom_z_m": -0.00027819553102312105,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1751,
+      "jaw_bottom_z_m": -0.0003198541386218284,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1801,
+      "jaw_bottom_z_m": -0.00036218396807071015,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1851,
+      "jaw_bottom_z_m": -0.0004051432449386441,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1901,
+      "jaw_bottom_z_m": -0.0004486895736058972,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1951,
+      "jaw_bottom_z_m": -0.000492779979103486,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 2001,
+      "jaw_bottom_z_m": -0.0005373709495242855,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 2051,
+      "jaw_bottom_z_m": -0.0005824184789640216,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 2101,
+      "jaw_bottom_z_m": -0.0006278781109497929,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 2151,
+      "jaw_bottom_z_m": -0.0006737049823132366,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 2201,
+      "jaw_bottom_z_m": -0.0007198538674650617,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 2251,
+      "jaw_bottom_z_m": -0.0007662792230272465,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 2301,
+      "jaw_bottom_z_m": -0.0008129352327788521,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 2351,
+      "jaw_bottom_z_m": -0.0008597758528711022,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 2401,
+      "jaw_bottom_z_m": -0.0009067548572671016,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 2451,
+      "jaw_bottom_z_m": -0.0009538258833613564,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 2501,
+      "jaw_bottom_z_m": -0.001000942477734064,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 2551,
+      "jaw_bottom_z_m": -0.0010480581419950357,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 2601,
+      "jaw_bottom_z_m": -0.0010951263786719875,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 2651,
+      "jaw_bottom_z_m": -0.0011421007370979377,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 2701,
+      "jaw_bottom_z_m": -0.0011889348592524014,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 2751,
+      "jaw_bottom_z_m": -0.0012355825255111652,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 2801,
+      "jaw_bottom_z_m": -0.0012819977002594726,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 2851,
+      "jaw_bottom_z_m": -0.001328134577323619,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 2901,
+      "jaw_bottom_z_m": -0.001373947625176114,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 2951,
+      "jaw_bottom_z_m": -0.001419391631869804,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 3001,
+      "jaw_bottom_z_m": -0.0014644217496566042,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 3051,
+      "jaw_bottom_z_m": -0.001508993539246811,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 3101,
+      "jaw_bottom_z_m": -0.0015530630136653158,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 3151,
+      "jaw_bottom_z_m": -0.0015965866816614396,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 3201,
+      "jaw_bottom_z_m": -0.0016395215906295463,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 3251,
+      "jaw_bottom_z_m": -0.0016818253689980796,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 3301,
+      "jaw_bottom_z_m": -0.0017234562680451854,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 3351,
+      "jaw_bottom_z_m": -0.0017643732030996648,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 3401,
+      "jaw_bottom_z_m": -0.0018045357940865798,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 3451,
+      "jaw_bottom_z_m": -0.0018439044053775154,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 3501,
+      "jaw_bottom_z_m": -0.001882440184906156,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 3551,
+      "jaw_bottom_z_m": -0.0019201051025105895,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 3601,
+      "jaw_bottom_z_m": -0.0019568619874644803,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 3651,
+      "jaw_bottom_z_m": -0.0019926745651600913,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 3701,
+      "jaw_bottom_z_m": -0.002027507492906942,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 3751,
+      "jaw_bottom_z_m": -0.0020613263948107766,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 3801,
+      "jaw_bottom_z_m": -0.0020940978956984213,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 3851,
+      "jaw_bottom_z_m": -0.0021257896540550513,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 3901,
+      "jaw_bottom_z_m": -0.002156370393941361,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 3951,
+      "jaw_bottom_z_m": -0.0021858099358591405,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 4001,
+      "jaw_bottom_z_m": -0.002214079226534796,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 4051,
+      "jaw_bottom_z_m": -0.0022411503675914216,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 4101,
+      "jaw_bottom_z_m": -0.0022669966430811355,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 4151,
+      "jaw_bottom_z_m": -0.002291592545850486,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 4201,
+      "jaw_bottom_z_m": -0.0023149138027129404,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 4251,
+      "jaw_bottom_z_m": -0.0023369373984035843,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 4301,
+      "jaw_bottom_z_m": -0.0023576415982924123,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 4351,
+      "jaw_bottom_z_m": -0.0023770059698337816,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 4401,
+      "jaw_bottom_z_m": -0.0023950114027308706,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 4451,
+      "jaw_bottom_z_m": -0.0024116401277952328,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 4501,
+      "jaw_bottom_z_m": -0.002426875734482838,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 4551,
+      "jaw_bottom_z_m": -0.002440703187089304,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 4601,
+      "jaw_bottom_z_m": -0.0024531088395883176,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 4651,
+      "jaw_bottom_z_m": -0.002464080449098612,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 4701,
+      "jaw_bottom_z_m": -0.0024736071879662225,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 4751,
+      "jaw_bottom_z_m": -0.002481679654450061,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 4801,
+      "jaw_bottom_z_m": -0.0024882898820003108,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 4851,
+      "jaw_bottom_z_m": -0.0024934313471204404,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 4901,
+      "jaw_bottom_z_m": -0.0024970989758051143,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 4951,
+      "jaw_bottom_z_m": -0.002499289148547618,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 5001,
+      "jaw_bottom_z_m": -0.002499999703911878,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 5051,
+      "jaw_bottom_z_m": -0.002499229940665536,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 5101,
+      "jaw_bottom_z_m": -0.002496980618471981,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 5151,
+      "jaw_bottom_z_m": -0.0024932539571406545,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 5201,
+      "jaw_bottom_z_m": -0.002488053634436365,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 5251,
+      "jaw_bottom_z_m": -0.00248138478244978,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 5301,
+      "jaw_bottom_z_m": -0.002473253982532669,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 5351,
+      "jaw_bottom_z_m": -0.002463669258802907,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 5401,
+      "jaw_bottom_z_m": -0.0024526400702256377,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 5451,
+      "jaw_bottom_z_m": -0.0024401773012784162,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 5501,
+      "jaw_bottom_z_m": -0.0024262932512095466,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 5551,
+      "jaw_bottom_z_m": -0.0024110016219002035,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 5601,
+      "jaw_bottom_z_m": -0.0023943175043423352,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 5651,
+      "jaw_bottom_z_m": -0.002376257363745674,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 5701,
+      "jaw_bottom_z_m": -0.00235683902328856,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 5751,
+      "jaw_bottom_z_m": -0.0023360816465286217,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 5801,
+      "jaw_bottom_z_m": -0.002314005718490652,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 5851,
+      "jaw_bottom_z_m": -0.0022906330254503643,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 5901,
+      "jaw_bottom_z_m": -0.00226598663343397,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 5951,
+      "jaw_bottom_z_m": -0.0022400908654547956,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 6001,
+      "jaw_bottom_z_m": -0.002212971277509402,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 6051,
+      "jaw_bottom_z_m": -0.002184654633356903,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 6101,
+      "jaw_bottom_z_m": -0.0021551688781063683,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 6151,
+      "jaw_bottom_z_m": -0.0021245431106383713,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 6201,
+      "jaw_bottom_z_m": -0.0020928075548879094,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 6251,
+      "jaw_bottom_z_m": -0.002059993530017028,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 6301,
+      "jaw_bottom_z_m": -0.00202613341950659,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 6351,
+      "jaw_bottom_z_m": -0.001991260639197688,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 6401,
+      "jaw_bottom_z_m": -0.001955409604314245,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 6451,
+      "jaw_bottom_z_m": -0.0019186156954993428,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 6501,
+      "jaw_bottom_z_m": -0.0018809152238988,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 6551,
+      "jaw_bottom_z_m": -0.0018423453953264534,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 6601,
+      "jaw_bottom_z_m": -0.0018029442735465113,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 6651,
+      "jaw_bottom_z_m": -0.0017627507427092149,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 6701,
+      "jaw_bottom_z_m": -0.001721804468976879,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 6751,
+      "jaw_bottom_z_m": -0.001680145861378172,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 6801,
+      "jaw_bottom_z_m": -0.0016378160319292898,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 6851,
+      "jaw_bottom_z_m": -0.0015948567550613554,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 6901,
+      "jaw_bottom_z_m": -0.0015513104263941025,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 6951,
+      "jaw_bottom_z_m": -0.0015072200208965133,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 7001,
+      "jaw_bottom_z_m": -0.001462629050475716,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 7051,
+      "jaw_bottom_z_m": -0.0014175815210359785,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 7101,
+      "jaw_bottom_z_m": -0.0013721218890502078,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 7151,
+      "jaw_bottom_z_m": -0.0013262950176867645,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 7201,
+      "jaw_bottom_z_m": -0.0012801461325349396,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 7251,
+      "jaw_bottom_z_m": -0.0012337207769727535,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 7301,
+      "jaw_bottom_z_m": -0.0011870647672211484,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 7351,
+      "jaw_bottom_z_m": -0.0011402241471288983,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 7401,
+      "jaw_bottom_z_m": -0.0010932451427328991,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 7451,
+      "jaw_bottom_z_m": -0.0010461741166386434,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 7501,
+      "jaw_bottom_z_m": -0.000999057522265936,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 7551,
+      "jaw_bottom_z_m": -0.0009519418580049644,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 7601,
+      "jaw_bottom_z_m": -0.000904873621328013,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 7651,
+      "jaw_bottom_z_m": -0.0008578992629020635,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 7701,
+      "jaw_bottom_z_m": -0.0008110651407475986,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 7751,
+      "jaw_bottom_z_m": -0.0007644174744888348,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 7801,
+      "jaw_bottom_z_m": -0.0007180022997405279,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 7851,
+      "jaw_bottom_z_m": -0.0006718654226763822,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 7901,
+      "jaw_bottom_z_m": -0.0006260523748238855,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 7951,
+      "jaw_bottom_z_m": -0.0005806083681301956,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 8001,
+      "jaw_bottom_z_m": -0.0005355782503433954,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 8051,
+      "jaw_bottom_z_m": -0.0004910064607531893,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 8101,
+      "jaw_bottom_z_m": -0.0004469369863346836,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 8151,
+      "jaw_bottom_z_m": -0.0004034133183385603,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 8201,
+      "jaw_bottom_z_m": -0.0003604784093704537,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 8251,
+      "jaw_bottom_z_m": -0.0003181746310019219,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 8301,
+      "jaw_bottom_z_m": -0.00027654373195481487,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 8351,
+      "jaw_bottom_z_m": -0.00023562679690033582,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 8401,
+      "jaw_bottom_z_m": -0.00019546420591342098,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 8451,
+      "jaw_bottom_z_m": -0.000156095594622486,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 8501,
+      "jaw_bottom_z_m": -0.00011755981509384392,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 8551,
+      "jaw_bottom_z_m": -7.989489748941065e-05,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 8601,
+      "jaw_bottom_z_m": -4.313801253552022e-05,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 8651,
+      "jaw_bottom_z_m": -7.325434839909281e-06,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 8701,
+      "jaw_bottom_z_m": 2.750749290694206e-05,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 8751,
+      "jaw_bottom_z_m": 6.132639481077641e-05,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 8801,
+      "jaw_bottom_z_m": 9.409789569842094e-05,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 8851,
+      "jaw_bottom_z_m": 0.00012578965405505096,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 8901,
+      "jaw_bottom_z_m": 0.00015637039394136067,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 8951,
+      "jaw_bottom_z_m": 0.00018580993585914067,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 9001,
+      "jaw_bottom_z_m": 0.00021407922653479537,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 9051,
+      "jaw_bottom_z_m": 0.00024115036759142158,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 9101,
+      "jaw_bottom_z_m": 0.000266996643081135,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 9151,
+      "jaw_bottom_z_m": 0.00029159254585048647,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 9201,
+      "jaw_bottom_z_m": 0.0003149138027129406,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 9251,
+      "jaw_bottom_z_m": 0.00033693739840358436,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 9301,
+      "jaw_bottom_z_m": 0.00035764159829241194,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 9351,
+      "jaw_bottom_z_m": 0.0003770059698337821,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 9401,
+      "jaw_bottom_z_m": 0.00039501140273087113,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 9451,
+      "jaw_bottom_z_m": 0.0004116401277952325,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 9501,
+      "jaw_bottom_z_m": 0.0004268757344828377,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 9551,
+      "jaw_bottom_z_m": 0.00044070318708930425,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 9601,
+      "jaw_bottom_z_m": 0.0004531088395883169,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 9651,
+      "jaw_bottom_z_m": 0.0004640804490986122,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 9701,
+      "jaw_bottom_z_m": 0.0004736071879662219,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 9751,
+      "jaw_bottom_z_m": 0.0004816796544500611,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 9801,
+      "jaw_bottom_z_m": 0.0004882898820003104,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 9851,
+      "jaw_bottom_z_m": 0.0004934313471204403,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 9901,
+      "jaw_bottom_z_m": 0.000497098975805114,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 9951,
+      "jaw_bottom_z_m": 0.0004992891485476179,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 10000,
+      "jaw_bottom_z_m": 0.0005,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    }
+  ],
+  "negative_control": true,
+  "residual_angle_rad": 0.0,
+  "plastic_angle_rad": 0.0,
+  "wall_seconds": 7.969067448750138
+}

@@ -15,7 +15,7 @@ from materials import SteelSpec
 from physx_material import PhysxPlasticHinge
 
 
-def build(stage):
+def build(stage, jaw_offset_y=0.):
     from pxr import Gf, PhysxSchema, Sdf, UsdGeom, UsdPhysics
     UsdGeom.SetStageMetersPerUnit(stage, 1.)
     UsdGeom.SetStageUpAxis(stage, UsdGeom.Tokens.z)
@@ -56,7 +56,7 @@ def build(stage):
     mass = 7850*length*steel.wire_width_m*steel.wire_thickness_m
     leg, _ = body("/Probe/leg", (length/2,0.,0.),
                   (length,steel.wire_width_m,steel.wire_thickness_m), mass)
-    _, jaw_translate = body("/Probe/jaw", (.0025,0.,.001), (.001,.002,.001), .01, True)
+    _, jaw_translate = body("/Probe/jaw", (.0025,jaw_offset_y,.001), (.001,.002,.001), .01, True)
     joint = UsdPhysics.RevoluteJoint.Define(stage, "/Probe/material_hinge")
     joint.CreateAxisAttr("Y")
     joint.CreateBody1Rel().SetTargets([Sdf.Path("/Probe/leg")])
@@ -73,6 +73,7 @@ def main():
     p.add_argument("--out", type=Path, required=True)
     p.add_argument("--dt", type=float, default=.0001)
     p.add_argument("--seconds", type=float, default=2.)
+    p.add_argument("--no-contact", action="store_true", help="Negative control: jaw passes 3 mm beside the wire")
     args = p.parse_args()
     if not .00002 <= args.dt <= .001 or not 1 <= args.seconds <= 5:
         p.error("Use 0.00002 <= dt <= 0.001 and 1 <= seconds <= 5")
@@ -91,7 +92,9 @@ def main():
               "evidence_type":"Native wire/kinematic-jaw contact coupon; no paper, extraction or robot evidence",
               "dt":args.dt,"seconds":args.seconds,"samples":[]}
     try:
-        jaw, material = build(stage)
+        jaw_offset_y = .003 if args.no_contact else 0.
+        record["negative_control"] = args.no_contact
+        jaw, material = build(stage, jaw_offset_y=jaw_offset_y)
         stage.GetRootLayer().Export(str(args.out/"initial.usda"))
         sim.attach_stage(cache.GetId(stage).ToLongInt())
         attached = True
@@ -101,7 +104,7 @@ def main():
             fraction = (step+1)/steps
             descent = math.sin(math.pi*fraction)**2
             bottom = .0005-.003*descent
-            jaw.Set(Gf.Vec3d(.0025,0.,bottom+.0005))
+            jaw.Set(Gf.Vec3d(.0025,jaw_offset_y,bottom+.0005))
             sim.simulate(args.dt, step*args.dt)
             sim.fetch_results()
             tr = physics.get_rigidbody_transformation("/Probe/leg")
@@ -117,7 +120,9 @@ def main():
                     "leg_center_m":list(map(float,tr["position"])),"angle_rad":angle,**response})
         record["residual_angle_rad"] = record["samples"][-1]["angle_rad"]
         record["plastic_angle_rad"] = material.hinge.plastic_angle_rad
-        if abs(record["plastic_angle_rad"]) < .05:
+        if args.no_contact and abs(record["plastic_angle_rad"]) > 1e-4:
+            raise RuntimeError("Noncontact jaw changed wire plastic state")
+        if not args.no_contact and abs(record["plastic_angle_rad"]) < .05:
             raise RuntimeError("Diagnostic jaw did not produce measurable plastic bending; inspect contact scale and drive update")
         record["complete"] = True
         stage.GetRootLayer().Export(str(args.out/"final.usda"))

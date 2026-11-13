@@ -134,6 +134,9 @@ def _fixture_spawn(path,cfg,translation=None,orientation=None,**kwargs):
     if spec.kind=='clothesline':
         from scene import author_rack
         author_rack(stage,str(path))
+    elif spec.kind=='laundry_support':
+        from scene import author_support
+        author_support(stage,str(path)+'/Support')
     elif spec.kind=='collar':
         from layout import author_collar
         author_collar(stage,str(path))

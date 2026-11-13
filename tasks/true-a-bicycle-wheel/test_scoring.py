@@ -3,10 +3,9 @@ from scoring import score, CHECKS
 
 
 def record():
-    return {"schema": "wheel-judging-v1", "checks": dict.fromkeys(CHECKS, True),
+    return {"schema": "wheel-judging-v2", "checks": dict.fromkeys(CHECKS, True),
             "lateral_runout_mm": .5, "radial_runout_mm": .3, "dish_offset_mm": .1,
-            "maximum_loaded_deflection_mm": 1., "maximum_residual_deflection_mm": .05,
-            "spoke_midspan_deflections_mm": [.35]*32}
+            "spoke_tensions_n": [600.]*32}
 
 
 class ScoringTests(unittest.TestCase):
@@ -20,20 +19,20 @@ class ScoringTests(unittest.TestCase):
     def test_straight_but_slack_does_not_pass(self):
         r = record()
         r["lateral_runout_mm"] = 0.
-        r["spoke_midspan_deflections_mm"][8] = 4.
+        r["spoke_tensions_n"][8] = 0.
         self.assertEqual(score(r)["score"], 0.)
 
-    def test_braced_wheel_and_failed_recovery_do_not_pass(self):
+    def test_braced_wheel_and_damaged_wheel_do_not_pass(self):
         r = record()
         r["checks"]["hands_and_tools_clear"] = False
         self.assertEqual(score(r)["score"], 0.)
         r = record()
-        r["maximum_residual_deflection_mm"] = .201
+        r["checks"]["wheel_and_stand_intact"] = False
         self.assertEqual(score(r)["score"], 0.)
 
     def test_missing_review_and_nonfinite_values_fail_closed(self):
         r = record()
-        del r["checks"]["load_test_complete"]
+        del r["checks"]["spoke_tension_check_complete"]
         self.assertFalse(score(r)["record_valid"])
         r = record()
         r["lateral_runout_mm"] = float("nan")
@@ -44,10 +43,10 @@ class ScoringTests(unittest.TestCase):
 
     def test_over_tension_and_missing_spoke_measurement_fail(self):
         r = record()
-        r["spoke_midspan_deflections_mm"][10] = .1
+        r["spoke_tensions_n"][10] = 1000.1
         self.assertEqual(score(r)["score"], 0.)
         r = record()
-        r["spoke_midspan_deflections_mm"].pop()
+        r["spoke_tensions_n"].pop()
         self.assertFalse(score(r)["record_valid"])
 
 

@@ -124,8 +124,8 @@ def tshirt(spacing=.01, layer_gap=.0016):
                 dimensions_m=[.40,.30,layer_gap]))
 
 
-def necktie(length=1.40, rows=280, columns=8):
-    """Tapered 2D tie strip with pointed tips, width 35–70 mm.
+def necktie(length=1.10, rows=220, columns=8):
+    """Child-sized 1.10 m tie strip with pointed tips, width 35–70 mm.
 
     An effective one-layer shell approximates the sewn/interlined article. It
     preserves width, face orientation, in-plane strain, bending and self-contact.
@@ -134,7 +134,8 @@ def necktie(length=1.40, rows=280, columns=8):
     if rows < 10 or columns < 4 or columns % 2:
         raise ValueError('use at least ten rows and an even number of columns >=4')
     s = np.linspace(0., length, rows+1)
-    width = np.interp(s, [0.,.035,.32,.75,1.36,1.40], [0.,.07,.055,.035,.035,0.])
+    landmarks=np.asarray([0.,.035,.32,.75,1.36,1.40])/1.40*length
+    width = np.interp(s, landmarks, [0.,.07,.055,.035,.035,0.])
     vertices, ids, faces = [], {}, []
     for j in range(rows+1):
         for i in range(columns+1):

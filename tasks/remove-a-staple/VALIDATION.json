@@ -2,24 +2,87 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "Actual NumPy-only probes and unittest checks passed locally; native/robot checks not run.",
-  "simulator_probe": null,
+  "cpu_checks": "27 NumPy-only checks passed. Native wire coupon passed positive, no-contact and time-step checks; coupled sheets and robot unvalidated.",
+  "simulator_probe": "One native 3 mm steel leg with contact-driven plastic hinge, not full task.",
   "demo": null,
   "dream": null,
   "media": null,
-  "paid_compute_usd": 0,
   "blocking_items": [
-    "Coupled deformable paper/steel contact solver with real puncture-hole geometry",
-    "Irreversible mixed-mode paper crack propagation and steel plastic bending",
-    "Sub-millimetre contact-scale stability without thickening paper or enlarging the staple",
-    "Measured staple/remover/paper properties and fixed starting layout",
-    "Successful full-score robot demo, Dream baseline and final media"
+    "Native paper/staple contact and time-step convergence validation",
+    "Validate complete free staple, A5 sheets and passive remover YAM scene",
+    "Evidence-supported elastic-domain validity boundary and adversarial non-contact/destructive tests",
+    "Successful ordinary robot demo, Dream baseline and final media"
   ],
   "status": "development_not_submission_ready",
   "native_probe": {
     "entry_point": "native_probe.py",
-    "status": "authored_not_run",
-    "runtime_compatibility_verified": false
+    "status": "positive_negative_and_half_dt_passed",
+    "runtime_compatibility_verified": true,
+    "evidence": {
+      "positive": {
+        "file": "evidence/native-coupon-positive.json",
+        "sha256": "70eeb814c7ca56d75f2ec7ef078512e47e92e88b060a4ce6fe47bfac46c6f887",
+        "complete": true,
+        "dt": 0.0001,
+        "seconds": 1.0,
+        "residual_angle_rad": 0.8756690910702264,
+        "plastic_angle_rad": 0.8756691325887901,
+        "wall_seconds": 7.031852848827839
+      },
+      "no-contact": {
+        "file": "evidence/native-coupon-no-contact.json",
+        "sha256": "6a2677b7cf9f6dc7e215bae4f565e1ab6a0550588d14788c2ab8a6327495a4f9",
+        "complete": true,
+        "dt": 0.0001,
+        "seconds": 1.0,
+        "residual_angle_rad": 0.0,
+        "plastic_angle_rad": 0.0,
+        "wall_seconds": 7.969067448750138
+      },
+      "half-dt": {
+        "file": "evidence/native-coupon-half-dt.json",
+        "sha256": "9c66fee98e78bb491439eea6ed754f27fb7a596934af0c9e318397003d7c8fea",
+        "complete": true,
+        "dt": 5e-05,
+        "seconds": 1.0,
+        "residual_angle_rad": 0.8732157642922956,
+        "plastic_angle_rad": 0.8732157920296051,
+        "wall_seconds": 12.312306197360158
+      }
+    }
   },
-  "cpu_tests_passed": 17
+  "cpu_tests_passed": 27,
+  "coupled_paper_probe": {
+    "entry_point": "paper_probe.py",
+    "status": "Native surface solver runs; mesh cleanup and documented bend coefficient still leave both contact trials outside provisional validity domain.",
+    "materials": "100 \u00b5m native surface FEM paper, explicit punctures and native steel plastic-hinge staple",
+    "limitations": [
+      "30\u00d724 mm coupon, not full A5 task",
+      "Fixed crown is a diagnostic fixture",
+      "Planar steel bending approximation",
+      "Isotropic paper and0.3% membrane/bending validity boundaries are provisional; exceeding them is solver invalidity, not a measured tear."
+    ],
+    "invalidity_guards": [
+      "Irreversible all-triangle membrane/bending strain bounds",
+      "Independent intact-triangle wire-crossing and swept-translation audit"
+    ],
+    "last_completed_diagnostics": {
+      "batch": "008",
+      "free": "At .129s, upper sheet reaches 0.3179% local bending and the two centroids separate by about0.8mm beyond initial gap; membrane strain remains0.0128%.",
+      "stapled": "At .010s, lower sheet reaches0.4175% local bending; membrane strain0.0823%; wire crossing audits remain clean.",
+      "next_check": "Explicit separated-sheet free-fall control isolates inter-sheet contact without relaxing validity limits."
+    },
+    "native_runtime": "Isaac6.1 AppLauncher + explicit cached stage attach + DirectGPU tensors. Read nodes only after first simulation step; legacyWorld.reset is incompatible here.",
+    "evidence": {
+      "native-paper-free-008.json": "5370633d5c0af7829aadab7738b8ce6876f8e7fe6897892c4a91915afe6b8a59",
+      "native-paper-stapled-008.json": "12babdebf10ae99556cec56d31552c8ad3e791e5f8390bcd6bb61ab91ed76149"
+    }
+  },
+  "full_scene": {
+    "entry_point": "full_scene.build_scene",
+    "status": "authored_not_run",
+    "setup": "Two 210\u00d7148\u00d70.1 mm FEM sheets, free native staple, forked lever remover, 20 mm flat support with accessible far edges",
+    "robot_demo": false,
+    "yam_bridge": "arena_paper.py, arena_hardware.py and task.py authored and syntax checked; native YAM initialization, guards and callbacks not runtime tested."
+  }
 }

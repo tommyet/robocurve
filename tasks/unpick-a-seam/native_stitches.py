@@ -25,7 +25,7 @@ def author_thread(stage,path,nodes,*,radius=.0002,density=1400.,open_diagnostic=
     for i,(p,direction,length) in enumerate(zip(centres,d,lengths)):
         root=UsdGeom.Xform.Define(stage,f'{path}/link_{i:03d}')
         root.AddTranslateOp().Set(Gf.Vec3d(*p))
-        q=x_quat(direction);root.AddOrientOp().Set(Gf.Quatd(q[3],*q[:3]))
+        q=x_quat(direction);root.AddOrientOp(UsdGeom.XformOp.PrecisionDouble).Set(Gf.Quatd(q[3],*q[:3]))
         prim=root.GetPrim();UsdPhysics.RigidBodyAPI.Apply(prim)
         UsdPhysics.MassAPI.Apply(prim).CreateMassAttr(float(math.pi*radius**2*length*density))
         rb=PhysxSchema.PhysxRigidBodyAPI.Apply(prim)
@@ -63,18 +63,19 @@ def author_thread(stage,path,nodes,*,radius=.0002,density=1400.,open_diagnostic=
             'mass_kg':float(math.pi*radius**2*lengths.sum()*density)}
 
 
-def author_pair(stage,*,transform=lambda p:p,open_diagnostic=False,root_path='/World'):
+def author_pair(stage,*,transform=lambda p:p,open_diagnostic=False,root_path='/World',
+                thread_radius=.0002,hole_half=.0006):
     cloth=[]
     material=Fabric(thickness=.0004,density=350.,youngs_modulus=2e6,bend_modulus=8e4,
                     contact_offset=.00025,rest_offset=.0002,solver_iterations=64)
     for i,left in enumerate((True,False)):
-        mesh=patch(left)
+        mesh=patch(left,hole_half=hole_half)
         mesh.rest=transform(mesh.rest)
         author_cloth(stage,f'{root_path}/Cloth_{i}',mesh,material,
                      color=(.76,.68,.47) if left else (.25,.42,.66))
         cloth.append(mesh)
     threads=[author_thread(stage,f'{root_path}/Stitch_{i}',transform(stitch_loop(y)),
-                            open_diagnostic=open_diagnostic) for i,y in enumerate(STITCH_Y)]
+                            open_diagnostic=open_diagnostic,radius=thread_radius) for i,y in enumerate(STITCH_Y)]
     return cloth,threads
 
 

@@ -1,124 +1,108 @@
-# True a bicycle wheel
+# True a wobbly bicycle wheel
 
-**Development package — not ready to submit.** The CPU model demonstrates
-coupled spoke/rim response. It is not a robot demonstration and does not establish
-that a complete task can be built for $3. No simulator or Dream run has occurred.
+**Development package; not submission-ready.** The CPU mechanics checks pass.
+The native ring responds to spoke adjustment, but its latest completed test
+became unstable. No successful truing demo, Dream run or media ID exists.
 
-The task is to correct lateral runout by adjusting spoke nipples, then leave the
-wheel straight, centred and usable. The assessor spins it to measure runout. This tests locating a structural error and
-redistributing tension, rather than turning a marked screw to a target angle.
+The robot adjusts spoke nipples to leave a wheel straight, centred and freely
+rotating. Finding the wobble and redistributing tension is the task; matching a
+hidden target nipple angle is not a scoring criterion.
 
-## What is implemented
+## Current implementation
 
-- A 32-spoke, 420 mm rim-diameter engineering model. Each steel spoke is a
-  tension-only axial spring; each nipple turn changes rest length by the thread
-  pitch. Ring hoop/bending stiffness couples all spoke locations.
-- A deterministic reset with four neighbouring same-side nipples loosened by
-  1.1 turns; quarter-turn and reverse-turn probes;
-  a complete slackening adversary; an assessor load probe.
-- A conservative, provisional scorer with explicit integrity, free-rotation,
-  centring and load-recovery checks. Unknown observations fail closed.
-- An authored native PhysX probe with 32 rigid rim segments, implicit compliant
-  D6 rim joints and tension-only distance-joint spoke springs. It is not yet run.
-- A further authored stage builder, `wheel_scene.build_scene`, adds the fixed
-  stand, freely rotating hub, colliding steel spoke segments, rotating square
-  nipples and an open-slot wrench in the proposed station layout. Its measured
-  thread coupling is implemented, but no native scene or robot run is validated.
+The 420 mm centreline-diameter rim has 32 independent curved sectors connected
+by compliant native joints. The tension-only steel spokes pull on both sides
+of a freely rotating hub. Four neighbouring same-side nipples start 1.1 turns
+looser than the balanced reference. Measured physical nipple rotation changes
+spoke rest length by the thread pitch and applies an opposing thread torque.
+The native wrench must transfer that torque through contact.
 
-All geometry, stiffness and tolerance values are development choices, **not
-measurements of a selected commercial wheel**. The model linearizes rim motion
-and freezes transverse prestress stiffness at its reference state. Its load
-prediction is out of scope once any spoke is slack. It does not include
-crossing friction, rim torsion/buckling, hub bearing friction or wrench contact.
+The curved rim avoids the 1.06 mm radial scallop of the earlier 32-box geometry;
+its six arc subdivisions per sector keep geometric chord error below 0.03 mm.
+The full scene includes a stand, colliding spoke rods, rotating square brass
+nipples and an open-slot wrench. Midspan spoke bending is compliant, so a real
+tension-gauge measurement has a corresponding physical response.
 
-## Reproduce the local checks
+A YAM asset bridge registers the 130 native bodies and resets them only at an
+episode reset. A before-substep material callback reads actual body state and
+applies thread torques; it does not write object poses. The DirectGPU version
+uses native tensor pose/force views. This bridge and the full scene are not yet
+runtime validated.
 
-From the repository root:
+The simplified material properties, thread friction and geometry are disclosed
+engineering choices. They are not measurements of a specific commercial wheel.
+Thread travel outside ±3 turns invalidates model scope. Detailed thread
+stripping, permanent rim damage and unrestricted spoke buckling are not yet
+represented. Native damage-domain, contact and stability checks remain needed.
 
-```sh
-.venv/bin/python -m unittest discover -s tasks/true-a-bicycle-wheel -p 'test_*.py' -v
-.venv/bin/python tasks/true-a-bicycle-wheel/probe.py --out tasks/true-a-bicycle-wheel/evidence/mechanics-probe.json
-```
+## Evidence and commands
 
-These NumPy-only checks take under one second on the development machine and use
-no GPU, API key or network. No random seed is used. `evidence/` contains the
-actual CPU output, explicitly labelled as a mechanical probe. The algebraic
-restoration of the initial nipple lengths is a solver sanity check, not a demo
-policy. Full trial runtime and run limit remain unverified.
-
-The final local reset produces **1.663 mm** lateral peak-to-peak runout, 0.383 mm
-dish shift and 0.279 mm radial runout in the linearized CPU model. These are
-model outputs, not physical calibration. They supersede an earlier exploratory
-sinusoidal reset involving all spokes.
-
-On the funded existing Isaac environment, from the repository root:
+The 21 CPU checks use NumPy, take under one second and use no randomness:
 
 ```sh
-python tasks/true-a-bicycle-wheel/native_probe.py --out artifacts/wheel-native-001 --dt 0.001 --seconds 8
+python -m unittest discover -s tasks/true-a-bicycle-wheel -p 'test_*.py' -v
+python tasks/true-a-bicycle-wheel/probe.py --out artifacts/wheel-cpu-probe.json
 ```
 
-This bounded isolated test fixes the hub, disables gravity and changes one
-spring rest length by a quarter turn halfway through. It tests the native ring
-response, not wrench skill or robot success. Its output includes `initial.usda`,
-`final.usda` and measured transform samples. Repeat at half the time step only
-if the first run is stable, then compare runout and ring gaps. The native model
-is a different discretization from the CPU linearized solver; matching is a
-validation requirement, not an asserted fact.
+The small-displacement CPU model predicts 1.663 mm starting lateral runout and
+about 0.125 mm lateral response to a single quarter turn. These are model
+outputs, not robot evidence. Its frozen prestress approximation makes load
+predictions invalid after a spoke becomes slack.
 
-Once that isolated probe passes, the complete proposed native geometry and
-thread coupling have a separate bounded settling diagnostic:
+In the pinned Isaac 6.1 environment, run the isolated ring gate first:
 
 ```sh
-python tasks/true-a-bicycle-wheel/scene_probe.py --out artifacts/wheel-scene-001 --dt 0.001 --seconds 2
+python tasks/true-a-bicycle-wheel/native_probe.py --out artifacts/wheel-ring --seconds 4 --dt .0001
 ```
 
-It records live PhysX transforms and material state. There is no robot, tool
-motion plan, task score or claim of successful truing in this diagnostic.
+This diagnostic fixes the hub, disables gravity and changes one spring rest
+length halfway through. It is not a robot or wrench demonstration. The first
+native DistanceJoint version did not respond at this scale. A D6 soft distance
+limit produced a response; a 100 microsecond, damped run initially settled to
+about 0.160 mm lateral runout but later developed an unstable translation/twist
+mode. Reducing TGS velocity iterations from 32 to 4 did not fix it. Read both
+`complete` and `bounded_small_response`; a completed process alone is not a
+physical pass. A failed Isaac run may still leave exit code zero.
 
-`wheel_scene.build_scene(stage, root)` is the next native stage. Call it during
-scene authoring, then create `thread_coupling.NativeThreadCoupler(stage_id,
-metadata)` after attaching the stage. The runner must call `before_step()`
-before every physics substep, as accepted custom force models do. This callback
-must not be exposed to a robot policy. A YAM custom-asset/reset wrapper and full
-trial runner are not yet wired; importing this module alone does not install it.
+An isolated D6 spring under a known 700 N diagnostic load responds to a
+quarter-turn rest-length change by 0.113398 mm, versus 0.1135 mm expected. Its
+absolute equilibrium position is about 46 µm too short at a 100 µs step, so
+the constitutive check fails. `spring_probe.py` separates this timestep/solver
+question from the full ring. Its saved report is `evidence/native-spring-008.json`.
 
-The full stage uses two colliding steel half-rods per spoke, joined by an
-implicit axial soft limit. They transmit tension without an axial compression
-spring. Square-nipple rotation shortens the spoke rest length and produces the
-equal/opposite thread lead torque on nipple and hub. Native capped angular
-damping approximates thread friction; creep and work balance need checking.
-The model has no hidden attachment, object pose update or proximity trigger.
-Travel outside ±3 turns from the nominal reference **invalidates the trial**;
-it is not silently clamped. Physical thread stripping, rim damage and detailed
-spoke buckling are not yet represented. The native scene remains unrun.
+Only after that gate is stable:
 
-## Required before a GPU task trial
+```sh
+python tasks/true-a-bicycle-wheel/scene_probe.py --out artifacts/wheel-scene --dt .0001 --seconds 1
+python tasks/true-a-bicycle-wheel/wrench_contact_probe.py --out artifacts/wheel-contact --dt .0001 --turn-deg 90
+python tasks/true-a-bicycle-wheel/wrench_contact_probe.py --out artifacts/wheel-no-contact --dt .0001 --turn-deg 90 --no-contact
+python tasks/true-a-bicycle-wheel/preview_yam.py --out artifacts/wheel-yam-preview --steps 40 --physics-hz 1000
+```
 
-1. Select a real wheel/stand/wrench and measure its geometry, loaded response,
-   nipple torque and usable adjustment range. Validate the judging tolerances.
-2. Validate the authored native scene and thread coupling. The visible wrench
-   must rotate nipples through actual contact, with reaction torque reaching
-   the tool. Check free hub rotation, thread friction/creep, slack and slip;
-   add a credible damage/stripping model or an explicit invalid-outcome domain.
-3. Verify substep stability and force/energy behaviour before adding the robot.
-   The stiff spoke/rim constants cannot safely be fed as explicit forces at
-   240 Hz without stability analysis; a kinematically reshaped visual rim would
-   omit the interaction being tested.
-4. Make an open-loop or camera/joint-feedback demo, then one ordinary Dream run
-   on the identical scene. Do not use privileged rim/tension feedback in a demo.
-5. Rescore the actual videos, record runtime/environment, and create media.
+The wrench test uses an explicitly kinematic diagnostic fixture. The no-contact
+control offsets it 40 mm along the nipple axis. Neither is a robot demo. The
+YAM preview holds the ready pose and records cameras and measured body state;
+it is unscored. Each output directory must be new. Native trial runtime, final
+physics rate and total task cost remain unestablished.
 
-The deterministic proposed layout is in `setup.json`: the hub is 1.005 m above
-the floor and the 420 mm rim sits above the 747.5 mm tabletop. The robot must
-rotate the wheel to bring each nipple into reach; this has not been checked.
+## Judging and remaining work
+
+`JUDGING.md` uses the stand pointer, feeler gauges and a basic mechanical spoke
+tensiometer. Full credit requires at most 0.5 mm lateral runout; partial credit
+allows 1.5 mm. Both require radial runout at most 1 mm, dish error at most 0.5 mm,
+every spoke within this fixture's 400–1000 N range, a complete released
+revolution and intact equipment. The old eight rim weight tests and 32 separate
+hanging-weight/caliper tests have been removed.
+
+Next establish stable mechanics and smaller-step agreement, contact-driven
+nipple rotation with a no-contact control, thread friction/creep and invalid
+outcome handling. Then complete collision-safe YAM manipulation, show a full
+score within the run limit and run Dream on the same scene. A simple physically
+reproducible assessor must score both recordings before media is finalized.
 
 Accepted [filing](https://github.com/robocurve/benchmark-tasks/tree/main/tasks/file-a-steel-block-flat-down-to-a-scribed-line)
 and [cord cutting](https://github.com/robocurve/benchmark-tasks/tree/main/tasks/cut-taut-cord)
-were inspected for their before-substep material/contact hooks and concise task
-structure. Their acceptance does not validate this wheel model.
-
-The native spring implementation follows NVIDIA's documented
-[distance-joint spring schema](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/schemas/physxschema.html)
-and [isolated simulation stepping](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/simulation_control/simulation_control.html).
-Implicit springs avoid the explicit-force stability limit; they still require
-runtime, contact and convergence validation.
+informed the causal before-substep material structure. NVIDIA documents the
+[D6 joint and soft-limit formulation](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/rigid_bodies_articulations/joints.html)
+and [native tensor force interface](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/extensions/runtime/source/omni.physics.tensors/docs/api/python.html).
+Their existence does not substitute for this task's own runtime evidence.

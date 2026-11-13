@@ -6,8 +6,21 @@ compression. Only emitted material geometry is authored from material state.
 This adapter is implemented but has not yet been executed on the team GPU.
 """
 from __future__ import annotations
+from dataclasses import dataclass
 import numpy as np
 from material import Icing
+
+
+@dataclass(frozen=True)
+class DispenserParameters:
+    # A passive seal damper. These are declared engineering approximations,
+    # not a controller or a hidden piston motor.
+    seal_damping_ns_m: float = 10.
+    seal_friction_n: float = .15
+    friction_regularization_m_s: float = .0005
+    # Reduced mass of the 80 g barrel and 25 g plunger. Limiting a dissipative
+    # impulse to the relative momentum avoids discrete Coulomb chatter.
+    seal_effective_mass_kg: float = .080*.025/(.080+.025)
 
 
 def rotation(q):
@@ -76,9 +89,13 @@ def author_dispenser(stage,barrel_path,plunger_path,*,diagnostic_fixture=False):
 
 
 class Coupling:
-    def __init__(self,material=None):
+    def __init__(self,material=None,dispenser=None):
         self.material=material or Icing()
+        self.dispenser=dispenser or DispenserParameters()
         self.last_piston_m=0.
+        self.last_piston_velocity_m_s=0.
+        self.last_seal_force_n=0.
+        self.previous_piston_m=None
         self.last_reaction_n=0.
         self.last_contact_force=np.zeros(3)
         self.last_contact_torque=np.zeros(3)
@@ -94,11 +111,17 @@ class Coupling:
         if not -.0002<=q<=self.material.p.stroke_m+.0002:
             raise RuntimeError(f"Piston escaped its guide: {q:.6f} m")
         q=float(np.clip(q,0.,self.material.p.stroke_m))
+        speed=0. if self.previous_piston_m is None else (q-self.previous_piston_m)/dt
+        self.previous_piston_m=q
         tip=b[:3]+r@np.array((0.,.080,0.))
         tipvel=v[:3]+np.cross(v[3:],tip-b[:3])
         nr=r@np.array([[1.,0.,0.],[0.,0.,1.],[0.,-1.,0.]])
         reaction=self.material.step(dt,piston_m=q,nozzle_pos=tip,
                                     nozzle_rotation=nr,nozzle_velocity=tipvel)
+        seal=(self.dispenser.seal_damping_ns_m*speed+
+              self.dispenser.seal_friction_n*np.tanh(speed/self.dispenser.friction_regularization_m_s))
+        stopping_force=self.dispenser.seal_effective_mass_kg*abs(speed)/dt
+        seal=float(np.clip(seal,-stopping_force,stopping_force))
         angles=np.arange(24)*2*np.pi/24
         samples=np.array([(radius*np.cos(a),.080,radius*np.sin(a))
                           for radius in (.0035,.004) for a in angles])
@@ -109,34 +132,43 @@ class Coupling:
         self.last_contact_force=contact.sum(axis=0)
         self.last_contact_torque=np.cross(world-b[:3],contact).sum(axis=0)
         self.last_piston_m,self.last_reaction_n=q,reaction
+        self.last_piston_velocity_m_s,self.last_seal_force_n=speed,float(seal)
         # The fluid pushes the piston backwards and barrel forwards. Torque is
         # zero for these centred axial forces.
-        return axis*reaction+self.last_contact_force,-axis*reaction
+        return axis*(reaction+seal)+self.last_contact_force,-axis*(reaction+seal)
+
+    def reset(self):
+        """Episode reset only; never used to control the running dispenser."""
+        self.material.reset()
+        self.previous_piston_m=None
+        self.last_piston_m=self.last_piston_velocity_m_s=self.last_reaction_n=self.last_seal_force_n=0.
+        self.last_contact_force=np.zeros(3);self.last_contact_torque=np.zeros(3)
 
     def author_surface(self,stage,path='/World/DepositedIcing'):
         from pxr import Gf,UsdGeom
         m=self.material
-        points=np.column_stack((m.X.ravel(),m.Y.ravel(),(m.base+m.height).ravel()))
-        faces=[];ny=len(m.y)
-        for i in range(len(m.x)-1):
-            for j in range(ny-1):
-                a=i*ny+j;faces.extend(((a,a+ny,a+ny+1),(a,a+ny+1,a+1)))
-        self.all_faces=np.asarray(faces,int)
+        ny=len(m.y)
+        a=(np.arange(len(m.x)-1)[:,None]*ny+np.arange(ny-1)[None,:]).ravel()
+        self.all_faces=np.stack((np.column_stack((a,a+ny,a+ny+1)),np.column_stack((a,a+ny+1,a+1))),axis=1).reshape(-1,3)
         self.mesh=UsdGeom.Mesh.Define(stage,path)
-        self.mesh.CreatePointsAttr(points.tolist())
+        self.mesh.CreatePointsAttr([])
         self.mesh.CreateSubdivisionSchemeAttr('none')
         self.mesh.CreateDoubleSidedAttr(True)
-        self.mesh.CreateDisplayColorAttr([Gf.Vec3f(.91,.78,.49)])
+        self.mesh.CreateDisplayColorAttr([Gf.Vec3f(.92,.18,.42)])
         self.update_surface()
 
     def update_surface(self):
         if self.mesh is None:return
         m=self.material
-        points=np.column_stack((m.X.ravel(),m.Y.ravel(),(m.base+m.height).ravel()))
         # No icing is drawn until the material solver deposits it. The same
         # measured surface is used by the scorer; blank cells remain invisible.
         active=m.height.ravel()>1e-5
-        faces=self.all_faces[active[self.all_faces].any(axis=1)]
+        faces=self.all_faces[active[self.all_faces].any(axis=1)] if active.any() else np.empty((0,3),int)
+        used=np.unique(faces)
+        points=np.column_stack((m.X.ravel()[used],m.Y.ravel()[used],(m.base+m.height).ravel()[used]))
+        # Compact only render indexing. Material cells, volume, footprint and
+        # scoring stay unchanged; no hidden geometry appears before extrusion.
+        faces=np.searchsorted(used,faces)
         self.mesh.GetPointsAttr().Set(points.tolist())
         self.mesh.CreateFaceVertexCountsAttr([3]*len(faces))
         self.mesh.CreateFaceVertexIndicesAttr(faces.ravel().tolist())

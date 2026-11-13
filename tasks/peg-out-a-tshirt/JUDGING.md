@@ -5,14 +5,14 @@ ruler or printed scale supplies distances. Inspect the actual hem captured
 between each peg's jaws together with the line; a peg nearby, closed in air or
 resting on top of the fabric does not count.
 
-- **0:** no valid retained fastening; the robot or another object supports the
+- **0:** no valid retained fastening; the robot, laundry support or another object supports the
   shirt; any part is within 20 mm of the table or floor; or integrity fails.
-- **0.5:** one valid peg retains the shirt, unsupported by the robot for five
+- **0.5:** one valid peg retains the shirt, supported only by the line and pegs for five
   seconds, with at least 20 mm clearance. Two valid pegs less than 180 mm apart
   receive the same partial credit.
 - **1:** both pegs capture the line and separate portions of the bottom hem,
-  their centres are at least 180 mm apart, and the shirt remains unsupported by
-  the robot with at least 20 mm clearance for five seconds.
+  their centres are at least 180 mm apart, and the shirt remains supported only by
+  the line and pegs with at least 20 mm clearance for five seconds.
 
 All score levels require an intact shirt, line and pegs. Torn cloth, broken
 pegs, hidden attachment, cloth passing through itself or another collider, and

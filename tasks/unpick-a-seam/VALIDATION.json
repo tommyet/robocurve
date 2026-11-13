@@ -1,31 +1,37 @@
 {
   "status": "development_not_submission_ready",
-  "checked_utc": "2026-11-12",
-  "cpu_tests_passed": 9,
-  "native_simulator_run": false,
+  "checked_utc": "2026-11-13",
+  "cpu_tests_passed": 18,
+  "native_simulator_run": true,
   "robot_demo_run": false,
   "dream_run": false,
   "media_uploaded": false,
   "scores": null,
-  "paid_compute_used_usd": 0.0,
+  "paid_compute_used_usd": null,
   "remaining_gates": [
-    "Native thin-thread/cloth-hole contact and intact/open retention untested",
-    "Force-qualified cutting native hook unexecuted",
-    "Blade-crossing audit wired but unvalidated; tensile damage and native cloth tearing unsupported",
-    "Final released-stitch inspection absent; native reset adapters implemented but unexecuted",
-    "Robot demo, Dream, media and real reference absent"
+    "0.4 mm thread failed at 19/20 ms; 0.8 mm diagnostic passes 0.1 s but longer intact/open differential remains pending",
+    "Force-qualified blade cutting hook and damage crossing audit unexecuted",
+    "2% principal-strain validity envelope is an engineering assumption, not measured tearing strain",
+    "Final capsule-clearance inspection implemented; native/photo agreement unvalidated",
+    "YAM cloth/thread integration, robot demo, Dream, media and photo scoring absent"
   ],
   "sources_sha256": {
     "arena_cloth.py": "053dc4d811c210ff75f34125679081b86c3e7fbc816f92fad10e1b39627d888d",
     "arena_thread.py": "25b8177924029bbd9893f4c96065097517efd302d8b450d89e8410dcb4735895",
+    "contact_audit.py": "412b342789bdf214d005cc787d09a2f92aea0bdbda111045ba893e6fdcb41dd7",
     "cutting.py": "f6a87366f5ea8b297a721e60460071699f198326beb3e608d85bfb9e045858b8",
-    "geometry.py": "03a90ccd676c2853618e0139ce297152304422713492813842179c4498015cbe",
-    "native_cloth.py": "a09c2d018df718b9947c8d11cf8b7679035e8e7f45a6a22b04e3069859f18314",
-    "native_stitches.py": "350c61ea5ec1a84103e5ebbc6d286876c8a3e3ee9747ce3068cb51a49f0a3589",
-    "preview_yam.py": "13db697140bac04fdbb34264ba204aa7d099e7b9cf8dd37cfdb66be1d1540faa",
-    "probe_native.py": "e558433725b85a027277b9113d32475c398266a4acc87511402efe9cf36592a5",
-    "scene.py": "5800239d4857db335241aaba1b9131c281b24673062c2db3057e52155e273023",
-    "scoring.py": "09c573a841083d2c095c5b5ae3aa0c7905c4f2bf4adde8468c2703eb13e27026",
-    "test_mechanism.py": "d292367e8dd3c1da873ca12c6204514bc5797a5faf19d23b69fc7e8a8679a122"
-  }
+    "geometry.py": "9c828119a26bb7f110da06500c70d5767d2f714745a3c93fdfd8daa3f50248fd",
+    "inspection.py": "8bd0c2cb65afdef57d3387bbfaf521b6dc219537392cfa82d69717bf78744489",
+    "native_cloth.py": "000d296d4a06b3b75f0570960338a27b49234a4f1d475945c60f92e0d2613b46",
+    "native_stitches.py": "ef52464dd646efc7aadf86c1eff98908ee435abfc0ac8bc5a1770c3f1ca1a5c7",
+    "plan.py": "96515fba8a322e72189a6542edcf7e6b0264845ed4c2f254bc1c6b5752f9adbf",
+    "preview_yam.py": "b7979217a0a73e20b35aba3fc825da2d7453645e74979ae4433daeecae6d18d3",
+    "probe_native.py": "c6e2008bf5dae26dce968a91f98d5ae403a14eeed26f0b8ba7d769b95dc69927",
+    "scene.py": "31b4ce5fafa8ef80cbd9bea098288736f92eef1f3dc86cdfe1544ac38a521d6a",
+    "scoring.py": "8690167a5404134907425a352f0beb838156c112aae4b234261e4dabde17b89c",
+    "test_contact_audit.py": "f6bcf5b1ae24512550469dfe71c33b90c5ecbcfd05f47a21a2a347037ea1c054",
+    "test_mechanism.py": "bc76e466f4086ccbce23497572a41d11a9b5b585b4b6b9e3ee3d5882bef82407"
+  },
+  "compute_note": "Shared bounded native session; allocation recorded by batch orchestrator.",
+  "native_mechanism_evidence": "evidence/native-retention-2026-11-13.json"
 }

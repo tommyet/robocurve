@@ -60,9 +60,10 @@ class NativeThreadCoupler:
     excess thread travel raises and invalidates the trial. The caller must
     record that error and must not resume with a saturated/clamped state.
     """
-    def __init__(self, stage_id, metadata, spec=None):
+    def __init__(self, stage_id, metadata, spec=None, native_io=None):
         from omni.physx import get_physx_interface, get_physx_simulation_interface
         from pxr import PhysicsSchemaTools, Sdf
+        self.native_io=native_io
         self.physics=get_physx_interface()
         self.sim=get_physx_simulation_interface()
         self.stage_id=stage_id
@@ -75,6 +76,8 @@ class NativeThreadCoupler:
         self.last=[]
 
     def frame(self,path):
+        if self.native_io is not None:
+            return self.native_io.frame(path)
         tr=self.physics.get_rigidbody_transformation(path)
         if not tr.get("ret_val"):
             raise RuntimeError("Live PhysX transform unavailable: "+path)
@@ -82,6 +85,8 @@ class NativeThreadCoupler:
 
     def before_step(self):
         import carb
+        if self.native_io is not None:
+            self.native_io.begin_step()
         hp,hR=self.frame(self.meta["hub_path"])
         hub_torque=np.zeros(3)
         self.last=[]
@@ -96,16 +101,72 @@ class NativeThreadCoupler:
             turns=s["initial_turn_offset"]+self.unwrapped[i]/(2*math.pi)
             anchor=hp+hR@np.asarray(s["hub_anchor_local_m"])
             endpoint=rp+rR@np.asarray(s["rim_anchor_local_m"])
-            length=float(np.linalg.norm(endpoint-anchor))
+            endpoint_length=float(np.linalg.norm(endpoint-anchor))
+            ip,iR=self.frame(s["inner_path"])
+            op,oR=self.frame(s["outer_path"])
+            half=s["half_rod_length_m"]
+            inner_joint=ip+iR[:,0]*(half/2)
+            outer_joint=op-oR[:,0]*(half/2)
+            gap=float(np.dot(outer_joint-inner_joint,iR[:,0]))
+            # Match the actual axial D6 coordinate, including spoke bending.
+            # Endpoint distance alone would miss material stretch in a bowed
+            # spoke and give the wrong thread reaction torque.
+            length=s["rest_target_origin_m"]+gap
             state=response(length,s["nominal_rest_m"],turns,s["stiffness_n_per_m"],self.spec)
             s["rest_target_attribute"].Set(state["rest_length_m"]-s["rest_target_origin_m"])
             s["friction_drive"].GetMaxForceAttr().Set(state["friction_limit_nm"])
             torque=nR[:,0]*state["lead_torque_nm"]
-            self.sim.apply_torque(self.stage_id,self.ids[s["nipple_path"]],carb.Float3(*map(float,torque)))
+            if self.native_io is None:
+                self.sim.apply_torque(self.stage_id,self.ids[s["nipple_path"]],carb.Float3(*map(float,torque)))
+            else:
+                self.native_io.add_torque(s["nipple_path"],torque)
             hub_torque-=torque
-            self.last.append({"spoke":i,"turns":turns,"length_m":length,**state})
-        self.sim.apply_torque(self.stage_id,self.ids[self.meta["hub_path"]],carb.Float3(*map(float,hub_torque)))
+            self.last.append({"spoke":i,"turns":turns,"length_m":length,"endpoint_distance_m":endpoint_length,"axial_joint_gap_m":gap,**state})
+        if self.native_io is None:
+            self.sim.apply_torque(self.stage_id,self.ids[self.meta["hub_path"]],carb.Float3(*map(float,hub_torque)))
+        else:
+            self.native_io.add_torque(self.meta["hub_path"],hub_torque)
+            self.native_io.flush_torques()
 
     def observation_for_assessor(self):
         """Material telemetry only; never feed this into a robot policy/demo."""
         return self.last
+
+
+class TensorNativeIO:
+    """DirectGPU-safe pose and torque bridge; never writes body transforms.
+
+    CPU PhysX transform access is not a valid source when readback is
+    suppressed. This adapter reads native tensor state every substep and writes
+    only the material's equal/opposite torques through the tensor force API.
+    """
+    def __init__(self,simulation_view,pattern):
+        import torch
+        self.view=simulation_view.create_rigid_body_view(pattern)
+        self.paths=list(self.view.prim_paths)
+        self.index={path:i for i,path in enumerate(self.paths)}
+        values=self.view.get_transforms()
+        self.device=values.device
+        self.indices=torch.arange(self.view.count,dtype=torch.int32,device=self.device)
+        self.torques=np.zeros((self.view.count,3))
+        self.transforms=None
+
+    def begin_step(self):
+        self.transforms=self.view.get_transforms().detach().cpu().numpy().copy()
+        self.torques.fill(0.)
+        if not np.isfinite(self.transforms).all():
+            raise RuntimeError('Nonfinite native wheel tensor state')
+
+    def frame(self,path):
+        if path not in self.index:
+            raise RuntimeError('Missing native tensor body: '+path)
+        pose=self.transforms[self.index[path]]
+        return pose[:3],rotation(pose[3:])
+
+    def add_torque(self,path,value):
+        self.torques[self.index[path]]+=np.asarray(value,float)
+
+    def flush_torques(self):
+        import torch
+        values=torch.as_tensor(self.torques,dtype=torch.float32,device=self.device)
+        self.view.apply_forces_and_torques_at_position(None,values,None,self.indices,True)

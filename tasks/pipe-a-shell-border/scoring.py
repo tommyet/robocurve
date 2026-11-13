@@ -50,6 +50,11 @@ def assess(x,y,volume,*,dx,emitted_m3,lost_m3=0.,airborne_m3=0.,damage_depth_m=0
     result={"score":0.,"status":"draft rubric; not submission evidence",
             "valid_shells":0,"shells":[],"spill_area_mm2":spill_area*1e6,
             "damage_mm":damage_depth_m*1e3}
+    balance_error=emitted_m3-float(volume.sum())-lost_m3-airborne_m3
+    result['volume_balance_error_m3']=balance_error
+    if abs(balance_error)>1e-9:
+        result['reason']='deposited, airborne and lost material do not match measured extrusion'
+        return result
     if not completed or damage_depth_m>.001 or spill_area>20e-6 or lost_m3>1e-9 or other_tool_contact:
         result["reason"]="incomplete evidence, cake/tool damage, spill, or unobserved lost material"
         return result
@@ -70,8 +75,13 @@ def assess(x,y,volume,*,dx,emitted_m3,lost_m3=0.,airborne_m3=0.,damage_depth_m=0
         candidates=np.arange(lower,upper+1)
         candidates=candidates[profile[candidates]>=.0005]
         if not len(candidates):continue
-        tail=int(candidates[np.argmin(width[candidates])])
         head_h,head_w=float(profile[k]),float(width[k])
+        # A shell may finish in a thinner pointed tip. Inspect its qualifying
+        # tapered section, not just the single narrowest occupied grid column.
+        qualifying=candidates[(width[candidates]>=.001)&(width[candidates]<=.65*head_w)&
+                              (profile[candidates]>=.0005)&
+                              (profile[candidates]<=min(.003,.65*head_h))]
+        tail=int(qualifying[np.argmin(width[qualifying])]) if len(qualifying) else int(candidates[np.argmin(width[candidates])])
         tail_h,tail_w=float(profile[tail]),float(width[tail])
         transverse=a[:,k]
         ridges=_peaks(transverse,minimum=.001,spacing=max(1,round(.0015/dx)),prominence=.0003)

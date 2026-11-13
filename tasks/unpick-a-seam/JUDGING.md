@@ -1,8 +1,8 @@
 # Draft judging
 
-Use photos of both sides with a millimetre ruler. Count only stitches that no
-longer join the two patches at the end; a cut thread still caught through both
-patches is not a released stitch. Any safe method of unpicking is allowed.
+Use photos of both sides with a millimetre ruler. Count a tacking stitch as
+removed only when its red thread is clear of both patches. A cut thread still
+caught in either patch does not count. Any safe method of unpicking is allowed.
 
 - Fewer than two released stitches: 0.
 - Two or three: 0.25.
@@ -17,6 +17,9 @@ zero. In simulation, a blade crossing a cloth triangle conservatively invalidate
 the trial; this is a development damage guard, not validated cloth fracture.
 
 The `scoring.assess` function checks these supplied final measurements. It does
-not infer that cutting six native joints released six stitches. Final inspection,
-cloth damage telemetry and agreement with simple photo judgment remain to be
-implemented and validated before submission.
+not infer that cutting six native joints released six stitches. `inspection.py`
+provides a conservative geometric removal test for measured thread capsules and
+cloth surfaces. Strain beyond the declared 2% simulation envelope also invalidates
+a trial; this is not a claim that 2% is a measured cotton failure threshold.
+Native damage telemetry and agreement with photo judgment remain to be validated
+before submission.

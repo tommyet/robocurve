@@ -127,7 +127,7 @@ def author_peg_jaw(stage,path,pos,*,upper=False,angle=0.):
     from pxr import Gf,UsdGeom,UsdPhysics,PhysxSchema
     body=UsdGeom.Xform.Define(stage,path)
     body.AddTranslateOp().Set(Gf.Vec3d(*pos))
-    body.AddOrientOp().Set(Gf.Quatd(math.cos(angle/2),0.,math.sin(angle/2),0.))
+    body.AddOrientOp(UsdGeom.XformOp.PrecisionDouble).Set(Gf.Quatd(math.cos(angle/2),0.,math.sin(angle/2),0.))
     p=body.GetPrim()
     UsdPhysics.RigidBodyAPI.Apply(p)
     UsdPhysics.MassAPI.Apply(p).CreateMassAttr(.004)
@@ -189,5 +189,5 @@ def ensure_gpu_scene(stage):
         api=PhysxSchema.PhysxSceneAPI.Apply(prim)
         api.CreateEnableGPUDynamicsAttr(True)
         api.CreateBroadphaseTypeAttr('GPU')
-        api.CreateEnableCCDAttr(True)
+        api.CreateEnableCCDAttr(False)  # Unsupported together with the GPU tensor pipeline
         api.CreateSolverTypeAttr('TGS')

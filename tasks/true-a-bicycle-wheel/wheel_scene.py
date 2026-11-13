@@ -93,7 +93,7 @@ def build_scene(stage, root="/WheelTask"):
             UsdPhysics.MassAPI.Apply(p).CreateMassAttr(mass)
             rb=PhysxSchema.PhysxRigidBodyAPI.Apply(p)
             rb.CreateSolverPositionIterationCountAttr(128)
-            rb.CreateSolverVelocityIterationCountAttr(32)
+            rb.CreateSolverVelocityIterationCountAttr(4)
             rb.CreateSleepThresholdAttr(0.)
             rb.CreateEnableCCDAttr(True)
         return g
@@ -165,10 +165,19 @@ def build_scene(stage, root="/WheelTask"):
         axial.CreateBody1Rel().SetTargets([Sdf.Path(outer)])
         axial.CreateLocalPos0Attr(Gf.Vec3f(L/4,0.,0.))
         axial.CreateLocalPos1Attr(Gf.Vec3f(-L/4,0.,0.))
-        for axis in ("transY","transZ","rotX","rotY","rotZ"):
+        for axis in ("transY","transZ","rotX"):
             limit=UsdPhysics.LimitAPI.Apply(axial.GetPrim(),axis)
             limit.CreateLowAttr(1.)
             limit.CreateHighAttr(-1.)
+        # Midspan bending is compliant: a perfectly rigid two-half rod would
+        # make a physical spoke-tension gauge impossible to reproduce. For
+        # pin-supported half rods K=3EI/L gives the standard 48EI/L^3 centre
+        # load stiffness; axial pretension adds geometric stiffness naturally.
+        bend_stiffness=3*spec.spoke_modulus_pa*(math.pi*spec.spoke_diameter_m**4/64)/L
+        for axis in ("rotY","rotZ"):
+            bend=UsdPhysics.DriveAPI.Apply(axial.GetPrim(),axis)
+            bend.CreateTypeAttr("force");bend.CreateStiffnessAttr(bend_stiffness*math.pi/180.)
+            bend.CreateDampingAttr(.002*math.pi/180.);bend.CreateTargetPositionAttr(0.)
         limit=UsdPhysics.LimitAPI.Apply(axial.GetPrim(),"transX")
         limit.CreateLowAttr(-1.)
         limit.CreateHighAttr(nominal-initial[i]*thread.pitch_m_per_turn-L)
@@ -200,6 +209,7 @@ def build_scene(stage, root="/WheelTask"):
             "initial_turn_offset":float(initial[i]),"hub_anchor_local_m":anchor.tolist(),
             "rim_anchor_local_m":[-chord/2,0.,0.],"nominal_rest_m":nominal,
             "stiffness_n_per_m":k,"rest_target_attribute":limit.GetHighAttr(),
+            "inner_path":inner,"outer_path":outer,"half_rod_length_m":L/2,
             "rest_target_origin_m":L,"friction_drive":friction})
 
     wrench=metadata["wrench_path"]

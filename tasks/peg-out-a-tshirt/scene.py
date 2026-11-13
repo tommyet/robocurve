@@ -7,12 +7,41 @@ TABLE=.7475
 LINE_X=.52
 LINE_Z=1.09
 LINE_HALF_SPAN=.25
+SUPPORT_SIZE=(.20,.44,.10)
+SUPPORT_CENTER=(.36,0.,TABLE+SUPPORT_SIZE[2]/2)
+SUPPORT_TOP=TABLE+SUPPORT_SIZE[2]
+HEM_X=.195
 
 
 def initial_layout(mesh=None):
     mesh=tshirt() if mesh is None else mesh
     p=mesh.rest
-    return np.column_stack((.18+p[:,1],-p[:,0],TABLE+.003+p[:,2]))
+    return np.column_stack((HEM_X+p[:,1],-p[:,0],SUPPORT_TOP+.003+p[:,2]))
+
+
+def support_geometry():
+    """Exact geometry shared by native authoring and the reset penetration audit."""
+    props={'Board':dict(kind='box',size=(SUPPORT_SIZE[0],SUPPORT_SIZE[1],.008),
+                       center=(SUPPORT_CENTER[0],0.,SUPPORT_TOP-.004))}
+    for ix,x in enumerate((.35,.425)):
+        for iy,y in enumerate((-.185,.185)):
+            props[f'Leg{ix}{iy}']=dict(kind='box',size=(.015,.015,SUPPORT_SIZE[2]-.008),
+                         center=(x,y,TABLE+(SUPPORT_SIZE[2]-.008)/2))
+    return props
+
+
+def author_support(stage,path='/World/LaundrySupport'):
+    """Fixed raised laundry board with clear space beneath the thin top.
+
+    The ordinary support has a 200 x 440 x 8 mm plastic top on four 15 mm
+    square legs. Its top is 100 mm above the table; the hem overhangs its near edge by 65 mm. The front edge is at x=.26. There are no attachments.
+    """
+    from pxr import UsdGeom
+    from native_cloth import author_box
+    root=UsdGeom.Xform.Define(stage,path)
+    for name,spec in support_geometry().items():
+        author_box(stage,path+'/'+name,spec['size'],spec['center'],(.78,.82,.80))
+    return root
 
 
 def author_rack(stage,path='/World/Rack'):
@@ -43,6 +72,7 @@ def author_props(stage):
     mesh=tshirt()
     author_cloth(stage,'/World/Tshirt',mesh,Fabric(),points=initial_layout(mesh))
     author_rack(stage)
+    author_support(stage)
     for sign in (-1,1):
         label='Left' if sign>0 else 'Right'
         author_peg(stage,'/World/'+label+'Peg',pos=(.12,sign*.20,TABLE+.014),

@@ -9,6 +9,7 @@ import json
 import hashlib
 from pathlib import Path
 import time
+import traceback
 import numpy as np
 from geometry import audit_scene
 
@@ -19,59 +20,117 @@ def main():
     p.add_argument('--seconds',type=float,default=3.)
     p.add_argument('--out',type=Path,required=True)
     p.add_argument('--physics-hz',type=int,choices=(480,960),default=960)
+    p.add_argument('--coarse-thread',action='store_true',help='Diagnostic 0.8 mm thread / 1.6 mm holes; does not change task reset')
+    p.add_argument('--continue-after-invalid',action='store_true',help='Bounded failure investigation only; invalid evidence never passes')
     a=p.parse_args()
     if not 0<a.seconds<=10:p.error('Diagnostic limited to ten simulated seconds')
     a.out.mkdir(parents=True,exist_ok=False)
     started=time.monotonic();report={'status':'running','robot_demo':False,'mode':a.mode,'geometry':audit_scene(),
                                    'source_sha256':{name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
                                                     for name in ('probe_native.py','native_stitches.py','native_cloth.py','geometry.py')}}
-    from isaacsim import SimulationApp
-    app=SimulationApp({'headless':True})
+    app=None;attached=False;stage=None;cache=None;physics=None
+    phase='launch'
     try:
-        from isaacsim.core.api import World
+        from isaaclab.app import AppLauncher
+        app=AppLauncher(headless=True,enable_cameras=False).app
+        phase='imports'
+        from pxr import Gf,Usd,UsdGeom,UsdPhysics,UsdUtils
+        from omni.physx import get_physx_simulation_interface
         import omni.physics.tensors as tensors
         from native_cloth import author_box,ensure_gpu_scene
         from native_stitches import author_pair
-        world=World(physics_dt=1/a.physics_hz,rendering_dt=1/60,stage_units_in_meters=1.,backend='numpy')
-        stage=world.stage;world.scene.add_default_ground_plane(z_position=0.)
+        from inspection import StrainAudit
+        from contact_audit import ThreadClothAudit,capsule_endpoints,match_capsule_order
+        phase='stage creation'
+        cache=UsdUtils.StageCache.Get();stage=Usd.Stage.CreateInMemory();cache.Insert(stage)
+        stage_id=cache.GetId(stage).ToLongInt()
+        UsdGeom.SetStageMetersPerUnit(stage,1.);UsdGeom.SetStageUpAxis(stage,UsdGeom.Tokens.z)
+        scene=UsdPhysics.Scene.Define(stage,'/physicsScene')
+        scene.CreateGravityDirectionAttr(Gf.Vec3f(0.,0.,-1.));scene.CreateGravityMagnitudeAttr(9.80665)
+        author_box(stage,'/World/Ground',(2.,2.,.02),(0.,0.,-.01))
         ensure_gpu_scene(stage)
         rotation=np.array(((0.,0.,1.),(0.,1.,0.),(-1.,0.,0.)))
         def transform(points):
             return (np.asarray(points)-(.235,0.,.7511))@rotation.T+(0.,0.,.5)
-        cloth,threads=author_pair(stage,transform=transform,open_diagnostic=a.mode=='open')
+        phase='scene authoring'
+        radius,hole_half=(.0004,.0008) if a.coarse_thread else (.0002,.0006)
+        cloth,threads=author_pair(stage,transform=transform,open_diagnostic=a.mode=='open',
+                                 thread_radius=radius,hole_half=hole_half)
+        report.update(thread_radius_m=radius,hole_width_m=2*hole_half,
+                      cloth_geometry=[mesh.audit() for mesh in cloth])
         # Clamp upper edge with physical surfaces. The gap is 0.30 mm for the
         # 0.40 mm cloth; all native vertices stay dynamic.
         for sign in (-1,1):
             author_box(stage,f'/World/Jaw{sign+1}',(.006,.085,.008),
                        (.0004+sign*.00315,0.,.496),friction=.8)
         stage.GetRootLayer().Export(str(a.out/'initial.usda'))
-        world.reset()
-        sim=tensors.create_simulation_view('numpy');sim.set_subspace_roots('/')
+        phase='stage attach'
+        import carb
+        carb.settings.get_settings().set_bool('/physics/suppressReadback',True)
+        carb.settings.get_settings().set_int('/physics/cudaDevice',0)
+        # The native surface-deformable GPU pipeline does not support CCD.
+        from pxr import PhysxSchema
+        PhysxSchema.PhysxSceneAPI.Apply(scene.GetPrim()).CreateEnableCCDAttr(False)
+        physics=get_physx_simulation_interface();physics.attach_stage(stage_id);attached=True
+        phase='tensor views'
+        sim=tensors.create_simulation_view('torch',stage_id);sim.set_subspace_roots('/')
         views=[sim.create_surface_deformable_body_view(f'/World/Cloth_{i}') for i in range(2)]
         if any(v.count!=1 for v in views):raise RuntimeError('Missing native cloth body')
         thread_view=sim.create_rigid_body_view('/World/Stitch_*/link_*')
         if thread_view.count!=sum(len(t['bodies']) for t in threads):raise RuntimeError('Missing native thread links')
-        frames=[[],[]];thread_frames=[]
-        for step in range(int(a.seconds*a.physics_hz)+1):
-            if step:world.step(render=step%max(1,a.physics_hz//60)==0)
-            if step%max(1,a.physics_hz//20)==0:
-                for j,v in enumerate(views):
-                    points=np.asarray(v.get_simulation_nodal_positions())[0,:len(cloth[j].rest)].copy()
-                    if not np.isfinite(points).all():raise RuntimeError('Nonfinite native cloth nodes')
-                    frames[j].append(points)
-                thread_frames.append(np.asarray(thread_view.get_transforms()).copy())
+        order=None
+        lengths=np.concatenate([t['lengths'] for t in threads])
+        frames=[[],[]];thread_frames=[];sample_times=[]
+        strain=[StrainAudit(m.rest,m.faces) for m in cloth]
+        contact=[ThreadClothAudit(m.faces) for m in cloth]
+        phase='physics stepping'
+        steps=round(a.seconds*a.physics_hz)
+        for step in range(1,steps+1):
+            # Native GPU tensors cannot fetch before the first simulation step.
+            # This first step is included in duration; there is no hidden warmup.
+            physics.simulate(1/a.physics_hz,(step-1)/a.physics_hz);physics.fetch_results()
+            poses=thread_view.get_transforms().detach().cpu().numpy()
+            if order is None:order=match_capsule_order(poses,threads,tolerance_m=.00025)
+            poses=poses[order].copy()
+            segments=capsule_endpoints(poses,lengths)
+            sample=step==1 or step==steps or step%max(1,a.physics_hz//20)==0
+            measured=[]
+            for j,v in enumerate(views):
+                points=v.get_simulation_nodal_positions().detach().cpu().numpy()[0,:len(cloth[j].rest)].copy()
+                if not np.isfinite(points).all():raise RuntimeError('Nonfinite native cloth nodes')
+                strain[j].update(points,step/a.physics_hz)
+                contact[j].update(points,segments,step/a.physics_hz)
+                measured.append(points)
+            invalid=any(audit.first_excursion is not None for audit in strain) or any(audit.first_failure is not None for audit in contact)
+            if invalid:
+                report.update(status='invalid_model_domain')
+                report.setdefault('first_invalid_step',step)
+                sample=True
+            if sample:
+                for j,points in enumerate(measured):frames[j].append(points)
+            if sample:thread_frames.append(poses);sample_times.append(step/a.physics_hz)
+            if invalid and not a.continue_after_invalid:break
         np.savez_compressed(a.out/'state.npz',left=frames[0],right=frames[1],
-                            left_faces=cloth[0].faces,right_faces=cloth[1].faces,thread=thread_frames)
-        report.update(status='complete',thread_count=thread_view.count,
+                            left_faces=cloth[0].faces,right_faces=cloth[1].faces,thread=thread_frames,
+                            sample_times_s=sample_times,authored_left=cloth[0].rest,authored_right=cloth[1].rest)
+        report.update(thread_count=thread_view.count,completed_steps=step,
                       right_centroid_drop_m=float(np.mean(cloth[1].rest[:,2])-np.mean(frames[1][-1][:,2])),
                       left_centroid_drop_m=float(np.mean(cloth[0].rest[:,2])-np.mean(frames[0][-1][:,2])),
+                      strain=[{'maximum_principal_stretch':s.maximum_observed,
+                               'first_validity_excursion':s.first_excursion} for s in strain],
+                      contact_audit=[audit.summary() for audit in contact],
                       note='Compare intact/open runs visually and numerically; no automatic feasibility pass.')
+        if report['status']=='running':report['status']='complete'
     except BaseException as exc:
-        report.update(status='failed',error=f'{type(exc).__name__}: {exc}')
+        report.update(status='failed',error=f'{type(exc).__name__}: {exc}',error_phase=phase,
+                      error_traceback=traceback.format_exc())
         raise
     finally:
         report['wall_seconds']=time.monotonic()-started
-        (a.out/'probe.json').write_text(json.dumps(report,indent=2)+'\n');app.close()
+        (a.out/'probe.json').write_text(json.dumps(report,indent=2)+'\n')
+        if attached:physics.detach_stage()
+        if stage and cache:cache.Erase(stage)
+        if app:app.close()
 
 
 if __name__=='__main__':main()

@@ -1,36 +1,38 @@
-# Provisional judging procedure
+# Judging the wheel
 
-This is a development rubric. Its limits require a real-wheel check and a
-matched simulation before submission. No hidden spoke-tension number may be
-the sole reason for a score that a physical reviewer cannot reproduce.
+This is a development rubric. The tolerances describe this fixture; they are
+not a service recommendation for every bicycle wheel. The complete native
+scene and robot demonstration still need to satisfy them.
 
-After the robot finishes, keep it and its tools clear. Spin the wheel through
-one complete marked revolution in its fixed stand. With a fixed pointer and
-feeler gauges, measure peak-to-peak lateral and radial runout; compare the rim's
-centre plane with the stand's marked centre reference. Video must show the
-whole revolution, not a selected arc.
+After the robot finishes, keep both hands and its wrench clear. Spin the wheel
+through one complete marked revolution in its stand. Use the stand's fixed
+pointer and feeler gauges to measure peak-to-peak lateral and radial runout.
+Compare the rim centre plane with the marked stand centre. Show the complete
+revolution, not a selected arc. Inspect the rim, spokes, nipples and stand for
+damage or bracing.
 
-For an integrity check, apply a 500 g mass through a horizontal cord and a small
-pulley to the rim at each of eight equally spaced marked locations. Measure
-axial displacement against a fixed ruler, then recovery after removing the
-load. This is an assessor procedure after the robot stops, not help to true the
-wheel. The load fixture, rubbing/friction allowance and safe deflection limits
-are not calibrated yet. It must detect a wheel made deceptively straight by
-loosening spokes. Also apply the same 500 g load perpendicular to each spoke at
-its marked free-span midpoint. Measure displacement relative to the unloaded
-position with a digital caliper or calibrated close photograph. Every one of
-the 32 deflections must be 0.15–1.2 mm; missing/broken spokes fail. These are
-explicit provisional service limits, not validated manufacturer values. The
-small-deflection taut-string estimate is F*L/(4*T); use actual spoke spans,
-measurements and crossing contacts when validating the real fixture.
+Check each of the 32 spokes with a basic mechanical spoke tensiometer. Use its
+conversion chart for round 2 mm steel wire; record all readings in newtons
+(1 kgf = 9.80665 N). Each must be 400–1000 N. This prevents earning credit by
+loosening the wheel until the rim looks straight. Missing readings, a missing
+spoke or a damaged component fail the check. The tool is used by the assessor
+after the robot stops; it does not help the robot true the wheel.
 
-| Score | Draft requirement |
+This replaces the draft's 32 hanging-weight/caliper measurements and eight rim
+proof-load trials. A spring tensiometer is an ordinary bicycle repair tool;
+[Park Tool's instructions](https://www.parktool.com/assets/doc/product/TM-1_instructions.pdf)
+explain reading the scale and converting by spoke material and diameter. The
+400–1000 N window is specified for this proposed small-wheel fixture, not taken
+from that manufacturer's recommendations for other rims.
+
+| Score | Requirement |
 |---|---|
-| 0 | Invalid/incomplete evidence, damaged wheel/stand, loose/broken spokes, direct rim bending, external bracing, radial runout over 1 mm, dish error over 0.5 mm, or a failed integrity test. |
-| 0.5 | All integrity checks pass and lateral peak-to-peak runout is at most 1.5 mm. |
-| 1.0 | All integrity checks pass and lateral peak-to-peak runout is at most 0.5 mm. |
+| 0 | Incomplete evidence, damage, direct rim bending, external bracing, any spoke outside 400–1000 N, radial runout over 1 mm, or dish error over 0.5 mm. |
+| 0.5 | All checks pass and lateral peak-to-peak runout is at most 1.5 mm. |
+| 1.0 | All checks pass and lateral peak-to-peak runout is at most 0.5 mm. |
 
-The provisional load limits are 2 mm maximum deflection and 0.2 mm residual
-deflection after unloading. These numbers are explicitly uncalibrated, not
-claimed manufacturer service limits. A review record is a measurement worksheet,
-not a substitute for the video, source and physical evidence.
+A `wheel-judging-v2` record supplies the three millimetre measurements, 32 spoke
+tensions and the reviewed boolean checks listed in `scoring.py`. Missing,
+nonfinite or negative values fail closed. A simulation assessor may reproduce
+the same observable quantities from measured geometry/material state, but a
+hidden target nipple angle is never a scoring criterion.

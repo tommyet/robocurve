@@ -4,6 +4,7 @@ import numpy as np
 from material import Icing
 from scoring import assess
 from native import Coupling
+from contact_audit import intersects_columns
 
 DOWN=np.diag((1.,-1.,-1.))
 
@@ -59,6 +60,26 @@ class MaterialTests(unittest.TestCase):
         self.assertLess(abs(m.balance()["error_m3"]),1e-18)
         self.assertTrue(np.all(m.volume>=0))
 
+    def test_submerged_pressure_spreads_without_creating_material(self):
+        models=[Icing(dx=.0005,xlim=(.225,.245),ylim=(-.01,.01)) for _ in range(3)]
+        for m in models:
+            m.volume[:]=.003*m.dx**2;m.emitted_m3=float(m.volume.sum())
+            m.nozzle_position=np.array((.235,0.,.8025));m.nozzle_rotation=DOWN
+        models[0].pressure_pa=12_000.
+        models[2].nozzle_position=np.array((.235,0.,.85))
+        for m in models:
+            m._relax(1/480)
+            self.assertLess(abs(m.balance()['error_m3']),1e-18)
+            self.assertTrue(np.all(m.volume>=0))
+        self.assertFalse(np.allclose(models[0].volume,models[1].volume,atol=1e-14))
+        np.testing.assert_array_equal(models[1].volume,models[2].volume)
+
+    def test_nozzle_contact_displacement_conserves_volume(self):
+        m=self.model();m.volume[:]=.003*m.dx**2;m.emitted_m3=float(m.volume.sum())
+        m.tool_contact([[.235,0.,m.cake_top+.002]],[[0.,0.,-.01]],1/240)
+        self.assertLess(abs(m.balance()['error_m3']),1e-18)
+        self.assertTrue(np.all(m.volume>=0))
+
     def test_cake_collision_is_irreversible_damage(self):
         m=self.model()
         reaction=m.tool_contact([[.235,0.,m.cake_top-.002]],[[0.,0.,-.01]],1/240)
@@ -86,6 +107,12 @@ class MaterialTests(unittest.TestCase):
         m.volume[0,0]=float("nan")
         self.assertEqual(assess(m.x,m.y,m.volume,dx=m.dx,emitted_m3=0)["score"],0.)
 
+    def test_unaccounted_material_cannot_score(self):
+        m=self.model();m.volume[50,50]=1e-6
+        r=assess(m.x,m.y,m.volume,dx=m.dx,emitted_m3=0.,completed=True,tools_clear=True)
+        self.assertEqual(r['score'],0.)
+        self.assertIn('match measured extrusion',r['reason'])
+
     def test_native_coupling_actually_uses_metal_lip_contact(self):
         c=Coupling(self.model())
         pose=np.array((.235,-.080,c.material.cake_top+.001,0.,0.,0.,1.))
@@ -100,6 +127,19 @@ class MaterialTests(unittest.TestCase):
         m.volume[(abs(X-.235)<.005)&(abs(Y)<.045)]=.004*m.dx**2
         r=assess(m.x,m.y,m.volume,dx=m.dx,emitted_m3=float(m.volume.sum()),completed=True,tools_clear=True)
         self.assertEqual(r['score'],0.)
+
+    def test_fine_point_does_not_invalidate_a_qualifying_tail(self):
+        m=Icing(dx=.0005,xlim=(.22,.25),ylim=(-.05,.05))
+        for start in (-.04,-.025,-.01,.005,.02,.035):
+            s=m.Y-start
+            width=np.where(s<.002,.008,np.maximum(.002,.008-(s-.002)))
+            height=np.where(s<.002,.004,np.maximum(.001,.004-.5*(s-.002)))
+            shape=(s>=0)&(s<.009)&(abs(m.X-.235)<width/2)
+            m.volume[shape]=height[shape]*m.dx**2
+            tip=(s>=.009)&(s<.010)&(abs(m.X-.235)<.0003)
+            m.volume[tip]=.0006*m.dx**2
+        r=assess(m.x,m.y,m.volume,dx=m.dx,emitted_m3=float(m.volume.sum()),completed=True,tools_clear=True)
+        self.assertGreaterEqual(r['valid_shells'],5)
 
     def test_perfect_looking_material_without_execution_proof_scores_zero(self):
         m=self.model()
@@ -130,6 +170,26 @@ class MaterialTests(unittest.TestCase):
         b=assess(m.x,-m.y[::-1],m.volume[:,::-1],**kw)
         self.assertEqual(a['score'],b['score'])
         self.assertGreater(a['valid_shells'],0)
+
+    def test_unsupported_finger_overlap_is_detected_between_grid_centres(self):
+        import itertools
+        m=self.model();m.volume[abs(m.X-.235)<.005]=.004*m.dx**2
+        def box(lo,hi):return np.asarray(list(itertools.product(*zip(lo,hi))))
+        touching=box((.233,-.002,.802),(.237,.002,.806))
+        clear=touching+[0,0,.020]
+        self.assertTrue(intersects_columns(touching,m.x,m.y,m.base,m.height,cake_mask=m.on_cake))
+        self.assertFalse(intersects_columns(clear,m.x,m.y,m.base,m.height,cake_mask=m.on_cake))
+
+    def test_passive_seal_damping_opposes_both_directions(self):
+        c=Coupling(self.model())
+        pose=np.array((.235,-.08,.85,0.,0.,0.,1.))
+        p=pose.copy();p[1]-=.060
+        c.advance(pose,np.zeros(6),p,1/240)
+        p[1]+=.0001;c.advance(pose,np.zeros(6),p,1/240)
+        self.assertGreater(c.last_seal_force_n,0.)
+        self.assertLessEqual(abs(c.last_seal_force_n),c.dispenser.seal_effective_mass_kg*abs(c.last_piston_velocity_m_s)*240+1e-12)
+        p[1]-=.0001;c.advance(pose,np.zeros(6),p,1/240)
+        self.assertLess(c.last_seal_force_n,0.)
 
 
 if __name__=="__main__":unittest.main()

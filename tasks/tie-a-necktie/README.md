@@ -10,6 +10,12 @@ leave it ready to wear. The defining differences from a round rope knot are
 the broad fabric's face orientation, folding, front-loop threading and final
 fit. A centreline knot invariant alone cannot establish success.
 
+On 13 November, the three-second native collar-drape probe ran and rendered,
+but the tie fell onto the table. The current plain neck cylinder does not
+provide the shoulder or folded-collar support of a real collar form. Its
+fixture needs correction before the reset or robot trajectory can be approved.
+No knot has been demonstrated.
+
 ## Local checks
 
 From the repository root:
@@ -19,8 +25,8 @@ From the repository root:
 .venv/bin/python tasks/tie-a-necktie/run.py --check-only
 ```
 
-The original 1.40 m mesh is a tapered two-dimensional strip, 35–70 mm wide with
-pointed ends. It has 2,513 vertices and 4,464 triangles. These tests verify
+The child-sized 1.10 m mesh is a tapered two-dimensional strip, 35–70 mm wide with
+pointed ends. It has 1,973 vertices and 3,504 triangles. These tests verify
 topology and that the diagnostic reset distorts edge lengths by less than
 0.03%. A full triangle/solid audit also checks at least 1 mm initial clearance
 from the neck, mounting post, base and collar points; its regression detects
@@ -56,7 +62,8 @@ It rejects a rigid substitute or software attachment and always leaves the
 task score null. Its floating-end start remains explicitly diagnostic.
 
 The probe logs native node positions, material parameters, source hashes and
-actual runtime. Start at 240 Hz. Inspect fabric/neck contact, self-contact and
+actual runtime. It also saves native-rendered diagnostic MP4 and initial/final
+PNG images, maximum transient edge strain and maximum nodal speed. Start at 240 Hz. Inspect fabric/neck contact, self-contact and
 whether the tie remains accessible on the table. Passing a drape probe is only
 the first gate. Next prove finger friction, threading, knot tightening and
 retention, then build a controller using camera observations and robot state.
@@ -68,7 +75,7 @@ $3 total task cost are not yet established.
 The native surface FEM mesh has stretch, bend and self-contact. It represents
 the sewn/interlined tie as one effective fabric shell, not every textile layer.
 The nominal 1.2 mm thickness and 500 kg/m³ effective density give approximately
-36.3 g. Friction, bending and elasticity remain uncalibrated. Native deformables
+28.5 g. Friction, bending and elasticity remain uncalibrated. Native deformables
 use dynamic friction; independent static friction is not supported. No vertex
 targets, runtime rest-shape edits, attachments or artificial tightening occur.
 
@@ -93,3 +100,35 @@ establish the supported API, not the validity of our material parameters.
 [TieBot](https://tiebots.github.io/) is direct prior robotics research. The
 wearable fit and flat-fabric distinctions may matter to review, but novelty
 relative to existing knot tasks is not guaranteed.
+
+## Reproduce a reviewed score
+
+Complete the measurements and visual decisions in a judging JSON record after
+reviewing the specified views. Include `evidence_files` and matching
+`evidence_sha256` maps for the required photographs and released video, with
+paths relative to the evidence directory. Then run:
+
+```bash
+python tasks/tie-a-necktie/judge.py /path/to/judging.json \
+  --evidence-dir /path/to/trial --out /path/to/reviewed-score.json
+```
+
+This checks every evidence file's digest before applying the rubric. Missing
+measurements, unknown integrity or changed media produce an error, not an
+invented score. No completed judging record exists yet.
+
+## Fixed contact diagnostics
+
+`run.py --mode motion-probe --plan <frozen-plan.json> --out <trial-dir>` replays
+a precomputed joint trajectory and records the same native scene audit,
+ordinary camera observations and assessor-only cloth nodes as smoke mode.
+It checks normal adapter joint and speed limits, freezes the exact action
+file and reads no object state into the policy. A motion probe remains
+unscored; a grasp plan will be frozen after the collar-drape evidence fixes
+the accessible starting fabric shape. No successful tie trajectory exists yet.
+
+The short collar form uses a child-sized tie deliberately. A 346 mm neckband
+and roughly 200 mm of extra knot take-up leave about 554 mm for both ends; a 304/250 mm split
+fits the proposed drop and keeps the narrow tip above the wide tip. This is a
+planning budget, not proof of a successful knot. The full-score rubric also
+requires the narrow tip to be at least 10 mm higher than the wide tip.

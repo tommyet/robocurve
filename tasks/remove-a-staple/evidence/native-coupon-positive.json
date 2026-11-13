@@ -1,0 +1,3230 @@
+{
+  "schema": "native-staple-contact-probe-v1",
+  "complete": true,
+  "calibrated": false,
+  "evidence_type": "Native wire/kinematic-jaw contact coupon; no paper, extraction or robot evidence",
+  "dt": 0.0001,
+  "seconds": 1.0,
+  "samples": [
+    {
+      "step": 1,
+      "jaw_bottom_z_m": 0.0004999997039118777,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 51,
+      "jaw_bottom_z_m": 0.0004992299406655355,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 101,
+      "jaw_bottom_z_m": 0.0004969806184719806,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 151,
+      "jaw_bottom_z_m": 0.0004932539571406542,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 201,
+      "jaw_bottom_z_m": 0.0004880536344363651,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 251,
+      "jaw_bottom_z_m": 0.00048138478244977973,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 301,
+      "jaw_bottom_z_m": 0.00047325398253266865,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 351,
+      "jaw_bottom_z_m": 0.00046366925880290667,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 401,
+      "jaw_bottom_z_m": 0.00045264007022563735,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 451,
+      "jaw_bottom_z_m": 0.0004401773012784164,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 501,
+      "jaw_bottom_z_m": 0.0004262932512095464,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 551,
+      "jaw_bottom_z_m": 0.00041100162190020357,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 601,
+      "jaw_bottom_z_m": 0.00039431750434233557,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 651,
+      "jaw_bottom_z_m": 0.00037625736374567395,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 701,
+      "jaw_bottom_z_m": 0.0003568390232885606,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 751,
+      "jaw_bottom_z_m": 0.0003360816465286218,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 801,
+      "jaw_bottom_z_m": 0.0003140057184906513,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 851,
+      "jaw_bottom_z_m": 0.0002906330254503636,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 901,
+      "jaw_bottom_z_m": 0.0002659866334339698,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 951,
+      "jaw_bottom_z_m": 0.00024009086545479516,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1001,
+      "jaw_bottom_z_m": 0.00021297127750940137,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1051,
+      "jaw_bottom_z_m": 0.0001846546333569027,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1101,
+      "jaw_bottom_z_m": 0.00015516887810636802,
+      "leg_center_m": [
+        0.001500000013038516,
+        0.0,
+        0.0
+      ],
+      "angle_rad": 0.0,
+      "moment_nm": 0.0,
+      "plastic_angle_rad": 0.0,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 0.0,
+      "dissipated_work_j": 0.0,
+      "stored_hardening_j": 0.0
+    },
+    {
+      "step": 1151,
+      "jaw_bottom_z_m": 0.0001245431106383712,
+      "leg_center_m": [
+        0.0014995381934568286,
+        5.2467878930428924e-08,
+        -1.1634522707026917e-05
+      ],
+      "angle_rad": 0.009068093696625548,
+      "moment_nm": 0.0019182478855584606,
+      "plastic_angle_rad": 0.004805320617606745,
+      "plastic_increment_rad": 0.00017052158470226773,
+      "elastic_energy_j": 4.088527722721674e-06,
+      "dissipated_work_j": 9.009976158012646e-06,
+      "stored_hardening_j": 1.039099780709841e-07
+    },
+    {
+      "step": 1201,
+      "jaw_bottom_z_m": 9.280755488790926e-05,
+      "leg_center_m": [
+        0.0014993061777204275,
+        5.182295481631627e-08,
+        -2.7330204829922877e-05
+      ],
+      "angle_rad": 0.019639861408936372,
+      "moment_nm": 0.0020115281889023797,
+      "plastic_angle_rad": 0.015169798766931083,
+      "plastic_increment_rad": 0.0002174986318663966,
+      "elastic_energy_j": 4.495828505276543e-06,
+      "dissipated_work_j": 2.8443372687995782e-05,
+      "stored_hardening_j": 1.0355525758313267e-06
+    },
+    {
+      "step": 1251,
+      "jaw_bottom_z_m": 5.9993530017028035e-05,
+      "leg_center_m": [
+        0.0014990009367465973,
+        5.988867002315601e-08,
+        -4.367878500488587e-05
+      ],
+      "angle_rad": 0.030513109198682324,
+      "moment_nm": 0.002107468610576608,
+      "plastic_angle_rad": 0.025829845619623194,
+      "plastic_increment_rad": 0.00024195738707381078,
+      "elastic_energy_j": 4.934915493961888e-06,
+      "dissipated_work_j": 4.843096053679343e-05,
+      "stored_hardening_j": 3.002314161301053e-06
+    },
+    {
+      "step": 1301,
+      "jaw_bottom_z_m": 2.6133419506589746e-05,
+      "leg_center_m": [
+        0.0014984592562541366,
+        5.903660849071457e-08,
+        -6.0536927776411176e-05
+      ],
+      "angle_rad": 0.04179439166621998,
+      "moment_nm": 0.002207009338231351,
+      "plastic_angle_rad": 0.03688992647015031,
+      "plastic_increment_rad": 0.00022906648652530368,
+      "elastic_energy_j": 5.412100243378209e-06,
+      "dissipated_work_j": 6.916861213153173e-05,
+      "stored_hardening_j": 6.123900037378933e-06
+    },
+    {
+      "step": 1351,
+      "jaw_bottom_z_m": -8.739360802312518e-06,
+      "leg_center_m": [
+        0.0014978940598666668,
+        8.382148308783144e-08,
+        -7.804211782058701e-05
+      ],
+      "angle_rad": 0.05333906486573944,
+      "moment_nm": 0.002308874101756523,
+      "plastic_angle_rad": 0.04820823352850272,
+      "plastic_increment_rad": 0.00028912647212885544,
+      "elastic_energy_j": 5.923221797513326e-06,
+      "dissipated_work_j": 9.039043786594251e-05,
+      "stored_hardening_j": 1.045815200972394e-05
+    },
+    {
+      "step": 1401,
+      "jaw_bottom_z_m": -4.4590395685755705e-05,
+      "leg_center_m": [
+        0.0014973512152209878,
+        1.226256500785894e-07,
+        -9.626599785406142e-05
+      ],
+      "angle_rad": 0.06497770096608567,
+      "moment_nm": 0.002411567949700754,
+      "plastic_angle_rad": 0.05961866107786177,
+      "plastic_increment_rad": 0.00025980559190579423,
+      "elastic_energy_j": 6.461844417804334e-06,
+      "dissipated_work_j": 0.00011178498952099075,
+      "stored_hardening_j": 1.599473136922627e-05
+    },
+    {
+      "step": 1451,
+      "jaw_bottom_z_m": -8.138430450065754e-05,
+      "leg_center_m": [
+        0.001496206852607429,
+        1.1621740014788884e-07,
+        -0.00011587427434278652
+      ],
+      "angle_rad": 0.07792229218189027,
+      "moment_nm": 0.0025257849310166757,
+      "plastic_angle_rad": 0.07230943677963099,
+      "plastic_increment_rad": 0.0002690815878076064,
+      "elastic_energy_j": 7.0884327975010175e-06,
+      "dissipated_work_j": 0.00013558019396180807,
+      "stored_hardening_j": 2.3528945913243525e-05
+    },
+    {
+      "step": 1501,
+      "jaw_bottom_z_m": -0.0001190847761012,
+      "leg_center_m": [
+        0.0014947509625926614,
+        1.138744707418482e-07,
+        -0.00013576883065979928
+      ],
+      "angle_rad": 0.09098428018850152,
+      "moment_nm": 0.002641037766369128,
+      "plastic_angle_rad": 0.0851153073743479,
+      "plastic_increment_rad": 0.0002495193274638591,
+      "elastic_energy_j": 7.750089425986705e-06,
+      "dissipated_work_j": 0.00015959120132690211,
+      "stored_hardening_j": 3.2600769972433746e-05
+    },
+    {
+      "step": 1551,
+      "jaw_bottom_z_m": -0.00015765460467354693,
+      "leg_center_m": [
+        0.0014926126459613442,
+        6.270041552625116e-08,
+        -0.00015638051263522357
+      ],
+      "angle_rad": 0.10446390303004718,
+      "moment_nm": 0.002759975614971005,
+      "plastic_angle_rad": 0.09833062388566717,
+      "plastic_increment_rad": 0.0004976362749512814,
+      "elastic_energy_j": 8.463850439149534e-06,
+      "dissipated_work_j": 0.00018436991978562577,
+      "stored_hardening_j": 4.351010217185041e-05
+    },
+    {
+      "step": 1601,
+      "jaw_bottom_z_m": -0.00019705572645348896,
+      "leg_center_m": [
+        0.0014881979441270232,
+        1.3498106454790104e-07,
+        -0.00019658221572171897
+      ],
+      "angle_rad": 0.1314050192908044,
+      "moment_nm": 0.0029976913466835684,
+      "plastic_angle_rad": 0.1247434829648409,
+      "plastic_increment_rad": 0.0005382247368148089,
+      "elastic_energy_j": 9.984614899979499e-06,
+      "dissipated_work_j": 0.0002338940305590765,
+      "stored_hardening_j": 7.002421443989797e-05
+    },
+    {
+      "step": 1651,
+      "jaw_bottom_z_m": -0.00023724925729078474,
+      "leg_center_m": [
+        0.0014821829972788692,
+        1.0847549702930337e-07,
+        -0.00023798528127372265
+      ],
+      "angle_rad": 0.1593061475647015,
+      "moment_nm": 0.003243877772629718,
+      "plastic_angle_rad": 0.152097530292191,
+      "plastic_increment_rad": 0.0005495457948604947,
+      "elastic_energy_j": 1.1691936670845716e-05,
+      "dissipated_work_j": 0.0002851828692978579,
+      "stored_hardening_j": 0.00010410146424442778
+    },
+    {
+      "step": 1701,
+      "jaw_bottom_z_m": -0.00027819553102312105,
+      "leg_center_m": [
+        0.0014749300898984075,
+        7.775803112508584e-08,
+        -0.0002792457235045731
+      ],
+      "angle_rad": 0.18723787297321598,
+      "moment_nm": 0.0034903341732930807,
+      "plastic_angle_rad": 0.17948157481034246,
+      "plastic_increment_rad": 0.0005395316338191992,
+      "elastic_energy_j": 1.3536036268063887e-05,
+      "dissipated_work_j": 0.0003365279527693919,
+      "stored_hardening_j": 0.00014496136063380248
+    },
+    {
+      "step": 1751,
+      "jaw_bottom_z_m": -0.0003198541386218284,
+      "leg_center_m": [
+        0.0014665907947346568,
+        6.461730350793005e-08,
+        -0.0003205245593562722
+      ],
+      "angle_rad": 0.21533360331811588,
+      "moment_nm": 0.0037382376763363187,
+      "plastic_angle_rad": 0.20702640848181295,
+      "plastic_increment_rad": 0.0005424738433346183,
+      "elastic_energy_j": 1.552713436086707e-05,
+      "dissipated_work_j": 0.0003881745159033991,
+      "stored_hardening_j": 0.00019286970213995309
+    },
+    {
+      "step": 1801,
+      "jaw_bottom_z_m": -0.00036218396807071015,
+      "leg_center_m": [
+        0.00145714171230793,
+        6.211626413232807e-08,
+        -0.0003618556947913021
+      ],
+      "angle_rad": 0.2436438773543721,
+      "moment_nm": 0.003988034211950343,
+      "plastic_angle_rad": 0.23478157910559355,
+      "plastic_increment_rad": 0.0005639464989708533,
+      "elastic_energy_j": 1.767157430631822e-05,
+      "dissipated_work_j": 0.0004402154608229877,
+      "stored_hardening_j": 0.0002480507544929223
+    },
+    {
+      "step": 1851,
+      "jaw_bottom_z_m": -0.0004051432449386441,
+      "leg_center_m": [
+        0.0014475168427452445,
+        -3.533906678399035e-08,
+        -0.000399475364247337
+      ],
+      "angle_rad": 0.2695841007892859,
+      "moment_nm": 0.00421691853637605,
+      "plastic_angle_rad": 0.26021317070845024,
+      "plastic_increment_rad": 0.00041917789413225875,
+      "elastic_energy_j": 1.975822438047993e-05,
+      "dissipated_work_j": 0.0004878996950783441,
+      "stored_hardening_j": 0.0003046990239456527
+    },
+    {
+      "step": 1901,
+      "jaw_bottom_z_m": -0.0004486895736058972,
+      "leg_center_m": [
+        0.0014389720745384693,
+        -1.0904498992658773e-07,
+        -0.00042873070924542844
+      ],
+      "angle_rad": 0.28988101018284135,
+      "moment_nm": 0.004396008913378006,
+      "plastic_angle_rad": 0.2801121014864458,
+      "plastic_increment_rad": 0.00037791520321216556,
+      "elastic_energy_j": 2.1472104851665426e-05,
+      "dissipated_work_j": 0.0005252101902870855,
+      "stored_hardening_j": 0.00035308255229618796
+    },
+    {
+      "step": 1951,
+      "jaw_bottom_z_m": -0.000492779979103486,
+      "leg_center_m": [
+        0.0014300071634352207,
+        -1.2825164219520957e-07,
+        -0.00045797982602380216
+      ],
+      "angle_rad": 0.31030498319184147,
+      "moment_nm": 0.004576220439928012,
+      "plastic_angle_rad": 0.3001356044364459,
+      "plastic_increment_rad": 0.0003784341083742928,
+      "elastic_energy_j": 2.3268659460905485e-05,
+      "dissipated_work_j": 0.0005627542583183356,
+      "stored_hardening_j": 0.0004053662147269381
+    },
+    {
+      "step": 2001,
+      "jaw_bottom_z_m": -0.0005373709495242855,
+      "leg_center_m": [
+        0.0014206734485924244,
+        -1.3332252990494453e-07,
+        -0.000487087934743613
+      ],
+      "angle_rad": 0.33076254085189194,
+      "moment_nm": 0.004756728301634331,
+      "plastic_angle_rad": 0.32019203351492675,
+      "plastic_increment_rad": 0.00042469440703861064,
+      "elastic_energy_j": 2.514051570618782e-05,
+      "dissipated_work_j": 0.0006003600628404875,
+      "stored_hardening_j": 0.0004613532224689078
+    },
+    {
+      "step": 2051,
+      "jaw_bottom_z_m": -0.0005824184789640216,
+      "leg_center_m": [
+        0.001410366385243833,
+        -1.5059356428537285e-07,
+        -0.0005158282583579421
+      ],
+      "angle_rad": 0.3511231297252182,
+      "moment_nm": 0.00493638055639898,
+      "plastic_angle_rad": 0.3401533951554427,
+      "plastic_increment_rad": 0.0003805443838406545,
+      "elastic_energy_j": 2.7075392219548788e-05,
+      "dissipated_work_j": 0.0006377876159164546,
+      "stored_hardening_j": 0.0005206694950609862
+    },
+    {
+      "step": 2101,
+      "jaw_bottom_z_m": -0.0006278781109497929,
+      "leg_center_m": [
+        0.0013997000642120838,
+        -1.6282837123071658e-07,
+        -0.0005442688707262278
+      ],
+      "angle_rad": 0.3714248132084356,
+      "moment_nm": 0.005115513057721492,
+      "plastic_angle_rad": 0.36005700641349897,
+      "plastic_increment_rad": 0.00038061859588923004,
+      "elastic_energy_j": 2.9076082048576775e-05,
+      "dissipated_work_j": 0.00067510688702531,
+      "stored_hardening_j": 0.0005833847154035267
+    },
+    {
+      "step": 2151,
+      "jaw_bottom_z_m": -0.0006737049823132366,
+      "leg_center_m": [
+        0.001388550503179431,
+        -1.7635171900565183e-07,
+        -0.0005723090143874288
+      ],
+      "angle_rad": 0.3916002501095381,
+      "moment_nm": 0.005293531618613557,
+      "plastic_angle_rad": 0.37983684651261906,
+      "plastic_increment_rad": 0.00037864064268158847,
+      "elastic_energy_j": 3.113497444140164e-05,
+      "dissipated_work_j": 0.0007121940872111601,
+      "stored_hardening_j": 0.000649242134858929
+    },
+    {
+      "step": 2201,
+      "jaw_bottom_z_m": -0.0007198538674650617,
+      "leg_center_m": [
+        0.0013770230580121279,
+        -1.918114378440805e-07,
+        -0.0005999425193294883
+      ],
+      "angle_rad": 0.41164796750275406,
+      "moment_nm": 0.005470423242671347,
+      "plastic_angle_rad": 0.39949147140792884,
+      "plastic_increment_rad": 0.0003827878610976649,
+      "elastic_energy_j": 3.325058939328767e-05,
+      "dissipated_work_j": 0.0007490465088898658,
+      "stored_hardening_j": 0.000718170460774524
+    },
+    {
+      "step": 2251,
+      "jaw_bottom_z_m": -0.0007662792230272465,
+      "leg_center_m": [
+        0.0013649738393723965,
+        -2.1021193674641836e-07,
+        -0.0006270285812206566
+      ],
+      "angle_rad": 0.43148886094605954,
+      "moment_nm": 0.005645489949524061,
+      "plastic_angle_rad": 0.41894332772489495,
+      "plastic_increment_rad": 0.00037668118967483776,
+      "elastic_energy_j": 3.541284085575244e-05,
+      "dissipated_work_j": 0.0007855187394841775,
+      "stored_hardening_j": 0.0007898108033034391
+    },
+    {
+      "step": 2301,
+      "jaw_bottom_z_m": -0.0008129352327788521,
+      "leg_center_m": [
+        0.0013524185633286834,
+        -2.2152303813527396e-07,
+        -0.0006534955464303493
+      ],
+      "angle_rad": 0.451080011250806,
+      "moment_nm": 0.005818353040448294,
+      "plastic_angle_rad": 0.43815033782758755,
+      "plastic_increment_rad": 0.000368922090430728,
+      "elastic_energy_j": 3.761470233699325e-05,
+      "dissipated_work_j": 0.0008215318834267261,
+      "stored_hardening_j": 0.0008638907334229308
+    },
+    {
+      "step": 2351,
+      "jaw_bottom_z_m": -0.0008597758528711022,
+      "leg_center_m": [
+        0.001339679816737771,
+        -2.392746694113157e-07,
+        -0.0006794395158067346
+      ],
+      "angle_rad": 0.47044922107046605,
+      "moment_nm": 0.00598925783297471,
+      "plastic_angle_rad": 0.45713975921941113,
+      "plastic_increment_rad": 0.00036302847050225846,
+      "elastic_energy_j": 3.985689932205436e-05,
+      "dissipated_work_j": 0.0008571370485363951,
+      "stored_hardening_j": 0.0009403954175663151
+    },
+    {
+      "step": 2401,
+      "jaw_bottom_z_m": -0.0009067548572671016,
+      "leg_center_m": [
+        0.001326610567048192,
+        -2.5163524242088897e-07,
+        -0.0007047227118164301
+      ],
+      "angle_rad": 0.4895263174799387,
+      "moment_nm": 0.006157585154234758,
+      "plastic_angle_rad": 0.47584279491497256,
+      "plastic_increment_rad": 0.00035980275505876995,
+      "elastic_energy_j": 4.212872770183589e-05,
+      "dissipated_work_j": 0.0008922052404655728,
+      "stored_hardening_j": 0.0010189186446262165
+    },
+    {
+      "step": 2451,
+      "jaw_bottom_z_m": -0.0009538258833613564,
+      "leg_center_m": [
+        0.0013133824104443192,
+        -2.6594244673106004e-07,
+        -0.0007293589296750724
+      ],
+      "angle_rad": 0.5082954236019478,
+      "moment_nm": 0.006323194914134836,
+      "plastic_angle_rad": 0.4942438793483148,
+      "plastic_increment_rad": 0.00035364477523764856,
+      "elastic_energy_j": 4.4425326580156305e-05,
+      "dissipated_work_j": 0.0009267072737780894,
+      "stored_hardening_j": 0.001099246555229722
+    },
+    {
+      "step": 2501,
+      "jaw_bottom_z_m": -0.001000942477734064,
+      "leg_center_m": [
+        0.0012998632155358791,
+        -2.834155452546838e-07,
+        -0.0007532729068771005
+      ],
+      "angle_rad": 0.5267293313557114,
+      "moment_nm": 0.006485847041373908,
+      "plastic_angle_rad": 0.5123163379304361,
+      "plastic_increment_rad": 0.0003470873749045964,
+      "elastic_energy_j": 4.674023538233188e-05,
+      "dissipated_work_j": 0.0009605931336195667,
+      "stored_hardening_j": 0.0011811061354970371
+    },
+    {
+      "step": 2551,
+      "jaw_bottom_z_m": -0.0010480581419950357,
+      "leg_center_m": [
+        0.0012861699797213078,
+        -2.912107390784513e-07,
+        -0.0007764559122733772
+      ],
+      "angle_rad": 0.5448077115303821,
+      "moment_nm": 0.006645362160562205,
+      "plastic_angle_rad": 0.5300402400624661,
+      "plastic_increment_rad": 0.000341598073203355,
+      "elastic_energy_j": 4.906759805003555e-05,
+      "dissipated_work_j": 0.000993825450117123,
+      "stored_hardening_j": 0.0012642419523846448
+    },
+    {
+      "step": 2601,
+      "jaw_bottom_z_m": -0.0010951263786719875,
+      "leg_center_m": [
+        0.001272299443371594,
+        -3.061400661863445e-07,
+        -0.0007988567231222987
+      ],
+      "angle_rad": 0.5624957302220632,
+      "moment_nm": 0.006801432913724106,
+      "plastic_angle_rad": 0.5473814348582319,
+      "plastic_increment_rad": 0.0003377715367586696,
+      "elastic_energy_j": 5.139943297765511e-05,
+      "dissipated_work_j": 0.0010263401903591839,
+      "stored_hardening_j": 0.001348318958523555
+    },
+    {
+      "step": 2651,
+      "jaw_bottom_z_m": -0.0011421007370979377,
+      "leg_center_m": [
+        0.0012585349613800645,
+        -3.2389948501077015e-07,
+        -0.0008206216152757406
+      ],
+      "angle_rad": 0.5798295988416666,
+      "moment_nm": 0.006954378813308812,
+      "plastic_angle_rad": 0.5643754237009804,
+      "plastic_increment_rad": 0.0003291650720726811,
+      "elastic_energy_j": 5.3737094087776115e-05,
+      "dissipated_work_j": 0.0010582039194393373,
+      "stored_hardening_j": 0.0014333382849494745
+    },
+    {
+      "step": 2701,
+      "jaw_bottom_z_m": -0.0011889348592524014,
+      "leg_center_m": [
+        0.0012448879424482584,
+        -3.3852725778160675e-07,
+        -0.0008416955824941397
+      ],
+      "angle_rad": 0.5967657704112428,
+      "moment_nm": 0.007103815621275687,
+      "plastic_angle_rad": 0.5809795134750746,
+      "plastic_increment_rad": 0.0003805395360588017,
+      "elastic_energy_j": 5.607132931231165e-05,
+      "dissipated_work_j": 0.0010893365877657653,
+      "stored_hardening_j": 0.0015189173778498042
+    },
+    {
+      "step": 2751,
+      "jaw_bottom_z_m": -0.0012355825255111652,
+      "leg_center_m": [
+        0.0012308874865993857,
+        -3.538069393016485e-07,
+        -0.0008618470747023821
+      ],
+      "angle_rad": 0.6132511157067204,
+      "moment_nm": 0.007249274550353427,
+      "plastic_angle_rad": 0.597141616705935,
+      "plastic_increment_rad": 0.00030712446180683494,
+      "elastic_energy_j": 5.839109056266878e-05,
+      "dissipated_work_j": 0.0011196405313236288,
+      "stored_hardening_j": 0.0016046014968097997
+    },
+    {
+      "step": 2801,
+      "jaw_bottom_z_m": -0.0012819977002594726,
+      "leg_center_m": [
+        0.0012169105466455221,
+        -3.6990732610320265e-07,
+        -0.0008811504812911153
+      ],
+      "angle_rad": 0.6292760677399071,
+      "moment_nm": 0.007390671185940376,
+      "plastic_angle_rad": 0.6128523539933729,
+      "plastic_increment_rad": 0.0003093280852057202,
+      "elastic_energy_j": 6.0691133976321484e-05,
+      "dissipated_work_j": 0.0011490981637375755,
+      "stored_hardening_j": 0.0016901460350784827
+    },
+    {
+      "step": 2851,
+      "jaw_bottom_z_m": -0.001328134577323619,
+      "leg_center_m": [
+        0.0012031721416860819,
+        -3.867161240123096e-07,
+        -0.00089979765471071
+      ],
+      "angle_rad": 0.6448845034942254,
+      "moment_nm": 0.0075283926778902084,
+      "plastic_angle_rad": 0.6281547419878027,
+      "plastic_increment_rad": 0.00030185123078959865,
+      "elastic_energy_j": 6.297410701390102e-05,
+      "dissipated_work_j": 0.0011777901412271304,
+      "stored_hardening_j": 0.0017756027094679332
+    },
+    {
+      "step": 2901,
+      "jaw_bottom_z_m": -0.001373947625176114,
+      "leg_center_m": [
+        0.0011895798379555345,
+        -4.105564528344985e-07,
+        -0.000917749188374728
+      ],
+      "angle_rad": 0.6600760261932463,
+      "moment_nm": 0.00766243552523451,
+      "plastic_angle_rad": 0.6430483916927252,
+      "plastic_increment_rad": 0.0002972815731621872,
+      "elastic_energy_j": 6.523657575375099e-05,
+      "dissipated_work_j": 0.00120571573442386,
+      "stored_hardening_j": 0.001860800553263702
+    },
+    {
+      "step": 2951,
+      "jaw_bottom_z_m": -0.001419391631869804,
+      "leg_center_m": [
+        0.0011742975329980254,
+        -5.602285000350093e-07,
+        -0.0009375378140248358
+      ],
+      "angle_rad": 0.6772849830129792,
+      "moment_nm": 0.007814279261879251,
+      "plastic_angle_rad": 0.6599199179865809,
+      "plastic_increment_rad": 0.0002514827797595585,
+      "elastic_energy_j": 6.784773375848461e-05,
+      "dissipated_work_j": 0.0012373498462248404,
+      "stored_hardening_j": 0.00195972434169937
+    },
+    {
+      "step": 3001,
+      "jaw_bottom_z_m": -0.0014644217496566042,
+      "leg_center_m": [
+        0.0011578123085200787,
+        -7.790717404532188e-08,
+        -0.0009576061274856329
+      ],
+      "angle_rad": 0.6949981310611199,
+      "moment_nm": 0.00797057174465692,
+      "plastic_angle_rad": 0.6772857494063267,
+      "plastic_increment_rad": 0.0002766219009103388,
+      "elastic_energy_j": 7.058890437413698e-05,
+      "dissipated_work_j": 0.0012699107801368641,
+      "stored_hardening_j": 0.0020642219385700023
+    },
+    {
+      "step": 3051,
+      "jaw_bottom_z_m": -0.001508993539246811,
+      "leg_center_m": [
+        0.001144704408943653,
+        7.333238016826726e-08,
+        -0.0009732848848216236
+      ],
+      "angle_rad": 0.708818081867905,
+      "moment_nm": 0.008092512487069733,
+      "plastic_angle_rad": 0.6908347207855278,
+      "plastic_increment_rad": 0.0002677272572183237,
+      "elastic_energy_j": 7.276528705931065e-05,
+      "dissipated_work_j": 0.001295315101472867,
+      "stored_hardening_j": 0.002147636751492681
+    },
+    {
+      "step": 3101,
+      "jaw_bottom_z_m": -0.0015530630136653158,
+      "leg_center_m": [
+        0.0011318064061924815,
+        1.1245560216366357e-07,
+        -0.0009882530430331826
+      ],
+      "angle_rad": 0.7221810569891567,
+      "moment_nm": 0.00821042109108078,
+      "plastic_angle_rad": 0.703935676786755,
+      "plastic_increment_rad": 0.0002587184544952959,
+      "elastic_energy_j": 7.49011272142935e-05,
+      "dissipated_work_j": 0.0013198793939751682,
+      "stored_hardening_j": 0.0022298644667395197
+    },
+    {
+      "step": 3151,
+      "jaw_bottom_z_m": -0.0015965866816614396,
+      "leg_center_m": [
+        0.0011191645171493292,
+        1.468868475740237e-07,
+        -0.0010025381343439221
+      ],
+      "angle_rad": 0.7350914745277075,
+      "moment_nm": 0.008324336539950381,
+      "plastic_angle_rad": 0.7165929488833733,
+      "plastic_increment_rad": 0.00024977177105327893,
+      "elastic_energy_j": 7.699397647817012e-05,
+      "dissipated_work_j": 0.001343611779156329,
+      "stored_hardening_j": 0.0023107745447521594
+    },
+    {
+      "step": 3201,
+      "jaw_bottom_z_m": -0.0016395215906295463,
+      "leg_center_m": [
+        0.0011068170424550772,
+        1.8075556340590992e-07,
+        -0.0010161850368604064
+      ],
+      "angle_rad": 0.7475545564751146,
+      "moment_nm": 0.008434304910074533,
+      "plastic_angle_rad": 0.728811656674949,
+      "plastic_increment_rad": 0.00024103432716303556,
+      "elastic_energy_j": 7.9041665906786e-05,
+      "dissipated_work_j": 0.0013665218562655328,
+      "stored_hardening_j": 0.002390248939073776
+    },
+    {
+      "step": 3251,
+      "jaw_bottom_z_m": -0.0016818253689980796,
+      "leg_center_m": [
+        0.0010947231203317642,
+        2.1332768085358111e-07,
+        -0.0010291588259860873
+      ],
+      "angle_rad": 0.7595680321262551,
+      "moment_nm": 0.008540306165819885,
+      "plastic_angle_rad": 0.7405895739799887,
+      "plastic_increment_rad": 0.0002324222851718173,
+      "elastic_energy_j": 8.104092156215685e-05,
+      "dissipated_work_j": 0.001388605451212482,
+      "stored_hardening_j": 0.0024681281268953744
+    },
+    {
+      "step": 3301,
+      "jaw_bottom_z_m": -0.0017234562680451854,
+      "leg_center_m": [
+        0.001082944916561246,
+        2.448543341415643e-07,
+        -0.00104152737185359
+      ],
+      "angle_rad": 0.7711417887079324,
+      "moment_nm": 0.008642427547422922,
+      "plastic_angle_rad": 0.7519363941581036,
+      "plastic_increment_rad": 0.00022336547191058155,
+      "elastic_energy_j": 8.29906154582829e-05,
+      "dissipated_work_j": 0.0014098807390464476,
+      "stored_hardening_j": 0.002544337533867709
+    },
+    {
+      "step": 3351,
+      "jaw_bottom_z_m": -0.0017643732030996648,
+      "leg_center_m": [
+        0.0010714608943089843,
+        2.7432969318397227e-07,
+        -0.0010532763553783298
+      ],
+      "angle_rad": 0.7822774391756321,
+      "moment_nm": 0.008740683286843806,
+      "plastic_angle_rad": 0.7628536985382014,
+      "plastic_increment_rad": 0.00021491354953128257,
+      "elastic_energy_j": 8.488838257878964e-05,
+      "dissipated_work_j": 0.0014303506847591313,
+      "stored_hardening_j": 0.002618755944180358
+    },
+    {
+      "step": 3401,
+      "jaw_bottom_z_m": -0.0018045357940865798,
+      "leg_center_m": [
+        0.0010603440459817648,
+        -2.2247252218221547e-07,
+        -0.0010644763242453337
+      ],
+      "angle_rad": 0.7929873989146156,
+      "moment_nm": 0.008835182931599541,
+      "plastic_angle_rad": 0.7733536590666166,
+      "plastic_increment_rad": 0.00020628184843117604,
+      "elastic_energy_j": 8.67338415942532e-05,
+      "dissipated_work_j": 0.0014500381107499097,
+      "stored_hardening_j": 0.00269134146896276
+    },
+    {
+      "step": 3451,
+      "jaw_bottom_z_m": -0.0018439044053775154,
+      "leg_center_m": [
+        0.00104948366060853,
+        -3.252001192777243e-07,
+        -0.0010750513756647706
+      ],
+      "angle_rad": 0.8032655576947599,
+      "moment_nm": 0.008925872567894951,
+      "plastic_angle_rad": 0.78343028532166,
+      "plastic_increment_rad": 0.00019833604510913338,
+      "elastic_energy_j": 8.852355677588849e-05,
+      "dissipated_work_j": 0.0014689317849781159,
+      "stored_hardening_j": 0.002761933553816299
+    },
+    {
+      "step": 3501,
+      "jaw_bottom_z_m": -0.001882440184906156,
+      "leg_center_m": [
+        0.0010390024399384856,
+        -3.517277491482673e-07,
+        -0.0010851221159100533
+      ],
+      "angle_rad": 0.8131303485203437,
+      "moment_nm": 0.00901291483988538,
+      "plastic_angle_rad": 0.793101648876154,
+      "plastic_increment_rad": 0.00019017478853976946,
+      "elastic_energy_j": 9.025848212336238e-05,
+      "dissipated_work_j": 0.0014870655916427924,
+      "stored_hardening_j": 0.0028305460145253334
+    },
+    {
+      "step": 3551,
+      "jaw_bottom_z_m": -0.0019201051025105895,
+      "leg_center_m": [
+        0.0010288550984114408,
+        -3.7290027421477134e-07,
+        -0.0010946531547233462
+      ],
+      "angle_rad": 0.8225831822369085,
+      "moment_nm": 0.009096322196207998,
+      "plastic_angle_rad": 0.8023691329120018,
+      "plastic_increment_rad": 0.0001819570010721152,
+      "elastic_energy_j": 9.193675277469593e-05,
+      "dissipated_work_j": 0.0015044421242100074,
+      "stored_hardening_j": 0.0028970830145248093
+    },
+    {
+      "step": 3601,
+      "jaw_bottom_z_m": -0.0019568619874644803,
+      "leg_center_m": [
+        0.0010190601460635662,
+        -3.915104684892867e-07,
+        -0.0011036802316084504
+      ],
+      "angle_rad": 0.8316312177534212,
+      "moment_nm": 0.009176157803706661,
+      "plastic_angle_rad": 0.8112397559674064,
+      "plastic_increment_rad": 0.00017380208482854726,
+      "elastic_energy_j": 9.355763559836298e-05,
+      "dissipated_work_j": 0.0015210745424388914,
+      "stored_hardening_j": 0.002961494737479256
+    },
+    {
+      "step": 3651,
+      "jaw_bottom_z_m": -0.0019926745651600913,
+      "leg_center_m": [
+        0.0010096622863784432,
+        -4.10273855777632e-07,
+        -0.0011122721480205655
+      ],
+      "angle_rad": 0.8402930270899005,
+      "moment_nm": 0.009252585533146175,
+      "plastic_angle_rad": 0.8197317259051312,
+      "plastic_increment_rad": 0.00016570689688788162,
+      "elastic_energy_j": 9.51225989424288e-05,
+      "dissipated_work_j": 0.0015369969860721264,
+      "stored_hardening_j": 0.0030238204610493224
+    },
+    {
+      "step": 3701,
+      "jaw_bottom_z_m": -0.002027507492906942,
+      "leg_center_m": [
+        0.0010008659446612,
+        -4.505911306296184e-07,
+        -0.0011206257622689009
+      ],
+      "angle_rad": 0.8486008328450315,
+      "moment_nm": 0.0093258897015738,
+      "plastic_angle_rad": 0.8278766335082008,
+      "plastic_increment_rad": 0.00020160506881893524,
+      "elastic_energy_j": 9.663579858435587e-05,
+      "dissipated_work_j": 0.0015522686878278822,
+      "stored_hardening_j": 0.0030842087413899223
+    },
+    {
+      "step": 3751,
+      "jaw_bottom_z_m": -0.0020613263948107766,
+      "leg_center_m": [
+        0.0009919194271788,
+        -4.4436632151700906e-07,
+        -0.001128060044720769
+      ],
+      "angle_rad": 0.856450454070612,
+      "moment_nm": 0.009395151065328941,
+      "plastic_angle_rad": 0.8355723405921033,
+      "plastic_increment_rad": 0.00014934155414461674,
+      "elastic_energy_j": 9.807651504483507e-05,
+      "dissipated_work_j": 0.0015666981386101993,
+      "stored_hardening_j": 0.0031418151136315456
+    },
+    {
+      "step": 3801,
+      "jaw_bottom_z_m": -0.0020940978956984213,
+      "leg_center_m": [
+        0.0009835532400757074,
+        -4.556476369543816e-07,
+        -0.0011352583533152938
+      ],
+      "angle_rad": 0.8639560295306604,
+      "moment_nm": 0.009461376731152901,
+      "plastic_angle_rad": 0.8429307479058762,
+      "plastic_increment_rad": 0.00014105190397177336,
+      "elastic_energy_j": 9.946405516533509e-05,
+      "dissipated_work_j": 0.0015804951523235228,
+      "stored_hardening_j": 0.003197395105943218
+    },
+    {
+      "step": 3851,
+      "jaw_bottom_z_m": -0.0021257896540550513,
+      "leg_center_m": [
+        0.0009756801300682127,
+        -4.76642554758655e-07,
+        -0.0011421884410083294
+      ],
+      "angle_rad": 0.8711165547001138,
+      "moment_nm": 0.009524557835589262,
+      "plastic_angle_rad": 0.8499508706210266,
+      "plastic_increment_rad": 0.00013147071697710875,
+      "elastic_energy_j": 0.00010079689107053871,
+      "dissipated_work_j": 0.0015936578824144296,
+      "stored_hardening_j": 0.0032508741711124844
+    },
+    {
+      "step": 3901,
+      "jaw_bottom_z_m": -0.002156370393941361,
+      "leg_center_m": [
+        0.0009681002702564001,
+        -4.901719421468442e-07,
+        -0.0011486458824947476
+      ],
+      "angle_rad": 0.8779057677582017,
+      "moment_nm": 0.009584462656689993,
+      "plastic_angle_rad": 0.8566069618544462,
+      "plastic_increment_rad": 0.0001233083052504917,
+      "elastic_energy_j": 0.00010206880490831669,
+      "dissipated_work_j": 0.0016061380534770915,
+      "stored_hardening_j": 0.0033019896919387697
+    },
+    {
+      "step": 3951,
+      "jaw_bottom_z_m": -0.0021858099358591405,
+      "leg_center_m": [
+        0.0009607577812857926,
+        -4.92465517254459e-07,
+        -0.0011545942397788167
+      ],
+      "angle_rad": 0.8843257567103793,
+      "moment_nm": 0.009641109618032759,
+      "plastic_angle_rad": 0.8629010686703065,
+      "plastic_increment_rad": 0.0001143805294818774,
+      "elastic_energy_j": 0.00010327888296324867,
+      "dissipated_work_j": 0.0016179395037568304,
+      "stored_hardening_j": 0.0033506921444056053
+    },
+    {
+      "step": 4001,
+      "jaw_bottom_z_m": -0.002214079226534796,
+      "leg_center_m": [
+        0.000953907088842243,
+        -5.067352049081819e-07,
+        -0.0011603166349232197
+      ],
+      "angle_rad": 0.890419292093652,
+      "moment_nm": 0.009694876106708685,
+      "plastic_angle_rad": 0.8688751229676327,
+      "plastic_increment_rad": 0.00010817603503974986,
+      "elastic_energy_j": 0.00010443402524936777,
+      "dissipated_work_j": 0.0016291408555643172,
+      "stored_hardening_j": 0.003397247906904084
+    },
+    {
+      "step": 4051,
+      "jaw_bottom_z_m": -0.0022411503675914216,
+      "leg_center_m": [
+        0.0009473515674471855,
+        -5.05564742070419e-07,
+        -0.0011655905982479453
+      ],
+      "angle_rad": 0.8961444555904269,
+      "moment_nm": 0.009745392255209652,
+      "plastic_angle_rad": 0.8744880283566276,
+      "plastic_increment_rad": 8.482853932247039e-05,
+      "elastic_energy_j": 0.00010552518911988923,
+      "dissipated_work_j": 0.0016396650531686824,
+      "stored_hardening_j": 0.003441281902825778
+    },
+    {
+      "step": 4101,
+      "jaw_bottom_z_m": -0.0022669966430811355,
+      "leg_center_m": [
+        0.0009445277974009514,
+        9.649177012960308e-10,
+        -0.001162785803899169
+      ],
+      "angle_rad": 0.8951979866176842,
+      "moment_nm": 0.008787984313002364,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 8.58096314284174e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 4151,
+      "jaw_bottom_z_m": -0.002291592545850486,
+      "leg_center_m": [
+        0.0009446140611544251,
+        5.823520510261915e-08,
+        -0.001162988948635757
+      ],
+      "angle_rad": 0.8952972613772405,
+      "moment_nm": 0.008832657954802694,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 8.668427394059926e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 4201,
+      "jaw_bottom_z_m": -0.0023149138027129404,
+      "leg_center_m": [
+        0.0009444484603591263,
+        3.0359700531334965e-08,
+        -0.0011626466875895858
+      ],
+      "angle_rad": 0.8951101911818391,
+      "moment_nm": 0.008748476366872052,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 8.503982082413205e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 4251,
+      "jaw_bottom_z_m": -0.0023369373984035843,
+      "leg_center_m": [
+        0.000944471568800509,
+        3.230329070902371e-08,
+        -0.0011626591440290213
+      ],
+      "angle_rad": 0.8951345428420003,
+      "moment_nm": 0.008759434613944609,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 8.525299417330107e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 4301,
+      "jaw_bottom_z_m": -0.0023576415982924123,
+      "leg_center_m": [
+        0.0009444309398531914,
+        3.0685299634569674e-08,
+        -0.0011626207269728184
+      ],
+      "angle_rad": 0.8950889662081906,
+      "moment_nm": 0.00873892512873021,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 8.485423600616928e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 4351,
+      "jaw_bottom_z_m": -0.0023770059698337816,
+      "leg_center_m": [
+        0.0009444300667382777,
+        3.012107541167097e-08,
+        -0.0011626050109043717
+      ],
+      "angle_rad": 0.8950884492549227,
+      "moment_nm": 0.008738692499759672,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 8.484971845039553e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 4401,
+      "jaw_bottom_z_m": -0.0023950114027308706,
+      "leg_center_m": [
+        0.0009444359457120299,
+        2.9448914418139793e-08,
+        -0.0011626066407188773
+      ],
+      "angle_rad": 0.8950956192565331,
+      "moment_nm": 0.008741919000484369,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 8.49123864566996e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 4451,
+      "jaw_bottom_z_m": -0.0024116401277952328,
+      "leg_center_m": [
+        0.0009445034083910286,
+        6.129604201987604e-08,
+        -0.0011627571657299995
+      ],
+      "angle_rad": 0.8951690017467233,
+      "moment_nm": 0.008774941121069949,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 8.555510186471595e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 4501,
+      "jaw_bottom_z_m": -0.002426875734482838,
+      "leg_center_m": [
+        0.0009446024778299034,
+        6.084990644694699e-08,
+        -0.0011629306245595217
+      ],
+      "angle_rad": 0.8952812256381869,
+      "moment_nm": 0.008825441872228565,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 8.654269360009474e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 4551,
+      "jaw_bottom_z_m": -0.002440703187089304,
+      "leg_center_m": [
+        0.000944641069509089,
+        6.019580212068831e-08,
+        -0.0011630572844296694
+      ],
+      "angle_rad": 0.8953272480946949,
+      "moment_nm": 0.008846151977657155,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 8.694933867978625e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 4601,
+      "jaw_bottom_z_m": -0.0024531088395883176,
+      "leg_center_m": [
+        0.0009444242459721863,
+        2.8617650471574052e-08,
+        -0.0011625263141468167
+      ],
+      "angle_rad": 0.8950816477219633,
+      "moment_nm": 0.008735631809927943,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 8.479029235402775e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 4651,
+      "jaw_bottom_z_m": -0.002464080449098612,
+      "leg_center_m": [
+        0.000944489729590714,
+        5.8173430517172164e-08,
+        -0.0011627388885244727
+      ],
+      "angle_rad": 0.8951523653371155,
+      "moment_nm": 0.008767454736746436,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 8.540918062321949e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 4701,
+      "jaw_bottom_z_m": -0.0024736071879662225,
+      "leg_center_m": [
+        0.0009445276809856296,
+        5.7710231260443834e-08,
+        -0.0011628152569755912
+      ],
+      "angle_rad": 0.8951961317845104,
+      "moment_nm": 0.00878714963807414,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 8.57933319576739e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 4751,
+      "jaw_bottom_z_m": -0.002481679654450061,
+      "leg_center_m": [
+        0.0009445556788705289,
+        5.786071355373679e-08,
+        -0.0011628890642896295
+      ],
+      "angle_rad": 0.8952289285323624,
+      "moment_nm": 0.008801908174607517,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 8.608176390469184e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 4801,
+      "jaw_bottom_z_m": -0.0024882898820003108,
+      "leg_center_m": [
+        0.0009445803007110953,
+        5.7384514917657725e-08,
+        -0.0011628845240920782
+      ],
+      "angle_rad": 0.8952566087501238,
+      "moment_nm": 0.00881436427260017,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 8.632557503343372e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 4851,
+      "jaw_bottom_z_m": -0.0024934313471204404,
+      "leg_center_m": [
+        0.0009445517207495868,
+        5.68225573260861e-08,
+        -0.0011628572829067707
+      ],
+      "angle_rad": 0.8952254741042952,
+      "moment_nm": 0.0088003536819773,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 8.60513610309905e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 4901,
+      "jaw_bottom_z_m": -0.0024970989758051143,
+      "leg_center_m": [
+        0.0009445204050280154,
+        5.6172059004211405e-08,
+        -0.0011627433123067021
+      ],
+      "angle_rad": 0.895185991002501,
+      "moment_nm": 0.008782586286169888,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 8.570424652668826e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 4951,
+      "jaw_bottom_z_m": -0.002499289148547618,
+      "leg_center_m": [
+        0.0009444180177524686,
+        5.4919794933994126e-08,
+        -0.0011625706683844328
+      ],
+      "angle_rad": 0.895070613091222,
+      "moment_nm": 0.008730666226094377,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 8.469392527940562e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 5001,
+      "jaw_bottom_z_m": -0.002499999703911878,
+      "leg_center_m": [
+        0.0009445673786103725,
+        5.649868128898561e-08,
+        -0.0011629086220636964
+      ],
+      "angle_rad": 0.895241667057712,
+      "moment_nm": 0.008807640511014866,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 8.619392374585583e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 5051,
+      "jaw_bottom_z_m": -0.002499229940665536,
+      "leg_center_m": [
+        0.0009444053866900504,
+        5.4566868357142084e-08,
+        -0.001162542263045907
+      ],
+      "angle_rad": 0.8950569049540722,
+      "moment_nm": 0.008724497564376946,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 8.45742863897992e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 5101,
+      "jaw_bottom_z_m": -0.002496980618471981,
+      "leg_center_m": [
+        0.0009439191198907793,
+        4.665740860332335e-08,
+        -0.0011614446993917227
+      ],
+      "angle_rad": 0.8945022715548419,
+      "moment_nm": 0.008474912534723291,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 7.980460274578886e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 5151,
+      "jaw_bottom_z_m": -0.0024932539571406545,
+      "leg_center_m": [
+        0.0009435652755200863,
+        -1.4799120151565148e-07,
+        -0.0011598126729950309
+      ],
+      "angle_rad": 0.893420915674115,
+      "moment_nm": 0.007988302388396193,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 7.090330560939593e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 5201,
+      "jaw_bottom_z_m": -0.002488053634436365,
+      "leg_center_m": [
+        0.0009461870649829507,
+        -2.278903821206768e-07,
+        -0.001158113474957645
+      ],
+      "angle_rad": 0.8902898016172996,
+      "moment_nm": 0.006579301062829299,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 4.8096891639274175e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 5251,
+      "jaw_bottom_z_m": -0.00248138478244978,
+      "leg_center_m": [
+        0.0009507322101853788,
+        -1.5487385951473698e-07,
+        -0.0011561523424461484
+      ],
+      "angle_rad": 0.8856795123506762,
+      "moment_nm": 0.004504670892848754,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.2546733169865328e-05,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 5301,
+      "jaw_bottom_z_m": -0.002473253982532669,
+      "leg_center_m": [
+        0.0009562629275023937,
+        -5.55172725569264e-08,
+        -0.0011537725804373622
+      ],
+      "angle_rad": 0.880083469286202,
+      "moment_nm": 0.0019864515138353404,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 4.384432907576352e-06,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 5351,
+      "jaw_bottom_z_m": -0.002463669258802907,
+      "leg_center_m": [
+        0.0009604789665900171,
+        3.2841632191527026e-11,
+        -0.0011519934050738811
+      ],
+      "angle_rad": 0.8758617393046512,
+      "moment_nm": 8.667302213748449e-05,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 8.346903073827642e-09,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 5401,
+      "jaw_bottom_z_m": -0.0024526400702256377,
+      "leg_center_m": [
+        0.000960488454438746,
+        1.9600429612687265e-10,
+        -0.0011519920080900192
+      ],
+      "angle_rad": 0.8758541343261136,
+      "moment_nm": 8.325078179557407e-05,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 7.70076963286032e-09,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 5451,
+      "jaw_bottom_z_m": -0.0024401773012784162,
+      "leg_center_m": [
+        0.0009604871738702059,
+        1.4948164234196426e-11,
+        -0.0011519917752593756
+      ],
+      "angle_rad": 0.8758543219772543,
+      "moment_nm": 8.333522480890584e-05,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 7.71639965994542e-09,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 5501,
+      "jaw_bottom_z_m": -0.0024262932512095466,
+      "leg_center_m": [
+        0.0009604879305697978,
+        1.3892598182962956e-10,
+        -0.0011519920080900192
+      ],
+      "angle_rad": 0.8758543955718953,
+      "moment_nm": 8.336834239732746e-05,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 7.722533904531144e-09,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 5551,
+      "jaw_bottom_z_m": -0.0024110016219002035,
+      "leg_center_m": [
+        0.0009604859515093267,
+        -2.4521868910443168e-11,
+        -0.0011519917752593756
+      ],
+      "angle_rad": 0.8758546153886532,
+      "moment_nm": 8.346725993838563e-05,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 7.740870535135596e-09,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 5601,
+      "jaw_bottom_z_m": -0.0023943175043423352,
+      "leg_center_m": [
+        0.0009604865917935967,
+        4.921121149470409e-11,
+        -0.0011519917752593756
+      ],
+      "angle_rad": 0.8758544685923388,
+      "moment_nm": 8.340120159693872e-05,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 7.728622697570241e-09,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 5651,
+      "jaw_bottom_z_m": -0.002376257363745674,
+      "leg_center_m": [
+        0.0009604863007552922,
+        4.634187131258294e-11,
+        -0.0011519920080900192
+      ],
+      "angle_rad": 0.8758545095650501,
+      "moment_nm": 8.341963931698945e-05,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 7.732040248640682e-09,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 5701,
+      "jaw_bottom_z_m": -0.00235683902328856,
+      "leg_center_m": [
+        0.000960487755946815,
+        -4.820639330424537e-13,
+        -0.001151992124505341
+      ],
+      "angle_rad": 0.8758543955951803,
+      "moment_nm": 8.33683528755957e-05,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 7.722535845766499e-09,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 5751,
+      "jaw_bottom_z_m": -0.0023360816465286217,
+      "leg_center_m": [
+        0.0009604871738702059,
+        2.434558457609093e-11,
+        -0.001151992124505341
+      ],
+      "angle_rad": 0.8758544040102132,
+      "moment_nm": 8.337213964039744e-05,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 7.723237409131037e-09,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 5801,
+      "jaw_bottom_z_m": -0.002314005718490652,
+      "leg_center_m": [
+        0.0009604879305697978,
+        9.52810538801252e-11,
+        -0.001151992124505341
+      ],
+      "angle_rad": 0.8758543956064223,
+      "moment_nm": 8.336835793449901e-05,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 7.722536782994163e-09,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 5851,
+      "jaw_bottom_z_m": -0.0022906330254503643,
+      "leg_center_m": [
+        0.0009604867082089186,
+        -8.995244328048602e-13,
+        -0.0011519923573359847
+      ],
+      "angle_rad": 0.8758544038724225,
+      "moment_nm": 8.337207763459694e-05,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 7.723225921232514e-09,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 5901,
+      "jaw_bottom_z_m": -0.00226598663343397,
+      "leg_center_m": [
+        0.0009604861843399704,
+        1.400120019923179e-10,
+        -0.0011519918916746974
+      ],
+      "angle_rad": 0.8758546889911538,
+      "moment_nm": 8.350038106367805e-05,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 7.747015153088273e-09,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 5951,
+      "jaw_bottom_z_m": -0.0022400908654547956,
+      "leg_center_m": [
+        0.0009604872320778668,
+        1.2757071787827812e-10,
+        -0.0011519923573359847
+      ],
+      "angle_rad": 0.8758544773862635,
+      "moment_nm": 8.340515886305352e-05,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 7.729356138856887e-09,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 6001,
+      "jaw_bottom_z_m": -0.002212971277509402,
+      "leg_center_m": [
+        0.0009592134738340974,
+        -1.8952655000958885e-09,
+        -0.0011529054027050734
+      ],
+      "angle_rad": 0.8774221755630719,
+      "moment_nm": 0.0007888693384268116,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 6.914609256777285e-07,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 6051,
+      "jaw_bottom_z_m": -0.002184654633356903,
+      "leg_center_m": [
+        0.0009593892027623951,
+        -2.2703579016791764e-09,
+        -0.0011527962051331997
+      ],
+      "angle_rad": 0.8772028889261515,
+      "moment_nm": 0.000690190351812636,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 5.292919130391672e-07,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 6101,
+      "jaw_bottom_z_m": -0.0021551688781063683,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351947605733656e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 6151,
+      "jaw_bottom_z_m": -0.0021245431106383713,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351948299623047e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 6201,
+      "jaw_bottom_z_m": -0.0020928075548879094,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351948993512437e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 6251,
+      "jaw_bottom_z_m": -0.002059993530017028,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351949687401827e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 6301,
+      "jaw_bottom_z_m": -0.00202613341950659,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351950381291218e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 6351,
+      "jaw_bottom_z_m": -0.001991260639197688,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351951075180608e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 6401,
+      "jaw_bottom_z_m": -0.001955409604314245,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351951769069998e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 6451,
+      "jaw_bottom_z_m": -0.0019186156954993428,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351952462959389e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 6501,
+      "jaw_bottom_z_m": -0.0018809152238988,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351953156848779e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 6551,
+      "jaw_bottom_z_m": -0.0018423453953264534,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.35195385073817e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 6601,
+      "jaw_bottom_z_m": -0.0018029442735465113,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.35195454462756e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 6651,
+      "jaw_bottom_z_m": -0.0017627507427092149,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.35195523851695e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 6701,
+      "jaw_bottom_z_m": -0.001721804468976879,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351955932406341e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 6751,
+      "jaw_bottom_z_m": -0.001680145861378172,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351956626295731e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 6801,
+      "jaw_bottom_z_m": -0.0016378160319292898,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351957320185122e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 6851,
+      "jaw_bottom_z_m": -0.0015948567550613554,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351958014074512e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 6901,
+      "jaw_bottom_z_m": -0.0015513104263941025,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351958707963902e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 6951,
+      "jaw_bottom_z_m": -0.0015072200208965133,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351959401853293e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 7001,
+      "jaw_bottom_z_m": -0.001462629050475716,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351960095742683e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 7051,
+      "jaw_bottom_z_m": -0.0014175815210359785,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351960789632074e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 7101,
+      "jaw_bottom_z_m": -0.0013721218890502078,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351961483521464e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 7151,
+      "jaw_bottom_z_m": -0.0013262950176867645,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351962177410854e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 7201,
+      "jaw_bottom_z_m": -0.0012801461325349396,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351962871300245e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 7251,
+      "jaw_bottom_z_m": -0.0012337207769727535,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351963565189635e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 7301,
+      "jaw_bottom_z_m": -0.0011870647672211484,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351964259079026e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 7351,
+      "jaw_bottom_z_m": -0.0011402241471288983,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351964952968416e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 7401,
+      "jaw_bottom_z_m": -0.0010932451427328991,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351965646857806e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 7451,
+      "jaw_bottom_z_m": -0.0010461741166386434,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351966340747197e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 7501,
+      "jaw_bottom_z_m": -0.000999057522265936,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351967034636587e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 7551,
+      "jaw_bottom_z_m": -0.0009519418580049644,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351967728525977e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 7601,
+      "jaw_bottom_z_m": -0.000904873621328013,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351968422415368e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 7651,
+      "jaw_bottom_z_m": -0.0008578992629020635,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351969116304758e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 7701,
+      "jaw_bottom_z_m": -0.0008110651407475986,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351969810194149e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 7751,
+      "jaw_bottom_z_m": -0.0007644174744888348,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351970504083539e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 7801,
+      "jaw_bottom_z_m": -0.0007180022997405279,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.35197189186232e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 7851,
+      "jaw_bottom_z_m": -0.0006718654226763822,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.35197258575171e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 7901,
+      "jaw_bottom_z_m": -0.0006260523748238855,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.3519732796411e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 7951,
+      "jaw_bottom_z_m": -0.0005806083681301956,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351973973530491e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 8001,
+      "jaw_bottom_z_m": -0.0005355782503433954,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351974667419881e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 8051,
+      "jaw_bottom_z_m": -0.0004910064607531893,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351975361309272e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 8101,
+      "jaw_bottom_z_m": -0.0004469369863346836,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351976055198662e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 8151,
+      "jaw_bottom_z_m": -0.0004034133183385603,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351976749088053e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 8201,
+      "jaw_bottom_z_m": -0.0003604784093704537,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351977442977443e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 8251,
+      "jaw_bottom_z_m": -0.0003181746310019219,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351978136866833e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 8301,
+      "jaw_bottom_z_m": -0.00027654373195481487,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351978830756224e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 8351,
+      "jaw_bottom_z_m": -0.00023562679690033582,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351979524645614e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 8401,
+      "jaw_bottom_z_m": -0.00019546420591342098,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351980218535004e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 8451,
+      "jaw_bottom_z_m": -0.000156095594622486,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351980912424395e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 8501,
+      "jaw_bottom_z_m": -0.00011755981509384392,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351981606313785e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 8551,
+      "jaw_bottom_z_m": -7.989489748941065e-05,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351982300203176e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 8601,
+      "jaw_bottom_z_m": -4.313801253552022e-05,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351982994092566e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 8651,
+      "jaw_bottom_z_m": -7.325434839909281e-06,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351983687981956e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 8701,
+      "jaw_bottom_z_m": 2.750749290694206e-05,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351984381871347e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 8751,
+      "jaw_bottom_z_m": 6.132639481077641e-05,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351985075760737e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 8801,
+      "jaw_bottom_z_m": 9.409789569842094e-05,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351985769650128e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 8851,
+      "jaw_bottom_z_m": 0.00012578965405505096,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351986463539518e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 8901,
+      "jaw_bottom_z_m": 0.00015637039394136067,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351987157428908e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 8951,
+      "jaw_bottom_z_m": 0.00018580993585914067,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351987851318299e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 9001,
+      "jaw_bottom_z_m": 0.00021407922653479537,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351988545207689e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 9051,
+      "jaw_bottom_z_m": 0.00024115036759142158,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.35198923909708e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 9101,
+      "jaw_bottom_z_m": 0.000266996643081135,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.35198993298647e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 9151,
+      "jaw_bottom_z_m": 0.00029159254585048647,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.35199062687586e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 9201,
+      "jaw_bottom_z_m": 0.0003149138027129406,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351991320765251e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 9251,
+      "jaw_bottom_z_m": 0.00033693739840358436,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351992014654641e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 9301,
+      "jaw_bottom_z_m": 0.00035764159829241194,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351992708544032e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 9351,
+      "jaw_bottom_z_m": 0.0003770059698337821,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351993402433422e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 9401,
+      "jaw_bottom_z_m": 0.00039501140273087113,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351994096322812e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 9451,
+      "jaw_bottom_z_m": 0.0004116401277952325,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351994790212203e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 9501,
+      "jaw_bottom_z_m": 0.0004268757344828377,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351995484101593e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 9551,
+      "jaw_bottom_z_m": 0.00044070318708930425,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351996177990983e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 9601,
+      "jaw_bottom_z_m": 0.0004531088395883169,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351996871880374e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 9651,
+      "jaw_bottom_z_m": 0.0004640804490986122,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351997565769764e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 9701,
+      "jaw_bottom_z_m": 0.0004736071879662219,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351998259659155e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 9751,
+      "jaw_bottom_z_m": 0.0004816796544500611,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351998953548545e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 9801,
+      "jaw_bottom_z_m": 0.0004882898820003104,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.351999647437935e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 9851,
+      "jaw_bottom_z_m": 0.0004934313471204403,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.352000341327326e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 9901,
+      "jaw_bottom_z_m": 0.000497098975805114,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.352001035216716e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 9951,
+      "jaw_bottom_z_m": 0.0004992891485476179,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.352001729106107e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756692292029483,
+      "moment_nm": 4.347637120316604e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 2.100216503328318e-15,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    },
+    {
+      "step": 10000,
+      "jaw_bottom_z_m": 0.0005,
+      "leg_center_m": [
+        0.000960724544711411,
+        8.352003116884887e-11,
+        -0.001151958480477333
+      ],
+      "angle_rad": 0.8756690910702264,
+      "moment_nm": -1.8683353664172834e-08,
+      "plastic_angle_rad": 0.8756691325887901,
+      "plastic_increment_rad": 0.0,
+      "elastic_energy_j": 3.8785300460062283e-16,
+      "dissipated_work_j": 0.0016418796236039863,
+      "stored_hardening_j": 0.0034505839339596172
+    }
+  ],
+  "negative_control": false,
+  "residual_angle_rad": 0.8756690910702264,
+  "plastic_angle_rad": 0.8756691325887901,
+  "wall_seconds": 7.031852848827839
+}

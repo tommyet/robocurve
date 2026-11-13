@@ -1,0 +1,111 @@
+{
+  "status": "complete",
+  "robot_demo": false,
+  "mode": "intact",
+  "geometry": {
+    "cloth": [
+      {
+        "vertices": 1346,
+        "triangles": 2492,
+        "surface_area_m2": 0.005982720000000001,
+        "boundary_loops": 13,
+        "connected": true
+      },
+      {
+        "vertices": 1346,
+        "triangles": 2492,
+        "surface_area_m2": 0.005982720000000001,
+        "boundary_loops": 13,
+        "connected": true
+      }
+    ],
+    "stitches": [
+      {
+        "nodes": 28,
+        "length_m": 0.024800000000000155,
+        "minimum_link_m": 0.0008000000000000229,
+        "closed": true
+      },
+      {
+        "nodes": 28,
+        "length_m": 0.024800000000000155,
+        "minimum_link_m": 0.0008000000000000229,
+        "closed": true
+      },
+      {
+        "nodes": 28,
+        "length_m": 0.024800000000000155,
+        "minimum_link_m": 0.0008000000000000229,
+        "closed": true
+      },
+      {
+        "nodes": 28,
+        "length_m": 0.024800000000000155,
+        "minimum_link_m": 0.0008000000000000229,
+        "closed": true
+      },
+      {
+        "nodes": 28,
+        "length_m": 0.024800000000000155,
+        "minimum_link_m": 0.0008000000000000229,
+        "closed": true
+      },
+      {
+        "nodes": 28,
+        "length_m": 0.024800000000000155,
+        "minimum_link_m": 0.0008000000000000229,
+        "closed": true
+      }
+    ]
+  },
+  "source_sha256": {
+    "probe_native.py": "3306e71ebb6ed48742fc113c3271e6d3b9af4107eb44e082eaf364b3918745f5",
+    "native_stitches.py": "22859662a4f694247d0cf417a2137f46e7295bcb8117780dc3a3d386fd5281be",
+    "native_cloth.py": "000d296d4a06b3b75f0570960338a27b49234a4f1d475945c60f92e0d2613b46",
+    "geometry.py": "03a90ccd676c2853618e0139ce297152304422713492813842179c4498015cbe"
+  },
+  "thread_count": 168,
+  "right_centroid_drop_m": 0.4107254318405551,
+  "left_centroid_drop_m": 1.7519808453214658e-05,
+  "strain": [
+    {
+      "maximum_principal_stretch": 1.0056099482407743,
+      "first_validity_excursion": null
+    },
+    {
+      "maximum_principal_stretch": 1.1284348557912418,
+      "first_validity_excursion": {
+        "time_s": 0.325,
+        "triangle": 2396,
+        "principal_stretch": 1.063421285043921,
+        "limit": 1.02
+      }
+    }
+  ],
+  "contact_audit": [
+    {
+      "valid": false,
+      "steps": 960,
+      "first_failure": {
+        "step": 19,
+        "time_s": 0.019791666666666666,
+        "reason": "thread crosses intact fabric",
+        "static_intersections": 6,
+        "swept_intersections": 0
+      }
+    },
+    {
+      "valid": false,
+      "steps": 960,
+      "first_failure": {
+        "step": 20,
+        "time_s": 0.020833333333333332,
+        "reason": "thread crosses intact fabric",
+        "static_intersections": 1,
+        "swept_intersections": 0
+      }
+    }
+  ],
+  "note": "Compare intact/open runs visually and numerically; no automatic feasibility pass.",
+  "wall_seconds": 58.14726861938834
+}

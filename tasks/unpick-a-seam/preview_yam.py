@@ -30,6 +30,7 @@ def main():
         from arena_thread import SPAWNED
         threads=[SPAWNED[f'stitch_{i}'] for i in range(6)]
         from cutting import ThreadCutter,DamageAudit
+        from inspection import StrainAudit,inspect_removed_threads
         from native_stitches import sever_contacted_joints
         sim=tensors.create_simulation_view('numpy');sim.set_subspace_roots('/')
         blade=sim.create_rigid_body_view(roots['ripper_blade'])
@@ -39,6 +40,8 @@ def main():
         envroot=roots['ripper_handle'].rsplit('/',1)[0]
         views=[sim.create_surface_deformable_body_view(envroot+'/'+name) for name in ('cloth_left','cloth_right')]
         damage=DamageAudit();previous_edge=[None]
+        strain=[StrainAudit(m.rest,m.faces) for m in cloth]
+        thread_views=[sim.create_rigid_body_view(t['bodies']) for t in threads]
         edge_local=np.column_stack((np.full(9,.0005),np.linspace(-.002,.002,9),np.zeros(9)))
         base=emb._base;write=base.scene.write_data_to_sim
         def cut_step(*args,**kwargs):
@@ -52,6 +55,7 @@ def main():
                                [2*(x*z-y*w),2*(y*z+x*w),1-2*(x*x+y*y)]])
             edge=edge_local@rotation.T+pose[:3]
             nodes=[np.asarray(view.get_simulation_nodal_positions())[0,:len(m.rest)] for view,m in zip(views,cloth)]
+            for audit,points in zip(strain,nodes):audit.update(points,cutter.t)
             damage.update(edge if previous_edge[0] is None else previous_edge[0],edge,nodes,[m.faces for m in cloth],cutter.t)
             previous_edge[0]=edge.copy()
             sever_contacted_joints(omni.usd.get_context().get_stage(),threads,cutter.update(f,normal,float(base.physics_dt)))
@@ -61,8 +65,21 @@ def main():
         for i in range(a.steps):emb._env.step(emb._ready)
         nodes=[np.asarray(view.get_simulation_nodal_positions())[0,:len(m.rest)] for view,m in zip(views,cloth)]
         np.savez_compressed(a.out/'cloth.npz',left=nodes[0],right=nodes[1])
+        endpoints=[]
+        for view,thread in zip(thread_views,threads):
+            poses=np.asarray(view.get_transforms())
+            if len(poses)!=len(thread['lengths']):raise RuntimeError('Missing thread capsule state')
+            q=poses[:,3:];q=q/np.linalg.norm(q,axis=1)[:,None]
+            x,y,z,w=q.T
+            axis=np.column_stack((1-2*(y*y+z*z),2*(x*y+w*z),2*(x*z-w*y)))
+            half=axis*np.asarray(thread['lengths'])[:,None]/2
+            endpoints.append(np.stack((poses[:,:3]-half,poses[:,:3]+half),axis=1))
+        removed=inspect_removed_threads(endpoints,nodes,[m.faces for m in cloth])
         report.update(status='complete',score=None,cut_events=cutter.events,damage_events=damage.events,
-                      note='Unscored integration preview; damage crossings are recorded; tensile damage and final stitch inspection remain unvalidated.')
+                      strain=[{'maximum_principal_stretch':s.maximum_observed,
+                               'first_validity_excursion':s.first_excursion} for s in strain],
+                      thread_inspection=removed,
+                      note='Unscored integration preview; contact cutting, strain envelope and final thread clearance are measured; no feasibility claim.')
     except BaseException as exc:
         report.update(status='failed',error=f'{type(exc).__name__}: {exc}');raise
     finally:

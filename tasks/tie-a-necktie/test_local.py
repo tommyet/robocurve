@@ -12,7 +12,7 @@ class Geometry(unittest.TestCase):
         m=necktie()
         self.assertEqual(len(m.audit()['boundary_loops']),1)
         self.assertGreater(np.ptp(m.rest[:,0]),.069)
-        self.assertAlmostEqual(np.ptp(m.rest[:,1]),1.4)
+        self.assertAlmostEqual(np.ptp(m.rest[:,1]),1.1)
         self.assertNotEqual(m.markers['wide_tip'],m.markers['narrow_tip'])
     def test_diagnostic_drape_does_not_stretch_the_reset_mesh(self):
         m=necktie();p=initial_layout(m)
@@ -39,7 +39,7 @@ class Judging(unittest.TestCase):
         return dict(evidence_sha256={k:'0'*64 for k in ('released_video','front_photo','rear_photo')},
                     integrity_checked=True,intact=True,four_in_hand_verified=True,released_hold_s=5.,
                     wide_face_out=True,narrow_end_hidden=True,knot_zone_offset_mm=10.,
-                    neckband_gap_mm=5.,wide_tip_below_collar_mm=320.)
+                    neckband_gap_mm=5.,wide_tip_below_collar_mm=320.,narrow_tip_above_wide_tip_mm=50.)
     def test_complete_and_retained_but_undressed_knot(self):
         j=self.record();self.assertEqual(score(j),1.)
         j['wide_face_out']=False;self.assertEqual(score(j),.5)
@@ -50,6 +50,8 @@ class Judging(unittest.TestCase):
     def test_good_knot_bad_fit_is_partial(self):
         j=self.record();j['neckband_gap_mm']=11.;self.assertEqual(score(j),.5)
         j=self.record();j['wide_tip_below_collar_mm']=100.;self.assertEqual(score(j),.5)
+    def test_narrow_tip_below_wide_is_not_ready_to_wear(self):
+        j=self.record();j['narrow_tip_above_wide_tip_mm']=-5.;self.assertEqual(score(j),.5)
     def test_missing_assessment_raises(self):
         j=self.record();del j['four_in_hand_verified']
         with self.assertRaises(ValueError):score(j)

@@ -6,39 +6,68 @@ Requested 12 November 2026. Develop the six tasks below for review before submis
 
 All six are in local development. None is submission-ready. Draft metadata deliberately omits claimed run scores and media IDs until actual trials exist.
 
-Each folder now has a proposed setup, concise task description, scoring and judging notes, a licence, a target environment manifest and an explicit `VALIDATION.json`. Native simulator code is authored but unexecuted. The environment manifests describe the retained installation previously verified for another task; they do not claim these six have run there.
+Each folder has a proposed setup, task description, scoring and judging notes, a licence, a target environment manifest and an explicit `VALIDATION.json`. Bounded native material tests are now running on Runpod. The steel coupon passes contact, no-contact and timestep checks; the icing plunger passes applied-force and zero-force controls. These establish individual mechanisms, not complete robot tasks.
 
 | Package | Local implementation | Main remaining engineering work |
 | --- | --- | --- |
 | [Wheel](../tasks/true-a-bicycle-wheel/README.md) | Coupled elastic rim/spoke model, nipple adjustment probes, released-wheel and individual-spoke judging | Validate native wheel, wrench/nipple contact and torque, physical response, reach and robot controller |
 | [T-shirt](../tasks/peg-out-a-tshirt/README.md) | Two-layer surface cloth with real garment openings; two dynamic spring pegs; YAM scene and bounded smoke recorder | Validate cloth/line capture and released retention; establish reachable reset and robot controller |
-| [Staple](../tasks/remove-a-staple/README.md) | Irreversible steel bending and paper damage laws; unilateral jaw-contact tests; native wire coupon | Implement and validate the coupled thin-paper, puncture-hole and full-staple extraction scene |
+| [Staple](../tasks/remove-a-staple/README.md) | Native plastic steel bending verified; punctured FEM paper, contact guards and full scene authored | Validate thin-paper contact, complete extraction and robot manipulation |
 | [Seam](../tasks/unpick-a-seam/README.md) | Two cloth meshes with real needle holes; six contact-held thread loops; force-qualified cutting; YAM preview and blade-crossing audit | Validate thin contacts, tensile damage, released-stitch inspection and robot controller |
 | [Cake](../tasks/pipe-a-shell-border/README.md) | Passive dispenser and pressure reaction; finite icing reservoir; gravity, slumping, metal-lip contact; YAM preview | Demonstrate shell ridges, complete robot/material contact, tune the controller and compare scoring with photos |
 | [Necktie](../tasks/tie-a-necktie/README.md) | Broad surface cloth, collar form, visible edge markings; YAM scene and bounded smoke recorder | Validate settled reset, self-contact, physical threading/tightening, wearable retention and robot controller |
 
-The remaining work includes implementation as well as GPU verification. Funding alone would not make these packages ready. Material behaviour and judging tolerances need credible reference checks before final evidence. No new media has been uploaded and no upstream PR has been opened.
+The remaining work includes implementation as well as GPU verification. Material behaviour must preserve each task's defining interaction, and the scoring must agree with visible evidence. No new media has been uploaded and no upstream PR has been opened.
 
-Local review passed **76 CPU tests**: wheel 19, T-shirt 7, staple 17, seam 9, cake 14 and tie 10. These cover geometry, material laws and adverse scoring cases; they are not successful robot trials. The shirt and tie definitions also load through the pinned YAM task-file loader. Their smoke runners explicitly reset the environment and record assessor state separately from the constant ready-pose action. The tie's 4,464 initial triangles pass a 1 mm fixture-clearance check; gravity settling is still untested.
+The November 12 checkpoint passed **76 CPU tests**; development has since added contact and material checks, with current counts recorded in each package. These are not successful robot trials. The shirt and tie definitions also load through the pinned YAM task-file loader. Their runners record assessor state separately from frozen joint commands; privileged object-state corrections do not control the demonstrations. The tie's 4,464 initial triangles pass a 1 mm fixture-clearance check; gravity settling is being tested separately.
 
 | Task | Defining interaction | Evidence needed before full runs |
 | --- | --- | --- |
 | True a bicycle wheel | Turning spoke nipples changes spoke tension and elastic rim shape | Contact-driven wrench rotation, stable elastic response, released runout measurement, rejection of a slack-wheel shortcut |
 | Peg out a T-shirt | Real spring pegs retain flexible fabric on a line | Native cloth draping and self-contact, physical jaw opening, cloth/line capture and unsupported retention |
-| Remove a staple | A remover unbends and withdraws clinched steel through paper | Plastic bending, paper-hole contact, irreversible tearing under misuse, complete released extraction |
+| Remove a staple | A remover unbends and withdraws clinched steel through paper | Plastic bending, paper-hole contact, damage/misuse detection, complete released extraction |
 | Unpick a seam | A seam ripper cuts joining thread while preserving both cloth pieces | Stitches physically join flexible layers, blade contact causes cutting, misuse can damage fabric |
 | Pipe a shell border | Squeezing a dispenser deposits icing with controlled starts, stops and shape | Finite reservoir, force/flow coupling, material deposition and slump, observable shell shapes without target-aware spawning |
 | Tie a necktie | Flat fabric wraps, passes through itself and retains a wearable knot | Surface cloth self-contact, grasp and slip, collar fit, functional knot retention after release |
 
 Accepted examples are references for useful approximations and submission structure, not proof that a new model is valid. The accepted [cord-cutting task](https://github.com/robocurve/benchmark-tasks/tree/main/tasks/cut-taut-cord) uses measured blade contact force before a cut; [panel painting](https://github.com/robocurve/benchmark-tasks/tree/main/tasks/finish-painting-panel) uses geometric contact-driven coverage. The defining interaction still has to cause the result.
 
-## Compute plan and blocker
+## Current compute plan
+
+On November 13 the user authorized continuing all six tasks through review-ready
+evidence. Runpod now has a verified Isaac/YAM runtime: the separate compatibility
+test cost an estimated $0.319 in compute and its Pod was confirmed stopped.
+That test did not validate any of these six task mechanisms. The first batch
+session uses one RTX 6000 Ada at the returned $1.09/hour rate, with a 45-minute
+local shutdown watchdog. Reusing the earlier stopped host was refused for lack
+of free capacity; a fresh inventory confirmed it stayed stopped before one
+replacement was allocated. No persistent volume was purchased. Billing-read
+access remains unavailable, so elapsed-time estimates are not invoices or
+account balances. Session records and a cost ledger are kept under ignored
+`artifacts/six-task-completion-2026-11-13/`.
+
+The target remains approximately $18 for the six-task batch. At this rate,
+$2.25 buys about 124 GPU minutes per task, before installation overhead,
+temporary disk charges and Dream calls. This is a budget allocation, not a
+promise that the technical risks can be resolved within it. Prepare changes
+locally, run short physics controls first, and reserve full demos/Dream calls
+for mechanisms that pass those controls.
+
+The November 13 novelty refresh covered 510 board entries and 1,841 all-state
+PRs. No direct match was found for wheel truing, staple removal, seam unpicking,
+shell piping or necktie tying. The closest laundry submission remains finally
+rejected [#760](https://github.com/robocurve/benchmark-tasks/pull/760), with no
+appeal comment at the check. Its review was November 12 at 07:07 UTC; recheck
+the 48-hour hold/appeal status before submitting. Its rigid sock and automatically
+actuated/fixed clip do not establish a valid precedent for the shirt.
+
+## Previous Brev funding check
 
 At 14:12 UTC on November 12, Brev's billing profile reported **−$2.48 remaining**. The usage overview total was $189.74 compute plus $12.7512 storage. Both team VMs were stopped. A per-instance reconciliation found all additional compute since the November 10 balance check on the second team VM, `yam-eval-launchable-72837c`; `robocurve-dice` had no additional compute charges. These are organization costs, not costs incurred by this batch or proof of who operated a VM. Rounded per-instance and overview totals can differ by a cent.
 
-The retained `robocurve-dice` rate remains $2.729872/hour including its catalog storage rate while running. A normal restart was attempted during the billing audit and refused with **“Credits are exhausted.”** Both VMs were confirmed stopped afterward. No successful VM start, simulator trial or Dream prediction has occurred for this batch. GPU validation is waiting for funded access. The program guide does not promise additional grant credits; Brev separately supports customer-funded credits. No payment or organizer contact has been made. Stopped storage continues billing, and [Brev's exhausted-credit policy](https://docs.nvidia.com/brev/guides/console-reference) warns of eventual resource deletion, so preservation of the retained installation is not guaranteed indefinitely.
+At that November 12 check, the retained `robocurve-dice` rate was $2.729872/hour including its catalog storage rate while running. A normal restart was refused with **“Credits are exhausted.”** Both VMs were confirmed stopped afterward. GPU validation was then awaiting funded access; the November 13 Runpod session supersedes that blocker. The program guide does not promise additional grant credits. No payment or organizer contact was made. Stopped Brev storage continues billing, and [Brev's exhausted-credit policy](https://docs.nvidia.com/brev/guides/console-reference) warns of eventual resource deletion.
 
-Provisional allocation, to refine using the first measured runtimes:
+Historical Brev allocation (superseded by the Runpod rate above):
 
 - $2.25 per task for active GPU runs, about 49 minutes at the current rate.
 - $0.50 per task reserved for Dream requests; this is an allowance, not a verified charge forecast.
