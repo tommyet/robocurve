@@ -56,5 +56,31 @@
     "evidence/native-three-shell-033-035.json",
     "evidence/native-three-shell-038-042.json"
   ],
-  "full_score_demo": false
+  "full_score_demo": false,
+  "state_assisted_scripted_demo": {
+    "status": "in_development",
+    "assistance": "Native barrel/plunger poses guide ordinary bounded robot joint commands; no physics/object/material writes; Dream unchanged.",
+    "fixed_recipe_constitutive_probe": {
+      "kind": "prescribed-input material diagnostic, not robot evidence",
+      "shells": 6,
+      "valid_decorated_length_mm": 83,
+      "score_diagnostic": 1.0,
+      "source_recipe": "scripted_plan.py",
+      "evidence": "Local ignored cake-recipe-cpu artifacts"
+    },
+    "integration_control055": "Once-per-step external-force setting disrupted stable grasp before extrusion; unqualified controller result. Matched default-setting run pending."
+  },
+  "cpu_checks_current": {
+    "test_count": 32,
+    "result": "passed",
+    "command": "python -m unittest discover -s tasks/pipe-a-shell-border -p test_*.py"
+  },
+  "scoring_tail_endpoint_correction": {
+    "date": "2026-11-13",
+    "change": "Measure the farthest qualifying connected tail section, not first equal-width minimum. Never bridge an empty gap to a different mound.",
+    "shape_thresholds_changed": false,
+    "round_mound_and_plain_line_rejection": "passed",
+    "six_shell_constitutive_probe": "83 mm, six ridged elongated shells; not robot evidence",
+    "source_sha256": "96408e0ee9e663fb799c6f91572f900794aa4f304d505ccbb9c778524b658073"
+  }
 }

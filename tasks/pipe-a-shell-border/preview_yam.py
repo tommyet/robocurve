@@ -1,8 +1,8 @@
 """Record native YAM diagnostics, frozen-plan demos or direct Dream trials.
 
-Requires the pinned team simulator. Policies receive standard observations;
-measured tool state is used only by physical coupling and assessment. Saved
-execution must be independently judged before claiming task completion.
+Requires the pinned team simulator. Dream receives standard observations.
+An explicitly labelled scripted feasibility demo may use measured tool poses
+to command ordinary robot motors. Saved execution is independently judged.
 """
 import argparse
 import hashlib
@@ -27,20 +27,25 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
     p.add_argument('--policy',choices=('diagnostic','demo','dream'),default=default_policy)
     p.add_argument('--plan',type=Path,help='Optional precompiled fixed action plan; no object feedback')
     p.add_argument('--joint-feedback',action='store_true',help='Bounded demo PI tracking from standard joint observations only')
+    p.add_argument('--state-assisted-demo',action='store_true',help='Disclosed native tool-pose feedback for the scripted demo only')
     p.add_argument('--tracking-proportional',type=float,default=1.5)
     p.add_argument('--tracking-integral',type=float,default=2.)
+    p.add_argument('--external-forces-once-diagnostic',action='store_true',help='Matched PhysX force-integration control; material and actuator settings stay unchanged')
     p.add_argument('--judging-views',action='store_true',default=default_review,help='Record close-up review views; never policy inputs')
     a=p.parse_args()
     if not 1<=a.steps<=2400:p.error('Trial limited to 2400 control steps')
     if not 0<=a.tracking_proportional<=4 or not 0<=a.tracking_integral<=10:
         p.error('Joint tracking gains outside the bounded diagnostic range')
     if a.policy=='demo' and a.plan is None:p.error('Demo requires a frozen joint plan')
-    if a.policy=='dream' and (a.plan or a.joint_feedback):p.error('Dream uses its own ordinary actions')
+    if a.policy=='dream' and (a.plan or a.joint_feedback or a.state_assisted_demo):p.error('Dream uses its own ordinary actions')
+    if a.state_assisted_demo and a.policy!='demo':p.error('State assistance is limited to the labelled scripted demo')
     plan=None
     if a.plan:
         plan=json.loads(a.plan.read_text())
-        if plan.get('control_hz')!=20 or not plan.get('no_object_feedback') or not plan.get('frames'):
-            p.error('Expected fixed 20 Hz joint plan with no object feedback')
+        valid_kind=(plan.get('no_object_feedback') or
+                    (a.state_assisted_demo and plan.get('schema')=='state-assisted-recipe-v1'))
+        if plan.get('control_hz')!=20 or not valid_kind or not plan.get('frames'):
+            p.error('Expected fixed 20 Hz plan, or an explicitly enabled state-assisted recipe')
         actions=np.asarray([f['action14'] for f in plan['frames']],float)
         if actions.shape!=(len(plan['frames']),14) or not np.isfinite(actions).all():p.error('Invalid plan actions')
         a.steps=min(a.steps,len(actions))
@@ -56,7 +61,10 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
             'full_score_demonstrated':False,'preview_steps':a.steps,'control_hz':20,
             'source_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in frozen.glob('*') if p.is_file()},
             'plan_sha256':hashlib.sha256(a.plan.read_bytes()).hexdigest() if a.plan else None,
-            'joint_feedback':a.joint_feedback}
+            'joint_feedback':a.joint_feedback,
+            'state_assisted_demo':a.state_assisted_demo,
+            'controller_assistance':plan.get('assistance') if plan and a.state_assisted_demo else None,
+            'external_forces_once_diagnostic':a.external_forces_once_diagnostic}
     app=None;video=None;trace=[];dream_policy=None;request_audit=[];session_audit={'session_count':0}
     def progress(phase,step=0):
         report.update(phase=phase,completed_control_steps=step,wall_seconds=time.monotonic()-start)
@@ -81,6 +89,19 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
         progress('build YAM scene and initialize renderer')
         from yam_arena import scene as adapter
         original_make_env=adapter.make_env
+        original_cfg_callback=adapter.env_cfg_callback
+        if a.external_forces_once_diagnostic:
+            def configure_callback(*args,**kwargs):
+                configure=original_cfg_callback(*args,**kwargs)
+                def override(cfg):
+                    cfg=configure(cfg)
+                    if cfg.sim.physics is None:
+                        from isaaclab_physx.physics import PhysxCfg
+                        cfg.sim.physics=PhysxCfg()
+                    cfg.sim.physics.enable_external_forces_every_iteration=False
+                    return cfg
+                return override
+            adapter.env_cfg_callback=configure_callback
         if a.judging_views:
             from review_views import configure
             def make_env(embodiment,**kwargs):
@@ -91,6 +112,7 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
             emb._ensure_sim(None)
         finally:
             adapter.make_env=original_make_env
+            adapter.env_cfg_callback=original_cfg_callback
         progress('native tensor and contact views')
         import sys
         # The task loader may give scene.py a generated module name. Its hook
@@ -102,6 +124,14 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
         sim=tensors.create_simulation_view('torch');sim.set_subspace_roots('/')
         barrel=sim.create_rigid_body_view(roots['barrel']);plunger=sim.create_rigid_body_view(roots['plunger'])
         import omni.usd
+        from pxr import UsdPhysics,PhysxSchema
+        stage=omni.usd.get_context().get_stage()
+        scenes=[prim for prim in stage.Traverse() if prim.IsA(UsdPhysics.Scene)]
+        if len(scenes)!=1:raise RuntimeError('Expected one native physics scene')
+        phys=PhysxSchema.PhysxSceneAPI(scenes[0])
+        report['effective_external_forces_every_iteration']=bool(phys.GetEnableExternalForcesEveryIterationAttr().Get())
+        if a.external_forces_once_diagnostic and report['effective_external_forces_every_iteration']:
+            raise RuntimeError('Requested once-per-step integration did not reach native scene')
         from contact_audit import NativeContactAudit
         other_contact=NativeContactAudit(omni.usd.get_context().get_stage(),sim,coupling.material,
             excluded_body_paths=(),
@@ -159,6 +189,12 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
         progress('fixed action preview',0)
         from joint_tracking import JointTracking
         tracking=JointTracking(proportional=a.tracking_proportional,integral=a.tracking_integral)
+        from scripted_servo import ScriptedServo
+        servo=ScriptedServo() if a.state_assisted_demo else None
+        from yam_arena.constants import SHOULDER,WRIST,GRIPPER,FINGER_OPEN
+        step_limit=np.tile(np.array([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+
+                                   [GRIPPER['velocity']/abs(FINGER_OPEN)/20]),2)
+        previous_applied=np.asarray(emb._observation().state['joint_pos'],float)
         report['joint_tracking_parameters']={k:getattr(tracking,k) for k in ('kp','ki','limit','slew')}
         for i in range(a.steps):
             observation=emb._observation()
@@ -169,12 +205,16 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
             else:
                 reference=emb._ready[0].detach().cpu().numpy() if plan is None else actions[i]
             observed=np.asarray(observation.state['joint_pos'],float)
-            requested=tracking.action(reference,observed,enabled=a.joint_feedback and i>=340)
-            applied=np.clip(requested,emb._low,emb._high)
+            assisted=reference if servo is None else servo.command(plan['frames'][i],reference,observed,
+                array(barrel.get_transforms())[0],array(plunger.get_transforms())[0])
+            requested=tracking.action(assisted,observed,enabled=a.joint_feedback and i>=340)
+            applied=np.clip(np.clip(requested,previous_applied-step_limit,previous_applied+step_limit),emb._low,emb._high)
+            previous_applied=applied.copy()
             action=torch.tensor([applied],device=base.device,dtype=torch.float32)
             emb._env.step(action);emb._t=(i+1)/20;coupling.update_surface();snapshot(i+1)
             trace[-1].update(reference_action14=reference.tolist(),requested_action14=requested.tolist(),
                              applied_action14=applied.tolist(),joint_tracking_bias12=tracking.bias.tolist())
+            if servo is not None:trace[-1]['scripted_servo']=servo.last
             if (i+1)%20==0 or i+1==a.steps:progress('fixed action preview',i+1)
         video.close();video=None
         for name in ('top_cam','left_cam','right_cam'):

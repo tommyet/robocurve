@@ -93,6 +93,11 @@ def assess(x,y,volume,*,dx,emitted_m3,lost_m3=0.,airborne_m3=0.,damage_depth_m=0
     covered_by_valid_shell=np.zeros(len(yy),dtype=bool)
     for n,k in enumerate(heads):
         stop=heads[n+1] if n+1<len(heads) else len(yy)-1
+        # A later disconnected deposit cannot supply this head's tail. End the
+        # candidate interval at the first break in the visible footprint.
+        following=np.arange(k+1,stop+1)
+        breaks=following[profile[following]<.0005]
+        if len(breaks):stop=int(breaks[0]-1)
         lower=k+max(1,round(.004/dx));upper=min(stop,k+round(.022/dx))
         if lower>=upper:continue
         candidates=np.arange(lower,upper+1)
@@ -107,7 +112,10 @@ def assess(x,y,volume,*,dx,emitted_m3,lost_m3=0.,airborne_m3=0.,damage_depth_m=0
         qualifying=candidates[(width[candidates]>=.001)&(width[candidates]<=.65*head_w)&
                               (profile[candidates]>=.0005)&
                               (profile[candidates]<=min(.003,.65*head_h))]
-        tail=int(qualifying[np.argmin(width[qualifying])]) if len(qualifying) else int(candidates[np.argmin(width[candidates])])
+        # The rule asks whether a qualifying tail section exists. A long tail
+        # can have several equally narrow columns; choosing the first minimum
+        # incorrectly truncates it and can turn an elongated shell into a mound.
+        tail=int(qualifying[-1]) if len(qualifying) else int(candidates[np.argmin(width[candidates])])
         tail_h,tail_w=float(profile[tail]),float(width[tail])
         tapered=(.0025<=head_h<=.008 and .006<=head_w<=.016 and
                  .0005<=tail_h<=min(.003,.65*head_h) and .001<=tail_w<=.65*head_w)

@@ -4,6 +4,51 @@ Last updated: 2026-11-13 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-13 — scripted feasibility assistance and ongoing six-task controls
+
+- Operator: repository agent, branch `codex/six-task-completion-2026-11-13`.
+  Re-read the saved current review guide (`artifacts/six-task-completion-2026-11-13/guide-review.txt`, lines150–160 and252).
+  Scripted or teleoperated full-score demos are expressly permitted. Earlier
+  restrictions equating the demo's observations with Dream's were our own design
+  choice, not a competition requirement. Clearly disclosed simulator pose feedback
+  may guide **ordinary bounded robot joint targets** in a scripted feasibility
+  demo. Dream retains its standard camera/joint observations and identical physics.
+  This does not authorize object/node repositioning, hidden attachments, extra
+  actuation, changes to scoring or concealment of assistance.
+- Wheel controls identified `enableExternalForcesEveryIteration=true` as the
+  cause of a large change in angular acceleration in this configuration. Native
+  readback is asserted, but a later frozen-thread control still accelerates.
+  Native axial-constraint geometry remains under investigation; changing force
+  integration alone is not a validated wheel fix. Cake055 also lost its formerly
+  stable barrel orientation during pickup with once-per-step integration, before
+  piston pressure. Thus this flag must not be promoted as a general simulator fix. Applying the same correction to the seam reduced
+  unforced cloth speed but did not cure thread/cloth contact. Batch053 failed
+  physical-integrity checks before any cut and is not a valid task demonstration.
+- Batch050 physically clipped an ordinary passive peg onto the line, but the
+  shirt had already slipped during pickup. The task score remains zero. The next
+  controller measures the settled hem and centers a real finger bite, with a
+  full collision screen before moving. All cloth remains free and flexible.
+- Cake batch052 completed and released the tool but scored only0.25: extra head
+  pressure did not reliably preserve elongated, ridged shells. The next disclosed
+  controller measures dispenser/plunger poses and compensates the physical grasp;
+  a fixed offline compression/outflow recipe supplies piston targets. It commands
+  normal robot joints only and does not read the achieved decoration or scorer.
+- Cake scorer correction: measure the farthest connected qualifying tail,
+  rather than the first equally narrow column. Do not cross an empty gap to
+  use a different mound as its tail. Geometry thresholds are unchanged; round
+  mounds and plain lines still fail, and all32 CPU tests pass. Prescribed-input
+  six-shell tests retain six qualifying shapes at0.5/0.25mm grid spacing
+  (83/82.5mm coverage), but maximum height differs6.19/7.55mm; disclose this
+  numerical limit. These tests are not robot feasibility evidence.
+- The latest inventory at08:08 UTC verified one running Pod; elapsed active
+  compute estimate$8.044, plus~$0.32 compatibility overhead and temporary disk.
+  Watchdog deadline renewed to08:53 UTC after inventory/rate/budget checks.
+  This is an estimate, not a provider invoice or account balance.
+- No new Dream requests, media uploads or upstream PRs in this work. None of the
+  six tasks is submission-ready at this checkpoint. Raw sources and failed trials
+  remain ignored and preserved locally. One RunPod at$1.09/hour is shared across
+  at most two simulator jobs; watchdog and elapsed-cost checks remain in force.
+
 ## Agreed workflow
 
 - The team fork's `main` is the shared development baseline. New work starts

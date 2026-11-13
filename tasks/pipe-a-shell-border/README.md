@@ -49,6 +49,18 @@ changes action targets, not motor gains or object poses. The independent audit
 uses the deposited material and measured tool/robot geometry. Confirm agreement
 with the matching top and side photographs; a numeric score alone is insufficient.
 
+The newer, explicitly state-assisted scripted candidate uses:
+
+```bash
+python tasks/pipe-a-shell-border/scripted_plan.py --shells 3 --out artifacts/piping-assisted-plan.json
+python tasks/pipe-a-shell-border/run.py --policy demo --joint-feedback --state-assisted-demo --plan artifacts/piping-assisted-plan.json --steps 2400 --out artifacts/piping-assisted-demo
+```
+
+It measures the native barrel/plunger poses to compensate the physical grasp and
+track a fixed piston recipe. It commands ordinary bounded joint targets; it does
+not move objects, change forces or read the achieved decoration. This assistance
+is limited to the scripted feasibility demo. Dream receives standard observations.
+
 A direct baseline uses the same scene and ordinary Dream observations:
 
 ```bash
@@ -75,10 +87,10 @@ Run CPU checks without renting a GPU:
 python -m unittest discover -s tasks/pipe-a-shell-border -p 'test_*.py' -v
 ```
 
-Twenty-nine tests cover pressure causality, finite volume, contact and damage,
+Thirty-two tests cover pressure causality, finite volume, contact and damage,
 shape scoring and released-tool evidence. Native tests have demonstrated a
 physical pickup, passive plunger extrusion and an elongated head and tail.
-Native035 released the tool cleanly and scored0.25 under the current independent
+Native035 released the tool cleanly and scored0.25 under its recorded independent
 scorer: two valid shell shapes, one with continuous ridges. The incomplete,
 uneven finish is not submission quality. A full joined border remains pending.
 
