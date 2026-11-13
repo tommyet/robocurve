@@ -1,0 +1,143 @@
+{
+  "passed": true,
+  "checks": {
+    "completed_without_error": true,
+    "expected_score": true,
+    "independent_replay_matches": true,
+    "trace_length": true,
+    "control_timestamps": true,
+    "no_invalid_outcomes": true,
+    "current_runtime_source_matches": true,
+    "action_count": true,
+    "action_bounds": true,
+    "command_rate_limits": true,
+    "no_failed_controller_event": true,
+    "no_controller_failure": true,
+    "final_flaps_open": true,
+    "item_on_pad": true,
+    "item_released": true,
+    "complete_camera_videos": true
+  },
+  "score": 1.0,
+  "control_steps": 1596,
+  "simulated_seconds": 79.79999999999761,
+  "wall_seconds": 222.85589639399996,
+  "final_flap_angles": [
+    110.00395779550477,
+    110.00398073802762
+  ],
+  "final_item": {
+    "pos": [
+      0.17552140355110168,
+      -0.23141057789325714,
+      0.7694998979568481
+    ],
+    "quat": [
+      3.1521826713287737e-06,
+      -1.2428480431481148e-06,
+      0.0008376273326575756,
+      0.9999996423721313
+    ],
+    "speed": 0.00017060796451890471
+  },
+  "final_cutter": {
+    "pos": [
+      0.12559719383716583,
+      0.19324174523353577,
+      0.7694999575614929
+    ],
+    "quat": [
+      4.3407699195086025e-06,
+      -6.806283749938302e-07,
+      0.003536382457241416,
+      0.9999937415122986
+    ],
+    "speed": 0.00014370699288168603
+  },
+  "maximum_ik_residual_m": 8.035597482317684e-05,
+  "video_frames": {
+    "~f1~scene-0-e0~left_cam.mp4": 1597,
+    "~f1~scene-0-e0~right_cam.mp4": 1597,
+    "~f1~scene-0-e0~top_cam.mp4": 1597
+  },
+  "action_audit": {
+    "maximum_command_steps": [
+      0.029543846231783244,
+      0.04574383841030594,
+      0.07481452905411423,
+      0.06299730731182007,
+      0.03260804150170571,
+      0.060874554934825714,
+      0.050000000000000044,
+      0.04121510129336958,
+      0.0466187873845858,
+      0.05019867366169861,
+      0.06274878454946498,
+      0.03265835004382489,
+      0.06064358918474155,
+      0.050000000000000044
+    ],
+    "limits": {
+      "low": [
+        -2.61799,
+        -8.88178e-16,
+        0.0,
+        -1.69297,
+        -1.5708,
+        -2.0944,
+        0.0,
+        -2.61799,
+        -8.88178e-16,
+        0.0,
+        -1.69297,
+        -1.5708,
+        -2.0944,
+        0.0
+      ],
+      "high": [
+        3.14159,
+        3.66519,
+        3.14159,
+        1.5708,
+        1.5708,
+        2.0944,
+        1.0,
+        3.14159,
+        3.66519,
+        3.14159,
+        1.5708,
+        1.5708,
+        2.0944,
+        1.0
+      ],
+      "max_step_at_20_hz": [
+        0.275,
+        0.275,
+        0.275,
+        1.0,
+        1.0,
+        1.0,
+        0.1556109919714454,
+        0.275,
+        0.275,
+        0.275,
+        1.0,
+        1.0,
+        1.0,
+        0.1556109919714454
+      ],
+      "configured_action_max_step": null,
+      "rate_check_basis": "Independent check against configured actuator velocity at 20 Hz"
+    }
+  },
+  "source_sha256": {
+    "config.py": "9ba8708b5c39159144cff73e22f5427b5a220de949f77f8ae9b2fa6207767d90",
+    "mechanics.py": "11cdf857e36764680bc6857107c53abd27884f892e6b14093aa8ab7db2c010ed",
+    "task.py": "3b91b45cc135d7ae85c1a1d39018e15b292cb620ea5a596ef6477626adf07f76",
+    "scoring.py": "f710dc39fd64546e1f20c96afc06e8251f5baa3f39bb5fa9d117ab152b0424d6",
+    "run.py": "31d319bcefc7adbfeb33a64fa35e831173f580f67d64715e77b4903aded15d5b",
+    "demo_policy.py": "6125277eb7f84461dbbe7b54cee49425602a28c8489fc10b8e0860649723d382",
+    "telemetry.py": "574f9949ddb5492f0f913403555bc32e2f6fdfac4ad215609e597a61f92b52b5",
+    "replay.py": "d20bd98997442b289094764e7068899518f3e9933ac2729c22473f3df75ec29d"
+  }
+}

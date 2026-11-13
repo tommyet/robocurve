@@ -11,9 +11,9 @@
   "context": "Receiving and unpacking parcels requires tool use followed by opening an enclosure and retrieving its contents.",
   "setup": "Fixed plain cardboard parcel, 220 x 180 x 75 mm with 3 mm walls and two hinged top flaps, on the YAM station table; 210 mm taped seam; 55 g guarded cutter on an orange pad to the left; 40 mm blue cube, 60 g, inside; 100 mm green pad to the right. See task.py and README for all dimensions and fixed coordinates.",
   "scoring": "0.25 for the complete measured tape cut; 0.5 after both flaps reach 80 degrees; 1.0 after released item placement and cutter return with flaps at least 70 degrees open for one second. Numeric placement and invalidation conditions are in README. Incomplete tape cut or invalid outcomes score 0.",
-  "run_limit": "Prototype limit: 2400 control steps at 20 Hz (120 simulated seconds). Full-score feasibility is not established.",
+  "run_limit": "2400 control steps at 20 Hz (120 simulated seconds). Scripted full success demonstrated in 1596 steps / 79.8 simulated seconds.",
   "reset_notes": "Fresh process per trial restores closed flaps, uncut tape, item and cutter. Fixed seed 0; object jitter 0.",
   "fidelity": "Rigid cardboard with ideal hinges and fixed packing fixture. Tape fracture uses measured held-blade sweep coverage to release a physical hinge latch; adhesive, fracture forces, cardboard flexibility and tool damage are not calibrated. No object teleportation or hand attachment. Development prototype, not validated for real-world fidelity.",
-  "scores": "Prototype scripted attempt: 0.25 (1153 steps); independent replay: 0.25. Dream not run; full-score demo pending.",
+  "scores": "Scripted demo: 1.0 in two fixed-layout trials; independent replays: 1.0 / 1.0. Dream has not been run on this task.",
   "media": null
 }

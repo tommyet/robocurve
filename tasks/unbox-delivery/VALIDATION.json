@@ -1,30 +1,122 @@
 {
-  "status": "partially validated development prototype",
+  "status": "full-score scripted feasibility demonstrated in two fixed-layout trials; competition draft",
   "date": "2026-11-13",
-  "scorer_tests": {
-    "command": "python3 -m unittest -v test_scoring",
-    "passed": 10
-  },
-  "demo_score": 0.25,
+  "demo_score": 1.0,
   "dream_score": null,
   "media": null,
-  "remaining": [
-    "Tune rotating flap grasp: current attempt reached only about 54 degrees left and 12 degrees right, then flaps closed",
-    "Demonstrate released full-score item retrieval after opening both flaps",
-    "Run Dream only after full-score feasibility validation",
-    "Calibrate tape fracture, material and grip proxy before claiming real-world fidelity",
-    "Resolve significant novelty overlap with pending carton-cutting submission #1856 before competition preparation"
+  "scorer_and_controller_tests": {
+    "command": "python -m unittest -v test_scoring test_controller",
+    "passed": 16
+  },
+  "demos": [
+    {
+      "run": "unbox-feedback-full-002",
+      "inspect_log": "adhoc_3f05810f.json",
+      "score": 1.0,
+      "replay_score": 1.0,
+      "control_steps": 1596,
+      "simulated_seconds": 79.79999999999761,
+      "wall_seconds": 222.85589639399996,
+      "first_complete_cut_s": 15.950000000000092,
+      "first_open_milestone_s": 53.899999999999075,
+      "final_flap_angles_deg": [
+        110.00395779550477,
+        110.00398073802762
+      ],
+      "final_item": {
+        "pos": [
+          0.17552140355110168,
+          -0.23141057789325714,
+          0.7694998979568481
+        ],
+        "quat": [
+          3.1521826713287737e-06,
+          -1.2428480431481148e-06,
+          0.0008376273326575756,
+          0.9999996423721313
+        ],
+        "speed": 0.00017060796451890471
+      },
+      "camera_frames_each": 1597,
+      "audit": "evidence/full-002-audit.json",
+      "all_audit_checks_passed": true,
+      "runtime_source_hashes_match": true
+    },
+    {
+      "run": "unbox-feedback-full-003",
+      "inspect_log": "adhoc_fadd7150.json",
+      "score": 1.0,
+      "replay_score": 1.0,
+      "control_steps": 1596,
+      "simulated_seconds": 79.79999999999761,
+      "wall_seconds": 220.4265593490004,
+      "first_complete_cut_s": 15.950000000000092,
+      "first_open_milestone_s": 53.899999999999075,
+      "final_flap_angles_deg": [
+        110.00395779550477,
+        110.00398073802762
+      ],
+      "final_item": {
+        "pos": [
+          0.17552140355110168,
+          -0.23141057789325714,
+          0.7694998979568481
+        ],
+        "quat": [
+          3.1521826713287737e-06,
+          -1.2428480431481148e-06,
+          0.0008376273326575756,
+          0.9999996423721313
+        ],
+        "speed": 0.00017060796451890471
+      },
+      "camera_frames_each": 1597,
+      "audit": "evidence/full-003-audit.json",
+      "all_audit_checks_passed": true,
+      "runtime_source_hashes_match": true
+    }
   ],
-  "smoke_test": {
-    "run": "unbox-smoke-001",
-    "control_steps": 2,
+  "source_sha256": {
+    "config.py": "9ba8708b5c39159144cff73e22f5427b5a220de949f77f8ae9b2fa6207767d90",
+    "mechanics.py": "11cdf857e36764680bc6857107c53abd27884f892e6b14093aa8ab7db2c010ed",
+    "task.py": "3b91b45cc135d7ae85c1a1d39018e15b292cb620ea5a596ef6477626adf07f76",
+    "scoring.py": "f710dc39fd64546e1f20c96afc06e8251f5baa3f39bb5fa9d117ab152b0424d6",
+    "run.py": "31d319bcefc7adbfeb33a64fa35e831173f580f67d64715e77b4903aded15d5b",
+    "demo_policy.py": "6125277eb7f84461dbbe7b54cee49425602a28c8489fc10b8e0860649723d382",
+    "telemetry.py": "574f9949ddb5492f0f913403555bc32e2f6fdfac4ad215609e597a61f92b52b5",
+    "replay.py": "d20bd98997442b289094764e7068899518f3e9933ac2729c22473f3df75ec29d"
+  },
+  "environment": {
+    "python": "3.12.16",
+    "packages": {
+      "inspect-robots": "1.0.0",
+      "inspect-robots-yam": "0.38.0",
+      "isaaclab": "17.0.2",
+      "isaacsim": "6.1.0.0",
+      "numpy": "2.3.1",
+      "yam-arena": "0.1.0"
+    },
+    "adapter_commit": "0059d02a1a91bc6834c1d0846022891df0c78730"
+  },
+  "opening_diagnostic": {
+    "run": "unbox-open-003",
+    "diagnostic_precut": true,
+    "task_credit": 0.0,
     "completed": true,
-    "initial_flap_angles_deg": [
-      -0.00049,
-      -0.00069
+    "final_flap_angles_deg": [
+      110.00398801078583,
+      110.00396171294695
     ],
-    "physics_errors_found": false,
-    "note": "Early geometry/controller diagnostic; superseded by demo-006, which explicitly checked both physical hinge prims. Early custom-geometry caching bug means smoke-001 is not evidence of physical hinges."
+    "maximum_ik_position_residual_m": 8.291397501884656e-05,
+    "note": "Tape assumed pre-cut only in the diagnostic. Both complete trials start sealed and receive no such assistance."
+  },
+  "evidence": {
+    "curated_trace": "evidence/full-demo.jsonl.gz",
+    "replay_score": 1.0,
+    "original_trace_sha256": "5cc199194dd7fc0b2626275b7d8c68e68c90acc9783b421e8635332424c48ed7",
+    "curated_trace_sha256": "f2d44dbeb3ec862d9e28fb0ed7449dfa8821504c1bddd8e5aae30bb7db7f736e",
+    "gzip_sha256": "106a52cec6a281e6ee8cd136de47448ed331686fbd9d39394b39aa1c7d021c4c",
+    "note": "Curated trace contains only scorer inputs; score is recomputed, not copied from stored metrics."
   },
   "novelty": {
     "status": "significant overlap with pending submission",
@@ -33,33 +125,28 @@
     "checked": "2026-11-13",
     "note": "Carton tape cutting, opening and product protection are already in a pending submission. Do not present this prototype as an unclaimed objective."
   },
-  "demo": {
-    "run": "unbox-demo-006",
-    "inspect_log": "adhoc_e351641c.json",
-    "control_steps": 1153,
-    "simulated_seconds": 57.65,
-    "wall_seconds": 169.556421809,
-    "score": 0.25,
-    "replay_score": 0.25,
-    "cut_segments": 21,
-    "first_complete_cut_s": 15.95,
-    "maximum_flap_angles_deg": [
-      53.8571764104,
-      11.5461979681
-    ],
-    "final_flaps_open": false,
-    "item_retrieved": false,
-    "camera_video_frames_each": 1154,
-    "camera_video_count": 3,
-    "core_source_hashes_match": true,
-    "local_evidence": "artifacts/unbox-20261113/demo-006 (ignored)"
-  },
-  "source_sha256": {
-    "task.py": "0ede97765b199eaf3c13040d8eef4df0fb84f5e308af632f05c18b7a71c0533d",
-    "scoring.py": "f710dc39fd64546e1f20c96afc06e8251f5baa3f39bb5fa9d117ab152b0424d6",
-    "config.py": "9ba8708b5c39159144cff73e22f5427b5a220de949f77f8ae9b2fa6207767d90",
-    "mechanics.py": "11cdf857e36764680bc6857107c53abd27884f892e6b14093aa8ab7db2c010ed",
-    "run.py": "ca53c94b440948534a8419173e38b82b0481424cd2f04729dd9ffc37a42791d7",
-    "replay.py": "a85857ad7135be58d82dccbdf575d04cafc8708b9f3d3db6bae21768b6976dc3"
-  }
+  "history": [
+    {
+      "run": "unbox-demo-006",
+      "score": 0.25,
+      "source_commit": "5d3e9e0",
+      "note": "Original open-loop prototype; superseded."
+    },
+    {
+      "run": "unbox-feedback-full-001",
+      "score": 0.5,
+      "note": "Both flaps opened; item slipped because carry transitions removed grasp preload. Preserving commanded jaw targets fixed this controller bug."
+    }
+  ],
+  "limitations": [
+    "Two fixed-seed, zero-jitter successes establish feasibility in this specific scene, not broad reliability.",
+    "Tape fracture remains a geometric sweep approximation; rigid cardboard, fixture, friction and grasp proxy remain uncalibrated.",
+    "The scripted controller uses privileged measured object and hand poses; Dream receives standard observations and has not been run on this task.",
+    "Meaningful novelty distinction is still needed given related pending carton-cutting PR #1856."
+  ],
+  "remaining": [
+    "Model-policy evaluation after the validated scripted baseline",
+    "Material/force calibration and physical-fidelity validation",
+    "Novelty resolution before any submission"
+  ]
 }

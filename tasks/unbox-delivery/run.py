@@ -8,12 +8,15 @@ from pathlib import Path
 import numpy as np
 from config import *
 from scoring import UnboxScorer
+import telemetry
 
 HERE=Path(__file__).resolve().parent
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--policy',choices=['demo','dream'],default='demo')
+    p.add_argument('--stage',choices=['full','opening'],default='full',
+                   help='opening is a diagnostic with tape already cut; cannot earn task credit')
     p.add_argument('--max-steps',type=int,default=1800)
     p.add_argument('--log-dir',type=Path,required=True)
     args=p.parse_args()
@@ -24,6 +27,9 @@ def main():
     for source in HERE.glob('*.py'):
         (args.log_dir/'source'/source.name).write_bytes(source.read_bytes())
     (args.log_dir/'source-sha256.json').write_text(json.dumps({f.name:hashlib.sha256(f.read_bytes()).hexdigest() for f in HERE.glob('*.py')},indent=2))
+    (args.log_dir/'mode.json').write_text(json.dumps(dict(stage=args.stage,diagnostic=args.stage=='opening',
+        privileged_demo=args.policy=='demo'),indent=2))
+    if args.stage=='opening' and args.policy!='demo': p.error('opening diagnostic is for the scripted controller only')
     from inspect_robots.cli import main as cli
     from inspect_robots.registry import register
     from yam_arena.inspect_embodiment import YamArenaEmbodiment
@@ -101,10 +107,16 @@ def main():
                 self.hinges[side]=UsdPhysics.RevoluteJoint(found[0])
                 self.flap_paths[side]=str(found[0].GetParent().GetPath())
             self.task.module._tracker=UnboxScorer()
+            self.task.module._diagnostic=args.stage=='opening'
+            if args.stage=='opening':
+                self.task.module._tracker.cut=[True]*21
+                self.task.module._tracker.covered.update(range(210))
+            telemetry.latest=None;telemetry.events.clear()
             self.released=False
             self.audit=(args.log_dir/'trajectory.jsonl').open('x')
             import cv2
             cv2.imwrite(str(args.log_dir/'setup.png'),cv2.cvtColor(observation.images['top_cam'],cv2.COLOR_RGB2BGR))
+            self._task_step()  # initial measured state before the demo policy resets
             return observation
 
         def _task_step(self):
@@ -125,20 +137,22 @@ def main():
             for side in ('left','right'):
                 name=side+'_robot'; r=self._base.scene[name]; ids,fids=self._ids[name]
                 q=arr(r.data.joint_pos)[0]
-                tcp,_=ik.tcp_pose(q[ids],self.rig.bases[side])
-                hands.append((tcp,float(np.clip(q[fids].mean()/FINGER_OPEN,0,1))))
-            held=any(np.linalg.norm(tcp-np.array(cutter['pos']))<.035 and .08<opening<.38 for tcp,opening in hands)
-            angles=[]
+                tcp,rotation=ik.tcp_pose(q[ids],self.rig.bases[side])
+                hands.append((tcp,float(np.clip(q[fids].mean()/FINGER_OPEN,0,1)),rotation,q[ids]))
+            held=any(np.linalg.norm(tcp-np.array(cutter['pos']))<.035 and .08<opening<.38 for tcp,opening,_,_ in hands)
+            angles=[];flaps={}
             for side,sign in [('left',-1),('right',1)]:
-                _,r=state(side+'_flap')
+                flaps[side],r=state(side+'_flap')
                 angles.append(float(sign*np.degrees(np.arctan2(r[2,1],r[1,1]))))
             sample=dict(time=self._t,cutter=cutter,item=item,
                         tip=(np.array(cutter['pos'])+rot@np.array(TIP_LOCAL)).tolist(),
-                        hands=[dict(tcp=tcp.tolist(),opening=opening) for tcp,opening in hands],
+                        hands=[dict(tcp=tcp.tolist(),opening=opening,tcp_rotation=rotation.tolist(),joints=joints.tolist())
+                               for tcp,opening,rotation,joints in hands],flaps=flaps,
                         held=bool(held),blade_down=float(rot[2,2]),flap_angles=angles,
-                        item_released=all(np.linalg.norm(tcp-np.array(item['pos']))>.065 for tcp,_ in hands))
+                        item_released=all(np.linalg.norm(tcp-np.array(item['pos']))>.065 for tcp,_,_,_ in hands),diagnostic=args.stage=='opening')
             tracker=self.task.module._tracker
             sample['metrics']=tracker.update(sample)
+            sample['controller']=telemetry.command
             if all(tracker.cut) and not self.released:
                 for side in ('left','right'):
                     joint=self.hinges[side]
@@ -151,17 +165,25 @@ def main():
                     if cut:
                         prim=self.stage.GetPrimAtPath(self.flap_paths[side]+'/tape_'+str(i))
                         if prim: UsdGeom.Gprim(prim).GetDisplayColorAttr().Set([Gf.Vec3f(.12,.07,.03)])
+            telemetry.latest=sample
             self.audit.write(json.dumps(sample,allow_nan=False)+'\n'); self.audit.flush()
             return super()._task_step()
 
         def close(self):
             if hasattr(self,'audit'):
                 self.audit.close()
-                (args.log_dir/'score-summary.json').write_text(json.dumps(self.task.module._tracker.result(),indent=2))
+                summary=self.task.module._tracker.result()
+                if args.stage=='opening': summary=dict(score=0.,diagnostic_precut=True,diagnostic_milestones=summary)
+                (args.log_dir/'score-summary.json').write_text(json.dumps(summary,indent=2))
+                (args.log_dir/'controller-events.json').write_text(json.dumps(telemetry.events,indent=2))
             super().close()
 
     register('embodiment','parcel_prototype')(ParcelEmbodiment)
-    argv=['run','--embodiment','parcel_prototype','--policy','yam_scripted' if args.policy=='demo' else 'dream',
+    policy='dream'
+    if args.policy=='demo':
+        from demo_policy import register_policy
+        policy=register_policy(opening_only=args.stage=='opening')
+    argv=['run','--embodiment','parcel_prototype','--policy',policy,
           '-E',f'task={HERE / "task.py"}','-E','object_jitter=0','-E','control_hz=20',
           '-E','cam_width=320','-E','cam_height=176','--instruction',INSTRUCTION,
           '--scorer','task_score','--max-steps',str(args.max_steps),'--store-frames',

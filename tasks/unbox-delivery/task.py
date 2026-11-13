@@ -28,14 +28,15 @@ OBJECTS = [
     Box('destination',pos=(*DESTINATION,TOP+.001),size=(.10,.10,.002),color=(.1,.6,.22)),
 ]
 _tracker = None
+_diagnostic = False
 
 def success(objects):
     if _tracker is None:
         raise RuntimeError('Use run.py to install the hinged box and tape mechanics')
-    return _tracker.value == 1.
+    return not _diagnostic and _tracker.value == 1.
 
 def score(objects):
-    return _tracker.value if _tracker else 0.
+    return _tracker.value if _tracker and not _diagnostic else 0.
 
 def demo():
     """Experimental robot-only plan; not yet a validated full-score demonstration."""

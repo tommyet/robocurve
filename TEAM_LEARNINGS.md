@@ -1151,6 +1151,62 @@ result or measure outcome fairness.
 
 ## Dated session log
 
+### 2026-11-13 — unboxing feedback controller reaches full score twice
+
+- Operator: repository agent; branch `codex/unbox-parcel`. User explicitly asked
+  to validate opening with tape pre-cut, repair the controller, and reconnect
+  cutting/opening/retrieval. Used the already-running user-selected
+  `yam-eval-launchable-72837c`; no other GPU job was present. This supersedes
+  the earlier prototype's 0.25 feasibility result below.
+- Added a privileged scripted feedback policy: measured tab grasp offsets,
+  rotating fold trajectories, observed-angle progress gates, bounded tab/pickup
+  retries, post-release opening checks and slip monitoring. It only commands
+  ordinary robot joints/grippers. Geometry, scorer thresholds, friction and
+  actuator settings retain their original task source hashes. Dream has no
+  access to the privileged telemetry and was not run in this session.
+- IK identified wrist limits beyond about 90 degrees. Capping wrist tilt at
+  80 degrees while completing the TCP arc opens the passive flaps through
+  contact. Smooth joint-space parking to READY avoids the bad local IK branch
+  encountered during retreat. A higher tab grasp keeps finger tips off the lid.
+  `unbox-open-003` verified both released flaps at about 110 degrees with maximum
+  planned IK position residual 0.083 mm. This is not a physical tracking claim.
+- The `--stage opening` diagnostic explicitly assumes cut tape, disables task
+  success/credit, and marks every trace row. Its reported task score and replay
+  are **0**, with separate geometric opening milestones. Both complete trials
+  below start sealed. Never use diagnostic milestones as full-task evidence.
+- Intermediate `unbox-feedback-full-001` scored 0.5: the item lifted, then fell
+  when the carry transition reset the gripper command to the wider measured
+  jaw opening, removing the established squeeze. Preserve the **commanded gap**
+  across loaded motion segments; measured gap is not the force-bearing target.
+  A regression test reproduces this distinction. No material retuning was needed.
+- Final `unbox-feedback-full-002` and `unbox-feedback-full-003` each score **1.0**,
+  independently replayed **1.0**. Each uses 1,596 actions / 79.8 simulated seconds;
+  runner wall 222.856 / 220.427 seconds. All 21 tape segments cut, tool returned,
+  both flaps remain at about 110 degrees, and the item rests released on its pad.
+  These are two zero-jitter fixed-seed feasibility checks, not broad reliability.
+- Sixteen scorer/controller tests pass. Both independent audits pass all checks:
+  complete trace/actions, eight current runtime source hashes, timestamps,
+  released final state, command bounds/rates and all 1,597 frames per camera.
+  Stock action semantics have `max_step=None`; motion rates were independently
+  checked against configured actuator velocities at 20 Hz. Do not describe
+  those rate limits as a configured stock per-step guardrail.
+- Brev lacks `ffprobe`; audit media locally after capturing installed robot
+  limits with `audit_trial.py --capture-limits-only`. All three camera MP4s,
+  source snapshots, actions, traces and logs for both full successes and the
+  final opening diagnostic are local in ignored
+  `artifacts/unbox-feedback-20261113/`. The task's `evidence/` includes both
+  audit reports and an anonymous compressed scorer-input trace replaying 1.0.
+  Original/curated/compressed hashes are distinguished in `VALIDATION.json`.
+- No Dream request, media upload or upstream PR. Related carton-cutting
+  [PR #1856](https://github.com/robocurve/benchmark-tasks/pull/1856) remains a
+  novelty concern; full-score feasibility does not resolve it. Material/tape
+  calibration and broader variation testing remain open.
+- All required evidence downloaded and GPU compute list empty before requesting
+  shutdown. `brev ls` confirmed **STOPPED** at **18:36 UTC** for the selected
+  instance; its disk and installation are retained. Billing/rate was not checked;
+  no cost is claimed.
+
+
 ### 2026-11-13 — unboxing prototype on the user-selected Brev instance
 
 - Operator: repository agent; branch `codex/unbox-parcel`, from freshly fetched
