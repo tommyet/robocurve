@@ -113,7 +113,7 @@ class NativeMonitor:
     def __init__(self,simulation,item,paper_specs):
         from paper import ElasticDomainGuard
         self.item=item;self.specs=paper_specs
-        self.rigid=simulation.create_rigid_body_view(item['root']+'/*')
+        self.rigid=simulation.create_rigid_body_view(item['metadata']['staple']['paths']+[item['metadata']['remover_path']])
         env_root=item['root'].rsplit('/',1)[0]
         self.paper_views=[simulation.create_surface_deformable_body_view(env_root+'/'+s.name) for s in self.specs]
         if any(view.count!=1 for view in self.paper_views):raise RuntimeError('Native paper missing from monitor')

@@ -5,6 +5,7 @@ cloth triangle. Check both current capsules and swept endpoints in each moving
 triangle's frame. This detects clear native-contact failures; it does not claim
 to resolve grazing fibres, finite-radius contact accuracy or fracture.
 """
+from collections import Counter
 import numpy as np
 
 
@@ -32,8 +33,8 @@ def capsule_endpoints(poses,lengths):
     return np.stack((p[:,:3]-half,p[:,:3]+half),axis=1)
 
 
-def _hits(start,end,triangles):
-    """Matched segment/triangle intersection, after an AABB broad phase."""
+def _intersection_coordinates(start,end,triangles):
+    """Matched intersections, retaining the original audit tolerances."""
     e1=triangles[:,1]-triangles[:,0];e2=triangles[:,2]-triangles[:,0]
     d=end-start;s=start-triangles[:,0]
     h=np.cross(d,e2);det=np.einsum('ij,ij->i',e1,h)
@@ -43,17 +44,64 @@ def _hits(start,end,triangles):
     q=np.cross(s,e1);v=np.einsum('ij,ij->i',d,q)*inv
     t=np.einsum('ij,ij->i',e2,q)*inv
     eps=1e-7
-    return good&(u>=-eps)&(v>=-eps)&(u+v<=1+eps)&(t>=-eps)&(t<=1+eps)
+    hits=good&(u>=-eps)&(v>=-eps)&(u+v<=1+eps)&(t>=-eps)&(t<=1+eps)
+    return hits,np.column_stack((1-u-v,u,v)),t
+
+
+def _hits(start,end,triangles):
+    """Matched segment/triangle intersection, after an AABB broad phase."""
+    return _intersection_coordinates(start,end,triangles)[0]
 
 
 class ThreadClothAudit:
     def __init__(self,faces):
         self.faces=np.asarray(faces,int);self.previous=None;self.previous_triangles=None
+        self.previous_points=None
         self.first_failure=None;self.steps=0
+        counts=Counter(tuple(sorted((int(a),int(b)))) for face in self.faces
+                       for a,b in zip(face,np.roll(face,-1)))
+        self.boundary_edges=np.asarray([edge for edge,count in counts.items() if count==1],int).reshape(-1,2)
+
+    def _details(self,start,end,triangles,segment_ids,face_ids,points,space,limit=8):
+        """Distances explain a failure; they never exempt or change one.
+
+        Genuine mesh-boundary edges have one adjacent triangle. An internal
+        triangulation edge is not a hole. Distance is Euclidean to the nearest
+        deformed boundary segment, not a fracture or finite-radius penetration
+        estimate. Barycentric coordinates expose tolerance-only grazing hits.
+        """
+        hits,barycentric,parameters=_intersection_coordinates(start,end,triangles)
+        result=[]
+        for k in np.flatnonzero(hits)[:limit]:
+            hit=start[k]+parameters[k]*(end[k]-start[k])
+            row={'segment_index':int(segment_ids[k]),'face_index':int(face_ids[k]),
+                 'coordinate_frame':space,'intersection_m':hit.tolist(),
+                 'barycentric':barycentric[k].tolist(),'segment_parameter':float(parameters[k]),
+                 'strictly_inside_triangle':bool(np.all(barycentric[k]>=0.)),
+                 'strictly_inside_segment':bool(0.<=parameters[k]<=1.)}
+            if len(self.boundary_edges):
+                ends=points[self.boundary_edges];d=ends[:,1]-ends[:,0]
+                dd=np.einsum('ij,ij->i',d,d)
+                fraction=np.clip(np.divide(np.einsum('ij,ij->i',hit-ends[:,0],d),dd,
+                                           out=np.zeros_like(dd),where=dd>0.),0.,1.)
+                nearest=ends[:,0]+fraction[:,None]*d
+                distance=np.linalg.norm(nearest-hit,axis=1);edge=int(np.argmin(distance))
+                row.update(distance_to_mesh_boundary_m=float(distance[edge]),
+                           closest_boundary_edge=self.boundary_edges[edge].tolist(),
+                           closest_boundary_point_m=nearest[edge].tolist(),
+                           closest_boundary_edge_length_m=float(np.linalg.norm(d[edge])))
+                direction=end[k]-start[k];squared=float(np.dot(direction,direction))
+                along=np.clip((points-start[k])@direction/squared,0.,1.) if squared>0 else np.zeros(len(points))
+                distances=np.linalg.norm(points-start[k]-along[:,None]*direction,axis=1)
+                row.update(closest_boundary_vertices_distance_to_thread_axis_m=distances[self.boundary_edges[edge]].tolist(),
+                           nearest_mesh_vertex_distance_to_thread_axis_m=float(distances.min()))
+            result.append(row)
+        return result
 
     def update(self,points,segments,time_s):
         self.steps+=1
-        segments=np.asarray(segments,float);triangles=np.asarray(points,float)[self.faces]
+        points=np.asarray(points,float)
+        segments=np.asarray(segments,float);triangles=points[self.faces]
         if (segments.ndim!=3 or segments.shape[1:]!=(2,3) or
                 not np.isfinite(segments).all() or not np.isfinite(triangles).all()):
             raise ValueError('Invalid measured thread/fabric geometry')
@@ -78,6 +126,7 @@ class ThreadClothAudit:
         current=triangles[face]
         static=_hits(segments[segment,0],segments[segment,1],current)
         swept=np.zeros(len(segment),dtype=bool)
+        swept_details=[]
         if self.previous is not None:
             old=self.previous_triangles[face]
             displacement=current[:,0]-old[:,0]
@@ -85,13 +134,25 @@ class ThreadClothAudit:
                 # Check translation in both old and new triangle shape. The
                 # elastic-domain audit separately bounds large deformation.
                 a=self.previous[segment,endpoint];b=segments[segment,endpoint]
-                swept|=_hits(a,b-displacement,old)|_hits(a+displacement,b,current)
+                old_hits=_hits(a,b-displacement,old)
+                new_hits=_hits(a+displacement,b,current)
+                swept|=old_hits|new_hits
+                if self.first_failure is None:
+                    if old_hits.any():
+                        swept_details.extend(self._details(a,b-displacement,old,segment,face,
+                            self.previous_points,f'previous_triangle_endpoint_{endpoint}'))
+                    if new_hits.any():
+                        swept_details.extend(self._details(a+displacement,b,current,segment,face,
+                            points,f'current_triangle_endpoint_{endpoint}'))
         if (static|swept).any() and self.first_failure is None:
             self.first_failure={'step':self.steps,'time_s':float(time_s),
                                 'reason':'thread crosses intact fabric',
                                 'static_intersections':int(static.sum()),
-                                'swept_intersections':int(swept.sum())}
-        self.previous=segments.copy();self.previous_triangles=triangles.copy()
+                                'swept_intersections':int(swept.sum()),
+                                'static_crossing_details':self._details(segments[segment,0],segments[segment,1],
+                                    current,segment,face,points,'current') if static.any() else [],
+                                'swept_crossing_details':swept_details[:8]}
+        self.previous=segments.copy();self.previous_triangles=triangles.copy();self.previous_points=points.copy()
         return self.first_failure is None
 
     def summary(self):

@@ -25,6 +25,33 @@ class Fabric:
     solver_iterations: int = 32
 
 
+@dataclass(frozen=True)
+class ContactRefinement:
+    """Numerical contact controls only; not a fabric/material change.
+
+    These are PhysxSurfaceDeformableBodyAPI attributes in the installed
+    PhysxSchemaAddition 110.3.2 schema, not rigid-body or scene CCD flags.
+    Pair updates affect surface-to-surface pairs; their benefit for a rigid
+    thread against cloth must not be assumed from schema availability.
+    """
+    speculative_ccd: bool = False
+    collision_iterations: int = 1
+    pair_update_frequency: int = 1
+
+    def attributes(self, solver_iterations):
+        if not isinstance(self.speculative_ccd, bool):
+            raise ValueError('speculative_ccd must be boolean')
+        if (type(self.collision_iterations) is not int or
+                not 1 <= self.collision_iterations <= solver_iterations//2):
+            raise ValueError('Collision multiplier outside native schema range')
+        if (type(self.pair_update_frequency) is not int or
+                not 0 <= self.pair_update_frequency <= solver_iterations):
+            raise ValueError('Pair update frequency outside native schema range')
+        return {'physxDeformableBody:enableSpeculativeCCD':self.speculative_ccd,
+                'physxDeformableBody:collisionIterationMultiplier':self.collision_iterations,
+                'physxDeformableBody:collisionPairUpdateFrequency':self.pair_update_frequency}
+
+
 def _set(prim, name, value):
     attr = prim.GetAttribute(name)
     if not attr:
@@ -33,7 +60,8 @@ def _set(prim, name, value):
         raise RuntimeError(f'Cannot author {name}')
 
 
-def author_cloth(stage, path, mesh, material=Fabric(), points=None, color=(.08,.35,.72)):
+def author_cloth(stage, path, mesh, material=Fabric(), points=None, color=(.08,.35,.72),
+                 contact_refinement=None):
     """Create one triangle mesh that is both simulated and rendered.
 
     ``points`` may differ from the unstressed rest mesh for initial draping only.
@@ -63,6 +91,9 @@ def author_cloth(stage, path, mesh, material=Fabric(), points=None, color=(.08,.
     _set(prim,'physxDeformableBody:selfCollision',True)
     _set(prim,'physxDeformableBody:disableGravity',False)
     _set(prim,'physxDeformableBody:solverPositionIterationCount',material.solver_iterations)
+    if contact_refinement is not None:
+        for name,value in contact_refinement.attributes(material.solver_iterations).items():
+            _set(prim,name,value)
     UsdPhysics.CollisionAPI.Apply(prim)
     collision = PhysxSchema.PhysxCollisionAPI.Apply(prim)
     collision.CreateContactOffsetAttr(material.contact_offset)
@@ -170,5 +201,5 @@ def ensure_gpu_scene(stage):
         api=PhysxSchema.PhysxSceneAPI.Apply(prim)
         api.CreateEnableGPUDynamicsAttr(True)
         api.CreateBroadphaseTypeAttr('GPU')
-        api.CreateEnableCCDAttr(True)
+        api.CreateEnableCCDAttr(False)  # Rigid sweep CCD is incompatible with DirectGPU tensors.
         api.CreateSolverTypeAttr('TGS')

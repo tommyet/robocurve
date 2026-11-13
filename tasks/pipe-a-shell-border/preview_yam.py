@@ -37,7 +37,7 @@ def main():
     a.out.mkdir(parents=True,exist_ok=False);start=time.monotonic()
     report={'status':'running','robot_demo':False,'preview_steps':a.steps,
             'source_sha256':{n:hashlib.sha256(Path(__file__).with_name(n).read_bytes()).hexdigest()
-                             for n in ('scene.py','native.py','material.py','preview_yam.py','contact_audit.py')},
+                             for n in ('scene.py','native.py','material.py','preview_yam.py','contact_audit.py','review_views.py')},
             'plan_sha256':hashlib.sha256(a.plan.read_bytes()).hexdigest() if a.plan else None}
     app=None;video=None;trace=[]
     def progress(phase,step=0):
@@ -61,7 +61,18 @@ def main():
         emb=wrapper.YamArenaEmbodiment(task=str(Path(__file__).with_name('scene.py')),
             object_jitter=0.,control_hz=20,cam_width=224,cam_height=224)
         progress('build YAM scene and initialize renderer')
-        emb._ensure_sim(None)
+        from yam_arena import scene as adapter
+        original_make_env=adapter.make_env
+        if a.judging_views:
+            from review_views import configure
+            def make_env(embodiment,**kwargs):
+                configure(embodiment)
+                return original_make_env(embodiment,**kwargs)
+            adapter.make_env=make_env
+        try:
+            emb._ensure_sim(None)
+        finally:
+            adapter.make_env=original_make_env
         progress('native tensor and contact views')
         import sys
         # The task loader may give scene.py a generated module name. Its hook
@@ -77,6 +88,7 @@ def main():
             excluded_body_paths=(),
             allowed_shape_paths=[roots['barrel']+f'/NozzleSector{i:02d}' for i in range(24)])
         base=emb._base;write=base.scene.write_data_to_sim
+        report['robot_body_names']={name:list(base.scene[name].body_names) for name in ('left_robot','right_robot')}
         def step_material(*args,**kwargs):
             out=write(*args,**kwargs)
             fb,fp=coupling.advance(array(barrel.get_transforms())[0],array(barrel.get_velocities())[0],
@@ -98,7 +110,10 @@ def main():
             rgb=array(base.scene['top_cam'].data.output['rgb'])[0,:,:,:3].astype(np.uint8)
             video.append_data(rgb)
             if not step:Image.fromarray(rgb).save(a.out/'setup.png')
-            trace.append({'step':step,'barrel_pose_xyzw':array(barrel.get_transforms())[0].tolist(),
+            trace.append({'step':step,
+                          'robot_joints':{name:array(base.scene[name].data.joint_pos)[0].tolist() for name in ('left_robot','right_robot')},
+                          'robot_links_xyzw':{name:array(base.scene[name].data.body_link_pose_w)[0].tolist() for name in ('left_robot','right_robot')},
+                          'barrel_pose_xyzw':array(barrel.get_transforms())[0].tolist(),
                           'plunger_pose_xyzw':array(plunger.get_transforms())[0].tolist(),
                           'piston_m':coupling.last_piston_m,'pressure_reaction_n':coupling.last_reaction_n,
                           'emitted_ml':coupling.material.emitted_m3*1e6,
@@ -114,6 +129,7 @@ def main():
             Image.fromarray(array(base.scene[name].data.output['rgb'])[0,:,:,:3].astype(np.uint8)).save(a.out/f'final-{name}.png')
         (a.out/'trace.json').write_text(json.dumps(trace,indent=2)+'\n')
         coupling.material.save(a.out/'material.npz')
+        report.update(balance=coupling.material.balance(),other_contact=other_contact.summary())
         if a.judging_views:
             progress('final judging photographs',a.steps)
             from review_views import capture_final

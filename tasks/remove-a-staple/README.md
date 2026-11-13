@@ -28,8 +28,13 @@ cleaned meshes and the documented shell bend coefficient, the touching free
 sheets gain about 0.8 mm of separation; one exceeds 0.3% local bending after
 0.129 seconds. The stapled coupon exceeds that boundary after 0.010 seconds.
 Wire-crossing audits stay clean. These are failed contact/validity tests, not
-evidence of a tear or successful retention. An explicitly separated-sheet
-free-fall control is the next diagnostic.
+evidence of a tear or successful retention. The separated-sheet control now
+passes 0.2 seconds with zero bending and a 9.9986 mm final gap from 10 mm;
+this implicates contact. The 120 µm midplane-gap control also passes with zero
+bending and 119.85 µm final separation. The stapled coupon with that gap and
+20 µm of crown clearance still crosses the bending-domain boundary after
+0.007 seconds. The next diagnostic tests the actual supported A5 setup,
+without changing material parameters or validity thresholds.
 
 ## Reproduce the checks
 
@@ -47,7 +52,8 @@ python tasks/remove-a-staple/native_probe.py --out artifacts/staple-negative --d
 python tasks/remove-a-staple/native_probe.py --out artifacts/staple-half-dt --dt .00005 --seconds 1
 python tasks/remove-a-staple/paper_probe.py --out artifacts/paper-free --mode free --seconds .2 --physics-hz 2000
 python tasks/remove-a-staple/paper_probe.py --out artifacts/paper-separated --mode free-separated --seconds .2 --physics-hz 2000
-python tasks/remove-a-staple/paper_probe.py --out artifacts/paper-stapled --mode stapled --seconds .2 --physics-hz 2000
+python tasks/remove-a-staple/paper_probe.py --out artifacts/paper-stapled --mode stapled --seconds .2 --physics-hz 2000 --sheet-gap-um 120 --crown-gap-um 20
+python tasks/remove-a-staple/full_probe.py --out artifacts/staple-full --seconds .1 --physics-hz 2000
 ```
 
 Each output directory must be new. Read the JSON result: Isaac shutdown may
@@ -75,6 +81,9 @@ The staple and remover fulcrum are over the support. This scene is unrun;
 The YAM bridge in `arena_paper.py`, `arena_hardware.py` and `task.py` is authored
 but unrun. It exposes measured geometry to an assessor, writes poses only on
 reset and fails closed when the material/contact validity guard trips.
+`preview_yam.py` is an unrun camera/integration recorder using ordinary ready
+joint targets. It audits both FEM sheets and all 61 free hardware bodies. Run
+it only after the native contact gates; it cannot certify task success.
 
 The steel currently bends in its original plane. The paper model is isotropic
 and uses a conservative, provisional 0.3% membrane/surface-bending strain

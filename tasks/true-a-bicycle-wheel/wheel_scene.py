@@ -31,7 +31,8 @@ def quat(R):
 
 
 def x_frame(direction):
-    x=np.asarray(direction,dtype=float)
+    # Callers reuse the metric direction to place the two half-spokes.
+    x=np.array(direction,dtype=float,copy=True)
     x/=np.linalg.norm(x)
     seed=np.array([0.,0.,1.]) if abs(x[2])<.9 else np.array([0.,1.,0.])
     y=np.cross(seed,x)
@@ -150,16 +151,27 @@ def build_scene(stage, root="/WheelTask"):
         for path,fraction in ((inner,.25),(outer,.75)):
             body(path,anchor+vec*fraction,R,mass)
             shape(path,"steel",(0.,0.,0.),(L/2,.001,0.),kind="capsule")
+            # The eyelet lies on the shared boundary of two rim sectors.
+            # Both sectors overlap this jointed internal interface; filtering
+            # only i would make i-1 eject the rod against its own rim joint.
             UsdPhysics.FilteredPairsAPI.Apply(stage.GetPrimAtPath(path)).CreateFilteredPairsRel().SetTargets([
-                Sdf.Path(inner if path==outer else outer),Sdf.Path(hub),Sdf.Path(rim_paths[i])])
+                Sdf.Path(inner if path==outer else outer),Sdf.Path(hub),
+                Sdf.Path(rim_paths[i]),Sdf.Path(rim_paths[(i-1)%n])])
         for label,path,other,p0,p1 in (
                 ("hub",inner,hub,anchor,(-L/4,0.,0.)),
                 ("rim",outer,rim_paths[i],(-chord/2,0.,0.),(L/4,0.,0.))):
-            joint=UsdPhysics.SphericalJoint.Define(stage,f"{wheel}/spoke_{i:02d}_{label}_joint")
+            # A retained spoke head can tilt but cannot freely spin about the
+            # shaft. This transmits the thread reaction through actual bodies.
+            joint=(UsdPhysics.Joint if label=='hub' else UsdPhysics.SphericalJoint).Define(stage,f"{wheel}/spoke_{i:02d}_{label}_joint")
             joint.CreateBody0Rel().SetTargets([Sdf.Path(other)])
             joint.CreateBody1Rel().SetTargets([Sdf.Path(path)])
             joint.CreateLocalPos0Attr(Gf.Vec3f(*map(float,p0)))
             joint.CreateLocalPos1Attr(Gf.Vec3f(*map(float,p1)))
+            if label=='hub':
+                joint.CreateLocalRot0Attr(qgf(R));joint.CreateLocalRot1Attr(qgf(I))
+                for axis in ('transX','transY','transZ','rotX'):
+                    locked=UsdPhysics.LimitAPI.Apply(joint.GetPrim(),axis)
+                    locked.CreateLowAttr(1.);locked.CreateHighAttr(-1.)
         axial=UsdPhysics.Joint.Define(stage,f"{wheel}/spoke_{i:02d}_axial")
         axial.CreateBody0Rel().SetTargets([Sdf.Path(inner)])
         axial.CreateBody1Rel().SetTargets([Sdf.Path(outer)])
@@ -190,7 +202,7 @@ def build_scene(stage, root="/WheelTask"):
         body(nipple,nipple_center,R,.0009)
         shape(nipple,"flats",(0.,0.,0.),(.012,.00323,.00323),color=(.7,.52,.17))
         UsdPhysics.FilteredPairsAPI.Apply(stage.GetPrimAtPath(nipple)).CreateFilteredPairsRel().SetTargets([
-            Sdf.Path(rim_paths[i]),Sdf.Path(outer)])
+            Sdf.Path(rim_paths[i]),Sdf.Path(rim_paths[(i-1)%n]),Sdf.Path(outer)])
         hinge=UsdPhysics.RevoluteJoint.Define(stage,f"{wheel}/nipple_{i:02d}_bearing")
         hinge.CreateAxisAttr("X")
         hinge.CreateBody0Rel().SetTargets([Sdf.Path(rim_paths[i])])
@@ -198,14 +210,20 @@ def build_scene(stage, root="/WheelTask"):
         hinge.CreateLocalPos0Attr(Gf.Vec3f(*map(float,rim_R.T@(nipple_center-rim_center))))
         hinge.CreateLocalPos1Attr(Gf.Vec3f(0.,0.,0.))
         hinge.CreateLocalRot0Attr(qgf(rim_R.T@R))
-        friction=UsdPhysics.DriveAPI.Apply(hinge.GetPrim(),"angular")
+        # Thread friction acts between nipple and outer spoke, not between
+        # nipple and rim. The separate rim bearing locates the nipple but does
+        # not prescribe its threaded angle or transfer a fictitious torque.
+        thread_joint=UsdPhysics.Joint.Define(stage,f'{wheel}/nipple_{i:02d}_thread_friction')
+        thread_joint.CreateBody0Rel().SetTargets([Sdf.Path(outer)])
+        thread_joint.CreateBody1Rel().SetTargets([Sdf.Path(nipple)])
+        friction=UsdPhysics.DriveAPI.Apply(thread_joint.GetPrim(),"rotX")
         friction.CreateTypeAttr("force")
         friction.CreateStiffnessAttr(0.)
         friction.CreateDampingAttr(thread.viscous_friction_nm_s_per_rad*math.pi/180.)
         friction.CreateTargetVelocityAttr(0.)
         friction.CreateMaxForceAttr(thread.friction_coefficient*spec.baseline_tension_n*thread.thread_mean_radius_m)
         metadata["spokes"].append({"nipple_path":nipple,"rim_path":rim_paths[i],
-            "reference_nipple_in_rim_rotation":(rim_R.T@R).tolist(),
+            "reference_nipple_in_spoke_rotation":I.tolist(),
             "initial_turn_offset":float(initial[i]),"hub_anchor_local_m":anchor.tolist(),
             "rim_anchor_local_m":[-chord/2,0.,0.],"nominal_rest_m":nominal,
             "stiffness_n_per_m":k,"rest_target_attribute":limit.GetHighAttr(),

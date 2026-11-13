@@ -19,15 +19,22 @@ def main():
     p.add_argument('--mode',choices=('intact','open'),default='intact')
     p.add_argument('--seconds',type=float,default=3.)
     p.add_argument('--out',type=Path,required=True)
-    p.add_argument('--physics-hz',type=int,choices=(480,960),default=960)
+    p.add_argument('--physics-hz',type=int,choices=(480,960,1920,3840),default=960)
     p.add_argument('--coarse-thread',action='store_true',help='Diagnostic 0.8 mm thread / 1.6 mm holes; does not change task reset')
+    p.add_argument('--contact-refinement',choices=('baseline','iterations','speculative','combined'),
+                   default='baseline',help='Diagnostic native deformable contact settings only; geometry/material/audit unchanged')
+    p.add_argument('--hole-mesh-spacing',type=float,default=None,
+                   help='Diagnostic local collision/simulation mesh refinement in metres; same holes, area and material')
     p.add_argument('--continue-after-invalid',action='store_true',help='Bounded failure investigation only; invalid evidence never passes')
     a=p.parse_args()
     if not 0<a.seconds<=10:p.error('Diagnostic limited to ten simulated seconds')
     a.out.mkdir(parents=True,exist_ok=False)
     started=time.monotonic();report={'status':'running','robot_demo':False,'mode':a.mode,'geometry':audit_scene(),
+                                   'physics_hz':a.physics_hz,'requested_seconds':a.seconds,
+                                   'contact_refinement':a.contact_refinement,
+                                   'hole_mesh_spacing_m':a.hole_mesh_spacing,
                                    'source_sha256':{name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
-                                                    for name in ('probe_native.py','native_stitches.py','native_cloth.py','geometry.py')}}
+                                                    for name in ('probe_native.py','native_stitches.py','native_cloth.py','geometry.py','contact_audit.py','inspection.py')}}
     app=None;attached=False;stage=None;cache=None;physics=None
     phase='launch'
     try:
@@ -37,7 +44,7 @@ def main():
         from pxr import Gf,Usd,UsdGeom,UsdPhysics,UsdUtils
         from omni.physx import get_physx_simulation_interface
         import omni.physics.tensors as tensors
-        from native_cloth import author_box,ensure_gpu_scene
+        from native_cloth import author_box,ensure_gpu_scene,ContactRefinement
         from native_stitches import author_pair
         from inspection import StrainAudit
         from contact_audit import ThreadClothAudit,capsule_endpoints,match_capsule_order
@@ -54,10 +61,18 @@ def main():
             return (np.asarray(points)-(.235,0.,.7511))@rotation.T+(0.,0.,.5)
         phase='scene authoring'
         radius,hole_half=(.0004,.0008) if a.coarse_thread else (.0002,.0006)
+        refined=a.contact_refinement in ('iterations','combined')
+        contact_settings=ContactRefinement(
+            speculative_ccd=a.contact_refinement in ('speculative','combined'),
+            collision_iterations=4 if refined else 1,
+            pair_update_frequency=4 if refined else 1)
         cloth,threads=author_pair(stage,transform=transform,open_diagnostic=a.mode=='open',
-                                 thread_radius=radius,hole_half=hole_half)
+                                 thread_radius=radius,hole_half=hole_half,contact_refinement=contact_settings,
+                                 hole_mesh_spacing=a.hole_mesh_spacing)
         report.update(thread_radius_m=radius,hole_width_m=2*hole_half,
-                      cloth_geometry=[mesh.audit() for mesh in cloth])
+                      cloth_geometry=[mesh.audit() for mesh in cloth],
+                      authored_contact_settings=[{name:stage.GetPrimAtPath(f'/World/Cloth_{i}').GetAttribute(name).Get()
+                         for name in contact_settings.attributes(64)} for i in range(2)])
         # Clamp upper edge with physical surfaces. The gap is 0.30 mm for the
         # 0.40 mm cloth; all native vertices stay dynamic.
         for sign in (-1,1):
@@ -81,6 +96,9 @@ def main():
         order=None
         lengths=np.concatenate([t['lengths'] for t in threads])
         frames=[[],[]];thread_frames=[];sample_times=[]
+        previous_measured=[m.rest.copy() for m in cloth]
+        previous_segments=np.concatenate([np.stack((t['nodes'],np.roll(t['nodes'],-1,axis=0)),axis=1) for t in threads])
+        maximum_node_step_m=0.;maximum_thread_endpoint_step_m=0.
         strain=[StrainAudit(m.rest,m.faces) for m in cloth]
         contact=[ThreadClothAudit(m.faces) for m in cloth]
         phase='physics stepping'
@@ -101,19 +119,36 @@ def main():
                 strain[j].update(points,step/a.physics_hz)
                 contact[j].update(points,segments,step/a.physics_hz)
                 measured.append(points)
+            node_step=max(float(np.linalg.norm(now-before,axis=1).max())
+                          for now,before in zip(measured,previous_measured))
+            thread_step=float(np.linalg.norm(segments-previous_segments,axis=2).max())
+            maximum_node_step_m=max(maximum_node_step_m,node_step)
+            maximum_thread_endpoint_step_m=max(maximum_thread_endpoint_step_m,thread_step)
             invalid=any(audit.first_excursion is not None for audit in strain) or any(audit.first_failure is not None for audit in contact)
             if invalid:
                 report.update(status='invalid_model_domain')
-                report.setdefault('first_invalid_step',step)
+                if 'first_invalid_step' not in report:
+                    report.update(first_invalid_step=step,first_invalid_node_step_m=node_step,
+                                  first_invalid_thread_endpoint_step_m=thread_step)
+                    np.savez_compressed(a.out/'first-invalid-pair.npz',
+                        previous_left=previous_measured[0],previous_right=previous_measured[1],
+                        current_left=measured[0],current_right=measured[1],
+                        previous_thread_segments=previous_segments,current_thread_segments=segments,
+                        left_faces=cloth[0].faces,right_faces=cloth[1].faces,
+                        time_s=step/a.physics_hz,dt=1/a.physics_hz)
                 sample=True
             if sample:
                 for j,points in enumerate(measured):frames[j].append(points)
             if sample:thread_frames.append(poses);sample_times.append(step/a.physics_hz)
+            previous_measured=[points.copy() for points in measured]
+            previous_segments=segments.copy()
             if invalid and not a.continue_after_invalid:break
         np.savez_compressed(a.out/'state.npz',left=frames[0],right=frames[1],
                             left_faces=cloth[0].faces,right_faces=cloth[1].faces,thread=thread_frames,
                             sample_times_s=sample_times,authored_left=cloth[0].rest,authored_right=cloth[1].rest)
         report.update(thread_count=thread_view.count,completed_steps=step,
+                      maximum_node_step_m=maximum_node_step_m,
+                      maximum_thread_endpoint_step_m=maximum_thread_endpoint_step_m,
                       right_centroid_drop_m=float(np.mean(cloth[1].rest[:,2])-np.mean(frames[1][-1][:,2])),
                       left_centroid_drop_m=float(np.mean(cloth[0].rest[:,2])-np.mean(frames[0][-1][:,2])),
                       strain=[{'maximum_principal_stretch':s.maximum_observed,

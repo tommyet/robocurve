@@ -42,12 +42,17 @@ class ThreadCutter:
 
 
 def segment_triangle_intersections(a,b,vertices,faces,eps=1e-10):
-    """Möller–Trumbore finite segment test, vectorized over actual cloth faces."""
+    """Scale-relative finite-segment test over actual cloth faces.
+
+    ``eps`` is dimensionless. A fixed determinant cutoff has cubic length
+    units and would silently miss crossings after submillimetre refinement.
+    """
     a,b,p,f=np.asarray(a,float),np.asarray(b,float),np.asarray(vertices,float),np.asarray(faces,int)
     d=b-a;v0,v1,v2=(p[f[:,i]] for i in range(3))
     e1,e2=v1-v0,v2-v0
     h=np.cross(np.broadcast_to(d,e2.shape),e2);det=np.einsum('ij,ij->i',e1,h)
-    nonparallel=np.abs(det)>eps
+    scale=np.linalg.norm(d)*np.linalg.norm(e1,axis=1)*np.linalg.norm(e2,axis=1)
+    nonparallel=(scale>0)&(np.abs(det)>eps*scale)
     inv=np.divide(1.,det,out=np.zeros_like(det),where=nonparallel)
     s=a-v0;u=inv*np.einsum('ij,ij->i',s,h)
     q=np.cross(s,e1);v=inv*(q@d);t=inv*np.einsum('ij,ij->i',e2,q)
@@ -61,18 +66,31 @@ class DamageAudit:
     invalidates a trial rather than pretend intact fabric survived a blade.
     It does not claim to simulate fracture propagation or inspect tiny fibres.
     """
-    def __init__(self):self.crossed_faces=set();self.events=[]
+    def __init__(self):self.crossed_faces=set();self.events=[];self.previous_cloth=None
 
     def update(self,blade_previous,blade_current,cloth_vertices,cloth_faces,time_s):
         before,now=np.asarray(blade_previous,float),np.asarray(blade_current,float)
-        if before.shape!=now.shape or now.ndim!=2 or now.shape[1]!=3:
+        if (before.shape!=now.shape or now.ndim!=2 or now.shape[1]!=3 or
+                not np.isfinite(before).all() or not np.isfinite(now).all()):
             raise ValueError('Blade samples must be Nx3')
         for layer,(p,f) in enumerate(zip(cloth_vertices,cloth_faces)):
             hits=set()
             for a,b in zip(before,now):hits.update(segment_triangle_intersections(a,b,p,f).tolist())
             # Include the physical blade edge itself, not only its moving tips.
             for a,b in zip(now[:-1],now[1:]):hits.update(segment_triangle_intersections(a,b,p,f).tolist())
+            if self.previous_cloth is not None:
+                # Cloth may move through a stationary blade. Reuse the same
+                # strict, translation-relative sweep guard as thread contact.
+                from contact_audit import _hits
+                old=np.asarray(self.previous_cloth[layer])[f];current=np.asarray(p)[f]
+                displacement=current[:,0]-old[:,0]
+                for a,b in zip(before,now):
+                    old_start=np.broadcast_to(a,displacement.shape)
+                    new_end=np.broadcast_to(b,displacement.shape)
+                    hit=_hits(old_start,new_end-displacement,old)|_hits(old_start+displacement,new_end,current)
+                    hits.update(np.flatnonzero(hit).tolist())
             fresh={(layer,int(i)) for i in hits}-self.crossed_faces
             if fresh:self.events.append({'time_s':float(time_s),'layer':layer,'triangles':sorted(i for _,i in fresh)})
             self.crossed_faces.update(fresh)
+        self.previous_cloth=[np.asarray(p).copy() for p in cloth_vertices]
         return bool(self.crossed_faces)

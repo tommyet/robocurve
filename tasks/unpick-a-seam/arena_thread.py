@@ -9,6 +9,7 @@ from native_stitches import author_thread,x_quat
 @dataclass(frozen=True)
 class Thread(Box):
     nodes: object=None
+    radius_m: float=.0002
     @property
     def free(self):return False
 
@@ -32,7 +33,7 @@ def spawn(path,cfg,**kwargs):
     stage=get_current_stage();root=str(path).rsplit('/',1)[0]
     spec=SPECS[cfg.thread_name]
     if not stage.GetPrimAtPath(str(path)):
-        SPAWNED[spec.name]=author_thread(stage,root,np.asarray(spec.nodes))
+        SPAWNED[spec.name]=author_thread(stage,root,np.asarray(spec.nodes),radius=spec.radius_m)
     return stage.GetPrimAtPath(str(path))
 
 
@@ -100,7 +101,7 @@ def object_states(env,names):
         if n not in SPECS:continue
         data=base.scene[n].data
         pts=arr(field(data,'body_link_pos_w','object_link_pos_w'))[0]-arr(base.scene.env_origins)[0]
-        lo,hi=pts.min(0)-.0002,pts.max(0)+.0002
+        lo,hi=pts.min(0)-SPECS[n].radius_m,pts.max(0)+SPECS[n].radius_m
         out[n]=ThreadState(pos=(lo+hi)/2,quat_xyzw=np.array((0.,0.,0.,1.)),
                            lin_vel=arr(field(data,'body_link_lin_vel_w','object_link_lin_vel_w'))[0].mean(0),ang_vel=np.zeros(3),
                            low=lo,high=hi,centres=pts)

@@ -11,12 +11,16 @@ TABLE=.7475
 NECK=(.50,0.,1.12)
 NECK_RADIUS=.055
 NECK_HEIGHT=.065
+SHOULDER_SIZE=(.160,.280,.045)
+SHOULDER_TOP=NECK[2]-NECK_HEIGHT/2
+SHOULDER_CENTER=(NECK[0],0.,SHOULDER_TOP-SHOULDER_SIZE[2]/2)
 
 
 def fixture_geometry():
     """Exact solid dimensions shared by authoring and the CPU clearance audit."""
     return {
         'Neck':dict(kind='cylinder',center=NECK,radius=NECK_RADIUS,height=NECK_HEIGHT),
+        'Shoulders':dict(kind='box',size=SHOULDER_SIZE,center=SHOULDER_CENTER),
         'Post':dict(kind='box',size=(.025,.025,NECK[2]-TABLE),
                     center=(NECK[0],0.,(NECK[2]+TABLE)/2)),
         'Base':dict(kind='box',size=(.18,.16,.012),center=(NECK[0],0.,TABLE+.006)),
@@ -66,7 +70,7 @@ def initial_layout(mesh=None):
 
 
 def author_collar(stage,path='/World/Collar'):
-    """Rigid collar form, with a 110 mm neck and two shirt-collar points."""
+    """Rigid collar jig with a 110 mm neck, ordinary shoulders and collar points."""
     from pxr import Gf,UsdGeom,UsdPhysics,PhysxSchema
     from native_cloth import author_box
     fixtures=fixture_geometry()
@@ -89,6 +93,6 @@ def author_collar(stage,path='/World/Collar'):
     # Central support stays inside the neck footprint, clear of the rear drape.
     for name,spec in fixtures.items():
         if name=='Neck':continue
-        color=(.92,.92,.90) if name.endswith('Point') else (.35,.35,.37)
+        color=(.92,.92,.90) if name.endswith('Point') or name=='Shoulders' else (.35,.35,.37)
         author_box(stage,path+'/'+name,spec['size'],spec['center'],color)
     return cylinder

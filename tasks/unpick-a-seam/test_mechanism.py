@@ -44,6 +44,19 @@ class MechanismTests(unittest.TestCase):
                                  [m.rest],[m.faces],.1))
         self.assertTrue(a.update([[.1,0,.8]],[[.1,0,.81]],[m.rest],[m.faces],.2))
 
+    def test_submillimetre_blade_crossing_is_not_lost_to_absolute_determinant(self):
+        vertices=np.array(((0.,0.,0.),(.0002,0.,0.),(0.,.0002,0.)))
+        hit=segment_triangle_intersections([.00005,.00005,-.00001],
+                                           [.00005,.00005,.00001],vertices,[[0,1,2]])
+        self.assertEqual(hit.tolist(),[0])
+
+    def test_cloth_moving_through_stationary_blade_is_invalid(self):
+        vertices=np.array(((0.,0.,0.),(.0002,0.,0.),(0.,.0002,0.)))
+        edge=np.array(((.00005,.00005,.00001),(.00006,.00005,.00001)))
+        audit=DamageAudit()
+        self.assertFalse(audit.update(edge,edge,[vertices],[[[0,1,2]]],0.))
+        self.assertTrue(audit.update(edge,edge,[vertices+[0,0,.00002]],[[[0,1,2]]],.001))
+
     def test_cut_count_alone_is_not_task_completion(self):
         r=assess(released_stitches=0,minimum_patch_gap_m=0,blade_crossed_fabric=False,
                  maximum_new_tear_m=0,complete=True,thread_bridge_present=True,tools_clear=True)

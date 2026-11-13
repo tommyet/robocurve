@@ -3,19 +3,24 @@
 Uses implicit D6 distance-limit springs for tension-only spokes and implicit D6
 rim-joint drives. The isolated hub is fixed and gravity is disabled. One rest
 length is changed by a diagnostic quarter turn after settling; no wrench is
-claimed. This script has not been runtime-validated in the current development
-session. Run in the existing Isaac environment when funded GPU access is available.
+claimed. At25µs the isolated ring remains bounded for two seconds. This is not the
+full wheel assembly; complete=True alone is not a physical pass. See VALIDATION.json.
 """
 from __future__ import annotations
 import argparse
 import json
 import math
 from pathlib import Path
+import signal
 import time
 import traceback
 import numpy as np
 from mechanics import WheelSpec
 from thread_coupling import rotation
+
+
+class ProbeInterrupted(RuntimeError):
+    pass
 
 
 def build(stage, turns=None, *, root="/Wheel", configure_physics=True, spoke_damping=100., rim_angular_damping=.3):
@@ -157,28 +162,42 @@ def main():
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--dt", type=float, default=.001)
     parser.add_argument("--seconds", type=float, default=8.)
+    parser.add_argument('--adjust-at',type=float,default=None,help='Diagnostic adjustment time in seconds; defaults to halfway')
     parser.add_argument("--spoke-damping", type=float, default=100.)
     parser.add_argument("--rim-angular-damping", type=float, default=.3)
     parser.add_argument("--loosen-turns", type=float, default=0., help="Diagnostic initial offset of spoke 0")
     args = parser.parse_args()
-    if not 0 < args.dt <= .005 or not 2 <= args.seconds <= 20:
-        parser.error("Use 0 < dt <= 0.005 and 2 <= seconds <= 20")
+    if not 0 < args.dt <= .005 or not .4 <= args.seconds <= 20:
+        parser.error("Use 0 < dt <= 0.005 and0.4 <= seconds <=20; short runs only diagnose early mechanics")
+    adjust_at=args.seconds/2 if args.adjust_at is None else args.adjust_at
+    if not .05<=adjust_at<=args.seconds-.2:parser.error('Allow at least0.05s before and0.2s after adjustment')
     args.out.mkdir(parents=True, exist_ok=False)
     started = time.monotonic()
-    from isaaclab.app import AppLauncher
-    app = AppLauncher(headless=True, enable_cameras=False).app
-    from pxr import Usd, UsdGeom, UsdUtils, UsdPhysics
-    from omni.physx import get_physx_interface, get_physx_simulation_interface
-    sim, physics = get_physx_simulation_interface(), get_physx_interface()
-    cache = UsdUtils.StageCache.Get()
-    stage = Usd.Stage.CreateInMemory()
-    cache.Insert(stage)
-    attached = False
+    app=sim=cache=stage=None
+    attached=False;old_handlers={}
     record = {"schema":"native-wheel-probe-v1","complete":False,"calibrated":False,
               "evidence_type":"Isolated native spring-ring probe, not robot or wrench evidence",
               "dt":args.dt,"seconds":args.seconds,"spoke_damping_ns_m":args.spoke_damping,
-              "rim_angular_damping_nm_s_rad":args.rim_angular_damping,"samples":[],"phase":"build"}
+              'adjustment_at_s':adjust_at,
+              "rim_angular_damping_nm_s_rad":args.rim_angular_damping,"samples":[],"phase":"launch","completed_steps":0}
+    def save():
+        record['wall_seconds']=time.monotonic()-started
+        tmp=args.out/'native-probe.json.tmp'
+        tmp.write_text(json.dumps(record,indent=2,allow_nan=False)+'\n')
+        tmp.replace(args.out/'native-probe.json')
+    def interrupted(signum,frame):
+        raise ProbeInterrupted('Received '+signal.Signals(signum).name+'; saved partial measurements are not a physical pass')
+    save()
     try:
+        from isaaclab.app import AppLauncher
+        app=AppLauncher(headless=True,enable_cameras=False).app
+        for sig in (signal.SIGTERM,signal.SIGINT):
+            old_handlers[sig]=signal.getsignal(sig);signal.signal(sig,interrupted)
+        from pxr import Usd,UsdGeom,UsdUtils,UsdPhysics
+        from omni.physx import get_physx_interface,get_physx_simulation_interface
+        sim,physics=get_physx_simulation_interface(),get_physx_interface()
+        cache=UsdUtils.StageCache.Get();stage=Usd.Stage.CreateInMemory();cache.Insert(stage)
+        record['phase']='build'
         turns = np.zeros(32)
         turns[0] = -args.loosen_turns
         paths, spokes, rest = build(stage, turns, spoke_damping=args.spoke_damping, rim_angular_damping=args.rim_angular_damping)
@@ -187,14 +206,17 @@ def main():
         sim.attach_stage(cache.GetId(stage).ToLongInt())
         attached = True
         steps = round(args.seconds/args.dt)
+        adjust_step=round(adjust_at/args.dt)
         record["phase"] = "simulate"
+        last_checkpoint=time.monotonic()
         for step in range(steps):
-            if step == steps//2:
+            if step == adjust_step:
                 # Diagnostic only: replace by measured physical nipple angle in a task.
                 UsdPhysics.LimitAPI(spokes[0].GetPrim(), "distance").GetHighAttr().Set(rest[0]-.25*WheelSpec().nipple_pitch_m_per_turn)
             sim.simulate(args.dt, step*args.dt)
             sim.fetch_results()
-            if step % max(1,round(.05/args.dt)) == 0 or step == steps-1:
+            record['completed_steps']=step+1
+            if step % max(1,round(.05/args.dt)) == 0 or step in (adjust_step-1,steps-1):
                 transforms = [physics.get_rigidbody_transformation(path) for path in paths]
                 if not all(tr.get("ret_val") for tr in transforms):
                     raise RuntimeError("Live PhysX rim transformations unavailable")
@@ -205,7 +227,9 @@ def main():
                 actual_rest=[float(UsdPhysics.LimitAPI(j.GetPrim(),"distance").GetHighAttr().Get()) for j in spokes]
                 diag=constraint_diagnostics(p,quats,actual_rest)
                 record["samples"].append({"step":step+1,"rim_rotations_xyzw":quats,"constraint_diagnostics":diag,"spoke0_rest_attr_m":float(UsdPhysics.LimitAPI(spokes[0].GetPrim(), "distance").GetHighAttr().Get()),"rim_centres_m":p.tolist(),"lateral_peak_to_peak_m":float(np.ptp(p[:,2]))})
-        before = [r for r in record["samples"] if r["step"] <= steps//2][-1]
+                if time.monotonic()-last_checkpoint>=5.:
+                    save();last_checkpoint=time.monotonic()
+        before = [r for r in record["samples"] if r["step"] <= adjust_step][-1]
         after = record["samples"][-1]
         change = np.asarray(after["rim_centres_m"])-np.asarray(before["rim_centres_m"])
         record["maximum_post_adjustment_displacement_m"] = float(np.max(np.linalg.norm(change,axis=1)))
@@ -220,16 +244,17 @@ def main():
         record["complete"] = True
         record["phase"] = "complete"
         stage.GetRootLayer().Export(str(args.out/"final-authored-parameters.usda"))
-    except Exception as error:
+    except BaseException as error:
+        record['interrupted']=isinstance(error,ProbeInterrupted)
         record["error"] = f"{type(error).__name__}: {error}"
         record["traceback"] = traceback.format_exc()
         raise
     finally:
-        record["wall_seconds"] = time.monotonic()-started
-        (args.out/"native-probe.json").write_text(json.dumps(record,indent=2)+"\n")
+        save()
         if attached: sim.detach_stage()
-        cache.Erase(stage)
-        app.close()
+        if cache is not None and stage is not None:cache.Erase(stage)
+        for sig,handler in old_handlers.items():signal.signal(sig,handler)
+        if app:app.close()
 
 
 if __name__ == "__main__":

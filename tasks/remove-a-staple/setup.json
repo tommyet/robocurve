@@ -14,15 +14,17 @@
     "bottom_sheet_center_m": [
       0.32,
       0.0,
-      0.76825
+      0.76821
     ],
     "top_sheet_center_m": [
       0.32,
       0.012,
-      0.76835
+      0.76833
     ],
     "orientation": "210 mm edges parallel to x; upper sheet shifted 12 mm along +y. Both sheets remain free.",
-    "reset_settling": "Spawn the flat stapled stack 0.7 mm above the document support. Native gravity/contact must settle and drape both sheets over the clinched tails and support edge. No paper pins or shape edits. Settled shape and tool access are not validated."
+    "reset_settling": "Spawn flat sheets with a 120 \u00b5m midplane gap and 20 \u00b5m clearance below the staple crown. The lower sheet underside starts 0.66 mm above the support. Native gravity/contact must settle and drape the free sheets over clinched tails and support edge. No pins or shape edits. Settled shape and tool access remain unvalidated.",
+    "initial_midplane_gap_m": 0.00012,
+    "initial_crown_clearance_m": 2e-05
   },
   "staple": {
     "material": "galvanized low-carbon steel; constitutive parameters uncalibrated",

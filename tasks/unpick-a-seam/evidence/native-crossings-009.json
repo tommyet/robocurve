@@ -1,0 +1,119 @@
+{
+  "evidence_type": "Offline static intersection replay of final saved native failure frames; not a new simulator run or a complete temporal replay",
+  "source_batch": "native-batch-009",
+  "audit_sha256": "c21cc184fd11bece7584ba80663db21aa78af06a1a9541d4260b523be7ea2093",
+  "runs": [
+    {
+      "mode": "intact",
+      "original_status": "invalid_model_domain",
+      "original_first_invalid_step": 65,
+      "source_report_sha256": "f70ab07a074ff9fade7f8ccd677deca280567bd3373cb6cb6c8c4da20bc76c2c",
+      "source_state_sha256": "9cb3c0f1b3d76ecd27ef121b55a924448509dea56660dc389a75a4fa2b8bbd48",
+      "static_replay": {
+        "left": {
+          "valid": false,
+          "steps": 1,
+          "first_failure": {
+            "step": 1,
+            "time_s": 0.06770833333333333,
+            "reason": "thread crosses intact fabric",
+            "static_intersections": 1,
+            "swept_intersections": 0,
+            "static_crossing_details": [
+              {
+                "segment_index": 56,
+                "face_index": 1933,
+                "coordinate_frame": "current",
+                "intersection_m": [
+                  0.0002474798815587922,
+                  -0.005723421944012001,
+                  0.43917192606856637
+                ],
+                "barycentric": [
+                  0.3287222850200546,
+                  7.875534290854559e-06,
+                  0.6712698394456545
+                ],
+                "segment_parameter": 0.3158568431274982,
+                "strictly_inside_triangle": true,
+                "strictly_inside_segment": true,
+                "distance_to_mesh_boundary_m": 1.73249396389596e-08,
+                "closest_boundary_edge": [
+                  1002,
+                  1003
+                ],
+                "closest_boundary_point_m": [
+                  0.0002474793836860378,
+                  -0.005723421949613797,
+                  0.43917194338634985
+                ]
+              }
+            ],
+            "swept_crossing_details": []
+          }
+        },
+        "right": {
+          "valid": true,
+          "steps": 1,
+          "first_failure": null
+        }
+      }
+    },
+    {
+      "mode": "open",
+      "original_status": "invalid_model_domain",
+      "original_first_invalid_step": 27,
+      "source_report_sha256": "91909b42e947628e74adf0bc245b8704f69e84d6fef2d25e6629fcc1359163d0",
+      "source_state_sha256": "02c8ab7c4c758af422b514d4178e2e122a806f114acfda32811e426789d54586",
+      "static_replay": {
+        "left": {
+          "valid": true,
+          "steps": 1,
+          "first_failure": null
+        },
+        "right": {
+          "valid": false,
+          "steps": 1,
+          "first_failure": {
+            "step": 1,
+            "time_s": 0.028125,
+            "reason": "thread crosses intact fabric",
+            "static_intersections": 1,
+            "swept_intersections": 0,
+            "static_crossing_details": [
+              {
+                "segment_index": 154,
+                "face_index": 586,
+                "coordinate_frame": "current",
+                "intersection_m": [
+                  -0.0006764073763650484,
+                  0.03008216743620369,
+                  0.42723604922385694
+                ],
+                "barycentric": [
+                  0.009634843995664263,
+                  0.933569311018402,
+                  0.05679584498593372
+                ],
+                "segment_parameter": 0.3472348902780291,
+                "strictly_inside_triangle": true,
+                "strictly_inside_segment": true,
+                "distance_to_mesh_boundary_m": 2.116398259878003e-05,
+                "closest_boundary_edge": [
+                  354,
+                  355
+                ],
+                "closest_boundary_point_m": [
+                  -0.0006754916088026307,
+                  0.030082032734600982,
+                  0.42721490549228724
+                ]
+              }
+            ],
+            "swept_crossing_details": []
+          }
+        }
+      }
+    }
+  ]
+}

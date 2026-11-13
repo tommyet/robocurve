@@ -8,10 +8,12 @@ standard camera/joint observation for online corrections.
 1. Let the loose garment settle over the laundry support. Confirm the hem is
    exposed, the cloth clears the support solids and the starting state is at
    rest. Both pegs start closed and are freely movable.
-2. Approach the two exposed hem corners from the sides, close the fingers,
+2. Approach the two exposed hem corners from in front, close vertically across both fabric layers,
    pull the fabric away from the support, then lift. The current 21-second
    grasp/release diagnostic tests only this contact stage; it is not a hanging
-   demonstration. Its exact target coordinates need the measured reset.
+   demonstration. The selected 8 mm support uses 480 Hz physics. The five-second YAM reset
+   and all 420 sampled approach poses pass their geometric audits; the first
+   physical grasp/lift trial is next.
 3. Lift the garment high enough to clear the board and carry the hem toward
    the line. Keep one corner supported while positioning the first fastening
    site; do not rely on an invented cloth-to-hand attachment.

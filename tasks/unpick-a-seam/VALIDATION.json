@@ -1,7 +1,7 @@
 {
   "status": "development_not_submission_ready",
   "checked_utc": "2026-11-13",
-  "cpu_tests_passed": 18,
+  "cpu_tests_passed": 24,
   "native_simulator_run": true,
   "robot_demo_run": false,
   "dream_run": false,
@@ -9,7 +9,7 @@
   "scores": null,
   "paid_compute_used_usd": null,
   "remaining_gates": [
-    "0.4 mm thread failed at 19/20 ms; 0.8 mm diagnostic passes 0.1 s but longer intact/open differential remains pending",
+    "Thread/fabric crossing persists with native contact refinement: intact 48.958 ms, open 28.125 ms. Same-domain hole mesh refinement is authored but unrun.",
     "Force-qualified blade cutting hook and damage crossing audit unexecuted",
     "2% principal-strain validity envelope is an engineering assumption, not measured tearing strain",
     "Final capsule-clearance inspection implemented; native/photo agreement unvalidated",
@@ -18,20 +18,24 @@
   "sources_sha256": {
     "arena_cloth.py": "053dc4d811c210ff75f34125679081b86c3e7fbc816f92fad10e1b39627d888d",
     "arena_thread.py": "25b8177924029bbd9893f4c96065097517efd302d8b450d89e8410dcb4735895",
-    "contact_audit.py": "412b342789bdf214d005cc787d09a2f92aea0bdbda111045ba893e6fdcb41dd7",
+    "contact_audit.py": "167c12d11f82faadbc88fc8d9fc2dc74278eccd2ee692783da096b7ed21c61fc",
     "cutting.py": "f6a87366f5ea8b297a721e60460071699f198326beb3e608d85bfb9e045858b8",
-    "geometry.py": "9c828119a26bb7f110da06500c70d5767d2f714745a3c93fdfd8daa3f50248fd",
+    "geometry.py": "13f5e255dc50bd92498a06c2a8f5d2647faa3f8eb1a2db0fbf01ba689b130e47",
     "inspection.py": "8bd0c2cb65afdef57d3387bbfaf521b6dc219537392cfa82d69717bf78744489",
-    "native_cloth.py": "000d296d4a06b3b75f0570960338a27b49234a4f1d475945c60f92e0d2613b46",
-    "native_stitches.py": "ef52464dd646efc7aadf86c1eff98908ee435abfc0ac8bc5a1770c3f1ca1a5c7",
+    "native_cloth.py": "68fe76ee7954ec2c1a4a204b95aee6519013964b7625173a08be4cda55b50a08",
+    "native_stitches.py": "2cd3655b33adcdb7bf91a32e61f293be60c615d647589a728f5d54b6afe54425",
     "plan.py": "96515fba8a322e72189a6542edcf7e6b0264845ed4c2f254bc1c6b5752f9adbf",
     "preview_yam.py": "b7979217a0a73e20b35aba3fc825da2d7453645e74979ae4433daeecae6d18d3",
-    "probe_native.py": "c6e2008bf5dae26dce968a91f98d5ae403a14eeed26f0b8ba7d769b95dc69927",
+    "probe_native.py": "56af71421846bf6682f0dcb879816c41f14db9026cccc428dbed32141005ffb4",
     "scene.py": "31b4ce5fafa8ef80cbd9bea098288736f92eef1f3dc86cdfe1544ac38a521d6a",
     "scoring.py": "8690167a5404134907425a352f0beb838156c112aae4b234261e4dabde17b89c",
-    "test_contact_audit.py": "f6bcf5b1ae24512550469dfe71c33b90c5ecbcfd05f47a21a2a347037ea1c054",
-    "test_mechanism.py": "bc76e466f4086ccbce23497572a41d11a9b5b585b4b6b9e3ee3d5882bef82407"
+    "test_contact_audit.py": "8dcfed3daab8bf70ad53f830dbe744fb7462d5900f4fe2e225e38936c6aee49a",
+    "test_mechanism.py": "bc76e466f4086ccbce23497572a41d11a9b5b585b4b6b9e3ee3d5882bef82407",
+    "test_mesh_refinement.py": "9604ad8cce0d2cf67cf32e30e62b70c44651b7878d1236eb9a656cfb1237c49f"
   },
   "compute_note": "Shared bounded native session; allocation recorded by batch orchestrator.",
-  "native_mechanism_evidence": "evidence/native-retention-2026-11-13.json"
+  "native_mechanism_evidence": "evidence/native-retention-2026-11-13.json",
+  "native_crossing_diagnostics": "evidence/native-crossings-009.json",
+  "contact_refinement_status": "Combined deformable speculative CCD and collision subiterations failed in batch013. Local FEM/collision mesh refinement is a new unrun diagnostic; no hole resizing or guard relaxation.",
+  "native_contact_refinement_diagnostics": "evidence/native-contact-refinement-013.json"
 }

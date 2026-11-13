@@ -31,13 +31,21 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--mode',choices=('drop','drape','clamp','open-clamp','task-layout'),default='drape')
     p.add_argument('--seconds',type=float,default=3.)
-    p.add_argument('--physics-hz',type=int,choices=(240,480,960),default=240)
+    p.add_argument('--peg-rests',action='store_true',help='Inactive candidate ordinary handle-access rests; task-layout diagnostic only')
+    p.add_argument('--board-thickness-mm',type=float,default=None,
+                   help='Task-layout diagnostic override for support thickness; task default is 8 mm')
+    p.add_argument('--physics-hz',type=int,choices=(240,480,960),default=480)
+    p.add_argument('--contact-refinement',choices=('baseline','iterations','speculative','combined'),
+                   default='baseline',help='Diagnostic native contact controls only; geometry/material/audit unchanged')
     p.add_argument('--output',type=Path,required=True)
     p.add_argument('--headless',choices=('true','false'),default='true')
     p.add_argument('--no-render',action='store_true',help='Only for diagnosing renderer failures; no RGB evidence')
     args=p.parse_args()
     if not 0 < args.seconds <= 10:
         p.error('a diagnostic is limited to ten simulated seconds')
+    if args.board_thickness_mm is not None and (args.mode!='task-layout' or not 8<=args.board_thickness_mm<=40):
+        p.error('board thickness diagnostics require task-layout and 8–40 mm')
+    if args.peg_rests and args.mode!='task-layout':p.error('--peg-rests requires task-layout')
     args.output.mkdir(parents=True,exist_ok=True)
     started=time.monotonic()
     # Application must precede all simulator imports.
@@ -47,7 +55,7 @@ def main():
             'mode':args.mode,'material':asdict(Fabric()),'physics_hz':args.physics_hz,
             'seconds':args.seconds,'provenance':{},'phase':'build',
             'render_bridge':None if args.no_render else 'native PhysX Fabric'}
-    for name in ('probe.py','cloth_mesh.py','native_cloth.py','scene.py','probe_capture.py','probe_runtime.py'):
+    for name in ('probe.py','cloth_mesh.py','native_cloth.py','scene.py','probe_capture.py','probe_runtime.py','peg_rests.py'):
         report['provenance'][name]=hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
     capture=None
     world=None
@@ -62,9 +70,14 @@ def main():
         ensure_gpu_scene(stage)
         cloth_path='/World/Cloth'
         if args.mode=='task-layout':
+            import scene
+            if args.board_thickness_mm is not None:
+                scene.SUPPORT_BOARD_THICKNESS=args.board_thickness_mm/1000
+            report['support_board_thickness_m']=scene.SUPPORT_BOARD_THICKNESS
             from scene import author_props,initial_layout,TABLE
             author_box(stage,'/World/Table',(1.1,1.3,.06),(.36,0.,TABLE-.03),(.58,.39,.25))
-            mesh=author_props(stage)
+            report['peg_rests_candidate']=bool(args.peg_rests)
+            mesh=author_props(stage,with_peg_rests=args.peg_rests)
             initial=initial_layout(mesh)
             cloth_path='/World/Tshirt'
         elif args.mode in ('drop','drape'):
@@ -96,6 +109,19 @@ def main():
                 UsdPhysics.RigidBodyAPI(stage.GetPrimAtPath('/World/Peg/upper')).CreateKinematicEnabledAttr(True)
         if args.mode!='task-layout':
             author_cloth(stage,cloth_path,mesh,points=initial)
+        # Native body contact options only; no global GPU-incompatible scene CCD.
+        from native_cloth import _set
+        contact_prim=stage.GetPrimAtPath(cloth_path)
+        if args.contact_refinement in ('iterations','combined'):
+            _set(contact_prim,'physxDeformableBody:collisionIterationMultiplier',4)
+            _set(contact_prim,'physxDeformableBody:collisionPairUpdateFrequency',4)
+        if args.contact_refinement in ('speculative','combined'):
+            _set(contact_prim,'physxDeformableBody:enableSpeculativeCCD',True)
+        report['contact_refinement']={'mode':args.contact_refinement,'native_attributes':{
+            key:contact_prim.GetAttribute(key).Get() for key in (
+                'physxDeformableBody:collisionIterationMultiplier',
+                'physxDeformableBody:collisionPairUpdateFrequency',
+                'physxDeformableBody:enableSpeculativeCCD')}}
         if not args.no_render:
             from probe_capture import ProbeCapture
             if args.mode in ('clamp','open-clamp'):

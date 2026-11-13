@@ -2,7 +2,7 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "21 CPU checks pass; native isolated ring responds but latest completed test is unstable.",
+  "cpu_checks": "29 CPU tests pass; isolated native ring is bounded across1.9s after adjustment at25\u00b5s. Full wheel/thread/contact remains unrun.",
   "simulator_probe": null,
   "demo": null,
   "dream": null,
@@ -16,7 +16,7 @@
   "status": "development_not_submission_ready",
   "native_probe": {
     "entry_point": "native_probe.py",
-    "status": "responds_but_unstable",
+    "status": "isolated_ring_two_second_fine_step_pass",
     "runtime_compatibility_verified": true,
     "last_observation": {
       "physics_dt_s": 0.0001,
@@ -25,10 +25,48 @@
       "bounded_small_response": false,
       "post_adjustment_displacement_mm": 49.0,
       "final_0p2s_drift_mm": 84.8,
-      "next_check": "A single D6 spring transfers rest-length changes accurately but shows static-load bias; compare25\u00b5s to100\u00b5s before another full ring run."
+      "next_check": "Run ring with25\u00b5s step plus measured joint-gap/energy diagnostics; isolated spring now passes at that rate."
+    },
+    "fine_ring_attempt": {
+      "dt": 2.5e-05,
+      "requested_seconds": 4,
+      "status": "wall_timeout_240s",
+      "motion_evidence": null,
+      "interpretation": "Only authored initial stage survived; no stability or motion conclusion is possible. Runner now checkpoints atomically and handles SIGTERM. Next diagnostic 0.8 s."
+    },
+    "short_fine_step": {
+      "status": "pass",
+      "evidence": "evidence/native-wheel-short-012.json",
+      "sha256": "04c9574a257d69847b80326b980a4653c9e2ab4c520e8036213bc7ba991107c8",
+      "dt": 2.5e-05,
+      "seconds": 0.8,
+      "wall_seconds": 50.82561977021396,
+      "maximum_post_adjustment_displacement_m": 0.0001313851635763529,
+      "final_0p2s_maximum_drift_m": 1.0236261451043451e-05,
+      "bounded_small_response": true,
+      "maximum_locked_joint_gap_m": 5.825916635642284e-07,
+      "next": "2s total with adjustment at0.1s; cover old delayed instability window."
+    },
+    "two_second_fine_step": {
+      "status": "pass",
+      "evidence": "evidence/native-wheel-stability-014.json",
+      "sha256": "943211bca7af2d77f56b2362657c379239bb49d16eb6ba30a8b3e2bde847d1a3",
+      "dt": 2.5e-05,
+      "seconds": 2.0,
+      "adjustment_at_s": 0.1,
+      "wall_seconds": 129.94831242226064,
+      "maximum_post_adjustment_displacement_m": 0.0001384737592190247,
+      "final_0p2s_maximum_drift_m": 5.7189562130328175e-06,
+      "bounded_small_response": true,
+      "final_lateral_runout_m": 0.00015780454850755632,
+      "late_rim_energy_range_j": [
+        0.5504511320822443,
+        0.5507030744763602
+      ],
+      "next": "Full 130-body geometry and live thread coupling .1s at25\u00b5s."
     }
   },
-  "cpu_tests_passed": 21,
+  "cpu_tests_passed": 29,
   "native_scene": {
     "authoring_entry_point": "wheel_scene.build_scene(stage, root)",
     "material_callback": "NativeThreadCoupler.before_step before every native substep",
@@ -40,8 +78,12 @@
       "Thread travel outside +/-3 turns invalidates model scope; no stripping/plastic rim damage model yet",
       "All native contact and reset coupling unvalidated"
     ],
-    "preview_entry_point": "preview_yam.py --out OUTPUT --steps 40 --physics-hz 1000",
-    "wrench_contact_diagnostic": "wrench_contact_probe.py --out OUTPUT --dt .001 --turn-deg 90; explicit kinematic fixture, not robot demo"
+    "preview_entry_point": "preview_yam.py --out OUTPUT --steps 2 --physics-hz 40000",
+    "wrench_contact_diagnostic": "wrench_contact_probe.py --out OUTPUT --dt .000025 --turn-deg -90; .9s explicit kinematic fixture, not robot demo",
+    "thread_coupling": "Nipple angle measured relative to outer spoke; equal/opposite lead torque and capped angular friction act on that pair. Head constraint blocks free axial spin while allowing tilt. Native runtime untested.",
+    "tensor_pose_conversion": "Batched native poses, relative thread/energy algebra and torques. Lazy assessor snapshots; exact per-joint rest/friction attributes. CPU equivalence checks pass; full native integration pending.",
+    "scene_probe": "scene_probe.py --out OUTPUT --dt .000025 --seconds .1",
+    "geometry_authoring_check": "x_frame preserves metric input vectors; regression protects actual half-spoke centre placement."
   },
   "judging": "v2: pointer/feeler-gauge runout and dish; mechanical spoke tensiometer, all32 spokes 400\u20131000N for this fixture; no separate hanging-weight trials.",
   "single_spring_probe": {
@@ -54,6 +96,16 @@
     "baseline_error_m": -4.579003143814764e-05,
     "final_error_m": -4.568786812333969e-05,
     "observed_displacement_m": -0.00011339783668518066,
-    "constitutive_pass": false
+    "constitutive_pass": false,
+    "finer_time_step": {
+      "status": "pass",
+      "evidence": "evidence/native-spring-fine-010.json",
+      "sha256": "a2cb4ea3723e288c22211bcd1ccbd279f8260c4a1db2f3b03e274a5d6634b924",
+      "dt": 2.5e-05,
+      "baseline_error_m": -2.785280232703302e-06,
+      "final_error_m": -2.772523885058442e-06,
+      "observed_displacement_m": -0.00011348724365234375,
+      "interpretation": "Static equilibrium error falls about16.4\u00d7 for a4\u00d7 smaller step; quarterturn response also agrees."
+    }
   }
 }

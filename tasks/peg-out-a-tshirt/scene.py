@@ -8,6 +8,8 @@ LINE_X=.52
 LINE_Z=1.09
 LINE_HALF_SPAN=.25
 SUPPORT_SIZE=(.20,.44,.10)
+SUPPORT_BOARD_THICKNESS=.008
+PHYSICS_HZ=480
 SUPPORT_CENTER=(.36,0.,TABLE+SUPPORT_SIZE[2]/2)
 SUPPORT_TOP=TABLE+SUPPORT_SIZE[2]
 HEM_X=.195
@@ -19,14 +21,27 @@ def initial_layout(mesh=None):
     return np.column_stack((HEM_X+p[:,1],-p[:,0],SUPPORT_TOP+.003+p[:,2]))
 
 
-def support_geometry():
+def support_geometry(board_thickness=None):
     """Exact geometry shared by native authoring and the reset penetration audit."""
-    props={'Board':dict(kind='box',size=(SUPPORT_SIZE[0],SUPPORT_SIZE[1],.008),
-                       center=(SUPPORT_CENTER[0],0.,SUPPORT_TOP-.004))}
+    thickness=SUPPORT_BOARD_THICKNESS if board_thickness is None else board_thickness
+    props={'Board':dict(kind='box',size=(SUPPORT_SIZE[0],SUPPORT_SIZE[1],thickness),
+                       center=(SUPPORT_CENTER[0],0.,SUPPORT_TOP-thickness/2))}
     for ix,x in enumerate((.35,.425)):
         for iy,y in enumerate((-.185,.185)):
-            props[f'Leg{ix}{iy}']=dict(kind='box',size=(.015,.015,SUPPORT_SIZE[2]-.008),
-                         center=(x,y,TABLE+(SUPPORT_SIZE[2]-.008)/2))
+            props[f'Leg{ix}{iy}']=dict(kind='box',size=(.015,.015,SUPPORT_SIZE[2]-thickness),
+                         center=(x,y,TABLE+(SUPPORT_SIZE[2]-thickness)/2))
+    return props
+
+
+def rack_geometry():
+    props={'Clothesline':dict(kind='cylinder',axis='Y',center=(LINE_X,0.,LINE_Z),
+                              radius=.0015,height=2*LINE_HALF_SPAN)}
+    for sign in (-1,1):
+        label='Left' if sign>0 else 'Right'
+        props[label+'Post']=dict(kind='box',size=(.025,.025,LINE_Z-TABLE),
+            center=(LINE_X,sign*(LINE_HALF_SPAN+.0125),(LINE_Z+TABLE)/2))
+        props[label+'Foot']=dict(kind='box',size=(.15,.07,.015),
+            center=(LINE_X,sign*(LINE_HALF_SPAN+.0125),TABLE+.0075))
     return props
 
 
@@ -67,14 +82,19 @@ def author_rack(stage,path='/World/Rack'):
     return line
 
 
-def author_props(stage):
+def author_props(stage,with_peg_rests=False):
     from native_cloth import author_cloth,author_peg
     mesh=tshirt()
     author_cloth(stage,'/World/Tshirt',mesh,Fabric(),points=initial_layout(mesh))
     author_rack(stage)
     author_support(stage)
-    for sign in (-1,1):
-        label='Left' if sign>0 else 'Right'
-        author_peg(stage,'/World/'+label+'Peg',pos=(.12,sign*.20,TABLE+.014),
+    if with_peg_rests:
+        from peg_rests import author,peg_positions
+        author(stage)
+        pegs=peg_positions()
+    else:
+        pegs={('Left' if sign>0 else 'Right'):(.12,sign*.20,TABLE+.014) for sign in (-1,1)}
+    for label,position in pegs.items():
+        author_peg(stage,'/World/'+label+'Peg',pos=position,
                    fixed_lower=False,spring=True,open_angle=0.)
     return mesh

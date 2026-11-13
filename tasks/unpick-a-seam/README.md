@@ -35,7 +35,7 @@ From the repository root:
 .venv/bin/python -m unittest discover -s tasks/unpick-a-seam -p 'test_*.py' -v
 ```
 
-Eighteen tests pass: connected cloth with real needle holes, needle-path clearance,
+Twenty-four tests pass: connected cloth with real needle holes, needle-path clearance,
 force direction and sustained contact for cutting, interrupted-contact rejection,
 blade damage latching, whole-thread clearance, rigid-motion-invariant strain
 inspection, moving-cloth/thread tunnelling detection, and final-state scoring. These are CPU geometry/rule
@@ -61,8 +61,46 @@ to a policy. The initial 0.4 mm thread failed the crossing audit after 19–20 m
 A 0.8 mm thread / 1.6 mm hole diagnostic retained the hanging patch for 0.1 s
 with a 2.47 mm drop and maximum principal extension below 0.7%; this short
 result does not certify sustained retention. Its 96 substeps took 7.74 s
-including startup. Longer intact/open controls remain pending. Initial layout is fixed,
+including startup. Repeated coarse-thread runs then failed the strict crossing
+audit at 67.708 ms (intact) and 28.125 ms (open). Offline inspection places those
+centreline intersections 17.3 nm and 21.2 µm inside the nearest genuine cloth
+boundary, respectively; both lie inside the intersected triangle. The first
+distance is near the precision scale of native coordinates, but it remains a
+failure. These distances are geometric diagnostics, not tear measurements or
+permission to ignore a crossing. See `evidence/native-crossings-009.json`.
+Initial layout is fixed,
 with no random jitter; intended task seed is 0 and limit is 2,400 actions at 20 Hz.
+
+A contact-settings diagnostic also failed: combined deformable speculative CCD
+and four collision subiterations produced crossings at 48.958 ms (intact) and
+28.125 ms (open). The intact failure crossed a 1.601 mm hole edge between vertices
+0.866 and 0.677 mm from the thread axis. That edge is underresolved relative to
+the 0.8 mm thread; the native implementation's exact edge handling is not
+established. Contact settings alone did not solve the problem.
+
+The next bounded diagnostic refines the actual FEM/collision mesh locally:
+
+```bash
+python tasks/unpick-a-seam/probe_native.py --mode intact --coarse-thread --contact-refinement combined --hole-mesh-spacing .0004 --physics-hz 960 --seconds .2 --out artifacts/seam-hole-mesh-refined
+```
+
+`--contact-refinement iterations` sets the native deformable collision multiplier
+and pair update frequency to 4; `speculative` enables only deformable speculative
+CCD; `combined` enables both. `baseline` preserves their native defaults. All
+options preserve geometry, fabric properties and strict audit tolerances. The
+report records the authored settings. These controls are documented in the
+[native deformable schema](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/deformables_beta/physx_deformable_schema.html)
+and were checked against installed PhysxSchemaAddition 110.3.2. Deformable
+speculative CCD is separate from unsupported rigid-body CCD in this GPU mode.
+Pair updates concern surface-to-surface contact; schema support alone does not
+establish an improvement in rigid-thread contact. `--hole-mesh-spacing .0004`
+uses conforming midpoint refinement near the same hole boundaries. It creates
+4,407 vertices / 8,490 triangles per patch, with hole edges at most 0.4 mm,
+unchanged 0.00596928 m² area and all thirteen boundary loops. There are no added
+colliders, attachments or enlarged openings. This refinement is unrun; a
+successful short probe would still need a longer intact/open comparison. See
+`evidence/native-contact-refinement-013.json` for the measured failure and CPU
+geometry checks.
 
 ## Mechanics and limitations
 

@@ -1,0 +1,406 @@
+{
+  "kind": "coupled_paper_staple_coupon",
+  "status": "complete",
+  "mode": "free",
+  "score": null,
+  "robot_demo": false,
+  "mesh": {
+    "vertices": 782,
+    "triangles": 1444,
+    "surface_area_m2": 0.0007194791999999999,
+    "holes": [
+      [
+        -0.00661,
+        -0.00619,
+        -0.00031,
+        0.00031
+      ],
+      [
+        0.00619,
+        0.00661,
+        -0.00031,
+        0.00031
+      ]
+    ],
+    "boundary_edges": 122,
+    "mass_kg": 5.755833599999999e-05,
+    "minimum_triangle_area_m2": 8.249999999999986e-09
+  },
+  "thickness_m": 0.0001,
+  "physics_hz": 2000,
+  "seconds": 0.2,
+  "collision_offsets_m": {
+    "contact": 6e-05,
+    "rest": 5e-05
+  },
+  "limitations": [
+    "uncalibrated isotropic paper",
+    "planar steel hinge model",
+    "crown fixed for diagnostic only"
+  ],
+  "source_sha256": {
+    "paper.py": "5bcb3af0136ebfb3ad332bc27b588478e78bd4b9bac331bd213eb8a43dde657a",
+    "native_paper.py": "fb920b9a7ce24b15c30b5355a45135e3f9587439877bb497d2920c604304b021",
+    "paper_probe.py": "97ce93c7bf78d5a92bfe5ec16d9fc823d77047cbd2d4a6e59689d9bd5aa114da",
+    "materials.py": "9840b118f8a908b85260cf767025ec1a009162e99820c540032e2171d085aa83",
+    "physx_material.py": "b4efc3dfc7671b3a5e57933cc066cdc5ac4e655301c9f595e97db97b47be8524",
+    "contact_guard.py": "95cba1bacf521fcde76ef639cb03968eb29dac81f49fac40115eb97e8a50a133"
+  },
+  "phase": "simulate",
+  "initial_midplane_gap_m": 0.00012000000000000899,
+  "completed_steps": 400,
+  "centroid_drop_m": [
+    0.1954996477127075,
+    0.1954997976732254
+  ],
+  "final_centroid_gap_m": 0.0001198500394821167,
+  "paper": [
+    {
+      "valid": true,
+      "steps": 400,
+      "first_failure": null,
+      "maximum_tensile_strain": 2.853141497527467e-05,
+      "maximum_surface_bending_strain": 0.0,
+      "thresholds_calibrated": false,
+      "last_geometry_diagnostics": {
+        "worst_bending_edge": [
+          1,
+          35
+        ],
+        "worst_bending_faces": [
+          0,
+          3
+        ],
+        "worst_edge_dihedral_rad": 0.0,
+        "worst_edge_dual_width_m": 0.001333333333333333,
+        "worst_membrane_face": 52
+      }
+    },
+    {
+      "valid": true,
+      "steps": 400,
+      "first_failure": null,
+      "maximum_tensile_strain": 2.853141497527467e-05,
+      "maximum_surface_bending_strain": 0.0,
+      "thresholds_calibrated": false,
+      "last_geometry_diagnostics": {
+        "worst_bending_edge": [
+          1,
+          35
+        ],
+        "worst_bending_faces": [
+          0,
+          3
+        ],
+        "worst_edge_dihedral_rad": 0.0,
+        "worst_edge_dual_width_m": 0.001333333333333333,
+        "worst_membrane_face": 52
+      }
+    }
+  ],
+  "contact_audit": null,
+  "samples": [
+    {
+      "step": 1,
+      "time_s": 0.0005,
+      "paper": [
+        {
+          "valid": true,
+          "steps": 1,
+          "first_failure": null,
+          "maximum_tensile_strain": 5.5079951344350064e-06,
+          "maximum_surface_bending_strain": 0.0,
+          "thresholds_calibrated": false,
+          "last_geometry_diagnostics": {
+            "worst_bending_edge": [
+              1,
+              35
+            ],
+            "worst_bending_faces": [
+              0,
+              3
+            ],
+            "worst_edge_dihedral_rad": 0.0,
+            "worst_edge_dual_width_m": 0.001333333333333333,
+            "worst_membrane_face": 335
+          },
+          "centroid_m": [
+            1.1492663484705074e-10,
+            -5.360543628763494e-10,
+            0.3998481035232544
+          ],
+          "z_span_m": 0.0
+        },
+        {
+          "valid": true,
+          "steps": 1,
+          "first_failure": null,
+          "maximum_tensile_strain": 5.5079951344350064e-06,
+          "maximum_surface_bending_strain": 0.0,
+          "thresholds_calibrated": false,
+          "last_geometry_diagnostics": {
+            "worst_bending_edge": [
+              1,
+              35
+            ],
+            "worst_bending_faces": [
+              0,
+              3
+            ],
+            "worst_edge_dihedral_rad": 0.0,
+            "worst_edge_dual_width_m": 0.001333333333333333,
+            "worst_membrane_face": 335
+          },
+          "centroid_m": [
+            1.1492663484705074e-10,
+            -5.360543628763494e-10,
+            0.39996808767318726
+          ],
+          "z_span_m": 0.0
+        }
+      ]
+    },
+    {
+      "step": 100,
+      "time_s": 0.05,
+      "paper": [
+        {
+          "valid": true,
+          "steps": 100,
+          "first_failure": null,
+          "maximum_tensile_strain": 1.4670918439430025e-05,
+          "maximum_surface_bending_strain": 0.0,
+          "thresholds_calibrated": false,
+          "last_geometry_diagnostics": {
+            "worst_bending_edge": [
+              1,
+              35
+            ],
+            "worst_bending_faces": [
+              0,
+              3
+            ],
+            "worst_edge_dihedral_rad": 0.0,
+            "worst_edge_dual_width_m": 0.001333333333333333,
+            "worst_membrane_face": 596
+          },
+          "centroid_m": [
+            1.8194255888309626e-07,
+            1.5157534103677256e-07,
+            0.38769829273223877
+          ],
+          "z_span_m": 0.0
+        },
+        {
+          "valid": true,
+          "steps": 100,
+          "first_failure": null,
+          "maximum_tensile_strain": 1.4670918439430025e-05,
+          "maximum_surface_bending_strain": 0.0,
+          "thresholds_calibrated": false,
+          "last_geometry_diagnostics": {
+            "worst_bending_edge": [
+              1,
+              35
+            ],
+            "worst_bending_faces": [
+              0,
+              3
+            ],
+            "worst_edge_dihedral_rad": 0.0,
+            "worst_edge_dual_width_m": 0.001333333333333333,
+            "worst_membrane_face": 596
+          },
+          "centroid_m": [
+            1.8194255888309626e-07,
+            1.5157534103677256e-07,
+            0.38781827688217163
+          ],
+          "z_span_m": 0.0
+        }
+      ]
+    },
+    {
+      "step": 200,
+      "time_s": 0.1,
+      "paper": [
+        {
+          "valid": true,
+          "steps": 200,
+          "first_failure": null,
+          "maximum_tensile_strain": 2.853141497527467e-05,
+          "maximum_surface_bending_strain": 0.0,
+          "thresholds_calibrated": false,
+          "last_geometry_diagnostics": {
+            "worst_bending_edge": [
+              1,
+              35
+            ],
+            "worst_bending_faces": [
+              0,
+              3
+            ],
+            "worst_edge_dihedral_rad": 0.0,
+            "worst_edge_dual_width_m": 0.001333333333333333,
+            "worst_membrane_face": 20
+          },
+          "centroid_m": [
+            1.956041001052598e-05,
+            4.114294826920554e-06,
+            0.35108673572540283
+          ],
+          "z_span_m": 0.0
+        },
+        {
+          "valid": true,
+          "steps": 200,
+          "first_failure": null,
+          "maximum_tensile_strain": 2.853141497527467e-05,
+          "maximum_surface_bending_strain": 0.0,
+          "thresholds_calibrated": false,
+          "last_geometry_diagnostics": {
+            "worst_bending_edge": [
+              1,
+              35
+            ],
+            "worst_bending_faces": [
+              0,
+              3
+            ],
+            "worst_edge_dihedral_rad": 0.0,
+            "worst_edge_dual_width_m": 0.001333333333333333,
+            "worst_membrane_face": 20
+          },
+          "centroid_m": [
+            1.956041001052598e-05,
+            4.114294826920554e-06,
+            0.3512067198753357
+          ],
+          "z_span_m": 0.0
+        }
+      ]
+    },
+    {
+      "step": 300,
+      "time_s": 0.15,
+      "paper": [
+        {
+          "valid": true,
+          "steps": 300,
+          "first_failure": null,
+          "maximum_tensile_strain": 2.853141497527467e-05,
+          "maximum_surface_bending_strain": 0.0,
+          "thresholds_calibrated": false,
+          "last_geometry_diagnostics": {
+            "worst_bending_edge": [
+              1,
+              35
+            ],
+            "worst_bending_faces": [
+              0,
+              3
+            ],
+            "worst_edge_dihedral_rad": 0.0,
+            "worst_edge_dual_width_m": 0.001333333333333333,
+            "worst_membrane_face": 367
+          },
+          "centroid_m": [
+            7.740209554083874e-05,
+            -2.2065759427910936e-06,
+            0.2899676561355591
+          ],
+          "z_span_m": 0.0
+        },
+        {
+          "valid": true,
+          "steps": 300,
+          "first_failure": null,
+          "maximum_tensile_strain": 2.853141497527467e-05,
+          "maximum_surface_bending_strain": 0.0,
+          "thresholds_calibrated": false,
+          "last_geometry_diagnostics": {
+            "worst_bending_edge": [
+              1,
+              35
+            ],
+            "worst_bending_faces": [
+              0,
+              3
+            ],
+            "worst_edge_dihedral_rad": 0.0,
+            "worst_edge_dual_width_m": 0.001333333333333333,
+            "worst_membrane_face": 367
+          },
+          "centroid_m": [
+            7.740209554083874e-05,
+            -2.2065759427910936e-06,
+            0.29008764028549194
+          ],
+          "z_span_m": 0.0
+        }
+      ]
+    },
+    {
+      "step": 400,
+      "time_s": 0.2,
+      "paper": [
+        {
+          "valid": true,
+          "steps": 400,
+          "first_failure": null,
+          "maximum_tensile_strain": 2.853141497527467e-05,
+          "maximum_surface_bending_strain": 0.0,
+          "thresholds_calibrated": false,
+          "last_geometry_diagnostics": {
+            "worst_bending_edge": [
+              1,
+              35
+            ],
+            "worst_bending_faces": [
+              0,
+              3
+            ],
+            "worst_edge_dihedral_rad": 0.0,
+            "worst_edge_dual_width_m": 0.001333333333333333,
+            "worst_membrane_face": 52
+          },
+          "centroid_m": [
+            0.00018765413960980255,
+            -9.335273322154963e-06,
+            0.20435035228729248
+          ],
+          "z_span_m": 0.0
+        },
+        {
+          "valid": true,
+          "steps": 400,
+          "first_failure": null,
+          "maximum_tensile_strain": 2.853141497527467e-05,
+          "maximum_surface_bending_strain": 0.0,
+          "thresholds_calibrated": false,
+          "last_geometry_diagnostics": {
+            "worst_bending_edge": [
+              1,
+              35
+            ],
+            "worst_bending_faces": [
+              0,
+              3
+            ],
+            "worst_edge_dihedral_rad": 0.0,
+            "worst_edge_dual_width_m": 0.001333333333333333,
+            "worst_membrane_face": 52
+          },
+          "centroid_m": [
+            0.00018765413960980255,
+            -9.335273322154963e-06,
+            0.2044702023267746
+          ],
+          "z_span_m": 0.0
+        }
+      ]
+    }
+  ],
+  "note": "A supported coupon must retain sheets with intact elastic-domain checks; free control must fall. Neither proves extraction or robot feasibility.",
+  "wall_seconds": 10.273988244123757
+}

@@ -1,32 +1,39 @@
-"""Final native judging photographs; never supplied to a policy or controller."""
+"""Fixed native judging cameras; their images never enter a policy input."""
 import numpy as np
+
+CONFIGS=[('judging_top',(.235,0.,1.15),(.235,0.,.8005),(0.,1.,0.),50.,(1280,960)),
+         ('judging_side',(.060,0.,.875),(.235,0.,.804),(0.,0.,1.),28.,(1280,720))]
+
+
+def configure(embodiment):
+    """Register with the native YAM renderer before the environment is built."""
+    import isaaclab.sim as sim_utils
+    from isaaclab.sensors import CameraCfg
+    from isaaclab_arena.utils.cameras import ArenaCameraCfg
+    from isaaclab_arena.utils.configclass import make_configclass
+    from pxr import Gf
+    from yam_arena.embodiment import RENDERER
+    fields=[(name,CameraCfg,value) for name,value in vars(embodiment.camera_config).items()
+            if isinstance(value,CameraCfg)]
+    for name,eye,target,up,focal,resolution in CONFIGS:
+        q=Gf.Matrix4d().SetLookAt(Gf.Vec3d(*eye),Gf.Vec3d(*target),Gf.Vec3d(*up)).GetInverse().ExtractRotationQuat()
+        config=CameraCfg(prim_path='{ENV_REGEX_NS}/'+name,height=resolution[1],width=resolution[0],
+            data_types=['rgb'],spawn=sim_utils.PinholeCameraCfg(focal_length=focal,horizontal_aperture=20.955,
+                clipping_range=(.005,10.)),offset=CameraCfg.OffsetCfg(pos=eye,
+                rot=(*q.GetImaginary(),q.GetReal()),convention='opengl'),renderer_cfg=RENDERER)
+        fields.append((name,CameraCfg,config))
+    embodiment.camera_config=make_configclass('CakeJudgingCameraCfg',fields,bases=(ArenaCameraCfg,))()
 
 
 def capture_final(base,output):
-    import omni.usd
-    import omni.replicator.core as rep
-    from pxr import Gf,UsdGeom
     from PIL import Image
-    stage=omni.usd.get_context().get_stage();metadata=[]
-    configs=[('top',(.235,0.,1.15),(.235,0.,.8005),(0.,1.,0.),50.,(1280,960)),
-             ('side',(.060,0.,.875),(.235,0.,.804),(0.,0.,1.),28.,(1280,720))]
-    for name,eye,target,up,focal,resolution in configs:
-        camera=UsdGeom.Camera.Define(stage,f'/World/Judging_{name}')
-        camera.CreateFocalLengthAttr(focal);camera.CreateHorizontalApertureAttr(20.955)
-        camera.CreateClippingRangeAttr(Gf.Vec2f(.005,10.))
-        transform=Gf.Matrix4d().SetLookAt(Gf.Vec3d(*eye),Gf.Vec3d(*target),Gf.Vec3d(*up)).GetInverse()
-        camera.AddTransformOp().Set(transform)
-        product=rep.create.render_product(str(camera.GetPath()),resolution)
-        rgb=rep.AnnotatorRegistry.get_annotator('rgb');rgb.attach([product])
-        try:
-            # Rendering only. The final physics state and material stay fixed.
-            for _ in range(5):base.sim.render()
-            value=rgb.get_data();value=value['data'] if isinstance(value,dict) else value
-            pixels=np.asarray(value)
-            if pixels.shape[:2]!=(resolution[1],resolution[0]) or pixels.ndim!=3:
-                raise RuntimeError(f'Missing native judging image: {name}')
-            Image.fromarray(pixels[:,:,:3].astype(np.uint8)).save(output/f'judging-{name}.png')
-            metadata.append({'name':name,'eye_m':eye,'target_m':target,'resolution':resolution,'policy_input':False})
-        finally:
-            rgb.detach([product]);product.destroy()
+    metadata=[]
+    for name,eye,target,up,focal,resolution in CONFIGS:
+        value=base.scene[name].data.output['rgb']
+        value=getattr(value,'torch',value)
+        pixels=value.detach().cpu().numpy()[0] if hasattr(value,'detach') else np.asarray(value)[0]
+        if pixels.shape[:2]!=(resolution[1],resolution[0]) or pixels.ndim!=3 or np.std(pixels[:,:,:3])<2.:
+            raise RuntimeError(f'Missing or blank native judging image: {name}')
+        Image.fromarray(pixels[:,:,:3].astype(np.uint8)).save(output/(name.replace('_','-')+'.png'))
+        metadata.append({'name':name,'eye_m':eye,'target_m':target,'resolution':resolution,'policy_input':False})
     return metadata

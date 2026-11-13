@@ -5,14 +5,15 @@ import hashlib
 import json
 from pathlib import Path
 import time
+import traceback
 import numpy as np
 
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--out', type=Path, required=True)
-    p.add_argument('--steps', type=int, default=40)
-    p.add_argument('--physics-hz', type=int, choices=(1000, 2000), default=1000)
+    p.add_argument('--steps', type=int, default=2)
+    p.add_argument('--physics-hz', type=int, choices=(40000,80000), default=40000)
     a = p.parse_args()
     if not 1 <= a.steps <= 100:
         p.error('Preview is limited to 100 control steps')
@@ -65,7 +66,7 @@ def main():
         report.update(status='complete', completed_steps=a.steps, bodies=len(state.body_names),
                       physics_dt_s=float(base.sim.get_physics_dt()))
     except BaseException as error:
-        report.update(status='failed', error=f'{type(error).__name__}: {error}')
+        report.update(status='failed', error=f'{type(error).__name__}: {error}',traceback=traceback.format_exc())
         raise
     finally:
         if trace: trace.close()

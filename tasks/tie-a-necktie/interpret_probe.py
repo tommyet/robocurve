@@ -18,7 +18,7 @@ def interpret(folder):
     if len(frames)!=len(times) or len(times)<2 or np.any(np.diff(times)<=0):
         raise ValueError('Need matching strictly increasing native sample times')
     speed=np.linalg.norm(np.diff(frames,axis=0)/np.diff(times)[:,None,None],axis=-1)
-    late=(times[1:]>=times[-1]-.5-1e-9)
+    late=(times[:-1]>=times[-1]-.5-1e-9)
     strain=edge_strain(rest,frames[-1],faces)
     result=dict(kind='offline_native_probe_measurements_not_task_score',score=None,
         mode=report['mode'],sample_times_s=times.tolist(),

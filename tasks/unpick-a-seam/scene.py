@@ -10,17 +10,20 @@ from arena_cloth import Cloth
 from arena_thread import Thread
 from native_cloth import Fabric
 from native_cloth import ensure_gpu_scene
+from runtime_config import CONFIG
 
 SCENE='station'
 FABRIC=Fabric(thickness=.0004,density=350.,youngs_modulus=2e6,bend_modulus=8e4,
               contact_offset=.00025,rest_offset=.0002,solver_iterations=64)
-MESHES=[patch(True),patch(False)]
+MESHES=[patch(left,hole_half=CONFIG.hole_half_m,hole_mesh_spacing=CONFIG.hole_mesh_spacing_m)
+        for left in (True,False)]
 OBJECTS=[
     Cloth('cloth_left',pos=(0.,0.,0.),size=(.13,.08,.004),mesh=MESHES[0],initial=MESHES[0].rest,
-          fabric=FABRIC,color=(.76,.68,.47)),
+          fabric=FABRIC,color=(.76,.68,.47),contact_refinement=CONFIG.contact_refinement),
     Cloth('cloth_right',pos=(0.,0.,0.),size=(.13,.08,.004),mesh=MESHES[1],initial=MESHES[1].rest,
-          fabric=FABRIC,color=(.25,.42,.66)),
-    *[Thread(f'stitch_{i}',pos=(0.,0.,0.),size=(.011,.0004,.003),nodes=stitch_loop(y)) for i,y in enumerate(STITCH_Y)],
+          fabric=FABRIC,color=(.25,.42,.66),contact_refinement=CONFIG.contact_refinement),
+    *[Thread(f'stitch_{i}',pos=(0.,0.,0.),size=(.011,2*CONFIG.thread_radius_m,.003),
+             nodes=stitch_loop(y),radius_m=CONFIG.thread_radius_m) for i,y in enumerate(STITCH_Y)],
     Box('ripper_handle',pos=(.20,-.12,TABLE_TOP+.008),size=(.070,.012,.012),mass=.018,color=(.2,.45,.25)),
     Box('ripper_blade',pos=(.25,-.12,TABLE_TOP+.008),size=(.001,.004,.0005),mass=.001,color=(.7,.72,.74)),
 ]
@@ -44,6 +47,13 @@ def task_object(spec):
         # starts. Enable it on the actual blade body, never infer contact from
         # the handle/TCP distance.
         PhysxSchema.PhysxContactReportAPI.Apply(prim).CreateThresholdAttr(0.)
+        # The generic box adapter uses millimetre-scale offsets intended for
+        # household objects. The cutting edge needs its own thin-tool contact
+        # envelope; this changes collision authoring, never object poses.
+        for child in stage.Traverse():
+            if str(child.GetPath()).startswith(str(prim_path)+'/') and child.HasAPI(UsdPhysics.CollisionAPI):
+                api=PhysxSchema.PhysxCollisionAPI.Apply(child)
+                api.CreateContactOffsetAttr(.00005);api.CreateRestOffsetAttr(0.)
         h,b=ROOTS['ripper_handle'],ROOTS['ripper_blade']
         joint=UsdPhysics.FixedJoint.Define(stage,h+'/BladeMount')
         joint.CreateBody0Rel().SetTargets([Sdf.Path(h)])
@@ -57,6 +67,8 @@ def task_object(spec):
             guard.AddTranslateOp().Set(Gf.Vec3d(.048+length/2,y,0.))
             guard.CreateDisplayColorAttr([Gf.Vec3f(.7,.72,.74)])
             UsdPhysics.CollisionAPI.Apply(guard.GetPrim())
+            collision=PhysxSchema.PhysxCollisionAPI.Apply(guard.GetPrim())
+            collision.CreateContactOffsetAttr(.00005);collision.CreateRestOffsetAttr(0.)
         return prim
     obj.spawner_cfg.func=physical_spawn
     obj.object_cfg.spawn.func=physical_spawn

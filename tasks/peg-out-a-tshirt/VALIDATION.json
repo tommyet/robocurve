@@ -6,7 +6,7 @@
     "result": "passed",
     "command": ".venv/bin/python -m unittest discover -s tasks/peg-out-a-tshirt -p test_local.py -v",
     "scope": "CPU geometry and synthetic evidence-rubric cases only; no physics or task-success claim",
-    "python_source_files": 18,
+    "python_source_files": 23,
     "syntax_and_json_check": {
       "result": "passed",
       "command": ".venv/bin/python tasks/peg-out-a-tshirt/run.py --check-only",
@@ -20,12 +20,11 @@
   },
   "native_gpu_checks": {
     "status": "mechanism_incomplete",
-    "drape": "One-second native drape in batch007 completed; zero final triangle/rail penetration, final maximum edge strain 0.05926, late maximum speed 0.1843 m/s (not settled). Three-second rendered drape in batch009 completed with 31 nonblank frames.",
-    "peg_controls": "Batch009 clamp, open-clamp, task-layout and YAM initialization failed at peg xform quaternion precision. Precision corrected; rerun pending.",
-    "evidence_batches": [
-      "native-batch-007",
-      "native-batch-009"
-    ]
+    "passive_peg_controls": "Batch010: closed passive spring retains all77 coupon root-patch nodes near0.500 m; open-jaw control drops all to floor. No automatic cloth attachment. Full cloth/line/peg manipulation still untested.",
+    "surface_runtime": "Standalone drape and native Fabric rendering complete. Batch010 YAM smoke completed20 steps and native asset audit passed.",
+    "task_reset": "Batch012 selected8 mm board/480 Hz has no initial node or final triangle penetration. Batch015 YAM five-second2400-substep reset has zero fixture triangle intersections, p99 strain0.003147 and maximum0.010045.",
+    "diagnostics_not_task_success": true,
+    "contact_trial": "Batch016 hit240-second wall cap at366 trace records (0\u2013365). Both hem layers follow grippers through~230\u2013250 mm lift and hold, then fall upon opening. Lower garment still rests on board. Ten sampled support/table triangle audits clear. Trace is truncated, videos usable; not a complete run or hanging demo."
   },
   "demo": {
     "status": "not_implemented"
@@ -40,45 +39,51 @@
     "native surface FEM runtime, self-contact and rigid contact validation",
     "passive spring-peg cloth/line retention with a valid open-jaw control and dynamic task pegs",
     "physical material/fixture parameter checks",
-    "native YAM smoke execution, observation-based robot demonstration and final scored runner",
     "full-score demo within the declared limit",
     "Dream baseline and final independent scoring",
     "matching anonymous setup screenshot and H.264 videos",
-    "media upload and final task.json"
+    "media upload and final task.json",
+    "robot garment lift, actual peg pickup/opening and cloth-plus-line capture, final scored runner"
   ],
   "source_sha256": {
     "ENVIRONMENT.json": "894a573dafa0d1ef4380e51a3e61f984e80cbbcfdf4988d3b1cc96e2f9eeb16e",
     "JUDGING.md": "5c25da08d83fbe546add001f2f0f6fd76afbc87413b957cf84e662be7afc4c07",
     "LICENSE": "a71ddeb012ff1961bf252489309b565ffd0443632819aa9c88eef4377f9f9f7a",
-    "MOTION_PLAN.md": "7ef67b45b8b15135d9b108b3682c343577c9448fab084bd76450a5e7e5cb8587",
-    "README.md": "4c1411eb0ae18c8c7abbe2cb09151a91a8f936d87eb75a5f1a9298ea1459af6c",
+    "MOTION_PLAN.md": "1a5a004775380f354e7903a5020b3ba7e0ced1fa88d064285aea8530000a722a",
+    "README.md": "4d370c96daf0eccc65b26f79a17443ca1a32751873162b42133115ce5de50886",
     "arena_cloth.py": "d6c4574249c9eb9a5772288c7ce0f03afccc5b8637f44ec923c7522ea4f387c6",
     "arena_props.py": "f911f52c69e6afbab20f8f264cdef0534cc1f35a67452594c952c5c93dc74963",
-    "audit_motion.py": "38e6a8133f31ae487f35fd9512e76ce25fbd4d4c63782fc4f2d78c11a7968a44",
+    "audit_motion.py": "a29267bfae76c8d7396860f28ac296eed6bfb9ed22b2082911315872859788fd",
     "cloth_mesh.py": "44a8d8027e7694edfae1b4d82eefad0add3f809899c61913ba3c6b0b7cea410c",
-    "fixed_motion.py": "25bf79136af88a7414806b06dc9c515ec5638eaeddd0c5ec62d4b0feff7fef45",
-    "fixture_clearance.py": "a872e448c64c1d2d9acbb0b89d9b39e1c7ec0bcdbf2f2b890175ca15aab96fc0",
-    "grasp-plan.json": "83b7b2a4fd4325fee6179c52df897419c8e9acd4c8a58daa91e4a69ec1566975",
-    "interpret_probe.py": "84fdacdec07dddc982e7e5883c51e31f1e669cc79aaccd575bc153c943b976b4",
+    "drape-plan.json": "c3d18e0d0678ff7ef04b812bed6886aa5797cc95082a2a6a911056a929207d12",
+    "drape_motion.py": "5ae4e977ba051c97777b84352bb290351ebecd24ad47bef2aa3957bce0e4d27b",
+    "fixed_motion.py": "ccd18cb1392634f836f11646c22b63295e043ca08080484bf40a0e83aa3afe8a",
+    "fixture_clearance.py": "7091d50d1a0e5e0c2c62c467ed158eb88c9667086de638845a40a4ba65074908",
+    "grasp-plan.json": "92f58a55bf77392c09f5c3a56eb8b26f91a1b5bce0846cc7c93037a12a75d119",
+    "interpret_motion.py": "9dec0fe18f4e8c6976c1d9ae66b1bc9a490dc04b345730ae94d7b083cfae8fe9",
+    "interpret_probe.py": "788e7ce41a5523f71a957e0dbc39002647a4973b2f531fcfec4d88f52d0b9d34",
     "judge.py": "c6c7cfcc493010a6f3508f4146fbdedee33b35d13ebfb156779d1c092a486ded",
     "native_cloth.py": "c87884160c87d0ddc8295eaed48fb49a705823ab20b069506d9716c523191530",
-    "probe.py": "c144333d67dd134337da7ef450ac089bff1c1cd5dec54f4e35e4dba4601ba994",
+    "peg_rests.py": "2e9b70101e290db4d82278bb5a1b8213eb0b7ec146da2c3787e66d54f36af061",
+    "probe.py": "ec274607d21d2819e4e46c1639cd6a465edcb8ec5e4b0645c053947f10f3d239",
     "probe_capture.py": "55ec10d9bb92a177751d790d16bfc9ef6a4cd08d4934735d1c223548ef8adb67",
     "probe_runtime.py": "1092025de87ae5168b0d0c519388b6cec65d6ebddf756f5407b7ef4c3b6dbd11",
-    "reset_asset.py": "ce170a1d31a12f628140ccd4cf0c3723fb47fa264b0b74c27355bc0858c3ac2d",
-    "run.py": "cba31f80aa5e9e8a238ad9af2e90a15f6b4d3a0c3b9d839fea7e7d04c1c66d77",
-    "scene.py": "01a284442b982890b794755945e3769cac293dbc1ce8b67d3934920bd77ec13f",
+    "reset_asset.py": "b9067e1c8be5e3f95947eb8d3c524914423fdf5a85e6cd1bb23f0fd6261af1fb",
+    "reset_scene.py": "34cc8d09c5f225917797a34553fefa5cd735b22951508866f2bd7a2b66a5a108",
+    "review_views.py": "8b40885e37e05aa3281ea1470947e8a654deed3b286fa7eba1ac6d7a25e00567",
+    "run.py": "e87c2d7225072380b11f4523e8494994a719bb80b76033886ddf9eec90322f83",
+    "scene.py": "e3ba27352fd67b48bc09bfa07530b1f39c5995056f82eb3c89cd0b4bfe088677",
     "scoring.py": "12ad7d87302c5b9b31f1e9241f91a74904f02e017bdcd05e4cb14b5a23d095e1",
-    "task.draft.json": "1d5cded5f04af810d00eddb159581b4fe42b4c2243928a2f02eb34ca23a8b75d",
+    "task.draft.json": "c007544a90fa08d69fd81973d614432bf6ae2bcb921ececaedf5f561c4efa46e",
     "task.py": "f436cf9778cac36d52b69b013079e96a5721bc6a00ce86cb5688c7ca6b486ecb",
     "test_local.py": "9a0eb627d4f049f00f89d9bc6d5f0e26607e2af9239ebd739250ad94991b6229"
   },
   "implementation_checkpoint": {
     "native_surface_cloth": "Native GPU surface FEM and Fabric rendering exercised in standalone diagnostics; garment/peg or knot interaction remains unvalidated.",
-    "arena_scene": "Full declared station scene registered with native deformable asset and custom fixtures; execution untested",
-    "passive_pegs": "Two dynamic rigid jaws per peg, passive revolute spring and collection reset; execution untested",
-    "runner": "Bounded smoke and fixed-joint motion-probe with camera-only controller interface and assessor-only node traces; native YAM startup remains unvalidated.",
-    "controller": "No observation-based successful task controller yet",
+    "arena_scene": "Native YAM cloth/free passive jaws and five-second480 Hz reset validated. Full hanging interaction pending.",
+    "passive_pegs": "Closed/open native contact controls pass; actual robot peg pickup/opening/line capture untested.",
+    "runner": "Smoke and fixed-joint motion probes share explicit raw reset plus exactly100 ready-position control steps of native settling; all setup physics counts/time recorded separately.",
+    "controller": "Native contact pickup demonstrated through interrupted420-action diagnostic. Next620-action1.20 m lift/line-drape candidate compiles; static audit found six fingertip/line intersections during release, so it is NOT released for native use. Full peg operation remains unimplemented.",
     "judging": "Evidence-bound manual photo/video/ruler rubric with adversarial local tests; final thresholds need runtime validation"
   }
 }

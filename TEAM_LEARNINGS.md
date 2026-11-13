@@ -123,6 +123,82 @@ developers and their agents, not a competition submission document.
   demonstration. Every control action is independent of privileged object
   state; measured poses feed only physics coupling and assessment.
 
+### 2026-11-13 — native contact controls and practical progress
+
+- The native shirt bridge now runs inside YAM with real surface-deformable
+  cloth and two free spring pegs. A passive jaw coupon retained the fabric
+  when closed and dropped it when open. These differential controls establish
+  basic grip; they are not a complete hanging demonstration. The initial
+  task-layout probe still had fabric passing through its support, so that
+  reset must be corrected before grasp trials.
+- A realistic shoulder block retained the untied necktie. Its three-second
+  drape passed the full-triangle fixture audit with late maximum nodal speed
+  7.65 mm/s. This establishes a candidate reset, not knot feasibility.
+- The native wheel's isolated spoke converged when the physics step fell
+  from 100 to 25 microseconds: static displacement bias fell from 45.79 to
+  2.785 micrometres, and a quarter-turn produced 0.113487 mm of shortening.
+  A four-second whole-wheel attempt hit its 240-second wall cap without a
+  saved trace. Add periodic atomic diagnostic checkpoints and SIGTERM
+  finalization before further runs; a startup USD is not motion evidence.
+- Separating the two paper coupons by 10 mm eliminated their spurious
+  bending over 0.2 seconds. This implicates contact, rather than free-fall
+  integration. It does not yet validate adjacent sheets or staple extraction.
+- The first robot-driven dispenser press reached about 1.35 mm piston travel
+  and 2.60 N material reaction, below the configured extrusion threshold.
+  It emitted no icing. Retained pickup and genuine plunger contact are
+  established separately from producing a shell.
+- Native deformable contact controls are available in the installed
+  PhysxSchemaAddition schema: `enableSpeculativeCCD`,
+  `collisionIterationMultiplier`, and `collisionPairUpdateFrequency` under
+  `physxDeformableBody`. Their roles are documented in NVIDIA's
+  [deformable schema](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/deformables_beta/physx_deformable_schema.html).
+  Test these as explicit diagnostic settings with unchanged geometry and
+  strict contact audits. Deformable speculative CCD is distinct from rigid
+  DirectGPU CCD support; do not assume both work from the name alone.
+- For extra YAM judging views, register `CameraCfg` objects with the native
+  environment camera configuration before scene construction, as the
+  magnifier task does. Late Replicator render products returned no image in
+  the cake test even after five renders. Preserve material/contact reports
+  before photograph export so an imaging failure cannot erase physics data.
+
+### 2026-11-13 — robot grasps, pressure extrusion and remaining contact work
+
+- Operator: repository agent, `codex/six-task-completion-2026-11-13`.
+  Batches 012–016 are locally archived and SHA-256 verified. This is continuing
+  development, not submission evidence; no Dream calls or upstream PRs yet.
+- An 8 mm laundry support with 480 Hz physics passed the shirt's reset audit;
+  the 240 Hz version tunneled through its thin support. Keep the cloth, pegs
+  and robot in the same declared five-second settling period. The resulting
+  YAM hem coordinates differ from a standalone cloth probe, so frozen grasp
+  plans must be calibrated to the actual episode reset.
+- The corrected necktie grasp raised a tracked fabric patch about 197 mm and
+  retained roughly 194 mm after a two-second hold. Opening the gripper let it
+  fall about 187 mm. This establishes contact-driven pickup and release, not
+  a tied knot. Assessor telemetry stays separate from the fixed robot actions.
+- Robot-driven icing presses emitted 0.0147 ml and 0.0653 ml, with closed
+  volume balance and no invalid material collider overlap. The latter native
+  photographs show a ridged mound, but pressure fell too early to draw a tail.
+  It does not qualify as a shell or a finished border. Preserve failed-shape
+  evidence instead of tuning the scorer to it.
+- Refining cloth around unchanged seam holes let the intact thread test run
+  0.2 seconds without a crossing. The open-thread control still crossed near
+  a hole edge, so native retention/release remains unresolved. Mesh resolution
+  helps but is not, by itself, a validated fix.
+- The wheel ring stayed bounded for two seconds at a 25 microsecond physics
+  step; its last 0.2 seconds drifted about 5.72 micrometres. The full scene still
+  needs its own gate. Native tensor body queries use explicit path lists:
+  a broad `namespace/*` matched direct children but not nested wheel/staple
+  rigid bodies. Counts must match the intended collection before applying forces.
+- The shirt manipulation hit a 240-second wall cap at 360 of 420 actions.
+  Its report remained running because SIGTERM was not handled; treat it as
+  incomplete and recover only recorded data. Every bounded runner needs a
+  SIGTERM handler that reaches finalization, periodic state flushing and a
+  status distinct from complete. Do not infer success from exit zero.
+- At 02:58 UTC, fresh inventory/GET confirmed one running Pod at $1.09/hour,
+  the shutdown watchdog alive, and estimated session compute of $2.41.
+  Container disk is estimated separately; billing and balance remain unreadable.
+  Continue active bounded batches, then save evidence and verify shutdown.
+
 ### 2026-11-13 — Runpod Isaac/YAM compatibility test passed
 
 - The user authorized one short GPU compatibility test. The final probe passed

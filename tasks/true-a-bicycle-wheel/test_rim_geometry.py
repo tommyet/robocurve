@@ -1,9 +1,17 @@
 import unittest
 import numpy as np
 from rim_geometry import sector_mesh, maximum_radial_chord_error_m
+from wheel_scene import x_frame
 
 
 class RimGeometryTests(unittest.TestCase):
+    def test_spoke_frame_does_not_destroy_metric_placement_vector(self):
+        direction=np.array((.183,-.014,-.025));original=direction.copy()
+        frame=x_frame(direction)
+        np.testing.assert_array_equal(direction,original)
+        np.testing.assert_allclose(frame[:,0],original/np.linalg.norm(original),atol=1e-14)
+        np.testing.assert_allclose(frame.T@frame,np.eye(3),atol=1e-14)
+
     def test_real_contact_edge_is_round_to_less_than_rubric_tolerance(self):
         self.assertGreater(maximum_radial_chord_error_m(subdivisions=1),.001)
         self.assertLess(maximum_radial_chord_error_m(),.00003)

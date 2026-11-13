@@ -19,7 +19,7 @@ Each folder has a proposed setup, task description, scoring and judging notes, a
 
 The remaining work includes implementation as well as GPU verification. Material behaviour must preserve each task's defining interaction, and the scoring must agree with visible evidence. No new media has been uploaded and no upstream PR has been opened.
 
-The November 12 checkpoint passed **76 CPU tests**; development has since added contact and material checks, with current counts recorded in each package. These are not successful robot trials. The shirt and tie definitions also load through the pinned YAM task-file loader. Their runners record assessor state separately from frozen joint commands; privileged object-state corrections do not control the demonstrations. The tie's 4,464 initial triangles pass a 1 mm fixture-clearance check; gravity settling is being tested separately.
+The November 12 checkpoint passed **76 CPU tests**; development has since added contact and material checks, with current counts recorded in each package. These are not successful robot trials. The shirt and tie definitions also load through the pinned YAM task-file loader. Their runners record assessor state separately from frozen joint commands; privileged object-state corrections do not control the demonstrations. The current child-sized tie has 3,504 triangles; its shoulder-supported native drape passes the full-triangle fixture audit. Its subsequent fixed robot plan physically grasped, raised and released the wide end; handoff, threading and knotting remain untested.
 
 | Task | Defining interaction | Evidence needed before full runs |
 | --- | --- | --- |

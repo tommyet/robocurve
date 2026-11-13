@@ -16,12 +16,12 @@ def audit(plan):
     from yam_arena import station
     from yam_arena.analysis import link_hulls,fk_link_poses_world,box_signed_distance
     from yam_arena.constants import ARM_JOINTS,FINGER_OPEN
-    from scene import support_geometry,TABLE
+    from scene import support_geometry,rack_geometry,TABLE
     local_hulls=link_hulls()
     vertices={k:np.concatenate([h.vertices for h in hs])
               for k,hs in local_hulls.items() if k!='base'}
-    boxes=support_geometry()
-    boxes['Table']=dict(center=(.36,0.,TABLE-.03),size=(1.1,1.3,.06))
+    boxes={**support_geometry(),**rack_geometry()}
+    boxes['Table']=dict(kind='box',center=(.36,0.,TABLE-.03),size=(1.1,1.3,.06))
     violations=[]
     closest={}
     inter_arm_min=float('inf')
@@ -42,8 +42,15 @@ def audit(plan):
             for link,v in vertices.items():
                 w=v@poses[link][:3,:3].T+poses[link][:3,3]
                 for name,box in boxes.items():
-                    distance=float(box_signed_distance(w,np.array(box['center']),
-                                   np.eye(3),np.array(box['size'])).min())
+                    if box['kind']=='box':
+                        distances=box_signed_distance(w,np.array(box['center']),np.eye(3),np.array(box['size']))
+                    else:
+                        v=w-np.array(box['center']);axis='XYZ'.index(box.get('axis','Z'))
+                        radial=np.linalg.norm(np.delete(v,axis,axis=1),axis=1)-box['radius']
+                        axial=abs(v[:,axis])-box['height']/2
+                        q=np.column_stack((radial,axial))
+                        distances=np.linalg.norm(np.maximum(q,0.),axis=1)+np.minimum(np.maximum(q[:,0],q[:,1]),0.)
+                    distance=float(distances.min())
                     key=f'{side}:{link}:{name}'
                     closest[key]=min(closest.get(key,float('inf')),distance)
                     if distance<-.0005:

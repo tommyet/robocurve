@@ -75,8 +75,16 @@ no live object-state input. Its interpolated path passes the local IK check;
 grasp, retention and collision remain native simulation tests. The preview
 records video, camera images and measured tool, piston, flow and contact state.
 A 20-action native ready-pose preview completed in 25.9 s including startup,
-with zero emission and no invalid collider contact. Pickup contact, material
-appearance and complete-task runtime remain untested.
+with zero emission and no invalid collider contact. A later 340-action frozen trajectory picked up and retained the dispenser.
+A 508-action press reached 1.35 mm piston travel and 2.60 N pressure reaction,
+but emitted no icing; it is a failed extrusion diagnostic. See
+`evidence/native-press-011.json`. Native 1280-pixel judging cameras now render
+through the same YAM camera system. The following 8 mm press emitted 0.0147 ml; a 12 mm single-shell attempt
+emitted 0.0653 ml with closed volume balance and no invalid robot contact.
+Its native judging photos show a ridged mound, but the pressure ended too early
+to form a tail. It is not a qualifying shell. See
+`evidence/native-robot-extrusion-014-015.json`. The next frozen plan sustains
+pressure during the first part of the draw. A complete border remains untested.
 CPU and native probes use deterministic starting values and no random jitter; intended
 task seed is 0. Intended task limit: 2,400 actions at 20 Hz.
 

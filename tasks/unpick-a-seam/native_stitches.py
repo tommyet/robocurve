@@ -64,15 +64,16 @@ def author_thread(stage,path,nodes,*,radius=.0002,density=1400.,open_diagnostic=
 
 
 def author_pair(stage,*,transform=lambda p:p,open_diagnostic=False,root_path='/World',
-                thread_radius=.0002,hole_half=.0006):
+                thread_radius=.0002,hole_half=.0006,contact_refinement=None,hole_mesh_spacing=None):
     cloth=[]
     material=Fabric(thickness=.0004,density=350.,youngs_modulus=2e6,bend_modulus=8e4,
                     contact_offset=.00025,rest_offset=.0002,solver_iterations=64)
     for i,left in enumerate((True,False)):
-        mesh=patch(left,hole_half=hole_half)
+        mesh=patch(left,hole_half=hole_half,hole_mesh_spacing=hole_mesh_spacing)
         mesh.rest=transform(mesh.rest)
         author_cloth(stage,f'{root_path}/Cloth_{i}',mesh,material,
-                     color=(.76,.68,.47) if left else (.25,.42,.66))
+                     color=(.76,.68,.47) if left else (.25,.42,.66),
+                     contact_refinement=contact_refinement)
         cloth.append(mesh)
     threads=[author_thread(stage,f'{root_path}/Stitch_{i}',transform(stitch_loop(y)),
                             open_diagnostic=open_diagnostic,radius=thread_radius) for i,y in enumerate(STITCH_Y)]

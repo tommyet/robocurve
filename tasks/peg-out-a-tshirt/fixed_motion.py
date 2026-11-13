@@ -10,28 +10,34 @@ from pathlib import Path
 import numpy as np
 
 
-ROTATIONS = {
-    'left': np.array([[-1.,0.,0.],[0.,0.,-1.],[0.,-1.,0.]]),
-    'right': np.array([[1.,0.,0.],[0.,0.,1.],[0.,-1.,0.]]),
-}
+def front_rotation(degrees=-30.,side='left'):
+    angle=np.deg2rad(degrees)
+    r=np.array([[np.sin(angle),0.,np.cos(angle)],
+                     [0.,1.,0.],[-np.cos(angle),0.,np.sin(angle)]])
+    return r@np.diag((-1.,-1.,1.)) if side=='right' else r
+
+ROTATIONS={side:front_rotation(side=side) for side in ('left','right')}
 
 
 def compile_grasp():
     from yam_arena import ik, station
     from yam_arena.constants import READY, FINGER_OPEN, SHOULDER, WRIST, GRIPPER
+    from scene import SUPPORT_BOARD_THICKNESS,PHYSICS_HZ
     targets=[]
     for side, sign in [('left',1),('right',-1)]:
+        hem_z=.863 if side=='left' else .867
+        pre_z=hem_z+.035
         targets.append([
-            (3.,(.205,sign*.120,.950),.5,'joint approach above exposed hem'),
-            (2.,(.205,sign*.120,.800),.5,'descend ahead of support'),
-            (2.,(.257,sign*.120,.800),.5,'approach exposed hem'),
-            (1.,(.257,sign*.120,.800),0.,'close fingers on hem'),
-            (2.,(.202,sign*.120,.802),0.,'pull clear of support'),
-            (3.,(.202,sign*.120,.950),0.,'lift flexible garment'),
-            (2.,(.260,sign*.120,.950),0.,'carry above clear support'),
-            (2.,(.260,sign*.120,.950),0.,'hold diagnostic lift'),
-            (2.,(.260,sign*.120,.950),1.,'release after diagnostic'),
-            (2.,(.210,sign*.120,.950),1.,'withdraw empty hand'),
+            (3.,(.1494,sign*.115,pre_z),.6,'joint approach above exposed hem'),
+            (2.,(.1494,sign*.115,pre_z),.6,'hold clear approach pose'),
+            (2.,(.210,sign*.115,hem_z),.6,'approach exposed hem'),
+            (1.,(.210,sign*.115,hem_z),0.,'close fingers on hem'),
+            (2.,(.1494,sign*.115,pre_z),0.,'pull clear of support'),
+            (3.,(.260,sign*.115,1.100),0.,'lift flexible garment'),
+            (2.,(.350,sign*.115,1.100),0.,'carry above clear support'),
+            (2.,(.350,sign*.115,1.100),0.,'hold diagnostic lift'),
+            (2.,(.350,sign*.115,1.100),1.,'release after diagnostic'),
+            (2.,(.280,sign*.115,1.100),1.,'withdraw empty hand'),
         ])
     actions_by_arm=[]
     audits=[]
@@ -40,20 +46,21 @@ def compile_grasp():
         opening=1.
         values=[]
         for seconds, position, target_opening, label in schedule:
+            target_rotation=front_rotation(0.,side) if label in ('lift flexible garment','carry above clear support','hold diagnostic lift','release after diagnostic','withdraw empty hand') else ROTATIONS[side]
             p0,r0=ik.tcp_pose(q,station.BASES[side])
             q0=q.copy()
             opening0=opening
             segment_pe=segment_re=0.
             joint_goal=None
             if label=='joint approach above exposed hem':
-                joint_goal,pe,re=ik.solve(position,ik.matrix_to_quat_xyzw(ROTATIONS[side]),
+                joint_goal,pe,re=ik.solve(position,ik.matrix_to_quat_xyzw(target_rotation),
                     READY,base_pos=station.BASES[side],iters=400)
                 if pe>.003 or re>.035:
-                    raise ValueError('Initial fixed approach waypoint is unreachable')
+                    raise ValueError(f'Initial fixed approach waypoint is unreachable: {side}, {pe:.5f} m, {re:.5f} rad')
             for step in range(1,round(seconds*20)+1):
                 t=ik.smoothstep(step/(seconds*20))
                 pos=p0+t*(np.asarray(position)-p0)
-                rot=ik.slerp_matrix(r0,ROTATIONS[side],t)
+                rot=ik.slerp_matrix(r0,target_rotation,t)
                 if joint_goal is not None:
                     q=q0+t*(joint_goal-q0)
                     pe=re=0.  # A joint-space approach has no Cartesian path constraint.
@@ -82,10 +89,10 @@ def compile_grasp():
     if max(a['max_position_error_m'] for a in audits)>.004 or max(a['max_rotation_error_rad'] for a in audits)>.04:
         raise ValueError('Fixed trajectory fails its 4 mm / 2.3 degree kinematic gate')
     return dict(schema='cloth-fixed-motion-v1',kind='diagnostic_not_submission_demo',
-                control_hz=20,score=None,feedback='none; precomputed joint commands only',
+                control_hz=20,score=None,fixture_board_thickness_m=SUPPORT_BOARD_THICKNESS,physics_hz=PHYSICS_HZ,feedback='none; precomputed joint commands only',
                 action_count=len(frames),frames=frames,kinematic_audit=audits,
                 max_joint_delta=max_delta.tolist(),
-                source_waypoints='Declared laundry-board reset; not a measured cloth path')
+                source_waypoints='Offline batch015 actual YAM reset hem,8 mm board/480 Hz; no online cloth feedback')
 
 
 def load(path):

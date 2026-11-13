@@ -32,9 +32,13 @@ def main():
     points=np.asarray(data['positions'],dtype=float)
     if points.ndim!=3 or points.shape[-1]!=3 or len(points)<11 or not np.isfinite(points).all():
         raise ValueError('At least half a second of finite settled-state evidence is required')
-    # Probes save one native state at 20 Hz.
-    speed=np.linalg.norm(np.diff(points[-11:],axis=0),axis=-1)*20
-    max_speed=float(speed.max())
+    times=data['times_s'] if 'times_s' in data else np.arange(len(points))/20
+    if len(times)!=len(points) or np.any(np.diff(times)<=0):
+        raise ValueError('Native states require matching increasing sample times')
+    late=times[:-1]>=times[-1]-.5-1e-9
+    if not late.any():raise ValueError('Missing settling intervals')
+    speed=np.linalg.norm(np.diff(points,axis=0)/np.diff(times)[:,None,None],axis=-1)
+    max_speed=float(speed[late].max())
     if max_speed > args.max_speed:
         raise ValueError(f'Cloth is still moving: late maximum {max_speed:.5f} m/s')
     if Path(__file__).parent.name=='peg-out-a-tshirt':

@@ -70,19 +70,57 @@
       "batch": "008",
       "free": "At .129s, upper sheet reaches 0.3179% local bending and the two centroids separate by about0.8mm beyond initial gap; membrane strain remains0.0128%.",
       "stapled": "At .010s, lower sheet reaches0.4175% local bending; membrane strain0.0823%; wire crossing audits remain clean.",
-      "next_check": "Explicit separated-sheet free-fall control isolates inter-sheet contact without relaxing validity limits."
+      "next_check": "Full supported A5 scene with120\u00b5m sheet gap/20\u00b5m crown clearance, same materials and guards."
     },
     "native_runtime": "Isaac6.1 AppLauncher + explicit cached stage attach + DirectGPU tensors. Read nodes only after first simulation step; legacyWorld.reset is incompatible here.",
     "evidence": {
       "native-paper-free-008.json": "5370633d5c0af7829aadab7738b8ce6876f8e7fe6897892c4a91915afe6b8a59",
       "native-paper-stapled-008.json": "12babdebf10ae99556cec56d31552c8ad3e791e5f8390bcd6bb61ab91ed76149"
+    },
+    "separated_control": {
+      "status": "pass",
+      "evidence": "evidence/native-paper-separated-010.json",
+      "sha256": "55ae414eccb5c66c649dc1197431d0464b0e2bd603320766cdbb632746e5ef32",
+      "seconds": 0.2,
+      "physics_hz": 2000,
+      "maximum_bending_strain": 0.0,
+      "maximum_tensile_strain": 2.853141497527467e-05,
+      "initial_gap_mm": 10.0,
+      "final_gap_mm": 9.99857485294342,
+      "interpretation": "Noncontact sheets remain flat; failure of touching pair implicates contact. Does not establish staple retention or extraction."
+    },
+    "near_separated_control": {
+      "status": "pass",
+      "evidence": "evidence/native-paper-gap120-012.json",
+      "sha256": "26a261a17f216b11a9fe977ac6cb9793d2cc4a28513360eab1a5072df74879ba",
+      "seconds": 0.2,
+      "physics_hz": 2000,
+      "maximum_bending_strain": 0.0,
+      "initial_gap_um": 120.0,
+      "final_gap_um": 119.8500394821167,
+      "interpretation": "Avoiding exactly-touching startup removes free-pair distortion. Stapled retention and handling remain untested for this clearance."
+    },
+    "stapled_clearance_control": {
+      "status": "invalid_model_domain",
+      "evidence": "evidence/native-paper-contactreset-014.json",
+      "sha256": "4b35cee044dbf85920c3586e292472ce39cfed9b6481af0d31731dfa56b3975d",
+      "sheet_gap_m": 0.00012,
+      "crown_clearance_m": 2e-05,
+      "first_invalid_step": 14,
+      "physics_hz": 2000,
+      "lower_maximum_surface_bending_strain": 0.00357696,
+      "interpretation": "Tiny local hinge reaches provisional bending-domain bound. No wire crossing. Unsupported coupon differs from full supported setup; evaluate full setup without changing thresholds."
     }
   },
   "full_scene": {
     "entry_point": "full_scene.build_scene",
-    "status": "authored_not_run",
+    "status": "first_authoring_attempt_failed_invalid_fork_identifier_fixed_retry_pending",
     "setup": "Two 210\u00d7148\u00d70.1 mm FEM sheets, free native staple, forked lever remover, 20 mm flat support with accessible far edges",
     "robot_demo": false,
-    "yam_bridge": "arena_paper.py, arena_hardware.py and task.py authored and syntax checked; native YAM initialization, guards and callbacks not runtime tested."
+    "yam_bridge": "arena_paper.py, arena_hardware.py and task.py authored and syntax checked; native YAM initialization, guards and callbacks not runtime tested.",
+    "preview_entrypoint": "preview_yam.py --out NEW --steps 10 --physics-hz 2000; authored/syntax-checked, not run. Ordinary ready-joint hold only.",
+    "native_entrypoint": "full_probe.py --out NEW --seconds .1 --physics-hz2000",
+    "initial_midplane_gap_m": 0.00012,
+    "initial_crown_clearance_m": 2e-05
   }
 }

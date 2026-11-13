@@ -15,6 +15,10 @@ SUPPORT_TOP=TABLE_TOP+.020
 SHEET_CENTRES=((.32,0.),(.32,.012))
 STAPLE_XY=(.227,-.050)
 PAPER_TOP=SUPPORT_TOP+.0009
+SHEET_GAP=.00012
+CROWN_GAP=.00002
+PAPER_CENTRE_HEIGHTS=(PAPER_TOP-.00005-CROWN_GAP-SHEET_GAP,
+                      PAPER_TOP-.00005-CROWN_GAP)
 
 
 def paper_mesh(index):
@@ -43,7 +47,7 @@ def build_scene(stage,root='/StapleTask', *, include_table=True, include_papers=
     paths=[]
     for i,(mesh,(x,y)) in enumerate(zip(meshes,SHEET_CENTRES)):
         path=f'{root}/paper_{i}';paths.append(path)
-        if include_papers:author_paper(stage,path,mesh,(x,y,PAPER_TOP-.00015+i*.0001))
+        if include_papers:author_paper(stage,path,mesh,(x,y,PAPER_CENTRE_HEIGHTS[i]))
     staple=author_staple(stage,root+'/staple',origin=(*STAPLE_XY,PAPER_TOP),yaw=math.pi/2,fixed_crown=False)
     tool=root+'/remover'
     xf=UsdGeom.Xform.Define(stage,tool)
@@ -61,12 +65,13 @@ def build_scene(stage,root='/StapleTask', *, include_table=True, include_papers=
         vertices=np.asarray([(x+offset,y,z) for offset in (-half,half) for y,z in profile])
         faces=np.array(((0,3,2),(0,2,1),(4,5,6),(4,6,7),(0,1,5),(0,5,4),
                         (1,2,6),(1,6,5),(2,3,7),(2,7,6),(3,0,4),(3,4,7)))
-        g=UsdGeom.Mesh.Define(stage,tool+f'/fork_{side}')
+        g=UsdGeom.Mesh.Define(stage,tool+('/fork_left' if side<0 else '/fork_right'))
         g.CreatePointsAttr(Vt.Vec3fArray(vertices.tolist()));g.CreateFaceVertexCountsAttr([3]*len(faces))
         g.CreateFaceVertexIndicesAttr(faces.ravel().tolist());g.CreateSubdivisionSchemeAttr('none')
         g.CreateDisplayColorAttr([Gf.Vec3f(.65,.67,.70)]);collision(g.GetPrim())
         UsdPhysics.MeshCollisionAPI.Apply(g.GetPrim()).CreateApproximationAttr('convexHull')
     return dict(root=root,paper_paths=paths,paper_meshes=meshes,staple=staple,remover_path=tool,
-                support_top_m=SUPPORT_TOP,initial_paper_top_m=PAPER_TOP,staple_xy_m=list(STAPLE_XY),
+                support_top_m=SUPPORT_TOP,initial_paper_top_m=PAPER_TOP-CROWN_GAP,staple_xy_m=list(STAPLE_XY),
+                initial_sheet_midplane_gap_m=SHEET_GAP,initial_crown_clearance_m=CROWN_GAP,
                 limitations=['Proposed setup; no full robot trial yet','Planar staple bending approximation',
                              'Conservative elastic paper validity termination; no rendered post-fracture topology'])

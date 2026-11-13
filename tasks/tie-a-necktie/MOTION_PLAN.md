@@ -8,9 +8,10 @@ camera/joint observation.
 
 1. **Establish the reset.** Let the untied half-wrap settle under gravity. Check
    that both ends are uncrossed, no cloth intersects the collar or support, and
-   the long end is on the intended side. Save the settled nodes as a reset
-   asset with the source/physics provenance. Do not carry an in-progress knot
-   across resets.
+   the long end is on the intended side. Use the shared fixed five-second
+   native reset procedure for every policy; a later reviewed settled-node asset
+   may replace it only with recorded source/physics provenance. Do not carry
+   an in-progress knot across resets.
 2. **Present the wide tip.** Grasp a hanging part of the wide end, lift it clear
    of the table, and transfer to a grasp near the tip with the other hand.
    Check the pale/gold edge orientation before wrapping. The collar's contact

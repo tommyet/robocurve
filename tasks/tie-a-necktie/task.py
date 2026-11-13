@@ -23,7 +23,7 @@ OBJECTS=[
     Cloth('tie',pos=tuple((INITIAL.min(0)+INITIAL.max(0))/2),
           size=tuple(INITIAL.max(0)-INITIAL.min(0)),color=(.50,.08,.17),
           mesh=MESH,initial=INITIAL,fabric=TIE_FABRIC,vertex_colors=face_colors(MESH)),
-    Fixture('collar',pos=(.52,0.,(NECK[2]+TABLE)/2),size=(.22,.16,NECK[2]+.0325-TABLE),kind='collar'),
+    Fixture('collar',pos=(.52,0.,(NECK[2]+TABLE)/2),size=(.22,.28,NECK[2]+.0325-TABLE),kind='collar'),
 ]
 
 

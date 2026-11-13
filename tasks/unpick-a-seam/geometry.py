@@ -45,7 +45,60 @@ class Mesh:
                 'boundary_loops':len(components(boundary)),'connected':True}
 
 
-def patch(left=True,*,hole_half=HOLE_HALF):
+def refine_hole_neighborhood(mesh,hole_half,max_edge):
+    """Conforming midpoint refinement; preserve the exact physical surface.
+
+    Refine triangles touching a band two target edge lengths around each
+    existing needle opening. Splitting a shared edge splits both incident
+    triangles, so no T-junction, additional hole, attachment or stiff rim is
+    introduced. Rest shape, material area and all hole boundaries are unchanged.
+    """
+    if not np.isfinite(max_edge) or not .0001 <= max_edge <= .001:
+        raise ValueError('Diagnostic hole mesh spacing must be 0.1 to 1.0 mm')
+    points=mesh.rest.copy();faces=mesh.faces.copy()
+    centres=np.array([(x,y) for x in (.295,.305) for y in STITCH_Y])
+    def near(points):
+        d=np.maximum(np.abs(points[:,:2,None]-centres.T[None])-hole_half,0.)
+        return (np.linalg.norm(d,axis=1)<=2*max_edge+1e-12).any(1)
+    for iteration in range(24):
+        affected=near(points)[faces].any(1)|near(points[faces].mean(1))
+        selected=set()
+        for face in faces[affected]:
+            for a,b in zip(face,np.roll(face,-1)):
+                if np.linalg.norm(points[a]-points[b])>max_edge*(1+1e-10):
+                    selected.add(tuple(sorted((int(a),int(b)))))
+        if not selected:
+            result=Mesh(points,faces);result.audit();return result
+        vertices=points.tolist();mid={}
+        for edge in sorted(selected):
+            mid[edge]=len(vertices);vertices.append(((points[edge[0]]+points[edge[1]])/2).tolist())
+        refined=[]
+        for face in faces:
+            edge_mid=[mid.get(tuple(sorted((int(face[i]),int(face[(i+1)%3]))))) for i in range(3)]
+            count=sum(v is not None for v in edge_mid)
+            if count==0:
+                refined.append(face.tolist())
+            elif count==1:
+                i=next(i for i,v in enumerate(edge_mid) if v is not None)
+                a,b,c=(int(face[(i+j)%3]) for j in range(3));m=edge_mid[i]
+                refined.extend(((a,m,c),(m,b,c)))
+            elif count==2:
+                i=edge_mid.index(None)
+                a,b,c=(int(face[(i+j)%3]) for j in range(3))
+                mbc,mca=edge_mid[(i+1)%3],edge_mid[(i+2)%3]
+                refined.append((c,mca,mbc))
+                if np.linalg.norm(np.asarray(vertices[a])-vertices[mbc])<=np.linalg.norm(np.asarray(vertices[b])-vertices[mca]):
+                    refined.extend(((a,b,mbc),(a,mbc,mca)))
+                else:
+                    refined.extend(((a,b,mca),(b,mbc,mca)))
+            else:
+                a,b,c=map(int,face);mab,mbc,mca=edge_mid
+                refined.extend(((a,mab,mca),(mab,b,mbc),(mca,mbc,c),(mab,mbc,mca)))
+        points=np.asarray(vertices);faces=np.asarray(refined,int)
+    raise RuntimeError('Hole mesh refinement did not converge')
+
+
+def patch(left=True,*,hole_half=HOLE_HALF,hole_mesh_spacing=None):
     xmin,xmax=(.235,.310) if left else (.290,.365)
     xs=np.unique(np.round(np.r_[np.linspace(xmin,xmax,26),
                                  .295-hole_half,.295+hole_half,.305-hole_half,.305+hole_half],9))
@@ -63,7 +116,8 @@ def patch(left=True,*,hole_half=HOLE_HALF):
             if hole:continue
             a,b,c,d=vertex(i,j),vertex(i+1,j),vertex(i+1,j+1),vertex(i,j+1)
             faces.extend(((a,b,c),(a,c,d)))
-    mesh=Mesh(np.asarray(vertices),np.asarray(faces,int));mesh.audit();return mesh
+    mesh=Mesh(np.asarray(vertices),np.asarray(faces,int));mesh.audit()
+    return mesh if hole_mesh_spacing is None else refine_hole_neighborhood(mesh,hole_half,hole_mesh_spacing)
 
 
 def stitch_loop(y,spacing=.001):

@@ -9,25 +9,23 @@
   "scores": null,
   "paid_compute_used_usd": null,
   "remaining_gates": [
-    "Passive native pressure controls and 20-action YAM ready preview pass; robot pickup/pressure control pending",
-    "Offline pressure-spreading deposits have rounded heads and tails; native ridge retention and robot manipulation pending",
-    "Non-nozzle collider audit completed the ready preview; manipulation and damage rejection still need evidence",
-    "Fixed pickup and first-press plans pass CPU IK; no native retention or press evidence yet",
-    "Robot full-score demo, Dream, media and photo agreement absent"
+    "Physical robot pickup and pressure-driven extrusion verified. Develop sustained tail flow from frozen robot actions; current deposit is a mound, not a shell.",
+    "Full shell shape, ridges, complete joined border, released dispenser and photo/scorer agreement remain unverified.",
+    "Robot full-score demo, Dream baseline, final rescoring and media absent."
   ],
   "sources_sha256": {
-    "contact_audit.py": "480e538193264fa16ad2cf640aa87c61d7eb881c2d9c076905d9eee98ebf1105",
+    "preview_yam.py": "02701f3a40bffbcf8d492003f399ebd4dfbd25d6c9bbc4e35361446b0a03c21b",
+    "plan.py": "b410364a170023b8e4475edfa320941d27d9ebe36373404e531569c6f76e1699",
     "material.py": "0e74b6efca877cda5b470ea53f5b09a1fbb465912cdaa1ea7309c5a9d00b6e0b",
-    "native.py": "0fbf2bb36adb6b175b3a0cafff2c490c75c4b01698d97efde756036878e1f455",
-    "plan.py": "28ca395eb52a5b781f4f499e2b2078b93ffb0c2a57bf7f9a62f7745576f63f1b",
-    "preview_yam.py": "5d3f72cc3d59ca44b8f09e93986118f23ca7ee14501dc6e327ceaa150eb14ec2",
-    "probe.py": "dc2421d3342eda2052d7340d10bbf856493ad5b30b121ad839fddda7c7a57c17",
     "probe_native.py": "1d5d47f963be39660c32dec7b626a26080d7d290da69cfc06e5e8e9f1945b4e8",
-    "probe_shell_shape.py": "3c7adab4072a8cd3e714724b4bbb81bb403297da2644fc6fe572a97e46cd38d4",
-    "review_views.py": "10f4baf1538ac832097c06eb462b5e27782cef5a6c6c06bf6926463e8e960c80",
-    "scene.py": "a339330f13e04878c8cc6981168feae2d0f91409b43a0647589388d6c7ea0bb4",
     "scoring.py": "6da41134132c9d42bcfaa5458d51792ca59bfcb46ff896a2a90d591324024180",
-    "test_material.py": "217b848fe94d15ffb733750e093e5f0c00256e8f420ee58418e4c495b36a0421"
+    "test_material.py": "217b848fe94d15ffb733750e093e5f0c00256e8f420ee58418e4c495b36a0421",
+    "scene.py": "a339330f13e04878c8cc6981168feae2d0f91409b43a0647589388d6c7ea0bb4",
+    "native.py": "0fbf2bb36adb6b175b3a0cafff2c490c75c4b01698d97efde756036878e1f455",
+    "probe_shell_shape.py": "3c7adab4072a8cd3e714724b4bbb81bb403297da2644fc6fe572a97e46cd38d4",
+    "probe.py": "dc2421d3342eda2052d7340d10bbf856493ad5b30b121ad839fddda7c7a57c17",
+    "contact_audit.py": "480e538193264fa16ad2cf640aa87c61d7eb881c2d9c076905d9eee98ebf1105",
+    "review_views.py": "e47fdf1b6d74172d54076a3f28976482065c36a8ef7f3d46fb497511f948a197"
   },
   "cpu_probe": {
     "simulated_seconds": 1.500000000000022,
@@ -43,5 +41,9 @@
     "meaning": "one prescribed-motion material deposit, not robot or shell demonstration"
   },
   "compute_note": "Shared bounded native session; allocation recorded by batch orchestrator.",
-  "native_mechanism_evidence": "evidence/native-passive-2026-11-13.json"
+  "native_mechanism_evidence": "evidence/native-passive-2026-11-13.json",
+  "native_robot_diagnostics": [
+    "evidence/native-press-011.json",
+    "evidence/native-robot-extrusion-014-015.json"
+  ]
 }

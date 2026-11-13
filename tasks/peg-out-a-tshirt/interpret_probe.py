@@ -18,7 +18,7 @@ def interpret(folder):
     if len(frames)!=len(times) or len(times)<2 or np.any(np.diff(times)<=0):
         raise ValueError('Need matching strictly increasing native sample times')
     speed=np.linalg.norm(np.diff(frames,axis=0)/np.diff(times)[:,None,None],axis=-1)
-    late=(times[1:]>=times[-1]-.5-1e-9)
+    late=(times[:-1]>=times[-1]-.5-1e-9)
     strain=edge_strain(rest,frames[-1],faces)
     result=dict(kind='offline_native_probe_measurements_not_task_score',score=None,
         mode=report['mode'],sample_times_s=times.tolist(),
@@ -37,7 +37,10 @@ def interpret(folder):
         fixtures['Rail']=dict(kind='cylinder',center=(0.,.32,.05),radius=.005,height=.55)
     elif mode=='task-layout':
         from scene import support_geometry,TABLE
-        fixtures=support_geometry()
+        fixtures=support_geometry(report.get('support_board_thickness_m',.008))
+        if report.get('peg_rests_candidate'):
+            from peg_rests import geometry
+            fixtures.update(geometry())
         fixtures['Table']=dict(kind='box',size=(1.1,1.3,.06),center=(.36,0.,TABLE-.03))
     elif mode=='collar-drape':
         from layout import fixture_geometry,TABLE

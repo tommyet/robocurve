@@ -21,8 +21,14 @@ def main():
     p.add_argument('--mode',choices=('stapled','free','free-separated'),default='stapled')
     p.add_argument('--seconds',type=float,default=.5)
     p.add_argument('--physics-hz',type=int,choices=(1000,2000,5000,10000),default=2000)
+    p.add_argument('--sheet-gap-um','--free-gap-um',dest='sheet_gap_um',type=float,default=100.,help='Diagnostic initial midplane gap; free-separated fixes10mm')
+    p.add_argument('--crown-gap-um',type=float,default=0.,help='Initial clearance below the crown, stapled mode only')
     a=p.parse_args()
     if not 0<a.seconds<=2:p.error('Diagnostic limited to two seconds')
+    if not 100.<=a.sheet_gap_um<=10000.:p.error('Diagnostic midplane gap must be100–10000µm')
+    if a.mode=='free-separated' and a.sheet_gap_um!=100.:p.error('free-separated fixes a10mm gap')
+    if not 0.<=a.crown_gap_um<=100. or (a.mode!='stapled' and a.crown_gap_um!=0.):p.error('Crown gap must be0–100µm and is only for stapled mode')
+    if a.mode=='stapled' and a.sheet_gap_um>200.:p.error('Stapled layout gap must fit the clinched staple')
     a.out.mkdir(parents=True,exist_ok=False);started=time.monotonic()
     mesh=perforated_sheet();guards=[ElasticDomainGuard(mesh),ElasticDomainGuard(mesh)]
     crossing=[PaperWireCrossingGuard(mesh.faces),PaperWireCrossingGuard(mesh.faces)]
@@ -56,7 +62,12 @@ def main():
         sx.CreateSolverTypeAttr('TGS');sx.CreateEnableCCDAttr(False)
         # Explicit diagnostic control: identical sheets, 10 mm of air between
         # their midplanes, so inter-sheet contact cannot explain deformation.
-        origins=[(0.,0.,.39985),(0.,0.,.40985 if a.mode=='free-separated' else .39995)]
+        gap=.01 if a.mode=='free-separated' else a.sheet_gap_um*1e-6
+        if a.mode=='stapled':
+            top_midplane=.39995-a.crown_gap_um*1e-6
+            origins=[(0.,0.,top_midplane-gap),(0.,0.,top_midplane)]
+            report['initial_crown_clearance_m']=a.crown_gap_um*1e-6
+        else:origins=[(0.,0.,.39985),(0.,0.,.39985+gap)]
         report['initial_midplane_gap_m']=origins[1][2]-origins[0][2]
         for i,origin in enumerate(origins):author_paper(stage,f'/World/Paper_{i}',mesh,origin)
         staple=author_staple(stage,'/World/Staple',origin=(0.,0.,.4),fixed_crown=True) if a.mode=='stapled' else None

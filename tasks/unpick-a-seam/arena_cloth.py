@@ -18,6 +18,7 @@ class Cloth(Box):
     mesh: object = None
     initial: object = None
     fabric: Fabric = Fabric()
+    contact_refinement: object = None
 
     @property
     def free(self):
@@ -50,7 +51,8 @@ def _spawn(path,cfg,translation=None,orientation=None,**kwargs):
     if orientation is not None and not np.allclose(orientation,(0.,0.,0.,1.)):
         raise ValueError('author the initial cloth orientation in its vertices')
     points=np.asarray(spec.initial)+np.asarray(translation or (0.,0.,0.))
-    return author_cloth(stage,str(path),spec.mesh,spec.fabric,points=points,color=spec.color).GetPrim()
+    return author_cloth(stage,str(path),spec.mesh,spec.fabric,points=points,color=spec.color,
+                        contact_refinement=spec.contact_refinement).GetPrim()
 
 
 def reset_cloth(env,env_ids,cloth_name):

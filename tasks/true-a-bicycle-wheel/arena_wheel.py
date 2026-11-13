@@ -131,7 +131,7 @@ def state(env, name):
 
 def install_material_hook(base, stage):
     from pxr import UsdUtils
-    from thread_coupling import NativeThreadCoupler, TensorNativeIO
+    from thread_coupling import NativeThreadCoupler, TensorNativeIO, body_paths
     import omni.physics.tensors as tensors
     cache = UsdUtils.StageCache.Get()
     stage_id = cache.GetId(stage).ToLongInt()
@@ -142,7 +142,7 @@ def install_material_hook(base, stage):
     tensor_view.set_subspace_roots('/')
     for item in ASSEMBLIES.values():
         item['tensor_view']=tensor_view
-        io=TensorNativeIO(tensor_view,item['root']+'/wheel/*')
+        io=TensorNativeIO(tensor_view,body_paths(item['metadata']))
         item['coupling'] = NativeThreadCoupler(stage_id, item['metadata'],native_io=io)
     original = base.scene.write_data_to_sim
     def before_substep(*args, **kwargs):

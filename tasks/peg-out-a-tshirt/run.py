@@ -14,6 +14,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import signal
 import time
 import numpy as np
 
@@ -105,6 +106,7 @@ def main():
     p.add_argument('--steps',type=int,default=None)
     p.add_argument('--plan',type=Path,help='Precomputed ordinary joint commands; required for motion-probe')
     p.add_argument('--seed',type=int,default=0)
+    p.add_argument('--judging-views',action='store_true',help='Record additional native960×720 front/rear assessor videos')
     p.add_argument('--out',type=Path)
     p.add_argument('--check-only',action='store_true',help='Compile source and check JSON without loading a simulator')
     args=p.parse_args()
@@ -114,6 +116,9 @@ def main():
             p.error('motion-probe requires a precomputed --plan')
         from fixed_motion import load
         fixed_plan,fixed_actions=load(args.plan)
+        from scene import SUPPORT_BOARD_THICKNESS
+        if fixed_plan.get('fixture_board_thickness_m')!=SUPPORT_BOARD_THICKNESS:
+            p.error('Frozen motion was not compiled for the current support thickness; recompile and audit first')
         args.steps=len(fixed_actions) if args.steps is None else args.steps
         if not 1<=args.steps<=len(fixed_actions):
             p.error('--steps exceeds the frozen action sequence')
@@ -158,6 +163,10 @@ def main():
         temporary.replace(args.out/'run.json')
     save()
     app=video=trace=emb=None
+    judging_videos={}
+    def terminate(signum,frame):
+        raise SystemExit('SIGTERM: bounded diagnostic interrupted')
+    previous_sigterm=signal.signal(signal.SIGTERM,terminate)
     try:
         os.environ.setdefault('OMNI_KIT_ACCEPT_EULA','YES')
         from isaaclab.app import AppLauncher
@@ -168,7 +177,18 @@ def main():
         import omni.usd
         import arena_cloth
         from arena_props import PEG_SPECS
+        from scene import PHYSICS_HZ
         from yam_arena import inspect_embodiment as wrapper,scene
+        # The normal callback derives decimation from this timestep and20 Hz.
+        scene.PHYSICS_DT=1/PHYSICS_HZ
+        if args.judging_views:
+            from review_views import configure,metadata
+            original_make_env=scene.make_env
+            def with_review_cameras(embodiment,**kwargs):
+                configure(embodiment)
+                return original_make_env(embodiment,**kwargs)
+            scene.make_env=with_review_cameras
+            report['judging_cameras']=metadata()
         np.random.seed(args.seed)
         torch.manual_seed(args.seed)
         wrapper._APP=app
@@ -177,13 +197,10 @@ def main():
         emb._ensure_sim(None)
         base=emb._base
         emb._instruction=draft['instruction']
-        report['reset']={'method':'emb._env.reset()','status':'requested',
-                         'physics_step_count_before':int(base.sim._physics_step_count)}
+        from reset_scene import reset_and_settle
+        report['reset']={'method':'raw reset plus five seconds of fixed native settling','status':'requested'}
         save()
-        emb._env.reset()
-        emb._t=0.
-        report['reset'].update(status='completed',
-                              physics_step_count_after=int(base.sim._physics_step_count))
+        report['reset']=reset_and_settle(emb)
         stage=omni.usd.get_context().get_stage()
         names=list(arena_cloth.SPECS)+list(PEG_SPECS)
         if not names:
@@ -191,11 +208,16 @@ def main():
         report['native_scene_audit']=native_audit(stage,list(arena_cloth.SPECS),list(PEG_SPECS))
         report['physics_dt_s']=float(base.sim.get_physics_dt())
         report['initial_physics_step_count']=int(base.sim._physics_step_count)
-        report['initial_snapshot']='After one explicit raw environment reset; no hidden extra settling loop'
+        report['initial_snapshot']='After one raw reset and the declared five-second native cloth/peg settling period'
         (args.out/'meshes.json').write_text(json.dumps({name:{'rest':spec.mesh.rest.tolist(),
             'faces':spec.mesh.faces.tolist(),'markers':spec.mesh.markers} for name,spec in arena_cloth.SPECS.items()})+'\n')
         video=imageio.get_writer(args.out/'diagnostic.mp4',fps=CONTROL_HZ,codec='libx264',pixelformat='yuv420p',
                                   ffmpeg_params=['-movflags','+faststart'],macro_block_size=1)
+        if args.judging_views:
+            for camera in report['judging_cameras']:
+                judging_videos[camera['name']]=imageio.get_writer(
+                    args.out/(camera['name'].replace('_','-')+'.mp4'),fps=CONTROL_HZ,
+                    codec='libx264',pixelformat='yuv420p',ffmpeg_params=['-movflags','+faststart'],macro_block_size=1)
         trace=gzip.open(args.out/'trace.jsonl.gz','wt')
         ready=emb._ready.detach().cpu().numpy()[0].copy()
         if ready.shape!=(14,) or not np.isfinite(ready).all():
@@ -227,6 +249,14 @@ def main():
             trace.flush()
             image=np.asarray(observation.images['top_cam'],dtype=np.uint8)
             video.append_data(image)
+            if args.judging_views:
+                from review_views import images
+                for camera,pixels in images(base).items():
+                    judging_videos[camera].append_data(pixels)
+                    if step in (0,args.steps):
+                        label='start' if step==0 else 'final'
+                        Image.fromarray(pixels).save(args.out/f'{camera.replace("_","-")}-{label}.png')
+
             if step in (0,args.steps):
                 label='start' if step==0 else 'final'
                 for camera,rgb in observation.images.items():
@@ -248,13 +278,15 @@ def main():
         report['status']='complete'
         report['meaning']='Bounded diagnostic execution completed; no task success or contact fidelity certified'
     except BaseException as exc:
-        report.update(status='failed',error_type=type(exc).__name__,error_message=str(exc))
+        report.update(status='interrupted' if isinstance(exc,SystemExit) else 'failed',error_type=type(exc).__name__,error_message=str(exc))
         raise
     finally:
         if trace is not None:trace.close()
         if video is not None:video.close()
+        for recorder in judging_videos.values():recorder.close()
         save()
         if app is not None:app.close()
+        signal.signal(signal.SIGTERM,previous_sigterm)
 
 
 if __name__=='__main__':main()

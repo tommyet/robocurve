@@ -35,8 +35,9 @@ def _clip_z(poly,height,keep_above):
     return np.asarray(result)
 
 
-def triangle_cylinder_intersects(triangle,center,radius,height,margin=0.):
-    poly=np.asarray(triangle,dtype=float)-np.asarray(center,dtype=float)
+def triangle_cylinder_intersects(triangle,center,radius,height,margin=0.,axis='Z'):
+    order={'X':(1,2,0),'Y':(0,2,1),'Z':(0,1,2)}[axis]
+    poly=(np.asarray(triangle,dtype=float)-np.asarray(center,dtype=float))[:,order]
     half=height/2+margin
     if poly[:,2].max() < -half or poly[:,2].min() > half:return False
     poly=_clip_z(poly,-half,True)
@@ -60,15 +61,17 @@ def fixture_intersections(points,faces,fixtures,margin=.001):
     hits={}
     for name,spec in fixtures.items():
         center=np.asarray(spec['center'])
-        size=np.asarray(spec['size'] if spec['kind']=='box' else
-                        (2*spec['radius'],2*spec['radius'],spec['height']))
+        if spec['kind']=='box':size=np.asarray(spec['size'])
+        else:
+            size=np.full(3,2*spec['radius'])
+            size['XYZ'.index(spec.get('axis','Z'))]=spec['height']
         low=center-size/2-margin;high=center+size/2+margin
         candidates=np.flatnonzero(np.all(triangles.max(1)>=low,axis=1)&
                                   np.all(triangles.min(1)<=high,axis=1))
         if spec['kind']=='box':
             hit=lambda t:triangle_box_intersects(t,center,size,margin)
         elif spec['kind']=='cylinder':
-            hit=lambda t:triangle_cylinder_intersects(t,center,spec['radius'],spec['height'],margin)
+            hit=lambda t:triangle_cylinder_intersects(t,center,spec['radius'],spec['height'],margin,spec.get('axis','Z'))
         else:raise ValueError('Unsupported fixture primitive: '+spec['kind'])
         hits[name]=[int(i) for i in candidates if hit(triangles[i])]
     return hits

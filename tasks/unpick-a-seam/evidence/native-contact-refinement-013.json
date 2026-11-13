@@ -1,0 +1,177 @@
+{
+  "evidence_type": "Native contact-refinement results plus offline static geometry diagnosis; no robot task score",
+  "source_batch": "native-batch-013",
+  "audit_sha256": "167c12d11f82faadbc88fc8d9fc2dc74278eccd2ee692783da096b7ed21c61fc",
+  "runs": [
+    {
+      "mode": "intact",
+      "status": "invalid_model_domain",
+      "first_invalid_step": 47,
+      "physics_hz": 960,
+      "authored_contact_settings": [
+        {
+          "physxDeformableBody:enableSpeculativeCCD": true,
+          "physxDeformableBody:collisionIterationMultiplier": 4,
+          "physxDeformableBody:collisionPairUpdateFrequency": 4
+        },
+        {
+          "physxDeformableBody:enableSpeculativeCCD": true,
+          "physxDeformableBody:collisionIterationMultiplier": 4,
+          "physxDeformableBody:collisionPairUpdateFrequency": 4
+        }
+      ],
+      "source_report_sha256": "0b687b127e76900b7b231ae444123a4033ec7b22113399be083d8241efe2fbbc",
+      "source_state_sha256": "94a1312d5421b7489505a26ecc8357f5daee7ff85ce3c4e16380d955081329cd",
+      "static_failure_frame_replay": {
+        "left": {
+          "valid": false,
+          "steps": 1,
+          "first_failure": {
+            "step": 1,
+            "time_s": 0.04895833333333333,
+            "reason": "thread crosses intact fabric",
+            "static_intersections": 1,
+            "swept_intersections": 0,
+            "static_crossing_details": [
+              {
+                "segment_index": 56,
+                "face_index": 1933,
+                "coordinate_frame": "current",
+                "intersection_m": [
+                  0.00024020523291907125,
+                  -0.005894867808363302,
+                  0.4391489493794418
+                ],
+                "barycentric": [
+                  0.4358958231692982,
+                  0.012407701802295416,
+                  0.5516964750284064
+                ],
+                "segment_parameter": 0.6234262993992611,
+                "strictly_inside_triangle": true,
+                "strictly_inside_segment": true,
+                "distance_to_mesh_boundary_m": 2.7285192636647482e-05,
+                "closest_boundary_edge": [
+                  1002,
+                  1003
+                ],
+                "closest_boundary_point_m": [
+                  0.00023980428889254079,
+                  -0.005894871395622165,
+                  0.43917623162583463
+                ],
+                "closest_boundary_edge_length_m": 0.0016008361825679673,
+                "closest_boundary_vertices_distance_to_thread_axis_m": [
+                  0.0008661981454935339,
+                  0.0006767380748704729
+                ],
+                "nearest_mesh_vertex_distance_to_thread_axis_m": 0.0006767380748704729
+              }
+            ],
+            "swept_crossing_details": []
+          }
+        },
+        "right": {
+          "valid": true,
+          "steps": 1,
+          "first_failure": null
+        }
+      }
+    },
+    {
+      "mode": "open",
+      "status": "invalid_model_domain",
+      "first_invalid_step": 27,
+      "physics_hz": 960,
+      "authored_contact_settings": [
+        {
+          "physxDeformableBody:enableSpeculativeCCD": true,
+          "physxDeformableBody:collisionIterationMultiplier": 4,
+          "physxDeformableBody:collisionPairUpdateFrequency": 4
+        },
+        {
+          "physxDeformableBody:enableSpeculativeCCD": true,
+          "physxDeformableBody:collisionIterationMultiplier": 4,
+          "physxDeformableBody:collisionPairUpdateFrequency": 4
+        }
+      ],
+      "source_report_sha256": "40ff2856ec2a91d78d6ca07887cb6eec9ade5ef49d4df6ec38b919d883b264b5",
+      "source_state_sha256": "8cb43da4665159daadc82c9c62d48e145359a140de3976f8908c42ba7599f44c",
+      "static_failure_frame_replay": {
+        "left": {
+          "valid": true,
+          "steps": 1,
+          "first_failure": null
+        },
+        "right": {
+          "valid": false,
+          "steps": 1,
+          "first_failure": {
+            "step": 1,
+            "time_s": 0.028125,
+            "reason": "thread crosses intact fabric",
+            "static_intersections": 1,
+            "swept_intersections": 0,
+            "static_crossing_details": [
+              {
+                "segment_index": 14,
+                "face_index": 516,
+                "coordinate_frame": "current",
+                "intersection_m": [
+                  -0.0006520370703594566,
+                  -0.03033866999106894,
+                  0.42732747030522256
+                ],
+                "barycentric": [
+                  0.010249175262196486,
+                  0.4379282773929003,
+                  0.5518225473449032
+                ],
+                "segment_parameter": 0.4407627099356218,
+                "strictly_inside_triangle": true,
+                "strictly_inside_segment": true,
+                "distance_to_mesh_boundary_m": 2.254331838425963e-05,
+                "closest_boundary_edge": [
+                  319,
+                  320
+                ],
+                "closest_boundary_point_m": [
+                  -0.0006512430128594754,
+                  -0.030338678053989047,
+                  0.4273049409774152
+                ],
+                "closest_boundary_edge_length_m": 0.0008003500132072398,
+                "closest_boundary_vertices_distance_to_thread_axis_m": [
+                  0.0004410042479424934,
+                  0.00035895134014801846
+                ],
+                "nearest_mesh_vertex_distance_to_thread_axis_m": 0.00035895134014801846
+              }
+            ],
+            "swept_crossing_details": []
+          }
+        }
+      }
+    }
+  ],
+  "next_diagnostic": {
+    "status": "unrun",
+    "hole_mesh_spacing_m": 0.0004,
+    "physical_domain_and_material_unchanged": true,
+    "base_mesh": {
+      "vertices": 1346,
+      "triangles": 2492,
+      "surface_area_m2": 0.005969280000000001,
+      "boundary_loops": 13,
+      "connected": true
+    },
+    "refined_mesh": {
+      "vertices": 4407,
+      "triangles": 8490,
+      "surface_area_m2": 0.005969280000000001,
+      "boundary_loops": 13,
+      "connected": true
+    },
+    "hypothesis": "Local contact discretization is too coarse near a needle-hole edge; native vertex-only handling is not established."
+  }
+}

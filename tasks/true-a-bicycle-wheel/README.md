@@ -1,8 +1,8 @@
 # True a wobbly bicycle wheel
 
 **Development package; not submission-ready.** The CPU mechanics checks pass.
-The native ring responds to spoke adjustment, but its latest completed test
-became unstable. No successful truing demo, Dream run or media ID exists.
+The isolated native ring passes a two-second fine-step response test. Full
+wheel/thread/contact integration remains unproven. No truing demo, Dream run or media ID exists.
 
 The robot adjusts spoke nipples to leave a wheel straight, centred and freely
 rotating. Finding the wobble and redistributing tension is the task; matching a
@@ -20,7 +20,12 @@ The native wrench must transfer that torque through contact.
 The curved rim avoids the 1.06 mm radial scallop of the earlier 32-box geometry;
 its six arc subdivisions per sector keep geometric chord error below 0.03 mm.
 The full scene includes a stand, colliding spoke rods, rotating square brass
-nipples and an open-slot wrench. Midspan spoke bending is compliant, so a real
+nipples and an open-slot wrench. The spoke heads can tilt but cannot freely
+spin; thread advance uses the nipple's measured rotation relative to the outer
+spoke. Lead and friction torques act between those two actual bodies. A common
+wheel/spoke/nipple rotation does not shorten a spoke. Clockwise nipple rotation
+viewed from the rim tightens the right-hand thread. Midspan bending is
+compliant, so a real
 tension-gauge measurement has a corresponding physical response.
 
 A YAM asset bridge registers the 130 native bodies and resets them only at an
@@ -37,7 +42,7 @@ represented. Native damage-domain, contact and stability checks remain needed.
 
 ## Evidence and commands
 
-The 21 CPU checks use NumPy, take under one second and use no randomness:
+The 29 CPU checks use NumPy, take under one second and use no randomness:
 
 ```sh
 python -m unittest discover -s tasks/true-a-bicycle-wheel -p 'test_*.py' -v
@@ -52,7 +57,7 @@ predictions invalid after a spoke becomes slack.
 In the pinned Isaac 6.1 environment, run the isolated ring gate first:
 
 ```sh
-python tasks/true-a-bicycle-wheel/native_probe.py --out artifacts/wheel-ring --seconds 4 --dt .0001
+python tasks/true-a-bicycle-wheel/native_probe.py --out artifacts/wheel-ring --seconds 2 --dt .000025 --adjust-at .1
 ```
 
 This diagnostic fixes the hub, disables gravity and changes one spring rest
@@ -69,14 +74,27 @@ quarter-turn rest-length change by 0.113398 mm, versus 0.1135 mm expected. Its
 absolute equilibrium position is about 46 µm too short at a 100 µs step, so
 the constitutive check fails. `spring_probe.py` separates this timestep/solver
 question from the full ring. Its saved report is `evidence/native-spring-008.json`.
+At a 25 µs step, the same isolated spring passes: static error falls to 2.8 µm
+and the observed rest-length response is 0.113487 mm. This supports a timestep
+convergence diagnosis.
+The attempted four-second fine-step ring test hit a 240-second wall limit;
+its old runner did not preserve motion samples. The runner now writes atomic
+checkpoints and finalizes on termination. The subsequent 0.8-second test passes:
+131 µm maximum adjustment response, 10.2 µm late drift and locked joint gaps
+below 0.59 µm. Rim strain energy stays bounded after the adjustment. Its 50.8
+seconds of wall time informed a two-second follow-up, with the adjustment at
+0.1 seconds. That follow-up remains bounded throughout the earlier instability
+window: 138 µm maximum response, 5.72 µm final drift and stable rim energy. It
+takes 130 wall seconds. This validates the isolated ring gate, not the full
+130-body scene or a truing action.
 
-Only after that gate is stable:
+The next bounded diagnostic is the full scene:
 
 ```sh
-python tasks/true-a-bicycle-wheel/scene_probe.py --out artifacts/wheel-scene --dt .0001 --seconds 1
-python tasks/true-a-bicycle-wheel/wrench_contact_probe.py --out artifacts/wheel-contact --dt .0001 --turn-deg 90
-python tasks/true-a-bicycle-wheel/wrench_contact_probe.py --out artifacts/wheel-no-contact --dt .0001 --turn-deg 90 --no-contact
-python tasks/true-a-bicycle-wheel/preview_yam.py --out artifacts/wheel-yam-preview --steps 40 --physics-hz 1000
+python tasks/true-a-bicycle-wheel/scene_probe.py --out artifacts/wheel-scene --dt .000025 --seconds .1
+python tasks/true-a-bicycle-wheel/wrench_contact_probe.py --out artifacts/wheel-contact --dt .000025 --turn-deg -90
+python tasks/true-a-bicycle-wheel/wrench_contact_probe.py --out artifacts/wheel-no-contact --dt .000025 --turn-deg -90 --no-contact
+python tasks/true-a-bicycle-wheel/preview_yam.py --out artifacts/wheel-yam-preview --steps 2 --physics-hz 40000
 ```
 
 The wrench test uses an explicitly kinematic diagnostic fixture. The no-contact
