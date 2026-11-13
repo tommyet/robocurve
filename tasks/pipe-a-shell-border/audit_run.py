@@ -6,6 +6,7 @@ Native photographs/video remain necessary for agreement with simple judging.
 import argparse
 import itertools
 import json
+import hashlib
 from pathlib import Path
 import numpy as np
 from native import rotation
@@ -71,6 +72,8 @@ def audit(directory):
             airborne_m3=float(state['airborne_m3']),damage_depth_m=float(state['damage_depth_m']),
             completed=bool(complete),tools_clear=bool(released['released_clear']),other_tool_contact=bool(invalid))
     return {'complete_record':bool(complete),'release':released,'assessment':result,
+            'scoring_sha256':hashlib.sha256(Path(__file__).with_name('scoring.py').read_bytes()).hexdigest(),
+            'audit_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
             'photo_agreement':'Requires independent review of the matching native images and video'}
 
 

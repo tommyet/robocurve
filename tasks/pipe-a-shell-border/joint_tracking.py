@@ -10,7 +10,7 @@ import numpy as np
 
 
 class JointTracking:
-    def __init__(self, *, proportional=.5, integral=.8, bias_limit=.06, slew_limit=.004):
+    def __init__(self, *, proportional=1.5, integral=2., bias_limit=.12, slew_limit=.006):
         self.kp=float(proportional);self.ki=float(integral)
         self.limit=float(bias_limit);self.slew=float(slew_limit)
         self.integral=np.zeros(12);self.bias=np.zeros(12)

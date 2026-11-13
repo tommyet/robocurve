@@ -14,16 +14,15 @@ import numpy as np
 
 # Gripper X is its closing axis. Barrel lies along Y, so pads close along X.
 DOWN=np.array([[1.,0.,0.],[0.,-1.,0.],[0.,0.,-1.]])
-# Fixed tool-in-hand calibration from the last 20 frames of native pickup009.
-# This is a declared offline calibration, not live task-object feedback. The
-# settled barrel varied by <0.05 mm per axis over that one-second interval.
-# Initial pickup actions stay unchanged; subsequent goals compensate its
-# measured seating offset and 3.2 degree pitch difference.
-GRASP_TRANSLATION=np.array((-.001836185,.008420001,.011846225))
+# Fixed tool-in-hand calibration from native026 frames400:439, after the
+# firmer grasp and before piston contact. The largest translation range was
+# 0.040 mm. This replaces the older pickup009 calibration, whose seating
+# offset no longer matched this grasp. No live object feedback is used.
+GRASP_TRANSLATION=np.array((.0000432964693,.000518241080,.009315861139))
 GRASP_ROTATION=np.array((
-    (-.999929335,-.009796625,.006734309),
-    (-.010160689,.998359913,-.056340427),
-    (-.006171318,-.056404871,-.998388905)))
+    (-.999999889705,.000237975474,-.000404917306),
+    (.000251620739,.999420459041,-.034039429154),
+    (.000396582091,-.034039527285,-.999420408689)))
 
 
 def calibrated_hand_pose(barrel_centre,barrel_rotation):
@@ -84,7 +83,7 @@ def compile_plan(mode='pickup',press_stroke=.006,shell_count=1,release_tool=Fals
     if mode in ('press','shell'):
         axis=np.array((0.,-np.sqrt(.5),-np.sqrt(.5)))
         start_y=(-.039 if shell_count>1 else -.035) if mode=='shell' else -.040
-        tip=np.array((.235,start_y,.8032 if mode=='shell' else .8035));centre=tip-axis*.080
+        tip=np.array((.235,start_y,.8045 if mode=='shell' else .8035));centre=tip-axis*.080
         push_rotation=rx(-np.pi/4)@DOWN@np.diag((-1.,-1.,1.))
         # The closed finger tips extend 13 mm beyond TCP. Position them behind
         # the actual 5 mm plunger face; no grasp/latch is added to the pusher.
@@ -102,7 +101,7 @@ def compile_plan(mode='pickup',press_stroke=.006,shell_count=1,release_tool=Fals
             if shell:
                 # Fixed technique and nominal consumed-volume allowance, never
                 # live material state. 0.45 mm is about 0.22 ml per deposit.
-                shift=np.array((0.,shell*.013,0.))
+                shift=np.array((0.,shell*.012,0.))
                 contact=initial_contact+shift+axis*(shell*.00045)
                 hand_p=initial_hand+shift
                 transition(1.,f'position for shell {shell+1}',{
@@ -115,7 +114,7 @@ def compile_plan(mode='pickup',press_stroke=.006,shell_count=1,release_tool=Fals
             if mode=='shell':
                 # Both hands move a physical dispenser; material is produced
                 # solely by actual piston pressure and aperture geometry.
-                tail_delta=np.array((0.,.012,-.002))
+                tail_delta=np.array((0.,.012,-.001))
                 transition(.35,'draw first tail under pressure',{
                     'right':(hand_p+tail_delta*.5,hand_r,-.0105),
                     'left':(contact+tail_delta*.5+axis*press_stroke,push_rotation,0.)})
@@ -141,7 +140,7 @@ def compile_plan(mode='pickup',press_stroke=.006,shell_count=1,release_tool=Fals
         transition(2. if release_tool else 1.,'observe deposited material',{})
     return {'schema':'fixed-joint-plan-v1','control_hz':20,'status':'development '+mode+' only',
             'no_object_feedback':True,'frames':frames,'shell_count':shell_count,'release_tool':release_tool,
-            'offline_grasp_calibration':'Native pickup009 final one-second mean; fixed constants, no trial-state input' if mode in ('press','shell') else None,
+            'offline_grasp_calibration':'Native026 frames400:439 mean; fixed constants, no trial-state input' if mode in ('press','shell') else None,
             'maximum_ik_position_error_m':maximum_position_error,
             'maximum_ik_rotation_error_rad':maximum_rotation_error,
             'plan_source_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}

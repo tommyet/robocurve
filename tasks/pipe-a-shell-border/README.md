@@ -23,7 +23,7 @@ and a stainless steel six-point star nozzle. Nominal barrel grip: 30 × 80 × 30
 star aperture with a 2.5 mm mean radius. The model starts with 20 ml of icing.
 Its barrel begins at (0.180, −0.160, 0.7775) m, nozzle along −Y; the plunger centre
 is at (0.180, −0.100, 0.7775) m, 60 mm behind it. Both bodies start at yaw 180°.
-A 50 × 40 × 15 mm plastic rest supports the dispenser. The tool starts
+A 50 × 40 × 15 mm plastic rest at (0.180, −0.160, 0.755) m supports the dispenser. The tool starts
 on the table, outside both hands. The 80 g barrel and 25 g plunger are dynamic.
 
 This is a proposed reproducible prop specification. No real dispenser or recipe
@@ -31,81 +31,61 @@ has yet been measured. A syringe avoids pretending that a
 rigid object is a deformable piping bag; pressure control still comes from
 physical piston movement.
 
-## Local checks
+## Run and inspect
 
-From the repository root:
-
-```bash
-.venv/bin/python -m unittest discover -s tasks/pipe-a-shell-border -p 'test_*.py' -v
-.venv/bin/python tasks/pipe-a-shell-border/probe.py --out artifacts/piping-cpu-new
-```
-
-The CPU probe prescribes nozzle motion to test the material law. It is **not** a
-robot policy or full-score demonstration. It took 0.19 s for 1.5 simulated seconds
-on the development machine; that is not a GPU trial-runtime estimate. It produced
-0.567 ml of icing with volume-balance error below 6 × 10⁻²² m³. The resulting
-single deposit is a blob, not evidence of a complete shell border.
-
-Twenty-one CPU tests cover finite volume, pressure causality, passive seal-force
-direction, contact/damage gates, incomplete evidence, and rubric invariance.
-
-The 13 November native positive/negative controls exercised the free piston in
-a fixed diagnostic barrel. An 8 N press for 0.5 s followed by 0.5 s release
-emitted 0.1587 ml; the zero-force control emitted none. Flow stopped on release,
-and retained volume matched extrusion. Each one-second probe took about 7 s
-including simulator startup. The recorded source hashes and traces are in
-`evidence/native-passive-2026-11-13.json`. This proves pressure causality for that
-revision, not a robot grasp or finished shell border.
-
-## Next native probes
-
-Run inside the pinned team Isaac Sim environment:
+Use the pinned Linux/NVIDIA environment in `ENVIRONMENT.json`. From the repository
+root, compile the fixed plan, run it, then score the saved physical record:
 
 ```bash
-python tasks/pipe-a-shell-border/probe_native.py --out artifacts/piping-native-zero --seconds 3 --force-n 0
-python tasks/pipe-a-shell-border/probe_native.py --out artifacts/piping-native-force --seconds 3 --force-n 8
-python tasks/pipe-a-shell-border/preview_yam.py --out artifacts/piping-yam-preview --steps 60
-python tasks/pipe-a-shell-border/plan.py --out artifacts/piping-pickup-plan.json
-python tasks/pipe-a-shell-border/preview_yam.py --out artifacts/piping-pickup --steps 400 --plan artifacts/piping-pickup-plan.json
+python tasks/pipe-a-shell-border/plan.py --mode shell --press-stroke .003 --shell-count 3 --release-tool --out artifacts/piping-plan.json
+python tasks/pipe-a-shell-border/run.py --policy demo --joint-feedback --plan artifacts/piping-plan.json --steps 2400 --out artifacts/piping-demo
+python tasks/pipe-a-shell-border/audit_run.py artifacts/piping-demo --out artifacts/piping-demo/audit.json
 ```
 
-The first two clamp the barrel as a diagnostic and push the ordinary dynamic
-plunger with a force; there is no imposed piston position. The YAM preview uses
-the unclamped tool and ordinary ready robot pose. All are unscored diagnostics.
-The fixed pickup plan is compiled before the trial from URDF kinematics and has
-no live object-state input. Its interpolated path passes the local IK check;
-grasp, retention and collision remain native simulation tests. The preview
-records video, camera images and measured tool, piston, flow and contact state.
-A 20-action native ready-pose preview completed in 25.9 s including startup,
-with zero emission and no invalid collider contact. A later 340-action frozen trajectory picked up and retained the dispenser.
-A 508-action press reached 1.35 mm piston travel and 2.60 N pressure reaction,
-but emitted no icing; it is a failed extrusion diagnostic. See
-`evidence/native-press-011.json`. Native 1280-pixel judging cameras now render
-through the same YAM camera system. The following 8 mm press emitted 0.0147 ml; a 12 mm single-shell attempt
-emitted 0.0653 ml with closed volume balance and no invalid robot contact.
-Its native judging photos show a ridged mound, but the pressure ended too early
-to form a tail. It is not a qualifying shell. See
-`evidence/native-robot-extrusion-014-015.json`. The next frozen plan sustains
-pressure during the first part of the draw. A complete border remains untested.
-The latest pressure trials revealed several millimetres of ordinary wrist
-deflection under load. Bounded PI tracking from standard joint-angle observations
-then produced one elongated deposit: 14.5 mm of qualifying length, with an 8.0 mm
-wide, 3.58 mm high head. Its ridges remain inadequate and the full border is
-unfinished. See `evidence/native-single-shell-021.json`. The controller changes
-ordinary action targets, never native motor gains or task-object state.
-The next frozen plan holds pressure longer, then lowers the tip while easing
-pressure, following [Wilton’s shell technique](https://wilton.com/how-to-pipe-a-shell-border/wltech-131/).
+The current three-shell plan is a development test, not a full border. The plan
+is compiled from robot kinematics and a fixed, recorded tool-grasp calibration.
+During execution, bounded PI correction reads ordinary joint angles only. It
+changes action targets, not motor gains or object poses. The independent audit
+uses the deposited material and measured tool/robot geometry. Confirm agreement
+with the matching top and side photographs; a numeric score alone is insufficient.
 
-The material solver now crops flux calculation to the occupied icing region,
-including empty neighbour cells. A 400-step comparison against the previous
-full grid produced bit-identical volume cells and extrusion, with local solver
-time falling from 6.11 to 0.285 seconds. Native end-to-end trials still include
-robot physics, rendering and recording; this is not a 21× overall speed claim.
+A direct baseline uses the same scene and ordinary Dream observations:
 
-CPU and native probes use deterministic starting values and no random jitter; intended
-task seed is 0. Intended task limit: 2,400 actions at 20 Hz.
+```bash
+python tasks/pipe-a-shell-border/run.py --policy dream --steps 2400 --out artifacts/piping-dream
+python tasks/pipe-a-shell-border/audit_run.py artifacts/piping-dream --out artifacts/piping-dream/audit.json
+```
 
-## Material and acceptance limits
+Dream credentials must be configured privately through the client's credentials
+file or environment. The Dream branch is implemented but has not yet run.
+Do not use the generic scene runner's placeholder score; this task requires
+`run.py` and `audit_run.py` for material coupling and assessment.
+
+Trials use a fixed starting layout, no object jitter and 20 Hz control. The limit
+is 2,400 actions, or 120 simulated seconds. The latest three-deposit
+trial took 342.7 wall seconds for 957 actions on an RTX 6000 Ada. Full demo and
+Dream runtimes remain unmeasured. Each run saves its exact Python source, plan,
+video, photographs, joint actions, material state and contact audit.
+
+## Validation so far
+
+Run CPU checks without renting a GPU:
+
+```bash
+python -m unittest discover -s tasks/pipe-a-shell-border -p 'test_*.py' -v
+```
+
+Twenty-four tests cover pressure causality, finite volume, contact and damage,
+shape scoring and released-tool evidence. Native tests have demonstrated a
+physical pickup, passive plunger extrusion and an elongated head and tail.
+The latest three-deposit trial released the tool cleanly, but produced smooth
+mounds and scored zero. A full joined shell border remains pending.
+
+The passive mechanism control emitted 0.1587 ml under an 8 N load and nothing
+under zero load; flow stopped after release and volume balance closed. Those
+controls are not robot task scores. Dated evidence is listed in `VALIDATION.json`.
+
+## Fidelity and judging
 
 `material.py` contains a finite reservoir, compression pressure, yield pressure,
 nozzle resistance, ballistic parcels and conservative viscoplastic surface flow.
@@ -129,16 +109,14 @@ A round mound cannot pass merely because it narrows at its edge.
 cake, using every dynamic collision shape and measured rigid-body transforms.
 This boundary prevents omitted finger smearing from earning credit; it may
 reject a near miss because bounding boxes overestimate occupied volume.
-Unknown collider types fail the preview. The ready-pose preview passed this
-audit; manipulation and deliberately invalid contacts still need native checks.
+Unknown collider types fail the preview. The completed manipulation diagnostics have passed this audit; deliberate
+invalid-contact controls and final-trial checks remain necessary.
 Cake damage is a conservative penetration audit,
-not a cake-fracture simulation. Reset/trial recording and independent photo
-scoring also remain to be completed after the mechanism passes.
+not a cake-fracture simulation. The complete trial still needs independent photo scoring.
 
-The scene preview deliberately always scores zero. Do not turn CPU probe motion
-into a demo, add hidden object-pose feedback to a policy, or fill in scores/media
-before genuine robot runs. Demo and Dream must eventually use the same task,
-material, seed, camera observations and run limit, followed by final rescoring.
+Demo and Dream must use the same scene, material, starting layout, observations
+and run limit, followed by final rescoring. Scores and media stay unset until
+those runs are complete.
 
 ## Review calibration
 
@@ -149,7 +127,7 @@ was rejected for lacking actual icing manipulation. These sources inform the
 design, not approval of this untested implementation. All geometry and source in
 this folder are original team work; no accepted task source was copied.
 
-The planned motion follows [Wilton's shell technique](https://wilton.com/content/downloadable/WLTECH-131_Shells.pdf):
-hold the star nozzle at 45°, build a head, then reduce pressure while drawing out
-the tail and overlap the next shell. This supports the manipulation technique,
-not the simulation's provisional cream or seal parameters.
+The physical technique follows [Wilton’s shell-border guide](https://wilton.com/how-to-pipe-a-shell-border/wltech-131/):
+build a head with a star nozzle, reduce pressure while drawing a tail, and overlap
+the next head with that tail. This supports the intended technique and shape,
+not the simulation's numerical material properties. Checked 2026-11-13.

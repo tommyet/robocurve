@@ -43,11 +43,14 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
     a.out.mkdir(parents=True,exist_ok=False);start=time.monotonic()
     frozen=a.out/'task-source';frozen.mkdir()
     for source in Path(__file__).parent.glob('*.py'):shutil.copyfile(source,frozen/source.name)
+    metadata_path=Path(__file__).with_name('task.json')
+    if not metadata_path.exists():metadata_path=Path(__file__).with_name('task.draft.json')
+    metadata=json.loads(metadata_path.read_text())
+    shutil.copyfile(metadata_path,frozen/'task-description.json')
     if a.plan:shutil.copyfile(a.plan,frozen/'fixed-plan.json')
     report={'status':'running','robot_demo':a.policy=='demo','policy':a.policy,
-            'full_score_demonstrated':False,'preview_steps':a.steps,
-            'source_sha256':{n:hashlib.sha256(Path(__file__).with_name(n).read_bytes()).hexdigest()
-                             for n in ('scene.py','native.py','material.py','preview_yam.py','contact_audit.py','review_views.py','joint_tracking.py')},
+            'full_score_demonstrated':False,'preview_steps':a.steps,'control_hz':20,
+            'source_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in frozen.glob('*') if p.is_file()},
             'plan_sha256':hashlib.sha256(a.plan.read_bytes()).hexdigest() if a.plan else None,
             'joint_feedback':a.joint_feedback}
     app=None;video=None;trace=[];dream_policy=None;request_audit=[];session_audit={'session_count':0}
@@ -100,6 +103,7 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
             excluded_body_paths=(),
             allowed_shape_paths=[roots['barrel']+f'/NozzleSector{i:02d}' for i in range(24)])
         base=emb._base;write=base.scene.write_data_to_sim
+        report['physics_dt_s']=float(base.physics_dt)
         report['robot_body_names']={name:list(base.scene[name].body_names) for name in ('left_robot','right_robot')}
         def step_material(*args,**kwargs):
             out=write(*args,**kwargs)
@@ -127,6 +131,7 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
             if not step:Image.fromarray(rgb).save(a.out/'setup.png')
             trace.append({'step':step,
                           'time_s':step/20,
+                          'native_physics_step':int(base.sim._physics_step_count),
                           'observed_action14':np.asarray(emb._observation().state['joint_pos'],float).tolist(),
                           'robot_joints':{name:array(base.scene[name].data.joint_pos)[0].tolist() for name in ('left_robot','right_robot')},
                           'robot_links_xyzw':{name:array(base.scene[name].data.body_link_pose_w)[0].tolist() for name in ('left_robot','right_robot')},
@@ -134,13 +139,15 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
                           'barrel_pose_xyzw':array(barrel.get_transforms())[0].tolist(),
                           'plunger_pose_xyzw':array(plunger.get_transforms())[0].tolist(),
                           'piston_m':coupling.last_piston_m,'pressure_reaction_n':coupling.last_reaction_n,
+                          'nozzle_contact_force_n':coupling.last_contact_force.tolist(),
+                          'nozzle_contact_torque_nm':coupling.last_contact_torque.tolist(),
                           'emitted_ml':coupling.material.emitted_m3*1e6,
                           'material_contact_invalid':bool(other_contact.events)})
         snapshot(0)
         if a.policy=='dream':
             from inspect_robots import Scene
             from dream_policy import make_policy
-            instruction=json.loads(Path(__file__).with_name('task.draft.json').read_text())['instruction']
+            instruction=metadata['instruction']
             dream_policy=make_policy(request_audit,session_audit,rows_per_request=8)
             dream_policy.bind(emb.info)
             dream_policy.reset(Scene(id='pipe-shell-border',instruction=instruction))
@@ -148,6 +155,7 @@ def main(*, default_policy='diagnostic', default_steps=60, default_review=False)
         progress('fixed action preview',0)
         from joint_tracking import JointTracking
         tracking=JointTracking()
+        report['joint_tracking_parameters']={k:getattr(tracking,k) for k in ('kp','ki','limit','slew')}
         for i in range(a.steps):
             observation=emb._observation()
             if dream_policy is not None:

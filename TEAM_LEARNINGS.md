@@ -60,6 +60,52 @@ developers and their agents, not a competition submission document.
 
 ## Review findings
 
+### 2026-11-13 — contact failures, released piping tool and next corrections
+
+- Operator: repository agent on `codex/six-task-completion-2026-11-13`.
+  Batches 025–027 are downloaded and SHA-256 verified; the ignored batch index
+  and frozen source archives preserve exact versions. None of the six tasks is
+  submission-ready, and no Dream calls or upstream PRs have been made.
+- Wheel: the native two-defect reset settles at 0.889 mm runout. A 50 µs timestep
+  gives 0.902 mm, a 1.4% difference, with valid all-substep rim integrity and roughly
+  half the runtime. Fourquarter-turn corrections give 0.297 mm but 374.9 N minimum
+  tension, below the 400 N rubric floor; plan six quarter-turns instead. A wrench
+  access test exposed nipple flats inside the solid rim collider. The next
+  source exposes the flats and adds a thin steel tool neck; external contacts
+  stay active. Earlier stability evidence does not validate this revised geometry.
+- Shirt 025: a peg remains on the line after both hands release, but the shirt
+  touches the table and fabric crosses through the 3 mm line by up to its full
+  radius. Do not claim a successful hang. Passive line-clamp controls retain
+  fabric without line-axis crossings; coarse 10 mm cloth cells still bridge
+  a jaw corner. Finer coupon meshes and a downward peg approach are the next
+  discriminating tests. Tie 025 crosses the strands but has 22% transient local
+  stretch and up to 1.46 mm finger penetration; wrapping remains unverified.
+- Paper: removing the staple does not remove the settling failure. A lower-sheet
+  only control also exceeds the declared elastic-domain guard, and 300 µm native
+  rest-neighbor filtering does not change the paired-sheet result. A local node
+  rises about 0.71 mm in 0.4 ms under gravity, supporting a contact-instability
+  diagnosis rather than mild yielding. Next compare a documented finite native
+  depenetration-speed cap; keep material, tear interpretation and guard unchanged.
+- Seam: the quality mesh removes tiny slivers but its standalone controls show
+  finite-radius thread/fabric overlap near hole edges. The rectilinear resting
+  YAM reset instead reaches 6.33% strain in a 50 µm-wide triangle. Neither is
+  valid task evidence. Next combine the quality mesh with the physically resting
+  reset; optional forensic runs retain failed status and cannot earn scores.
+- Cake 026:957 actions completed in 342.7 seconds. The measured released tool
+  stays 82.0 mm clear of robot bodies and 46.9 mm from the border, moving less
+  than 0.001 mm in the final second. Volume balance closes and the collider audit
+  passes, but the three smooth deposits score 0 and visually agree with that
+  result. The old fixed grasp calibration no longer matches the actual grasp,
+  while wrist PI correction saturates. The next fixed calibration comes from
+  saved 026 joint/tool measurements; higher bounded joint-only correction uses
+  ordinary action targets. No live object-pose feedback or material-law change.
+- At 04:30 UTC the one live RTX 6000 Ada Pod estimates $4.087 compute for this
+  session at $1.09/hour, plus temporary disk and earlier compatibility overhead.
+  This is elapsed-time estimation, not account billing. Full inventory and the
+  independent watchdog were verified before renewing its bounded deadline to
+  05:15:57 UTC. Download results before stopping the ephemeral Pod; confirm EXITED.
+
+
 ### 2026-11-13 — six-task continuation and first material-test session
 
 - User authorized developing all six drafts through review readiness, keeping
