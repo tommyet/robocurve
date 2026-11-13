@@ -426,15 +426,21 @@
   },
   "submission_ready": false,
   "latest_review_2026_11_13": {
-    "status": "Native155 completes retained handoff/regrasp; no knot.",
-    "batch": "155",
-    "actions": 880,
-    "wall_seconds": 663.828,
-    "final_material_patch_tcp_distance_mm": 9.14,
-    "sampled_self_crossings": 0,
-    "sampled_native_robot_intersections": 0,
-    "sampled_fixture_intersections": 0,
-    "latest_candidate": "Narrow-end approach still fails reach or fixture checks; no next native run.",
-    "cpu_tests": 24
+    "status": "Native160 completes1180 actions with no sampled self/fixture/robot intersections, but narrow pinch misses. No knot or task success.",
+    "batch": "160",
+    "actions": 1180,
+    "wall_seconds": 1648.0401206288952,
+    "right_patch_final_tcp_distance_m": 0.00964,
+    "left_patch_final_tcp_distance_m": 0.01481,
+    "left_patch_final_closing_axis_offset_m": 0.01428,
+    "self_audit_samples": 31,
+    "self_crossing_pairs": 0,
+    "native_robot_audit_samples": 14,
+    "native_robot_intersections": 0,
+    "fixture_audit_samples": 40,
+    "fixture_intersections": 0,
+    "archive_sha256": "2c34d5ac5e85053219dc0fa731df1f8244d8a43bd6677345fe0d879f16d2619f",
+    "latest_candidate": "Unscored checkpoint reconstruction compares .6 and fully open approaches; both pass local rigid/material screens. No new native outcome yet.",
+    "submission_ready": false
   }
 }

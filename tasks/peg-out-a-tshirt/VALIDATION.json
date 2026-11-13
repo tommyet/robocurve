@@ -546,6 +546,13 @@
     "sampled_fixture_intersections": 0,
     "retained_grasp": false,
     "latest_candidate": "Fully open insertion passes320 local rigid checks; new native158 is being prepared.",
-    "cpu_tests": 19
+    "cpu_tests": 19,
+    "native158": {
+      "status": "interrupted before grasp",
+      "completed_actions": 76,
+      "wall_seconds": 1100.2831378569826,
+      "archive_sha256": "d984c208281aab00d7c6ab1b6860be4a43c5a541565f52a36a5997062e4d5d6e"
+    },
+    "native161": "Running unchanged wide-insertion candidate without judging cameras; no grasp or peg success established."
   }
 }

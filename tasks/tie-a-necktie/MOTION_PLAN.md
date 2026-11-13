@@ -1,55 +1,38 @@
-# Adult necktie development plan
+# Adult necktie development
 
-This is an unfinished physical controller, not a successful demonstration.
-The current scene uses a 1.45 m tie on a standalone folded collar. The target
-is a simple (Oriental) knot, starting with the tie inside out. A complete knot,
-wearable fit and released retention remain unproven.
+This controller is unfinished. No complete knot, wearable fit or released
+retention has been demonstrated.
 
-A disclosed scripted demo may read native cloth positions to choose ordinary
-bounded joint and finger actions. Dream receives only its normal camera and
-joint observations, on the same scene and reset. No controller may reposition
-cloth, add attachments, change material rest lengths or apply hidden forces.
+The scene starts with an untied1.45m necktie draped inside-out around a folded
+collar form. The target is a simple (Oriental) knot. A scripted demo may read
+native cloth geometry to choose ordinary joint and finger actions. Dream gets
+its normal camera and joint observations. No controller may reposition cloth,
+attach it, change its rest shape or apply hidden forces.
 
-1. Settle the untied collar drape for five seconds. Check both free ends and
-   collar contact. The source-authored reset shape comes from recorded gravity
-   settling; it contains no knot.
-2. Lift the wide strand and physically transfer its tip to the other hand.
-   The adult pickup is proven; the first handoff pushes the tip aside and
-   lifts empty. Batch115 carries the held strip 70 mm forward and retains it.
-   The released receiver uses a finger-axis approach and 10 mm pad bite.
-   Rigid checks pass; predicted contact with the loose narrow tip requires
-   native integrity review. Batch119 retains the transfer, but the released
-   middle section folds through the wide strip. Batch126 instead raises the
-   receiving tip while both hands retain the material, then opens the original
-   pinch. It retains the tip through recovered action549, but residual wide
-   self-crossing and transient pad penetration still invalidate the transfer.
-   An empty pinch stops the original release.
-3. Keep the receiving left hand on the wide tip if the transfer succeeds.
-   The free right hand stabilizes the narrow end without pulling it taut. Reach
-   and actual cloth contact must pass before the next stage.
-4. Pass the wide end under the narrow end and back across its front. Keep a
-   loose front opening using an ordinary finger or pinch. The robot must
-   create and retain this wrap through contact; no loop is fixed in place.
-5. Feed the wide tip upward through the neck loop, then downward through the
-   front opening. Use a physical handoff if the wrist cannot clear a loop.
-6. Pull the wide end through, dress the knot and slide it toward the collar
-   while holding the narrow end. Leave the wide face outward and the narrow
-   tip hidden behind it, at least 10 mm above the wide tip.
-7. Withdraw both hands and record five seconds of released retention. Measure
-   collar gap, knot centering, front-face orientation and both tip positions.
+Native155 and160 establish the pickup, tip handoff and right-hand regrasp of
+the wide strand. Native160 then approaches the narrow strand, but pushes it
+aside and closes beside it. Sampled self, robot and fixture checks are clear;
+that does not establish grasp success. A fully open approach passes local
+screens and awaits a short native comparison.
 
-The proposed final wide-tip drop is 400–440 mm below the collar's lower edge
-at z=1.20 m. This is a provisional fit target until a complete physical knot
-is demonstrated. Prior child-tie experiments remain in `VALIDATION.json`;
-they are not evidence for this adult task. Dream runs follow a full demo.
+Remaining work:
 
-Batch115 confirms the forward carry with a retained 23 mm pinch and no sampled
-self, fixture or deep robot intersections. Batch119's retained receiving pinch
-is physical progress, but 66 transverse self-crossing pairs after original-hand
-release invalidate its transfer integrity. The corrected126 sequence preserves
-its approach, raises the receiving tip first, then opens and withdraws the
-original hand. All 300 commanded continuation poses pass the rigid screen,
-but native126 still has two transverse wide-strip pairs and transient 1.85 mm
-pad penetration. The next route must keep the unsupported middle fold away
-from the receiving fingertips and collar-side strand before release. No such
-continuation is released. This is an unfinished transfer, not a knot or score.
+1. Retain the narrow strand with the left hand and prove retention during a
+   small ordinary carry. Verify the wide strand remains held.
+2. Pass the wide end under the narrow end and back across its front, retaining
+   a loose front opening through physical finger contact.
+3. Feed the wide tip upward through the neck loop and downward through the
+   front opening. Use a physical handoff if necessary.
+4. Pull through, dress the knot and slide it toward the collar while holding
+   the narrow end. Leave the wide face outward and the narrow tip hidden.
+5. Release both hands for five seconds. Check knot structure, collar fit,
+   centering, both tip positions and material/contact integrity before scoring.
+
+The proposed400–440mm wide-tip drop is provisional until a complete knot
+exists. Earlier child-tie experiments are retained in VALIDATION.json and are
+not evidence for this adult task. Dream runs follow a valid full demonstration.
+
+`probe_checkpoint.py` is only a short contact diagnostic. It reconstructs a
+recorded native state once, then uses normal robot actions. Missing solver warm
+starts and estimated joint velocity can change the continuation. Its output
+cannot be presented as a task episode or joined to a submission video.

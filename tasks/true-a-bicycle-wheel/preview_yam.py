@@ -30,6 +30,7 @@ def main():
     p.add_argument('--nipple-target-servo-diagnostic',action='store_true',help='Also latch measured square-nipple frame before each ordinary quarter-turn; requires tool servo')
     p.add_argument('--plan',type=Path,help='Frozen ordinary14-D joint commands; remains a diagnostic')
     p.add_argument('--relocated-fixture-diagnostic',action='store_true',help='Explicit10mm-forward/50mm-right/10mm-lower wheel with a10mm shorter stand; unvalidated layout')
+    p.add_argument('--right-workspace-fixture-diagnostic',action='store_true',help='Explicit10mm-forward/200mm-right/5mm-lower wheel; unvalidated workspace diagnostic')
     p.add_argument('--dream',action='store_true',help='Ordinary Dream policy without demo plans or state feedback')
     p.add_argument('--dream-rows-per-request',type=int,choices=(2,4,8),default=8)
     p.add_argument('--judging-views',action='store_true',help='Fixed close key/gauge cameras, never policy inputs')
@@ -39,8 +40,11 @@ def main():
     p.add_argument('--reset-profile',choices=('four-defect-reference','two-defect-candidate'),default='two-defect-candidate')
     p.add_argument('--solver-position-iterations',type=int,choices=(32,64,128),default=32)
     a = p.parse_args()
-    from fixture_layout import REFERENCE,RELOCATED,axle_position
-    fixture_layout=RELOCATED if a.relocated_fixture_diagnostic else REFERENCE
+    from fixture_layout import REFERENCE,RELOCATED,RIGHT_WORKSPACE,axle_position
+    if a.relocated_fixture_diagnostic and a.right_workspace_fixture_diagnostic:
+        p.error('Choose one fixed fixture layout')
+    fixture_layout=(RIGHT_WORKSPACE if a.right_workspace_fixture_diagnostic else
+                    RELOCATED if a.relocated_fixture_diagnostic else REFERENCE)
     if a.dream and (a.plan or a.joint_tracking_diagnostic or a.tool_pose_servo_diagnostic or a.nipple_target_servo_diagnostic):
         p.error('Dream cannot use a scripted plan or demo feedback')
     if a.distance_tolerance_compensation_m and not a.central_spring_candidate:p.error('Distance tolerance requires central-spring candidate')

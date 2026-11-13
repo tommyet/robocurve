@@ -3,7 +3,7 @@ import types
 import unittest
 from unittest.mock import patch
 import numpy as np
-from fixture_layout import REFERENCE,RELOCATED,offset,axle_position,stand_parts
+from fixture_layout import REFERENCE,RELOCATED,RIGHT_WORKSPACE,offset,axle_position,stand_parts
 from wheel_scene import build_scene
 from plan_turns import nominal_nipple
 from test_authoring_flow import Stage,SchemaNamespace
@@ -42,7 +42,7 @@ class FixtureLayoutTests(unittest.TestCase):
             UsdGeom=SchemaNamespace(),UsdPhysics=SchemaNamespace(),PhysxSchema=SchemaNamespace())
         states=[]
         with patch.dict(sys.modules,{'pxr':stub}):
-            for layout in (REFERENCE,RELOCATED):
+            for layout in (REFERENCE,RELOCATED,RIGHT_WORKSPACE):
                 stage=Stage()
                 meta=build_scene(stage,fixture_layout=layout,central_spring_candidate=True,distance_spring_tolerance_m=.025)
                 np.testing.assert_allclose(stage.prims['/WheelTask/wheel'].attributes['TranslateOp'].value,axle_position(layout))
@@ -53,3 +53,7 @@ class FixtureLayoutTests(unittest.TestCase):
             self.assertEqual(old['stiffness_n_per_m'],new['stiffness_n_per_m'])
         self.assertEqual(states[0][0].prims['/WheelTask/wrench'].attributes['TranslateOp'].value,
                          states[1][0].prims['/WheelTask/wrench'].attributes['TranslateOp'].value)
+        for layout in (RELOCATED,RIGHT_WORKSPACE):
+            parts={name:(np.array(p),np.array(s)) for name,p,s in stand_parts(layout)}
+            self.assertAlmostEqual(parts['base'][0][2]-parts['base'][1][2]/2,.7475)
+            self.assertAlmostEqual(parts['upright'][0][2]-parts['upright'][1][2]/2,.7675)

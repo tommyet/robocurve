@@ -1,4 +1,4 @@
-"""Two explicit fixture layouts; no runtime object motion.
+"""Explicit fixed fixture layouts; no runtime object motion.
 
 The alternative is an unvalidated reach diagnostic. Its base stays on the
 table, while a10mm shorter upright lowers the wheel and axle arm. The physical
@@ -8,13 +8,16 @@ import numpy as np
 
 REFERENCE = 'reference'
 RELOCATED = 'forward10-right50-lower10'
-LAYOUTS = (REFERENCE, RELOCATED)
+RIGHT_WORKSPACE = 'forward10-right200-lower5'
+LAYOUTS = (REFERENCE, RELOCATED, RIGHT_WORKSPACE)
 
 
 def offset(layout=REFERENCE):
     if layout not in LAYOUTS:
         raise ValueError('Unknown fixed wheel fixture layout')
-    return np.zeros(3) if layout == REFERENCE else np.array((.010, -.050, -.010))
+    return np.array({REFERENCE: (0., 0., 0.),
+                     RELOCATED: (.010, -.050, -.010),
+                     RIGHT_WORKSPACE: (.010, -.200, -.005)}[layout])
 
 
 def axle_position(layout=REFERENCE):

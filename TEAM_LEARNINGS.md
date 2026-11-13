@@ -27,6 +27,49 @@ developers and their agents, not a competition submission document.
   and all GPUs are confirmed stopped, as requested. No paid tests are authorized
   for those ideas yet.
 
+## 2026-11-13 — native160 contact audit and bounded follow-ups
+
+- Native160 completes1,180 tie actions in1,648.04s.31 sampled self-crossing,
+  14 native-cooked robot and40 fixture audits are clear. The right wide patch
+  stays9.64mm from its TCP. The narrow patch sits14.28mm off the closing axis:
+  it was pushed about24mm during approach and is outside the final pinch.
+  This is a missed grasp, not a knot or a successful two-handed hold.
+  Archive160 is local, extracted and SHA256-verified:
+  `2c34d5ac5e85053219dc0fa731df1f8244d8a43bd6677345fe0d879f16d2619f`.
+- Shirt158 hit its original1,100s cap at76 actions, before the measured grasp.
+  Its352s reset and804s total initialization were unusually slow on A40.
+  The extension arrived after that process ended; it did not complete.
+  Archive158 is local and verified:
+  `d984c208281aab00d7c6ab1b6860be4a43c5a541565f52a36a5997062e4d5d6e`.
+- Tie160's original timeout was replaced by a separate bounded process monitor
+  ending21:30UTC. It completed21:21:42UTC; the old timeout wrapper may report124
+  because its timer expired while paused. Native run.json/trace and the monitor
+  completion record establish actual completion. This mechanism is diagnostic
+  session accounting, never evidence of task success.
+- Native161 retries the identical shirt physics and fully open insertion without
+  extra judging cameras, capped at1,800s. No outcome yet. Native162 shares the
+  sameA40 and tests a new fixed wheel position, axle(.360,-.200,1.000)m. The
+  stand stays on the table; wheel, wrench, bearings and scoring are unchanged.
+  The left hand stays clear. All1,182 nominal poses and1,100 counterfactual
+  native149-grasp/fixture servo poses have zero cooked-hull intersections.
+  Those are local screens; native two-turn or complete truing success is unproven.
+- Native163 is prepared to run only after shirt161 finishes, keeping at most two
+  simulator processes. It compares narrow-grasp openings.6 and1.0 from measured
+  tie160/action1040. The new probe initializes once, then uses ordinary actions.
+  It preserves actual cloth velocity but reconstructs robot velocity from20Hz
+  observations and cannot restore solver warm starts. These are explicitly
+  unscored contact diagnostics, never task resets or edited demo continuations.
+  Both candidates pass local rigid/material approach screens. A full fresh run
+  remains required after any useful finding.
+- The one active Pod is6j5r534r2o9ghj at$0.59/hour. Its independent watchdog is
+  verified alive with deadline**22:55UTC**; wheel162 has a4,800s process limit,
+  shirt1611,800s, each queued tie probe450s. Stop earlier after evidence transfer.
+  No new Dream calls. Cumulative estimate before thisA40 remains$20.88, plus
+  elapsedA40 time since20:36:32UTC; this is not a billing balance or invoice.
+- Cake PR1919 remains open, waiting for review at21:26UTC. No new feedback.
+  The other five tasks remain development-only. Four fixture-layout tests and
+  24 tie tests pass after these changes. New-idea research remains deferred.
+
 ## 2026-11-13 — narrow-end route and shared A40 tests
 
 - A measured300-action continuation from tie155 now passes all rigid fixture/
@@ -40,7 +83,7 @@ developers and their agents, not a competition submission document.
   knot success is claimed. Twenty-four existing tie tests and the runner's
   check-only path pass.
 - Shirt158 and tie160 share the sameA40; no second GPU is active. The watchdog
-  was verified and extended to**21:20UTC** to cover both bounded tests and
+  was initially verified and extended to**21:20UTC** to cover both bounded tests and
   evidence transfer. Shirt has a1,100s process cap; tie1,200s. The A40's first
   shirt initialization took804s before action execution, including native reset,
   shader/setup and actual-state route screening. This is substantially slower
