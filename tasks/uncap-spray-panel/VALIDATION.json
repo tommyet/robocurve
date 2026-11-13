@@ -1,0 +1,20 @@
+{
+  "status": "development_prototype_not_submission_ready",
+  "checked_date": "2026-11-13",
+  "local_scorer_tests": {"passed": 15, "command": "python3 -m unittest discover -s tasks/uncap-spray-panel -p 'test_*.py' -v"},
+  "native_runtime_tested": false,
+  "scripted_demo_score": null,
+  "dream_score": null,
+  "media": null,
+  "gpu_started_for_this_task": false,
+  "remaining": [
+    "No-model native mechanics probe and geometry/contact review",
+    "Cap retention and removal under ordinary robot forces",
+    "Bimanual can grasp and physical nozzle press/release",
+    "Full robot geometry spray occlusion beyond conservative TCP spheres",
+    "Coating model calibration and independent deposition audit",
+    "Feedback controller and repeated full-score sealed-start demo",
+    "Dream run with the final matching scene and scorer",
+    "Videos, screenshot, task.json and novelty recheck"
+  ]
+}

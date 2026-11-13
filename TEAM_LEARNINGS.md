@@ -60,6 +60,38 @@ developers and their agents, not a competition submission document.
 
 ## Review findings
 
+
+### 2026-11-13 — uncap-and-spray panel task enters local development
+
+- Operator: root agent; branch `codex/uncap-spray-object`, isolated worktree
+  `/private/tmp/robocurve-spray`, based on freshly fetched `origin/main` 5a225a9.
+  User requested removing a spray-can cap and spraying an object. Interpreted
+  as coating a fixed white panel with a blue spray-paint can. No submission
+  authorized for this task.
+- Read-only scan of all 1,953 upstream PRs found no direct uncap-and-spray-coat
+  title/body match. Brush primer #1770 is related; inhaler priming #795 was
+  finally rejected on November 12 for non-robotic difficulty and unspecified
+  product protocol. The board redirected to sign-in. Recheck before submission;
+  this scan is not a novelty guarantee.
+- Added `tasks/uncap-spray-panel/`: compound cylindrical can, hollow cap,
+  spring-detent release approximation, native prismatic actuator, measured
+  cone deposition/coverage and cumulative overspray scorer, native runner and
+  no-model hold probe. Cap guide and nozzle joint are authored during spawning,
+  before physics view initialization; actual runtime remains untested.
+- Fifteen CPU scorer tests pass. They exercise capped/no-press/wrong-facing
+  spray, range, finite supply, cap/hand occlusion, drop/clock invalidation and
+  final parking/release. A test caught the initial cap-removal threshold being
+  shorter than the seated 87 mm offset; now requires 140 mm centre separation.
+  Synthetic deposition/rubric states do not prove robot feasibility.
+- No full-score controller, native physical probe, Dream run, video, screenshot
+  or media ID exists. `VALIDATION.json` records these gaps. Full mesh occlusion,
+  material/flux calibration, cap-force/access checks and bimanual nozzle
+  actuation are unresolved. Do not advertise this as a finished task or run
+  Dream before the no-model mechanics and demo work.
+- Both shared Brev instances were confirmed STOPPED by `brev ls --all`.
+  No GPU start or Dream requests for this work; compute/model cost $0.
+
+
 ### 2026-11-13 — Runpod Isaac/YAM compatibility test passed
 
 - The user authorized one short GPU compatibility test. The final probe passed
