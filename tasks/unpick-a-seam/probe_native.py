@@ -72,7 +72,7 @@ def main():
         from isaaclab.app import AppLauncher
         app=AppLauncher(headless=True,enable_cameras=False).app
         phase='imports'
-        from pxr import Gf,Usd,UsdGeom,UsdPhysics,UsdUtils
+        from pxr import Gf,Usd,UsdGeom,UsdPhysics,UsdUtils,PhysxSchema
         from omni.physx import get_physx_simulation_interface
         import omni.physics.tensors as tensors
         from native_cloth import author_box,ensure_gpu_scene,ContactRefinement
@@ -87,6 +87,7 @@ def main():
         scene.CreateGravityDirectionAttr(Gf.Vec3f(0.,0.,-1.));scene.CreateGravityMagnitudeAttr(9.81 if a.sewing_clamp else 9.80665)
         author_box(stage,'/World/Ground',(2.,2.,.02),(0.,0.,-.01))
         ensure_gpu_scene(stage)
+        report['effective_external_forces_every_iteration']=bool(PhysxSchema.PhysxSceneAPI(scene.GetPrim()).GetEnableExternalForcesEveryIterationAttr().Get())
         rotation=np.array(((0.,0.,1.),(0.,1.,0.),(-1.,0.,0.)))
         def transform(points):
             return (np.asarray(points)-(.235,0.,.7511))@rotation.T+(0.,0.,.5)

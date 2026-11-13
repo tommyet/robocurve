@@ -115,6 +115,9 @@ def main():
             tcp=np.asarray(calibration['tcp_position_in_tool_m']) if calibrated else TOOL_TCP
             R=R@grip.T;center=pos-R@tcp
         else:center=np.array(WRENCH_ORIGIN_M);R=np.eye(3)
+        released=plan.get('released_tool',{})
+        if index+1>=released.get('from_step',float('inf')):
+            center=np.asarray(released['position_m']);R=np.asarray(released['rotation'])
         wrench=tool_props(center,R);hits=[];expected=[]
         for side,robot in robots.items():
             all_props=props+wrench
@@ -131,7 +134,7 @@ def main():
         # Wrench/rim clearance is essential even when hand reach is good.
         for hi,pi in candidate_pairs(wrench,props,args.margin):
             h,prop=wrench[hi],props[pi]
-            if prop['name']=='table' and not grasp_assumed:continue
+            if prop['name']=='table' and (not grasp_assumed or index+1>=released.get('from_step',float('inf'))):continue
             depth=overlap(h,prop,args.margin)
             if depth is None:continue
             record=dict(body=h['name'],prop=prop['name'],intersection_ball_radius_m=depth)

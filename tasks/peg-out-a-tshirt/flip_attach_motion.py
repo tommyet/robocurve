@@ -9,13 +9,13 @@ from pathlib import Path
 import numpy as np
 
 
-def compile_flip_attach(grasp_x=.220,clip_target=(.484,.115,1.114)):
+def compile_flip_attach(grasp_x=.220,clip_target=(.484,.115,1.114),approach_depth=0.,approach_from_below=False):
     from feed_clear_motion import compile_feed,tilted_side_rotation
     from fixed_motion import front_rotation
     from yam_arena import ik,station
     from yam_arena.constants import READY,SHOULDER,WRIST,GRIPPER,FINGER_OPEN
     from scene import PHYSICS_HZ,SUPPORT_BOARD_THICKNESS
-    frames=compile_feed(grasp_x=grasp_x)['frames'][:540];a=np.asarray(frames[-1]['action14'])
+    frames=compile_feed(grasp_x=grasp_x,approach_depth=approach_depth,approach_from_below=approach_from_below)['frames'][:540];a=np.asarray(frames[-1]['action14'])
     q={s:a[7*i:7*i+6].copy() for i,s in enumerate(('left','right'))};opening={'left':0.,'right':0.};audits=[]
     side=tilted_side_rotation(0.);angle=np.deg2rad(120.)
     turn=np.array([[np.cos(angle),0.,np.sin(angle)],[0.,1.,0.],[-np.sin(angle),0.,np.cos(angle)]])

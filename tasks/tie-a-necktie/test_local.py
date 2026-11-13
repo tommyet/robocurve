@@ -36,6 +36,18 @@ class Geometry(unittest.TestCase):
         m=necktie();fixtures=fixture_geometry()
         fixtures['Post']['center']=(NECK[0]+.055,0.,(NECK[2]+TABLE)/2)
         self.assertGreater(len(fixture_intersections(initial_layout(m),m.faces,fixtures,margin=0.)['Post']),0)
+    def test_rotated_collar_flap_uses_its_actual_box(self):
+        triangle=np.array(((-.02,.08,0.),(.02,.08,0.),(0.,.09,0.)))
+        R=np.array(((0.,-1.,0.),(1.,0.,0.),(0.,0.,1.)))
+        spec=dict(kind='box',center=(0.,0.,0.),size=(.2,.02,.1),rotation=R.tolist())
+        self.assertEqual(fixture_intersections(triangle,[[0,1,2]],{'flap':spec},margin=0.),{'flap':[0]})
+        del spec['rotation']
+        self.assertEqual(fixture_intersections(triangle,[[0,1,2]],{'flap':spec},margin=0.),{'flap':[]})
+    def test_adult_candidate_starts_clear_of_folded_collar(self):
+        from adult_layout import make_mesh,initial_layout as adult_initial,fixture_geometry as adult_fixtures
+        mesh=make_mesh();points=adult_initial(mesh)
+        self.assertEqual(fixture_intersections(points,mesh.faces,adult_fixtures(),margin=.001),{name:[] for name in adult_fixtures()})
+        self.assertLess(np.max(np.abs(edge_strain(mesh.rest,points,mesh.faces))),.0003)
     def test_face_crossings_without_inside_vertices_are_detected(self):
         triangle=np.array(((-2.,-2.,0.),(2.,-2.,0.),(0.,3.,0.)))
         self.assertTrue(triangle_box_intersects(triangle,(0,0,0),(1,1,1)))

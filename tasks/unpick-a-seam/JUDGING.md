@@ -7,9 +7,16 @@ caught in either patch does not count. Any safe method of unpicking is allowed.
 - Fewer than two released stitches: 0.
 - Two or three: 0.25.
 - Four or five: 0.5.
-- All six, but incomplete separation: 0.75.
-- All six, both patches separated edge-to-edge by at least 30 mm, no thread bridge,
-  and the tool released clear: 1.0.
+- All six removed, but the tool is still held or not safely put down: 0.75.
+- All six removed, no remaining thread bridge, and the seam ripper released by
+  the robot and resting on the table at least10 mm from either patch: 1.0.
+
+The patches may remain in the fixture. Moving them apart is not required; all
+thread fragments must be visibly clear of both patches in the final inspection.
+The earlier draft required30 mm patch relocation; this was removed before any
+scored demo because it adds a separate handling task rather than proving seam
+removal. This change does not relax thread clearance, fabric-damage or native
+validity checks.
 
 A new cut or tear extending more than 2 mm beyond an original needle hole scores
 zero at every level. Incomplete trials or missing final inspection also score

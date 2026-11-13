@@ -1,0 +1,124 @@
+{
+  "status": "failed",
+  "completed_steps": 1,
+  "audited_physics_substeps": 96,
+  "first_invalid_substep": 78,
+  "runtime": {
+    "thread_radius_m": 0.0004,
+    "hole_half_m": 0.0008,
+    "hole_mesh_spacing_m": null,
+    "physics_hz": 960,
+    "contact_refinement": {
+      "speculative_ccd": true,
+      "collision_iterations": 4,
+      "pair_update_frequency": 4,
+      "max_depenetration_m_s": 0.05
+    },
+    "maximum_stretch": 1.05,
+    "quality_mesh": true,
+    "seam_lowering_m": 0.0,
+    "pre_draped_seam": false,
+    "drape_shape": "gaussian",
+    "sewing_clamp": true,
+    "passive_clamp": true,
+    "supported_clamp": true,
+    "cloth_contact_offset_m": 0.00075
+  },
+  "strain": [
+    {
+      "maximum_principal_stretch": 1.0077286580850233,
+      "first_validity_excursion": null,
+      "first_2pct_warning": null,
+      "maximum_stretch_limit": 1.05
+    },
+    {
+      "maximum_principal_stretch": 1.0043666474406998,
+      "first_validity_excursion": null,
+      "first_2pct_warning": null,
+      "maximum_stretch_limit": 1.05
+    }
+  ],
+  "contact_audit": [
+    {
+      "valid": false,
+      "steps": 79,
+      "first_failure": {
+        "step": 79,
+        "time_s": 0.08125,
+        "reason": "thread crosses intact fabric",
+        "static_intersections": 1,
+        "swept_intersections": 0,
+        "static_crossing_details": [
+          {
+            "segment_index": 94,
+            "face_index": 2668,
+            "coordinate_frame": "current",
+            "intersection_m": [
+              0.2978424487819735,
+              -0.006270950506786505,
+              0.8086472929498514
+            ],
+            "barycentric": [
+              0.32698060094757514,
+              0.5419004843215608,
+              0.13111891473086407
+            ],
+            "segment_parameter": 0.3282636323892848,
+            "strictly_inside_triangle": true,
+            "strictly_inside_segment": true,
+            "distance_to_mesh_boundary_m": 5.24377378191925e-05,
+            "closest_boundary_edge": [
+              1236,
+              1237
+            ],
+            "closest_boundary_point_m": [
+              0.29783434424103133,
+              -0.006271050106199454,
+              0.8085954853939964
+            ],
+            "closest_boundary_edge_length_m": 0.00040044782146344204,
+            "closest_boundary_vertices_distance_to_thread_axis_m": [
+              0.0002704071852147466,
+              0.00014093394089720774
+            ],
+            "nearest_mesh_vertex_distance_to_thread_axis_m": 0.00014093394089720774
+          }
+        ],
+        "swept_crossing_details": [],
+        "native_substep": 78
+      }
+    },
+    {
+      "valid": true,
+      "steps": 79,
+      "first_failure": null
+    }
+  ],
+  "thread_joint_integrity": {
+    "maximum_closed_joint_gap_m": 9.199164920627228e-06,
+    "first_failure": null,
+    "valid": true
+  },
+  "closed_junction_contact_audit": [
+    {
+      "valid": true,
+      "steps": 97,
+      "first_failure": null
+    },
+    {
+      "valid": true,
+      "steps": 97,
+      "first_failure": null
+    }
+  ],
+  "cut_events": [],
+  "damage_events": [],
+  "final_maximum_cloth_speed_m_s": [
+    0.5392680168151855,
+    0.34426653385162354
+  ],
+  "source_report_sha256": "fa5f2821b80da9774ffc3be9fbc187321b6a5c7e909194f354c736cbb72ab2d5",
+  "decision": "The correction cap also fails before manipulation. Next candidate adds an ordinary physical backing and front guide rails, with baseline contact offset and no correction cap. All guards remain unchanged.",
+  "robot_demo": false,
+  "score": null
+}

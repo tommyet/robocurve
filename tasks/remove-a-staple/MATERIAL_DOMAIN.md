@@ -47,3 +47,34 @@ The full stapled control still reaches 0.368% local membrane strain at 5.6 ms.
 That result remains invalid under the current task monitor. A bounded diagnostic
 will establish whether it settles or grows before extraction is attempted.
 No final paper-preservation or task-success claim follows from these controls.
+
+## Later contact findings and the flexible-facet candidate
+
+Controls 049–055 supersede the initial settling inference above. Finer stepping,
+heavier paper and a wider predictive steel contact margin did not validate the
+coupled FEM scene. In 051 and 055, steel crosses an intact triangle while membrane
+strain remains below 0.6%. Increasing a strain allowance would not repair that
+contact failure. The 0.3% and 1% stops are model/diagnostic limits, not observations
+of tears.
+
+The separate flexible-facet candidate uses 100µm triangular paper prisms with
+native bending hinges. Its bending rigidity is `E h³ / (12(1−ν²))`, using the
+same 2 GPa isotropic modulus. Hinges have finite native break force proportional
+to shared-edge length. No entire sheet is rigid or attached to the world.
+
+For a conservative strength envelope, one published laboratory characterization
+of 78.7 gsm, 102 µm copy paper reports tensile indices 57.43 kNm/kg in the machine
+direction and 19.31 kNm/kg across it, with rupture strains 1.51% and 3.60% respectively.
+The weaker index gives about 1520 N per metre of width; the candidate uses 1500 N/m
+in every direction. This is a declared engineering approximation to a specific
+paper grade, not a calibration of crack growth around the staple punctures.
+[Laboratory copy-paper characterization](https://crimsonpublishers.com/acsr/fulltext/ACSR.000566.php)
+
+The approximation has limits: each triangle is internally inextensible, bending
+is reversible, and native joint breaking can separate facets only along mesh
+edges. A separate 25 µm endpoint-gap guard prevents averaging separated facets
+back into an apparently intact sheet. Original puncture geometry and all steel
+contacts remain active. Full-size bending, deliberate damage controls and
+complete staple extraction must be verified before this candidate can become
+the task model. The first coupon 058 failed on its first step even without a
+staple; its authored dimensions alone are not evidence of valid dynamics.

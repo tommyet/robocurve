@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-13",
+  "status": "invalid_model_domain",
+  "score": null,
+  "robot_demo": false,
+  "runs": {
+    "bend": {
+      "status": "invalid_model_domain",
+      "physics_hz": 960,
+      "completed_steps": 1,
+      "maximum_hinge_endpoint_gap_m": 0.00015241964034691408,
+      "convex_hull_min_thickness_m": [
+        [
+          9.999999747378752e-05
+        ]
+      ],
+      "report_sha256": "cc25437b53e355176be170046cf3fea5bbe2f33f2cb3beae62ca5ad9bf6087a4",
+      "patch_arrays_exactly_equal_to056": true
+    },
+    "intact": {
+      "status": "invalid_model_domain",
+      "physics_hz": 960,
+      "completed_steps": 1,
+      "maximum_hinge_endpoint_gap_m": 0.00031395844717795073,
+      "convex_hull_min_thickness_m": [
+        [
+          9.999999747378752e-05
+        ],
+        [
+          9.999999747378752e-05
+        ]
+      ],
+      "report_sha256": "54a27de806dba33fff8d5e65e50c6181e0a6de691f310e6205b3ad0a0277021d",
+      "patch_arrays_exactly_equal_to056": true
+    }
+  },
+  "finding": "Explicit hull minThickness did not change the first-step failure. The056 default-thickness hypothesis is not established as the cause. Native geometry and contact-free versus fixture/solver controls are required."
+}

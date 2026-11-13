@@ -1,0 +1,76 @@
+{
+  "date": "2026-11-13",
+  "score": null,
+  "robot_demo": false,
+  "runs": {
+    "32": {
+      "status": "complete",
+      "completed_steps": 48,
+      "maximum_hinge_endpoint_gap_m": 2.4512637380809833e-07,
+      "initial_facet_state": [
+        {
+          "maximum_hinge_endpoint_gap_m": 2.3542666078168406e-08,
+          "maximum_vertex_average_error_m": 1.8777416921696132e-08,
+          "valid": true,
+          "maximum_authored_vertex_error_m": 1.6208944611246442e-08,
+          "maximum_body_speed_m_s": 0.0
+        }
+      ],
+      "freefall_mean_displacement_m": [
+        2.0982094601997068e-08,
+        2.801823498234442e-09,
+        -0.012518001328133774
+      ],
+      "freefall_maximum_nontranslation_m": 2.1025364865851146e-07,
+      "final_maximum_body_speed_m_s": [
+        0.4905930161476135
+      ],
+      "rigid_solver_velocity_iterations": [
+        32
+      ],
+      "cooked_hull": {
+        "minimum_thickness_m": 0.0010762195306597278,
+        "maximum_thickness_m": 0.0010993392643285915
+      },
+      "cooked_vertex_counts": [
+        4
+      ],
+      "report_sha256": "b328af64aa94934a6842431026435dfe65fbf6e2c2ef4bdd4787eff4f0185fa6"
+    },
+    "1": {
+      "status": "complete",
+      "completed_steps": 48,
+      "maximum_hinge_endpoint_gap_m": 2.6255488651556685e-07,
+      "initial_facet_state": [
+        {
+          "maximum_hinge_endpoint_gap_m": 2.3542666078168406e-08,
+          "maximum_vertex_average_error_m": 1.8777416921696132e-08,
+          "valid": true,
+          "maximum_authored_vertex_error_m": 1.6208944611246442e-08,
+          "maximum_body_speed_m_s": 0.0
+        }
+      ],
+      "freefall_mean_displacement_m": [
+        5.4646919044361e-09,
+        3.205341349373903e-09,
+        -0.01251799609711394
+      ],
+      "freefall_maximum_nontranslation_m": 1.7098946792286142e-07,
+      "final_maximum_body_speed_m_s": [
+        0.4905919134616852
+      ],
+      "rigid_solver_velocity_iterations": [
+        1
+      ],
+      "cooked_hull": {
+        "minimum_thickness_m": 0.0010762195306597278,
+        "maximum_thickness_m": 0.0010993392643285915
+      },
+      "cooked_vertex_counts": [
+        4
+      ],
+      "report_sha256": "29fefef71033df8b5a0a028998dfd1a1b1f524496bcc62d9ad3a3b0f4f01a040"
+    }
+  },
+  "conclusion": "Both freefall controls retain continuity and ordinary gravitational translation. Cooked collision hulls are much thicker than the authored0.4mm prisms. This makes the contact coupons invalid, not evidence of unusable hinge dynamics. Native box panels avoid that hull cooking path while preserving the exact rectangular surface/hole layout."
+}

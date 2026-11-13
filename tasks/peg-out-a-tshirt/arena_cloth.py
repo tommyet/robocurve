@@ -2,7 +2,8 @@
 
 Uses lazy Box subclass dispatch with the retained YAM task loader.
 The actual body is a native DeformableObject, never a rigid shirt proxy. Nodal
-state is exposed only to the assessor, not to any demonstration policy.
+state is exposed to the assessor and explicitly disclosed scripted feasibility
+controller. Dream uses its ordinary images and joint observations.
 """
 from dataclasses import dataclass,field
 import importlib.abc

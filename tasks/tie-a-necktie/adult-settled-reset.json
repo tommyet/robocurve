@@ -1,0 +1,8 @@
+{
+  "kind": "measured_gravity_reset_shape_not_a_policy",
+  "source_nodes_sha256": "a6b67ca4060787ce424e0bd68d9fe9d621aa71691524a6b5c12029c472e4307f",
+  "source": "native058 standalone adult collar,5seconds,240Hz,128FEMiterations",
+  "reset_shape_sha256": "429998f05faa82fb7a1c3c2fdba7270cb0cd00447e42f6f2d213d739bfa83bd7",
+  "validation": "All full triangles clear the recorded fixtures at50micrometre contraction and both ready-arm hulls at1mm inflation. Maximum edge strain9.42%,p99=2.56%. Same rest mesh/material retained. Every policy receives the same shape and5seconds of normal native settling.",
+  "state_writes": "Only ordinary environment reset; no during-episode object/node targets."
+}

@@ -124,7 +124,7 @@ def tshirt(spacing=.01, layer_gap=.0016):
                 dimensions_m=[.40,.30,layer_gap]))
 
 
-def necktie(length=1.10, rows=220, columns=8):
+def necktie(length=1.10, rows=220, columns=8, longitudinal_samples=None):
     """Child-sized 1.10 m tie strip with pointed tips, width 35–70 mm.
 
     An effective one-layer shell approximates the sewn/interlined article. It
@@ -133,7 +133,10 @@ def necktie(length=1.10, rows=220, columns=8):
     """
     if rows < 10 or columns < 4 or columns % 2:
         raise ValueError('use at least ten rows and an even number of columns >=4')
-    s = np.linspace(0., length, rows+1)
+    s = np.linspace(0., length, rows+1) if longitudinal_samples is None else np.asarray(longitudinal_samples,dtype=float)
+    if len(s)<11 or abs(s[0])>1e-12 or abs(s[-1]-length)>1e-12 or np.any(np.diff(s)<=0.):
+        raise ValueError('longitudinal samples must strictly increase from zero to length')
+    rows=len(s)-1
     landmarks=np.asarray([0.,.035,.32,.75,1.36,1.40])/1.40*length
     width = np.interp(s, landmarks, [0.,.07,.055,.035,.035,0.])
     vertices, ids, faces = [], {}, []

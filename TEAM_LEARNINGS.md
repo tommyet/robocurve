@@ -49,6 +49,43 @@ developers and their agents, not a competition submission document.
   remain ignored and preserved locally. One RunPod at$1.09/hour is shared across
   at most two simulator jobs; watchdog and elapsed-cost checks remain in force.
 
+## 2026-11-13 — exact thin panels and bounded pose-control diagnostics
+
+- Batches061–063 establish that the simulator cooked100µm paper and400µm
+  triangular cloth prisms into roughly0.74–1.10mm tetrahedra. The authored
+  `minThickness` setting did not prevent this. Unsupported free-fall controls
+  stayed stable, separating the collision geometry fault from joint bias.
+  Exact native box panels preserve physical thickness, holes and mass. Paper
+  free-fall passes200steps (maximum hinge gap0.738nm); the seam bending control
+  sags52.37mm over0.5s with maximum hinge gap5.72µm. Loaded contact is still
+  unvalidated: the seam intact control fails at0.274s. These are controls,
+  not task demonstrations; they do not justify removing crossing guards.
+- The native DistanceJoint has a25mm numerical tolerance in this installation.
+  Compensating its authored limit while preserving the physical rest length,
+  with proportional force application each TGS iteration, reproduces the
+  isolated spoke response within0.372µm. The full wheel still gains unexplained
+  angular momentum; a frozen-thread comparison is pending. Do not promote the
+  isolated result as a working truing task or a general solver fix.
+- Cake058/062 complete838 ordinary robot actions and release cleanly, but the
+  current independent scorer returns0.0: measured pressure falls while the
+  nozzle traverses, leaving blobs. Stronger bounded axial feedback alone does
+  not cure the relative motion mismatch. A filtered common-translation
+  correction passes replay of all198 assisted states before the next physical
+  test. Physics, material, ordinary actuator limits and scoring are unchanged.
+- Shirt058 physically lifts the free garment and preserves the spare peg, but
+  the clip controller's desired-pose update drifted until its workspace guard
+  stopped the run. Correcting the outer loop against its nominal reference
+  passes replay of all11 available failure-adjacent states; a new native run
+  is required. Adult tie061 failed its initial workspace guard before any
+  robot action. The next reset authors the measured naturally settled cloth
+  shape before physics, then settles normally; no episode node edits.
+- Inventory08:42UTC verifies one running Pod at$1.09/hour. Active-session
+  compute estimate$8.657, plus~$0.32 earlier compatibility and temporary disk;
+  watchdog renewed to09:27UTC. Cost is elapsed-time estimation, not billing.
+  No Dream requests, media uploads or PRs. All six remain in development.
+  Exact source archives and SHA-verified failed controls are retained locally
+  in ignored `artifacts/six-task-completion-2026-11-13/`.
+
 ## Agreed workflow
 
 - The team fork's `main` is the shared development baseline. New work starts

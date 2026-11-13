@@ -58,28 +58,37 @@ class MechanismTests(unittest.TestCase):
         self.assertTrue(audit.update(edge,edge,[vertices+[0,0,.00002]],[[[0,1,2]]],.001))
 
     def test_cut_count_alone_is_not_task_completion(self):
-        r=assess(released_stitches=0,minimum_patch_gap_m=0,blade_crossed_fabric=False,
+        r=assess(released_stitches=0,blade_crossed_fabric=False,
                  maximum_new_tear_m=0,complete=True,thread_bridge_present=True,tools_clear=True)
         self.assertEqual(r['score'],0.)
 
-    def test_intact_separation_and_damage_gate(self):
-        kw=dict(released_stitches=6,minimum_patch_gap_m=.03,blade_crossed_fabric=False,
+    def test_all_removed_and_damage_gate(self):
+        kw=dict(released_stitches=6,blade_crossed_fabric=False,
                 maximum_new_tear_m=0,complete=True,thread_bridge_present=False,tools_clear=True,material_valid=True)
         self.assertEqual(assess(**kw)['score'],1.)
         kw['blade_crossed_fabric']=True
         self.assertEqual(assess(**kw)['score'],0.)
 
+    def test_full_removal_does_not_require_patch_relocation_but_requires_safe_release(self):
+        kw=dict(released_stitches=6,blade_crossed_fabric=False,maximum_new_tear_m=0.,
+                complete=True,thread_bridge_present=False,tools_clear=True,material_valid=True)
+        self.assertEqual(assess(**kw)['score'],1.)
+        kw['tools_clear']=False
+        self.assertEqual(assess(**kw)['score'],.75)
+        kw['thread_bridge_present']=True
+        self.assertEqual(assess(**kw)['score'],0.)
+
     def test_invalid_judgment_types_fail_closed(self):
-        base=dict(released_stitches=6,minimum_patch_gap_m=.03,blade_crossed_fabric=False,
+        base=dict(released_stitches=6,blade_crossed_fabric=False,
                   maximum_new_tear_m=0,complete=True,thread_bridge_present=False,tools_clear=True,material_valid=True)
         for field,value in [('complete','false'),('tools_clear',1),('released_stitches',True),
-                            ('minimum_patch_gap_m',None),('maximum_new_tear_m',float('nan'))]:
+                            ('maximum_new_tear_m',float('nan'))]:
             data=dict(base);data[field]=value
             self.assertEqual(assess(**data)['score'],0.)
 
     def test_invalid_material_cannot_earn_partial_or_full_credit(self):
         for count in (2,4,6):
-            r=assess(released_stitches=count,minimum_patch_gap_m=.04,blade_crossed_fabric=False,
+            r=assess(released_stitches=count,blade_crossed_fabric=False,
                      maximum_new_tear_m=0.,complete=True,thread_bridge_present=False,tools_clear=True,material_valid=False)
             self.assertEqual(r['score'],0.)
 

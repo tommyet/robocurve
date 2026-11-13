@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-13",
+  "scope": "Exact vectorization of same hinge endpoint-gap predicate, no threshold/physics change",
+  "cases": 200,
+  "maximum_gap_difference_m": 0.0,
+  "old_total_seconds": 0.6114432875183411,
+  "new_total_seconds": 0.03298886038828641,
+  "seed": 24,
+  "source_sha256": "db405abb42e7e202f0562e1fdc107736528afc8d7ab19f7421fc793be651c18a"
+}

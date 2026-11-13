@@ -1,12 +1,14 @@
 # Remove a staple without tearing the papers
 
-**Development package; not submission-ready.** The native steel coupon works.
-Paper contact, complete extraction and robot feasibility remain unproven. There
-is no demo, Dream run or media ID.
+**Development package; not submission-ready.** Native steel plasticity and
+flexible100µm box-panel paper contact coupons pass. Full-size paper contact,
+complete extraction and robot feasibility remain unverified. There is no demo,
+Dream run or media ID.
 
-The robot removes a clinched staple, then separates two flexible office-paper
-sheets. The central difficulty is engaging a remover under the crown and
-unbending the legs without damaging the thin paper around their holes.
+The robot removes a clinched staple without tearing either sheet and leaves the
+complete staple at least10mm clear. The difficulty is engaging a remover under
+the crown and unbending both legs without damaging their paper holes. No
+unrelated transport or separation of the sheets is required.
 
 ## Evidence so far
 
@@ -18,7 +20,7 @@ difference. The three unedited reports are in `evidence/native-coupon-*.json`;
 `VALIDATION.json` records their hashes. These are contact/material tests, not
 paper extraction or robot demonstrations. Material parameters are approximate.
 
-There are 40 passing CPU checks for the steel law, punctured meshes,
+There are 46 passing CPU checks for the steel law, punctured meshes,
 latched membrane/contact guards, tool approach geometry and photo-based judging.
 The older CPU cohesive-opening model remains a research probe; it does not
 supply tearing physics in the native scene.
@@ -75,7 +77,7 @@ validity bounds. Passing that test does not establish extraction.
 
 `full_scene.py` authors two 210 × 148 mm sheets, a **free** staple, a forked lever
 remover and a 20 mm-high document support. The upper sheet is offset by 12 mm;
-the far edges overhang by 20 and 32 mm to make later separation accessible.
+the far edges overhang by 20 and 32 mm.
 The candidate support is190 ×128mm, with the staple8mm beyond its left edge
 and the remover fulcrum on the board. This scene runs but has
 not passed its material/contact validity gate;
@@ -101,14 +103,15 @@ adversarial checks before any score can be claimed. See `PAPER_SOLVER_PLAN.md`.
 2. Settle the full scene without fixtures, show contact-driven extraction and
    reject damaging or out-of-plane manipulation that exceeds model scope.
 3. Implement ordinary YAM manipulation and demonstrate full score within the
-   run limit, including releasing and separating the sheets.
+   run limit, including safely releasing the extracted staple and papers.
 4. Run Dream, score both recordings, verify the concise final setup and upload
    media only after the user authorizes submission.
 
 The proposed judging uses before/after photographs, a millimetre ruler and
 backlighting. It awards 0.5 for one leg entirely clear of both sheets, and 1.0
-for both legs clear plus30mm additional relative sheet-corner displacement
-from their initial12mm stagger, and release for three seconds. Excess damage or invalid simulation evidence overrides all credit.
+for both legs clear with every part of the intact staple at least 10 mm from
+either sheet and three seconds of release. The sheets may remain stacked.
+Excess damage or invalid simulation evidence overrides all credit.
 
 Accepted [cord cutting](https://github.com/robocurve/benchmark-tasks/tree/main/tasks/cut-taut-cord)
 and [steel filing](https://github.com/robocurve/benchmark-tasks/tree/main/tasks/file-a-steel-block-flat-down-to-a-scribed-line)
@@ -140,10 +143,60 @@ strain after 8.4 ms. This remains a diagnostic geometry candidate, not a
 promoted reset or a change to the damage rubric.
 
 An unrun fallback explicitly uses heavier flexible printing paper via
-`--paper-profile heavy-200gsm-candidate`:200g/m² and200µm, with matching mass,
+`--paper-profile heavy-200gsm-candidate`: 200 g/m² and 200 µm, with matching mass,
 contact thickness, sheet spacing and staple-clinch depth. Both sheets remain
 native deformable surfaces. [Mondi’s printing-paper range](https://www.mondigroup.com/products-and-solutions/uncoated-printing-paper/color-copy/)
-and the[manufacturer datasheet](https://store.paper.co.uk/pub/pdfs/Color-Copy-data-sheet-10-19.pdf)
-support this material class. They do not calibrate the declared isotropic2GPa
+and the [manufacturer datasheet](https://store.paper.co.uk/pub/pdfs/Color-Copy-data-sheet-10-19.pdf)
+support this material class. They do not calibrate the declared isotropic 2 GPa
 elastic approximation. This candidate has not replaced the task setup or
 passed native extraction; scoring and strain guards are unchanged.
+
+## Flexible-facet candidate
+
+Native surface-FEM controls still let the steel cross intact paper, including
+200gsm paper and increased predictive contact margin. This is a contact failure,
+not a conclusion that ordinary creasing tears paper. The task is not ready.
+
+`facet_probe.py` tests two 24×20mm coupons made from 100µm triangular prisms.
+Native bending hinges provide flexibility and native finite break forces bound
+intactness. All staple contacts stay enabled; no sheet is pinned or attached.
+The weak-direction 1500 N/m strength envelope is an engineering approximation
+from the copy-paper tensile data cited in `MATERIAL_DOMAIN.md`, not a calibrated
+puncture fracture law. This candidate has no full-size or extraction evidence.
+
+```sh
+python tasks/remove-a-staple/facet_probe.py --out OUTPUT --seconds .02 --dt .0001
+python tasks/remove-a-staple/facet_probe.py --out OUTPUT_EMPTY --seconds .02 --dt .0001 --no-staple
+```
+
+Inspect native cooked-hull thickness, mass, hinge continuity and wire crossing
+before interpreting either control. Authored collision dimensions alone do not
+prove that native cooking preserved the 100 µm thickness.
+
+### Latest paper candidate: native analytic panels
+
+The earlier surface-FEM controls remained invalid because steel crossed intact
+paper. Triangular rigid facets also failed: native cooking produced741–1030µm
+thick tetrahedra from100µm input prisms. Setting minimum hull thickness did not
+fix this, so these controls are not accepted evidence of paper behavior.
+
+The replacement uses exact100µm native boxes joined along edges by passive
+bending hinges. Paper flexural rigidity, mass and finite edge strength remain
+explicit. There are no paper anchors or automatic releases. The24×20mm coupon
+has152 panels per sheet and the same two physical punctures. A20ms free-fall
+control matches gravity; both empty and stapled100ms contact controls pass,
+with final hinge gaps below13nm and clean metal-crossing audits. These are
+material/contact results, not extraction demonstrations. The full210×148mm
+candidate is prepared with573/550 panels per sheet and the established support,
+free staple and remover. It still needs native validation and robot extraction.
+
+```sh
+python tasks/remove-a-staple/facet_probe.py --out artifacts/paper-box-stapled --seconds .1 --dt .0001 --primitive-box-panels --external-forces-every-iteration
+python tasks/remove-a-staple/facet_probe.py --out artifacts/paper-box-full --seconds .05 --dt .0001 --primitive-box-panels --full-size-candidate --external-forces-every-iteration
+```
+
+`arena_panels.py` and `task_panels.py` are separate candidate YAM modules. They
+use reset-only pose writes and inspect paper continuity/crossing every substep.
+They have not yet run. Paper remains a discretely flexible shell, not one rigid
+sheet; anisotropy, permanent crease memory and detailed post-fracture topology
+are not represented. Any broken/gaping hinge invalidates the candidate trial.

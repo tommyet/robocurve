@@ -1,0 +1,65 @@
+{
+  "status": "CPU authoring/mechanics candidate; native gate pending",
+  "material": {
+    "thickness_m": 0.0004,
+    "density_kg_m3": 350.0,
+    "bend_modulus_pa": 80000.0,
+    "poissons_ratio": 0.3,
+    "damping_ratio": 0.15,
+    "friction": 0.55
+  },
+  "bending_rigidity_nm": 4.6886446886446895e-07,
+  "patches": [
+    {
+      "upper": true,
+      "geometry": {
+        "vertices": 154,
+        "triangles": 236,
+        "surface_area_m2": 0.00596928,
+        "boundary_loops": 13,
+        "connected": true
+      },
+      "bodies": 236,
+      "hinges": 307,
+      "mass_kg": 0.0008356992000000001,
+      "bending_stiffness_range_nm_rad": [
+        1.1252747252747163e-07,
+        4.6796280642432384e-06
+      ]
+    },
+    {
+      "upper": false,
+      "geometry": {
+        "vertices": 154,
+        "triangles": 236,
+        "surface_area_m2": 0.005969280000000002,
+        "boundary_loops": 13,
+        "connected": true
+      },
+      "bodies": 236,
+      "hinges": 307,
+      "mass_kg": 0.0008356992000000003,
+      "bending_stiffness_range_nm_rad": [
+        1.1252747252747163e-07,
+        4.6796280642432384e-06
+      ]
+    }
+  ],
+  "membrane_model": "Approximately inextensible rigid facets, finite passive edge bending; not FEM",
+  "fidelity_limits": [
+    "A coarse finite shell, not continuous woven yarns",
+    "Shared-edge revolute joints approximate inextensible membrane continuity",
+    "Facets sharing a material vertex are excluded from mutual collision to avoid double-thickness overlap; all thread contacts remain enabled",
+    "Every-substep hinge gaps above0.1mm invalidate the candidate; averaging measured shared vertices never excuses disconnected facets"
+  ],
+  "physical_gates": [
+    "Native cantilever must visibly bend while the physical clamp retains the near edge",
+    "Intact/open native thread controls must preserve contact and hinge continuity",
+    "Full YAM pickup/cut/removal/safe release must pass unchanged crossing and damage guards"
+  ],
+  "sources_sha256": {
+    "facet_cloth.py": "89a66cdb3430fe86b96d1e43481575fe2661603a7980869ee31e37390a676455",
+    "arena_facet.py": "e4f5a06cd66671363bb7aefb25a74fa645471aece562364ad7a362253f38479f",
+    "probe_facets.py": "1e2f4820153fddbd94b0e4b5e13f1b2d0263eb24adccd1b0d2b4813539ac1eef"
+  }
+}

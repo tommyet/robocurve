@@ -1,0 +1,49 @@
+{
+  "date": "2026-11-13",
+  "status": "invalid_model_domain",
+  "robot_demo": false,
+  "score": null,
+  "runs": {
+    "bend": {
+      "status": "invalid_model_domain",
+      "physics_hz": 960,
+      "completed_steps": 1,
+      "maximum_hinge_endpoint_gap_m": 0.00015241964034691408,
+      "maximum_rms_nonplanarity_m": 5.599896597947063e-05,
+      "last_facet_checks": [
+        {
+          "maximum_hinge_endpoint_gap_m": 0.00015241964034691408,
+          "maximum_vertex_average_error_m": 0.00010151204430985342,
+          "valid": false
+        }
+      ],
+      "wall_seconds": 4.268942045979202,
+      "report_sha256": "1cc4ec0ee802259dc0cfb4c0820070c7ef23cabcadd1d9e3c4bbbbec8dc1753d"
+    },
+    "intact": {
+      "status": "invalid_model_domain",
+      "physics_hz": 960,
+      "completed_steps": 1,
+      "maximum_hinge_endpoint_gap_m": 0.00031395844717795073,
+      "maximum_rms_nonplanarity_m": 0.00011686380457189764,
+      "last_facet_checks": [
+        {
+          "maximum_hinge_endpoint_gap_m": 0.00031395844717795073,
+          "maximum_vertex_average_error_m": 0.0001603487077876669,
+          "valid": false
+        },
+        {
+          "maximum_hinge_endpoint_gap_m": 0.0001515399574671385,
+          "maximum_vertex_average_error_m": 0.0001007854974121601,
+          "valid": false
+        }
+      ],
+      "wall_seconds": 5.342154834419489,
+      "report_sha256": "89722b8c036fba1a4f1651aa917f9cdcd6d584e153ba2ac672decd52ee28c767"
+    }
+  },
+  "identified_authoring_defect": "PhysX convex hull minThickness was unauthored. Installed110.3.2 schema defaults to1mm, greater than the actual0.4mm shell thickness and bend fixture gap. This can inflate collision hulls; first-step displacement is consistent with depenetration. Corrected thickness cooking still requires native verification.",
+  "schema_source": "https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/schemas/physxschema.html",
+  "installed_schema_verified_read_only": true,
+  "correction": "Explicit minThickness=thickness/4 (0.1mm); actual prism points remain0.4mm apart. All physical and integrity guards unchanged."
+}

@@ -1,0 +1,13 @@
+{
+  "status": "Confirmed integration configuration difference; causal seam experiment pending",
+  "standalone041_authored_flag": null,
+  "standalone041_schema_default": false,
+  "yam047_authored_flag": true,
+  "files_sha256": {
+    "initial.usda_0": "309df839708cc4b4f9cb3dfb2ae800a751bc8fb82c19772070d19657ae47234e",
+    "initial.usda_1": "fc9bcb183e38a9b63b156e0546694d05fa705a2a39e12fa501763c0ce63ff64a"
+  },
+  "schema": "PhysxSchema110.3.2 generatedSchema.usda, read directly on the installed runtime2026-11-13",
+  "diagnostic": "--external-forces-once sets cfg.sim.physics.enable_external_forces_every_iteration=False before scene construction and asserts the composed native attribute; no geometry, material, guard, scoring or policy change",
+  "source_reference": "The wheel044 controlled comparison identified unforced momentum gain with true and removed it with false. Seam behavior must be measured independently."
+}

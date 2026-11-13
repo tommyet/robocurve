@@ -25,6 +25,8 @@ class SeamRuntime:
     supported_clamp: bool = False
     cloth_contact_offset_m: float = .00025
     backed_clamp: bool = False
+    facet_cloth: bool = False
+    box_panels: bool = False
 
 
 CONFIG=SeamRuntime()

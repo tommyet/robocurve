@@ -33,6 +33,7 @@ def main():
     p.add_argument('--out',type=Path,required=True)
     p.add_argument('--steps',type=int,default=20)
     p.add_argument('--plan',type=Path,help='Frozen action14 JSON produced by plan.py')
+    p.add_argument('--pose-assisted-entry',action='store_true',help='Disclosed scripted demo: after the proven140-action pickup, filter measured tool-in-gripper pose to convert the fixed blade path into ordinary bounded joint targets')
     p.add_argument('--physics-hz',type=int,choices=(960,1920,3840),default=960)
     p.add_argument('--coarse-thread',action='store_true')
     p.add_argument('--hole-mesh-spacing',type=float)
@@ -43,6 +44,11 @@ def main():
     p.add_argument('--sewing-clamp',action='store_true',help='Vertical swatches in an ordinary fixed bench clamp; requires coarse thread and 0.4 mm hole refinement, without table-reset options')
     p.add_argument('--passive-clamp',action='store_true',help='Replace the incompatible fixed-gap jaws with the declared force-limited passive spring jaw; requires --sewing-clamp')
     p.add_argument('--supported-clamp',action='store_true',help='Lower the fixture so the lower patch edge rests on the real tabletop; requires --passive-clamp')
+    p.add_argument('--facet-cloth',action='store_true',help='Opt-in inextensible native rigid-facet shell with passive bending hinges; requires backed clamp and once-per-step forces; default remains FEM')
+    p.add_argument('--box-panels',action='store_true',help='Use native rectangular boxes for the facet candidate, avoiding failed convex hull cooking')
+    p.add_argument('--external-forces-once',action='store_true',help='Configure TGS external forces once per physics step before scene construction; measured wheel control motivates this diagnostic')
+    p.add_argument('--velocity-iterations',type=int,choices=(1,32),default=None,
+                   help='Explicit scene-level velocity iteration count, including robot articulations; preserves ordinary joint/action limits')
     p.add_argument('--backed-clamp',action='store_true',help='Add the physical rear sewing board and front guide rails outside the open seam window; requires --supported-clamp')
     p.add_argument('--keep-constructor-state',action='store_true',help='Unsupported historical diagnostic; rejected before simulator startup because Gym requires an episode reset')
     p.add_argument('--contact-refinement',choices=('baseline','iterations','speculative','combined'),default='baseline')
@@ -66,16 +72,21 @@ def main():
         p.error('Quality mesh requires --coarse-thread and omitting --hole-mesh-spacing')
     if a.pre_draped_seam and not (a.coarse_thread and a.quality_mesh):
         p.error('Pre-drape requires --coarse-thread and --quality-mesh')
-    if a.sewing_clamp and (not a.coarse_thread or (not a.quality_mesh and a.hole_mesh_spacing!=.0004) or a.resting_seam or a.pre_draped_seam):
+    if a.sewing_clamp and (not a.coarse_thread or (not a.quality_mesh and not a.facet_cloth and a.hole_mesh_spacing!=.0004) or a.resting_seam or a.pre_draped_seam):
         p.error('Sewing clamp requires --coarse-thread and either --hole-mesh-spacing .0004 or --quality-mesh, without table reset options')
     if a.passive_clamp and not a.sewing_clamp:p.error('Passive clamp requires --sewing-clamp')
     if a.supported_clamp and not a.passive_clamp:p.error('Supported reset requires --passive-clamp')
     if a.backed_clamp and not a.supported_clamp:p.error('Repair backing requires --supported-clamp')
+    if a.facet_cloth and (not a.backed_clamp or not a.external_forces_once or a.quality_mesh or a.hole_mesh_spacing is not None or a.cloth_contact_offset!=.00025 or a.contact_refinement!='baseline' or a.max_depenetration_m_s is not None):
+        p.error('Facet shell requires backed clamp, once-per-step forces and its own mesh; no quality-mesh/hole refinement/contact-offset override')
+    if a.box_panels and not a.facet_cloth:p.error('Box panels require --facet-cloth')
     if a.drape_shape!='gaussian' and not a.pre_draped_seam:
         p.error('Drape shape requires --pre-draped-seam')
     if a.max_depenetration_m_s is not None and not .01<=a.max_depenetration_m_s<=1.:
         p.error('Diagnostic depenetration velocity must be 0.01 to 1 m/s')
     if a.plan is None and a.steps>200:p.error('Ready-hold preview limited to 200 steps')
+    if a.pose_assisted_entry and (a.plan is None or a.steps<=140):
+        p.error('Pose-assisted entry requires a frozen plan extending beyond the140-action pickup')
     if a.continue_after_strain and (a.plan is not None or a.steps>4):
         p.error('Strain continuation is limited to four ready-hold steps and cannot run a policy')
     if a.contact_forensics and (a.plan is not None or a.steps>20 or a.continue_after_strain):
@@ -108,7 +119,7 @@ def main():
         .0004 if a.coarse_thread else .0002,.0008 if a.coarse_thread else .0006,
         a.hole_mesh_spacing,a.physics_hz,settings,a.maximum_stretch,a.quality_mesh,
         .0024-(.0004 if a.coarse_thread else .0002) if (a.resting_seam or a.pre_draped_seam) else 0.,
-        a.pre_draped_seam,a.drape_shape,a.sewing_clamp,a.passive_clamp,a.supported_clamp,a.cloth_contact_offset,a.backed_clamp)
+        a.pre_draped_seam,a.drape_shape,a.sewing_clamp,a.passive_clamp,a.supported_clamp,a.cloth_contact_offset,a.backed_clamp,a.facet_cloth,a.box_panels)
     a.out.mkdir(parents=True,exist_ok=False)
     frozen=a.out/'task-source';frozen.mkdir()
     hashes={}
@@ -130,6 +141,8 @@ def main():
             'constructor_prefix_audited':False,
             'runtime':asdict(runtime_config.CONFIG),'source_sha256':hashes,
             'policy':'ordinary ready targets' if actions is None else 'frozen joint targets; no object feedback'}
+    if a.pose_assisted_entry:
+        report['policy']='scripted feasibility demo: frozen pickup then fixed blade path with filtered native tool-in-gripper pose compensation; ordinary bounded joint actions'
     app=video=trace=emb=None
     profiler=None
     if a.profile_steps:
@@ -147,14 +160,45 @@ def main():
         from PIL import Image
         import omni.physics.tensors as tensors
         import omni.usd
-        from pxr import UsdPhysics
+        from pxr import UsdPhysics,PhysxSchema
         from yam_arena import inspect_embodiment as wrapper,scene as adapter
         wrapper._APP=app
         adapter.PHYSICS_DT=1/a.physics_hz
         emb=wrapper.YamArenaEmbodiment(task=str(HERE/'scene.py'),object_jitter=0.,
                                       control_hz=20,cam_width=224,cam_height=224)
-        emb._ensure_sim(None)
+        original_callback=adapter.env_cfg_callback
+        if a.external_forces_once or a.velocity_iterations is not None:
+            def callback(*args,**kwargs):
+                configure=original_callback(*args,**kwargs)
+                def override(cfg):
+                    cfg=configure(cfg)
+                    if cfg.sim.physics is None:
+                        from isaaclab_physx.physics import PhysxCfg
+                        cfg.sim.physics=PhysxCfg()
+                    if a.external_forces_once:cfg.sim.physics.enable_external_forces_every_iteration=False
+                    if a.velocity_iterations is not None:
+                        cfg.sim.physics.min_velocity_iteration_count=a.velocity_iterations
+                        cfg.sim.physics.max_velocity_iteration_count=a.velocity_iterations
+                    return cfg
+                return override
+            adapter.env_cfg_callback=callback
+        try:
+            emb._ensure_sim(None)
+        finally:
+            adapter.env_cfg_callback=original_callback
         base=emb._base;stage=omni.usd.get_context().get_stage()
+        native_scenes=[prim for prim in stage.Traverse() if prim.IsA(UsdPhysics.Scene)]
+        if len(native_scenes)!=1:raise RuntimeError('Expected one native physics scene')
+        native_scene=PhysxSchema.PhysxSceneAPI(native_scenes[0])
+        effective_force_mode=bool(native_scene.GetEnableExternalForcesEveryIterationAttr().Get())
+        report['external_forces_once_requested']=a.external_forces_once
+        report['effective_external_forces_every_iteration']=effective_force_mode
+        if a.external_forces_once and effective_force_mode:
+            raise RuntimeError('Required once-per-step force mode did not reach native scene')
+        report['scene_velocity_iteration_range']=[int(native_scene.GetMinVelocityIterationCountAttr().Get()),
+                                                  int(native_scene.GetMaxVelocityIterationCountAttr().Get())]
+        if a.velocity_iterations is not None and report['scene_velocity_iteration_range']!=[a.velocity_iterations]*2:
+            raise RuntimeError('Requested velocity iteration count did not reach native scene')
         # SimulationContext sets this to True while constructing the scene.
         # Use the same post-construction setting as IsaacLab's ContactSensor
         # before creating our directly filtered native sensor view. Setting it
@@ -178,27 +222,38 @@ def main():
             if UsdPhysics.RigidBodyAPI(stage.GetPrimAtPath(path)).GetKinematicEnabledAttr().Get():
                 raise RuntimeError('Task thread must remain dynamic')
         envroot=roots['ripper_handle'].rsplit('/',1)[0]
-        for name in ('cloth_left','cloth_right'):
-            prim=stage.GetPrimAtPath(envroot+'/'+name)
-            if 'OmniPhysicsSurfaceDeformableSimAPI' not in prim.GetAppliedSchemas() or prim.HasAPI(UsdPhysics.RigidBodyAPI):
-                raise RuntimeError('Cloth is not native surface FEM')
-        contact_names=('physxCollision:restOffset','physxCollision:contactOffset',
-                       'physxDeformableBody:selfCollisionFilterDistance',
-                       'physxDeformableBody:maxDepenetrationVelocity',
-                       'physxDeformableBody:maxLinearVelocity',
-                       'physxDeformableBody:enableSpeculativeCCD',
-                       'physxDeformableBody:collisionIterationMultiplier',
-                       'physxDeformableBody:collisionPairUpdateFrequency')
-        report['native_surface_contact']=[{key:stage.GetPrimAtPath(envroot+'/'+name).GetAttribute(key).Get()
-                                           for key in contact_names}
-                                          for name in ('cloth_left','cloth_right')]
-        for row in report['native_surface_contact']:
-            if not np.isclose(row['physxCollision:contactOffset'],a.cloth_contact_offset,rtol=0.,atol=1e-9):
-                raise RuntimeError('Authored cloth contact generation offset differs from the selected configuration')
-            if not np.isclose(row['physxCollision:restOffset'],.0002,rtol=0.,atol=1e-9):
-                raise RuntimeError('Physical cloth rest offset changed')
-            for key,value in row.items():
-                if isinstance(value,float) and not np.isfinite(value):row[key]=str(value)
+        facet_shells=None
+        if a.facet_cloth:
+            from arena_facet import SPAWNED as facet_spawned,FacetView
+            facet_shells=[facet_spawned[name] for name in ('cloth_left','cloth_right')]
+            report['cloth_model']='inextensible finite rigid facets with passive bending hinges; candidate, not FEM'
+            report['facet_body_counts']=[len(shell['bodies']) for shell in facet_shells]
+            for shell in facet_shells:
+                for path in shell['bodies']:
+                    if UsdPhysics.RigidBodyAPI(stage.GetPrimAtPath(path)).GetKinematicEnabledAttr().Get():
+                        raise RuntimeError('Every fabric facet must remain native dynamic')
+        else:
+            for name in ('cloth_left','cloth_right'):
+                prim=stage.GetPrimAtPath(envroot+'/'+name)
+                if 'OmniPhysicsSurfaceDeformableSimAPI' not in prim.GetAppliedSchemas() or prim.HasAPI(UsdPhysics.RigidBodyAPI):
+                    raise RuntimeError('Cloth is not native surface FEM')
+            contact_names=('physxCollision:restOffset','physxCollision:contactOffset',
+                           'physxDeformableBody:selfCollisionFilterDistance',
+                           'physxDeformableBody:maxDepenetrationVelocity',
+                           'physxDeformableBody:maxLinearVelocity',
+                           'physxDeformableBody:enableSpeculativeCCD',
+                           'physxDeformableBody:collisionIterationMultiplier',
+                           'physxDeformableBody:collisionPairUpdateFrequency')
+            report['native_surface_contact']=[{key:stage.GetPrimAtPath(envroot+'/'+name).GetAttribute(key).Get()
+                                               for key in contact_names}
+                                              for name in ('cloth_left','cloth_right')]
+            for row in report['native_surface_contact']:
+                if not np.isclose(row['physxCollision:contactOffset'],a.cloth_contact_offset,rtol=0.,atol=1e-9):
+                    raise RuntimeError('Authored cloth contact generation offset differs from the selected configuration')
+                if not np.isclose(row['physxCollision:restOffset'],.0002,rtol=0.,atol=1e-9):
+                    raise RuntimeError('Physical cloth rest offset changed')
+                for key,value in row.items():
+                    if isinstance(value,float) and not np.isfinite(value):row[key]=str(value)
         sim=tensors.create_simulation_view('torch');sim.set_subspace_roots('/')
         blade=sim.create_rigid_body_view(roots['ripper_blade'])
         handle=sim.create_rigid_body_view(roots['ripper_handle'])
@@ -214,7 +269,8 @@ def main():
         thread_view=sim.create_rigid_body_view(all_paths)
         native_paths=list(thread_view.prim_paths)
         order=np.asarray([native_paths.index(path) for path in all_paths])
-        views=[sim.create_surface_deformable_body_view(envroot+'/'+name) for name in ('cloth_left','cloth_right')]
+        views=([FacetView(sim,shell) for shell in facet_shells] if a.facet_cloth else
+               [sim.create_surface_deformable_body_view(envroot+'/'+name) for name in ('cloth_left','cloth_right')])
         if blade.count!=1 or handle.count!=1 or any(v.count!=1 for v in views):
             raise RuntimeError('Missing native seam body')
         contact=sim.create_rigid_contact_view([roots['ripper_blade']],filter_patterns=[all_paths],max_contact_data_count=4096)
@@ -250,6 +306,8 @@ def main():
         if not a.keep_constructor_state:
             emb._env.reset()
         snapshot_reset('after')
+        if a.facet_cloth:
+            for view in views:view.reset_audit()
         # Every following substep is audited. Constructor-internal startup
         # steps are outside this hook and explicitly reported as unobserved.
         # Keeping their state requires a freshly constructed scene per trial;
@@ -306,8 +364,9 @@ def main():
                           nodes,[m.faces for m in cloth],t)
             state['timings_s']['blade_damage']+=time.perf_counter()-start
             state['previous_edge']=edge.copy()
-            state['non_strain_invalid']=bool(junction_invalid or damage.crossed_faces or any(s.first_failure for s in crossing))
-            state['hard_invalid']=bool(junction_invalid or damage.crossed_faces or any(s.first_excursion for s in strain))
+            facet_invalid=a.facet_cloth and any(view.first_failure for view in views)
+            state['non_strain_invalid']=bool(facet_invalid or junction_invalid or damage.crossed_faces or any(s.first_failure for s in crossing))
+            state['hard_invalid']=bool(facet_invalid or junction_invalid or damage.crossed_faces or any(s.first_excursion for s in strain))
             invalid=bool(state['non_strain_invalid'] or any(s.first_excursion for s in strain))
             if invalid:
                 state['invalid']=True
@@ -380,20 +439,52 @@ def main():
         video=imageio.get_writer(a.out/'preview.mp4',fps=20,codec='libx264',pixelformat='yuv420p',
                                 ffmpeg_params=['-movflags','+faststart'],macro_block_size=1)
         trace=gzip.open(a.out/'trace.jsonl.gz','wt')
+        right_robot=base.scene['right_robot']
+        right_gripper_index=right_robot.body_names.index('gripper')
+        from yam_arena.constants import TCP_OFFSET
+        entry=None
+        if a.pose_assisted_entry:
+            from tool_entry import ToolEntryCompensation
+            from yam_arena import ik,station
+            from plan import DOWN
+            from plan_cut import GRASP_OFFSET
+            entry=ToolEntryCompensation(TCP_OFFSET,alpha=.1)
         def snapshot(step,action):
+            hand=array(right_robot.data.body_link_pose_w)[0,right_gripper_index]
+            hand_rotation=rotation(hand[3:]);handle_pose=array(handle.get_transforms())[0]
             rgb=array(base.scene['top_cam'].data.output['rgb'])[0,:,:,:3].astype(np.uint8)
             video.append_data(rgb)
             if step==0:Image.fromarray(rgb).save(a.out/'setup.png')
             row={'step':step,'time_s':step/20,'action14':action.tolist(),'physics_substeps':state['steps'],
-                 'handle_pose_xyzw':array(handle.get_transforms())[0].tolist(),
+                 'handle_pose_xyzw':handle_pose.tolist(),
+                 'blade_pose_xyzw':array(blade.get_transforms())[0].tolist(),
+                 'right_gripper_pose_xyzw':hand.tolist(),
+                 'right_tcp_position_m':(hand[:3]+hand_rotation@np.asarray(TCP_OFFSET)).tolist(),
+                 'handle_position_in_gripper_m':(hand_rotation.T@(handle_pose[:3]-hand[:3])).tolist(),
+                 'handle_rotation_in_gripper':(hand_rotation.T@rotation(handle_pose[3:])).tolist(),
                  'blade_pose_xyzw':array(blade.get_transforms())[0].tolist(),
                  'thread_poses_xyzw':state['poses'].tolist(),'cloth_nodes':[n.tolist() for n in state['nodes']],
                  'cut_events':cutter.events,'invalid':state['invalid']}
             trace.write(json.dumps(row,allow_nan=False)+'\n');trace.flush()
         snapshot(0,ready);save()
         if state['invalid']:raise RuntimeError('Authored seam reset fails material/contact audit')
+        previous_action=ready.copy()
         for step in range(1,a.steps+1):
-            action=ready if actions is None else actions[step-1]
+            action=ready.copy() if actions is None else actions[step-1].copy()
+            if entry is not None and step>140:
+                nominal_tcp,nominal_hand_r=ik.tcp_pose(action[7:13],station.BASES['right'])
+                nominal_tool_r=nominal_hand_r@DOWN.T
+                nominal_tool_p=nominal_tcp-nominal_tool_r@GRASP_OFFSET
+                measured_hand=array(right_robot.data.body_link_pose_w)[0,right_gripper_index]
+                measured_tool=array(handle.get_transforms())[0]
+                goal_p,goal_r=entry.target(nominal_tool_p,nominal_tool_r,measured_hand,measured_tool)
+                q,position_error,rotation_error=ik.solve(goal_p,ik.matrix_to_quat_xyzw(goal_r),
+                    previous_action[7:13],station.BASES['right'],iters=200,tol=1e-6)
+                if position_error>.001 or rotation_error>np.deg2rad(.5):
+                    raise RuntimeError('Pose-assisted entry target is not reachable within the ordinary robot limits')
+                action[7:13]=q
+                action=np.clip(action,emb._low,emb._high)
+                action=np.clip(action,previous_action-limits,previous_action+limits)
             start=time.perf_counter()
             try:
                 if profiler is not None:profiler.enable()
@@ -403,6 +494,7 @@ def main():
                 state['timings_s']['control_steps_total']+=time.perf_counter()-start
             check_crossing_boundary()
             snapshot(step,action);report['completed_steps']=step
+            previous_action=action.copy()
             if step%20==0:save()
         if state['steps']!=round(a.steps*a.physics_hz/20):raise RuntimeError('Every-substep audit coverage mismatch')
         if gpu_crossing is not None and gpu_crossing.updates!=state['steps']+1:
@@ -431,8 +523,12 @@ def main():
             (a.out/'control-profile.json').write_text(json.dumps(sorted(entries,key=lambda e:-e['cumulative_seconds']),indent=2)+'\n')
             report['control_profile']='control-profile.json'
         if 'state' in locals():
+            if 'entry' in locals() and entry is not None:report['pose_assisted_entry']=entry.summary()
             try:
                 cross_report=crossing_summaries()
+                failed_steps=[row['first_failure']['native_substep'] for row in cross_report
+                              if row.get('first_failure') and 'native_substep' in row['first_failure']]
+                if failed_steps:report['first_invalid_substep']=min(min(failed_steps),report.get('first_invalid_substep',min(failed_steps)))
                 if gpu_crossing is not None:
                     report['gpu_crossing_updates']=gpu_crossing.updates
                     if any(not s['valid'] for s in cross_report):gpu_crossing.save_failure(a.out/'first-crossing-pair.npz')
@@ -448,6 +544,7 @@ def main():
                 closed_junction_contact_audit=junctions.summary() if junctions is not None else None,
                 strain=[{'maximum_principal_stretch':s.maximum_observed,'first_validity_excursion':s.first_excursion,
                          'first_2pct_warning':s.first_warning,'maximum_stretch_limit':s.limit} for s in strain])
+            if a.facet_cloth:report['facet_consistency']=[view.summary() for view in views]
             if contact_history is not None:
                 report['forensic_contact_history']=[h.summary() for h in contact_history]
                 report['forensic_contact_history_file']='contact-history.json'

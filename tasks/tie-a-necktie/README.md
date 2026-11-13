@@ -115,3 +115,26 @@ Native authoring follows [NVIDIA surface deformables](https://docs.omniverse.nvi
 [TieBot](https://tiebots.github.io/) is relevant prior robotics research. Its
 results do not supply a YAM controller or validate this model; novelty relative
 to existing knot tasks remains a review question.
+
+An isolated adult-layout candidate is available with `probe.py --adult-collar`
+and the matching explicit YAM runner option. It uses a1.45m,37.55g strip and a
+raised standalone collar on a rear stand. A162mm lower rim and a physical
+folded rear collar retain the neckband; there are no cloth attachments. The
+broad shoulder block is removed. Initial triangles clear all fixtures by1mm.
+
+The folded collar retained the adult tie in054. Refinement removed its small
+triangle/fixture crossing, but056/057 showed about40% local edge stretch at
+the leading flap. The128-iteration058 control reduced maximum edge stretch to9.42%
+(p99=2.56%) with no final triangle/fixture intersections. These effective
+textile parameters remain uncalibrated. The200-action state-assisted adult
+pickup is a separate diagnostic: actual reset cloth selects ordinary pinch
+targets, with full commanded-hull checks before movement. Dream receives no
+material state. No adult knot or full-score demo has been demonstrated.
+
+Batch061 failed before any action: dropping the initially horizontal adult
+strip into the YAM scene produced an out-of-workspace pinch. The next explicit
+adult reset uses the recorded untied gravity shape from058 and the same flat
+rest mesh. All triangles clear both ready robots by1mm. Each policy still
+receives five seconds of ordinary physical settling; this is a shared starting
+layout, never a controller write. The new reset and pickup are not yet native
+validated. `adult-settled-reset.json` records provenance and hashes.

@@ -2,7 +2,7 @@
 
 Native043 proved free peg removal/rotation, but the insertion hand deflected
 24mm upward and the garment crept out of its pinch. Keep the same reference
-route, insert10mm farther into the hem initially, then correct right-arm joint
+route, insert10mm farther along the angled finger approach initially, then correct right-arm joint
 tracking after action700. This uses no object/material-state feedback.
 """
 import argparse,json
@@ -11,10 +11,10 @@ from flip_attach_motion import compile_flip_attach
 
 
 def compile_tracked_clip():
-    p=compile_flip_attach(grasp_x=.230,clip_target=(.4787,.115,1.115))
+    p=compile_flip_attach(grasp_x=.220,approach_depth=.010,clip_target=(.4787,.115,1.115))
     p['requires_joint_feedback_from']=700
     p['feedback']='right-arm ordinary joint positions only; bounded PI after action700, no object/assessor state'
-    p['source_waypoints']='Native043 peg removal/turn retained a stable hand-relative pose. Center the open mouth on the line using native043 hand/peg transform (5.3mm forward/1mm upward reference correction),10mm deeper initial hem pinch. Bounded right-arm joint tracking corrects observed insertion deflection; native revalidation required.'
+    p['source_waypoints']='Native043 peg removal/turn retained a stable hand-relative pose. Center the open mouth on the line using native043 hand/peg transform (5.3mm forward/1mm upward reference correction),10mm deeper hem pinch along the30degree downward approach, preserving the pinch plane;050 horizontal-offset bite slipped during first lift, while its free peg capture and bounded tracking worked. Bounded right-arm joint tracking corrects observed insertion deflection; native revalidation required.'
     p['do_not_run_reason']='Awaiting new full-pose hull/line rejection check and runtime tracking CPU checks.'
     return p
 

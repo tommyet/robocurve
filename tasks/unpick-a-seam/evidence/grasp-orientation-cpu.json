@@ -1,0 +1,29 @@
+{
+  "scope": "Independent fixed-grasp orientation check from native029, not a plan change or full task demonstration",
+  "trace_sha256": "0625e681dd37c77e9d0820c992b0c6036d6070e8cd72e77ccd3ca5054217818f",
+  "held_actions": [
+    140,
+    159
+  ],
+  "mean_rotation_in_gripper": [
+    [
+      -0.00016568851491110016,
+      -0.9999989957372513,
+      0.001407505525428466
+    ],
+    [
+      -0.99999997245447,
+      0.0001654543536091038,
+      -0.00016648097890077632
+    ],
+    [
+      0.00016624793379317555,
+      -0.0014075330706440634,
+      -0.9999989956056352
+    ]
+  ],
+  "offset_from_assumed_degrees": 0.08175854758565772,
+  "tip_offset_bound_at_60mm_m": 8.561734355716204e-05,
+  "matrix_component_maximum_range": 6.264492105735467e-06,
+  "limitation": "This is measured native240Hz pickup evidence. The current960Hz complete scene must establish its own actual grasp and joint tracking."
+}

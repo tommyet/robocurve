@@ -1,7 +1,8 @@
 # Unpick a seam
 
-Remove the six tacking stitches joining two canvas patches. Separate the patches
-without cutting or tearing either one.
+Remove the six tacking stitches joining two canvas patches without cutting or
+tearing either patch, then put the seam ripper down. Patch relocation is not
+required. See `JUDGING.md` for the final inspection and safe-release criteria.
 
 **Development package; not ready to submit.** No robot demo, Dream run, media or
 task score exists. `task.draft.json` is a draft. Matched 0.2 s controls at 3,840 Hz
@@ -67,7 +68,7 @@ From the repository root:
 .venv/bin/python -m unittest discover -s tasks/unpick-a-seam -p 'test_*.py' -v
 ```
 
-Forty-six tests pass: connected cloth with real needle holes, needle-path clearance,
+Fifty tests pass: connected cloth with real needle holes, needle-path clearance,
 force direction and sustained contact for cutting, interrupted-contact rejection,
 blade damage latching, whole-thread clearance, rigid-motion-invariant strain
 inspection, moving-cloth/thread tunnelling detection, and final-state scoring. These are CPU geometry/rule
@@ -496,5 +497,95 @@ The guarded first-cut candidate uses this option with the unchanged frozen
 but normal-to-cloth velocity reached0.700/0.560 m/s with unlimited native
 depenetration velocity. The larger generation envelope alone does not fix
 contact stability. See `evidence/native-predictive-contact-047.json`.
-The next bounded candidate adds the existing `--max-depenetration-m-s .05`
-option, keeping every geometric and material guard unchanged.
+The same source with `--max-depenetration-m-s .05` also failed before pickup,
+at0.08125 s. Peak extensions were0.773%/0.437%; the cap did not preserve
+thread/cloth contact. See `evidence/native-capped-contact-047.json`.
+
+
+### Physical repair backing candidate
+
+`--backed-clamp` adds an ordinary rigid rear board and two front guide rails
+to the supported spring-clamp layout. A26 mm high front window exposes both
+needle-hole rows and the seam ripper approach. The65 mm rear board leaves
+7.5 mm of fabric exposed at each side. The lower sheet remains free to slide;
+no cloth attachment, vertex target or changed material is used. The fixture
+has a foot, posts and standoffs connected to the existing bolted stand.
+
+Initial geometry has at least0.20 mm clearance from every added solid. The
+same294-action first-cut plan clears the complete arm/tool box geometry at
+commanded20 Hz poses. This is a CPU screening result; native tracking, thread
+contact, cutting and later side extraction remain unvalidated. The candidate
+returns to baseline0.25 mm contact offset and unlimited correction velocity,
+with every existing crossing, junction, strain and blade-damage guard intact.
+
+```bash
+python tasks/unpick-a-seam/preview_yam.py --sewing-clamp --passive-clamp --supported-clamp --backed-clamp --coarse-thread --quality-mesh --contact-refinement combined --physics-hz 960 --plan tasks/unpick-a-seam/evidence/clamp-cut-plan.json --steps 294 --maximum-stretch 1.05 --audit-junctions --crossing-backend warp --profile-steps --out artifacts/seam-backed-first-cut
+```
+
+
+### Native force-integration comparison
+
+The supported standalone041 scene leaves TGS external-force iteration at the
+installed schema default, false. YAM047 explicitly authors it true. The wheel
+control found unforced angular momentum with true and removed it with false;
+that finding motivates a seam comparison but does not prove the seam cause.
+`--external-forces-once` sets the option before scene construction and checks
+the composed native flag. It changes no material, geometry, action or guard.
+The preview also records measured gripper/tool relative poses so an actual
+cutting miss can be attributed to tracking or grasp geometry. These measured
+poses never feed the frozen policy. See `evidence/external-force-mode-cpu.json`.
+
+
+### Finite articulated cloth candidate
+
+FEM contact remains invalid after the backing and once-per-step comparison.
+The new opt-in `--facet-cloth` route replaces each patch with236 dynamic thin
+triangular prisms and passive revolute hinges along their shared edges. The
+physical area, needle openings,0.4 mm thickness and total mass are unchanged.
+Finite bending springs use D = E_bend t³ / [12(1−ν²)] and the hinge edge length
+over the adjacent centroid spacing. The membrane is approximately inextensible;
+this is a discrete flexible shell, not FEM or a single rigid cloth proxy.
+No fabric facet is attached to the world. The same ordinary clamp/backing
+provides support. Neighbouring material facets sharing a vertex have collision
+exclusions; thread-to-fabric and distant self-contact remain enabled.
+
+The measured shared-vertex mesh feeds the existing crossing and damage checks.
+Every native substep also measures physical hinge-endpoint gaps; any gap over
+0.1 mm invalidates the candidate. This prevents averaged vertices hiding a
+disconnected sheet. The first native pair (056) stopped on first-step hinge gaps. Its hull cooking
+left the PhysX minimum thickness at1mm, exceeding the actual0.4mm shell and
+clamp gap. Explicitly reducing that cooking minimum in057 produced exactly
+the same measured states, so it did not establish the cause. The supported
+PhysX collision-representation query now measures cooked geometry directly;
+contact-free and velocity-iteration controls distinguish fixture contact from
+solver/joint bias. Geometry and guards stay unchanged. Native cantilever
+bending, retained/open thread contact and full manipulation still require
+validation. See `evidence/native-facet-control-056.json` and `evidence/native-facet-control-057.json`. Defaults remain FEM. The
+scripted runner is integrated so a successful mechanism gate can proceed
+without another scene rewrite. See `evidence/facet-shell-cpu.json`.
+
+```bash
+python tasks/unpick-a-seam/probe_facets.py --mode bend --physics-hz 240 --seconds .5 --out artifacts/seam-facet-bend
+python tasks/unpick-a-seam/probe_facets.py --mode intact --physics-hz 960 --seconds .5 --out artifacts/seam-facet-intact
+python tasks/unpick-a-seam/probe_facets.py --mode open --physics-hz 960 --seconds .5 --out artifacts/seam-facet-open
+# Only after the physical gates and visual review:
+python tasks/unpick-a-seam/preview_yam.py --facet-cloth --external-forces-once --sewing-clamp --passive-clamp --supported-clamp --backed-clamp --coarse-thread --physics-hz 960 --plan tasks/unpick-a-seam/evidence/clamp-cut-plan.json --steps 294 --maximum-stretch 1.05 --audit-junctions --crossing-backend warp --profile-steps --out artifacts/seam-facet-first-cut
+```
+
+
+### Native primitive panel and pose-assisted entry candidates
+
+The061 freefall pair keeps hinge gaps below0.3µm at both32 and1 velocity
+iterations, but its queried collision hulls are1.076–1.099mm thick instead of
+0.4mm. The opt-in `--box-panels` candidate merges each rectangular triangle
+pair into a native box:118 dynamic panels and189 bending hinges per patch,
+with the same physical area, thickness, mass and needle openings. This avoids
+convex cooking. Its actual bending/contact gates are pending; see
+`evidence/native-facet-freefall-061.json` and `evidence/box-panels-cpu.json`.
+
+`--pose-assisted-entry` is a disclosed scripted-demo option. It preserves the
+first140 pickup actions, then converts the fixed blade path using measured
+tool-in-gripper poses filtered with alpha0.1. It commands only bounded robot
+joint targets. No tool or cloth pose is written, and large grasp slip stops
+the diagnostic. Native entry remains unvalidated. Dream would keep its normal
+camera/joint observations. See `evidence/tool-entry-cpu.json`.

@@ -1,0 +1,416 @@
+{
+  "status": "nominal CPU candidate, not native contact proof",
+  "minimum_hand_table_clearance": {
+    "left/base": {
+      "clearance_m": 0.0013988879699513568,
+      "step": 1,
+      "phase": "approach ripper"
+    },
+    "left/gripper": {
+      "clearance_m": 0.2735882534159759,
+      "step": 1,
+      "phase": "approach ripper"
+    },
+    "left/link1": {
+      "clearance_m": 0.07001718083376207,
+      "step": 1,
+      "phase": "approach ripper"
+    },
+    "left/link2": {
+      "clearance_m": 0.07320878084505222,
+      "step": 1,
+      "phase": "approach ripper"
+    },
+    "left/link3": {
+      "clearance_m": 0.30668252531671936,
+      "step": 1,
+      "phase": "approach ripper"
+    },
+    "left/link4": {
+      "clearance_m": 0.3259325210869195,
+      "step": 1,
+      "phase": "approach ripper"
+    },
+    "left/link5": {
+      "clearance_m": 0.3127816943778903,
+      "step": 1,
+      "phase": "approach ripper"
+    },
+    "left/tip_left": {
+      "clearance_m": 0.225292349556258,
+      "step": 1,
+      "phase": "approach ripper"
+    },
+    "left/tip_right": {
+      "clearance_m": 0.22529202138144666,
+      "step": 1,
+      "phase": "approach ripper"
+    },
+    "right/base": {
+      "clearance_m": 0.0013988879699513568,
+      "step": 1,
+      "phase": "approach ripper"
+    },
+    "right/gripper": {
+      "clearance_m": 0.01422950060924455,
+      "step": 240,
+      "phase": "place leading point before first tack"
+    },
+    "right/link1": {
+      "clearance_m": 0.07001706421400589,
+      "step": 183,
+      "phase": "orient ripper clear of clamped seam"
+    },
+    "right/link2": {
+      "clearance_m": 0.07219639984064952,
+      "step": 211,
+      "phase": "approach first tack clear of fabric"
+    },
+    "right/link3": {
+      "clearance_m": 0.015582532958841044,
+      "step": 240,
+      "phase": "place leading point before first tack"
+    },
+    "right/link4": {
+      "clearance_m": 0.047728455636038114,
+      "step": 240,
+      "phase": "place leading point before first tack"
+    },
+    "right/link5": {
+      "clearance_m": 0.03677533319871362,
+      "step": 240,
+      "phase": "place leading point before first tack"
+    },
+    "right/tip_left": {
+      "clearance_m": 0.0031575504103296126,
+      "step": 80,
+      "phase": "lower around handle"
+    },
+    "right/tip_right": {
+      "clearance_m": 0.0031575570558642907,
+      "step": 100,
+      "phase": "grasp handle"
+    }
+  },
+  "inter_hand_obb_intersections": [],
+  "tool_left_hand_obb_intersections": [],
+  "frames": 294,
+  "plan_file_sha256": "bae874d0374dcd5e1b61dd2a7cfe5ca1dc67ed3b14d90faab519106f20657e7a",
+  "geometry": {
+    "urdf": "yam_arm.urdf",
+    "urdf_sha256": "d6cc3fca8d6848aad36c0d2bb8798de391fcf5ef8f41180fe7618eda141f0bef",
+    "collision_meshes_sha256": "d1a445176b9a35a200a6cc3e28687180e831a6b0932efff85e355221dae823c5",
+    "mesh_hash_format": "SHA256 of ordered filename+NUL+SHA256(mesh bytes), in selected-link/URDF-collision order",
+    "asset_source_commit": "120c3c81400171174604e503943f8d1ebc891058",
+    "links": {
+      "base": {
+        "collision_meshes": 26,
+        "center": [
+          4.2823490491172844e-07,
+          1.8682652919155274e-07,
+          0.036548991171995095
+        ],
+        "half_size": [
+          0.0361006620107427,
+          0.10110017601587441,
+          0.037650103202043636
+        ]
+      },
+      "gripper": {
+        "collision_meshes": 44,
+        "center": [
+          -2.6554510014487054e-08,
+          1.3634562472109035e-09,
+          0.026499383771419527
+        ],
+        "half_size": [
+          0.05099999974481762,
+          0.032499999739229686,
+          0.03699938207864762
+        ]
+      },
+      "link1": {
+        "collision_meshes": 105,
+        "center": [
+          -0.03148732307350635,
+          -0.002999804922007021,
+          -0.009238665650983524
+        ],
+        "half_size": [
+          0.031970070675015456,
+          0.044382709427736707,
+          0.02872157774982043
+        ]
+      },
+      "link2": {
+        "collision_meshes": 8,
+        "center": [
+          1.6437673569513755e-08,
+          -0.03340052475780249,
+          0.13202309579234123
+        ],
+        "half_size": [
+          0.030999999493360523,
+          0.03334947582334281,
+          0.16297115758061412
+        ]
+      },
+      "link3": {
+        "collision_meshes": 12,
+        "center": [
+          -0.029867597947406774,
+          -0.034925490248668936,
+          -0.12098033932426572
+        ],
+        "half_size": [
+          0.06133270263671876,
+          0.0449245100026019,
+          0.15247686253860596
+        ]
+      },
+      "link4": {
+        "collision_meshes": 12,
+        "center": [
+          -0.04035017048804759,
+          0.03000000440515578,
+          -0.04242204265668392
+        ],
+        "half_size": [
+          0.05785013176500798,
+          0.04300000495277346,
+          0.059896418824791915
+        ]
+      },
+      "link5": {
+        "collision_meshes": 16,
+        "center": [
+          0.034476724766194816,
+          -2.5856018069647657e-08,
+          -0.0010500004049390568
+        ],
+        "half_size": [
+          0.03447672445327044,
+          0.028499998152256015,
+          0.03455000021494926
+        ]
+      },
+      "tip_left": {
+        "collision_meshes": 45,
+        "center": [
+          0.02399234150817156,
+          -0.03249998061134815,
+          -0.04323830162715911
+        ],
+        "half_size": [
+          0.03399913292378188,
+          0.035785401239991195,
+          0.04692129790782929
+        ]
+      },
+      "tip_right": {
+        "collision_meshes": 47,
+        "center": [
+          -0.023993591654670236,
+          0.03250000244997933,
+          -0.04323830162715911
+        ],
+        "half_size": [
+          0.03399960976094008,
+          0.03578540141461418,
+          0.04692129790782929
+        ]
+      }
+    },
+    "scope": "robot",
+    "envelope": "one link-frame AABB per complete selected collision link"
+  },
+  "fixture_intersections": [],
+  "limitations": [
+    "Commanded poses and an assumed offline calibrated grasp, not measured native poses",
+    "Complete-link OBBs conservatively bound the geometry at 20 Hz samples; this is not continuous-time contact proof",
+    "Inter-hand, tool/left-hand, hand/table and fixture screening; full arm self-collision remains native"
+  ],
+  "fixture_description": {
+    "mechanism": "Fixed rear sewing board and front guide rails, connected to the bolted bench stand",
+    "physical_material": "Rigid board and metal guides; ordinary frictional contact",
+    "seam_window_z_m": [
+      0.7997,
+      0.8257
+    ],
+    "rear_board_front_x_m": 0.3018,
+    "rear_board_width_m": 0.065,
+    "cloth_edge_overhang_each_side_m": 0.0075,
+    "front_upper_rest_clearance_m": 0.0008,
+    "front_lower_rest_clearance_m": 0.0008,
+    "rear_lower_rest_clearance_m": 0.0012,
+    "cloth_attachments": false,
+    "lower_patch_can_slide_sideways": true,
+    "native_validation": "pending"
+  },
+  "authored_boxes": [
+    [
+      "clamp_repair_backing",
+      [
+        0.003,
+        0.065,
+        0.1152
+      ],
+      [
+        0.3033,
+        0.0,
+        0.8051
+      ]
+    ],
+    [
+      "clamp_repair_foot",
+      [
+        0.0382,
+        0.065,
+        0.005
+      ],
+      [
+        0.3209,
+        0.0,
+        0.75
+      ]
+    ],
+    [
+      "clamp_front_upper_rail",
+      [
+        0.003,
+        0.06,
+        0.036
+      ],
+      [
+        0.2971,
+        0.0,
+        0.8437
+      ]
+    ],
+    [
+      "clamp_front_lower_rail",
+      [
+        0.003,
+        0.06,
+        0.0472
+      ],
+      [
+        0.2979,
+        0.0,
+        0.7761
+      ]
+    ],
+    [
+      "clamp_front_upper_mount",
+      [
+        0.003,
+        0.1,
+        0.004
+      ],
+      [
+        0.2971,
+        0.0,
+        0.8597
+      ]
+    ],
+    [
+      "clamp_front_lower_mount",
+      [
+        0.003,
+        0.1,
+        0.004
+      ],
+      [
+        0.2979,
+        0.0,
+        0.7545
+      ]
+    ],
+    [
+      "clamp_left_top_standoff",
+      [
+        0.02,
+        0.006,
+        0.004
+      ],
+      [
+        0.3056,
+        0.047,
+        0.8597
+      ]
+    ],
+    [
+      "clamp_right_top_standoff",
+      [
+        0.02,
+        0.006,
+        0.004
+      ],
+      [
+        0.3056,
+        -0.047,
+        0.8597
+      ]
+    ],
+    [
+      "clamp_left_low_standoff",
+      [
+        0.02,
+        0.006,
+        0.004
+      ],
+      [
+        0.3064,
+        0.047,
+        0.7545
+      ]
+    ],
+    [
+      "clamp_right_low_standoff",
+      [
+        0.02,
+        0.006,
+        0.004
+      ],
+      [
+        0.3064,
+        -0.047,
+        0.7545
+      ]
+    ],
+    [
+      "clamp_left_repair_post",
+      [
+        0.008,
+        0.006,
+        0.1152
+      ],
+      [
+        0.312,
+        0.047,
+        0.8051
+      ]
+    ],
+    [
+      "clamp_right_repair_post",
+      [
+        0.008,
+        0.006,
+        0.1152
+      ],
+      [
+        0.312,
+        -0.047,
+        0.8051
+      ]
+    ]
+  ],
+  "minimum_initial_envelope_clearance_m": 0.00020000000000003348,
+  "source_sha256": {
+    "repair_backing.py": "f0bc95db9b63f734f7b0a34e77a30e34794676548f2a5e40e5bec6c858f15a7f",
+    "scene.py": "63fe301de00d8a47e7ca52395ed41ba0a8b1f92ff2d565e79fce18951d92d60c",
+    "plan_clamp.py": "683e32be9b1204a2ec401adb78d17050682fc3b9b9eb572e2679205158345e33",
+    "passive_clamp.py": "460f523e0c01d5c1a2f5d4c508343617e5a801408af7a55e2554bdb9bdd47e03",
+    "tool_geometry.py": "3972bd467f38ad64308577db9bc7d706a68927b03dd8f986134e570c3a314953"
+  }
+}

@@ -21,6 +21,7 @@ def main():
     p.add_argument('--max-depenetration-m-s',type=float,help='Bound native numerical contact correction speed; diagnostic only')
     p.add_argument('--staple-velocity-iterations',type=int,choices=(4,32),default=32,help='Native rigid solver diagnostic; unchanged physical mass/material')
     p.add_argument('--staple-max-depenetration-m-s',type=float,help='Separate correction cap on the native wire bodies; diagnostic only')
+    p.add_argument('--staple-contact-offset-um',type=float,default=2.,help='Predictive steel contact distance; resting geometry and rest offset remain unchanged')
     p.add_argument('--observe-strain-diagnostic',action='store_true',help='Record beyond elastic-domain failure up to1% membrane strain; never a task validity claim')
     p.add_argument('--surface-iterations',type=int,choices=(64,128,255),default=64)
     p.add_argument('--paper-profile',choices=PAPER_PROFILES,default='office-80gsm',help='Explicit physical paper grade candidate; changes thickness, mass, contact thickness and clinch depth together')
@@ -38,6 +39,7 @@ def main():
     if a.lower_sheet_only_diagnostic and not a.remove_staple_diagnostic:p.error('Single-sheet isolation requires --remove-staple-diagnostic')
     if a.max_depenetration_m_s is not None and not .01<=a.max_depenetration_m_s<=1.:p.error('Contact correction speed must be .01–1m/s')
     if a.staple_max_depenetration_m_s is not None and not .01<=a.staple_max_depenetration_m_s<=1.:p.error('Wire correction speed must be .01–1m/s')
+    if not 2<=a.staple_contact_offset_um<=100:p.error('Steel contact-detection distance must be2–100µm')
     if a.self_filter_distance_um is not None and not 100<=a.self_filter_distance_um<=1000:
         p.error('Self-neighbor diagnostic distance must be100–1000µm')
     a.out.mkdir(parents=True,exist_ok=False);started=time.monotonic()
@@ -54,6 +56,7 @@ def main():
             'lower_sheet_only_diagnostic':a.lower_sheet_only_diagnostic,
             'max_depenetration_m_s':a.max_depenetration_m_s,
             'staple_max_depenetration_m_s':a.staple_max_depenetration_m_s,
+            'staple_contact_offset_um':a.staple_contact_offset_um,
             'observe_strain_diagnostic':a.observe_strain_diagnostic,
             'membrane_diagnostic_stop_strain':.01 if a.observe_strain_diagnostic else .003,
             'source_sha256':{name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
@@ -83,6 +86,11 @@ def main():
         if staple:
             for path in staple['paths']:
                 PhysxSchema.PhysxRigidBodyAPI.Get(stage,path).CreateSolverVelocityIterationCountAttr(a.staple_velocity_iterations)
+                PhysxSchema.PhysxCollisionAPI.Get(stage,path+'/steel').CreateContactOffsetAttr(a.staple_contact_offset_um*1e-6)
+            report['native_staple_contact']=[{'path':path+'/steel',
+                'contact_offset_m':PhysxSchema.PhysxCollisionAPI.Get(stage,path+'/steel').GetContactOffsetAttr().Get(),
+                'rest_offset_m':PhysxSchema.PhysxCollisionAPI.Get(stage,path+'/steel').GetRestOffsetAttr().Get()}
+                for path in staple['paths']]
         if staple and a.staple_max_depenetration_m_s is not None:
             for path in staple['paths']:
                 PhysxSchema.PhysxRigidBodyAPI.Get(stage,path).CreateMaxDepenetrationVelocityAttr(a.staple_max_depenetration_m_s)

@@ -2,7 +2,7 @@
   "status": "development_not_submission_ready",
   "checked_date": "2026-11-13",
   "local_checks": {
-    "geometry_and_rubric_tests": 15,
+    "geometry_and_rubric_tests": 17,
     "result": "passed",
     "command": ".venv/bin/python -m unittest discover -s tasks/tie-a-necktie -p test_local.py -v",
     "scope": "CPU geometry and synthetic evidence-rubric cases only; no physics or task-success claim",
@@ -96,6 +96,29 @@
       "failure": "A40mm narrow-tail bite also slips during the rear pass. Material patch s1.06 moves29mm outward from its previous finger-depth coordinate between960 and980 and125mm by1000. Narrow tip rises fromz0.856 to0.913m and is swept around the wrapping hand. No retained wrap or knot.",
       "length_diagnosis": "The0.50m wide segment between the helds0.08 patch and collar ats0.58 retains0.493\u20130.498m centerline arc while endpoint separation falls0.388\u21920.154m through880\u20131000. It is not globally taut during the failed rear pass. This does not establish slack for later neck/front-loop threading.",
       "next": "A sideways single-hand continuation is rejected by CPU whole-arm/recorded-strand screens. Next examine a physical wide-tip handoff so the first arm can withdraw before rear passage; no fixture or material change has been made."
+    },
+    "adult_folded_collar054_056": {
+      "status": "retained_but_reset_not_validated",
+      "coarse054": "Both ends hang in front; last0.5s max speed5.1mm/s. One full triangle crosses leading folded-flap corner by>1mm; no valid reset.",
+      "refined056": "All final triangles clear every fixture. Local wide-edge tensile strain reaches39.7% where the strip snags the leading corner. Do not accept this as textile integrity.",
+      "next": "Same refined material/mesh; shorter realistic folded flap covers rear140degrees and leaves the hanging side bends open."
+    },
+    "adult128_iteration_control058": {
+      "status": "retained_drape_with_zero_final_fixture_intersections",
+      "max_abs_edge_strain": 0.09415967017414517,
+      "p99_abs_edge_strain": 0.02561399620028534,
+      "late_max_nodal_speed_m_s": 0.009382739216738715,
+      "late_median_nodal_speed_m_s": 0.00050204137443385,
+      "finding": "Increasing32 to128 native solver iterations reduces prior40.36% edge stretch. No material or geometry change. Adult-only YAM diagnostic now matches128. This is a useful reset for grasp testing, not calibrated textile fidelity or knot success.",
+      "source_nodes_sha256": "a6b67ca4060787ce424e0bd68d9fe9d621aa71691524a6b5c12029c472e4307f"
+    },
+    "adult_yam061": {
+      "status": "failed_before_actions",
+      "completed_actions": 0,
+      "wall_seconds": 67.756666,
+      "failure": "Reset pinch outside planned workspace; no physical pickup attempted. Reset capture now precedes calibration so future failures retain geometry.",
+      "candidate": "Source-authored native058 gravity shape; unchanged flat rest mesh/material; same five-second reset for every policy. Full triangles clear both ready robots at1mm inflation. Not native tested.",
+      "pending064": "200-action actual-cloth pickup using source-authored native058 settled gravity shape; whole READY-robot triangle clearance and200 commanded-pose screens pass. Native result pending."
     }
   },
   "demo": {
@@ -159,5 +182,27 @@
     "runner": "Smoke and fixed-joint motion probes share explicit raw reset plus exactly100 ready-position control steps of native settling; all setup physics counts/time recorded separately.",
     "controller": "Retained physical tip handoff demonstrated in batch022. Narrow-strand grasp/front-cross continuation uses offline measured pose. Full knot, clean release and wearable fit remain unproven.",
     "judging": "Evidence-bound manual photo/video/ruler rubric with adversarial local tests; final thresholds need runtime validation"
+  },
+  "adult_collar_candidate": {
+    "status": "native058_passive_retained; adultYAM061_reset_failed; measured_reset_candidate_pending",
+    "length_m": 1.45,
+    "mass_kg": 0.03755359557675263,
+    "vertices": 8689,
+    "triangles": 16352,
+    "neck_center_m": [
+      0.4,
+      0,
+      1.25
+    ],
+    "neck_diameter_m": 0.11,
+    "lower_rim_diameter_m": 0.162,
+    "lower_rim_thickness_m": 0.005,
+    "initial_full_triangle_clearance_m": 0.001,
+    "max_initial_abs_edge_strain": 0.00024653008830077816,
+    "constraints": "none",
+    "purpose": "Remove broad shoulder obstruction and provide realistic slack for one under/over simple knot. Existing child reset remains unchanged until native passive support and robot clearance are established.",
+    "limitations": "No adult YAM grasp, knot, fit or final score evidence.",
+    "outer_collar": "15 rigid3\u00d715\u00d760mm tangential segments on79mm radius, rear140degrees, front open",
+    "native051": "Five seconds complete,51/51 nonblank frames; tie slipped off neck and draped rear support. No usable task reset. Final full triangles clear fixtures and late max speed5.4mm/s."
   }
 }

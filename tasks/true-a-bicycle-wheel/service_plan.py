@@ -10,7 +10,9 @@ PARK_X=.23
 PARK_Z=.88
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--out',type=Path,required=True)
-OUT=parser.parse_args().out
+parser.add_argument('--clock-deg',type=float,default=55.)
+args=parser.parse_args();OUT=args.out
+CLOCK=float(args.clock_deg)
 def rx(a):
  c,s=np.cos(a),np.sin(a);return np.array(((1,0,0),(0,c,-s),(0,s,c)))
 c=Compiler();pickup=compile_plan('pickup');c.frames=pickup['frames'];c.audit=pickup['kinematic_audit']
@@ -23,8 +25,8 @@ GRIP=np.array(((.9999836762514792,.00561312443021827,.0010677381268720367),
  (.0013588606735889215,-.05211937837972152,-.9986399370618928)))
 c.tool_tcp=TOOL_TCP.copy();c.grip=GRIP.copy()
 
-for frame in c.frames:frame['nominal_wheel_clocking_deg']=55.
-clock=55.;origin=np.array((.35,0,1.005));current_clock=clock
+for frame in c.frames:frame['nominal_wheel_clocking_deg']=CLOCK
+clock=CLOCK;origin=np.array((.35,0,1.005));current_clock=clock
 left_p,left_R=ik.tcp_pose(c.q['left'],station.BASES['left'])
 def segment(*args,**kwargs):
  before=len(c.frames);c.segment(*args,**kwargs)
@@ -73,13 +75,13 @@ try:
     u=ik.smoothstep(k/count);rot=rx(-np.deg2rad(22.5)*u);p=origin+rot@(p0-origin);R=rot@Rold
     q,pe,re=ik.solve(p,ik.matrix_to_quat_xyzw(R),c.q['left'],station.BASES['left'],iters=300,damping=.008,tol=1e-7)
     if pe>.0001 or re>.001:raise ValueError(('index',k,pe,re))
-    c.q['left']=q;c.frames.append(dict(stage='Index wheel by one spoke pair',nominal_wheel_clocking_deg=55.-22.5*u,action14=np.r_[q,c.opening['left'],c.q['right'],c.opening['right']].tolist()))
-   current_clock=32.5;left_p=p;left_R=R
+    c.q['left']=q;c.frames.append(dict(stage='Index wheel by one spoke pair',nominal_wheel_clocking_deg=CLOCK-22.5*u,action14=np.r_[q,c.opening['left'],c.q['right'],c.opening['right']].tolist()))
+   current_clock=CLOCK-22.5;left_p=p;left_R=R
    c.audit.append(dict(stage='Index wheel by one spoke pair',seconds=1.5,interpolation='Cartesian rim arc'))
- plan=dict(pickup);plan.update(wheel_clocking_deg=55.,requested_stage='repair_candidate',frames=c.frames,kinematic_audit=c.audit,action_count=len(c.frames),seconds=len(c.frames)/20,limitations=['Offline candidate. No grasp or contact proof.','Released final revolution not yet included.'])
+ plan=dict(pickup);plan.update(wheel_clocking_deg=CLOCK,requested_stage='repair_candidate',frames=c.frames,kinematic_audit=c.audit,action_count=len(c.frames),seconds=len(c.frames)/20,limitations=['Offline candidate. No grasp or contact proof.','Released final revolution not yet included.'])
  actions=np.asarray([np.r_[READY,1.,READY,1.]]+[f['action14'] for f in c.frames]);limits=np.tile(np.array([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/20]),2);plan['max_speed_fraction']=float(np.max(np.abs(np.diff(actions,axis=0))/limits));plan['compile_success']=True
 except Exception as e:
- plan=dict(pickup);plan.update(wheel_clocking_deg=55.,requested_stage='repair_candidate',frames=c.frames,kinematic_audit=c.audit,action_count=len(c.frames),seconds=len(c.frames)/20,compile_success=False,error=str(e))
+ plan=dict(pickup);plan.update(wheel_clocking_deg=CLOCK,requested_stage='repair_candidate',frames=c.frames,kinematic_audit=c.audit,action_count=len(c.frames),seconds=len(c.frames)/20,compile_success=False,error=str(e))
 plan['held_grasp_calibration']={'source':'Native036 final pickup, fixed ordinary FK/native tool observation', 'applies_from_step':83,'tcp_position_in_tool_m':TOOL_TCP.tolist(),'tcp_rotation_in_tool':GRIP.tolist(),'limitation':'One empirical grasp; load-dependent slip still requires native verification.'}
 plan['source_sha256']['service_plan.py']=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 OUT.parent.mkdir(parents=True,exist_ok=True)

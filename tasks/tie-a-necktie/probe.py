@@ -1,6 +1,6 @@
 """Three-second native flat-fabric drape check; not a knot demonstration."""
 import argparse
-from dataclasses import asdict
+from dataclasses import asdict,replace
 import hashlib
 import json
 from pathlib import Path
@@ -21,11 +21,14 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--mode',choices=('collar-drape','free-fall'),default='collar-drape')
     p.add_argument('--seconds',type=float,default=3.)
+    p.add_argument('--adult-collar',action='store_true',help='Isolated1.45m inside-out tie on a raised standalone collar; leaves child task reset unchanged')
     p.add_argument('--physics-hz',type=int,choices=(240,480,960),default=240)
+    p.add_argument('--solver-iterations',type=int,choices=(32,64,128,255),default=32,help='Diagnostic FEM convergence comparison; does not change material')
     p.add_argument('--output',type=Path,required=True)
     p.add_argument('--headless',choices=('true','false'),default='true')
     p.add_argument('--no-render',action='store_true',help='Only for diagnosing renderer failures; no RGB evidence')
     args=p.parse_args()
+    material=replace(TIE_FABRIC,solver_iterations=args.solver_iterations)
     if not 0 < args.seconds <= 10:
         p.error('diagnostics are limited to ten simulated seconds')
     args.output.mkdir(parents=True,exist_ok=True)
@@ -33,10 +36,10 @@ def main():
     from isaaclab.app import AppLauncher
     app=AppLauncher(headless=args.headless=='true', enable_cameras=not args.no_render).app
     report={'status':'running','kind':'diagnostic_not_submission_evidence',
-            'mode':args.mode,'material':asdict(TIE_FABRIC),'physics_hz':args.physics_hz,
-            'seconds':args.seconds,'provenance':{},'phase':'build',
+            'mode':args.mode,'material':asdict(material),'physics_hz':args.physics_hz,
+            'seconds':args.seconds,'adult_collar_candidate':args.adult_collar,'provenance':{},'phase':'build',
             'render_bridge':None if args.no_render else 'native PhysX Fabric'}
-    for name in ('probe.py','cloth_mesh.py','native_cloth.py','layout.py','probe_capture.py','probe_runtime.py'):
+    for name in ('probe.py','cloth_mesh.py','native_cloth.py','layout.py','probe_capture.py','probe_runtime.py','adult_layout.py'):
         report['provenance'][name]=hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
     capture=None
     world=None
@@ -50,15 +53,19 @@ def main():
         ensure_gpu_scene(stage)
         author_box(stage,'/World/Ground',(10.,10.,.1),(0.,0.,-.05))
         author_box(stage,'/World/Table',(1.1,1.3,.06),(.36,0.,TABLE-.03),(.58,.39,.25))
-        mesh=necktie()
-        initial=initial_layout(mesh)
-        if args.mode=='collar-drape':
-            author_collar(stage)
-        author_cloth(stage,'/World/Tie',mesh,TIE_FABRIC,points=initial,color=(.50,.08,.17),
+        if args.adult_collar:
+            from adult_layout import make_mesh,initial_layout as adult_initial,author_collar as adult_collar,fixture_geometry
+            mesh=make_mesh();initial=adult_initial(mesh)
+            report['fixture_geometry']=fixture_geometry()
+            if args.mode=='collar-drape':adult_collar(stage)
+        else:
+            mesh=necktie();initial=initial_layout(mesh)
+            if args.mode=='collar-drape':author_collar(stage)
+        author_cloth(stage,'/World/Tie',mesh,material,points=initial,color=(.50,.08,.17),
                      vertex_colors=face_colors(mesh))
         if not args.no_render:
             from probe_capture import ProbeCapture
-            eye,target=(-.40,-1.10,1.48),(.40,0.,.98)
+            eye,target=((- .40,-1.10,1.60),(.37,0.,1.08)) if args.adult_collar else ((-.40,-1.10,1.48),(.40,0.,.98))
             capture=ProbeCapture(stage,args.output,eye,target)
         stage.GetRootLayer().Export(str(args.output/'initial.usda'))
         report['phase']='attach'

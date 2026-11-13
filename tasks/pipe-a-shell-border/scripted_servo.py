@@ -12,7 +12,9 @@ from native import rotation
 
 class ScriptedServo:
     def __init__(self):
-        self.last={};self.piston_integral=0.;self.grip_position=None;self.grip_rotation=None
+        self.last={};self.piston_integral=0.;self.piston_bias=0.
+        self.grip_position=None;self.grip_rotation=None
+        self.pusher_translation=np.zeros(3)
 
     def command(self,frame,reference,observed,barrel_pose,plunger_pose):
         target=np.asarray(reference,float).copy()
@@ -47,17 +49,24 @@ class ScriptedServo:
             actual_q=float(np.dot(p[:3]-b[:3],axis)+.060)
             desired_q=float(recipe['piston_m'])
             error=desired_q-actual_q
-            self.piston_integral=float(np.clip(self.piston_integral+.2*error*.05,-.001,.001))
-            bias=float(np.clip(.3*error+self.piston_integral,-.0015,.0015))
-            # Keep the pusher on the fixed common tool reference. Following the
-            # barrel's instantaneous lateral motion couples two position loops
-            # through contact and can destabilize an otherwise firm grasp.
+            self.piston_integral=float(np.clip(self.piston_integral+2.*error*.05,-.003,.003))
+            wanted_bias=float(np.clip(1.5*error+self.piston_integral,-.004,.004))
+            self.piston_bias+=float(np.clip(wanted_bias-self.piston_bias,-.0004,.0004))
+            bias=self.piston_bias
+            # Follow the measured translational tracking lag slowly. Without
+            # this common displacement, the pusher runs ahead of the barrel
+            # during a tail stroke and loses compression. Do not chase its
+            # instantaneous rotation or elastic finger motion.
+            displacement=np.clip(b[:3]-wanted_b,-.008,.008)
+            self.pusher_translation+=.3*(displacement-self.pusher_translation)
             push_p,push_R=ik.tcp_pose(target[:6],station.BASES['left'])
-            push_p+=wanted_R[:,1]*bias
+            push_p+=self.pusher_translation+wanted_R[:,1]*bias
             q,pe,re=ik.solve(push_p,ik.matrix_to_quat_xyzw(push_R),target[:6],station.BASES['left'],iters=160,tol=1e-7)
             if pe>.0005 or re>.005:raise RuntimeError(f'Piston pose servo unreachable: {pe}, {re}')
             target[:6]=q
             self.last.update(piston_target_m=desired_q,piston_measured_m=actual_q,
-                piston_bias_m=bias,left_ik_error_m=float(pe))
-        else:self.piston_integral=0.
+                piston_bias_m=bias,pusher_translation_m=self.pusher_translation.tolist(),
+                left_ik_error_m=float(pe))
+        else:
+            self.piston_integral=0.;self.piston_bias=0.;self.pusher_translation[:]=0.
         return target

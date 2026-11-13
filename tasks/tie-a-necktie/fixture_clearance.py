@@ -62,11 +62,13 @@ def fixture_intersections(points,faces,fixtures,margin=.001):
         center=np.asarray(spec['center'])
         size=np.asarray(spec['size'] if spec['kind']=='box' else
                         (2*spec['radius'],2*spec['radius'],spec['height']))
-        low=center-size/2-margin;high=center+size/2+margin
+        rotation=np.asarray(spec.get('rotation',np.eye(3)))
+        bound_size=np.abs(rotation)@size if spec['kind']=='box' else size
+        low=center-bound_size/2-margin;high=center+bound_size/2+margin
         candidates=np.flatnonzero(np.all(triangles.max(1)>=low,axis=1)&
                                   np.all(triangles.min(1)<=high,axis=1))
         if spec['kind']=='box':
-            hit=lambda t:triangle_box_intersects(t,center,size,margin)
+            hit=lambda t:triangle_box_intersects((t-center)@rotation,(0.,0.,0.),size,margin)
         elif spec['kind']=='cylinder':
             hit=lambda t:triangle_cylinder_intersects(t,center,spec['radius'],spec['height'],margin)
         else:raise ValueError('Unsupported fixture primitive: '+spec['kind'])

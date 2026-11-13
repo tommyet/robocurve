@@ -1,0 +1,61 @@
+{
+  "schema": "wheel-preloaded-reset-controls-v1",
+  "submission_ready": false,
+  "robot_demo": false,
+  "score": 0,
+  "interpretation": "The frozen-thread native assembly gains angular momentum despite a preloaded shape and no custom runtime material forces. Once-per-step force integration does not by itself validate this wheel. Native central DistanceJoint candidate is under investigation; no source default changed.",
+  "records": [
+    {
+      "batch": "054",
+      "diagnostic": "preloaded_active",
+      "report_sha256": "659ffefc713b6250626c1357578a5cf12eefc86c0f7acbdd7d859fa20e9b28c2",
+      "complete": true,
+      "dt": 0.0001,
+      "seconds": 0.3,
+      "frozen_material": false,
+      "external_forces_every_iteration": false,
+      "initial_axial_angular_momentum": -1.5926268761689915e-05,
+      "final_axial_angular_momentum": -0.00590659498485043,
+      "mean_axial_torque_from_momentum_nm": -0.019642109756881427,
+      "rim_integrity": {
+        "valid": true,
+        "steps": 3000,
+        "first_failure": null,
+        "maximum_axial_bending_strain": 0.0011513970992745105,
+        "maximum_twist_rad": 0.0009611942421726694,
+        "maximum_locked_joint_gap_m": 8.941242866933663e-06,
+        "peaks": {
+          "maximum_axial_bending_strain": 0.0011923193945504872,
+          "maximum_twist_rad": 0.0009624354967705693,
+          "maximum_locked_joint_gap_m": 9.323036531367597e-06
+        }
+      }
+    },
+    {
+      "batch": "055",
+      "diagnostic": "preloaded_frozen",
+      "report_sha256": "607ed80b7ebe4957513a6af9778012f0669f2bad6d21f545053ee6aafcbb61ca",
+      "complete": true,
+      "dt": 0.0001,
+      "seconds": 0.3,
+      "frozen_material": true,
+      "external_forces_every_iteration": false,
+      "initial_axial_angular_momentum": -1.5926268761689915e-05,
+      "final_axial_angular_momentum": -0.04712202314399583,
+      "mean_axial_torque_from_momentum_nm": -0.1570726804776063,
+      "rim_integrity": {
+        "valid": true,
+        "steps": 3000,
+        "first_failure": null,
+        "maximum_axial_bending_strain": 0.001160297099831775,
+        "maximum_twist_rad": 0.0009614362760951133,
+        "maximum_locked_joint_gap_m": 8.040604433981998e-06,
+        "peaks": {
+          "maximum_axial_bending_strain": 0.0011940103826107626,
+          "maximum_twist_rad": 0.0009624017286187557,
+          "maximum_locked_joint_gap_m": 9.402673553536026e-06
+        }
+      }
+    }
+  ]
+}

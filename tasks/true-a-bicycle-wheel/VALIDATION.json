@@ -2,13 +2,13 @@
   "schema": "development-validation-v1",
   "submission_ready": false,
   "calibrated": false,
-  "cpu_checks": "47 CPU checks pass. Free-wrench pickup verified. Reciprocal native force-integration controls identify and remove sustained unforced acceleration; normal-reset manipulation with the corrected setting remains to be tested.",
+  "cpu_checks": "52 CPU checks pass. Real robot202-action service049 did not turn a nipple. Preloaded frozen-thread055 still gains unforced angular momentum. Native central DistanceJoint057 removes that large bias but has a25mm numerical tolerance; its uncorrected response is invalid. Compensated isolated spring is pending.",
   "simulator_probe": null,
   "demo": null,
   "dream": null,
   "media": null,
   "blocking_items": [
-    "Verify normal-reset robot service with once-per-step external forces and ordinary joint tracking",
+    "Validate unbiased native spoke forces and reproducible passive wheel settling",
     "Validate finite-load wrench engagement without excessive jaw penetration",
     "Run the collision-screened replacement service route with ordinary robot joint-state tracking",
     "Complete released-wheel revolution and final spoke-tension judging",
@@ -67,7 +67,7 @@
       "next": "Full 130-body geometry and live thread coupling .1s at25\u00b5s."
     }
   },
-  "cpu_tests_passed": 47,
+  "cpu_tests_passed": 53,
   "native_scene": {
     "authoring_entry_point": "wheel_scene.build_scene(stage, root)",
     "material_callback": "NativeThreadCoupler.before_step before every native substep",
@@ -293,7 +293,8 @@
           "maximum_locked_joint_gap_m": 9.411993246901708e-06
         }
       },
-      "first_service_candidate": "service-plan.json:682 ordinary actions; first202 include pickup, quarter turn and withdrawal. PI uses joint state only; not yet run."
+      "first_service_candidate": "service-plan.json:682 ordinary actions; first202 include pickup, quarter turn and withdrawal. PI uses joint state only; not yet run.",
+      "superseded": "Later049/055/063 show that once-per-step forces are not a validated wheel fix; retain this field as historical control evidence only."
     },
     "service_hull_screen": {
       "kind": "wheel_service_nominal_convex_screen",
@@ -359,12 +360,147 @@
     "native_yam_cpu_035": "2actions completed; too short to reveal later CPU runaway.",
     "native_yam_gpu_034": "Interrupted before grasp. Recoverable trace reaches23 actions/1.15s and shows uncommanded hub speed37rad/s. GPU YAM is unsuitable until this is diagnosed. Truncated gzip is partial evidence, not a completed trial.",
     "standalone_pair_035": "BothCPU/GPU0.1s standalone scenes pass rim integrity. Later long CPU YAM evidence rules out a GPU-only cause.",
-    "next": "Run normal-reset calibrated service with once-per-step external forces and ordinary joint-state PI.",
+    "next": "Isolate world-bearing reaction from native internal-constraint momentum error; no robot service run until understood.",
     "native_yam_cpu_036": "82actions complete in393.82s; unheld hub reaches14.413rad/s before rim grip. CPU delays rather than fixes the runaway.",
     "native_yam_no_rewind_040": "30actions complete in155.89s; hub reaches10.2996rad/s at1.5s, Lx changes\u22120.22251kgm2/s despite custom torque sum0 and small gravity axle torque.",
     "frozen_thread_040": "30actions complete in89.24s, no custom torques or material writes; hub reaches10.3984rad/s at1.5s, nearly the live-coupling trajectory. Native scene configuration/contacts remain under investigation.",
     "native_mass_property_comparison": "All130 masses, COM offsets and inertia tensors match standalone036 and YAM040 within1e-5 relative tolerance.",
     "evidence": "evidence/native-yam-pickup-and-spin-036-040-summary.json",
-    "native_yam_forces_once_044": "30 actions1.5s complete, rim guard valid at all15002 substeps; no sustained acceleration. Reciprocal standalone flag-on control reproduces the prior runaway."
+    "native_yam_forces_once_044": "30 actions1.5s complete, rim guard valid at all15002 substeps; no sustained acceleration. Reciprocal standalone flag-on control reproduces the prior runaway.",
+    "latest_063": "Compensated central spring full wheel gains approximately\u22120.405Nm unexplained axle torque, including with all material callbacks frozen.500us also violates rim joint-gap domain on step1."
+  },
+  "current_preloaded_reset": {
+    "promoted": false,
+    "evidence": "evidence/native-preloaded-reset-054-055-summary.json",
+    "frozen_native_torque_nm": -0.157,
+    "interpretation": "Preloaded geometry alone and once-per-step external forces do not validate wheel mechanics."
+  },
+  "central_spring_candidate": {
+    "promoted": false,
+    "diagnostic_only": true,
+    "status": "unit_passes_full_wheel_momentum_invalid",
+    "candidate": "CPU native central DistanceJoint with separate transverse/bending continuity",
+    "native_distance_tolerance_m": 0.025,
+    "numerical_compensation_pending_unit_gate": false,
+    "physical_rest_and_modulus_changed": false,
+    "source": "https://raw.githubusercontent.com/NVIDIA-Omniverse/PhysX/main/physx/source/physxextensions/src/ExtDistanceJoint.cpp",
+    "evidence": "evidence/native-central-spring-063-summary.json",
+    "isolated_unit_059": {
+      "proportional_forces": true,
+      "baseline_error_m": 1.2369105462e-09,
+      "final_error_m": 3.7162112684e-07,
+      "quarter_turn_shift_m": -0.0001131296158,
+      "constitutive_pass": true
+    },
+    "full_063": [
+      {
+        "report_sha256": "e965addaedf6e24d5a49742dbc59ea7f5c02e4edc8b81f53d733508321c029c5",
+        "diagnostic": "wheel-central100",
+        "complete": true,
+        "dt": 0.0001,
+        "seconds": 0.3,
+        "completed_steps": 3000,
+        "error": null,
+        "wall_seconds": 21.631164063699543,
+        "rim_integrity": {
+          "valid": true,
+          "steps": 3000,
+          "first_failure": null,
+          "maximum_axial_bending_strain": 0.0012250166104749648,
+          "maximum_twist_rad": 0.0009384155296879237,
+          "maximum_locked_joint_gap_m": 9.448395888753235e-06,
+          "peaks": {
+            "maximum_axial_bending_strain": 0.001627243228859595,
+            "maximum_twist_rad": 0.0013612895641817227,
+            "maximum_locked_joint_gap_m": 1.5313271660344336e-05
+          }
+        },
+        "final_runout_m": 0.0009050965309143066,
+        "initial_angular_momentum": [
+          -2.4038395398705804e-05,
+          0.001472956724871614,
+          0.0027018784091706024
+        ],
+        "final_angular_momentum": [
+          -0.12039109302988851,
+          -1.6201599722857885e-05,
+          0.00010383099943997406
+        ],
+        "gravity_impulse": [
+          -4.457417097676466e-05,
+          0.0008926244046172118,
+          0.0
+        ],
+        "unexplained_mean_axle_torque_nm": -0.40120867110207753
+      },
+      {
+        "report_sha256": "b2cf63e342b304b3615cb79373f03d7df663e6b5bd2fb885aae12b4b11e9077c",
+        "diagnostic": "wheel-central500",
+        "complete": false,
+        "dt": 0.0005,
+        "seconds": 0.3,
+        "completed_steps": 1,
+        "error": "ThreadTravelOutOfScope: Native rim left elastic model domain: {'step': 1, 'maximum_axial_bending_strain': 0.0018273798594509514, 'maximum_twist_rad': 0.0004550384127968742, 'maximum_locked_joint_gap_m': 0.00013164634886465967}",
+        "wall_seconds": 3.6748466212302446,
+        "rim_integrity": null,
+        "final_runout_m": 0.00014391541481018066,
+        "initial_angular_momentum": [
+          -0.0005193638212458055,
+          0.0029484754544445374,
+          0.005433048542478094
+        ],
+        "final_angular_momentum": [
+          -0.0005193638212458055,
+          0.0029484754544445374,
+          0.005433048542478094
+        ],
+        "gravity_impulse": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "unexplained_mean_axle_torque_nm": null
+      },
+      {
+        "report_sha256": "2ae19a5e3c07941a94322d436e00e581e1050c997719c11f725bcf6a31bb26e6",
+        "diagnostic": "wheel-central-frozen100",
+        "complete": true,
+        "dt": 0.0001,
+        "seconds": 0.1,
+        "completed_steps": 1000,
+        "error": null,
+        "wall_seconds": 7.18562588468194,
+        "rim_integrity": {
+          "valid": true,
+          "steps": 1000,
+          "first_failure": null,
+          "maximum_axial_bending_strain": 0.0012177610931060371,
+          "maximum_twist_rad": 0.0009387909813659176,
+          "maximum_locked_joint_gap_m": 9.677540119514502e-06,
+          "peaks": {
+            "maximum_axial_bending_strain": 0.0016332088301009842,
+            "maximum_twist_rad": 0.0013616707351179849,
+            "maximum_locked_joint_gap_m": 1.5328540208968612e-05
+          }
+        },
+        "final_runout_m": 0.0009058117866516465,
+        "initial_angular_momentum": [
+          -2.4038395398705804e-05,
+          0.001472956724871614,
+          0.0027018784091706024
+        ],
+        "final_angular_momentum": [
+          -0.04054260078513947,
+          2.277127642194803e-05,
+          1.9717348730184362e-05
+        ],
+        "gravity_impulse": [
+          -1.857419348972212e-05,
+          0.00029721962296009544,
+          0.0
+        ],
+        "unexplained_mean_axle_torque_nm": -0.40540528724976016
+      }
+    ]
   }
 }

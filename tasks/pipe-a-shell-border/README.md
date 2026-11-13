@@ -75,7 +75,7 @@ Do not use the generic scene runner's placeholder score; this task requires
 
 Trials use a fixed starting layout, no object jitter and 20 Hz control. The limit
 is 2,400 actions, or 120 simulated seconds. The latest three-deposit
-trial took 382.8 wall seconds for 957 actions on an RTX 6000 Ada. Full demo and
+trial took about 326 wall seconds for 838 actions on an RTX 6000 Ada. Full demo and
 Dream runtimes remain unmeasured. Each run saves its exact Python source, plan,
 video, photographs, joint actions, material state and contact audit.
 
@@ -92,7 +92,10 @@ shape scoring and released-tool evidence. Native tests have demonstrated a
 physical pickup, passive plunger extrusion and an elongated head and tail.
 Native035 released the tool cleanly and scored0.25 under its recorded independent
 scorer: two valid shell shapes, one with continuous ridges. The incomplete,
-uneven finish is not submission quality. A full joined border remains pending.
+uneven finish is not submission quality. Later pose-assisted trials058/062
+complete 838 actions and release cleanly, but score zero under the current
+scorer: pressure falls during tail travel, leaving rounded deposits. A full
+joined border remains pending.
 
 The passive mechanism control emitted 0.1587 ml under an 8 N load and nothing
 under zero load; flow stopped after release and volume balance closed. Those

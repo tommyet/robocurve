@@ -1,0 +1,116 @@
+{
+  "schema": "wheel-central-spring-063-summary-v1",
+  "robot_demo": false,
+  "task_score": null,
+  "controls": [
+    {
+      "report_sha256": "e965addaedf6e24d5a49742dbc59ea7f5c02e4edc8b81f53d733508321c029c5",
+      "diagnostic": "wheel-central100",
+      "complete": true,
+      "dt": 0.0001,
+      "seconds": 0.3,
+      "completed_steps": 3000,
+      "error": null,
+      "wall_seconds": 21.631164063699543,
+      "rim_integrity": {
+        "valid": true,
+        "steps": 3000,
+        "first_failure": null,
+        "maximum_axial_bending_strain": 0.0012250166104749648,
+        "maximum_twist_rad": 0.0009384155296879237,
+        "maximum_locked_joint_gap_m": 9.448395888753235e-06,
+        "peaks": {
+          "maximum_axial_bending_strain": 0.001627243228859595,
+          "maximum_twist_rad": 0.0013612895641817227,
+          "maximum_locked_joint_gap_m": 1.5313271660344336e-05
+        }
+      },
+      "final_runout_m": 0.0009050965309143066,
+      "initial_angular_momentum": [
+        -2.4038395398705804e-05,
+        0.001472956724871614,
+        0.0027018784091706024
+      ],
+      "final_angular_momentum": [
+        -0.12039109302988851,
+        -1.6201599722857885e-05,
+        0.00010383099943997406
+      ],
+      "gravity_impulse": [
+        -4.457417097676466e-05,
+        0.0008926244046172118,
+        0.0
+      ],
+      "unexplained_mean_axle_torque_nm": -0.40120867110207753
+    },
+    {
+      "report_sha256": "b2cf63e342b304b3615cb79373f03d7df663e6b5bd2fb885aae12b4b11e9077c",
+      "diagnostic": "wheel-central500",
+      "complete": false,
+      "dt": 0.0005,
+      "seconds": 0.3,
+      "completed_steps": 1,
+      "error": "ThreadTravelOutOfScope: Native rim left elastic model domain: {'step': 1, 'maximum_axial_bending_strain': 0.0018273798594509514, 'maximum_twist_rad': 0.0004550384127968742, 'maximum_locked_joint_gap_m': 0.00013164634886465967}",
+      "wall_seconds": 3.6748466212302446,
+      "rim_integrity": null,
+      "final_runout_m": 0.00014391541481018066,
+      "initial_angular_momentum": [
+        -0.0005193638212458055,
+        0.0029484754544445374,
+        0.005433048542478094
+      ],
+      "final_angular_momentum": [
+        -0.0005193638212458055,
+        0.0029484754544445374,
+        0.005433048542478094
+      ],
+      "gravity_impulse": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "unexplained_mean_axle_torque_nm": null
+    },
+    {
+      "report_sha256": "2ae19a5e3c07941a94322d436e00e581e1050c997719c11f725bcf6a31bb26e6",
+      "diagnostic": "wheel-central-frozen100",
+      "complete": true,
+      "dt": 0.0001,
+      "seconds": 0.1,
+      "completed_steps": 1000,
+      "error": null,
+      "wall_seconds": 7.18562588468194,
+      "rim_integrity": {
+        "valid": true,
+        "steps": 1000,
+        "first_failure": null,
+        "maximum_axial_bending_strain": 0.0012177610931060371,
+        "maximum_twist_rad": 0.0009387909813659176,
+        "maximum_locked_joint_gap_m": 9.677540119514502e-06,
+        "peaks": {
+          "maximum_axial_bending_strain": 0.0016332088301009842,
+          "maximum_twist_rad": 0.0013616707351179849,
+          "maximum_locked_joint_gap_m": 1.5328540208968612e-05
+        }
+      },
+      "final_runout_m": 0.0009058117866516465,
+      "initial_angular_momentum": [
+        -2.4038395398705804e-05,
+        0.001472956724871614,
+        0.0027018784091706024
+      ],
+      "final_angular_momentum": [
+        -0.04054260078513947,
+        2.277127642194803e-05,
+        1.9717348730184362e-05
+      ],
+      "gravity_impulse": [
+        -1.857419348972212e-05,
+        0.00029721962296009544,
+        0.0
+      ],
+      "unexplained_mean_axle_torque_nm": -0.40540528724976016
+    }
+  ],
+  "interpretation": "Compensated central spring passes the isolated constitutive test, but full wheel still gains angular momentum with the callback frozen. No robot run is authorized by this evidence."
+}

@@ -15,7 +15,14 @@ from tool_geometry import HANDLE_SIZE,BLADE_SIZE,BLADE_OFFSET,METAL_PARTS,GUARDS
 
 SCENE='station'
 FABRIC=seam_fabric(CONFIG.cloth_contact_offset_m)
-if CONFIG.quality_mesh:
+if CONFIG.facet_cloth:
+    if not CONFIG.backed_clamp or CONFIG.quality_mesh or CONFIG.hole_mesh_spacing_m is not None:
+        raise ValueError('Facet candidate requires the backed clamp and its own explicit mesh')
+    from facet_cloth import shell_mesh
+    from arena_facet import FacetCloth
+    Cloth=FacetCloth
+    MESHES=[shell_mesh(upper) for upper in (True,False)]
+elif CONFIG.quality_mesh:
     if abs(CONFIG.hole_half_m-.0008)>1e-12 or CONFIG.hole_mesh_spacing_m is not None:
         raise ValueError('Quality mesh requires the fixed 1.6 mm hole diagnostic')
     from quality_mesh import quality_patch
@@ -32,7 +39,7 @@ for mesh in MESHES:mesh.rest[:,2]-=CONFIG.seam_lowering_m
 if CONFIG.sewing_clamp:
     if (CONFIG.pre_draped_seam or CONFIG.seam_lowering_m!=0. or
             abs(CONFIG.thread_radius_m-.0004)>1e-12 or
-            (not CONFIG.quality_mesh and CONFIG.hole_mesh_spacing_m!=.0004)):
+            (not CONFIG.quality_mesh and not CONFIG.facet_cloth and CONFIG.hole_mesh_spacing_m!=.0004)):
         raise ValueError('Sewing clamp requires coarse thread and locally refined or graded hole mesh')
     from clamp_layout import transform
     for mesh in MESHES:mesh.rest=transform(mesh.rest,lower_edge_supported=CONFIG.supported_clamp)
@@ -77,9 +84,11 @@ if CONFIG.sewing_clamp:
 
 OBJECTS=[
     Cloth('cloth_left',pos=(0.,0.,0.),size=(.13,.08,.004),mesh=MESHES[0],initial=INITIAL[0],
-          fabric=FABRIC,color=(.76,.68,.47),contact_refinement=CONFIG.contact_refinement),
+          fabric=FABRIC,color=(.76,.68,.47),contact_refinement=CONFIG.contact_refinement,
+          **({'primitive_boxes':CONFIG.box_panels} if CONFIG.facet_cloth else {})),
     Cloth('cloth_right',pos=(0.,0.,0.),size=(.13,.08,.004),mesh=MESHES[1],initial=INITIAL[1],
-          fabric=FABRIC,color=(.25,.42,.66),contact_refinement=CONFIG.contact_refinement),
+          fabric=FABRIC,color=(.25,.42,.66),contact_refinement=CONFIG.contact_refinement,
+          **({'primitive_boxes':CONFIG.box_panels} if CONFIG.facet_cloth else {})),
     *[Thread(f'stitch_{i}',pos=(0.,0.,0.),size=(.011,2*CONFIG.thread_radius_m,.003),
              nodes=thread_nodes(y),radius_m=CONFIG.thread_radius_m) for i,y in enumerate(STITCH_Y)],
     *FIXTURE,

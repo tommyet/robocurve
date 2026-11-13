@@ -1,8 +1,9 @@
 """Bounded YAM/Arena smoke recorder. No task demo, Dream call or scored success.
 
 Smoke mode holds the ordinary ready joint targets. Motion-probe mode replays a
-frozen ordinary joint trajectory. Measured cloth/prop geometry is assessor
-evidence only and never changes either policy's targets.
+frozen ordinary joint trajectory. Explicit state-assisted mode reads reset
+cloth geometry to choose ordinary joint targets; it cannot move material
+directly. Dream retains normal camera and joint observations.
 """
 import argparse
 from dataclasses import fields,is_dataclass
@@ -40,7 +41,7 @@ def encode(value):
 def sources():
     result={}
     for p in sorted(HERE.iterdir()):
-        if p.suffix in ('.py','.json','.md') or p.name=='LICENSE':
+        if p.suffix in ('.py','.json','.md','.npz') or p.name=='LICENSE':
             if p.suffix=='.py':
                 compile(p.read_bytes(),str(p),'exec')
             elif p.suffix=='.json':
@@ -60,17 +61,20 @@ def package_versions():
 def native_audit(stage,cloth_names,peg_names):
     """Fail closed if a custom asset silently becomes a rigid/proxy object."""
     from pxr import UsdPhysics
-    result={'cloth':{},'pegs':{},'attachments':[]}
+    result={'cloth':{},'pegs':{},'attachments':[],'physics_scenes':[]}
     for prim in stage.Traverse():
         path=str(prim.GetPath())
         schemas=prim.GetAppliedSchemas()
+        if prim.IsA(UsdPhysics.Scene):
+            result['physics_scenes'].append(dict(path=path,settings={name:prim.GetAttribute('physxScene:'+name).Get() for name in ('enableGPUDynamics','enableEnhancedDeterminism','enableExternalForcesEveryIteration')}))
         if 'Attachment' in prim.GetTypeName() or any('Attachment' in s for s in schemas):
             result['attachments'].append(path)
         for name in cloth_names:
             if path.endswith('/'+name) and 'OmniPhysicsDeformableBodyAPI' in schemas:
                 result['cloth'][name]={'path':path,'schemas':list(schemas),
                      'rigid_body':prim.HasAPI(UsdPhysics.RigidBodyAPI),
-                     'self_collision':prim.GetAttribute('physxDeformableBody:selfCollision').Get()}
+                     'self_collision':prim.GetAttribute('physxDeformableBody:selfCollision').Get(),
+                     'solver_position_iterations':prim.GetAttribute('physxDeformableBody:solverPositionIterationCount').Get()}
         for name in peg_names:
             if '/'+name+'/' in path:
                 entry=result['pegs'].setdefault(name,{'bodies':[],'joints':[],'kinematic_bodies':[]})
@@ -107,6 +111,8 @@ def main():
     p.add_argument('--plan',type=Path,help='Precomputed ordinary joint commands; required for motion-probe')
     p.add_argument('--seed',type=int,default=0)
     p.add_argument('--inside-out-reset',action='store_true',help='Explicit diagnostic reset for a simple (Oriental) knot; default remains front-face drape')
+    p.add_argument('--adult-collar',action='store_true',help='Explicit diagnostic145cm tie and standalone folded-collar form')
+    p.add_argument('--state-assisted-grasp',action='store_true',help='Disclosed scripted adult pickup: use measured reset cloth to select ordinary finger targets')
     p.add_argument('--judging-views',action='store_true',help='Record additional native960×720 front/rear assessor videos')
     p.add_argument('--out',type=Path)
     p.add_argument('--check-only',action='store_true',help='Compile source and check JSON without loading a simulator')
@@ -121,7 +127,9 @@ def main():
             p.error('Motion and explicitly selected initial face do not match')
         if fixed_plan.get('do_not_run_reason'):
             p.error(fixed_plan['do_not_run_reason'])
-        expected=hashlib.sha256((HERE/'layout.py').read_bytes()).hexdigest()
+        if bool(fixed_plan.get('requires_adult_collar')) != args.adult_collar:
+            p.error('Motion and selected collar form do not match')
+        expected=hashlib.sha256((HERE/('adult_layout.py' if args.adult_collar else 'layout.py')).read_bytes()).hexdigest()
         if fixed_plan.get('fixture_source_sha256')!=expected:
             p.error('Frozen motion does not match current collar geometry; recompile and audit first')
         args.steps=len(fixed_actions) if args.steps is None else args.steps
@@ -135,6 +143,8 @@ def main():
             p.error('Smoke runs are limited to 1–200 control steps')
     if not 0<=args.seed<2**32:
         p.error('Seed must be an unsigned 32-bit integer')
+    if args.state_assisted_grasp and (args.mode!='motion-probe' or not args.adult_collar or args.steps!=200):
+        p.error('Adult state-assisted pickup currently requires the bounded200-action adult motion probe')
     source_hashes=sources()
     if args.check_only:
         print(json.dumps({'status':'local_syntax_and_json_passed','source_sha256':source_hashes,
@@ -161,9 +171,12 @@ def main():
             'score':None,'demo':False,'dream_requests':0,'started_utc':datetime.now(timezone.utc).isoformat(),
             'source_sha256':source_hashes,'versions':versions,'seed':args.seed,
             'initial_face':'inside-out for simple knot diagnostic' if args.inside_out_reset else 'front-face four-in-hand diagnostic',
+            'adult_collar_candidate':args.adult_collar,
             'control_hz':CONTROL_HZ,'requested_steps':args.steps,'completed_steps':0,
             'policy':('constant adapter-ready joint targets' if fixed_plan is None else 'frozen fixed joint trajectory')+'; no object/assessor feedback',
             'instruction':draft['instruction']}
+    if args.state_assisted_grasp:
+        report['policy']='Explicit state-assisted scripted feasibility demonstration: measured reset cloth selects an ordinary pinch and lift. No physical state writes; Dream receives no material state.'
     def save():
         report['wall_seconds']=time.monotonic()-started
         temporary=args.out/'run.json.tmp'
@@ -178,6 +191,7 @@ def main():
     try:
         os.environ.setdefault('OMNI_KIT_ACCEPT_EULA','YES')
         os.environ['ROBOCURVE_TIE_INSIDE_OUT_RESET']='1' if args.inside_out_reset else '0'
+        os.environ['ROBOCURVE_TIE_ADULT_COLLAR']='1' if args.adult_collar else '0'
         from isaaclab.app import AppLauncher
         app=AppLauncher(headless=True,enable_cameras=True).app
         import torch
@@ -213,6 +227,25 @@ def main():
             raise RuntimeError('Task custom assets were not registered')
         report['native_scene_audit']=native_audit(stage,list(arena_cloth.SPECS),list(PEG_SPECS))
         report['physics_dt_s']=float(base.sim.get_physics_dt())
+        if args.adult_collar:
+            from adult_layout import fixture_geometry
+            report['fixture_geometry']=fixture_geometry()
+        if args.state_assisted_grasp:
+            from adult_motion import compile_pickup
+            from audit_adult_motion import audit
+            nodes=arena_cloth.state(emb._env,'tie').nodes
+            np.savez_compressed(args.out/'reset-cloth.npz',positions=nodes,
+                rest=arena_cloth.SPECS['tie'].mesh.rest,faces=arena_cloth.SPECS['tie'].mesh.faces)
+            fixed_plan=compile_pickup(arena_cloth.SPECS['tie'].mesh.rest,nodes)
+            clearance=audit(fixed_plan)
+            (args.out/'reset-grasp-hull-audit.json').write_text(json.dumps(clearance,indent=2)+'\n')
+            if not clearance['passed']:raise RuntimeError('Measured adult pickup fails commanded hull rejection check')
+            fixed_plan.pop('do_not_run_reason',None)
+            (frozen/'fixed-motion.json').rename(frozen/'requested-fixed-motion.json')
+            (frozen/'fixed-motion.json').write_text(json.dumps(fixed_plan,indent=2)+'\n')
+            report['executed_plan_sha256']=hashlib.sha256((frozen/'fixed-motion.json').read_bytes()).hexdigest()
+            report['state_assisted_grasp']=fixed_plan['grasp']
+            fixed_actions=np.asarray([f['action14'] for f in fixed_plan['frames']],float)
         report['initial_physics_step_count']=int(base.sim._physics_step_count)
         report['initial_snapshot']='After one raw reset and the declared five-second native cloth/peg settling period'
         (args.out/'meshes.json').write_text(json.dumps({name:{'rest':spec.mesh.rest.tolist(),

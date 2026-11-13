@@ -1,9 +1,11 @@
 # True a wobbly bicycle wheel
 
 **Development package, not ready to submit.** The robot has picked up the free
-wrench. Reciprocal simulator controls identified the setting that caused
-unforced wheel acceleration; CPU PhysX now uses once-per-step external forces.
-Actual robot tightening and a full-score demonstration remain unproven.
+wrench, but no valid tightening demonstration exists. The latest central-spring
+unit matches the physical load law; the full wheel still develops unexplained
+axle torque even with its material callback frozen. Once-per-step integration
+and preloaded geometry did not resolve this. Native bearing/constraint isolation
+is pending; no Dream run or submission media exists.
 
 The robot adjusts spoke nipples until the wheel runs straight, remains centred
 and spins freely. Scoring measures the resulting wheel, not hidden target
@@ -29,8 +31,8 @@ The current wrench has a 175 × 10 × 4 mm steel neck and a 55 mm grip, with
 195 mm between the slot and the grasp point. Its 90 g mass includes a steel
 tang inside the polymer grip. The longer handle and shorter front axle give
 the robot room to reach the nipples. This geometry passes sampled hull checks;
-native pickup has lifted it about 74 mm. The grasp-point translation stays within about0.8mm, but the tool rotates
-about3° in the grasp, shifting the jaws roughly10mm at the long lever arm. Earlier kinematic jaw tests
+native pickup has lifted it about 74 mm. The grasp-point translation stays within about 0.8 mm, but the tool rotates
+about 3° in the grasp, shifting the jaws roughly 10 mm at the long lever arm. Earlier kinematic jaw tests
 transfer rotation, but an offline intersection check found up to 175 µm of
 persistent penetration; finite-load engagement still needs validation.
 
@@ -59,7 +61,7 @@ to ±3 turns. See `VALIDATION.json` for parameters, limits and test history.
 
 ## Reproducing the current checks
 
-The 47 CPU checks need NumPy, use no randomness and take under one second:
+The 53 CPU checks need NumPy, use no randomness and take under one second:
 
 ```sh
 python -m unittest discover -s tasks/true-a-bicycle-wheel -p 'test_*.py'
@@ -96,28 +98,49 @@ tensiometer. Full credit requires lateral runout ≤0.5 mm; partial credit allow
 within this fixture's 400–1000 N range, intact equipment and a complete released
 revolution. Destructive or invalid outcomes receive zero.
 
-Reciprocal controls044 identify the sustained acceleration: enabling TGS
-external forces every iteration reproduces it in the standalone scene, while
-disabling it removes it in YAM through1.5 seconds. The latter keeps all15,002
-rim checks valid. This configuration is now explicit in the wheel adapter.
-The retained constructor-state control has a small initial rotation; the next
-service trial uses the normal deterministic reset, which restores native body
-poses and velocities before the ordinary robot commands.
+Reciprocal controls 044 show that the force-integration option materially changes
+this scene. They do not establish a general simulator defect. The202-action
+robot trial 049 keeps every rim check valid but does not turn either nipple:
+the wheel rotates during startup, while the fixed key path misses the target.
+The physical tool grip also rolls progressively under load, reaching about 11°.
 
-PhysX documents both options as alternative ways to integrate the same external
-impulse over a step ([TGS force application](https://nvidia-omniverse.github.io/PhysX/physx/5.8.0/docs/Simulation.html#tgs-force-application)).
-The observed failure is specific to this tested scene/configuration; no claim
-is made about all PhysX scenes. Curated reciprocal measurements are in
-`evidence/native-force-integration-044-summary.json`.
+A preloaded starting shape does not solve the reset. In 055, with runtime thread
+forces frozen and once-per-step integration, native angular momentum increases
+by 0.0471 kg m²/s in 0.3 seconds (approximately 0.157 Nm). The rim stays intact;
+that alone is insufficient to validate the mechanics. A CPU native DistanceJoint
+candidate replaces the negative-offset axial D6 soft spring with a central
+positive-distance spring. It is a diagnostic option, not the task default.
+See `evidence/native-preloaded-reset-054-055-summary.json`.
 
-Next verify robot-driven tightening, final release and full-revolution judging,
-then run Dream with the same physics and score both recordings. The682-action
-service candidate uses only ordinary joint commands, with optional bounded
-integral joint tracking to compensate measured arm droop. A fixed empirical
-grip transform accounts for the observed3° tool rotation; whether that grip
-repeats under changing load still needs native evidence. It does not inspect
-object state or change actuator effort limits. See`MOTION_PLAN.md`.
+PhysX documents the two integration options as alternative ways to integrate an
+external impulse over a step ([TGS force application](https://nvidia-omniverse.github.io/PhysX/physx/5.8.0/docs/Simulation.html#tgs-force-application)).
+These observed differences are specific to the tested scene. Preserve the
+matched controls instead of promoting either option as universally correct.
 
-Use`--device cpu` with GPU-rendered cameras. The latest30-action diagnostic takes
-129 wall seconds including startup. Full repair runtime and cost remain
-unmeasured. No media ID, final task score or submission certificate exists yet.
+The next demo may use clearly disclosed native tool-pose feedback to compensate
+the physical grasp, issuing ordinary bounded robot joint targets. Scripted
+feasibility demos are permitted; Dream retains camera/joint observations only.
+Neither controller may alter object poses, attachments, forces or actuator
+limits. The physical reset and genuine key engagement still need validation.
+
+Use CPU physics with GPU-rendered cameras. Trial049 took 758 wall seconds for
+10.1 simulated seconds; complete repair runtime remains unmeasured. No full-score
+demo, Dream baseline, media ID or submission certificate exists.
+
+### Latest native evidence: batches059–063
+
+The compensated central DistanceJoint matches the isolated700N spring test:
+initial equilibrium error1.2nm, final error0.372µm, and quarter-turn shortening
+113.13µm against113.5µm expected. The physical modulus/rest length is unchanged;
+the authored limit compensates PhysX's25mm numerical tolerance. Standard
+proportional force integration passes; once-per-step integration retains45.7µm
+static error.
+
+This does **not** validate the whole wheel. At100µs, full-scene runout is0.905mm
+and rim integrity passes, but unexplained axle torque is about−0.405Nm with
+runtime thread torques/rest updates disabled. Native masses/COMs predict less
+than0.0002Nm gravity torque. At500µs the first-step locked gap is131.6µm and
+fails the unchanged100µm validity bound. See
+`evidence/native-central-spring-063-summary.json`. The optional candidate bridge
+and pose-assisted controller remain unvalidated; older successful short-settle
+or offline hull screens do not establish a truing demonstration.

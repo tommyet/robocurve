@@ -1,7 +1,7 @@
 {
   "schema": "runtime-evidence-v1",
   "status": "native_diagnostics_executed_full_task_unverified",
-  "scope": "Native passive-piston force/zero-force controls and a 20-action YAM ready-pose renderer/contact preview executed on this exact stack. Full robot manipulation, shell morphology and Dream remain unverified.",
+  "scope": "Native passive-piston controls, physical YAM pickup, extrusion, state-assisted three-deposit trajectories and released-tool evidence executed on this stack. Full-score shell border and Dream baseline remain unverified.",
   "current_task_runtime_verified": false,
   "python": "3.12.16",
   "packages": {

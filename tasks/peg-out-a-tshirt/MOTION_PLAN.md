@@ -1,9 +1,9 @@
 # Pegging development sequence
 
 This is a controller plan, not a successful demonstration. The robot may use
-ordinary joint and finger commands. Native object/node state is offline tuning
-and assessor data only; a submitted script must be frozen, or use only the
-standard camera/joint observation for online corrections.
+ordinary joint and finger commands. An explicitly disclosed scripted feasibility demo may use measured reset
+cloth state to plan these actions. Dream remains camera/joint only, with the
+identical scene and reset. No controller may write cloth/prop poses or forces.
 
 1. Let the loose garment settle over the laundry support. Confirm the hem is
    exposed, the cloth clears the support solids and the starting state is at
@@ -34,3 +34,20 @@ pegs cannot retain native fabric, fix their physical model before attempting a
 full robot episode. Convenient physical peg rests may expose the handles, but
 must be listed in the setup and cannot fixture the peg to the world during
 robot use. No successful peg manipulation or full hanging trajectory exists yet.
+
+
+Current continuation plan (2026-11-13): the state-assisted reset grasp in054
+retained the garment through its full carry. The peg missed the line and fell;
+cloth crossings after that failure invalidate the run. The058 candidate uses
+measured free-jaw poses only to guide ordinary robot actions before closure.
+It aborts if mouth alignment is worse than1.5mm. Neither state-assisted step
+writes cloth, body or force state, and neither is available to Dream.
+
+For the second fastening, exchange arm roles: the right hand picks up a free
+edge of the already supported garment and presents it toward y=-0.115m. The
+left hand approaches the spare peg from below, squeezes its handles, withdraws
+it, turns it in free space and clips from above. The mirrored920-action
+fragment has passed IK/speed checks; it is not a whole episode and remains
+blocked until the first clip, actual second cloth pickup and its contact path
+are demonstrated. Allow about200actions for that pickup, giving roughly
+2240actions for the complete first/second fastening and final released hold.

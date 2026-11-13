@@ -48,18 +48,15 @@ def description():
 
 def initial_clearance(meshes,thread_nodes,radius_m=.0004):
     """Conservative reset-only AABB distances; not a dynamic validity check."""
-    clouds=[np.asarray(mesh.rest) for mesh in meshes]
-    half_thickness=[.0002,.0002]
-    clouds.extend(np.asarray(nodes) for nodes in thread_nodes)
-    half_thickness.extend([radius_m]*len(thread_nodes))
+    clouds=[(np.asarray(mesh.rest),np.array((.0002,0.,0.))) for mesh in meshes]
+    clouds.extend((np.asarray(nodes),np.full(3,radius_m)) for nodes in thread_nodes)
     minimum=float('inf')
     for _,size,position in fixture_boxes():
         low=np.asarray(position)-np.asarray(size)/2
         high=np.asarray(position)+np.asarray(size)/2
-        for points,padding in zip(clouds,half_thickness,strict=True):
+        for points,pad in clouds:
             # Cloth is planar normal to X. Its actual thickness pads X only;
             # the thread is conservatively padded in all directions.
-            pad=np.array((padding,0.,0.)) if padding==.0002 else np.full(3,padding)
             cloud_low=points.min(0)-pad;cloud_high=points.max(0)+pad
             gap=np.maximum(np.maximum(low-cloud_high,cloud_low-high),0.)
             distance=float(np.linalg.norm(gap))

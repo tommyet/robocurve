@@ -1,0 +1,144 @@
+{
+  "status": "failed",
+  "requested_steps": 294,
+  "completed_steps": 2,
+  "first_invalid_substep": 110,
+  "audited_physics_substeps": 144,
+  "error": "RuntimeError: Native thread/fabric crossing detected",
+  "runtime": {
+    "thread_radius_m": 0.0004,
+    "hole_half_m": 0.0008,
+    "hole_mesh_spacing_m": null,
+    "physics_hz": 960,
+    "contact_refinement": {
+      "speculative_ccd": true,
+      "collision_iterations": 4,
+      "pair_update_frequency": 4,
+      "max_depenetration_m_s": null
+    },
+    "maximum_stretch": 1.05,
+    "quality_mesh": true,
+    "seam_lowering_m": 0.0,
+    "pre_draped_seam": false,
+    "drape_shape": "gaussian",
+    "sewing_clamp": true,
+    "passive_clamp": true,
+    "supported_clamp": true,
+    "cloth_contact_offset_m": 0.00025,
+    "backed_clamp": true
+  },
+  "repair_backing": {
+    "mechanism": "Fixed rear sewing board and front guide rails, connected to the bolted bench stand",
+    "physical_material": "Rigid board and metal guides; ordinary frictional contact",
+    "seam_window_z_m": [
+      0.7997,
+      0.8257
+    ],
+    "rear_board_front_x_m": 0.3018,
+    "rear_board_width_m": 0.065,
+    "cloth_edge_overhang_each_side_m": 0.0075,
+    "front_upper_rest_clearance_m": 0.0008,
+    "front_lower_rest_clearance_m": 0.0008,
+    "rear_lower_rest_clearance_m": 0.0012,
+    "cloth_attachments": false,
+    "lower_patch_can_slide_sideways": true,
+    "native_validation": "pending"
+  },
+  "contact_audit": [
+    {
+      "valid": true,
+      "steps": 111,
+      "first_failure": null
+    },
+    {
+      "valid": false,
+      "steps": 111,
+      "first_failure": {
+        "step": 111,
+        "time_s": 0.11458333333333333,
+        "reason": "thread crosses intact fabric",
+        "static_intersections": 1,
+        "swept_intersections": 0,
+        "static_crossing_details": [
+          {
+            "segment_index": 155,
+            "face_index": 2718,
+            "coordinate_frame": "current",
+            "intersection_m": [
+              0.30088875584989405,
+              -0.02950631296183775,
+              0.8085188359253465
+            ],
+            "barycentric": [
+              0.18075197631481532,
+              0.06305166033940669,
+              0.756196363345778
+            ],
+            "segment_parameter": 0.5195834180324624,
+            "strictly_inside_triangle": true,
+            "strictly_inside_segment": true,
+            "distance_to_mesh_boundary_m": 2.523000082185496e-05,
+            "closest_boundary_edge": [
+              729,
+              730
+            ],
+            "closest_boundary_point_m": [
+              0.3008922143857175,
+              -0.029506204181944343,
+              0.8084938443339933
+            ],
+            "closest_boundary_edge_length_m": 0.0004011392604627468,
+            "closest_boundary_vertices_distance_to_thread_axis_m": [
+              7.621242253887139e-05,
+              0.0003254662045354581
+            ],
+            "nearest_mesh_vertex_distance_to_thread_axis_m": 7.621242253887139e-05
+          }
+        ],
+        "swept_crossing_details": [],
+        "native_substep": 110
+      }
+    }
+  ],
+  "closed_junction_contact_audit": [
+    {
+      "valid": true,
+      "steps": 145,
+      "first_failure": null
+    },
+    {
+      "valid": true,
+      "steps": 145,
+      "first_failure": null
+    }
+  ],
+  "strain": [
+    {
+      "maximum_principal_stretch": 1.0112733023756977,
+      "first_validity_excursion": null,
+      "first_2pct_warning": null,
+      "maximum_stretch_limit": 1.05
+    },
+    {
+      "maximum_principal_stretch": 1.0175898516458868,
+      "first_validity_excursion": null,
+      "first_2pct_warning": null,
+      "maximum_stretch_limit": 1.05
+    }
+  ],
+  "thread_joint_integrity": {
+    "maximum_closed_joint_gap_m": 9.77133392228215e-05,
+    "first_failure": null,
+    "valid": true
+  },
+  "final_maximum_cloth_speed_m_s": [
+    0.6395037770271301,
+    0.3770577013492584
+  ],
+  "cut_events": [],
+  "damage_events": [],
+  "report_sha256": "e9814da6451742760156195916b6a7f14eb4cedbaead0b7ccd2aa4e041258889",
+  "score": null,
+  "robot_demo": false,
+  "decision": "Physical backing still fails before manipulation. Confirmed native TGS external-force integration differs between YAM and standalone; test once-per-step with unchanged fixture/material/guards."
+}

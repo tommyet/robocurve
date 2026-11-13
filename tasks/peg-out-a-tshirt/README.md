@@ -42,7 +42,11 @@ The runner saves ordinary camera images, native 960×720 judging views when
 requested, source hashes, actual runtime and assessor telemetry. It checks
 native deformable/self-contact registration and rejects attachments or
 kinematic peg jaws. Frozen plans supply ordinary joint commands only; object
-and mesh readings never control the robot. Interrupted runs remain marked as
+and mesh readings are assessor-only unless `--state-assisted-grasp` is
+explicitly selected. That scripted feasibility mode measures the reset hem once
+to center ordinary fingers, then uses bounded joint actions. It never writes
+cloth or prop state and is separate from the Dream image/joint policy.
+Interrupted runs remain marked as
 interrupted. All current diagnostic scores are null.
 
 ## What has been demonstrated
@@ -129,3 +133,16 @@ the clipping target using ordinary right-arm joint observations. Its bounded
 PI changes only ordinary joint targets; it never reads cloth or peg state.
 All reference poses pass the rigid-hull and finite-line-axis rejection check.
 Actual capture, contact integrity and released retention still need native proof.
+
+The next scripted candidate can use `--state-assisted-grasp` to handle measured
+reset variation. Both observed043 and050 reset shapes pass the200-action
+collision rejection check after this calibration. All later reference actions
+remain unchanged. The actual executed plan, input-state hash and grasp targets
+are saved with the trial; no state-assisted native result exists yet.
+
+Batch058 retained the unused peg throughout the corrected approach. The first
+clip was withheld after830 actions when the mouth controller could not produce
+a reachable target. Its corrected outer loop integrates the desired TCP instead
+of adding measured hand compliance repeatedly; all11 available recorded input
+states pass the local hull screen. Batch064 tests six seconds of alignment
+before closure. Neither trial is a scored hanging demonstration.

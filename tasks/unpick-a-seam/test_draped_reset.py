@@ -108,6 +108,22 @@ for before,after in zip(baseline['MESHES'],result['MESHES']):
     np.testing.assert_array_equal(before.faces,after.faces)
 assert baseline['FIXTURE']==result['FIXTURE']
 np.testing.assert_array_equal(baseline['thread_nodes'](0.),result['thread_nodes'](0.))
+runtime_config.CONFIG=replace(runtime_config.CONFIG,cloth_contact_offset_m=.00025,backed_clamp=True)
+result=runpy.run_path('scene.py')
+assert len(result['FIXTURE'])==17
+assert len([box for box in result['FIXTURE'] if box.mass is not None])==1
+for before,after in zip(baseline['MESHES'],result['MESHES']):
+    np.testing.assert_array_equal(before.rest,after.rest)
+    np.testing.assert_array_equal(before.faces,after.faces)
+from repair_backing import initial_clearance,fixture_boxes
+assert abs(initial_clearance(result['MESHES'],[result['thread_nodes'](y) for y in result['STITCH_Y']])-.0002)<1e-12
+assert len(fixture_boxes())==12
+runtime_config.CONFIG=replace(runtime_config.CONFIG,quality_mesh=False,facet_cloth=True)
+result=runpy.run_path('scene.py')
+assert all(len(mesh.faces)==236 for mesh in result['MESHES'])
+assert len(result['FIXTURE'])==17
+assert type(result['OBJECTS'][0]).__name__=='FacetCloth'
+assert abs(result['MESHES'][0].audit()['surface_area_m2']-baseline['MESHES'][0].audit()['surface_area_m2'])<1e-12
 '''
         result=subprocess.run([sys.executable,'-c',script],cwd=Path(__file__).resolve().parent,
                               text=True,capture_output=True)

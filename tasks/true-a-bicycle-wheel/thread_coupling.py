@@ -212,6 +212,7 @@ class NativeThreadCoupler:
                  'rim_anchor_local_m','half_rod_length_m','rest_target_origin_m','nominal_rest_m','stiffness_n_per_m')}
             self._batch.update({key:np.asarray([native_io.index[s[key]] for s in spokes],int)
                 for key in ('rim_path','nipple_path','inner_path','outer_path')})
+            self._batch['native_rest_bias_m']=np.asarray([s.get('native_rest_bias_m',0.) for s in spokes])
 
     @property
     def last(self):
@@ -263,7 +264,7 @@ class NativeThreadCoupler:
             # Match the actual axial D6 coordinate, including spoke bending.
             # Endpoint distance alone would miss material stretch in a bowed
             # spoke and give the wrong thread reaction torque.
-            length=s["rest_target_origin_m"]+gap
+            length=s["rest_target_origin_m"]+(float(np.linalg.norm(op-ip)) if s.get('central_spring') else gap)
             state=response(length,s["nominal_rest_m"],turns,s["stiffness_n_per_m"],self.spec)
             torque=torque_gradient*state["lead_torque_nm"]
             if self.native_io is None:
@@ -275,7 +276,7 @@ class NativeThreadCoupler:
             self.last.append({"spoke":i,"turns":turns,"length_m":length,"endpoint_distance_m":endpoint_length,"axial_joint_gap_m":gap,**state})
         friction=self.friction.advance(self.unwrapped,np.array([s['friction_limit_nm'] for s in self.last]))
         targets=np.degrees((friction['friction_target_rad']+math.pi)%(2*math.pi)-math.pi)
-        self.parameters.set([[state['rest_length_m']-s['rest_target_origin_m'],state['friction_limit_nm'],target]
+        self.parameters.set([[state['rest_length_m']-s['rest_target_origin_m']-s.get('native_rest_bias_m',0.),state['friction_limit_nm'],target]
             for s,state,target in zip(self.meta['spokes'],self.last,targets)])
         for i,s in enumerate(self.meta['spokes']):
             self.last[i].update({key:float(value[i]) for key,value in friction.items()})
@@ -296,13 +297,14 @@ class NativeThreadCoupler:
         endpoints=p[rim]+np.einsum('nij,nj->ni',R[rim],b['rim_anchor_local_m'])
         half=b['half_rod_length_m'][:,None]
         gap=np.sum((p[outer]-R[outer,:,0]*half/2-p[inner]-R[inner,:,0]*half/2)*R[inner,:,0],axis=1)
-        length=b['rest_target_origin_m']+gap
+        coordinate=np.linalg.norm(p[outer]-p[inner],axis=1) if self.meta.get('central_spring_candidate') else gap
+        length=b['rest_target_origin_m']+coordinate
         material_turns=b['initial_turn_offset'] if frozen_material_diagnostic else turns
         state=response_batch(length,b['nominal_rest_m'],material_turns,b['stiffness_n_per_m'],self.spec)
         if not frozen_material_diagnostic:
             friction=self.friction.advance(self.unwrapped,state['friction_limit_nm'])
             targets=np.degrees((friction['friction_target_rad']+math.pi)%(2*math.pi)-math.pi)
-            self.parameters.set(np.column_stack((state['rest_length_m']-b['rest_target_origin_m'],
+            self.parameters.set(np.column_stack((state['rest_length_m']-b['rest_target_origin_m']-b['native_rest_bias_m'],
                                                 state['friction_limit_nm'],targets)))
             torque=gradient*state['lead_torque_nm'][:,None]
             # These are disjoint body indices, one nipple and outer half per spoke.

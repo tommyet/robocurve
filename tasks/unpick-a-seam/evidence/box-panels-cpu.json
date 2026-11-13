@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-13",
+  "status": "native_gate_pending",
+  "surface": {
+    "vertices": 154,
+    "triangles": 236,
+    "surface_area_m2": 0.00596928,
+    "boundary_loops": 13,
+    "connected": true
+  },
+  "dynamic_native_box_panels": 118,
+  "passive_native_edge_hinges": 189,
+  "thickness_m": 0.0004,
+  "total_mass_kg": 0.0008356992000000001,
+  "minimum_hinge_stiffness_nm_rad": 7.501831501831483e-08,
+  "maximum_hinge_stiffness_nm_rad": 1.6814449917898444e-06,
+  "collision_representation": "Ordinary native Cube primitives; no convex mesh cooking",
+  "limits": "Rectangular panels approximate inextensible cloth bending. Actual cantilever deflection, continuity and contact retention require native evidence. No world attachments or fabricated mesh trajectories.",
+  "source_sha256": "83c8b2f619bbfbd9eb591cddf53523515c84625b6be7f6723174291a725956bb"
+}

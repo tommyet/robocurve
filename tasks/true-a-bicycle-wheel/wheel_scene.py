@@ -91,9 +91,11 @@ def wrench_jaw_mesh(side):
     return points,np.array(faces,int)
 
 
-def build_scene(stage, root="/WheelTask", *, reset_profile="two-defect-candidate", nipple_flat_phase_rad=0., wheel_clocking_rad=0.):
+def build_scene(stage, root="/WheelTask", *, reset_profile="two-defect-candidate", nipple_flat_phase_rad=0., wheel_clocking_rad=0., central_spring_candidate=False, distance_spring_tolerance_m=0.):
     from pxr import Gf, PhysxSchema, Sdf, UsdGeom, UsdPhysics, Vt
     spec,thread=WheelSpec(),ThreadSpec()
+    if distance_spring_tolerance_m not in (0.,.025) or (distance_spring_tolerance_m and not central_spring_candidate):
+        raise ValueError('Distance tolerance compensation is only a native central-spring diagnostic')
     flat_phase=spoke_phase(nipple_flat_phase_rad)
     wheel=root+"/wheel"
     n=spec.spokes
@@ -187,7 +189,8 @@ def build_scene(stage, root="/WheelTask", *, reset_profile="two-defect-candidate
     metadata={"hub_path":hub,"spokes":[],"wrench_path":root+"/wrench",
               "reset_profile":reset_profile,"initial_turn_offsets":initial.tolist(),
               "nipple_flat_phase_rad":float(nipple_flat_phase_rad),
-              "wheel_clocking_rad":float(wheel_clocking_rad)}
+              "wheel_clocking_rad":float(wheel_clocking_rad),
+              "central_spring_candidate":bool(central_spring_candidate)}
     for i in range(n):
         old_spokes[i].CreateJointEnabledAttr(False)
         side=1 if i%2==0 else -1
@@ -247,12 +250,29 @@ def build_scene(stage, root="/WheelTask", *, reset_profile="two-defect-candidate
             bend=UsdPhysics.DriveAPI.Apply(axial.GetPrim(),axis)
             bend.CreateTypeAttr("force");bend.CreateStiffnessAttr(bend_stiffness*math.pi/180.)
             bend.CreateDampingAttr(.002*math.pi/180.);bend.CreateTargetPositionAttr(0.)
-        limit=UsdPhysics.LimitAPI.Apply(axial.GetPrim(),"transX")
-        limit.CreateLowAttr(-1.)
-        limit.CreateHighAttr(nominal-initial[i]*thread.pitch_m_per_turn-L)
-        soft=PhysxSchema.PhysxLimitAPI.Apply(axial.GetPrim(),"transX")
-        soft.CreateStiffnessAttr(k)
-        soft.CreateDampingAttr(1.)
+        if central_spring_candidate:
+            # Central tension acts along the line joining the two half-rod
+            # centres. This uses a positive separation, unlike the reference
+            # D6 soft limit at a negative midspan offset. The separate D6 still
+            # supplies the rod's transverse, bending and torsional continuity.
+            spring=UsdPhysics.DistanceJoint.Define(stage,f"{wheel}/spoke_{i:02d}_central_spring")
+            spring.CreateBody0Rel().SetTargets([Sdf.Path(inner)])
+            spring.CreateBody1Rel().SetTargets([Sdf.Path(outer)])
+            spring.CreateMinDistanceAttr(-1.)
+            rest_attr=spring.CreateMaxDistanceAttr(nominal-initial[i]*thread.pitch_m_per_turn-L/2-distance_spring_tolerance_m)
+            soft=PhysxSchema.PhysxPhysicsDistanceJointAPI.Apply(spring.GetPrim())
+            soft.CreateSpringEnabledAttr(True)
+            soft.CreateSpringStiffnessAttr(k)
+            soft.CreateSpringDampingAttr(1.)
+            rest_origin=L/2
+        else:
+            limit=UsdPhysics.LimitAPI.Apply(axial.GetPrim(),"transX")
+            limit.CreateLowAttr(-1.)
+            rest_attr=limit.CreateHighAttr(nominal-initial[i]*thread.pitch_m_per_turn-L)
+            soft=PhysxSchema.PhysxLimitAPI.Apply(axial.GetPrim(),"transX")
+            soft.CreateStiffnessAttr(k)
+            soft.CreateDampingAttr(1.)
+            rest_origin=L
 
         nipple=f"{wheel}/nipple_{i:02d}"
         nipple_center=endpoint-R[:,0]*NIPPLE_CENTER_INSET_M
@@ -288,9 +308,10 @@ def build_scene(stage, root="/WheelTask", *, reset_profile="two-defect-candidate
             "reference_nipple_in_spoke_rotation":flat_phase.tolist(),
             "initial_turn_offset":float(initial[i]),"hub_anchor_local_m":anchor.tolist(),
             "rim_anchor_local_m":[-chord/2,0.,0.],"nominal_rest_m":nominal,
-            "stiffness_n_per_m":k,"rest_target_attribute":limit.GetHighAttr(),
+            "stiffness_n_per_m":k,"rest_target_attribute":rest_attr,
             "inner_path":inner,"outer_path":outer,"half_rod_length_m":L/2,
-            "rest_target_origin_m":L,"friction_drive":friction})
+            "rest_target_origin_m":rest_origin,"native_rest_bias_m":distance_spring_tolerance_m,
+            "central_spring":bool(central_spring_candidate),"friction_drive":friction})
 
     wrench=metadata["wrench_path"]
     # A manufacturable extended spoke key keeps the bulky wrist in front of

@@ -22,12 +22,12 @@ def tilted_side_rotation(degrees):
     return rx@side_rotation(degrees)
 
 
-def compile_feed(grasp_x=.220):
+def compile_feed(grasp_x=.220,approach_depth=0.,approach_from_below=False):
     from fixed_motion import compile_grasp,front_rotation
     from yam_arena import ik,station
     from yam_arena.constants import READY,SHOULDER,WRIST,GRIPPER,FINGER_OPEN
     from scene import PHYSICS_HZ,SUPPORT_BOARD_THICKNESS
-    frames=compile_grasp(grasp_x=grasp_x)['frames'][:200];a=np.asarray(frames[-1]['action14'])
+    frames=compile_grasp(grasp_x=grasp_x,approach_depth=approach_depth)['frames'][:200];a=np.asarray(frames[-1]['action14'])
     q={s:a[7*i:7*i+6].copy() for i,s in enumerate(('left','right'))};opening={'left':0.,'right':0.};audits=[]
     def both(x,z):return {s:((x,sign*.115,z),0.,'front') for s,sign in [('left',1),('right',-1)]}
     schedule=[
@@ -46,6 +46,15 @@ def compile_feed(grasp_x=.220):
         (3.,'withdraw empty fabric hand',{'left':((.45,.115,1.20),.6,'front')}),
         (5.,'observe released garment',{}),
     ]
+    if approach_from_below:
+        # The previous diagonal pass touched the unused second peg with the
+        # palm. Translate below both pegs, then rise around the target handles.
+        # The final pose, squeeze and all later waypoints are unchanged.
+        schedule[3:6]=[
+            (2.,'lower empty hand below both pegs',{'right':((.35,-.115,.970),.6,'side')}),
+            (3.,'translate below target peg',{'right':((.52,.115,.970),.6,'side')}),
+            (2.,'rise around passive handles',{'right':((.52,.115,1.038),.6,'side')}),
+        ]
     for seconds,label,targets in schedule:
         poses={s:ik.tcp_pose(q[s],station.BASES[s]) for s in q};start_open=opening.copy();errors={s:[0.,0.] for s in targets}
         for k in range(1,round(seconds*20)+1):
@@ -53,7 +62,7 @@ def compile_feed(grasp_x=.220):
             for side,(position,grip,orientation) in targets.items():
                 p0,r0=poses[side];target=p0+t*(np.asarray(position)-p0)
                 goal=front_rotation(0.,side) if orientation=='front' else tilted_side_rotation(0. if side=='right' else 180.)
-                if label=='lower empty hand clear of line':goal=side_rotation(0.)
+                if label in ('lower empty hand clear of line','lower empty hand below both pegs'):goal=side_rotation(0.)
                 rotation=ik.slerp_matrix(r0,goal,t)
                 q[side],pe,re=ik.solve(target,ik.matrix_to_quat_xyzw(rotation),q[side],base_pos=station.BASES[side],iters=100)
                 errors[side][0]=max(errors[side][0],float(pe));errors[side][1]=max(errors[side][1],float(re));opening[side]=start_open[side]+t*(grip-start_open[side])

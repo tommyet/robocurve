@@ -20,19 +20,21 @@ slipped off an embedded leg does not satisfy that condition.
 |---|---|
 | 0 | Neither leg is fully clear, damaged paper beyond the stated tolerance, broken staple, altered sheets or invalid/incomplete evidence. |
 | 0.5 | At least one complete leg is clear of both sheets and all preservation checks pass. |
-| 1.0 | Both legs are clear; the sheets move at least30 mm relative to one another from their initial12 mm stagger, then remain released for three seconds. |
+| 1.0 | Both legs are fully clear, every part of the intact staple is at least 10 mm from either sheet, and the staple and papers remain released for three seconds. |
 
-For the slide check, use the same corresponding corner on each sheet in the
-before/after overhead photographs. Measure their relative tabletop displacement
-vector. Initially it is (0,12) mm. The length of the change in that vector must
-be at least30 mm. Moving the whole stack together does not count. The sheets
-may still overlap. Wrinkles and creases alone are not tears.
+Measure the shortest metal-to-paper clearance in the final state with a ruler
+and overhead/side photographs. Include both bent tails, not just the crown.
+The three-second release interval starts when neither robot hand nor the
+remover touches the staple or papers. The sheets may stay in their original
+stack; no separate paper-transport action is required. Wrinkles and creases
+alone are not tears.
 
 Judge the final state, not an earlier successful frame. The staple need not be
 straight or neatly placed in a tray. Both tool-assisted methods and successful
 direct manipulation are valid; the result and preservation matter. Score from
 continuous trial video, after-trial photographs and a ruler. The scorer's
 boolean observations are review fields, not automatic claims by the simulator.
+The record schema is `staple-judging-v3`.
 
 The 2 mm damage allowance and proposed 120-second run limit remain development
 choices. Check their suitability with the selected real paper and remover.

@@ -2,8 +2,9 @@
 
 The authored assembly contains independently simulated bodies. Reset writes are
 confined to the reset event; the material callback only applies measured-angle
-thread shortening and reaction torques. Native CPU PhysX uses once-per-step
-external-force integration, verified by reciprocal momentum controls.
+thread shortening and reaction torques. The central-distance-spring candidate
+uses ordinary proportional external forces; the older once-per-step reference
+configuration is retained only for comparison and is not validated for truing.
 """
 from dataclasses import dataclass, field
 import importlib.abc
@@ -39,6 +40,9 @@ FLAT_PHASE_RAD_OVERRIDE = 0.
 CONTACT_AUDIT_DIAGNOSTIC = False
 NO_REWIND_DIAGNOSTIC = False
 FROZEN_MATERIAL_DIAGNOSTIC = False
+PRELOADED_RESET_CANDIDATE = False
+CENTRAL_SPRING_CANDIDATE = False
+DISTANCE_TOLERANCE_COMPENSATION_M = 0.
 RESET_DIAGNOSTICS = []
 
 
@@ -53,7 +57,12 @@ def _spawn(path, cfg, translation=None, orientation=None, **kwargs):
     root = str(path)[:-len(cfg.body_name)-1]
     if name not in ASSEMBLIES:
         metadata = build_scene(stage, root=root, reset_profile=RESET_PROFILE_OVERRIDE or 'two-defect-candidate',
-            wheel_clocking_rad=CLOCKING_RAD_OVERRIDE,nipple_flat_phase_rad=FLAT_PHASE_RAD_OVERRIDE)
+            wheel_clocking_rad=CLOCKING_RAD_OVERRIDE,nipple_flat_phase_rad=FLAT_PHASE_RAD_OVERRIDE,
+            central_spring_candidate=CENTRAL_SPRING_CANDIDATE,
+            distance_spring_tolerance_m=DISTANCE_TOLERANCE_COMPENSATION_M)
+        if PRELOADED_RESET_CANDIDATE:
+            from preloaded_reset import author_preloaded_configuration
+            author_preloaded_configuration(stage,metadata)
         if SOLVER_ITERATIONS_OVERRIDE is not None:
             from pxr import PhysxSchema
             from thread_coupling import body_paths
@@ -112,7 +121,8 @@ def reset_assembly(env, env_ids, assembly_name):
         spec=item['coupling'].spec
         for spoke in item['metadata']['spokes']:
             spoke['rest_target_attribute'].Set(spoke['nominal_rest_m']-
-                spoke['initial_turn_offset']*spec.pitch_m_per_turn-spoke['rest_target_origin_m'])
+                spoke['initial_turn_offset']*spec.pitch_m_per_turn-spoke['rest_target_origin_m']-
+                spoke.get('native_rest_bias_m',0.))
             spoke['friction_drive'].GetTargetPositionAttr().Set(0.)
             spoke['friction_drive'].GetMaxForceAttr().Set(spec.friction_coefficient*
                 WheelSpec().baseline_tension_n*spec.thread_mean_radius_m)
@@ -208,10 +218,10 @@ def _patch(scene):
                 cfg.sim.physics = PhysxCfg()
             if not isinstance(cfg.sim.physics, PhysxCfg):
                 raise ValueError('Wheel assembly requires native PhysX')
-            # Reciprocal controls044 reproduce unforced angular acceleration
-            # with TGS external forces every iteration and eliminate it when
-            # the same external impulse is integrated once per physics step.
-            cfg.sim.physics.enable_external_forces_every_iteration = False
+            # The059 isolated constitutive test passes only with ordinary
+            # proportional forces and compensated central DistanceJoint. The
+            # older D6 reference retains its historical comparison setting.
+            cfg.sim.physics.enable_external_forces_every_iteration = CENTRAL_SPRING_CANDIDATE
             return cfg
         return configure_wheel
     scene.env_cfg_callback = configure_callback

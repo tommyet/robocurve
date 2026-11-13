@@ -1,0 +1,11 @@
+{
+  "date": "2026-11-13",
+  "scope": "Pose-assisted scripted entry transform verification only; no native task score",
+  "actual_20hz_plan_frames_checked": 154,
+  "maximum_ideal_calibration_tcp_error_m": 2.220446049250313e-16,
+  "maximum_ideal_calibration_rotation_error_rad": 3.725553891911094e-16,
+  "filter_alpha": 0.1,
+  "physical_grasp_domain": "Tool centre within40mm of the actual134mm TCP offset, not gripper-link origin; relative slip bounded to10mm/15degrees",
+  "limitations": "Native entry still requires validation. Original140-action pickup is preserved. The robot alone applies bounded joint targets; no tool/cloth pose writes or forces.",
+  "source_sha256": "88e58e0d003fb0fba71fae5b6aa9c2be0fba36b54967ba053c056386ed1b520c"
+}

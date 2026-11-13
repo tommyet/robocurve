@@ -1,7 +1,7 @@
 {
   "status": "development_not_submission_ready",
   "checked_utc": "2026-11-13",
-  "cpu_tests_passed": 29,
+  "cpu_tests_passed": 32,
   "native_simulator_run": true,
   "robot_demo_run": true,
   "dream_run": false,
@@ -9,9 +9,9 @@
   "scores": null,
   "paid_compute_used_usd": null,
   "remaining_gates": [
-    "Latest038 and042 native trials remain incomplete and uneven (scores0.25,0,0). No full-score shell border exists. Continuous-tail technique is the next bounded candidate.",
-    "Complete joined border, visible continuous ridges, and agreement with photographs remain unverified.",
-    "Dream baseline and final rescoring are pending. No API requests or media upload made."
+    "Latest state-assisted native058/062 complete838 ordinary robot actions and release cleanly, but score0.0 under the current scorer: piston pressure falls during tail travel and deposits remain blobs.",
+    "Complete joined border, visible continuous ridges and agreement with photographs remain unverified.",
+    "Dream baseline and final rescoring pending; no API requests or media uploads."
   ],
   "sources_sha256": {
     "audit_run.py": "27a34c14178caa3e6d76689437917d9d40503eb38a75453536d94778ca50a6a9",
@@ -20,17 +20,20 @@
     "joint_tracking.py": "a5e2cee60f6a84e0a46d95240f1a098794e95a12c1ac166b3c7d5be184ff3a44",
     "material.py": "a82fb1cb242a02990707a3c08a6466f304cf757541a663a974765eebb984d525",
     "native.py": "bd7399d45e89f4955aaa0d945b518f98f81e4ac31eafb618cdc615e909b95fef",
-    "plan.py": "6b6e974474e1fb07c89c9acd8e57a9296897a069baf1c5f0c713766839592784",
-    "preview_yam.py": "3cd49d04d5e6ba8f45629f7edc346351d728ada935660065bdc1aabcb5e1a338",
+    "plan.py": "d30d85b075a439865d750dee90a7a059637f21f9330a8e0aa0924ce4e0eb9c2b",
+    "preview_yam.py": "44f3ad5d93bd9634d23edd0a8e381d4c18ac8617abe3882b87c103525b7e76b4",
     "probe.py": "dc2421d3342eda2052d7340d10bbf856493ad5b30b121ad839fddda7c7a57c17",
     "probe_native.py": "1d5d47f963be39660c32dec7b626a26080d7d290da69cfc06e5e8e9f1945b4e8",
     "probe_shell_shape.py": "a4e2ab3a31c23b0acc9baeef718887a8d9e74c8fca1f2ed91659c2aa9732289e",
     "review_views.py": "91fff198f4643babe15e10ca1d72cfb068ee8521e556e3d3e49fda0a2b9c804d",
     "run.py": "3f23a922f9bba0e959c19624107defc95f13e580f0cd9efee832e4ae1b88b893",
     "scene.py": "893a2016851d05ec62ca47f22cb3aca3c11fc19a2ef81333372132dd856dfcf5",
-    "scoring.py": "56c0ce90074f44ab9e9a6c28c1d09d6bcf2e3174693d4eb37475f68d0eca072b",
-    "test_material.py": "3a7fb1893d4c46df15d31eab9f2a7adedc804af2fe2578e82388a1555f870037",
-    "test_release.py": "d2b6b9b3388736c2a8e6d85cba253c43086dcfab7885be8b7a3973b0e7523f19"
+    "scoring.py": "96408e0ee9e663fb799c6f91572f900794aa4f304d505ccbb9c778524b658073",
+    "scripted_plan.py": "27a6c93162569cc520c8949fe67780e8a77afdcdb82f224bdda249ec47300b32",
+    "scripted_servo.py": "485d391accda6b836864334bb2d074d7695e27bc6b6c3b111aefae902c320a55",
+    "test_material.py": "183250183f5f42ec16e9bd6e92737c85ac43dbf4a5ac06a47a9ee289446db230",
+    "test_release.py": "d2b6b9b3388736c2a8e6d85cba253c43086dcfab7885be8b7a3973b0e7523f19",
+    "test_scripted_servo.py": "f5c48f4db8c9958760f702e8a2615aeae3ef263d71477351aaa91a3962f9c1af"
   },
   "cpu_probe": {
     "simulated_seconds": 1.500000000000022,
@@ -68,7 +71,8 @@
       "source_recipe": "scripted_plan.py",
       "evidence": "Local ignored cake-recipe-cpu artifacts"
     },
-    "integration_control055": "Once-per-step external-force setting disrupted stable grasp before extrusion; unqualified controller result. Matched default-setting run pending."
+    "integration_control055": "Once-per-step integration disrupts pickup; default iteration mode retained. Instantaneous coupled pose correction also destabilized pressure; filtered grasp estimate retained.",
+    "native058_062": "Complete838 actions; clean release; current score0.0. Next bounded correction filters measured common barrel translation into the pressing-arm reference."
   },
   "cpu_checks_current": {
     "test_count": 32,

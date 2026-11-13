@@ -25,23 +25,35 @@ def main():
     p.add_argument('--reset-profile',choices=RESET_PROFILES,default='four-defect-reference')
     p.add_argument('--nipple-flat-phase-deg',type=float,choices=(0.,45.),default=0.)
     p.add_argument('--wheel-clocking-deg',type=float,choices=(0.,10.,20.,50.),default=0.)
+    p.add_argument('--solver-velocity-iterations',type=int,choices=(1,4),default=4)
     p.add_argument('--solver-position-iterations',type=int,choices=(16,32,64,128),default=128)
     p.add_argument('--gpu-physics',action='store_true',help='Compare native GPU rigid physics with the CPU reference')
     p.add_argument('--external-forces-every-iteration',action='store_true',help='Match the YAM TGS external-force integration option; diagnostic only')
+    p.add_argument('--omit-bearing-diagnostic',action='store_true',help='Remove only the world bearing before attachment; short free-fall momentum isolation')
     p.add_argument('--freeze-thread-diagnostic',action='store_true',help='No runtime material writes/lead torque; isolates native assembly')
+    p.add_argument('--preloaded-reset-candidate',action='store_true',help='Author the measured loaded wheel shape before physics attaches')
+    p.add_argument('--central-spring-candidate',action='store_true',help='CPU native DistanceJoint spoke tension; compare against D6 reference')
+    p.add_argument('--distance-tolerance-compensation-m',type=float,choices=(0.,.025),default=0.,help='Compensate native DistanceJoint numerical tolerance, preserving physical rest length')
     args=p.parse_args()
-    if not .00001<=args.dt<=.0001 or not .025<=args.seconds<=2.:
-        p.error('Use 0.00001 <= dt <= 0.0001 and 0.025 <= seconds <= 2')
+    if not .00001<=args.dt<=.0005 or not .025<=args.seconds<=2.:
+        p.error('Use 0.00001 <= dt <= 0.0005 and 0.025 <= seconds <= 2')
+    if args.omit_bearing_diagnostic and args.seconds>.05:p.error('Free-bearing diagnostic is limited to50ms before bench approach')
+    if args.central_spring_candidate and args.gpu_physics:p.error('Native DistanceJoint is supported on CPU only')
+    if args.distance_tolerance_compensation_m and not args.central_spring_candidate:p.error('Distance tolerance compensation requires central-spring candidate')
     args.out.mkdir(parents=True,exist_ok=False);started=time.monotonic()
     record={'schema':'native-wheel-scene-diagnostic-v2','complete':False,'calibrated':False,
             'evidence_type':'Native full scene with live thread coupling; no robot or task score',
             'dt':args.dt,'seconds':args.seconds,'samples':[],'completed_steps':0,'phase':'launch',
             'solver_position_iterations':args.solver_position_iterations,
+            'solver_velocity_iterations':args.solver_velocity_iterations,
             'reset_profile':args.reset_profile,'nipple_flat_phase_deg':args.nipple_flat_phase_deg,'wheel_clocking_deg':args.wheel_clocking_deg,
             'initial_turn_offsets':starting_turn_errors(profile=args.reset_profile).tolist(),
             'frozen_material_diagnostic':args.freeze_thread_diagnostic,
+            'omitted_bearing_diagnostic':args.omit_bearing_diagnostic,
             'gpu_physics':args.gpu_physics,
             'external_forces_every_iteration':args.external_forces_every_iteration,
+            'central_spring_candidate':args.central_spring_candidate,
+            'distance_tolerance_compensation_m':args.distance_tolerance_compensation_m,
             'first_step':'Initializes native tensor state; authored spring rest lengths/friction already present, lead torque begins on step2.',
             'source_sha256':{n:hashlib.sha256(Path(__file__).with_name(n).read_bytes()).hexdigest()
                              for n in ('scene_probe.py','wheel_scene.py','native_probe.py','thread_coupling.py','mechanics.py','integrity.py','momentum.py')}}
@@ -77,10 +89,17 @@ def main():
         table.AddTranslateOp().Set(Gf.Vec3d(.3,0.,.7275));table.AddScaleOp().Set(Gf.Vec3f(1.,1.,.04))
         UsdPhysics.CollisionAPI.Apply(table.GetPrim())
         PhysxSchema.PhysxCollisionAPI.Apply(table.GetPrim()).CreateContactOffsetAttr(.000002)
-        metadata=build_scene(stage,reset_profile=args.reset_profile,nipple_flat_phase_rad=np.deg2rad(args.nipple_flat_phase_deg),wheel_clocking_rad=np.deg2rad(args.wheel_clocking_deg))
+        metadata=build_scene(stage,reset_profile=args.reset_profile,nipple_flat_phase_rad=np.deg2rad(args.nipple_flat_phase_deg),wheel_clocking_rad=np.deg2rad(args.wheel_clocking_deg),central_spring_candidate=args.central_spring_candidate,distance_spring_tolerance_m=args.distance_tolerance_compensation_m)
+        if args.omit_bearing_diagnostic:
+            if not stage.RemovePrim(metadata['hub_path'].rsplit('/',1)[0]+'/hub_bearing'):
+                raise RuntimeError('World bearing removal failed')
+        if args.preloaded_reset_candidate:
+            from preloaded_reset import author_preloaded_configuration
+            record['preloaded_reset']=author_preloaded_configuration(stage,metadata)
         for path in body_paths(metadata):
             rb=PhysxSchema.PhysxRigidBodyAPI.Get(stage,path)
             rb.CreateSolverPositionIterationCountAttr(args.solver_position_iterations)
+            rb.CreateSolverVelocityIterationCountAttr(args.solver_velocity_iterations)
         stage.GetRootLayer().Export(str(args.out/'initial.usda'))
         cache_xf=UsdGeom.XformCache();authored={}
         for path in body_paths(metadata):
@@ -92,14 +111,17 @@ def main():
             ip,iR=authored[s['inner_path']];op,oR=authored[s['outer_path']];rp,rR=authored[s['rim_path']]
             anchor=hp+hR@np.asarray(s['hub_anchor_local_m']);end=rp+rR@np.asarray(s['rim_anchor_local_m'])
             half=s['half_rod_length_m'];gap=(op-oR[:,0]*half/2)-(ip+iR[:,0]*half/2)
-            axial=float(gap@iR[:,0]);rest=s['rest_target_attribute'].Get()+s['rest_target_origin_m']
+            axial=float(gap@iR[:,0]);rest=s['rest_target_attribute'].Get()+s['rest_target_origin_m']+s.get('native_rest_bias_m',0.)
+            coordinate=float(np.linalg.norm(op-ip)) if s.get('central_spring') else axial
             audit.append({'spoke':i,'hub_joint_gap_m':float(np.linalg.norm(ip-iR[:,0]*half/2-anchor)),
                 'rim_joint_gap_m':float(np.linalg.norm(op+oR[:,0]*half/2-end)),
-                'mid_joint_gap_m':gap.tolist(),'axial_extension_m':s['rest_target_origin_m']+axial-rest,
-                'initial_tension_n':max(0.,s['rest_target_origin_m']+axial-rest)*s['stiffness_n_per_m'],
+                'mid_joint_gap_m':gap.tolist(),'axial_extension_m':s['rest_target_origin_m']+coordinate-rest,
+                'initial_tension_n':max(0.,s['rest_target_origin_m']+coordinate-rest)*s['stiffness_n_per_m'],
                 'axis_alignment':float(iR[:,0]@oR[:,0])})
         record['authored_spoke_constraint_audit']=audit
-        if any(max(x['hub_joint_gap_m'],x['rim_joint_gap_m'],np.linalg.norm(x['mid_joint_gap_m']))>1e-6 for x in audit):
+        # A prestressed wheel has intended axial spring extension. Lateral
+        # locked gaps remain bounded and every substep is independently audited.
+        if not args.preloaded_reset_candidate and any(max(x['hub_joint_gap_m'],x['rim_joint_gap_m'],np.linalg.norm(x['mid_joint_gap_m']))>1e-6 for x in audit):
             raise RuntimeError('Authored spoke endpoint or midpoint joint mismatch')
         record['phase']='attach';sim.attach_stage(stage_id);attached=True
         sim.simulate(args.dt,0.);sim.fetch_results();record['completed_steps']=1

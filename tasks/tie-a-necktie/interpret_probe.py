@@ -40,8 +40,11 @@ def interpret(folder):
         fixtures=support_geometry()
         fixtures['Table']=dict(kind='box',size=(1.1,1.3,.06),center=(.36,0.,TABLE-.03))
     elif mode=='collar-drape':
-        from layout import fixture_geometry,TABLE
-        fixtures=fixture_geometry()
+        if report.get('adult_collar_candidate'):
+            from adult_layout import fixture_geometry,TABLE
+        else:
+            from layout import fixture_geometry,TABLE
+        fixtures=report.get('fixture_geometry') or fixture_geometry()
         fixtures['Table']=dict(kind='box',size=(1.1,1.3,.06),center=(.36,0.,TABLE-.03))
     elif mode in ('clamp','open-clamp'):
         root=rest[:,0]<=.030001

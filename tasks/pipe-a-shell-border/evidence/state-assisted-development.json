@@ -40,5 +40,12 @@
     "fine_max_head_height_mm": 7.554,
     "both_diagnostic_shape_scores": 1.0,
     "limitation": "Qualifying shapes persist; exact heights are not grid-converged. These are prescribed-input constitutive probes, not robot evidence."
+  },
+  "native058_062": {
+    "control_steps": 838,
+    "status": "complete",
+    "released_clear": true,
+    "score": 0.0,
+    "failure": "Rounded deposits; measured piston compression falls while nozzle traverses despite stable height. Stronger axial feedback alone does not preserve tail flow."
   }
 }

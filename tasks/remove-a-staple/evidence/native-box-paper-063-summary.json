@@ -1,0 +1,162 @@
+{
+  "schema": "paper-native-box-063-v1",
+  "robot_demo": false,
+  "task_score": null,
+  "interpretation": "Native100um analytic box panels resolve the convex tetrahedron fallback. Coupon contact passes; full A5 geometry and extraction remain unproven.",
+  "controls": [
+    {
+      "report_sha256": "c427b329a604857fee9bb62ac46420af54829bda85d263ea177fcac63bc64ec0",
+      "diagnostic": "paper-box-freefall",
+      "complete": true,
+      "dt": 0.0001,
+      "seconds": 0.02,
+      "completed_steps": 200,
+      "wall_seconds": 7.1422495655715466,
+      "native_mass_relative_error": 8.274037077704577e-08,
+      "maximum_recorded_hinge_gap_m": 7.689567528254941e-10,
+      "final_sample": {
+        "step": 200,
+        "time_s": 0.02,
+        "checks": [
+          {
+            "continuity": {
+              "maximum_hinge_endpoint_gap_m": 7.383258267469153e-10,
+              "maximum_vertex_average_error_m": 4.986590228042593e-10,
+              "valid": true
+            },
+            "wire_crossing": {
+              "valid": true
+            }
+          },
+          {
+            "continuity": {
+              "maximum_hinge_endpoint_gap_m": 7.383258267469153e-10,
+              "maximum_vertex_average_error_m": 4.986590228042593e-10,
+              "valid": true
+            },
+            "wire_crossing": {
+              "valid": true
+            }
+          }
+        ],
+        "paper_centroids_m": [
+          [
+            -1.7927087669283242e-12,
+            -3.676206869782403e-12,
+            0.028038805350661278
+          ],
+          [
+            -1.7927087669283242e-12,
+            -3.676206869782403e-12,
+            0.04803880304098129
+          ]
+        ],
+        "maximum_facet_speed_m_s": 0.1960986852645874
+      }
+    },
+    {
+      "report_sha256": "c86f2b5b44806ad09079cb2af3a1ba8825f1264f6909dc7e521746ba7b761117",
+      "diagnostic": "paper-empty",
+      "complete": true,
+      "dt": 0.0001,
+      "seconds": 0.1,
+      "completed_steps": 1000,
+      "wall_seconds": 28.244682973250747,
+      "native_mass_relative_error": 8.274037077704577e-08,
+      "maximum_recorded_hinge_gap_m": 6.7227046159525696e-09,
+      "final_sample": {
+        "step": 1000,
+        "time_s": 0.1,
+        "checks": [
+          {
+            "continuity": {
+              "maximum_hinge_endpoint_gap_m": 5.4562016266155155e-09,
+              "maximum_vertex_average_error_m": 3.776966606502509e-09,
+              "valid": true
+            },
+            "wire_crossing": {
+              "valid": true
+            }
+          },
+          {
+            "continuity": {
+              "maximum_hinge_endpoint_gap_m": 6.643580498728752e-09,
+              "maximum_vertex_average_error_m": 4.937121621854109e-09,
+              "valid": true
+            },
+            "wire_crossing": {
+              "valid": true
+            }
+          }
+        ],
+        "paper_centroids_m": [
+          [
+            -4.046991406151452e-11,
+            -3.23543974212501e-12,
+            0.01005000032421118
+          ],
+          [
+            -3.9549651333610336e-11,
+            -4.0926237996557416e-12,
+            0.010149999928454674
+          ]
+        ],
+        "maximum_facet_speed_m_s": 7.749422366032377e-05
+      }
+    },
+    {
+      "report_sha256": "753c0815857b1931c0667ff825cd432e9e45bbe9293ca734abc082dbf54d9a8e",
+      "diagnostic": "paper-stapled",
+      "complete": true,
+      "dt": 0.0001,
+      "seconds": 0.1,
+      "completed_steps": 1000,
+      "wall_seconds": 49.00555431377143,
+      "native_mass_relative_error": 8.274037077704577e-08,
+      "maximum_recorded_hinge_gap_m": 2.3645980067974658e-08,
+      "final_sample": {
+        "step": 1000,
+        "time_s": 0.1,
+        "checks": [
+          {
+            "continuity": {
+              "maximum_hinge_endpoint_gap_m": 1.0674983115639463e-08,
+              "maximum_vertex_average_error_m": 6.237814154011166e-09,
+              "valid": true
+            },
+            "wire_crossing": {
+              "valid": true,
+              "steps": 1000,
+              "first_failure": null
+            }
+          },
+          {
+            "continuity": {
+              "maximum_hinge_endpoint_gap_m": 1.29875317783003e-08,
+              "maximum_vertex_average_error_m": 8.282920809619657e-09,
+              "valid": true
+            },
+            "wire_crossing": {
+              "valid": true,
+              "steps": 1000,
+              "first_failure": null
+            }
+          }
+        ],
+        "paper_centroids_m": [
+          [
+            1.613169549715934e-11,
+            3.569033590079355e-11,
+            0.01005000079071888
+          ],
+          [
+            -4.83668713683389e-12,
+            -7.84876875972883e-11,
+            0.010150002684961586
+          ]
+        ],
+        "maximum_facet_speed_m_s": 0.00010331538942409679
+      }
+    }
+  ]
+}

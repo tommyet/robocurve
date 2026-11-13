@@ -1,8 +1,9 @@
 """Bounded YAM/Arena smoke recorder. No task demo, Dream call or scored success.
 
 Smoke mode holds the ordinary ready joint targets. Motion-probe mode replays a
-frozen ordinary joint trajectory. Measured cloth/peg geometry is assessor
-evidence only and never changes either policy's targets.
+frozen ordinary joint trajectory. The explicitly selected state-assisted grasp
+uses native reset cloth geometry to plan ordinary finger targets; this scripted
+feasibility mode is disclosed separately from Dream. No prop state is written.
 """
 import argparse
 from dataclasses import fields,is_dataclass
@@ -60,10 +61,12 @@ def package_versions():
 def native_audit(stage,cloth_names,peg_names):
     """Fail closed if a custom asset silently becomes a rigid/proxy object."""
     from pxr import UsdPhysics
-    result={'cloth':{},'pegs':{},'attachments':[]}
+    result={'cloth':{},'pegs':{},'attachments':[],'physics_scenes':[]}
     for prim in stage.Traverse():
         path=str(prim.GetPath())
         schemas=prim.GetAppliedSchemas()
+        if prim.IsA(UsdPhysics.Scene):
+            result['physics_scenes'].append(dict(path=path,settings={name:prim.GetAttribute('physxScene:'+name).Get() for name in ('enableGPUDynamics','enableEnhancedDeterminism','enableExternalForcesEveryIteration')}))
         if 'Attachment' in prim.GetTypeName() or any('Attachment' in s for s in schemas):
             result['attachments'].append(path)
         for name in cloth_names:
@@ -106,6 +109,8 @@ def main():
     p.add_argument('--steps',type=int,default=None)
     p.add_argument('--plan',type=Path,help='Precomputed ordinary joint commands; required for motion-probe')
     p.add_argument('--seed',type=int,default=0)
+    p.add_argument('--state-assisted-grasp',action='store_true',help='Explicit scripted feasibility demo: measure reset cloth once to place ordinary fingers; never used by Dream')
+    p.add_argument('--state-assisted-clip',action='store_true',help='Explicit scripted demo: center free peg jaws with ordinary robot actions before closure')
     p.add_argument('--joint-feedback-from',type=int,help='Enable bounded right-arm PI tracking after this many actions, using ordinary joint observations only')
     p.add_argument('--judging-views',action='store_true',help='Record additional native960×720 front/rear assessor videos')
     p.add_argument('--out',type=Path)
@@ -145,6 +150,10 @@ def main():
         p.error('Joint feedback requires a motion probe and a start before its last action')
     if fixed_plan is not None and fixed_plan.get('requires_joint_feedback_from')!=args.joint_feedback_from:
         p.error('Joint feedback option must exactly match the frozen plan')
+    if args.state_assisted_grasp and (args.mode!='motion-probe' or args.steps<200):
+        p.error('State-assisted reset grasp requires at least200 scripted motion actions')
+    if args.state_assisted_clip and (args.mode!='motion-probe' or args.steps<940 or args.joint_feedback_from!=700):
+        p.error('State-assisted clip requires the tracked first-clip sequence through at least940 actions')
     if not 0<=args.seed<2**32:
         p.error('Seed must be an unsigned 32-bit integer')
     source_hashes=sources()
@@ -172,9 +181,14 @@ def main():
             'source_sha256':source_hashes,'versions':versions,'seed':args.seed,
             'control_hz':CONTROL_HZ,'requested_steps':args.steps,'completed_steps':0,
             'policy':('constant adapter-ready joint targets' if fixed_plan is None else 'frozen fixed joint trajectory')+'; no object/assessor feedback',
-            'instruction':draft['instruction'],'joint_feedback_from':args.joint_feedback_from}
+            'instruction':draft['instruction'],'joint_feedback_from':args.joint_feedback_from,'state_assisted_grasp':args.state_assisted_grasp}
     if args.joint_feedback_from is not None:
         report['policy']='frozen joint reference with bounded right-arm PI from ordinary joint observations; no object/assessor feedback'
+    if args.state_assisted_grasp:
+        report['policy']='Explicit state-assisted scripted feasibility demonstration: native reset cloth selects ordinary grasp targets; normal joint tracking thereafter. This is not a Dream policy run.'
+    if args.state_assisted_clip:
+        report['state_assisted_clip']=True
+        report['policy']+=' Free-jaw poses also guide ordinary peg-mouth alignment before release.'
     def save():
         report['wall_seconds']=time.monotonic()-started
         temporary=args.out/'run.json.tmp'
@@ -228,6 +242,24 @@ def main():
         report['physics_dt_s']=float(base.sim.get_physics_dt())
         report['initial_physics_step_count']=int(base.sim._physics_step_count)
         report['initial_snapshot']='After one raw reset and the declared five-second native cloth/peg settling period'
+        if args.state_assisted_grasp:
+            from scripted_grasp import calibrate
+            from audit_motion import audit
+            reset_cloth=arena_cloth.state(emb._env,'tshirt')
+            fixed_plan,calibration=calibrate(fixed_plan,arena_cloth.SPECS['tshirt'].mesh.rest,reset_cloth.nodes)
+            # Only the first200 ordinary reference actions change. The rest
+            # stays byte-for-byte identical to the reviewed fixed reference.
+            prefix=dict(fixed_plan,frames=fixed_plan['frames'][:200])
+            rejection=audit(prefix)
+            (args.out/'reset-grasp-hull-audit.json').write_text(json.dumps(rejection,indent=2)+'\n')
+            if not rejection['passed_rejection_check']:
+                raise RuntimeError('State-assisted grasp failed the rigid fixture/hull rejection check')
+            (frozen/'fixed-motion.json').rename(frozen/'requested-fixed-motion.json')
+            (frozen/'fixed-motion.json').write_text(json.dumps(fixed_plan,indent=2)+'\n')
+            fixed_actions=np.asarray([f['action14'] for f in fixed_plan['frames']],float)
+            report['scripted_reset_grasp']=calibration
+            report['executed_plan_sha256']=hashlib.sha256((frozen/'fixed-motion.json').read_bytes()).hexdigest()
+            save()
         (args.out/'meshes.json').write_text(json.dumps({name:{'rest':spec.mesh.rest.tolist(),
             'faces':spec.mesh.faces.tolist(),'markers':spec.mesh.markers} for name,spec in arena_cloth.SPECS.items()})+'\n')
         video=imageio.get_writer(args.out/'diagnostic.mp4',fps=CONTROL_HZ,codec='libx264',pixelformat='yuv420p',
@@ -254,6 +286,9 @@ def main():
                 raise ValueError('Fixed trajectory exceeds normal joint/gripper speed limits')
         from joint_tracking import JointTracking
         tracking=JointTracking()
+        from scripted_clip import PegMouthServo
+        clip_window=fixed_plan.get('clip_servo_window',[820,880]) if fixed_plan is not None else [820,880]
+        clip_servo=PegMouthServo(start=clip_window[0],end=clip_window[1]) if args.state_assisted_clip else None
         report['joint_tracking_parameters']={k:getattr(tracking,k) for k in ('kp','ki','limit','slew')}
         active_action=ready.copy();reference_action=ready.copy();requested_action=ready.copy()
         def arr(value):
@@ -293,6 +328,11 @@ def main():
             if fixed_actions is not None:
                 reference_action=fixed_actions[step-1].copy()
                 observed=np.asarray(emb._observation().state['joint_pos'],float)
+                if clip_servo is not None:
+                    from arena_props import peg_state
+                    body_poses=peg_state(emb._env,'left_peg').body_poses if clip_servo.start<step<=clip_servo.end else None
+                    reference_action=clip_servo.action(step,reference_action,observed,body_poses)
+                    report['peg_alignment']=clip_servo.records
                 requested_action=tracking.action(reference_action,observed,enabled=args.joint_feedback_from is not None and step>args.joint_feedback_from)
                 bounded=np.clip(requested_action,emb._low,emb._high)
                 active_action=active_action+np.clip(bounded-active_action,-delta_limit,delta_limit)

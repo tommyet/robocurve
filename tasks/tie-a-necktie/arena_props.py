@@ -137,6 +137,9 @@ def _fixture_spawn(path,cfg,translation=None,orientation=None,**kwargs):
     elif spec.kind=='collar':
         from layout import author_collar
         author_collar(stage,str(path))
+    elif spec.kind=='adult-collar':
+        from adult_layout import author_collar
+        author_collar(stage,str(path))
     else:
         raise ValueError('Unknown fixture '+spec.kind)
     return root.GetPrim()

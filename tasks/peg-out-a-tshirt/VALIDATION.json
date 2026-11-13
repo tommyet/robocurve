@@ -116,10 +116,43 @@
     "tracked_clip_candidate": {
       "status": "released_native_diagnostic_pending",
       "actions": 1220,
-      "plan_sha256": "77b2b9aa6138f9691b7b39f780c38d87bd81ced422b273d7747272fc4c9754cc",
+      "plan_sha256": "5cd8e72684b122a6bbbdc79db956972583450b77e4a8fb35be9de40831bb8d3f",
       "all_reference_pose_rejection_check": "passed",
-      "technique": "10mm deeper initial hem pinch; mouth reference shifted5.3mm forward1mm upward; bounded PI of ordinary right-arm joint observations afteraction700. No object-state feedback.",
+      "technique": "Preserve043 pinch plane and deepen10mm along actual30degree downwards approach: dx8.66mm,dz\u22125mm. Preserve050 corrected peg clipping and ordinary right-joint PI. Native revalidation required.",
       "limitations": "No native attachment or retention claim. Corrected commanded geometry does not certify actual tracking."
+    },
+    "unused_second_peg_issue": "Trial043 unused spare peg is on table byaction540, likely brushed during initial approach. A second-clip demo must preserve its passive reset or physically retrieve it; do not assume it remains on line.",
+    "tracked_clip050": {
+      "status": "line_only_peg_capture_no_garment_hang",
+      "actions": 1220,
+      "wall_seconds": 561.7347596837208,
+      "empty_peg_retained_after_release": true,
+      "closed_jaw_gap_m": 0.00337,
+      "fixture_triangle_samples": 62,
+      "fixture_triangle_intersections": 0,
+      "initial_hem_height_m": 0.854,
+      "initial_hem_height043_m": 0.8611,
+      "failure": "Horizontal bite shifted across angled pinch plane; garment slipped during first lift230\u2013240. PI corrected peg tracking and free peg subsequently captured the line, but garment was on board. No score."
+    },
+    "state_assisted_grasp054": {
+      "status": "completed1220_actions_no_score",
+      "wall_seconds": 728.4903371138498,
+      "finding": "Measured reset grasps retain the real garment through the full carry until commanded release. The free peg mouth remains about8mm from the intended line center, then the peg drops to the board during closure. Cloth/line crossings appear after this missed closure; no credit.",
+      "effective_external_forces_every_iteration": true,
+      "next": "Preserve spare peg using below-handles approach; explicitly disclosed free-jaw alignment through ordinary robot actions. Closure blocked unless mouth error<=1.5mm."
+    },
+    "aligned_peg058": {
+      "status": "controller_guard_failed_no_clip",
+      "completed_actions": 830,
+      "wall_seconds": 558.015368,
+      "error": "Peg-mouth servo could not produce a normal reachable action",
+      "diagnosis": "Outer loop re-anchored each target to measured compliant hand while joint PI retained load compensation; corrected loop integrates desired TCP from nominal reference instead.",
+      "corrected_cpu_check": "All11 available actual058 input states produce reachable commands and zero fixture, line or opposite-arm intersections. No native convergence claim.",
+      "next_candidate": "1280-action servo-clip-plan; six-second measured mouth alignment before ordinary closure; same physical setup.",
+      "unused_peg_retention": "Mouth remains at(.520051,\u2212.115180,1.085106)m through830 actions; corrected below-line approach does not knock the spare.",
+      "cloth_retention": "Marked hem patch lifts340mm and remains visibly held but drifts16mm toward fingertip. No released garment support demonstrated.",
+      "fixture_contact": "34 sampled whole-triangle audits: two line-contact faces at800 intersect a50micrometre-contracted line; none survive200micrometre contraction. No deep line crossing in those samples.",
+      "pending064": "1280-action corrected desired-TCP servo, six-second alignment window; result pending."
     }
   },
   "demo": {
