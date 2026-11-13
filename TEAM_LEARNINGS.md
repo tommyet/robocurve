@@ -1151,6 +1151,46 @@ result or measure outcome fairness.
 
 ## Dated session log
 
+### 2026-11-13 — unboxing prototype on the user-selected Brev instance
+
+- Operator: repository agent; branch `codex/unbox-parcel`, from freshly fetched
+  `origin/main` (`5a225a9`). Preserved and merged the prior November 12 station
+  notes. User requested implementation of taped-delivery unboxing with a cutter.
+  Reconnected to `yam-eval-launchable-72837c`; no other login or GPU process was
+  present. No instance was created, resized, started or stopped.
+- Implemented `tasks/unbox-delivery/`: hollow fixed carton, rigid hinged flaps,
+  compound guarded cutter/cradle, internal item, segmented blade-sweep tape
+  latch, ordered scorer, experimental robot-only plan, replay and source audit.
+  Tape fracture and grasp detection remain explicit geometric approximations;
+  no cardboard fracture, adhesive calibration or item-damage claim is made.
+- Important Arena integration finding: `Object.__init__` caches `object_cfg`.
+  Assigning `obj.spawner_cfg` afterward does not replace the geometry used by
+  the simulator. Construct a fresh Object with the desired spawner instead.
+  Keep hinge prims under the flap root and use the actual scene stage; check
+  that both joints exist before accepting a trial. Early attempts 001–004
+  exposed this bug and are not physical-hinge validation. Attempt 002 errored
+  after full geometric tape coverage and has no valid final score.
+- Final `unbox-demo-006` completed without an execution error, score **0.25**,
+  independently replayed **0.25**. All 21 tape segments were cut by 15.95 s;
+  the cutter was returned. Physical flap maxima were 53.86° / 11.55°, short of
+  the 80° opening milestone; the item remained inside. 1,153 actions / 57.65
+  simulated seconds; runner wall 169.556 s. Ten scorer regression tests pass.
+  Core runtime source hashes match the final recorded snapshot. This is a
+  partially validated prototype, not a full-score demonstration.
+- Evidence: remote `~/yam-eval/unbox-demo-006/adhoc_e351641c.json`, local ignored
+  `artifacts/unbox-20261113/demo-006/`; three 20 Hz camera exports, 1,154 frames
+  each, plus setup image, trajectory, scorer summary and source hashes. Other
+  development attempts remain on the VM. No Dream call, media upload or PR.
+- Public PR history revealed significant novelty overlap: [#1856](https://github.com/robocurve/benchmark-tasks/pull/1856)
+  was received as TK-V7P9X9 on November 13 and is pending; it cuts carton tape,
+  opens the box and protects the product. Do not describe generic unboxing as
+  unclaimed. Authenticated board access was unavailable. Further competition
+  work needs a meaningful distinction; current folder is explicitly a draft.
+- No session billing/rate was checked, so no cost is claimed. Existing instance
+  remains running for the user's ongoing session. Remaining work: rotating flap
+  grasp/controller, full-score retrieval, material/contact validation and novelty.
+
+
 ### 2026-11-08 — Safari login restored; smaller Brev VM runs rope pilots
 
 - Operator: repository agent; development branch `codex/rope-bimanual`. After
@@ -1551,6 +1591,28 @@ result or measure outcome fairness.
   small rope-physics feasibility check; none of the four generic ideas is a
   low-risk acceptance candidate. These are engineering/novelty judgments, not
   organiser decisions.
+### 2026-11-12 — walkthrough station checks on user-selected Brev instance
+
+- Operator: repository agent; instance `yam-eval-launchable-72837c`, launchable
+  checkout `25a2963`, clean and matching freshly fetched `origin/main`.
+  Setup log contains `=== [yam-setup] done` at line 3324; `yam_arena` is
+  registered. Inspect/YAM/agent versions are 1.0.0/0.38.0/0.30.0, the production
+  asset-root fix is present, and desktop/reports services are active.
+- User requested the walkthrough's fixed station apple-to-bowl commands.
+  Dream completed 2,400 steps with automatic `success_at_end=0`; operator
+  judgment was skipped rather than guessed. Remote evidence:
+  `~/yam-eval/dream/adhoc_4089e125.json`, frames
+  `20261112_233013_8ae0c5cf` (2,401 frames per camera).
+- Scripted demo then succeeded with `success_at_end=1`; remote evidence:
+  `~/yam-eval/demo/adhoc_ee6de361.json`, frames
+  `20261112_233645_dd97aa62` (203 frames per camera). All three camera MP4s
+  were exported for each run; setup image is `~/yam-eval/setup-20261112.png`.
+  No media was uploaded or submission changed. No rate/billing was checked;
+  no cost claim is made. The instance remains running for the user's session.
+- Live JSON retained a stale step-0 entry while stored frame numbers advanced;
+  do not infer a stalled first Dream request from that entry alone. Videos
+  have not yet been visually reviewed; the scores above are the reported scorer
+  results, not an independent behavioral audit.
 
 ### 2026-11-07 — shared main and agent handoff
 

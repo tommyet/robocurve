@@ -1,0 +1,65 @@
+{
+  "status": "partially validated development prototype",
+  "date": "2026-11-13",
+  "scorer_tests": {
+    "command": "python3 -m unittest -v test_scoring",
+    "passed": 10
+  },
+  "demo_score": 0.25,
+  "dream_score": null,
+  "media": null,
+  "remaining": [
+    "Tune rotating flap grasp: current attempt reached only about 54 degrees left and 12 degrees right, then flaps closed",
+    "Demonstrate released full-score item retrieval after opening both flaps",
+    "Run Dream only after full-score feasibility validation",
+    "Calibrate tape fracture, material and grip proxy before claiming real-world fidelity",
+    "Resolve significant novelty overlap with pending carton-cutting submission #1856 before competition preparation"
+  ],
+  "smoke_test": {
+    "run": "unbox-smoke-001",
+    "control_steps": 2,
+    "completed": true,
+    "initial_flap_angles_deg": [
+      -0.00049,
+      -0.00069
+    ],
+    "physics_errors_found": false,
+    "note": "Early geometry/controller diagnostic; superseded by demo-006, which explicitly checked both physical hinge prims. Early custom-geometry caching bug means smoke-001 is not evidence of physical hinges."
+  },
+  "novelty": {
+    "status": "significant overlap with pending submission",
+    "url": "https://github.com/robocurve/benchmark-tasks/pull/1856",
+    "received_task": "TK-V7P9X9",
+    "checked": "2026-11-13",
+    "note": "Carton tape cutting, opening and product protection are already in a pending submission. Do not present this prototype as an unclaimed objective."
+  },
+  "demo": {
+    "run": "unbox-demo-006",
+    "inspect_log": "adhoc_e351641c.json",
+    "control_steps": 1153,
+    "simulated_seconds": 57.65,
+    "wall_seconds": 169.556421809,
+    "score": 0.25,
+    "replay_score": 0.25,
+    "cut_segments": 21,
+    "first_complete_cut_s": 15.95,
+    "maximum_flap_angles_deg": [
+      53.8571764104,
+      11.5461979681
+    ],
+    "final_flaps_open": false,
+    "item_retrieved": false,
+    "camera_video_frames_each": 1154,
+    "camera_video_count": 3,
+    "core_source_hashes_match": true,
+    "local_evidence": "artifacts/unbox-20261113/demo-006 (ignored)"
+  },
+  "source_sha256": {
+    "task.py": "0ede97765b199eaf3c13040d8eef4df0fb84f5e308af632f05c18b7a71c0533d",
+    "scoring.py": "f710dc39fd64546e1f20c96afc06e8251f5baa3f39bb5fa9d117ab152b0424d6",
+    "config.py": "9ba8708b5c39159144cff73e22f5427b5a220de949f77f8ae9b2fa6207767d90",
+    "mechanics.py": "11cdf857e36764680bc6857107c53abd27884f892e6b14093aa8ab7db2c010ed",
+    "run.py": "ca53c94b440948534a8419173e38b82b0481424cd2f04729dd9ffc37a42791d7",
+    "replay.py": "a85857ad7135be58d82dccbdf575d04cafc8708b9f3d3db6bae21768b6976dc3"
+  }
+}
