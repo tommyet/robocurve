@@ -80,15 +80,47 @@ class PaperWireCrossingGuard:
         return {'valid':not self.failed,'steps':self.steps,'first_failure':self.first_failure}
 
 
-def wire_chain_continuity(segments, maximum_gap_m=.00003):
+def wire_chain_continuity(segments, maximum_gap_m=.00003, *, poses_xyzw=None,
+                          width_m=.0005, thickness_m=.0003):
     """Check the intact steel chain independently of paper contact.
 
-    The30µm numerical envelope is one tenth of the300µm wire thickness. A
-    disconnected chain cannot count as an intact extracted staple. This is
-    an assessor guard, not a force, joint repair or a break/release controller.
+    The30µm endpoint envelope remains a sufficient bound. When exact native
+    box poses are supplied, overlapping neighbouring steel volumes also prove
+    continuity: bent boxes can overlap even when their centreline endpoints
+    differ. No positive separating-axis gap receives this exemption. This
+    changes observation only, never joints, collision shapes or steel forces.
     """
     segments=np.asarray(segments,float)
     if segments.ndim!=3 or segments.shape[1:]!=(2,3) or len(segments)<2 or not np.isfinite(segments).all():
         raise ValueError('A finite ordered chain of steel segments is required')
-    gap=float(np.linalg.norm(segments[:-1,1]-segments[1:,0],axis=1).max(initial=0.))
-    return dict(maximum_endpoint_gap_m=gap,maximum_allowed_gap_m=maximum_gap_m,valid=gap<=maximum_gap_m)
+    gaps=np.linalg.norm(segments[:-1,1]-segments[1:,0],axis=1)
+    bad=np.flatnonzero(gaps>maximum_gap_m)
+    overlap=[]
+    if poses_xyzw is not None:
+        from scipy.spatial.transform import Rotation
+        poses=np.asarray(poses_xyzw,float)
+        if (poses.shape!=(len(segments),7) or not np.isfinite(poses).all()
+                or not np.isfinite([width_m,thickness_m]).all()
+                or min(width_m,thickness_m)<=0):
+            raise ValueError('Exact finite native wire poses and positive section sizes required')
+        rotations=Rotation.from_quat(poses[:,3:]).as_matrix()
+        lengths=np.linalg.norm(segments[:,1]-segments[:,0],axis=1)
+        half=np.column_stack((lengths/2,np.full(len(lengths),width_m/2),
+                              np.full(len(lengths),thickness_m/2)))
+        expected=np.stack((poses[:,:3]-rotations[:,:,0]*lengths[:,None]/2,
+                           poses[:,:3]+rotations[:,:,0]*lengths[:,None]/2),axis=1)
+        if not np.allclose(expected,segments,atol=1e-8,rtol=0):
+            raise ValueError('Native box poses do not match the measured wire segments')
+        for i in bad:
+            A,B=rotations[i],rotations[i+1]
+            axes=np.concatenate((A.T,B.T,np.cross(A.T[:,None,:],B.T[None,:,:]).reshape(-1,3)))
+            norms=np.linalg.norm(axes,axis=1);usable=norms>1e-10
+            axes=axes[usable]/norms[usable,None]
+            separation=np.abs(axes@(poses[i+1,:3]-poses[i,:3]))-np.abs(axes@A)@half[i]-np.abs(axes@B)@half[i+1]
+            overlap.append(dict(pair=int(i),maximum_separating_axis_gap_m=float(separation.max()),
+                                intersecting=bool(np.all(separation<=0.))))
+    valid=not len(bad) or (poses_xyzw is not None and all(x['intersecting'] for x in overlap))
+    return dict(maximum_endpoint_gap_m=float(gaps.max(initial=0.)),
+                maximum_allowed_gap_m=maximum_gap_m,valid=bool(valid),
+                method='endpoint_bound_or_native_box_intersection' if poses_xyzw is not None else 'endpoint_bound',
+                native_box_checks=overlap)

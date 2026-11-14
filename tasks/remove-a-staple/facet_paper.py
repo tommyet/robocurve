@@ -101,7 +101,9 @@ def rotation_quaternion(matrix):
     return Rotation.from_matrix(matrix).as_quat()
 
 
-def mechanics(mesh,material=ShellMaterial(),primitive_boxes=False):
+def mechanics(mesh,material=ShellMaterial(),primitive_boxes=False,minimum_panel_mass_kg=0.):
+    if not 0.<=minimum_panel_mass_kg<=.000005:
+        raise ValueError('Explicit numerical panel mass floor must be within0–5mg')
     vertex_ids=mesh.faces
     if primitive_boxes:
         if len(mesh.faces)%2:raise ValueError('Box panels require paired rectangular triangles')
@@ -120,7 +122,8 @@ def mechanics(mesh,material=ShellMaterial(),primitive_boxes=False):
                 np.allclose(np.sum(edge1*edge2,axis=1),0.,atol=1e-14)):
             raise ValueError('Native box panels must be rectangles')
         areas*=2
-    masses=areas*material.thickness_m*material.density_kg_m3
+    physical_masses=areas*material.thickness_m*material.density_kg_m3
+    masses=np.maximum(physical_masses,minimum_panel_mass_kg)
     edges=defaultdict(list);vertices=defaultdict(list)
     for face,ids in enumerate(vertex_ids):
         for vertex in ids:vertices[int(vertex)].append(face)
@@ -159,6 +162,7 @@ def mechanics(mesh,material=ShellMaterial(),primitive_boxes=False):
             endpoint_pairs.append((i,int(np.flatnonzero(vertex_ids[i]==vertex)[0]),
                                    j,int(np.flatnonzero(vertex_ids[j]==vertex)[0])))
     return dict(points=points,centres=centres,normals=normals,masses=masses,
+                physical_masses=physical_masses,minimum_panel_mass_kg=minimum_panel_mass_kg,
                 neighbours=neighbours,hinges=hinges,
                 endpoint_pairs=np.asarray(endpoint_pairs,int).reshape(-1,4),
                 minimum_shared_edge_length_m=min(np.linalg.norm(mesh.rest[h['edge'][1]]-mesh.rest[h['edge'][0]]) for h in hinges),
@@ -218,12 +222,12 @@ def geometric_edge_measurements(model,world,rotations,thickness_m=.0001):
         interpretation='Empty aperture geometry only. Compression and tangential slip are reported separately; native hinge fracture is a distinct event.')
 
 
-def author_shell(stage,path,mesh,material=ShellMaterial(),color=(.94,.94,.91),*,primitive_boxes=False,velocity_iterations=4,position_iterations=128):
+def author_shell(stage,path,mesh,material=ShellMaterial(),color=(.94,.94,.91),*,primitive_boxes=False,velocity_iterations=4,position_iterations=128,minimum_panel_mass_kg=0.):
     """Author only before simulation. All shell facet bodies remain dynamic."""
     from pxr import Gf,Sdf,UsdGeom,UsdPhysics,PhysxSchema,UsdShade,Vt
     if velocity_iterations not in (1,4,32):raise ValueError('Unsupported diagnostic velocity iterations')
     if position_iterations not in (32,64,128,255):raise ValueError('Unsupported diagnostic position iterations')
-    model=mechanics(mesh,material,primitive_boxes);bodies=[];joints=[]
+    model=mechanics(mesh,material,primitive_boxes,minimum_panel_mass_kg);bodies=[];joints=[]
     mat=UsdShade.Material.Define(stage,path+'/Material')
     pm=UsdPhysics.MaterialAPI.Apply(mat.GetPrim())
     pm.CreateStaticFrictionAttr(material.friction);pm.CreateDynamicFrictionAttr(material.friction)

@@ -26,6 +26,7 @@ def main():
     parser.add_argument('--physics-hz',type=int,choices=(240,480,960),default=960)
     parser.add_argument('--solver-iterations',type=int,choices=(32,128),default=128)
     parser.add_argument('--center-peg-reset',action='store_true',help='Explicit alternative initial peg layout: first at centre, spare at y=0.20m; reset-only translation, never an action-time edit')
+    parser.add_argument('--fresh-peg-reset',action='store_true',help='Use the declared initial peg poses and zero velocities instead of reconstructed settled peg states')
     args=parser.parse_args()
     source=Path(__file__).resolve().parent
     provenance=json.loads(args.state.with_suffix('.json').read_text())
@@ -60,6 +61,7 @@ def main():
         requested_steps=len(actions),completed_steps=0,provenance=provenance,
         physics_hz=args.physics_hz,solver_iterations=args.solver_iterations,
         center_peg_reset=args.center_peg_reset,
+        fresh_peg_reset=args.fresh_peg_reset,
         plan_sha256=hashlib.sha256(args.plan.read_bytes()).hexdigest())
     def save():
         report['wall_seconds']=time.monotonic()-started
@@ -118,6 +120,10 @@ def main():
             robot.actuators.target_command.set_position_index(value=q,env_ids=ids)
             robot.actuators.target_command.set_velocity_index(value=torch.zeros_like(v),env_ids=ids)
         for name in ('left_peg','right_peg'):
+            if args.fresh_peg_reset:
+                # The environment reset already authored both free jaws at
+                # their declared poses. No peg state writes during execution.
+                continue
             peg=base.scene[name]
             peg_poses=state[name+'_body_poses'].copy()
             if args.center_peg_reset:
@@ -184,6 +190,16 @@ def main():
             action=active.copy()
             emb._env.step(torch.as_tensor(action[None],device=base.device,dtype=torch.float32))
             snapshot(step,action);report['completed_steps']=step
+            guard_until=plan.get('held_left_guard_until',0)
+            if step<=guard_until and step%10==0:
+                from scripted_grasp import held_patch_geometry
+                robot=base.scene['left_robot']
+                pose=array(robot.data.body_link_pose_w)[0,robot.body_names.index('gripper')]
+                actual=arena_cloth.state(emb._env,'tshirt')
+                geometry=held_patch_geometry(state['rest'],actual.nodes,pose)
+                report['held_left_guard']=dict(step=step,**geometry)
+                if np.linalg.norm(geometry['patch_relative_to_tcp_m'])>.10:
+                    raise RuntimeError('Held hem is more than10cm from the fingers; remaining continuation withheld')
             if step%20==0:save()
         report['status']='complete'
     except BaseException as error:

@@ -7,6 +7,19 @@ from facet_paper import (coupon_mesh,box_coupon_mesh,box_task_mesh,mechanics,mea
 
 
 class FacetPaperTests(unittest.TestCase):
+    def test_disclosed_mass_floor_preserves_holes_stiffness_and_strength(self):
+        mesh=box_task_mesh(0,.04)
+        material=ShellMaterial(thickness_m=.0002,density_kg_m3=1000.,tensile_strength_per_width_n_m=3750.)
+        physical=mechanics(mesh,material,primitive_boxes=True)
+        candidate=mechanics(mesh,material,primitive_boxes=True,minimum_panel_mass_kg=.000005)
+        np.testing.assert_array_equal(candidate['points'],physical['points'])
+        np.testing.assert_array_equal(candidate['physical_masses'],physical['masses'])
+        self.assertGreaterEqual(candidate['masses'].min(),.000005)
+        self.assertLess(candidate['masses'].sum()/physical['masses'].sum(),1.05)
+        for original,modified in zip(physical['hinges'],candidate['hinges']):
+            self.assertEqual(original['stiffness_nm_rad'],modified['stiffness_nm_rad'])
+            self.assertEqual(original['break_force_n'],modified['break_force_n'])
+
     def test_geometry_diagnostic_does_not_stop_on_harmless_overlap(self):
         mesh=_rectangular_mesh(np.array((0.,.01,.02)),np.array((0.,.01)),[])
         model=mechanics(mesh,primitive_boxes=True);shell=dict(mesh=mesh,model=model)

@@ -57,6 +57,8 @@ def main():
         help='100 is an explicitly unscored continuity diagnostic; it does not change contact or forces')
     p.add_argument('--geometry-aware-continuity',action='store_true',
         help='Unscored150um empty-aperture diagnostic; preserve raw endpoint errors and native fracture events')
+    p.add_argument('--minimum-panel-mass-mg',type=int,choices=(0,5),default=0,
+        help='Explicit numerical mass floor for tiny paper panels; geometry, stiffness, strength and crossing checks remain unchanged')
     p.add_argument('--paper-aperture-um',type=int,choices=(150,250),default=150,
         help='Explicit numerical panel-gap bound.250um remains below the300um minimum steel-wire thickness; independent swept crossing and fracture checks remain active')
     p.add_argument('--solver-type',choices=('TGS','PGS'),default='TGS')
@@ -100,6 +102,7 @@ def main():
         'paper_gap_envelope_m':a.paper_gap_envelope_um*1e-6,
         'geometry_aware_continuity':a.geometry_aware_continuity,
         'empty_aperture_limit_m':a.paper_aperture_um*1e-6 if a.geometry_aware_continuity else None,
+        'minimum_panel_mass_mg':a.minimum_panel_mass_mg,
         'dream_requests':0,'requested_steps':a.steps,'control_hz':20,'phase':'launch',
         'policy':('Dream with ordinary camera/joint observations' if a.dream else
                   'State-assisted scripted tool-pose servo; ordinary bounded joint commands' if a.tool_pose_servo else
@@ -132,6 +135,7 @@ def main():
         arena_panels.POSITION_ITERATIONS=a.position_iterations
         arena_panels.MAXIMUM_HINGE_GAP_M=a.paper_gap_envelope_um*1e-6
         arena_panels.GEOMETRIC_APERTURE_LIMIT_M=a.paper_aperture_um*1e-6 if a.geometry_aware_continuity else None
+        arena_panels.MINIMUM_PANEL_MASS_KG=a.minimum_panel_mass_mg*1e-6
         from yam_arena import inspect_embodiment as wrapper,scene as adapter
         wrapper._APP=app;report['phase']='build'
         emb=wrapper.YamArenaEmbodiment(task=str(Path(__file__).with_name('task_panels.py')),object_jitter=0.,control_hz=20,cam_width=224,cam_height=224,device='cpu')

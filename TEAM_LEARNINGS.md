@@ -4,6 +4,42 @@ Last updated: 2026-11-14 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-14 — completion checks, 22:23 UTC
+
+- Wheel173 completes650 actions, but its first turn does **not** survive
+  withdrawal. Spoke0 moves from−0.7510 to−0.5326 turns at action552, then returns
+  to−0.7511 by620. Do not report a retained adjustment. Local archive SHA256:
+  `b8ff708d1144a81ca79491ce4b6153bb1dede0b15f2c7282f955758e28aa9bf4`.
+  Standalone native-drive checks confirm both ordinary USD and batched Sdf
+  targets update correctly; this alone does not validate the assembled wheel.
+- Seam187 completes the first cut and reverse withdrawal:327 actions,877.55s
+  wall, one50mN/10ms-qualified cut at13.3833s, no recorded damage or native
+  cloth-hinge break, material guard valid. No stitch is yet fully removed.
+  `plan_reverse.py` preserves this route and compiles the pending six-cut plan.
+  Full191 is running; fragment removal still requires separate demonstration.
+- Staple186's5mg panel-mass floor improves paper continuity. Its341-action stop
+  is a32.009µm **steel centreline endpoint** difference, not a paper tear. Exact
+  native boxes at that pair overlap by4.528µm on the limiting separating axis.
+  The corrected audit accepts either the original30µm endpoint bound or an
+  actual intersection of adjacent native steel boxes. It never excuses a
+  positive separating gap using a larger tolerance. Physics, geometry and
+  material forces are unchanged by this audit fix. All80 staple tests pass,
+  including real-gap and mismatched-pose negative controls. Full193 is running.
+- Shirt185 retains the cloth through its carry but fails with a closed peg.
+  Restoring the15-degree peg approach in188 still leaves the mouth closed and
+  loses the hem at540. Neither is a first-clip demo. Short194 tests ordinary
+  right-arm tracking from the start of the relocated pickup; no material change.
+- Tie189 completes200 actions with the left actual wide tip and right narrow
+  strip between the fingers.192 completes the wrap route, but moving the right
+  hand lets the narrow strip slip, so there is no knot.195 tests a22mm bite and
+  preserves pinch orientation while lowering. All routes receive local full
+  robot/fixture collision checks before native execution. No attachment law
+  or cloth pose animation has been added.
+- The two A40 rentals remain active, with separate process caps and live local
+  shutdown watchdogs. Lifecycle JSON files contain the current deadlines;
+  these replace all earlier deadline estimates. No new Dream calls or PRs for
+  the five unfinished tasks. Cake1919 still has no successful revised receipt.
+
 ## 2026-11-14 — practical submission standard and current trials
 
 - Operator: repository agent, continuing `codex/six-task-completion-2026-11-13`.

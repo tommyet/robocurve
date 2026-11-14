@@ -36,6 +36,7 @@ SHELLS={}
 POSITION_ITERATIONS=128
 MAXIMUM_HINGE_GAP_M=.000025
 GEOMETRIC_APERTURE_LIMIT_M=None
+MINIMUM_PANEL_MASS_KG=0.
 
 
 def _spawn(path,cfg,translation=None,orientation=None,**kwargs):
@@ -46,7 +47,7 @@ def _spawn(path,cfg,translation=None,orientation=None,**kwargs):
         from coordinate_frame import to_native
         from paper import PaperMesh
         mesh=PaperMesh(to_native(spec.mesh.rest),spec.mesh.faces,spec.mesh.holes)
-        shell=author_shell(stage,root,mesh,spec.material,primitive_boxes=True,velocity_iterations=4,position_iterations=POSITION_ITERATIONS)
+        shell=author_shell(stage,root,mesh,spec.material,primitive_boxes=True,velocity_iterations=4,position_iterations=POSITION_ITERATIONS,minimum_panel_mass_kg=MINIMUM_PANEL_MASS_KG)
         model=shell['model'];shell['reset_poses']=np.c_[model['centres'],np.tile((0.,0.,0.,1.),(len(model['centres']),1))]
         SHELLS[cfg.paper_name]=shell
     prim=stage.GetPrimAtPath(str(path))
@@ -139,7 +140,7 @@ class PanelMonitor:
         self.frames=dict(zip(self.rigid.prim_paths,self.rigid.get_transforms().detach().cpu().numpy()))
         staple=self.item['metadata']['staple'];wire=measured_wire_segments(self,staple);values=[];paper_poses=[]
         from contact_guard import wire_chain_continuity
-        chain=wire_chain_continuity(wire)
+        chain=wire_chain_continuity(wire,poses_xyzw=np.asarray([self.frames[p] for p in staple['paths']]))
         self.peak_wire_gap_m=max(self.peak_wire_gap_m,chain['maximum_endpoint_gap_m'])
         for shell,view,ids,audit in zip(self.shells,self.views,self.indices,self.crossing):
             poses=view.get_transforms().detach().cpu().numpy()[ids]

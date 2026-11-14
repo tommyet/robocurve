@@ -1,6 +1,6 @@
 # Judging staple removal
 
-The development reset is two 80 gsm office-paper sheets, 210 × 148 mm,
+The development reset is two 200 gsm paper sheets, 210 × 148 mm,
 with one ordinary clinched steel staple near a corner. The upper sheet is offset 12 mm along its short direction. The crown midpoint
 is 12 mm from the left edge of each sheet, and 12/24 mm from the
 upper/lower sheet's near edge, as fixed in `setup.json`. Photograph both faces

@@ -101,7 +101,9 @@ def assess(directory):
     samples=[];whole_run_valid=(not native_topology_broken and continuity_supported and report['status']!='invalid_model_domain' and
                                all(m['valid'] for m in report.get('material',[])))
     for row in rows:
-        wire=measured_wire(row,lengths);chain=wire_chain_continuity(wire)
+        wire=measured_wire(row,lengths)
+        ids=[row['hardware_names'].index(f'staple/wire_{i:03d}') for i in range(len(lengths))]
+        chain=wire_chain_continuity(wire,poses_xyzw=np.asarray(row['hardware_poses'])[ids])
         material=bool(row['material']) and all(m['valid'] for m in row['material'])
         whole_run_valid=whole_run_valid and material and chain['valid']
         errors=[x['maximum_vertex_average_error_m'] for x in row['paper_continuity']]
