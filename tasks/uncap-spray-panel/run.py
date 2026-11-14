@@ -20,6 +20,7 @@ def main():
     out=args.log_dir.expanduser().resolve();out.mkdir(parents=True,exist_ok=False)
     (out/'source').mkdir()
     sources=list(Path(__file__).parent.glob('*.py'))
+    sources.append(Path(__file__).with_name('press_face.json'))
     for source in sources:(out/'source'/source.name).write_bytes(source.read_bytes())
     (out/'source-sha256.json').write_text(json.dumps(
         {s.name:hashlib.sha256(s.read_bytes()).hexdigest() for s in sources},indent=2))
@@ -46,9 +47,10 @@ def main():
             def sensor_init(instance,*a,**kw):
                 kw['contact_sensors']=True
                 original_init(instance,*a,**kw)
+                stem=instance.scene_config.left_contacts.prim_path.rsplit('/.*',1)[0]
                 instance.scene_config.right_contacts.filter_prim_paths_expr=[
                     '{ENV_REGEX_NS}/spray_can','{ENV_REGEX_NS}/button',
-                    instance.scene_config.left_contacts.prim_path]
+                    *[stem+instance.link_paths[n] for n in ('gripper','tip_left','tip_right')]]
             BimanualYamEmbodiment.__init__=sensor_init
             import isaaclab.sim as sim
             from mechanics import asset,stand_asset
@@ -169,6 +171,7 @@ def main():
                 q=array(robot.data.joint_pos)[0]
                 tcp,rotation=ik.tcp_pose(q[ids],self.rig.bases[side]);hands.append(tcp)
                 hand_states.append(dict(tcp=tcp.tolist(),rotation=rotation.tolist(),joints=q[ids].tolist(),
+                                        finger_joints=q[fids].tolist(),
                                         opening=float(np.clip(q[fids].mean()/FINGER_OPEN,0,1))))
             sample=dict(time=float(self._t),can=can.tolist(),cap=cap.tolist(),
                         nozzle=(button+rot@np.array((.009,0.,0.))).tolist(),axis=rot[:,0].tolist(),

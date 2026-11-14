@@ -140,3 +140,16 @@ hand poses, compensates bounded arm PD deflection and adjusts press height
 using measured piston travel (2.7 mm target). It sends ordinary joint targets;
 only the environment's geometric spray model writes accumulated surface dose.
 The sparse aerosol points are a visual aid, not simulated fluid particles.
+
+### Clearance diagnostic revision
+
+Native force filtering observed brief button contact followed by large right
+finger net forces outside the can/button pairs. The next clearance probe adds
+the other arm as a filter, braces the can 25 mm below its centre, and starts it
+on an ordinary 80x80x50 mm support block. The block enables a reachable lower
+grasp; it does not constrain the can during painting. Return height follows
+the physical block. This setup revision is not yet a validated full demo.
+
+`--stage press` is an explicitly uncapped diagnostic. It bypasses cap removal
+only to inspect nozzle contacts and is forced to score zero. Completion must
+come from `--stage full`, starting capped and finishing with released parking.

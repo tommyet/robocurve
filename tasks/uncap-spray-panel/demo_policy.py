@@ -4,6 +4,8 @@ No pose writes, forces, joint removal, deposit writes or scorer updates here.
 The policy receives privileged simulation telemetry for planning, disclosed.
 """
 from dataclasses import replace
+import json
+from pathlib import Path
 import numpy as np
 from yam_arena import ik
 from yam_arena.constants import FINGER_OPEN
@@ -17,7 +19,11 @@ from control_math import grip_fraction
 
 LEFT_R=np.array([[-1.,0.,0.],[0.,0.,-1.],[0.,-1.,0.]])
 RIGHT_R=np.array([[1.,0.,0.],[0.,0.,1.],[0.,-1.,0.]])
-PRESS_R=axis_angle_matrix(np.array([1.,0.,0.]),np.radians(-45.))@RIGHT_R
+# A real lower-finger face from the pinned YAM collision meshes, at joint7=-28mm.
+# This orientation makes that face horizontal; the spare jaw stays above it.
+_FACE=json.loads(Path(__file__).with_name('press_face.json').read_text())
+PRESS_POINT=np.array(_FACE['point_tcp'])
+PRESS_R=np.array(_FACE['rotation_can_from_tcp'])
 
 
 class SprayDemo(YamScriptedPolicy):
@@ -30,7 +36,7 @@ class SprayDemo(YamScriptedPolicy):
 
     def initialize(self):
         self.started=True;self.index=-1;self.failure=None;self.moves=[]
-        self.press_offset=.093;self.grasp_calibrated=False;self.press_enabled=True
+        self.press_depth=.0027;self.grasp_calibrated=False;self.press_enabled=True
         self.contact_time=0.;self.press_grip=grip_fraction(-.028,FINGER_OPEN)
         self.targets=[];self.q=[]
         self.position_bias=[np.zeros(3),np.zeros(3)]
@@ -62,7 +68,7 @@ class SprayDemo(YamScriptedPolicy):
             return
         can_center=np.array((CAN_START[0],0.,TARGET_CENTER[1]-.077))
         move('can_lift',2.,L=lp(can_center+(0.,0.,-.025),self.grip))
-        move('press_approach',2.,R=(can_center+(-.028,-.08,.135),PRESS_R,self.press_grip))
+        move('press_approach',2.,R=(can_center+(0.,-.08,.14),PRESS_R,self.press_grip))
         move('press_hover',1.5,follow='hover')
         for index,(y,z) in enumerate([(-.035,-.035),(-.035,.035),(.035,.035),(.035,-.035)]):
             p=can_center+np.array((0.,y,z-.025))
@@ -152,11 +158,15 @@ class SprayDemo(YamScriptedPolicy):
                 pressing=step['follow']=='press'
                 if pressing:
                     travel_error=.0027-s['button_travel']
-                    self.press_offset=float(np.clip(self.press_offset-.20*travel_error,.080,.110))
-                offset=self.press_offset if pressing else .122
-                # Open 56 mm and align one finger at the button; the other
-                # stays behind the can, clear of both its body and spray path.
-                target=can+rot@np.array((-.028,-.010,offset))
+                    self.press_depth=float(np.clip(self.press_depth+.20*travel_error,0.,.006))
+                height=.082-self.press_depth if pressing else .105
+                point=PRESS_POINT.copy()
+                finger=s['hands'][1].get('finger_joints',[-.028,-.028])[0]
+                point[0]+=finger-(-.028)
+                # Command the actual horizontal face onto the actuator's top,
+                # accounting for finger spring deflection instead of guessing
+                # a contact height from the generic TCP marker.
+                target=can+rot@(np.array((0.,0.,height))-PRESS_R@point)
                 previous=self.targets[1][0]
                 delta=target-previous
                 delta*=min(1.,.005/max(1e-9,np.linalg.norm(delta)))
@@ -180,7 +190,7 @@ class SprayDemo(YamScriptedPolicy):
                                          tracking_position=float(np.linalg.norm(error)),tracking_rotation=float(np.linalg.norm(rotation_error)),
                                          position_bias=self.position_bias[i].tolist())
             actions.append(np.r_[q,np.clip(g,0.,1.)])
-        telemetry.command=dict(phase=phase,errors=errors,failure=self.failure,press_offset=self.press_offset,measured_contact_time=self.contact_time)
+        telemetry.command=dict(phase=phase,errors=errors,failure=self.failure,commanded_depression=self.press_depth,measured_contact_time=self.contact_time)
         meta={'request_stop':True} if self.failure or self.index>=len(self.moves) else {}
         return ActionChunk(actions=[Action(data=pack(*actions),meta=meta)],control_hz=1/self._dt)
 

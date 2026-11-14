@@ -2177,3 +2177,15 @@ measured result, evidence path, cost basis, decision and remaining uncertainty**
 Update the working guidance when evidence changes it; preserve earlier dated
 results and mark superseded conclusions explicitly. Pull the latest notes before
 editing, merge both agents' findings, and commit/push the update with the work.
+
+### 2026-11-14 — primary Brev restart failure; fallback check
+
+- Root prepared an exact horizontal lower-finger contact frame from unchanged
+  pinned collision/tip_left/tip_left_014.stl. Mesh triangle/rotation checks
+  passed; 21 local tests now pass. The native runtime has not tested this frame.
+- The primary yam-eval-launchable-72837c returned FAILURE twice on restart,
+  with no GPU/shell ready. No new physics trial started after that failure.
+  Stop it and confirm before trying the existing stopped robocurve-dice L40S.
+  No simultaneous GPU trials or new instance creation. Record actual fallback
+  outcome and both final states. User explicitly wants Brev compute off after
+  the whole batch, and it is also stopped during offline preparation.
