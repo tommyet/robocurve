@@ -60,3 +60,22 @@ retaining ledge, flexible clip and unbooted plug details are original approximat
 geometry, not vendor CAD or a standards certification. The source/target are
 the lower/upper ports of the outside column; six other cables remain connected.
 Source: https://cdn.amphenol-cs.com/media/wysiwyg/files/drawing/p-rje7k-888-1xx0.pdf
+
+
+The current controller uses the left hand on the ordinary boot and the right
+hand's unmodified left finger on the clip. Boot contact is 26.5 mm behind the
+plug origin. It narrows the jaws to a 13 mm aperture while 40 mm in front,
+then inserts and force-closes. Pressing begins after measured pose/jaw gates;
+actual clip travel must exceed 1.8 mm before withdrawal. Pulling pauses if the
+clip returns and pressing follows the actual moving plug until the measured
+hook front clears the retaining ledge by 0.5 mm. The pressing finger then
+rises 20 mm before the boot finishes withdrawing; this avoids dragging its
+spare jaw through a neighbouring socket roof. Physical plug-tip
+clearance, measured grasp slip, target seating and clip return gate later
+phases. Both hands retreat before the retention rest.
+
+The trace records both measured finger joints, TCP tracking and the actual
+pressing support point. Bias is limited to 1 mm and frozen/decayed during
+contact. The adaptive engineering probe permits up to 2,000 actions / 100 s;
+it stops on a measured failure or completed retention rest. Nominal CPU mesh
+and IK checks do not establish full-arm/cable clearance or native success.

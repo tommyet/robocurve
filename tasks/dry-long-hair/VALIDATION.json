@@ -1,7 +1,7 @@
 {
-  "status": "native_articulation_passed_robot_power_attempt_pending",
+  "status": "scalp_contact_repaired_switch_grasp_native_incomplete",
   "date": "2026-11-14",
-  "local_model_tests_passed": 10,
+  "local_model_tests_passed": 18,
   "native_runtime": true,
   "demo_score": null,
   "video": null,
@@ -25,10 +25,18 @@
     "actuated_hair_joints": false
   },
   "current_native_mechanics_probe": {
-    "run": "hair-articulation-003",
-    "max_joint_separation_m": 1.12266e-07,
-    "max_lock_motion_m": 0.0354696,
+    "run": "hair-skin012",
+    "max_joint_separation_m": 2.417935e-07,
+    "max_lock_motion_m": 0.036507876,
+    "max_skin_attachment_error_m": 6.4461915e-07,
+    "scalp_contact_respected": true,
     "power_off_water_loss_kg": 0.0,
     "task_score": null
+  },
+  "latest_controller": {
+    "run": "hair-power011",
+    "score": 0.0,
+    "failure": "insert_below_switch did not settle within measured tolerances",
+    "diagnosed": "actual dryer roll makes body-aligned wrist orientation unreachable; world-fixed orientation solves measured pose within43um, pending native repeat"
   }
 }

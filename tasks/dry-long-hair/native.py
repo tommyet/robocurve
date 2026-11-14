@@ -21,9 +21,15 @@ def export(path,name):
    box(s,f'/Object/post_{i}',(.016,.016,height),(x+.060,y+sign*.055,TOP+.012+height/2),(.27,.30,.33))
    box(s,f'/Object/cradle_{i}',(.080,.015,.020),(x+.005,y+sign*.032,z-.026),(.27,.30,.33))
    box(s,f'/Object/bracket_{i}',(.016,.035,.020),(x+.060,y+sign*.043,z-.026),(.27,.30,.33))
+ elif name=='scalp_collision':
+  # A separate, physically attached skin body avoids the backend's adjacent
+  # articulation-link collision filtering. Total head+skin mass remains650g.
+  UsdPhysics.RigidBodyAPI.Apply(r.GetPrim());UsdPhysics.MassAPI.Apply(r.GetPrim()).CreateMassAttr(.05)
+  b=PhysxSchema.PhysxRigidBodyAPI.Apply(r.GetPrim());b.CreateSolverPositionIterationCountAttr(32);b.CreateSolverVelocityIterationCountAttr(4)
+  c=UsdGeom.Sphere.Define(s,'/Object/skin');c.CreateRadiusAttr(HEAD_RADIUS);c.CreateVisibilityAttr('invisible');collider(c)
  elif name=='head':
-  UsdPhysics.RigidBodyAPI.Apply(r.GetPrim());UsdPhysics.MassAPI.Apply(r.GetPrim()).CreateMassAttr(.65);b=PhysxSchema.PhysxRigidBodyAPI.Apply(r.GetPrim());b.CreateSolverPositionIterationCountAttr(32);b.CreateSolverVelocityIterationCountAttr(4)
-  c=UsdGeom.Sphere.Define(s,'/Object/scalp');c.CreateRadiusAttr(HEAD_RADIUS);c.CreateDisplayColorAttr([Gf.Vec3f(.75,.55,.42)]);collider(c)
+  UsdPhysics.RigidBodyAPI.Apply(r.GetPrim());UsdPhysics.MassAPI.Apply(r.GetPrim()).CreateMassAttr(.60);b=PhysxSchema.PhysxRigidBodyAPI.Apply(r.GetPrim());b.CreateSolverPositionIterationCountAttr(32);b.CreateSolverVelocityIterationCountAttr(4)
+  c=UsdGeom.Sphere.Define(s,'/Object/scalp');c.CreateRadiusAttr(HEAD_RADIUS);c.CreateDisplayColorAttr([Gf.Vec3f(.75,.55,.42)])
   box(s,'/Object/neck',(.038,.045,.13),(0,0,-.11),(.75,.55,.42))
   nose=UsdGeom.Sphere.Define(s,'/Object/nose');nose.CreateRadiusAttr(.01);nose.AddTranslateOp().Set(Gf.Vec3d(-.065,0,0));nose.CreateDisplayColorAttr([Gf.Vec3f(.75,.55,.42)]);collider(nose)
  else:
@@ -47,7 +53,7 @@ def install_joints(s,parent,include_dryer=True):
    if n:parent_name=f'{parent}/hair_{k}_{n-1}';parent_pos=segment(k,n-1);parent_q=segment_quat(k,n-1)
    else:parent_name=parent+'/head';parent_pos=HEAD;parent_q=(0.,0.,0.,1.)
    anchor=points(k)[n];a0=rotate(conjugate(parent_q),tuple(x-y for x,y in zip(anchor,parent_pos)));a1=rotate(conjugate(child_q),tuple(x-y for x,y in zip(anchor,segment(k,n))));relative=multiply(conjugate(child_q),parent_q)
-   j=UsdPhysics.RevoluteJoint.Define(s,child+'/bend_'+str(k)+'_'+str(n));j.CreateBody0Rel().SetTargets([parent_name]);j.CreateBody1Rel().SetTargets([child]);j.CreateAxisAttr('X' if (k+n)%2 else 'Y');j.CreateExcludeFromArticulationAttr(True);j.CreateCollisionEnabledAttr(False);j.CreateLocalPos0Attr(Gf.Vec3f(*a0));j.CreateLocalPos1Attr(Gf.Vec3f(*a1));j.CreateLocalRot1Attr(Gf.Quatf(relative[3],Gf.Vec3f(*relative[:3])));j.CreateLowerLimitAttr(-70.);j.CreateUpperLimitAttr(70.)
+   j=UsdPhysics.RevoluteJoint.Define(s,child+'/bend_'+str(k)+'_'+str(n));j.CreateBody0Rel().SetTargets([parent_name]);j.CreateBody1Rel().SetTargets([child]);j.CreateAxisAttr('X' if (k+n)%2 else 'Y');j.CreateExcludeFromArticulationAttr(True);j.CreateCollisionEnabledAttr(n == 0);j.CreateLocalPos0Attr(Gf.Vec3f(*a0));j.CreateLocalPos1Attr(Gf.Vec3f(*a1));j.CreateLocalRot1Attr(Gf.Quatf(relative[3],Gf.Vec3f(*relative[:3])));j.CreateLowerLimitAttr(-70.);j.CreateUpperLimitAttr(70.)
    d=UsdPhysics.DriveAPI.Apply(j.GetPrim(),'angular');d.CreateTypeAttr('force');d.CreateTargetPositionAttr(0.);d.CreateStiffnessAttr(.00006);d.CreateDampingAttr(.000015)
  if include_dryer:install_slider(s,parent)
 
@@ -72,3 +78,9 @@ def export_hair(path):
   if prim.IsA(UsdPhysics.Joint) and prim.GetName().startswith('bend_'):UsdPhysics.Joint(prim).GetExcludeFromArticulationAttr().Set(False)
  head=s.GetPrimAtPath('/Mannequin/head');UsdPhysics.ArticulationRootAPI.Apply(head);a=PhysxSchema.PhysxArticulationAPI.Apply(head);a.CreateEnabledSelfCollisionsAttr(True);a.CreateSolverPositionIterationCountAttr(32);a.CreateSolverVelocityIterationCountAttr(4)
  s.GetRootLayer().Save();return str(Path(path).resolve())
+
+def install_skin_attachment(stage,parent):
+ # Anatomical rigid attachment, never a robot grasp or controller constraint.
+ j=UsdPhysics.FixedJoint.Define(stage,parent+'/scalp_collision/skin_attachment')
+ j.CreateBody0Rel().SetTargets([parent+'/mannequin/head']);j.CreateBody1Rel().SetTargets([parent+'/scalp_collision'])
+ j.CreateLocalPos0Attr(Gf.Vec3f(0,0,0));j.CreateLocalPos1Attr(Gf.Vec3f(0,0,0));j.CreateCollisionEnabledAttr(False);j.CreateExcludeFromArticulationAttr(True)

@@ -2173,3 +2173,27 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Raw sources/traces/videos backed up locally at ignored
   artifacts/native-four-task-20261114/evidence.tgz. GPU used for native physics;
   no Dream call. No full-score demo and no submission authorized.
+
+### 2026-11-14 — measured geometry fixes after Astra/Sol review
+
+- User authorized Astra diagnosis and Sol implementation after roughly8trials.
+  Root coordinates allGPUwork; agents useCPUmeshes/FK. Astra found oldEthernet
+  press intersectsport5 andbootpinch intersectsownshell. Sol implemented role
+  reversal(leftboot/rightclip), measuredhook-clearthenclipfingerretreat,
+  actualtip-clearthen transfer.18CPUtests pass, native attempt stillpending.
+- Hair011 lowerhandlegrasp is stable, but insertion correctly stopped at
+  1.3–1.5mm trackingerror; measured tilted-dryer orientation has2.43mmIK
+  residual. World-fixed wrist orientation with actual local support calculation
+  solves that same measuredpose within43um; native repeatpending. No drying.
+- RootcollisionEnabledTrue alone didNOT prevent2.69mm scalp penetration.
+  hair-skin012 uses separate50g collision skin fixed to600g head, excluded from
+  articulation; total650g unchanged. Allnative9sdiagnosticchecks passed: max
+  strandanchor gap.242um, skinattachment.645um, hairmotion36.5mm, no poweroff
+  waterloss. No scoreexemption. Raw result oncb0da2 yam-eval/hair-skin012.
+- Correct activebackend identification from native traceback is isaaclab_physx,
+  not earlier inspected isaaclab_ov source. StaticGPUcontactfilter unsupported;
+  isolatedadhesioncoupon revisedto5kg dynamicfloor-supportedblock. First
+  couponprobe failedbefore reset fromnumpyfloat64 pose; convertallposevalues
+  toPythonfloat. Do not infercontactforcevalidation from all-zero data.
+- Compute continues sequentially, noDreamcalls/submission. Allfourfulltasks
+  remain incomplete. Backup/stop instruction stillapplies after batch.

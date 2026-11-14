@@ -57,14 +57,14 @@ def main():
   samples=[]
   robot=None
   if a.mode in ('grasp-probe','release-probe'):
-   from robot import GraspProbe,ReleaseProbe
+   from robot import GraspProbe,ReleaseProbe,MAX_RELEASE_STEPS
    robot=(ReleaseProbe if a.mode=='release-probe' else GraspProbe)(env,pose(f'plug_{SERVICE}')[:3])
   scorer=None;previous_plug=None
   if a.mode=='release-probe':
    from scoring import EthernetScorer
    scorer=EthernetScorer();task._tracker=scorer;task._diagnostic=False
   with (a.out/'trajectory.jsonl').open('w') as trace:
-   for step in range(820 if a.mode=='release-probe' else 360 if robot else 180):
+   for step in range(MAX_RELEASE_STEPS if a.mode=='release-probe' else 600 if robot else 180):
     phase='settle' if step<40 else 'pull_engaged' if step<60 else 'press_clip' if step<80 else 'pull_pressed' if step<120 else 'release'
     pull=-1.0 if phase in ('pull_engaged','pull_pressed') else 0.
     if phase=='pull_pressed' and pose(f'plug_{SERVICE}')[0]<PLUG_X-.035:pull=0.
@@ -95,14 +95,14 @@ def main():
     cv2.putText(canvas,(('ETHERNET ROBOT RELEASE ATTEMPT | ' if scorer else 'ETHERNET ROBOT GRASP PROBE | ') if robot else 'ETHERNET NATIVE FORCE PROBE | ')+phase,(12,25),cv2.FONT_HERSHEY_SIMPLEX,.60,(255,255,255),1,cv2.LINE_AA)
     cv2.putText(canvas,(('Ordinary robot commands. Measured score: '+str(scorer.value) if scorer else 'Ordinary robot commands, grasp diagnostic only. Task score: unscored') if robot else 'External test forces, not a robot demonstration. Task score: unscored'),(12,590),cv2.FONT_HERSHEY_SIMPLEX,.46,(255,205,120),1,cv2.LINE_AA);video.append_data(canvas)
     if step in (39,59,79,119,179,259,299,359,459,539,619,719,819):imageio.imwrite(a.out/f'step-{step}.png',canvas)
-    if control is not None and control.get('failure'):break
+    if control is not None and (control.get('failure') or control.get('complete')):break
   # Report actual measured behaviour, never infer passing from a scripted phase.
   x0=samples[39]['plug_pose'][0];xe=samples[59]['plug_pose'][0];xr=min(r['plug_pose'][0] for r in samples[80:120])
   cliptravel=max(CLIP_Z-(quat_xyzw_to_matrix(np.array(r['plug_pose'][3:])).T@(np.array(r['clip_pose'][:3])-np.array(r['plug_pose'][:3])))[2] for r in samples[60:120])
   tips=[r['plug_pose'][0]+float((quat_xyzw_to_matrix(np.array(r['plug_pose'][3:]))@np.array((.012,0,0)))[0]) for r in samples[40:60]]
   settled_span=float(np.ptp([r['plug_pose'][0] for r in samples[50:60]]))
   result={'diagnostic':True,'task_score':None,'robot_demo':False,'engaged_pull_displacement_m':x0-xe,'pressed_withdrawal_m':x0-xr,'max_clip_travel_m':cliptravel,'engaged_tip_min_x_m':min(tips),'engaged_end_x_span_m':settled_span,'checks':{'retains_engaged':min(tips)>(.412-.027/2)+.005 and settled_span<.0015,'releases_pressed':x0-xr>.020,'clip_depresses':cliptravel>RELEASE_TRAVEL}}
-  if robot:result={'diagnostic':True,'task_score':None,'robot_demo':False,'robot_grasp_probe':True,'max_tracking_error_m':max(r['robot_control']['position_error'] for r in samples),'final_plug_pose':samples[-1]['plug_pose'],'controller_failure':samples[-1]['robot_control'].get('failure')}
+  if robot:result={'diagnostic':True,'task_score':None,'robot_demo':False,'robot_grasp_probe':True,'max_tracking_error_m':max(r['robot_control']['position_error'] for r in samples),'final_plug_pose':samples[-1]['plug_pose'],'controller_failure':samples[-1]['robot_control'].get('failure'),'controller_complete':samples[-1]['robot_control'].get('complete',False)}
   if scorer is not None:result|={'diagnostic':False,'privileged_robot_attempt':True,'task_score':scorer.value,'metrics':samples[-1]['metrics']}
   (a.out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result))
  except BaseException as error:

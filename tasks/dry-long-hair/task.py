@@ -8,6 +8,7 @@ from yam_arena.task_file import Box
 from config import *
 SCENE='station';SUCCESS_HOLD_S=0.;SCORE_OVER='end'
 OBJECTS=[Box('mannequin',pos=(0,0,0),size=(.01,.01,.01)),
+ Box('scalp_collision',pos=HEAD,size=(HEAD_RADIUS*2,)*3,mass=.05),
  Box('stand',pos=(HEAD[0],HEAD[1],TOP+.06),size=(.11,.11,.12),color=(.3,.32,.35)),
  Box('dryer_holder',pos=(0,0,0),size=(.01,.01,.01)),
  Box('dryer',pos=DRYER_START,size=(.12,.06,.14),mass=.48),
