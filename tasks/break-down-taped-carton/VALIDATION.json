@@ -1,5 +1,5 @@
 {
-  "status": "engineering_draft_no_robot_rollout",
+  "status": "native_free_carton_mechanics_no_robot_completion",
   "date": "2026-11-13",
   "local_tests_passed": 12,
   "native_runtime_verified": false,
@@ -12,5 +12,13 @@
     "Physical cut latch, live body/contact telemetry",
     "Four bottom flap opening and released collapse demo",
     "Final Dream trial and media"
-  ]
+  ],
+  "native_mechanics_probe": {
+    "run": "carton-native-001",
+    "sealed_bottom": true,
+    "max_crease_separation_m": 5.550186e-05,
+    "lowest_vertex_relative_table_m": -1.131224e-05,
+    "probe_force_N": 0.25,
+    "task_score": null
+  }
 }

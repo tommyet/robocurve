@@ -2104,3 +2104,26 @@ measured result, evidence path, cost basis, decision and remaining uncertainty**
 Update the working guidance when evidence changes it; preserve earlier dated
 results and mark superseded conclusions explicitly. Pull the latest notes before
 editing, merge both agents' findings, and commit/push the update with the work.
+
+### 2026-11-14 — native carton and ribbon mechanics implementation
+
+- Root on codex/carton-breakdown-packing: carton native001 created 12 free
+  finite-thickness panels and 12 passive creases. Sealed-bottom load probe
+  passed intactness/table support: max anchor separation 55.5 um, lowest
+  vertex -11.3 um vs table. Not a robot cut/unfold/collapse demonstration.
+- Native connected tape roll: 72 explicit 5 mm film cells (360 mm) on a hollow
+  76.2 mm core, no leader, native finite-strength wound tack and bend joints.
+  Bench fixture and driven end are explicitly diagnostic, never task credit.
+- Native002 headline peel pass invalid: initial wrap drifted before loading.
+  Found annulus T*S*R transform ordering and work mat 2 mm initial overlap.
+  Native003 fixed both: rest drift 14.5 um; material responds to loading, but
+  maximum film joint error 432 um exceeds the 250 um/5% limit. Not valid yet.
+  Native004 prepared at 2 kHz physics, 128 position/4 velocity iterations,
+  no mass scaling, no scoring relaxation; not yet run.
+- Added footprint/pressure/dwell native adhesive weld module; it is not wired
+  to substep contact sensing or validated yet. No tool-path tape painting,
+  object pose animation or automatic carton hinge closing. 22 packing tests
+  and 12 breakdown tests pass. Robot rim-grip/lift probe prepared, not run.
+- Sole current GPU cb0da2 restarted at user request; direct SSH/desktop work
+  although CLI health reports UNHEALTHY. Deleted old VMs must not be restarted.
+  All four complete task demos and final media remain outstanding.
