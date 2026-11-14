@@ -66,3 +66,32 @@ DYMO-Hair demonstrates simulated and real-wig hair manipulation/styling, not
 this drying task. Reuse its insights only after inspecting implementation and
 licence; its paper is not evidence that our native hair/airflow model works.
 Source: https://arxiv.org/abs/2510.06199
+
+## Connector reference candidates
+
+- TE 1827585-1: shielded single-port 8-position RJ45 jack, latch-up orientation;
+  public product page links the customer drawing and CAD. A 4x2 board can use
+  eight real jacks. Do not freeze port pitch or latch travel until the selected
+  drawing and mating plug are checked together.
+  https://www.te.com/en/product-1827585-1.html
+- Public connector drawings provide dimensional references, not an automatic
+  licence to redistribute vendor CAD. Prefer original procedural geometry
+  from verified dimensions and preserve attribution/fidelity notes.
+
+## Compute shutdown requirement
+
+On 14 November the user explicitly requested turning off Brev compute after
+all batch tasks complete. Download and verify all preview videos first, stop
+the instance, and independently verify STOPPED. Stop between GPU sessions too
+when no active trial needs it. Do not leave compute running after delivery.
+
+## Final video collection
+
+`tools/collect_batch_previews.py` validates all five existing composites before
+copying anything. Supply a private JSON map with the task keys `spray-panel`,
+`carton-breakdown`, `carton-packing`, `ethernet-latch`, `hair-drying` and absolute
+MP4 paths. Run with `--manifest PATH --out artifacts/task-previews` after all
+previews are audited. It requires H.264/yuv420p video, verifies copied hashes,
+and rejects unrelated artifacts in the destination. Do not fabricate missing
+entries to make packaging pass. Successful scoring and honest incomplete
+labelling must be established by task validation, not by this format checker.
