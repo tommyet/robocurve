@@ -9,13 +9,14 @@ from pathlib import Path
 import numpy as np
 from yam_arena import ik
 from yam_arena.constants import FINGER_OPEN
-from yam_arena.urdf import quat_xyzw_to_matrix,rotation_angle_deg
+from yam_arena.urdf import quat_xyzw_to_matrix,rotation_angle_deg,axis_angle_matrix as axis_rotation
 from config import SERVICE,TARGET,CLIP_Z,CLIP_TRAVEL,RELEASE_TRAVEL,port
 from collision_geometry import FingerGeometry,minimum_separation
+from feedback import snapshot,clearance,gripper_sweep,BootJawPredictor,plug_fit,plug_hand_target,retaining_face
 
 _angle=np.radians(80.)
 R_GRIP=np.array([[0.,np.cos(_angle),np.sin(_angle)],[0.,-np.sin(_angle),np.cos(_angle)],[1.,0.,0.]])
-BOOT_LOCAL=np.array((-.0265,.0005,-.0005))
+BOOT_LOCAL=np.array((-.0395,-.0035,-.0005))
 GRIP=.0015/abs(FINGER_OPEN)
 ENTRY_GRIP=.0065/abs(FINGER_OPEN)
 PRESS_JAW=-.028
@@ -27,15 +28,16 @@ class GraspProbe:
     def __init__(self,env,plug):
         self.env,self.base,self.plug=env,env._base,np.array(plug)
         self.previous=env._ready.detach().cpu().numpy().reshape(-1).copy()
-        self.starts=[];self.q=[];self.bias=[np.zeros(3),np.zeros(3)]
+        self.starts=[];self.q=[];self.bias=[np.zeros(3),np.zeros(3)];self.cartesian_bias_enabled=False
         for side in ('left','right'):
             q,f,p,r=self.arm(side);self.q.append(q.copy());self.starts.append((p.copy(),r.copy()))
         self.phase='approach_boot';self.phase_start=0.;self.stable_frames=0
         self.failure=None;self.last_t=None;self.release=False;self.events=[]
-        self.boot_goal=self.plug+BOOT_LOCAL;self.boot_rotation=R_GRIP
+        self.boot_goal=self.plug+BOOT_LOCAL;self.boot_rotation=R_GRIP;self.front_offset=np.array((-.040,0,0))
         self.geometry=FingerGeometry();self.hand_clearance=None
         self.hold_offset=None;self.hold_rotation=None;self.grasp_drift=0.
         self.last_fingers=None
+        self.free_clearance=None;self.entry_clearance=None;self.boot_prediction=None;self.jaw_predictor=BootJawPredictor(self.geometry)
 
     def arm(self,side):
         ids,fids=self.env._ids[side+'_robot']
@@ -54,11 +56,10 @@ class GraspProbe:
     def transition(self,phase,t):
         self.events.append({'time':float(t),'from':self.phase,'to':phase})
         self.phase,self.phase_start,self.stable_frames=phase,t,0
-        self.bias[1][:]=0.
 
     @staticmethod
-    def settled(measured,target,tolerance=.001):
-        return np.linalg.norm(measured[0]-target[0])<tolerance and rotation_angle_deg(measured[1],target[1])<1.
+    def settled(measured,target,tolerance=.001,rotation_tolerance=1.):
+        return np.linalg.norm(measured[0]-target[0])<tolerance and rotation_angle_deg(measured[1],target[1])<rotation_tolerance
 
     def gate(self,condition,age,duration,timeout,next_phase,t):
         self.stable_frames=self.stable_frames+1 if condition and age>=duration else 0
@@ -78,6 +79,14 @@ class GraspProbe:
         clip=self.object_pose(f'clip_{SERVICE}');self.measured_clip=clip.copy()
         travel=float(CLIP_Z-(rotation.T@(clip[:3]-plug[:3]))[2])
         age=t-self.phase_start;phase=self.phase
+        if self.hold_offset is None and phase in ('approach_boot','narrow_in_front_of_boot','enter_boot','close_on_boot'):
+            # Cable load settles the real plug at a pitch/yaw before contact.
+            # Track its actual boot centreline, while keeping this reachable
+            # wrist orientation fixed in the world. The pad reaches forward
+            # from this rearward/outboard TCP onto the rear of the ordinary boot.
+            self.boot_goal=plug[:3]+rotation@BOOT_LOCAL
+            self.boot_rotation=R_GRIP
+            self.front_offset=rotation@np.array((-.040,0,0))
         lp,lr,lg=self.boot_goal.copy(),self.boot_rotation,GRIP
         rp,rr=self.starts[1];rg=1.
         left_actual=measured[0][2:];right_actual=measured[1][2:]
@@ -86,25 +95,45 @@ class GraspProbe:
             self.grasp_drift=float(np.linalg.norm(actual_offset-self.hold_offset))
             if self.grasp_drift>.006:self.failure='boot slipped more than 6 mm relative to measured grasp'
         if travel>CLIP_TRAVEL+.0002:self.failure='clip exceeded physical travel limit'
+        # Only the certified front standoff uses a wider pose gate. Geometry
+        # uses actual rotation/fingers and includes all 84 measured cables.
+        if phase in ('approach_boot','narrow_in_front_of_boot') and age>=2.:
+            front=self.boot_goal+self.front_offset
+            if self.settled(left_actual,(front,self.boot_rotation),.003,3.):
+                state=snapshot(self.object_pose)
+                sweep=gripper_sweep(self.geometry,measured[0][1],measured[0][2],measured[0][3],end_fingers=[-.0065,-.0065])
+                self.free_clearance=clearance(sweep,state)
+        free_ok=self.free_clearance is not None and self.free_clearance['minimum_gap_m']>=.005
 
         if phase=='approach_boot':
             p0,r0=self.starts[0];s=ik.smoothstep(min(1.,age/4.))
-            front=self.boot_goal+np.array((-.040,0,0))
+            front=self.boot_goal+self.front_offset
             lp,lr,lg=p0+s*(front-p0),ik.slerp_matrix(r0,self.boot_rotation,s),1.
-            self.gate(self.settled(left_actual,(front,self.boot_rotation)),age,4.,5.,'narrow_in_front_of_boot',t)
+            self.gate(free_ok and self.settled(left_actual,(front,self.boot_rotation),.002,2.),age,4.,5.,'narrow_in_front_of_boot',t)
         elif phase=='narrow_in_front_of_boot':
-            lp=self.boot_goal+np.array((-.040,0,0));lr=self.boot_rotation
+            lp=self.boot_goal+self.front_offset;lr=self.boot_rotation
             lg=1.+(ENTRY_GRIP-1.)*ik.smoothstep(min(1.,age/2.))
             jaw_ok=np.max(np.abs(measured[0][1]+.0065))<.001
-            self.gate(jaw_ok and self.settled(left_actual,(lp,lr)),age,2.,5.,'enter_boot',t)
+            self.gate(free_ok and jaw_ok and self.settled(left_actual,(lp,lr),.002,2.),age,2.,5.,'enter_boot',t)
         elif phase=='enter_boot':
-            lp=self.boot_goal+np.array((-.040*(1-ik.smoothstep(min(1.,age/3.))),0,0));lg=ENTRY_GRIP
-            self.gate(self.settled(left_actual,(self.boot_goal,lr)),age,3.,5.,'close_on_boot',t)
+            lp=self.boot_goal+self.front_offset*(1-ik.smoothstep(min(1.,age/3.)));lg=ENTRY_GRIP
+            entry_ok=False
+            if age>=3. or np.linalg.norm(measured[0][2]-self.boot_goal)<.010:
+                self.entry_clearance=clearance(gripper_sweep(self.geometry,measured[0][1],measured[0][2],measured[0][3]),snapshot(self.object_pose),wire_margin=.0005)
+                # Flexible cable brushing is permitted. Only rigid socket,
+                # own-boot and clip clearance blocks this entry stage.
+                entry_ok=(self.entry_clearance['rigid_gap_m']>=.0005 and self.settled(left_actual,(self.boot_goal,lr),.002,2.))
+            self.gate(entry_ok,age,3.,5.,'close_on_boot',t)
         elif phase=='close_on_boot':
             lg=ENTRY_GRIP+(GRIP-ENTRY_GRIP)*ik.smoothstep(min(1.,age/2.))
-            jaws=np.abs(measured[0][1]);jaw_ok=np.all(jaws>.0025) and np.all(jaws<.0065)
+            jaws=np.abs(measured[0][1]);jaw_ok=False
             jaw_stable=self.last_fingers is not None and np.max(np.abs(measured[0][1]-self.last_fingers))<.0001
-            self.gate(jaw_ok and jaw_stable and self.settled(left_actual,(lp,lr)),age,2.,5.,'prepare_press' if self.release else 'verified_boot_hold',t)
+            if age>=2. and self.settled(left_actual,(lp,lr),.002,2.):
+                self.boot_prediction=self.jaw_predictor.predict(plug,measured[0][2],measured[0][3],measured[0][1])
+                expected=np.array(self.boot_prediction['opening_m'])
+                jaw_ok=(all(self.boot_prediction['contact_possible']) and np.all(np.abs(jaws-expected)<=.0005)
+                        and np.all(jaws>.002) and max(self.boot_prediction['actual_surface_gap_m'])<=.0006)
+            self.gate(jaw_ok and jaw_stable,age,2.,5.,'prepare_press' if self.release else 'verified_boot_hold',t)
             if self.phase!=phase:
                 self.capture_grasp(plug,rotation,measured[0])
                 self.press_start=(measured[1][2].copy(),measured[1][3].copy())
@@ -116,28 +145,33 @@ class GraspProbe:
 
         self.last_fingers=measured[0][1].copy()
         targets=[(lp,lr,lg),(rp,rr,rg)];out=self.env._ready.detach().cpu().numpy().reshape(-1).copy();arms=[]
-        contact=phase in ('close_on_boot','lower_press_front','insert_above_clip','depress_clip','withdraw_with_clip_pressed','finish_withdrawal','lift_press_finger','clear_press_finger','align_empty_target','insert_empty_target','seat_and_release_clip','release_boot','retreat_hands','retention_rest')
+        contact=phase in ('enter_boot','close_on_boot','lower_press_front','insert_above_clip','depress_clip','withdraw_with_clip_pressed','finish_withdrawal','lift_press_finger','clear_press_finger','align_empty_target','insert_empty_target','retract_for_alignment','seat_and_release_clip','release_boot','retreat_hands','certify_open_clearance','retreat_partially_open','open_clear_hands','retention_rest')
         for i,side in enumerate(('left','right')):
             p,r,g=targets[i];actual,actualr=measured[i][2:];error=p-actual
-            if not contact and np.linalg.norm(error)<.02 and rotation_angle_deg(actualr,r)<5.:
-                self.bias[i]=np.clip(self.bias[i]+.8*dt*error,-.001,.001)
-            elif contact:self.bias[i]*=.98
+            if self.cartesian_bias_enabled and not contact and np.linalg.norm(error)<.02 and rotation_angle_deg(actualr,r)<5.:
+                cap=.0025 if i==0 and phase in ('approach_boot','narrow_in_front_of_boot') and free_ok else .001
+                self.bias[i]=np.clip(self.bias[i]+.8*dt*error,-cap,cap)
+            # Contact retains bounded learned gravity/stiction compensation;
+            # there is no new integral and no decay that erases the preload.
             self.q[i],pe,re=ik.solve(p+self.bias[i],ik.matrix_to_quat_xyzw(r),self.q[i],base_pos=self.env.rig.bases[side],iters=110)
             out[7*i:7*i+6],out[7*i+6]=self.q[i],g
             arms.append({'side':side,'tcp':actual.tolist(),'target':p.tolist(),'position_error':float(np.linalg.norm(error)),
                          'rotation_error_deg':rotation_angle_deg(actualr,r),'ik_position_error':float(pe),'ik_rotation_error':float(re),
-                         'actual_joints':measured[i][0].tolist(),'actual_finger_joints_m':measured[i][1].tolist(),'bias_m':self.bias[i].tolist()})
+                         'effective_ik_tcp_target':(p+self.bias[i]).tolist(),'actual_joints':measured[i][0].tolist(),'actual_finger_joints_m':measured[i][1].tolist(),'bias_m':self.bias[i].tolist()})
         delta=np.array([.04]*6+[.05]+[.04]*6+[.05]);out=np.clip(np.clip(out,self.previous-delta,self.previous+delta),self.env._low,self.env._high);self.previous=out
-        report={'phase':phase,'phase_age_s':float(age),'next_phase':self.phase,'arms':arms,'position_error':arms[0]['position_error'],
+        for i,side in enumerate(('left','right')):
+            command_p,command_r=ik.tcp_pose(out[7*i:7*i+6],self.env.rig.bases[side])
+            arms[i]['bounded_command_fk_tcp']=command_p.tolist();arms[i]['bounded_command_fk_rotation']=command_r.tolist()
+        report={'cartesian_bias_enabled':self.cartesian_bias_enabled,'bounded_action_14d':out.tolist(),'phase':phase,'phase_age_s':float(age),'next_phase':self.phase,'arms':arms,'position_error':arms[0]['position_error'],
                     'left_tcp':measured[0][2].tolist(),'left_target':lp.tolist(),'right_tcp':measured[1][2].tolist(),'right_target':rp.tolist(),
-                    'clip_travel_m':travel,'grasp_drift_m':self.grasp_drift,'hand_clearance_m':self.hand_clearance,'stable_frames':self.stable_frames,
-                    'failure':self.failure,'complete':bool(self.failure is None and ((phase=='verified_boot_hold' and age>=1.) or (phase=='retention_rest' and age>=2.5))),
+                    'boot_target_plug_local':BOOT_LOCAL.tolist(),'actual_boot_grasp_target':(plug[:3]+rotation@BOOT_LOCAL).tolist(),'clip_travel_m':travel,'grasp_drift_m':self.grasp_drift,'free_standoff_clearance':self.free_clearance,'entry_clearance':self.entry_clearance,'boot_jaw_prediction':self.boot_prediction,'hand_clearance_m':self.hand_clearance,'stable_frames':self.stable_frames,
+                    'failure':self.failure,'complete':bool(self.failure is None and ((phase=='verified_boot_hold' and age>=1.) or (phase=='retention_rest' and age>=2.5 and self.retention_gate_s>=2.1))),
                     'events':self.events[-3:]}
         if self.release:
             point=self.point.copy();point[0]+=measured[1][1][0]+.028
             witness=measured[1][2]+measured[1][3]@point
             report.update({'measured_press_point':witness.tolist(),'measured_press_point_plug_local':(rotation.T@(witness-plug[:3])).tolist(),
-                           'target_press_point':(rp+rr@point).tolist(),'press_depth_m':self.press_depth,'withdraw_target_distance_m':self.pull_distance,'measured_hook_front_x_m':getattr(self,'measured_hook_front',None)})
+                           'target_press_point':(rp+rr@point).tolist(),'press_depth_m':self.press_depth,'withdraw_target_distance_m':self.pull_distance,'measured_hook_front_x_m':getattr(self,'measured_hook_front',None),'guide_geometry':self.guide_geometry,'insertion_command_x_m':self.insertion_x,'insertion_retries':self.insertion_retries,'full_release_clearance':self.final_clearance,'released_hold_s':self.retention_gate_s})
         return out,report
 
 
@@ -147,6 +181,8 @@ class ReleaseProbe(GraspProbe):
         spec=json.loads(Path(__file__).with_name('press_point.json').read_text())
         self.point=np.array(spec['point_tcp']);self.pressR=np.array(spec['rotation'])
         self.press_depth=0.;self.pull_distance=0.;self.source_clear=False;self.target_origin=np.array(port(TARGET))
+        self.alignment_bias=np.zeros(3);self.alignment_rotation_bias=np.zeros(3);self.insertion_x=None;self.insertion_retries=0;self.bad_fit_frames=0
+        self.guide_geometry=None;self.final_clearance=None;self.retention_gate_s=0.;self.retention_last_position=None;self.escape_count=0
 
     def release_targets(self,t,age,phase,plug,bodyR,travel,measured,targets):
         lp,lr,lg,rp,rr,rg=targets
@@ -227,28 +263,104 @@ class ReleaseProbe(GraspProbe):
             lp=self.withdraw_end
             p0,r0=self.press_retreat;rp=p0+np.array((0,0,.020))+np.array((-.080,0,.030))*ik.smoothstep(min(1.,age/3.));rr=r0
             self.gate(self.settled(actual_right,(rp,rr)),age,3.,5.,'align_empty_target',t)
-            if self.phase!=phase:self.right_clear=(rp.copy(),rr.copy());self.align_start=lp.copy()
+            if self.phase!=phase:
+                self.right_clear=(rp.copy(),rr.copy());self.align_start=lp.copy();self.align_plug_start=plug[:3].copy();self.align_body_start=bodyR.copy()
         elif phase=='align_empty_target':
-            targetR=np.eye(3);goal=self.target_origin+targetR@self.hold_offset+np.array((-.038,0,0));goalR=targetR@self.hold_rotation
-            s=ik.smoothstep(min(1.,age/3.));lp=self.align_start+s*(goal-self.align_start);lr=ik.slerp_matrix(self.boot_rotation,goalR,s);rp,rr=self.right_clear
-            self.gate(self.settled(actual_left,(goal,goalR),.0015),age,3.,5.,'insert_empty_target',t)
+            rp,rr=self.right_clear
+            pretarget=self.target_origin+np.array((-.038,0,0));s=ik.smoothstep(min(1.,age/3.))
+            # Learn only outside the mouth. This compensates actual plug pose,
+            # rather than declaring a 1.5 mm TCP residual to be guide alignment.
+            if age>=3.:
+                tip=plug[:3]+bodyR@np.array((.012,0,0))
+                if tip[0]>(.412-.027/2)-.003:self.failure='target alignment attempted before plug cleared mouth'
+                error=pretarget-plug[:3]
+                self.alignment_bias=np.clip(self.alignment_bias+.04*error,[-.001,-.0025,-.0025],[.001,.0025,.0025])
+                self.alignment_rotation_bias=np.clip(self.alignment_rotation_bias+.02*ik._rot_error(np.eye(3),bodyR),-np.radians(1.5),np.radians(1.5))
+            angle=np.linalg.norm(self.alignment_rotation_bias)
+            correction=np.eye(3) if angle<1e-10 else axis_rotation(self.alignment_rotation_bias/angle,angle)
+            command=self.align_plug_start+s*(pretarget-self.align_plug_start)+self.alignment_bias
+            body_goal=correction@ik.slerp_matrix(self.align_body_start,np.eye(3),s)
+            lp,lr=plug_hand_target(command,body_goal,plug,measured[0][2],measured[0][3])
+            self.guide_geometry=plug_fit(plug,TARGET)
+            ready=(self.guide_geometry['minimum_clearance_m']>=.0001 and abs(plug[0]-pretarget[0])<.002)
+            self.gate(ready,age,3.,8.,'insert_empty_target',t)
+            if self.phase!=phase:self.insertion_x=float(plug[0]);self.bad_fit_frames=0;self.frozen_alignment_rotation=body_goal.copy()
         elif phase=='insert_empty_target':
-            rp,rr=self.right_clear;lr=self.hold_rotation
-            progress=min(.038,.003*age);lp=self.target_origin+self.hold_offset+np.array((-.038+progress,0,0))
-            error=np.linalg.norm(plug[1:3]-self.target_origin[1:3]);angle=rotation_angle_deg(bodyR,np.eye(3));tip=plug[:3]+bodyR@np.array((.012,0,0))
-            seated=tip[0]>(.412-.027/2)+.008 and error<.001 and angle<5.
-            self.gate(seated and self.settled(actual_left,(lp,lr),.0015),age,12.7,5.,'seat_and_release_clip',t)
+            rp,rr=self.right_clear;self.guide_geometry=plug_fit(plug,TARGET)
+            fit=self.guide_geometry
+            # Guide contact is ordinary insertion contact. Stop advancing for
+            # substantial transverse interference, and retract to realign;
+            # no correction integral is accumulated against a wall.
+            guide_safe=(fit['minimum_clearance_m']>=-.0001 and fit['axis_angle_deg']<5. and fit['lateral_error_m']<.001)
+            self.bad_fit_frames=self.bad_fit_frames+1 if not guide_safe else 0
+            if guide_safe and self.insertion_x-plug[0]<.0007:self.insertion_x=min(self.target_origin[0],self.insertion_x+.003*.05)
+            command=self.target_origin+np.array((self.insertion_x-self.target_origin[0],0,0))+self.alignment_bias
+            lp,lr=plug_hand_target(command,self.frozen_alignment_rotation,plug,measured[0][2],measured[0][3])
+            tip=plug[:3]+bodyR@np.array((.012,0,0))
+            seated=(self.insertion_x>=self.target_origin[0]-1e-8 and tip[0]>(.412-.027/2)+.008
+                    and fit['lateral_error_m']<.001 and fit['axis_angle_deg']<5.)
+            self.gate(seated,age,0.,22.,'seat_and_release_clip',t)
+            if self.bad_fit_frames>=3:
+                if self.insertion_retries>=2:self.failure='actual plug/guide fit failed after two bounded realignments'
+                else:
+                    self.insertion_retries+=1;self.retract_plug_start=plug[:3].copy();self.retract_body_start=bodyR.copy();self.transition('retract_for_alignment',t)
+        elif phase=='retract_for_alignment':
+            rp,rr=self.right_clear;goal=self.target_origin+np.array((-.038,0,0));s=ik.smoothstep(min(1.,age/3.))
+            command=self.retract_plug_start+s*(goal-self.retract_plug_start)
+            lp,lr=plug_hand_target(command,self.retract_body_start,plug,measured[0][2],measured[0][3])
+            clear=abs(plug[0]-goal[0])<.002
+            self.gate(clear,age,3.,5.,'align_empty_target',t)
+            if self.phase!=phase:self.align_plug_start=plug[:3].copy();self.align_body_start=bodyR.copy();self.alignment_bias[:]=0.;self.alignment_rotation_bias[:]=0.
         elif phase=='seat_and_release_clip':
-            lp=self.target_origin+self.hold_offset;lr=self.hold_rotation;rp,rr=self.right_clear
-            self.gate(travel<.0003 and self.settled(actual_left,(lp,lr),.0015),age,1.,5.,'release_boot',t)
+            command=self.target_origin+self.alignment_bias;lp,lr=plug_hand_target(command,self.frozen_alignment_rotation,plug,measured[0][2],measured[0][3]);rp,rr=self.right_clear
+            face=retaining_face(getattr(self,'measured_clip',self.object_pose(f'clip_{SERVICE}')),TARGET)
+            fit=plug_fit(plug,TARGET)
+            self.gate(travel<.0003 and face['retained'] and fit['axis_angle_deg']<5. and fit['lateral_error_m']<.001,age,1.,5.,'release_boot',t)
+            if self.phase!=phase:self.seated_hand_target=(lp.copy(),lr.copy())
         elif phase=='release_boot':
-            lp=self.target_origin+self.hold_offset;lr=self.hold_rotation;rp,rr=self.right_clear;lg=GRIP+(ENTRY_GRIP-GRIP)*ik.smoothstep(min(1.,age/2.))
+            lp,lr=self.seated_hand_target;rp,rr=self.right_clear;lg=GRIP+(ENTRY_GRIP-GRIP)*ik.smoothstep(min(1.,age/2.))
             self.gate(np.max(np.abs(measured[0][1]+.0065))<.001,age,2.,5.,'retreat_hands',t)
             if self.phase!=phase:self.retreat_start=(lp.copy(),lr.copy());self.hold_offset=None
         elif phase=='retreat_hands':
             p0,r0=self.retreat_start;s=ik.smoothstep(min(1.,age/3.));lp=p0+np.array((-.11,0,0))*s;lr=r0;lg=ENTRY_GRIP;rp,rr=self.right_clear
-            self.gate(self.settled(actual_left,(lp,lr),.002),age,3.,5.,'retention_rest',t)
+            self.gate(self.settled(actual_left,(lp,lr),.002),age,3.,5.,'certify_open_clearance',t)
+        elif phase=='certify_open_clearance':
+            lp,lr=measured[0][2].copy(),measured[0][3].copy();lg=ENTRY_GRIP;rp,rr=self.right_clear
+            state=snapshot(self.object_pose)
+            left=gripper_sweep(self.geometry,measured[0][1],lp,lr,end_fingers=[FINGER_OPEN,FINGER_OPEN])
+            right=[a@measured[1][3].T+measured[1][2] for _,a in self.geometry.pieces(measured[1][1])]
+            self.final_clearance=clearance(left+right,state)
+            mutual=minimum_separation(left,right)
+            if self.final_clearance['minimum_gap_m']>=.005 and mutual>=.005:
+                self.final_hand_target=(lp.copy(),lr.copy());self.transition('open_clear_hands',t)
+            elif self.escape_count>=3:self.failure='full jaw opening lacks measured object/cable clearance after three retreats'
+            else:
+                # Remain partially open while choosing a complete, certified
+                # escape translation. Fully open jaws are never swept blindly
+                # through the hanging cables at the old straight-back height.
+                for delta in (np.array((0,0,.080)),np.array((-.050,0,.060)),np.array((0,.080,.060))):
+                    moving=gripper_sweep(self.geometry,measured[0][1],lp,lr,translation=delta)
+                    cert=clearance(moving+right,state,wire_margin=.001)
+                    if cert['minimum_gap_m']>=.001 and minimum_separation(moving,right)>=.001:
+                        self.escape_start=(lp.copy(),lr.copy());self.escape_delta=delta;self.escape_count+=1;self.transition('retreat_partially_open',t);break
+                else:self.failure='partially open hand has no certified cable-clear retreat translation'
+        elif phase=='retreat_partially_open':
+            p0,r0=self.escape_start;lp=p0+self.escape_delta*ik.smoothstep(min(1.,age/3.));lr=r0;lg=ENTRY_GRIP;rp,rr=self.right_clear
+            self.gate(self.settled(actual_left,(lp,lr),.002),age,3.,5.,'certify_open_clearance',t)
+        elif phase=='open_clear_hands':
+            lp,lr=self.final_hand_target;rp,rr=self.right_clear;lg=ENTRY_GRIP+(1-ENTRY_GRIP)*ik.smoothstep(min(1.,age/1.5))
+            self.gate(np.max(np.abs(measured[0][1]-FINGER_OPEN))<.001,age,1.5,5.,'retention_rest',t)
         elif phase=='retention_rest':
-            p0,r0=self.retreat_start;lp=p0+np.array((-.11,0,0));lr=r0;lg=1.;rp,rr=self.right_clear
+            lp,lr=self.final_hand_target;lg=1.;rp,rr=self.right_clear
+            state=snapshot(self.object_pose);parts=[]
+            for arm in measured:parts.extend(a@arm[3].T+arm[2] for _,a in self.geometry.pieces(arm[1]))
+            self.final_clearance=clearance(parts,state)
+            face=retaining_face(state[1][SERVICE],TARGET);fit=plug_fit(plug,TARGET)
+            speed=0. if self.retention_last_position is None else np.linalg.norm(plug[:3]-self.retention_last_position)/.05
+            self.retention_last_position=plug[:3].copy()
+            ready=(self.final_clearance['minimum_gap_m']>=.005 and face['retained'] and travel<.0003 and fit['axis_angle_deg']<5.
+                   and fit['lateral_error_m']<.001 and speed<.01 and all(np.linalg.norm(arm[2]-plug[:3])>.070 for arm in measured))
+            self.retention_gate_s=self.retention_gate_s+.05 if ready else 0.
+            if age>12.:self.failure='actual unheld latch/whole-gripper clearance did not maintain a released hold'
         else:raise RuntimeError('unknown release phase '+phase)
         return lp,lr,lg,rp,rr,rg

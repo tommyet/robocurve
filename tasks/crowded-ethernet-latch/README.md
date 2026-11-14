@@ -34,6 +34,7 @@ needs calibration against a selected product; it is not licensed vendor CAD.
 The switch is fixed on a stand; plugs and cables have real rigid-body dynamics.
 
 ```bash
+/data/IsaacLab-Arena/.venv/bin/python run.py --mode fit-probe --out /path/to/new-fit
 /data/IsaacLab-Arena/.venv/bin/python run.py --mode retention-probe --out /path/to/new-run
 /data/IsaacLab-Arena/.venv/bin/python run.py --mode release-probe --out /path/to/new-attempt
 ```
@@ -63,8 +64,10 @@ Source: https://cdn.amphenol-cs.com/media/wysiwyg/files/drawing/p-rje7k-888-1xx0
 
 
 The current controller uses the left hand on the ordinary boot and the right
-hand's unmodified left finger on the clip. Boot contact is 26.5 mm behind the
-plug origin. It narrows the jaws to a 13 mm aperture while 40 mm in front,
+hand's unmodified left finger on the clip. The current grasp TCP is 39.5 mm behind and 3.5 mm toward the outside
+of the measured plug origin; the ordinary finger tips reach the rear boot.
+Position and approach axis follow the actual settled plug pose while the left
+wrist keeps a fixed world orientation. It narrows the jaws to a 13 mm aperture while 40 mm in front,
 then inserts and force-closes. Pressing begins after measured pose/jaw gates;
 actual clip travel must exceed 1.8 mm before withdrawal. Pulling pauses if the
 clip returns and pressing follows the actual moving plug until the measured
@@ -79,3 +82,68 @@ pressing support point. Bias is limited to 1 mm and frozen/decayed during
 contact. The adaptive engineering probe permits up to 2,000 actions / 100 s;
 it stops on a measured failure or completed retention rest. Nominal CPU mesh
 and IK checks do not establish full-arm/cable clearance or native success.
+
+Measured native pose regressions include 8–11.6 degree source pitch under
+cable load. They check full gripper surfaces against sockets, loaded neighbour
+plugs, the service plug shell and its own clip tab. The earlier nominal boot
+certificate omitted that tab; moving the grasp TCP 3 mm rearward restores
+clearance while retaining contact on the ordinary boot. These static numeric
+certificates do not establish native grip stability or full cable/arm clearance.
+
+
+The current socket-fit candidate adds two ordinary internal longitudinal
+shoulder guides per port: X = 399.5–425.5 mm, Y = port centre ±4.75 mm,
+width 2.5 mm, and Z = port centre +4.3–6.8 mm. The nominal plug shoulder
+top is +4.0 mm, leaving 0.3 mm vertical clearance. The 7 mm centre channel
+clears the 5 mm latch. These procedural dimensions are a physical fit repair;
+they are not vendor-validated CAD, and native fit has not yet passed.
+
+`fit-probe` applies no external force and holds both arms at READY for 6 s.
+Its final 1 s reports every one of the seven connected plugs: maximum absolute
+pitch must be ≤3.5°, and absolute released clip travel ≤0.2 mm. The separate
+9 s `retention-probe` records the same fit before its 1 N pull/depression
+bench loads; those forces are never called in a robot/scored run. Scoring
+limits, masses and port pitch are unchanged.
+
+Every future trace includes a post-step snapshot of all plug, clip and 84
+wire-body poses, plus actual joint positions, finger positions, TCP rotation
+and robot root pose for both arms. Controller targets describe the preceding
+step; `native_hands` and body snapshots share the post-step timestamp. The
+shared CPU object builder includes every task collider. Round boots and cable
+capsules use enclosing boxes for conservative clearance certificates. Cable
+axes include the capsule's authored local rotation as well as body rotation.
+Full arm-link clearance and dynamic fit/retention still need native evidence.
+
+
+For state-only engineering checks add `--no-video`. This disables AppLauncher
+camera support and sensor/review cameras, and skips video readback/encoding.
+The physical URDF wrist-camera housings, collider assets, masses, joints,
+physics timestep and action rate are retained. Each run writes a
+`physics-manifest.json` containing collision-mesh/native-asset hashes and a
+camera-independent live body/joint/mass digest for video/no-video comparison.
+Native equivalence must be checked from these manifests; state-only evidence
+is not final submission media. Defaults continue to record video.
+
+Results report monotonic setup, simulator construction, controller build,
+policy, environment step, telemetry and video times, plus total wall time to
+stop. Environment-step time includes internal sensor rendering in video mode.
+Fit reports distinguish the unchanged task limits (axis angle <5°, lateral
+error <1 mm, clip travel <0.3 mm) from the stricter engineering margins
+(axis angle ≤3.5°, absolute clip travel ≤0.2 mm). Guided003 met task fit and
+1 N retention/release checks; its total-axis engineering margin did not pass
+all seven ports. No full robot success is established by that bench test.
+
+Final retention readback now uses the four actual clip-body retaining-face
+vertices against the ledge, including finite Y/Z overlap. Released scoring
+retains the 70 mm TCP condition and additionally requires full gripper-surface
+clearance of at least 5 mm from every rigid object and measured cable capsule.
+Capsule clearance uses its exact support function; possible flexible brushing
+during entry remains permitted and is logged rather than used as a new task
+constraint.
+
+The next grasp candidate shifts the TCP another 10 mm rearward and 4 mm
+outward after actual native wire contacts blocked the prior approach. CPU
+swept-shape checks cover the measured source/neighbor cable cluster, with
+at least 0.5 mm separation during entry and loaded closure. This narrow
+fingertip grasp still requires the native predicted-jaw and slip gates;
+its sustained physical hold has not been demonstrated.

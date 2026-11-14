@@ -1,7 +1,7 @@
 {
-  "status": "role_swapped_collision_checked_controller_pending_native",
+  "status": "guided_fit_validated_grasp_controller_in_progress",
   "date": "2026-11-14",
-  "local_model_tests_passed": 18,
+  "local_model_tests_passed": 30,
   "native_runtime": false,
   "demo_score": null,
   "video": null,
@@ -40,5 +40,68 @@
     "clip_hand": "right",
     "mechanics_changed": false,
     "basis": "Astra convex-box SAT and hand-hand separating-plane certificates with0.2mm margin, scoped to tested gripper/plug geometries; arm links, live cables and actual retention unvalidated"
+  },
+  "socket_fit_candidate": {
+    "native_validated": false,
+    "guide_x_m": [
+      0.3995,
+      0.4255
+    ],
+    "guide_y_offsets_m": [
+      -0.00475,
+      0.00475
+    ],
+    "guide_width_m": 0.0025,
+    "guide_z_m": [
+      0.0043,
+      0.0068
+    ],
+    "nominal_shoulder_clearance_m": 0.0003,
+    "clip_channel_width_m": 0.007,
+    "baseline_limits": {
+      "all_connected_plugs": 7,
+      "max_abs_pitch_deg": 3.5,
+      "max_abs_clip_travel_m": 0.0002
+    },
+    "fidelity": "Original procedural internal shoulder guides; not vendor-validated CAD. Native baseline, retention and full robot runs remain unvalidated."
+  },
+  "grasp_candidate": {
+    "boot_tcp_plug_local_m": [
+      -0.0395,
+      -0.0035,
+      -0.0005
+    ],
+    "wrist_rotation": "world-fixed R_GRIP",
+    "native_sustained_hold_validated": false,
+    "basis": "Astra exact-capsule/full-gripper swept entry and closure certificates on three actual guided snapshots; >=0.5 mm clearance. Rear fingertip contact remains subject to native independent-jaw/slip gates."
+  },
+  "work_state": "active_serial_priority",
+  "full_completion_verified": false,
+  "native_fit_bench": {
+    "run": "ethernet-guided003",
+    "task_angle_limit_deg": 5.0,
+    "max_axis_angle_deg": 4.436,
+    "max_clip_travel_m": 2.33e-05,
+    "engaged_pull_N": 1.0,
+    "retains_engaged": true,
+    "pressed_withdrawal_m": 0.2196918,
+    "task_score": null,
+    "engineering_axis_margin_deg": 3.5,
+    "engineering_margin_pass": false
+  },
+  "fast_mode_check": {
+    "runs": [
+      "ethernet-fastfit005",
+      "ethernet-videofit005"
+    ],
+    "simulated_s": 6.0,
+    "fast_wall_s": 23.591034894,
+    "video_wall_s": 37.56497373,
+    "speedup": 1.592341069,
+    "physics_manifests_equal": true,
+    "colliders": 830,
+    "bodies": 116,
+    "joints": 109,
+    "media_eligible": false
   }
 }

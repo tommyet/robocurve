@@ -1,0 +1,134 @@
+"""Read-only physical geometry for staged ordinary robot control."""
+import math
+import numpy as np
+from yam_arena.urdf import quat_xyzw_to_matrix
+from collision_geometry import minimum_separation
+from geometry import object_obstacles,plug_boxes,box_triangles,wire_local_frame,GUIDE_BOTTOM
+from config import *
+
+
+def snapshot(read_pose):
+    return ({i:np.asarray(read_pose(f'plug_{i}')) for i in USED},
+            {i:np.asarray(read_pose(f'clip_{i}')) for i in USED},
+            {(i,k):np.asarray(read_pose(f'wire_{i}_{k}')) for i in USED for k in range(LINKS)})
+
+
+def gripper_sweep(geometry,fingers,tcp,rotation,*,end_fingers=None,translation=None):
+    start=geometry.pieces(fingers)
+    end=start if end_fingers is None else geometry.pieces(end_fingers)
+    delta=np.zeros(3) if translation is None else np.asarray(translation)
+    return [np.concatenate((a@rotation.T+tcp,b@rotation.T+tcp+delta)) for (_,a),(_,b) in zip(start,end)]
+
+
+def capsule_gap(triangles,center,axis,height,radius,margin=.005):
+    """Positive projection gap certifies distance from the exact capsule.
+
+    Capsule support is c·d + |axis·d|h/2+r for unit d. No OBB corner can
+    falsely become a cable contact. Zero only means absence is uncertified.
+    """
+    if not all(np.isfinite(value).all() for value in (triangles,center,axis,height,radius)):return 0.
+    vertices=np.unique(triangles.reshape(-1,3),axis=0)
+    extent=np.abs(axis)*height/2+radius
+    gap=float(np.maximum(vertices.min(0)-(center+extent),(center-extent)-vertices.max(0)).max())
+    if gap>margin:return gap
+    normals=np.cross(triangles[:,1]-triangles[:,0],triangles[:,2]-triangles[:,0])
+    edges=np.concatenate((triangles[:,1]-triangles[:,0],triangles[:,2]-triangles[:,1],triangles[:,0]-triangles[:,2]))
+    nearest=center+np.clip((vertices-center)@axis,-height/2,height/2)[:,None]*axis
+    axes=np.concatenate((np.eye(3),normals,np.cross(edges,axis),vertices-nearest))
+    lengths=np.linalg.norm(axes,axis=1);axes=axes[lengths>1e-12]/lengths[lengths>1e-12,None]
+    axes=np.unique(np.round(axes,8),axis=0);axes/=np.linalg.norm(axes,axis=1)[:,None]
+    for start in range(0,len(axes),128):
+        directions=axes[start:start+128];project=vertices@directions.T
+        middle=directions@center;support=np.abs(directions@axis)*height/2+radius
+        gap=max(gap,float(np.maximum(project.min(0)-(middle+support),(middle-support)-project.max(0)).max()))
+        if gap>margin:return gap
+    return max(0.,gap)
+
+
+def wire_clearance(parts,wire_poses,margin=.005):
+    pmin=np.array([p.min((0,1)) for p in parts]);pmax=np.array([p.max((0,1)) for p in parts])
+    centers=[];axes=[];heights=[]
+    for (i,k),pose in wire_poses.items():
+        local,height=wire_local_frame(i,k);rotation=quat_xyzw_to_matrix(pose[3:])
+        centers.append(pose[:3]);axes.append((rotation@local)[:,2]);heights.append(height)
+    centers=np.asarray(centers);axes=np.asarray(axes);heights=np.asarray(heights)
+    extent=np.abs(axes)*heights[:,None]/2+CABLE_RADIUS
+    gaps=np.maximum(pmin[:,None]-(centers+extent)[None,:],(centers-extent)[None,:]-pmax[:,None]).max(2)
+    for i,j in np.argwhere(gaps<=margin):gaps[i,j]=capsule_gap(parts[i],centers[j],axes[j],heights[j],CABLE_RADIUS,margin)
+    return float(gaps.min())
+
+
+def clearance(parts,state,*,exclude=(),wire_margin=.005):
+    plugs,clips,wires=state
+    if not all(np.isfinite(value).all() for value in (*parts,*plugs.values(),*clips.values(),*wires.values())):
+        return {'rigid_gap_m':0.,'wire_gap_m':0.,'minimum_gap_m':0.,'invalid':'nonfinite_geometry'}
+    rigid=[triangles for owner,name,triangles in object_obstacles(plugs,clips,include_wires=False)
+           if (owner,name) not in exclude]
+    rg=minimum_separation(parts,rigid);wg=wire_clearance(parts,wires,wire_margin)
+    return {'rigid_gap_m':rg,'wire_gap_m':wg,'minimum_gap_m':min(rg,wg)}
+
+
+def boot_cylinder(plug,count=64):
+    angles=np.arange(count)*2*np.pi/count;radius=.0035/np.cos(np.pi/count)
+    rings=np.array([np.column_stack((np.full(count,x),radius*np.cos(angles),radius*np.sin(angles))) for x in (-.007,.007)])
+    triangles=[]
+    for i in range(count):
+        j=(i+1)%count
+        triangles.extend(((rings[0,i],rings[0,j],rings[1,j]),(rings[0,i],rings[1,j],rings[1,i]),
+                          ((-.007,0,0),rings[0,j],rings[0,i]),((.007,0,0),rings[1,i],rings[1,j])))
+    rotation=quat_xyzw_to_matrix(plug[3:])
+    return (np.asarray(triangles)+[-.0205,0,-.0005])@rotation.T+plug[:3]
+
+
+class BootJawPredictor:
+    """First ordinary-pad/boot contact for each independent measured jaw."""
+    def __init__(self,geometry):
+        zero=geometry.pieces([0.,0.]);moved=geometry.pieces([-.001,-.001]);self.parts=[]
+        for name in ('tip_left','tip_right'):
+            self.parts.append([(a,(b[0,0]-a[0,0])/-.001) for (n,a),(_,b) in zip(zero,moved) if n==name])
+
+    def predict(self,plug,tcp,rotation,actual_fingers):
+        boot=boot_cylinder(np.asarray(plug));stops=[];actual_gaps=[];possible=[]
+        for i,pieces in enumerate(self.parts):
+            def gap(opening):
+                return minimum_separation([(a-opening*slope)@rotation.T+tcp for a,slope in pieces],[boot])
+            low,high=0.,.0065
+            possible.append(gap(.0015)<=1e-6 and gap(.0065)>1e-6)
+            for _ in range(14):
+                middle=(low+high)/2
+                if gap(middle)>1e-6:high=middle
+                else:low=middle
+            stops.append((low+high)/2);actual_gaps.append(gap(abs(actual_fingers[i])))
+        return {'opening_m':stops,'actual_surface_gap_m':actual_gaps,'contact_possible':possible}
+
+
+def plug_fit(plug,target):
+    """Actual solid footprint predicted at engagement, excluding latch ramp."""
+    rotation=quat_xyzw_to_matrix(np.asarray(plug[3:]));center=np.asarray(plug[:3]).copy();center[0]=port(target)[0]
+    target_y,target_z=port(target)[1:];side=.0065;floor=target_z-.0045;roof=target_z+.0068
+    gaps={}
+    for name,local,size in plug_boxes():
+        vertices=(box_triangles(local,size)@rotation.T+center).reshape(-1,3)
+        gaps[name+'_side']=float(side-np.abs(vertices[:,1]-target_y).max())
+        gaps[name+'_floor']=float(vertices[:,2].min()-floor)
+        gaps[name+'_ceiling']=float((target_z+GUIDE_BOTTOM if name.startswith('shoulder') else roof)-vertices[:,2].max())
+    return {'minimum_clearance_m':min(gaps.values()),'clearances_m':gaps,
+            'axis_angle_deg':math.degrees(math.acos(float(np.clip(rotation[0,0],-1,1)))),
+            'lateral_error_m':float(np.linalg.norm(np.asarray(plug[1:3])-np.asarray(port(target)[1:3])))}
+
+
+def retaining_face(clip,target):
+    """Actual clip-body retaining face, never reconstructed from the plug."""
+    if not np.isfinite(clip).all():return {'retained':False,'vertices_w':None,'y_overlap_m':0.,'z_overlap_m':0.,'invalid':'nonfinite_clip'}
+    rotation=quat_xyzw_to_matrix(np.asarray(clip[3:]));vertices=np.array([(.006,y,z) for y in (-.0025,.0025) for z in (.0005,.0025)])@rotation.T+clip[:3]
+    _,y,z=port(target);lower=vertices.min(0);upper=vertices.max(0)
+    y_overlap=float(min(upper[1],y+.00275)-max(lower[1],y-.00275))
+    z_overlap=float(min(upper[2],z+.007)-max(lower[2],z+.005))
+    retained=bool(lower[0]>.409-.0002 and upper[0]<.423 and abs(vertices[:,1].mean()-y)<.003
+                  and z+.005<upper[2]<z+.0075 and y_overlap>0 and z_overlap>0)
+    return {'retained':retained,'vertices_w':vertices.tolist(),'y_overlap_m':y_overlap,'z_overlap_m':z_overlap}
+
+
+def plug_hand_target(position,rotation,actual_plug,tcp,hand_rotation):
+    body=quat_xyzw_to_matrix(np.asarray(actual_plug[3:]));offset=body.T@(tcp-actual_plug[:3]);relative=body.T@hand_rotation
+    return np.asarray(position)+rotation@offset,rotation@relative

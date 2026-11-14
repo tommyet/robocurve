@@ -110,6 +110,8 @@ class BimanualGeometryTests(unittest.TestCase):
    return [np.concatenate([(a-point)@rotation.T+start+fraction*np.array(delta) for fraction in (0.,1.)])
            for _,a in geometry.pieces([-.028,-.028])]
   contact=np.array((-.010,0,.0022))
-  self.assertEqual(minimum_separation(left,translated_sweep(contact,(-.080,0,.050))),0.)
+  # The earlier, more forward grasp made direct diagonal retreat unsafe.
+  old_left=[a@R_GRIP.T+[-.0265,.0005,-.0005] for _,a in geometry.pieces([-.0038,-.0038])]
+  self.assertEqual(minimum_separation(old_left,translated_sweep(contact,(-.080,0,.050))),0.)
   self.assertGreater(minimum_separation(left,translated_sweep(contact,(0,0,.020))),.0002)
   self.assertGreater(minimum_separation(left,translated_sweep(contact+[0,0,.020],(-.080,0,.030))),.003)

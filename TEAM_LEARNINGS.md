@@ -2197,3 +2197,30 @@ editing, merge both agents' findings, and commit/push the update with the work.
   toPythonfloat. Do not infercontactforcevalidation from all-zero data.
 - Compute continues sequentially, noDreamcalls/submission. Allfourfulltasks
   remain incomplete. Backup/stop instruction stillapplies after batch.
+
+### 2026-11-14 — serial Ethernet and measured fast-mode validation
+
+- User explicitly directs serial task completion, Ethernet first. Hair and both
+  carton implementations are paused and backed up on their branches. Use Astra
+  after two or three repeated failures, Sol for implementation, root for one
+  GPU trial at a time. Optimize wall-clock time; no extra GPU requested.
+- Two grasp-approach failures triggered focused review. Internal socket guides
+  repair excessive pitch under hanging-cable load. Native guided003 retains
+  under1N pull and releases when clip pressed; all connector axis angles<5deg
+  (max4.436), clip travel<=.0233mm. Optional3.5deg engineering margin fails
+  three connectors; it is distinct from the unchanged task criterion.
+- Matched6s fit runs: fastfit00523.591s wall versus videofit00537.565s,1.592x.
+  Recorded physical-input/body-joint-mass hashes match:830colliders,116bodies,
+ 109joints. Camera-free mode preserves hardware camera collision meshes,
+  disables sensors only; state-only trials are not eligible final media.
+- Measured earlier full trial times: role00171.99s/16.1simulated seconds;
+  role00247.40s/9.1s; guided00348.41s/9s. Engineering/review currently dominates
+  elapsed time. Avoid delaying focused trials for broad performance refactors.
+- Grasp004 had real own/neighbor cable contact. Revised rear/outboard grasp
+  clears those measured states. Grasp006 then failed from frozen Cartesian
+  bias, not collision: goal error2.428mmY =1.687mm stale bias+.737mm servo
+  residual. Astra certified actual cable gap>=.962mm. Grasp007 zero-bias A/B
+  is running with unchanged geometry/gates; no native grasp success yet.
+- Final task still requires physical clip release, transfer, true insertion,
+  actual retaining-face overlap and2s released stability. No full-score claim
+  or new upstream PR/media upload. Keep compute shutdown after completed batch.

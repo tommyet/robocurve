@@ -8,6 +8,7 @@ import math
 from pathlib import Path
 from pxr import Usd,UsdGeom,UsdPhysics,PhysxSchema,Gf
 from config import *
+from geometry import socket_boxes,plug_boxes,hook_mesh
 
 def collider(shape):
     UsdPhysics.CollisionAPI.Apply(shape.GetPrim())
@@ -21,8 +22,8 @@ def cube(stage,path,size,pos,color):
 def wedge(stage,path,color):
     # Leading +x face slopes down; trailing -x face retains against the ledge.
     m=UsdGeom.Mesh.Define(stage,path)
-    v=[(.006,y,.0005) for y in [-.0025,.0025]]+[(.006,y,.0025) for y in [-.0025,.0025]]+[(.010,y,.0005) for y in [-.0025,.0025]]
-    m.CreatePointsAttr([Gf.Vec3f(*p) for p in v]);faces=[[0,1,3,2],[0,4,5,1],[2,3,5,4],[0,2,4],[1,5,3]]
+    v,faces=hook_mesh()
+    m.CreatePointsAttr([Gf.Vec3f(*p) for p in v])
     m.CreateFaceVertexCountsAttr([len(f) for f in faces]);m.CreateFaceVertexIndicesAttr([i for f in faces for i in f]);m.CreateSubdivisionSchemeAttr('none');m.CreateDisplayColorAttr([Gf.Vec3f(*color)])
     collider(m);UsdPhysics.MeshCollisionAPI.Apply(m.GetPrim()).CreateApproximationAttr('convexHull')
 
@@ -31,20 +32,11 @@ def export(path,name):
     root=UsdGeom.Xform.Define(stage,'/Object');stage.SetDefaultPrim(root.GetPrim())
     color=(.82,.86,.88)
     if name=='switch':
-        # Real open cavities with separate surfaces, not painted sockets.
-        case_back=.3985+PANEL_DEPTH;case_z=(.95-.0055+.95+PITCH_Z+.0078)/2
-        cube(stage,'/Object/back',(.012,PANEL_WIDTH,PANEL_HEIGHT),(case_back-.006,0,case_z),(.55,.59,.63))
-        post_height=case_z-TOP-.012
-        cube(stage,'/Object/post',(.020,.045,post_height),(case_back-.003,0,TOP+.012+post_height/2),(.25,.28,.31))
-        cube(stage,'/Object/foot',(.095,.135,.012),(case_back-.005,0,TOP+.006),(.25,.28,.31))
-        for i in range(8):
-            _,y,z=port(i)
-            cube(stage,f'/Object/floor_{i}',(.027,.015,.001),(.412,y,z-.005),color)
-            cube(stage,f'/Object/roof_{i}',(.027,.015,.001),(.412,y,z+.0073),color)
-            for sign in [-1,1]:
-                cube(stage,f'/Object/side_{i}_{"p" if sign>0 else "m"}',(.027,.002,.0133),(.412,y+sign*.0075,z+.00115),color)
-            cube(stage,f'/Object/ledge_{i}',(.002,.0055,.002),(.408,y,z+.006),color)
-            cube(stage,f'/Object/contact_{i}',(.003,.010,.006),(case_back-.004,y,z-.001),(.76,.59,.18))
+        # Internal guides prevent the hanging cable from pitching a seated
+        # shoulder into the latch roof. Dimensions remain a candidate model.
+        colors={'case':(.55,.59,.63),'stand':(.25,.28,.31),'socket':color,'contact':(.76,.59,.18)}
+        for label,center,size,kind in socket_boxes():
+            cube(stage,'/Object/'+label,size,center,colors[kind])
     else:
         UsdPhysics.RigidBodyAPI.Apply(root.GetPrim())
         mass=.0003 if name.startswith('clip') else .008 if name.startswith('plug') else .001
@@ -52,8 +44,7 @@ def export(path,name):
         PhysxSchema.PhysxContactReportAPI.Apply(root.GetPrim()).CreateThresholdAttr(0.)
         if name.startswith('plug'):
             i=int(name.split('_')[1]);col=(1.,.38,.025) if i==SERVICE else (.05,.36,.75)
-            cube(stage,'/Object/shell',(.024,.012,.005),(0,0,-.0015),color)
-            for sign in [-1,1]:cube(stage,f'/Object/shoulder_{"p" if sign>0 else "m"}',(.014,.0025,.003),(.003,sign*.00475,.0025),color)
+            for label,center,size in plug_boxes():cube(stage,'/Object/'+label,size,center,color)
             boot=UsdGeom.Cylinder.Define(stage,'/Object/boot');boot.CreateRadiusAttr(.0035);boot.CreateHeightAttr(.014);boot.CreateAxisAttr('X');boot.AddTranslateOp().Set(Gf.Vec3d(-.0205,0,-.0005));boot.CreateDisplayColorAttr([Gf.Vec3f(*col)]);collider(boot)
         elif name.startswith('clip'):
             cube(stage,'/Object/tab',(.020,.005,.001),(-.003,0,0),color);wedge(stage,'/Object/hook',color)
