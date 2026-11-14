@@ -8,7 +8,7 @@ def main():
  a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=False)
  (a.out/'source').mkdir()
  for f in [*Path(__file__).parent.glob('*.py'),Path(__file__).with_name('press_point.json')]:shutil.copy2(f,a.out/'source'/f.name)
- (a.out/'source-sha256.json').write_text(json.dumps({f.name:hashlib.sha256(f.read_bytes()).hexdigest() for f in Path(__file__).parent.glob('*.py')},indent=2))
+ (a.out/'source-sha256.json').write_text(json.dumps({f.name:hashlib.sha256(f.read_bytes()).hexdigest() for f in [*Path(__file__).parent.glob('*.py'),*Path(__file__).parent.glob('*point.json')]},indent=2))
  os.environ.setdefault('OMNI_KIT_ACCEPT_EULA','YES')
  from isaaclab.app import AppLauncher
  app=AppLauncher(headless=True,enable_cameras=True).app
@@ -34,14 +34,19 @@ def main():
      install_joints(prim.GetStage(),str(prim.GetPath()).rsplit('/',1)[0]);return prim
     cfg.func=with_joints
    return sc.Object(name=spec.name,object_type=sc.ObjectType.BASE if spec.name=='switch' else sc.ObjectType.RIGID,spawner_cfg=cfg,initial_pose=sc.Pose(position_xyz=spec.pos,rotation_xyzw=(0,0,0,1)))
+  from yam_arena.embodiment import BimanualYamEmbodiment
+  import review
+  original_init=BimanualYamEmbodiment.__init__
+  def with_reviews(instance,*args,**kwargs):
+   kwargs['cam_width']=320;kwargs['cam_height']=180;original_init(instance,*args,**kwargs);review.add_cameras(instance)
+  BimanualYamEmbodiment.__init__=with_reviews
   sc.task_object=make
   try:
    env=wrapper.YamArenaEmbodiment(task=str(Path(__file__).with_name('task.py')),object_jitter=0.,control_hz=20,headless=True,cam_width=320,cam_height=180)
    env._ensure_sim(None)
-  finally:sc.task_object=original
+  finally:sc.task_object=original;BimanualYamEmbodiment.__init__=original_init
   base=env._base;env._env.reset();env._instruction='Native retention force probe; no task score';env._t=0.
-  for n,eye in zip(['top_cam','left_cam','right_cam'],[(.08,-.26,1.25),(.10,.17,1.08),(.12,-.12,1.05)]):
-   base.scene[n].set_world_poses_from_view(torch.tensor([eye],device=base.device),torch.tensor([[.41,0,.96]],device=base.device))
+  review.place(base,(.41,0.,.96))
   def arr(v):
    v=v.torch if hasattr(v,'torch') else v
    return v.detach().cpu().numpy()
@@ -77,15 +82,15 @@ def main():
      rp=quat_xyzw_to_matrix(p0[3:]);local_clip=rp.T@(c[:3]-p0[:3]);travel=float(CLIP_Z-local_clip[2]);tip=p0[:3]+rp@np.array((.012,0,0))
      def insertion(i):
       center=np.array(port(i));lateral=np.linalg.norm(p0[1:3]-center[1:3]);return float(tip[0]-(.412-.027/2)) if lateral<.007 and rp[0,0]>.8 else -.020
-     target=np.array(port(TARGET));hook=p0[:3]+rp@np.array((.006,0,.0075-travel));hand_positions=[]
+     target=np.array(port(TARGET));hook=p0[:3]+rp@np.array((.006,0,CLIP_Z+.0025-travel));hand_positions=[]
      from yam_arena import ik
      for side in ('left','right'):
       ids,_=env._ids[side+'_robot'];d=arr(base.scene[side+'_robot'].data.joint_pos)[0,ids];hand_positions.append(ik.tcp_pose(d,env.rig.bases[side])[0])
-     sample={'time':env._t,'clip_travel':travel,'source_insertion':insertion(SERVICE),'target_insertion':insertion(TARGET),'target_lateral_error':float(np.linalg.norm(p0[1:3]-target[1:3])),'target_angle':float(np.arccos(np.clip(rp[0,0],-1,1))),'speed':0. if previous_plug is None else float(np.linalg.norm(p0[:3]-previous_plug)/.05),'height':float(p0[2]),'max_neighbour_withdrawal':max(max(0.,PLUG_X-v[0]) for v in row['neighbours'].values()),'hands_clear':all(np.linalg.norm(h-p0[:3])>.070 for h in hand_positions),'hook_retained':bool(.409-.0002<hook[0]<.423 and abs(hook[1]-target[1])<.003 and target[2]+.006<hook[2]<target[2]+.011)}
+     sample={'time':env._t,'clip_travel':travel,'source_insertion':insertion(SERVICE),'target_insertion':insertion(TARGET),'target_lateral_error':float(np.linalg.norm(p0[1:3]-target[1:3])),'target_angle':float(np.arccos(np.clip(rp[0,0],-1,1))),'speed':0. if previous_plug is None else float(np.linalg.norm(p0[:3]-previous_plug)/.05),'height':float(p0[2]),'max_neighbour_withdrawal':max(max(0.,PLUG_X-v[0]) for v in row['neighbours'].values()),'hands_clear':all(np.linalg.norm(h-p0[:3])>.070 for h in hand_positions),'hook_retained':bool(.409-.0002<hook[0]<.423 and abs(hook[1]-target[1])<.003 and target[2]+.005<hook[2]<target[2]+.0075)}
      previous_plug=p0[:3].copy();row['score_sample']=sample;row['metrics']=scorer.update(sample)
     if not np.isfinite([*p0,*c]).all():raise RuntimeError('nonfinite rigid body state')
     trace.write(json.dumps(row)+'\n');samples.append(row)
-    panels=[cv2.resize(arr(base.scene[n].data.output['rgb'])[0,:,:,:3].astype(np.uint8),(480,270)) for n in ['top_cam','left_cam','right_cam']]
+    panels=review.panels(base)
     canvas=np.zeros((594,960,3),dtype=np.uint8);canvas[36:306,240:720]=panels[0];canvas[306:576,:480]=panels[1];canvas[306:576,480:]=panels[2]
     cv2.putText(canvas,(('ETHERNET ROBOT RELEASE ATTEMPT | ' if scorer else 'ETHERNET ROBOT GRASP PROBE | ') if robot else 'ETHERNET NATIVE FORCE PROBE | ')+phase,(12,25),cv2.FONT_HERSHEY_SIMPLEX,.60,(255,255,255),1,cv2.LINE_AA)
     cv2.putText(canvas,(('Ordinary robot commands. Measured score: '+str(scorer.value) if scorer else 'Ordinary robot commands, grasp diagnostic only. Task score: unscored') if robot else 'External test forces, not a robot demonstration. Task score: unscored'),(12,590),cv2.FONT_HERSHEY_SIMPLEX,.46,(255,205,120),1,cv2.LINE_AA);video.append_data(canvas)

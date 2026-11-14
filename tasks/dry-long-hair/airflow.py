@@ -31,13 +31,13 @@ class HairThermal:
   area=2*math.pi*RADIUS*LENGTH/PATCHES_PER_SEGMENT
   self.patches=[Patch(area,DRY_MASS_PER_SEGMENT*1400/PATCHES_PER_SEGMENT,WATER_PER_PATCH) for _ in range(LOCKS*SEGMENTS*PATCHES_PER_SEGMENT)]
   self.max_temperature=20.;self.energy=0.
- def step(self,dt,segments,nozzle,axis,power):
+ def step(self,dt,segments,nozzle,axis,power,head_center=HEAD):
   if len(segments)!=LOCKS*SEGMENTS:raise ValueError('missing native hair segments')
   if not math.isfinite(power) or not 0<=power<=1:raise ValueError('invalid measured power slider')
   nn=norm(axis)
   if nn<.999 or nn>1.001:raise ValueError('dryer axis must be unit length')
   capsules=[(add(s['pos'],mul(column(s['rotation'],2),-LENGTH/2+RADIUS)),add(s['pos'],mul(column(s['rotation'],2),LENGTH/2-RADIUS))) for s in segments]
-  flux=[]
+  flux=[];wind=[0. for _ in segments]
   for i,s in enumerate(segments):
    r=s['rotation'];normals=[column(r,0),mul(column(r,0),-1),column(r,1),mul(column(r,1),-1)]
    for normal in normals:
@@ -46,7 +46,7 @@ class HairThermal:
     if power>.5 and .08<=distance<=.30 and dot(ray,axis)/distance>=math.cos(math.radians(22.)):
      exposed=max(0.,dot(normal,mul(ray,-1/distance)))
      # Test actual scalp sphere and every other measured capsule.
-     if segment_distance(nozzle,point,HEAD,HEAD)<HEAD_RADIUS:exposed=0.
+     if segment_distance(nozzle,point,head_center,head_center)<HEAD_RADIUS:exposed=0.
      if exposed>0:
       end=add(point,mul(ray,-.0002/distance))
       for k,(a,b) in enumerate(capsules):
@@ -54,12 +54,16 @@ class HairThermal:
         exposed=0.;break
      h=150.*(.15/distance)**2*power
     flux.append((h,exposed))
+    # Coarse pressure drag from this exposed surface quadrant.
+    if exposed>0:wind[i]+=.5*1.2*1.1*(2*RADIUS*LENGTH/4)*(12.*(.15/distance)*power)**2*exposed
   heat=sum(h*p.area*f*max(0.,AIR_TEMPERATURE-p.temperature) for p,(h,f) in zip(self.patches,flux))
   scale=min(1.,HEATER_LIMIT/max(1e-12,heat));self.energy+=heat*scale*dt
   removed=0.
   for p,(h,f) in zip(self.patches,flux):removed+=p.step(dt,AIR_TEMPERATURE,h*scale,f)
   self.max_temperature=max(self.max_temperature,max(p.temperature for p in self.patches))
-  return self.result()|{'water_removed_step_kg':removed,'convective_power_W':heat*scale,'exposed_patches':sum(f>0 for _,f in flux)}
+  wind_scale=min(1.,.25/max(1e-12,sum(wind)))
+  forces=[list(mul(axis,f*wind_scale)) for f in wind]
+  return self.result()|{'wind_forces_N':forces,'water_removed_step_kg':removed,'convective_power_W':heat*scale,'exposed_patches':sum(f>0 for _,f in flux)}
  def result(self):
   fractions=[p.water/WATER_PER_PATCH for p in self.patches]
   return {'dry_fraction':sum(f<=DRY_FRACTION for f in fractions)/len(fractions),'worst_remaining_water_fraction':max(fractions),'water_kg':sum(p.water for p in self.patches),'max_temperature_C':self.max_temperature,'delivered_energy_J':self.energy}

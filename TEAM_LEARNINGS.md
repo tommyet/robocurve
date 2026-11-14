@@ -2153,3 +2153,23 @@ editing, merge both agents' findings, and commit/push the update with the work.
   displaces ~125 mm material, but max film-anchor error .432 mm exceeds the
   .250 mm/5% limit. Do NOT call this a valid peel demo yet. Native004 planned
   at 2 kHz without mass scaling or scoring relaxation. No robot packing demo.
+
+### 2026-11-14 — root Ethernet/hair native revisions
+
+- Operator root, branch codex/ethernet-hair-batch; retained cb0da2 restored,
+  SSH/GPU/noVNC operational despite Brev UNHEALTHY status. Deleted failed old
+  instances independently verified absent. Do not refresh SSH alias while using
+  direct connection: unhealthy control-plane can remove its alias.
+- Hair-articulation-003: 60 passive DOF, 12 five-segment curved locks, measured
+  maximum anchor gap 1.123e-7 m and 35.47 mm lock motion; power-off water loss
+  zero. This validates mechanics only, not drying completion. Earlier 160-body
+  independent-joint model is superseded. Physical switch/pickup remains under test.
+- Ethernet release-002 failed: no sustained clip depression, no disconnection,
+  score zero. Native jack retention/pressed-pull bench showed physical release,
+  but oversized 28 mm pitch was unrealistic. Current 16.26 mm horizontal pitch
+  follows public Amphenol drawing p-rje7k-888-1xx0; vertical 13.72 mm provisional.
+  Original procedural geometry, no manufacturer CAD copied. New pitch/boot/clip
+  robot interaction still requires native validation.
+- Raw sources/traces/videos backed up locally at ignored
+  artifacts/native-four-task-20261114/evidence.tgz. GPU used for native physics;
+  no Dream call. No full-score demo and no submission authorized.

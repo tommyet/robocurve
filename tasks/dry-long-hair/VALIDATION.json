@@ -1,21 +1,33 @@
 {
-  "status": "native_flexible_hair_probe_no_drying_demo",
+  "status": "native_articulation_passed_robot_power_attempt_pending",
   "date": "2026-11-14",
-  "local_model_tests_passed": 7,
-  "native_runtime": false,
+  "local_model_tests_passed": 10,
+  "native_runtime": true,
   "demo_score": null,
   "video": null,
   "remaining": [
-    "Native long-hair dynamics and self-contact",
-    "Mannequin/scalp and dryer/switch assets",
-    "Geometry-derived airflow and occlusion",
-    "Calibrate heat/moisture model",
-    "Bimanual controller and actual scored video"
+    "Complete real switch actuation and dryer pickup",
+    "Manipulate and expose every hair surface with live airflow",
+    "Power off, park and release after all patches dry",
+    "Validate material parameters and full scored demo"
   ],
   "native_mechanics_probe": {
     "run": "hair-native-001",
     "max_joint_separation_m": 0.0009245453,
     "max_lock_motion_m": 0.1177754,
+    "power_off_water_loss_kg": 0.0,
+    "task_score": null
+  },
+  "current_model": {
+    "locks": 12,
+    "segments_per_lock": 5,
+    "passive_articulation": true,
+    "actuated_hair_joints": false
+  },
+  "current_native_mechanics_probe": {
+    "run": "hair-articulation-003",
+    "max_joint_separation_m": 1.12266e-07,
+    "max_lock_motion_m": 0.0354696,
     "power_off_water_loss_kg": 0.0,
     "task_score": null
   }

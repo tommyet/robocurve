@@ -1,5 +1,5 @@
 {
-  "status": "native_mechanics_and_robot_attempt_no_completion",
+  "status": "real_pitch_revision_pending_native_robot_validation",
   "date": "2026-11-14",
   "local_model_tests_passed": 11,
   "native_runtime": false,
@@ -33,5 +33,6 @@
       "clip_release_observed": true,
       "plug_disconnected": false
     }
-  ]
+  ],
+  "current_model_note": "16.26 mm horizontal pitch, provisional 13.72 mm vertical pitch. Earlier 28 mm pitch attempts do not validate this revision."
 }

@@ -1,6 +1,6 @@
 # Dry long hair evenly with a handheld dryer
 
-Authorized batch job; engineering design, not a functioning simulated task yet.
+Native mechanics and controller under development; no complete drying demo yet.
 
 Use a long-haired mannequin representing a woman's hairstyle. Pick up and
 operate the dryer, expose hair sections as needed, and dry the full length,
@@ -21,6 +21,34 @@ exposure, hidden inner layers, near/far operation, no airflow, manipulation,
 and released stable hair. Exact moisture/heat thresholds and task allowance
 remain unset until the model and native reach/access probes are established.
 
-No native scene, controller, score, video or submission readiness is claimed.
+Native geometry, thermal/occlusion kernels and incomplete robot probes now exist. No complete drying score, demo or submission readiness is claimed.
 DYMO-Hair is relevant prior work on hair dynamics/manipulation, not proof that
 this implementation can model or complete drying. See the batch record.
+
+## Current implementation and probes
+
+The mannequin has a passive swivel neck bearing and separate articulated locks;
+robot contact must turn its head. The bearing has no policy-driven angle or
+motor. A normal open U-shaped dryer holder supports the barrel with its handle
+accessible below; no extra grasp handles are added. The real handle slider
+sets power from measured travel. The robot braces the handle, pushes the
+slider, lifts the dryer and attempts an aimed airflow hold.
+
+`airflow.py` traces from the measured nozzle to four surface quadrants on every
+hair segment. The scalp and other measured capsule locks can occlude airflow.
+Local heat/moisture loss is energy limited; power-off and hidden patches do
+not dry. Candidate pressure drag is capped at 0.25 N total with equal/opposite
+dryer recoil. Heat, moisture, drag and bearing values remain uncalibrated.
+The hair model is a coarse bundle approximation, not individual-fibre CFD.
+
+```bash
+/data/IsaacLab-Arena/.venv/bin/python run.py --mode dynamics --out /path/to/new-probe
+/data/IsaacLab-Arena/.venv/bin/python run.py --mode power-probe --out /path/to/new-attempt
+```
+
+The first separate-body hair probe passed its passive test, but moving-head
+robot trials exposed excessive joint error. A reduced-coordinate tree is now
+being validated for both integrity and speed. Current slider/pickup attempts
+are incomplete. Full inner-layer manipulation, all-surface drying, switch-off,
+released parking and native scoring integration are still required. Do not
+infer successful drying from a planned arm sweep or a warm-coloured render.

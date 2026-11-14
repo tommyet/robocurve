@@ -32,17 +32,19 @@ def export(path,name):
     color=(.82,.86,.88)
     if name=='switch':
         # Real open cavities with separate surfaces, not painted sockets.
-        cube(stage,'/Object/back',(.012,.130,.080),(.431,0,.966),(.55,.59,.63))
-        cube(stage,'/Object/post',(.035,.045,.160),(.45,0,.8275),(.25,.28,.31))
-        cube(stage,'/Object/foot',(.095,.135,.012),(.45,0,TOP+.006),(.25,.28,.31))
+        case_back=.3985+PANEL_DEPTH;case_z=(.95-.0055+.95+PITCH_Z+.0078)/2
+        cube(stage,'/Object/back',(.012,PANEL_WIDTH,PANEL_HEIGHT),(case_back-.006,0,case_z),(.55,.59,.63))
+        post_height=case_z-TOP-.012
+        cube(stage,'/Object/post',(.020,.045,post_height),(case_back-.003,0,TOP+.012+post_height/2),(.25,.28,.31))
+        cube(stage,'/Object/foot',(.095,.135,.012),(case_back-.005,0,TOP+.006),(.25,.28,.31))
         for i in range(8):
             _,y,z=port(i)
-            cube(stage,f'/Object/floor_{i}',(.027,.015,.002),(.412,y,z-.0055),color)
-            cube(stage,f'/Object/roof_{i}',(.027,.015,.002),(.412,y,z+.0105),color)
+            cube(stage,f'/Object/floor_{i}',(.027,.015,.001),(.412,y,z-.005),color)
+            cube(stage,f'/Object/roof_{i}',(.027,.015,.001),(.412,y,z+.0073),color)
             for sign in [-1,1]:
-                cube(stage,f'/Object/side_{i}_{"p" if sign>0 else "m"}',(.027,.002,.018),(.412,y+sign*.0075,z+.0025),color)
-            cube(stage,f'/Object/ledge_{i}',(.002,.0055,.003),(.408,y,z+.0075),color)
-            cube(stage,f'/Object/contact_{i}',(.003,.010,.006),(.424,y,z-.001),(.76,.59,.18))
+                cube(stage,f'/Object/side_{i}_{"p" if sign>0 else "m"}',(.027,.002,.0133),(.412,y+sign*.0075,z+.00115),color)
+            cube(stage,f'/Object/ledge_{i}',(.002,.0055,.002),(.408,y,z+.006),color)
+            cube(stage,f'/Object/contact_{i}',(.003,.010,.006),(case_back-.004,y,z-.001),(.76,.59,.18))
     else:
         UsdPhysics.RigidBodyAPI.Apply(root.GetPrim())
         mass=.0003 if name.startswith('clip') else .008 if name.startswith('plug') else .001
@@ -51,10 +53,10 @@ def export(path,name):
         if name.startswith('plug'):
             i=int(name.split('_')[1]);col=(1.,.38,.025) if i==SERVICE else (.05,.36,.75)
             cube(stage,'/Object/shell',(.024,.012,.005),(0,0,-.0015),color)
-            for sign in [-1,1]:cube(stage,f'/Object/shoulder_{"p" if sign>0 else "m"}',(.020,.0025,.003),(0,sign*.00475,.0025),color)
-            cube(stage,'/Object/boot',(.012,.011,.009),(-.015,0,-.0005),col)
+            for sign in [-1,1]:cube(stage,f'/Object/shoulder_{"p" if sign>0 else "m"}',(.014,.0025,.003),(.003,sign*.00475,.0025),color)
+            boot=UsdGeom.Cylinder.Define(stage,'/Object/boot');boot.CreateRadiusAttr(.0035);boot.CreateHeightAttr(.014);boot.CreateAxisAttr('X');boot.AddTranslateOp().Set(Gf.Vec3d(-.0205,0,-.0005));boot.CreateDisplayColorAttr([Gf.Vec3f(*col)]);collider(boot)
         elif name.startswith('clip'):
-            cube(stage,'/Object/tab',(.018,.005,.001),(0,0,0),color);wedge(stage,'/Object/hook',color)
+            cube(stage,'/Object/tab',(.020,.005,.001),(-.003,0,0),color);wedge(stage,'/Object/hook',color)
         else:
             _,i,k=name.split('_');i=int(i);k=int(k);points=cable_points(i);a,b=points[k:k+2]
             delta=Gf.Vec3d(*[v-u for u,v in zip(a,b)])
