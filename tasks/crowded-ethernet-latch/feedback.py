@@ -87,19 +87,113 @@ class BootJawPredictor:
         for name in ('tip_left','tip_right'):
             self.parts.append([(a,(b[0,0]-a[0,0])/-.001) for (n,a),(_,b) in zip(zero,moved) if n==name])
 
-    def predict(self,plug,tcp,rotation,actual_fingers):
+    def predict(self,plug,tcp,rotation,actual_fingers,command_opening=.0015):
         boot=boot_cylinder(np.asarray(plug));stops=[];actual_gaps=[];possible=[]
         for i,pieces in enumerate(self.parts):
             def gap(opening):
                 return minimum_separation([(a-opening*slope)@rotation.T+tcp for a,slope in pieces],[boot])
             low,high=0.,.0065
-            possible.append(gap(.0015)<=1e-6 and gap(.0065)>1e-6)
+            possible.append(gap(command_opening)<=1e-6 and gap(.0065)>1e-6)
             for _ in range(14):
                 middle=(low+high)/2
                 if gap(middle)>1e-6:high=middle
                 else:low=middle
             stops.append((low+high)/2);actual_gaps.append(gap(abs(actual_fingers[i])))
         return {'opening_m':stops,'actual_surface_gap_m':actual_gaps,'contact_possible':possible}
+
+    def surface_gaps(self,plug,tcp,rotation,actual_fingers):
+        boot=boot_cylinder(np.asarray(plug))
+        return [minimum_separation([(a+float(actual_fingers[i])*slope)@rotation.T+tcp for a,slope in pieces],[boot])
+                for i,pieces in enumerate(self.parts)]
+
+
+class BootJawContactCache:
+    """Cache first-contact roots, never the current measured surface check."""
+    def __init__(self,predictor):
+        self.predictor=predictor;self.last_key=None;self.cached=None;self.timestamp=None;self.full_evaluations=0
+
+    @staticmethod
+    def key(plug,tcp,rotation,command_opening):
+        body=quat_xyzw_to_matrix(np.asarray(plug[3:]))
+        return (body.T@(tcp-plug[:3]),body.T@rotation,float(command_opening))
+
+    def unchanged(self,key):
+        if self.last_key is None:return False
+        p,r,command=key;old_p,old_r,old_command=self.last_key
+        angle=math.acos(float(np.clip((np.trace(r.T@old_r)-1)/2,-1,1)))
+        return bool(np.linalg.norm(p-old_p)<=.000025 and angle<=math.radians(.03) and command==old_command)
+
+    def evaluate(self,plug,tcp,rotation,fingers,time,command_opening,*,fresh=False):
+        key=self.key(plug,tcp,rotation,command_opening);hit=self.unchanged(key) and not fresh
+        if not hit:
+            self.cached=self.predictor.predict(plug,tcp,rotation,fingers,command_opening=command_opening)
+            self.last_key=(key[0].copy(),key[1].copy(),key[2]);self.timestamp=float(time);self.full_evaluations+=1
+        result=dict(self.cached)
+        if hit:result['actual_surface_gap_m']=self.predictor.surface_gaps(plug,tcp,rotation,fingers)
+        result.update(cache_hit=bool(hit),cache_timestamp_s=self.timestamp,full_evaluations=self.full_evaluations,
+                      cache_key={'tcp_in_boot_m':self.last_key[0].tolist(),'hand_rotation_in_boot':self.last_key[1].tolist(),
+                                 'command_opening_m':self.last_key[2]})
+        return result
+
+
+def closing_opening(age,entry_opening,hold_opening):
+    """Reach the final millimetre gently, then retain one hold command."""
+    def smooth(value):
+        value=float(np.clip(value,0.,1.));return value*value*(3.-2.*value)
+    near=min(entry_opening,hold_opening+.001)
+    if age<2.:return entry_opening+(near-entry_opening)*smooth(age/2.)
+    return near+(hold_opening-near)*smooth((age-2.)/2.)
+
+
+def predicted_jaw_normal_forces(openings,command_opening,axis_vertical=1.):
+    """Quasistatic PD+finger-gravity estimate, not a contact-force sensor."""
+    gravity=.069657*9.81*axis_vertical
+    spring=5000.*(np.asarray(openings)-command_opening)
+    return [float(spring[0]-gravity),float(spring[1]+gravity)]
+
+
+def boot_contact_force_gate(openings,command_opening,axis_vertical=1.):
+    """The original 0.75 N obstruction margin, with each finger's gravity."""
+    forces=predicted_jaw_normal_forces(openings,command_opening,axis_vertical)
+    return {'normal_estimate_N':forces,'minimum_normal_N':.75,
+            'blocked':bool(np.isfinite(forces).all() and min(forces)>.75)}
+
+
+class EndpointCorrection:
+    """Small Cartesian integral, enabled only at a measured settled endpoint."""
+    def __init__(self):self.value=np.zeros(3)
+    def reset(self):self.value[:]=0.
+    def update(self,error,dt,enabled):
+        if enabled:
+            step=2.*dt*np.asarray(error);length=float(np.linalg.norm(step));limit=.00005*min(1.,dt/.05)
+            if length>limit:step*=limit/length
+            self.value+=step
+            length=float(np.linalg.norm(self.value))
+            if length>.0025:self.value*=.0025/length
+        return self.value.copy()
+
+
+class JointEndpointCorrection:
+    """Fixed unbiased joint reference with a bounded outer integral."""
+    def __init__(self):self.reset()
+    def reset(self):
+        self.reference=None;self.bias=np.zeros(6);self.frozen=False;self.invalid=None
+    def latch(self,reference):
+        reference=np.asarray(reference,dtype=float)
+        if reference.shape!=(6,) or not np.isfinite(reference).all():raise ValueError('nonfinite or invalid joint endpoint reference')
+        self.reference=reference.copy();self.reference.setflags(write=False);self.bias[:]=0.;self.frozen=False;self.invalid=None
+    def freeze(self):self.frozen=True
+    def update(self,actual,dt,allowed=True):
+        if self.reference is None or self.frozen or not allowed:return
+        actual=np.asarray(actual,dtype=float)
+        if not math.isfinite(dt) or dt<=0:
+            self.invalid='nonfinite or invalid endpoint timestep';return
+        if actual.shape!=(6,) or not np.isfinite(actual).all():
+            self.invalid='nonfinite or invalid measured joint state';return
+        step=.5*dt*(self.reference-actual);limit=.00025*min(1.,dt/.05)
+        self.bias=np.clip(self.bias+np.clip(step,-limit,limit),-.02,.02)
+    def command(self):
+        return None if self.reference is None else self.reference+self.bias
 
 
 def plug_fit(plug,target):

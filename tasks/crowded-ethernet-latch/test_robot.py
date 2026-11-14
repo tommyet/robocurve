@@ -6,8 +6,8 @@ import unittest
 import numpy as np
 from yam_arena import ik
 from yam_arena.constants import READY,FINGER_OPEN
-from robot import GraspProbe,ReleaseProbe,R_GRIP,BOOT_LOCAL,ENTRY_GRIP,PRESS_GRIP
-from config import port,SERVICE,CLIP_Z,RELEASE_TRAVEL
+from robot import GraspProbe,ReleaseProbe,R_GRIP,BOOT_LOCAL,ENTRY_GRIP,PRESS_GRIP,GRIP,GRIP_OPENING
+from config import port,SERVICE,TARGET,CLIP_Z,RELEASE_TRAVEL
 
 class Array:
  def __init__(self,value):self.value=np.array(value,dtype=float)
@@ -115,3 +115,85 @@ class BimanualGeometryTests(unittest.TestCase):
   self.assertEqual(minimum_separation(old_left,translated_sweep(contact,(-.080,0,.050))),0.)
   self.assertGreater(minimum_separation(left,translated_sweep(contact,(0,0,.020))),.0002)
   self.assertGreater(minimum_separation(left,translated_sweep(contact+[0,0,.020],(-.080,0,.030))),.003)
+
+
+class EntryEndpointTests(unittest.TestCase):
+ def test_endpoint_reference_stays_fixed_while_joint_feedback_rejects_contact_load(self):
+  from unittest.mock import patch
+  probe=GraspProbe(environment(),np.array(port(SERVICE)))
+  probe.bias[0][:]=.001
+  probe.transition('enter_boot',0.)
+  np.testing.assert_array_equal(probe.bias[0],np.zeros(3))
+  goal=np.array(port(SERVICE))+BOOT_LOCAL
+  measured=[probe.arm(side) for side in ('left','right')]
+  left=(measured[0][0],np.array((-.0065,-.0065)),goal-np.array((.0008,0,0)),R_GRIP)
+  probe.arm=lambda side:left if side=='left' else measured[1]
+  safe={'rigid_gap_m':.002,'wire_gap_m':.001,'minimum_gap_m':.001}
+  with patch('robot.clearance',return_value=safe),patch('robot.snapshot',return_value=({},{},{})),patch.object(probe,'stationary_hold_safety',return_value={'rigid_gap_m':.002,'other_hand_gap_m':.002}):
+   probe.command(2.9)
+   np.testing.assert_array_equal(probe.bias[0],np.zeros(3))
+   for time in (3.05,3.10,3.15):probe.command(time)
+   self.assertIsNotNone(probe.entry_joint_servo.reference)
+   self.assertGreater(np.linalg.norm(probe.entry_joint_servo.bias),0.)
+   np.testing.assert_array_equal(probe.bias[0],np.zeros(3))
+   self.assertEqual(probe.phase,'enter_boot')
+   learned=probe.entry_joint_servo.bias.copy();reference=probe.entry_joint_servo.reference.copy()
+   probe.transition('close_on_boot',3.2);probe.command(3.25)
+   self.assertGreater(np.linalg.norm(probe.entry_joint_servo.bias-learned),0.)
+   np.testing.assert_array_equal(probe.entry_joint_servo.reference,reference)
+   self.assertFalse(probe.entry_joint_servo.frozen)
+
+class ReleaseGeometryGateTests(unittest.TestCase):
+ def make_state(self,phase):
+  probe=ReleaseProbe(environment(),np.array(port(SERVICE)));probe.phase=phase
+  measured=[probe.arm(side) for side in ('left','right')]
+  probe.right_clear=(measured[1][2].copy(),measured[1][3].copy())
+  probe.align_plug_start=probe.target_origin+np.array((-.038,0,0));probe.align_body_start=np.eye(3)
+  probe.insertion_x=float(probe.align_plug_start[0]);probe.frozen_alignment_rotation=np.eye(3)
+  targets=(measured[0][2],measured[0][3],0.,measured[1][2],measured[1][3],PRESS_GRIP)
+  return probe,measured,targets
+
+ def test_negative_x_alignment_bias_cannot_deadlock_actual_insertion_progress(self):
+  probe,measured,targets=self.make_state('insert_empty_target')
+  probe.alignment_bias[0]=-.001
+  plug=np.r_[probe.align_plug_start+[-.001,0,0],0,0,0,1.]
+  before=probe.insertion_x
+  probe.release_targets(1.,1.,probe.phase,plug,np.eye(3),0.,measured,targets)
+  self.assertGreater(probe.insertion_x,before)
+
+ def test_bad_actual_guide_footprint_blocks_entry_even_with_a_good_tcp(self):
+  probe,measured,targets=self.make_state('align_empty_target')
+  plug=np.r_[probe.align_plug_start+[0,0,.00025],0,0,0,1.]
+  for i in range(8):probe.release_targets(3+i*.05,3+i*.05,probe.phase,plug,np.eye(3),0.,measured,targets)
+  self.assertEqual(probe.phase,'align_empty_target')
+  self.assertLess(probe.guide_geometry['minimum_clearance_m'],.0001)
+
+ def test_partial_jaws_do_not_fully_open_without_all_wire_clearance(self):
+  from unittest.mock import patch
+  probe,measured,targets=self.make_state('certify_open_clearance')
+  plug=np.r_[port(TARGET),0,0,0,1.]
+  blocked={'rigid_gap_m':.010,'wire_gap_m':0.,'minimum_gap_m':0.}
+  with patch('robot.snapshot',return_value=({},{},{})),patch('robot.clearance',return_value=blocked):
+   result=probe.release_targets(1.,1.,probe.phase,plug,np.eye(3),0.,measured,targets)
+  self.assertEqual(result[2],ENTRY_GRIP)
+  self.assertNotEqual(probe.phase,'open_clear_hands')
+  self.assertIsNotNone(probe.failure)
+
+ def test_full_opening_requires_complete_sweep_clearance(self):
+  from unittest.mock import patch
+  probe,measured,targets=self.make_state('certify_open_clearance')
+  plug=np.r_[port(TARGET),0,0,0,1.]
+  clear={'rigid_gap_m':.020,'wire_gap_m':.010,'minimum_gap_m':.010}
+  with patch('robot.snapshot',return_value=({},{},{})),patch('robot.clearance',return_value=clear),patch('robot.minimum_separation',return_value=.020):
+   result=probe.release_targets(1.,1.,probe.phase,plug,np.eye(3),0.,measured,targets)
+  self.assertEqual(probe.phase,'open_clear_hands')
+  self.assertEqual(result[2],ENTRY_GRIP)
+
+
+class HoldPreloadTests(unittest.TestCase):
+ def test_measured_preload_command_persists_in_hold_and_clip_operation(self):
+  for cls,phase in ((GraspProbe,'verified_boot_hold'),(ReleaseProbe,'depress_clip')):
+   probe=cls(environment(),np.array(port(SERVICE)));probe.phase=phase;probe.previous[6]=GRIP
+   action,report=probe.command(1.)
+   self.assertAlmostEqual(action[6],GRIP)
+   self.assertAlmostEqual(report['hold_command_opening_m'],GRIP_OPENING)

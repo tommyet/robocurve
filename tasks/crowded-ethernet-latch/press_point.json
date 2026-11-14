@@ -40,9 +40,9 @@
   "purpose": "Unmodified tip_left support vertex on RIGHT robot; nominal environment and bimanual CPU certificates recorded separately. Native validation pending.",
   "finger_joint": -0.028,
   "boot_tcp_local": [
-    -0.0395,
+    -0.038,
     -0.0035,
-    -0.0005
+    0.00024
   ],
   "boot_rotation": [
     [
@@ -62,12 +62,12 @@
     ]
   ],
   "boot_ik_seed": [
-    -1.0739406641464195,
-    2.026207514130806,
-    1.1444230632155314,
-    0.8808690379966839,
-    -1.2484774216594194,
-    -1.5716904358795827
+    -1.0707448990636848,
+    2.026994576520793,
+    1.148672390727258,
+    0.8783051425419364,
+    -1.2452682532195705,
+    -1.5708116668794554
   ],
   "press_ik_seed": [
     0.38013360351143405,
@@ -77,5 +77,6 @@
     -0.7032805010332176,
     -1.4612519013210035
   ],
-  "boot_note": "Actual plug-frame TCP; world-fixed R_GRIP. Rearward/outboard fingertip grasp clears the native source/neighbor cable cluster. Ordinary boot only; loaded-jaw/slip gates remain required."
+  "boot_note": "Force-balanced rear-boot pose with same R_GRIP. Includes 69.657 g finger gravity; 3.04001 mm common preload opening estimates about 2.5 N opposed normals. Native holding remains unvalidated.",
+  "hold_opening_m": 0.00304001
 }

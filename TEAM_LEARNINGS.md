@@ -2224,3 +2224,16 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Final task still requires physical clip release, transfer, true insertion,
   actual retaining-face overlap and2s released stability. No full-score claim
   or new upstream PR/media upload. Keep compute shutdown after completed batch.
+
+### 2026-11-14 — Ethernet closure feedback and gravity-aware contact check
+
+- GRASP010 fixed-reference bounded joint integral correction passed the 0.2 mm
+  endpoint gate, but full jaw closure shifted the boot and lost contact.
+- GRASP011 uses deeper flat-pad purchase, 3.04001 mm jaw target and continued
+  bounded stationary correction. Native endpoint error remained 0.168 mm;
+  closure acceptance timed out at23.35s. No task completion or score claimed.
+- Fresh final geometry found both pad surface gaps zero, predicted stops within
+  existing0.5mm tolerance. Raw commanded-spacing obstruction test incorrectly
+  ignored opposite finger gravity loads; gravity-adjusted estimates1.06/1.05N
+  exceed intended0.75N threshold. Sol correcting this predicate with empty-jaw
+  and one-sided-contact regressions; next native trial pending.

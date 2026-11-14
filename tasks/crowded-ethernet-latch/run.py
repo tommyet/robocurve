@@ -22,7 +22,7 @@ def main():
   import isaaclab.sim as sim
   from native import export,install_joints
   import task
-  from diagnostics import bench_command,connector_fit,fit_summary
+  from diagnostics import bench_command,connector_fit,fit_summary,robot_snapshot
   wrapper._APP=app
   assets={s.name:export(a.out/(s.name+'.usda'),s.name) for s in task.OBJECTS if s.name!='mat'}
   original=sc.task_object
@@ -103,13 +103,7 @@ def main():
     telemetry_started=time.monotonic()
     bodies=native_body_snapshot();p0=bodies[f'plug_{SERVICE}'];c=bodies[f'clip_{SERVICE}']
     from yam_arena import ik
-    native_hands=[]
-    for side in ('left','right'):
-     ids,fids=env._ids[side+'_robot'];joint=arr(base.scene[side+'_robot'].data.joint_pos)[0]
-     tcp,rotation=ik.tcp_pose(joint[ids],env.rig.bases[side])
-     native_hands.append({'side':side,'joints':joint[ids].tolist(),'finger_joints':joint[fids].tolist(),
-                          'tcp':tcp.tolist(),'tcp_rotation':rotation.tolist(),'robot_base_w':list(env.rig.bases[side]),
-                          'robot_root_pose_w':arr(base.scene[side+'_robot'].data.root_pose_w)[0].tolist()})
+    native_hands=robot_snapshot(env,arr)
     row={'time':env._t,'phase':phase,'robot_control':control,'plug_pose':p0.tolist(),'clip_pose':c.tolist(),
          'pull_N':pull,'press_N':press,'action_14d':arr(action)[0].tolist(),'native_hands':native_hands,
          'plug_poses':{str(i):bodies[f'plug_{i}'].tolist() for i in USED},
@@ -172,7 +166,9 @@ def main():
   if robot:
    result|={'robot_grasp_probe':True,'max_tracking_error_m':max(r['robot_control']['position_error'] for r in samples),
             'final_plug_pose':samples[-1]['plug_pose'],'controller_failure':samples[-1]['robot_control'].get('failure'),
-            'controller_complete':samples[-1]['robot_control'].get('complete',False)}
+            'controller_complete':samples[-1]['robot_control'].get('complete',False),
+            'probe_step_count':len(samples),
+            'probe_end_reason':'controller_completed' if samples[-1]['robot_control'].get('complete') else 'controller_failure' if samples[-1]['robot_control'].get('failure') else 'control_step_limit'}
   if scorer is not None:result|={'diagnostic':False,'privileged_robot_attempt':True,'task_score':scorer.value,'metrics':samples[-1]['metrics']}
   (a.out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result))
  except BaseException as error:

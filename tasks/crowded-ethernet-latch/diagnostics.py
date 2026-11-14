@@ -44,3 +44,18 @@ def fit_summary(samples):
             'connectors':connectors,'task_fit_pass':all(c['task_fit_pass'] for c in connectors.values()),
             'engineering_margin_pass':all(c['engineering_margin_pass'] for c in connectors.values()),
             'pass':all(c['task_fit_pass'] for c in connectors.values())}
+
+
+def robot_snapshot(env,array):
+    """Post-step joint/FK and independent native link poses, one copy per arm."""
+    from yam_arena import ik
+    result=[]
+    for side in ('left','right'):
+        asset=env._base.scene[side+'_robot'];ids,fids=env._ids[side+'_robot']
+        joints=array(asset.data.joint_pos)[0];tcp,rotation=ik.tcp_pose(joints[ids],env.rig.bases[side])
+        links=array(asset.data.body_link_pose_w)[0]
+        result.append({'side':side,'joints':joints[ids].tolist(),'finger_joints':joints[fids].tolist(),
+                       'tcp':tcp.tolist(),'tcp_rotation':rotation.tolist(),'robot_base_w':list(env.rig.bases[side]),
+                       'robot_root_pose_w':array(asset.data.root_pose_w)[0].tolist(),
+                       'body_names':list(asset.body_names),'body_link_pose_w':links.tolist()})
+    return result

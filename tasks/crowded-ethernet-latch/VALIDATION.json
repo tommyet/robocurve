@@ -1,7 +1,7 @@
 {
-  "status": "guided_fit_validated_grasp_controller_in_progress",
+  "status": "force_balanced_grasp_candidate_pending_native",
   "date": "2026-11-14",
-  "local_model_tests_passed": 30,
+  "local_model_tests_passed": 45,
   "native_runtime": false,
   "demo_score": null,
   "video": null,
@@ -67,13 +67,18 @@
   },
   "grasp_candidate": {
     "boot_tcp_plug_local_m": [
-      -0.0395,
+      -0.038,
       -0.0035,
-      -0.0005
+      0.00024
     ],
     "wrist_rotation": "world-fixed R_GRIP",
     "native_sustained_hold_validated": false,
-    "basis": "Astra exact-capsule/full-gripper swept entry and closure certificates on three actual guided snapshots; >=0.5 mm clearance. Rear fingertip contact remains subject to native independent-jaw/slip gates."
+    "basis": "Astra exact-capsule/full-gripper swept entry and closure certificates on three actual guided snapshots; >=0.5 mm clearance. Rear fingertip contact remains subject to native independent-jaw/slip gates.",
+    "hold_opening_m": 0.00304001,
+    "predicted_opposed_normal_force_N": [
+      2.506,
+      2.494
+    ]
   },
   "work_state": "active_serial_priority",
   "full_completion_verified": false,

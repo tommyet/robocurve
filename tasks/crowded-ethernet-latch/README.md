@@ -64,8 +64,8 @@ Source: https://cdn.amphenol-cs.com/media/wysiwyg/files/drawing/p-rje7k-888-1xx0
 
 
 The current controller uses the left hand on the ordinary boot and the right
-hand's unmodified left finger on the clip. The current grasp TCP is 39.5 mm behind and 3.5 mm toward the outside
-of the measured plug origin; the ordinary finger tips reach the rear boot.
+hand's unmodified left finger on the clip. The current grasp TCP is 38.0 mm behind, 3.5 mm toward the outside and
+0.24 mm above the measured plug origin; the ordinary finger tips reach the rear boot.
 Position and approach axis follow the actual settled plug pose while the left
 wrist keeps a fixed world orientation. It narrows the jaws to a 13 mm aperture while 40 mm in front,
 then inserts and force-closes. Pressing begins after measured pose/jaw gates;
@@ -147,3 +147,11 @@ swept-shape checks cover the measured source/neighbor cable cluster, with
 at least 0.5 mm separation during entry and loaded closure. This narrow
 fingertip grasp still requires the native predicted-jaw and slip gates;
 its sustained physical hold has not been demonstrated.
+
+The force-balanced grasp candidate uses a 3.04001 mm command per jaw
+through holding and transfer. With predicted stops of 3.67787/3.40215 mm,
+the unchanged 5000 N/m PD stiffness and 69.657 g finger masses predict
+about 2.5 N opposed contact forces after gravity. This is a quasistatic
+estimate, not a force-sensor measurement or native success claim. The last
+1 mm closes over 2 s; bounded fixed-reference joint feedback continues
+during stationary closing/holding, with non-target rigid clearance checks.
