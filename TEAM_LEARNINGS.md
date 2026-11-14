@@ -2237,3 +2237,15 @@ editing, merge both agents' findings, and commit/push the update with the work.
   ignored opposite finger gravity loads; gravity-adjusted estimates1.06/1.05N
   exceed intended0.75N threshold. Sol correcting this predicate with empty-jaw
   and one-sided-contact regressions; next native trial pending.
+- Follow-up GRASP012 native PASSED: controller_complete true, no failure,
+ 390controlsteps, stable measured boot hold. Same corrected source now running
+ release013 clip-release/transfer/insertion; whole-task success remains unverified.
+
+- Release013 reproduced grasp then failed lower_press_front at633steps: actual
+  left/right TCP errors3.138/4.140mm while rightIK28um. Exact meshes confirm
+  lefttip_right99/righttip_left58 collide during low-front dogleg.
+- Release014 replaces dogleg with4s far-to-above diagonal. CPU51tests pass;
+  sampledIK<=72um, rigid sweep>=.895mm, mutual>=3.924mm. Higher25mm waypoint
+  was rejected as unreachable before GPU. Neighbor5_0 flexible contact remains
+  disclosed, not certified clear; unchanged native retention/scoring gates.
+  Native release014 running; no complete-task result yet.

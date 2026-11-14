@@ -85,12 +85,44 @@ class RobotTests(unittest.TestCase):
   rotation=np.array(spec['rotation']);point=np.array(spec['point_tcp'])
   plug=np.array(port(SERVICE));above=plug+[-.010,0,.0086]-rotation@point
   q=np.array(READY)
-  for offset in ((-.040,0,.025),(-.040,0,0),(0,0,0),(0,0,-.006),(-.025,0,-.006),(-.105,0,.044)):
+  for offset in [(-.040*(1.-s),0,.025*(1.-s)) for s in np.linspace(0.,1.,21)]+[(0,0,-.006),(-.025,0,-.006),(-.105,0,.044)]:
    q,error,angle=ik.solve(above+offset,ik.matrix_to_quat_xyzw(rotation),q,base_pos=(0,-.305,.75),iters=300)
    self.assertLess(error,.0001)
    self.assertLess(angle,.001)
 
 class BimanualGeometryTests(unittest.TestCase):
+ def test_diagonal_route_bypasses_loaded_hand(self):
+  from collision_geometry import FingerGeometry,minimum_separation
+  spec=json.loads(Path(__file__).with_name('press_point.json').read_text())
+  rotation,point=np.array(spec['rotation']),np.array(spec['point_tcp']);geometry=FingerGeometry()
+  left=[a@R_GRIP.T+BOOT_LOCAL for _,a in geometry.pieces([-.003678,-.003402])]
+  def sweep(start,end):
+   return [np.concatenate([(a-point)@rotation.T+position for position in (np.array(start),np.array(end))])
+           for _,a in geometry.pieces([-.028,-.028])]
+  far=(-.050,0,.0336);above=(-.010,0,.0086)
+  self.assertGreater(minimum_separation(left,sweep(far,above)),.0002)
+  self.assertEqual(minimum_separation(left,sweep(far,(-.050,0,.0086))),0.)
+
+ def test_press_handoff_checks_whole_leg_before_transition(self):
+  from unittest.mock import patch
+  probe=ReleaseProbe(environment(),np.array(port(SERVICE)));probe.phase='prepare_press';probe.stable_frames=4
+  measured=[probe.arm(s) for s in ('left','right')]
+  blocked={'rigid_gap_m':.01,'wire_gap_m':.01,'minimum_gap_m':.01}
+  with patch('robot.clearance',return_value=blocked),patch('robot.snapshot',return_value=({},{},{})),patch('robot.minimum_separation',return_value=0.):
+   probe.press_handoff(True,4.,4.,'approach_above_clip',4.,measured,measured[1][2]+[.04,0,0],measured[1][3])
+  self.assertEqual(probe.phase,'prepare_press')
+  self.assertIn('sweep clearance',probe.failure)
+
+ def test_flexible_cable_overlap_is_logged_without_inventing_entry_contact_ban(self):
+  from unittest.mock import patch
+  probe=ReleaseProbe(environment(),np.array(port(SERVICE)))
+  measured=[probe.arm(s) for s in ('left','right')]
+  cert={'rigid_gap_m':.01,'wire_gap_m':0.,'minimum_gap_m':0.}
+  with patch('robot.clearance',return_value=cert),patch('robot.snapshot',return_value=({},{},{})),patch('robot.minimum_separation',return_value=.01):
+   self.assertTrue(probe.certify_press_path(measured,measured[1][2]+[.04,0,0],measured[1][3],'approach_above_clip'))
+  self.assertEqual(probe.press_approach_certificate['wire_gap_m'],0.)
+  self.assertIsNone(probe.failure)
+
  def test_loaded_hands_have_separating_planes_for_entire_press_stroke(self):
   from collision_geometry import FingerGeometry,minimum_separation
   spec=json.loads(Path(__file__).with_name('press_point.json').read_text())
