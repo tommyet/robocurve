@@ -2093,3 +2093,15 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Preview geometry uses illustrative connector, fixed hair and carton proxies;
   full task mechanics/controllers remain unimplemented as VALIDATION states.
   Do not mistake these videos for demos, or change scores based on them.
+
+- Final preview runs: Ethernet 002, hair 003, carton breakdown 002, carton
+  packing 002 all exited 0. Four H.264/yuv420p composites each decode fully,
+  have 160 frames/8 s, and verified transfer hashes. Raw preview evidence:
+  artifacts/scene-previews-20261114; copies in artifacts/task-previews.
+  This is layout visibility evidence only. Hair/cables use fixed continuous
+  render curves; carton preview is fixed box proxies, not native hinge tests.
+- Visually inspected all four recorded setups, including the corrected hair
+  appearance and ordinary annular tape-roll form. No successful manipulation
+  or scores claimed. Current task implementation gaps remain unchanged.
+- No active simulator trial at session end. Compute stop requested after
+  download; final lifecycle state must be independently verified.

@@ -36,7 +36,7 @@ def build(kind):
         ball('head',(.43,0,T+.27),.074,(.78,.59,.46))
         ball('nose',(.354,0,T+.27),.012,(.78,.59,.46))
         # Long separate surface and inner locks, represented by fixed beads.
-        for k in range(22):
+        for k in range(0):
             a=2*math.pi*k/22
             for j in range(20):
                 u=j/19;r=.061+.017*u

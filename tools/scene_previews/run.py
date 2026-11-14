@@ -33,6 +33,20 @@ try:
    curve.CreateTypeAttr('linear');curve.CreateCurveVertexCountsAttr([41])
    curve.CreatePointsAttr([Gf.Vec3f(.398-.19*u,y+.018*np.sin(u*np.pi*2+i),z-.075*u) for u in np.linspace(0,1,41)])
    curve.CreateWidthsAttr([.0064]);curve.SetWidthsInterpolation('constant');curve.CreateDisplayColorAttr([Gf.Vec3f(*color)])
+ if a.kind=='hair':
+  from pxr import UsdGeom,Gf
+  # Continuous original render curves instead of beads. No dynamics claim.
+  for k,a0 in enumerate(np.linspace(-2.12,2.12,160)):
+   points=[]
+   for phi in np.linspace(.04,np.pi/2,18):
+    r=.077
+    points.append((.43+r*np.sin(phi)*np.cos(a0),r*np.sin(phi)*np.sin(a0),1.0175+r*np.cos(phi)))
+   for u in np.linspace(.025,1,24):
+    r=.077+.007*np.sin(u*3+k*.13)
+    points.append((.43+r*np.cos(a0),r*np.sin(a0),1.0175-.205*u))
+   curve=UsdGeom.BasisCurves.Define(base.scene.stage,'/World/preview_hair_'+str(k))
+   curve.CreateTypeAttr('linear');curve.CreateCurveVertexCountsAttr([len(points)])
+   curve.CreatePointsAttr([Gf.Vec3f(*v) for v in points]);curve.CreateWidthsAttr([.003]);curve.SetWidthsInterpolation('constant');curve.CreateDisplayColorAttr([Gf.Vec3f(.045+.008*(k%4),.018,.009)])
  if a.kind=='carton-packing':
   # Replace solid proxy visually with an open annular mesh; no mechanics claim.
   from pxr import UsdGeom,Gf,Usd
