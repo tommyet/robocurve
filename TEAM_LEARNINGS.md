@@ -2076,3 +2076,20 @@ measured result, evidence path, cost basis, decision and remaining uncertainty**
 Update the working guidance when evidence changes it; preserve earlier dated
 results and mark superseded conclusions explicitly. Pull the latest notes before
 editing, merge both agents' findings, and commit/push the update with the work.
+
+### 2026-11-14 — native layout previews requested for four drafts
+
+- Root, branch codex/ethernet-hair-batch: user requested videos of Ethernet,
+  hair drying, and both carton tasks. New recorder tools/scene_previews is
+  explicitly separate from task implementations. Fixed draft geometry and
+  hold-READY robot commands cannot establish task success; every frame says so.
+- Native recordings on replacement yam-eval-launchable-cb0da2 use real three-
+  camera RGB, 160 frames/20 Hz, H.264/yuv420p. No Dream calls or object pose
+  animation. First Ethernet, hair and breakdown runs exited 0; wide review
+  cameras need correcting before final delivery. Final verification pending.
+- New VM has IsaacSim 6.1.0.0, IsaacLab 17.0.2, Inspect 1.0.0 and adapter
+  0059d02a1a91bc6834c1d0846022891df0c78730. Old VMs both report FAILURE;
+  no provider cleanup/billing claim. Dream credentials absent on new VM.
+- Preview geometry uses illustrative connector, fixed hair and carton proxies;
+  full task mechanics/controllers remain unimplemented as VALIDATION states.
+  Do not mistake these videos for demos, or change scores based on them.
