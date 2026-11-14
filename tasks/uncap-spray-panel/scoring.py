@@ -63,9 +63,10 @@ class SprayScorer:
             self.invalid = 'nonmonotonic time or missing control samples'
         if min(s['can'][2], s['cap'][2]) < TOP-.03:
             self.invalid = 'can or cap dropped below table'
-        # Seated cap centre is already 87 mm above the can centre. Require
-        # 140 mm separation, not a threshold the closed cap satisfies.
-        if s['cap_detached'] and distance(s['cap'], s['can']) > .14:
+        # Compare against the actual seated location, not the can centre:
+        # the latter is already 87 mm away even when the cap is closed.
+        seated=[p+.087*u for p,u in zip(s['can'],s.get('can_axis',(0.,0.,1.)))]
+        if s['cap_detached'] and distance(s['cap'], seated) > .06:
             self.cap_removed = True
         spray = (self.cap_removed and s['button_travel'] >= PRESS_TRAVEL)
         if spray and not self.invalid:
@@ -110,7 +111,7 @@ class SprayScorer:
         cap_parked = (distance(s['cap'][:2], CAP_PAD[:2]) <= .045 and
                       abs(s['cap'][2]-(TOP+.017)) <= .012 and s['cap_speed'] < .02)
         can_parked = (distance(s['can'][:2], CAN_PAD[:2]) <= .035 and
-                      abs(s['can'][2]-(TOP+.07)) <= .012 and
+                      abs(s['can'][2]-CAN_REST_HEIGHT) <= .012 and
                       s['upright'] >= math.cos(math.radians(10)) and s['can_speed'] < .02)
         finished = (self.cap_removed and coverage >= .90 and overspray <= .15 and
                     cap_parked and can_parked and s['button_travel'] < .0005 and s['hands_clear'])

@@ -1,9 +1,8 @@
 {
-  "status": "development_prototype_not_submission_ready",
-  "checked_date": "2026-11-13",
+  "status": "physical_cap_success_spray_completion_unresolved",
+  "checked_date": "2026-11-14",
   "local_scorer_tests": {
-    "passed": 15,
-    "command": "python3 -m unittest discover -s tasks/uncap-spray-panel -p 'test_*.py' -v"
+    "passed": 19
   },
   "native_runtime_tested": true,
   "scripted_demo_score": null,
@@ -11,14 +10,11 @@
   "media": null,
   "gpu_started_for_this_task": true,
   "remaining": [
-    "Cap grasp/access and force diagnosis: first physical removal attempt did not detach cap",
-    "Cap retention and removal under ordinary robot forces",
-    "Bimanual can grasp and physical nozzle press/release",
-    "Full robot geometry spray occlusion beyond conservative TCP spheres",
-    "Coating model calibration and independent deposition audit",
-    "Feedback controller and repeated full-score sealed-start demo",
-    "Dream run with the final matching scene and scorer",
-    "Videos, screenshot, task.json and novelty recheck"
+    "Validate lower brace grip and unobstructed nozzle actuation",
+    "Complete >=90% coverage with <=15% overspray and released parking",
+    "Audit and visually review the complete capped-start successful run",
+    "Publish one composite preview in the batch video-only folder",
+    "Dream run and broader force/material calibration remain separate submission work"
   ],
   "diagnostic_probe": {
     "steps": 150,
@@ -42,5 +38,31 @@
     "height": 552,
     "successful_spray_demo": false,
     "local_path": "/Users/miyamura/Github/robocurve/artifacts/spray-panel-20261113/spray-capprobe-001/diagnostic-preview.mp4"
+  },
+  "latest_results": {
+    "spray-v2-cap-002": {
+      "score": 0.25,
+      "cap_removed": true
+    },
+    "spray-v3-full-001": {
+      "score": 0.25,
+      "coverage": 0.6785714285714286,
+      "overspray": 0.42082066104420585
+    },
+    "spray-v6-full-001": {
+      "score": 0.25,
+      "coverage": 0.8061224489795918,
+      "overspray": 0.1708384380135244
+    },
+    "spray-v7-full-001": {
+      "score": 0.25,
+      "coverage": 0.49489795918367346,
+      "overspray": 0.12690796707927954
+    },
+    "spray-contact-002": {
+      "diagnostic": true,
+      "score": 0.0,
+      "finding": "native force data indicates cross-arm interference; clearance fix prepared but not run"
+    }
   }
 }

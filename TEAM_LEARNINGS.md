@@ -61,6 +61,65 @@ developers and their agents, not a competition submission document.
 ## Review findings
 
 
+### 2026-11-14 — spray contact diagnosis and bounded session stop
+
+- Root, codex/uncap-spray-object. Visual stand/contrast changes and a native
+  feedback side-grip controller are implemented. Cap removal/parking succeeds
+  physically. No full-score spraying run exists yet; do not claim completion.
+- Best completed coverage was spray-v6-full-001: 80.61%, 17.08% overspray,
+  score 0.25. Later steady aimed passes achieved 12.69% overspray but only
+  49.49% coverage. Scoring thresholds remain 90% coverage / 15% overspray.
+  Never relabel these as successful demos. All runs used ordinary arm targets;
+  no can weld, pose writes, handles or increased actuator limits.
+- Added finite can-body torsional patch radius 3 mm/minimum 1.5 mm, an explicit
+  uncalibrated finger-pad approximation. Aimed dwell and piston-travel feedback
+  are still insufficient because of contact interference. Original positive
+  finger target bug was fixed; three regression checks plus the scorer suite
+  bring local tests to 19 passed.
+- Legacy Omni contact callbacks returned no data in this installed backend.
+  Native Isaac Lab contact sensors do work: the unscored press probe reports
+  button forces around 3.6 N at 1.98 mm depression, then right-finger net
+  forces up to 71.5 N without matching can/button contact. This indicates
+  other-arm interference; add a left-arm filter to confirm it in the next
+  probe. Do not treat empty legacy callbacks as absence of physical contacts.
+- Prepared a lower body brace grip, with an ordinary 80x80x50 mm support block
+  beneath the can at start/return. It enables the lower grasp without a fixture
+  lock; the can is still lifted and free during spraying. Target size and
+  coverage/overspray limits unchanged. New geometry is not yet runtime-verified.
+- Native --stage press starts uncapped for diagnosis and task scoring is
+  forcibly zero; only --stage full capped-start evidence can establish success.
+- Independent bounded supervisor reached its deadline and stopped the existing
+  VM. Both shared VMs verified STOPPED at 01:22 UTC, before further GPU work.
+  User explicitly requested compute off after batch completion; also stop
+  between sessions and verify state. Current code/force traces remain saved;
+  contact trace is ignored locally at artifacts/spray-panel-20261114/contact-002.jsonl.
+- User added crowded 4x2 Ethernet latch and long-hair drying jobs, saved in
+  codex/ethernet-hair-batch (5f06158). Both remain engineering kernels, not
+  completed simulations. All five requested task previews ultimately go in
+  artifacts/task-previews/, MP4 files only, one composite each. No new upstream
+  submission authorized. Parallel-agent preference was asked but unanswered;
+  continue sequentially unless explicitly selected.
+
+
+
+### 2026-11-14 — spray correction session begins
+
+- Operator root, existing branch codex/uncap-spray-object. User authorized
+  realistic stand, orange/dark cap contrast and completing cap/nozzle/spray.
+- Diagnosed prior cap failure: positive Waypoint finger values were divided
+  by negative FINGER_OPEN and clipped closed. Pinned source confirms finger
+  targets are -0.04695..0 metres. Fixed signs; new feedback side grasps avoid
+  overlapping vertical wrists. Local source IK checks reject the first
+  horizontal grip orientation at wrist limit; flipping parallel fingers by
+  180 degrees yields reachable left-side orientation.
+- Preparing native cap-only then full robot rollouts, consecutively on
+  yam-eval-launchable-72837c. Both VMs read STOPPED first. No Dream requests or
+  new submission planned. Stand feet/posts/braces and neutral work surface
+  replace the single-post display. No grasp handles added to can/cap.
+- Completion, runtime evidence and STOPPED confirmation follow below.
+
+
+
 ### 2026-11-13 — spray cap diagnostic recorded; carton mechanics drafts checked
 
 - Root agent completed two no-model native spray runs on the existing L40S:

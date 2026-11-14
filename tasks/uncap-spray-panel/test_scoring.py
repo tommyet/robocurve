@@ -8,7 +8,7 @@ from scoring import SprayScorer
 
 def sample(**changes):
     s=dict(time=0.,can=CAN_START,cap=CAP_START,button_travel=0.,
-           nozzle=(.23,0.,TARGET_CENTER[1]),axis=(1.,0.,0.),
+           nozzle=(TARGET_X-.20,0.,TARGET_CENTER[1]),axis=(1.,0.,0.),
            can_speed=0.,cap_speed=0.,upright=1.,cap_detached=False,hands_clear=False)
     s.update(changes)
     return s
@@ -34,12 +34,12 @@ class ScoringTests(unittest.TestCase):
         self.assertEqual(t.value,.25);self.assertEqual(t.emitted,0)
 
     def test_wrong_facing_is_overspray(self):
-        t=SprayScorer();s=sample(cap_detached=True,cap=(.13,-.22,TOP+.017),button_travel=.003,axis=(-1.,0.,0.))
+        t=SprayScorer();s=sample(cap_detached=True,cap=(CAP_PAD[0],CAP_PAD[1],TOP+.017),button_travel=.003,axis=(-1.,0.,0.))
         t.update(s);self.tick(t,s,20)
         self.assertEqual(t.result()['overspray'],1);self.assertFalse(any(t.dose))
 
     def test_far_spray_no_credit(self):
-        t=SprayScorer();s=sample(cap_detached=True,cap=(.13,-.22,TOP+.017),button_travel=.003,nozzle=(0.,0.,TARGET_CENTER[1]))
+        t=SprayScorer();s=sample(cap_detached=True,cap=(CAP_PAD[0],CAP_PAD[1],TOP+.017),button_travel=.003,nozzle=(0.,0.,TARGET_CENTER[1]))
         t.update(s);self.tick(t,s,20)
         self.assertFalse(any(t.dose));self.assertEqual(t.result()['overspray'],1)
 
@@ -48,14 +48,14 @@ class ScoringTests(unittest.TestCase):
         t.update(s);self.assertEqual(t.value,0)
 
     def test_center_spray_coats_only_footprint(self):
-        t=SprayScorer();s=sample(cap_detached=True,cap=(.13,-.22,TOP+.017),button_travel=.003)
+        t=SprayScorer();s=sample(cap_detached=True,cap=(CAP_PAD[0],CAP_PAD[1],TOP+.017),button_travel=.003)
         t.update(s);self.tick(t,s,40)
         self.assertGreater(t.result()['coverage'],.1)
         self.assertLess(t.result()['coverage'],.5)
         self.assertLess(t.result()['overspray'],.15)
 
     def test_budget_is_finite(self):
-        t=SprayScorer();s=sample(cap_detached=True,cap=(.13,-.22,TOP+.017),button_travel=.003)
+        t=SprayScorer();s=sample(cap_detached=True,cap=(CAP_PAD[0],CAP_PAD[1],TOP+.017),button_travel=.003)
         t.update(s);self.tick(t,s,300)
         self.assertAlmostEqual(t.spray_seconds,MAX_SPRAY_SECONDS)
         doses=copy.copy(t.dose);self.tick(t,s,20);self.assertEqual(doses,t.dose)
@@ -96,8 +96,8 @@ class ScoringTests(unittest.TestCase):
         self.assertEqual(t.value,.25)
 
     def test_hand_in_spray_blocks_target(self):
-        t=SprayScorer();s=sample(cap_detached=True,cap=(.13,-.22,TOP+.017),
-                               button_travel=.003,hand_tcp=[(.25,0.,TARGET_CENTER[1])])
+        t=SprayScorer();s=sample(cap_detached=True,cap=(CAP_PAD[0],CAP_PAD[1],TOP+.017),
+                               button_travel=.003,hand_tcp=[(TARGET_X-.18,0.,TARGET_CENTER[1])])
         t.update(s);self.tick(t,s,20)
         self.assertFalse(any(t.dose))
 
@@ -105,5 +105,20 @@ class ScoringTests(unittest.TestCase):
         t=SprayScorer();s=sample(cap_detached=True,button_travel=.003)
         t.update(s);self.tick(t,s,20)
         self.assertEqual(t.emitted,0.)
+
+    def test_geometric_coating_path_then_release_can_reach_full_score(self):
+        # A synthetic measured-state path checks the complete deposition and
+        # release rubric. It is not a robot-feasibility demonstration.
+        t=SprayScorer();s=sample(cap_detached=True,cap=(CAP_PAD[0],CAP_PAD[1],TOP+.017))
+        t.update(s)
+        for y in (-.035,.035):
+            for z in (-.035,.035):
+                s['can']=(CAN_START[0],y,TARGET_CENTER[1]-.077+z)
+                s['nozzle']=(CAN_START[0]+.009,y,TARGET_CENTER[1]+z)
+                s['button_travel']=.0027;self.tick(t,s,16)
+        self.assertGreaterEqual(t.result()['coverage'],.9)
+        self.assertLess(t.result()['overspray'],.15)
+        s.update(can=CAN_START,button_travel=0.,hands_clear=True)
+        self.tick(t,s,21);self.assertEqual(t.value,1.)
 
 if __name__=='__main__':unittest.main()
