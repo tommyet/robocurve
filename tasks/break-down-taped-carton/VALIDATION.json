@@ -30,5 +30,7 @@
     "back_fold_cells": 0,
     "max_crease_separation_m": 0.0004282501
   },
-  "superseded_geometry_note": "Unshifted -275 degree D6 limit was clamped to -180 by PhysX, pulling folded-back top flaps closed. Current top joints use a -135 degree local reference frame, with supported relative limits; native validation pending."
+  "superseded_geometry_note": "Unshifted -275 degree D6 limit was clamped to -180 by PhysX, pulling folded-back top flaps closed. Current top joints use a -135 degree local reference frame, with supported relative limits; native validation pending.",
+  "work_state": "paused_by_user_serial_ethernet_priority",
+  "full_completion_verified": false
 }

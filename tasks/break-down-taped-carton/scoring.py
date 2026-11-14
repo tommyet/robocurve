@@ -3,7 +3,7 @@
 The future native adapter must derive all inputs from live body/contact state.
 It must not expose these fields as policy controls or mutate them to progress.
 """
-from math import isfinite
+from math import isfinite,sin,cos,radians
 from model import BladeCoverage
 
 
@@ -33,11 +33,15 @@ class BreakdownScorer:
         self.coverage.update(s['blade_tip_local'],s['blade_alignment'],s['cutter_held'],dt)
         bottom_open=all(a >= 150. for a in s['bottom_angles'])
         if self.coverage.complete and bottom_open:self.opened=True
-        # Entire carton must rest flat on the table, with all eight flaps open.
+        # Opening >=150 degrees is a historical manipulation requirement.
+        # Final flattening requires each flap coplanar with its wall (90/270
+        # degrees), not still perpendicular to that wall at 180 degrees.
+        # Entire carton must rest flat on the table, including all eight flaps.
         # Heights refer to all actual cardboard vertices, not one root body.
         flat=(s['max_height']-s['min_height'] <= .024 and
               -.002 <= s['min_height'] <= .008 and s['max_height'] <= .030)
-        ready=(self.opened and bottom_open and all(a >= 150. for a in s['top_angles']) and
+        coplanar=all(abs(sin(radians(a)))>=cos(radians(15.)) for a in [*s['bottom_angles'],*s['top_angles']])
+        ready=(self.opened and coplanar and
                flat and s['carton_speed'] < .01 and s['cutter_parked'] and s['hands_clear'])
         self.hold=self.hold+dt if ready else 0.
         self.value=(0. if self.invalid else 1. if self.hold >= 1. else

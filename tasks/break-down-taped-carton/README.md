@@ -86,3 +86,60 @@ with no task score. A completed task still requires robot turnover, measured
 blade cuts, four bottom flaps physically opened, intact collapse and released
 flatness. Every probe freezes its sources; `error.json` invalidates it even if
 Kit returns exit code 0. See `VALIDATION.json` for recorded limitations.
+
+Scoring clarification: the robot must first open all four bottom flaps through
+at least150 degrees after cutting all three tape paths. This is recorded from
+measured hinge angles. During subsequent flattening, the flaps return to a
+wall-coplanar90/270-degree fold; requiring150-degree angles at the flat finish
+would physically contradict the24mm total-cardboard slab criterion. Final
+credit requires every flap within15 degrees of its wall plane, all cardboard
+vertices within the slab, intact creases, parked cutter and released hands.
+
+## Feedback cutter and flap diagnostics
+
+The cutter controller retains the ordinary seven-second pickup prefix, then
+calibrates the measured TCP/tool transform after checking native cutter height,
+finger opening and hand distance. Cutting uses the rotated TCP-to-blade offset:
+turning the tool also changes the required TCP translation. Separate staging,
+orientation, hover, lowering, cutting and lifting phases advance only when the
+actual blade follows the current command and settles at the endpoint. Tool
+travel pauses above 6 mm tracking error or 0.07 rad orientation error. Elapsed
+time can cause an explicit failure; it cannot advance the cut to the next path.
+The scorer still counts only actual native blade sweeps.
+
+In the earlier cut005 trace the timed seam started while the blade was still
+162 mm from its start; at 20 s it remained 129 mm behind the moving target.
+The same trace later reached 0.23 mm error on the front fold. A CPU FK check
+also found the old diagonal seam hover intrinsically unreachable by about
+25 mm. The revised seam uses the opposite tool direction, keeping the TCP on
+the reachable side, and a 20 mm blade clearance rather than that high hover.
+These observations diagnose tracking/endpoint problems; they do not establish
+whether native inter-arm or carton collisions occurred. That trace omitted the
+actual arm joints needed to reconstruct all robot collision meshes.
+
+The flap gripper basis puts its Y axis along the edge and its X closing axis
+across it. Approach and entry now require actual pose alignment; pinching needs
+a measured 2.3–15 mm finger gap at the edge. Rotation must produce at least
+5 degrees of actual flap movement and keep the acquired TCP/flap offset;
+measured slipping or stalled motion fails the diagnostic. No grasp weld,
+object-pose write or automatic flap opening is used.
+
+Every new trace records normalized fourteen-dimensional actions, native arm and
+finger joints, and FK TCP positions/rotations for both arms. Cutter reports
+include actual/commanded/endpoint blade positions, orientation error and path
+progress. The cut probe has at most 3,600 controls (180 s), stopping early on
+controller failure or completion of its cutting/parking attempt. Completion of
+this probe is not a full carton-breakdown demonstration.
+
+Twenty-three CPU tests pass with NumPy available:
+
+```bash
+/private/tmp/robocurve-media-env/bin/python -m unittest discover -s tasks/break-down-taped-carton -p 'test_*.py' -v
+python3 -m compileall -q tasks/break-down-taped-carton
+```
+
+An ideal attached-tool FK dry run reached every revised cutting/parking phase
+in 63.8 simulated seconds without an IK failure. It assumes perfect joint
+tracking and rigid tool retention and includes no contacts; it is not native
+physics evidence. Native grip retention, blade alignment under load, inter-arm
+clearance and all four physical flap grasps remain to be tested.

@@ -42,5 +42,7 @@
     "max_anchor_separation_m": 0.000432,
     "passes_strain_limit": false
   },
-  "invalidated_result": "packing-native-002 displacement began before loading and was not causal peel evidence; superseded by geometry and initial-wrap negative-control fixes."
+  "invalidated_result": "packing-native-002 displacement began before loading and was not causal peel evidence; superseded by geometry and initial-wrap negative-control fixes.",
+  "work_state": "paused_by_user_serial_ethernet_priority",
+  "full_completion_verified": false
 }

@@ -50,7 +50,9 @@ def layout(top_angle=160.,bottom_angle=0.):
             hinges.append(dict(name=flap+'_hinge',a=name,b=flap,axis='X',
                                anchor_a=(0.,0.,hinge[2]-center[2]),anchor_b=(0.,depth/2,0.),
                                low=-175. if end=='top' else 0.,high=0. if end=='top' else 175.,
-                               spring=.003,target=sign*160.,sealed=end=='bottom' and name in ('north','south')))
+                               # USD angular drives use torque per degree, not per radian.
+                               # Weak worn top-crease memory; gravity can retain closure.
+                               spring=.00002 if end=='top' else .003,target=sign*160.,sealed=end=='bottom' and name in ('north','south')))
     # Corner anchors are expressed in each body's local frame.
     corners=[(L/2,W/2,H/2),(L/2,-W/2,H/2),(-L/2,-W/2,H/2),(-L/2,W/2,H/2)]
     for i,(name,center,_,yaw) in enumerate(walls):

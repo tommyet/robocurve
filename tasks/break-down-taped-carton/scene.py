@@ -7,6 +7,7 @@ clearance require a real PhysX probe before claiming flattening works.
 import math
 from pathlib import Path
 from model import LENGTH as L,WIDTH as W,HEIGHT as H,BOARD as T
+from crease import BOTTOM_CENTER,BOTTOM_LOW,BOTTOM_HIGH,BOTTOM_OFFSET,joint_parameters
 
 
 def rotate_z(v,angle):
@@ -43,14 +44,24 @@ def layout(top_angle=270.,bottom_angle=0.):
             outset=T if end=='top' else 0.
             hinge=add(center,rotate_z((0.,outset,(H/2-inset)*(1 if end=='top' else -1)),yaw))
             depth=W/2 if end=='top' else W/2-T
-            offset=rotate_z(rotate_x((0.,-depth/2,0.),theta),yaw)
+            # Shift BOTH bottom anchor Z values. At angle zero their shifts
+            # cancel exactly; nonzero poses must be rebuilt from those anchors.
+            shift=BOTTOM_OFFSET if end=='bottom' else 0.
+            anchor_a=(0.,outset,hinge[2]-center[2]-shift)
+            anchor_b=(0.,depth/2,-shift)
+            relative=tuple(a-b for a,b in zip(anchor_a,rotate_x(anchor_b,theta)))
             flap=name+'_'+end
-            parts.append(dict(name=flap,pos=add(hinge,offset),quat=quat(yaw,theta),
+            parts.append(dict(name=flap,pos=add(center,rotate_z(relative,yaw)),quat=quat(yaw,theta),
                               size=(length-2*T,depth,T),mass=.018))
             hinges.append(dict(name=flap+'_hinge',a=name,b=flap,axis='X',
-                               anchor_a=(0.,outset,hinge[2]-center[2]),anchor_b=(0.,depth/2,0.),
-                               low=-275. if end=='top' else -85.,high=0. if end=='top' else 175.,
-                               spring=.0002 if end=='top' else .004,target=-top_angle if end=='top' else 90.,sealed=end=='bottom' and name in ('north','south')))
+                               anchor_a=anchor_a,anchor_b=anchor_b,
+                               low=-275. if end=='top' else BOTTOM_LOW,
+                               high=0. if end=='top' else BOTTOM_HIGH,
+                               frame_center=-135. if end=='top' else BOTTOM_CENTER,
+                               spring=.0002 if end=='top' else 0.,
+                               damping=.001,drive_units='degrees' if end=='top' else 'radians',
+                               target=-top_angle if end=='top' else BOTTOM_CENTER,
+                               sealed=end=='bottom' and name in ('north','south')))
     # Corner anchors are expressed in each body's local frame.
     corners=[(L/2,W/2,H/2),(L/2,-W/2,H/2),(-L/2,-W/2,H/2),(-L/2,W/2,H/2)]
     for i,(name,center,_,yaw) in enumerate(walls):
@@ -59,7 +70,7 @@ def layout(top_angle=270.,bottom_angle=0.):
         b=rotate_z(tuple(v-c for v,c in zip(corner,next_center)),-next_yaw)
         hinges.append(dict(name='corner_'+str(i),a=name,b=next_name,axis='Z',
                            anchor_a=a,anchor_b=b,low=-180.,high=180.,
-                           spring=.002,target=-90.,sealed=False))
+                           spring=.002,damping=.001,drive_units='radians',target=-90.,sealed=False))
     return parts,hinges
 
 
@@ -89,16 +100,15 @@ def export(path,sealed_bottom=True):
         joint.CreateAxisAttr(h['axis'])
         joint.CreateLocalPos0Attr(Gf.Vec3f(*h['anchor_a']))
         joint.CreateLocalPos1Attr(Gf.Vec3f(*h['anchor_b']))
-        lock=sealed_bottom and h['sealed']
-        shift=135. if h['b'].endswith('_top') else 0.
-        if shift:joint.CreateLocalRot0Attr(Gf.Quatf(math.cos(math.radians(-shift)/2),Gf.Vec3f(math.sin(math.radians(-shift)/2),0,0)))
-        joint.CreateLowerLimitAttr(0. if lock else h['low']+shift)
-        joint.CreateUpperLimitAttr(0. if lock else h['high']+shift)
+        parameters=joint_parameters(h,sealed_bottom)
+        center=parameters['center']
+        if center:joint.CreateLocalRot0Attr(Gf.Quatf(math.cos(math.radians(center)/2),Gf.Vec3f(math.sin(math.radians(center)/2),0,0)))
+        joint.CreateLowerLimitAttr(parameters['low']);joint.CreateUpperLimitAttr(parameters['high'])
         joint.CreateExcludeFromArticulationAttr(True)
-        joint.CreateCollisionEnabledAttr(False)
+        joint.CreateCollisionEnabledAttr(parameters['collision_enabled'])
         drive=UsdPhysics.DriveAPI.Apply(joint.GetPrim(),'angular')
-        drive.CreateTypeAttr('force');drive.CreateTargetPositionAttr(h['target']+shift)
-        drive.CreateStiffnessAttr(h['spring']);drive.CreateDampingAttr(.001)
+        drive.CreateTypeAttr('force');drive.CreateTargetPositionAttr(parameters['target'])
+        drive.CreateStiffnessAttr(parameters['stiffness']);drive.CreateDampingAttr(parameters['damping'])
     stage.GetRootLayer().Save();return str(Path(path).resolve())
 
 if __name__=='__main__':

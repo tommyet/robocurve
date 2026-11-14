@@ -6,6 +6,12 @@ native deformable/ribbon mechanics, not a sequence-triggered state machine.
 from math import isfinite
 from model import TapeLedger
 
+# Two 3 mm bottom-board layers support the products at 6 mm in the carton
+# frame. Native contact solves can settle a few micrometres into that plane;
+# allow at most 0.2 mm here without relaxing side or upper containment bounds.
+NOMINAL_FLOOR_HEIGHT=.006
+FLOOR_CONTACT_TOLERANCE=.0002
+
 
 class PackingScorer:
     def __init__(self):
@@ -30,7 +36,7 @@ class PackingScorer:
         if self.tape.invalid:self.invalid=self.tape.invalid
         # Item AABBs in carton frame, both wholly inside with clearance; no
         # root-centre shortcuts or objects protruding through side walls.
-        inside=all(all(lo >= bound for lo,bound in zip(item['local_min'],(-.104,-.084,.006))) and
+        inside=all(all(lo >= bound for lo,bound in zip(item['local_min'],(-.104,-.084,NOMINAL_FLOOR_HEIGHT-FLOOR_CONTACT_TOLERANCE))) and
                    all(hi <= bound for hi,bound in zip(item['local_max'],(.104,.084,.092))) and
                    item['speed'] < .02 for item in s['items'])
         closed=all(abs(a) <= 5. for a in s['flap_angles']) and s['inner_flaps_under_outer']

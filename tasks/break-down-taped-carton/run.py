@@ -4,6 +4,7 @@ from pathlib import Path
 from config import *
 from scene import layout
 from model import WIDTH,HEIGHT
+from crease import physical_bottom_angle,joint_parameters
 
 def main():
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True);p.add_argument('--mode',choices=['dynamics','grip-probe','cut-probe','open-probe'],default='dynamics');p.add_argument('--unsealed',action='store_true',help='Explicit unscored starting condition for folding diagnostics');a=p.parse_args();
@@ -59,7 +60,7 @@ def main():
   tracker=BreakdownScorer() if a.mode=='cut-probe' else None;released=False;previous_positions=None;previous_cutter=None
   if tracker is not None:task._tracker=tracker;task._diagnostic=False
   with (a.out/'trajectory.jsonl').open('w') as trace:
-   for step in range(2400 if a.mode=='open-probe' else 1200 if a.mode=='cut-probe' else 440 if robot else 180):
+   for step in range(2400 if a.mode=='open-probe' else 3600 if a.mode=='cut-probe' else 440 if robot else 180):
     phase='settle' if step<60 else 'wall_load' if step<120 else 'release'
     f=(0.,-.25,0.) if phase=='wall_load' and not robot else (0.,0.,0.)
     base.scene['east'].permanent_wrench_composer.set_forces_and_torques_index(forces=torch.tensor([[f]],device=base.device),torques=torch.zeros((1,1,3),device=base.device),is_global=True)
@@ -73,14 +74,18 @@ def main():
     for h in hs:
      pa=pp[h['a']][:3]+rr[h['a']]@np.array(h['anchor_a']);pb=pp[h['b']][:3]+rr[h['b']]@np.array(h['anchor_b']);sep=max(sep,float(np.linalg.norm(pa-pb)))
      rel=rr[h['a']].T@rr[h['b']]
-     angles[h['name']]=float(np.degrees(np.arctan2(rel[2,1],rel[1,1]) if h['axis']=='X' else np.arctan2(rel[1,0],rel[0,0])))
+     raw=float(np.degrees(np.arctan2(rel[2,1],rel[1,1]) if h['axis']=='X' else np.arctan2(rel[1,0],rel[0,0])))
+     angles[h['name']]=physical_bottom_angle(raw) if h['b'].endswith('_bottom') else raw
     vertices=[]
     for s in parts:
      for x in [-1,1]:
       for y in [-1,1]:
        for z in [-1,1]:vertices.append(pp[s['name']][:3]+rr[s['name']]@(.5*np.array(s['size'])*np.array((x,y,z))))
     vertices=np.array(vertices);low=float(vertices[:,2].min()-TOP);high=float(vertices[:,2].max()-TOP);worst=max(worst,sep);minz=min(minz,low);bestflat=min(bestflat,high-low)
-    row={'time':env._t,'phase':phase,'robot_control':control,'poses':{n:v.tolist() for n,v in pp.items()},'angles_deg':angles,'max_crease_separation_m':sep,'lowest_vertex_m':low,'highest_vertex_m':high,'force_N':f}
+    native_hands=[]
+    for side in ['left','right']:
+     ids,fids=env._ids[side+'_robot'];qnative=arr(base.scene[side+'_robot'].data.joint_pos)[0];tcpnative,rnative=ik.tcp_pose(qnative[ids],env.rig.bases[side]);native_hands.append({'side':side,'joints':qnative[ids].tolist(),'finger_joints':qnative[fids].tolist(),'tcp':tcpnative.tolist(),'tcp_rotation':rnative.tolist(),'opening':float(np.clip(qnative[fids].mean()/FINGER_OPEN,0,1))})
+    row={'time':env._t,'phase':phase,'robot_control':control,'action_14d':arr(action)[0].tolist(),'native_hands':native_hands,'cutter_pose':pose('cutter').tolist(),'poses':{n:v.tolist() for n,v in pp.items()},'angles_deg':angles,'max_crease_separation_m':sep,'lowest_vertex_m':low,'highest_vertex_m':high,'force_N':f}
     if tracker is not None:
      cutter=pose('cutter');cr=quat_xyzw_to_matrix(cutter[3:]);tip=cutter[:3]+cr@np.array((.062,0,-.020));reference=rr['north'];origin=pp['north'][:3]-reference@np.array((0,WIDTH/2,HEIGHT/2));localtip=reference.T@(tip-origin);hands=[];held=False
      for side in ['left','right']:
@@ -91,18 +96,18 @@ def main():
      row['score_sample']=sample;row['metrics']=tracker.update(sample);row['cutter_pose']=cutter.tolist()
      if tracker.coverage.complete and not released:
       for name in ['north','south']:
-       joint=UsdPhysics.RevoluteJoint(base.scene.stage.GetPrimAtPath(f'/World/envs/env_0/{name}_bottom/{name}_bottom_hinge'));joint.GetLowerLimitAttr().Set(-85.);joint.GetUpperLimitAttr().Set(175.)
+       joint=UsdPhysics.RevoluteJoint(base.scene.stage.GetPrimAtPath(f'/World/envs/env_0/{name}_bottom/{name}_bottom_hinge'));parameters=joint_parameters(next(h for h in hs if h['name']==name+'_bottom_hinge'));joint.GetLowerLimitAttr().Set(parameters['low']);joint.GetUpperLimitAttr().Set(parameters['high'])
       released=True
     trace.write(json.dumps(row)+'\n')
     if not np.isfinite(vertices).all() or sep>.03:raise RuntimeError('unstable carton/crease failure')
     panels=review.panels(base);canvas=np.zeros((594,960,3),dtype=np.uint8);canvas[36:306,240:720]=panels[0];canvas[306:576,:480]=panels[1];canvas[306:576,480:]=panels[2]
     cv2.putText(canvas,('CARTON ROBOT GRIP PROBE | ' if robot else 'NATIVE CARTON | ')+phase+(' | unsealed diagnostic' if a.unsealed else ' | sealed bottom'),(12,25),cv2.FONT_HERSHEY_SIMPLEX,.57,(255,255,255),1,cv2.LINE_AA);cv2.putText(canvas,(('Measured cutting score: '+str(tracker.value)+' | incomplete task attempt' if tracker else 'Ordinary robot commands. Rim grip/lift diagnostic, not task completion.') if robot else 'Free rigid panels and physical creases. Force probe, not robot completion.'),(12,590),cv2.FONT_HERSHEY_SIMPLEX,.45,(255,205,120),1,cv2.LINE_AA);video.append_data(canvas)
     if step in (59,119,179,279,399,599,799,999,1199):imageio.imwrite(a.out/f'step-{step}.png',canvas)
-    if robot is not None and getattr(robot,"failure",None):break
+    if robot is not None and (getattr(robot,"failure",None) or getattr(robot,"done",False)):break
     if a.mode=='open-probe' and robot.index>=4:break
   result={'diagnostic':True,'task_score':None,'unsealed_start':a.unsealed,'max_crease_separation_m':worst,'lowest_vertex_m':minz,'smallest_height_span_m':bestflat,'checks':{'creases_intact':worst<.004,'above_table':minz>-.004}}
   if a.mode=='open-probe':result|={'controller_failure':robot.failure,'flaps_completed':robot.index,'final_angles_deg':angles}
-  if tracker is not None:result|={'diagnostic':False,'task_score':tracker.value,'privileged_robot_attempt':True,'metrics':tracker.result(),'bottom_up_start':True}
+  if tracker is not None:result|={'diagnostic':False,'task_score':tracker.value,'privileged_robot_attempt':True,'metrics':tracker.result(),'bottom_up_start':True,'controller_failure':robot.failure,'controller_completed_cut_attempt':robot.done}
   (a.out/'result.json').write_text(json.dumps(result,indent=2)+'\n')
  except BaseException as error:
   import traceback;traceback.print_exc();(a.out/'error.json').write_text(json.dumps({'error':str(error),'type':type(error).__name__},indent=2));raise

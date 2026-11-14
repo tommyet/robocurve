@@ -9,6 +9,7 @@ from pxr import Usd,UsdGeom,UsdPhysics,PhysxSchema,Gf
 from model import BOARD as T,HEIGHT as H,WIDTH as W
 from config import *
 from scene import layout
+from crease import joint_parameters
 
 def box(s,p,size,pos,color,collision=True):
  c=UsdGeom.Cube.Define(s,p);c.CreateSizeAttr(1.);c.AddTranslateOp().Set(Gf.Vec3d(*pos));c.AddScaleOp().Set(Gf.Vec3f(*size));c.CreateDisplayColorAttr([Gf.Vec3f(*color)])
@@ -35,7 +36,9 @@ def install_joints(stage,parent,sealed=True):
  _,hs=layout()
  for h in hs:
   j=UsdPhysics.RevoluteJoint.Define(stage,parent+'/'+h['b']+'/'+h['name'])
-  j.CreateBody0Rel().SetTargets([parent+'/'+h['a']]);j.CreateBody1Rel().SetTargets([parent+'/'+h['b']]);j.CreateAxisAttr(h['axis']);j.CreateLocalPos0Attr(Gf.Vec3f(*h['anchor_a']));j.CreateLocalPos1Attr(Gf.Vec3f(*h['anchor_b']));lock=sealed and h['sealed'];shift=135. if h['b'].endswith('_top') else 0.;
-  if shift:j.CreateLocalRot0Attr(Gf.Quatf(math.cos(math.radians(-shift)/2),Gf.Vec3f(math.sin(math.radians(-shift)/2),0,0)))
-  j.CreateLowerLimitAttr(0. if lock else h['low']+shift);j.CreateUpperLimitAttr(0. if lock else h['high']+shift);j.CreateExcludeFromArticulationAttr(True);j.CreateCollisionEnabledAttr(False)
-  d=UsdPhysics.DriveAPI.Apply(j.GetPrim(),'angular');d.CreateTypeAttr('force');d.CreateTargetPositionAttr(h['target']+shift);d.CreateStiffnessAttr(h['spring']);d.CreateDampingAttr(.001)
+  j.CreateBody0Rel().SetTargets([parent+'/'+h['a']]);j.CreateBody1Rel().SetTargets([parent+'/'+h['b']]);j.CreateAxisAttr(h['axis']);j.CreateLocalPos0Attr(Gf.Vec3f(*h['anchor_a']));j.CreateLocalPos1Attr(Gf.Vec3f(*h['anchor_b']))
+  parameters=joint_parameters(h,sealed)
+  center=parameters['center']
+  if center:j.CreateLocalRot0Attr(Gf.Quatf(math.cos(math.radians(center)/2),Gf.Vec3f(math.sin(math.radians(center)/2),0,0)))
+  j.CreateLowerLimitAttr(parameters['low']);j.CreateUpperLimitAttr(parameters['high']);j.CreateExcludeFromArticulationAttr(True);j.CreateCollisionEnabledAttr(parameters['collision_enabled'])
+  d=UsdPhysics.DriveAPI.Apply(j.GetPrim(),'angular');d.CreateTypeAttr('force');d.CreateTargetPositionAttr(parameters['target']);d.CreateStiffnessAttr(parameters['stiffness']);d.CreateDampingAttr(parameters['damping'])

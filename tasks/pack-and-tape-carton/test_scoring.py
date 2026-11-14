@@ -1,6 +1,6 @@
 import unittest
 from model import TapeLedger,MIN_STRIP,OUTER_RADIUS
-from scoring import PackingScorer
+from scoring import PackingScorer,NOMINAL_FLOOR_HEIGHT,FLOOR_CONTACT_TOLERANCE
 
 
 def state(**changes):
@@ -24,6 +24,22 @@ def sealed():
 class Tests(unittest.TestCase):
     def test_packed_items_earn_only_quarter(self):
         t=PackingScorer();t.update(state());self.assertEqual(t.value,.25)
+
+    def test_floor_contact_solver_settling_still_counts_as_contained(self):
+        s=state()
+        for item,height in zip(s['items'],(.005988815,.005992245)):
+            item['local_min']=(*item['local_min'][:2],height)
+        t=PackingScorer();t.update(s);self.assertEqual(t.value,.25)
+
+    def test_floor_penetration_beyond_contact_tolerance_rejected(self):
+        s=state();item=s['items'][0]
+        item['local_min']=(*item['local_min'][:2],NOMINAL_FLOOR_HEIGHT-FLOOR_CONTACT_TOLERANCE-.000001)
+        t=PackingScorer();t.update(s);self.assertEqual(t.value,0.)
+
+    def test_floor_contact_tolerance_does_not_relax_sides_or_lid(self):
+        for field,index,value in [('local_min',0,-.104001),('local_min',1,-.084001),('local_max',2,.092001)]:
+            s=state();values=list(s['items'][0][field]);values[index]=value;s['items'][0][field]=values
+            t=PackingScorer();t.update(s);self.assertEqual(t.value,0.)
 
     def test_no_root_center_shortcut_for_item_protruding(self):
         t=PackingScorer();s=state();s['items'][0]['local_max']=(.15,.025,.038)

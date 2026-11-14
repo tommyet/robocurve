@@ -52,11 +52,14 @@ class Tests(unittest.TestCase):
 
     def test_full_score_requires_eight_flaps_and_flat_released_hold(self):
         t=BreakdownScorer();s=state();t.update(s);cut_all(t,s)
-        s.update(bottom_angles=[160.]*4,min_height=.002,max_height=.022,
-                 cutter_held=False,cutter_parked=True,hands_clear=True)
+        s.update(bottom_angles=[160.]*4,cutter_held=False)
+        s['time']+=.05;t.update(s)
+        self.assertEqual(t.value,.5)
+        s.update(bottom_angles=[90.]*4,top_angles=[270.]*4,min_height=.002,max_height=.022,
+                 cutter_parked=True,hands_clear=True)
         for _ in range(21):s['time']+=.05;t.update(s)
         self.assertEqual(t.value,1.)
-        s['top_angles'][0]=100.;s['time']+=.05;t.update(s)
+        s['top_angles'][0]=0.;s['time']+=.05;t.update(s)
         self.assertEqual(t.value,.5)
 
     def test_destroying_carton_never_counts(self):
@@ -83,3 +86,19 @@ class BladeEdgeDepthTests(unittest.TestCase):
         m=BladeCoverage()
         for i in range(111):m.update((-.11+.002*i,0.,FILM_Z-.0001),1.,True,.05)
         self.assertEqual(m.groups()['seam']['cut'],0)
+
+class FlatteningGeometryTests(unittest.TestCase):
+    def test_opening_and_final_coplanarity_are_different_requirements(self):
+        from math import cos,radians
+        # A horizontal wall places the flap's local Y direction vertically
+        # at angle zero. At 150 degrees an87mm flap needs75mm of height;
+        # at90degrees it lies in the same plane as its wall.
+        self.assertGreater(.087*abs(cos(radians(150))),.024)
+        self.assertLess(.087*abs(cos(radians(90))),1e-12)
+        t=BreakdownScorer();s=state();t.update(s);cut_all(t,s)
+        s.update(bottom_angles=[160.]*4,top_angles=[270.]*4,min_height=0.,max_height=.02,cutter_parked=True,hands_clear=True)
+        for _ in range(25):s['time']+=.05;t.update(s)
+        self.assertEqual(t.value,.5)
+        s['bottom_angles']=[90.]*4
+        for _ in range(25):s['time']+=.05;t.update(s)
+        self.assertEqual(t.value,1.)

@@ -2154,3 +2154,51 @@ editing, merge both agents' findings, and commit/push the update with the work.
   SHA256 4cc469b545af8aea6e45d4f84be21343b68e5baf7c72ef5e56044c6fbed22769
   matches VM archive. GPU active for sequential physics tests; no Dream call,
   no upstream submission. Full completion still unproven for all four tasks.
+
+### 2026-11-14 — Astra diagnosis and Sol implementation handoff
+
+- User explicitly authorized Astra diagnosis after roughly eight attempts and
+  Sol implementation. Root spawned Astra for geometry/feasibility review; Sol
+  handles hair controller and packing/contact/cutter implementation. GPU runs
+  remain sequential under root on cb0da2; no agent has independent GPU work.
+- Native packing-native004 PASSED diagnostic material checks at .5ms timestep:
+  initial-wrap drift14.5004um, max hinge-anchor gap203.753um (<250um limit),
+ 120mm peeled. Bench fixtures only; this is not robot packing/sealing success.
+  Follow-up archive SHA2566eb3e3b559f5d5fb54611cb2926ff82f5ea331f9e70fe47acd0910b476dc3417
+  matches local artifacts/native-four-task-20261114/followup.tgz and VM.
+- Carton final-angle requirement was geometrically contradictory: an87mm flap
+  at150deg projects75mm above its wall plane, incompatible with a24mm slab.
+  Scorer preserves historical all-four opening>=150 after actual cuts, then
+  requires final90/270deg wall-coplanarity within15deg plus all-vertex slab,
+  intact joints and released hold. Seventeen CPU tests pass. Native full demo
+  remains incomplete; carton-cut005 again only frontfold24/24, score0.
+- USD angular drive stiffness/damping are perdegree, not perradian. See NVIDIA
+  PhysicsDriveAPI docs. Excess bottom crease stiffness drove released flaps
+  back to90; reduced .004 to .00006Nm/deg, still a provisional material model.
+- Sol cutter audit: original seam-hover TCP orientation unreachable (~24.6mm
+  position/8.3deg rotation residual); reversing blade yaw180 produces<.1mm IK
+  error. Existing fixedtime controller outruns blade by~.3m at8s. Feasible
+  endpoints, actual rigid grasptransform and measured phase gates now planned.
+- These findings supersede optimistic earlier trace descriptions, not prior
+  raw evidence. No fullcompletion for any of the four tasks, no Dream call,
+  no competition submission.
+
+### 2026-11-14 — user directs serial task completion
+
+- Root: user explicitly asked to prioritize one task through completion, use
+  Astra after two or three repeated failures, and stop parallel task work
+  because GPU capacity is limited. Ethernet is now the sole active task.
+  Hair, carton breakdown and carton packing implementation/trials are paused;
+  their incomplete source is preserved, not validated as finished work.
+- Packing closure candidate passed40CPUtests and a reach/mesh check; ideal
+  controller131.3s. Actual product trace rescored0.25 with documented0.2mm
+  floor-contact tolerance; source trace hash is in the local rescore report.
+  Native closure, adhesive retention and cutting remain unvalidated.
+- Breakdown geometry repair passed723OBBposes (35CPUtests at that point).
+  Latest185deg opening/release/270deg-settle edit compiles but lacks native
+  validation. No collapse controller or collapse mode was implemented.
+  Preserve Astra candidate files and the material geometry certificate in
+  the ignored evidence archive. Do not confuse CPUgeometry/reach with physics.
+- Future scope order: finish Ethernet, then resume one remaining task at a
+  time. No upstream PR or new media upload is authorized. Retain the user's
+  request to shut compute down after the completed batch.
