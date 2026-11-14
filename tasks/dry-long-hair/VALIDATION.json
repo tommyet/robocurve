@@ -1,7 +1,7 @@
 {
-  "status": "engineering_design_no_native_trial",
+  "status": "native_flexible_hair_probe_no_drying_demo",
   "date": "2026-11-14",
-  "local_model_tests_passed": 4,
+  "local_model_tests_passed": 7,
   "native_runtime": false,
   "demo_score": null,
   "video": null,
@@ -11,5 +11,12 @@
     "Geometry-derived airflow and occlusion",
     "Calibrate heat/moisture model",
     "Bimanual controller and actual scored video"
-  ]
+  ],
+  "native_mechanics_probe": {
+    "run": "hair-native-001",
+    "max_joint_separation_m": 0.0009245453,
+    "max_lock_motion_m": 0.1177754,
+    "power_off_water_loss_kg": 0.0,
+    "task_score": null
+  }
 }

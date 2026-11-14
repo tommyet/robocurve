@@ -2105,3 +2105,51 @@ editing, merge both agents' findings, and commit/push the update with the work.
   or scores claimed. Current task implementation gaps remain unchanged.
 - No active simulator trial at session end. Compute stop requested after
   download; final lifecycle state must be independently verified.
+
+### 2026-11-14 — native mechanics implementation resumes, not full demos
+
+- User explicitly requested finishing all four tasks and restarting browser/VM.
+  cb0da2 restarted; control plane says UNHEALTHY but direct SSH and desktop
+  HTTP 6080 return successfully. CLI refresh currently empties its alias file;
+  direct existing-key SSH at the previously verified endpoint works. Do not
+  confuse that health label with a failed physics process. New browser tunnel
+  is live and Safari opening was requested. Never display desktop credentials.
+- Ethernet first native initialization failed: joints created missing body
+  parent prims before USD asset spawners, suppressing later spawns. Install
+  constraints only in the last body spawner. Kit close swallowed the exception
+  and exited 0; require result.json AND no error.json, not just exit status.
+- Ethernet native002: 0.2 N pull held engaged but press + pull did not withdraw;
+  slider reached ~2.84 mm. Native003 at 1 N: settled insertion lash ~3 mm,
+  then retained (last-window x span ~0.2 mm), pressed plug withdrew >20 cm.
+  Initial result's <1.5 mm displacement criterion failed because it counted
+  seating lash; revised check uses actual tip remaining in cavity and settled
+  motion under load. World-z clip travel was wrong after body rotation; use
+  plug-local travel. Revised checks still need a new native run. Probe forces
+  are diagnostic, NOT robot task credit. Dimensions remain approximate.
+- Hair native001: 160 passive capsule segments, alternating bending axes,
+  rooted to scalp, actual dryer slider; 9 s test. Max crease error .925 mm,
+  lock motion 117.8 mm under 4 mN probe, no moisture loss/power with switch off.
+  This establishes coarse lock dynamics only, not drying/controller success.
+- Carton native001: free 12-panel/12-crease carton, factory sealed bottom,
+  probe load .25 N. Max crease separation .0555 mm; lowest vertex -0.0113 mm
+  relative to table. Intact stable native response, not cutting/flattening.
+- Local source drafts now contain actual native assets/runners and failure
+  records; task diagnostics still force score absent/zero. Full robot demos,
+  final run limits/calibration/scoring runtime integration remain outstanding.
+
+- Original failed instances 72837c and b4f58b were explicitly deleted at the
+  user's request and confirmed absent before this restart. The sole retained
+  VM is cb0da2. All present engineering work is locally backed up; unrecovered
+  VM-only recordings on the deleted disks are gone. Earlier notes saying
+  both failed VMs remain are superseded.
+- Ethernet robot-grasp001 used actual bounded 14D commands and reached the
+  boot. First two-arm release001 scored 0.0: clip release travel was reached
+  briefly, but boot grip slipped and the plug never disconnected. No success
+  claimed. New side pinch and measured release/withdrawal gates prepared.
+- Packing native001 became unstable; native002 headline pass was invalidated
+  by a negative-control audit: material already shifted before pulling.
+  Found annulus op order T*S*R instead of T*R*S and 2 mm work-mat overlap.
+  Native003 fixes initial geometry: 14.5 um max rest drift; real loaded peel
+  displaces ~125 mm material, but max film-anchor error .432 mm exceeds the
+  .250 mm/5% limit. Do NOT call this a valid peel demo yet. Native004 planned
+  at 2 kHz without mass scaling or scoring relaxation. No robot packing demo.

@@ -1,0 +1,65 @@
+"""Measured geometry -> occluded, power-limited local convection.
+
+Coarse capsules approximate locks. This is not CFD and ignores humidity and
+inter-fibre capillary transport. All exposure comes from live body geometry.
+"""
+import math
+from config import *
+from moisture import Patch
+
+def add(a,b):return tuple(x+y for x,y in zip(a,b))
+def sub(a,b):return tuple(x-y for x,y in zip(a,b))
+def mul(a,s):return tuple(x*s for x in a)
+def dot(a,b):return sum(x*y for x,y in zip(a,b))
+def norm(a):return math.sqrt(dot(a,a))
+def column(r,i):return tuple(row[i] for row in r)
+def segment_distance(a,b,c,d):
+ # Closest distance between finite segments, including parallel/degenerate cases.
+ u=sub(b,a);v=sub(d,c);w=sub(a,c);aa=dot(u,u);bb=dot(u,v);cc=dot(v,v);dd=dot(u,w);ee=dot(v,w)
+ if aa<1e-15 and cc<1e-15:return norm(w)
+ if aa<1e-15:s=0.;t=max(0.,min(1.,ee/cc))
+ elif cc<1e-15:t=0.;s=max(0.,min(1.,-dd/aa))
+ else:
+  den=aa*cc-bb*bb;s=max(0.,min(1.,(bb*ee-cc*dd)/den)) if den>1e-15 else 0.
+  t=(bb*s+ee)/cc
+  if t<0.:t=0.;s=max(0.,min(1.,-dd/aa))
+  elif t>1.:t=1.;s=max(0.,min(1.,(bb-dd)/aa))
+ return norm(sub(add(a,mul(u,s)),add(c,mul(v,t))))
+
+class HairThermal:
+ def __init__(self):
+  area=2*math.pi*RADIUS*LENGTH/PATCHES_PER_SEGMENT
+  self.patches=[Patch(area,DRY_MASS_PER_SEGMENT*1400/PATCHES_PER_SEGMENT,WATER_PER_PATCH) for _ in range(LOCKS*SEGMENTS*PATCHES_PER_SEGMENT)]
+  self.max_temperature=20.;self.energy=0.
+ def step(self,dt,segments,nozzle,axis,power):
+  if len(segments)!=LOCKS*SEGMENTS:raise ValueError('missing native hair segments')
+  if not math.isfinite(power) or not 0<=power<=1:raise ValueError('invalid measured power slider')
+  nn=norm(axis)
+  if nn<.999 or nn>1.001:raise ValueError('dryer axis must be unit length')
+  capsules=[(add(s['pos'],mul(column(s['rotation'],2),-LENGTH/2+RADIUS)),add(s['pos'],mul(column(s['rotation'],2),LENGTH/2-RADIUS))) for s in segments]
+  flux=[]
+  for i,s in enumerate(segments):
+   r=s['rotation'];normals=[column(r,0),mul(column(r,0),-1),column(r,1),mul(column(r,1),-1)]
+   for normal in normals:
+    point=add(s['pos'],mul(normal,RADIUS));ray=sub(point,nozzle);distance=norm(ray)
+    h=0.;exposed=0.
+    if power>.5 and .08<=distance<=.30 and dot(ray,axis)/distance>=math.cos(math.radians(22.)):
+     exposed=max(0.,dot(normal,mul(ray,-1/distance)))
+     # Test actual scalp sphere and every other measured capsule.
+     if segment_distance(nozzle,point,HEAD,HEAD)<HEAD_RADIUS:exposed=0.
+     if exposed>0:
+      end=add(point,mul(ray,-.0002/distance))
+      for k,(a,b) in enumerate(capsules):
+       if k!=i and segment_distance(nozzle,end,a,b)<RADIUS-.0001:
+        exposed=0.;break
+     h=150.*(.15/distance)**2*power
+    flux.append((h,exposed))
+  heat=sum(h*p.area*f*max(0.,AIR_TEMPERATURE-p.temperature) for p,(h,f) in zip(self.patches,flux))
+  scale=min(1.,HEATER_LIMIT/max(1e-12,heat));self.energy+=heat*scale*dt
+  removed=0.
+  for p,(h,f) in zip(self.patches,flux):removed+=p.step(dt,AIR_TEMPERATURE,h*scale,f)
+  self.max_temperature=max(self.max_temperature,max(p.temperature for p in self.patches))
+  return self.result()|{'water_removed_step_kg':removed,'convective_power_W':heat*scale,'exposed_patches':sum(f>0 for _,f in flux)}
+ def result(self):
+  fractions=[p.water/WATER_PER_PATCH for p in self.patches]
+  return {'dry_fraction':sum(f<=DRY_FRACTION for f in fractions)/len(fractions),'worst_remaining_water_fraction':max(fractions),'water_kg':sum(p.water for p in self.patches),'max_temperature_C':self.max_temperature,'delivered_energy_J':self.energy}

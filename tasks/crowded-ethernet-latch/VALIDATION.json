@@ -1,7 +1,7 @@
 {
-  "status": "engineering_design_no_native_trial",
+  "status": "native_mechanics_and_robot_attempt_no_completion",
   "date": "2026-11-14",
-  "local_model_tests_passed": 4,
+  "local_model_tests_passed": 11,
   "native_runtime": false,
   "demo_score": null,
   "video": null,
@@ -10,5 +10,28 @@
     "Native flexible latch and retained jack engagement",
     "Flexible crowded cables and bimanual access",
     "Robot controller and actual scored video"
+  ],
+  "native_probes": [
+    {
+      "run": "ethernet-native-002",
+      "retains_engaged_0_2N": true,
+      "clip_depresses": true,
+      "withdraws_pressed": false
+    },
+    {
+      "run": "ethernet-native-003",
+      "withdraws_pressed_1N_m": 0.227345,
+      "seating_lash_m": 0.003026,
+      "legacy_result_check_failed": true,
+      "travel_coordinate_bug": "world-z superseded by plug-local readback"
+    }
+  ],
+  "robot_attempts": [
+    {
+      "run": "ethernet-release-001",
+      "score": 0.0,
+      "clip_release_observed": true,
+      "plug_disconnected": false
+    }
   ]
 }
