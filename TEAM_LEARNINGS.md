@@ -2127,3 +2127,30 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Sole current GPU cb0da2 restarted at user request; direct SSH/desktop work
   although CLI health reports UNHEALTHY. Deleted old VMs must not be restarted.
   All four complete task demos and final media remain outstanding.
+
+### 2026-11-14 — root carton/ribbon native corrections
+
+- Operator root, codex/carton-breakdown-packing, sole active cb0da2. Native
+  carton-cut004 used actual blade feedback and ordinary 14D robot commands;
+  score 0: front-fold 24/24 cells, seam 0/110, back-fold 0/24; max crease gap
+  .428 mm. Not a successful task. Solver log exposed a D6 lower-limit clamp
+  from -275 to -180 degrees, closing the starting folded-back top flaps.
+  Current top joints shift local zero by -135 degrees to represent the full
+  fold within supported relative limits. Native confirmation pending.
+- A plain-free-edge four-flap controller is implemented as an explicitly
+  unsealed diagnostic. It verifies actual flap progress and released angles;
+  it cannot count as a full task demonstration. Cutting all bottom tape and
+  physically collapsing the free wall loop remain incomplete.
+- packing-native-002 headline peel estimate INVALIDATED: tape moved before
+  pull due to initial overlap/incorrect annulus transform order. Corrected
+  packing-native-003 stayed wound within 14.52 micrometres before loading and
+  displaced 125 mm of film under pull, but .432 mm anchor error exceeds the
+  .250 mm strain limit. Do not call the material solver validated. Next probe
+  reduces timestep to .5 ms without changing film mass or scoring tolerance.
+- Product pick/place controller and contact-pressure-dependent adhesive-joint
+  module implemented; product trial and native contact-sensor integration
+  remain pending. Bench fixtures are diagnostic only, absent in robot mode.
+- Evidence locally backed up at artifacts/native-four-task-20261114/evidence.tgz;
+  SHA256 4cc469b545af8aea6e45d4f84be21343b68e5baf7c72ef5e56044c6fbed22769
+  matches VM archive. GPU active for sequential physics tests; no Dream call,
+  no upstream submission. Full completion still unproven for all four tasks.

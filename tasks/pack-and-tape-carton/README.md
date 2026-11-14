@@ -1,8 +1,6 @@
 # Pack a carton and seal it using an ordinary tape roll
 
-Engineering draft. Twenty local material/contact/scorer checks pass. **There
-is no functioning native peel/adhesion runtime, robot demonstration, model
-score or video.** The finite tape ledger is accounting, not a tape simulator.
+Native mechanics draft. Twenty-two local material/contact/scorer checks pass. Native ribbon/roll bench probes exist, but none yet validates the full task: **no robot packing/sealing demonstration or model score exists.** The tape ledger alone is accounting, not physics.
 
 Pack two objects into an open carton, fold its four top flaps in the correct
 order, find and peel the end of an ordinary roll of packing tape, pull out a
@@ -78,5 +76,27 @@ python3 -m unittest discover -s tasks/pack-and-tape-carton -p 'test_*.py' -v
 Next: hollow-roll/native ribbon representation, flush-edge peel probe with real
 gripper geometry, winding/payout mechanics, force-coupled adhesion/peel,
 scissor/cutter interaction, native packed-carton flap scene, then a robot
-controller and complete validation. There is currently no `run.py`; do not
-describe synthetic scoring states as a physically feasible robot trajectory.
+controller and complete validation. The native `run.py` currently runs only a material bench; do not describe synthetic scoring states as a physically feasible robot trajectory.
+
+## Current native material bench
+
+```bash
+/data/IsaacLab-Arena/.venv/bin/python run.py --out /path/to/new-bench
+```
+
+The hollow roll has 72 connected 5 mm film cells explicitly wound on its outer
+layer. Native breakable tack and width-axis bend joints must physically free
+material; there is no prepared leader or tool-path deposition. The bench clamps
+the roll and drives its end for characterisation only. Those fixtures are not
+part of a scored robot task.
+
+Require the coil to stay wound before loading. The first apparent peel pass
+failed this negative control; transform ordering and initial mat overlap were
+fixed. Native003 had 14.5 um rest drift, but its 432 um joint error exceeded
+the 250 um/5% strain limit. Native004 is being tested at 2 kHz without mass
+scaling or relaxed criteria. `contact_native.py` creates finite-strength passive
+bonds only after measured contact pressure, geometric adhesive-face overlap
+and dwell; its actual substep contact-sensor integration is still unvalidated.
+No body or film pose is ever set by a policy. Full robot peeling, product/flap
+manipulation, cutting, force-supported adhesion and released retention remain
+required before this folder can claim task completion.

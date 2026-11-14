@@ -8,6 +8,7 @@ from math import dist, isfinite
 LENGTH, WIDTH, HEIGHT, BOARD = .22, .18, .10, .003
 TAPE_WIDTH, WRAP = .048, .04
 CELL = .002
+FILM_Z = -BOARD/2-.00005
 # Bottom is z=0. Tape runs along x at y=0, plus end folds across y.
 CUT_PATHS = (
     ('seam', (-LENGTH/2, 0., 0.), (LENGTH/2, 0., 0.)),
@@ -40,12 +41,12 @@ class BladeCoverage:
     def update(self,tip,normal_alignment,held,dt):
         tip=tuple(tip)
         valid=(held and normal_alignment >= .85 and
-               all(isfinite(x) for x in tip) and -.002 <= tip[2] <= .001)
+               all(isfinite(x) for x in tip) and FILM_Z <= tip[2] <= .001)
         if valid and self.previous is not None and 0 < dt <= .051:
             # Reject teleported/undersampled tool motion rather than fill gaps.
             if dist(self.previous,tip) <= .015:
                 for i,(_,p) in enumerate(self.cells):
-                    if point_segment_distance(p,self.previous,tip) <= .0011:self.cut.add(i)
+                    if point_segment_distance((*p[:2],0.),(*self.previous[:2],0.),(*tip[:2],0.)) <= .0011:self.cut.add(i)
         self.previous=tip if valid else None
 
     def groups(self):

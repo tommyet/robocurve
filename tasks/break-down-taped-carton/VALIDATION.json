@@ -1,5 +1,5 @@
 {
-  "status": "native_free_carton_mechanics_no_robot_completion",
+  "status": "native_carton_robot_cut_incomplete_joint_reference_fix_pending",
   "date": "2026-11-13",
   "local_tests_passed": 12,
   "native_runtime_verified": false,
@@ -7,11 +7,10 @@
   "dream_score": null,
   "media": null,
   "remaining": [
-    "Native carton stability and folding clearance",
-    "Free-carton turnover and guarded cutter integration",
-    "Physical cut latch, live body/contact telemetry",
-    "Four bottom flap opening and released collapse demo",
-    "Final Dream trial and media"
+    "Validate corrected top fold reference frame",
+    "Complete all three physical blade cut paths",
+    "Unfold all four bottom flaps with plain-edge grasps",
+    "Collapse free wall loop, park cutter and release for full scored demo"
   ],
   "native_mechanics_probe": {
     "run": "carton-native-001",
@@ -20,5 +19,16 @@
     "lowest_vertex_relative_table_m": -1.131224e-05,
     "probe_force_N": 0.25,
     "task_score": null
-  }
+  },
+  "native_runtime": true,
+  "local_model_tests_passed": 16,
+  "latest_robot_cut": {
+    "run": "carton-cut004",
+    "score": 0.0,
+    "seam_cells": 0,
+    "front_fold_cells": 24,
+    "back_fold_cells": 0,
+    "max_crease_separation_m": 0.0004282501
+  },
+  "superseded_geometry_note": "Unshifted -275 degree D6 limit was clamped to -180 by PhysX, pulling folded-back top flaps closed. Current top joints use a -135 degree local reference frame, with supported relative limits; native validation pending."
 }

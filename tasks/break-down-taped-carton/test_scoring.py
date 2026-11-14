@@ -71,3 +71,15 @@ class Tests(unittest.TestCase):
         self.assertEqual(t.value,0.)
 
 if __name__=='__main__':unittest.main()
+
+class BladeEdgeDepthTests(unittest.TestCase):
+    def test_cutting_edge_penetrating_film_counts_xy_coverage(self):
+        from model import BladeCoverage,FILM_Z
+        m=BladeCoverage()
+        for i in range(111):m.update((-.11+.002*i,0.,FILM_Z+.0002),1.,True,.05)
+        self.assertEqual(m.groups()['seam']['cut'],110)
+    def test_edge_outside_film_does_not_cut(self):
+        from model import BladeCoverage,FILM_Z
+        m=BladeCoverage()
+        for i in range(111):m.update((-.11+.002*i,0.,FILM_Z-.0001),1.,True,.05)
+        self.assertEqual(m.groups()['seam']['cut'],0)

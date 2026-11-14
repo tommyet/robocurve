@@ -15,7 +15,7 @@ class BreakdownScorer:
     def update(self,s):
         numbers=[s['time'],*s['blade_tip_local'],s['blade_alignment'],
                  *s['bottom_angles'],*s['top_angles'],s['crease_separation'],
-                 s['min_height'],s['max_height'],s['carton_speed']]
+                 s['min_height'],s['max_height'],s['carton_speed'],s.get('cutter_height',0.)]
         if not all(isfinite(x) for x in numbers):
             self.invalid='nonfinite state';self.value=0.;return self.result()
         if len(s['bottom_angles'])!=4 or len(s['top_angles'])!=4:
@@ -24,6 +24,7 @@ class BreakdownScorer:
         if not 0 <= dt <= .051:self.invalid='missing or nonmonotonic control samples'
         if s['crease_separation'] > .004:self.invalid='torn or disconnected cardboard'
         if s['min_height'] < -.03:self.invalid='carton fell below table'
+        if s.get('cutter_height',0.) < -.03:self.invalid='cutter fell below table'
         # Only the two outer flaps are restrained by the sealed seam.
         # Fail before processing the current cut, so forced opening and a cut
         # in the same sample cannot erase the violation.

@@ -28,7 +28,7 @@ def quat(z,x=0.):
             math.sin(z/2)*math.sin(x/2),math.sin(z/2)*math.cos(x/2))
 
 
-def layout(top_angle=160.,bottom_angle=0.):
+def layout(top_angle=270.,bottom_angle=0.):
     parts=[];hinges=[]
     walls=[('north',(0.,W/2,H/2),L,0.),
            ('east',(L/2,0.,H/2),W,-math.pi/2),
@@ -40,16 +40,17 @@ def layout(top_angle=160.,bottom_angle=0.):
             theta=math.radians(sign*angle)
             # Inner short flaps lie one board thickness inside the outer pair.
             inset=T if name in ('east','west') else 0.
-            hinge=add(center,(0.,0.,(H/2-inset)*(1 if end=='top' else -1)))
-            depth=W/2-T
+            outset=T if end=='top' else 0.
+            hinge=add(center,rotate_z((0.,outset,(H/2-inset)*(1 if end=='top' else -1)),yaw))
+            depth=W/2 if end=='top' else W/2-T
             offset=rotate_z(rotate_x((0.,-depth/2,0.),theta),yaw)
             flap=name+'_'+end
             parts.append(dict(name=flap,pos=add(hinge,offset),quat=quat(yaw,theta),
                               size=(length-2*T,depth,T),mass=.018))
             hinges.append(dict(name=flap+'_hinge',a=name,b=flap,axis='X',
-                               anchor_a=(0.,0.,hinge[2]-center[2]),anchor_b=(0.,depth/2,0.),
-                               low=-175. if end=='top' else 0.,high=0. if end=='top' else 175.,
-                               spring=.003,target=sign*160.,sealed=end=='bottom' and name in ('north','south')))
+                               anchor_a=(0.,outset,hinge[2]-center[2]),anchor_b=(0.,depth/2,0.),
+                               low=-275. if end=='top' else -85.,high=0. if end=='top' else 175.,
+                               spring=.0002 if end=='top' else .004,target=-top_angle if end=='top' else 90.,sealed=end=='bottom' and name in ('north','south')))
     # Corner anchors are expressed in each body's local frame.
     corners=[(L/2,W/2,H/2),(L/2,-W/2,H/2),(-L/2,-W/2,H/2),(-L/2,W/2,H/2)]
     for i,(name,center,_,yaw) in enumerate(walls):
@@ -89,12 +90,14 @@ def export(path,sealed_bottom=True):
         joint.CreateLocalPos0Attr(Gf.Vec3f(*h['anchor_a']))
         joint.CreateLocalPos1Attr(Gf.Vec3f(*h['anchor_b']))
         lock=sealed_bottom and h['sealed']
-        joint.CreateLowerLimitAttr(0. if lock else h['low'])
-        joint.CreateUpperLimitAttr(0. if lock else h['high'])
+        shift=135. if h['b'].endswith('_top') else 0.
+        if shift:joint.CreateLocalRot0Attr(Gf.Quatf(math.cos(math.radians(-shift)/2),Gf.Vec3f(math.sin(math.radians(-shift)/2),0,0)))
+        joint.CreateLowerLimitAttr(0. if lock else h['low']+shift)
+        joint.CreateUpperLimitAttr(0. if lock else h['high']+shift)
         joint.CreateExcludeFromArticulationAttr(True)
         joint.CreateCollisionEnabledAttr(False)
         drive=UsdPhysics.DriveAPI.Apply(joint.GetPrim(),'angular')
-        drive.CreateTypeAttr('force');drive.CreateTargetPositionAttr(h['target'])
+        drive.CreateTypeAttr('force');drive.CreateTargetPositionAttr(h['target']+shift)
         drive.CreateStiffnessAttr(h['spring']);drive.CreateDampingAttr(.001)
     stage.GetRootLayer().Save();return str(Path(path).resolve())
 

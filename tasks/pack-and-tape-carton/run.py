@@ -5,7 +5,7 @@ from config import *
 from carton_scene import layout
 
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True);a=p.parse_args();a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=False);(a.out/'source').mkdir()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True);p.add_argument('--mode',choices=['bench','products-probe'],default='bench');a=p.parse_args();a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=False);(a.out/'source').mkdir()
  for f in Path(__file__).parent.glob('*.py'):shutil.copy2(f,a.out/'source'/f.name)
  (a.out/'source-sha256.json').write_text(json.dumps({f.name:hashlib.sha256(f.read_bytes()).hexdigest() for f in Path(__file__).parent.glob('*.py')},indent=2));os.environ.setdefault('OMNI_KIT_ACCEPT_EULA','YES')
  from isaaclab.app import AppLauncher
@@ -24,7 +24,7 @@ def main():
   for spec in task.OBJECTS:
    if spec.name in byname or spec.name=='cutter':assets[spec.name]=cexport(a.out/(spec.name+'.usda'),spec.name)
    elif spec.name=='roll' or spec.name.startswith('tape_'):assets[spec.name]=texport(a.out/(spec.name+'.usda'),spec.name)
-  original=sc.task_object;original_dt=sc.PHYSICS_DT;sc.PHYSICS_DT=.0005
+  original=sc.task_object;original_dt=sc.PHYSICS_DT;sc.PHYSICS_DT=.0005 if a.mode=='bench' else 1/240
   def make(spec):
    if spec.name not in assets:return original(spec)
    q=byname[spec.name]['quat'] if spec.name in byname else (math.cos(spec.yaw/2),0,0,math.sin(spec.yaw/2))
@@ -34,19 +34,26 @@ def main():
     def with_joints(path,cfg,translation=None,orientation=None,**kwargs):
      prim=spawn(path,cfg,translation=translation,orientation=orientation,**kwargs);s=prim.GetStage();parent=str(prim.GetPath()).rsplit('/',1)[0];install_joints(s,parent)
      # Explicit test-bench fixtures only. Not present in a real task episode.
+     if a.mode!='bench':return prim
      j=UsdPhysics.FixedJoint.Define(s,parent+'/roll/bench_fixture');j.CreateBody1Rel().SetTargets([parent+'/roll']);j.CreateLocalPos0Attr(Gf.Vec3f(*ROLL_START));j.CreateLocalPos1Attr(Gf.Vec3f(0,0,0));j.CreateExcludeFromArticulationAttr(True)
      point,yaw=tape_cell(CELLS-1);j=UsdPhysics.PrismaticJoint.Define(s,parent+f'/tape_{CELLS-1}/bench_peel');j.CreateBody1Rel().SetTargets([parent+f'/tape_{CELLS-1}']);j.CreateAxisAttr('X');j.CreateLocalPos0Attr(Gf.Vec3f(*point));j.CreateLocalPos1Attr(Gf.Vec3f(0,0,0));j.CreateLocalRot1Attr(Gf.Quatf(math.cos(yaw/2),Gf.Vec3f(0,0,-math.sin(yaw/2))));j.CreateLowerLimitAttr(0.);j.CreateUpperLimitAttr(.07);j.CreateExcludeFromArticulationAttr(True)
      d=UsdPhysics.DriveAPI.Apply(j.GetPrim(),'linear');d.CreateTypeAttr('force');d.CreateStiffnessAttr(30.);d.CreateDampingAttr(.1);d.CreateMaxForceAttr(3.);d.CreateTargetPositionAttr(0.)
      return prim
     cfg.func=with_joints
    return sc.Object(name=spec.name,object_type=sc.ObjectType.RIGID,spawner_cfg=cfg,initial_pose=sc.Pose(position_xyz=spec.pos,rotation_xyzw=(*q[1:],q[0])))
+  from yam_arena.embodiment import BimanualYamEmbodiment
+  import review
+  original_init=BimanualYamEmbodiment.__init__
+  def with_reviews(instance,*args,**kwargs):
+   kwargs['cam_width']=320;kwargs['cam_height']=180;original_init(instance,*args,**kwargs);review.add_cameras(instance)
+  BimanualYamEmbodiment.__init__=with_reviews
   sc.task_object=make
   try:
    env=wrapper.YamArenaEmbodiment(task=str(Path(__file__).with_name('task.py')),object_jitter=0.,control_hz=20,headless=True,cam_width=320,cam_height=180);env._ensure_sim(None)
-  finally:sc.task_object=original;sc.PHYSICS_DT=original_dt
+  finally:sc.task_object=original;sc.PHYSICS_DT=original_dt;BimanualYamEmbodiment.__init__=original_init
   base=env._base;env._env.reset();env._instruction='Finite wound-ribbon material probe';env._t=0.
-  for n,eye in zip(['top_cam','left_cam','right_cam'],[(.0,-.32,1.18),(.03,.20,1.04),(.04,-.24,1.02)]):base.scene[n].set_world_poses_from_view(torch.tensor([eye],device=base.device),torch.tensor([[.20,-.08,.81]],device=base.device))
-  drive=UsdPhysics.DriveAPI(base.scene.stage.GetPrimAtPath(f'/World/envs/env_0/tape_{CELLS-1}/bench_peel'),'linear')
+  review.place(base,(.30,0.,.82))
+  drive=UsdPhysics.DriveAPI(base.scene.stage.GetPrimAtPath(f'/World/envs/env_0/tape_{CELLS-1}/bench_peel'),'linear') if a.mode=='bench' else None
   def arr(v):
    v=v.torch if hasattr(v,'torch') else v
    return v.detach().cpu().numpy()
@@ -59,14 +66,22 @@ def main():
    def event(e):events.append({'time':env._t,'type':int(e.type),'payload':str(e.payload)})
    subscription=stream.create_subscription_to_pop(event)
   except Exception as error:events.append({'subscription_error':str(error)})
-  video=imageio.get_writer(str(a.out/'diagnostic.mp4'),fps=20,codec='libx264',pixelformat='yuv420p',macro_block_size=1,ffmpeg_params=['-movflags','+faststart']);worst=0.;max_unwound=0.;allposes=[];initial_displacement=0.
+  video=imageio.get_writer(str(a.out/'diagnostic.mp4'),fps=20,codec='libx264',pixelformat='yuv420p',macro_block_size=1,ffmpeg_params=['-movflags','+faststart']);worst=0.;max_unwound=0.;allposes=[];initial_displacement=0.;robot=None;tracker=None;previous_items=None;previous_parts=None
+  if a.mode=='products-probe':
+   from robot import ProductsProbe
+   from scoring import PackingScorer
+   from yam_arena import ik
+   robot=ProductsProbe(env);tracker=PackingScorer();task._tracker=tracker;task._diagnostic=False
   with (a.out/'trajectory.jsonl').open('w') as trace:
-   for step in range(100):
+   for step in range(720 if robot else 100):
     phase='settle' if step<20 else 'peel_bench' if step<60 else 'hold'
     target=.06*min(1.,max(0.,(step-20)/40))
-    drive.GetTargetPositionAttr().Set(target)
-    env._env.step(env._ready);env._t=(step+1)*.05
-    roll=pose('roll');rr=quat_xyzw_to_matrix(roll[3:]);states=[pose(f'tape_{i}') for i in range(CELLS)];local=[rr.T@(v[:3]-roll[:3]) for v in states];displaced=[];sep=0.
+    control=None
+    if robot:
+     action,control=robot.command(step*.05);phase=control['phase'];action=torch.tensor(action[None,:],device=base.device,dtype=torch.float32)
+    else:drive.GetTargetPositionAttr().Set(target);action=env._ready
+    env._env.step(action);env._t=(step+1)*.05
+    roll=pose('roll');rr=quat_xyzw_to_matrix(roll[3:]);tensors=[base.arena_world.get_pose_w(f'tape_{i}') for i in range(CELLS)];states=torch.cat([v.torch if hasattr(v,'torch') else v for v in tensors],dim=0).detach().cpu().numpy();local=[rr.T@(v[:3]-roll[:3]) for v in states];displaced=[];sep=0.;anchor_errors={}
     for i,v in enumerate(local):
      pos,_=tape_cell(i);displaced.append(float(np.linalg.norm(v-(np.array(pos)-np.array(ROLL_START)))))
      if i:
@@ -75,16 +90,48 @@ def main():
       def localpoint(origin,yaw):
        r=np.array([[np.cos(yaw),-np.sin(yaw),0],[np.sin(yaw),np.cos(yaw),0],[0,0,1]])
        return r.T@(anchor-np.array(origin))
-      a0=states[i-1][:3]+quat_xyzw_to_matrix(states[i-1][3:])@localpoint(p0,y0);a1=states[i][:3]+quat_xyzw_to_matrix(states[i][3:])@localpoint(p1,y1);sep=max(sep,float(np.linalg.norm(a0-a1)))
+      a0=states[i-1][:3]+quat_xyzw_to_matrix(states[i-1][3:])@localpoint(p0,y0);a1=states[i][:3]+quat_xyzw_to_matrix(states[i][3:])@localpoint(p1,y1);anchor_errors[i]=float(np.linalg.norm(a0-a1));sep=max(sep,anchor_errors[i])
     if step<20:initial_displacement=max(initial_displacement,max(displaced))
     if step==19 and initial_displacement>.0005:raise RuntimeError('tape shifted before peel loading; initial wrap invalid')
     worst=max(worst,sep);unwound=sum(d>.003 for d in displaced)*CELL_LENGTH;max_unwound=max(max_unwound,unwound)
-    row={'time':env._t,'phase':phase,'bench_target_m':target,'roll_pose':roll.tolist(),'film_poses':[s.tolist() for s in states],'native_cell_displacement_m':displaced,'material_anchor_separation_m':sep,'unwound_length_estimate_m':unwound};trace.write(json.dumps(row)+'\n')
+    row={'time':env._t,'phase':phase,'robot_control':control,'bench_target_m':target,'roll_pose':roll.tolist(),'film_poses':[s.tolist() for s in states],'native_cell_displacement_m':displaced,'material_anchor_separation_m':sep,'unwound_length_estimate_m':unwound}
+    if tracker is not None:
+     pp={p['name']:pose(p['name']) for p in parts};rr={n:quat_xyzw_to_matrix(p[3:]) for n,p in pp.items()};reference=rr['north'];origin=pp['north'][:3]-reference@np.array((0,CARTON_WIDTH/2,CARTON_HEIGHT/2+BOARD/2));crease=0.
+     for h in hs:
+      crease=max(crease,float(np.linalg.norm(pp[h['a']][:3]+rr[h['a']]@np.array(h['anchor_a'])-pp[h['b']][:3]-rr[h['b']]@np.array(h['anchor_b']))))
+     item_states=[];current_items={}
+     for name,_,size,_,_ in PRODUCTS:
+      body=pose(name);r=quat_xyzw_to_matrix(body[3:]);corners=[]
+      for x in [-1,1]:
+       for y in [-1,1]:
+        for z in [-1,1]:corners.append(reference.T@(body[:3]+r@(np.array(size)*np.array((x,y,z))/2)-origin))
+      corners=np.array(corners);speed=0. if previous_items is None else float(np.linalg.norm(body[:3]-previous_items[name])/.05);current_items[name]=body[:3].copy();item_states.append({'local_min':corners.min(0).tolist(),'local_max':corners.max(0).tolist(),'speed':speed})
+     carton_vertices={}
+     for p in parts:
+      vertices=[]
+      for x in [-1,1]:
+       for y in [-1,1]:
+        for z in [-1,1]:vertices.append(reference.T@(pp[p['name']][:3]+rr[p['name']]@(np.array(p['size'])*np.array((x,y,z))/2)-origin))
+      carton_vertices[p['name']]=np.array(vertices)
+     inner_under=max(carton_vertices[n+'_top'][:,2].max() for n in ['east','west'])<=min(carton_vertices[n+'_top'][:,2].min() for n in ['north','south'])+.0005
+     vmin=np.min(np.concatenate(list(carton_vertices.values())),axis=0);vmax=np.max(np.concatenate(list(carton_vertices.values())),axis=0);hands=[]
+     for side in ['left','right']:
+      ids,_=env._ids[side+'_robot'];q=arr(base.scene[side+'_robot'].data.joint_pos)[0,ids];hands.append(reference.T@(ik.tcp_pose(q,env.rig.bases[side])[0]-origin))
+     hand_clear=all(np.linalg.norm(h-np.clip(h,vmin,vmax))>.07 for h in hands);tool=pose('cutter');tools_parked=np.linalg.norm(tool[:3]-np.array(CUTTER_START))<.05 and np.linalg.norm(roll[:3]-np.array(ROLL_START))<.05
+     angles=[]
+     for n in ['north','south','east','west']:
+      r=rr[n].T@rr[n+'_top'];angles.append(float(np.degrees(np.arctan2(r[2,1],r[1,1]))))
+     speed=0. if previous_parts is None else max(float(np.linalg.norm(pp[n][:3]-previous_parts[n])/.05) for n in pp);previous_parts={n:p[:3].copy() for n,p in pp.items()};previous_items=current_items
+     peeled={i for i,d in enumerate(displaced) if d>.003};payout=len(peeled)*CELL_LENGTH;film_length=payout+sum(e for i,e in anchor_errors.items() if i in peeled and i-1 in peeled)
+     sample={'time':env._t,'payout':payout,'ribbon_length':film_length,'flap_angles':angles,'items':item_states,'seam_bond':[0.]*44,'end_bond':[0.,0.],'carton_speed':speed,'crease_separation':crease,'max_strain':sep/CELL_LENGTH,'canary_min_height':min(min(i['local_min'][2]+origin[2]-TOP for i in item_states),min(v[:,2].min()+origin[2]-TOP for v in carton_vertices.values())),'inner_flaps_under_outer':bool(inner_under),'single_strip':False,'strip_still_on_roll':bool(len(peeled)<CELLS),'hands_clear':bool(hand_clear),'tools_parked':bool(tools_parked)}
+     row['score_sample']=sample;row['metrics']=tracker.update(sample)
+    trace.write(json.dumps(row)+'\n')
     if not np.isfinite(states).all() or sep>.02:raise RuntimeError('unstable ribbon or disconnected material')
-    panels=[cv2.resize(arr(base.scene[n].data.output['rgb'])[0,:,:,:3].astype(np.uint8),(480,270)) for n in ['top_cam','left_cam','right_cam']];canvas=np.zeros((594,960,3),dtype=np.uint8);canvas[36:306,240:720]=panels[0];canvas[306:576,:480]=panels[1];canvas[306:576,480:]=panels[2]
-    cv2.putText(canvas,'NATIVE WOUND TAPE | '+phase,(12,25),cv2.FONT_HERSHEY_SIMPLEX,.6,(255,255,255),1,cv2.LINE_AA);cv2.putText(canvas,'Clamped material bench, not robot packing. No tape pose animation.',(12,590),cv2.FONT_HERSHEY_SIMPLEX,.46,(255,205,120),1,cv2.LINE_AA);video.append_data(canvas)
-    if step in (19,59,99):imageio.imwrite(a.out/f'step-{step}.png',canvas)
+    panels=review.panels(base);canvas=np.zeros((594,960,3),dtype=np.uint8);canvas[36:306,240:720]=panels[0];canvas[306:576,:480]=panels[1];canvas[306:576,480:]=panels[2]
+    cv2.putText(canvas,('ROBOT PRODUCT PACKING | ' if robot else 'NATIVE WOUND TAPE | ')+phase,(12,25),cv2.FONT_HERSHEY_SIMPLEX,.6,(255,255,255),1,cv2.LINE_AA);cv2.putText(canvas,('Actual robot commands. Packing score: '+str(tracker.value)+' | sealing incomplete' if robot else 'Clamped material bench, not robot packing. No tape pose animation.'),(12,590),cv2.FONT_HERSHEY_SIMPLEX,.46,(255,205,120),1,cv2.LINE_AA);video.append_data(canvas)
+    if step in (19,59,99,179,259,339,419,499,579,659,719):imageio.imwrite(a.out/f'step-{step}.png',canvas)
   result={'diagnostic':True,'robot_demo':False,'task_score':None,'bench_fixtures':True,'physics_dt_s':float(base.sim.get_physics_dt()),'explicit_material_length_m':ACTIVE_LENGTH,'initial_wrap_displacement_m':initial_displacement,'max_anchor_separation_m':worst,'max_displaced_material_estimate_m':max_unwound,'checks':{'stays_wound_before_pull':initial_displacement<.0005,'material_connected':worst<CELL_LENGTH*MAX_STRAIN,'material_peels':max_unwound>.025}}
+  if tracker is not None:result|={'diagnostic':False,'bench_fixtures':False,'privileged_robot_attempt':True,'task_score':tracker.value,'metrics':tracker.result()}
   (a.out/'native-events.json').write_text(json.dumps(events,indent=2)+'\n');(a.out/'result.json').write_text(json.dumps(result,indent=2)+'\n')
  except BaseException as error:
   import traceback;traceback.print_exc();(a.out/'error.json').write_text(json.dumps({'error':str(error),'type':type(error).__name__},indent=2));raise

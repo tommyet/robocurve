@@ -1,8 +1,6 @@
 # Cut the bottom tape, unfold the flaps and flatten a used carton
 
-Engineering draft. Twelve local checks pass, including hinge-anchor geometry
-and scorer outcomes. There is no native physics rollout, robot demo, Dream
-score or video yet. The exported carton is not a validated working scene.
+Native mechanics/controller draft. Thirteen local checks pass, including hinge-anchor geometry and scorer outcomes. A native free-carton stability probe passes, but no full cutting/unfolding/flattening robot demo or Dream score exists.
 
 Start with an **empty used carton**, upright with its four top flaps open and
 its four bottom flaps closed and taped. Turn it over, use a guarded cutter to
@@ -67,3 +65,24 @@ and fracture coupling, a physical four-flap opening demo, collapse/release
 tests, then a matching Dream trial. `scoring.py` currently accepts a measured
 state schema; there is no robot adapter supplying those measurements yet.
 No controller can set these scoring inputs directly in the eventual runtime.
+
+## Native development probes
+
+```bash
+/data/IsaacLab-Arena/.venv/bin/python run.py --mode dynamics --out /path/to/new-probe
+/data/IsaacLab-Arena/.venv/bin/python run.py --mode grip-probe --out /path/to/new-attempt
+```
+
+The carton has twelve genuinely free rigid panels and twelve physical creases.
+The stability probe kept crease errors below 0.06 mm. The first robot grip
+attempt remained intact but failed to lift: its fingers met the outward top
+flaps before reaching the rims. Top flaps now allow a real fold-back motion to
+270 degrees with a 3 mm finite crease offset outside the wall. A geometric
+regression checks that the folded flap clears the outer wall; the next native
+grasp test still has to establish that this fixes access.
+
+Probe forces and `--unsealed` starting conditions are explicitly diagnostic,
+with no task score. A completed task still requires robot turnover, measured
+blade cuts, four bottom flaps physically opened, intact collapse and released
+flatness. Every probe freezes its sources; `error.json` invalidates it even if
+Kit returns exit code 0. See `VALIDATION.json` for recorded limitations.

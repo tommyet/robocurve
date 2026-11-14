@@ -3,9 +3,12 @@ import argparse,os,json,shutil,hashlib
 from pathlib import Path
 from config import *
 from scene import layout
+from model import WIDTH,HEIGHT
 
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True);p.add_argument('--mode',choices=['dynamics','grip-probe'],default='dynamics');p.add_argument('--unsealed',action='store_true',help='Explicit unscored starting condition for folding diagnostics');a=p.parse_args();a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=False);(a.out/'source').mkdir()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True);p.add_argument('--mode',choices=['dynamics','grip-probe','cut-probe','open-probe'],default='dynamics');p.add_argument('--unsealed',action='store_true',help='Explicit unscored starting condition for folding diagnostics');a=p.parse_args();
+ if a.mode=='open-probe' and not a.unsealed:p.error('open-probe requires --unsealed and cannot count as task completion')
+ a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=False);(a.out/'source').mkdir()
  for f in Path(__file__).parent.glob('*.py'):shutil.copy2(f,a.out/'source'/f.name)
  (a.out/'source-sha256.json').write_text(json.dumps({f.name:hashlib.sha256(f.read_bytes()).hexdigest() for f in Path(__file__).parent.glob('*.py')},indent=2))
  os.environ.setdefault('OMNI_KIT_ACCEPT_EULA','YES')
@@ -18,33 +21,45 @@ def main():
   from yam_arena.urdf import quat_xyzw_to_matrix
   import isaaclab.sim as sim
   from native import export,install_joints
+  from scoring import BreakdownScorer
+  from yam_arena import ik
+  from yam_arena.constants import FINGER_OPEN
+  from pxr import UsdPhysics
   import task
   wrapper._APP=app;parts,hs=layout();byname={s['name']:s for s in parts};assets={s.name:export(a.out/(s.name+'.usda'),s.name) for s in task.OBJECTS if s.name!='cutter_pad'};original=sc.task_object
   def make(spec):
    if spec.name not in assets:return original(spec)
-   cfg=sim.UsdFileCfg(usd_path=assets[spec.name]);q=byname[spec.name]['quat'] if spec.name in byname else (1,0,0,0)
+   cfg=sim.UsdFileCfg(usd_path=assets[spec.name]);pos,q=starting_pose(byname[spec.name],upright=a.mode=='grip-probe') if spec.name in byname else (spec.pos,(1,0,0,0))
    if spec.name=='cutter':
     spawn=cfg.func
     def with_joints(path,cfg,translation=None,orientation=None,**kwargs):
      prim=spawn(path,cfg,translation=translation,orientation=orientation,**kwargs);install_joints(prim.GetStage(),str(prim.GetPath()).rsplit('/',1)[0],sealed=not a.unsealed);return prim
     cfg.func=with_joints
-   return sc.Object(name=spec.name,object_type=sc.ObjectType.RIGID,spawner_cfg=cfg,initial_pose=sc.Pose(position_xyz=spec.pos,rotation_xyzw=(*q[1:],q[0])))
+   return sc.Object(name=spec.name,object_type=sc.ObjectType.RIGID,spawner_cfg=cfg,initial_pose=sc.Pose(position_xyz=pos,rotation_xyzw=(*q[1:],q[0])))
+  from yam_arena.embodiment import BimanualYamEmbodiment
+  import review
+  original_init=BimanualYamEmbodiment.__init__
+  def with_reviews(instance,*args,**kwargs):
+   kwargs['cam_width']=320;kwargs['cam_height']=180;original_init(instance,*args,**kwargs);review.add_cameras(instance)
+  BimanualYamEmbodiment.__init__=with_reviews
   sc.task_object=make
   try:
    env=wrapper.YamArenaEmbodiment(task=str(Path(__file__).with_name('task.py')),object_jitter=0.,control_hz=20,headless=True,cam_width=320,cam_height=180);env._ensure_sim(None)
-  finally:sc.task_object=original
+  finally:sc.task_object=original;BimanualYamEmbodiment.__init__=original_init
   base=env._base;env._env.reset();env._instruction='Native carton mechanics probe';env._t=0.
-  for name,eye in zip(['top_cam','left_cam','right_cam'],[(.04,-.32,1.25),(.06,.22,1.1),(.07,-.22,1.1)]):base.scene[name].set_world_poses_from_view(torch.tensor([eye],device=base.device),torch.tensor([[.32,0,.81]],device=base.device))
+  review.place(base,(.32,0.,.82))
   def arr(v):
    v=v.torch if hasattr(v,'torch') else v
    return v.detach().cpu().numpy()
   def pose(name):return arr(base.arena_world.get_pose_w(name))[0]
   video=imageio.get_writer(str(a.out/'diagnostic.mp4'),fps=20,codec='libx264',pixelformat='yuv420p',macro_block_size=1,ffmpeg_params=['-movflags','+faststart']);worst=0.;minz=10.;bestflat=10.;robot=None
-  if a.mode=='grip-probe':
-   from robot import CartonGripProbe
-   robot=CartonGripProbe(env)
+  if a.mode in ('grip-probe','cut-probe','open-probe'):
+   from robot import CartonGripProbe,CartonCutProbe,CartonOpenProbe
+   robot=({'cut-probe':CartonCutProbe,'open-probe':CartonOpenProbe}.get(a.mode,CartonGripProbe))(env)
+  tracker=BreakdownScorer() if a.mode=='cut-probe' else None;released=False;previous_positions=None;previous_cutter=None
+  if tracker is not None:task._tracker=tracker;task._diagnostic=False
   with (a.out/'trajectory.jsonl').open('w') as trace:
-   for step in range(440 if robot else 180):
+   for step in range(2400 if a.mode=='open-probe' else 1200 if a.mode=='cut-probe' else 440 if robot else 180):
     phase='settle' if step<60 else 'wall_load' if step<120 else 'release'
     f=(0.,-.25,0.) if phase=='wall_load' and not robot else (0.,0.,0.)
     base.scene['east'].permanent_wrench_composer.set_forces_and_torques_index(forces=torch.tensor([[f]],device=base.device),torques=torch.zeros((1,1,3),device=base.device),is_global=True)
@@ -65,12 +80,29 @@ def main():
       for y in [-1,1]:
        for z in [-1,1]:vertices.append(pp[s['name']][:3]+rr[s['name']]@(.5*np.array(s['size'])*np.array((x,y,z))))
     vertices=np.array(vertices);low=float(vertices[:,2].min()-TOP);high=float(vertices[:,2].max()-TOP);worst=max(worst,sep);minz=min(minz,low);bestflat=min(bestflat,high-low)
-    row={'time':env._t,'phase':phase,'robot_control':control,'poses':{n:v.tolist() for n,v in pp.items()},'angles_deg':angles,'max_crease_separation_m':sep,'lowest_vertex_m':low,'highest_vertex_m':high,'force_N':f};trace.write(json.dumps(row)+'\n')
+    row={'time':env._t,'phase':phase,'robot_control':control,'poses':{n:v.tolist() for n,v in pp.items()},'angles_deg':angles,'max_crease_separation_m':sep,'lowest_vertex_m':low,'highest_vertex_m':high,'force_N':f}
+    if tracker is not None:
+     cutter=pose('cutter');cr=quat_xyzw_to_matrix(cutter[3:]);tip=cutter[:3]+cr@np.array((.062,0,-.020));reference=rr['north'];origin=pp['north'][:3]-reference@np.array((0,WIDTH/2,HEIGHT/2));localtip=reference.T@(tip-origin);hands=[];held=False
+     for side in ['left','right']:
+      ids,fids=env._ids[side+'_robot'];q=arr(base.scene[side+'_robot'].data.joint_pos)[0];tcp,rotation=ik.tcp_pose(q[ids],env.rig.bases[side]);opening=float(np.clip(q[fids].mean()/FINGER_OPEN,0,1));hands.append(tcp);held|=np.linalg.norm(tcp-cutter[:3])<.035 and .08<opening<.38
+     bottom=[angles[n+'_bottom_hinge'] for n in ['north','south','east','west']];top=[(-angles[n+'_top_hinge'])%360 for n in ['north','south','east','west']];top=[0. if x>350 else x for x in top]
+     speed=0. if previous_positions is None else max(float(np.linalg.norm(pp[n][:3]-previous_positions[n])/ .05) for n in pp);cspeed=0. if previous_cutter is None else float(np.linalg.norm(cutter[:3]-previous_cutter)/.05);previous_positions={n:p[:3].copy() for n,p in pp.items()};previous_cutter=cutter[:3].copy();vmin=vertices.min(0);vmax=vertices.max(0)
+     sample={'time':env._t,'blade_tip_local':localtip.tolist(),'blade_alignment':float(-np.dot(cr[:,2],reference[:,2])),'cutter_held':bool(held),'bottom_angles':bottom,'top_angles':top,'crease_separation':sep,'min_height':low,'max_height':high,'carton_speed':speed,'cutter_height':float(cutter[2]-TOP),'cutter_parked':bool(np.linalg.norm(cutter[:3]-np.array(CUTTER_START))<.05 and cspeed<.02),'hands_clear':all(np.linalg.norm(h-np.clip(h,vmin,vmax))>.07 and np.linalg.norm(h-cutter[:3])>.065 for h in hands)}
+     row['score_sample']=sample;row['metrics']=tracker.update(sample);row['cutter_pose']=cutter.tolist()
+     if tracker.coverage.complete and not released:
+      for name in ['north','south']:
+       joint=UsdPhysics.RevoluteJoint(base.scene.stage.GetPrimAtPath(f'/World/envs/env_0/{name}_bottom/{name}_bottom_hinge'));joint.GetLowerLimitAttr().Set(-85.);joint.GetUpperLimitAttr().Set(175.)
+      released=True
+    trace.write(json.dumps(row)+'\n')
     if not np.isfinite(vertices).all() or sep>.03:raise RuntimeError('unstable carton/crease failure')
-    panels=[cv2.resize(arr(base.scene[n].data.output['rgb'])[0,:,:,:3].astype(np.uint8),(480,270)) for n in ['top_cam','left_cam','right_cam']];canvas=np.zeros((594,960,3),dtype=np.uint8);canvas[36:306,240:720]=panels[0];canvas[306:576,:480]=panels[1];canvas[306:576,480:]=panels[2]
-    cv2.putText(canvas,('CARTON ROBOT GRIP PROBE | ' if robot else 'NATIVE CARTON | ')+phase+(' | unsealed diagnostic' if a.unsealed else ' | sealed bottom'),(12,25),cv2.FONT_HERSHEY_SIMPLEX,.57,(255,255,255),1,cv2.LINE_AA);cv2.putText(canvas,('Ordinary robot commands. Rim grip/lift diagnostic, not task completion.' if robot else 'Free rigid panels and physical creases. Force probe, not robot completion.'),(12,590),cv2.FONT_HERSHEY_SIMPLEX,.45,(255,205,120),1,cv2.LINE_AA);video.append_data(canvas)
-    if step in (59,119,179):imageio.imwrite(a.out/f'step-{step}.png',canvas)
+    panels=review.panels(base);canvas=np.zeros((594,960,3),dtype=np.uint8);canvas[36:306,240:720]=panels[0];canvas[306:576,:480]=panels[1];canvas[306:576,480:]=panels[2]
+    cv2.putText(canvas,('CARTON ROBOT GRIP PROBE | ' if robot else 'NATIVE CARTON | ')+phase+(' | unsealed diagnostic' if a.unsealed else ' | sealed bottom'),(12,25),cv2.FONT_HERSHEY_SIMPLEX,.57,(255,255,255),1,cv2.LINE_AA);cv2.putText(canvas,(('Measured cutting score: '+str(tracker.value)+' | incomplete task attempt' if tracker else 'Ordinary robot commands. Rim grip/lift diagnostic, not task completion.') if robot else 'Free rigid panels and physical creases. Force probe, not robot completion.'),(12,590),cv2.FONT_HERSHEY_SIMPLEX,.45,(255,205,120),1,cv2.LINE_AA);video.append_data(canvas)
+    if step in (59,119,179,279,399,599,799,999,1199):imageio.imwrite(a.out/f'step-{step}.png',canvas)
+    if robot is not None and getattr(robot,"failure",None):break
+    if a.mode=='open-probe' and robot.index>=4:break
   result={'diagnostic':True,'task_score':None,'unsealed_start':a.unsealed,'max_crease_separation_m':worst,'lowest_vertex_m':minz,'smallest_height_span_m':bestflat,'checks':{'creases_intact':worst<.004,'above_table':minz>-.004}}
+  if a.mode=='open-probe':result|={'controller_failure':robot.failure,'flaps_completed':robot.index,'final_angles_deg':angles}
+  if tracker is not None:result|={'diagnostic':False,'task_score':tracker.value,'privileged_robot_attempt':True,'metrics':tracker.result(),'bottom_up_start':True}
   (a.out/'result.json').write_text(json.dumps(result,indent=2)+'\n')
  except BaseException as error:
   import traceback;traceback.print_exc();(a.out/'error.json').write_text(json.dumps({'error':str(error),'type':type(error).__name__},indent=2));raise
