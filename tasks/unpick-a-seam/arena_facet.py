@@ -96,9 +96,11 @@ def asset(spec):
 class FacetView:
     """Read-only surface adapter; preserve every-substep hinge-gap evidence."""
     count=1
-    def __init__(self,simulation,shell,*,geometry_aperture_m=None):
+    def __init__(self,simulation,shell,*,geometry_aperture_m=None,boundary_tolerance_m=0.):
         self.shell=shell;self.view=simulation.create_rigid_body_view(shell['bodies'])
         self.geometry_aperture_m=geometry_aperture_m
+        if not 0.<=boundary_tolerance_m<=.0001:raise ValueError('Boundary tolerance outside0–0.1mm')
+        self.boundary_tolerance_m=boundary_tolerance_m
         paths=list(self.view.prim_paths)
         self.order=np.array([paths.index(p) for p in shell['bodies']])
         if self.view.count!=len(self.order):raise RuntimeError('Missing facet body')
@@ -108,6 +110,7 @@ class FacetView:
         self.first_endpoint_warning=None;self.last_check=None;self.last_poses=None
         self.first_aperture_warning=None
         self.first_solid_failure=None;self.solid_checks=0;self.maximum_thread_overlap=0.
+        self.tolerated_boundary_intersections=0;self.maximum_tolerated_boundary_depth_m=0.
         self.geometry_maxima={}
     def poses(self):
         values=self.view.get_transforms()
@@ -151,6 +154,9 @@ class FacetView:
                     first_endpoint_warning=self.first_endpoint_warning,
                     first_aperture_warning=self.first_aperture_warning,
                     native_thread_solid_audit=dict(checks=self.solid_checks,
+                        boundary_tolerance_m=self.boundary_tolerance_m,
+                        tolerated_boundary_intersections=self.tolerated_boundary_intersections,
+                        maximum_tolerated_boundary_depth_m=self.maximum_tolerated_boundary_depth_m,
                         first_failure=self.first_solid_failure,
                         maximum_capsule_overlap_m=self.maximum_thread_overlap,
                         interpretation='Exact current capsule axes against actual box midplanes; finite overlap is reported separately. The independent swept mesh/junction guards remain active.'),
@@ -159,7 +165,12 @@ class FacetView:
     def audit_thread_solids(self,segments,radius,time_s):
         from panel_diagnostics import solid_contacts
         result=solid_contacts(self.shell['model'],self.last_poses,segments,
-                              radius=radius,thickness=self.shell['material'].thickness_m)
+                              radius=radius,thickness=self.shell['material'].thickness_m,
+                              boundary_tolerance_m=self.boundary_tolerance_m)
+        tolerated=result.get('tolerated_boundary_intersections',[])
+        self.tolerated_boundary_intersections+=len(tolerated)
+        self.maximum_tolerated_boundary_depth_m=max(self.maximum_tolerated_boundary_depth_m,
+            max((r['distance_to_actual_boundary_m'] for r in tolerated),default=0.))
         self.solid_checks+=1
         self.maximum_thread_overlap=max(self.maximum_thread_overlap,
             result['maximum_capsule_overlap_lower_bound_m'])

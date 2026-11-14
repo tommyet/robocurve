@@ -231,12 +231,17 @@ class NativeThreadCoupler:
     excess thread travel raises and invalidates the trial. The caller must
     record that error and must not resume with a saturated/clamped state.
     """
-    def __init__(self, stage_id, metadata, spec=None, native_io=None,*,batch_sdf_notices=False):
+    def __init__(self, stage_id, metadata, spec=None, native_io=None,*,batch_sdf_notices=False,material_stride=1):
         from omni.physx import get_physx_interface, get_physx_simulation_interface
         from pxr import PhysicsSchemaTools, Sdf
         from integrity import RimDomainGuard
         self.integrity=RimDomainGuard()
         self.native_io=native_io
+        if material_stride not in (1,5) or (material_stride!=1 and native_io is None):
+            raise ValueError('Material stride must be1 or5; multirate mode requires native tensors')
+        self.material_stride=material_stride
+        self._material_step=0
+        self._held_torques=None
         self.physics=get_physx_interface()
         self.sim=get_physx_simulation_interface()
         self.stage_id=stage_id
@@ -281,12 +286,23 @@ class NativeThreadCoupler:
         return np.asarray(tr["position"],dtype=float),rotation(tr["rotation"])
 
     def before_step(self, *, frozen_material_diagnostic=False):
-        import carb
         if self.native_io is not None:
+            # Explicit sample-and-hold approximation: keep native constraints,
+            # collisions and equal/opposite external torque active EVERY step.
+            # Cache separately because assessor reads can clear io.torques.
+            refresh=self._material_step%self.material_stride==0
+            self._material_step+=1
+            if not refresh:
+                if not frozen_material_diagnostic:
+                    self.native_io.torques[:]=self._held_torques
+                    self.native_io.flush_torques()
+                return
             self.native_io.begin_step()
             self.audit_integrity(refresh=False)
             self._before_tensor_step(frozen_material_diagnostic=frozen_material_diagnostic)
+            self._held_torques=self.native_io.torques.copy()
             return
+        import carb
         if frozen_material_diagnostic:raise ValueError('Frozen diagnostic requires tensor state')
         self.audit_integrity(refresh=False)
         hp,hR=self.frame(self.meta["hub_path"])

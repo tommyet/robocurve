@@ -28,7 +28,7 @@ def native_audit(stage):
         for path in shell['bodies']:
             prim=stage.GetPrimAtPath(path);shape=stage.GetPrimAtPath(path+'/Shape')
             if not prim.HasAPI(UsdPhysics.RigidBodyAPI) or UsdPhysics.RigidBodyAPI(prim).GetKinematicEnabledAttr().Get():raise RuntimeError('Paper panel must be free/dynamic')
-            if shape.GetTypeName()!='Cube' or abs(shape.GetAttribute('xformOp:scale').Get()[2]-.0001)>1e-10:raise RuntimeError('Paper panel must be100um analytic box')
+            if shape.GetTypeName()!='Cube' or abs(shape.GetAttribute('xformOp:scale').Get()[2]-shell['material'].thickness_m)>1e-10:raise RuntimeError('Paper thickness does not match its declared material')
         for path in shell['joints']:
             prim=stage.GetPrimAtPath(path)
             if not prim.GetRelationship('physics:body0').GetTargets() or not prim.GetRelationship('physics:body1').GetTargets():fixed.append(path)
@@ -42,6 +42,8 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--out',type=Path,required=True);p.add_argument('--steps',type=int,default=10)
     p.add_argument('--physics-hz',type=int,choices=(2000,5000,10000),default=10000)
+    p.add_argument('--paper-profile',choices=('office-80gsm','heavy-200gsm-candidate'),default='office-80gsm')
+    p.add_argument('--panel-spacing-m',type=float,choices=(.012,.04),default=.012)
     p.add_argument('--plan',type=Path)
     p.add_argument('--dream',action='store_true',help='Ordinary Dream policy; mutually exclusive with scripted feedback')
     p.add_argument('--dream-rows-per-request',type=int,choices=(2,4,8),default=8)
@@ -55,6 +57,8 @@ def main():
         help='100 is an explicitly unscored continuity diagnostic; it does not change contact or forces')
     p.add_argument('--geometry-aware-continuity',action='store_true',
         help='Unscored150um empty-aperture diagnostic; preserve raw endpoint errors and native fracture events')
+    p.add_argument('--paper-aperture-um',type=int,choices=(150,250),default=150,
+        help='Explicit numerical panel-gap bound.250um remains below the300um minimum steel-wire thickness; independent swept crossing and fracture checks remain active')
     p.add_argument('--solver-type',choices=('TGS','PGS'),default='TGS')
     p.add_argument('--recenter-at-paper',action='store_true',help='Fixed global origin shift including robot bases and fixed cameras before construction')
     p.add_argument('--reset-profile',choices=('pocket-support-candidate',),default='pocket-support-candidate')
@@ -62,7 +66,8 @@ def main():
     p.add_argument('--refined-contact-diagnostic',action='store_true')
     p.add_argument('--max-depenetration-m-s',type=float)
     a=p.parse_args()
-    if a.dream and (a.plan or a.joint_tracking or a.tool_pose_servo or a.paper_gap_envelope_um!=25 or a.geometry_aware_continuity):p.error('Dream cannot use scripted feedback or a diagnostic continuity envelope')
+    if a.dream and (a.plan or a.joint_tracking or a.tool_pose_servo or a.paper_gap_envelope_um!=25):p.error('Dream cannot use scripted feedback or a diagnostic endpoint envelope')
+    if a.paper_aperture_um!=150 and not a.geometry_aware_continuity:p.error('Explicit aperture bound requires direct geometric continuity')
     if a.joint_tracking and not a.plan:p.error('Joint tracking requires a plan')
     if a.joint_velocity_feedforward_from is not None and (not a.joint_tracking or not 1<=a.joint_velocity_feedforward_from<=a.steps):p.error('Feedforward needs a bounded scripted joint-tracking start')
     if a.tool_pose_servo and (not a.plan or not a.joint_tracking):p.error('Tool-pose servo requires a plan and bounded joint tracking')
@@ -72,6 +77,8 @@ def main():
     import coordinate_frame
     coordinate_frame.configure(a.recenter_at_paper)
     runtime_config.configure(a.reset_profile,a.mesh_profile,a.refined_contact_diagnostic,a.max_depenetration_m_s)
+    runtime_config.PAPER_PROFILE=a.paper_profile
+    runtime_config.PANEL_SPACING_M=a.panel_spacing_m
     plan=actions=None
     if a.plan:
         from motion_plan import load
@@ -79,6 +86,8 @@ def main():
         plan,actions=load(a.plan)
         if a.steps>len(actions):p.error('Requested steps exceed plan')
         if plan['reset_profile']!=a.reset_profile or plan['mesh_profile']!=a.mesh_profile:p.error('Plan and native reset must match')
+        if plan.get('paper_profile','office-80gsm')!=a.paper_profile:p.error('Plan and physical paper grade must match')
+        if plan.get('panel_spacing_m',.012)!=a.panel_spacing_m:p.error('Plan and panel spacing must match')
         if hashlib.sha256(Path(YAM_URDF).read_bytes()).hexdigest()!=plan['urdf_sha256']:raise RuntimeError('Plan URDF mismatch')
         for name,digest in plan['source_sha256'].items():
             if hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()!=digest:raise RuntimeError('Stale plan source: '+name)
@@ -90,12 +99,13 @@ def main():
         'diagnostic_only':a.paper_gap_envelope_um!=25 or a.geometry_aware_continuity,
         'paper_gap_envelope_m':a.paper_gap_envelope_um*1e-6,
         'geometry_aware_continuity':a.geometry_aware_continuity,
-        'empty_aperture_limit_m':.00015 if a.geometry_aware_continuity else None,
+        'empty_aperture_limit_m':a.paper_aperture_um*1e-6 if a.geometry_aware_continuity else None,
         'dream_requests':0,'requested_steps':a.steps,'control_hz':20,'phase':'launch',
         'policy':('Dream with ordinary camera/joint observations' if a.dream else
                   'State-assisted scripted tool-pose servo; ordinary bounded joint commands' if a.tool_pose_servo else
                   'ordinary fixed joint commands; no object state feedback'),
-        'paper_model':'native analytic100um box panels with passive bending/strength hinges',
+        'paper_model':'native analytic box panels with passive bending/strength hinges',
+        'paper_profile':a.paper_profile,'panel_spacing_m':a.panel_spacing_m,
         'world_coordinate_offset_m':coordinate_frame.OFFSET_M.tolist(),
         'plan_sha256':hashlib.sha256(a.plan.read_bytes()).hexdigest() if a.plan else None,
         'reset_profile':a.reset_profile,'mesh_profile':a.mesh_profile,
@@ -121,7 +131,7 @@ def main():
         arena_hardware.PANEL_POSITION_ITERATIONS=a.position_iterations
         arena_panels.POSITION_ITERATIONS=a.position_iterations
         arena_panels.MAXIMUM_HINGE_GAP_M=a.paper_gap_envelope_um*1e-6
-        arena_panels.GEOMETRIC_APERTURE_LIMIT_M=.00015 if a.geometry_aware_continuity else None
+        arena_panels.GEOMETRIC_APERTURE_LIMIT_M=a.paper_aperture_um*1e-6 if a.geometry_aware_continuity else None
         from yam_arena import inspect_embodiment as wrapper,scene as adapter
         wrapper._APP=app;report['phase']='build'
         emb=wrapper.YamArenaEmbodiment(task=str(Path(__file__).with_name('task_panels.py')),object_jitter=0.,control_hz=20,cam_width=224,cam_height=224,device='cpu')

@@ -23,6 +23,9 @@ def main():
     parser.add_argument('--state',type=Path,required=True)
     parser.add_argument('--plan',type=Path,required=True)
     parser.add_argument('--out',type=Path,required=True)
+    parser.add_argument('--physics-hz',type=int,choices=(240,480,960),default=960)
+    parser.add_argument('--solver-iterations',type=int,choices=(32,128),default=128)
+    parser.add_argument('--center-peg-reset',action='store_true',help='Explicit alternative initial peg layout: first at centre, spare at y=0.20m; reset-only translation, never an action-time edit')
     args=parser.parse_args()
     source=Path(__file__).resolve().parent
     provenance=json.loads(args.state.with_suffix('.json').read_text())
@@ -36,8 +39,10 @@ def main():
     plan=json.loads(args.plan.read_text())
     actions=np.asarray([frame['action14'] for frame in plan['frames']],float)
     if (plan.get('checkpoint_sha256')!=digest or actions.ndim!=2 or
-            actions.shape[1]!=14 or not 1<=len(actions)<=400 or not np.isfinite(actions).all()):
+            actions.shape[1]!=14 or not 1<=len(actions)<=1200 or not np.isfinite(actions).all()):
         raise ValueError('Expected bounded ordinary commands for this checkpoint')
+    if bool(plan.get('requires_center_peg_reset'))!=args.center_peg_reset:
+        raise ValueError('Plan and explicit alternative initial peg layout must match')
     if state['nodes'].shape!=state['velocities'].shape or state['action'].shape!=(14,):
         raise ValueError('Incomplete measured state')
     if not all(np.isfinite(x).all() for x in state.values()):raise ValueError('Nonfinite checkpoint')
@@ -53,6 +58,8 @@ def main():
     report=dict(kind='unscored_native_checkpoint_contact_diagnostic',status='initializing',
         score=None,demo=False,dream_requests=0,raised_support_candidate=True,
         requested_steps=len(actions),completed_steps=0,provenance=provenance,
+        physics_hz=args.physics_hz,solver_iterations=args.solver_iterations,
+        center_peg_reset=args.center_peg_reset,
         plan_sha256=hashlib.sha256(args.plan.read_bytes()).hexdigest())
     def save():
         report['wall_seconds']=time.monotonic()-started
@@ -65,9 +72,10 @@ def main():
         os.environ['ROBOCURVE_SHIRT_RAISED_SUPPORT']='1'
         os.environ['ROBOCURVE_SHIRT_SURFACE_CONTACT_DIAGNOSTIC']='1'
         os.environ['ROBOCURVE_SHIRT_REGULAR_REFINED']='1'
+        os.environ['ROBOCURVE_SHIRT_PAD_REFINED']='0'
         os.environ['ROBOCURVE_SHIRT_CONTACT_REFINED']='0'
-        os.environ['ROBOCURVE_SHIRT_SOLVER_ITERATIONS']='128'
-        os.environ['ROBOCURVE_SHIRT_CENTER_PEG_DIAGNOSTIC']='0'
+        os.environ['ROBOCURVE_SHIRT_SOLVER_ITERATIONS']=str(args.solver_iterations)
+        os.environ['ROBOCURVE_SHIRT_CENTER_PEG_DIAGNOSTIC']='1' if args.center_peg_reset else '0'
         from isaaclab.app import AppLauncher
         app=AppLauncher(headless=True,enable_cameras=True).app
         import torch
@@ -78,7 +86,7 @@ def main():
         from yam_arena import inspect_embodiment as wrapper,scene
         from yam_arena.constants import ARM_JOINTS,FINGER_JOINTS,FINGER_OPEN,SHOULDER,WRIST,GRIPPER
         from run import encode,native_audit
-        scene.PHYSICS_DT=1/960
+        scene.PHYSICS_DT=1/args.physics_hz
         original_callback=scene.env_cfg_callback
         def configure_callback(*values,**kwargs):
             configure=original_callback(*values,**kwargs)
@@ -111,7 +119,14 @@ def main():
             robot.actuators.target_command.set_velocity_index(value=torch.zeros_like(v),env_ids=ids)
         for name in ('left_peg','right_peg'):
             peg=base.scene[name]
-            peg.write_body_link_pose_to_sim_index(body_poses=torch.as_tensor(state[name+'_body_poses'][None],device=base.device,dtype=torch.float32),env_ids=ids)
+            peg_poses=state[name+'_body_poses'].copy()
+            if args.center_peg_reset:
+                # These offsets change the declared INITIAL layout only.
+                # The later actions must physically remove, carry and clip it.
+                delta=-.115 if name=='left_peg' else .315
+                peg_poses[:,1]+=delta
+                report.setdefault('reset_only_peg_translation_m',{})[name]=[0.,delta,0.]
+            peg.write_body_link_pose_to_sim_index(body_poses=torch.as_tensor(peg_poses[None],device=base.device,dtype=torch.float32),env_ids=ids)
             peg.write_body_link_velocity_to_sim_index(body_velocities=torch.as_tensor(state[name+'_body_velocities'][None],device=base.device,dtype=torch.float32),env_ids=ids)
         cloth=base.scene['tshirt'];native=torch.as_tensor(np.c_[state['nodes'],state['velocities']][None],
             device=base.device,dtype=torch.float32)
@@ -148,7 +163,25 @@ def main():
         signal.signal(signal.SIGTERM,terminated)
         base.sim.render();base.scene.update(0.)
         snapshot(0,state['action']);report['status']='running';save()
-        for step,action in enumerate(actions,1):
+        from joint_tracking import JointTracking
+        from scripted_clip import PegMouthServo
+        from arena_props import peg_state
+        tracking=JointTracking()
+        track_start=plan.get('requires_joint_feedback_from')
+        window=plan.get('clip_servo_window')
+        servo=PegMouthServo(start=window[0],end=window[1]) if window else None
+        active=state['action'].copy()
+        for step,reference in enumerate(actions,1):
+            observed=np.asarray(emb._observation().state['joint_pos'],float)
+            action=reference.copy()
+            if servo is not None:
+                poses=peg_state(emb._env,'left_peg').body_poses if servo.start<step<=servo.end+1 else None
+                action=servo.action(step,action,observed,poses)
+                report['peg_alignment']=servo.records
+            action=tracking.action(action,observed,enabled=track_start is not None and step>track_start)
+            bounded=np.clip(action,emb._low,emb._high)
+            active=active+np.clip(bounded-active,-limits,limits)
+            action=active.copy()
             emb._env.step(torch.as_tensor(action[None],device=base.device,dtype=torch.float32))
             snapshot(step,action);report['completed_steps']=step
             if step%20==0:save()

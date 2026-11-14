@@ -1,8 +1,79 @@
 # Shared working notes
 
-Last updated: 2026-11-13 UTC. Read this before starting work; update it when an
+Last updated: 2026-11-14 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
+
+## 2026-11-14 — practical submission standard and current trials
+
+- Operator: repository agent, continuing `codex/six-task-completion-2026-11-13`.
+  The user explicitly asked for efficient acceptance-standard work and PRs.
+  Full demonstrations and honest scoring remain required; microscopic model
+  perfection is not the objective. The board's accepted examples include
+  analytic O-ring/tape contact laws (TK-NT76KH, TK-QXRCYD), a two-piece hinged
+  ice tray (TK-YTH6M4), and heavier segmented cord (TK-53WVPU). These are
+  precedents for disclosed approximations, not acceptance guarantees.
+  Read-only evidence: `artifacts/submission-standard-2026-11-14/`.
+- Cake PR1919 was rejected at23:44 UTC on13 November for the jobs-importance
+  framing. Commit7c8c0b7 changes only its category to Societal relatability and
+  context to decorating a birthday cake. Media, physics and scores remain
+  unchanged. Both that push and empty retry2e088c6 received the board's
+  server-side ingestion error, at19:50 and19:56 UTC. At21:00 the PR remains
+  open/Not accepted with no successful revised receipt. Do not describe it as
+  accepted or revised-and-received; do not spam retries or open a duplicate PR.
+- Shirt176: two240Hz reconstructions completed but lost the cloth, including
+  full finger closure with128 iterations.480Hz/128 iterations retained the
+  left hem after right-hand release for all180 actions, in300.98s wall. The
+  final observed patch remains within the hand; a native image shows the shirt
+  hanging. This is a reconstruction diagnostic, not a full task demo.
+  The1000-action first-peg continuation181 is running. Its alternative initial
+  peg layout is explicitly centre/left-spare, with translations performed only
+  during reconstruction. Ordinary actions must still remove/carry/clip the
+  free spring peg. Final evidence must start from the corresponding shared
+  fresh reset; never splice these probes into a purported episode.
+- Seam176:12 capsules per closed loop preserve the same centreline/radius;
+  an explicit10x numerical mass makes each loop0.1745g, including gravity.
+  The original cutting law still failed before cutting.179's declared sharp
+  edge law (50mN inward native contact for10ms) produced the first real
+  severing event at13.3677s; no blade damage, thread crossing or broken cloth
+  hinge was reported. It stopped2ms later on5.29% strain of averaged render
+  vertices. For rigid facets that is not material strain: candidate180 records
+  it as telemetry while retaining actual box-panel aperture, swept thread,
+  junction, blade-damage and native-fracture checks. It is still running; no
+  stitch removal or task score has yet been established.
+- Staple178: the200gsm/0.2mm paper candidate uses190 physical panels per sheet
+  and the original deformable steel. It reached332 actions, past the old299
+  failure, then stopped at a153.47µm empty panel aperture. No wire crossing,
+  broken paper hinge or disconnected wire was reported.182 explicitly allows
+  up to250µm numerical aperture, below the wire's300µm minimum thickness,
+  while retaining swept crossing,30µm wire continuity and native fracture
+  guards. This is a new, unvalidated configuration, not a rescore of178 as
+  successful. The assessor now uses the recorded paper thickness/grid instead
+  of silently assuming80gsm/12mm panels. Extraction remains unproven.
+- Tie178:240-action front-wrap and380-action lower-grip/circle continuations
+  complete, but final native geometry does not establish a knot. The moving
+  narrow strand migrated outside the planned wrap. Further low-wrap routes
+  were rejected locally for arm collisions/reach; no GPU was spent on those.
+  A genuine threading/tightening sequence and fresh full demo are still needed.
+- Wheel173: the physical left-rim brace trial is running at10kHz.179's paired
+  material-stride1/5 controls differ by only0.64µm in final rim centres over
+ 0.1s and reduce material bookkeeping, but save only a fraction of total cost.
+  The2kHz native-physics control changes tension substantially (minimum0N
+  versus134.7N at10kHz; approximately1.05mm centre difference after0.5s), so
+  it is rejected. Do not use it merely to make the demo faster. The production
+  candidate remains stride1/10kHz; no full truing score exists yet.
+- Current rentals: A40 k6yi0tfzyuh133 (started20:00 UTC) and A40
+  wbti6lecu6am1a (started20:18 UTC), each$0.59/hour. Both have independent
+  local stop watchdogs and bounded processes; lifecycle files under
+  `artifacts/submission-{fresh,materials}-2026-11-14/` hold current deadlines.
+  These supersede the earlier all-stopped entry. Three prior stopped-Pod
+  restart attempts failed explicitly for capacity and were not restarted.
+  Prior cumulative estimate$23.70 is unchanged as a historical subtotal;
+  add this session's measured rental time at shutdown, excluding storage/Dream.
+- Local checks currently pass:84 wheel,85 seam,77 staple and20 shirt tests.
+  No new Dream calls or upstream PRs for the five unfinished tasks. The ten
+  new ideas remain deferred, without paid tests. Update this entry after final
+  results, artifact download, submission and verified shutdown.
 
 ## 2026-11-13 — final contact gate and GPU shutdown, 23:11 UTC
 

@@ -44,6 +44,7 @@ PRELOADED_RESET_CANDIDATE = False
 CENTRAL_SPRING_CANDIDATE = False
 DISTANCE_TOLERANCE_COMPENSATION_M = 0.
 BATCH_SDF_NOTICES = False
+MATERIAL_STRIDE = 1
 SOLVER_TYPE = 'TGS'
 FIXTURE_LAYOUT = 'reference'
 RESET_DIAGNOSTICS = []
@@ -120,6 +121,8 @@ def reset_assembly(env, env_ids, assembly_name):
         item['coupling'].friction.rest[:] = 0.
         item['coupling'].friction.dissipated[:] = 0.
         item['coupling'].parameters.invalidate()
+        item['coupling']._material_step=0
+        item['coupling']._held_torques=None
         item['coupling'].last = []
         from mechanics import WheelSpec
         spec=item['coupling'].spec
@@ -198,7 +201,7 @@ def install_material_hook(base, stage):
         item['tensor_view']=tensor_view
         io=TensorNativeIO(tensor_view,body_paths(item['metadata']))
         item['coupling'] = NativeThreadCoupler(stage_id, item['metadata'],native_io=io,
-            batch_sdf_notices=BATCH_SDF_NOTICES)
+            batch_sdf_notices=BATCH_SDF_NOTICES,material_stride=MATERIAL_STRIDE)
     original = base.scene.write_data_to_sim
     def before_substep(*args, **kwargs):
         result = original(*args, **kwargs)

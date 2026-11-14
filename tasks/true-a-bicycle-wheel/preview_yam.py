@@ -23,6 +23,7 @@ def main():
     p.add_argument('--joint-velocity-feedforward-from',type=int,help='From this action add native drive D/K desired-velocity compensation through ordinary bounded joint targets')
     p.add_argument('--central-spring-candidate',action='store_true')
     p.add_argument('--batch-sdf-notices',action='store_true',help='Batch identical native Float updates; standalone paired501-state trajectory verified identical')
+    p.add_argument('--material-stride',type=int,choices=(1,5),default=1,help='Explicit material sample-and-hold approximation; keep native physics and torque application at every substep')
     p.add_argument('--solver-type',choices=('TGS','PGS'),default='TGS')
     p.add_argument('--distance-tolerance-compensation-m',type=float,choices=(0.,.025),default=0.)
     p.add_argument('--preloaded-reset-candidate',action='store_true',help='Use the measured loaded internal shape only when constructing/resetting the scene')
@@ -86,6 +87,8 @@ def main():
         'central_spring_candidate':a.central_spring_candidate,
         'fixture_layout':fixture_layout,
         'batch_sdf_notices':a.batch_sdf_notices,
+        'material_stride':a.material_stride,
+        'material_sample_hz':a.physics_hz/a.material_stride,
         'solver_type':a.solver_type,
         'distance_tolerance_compensation_m':a.distance_tolerance_compensation_m,
         'tool_pose_servo_diagnostic':a.tool_pose_servo_diagnostic,
@@ -121,6 +124,7 @@ def main():
         arena_wheel.PRELOADED_RESET_CANDIDATE=a.preloaded_reset_candidate
         arena_wheel.CENTRAL_SPRING_CANDIDATE=a.central_spring_candidate
         arena_wheel.BATCH_SDF_NOTICES=a.batch_sdf_notices
+        arena_wheel.MATERIAL_STRIDE=a.material_stride
         arena_wheel.SOLVER_TYPE=a.solver_type
         arena_wheel.FIXTURE_LAYOUT=fixture_layout
         arena_wheel.DISTANCE_TOLERANCE_COMPENSATION_M=a.distance_tolerance_compensation_m

@@ -54,7 +54,12 @@ def _hits(start,end,triangles):
 
 
 class ThreadClothAudit:
-    def __init__(self,faces):
+    def __init__(self,faces,*,boundary_tolerance_m=0.):
+        if not 0.<=boundary_tolerance_m<=.0001:
+            raise ValueError('Boundary contact tolerance must be between zero and0.1mm')
+        self.boundary_tolerance_m=float(boundary_tolerance_m)
+        self.tolerated_boundary_hits=0
+        self.maximum_tolerated_depth_m=0.
         self.faces=np.asarray(faces,int);self.previous=None;self.previous_triangles=None
         self.previous_bounds=None
         self.previous_points=None
@@ -62,6 +67,21 @@ class ThreadClothAudit:
         counts=Counter(tuple(sorted((int(a),int(b)))) for face in self.faces
                        for a,b in zip(face,np.roll(face,-1)))
         self.boundary_edges=np.asarray([edge for edge,count in counts.items() if count==1],int).reshape(-1,2)
+
+    def _qualified_hits(self,start,end,triangles,points):
+        hits,_,parameters=_intersection_coordinates(start,end,triangles)
+        if not self.boundary_tolerance_m or not hits.any():return hits
+        ends=points[self.boundary_edges];d=ends[:,1]-ends[:,0]
+        dd=np.einsum('ij,ij->i',d,d)
+        for k in np.flatnonzero(hits):
+            point=start[k]+parameters[k]*(end[k]-start[k])
+            fraction=np.clip(np.divide(np.einsum('ij,ij->i',point-ends[:,0],d),dd,
+                out=np.zeros_like(dd),where=dd>0.),0.,1.)
+            depth=float(np.linalg.norm(ends[:,0]+fraction[:,None]*d-point,axis=1).min())
+            if depth<=self.boundary_tolerance_m:
+                hits[k]=False;self.tolerated_boundary_hits+=1
+                self.maximum_tolerated_depth_m=max(self.maximum_tolerated_depth_m,depth)
+        return hits
 
     def _details(self,start,end,triangles,segment_ids,face_ids,points,space,limit=8):
         """Distances explain a failure; they never exempt or change one.
@@ -133,7 +153,7 @@ class ThreadClothAudit:
             si,fi=np.nonzero(hit);segment_ids.extend(si+start);face_ids.extend(candidates[fi])
         segment=np.asarray(segment_ids,int);face=np.asarray(face_ids,int)
         current=triangles[face]
-        static=_hits(segments[segment,0],segments[segment,1],current)
+        static=self._qualified_hits(segments[segment,0],segments[segment,1],current,points)
         swept=np.zeros(len(segment),dtype=bool)
         swept_details=[]
         if self.previous is not None:
@@ -143,8 +163,8 @@ class ThreadClothAudit:
                 # Check translation in both old and new triangle shape. The
                 # elastic-domain audit separately bounds large deformation.
                 a=self.previous[segment,endpoint];b=segments[segment,endpoint]
-                old_hits=_hits(a,b-displacement,old)
-                new_hits=_hits(a+displacement,b,current)
+                old_hits=self._qualified_hits(a,b-displacement,old,self.previous_points)
+                new_hits=self._qualified_hits(a+displacement,b,current,points)
                 swept|=old_hits|new_hits
                 if self.first_failure is None:
                     if old_hits.any():
@@ -166,4 +186,7 @@ class ThreadClothAudit:
         return self.first_failure is None
 
     def summary(self):
-        return {'valid':self.first_failure is None,'steps':self.steps,'first_failure':self.first_failure}
+        return {'valid':self.first_failure is None,'steps':self.steps,'first_failure':self.first_failure,
+                'boundary_tolerance_m':self.boundary_tolerance_m,
+                'tolerated_boundary_hits':self.tolerated_boundary_hits,
+                'maximum_tolerated_depth_m':self.maximum_tolerated_depth_m}

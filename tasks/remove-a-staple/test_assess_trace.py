@@ -37,5 +37,13 @@ class GeometryEvidenceTests(unittest.TestCase):
         self.assertAlmostEqual(exact-uncertain,.0002)
         with self.assertRaises(ValueError):clearance_lower_bound(wire,[paper],faces,[-.0001])
 
+    def test_heavy_paper_cannot_inherit_thin_sheet_clearance(self):
+        wire=np.array([[[0.,0.,.011],[.01,0.,.011]]])
+        paper=np.array([[-1.,-1.,0.],[1.,-1.,0.],[0.,1.,0.]])
+        faces=[np.array([[0,1,2]])]
+        thin=clearance_lower_bound(wire,[paper],faces,thickness_m=.0001)
+        heavy=clearance_lower_bound(wire,[paper],faces,thickness_m=.0002)
+        self.assertAlmostEqual(thin-heavy,.00005)
+
 
 if __name__=='__main__':unittest.main()

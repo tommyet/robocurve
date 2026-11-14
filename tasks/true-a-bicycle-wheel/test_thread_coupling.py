@@ -4,7 +4,7 @@ from unittest.mock import patch
 from types import SimpleNamespace
 import numpy as np
 from thread_coupling import (response,response_batch,rotation,rotation_batch,relative_thread_angle,
-    relative_thread_angle_batch,ThreadTravelOutOfScope,ThreadSpec,ThreadFriction,NativeFloatAttributes)
+    relative_thread_angle_batch,ThreadTravelOutOfScope,ThreadSpec,ThreadFriction,NativeFloatAttributes,NativeThreadCoupler)
 
 
 def rotvec(vector):
@@ -13,6 +13,30 @@ def rotvec(vector):
 
 
 class ThreadTests(unittest.TestCase):
+    def test_multirate_torque_survives_assessor_reads_and_is_applied_every_substep(self):
+        history=[]
+        class IO:
+            torques=np.zeros((2,3))
+            def begin_step(self):self.torques.fill(0.)
+            def flush_torques(self):history.append(self.torques.copy())
+        coupling=NativeThreadCoupler.__new__(NativeThreadCoupler)
+        coupling.native_io=IO();coupling.material_stride=5
+        coupling._material_step=0;coupling._held_torques=None
+        refresh=[]
+        coupling.audit_integrity=lambda **kwargs:None
+        def update(**kwargs):
+            refresh.append(len(history))
+            coupling.native_io.torques[:]=[[1.,2.,3.],[-1.,-2.,-3.]]
+            coupling.native_io.flush_torques()
+        coupling._before_tensor_step=update
+        for _ in range(12):
+            coupling.before_step()
+            coupling.native_io.begin_step()  # independent observer clears scratch
+        self.assertEqual(refresh,[0,5,10])
+        self.assertEqual(len(history),12)
+        for torques in history:
+            np.testing.assert_array_equal(torques,[[1.,2.,3.],[-1.,-2.,-3.]])
+
     def test_sdf_batch_preserves_values_and_never_calls_usd_inside_change_block(self):
         state={'open':False,'notices':0}
         class ChangeBlock:

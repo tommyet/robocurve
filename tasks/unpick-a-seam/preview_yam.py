@@ -54,7 +54,14 @@ def main():
     p.add_argument('--solver',choices=('TGS','PGS'),default='TGS')
     p.add_argument('--recenter-at-seam',action='store_true',help='Preconstruction translation of the whole world, including robot bases and fixed cameras')
     p.add_argument('--clear-thread-sampling',action='store_true',help='Use the same centreline with24 capsules per loop')
+    p.add_argument('--thread-long-side-links',type=int,choices=(4,10),default=10,
+        help='Explicit12-link or24-link closed-thread discretization; radius, centreline and density unchanged')
+    p.add_argument('--thread-inertia-scale',type=float,choices=(1.,10.),default=1.,
+        help='Explicit numerical mass approximation:10x makes each loop0.175g; geometry/contact/cutting unchanged, gravity scales too')
     p.add_argument('--passive-thread-bending',action='store_true',help='Disclosed passive straight-rest D6 thread bending; no task-aware forces')
+    p.add_argument('--sharp-edge-cut',action='store_true',help='Explicit sharp-edge approximation: measured inward contact force of50mN for10ms severs the contacted thread joint; no cloth/contact guard changes')
+    p.add_argument('--rigid-panel-strain-telemetry',action='store_true',help='Use actual panel apertures and contact damage as the domain checks; averaged render-node strain is telemetry because rigid panels cannot stretch')
+    p.add_argument('--boundary-contact-envelope',action='store_true',help='Explicit0.1mm numerical tolerance at actual outer/needle-hole boundaries only; deeper and interior crossings remain invalid')
     p.add_argument('--convex-capsules-diagnostic',action='store_true',help='Matched scaled convex thread/guard colliders; preserves dimensions and mass, avoids native tiny-capsule contact fallback')
     p.add_argument('--external-forces-once',action='store_true',help='Configure TGS external forces once per physics step before scene construction; measured wheel control motivates this diagnostic')
     p.add_argument('--velocity-iterations',type=int,choices=(1,32),default=None,
@@ -95,11 +102,16 @@ def main():
     if a.geometric_panel_audit and not a.box_panels:p.error('Geometric panel audit requires native box panels')
     if a.panel_passage_diagnostic and not (a.geometric_panel_audit and a.coarse_thread and a.audit_junctions):
         p.error('Panel passage diagnostic requires geometric box-panel audit, 0.8 mm thread and junction audits')
+    if a.rigid_panel_strain_telemetry and not a.panel_passage_diagnostic:
+        p.error('Averaged strain is telemetry only when actual box-panel apertures, thread passage and junctions are all checked')
+    if a.boundary_contact_envelope and not (a.panel_passage_diagnostic and a.crossing_backend=='cpu'):
+        p.error('Boundary envelope requires all direct box-panel and CPU swept-contact audits')
     if a.cpu_ccd and (not a.box_panels or a.crossing_backend!='cpu'):
         p.error('CPU CCD requires box panels and CPU geometric audits')
     if (a.solver!='TGS' or a.recenter_at_seam) and not a.cpu_ccd:
         p.error('Solver/origin comparison requires the CPU candidate')
     if a.clear_thread_sampling and not a.coarse_thread:p.error('Clear sampling requires coarse thread')
+    if a.thread_long_side_links!=10 and not a.clear_thread_sampling:p.error('Reduced thread links require clear sampling')
     if a.passive_thread_bending and not (a.cpu_ccd and a.clear_thread_sampling):
         p.error('Passive thread bending requires the clear-sampled CPU candidate')
     if a.drape_shape!='gaussian' and not a.pre_draped_seam:
@@ -147,7 +159,8 @@ def main():
         a.hole_mesh_spacing,a.physics_hz,settings,a.maximum_stretch,a.quality_mesh,
         .0024-(.0004 if a.coarse_thread else .0002) if (a.resting_seam or a.pre_draped_seam) else 0.,
         a.pre_draped_seam,a.drape_shape,a.sewing_clamp,a.passive_clamp,a.supported_clamp,a.cloth_contact_offset,a.backed_clamp,a.facet_cloth,a.box_panels,
-        a.cpu_ccd,a.solver,a.clear_thread_sampling,a.passive_thread_bending)
+        a.cpu_ccd,a.solver,a.clear_thread_sampling,a.passive_thread_bending,
+        thread_long_side_links=a.thread_long_side_links,thread_inertia_scale=a.thread_inertia_scale)
     a.out.mkdir(parents=True,exist_ok=False)
     frozen=a.out/'task-source';frozen.mkdir()
     hashes={}
@@ -342,7 +355,8 @@ def main():
         thread_view=sim.create_rigid_body_view(all_paths)
         native_paths=list(thread_view.prim_paths)
         order=np.asarray([native_paths.index(path) for path in all_paths])
-        views=([FacetView(sim,shell,geometry_aperture_m=(.0004 if a.panel_passage_diagnostic else .0002) if a.geometric_panel_audit else None)
+        views=([FacetView(sim,shell,geometry_aperture_m=(.0004 if a.panel_passage_diagnostic else .0002) if a.geometric_panel_audit else None,
+                        boundary_tolerance_m=.0001 if a.boundary_contact_envelope else 0.)
                 for shell in facet_shells] if a.facet_cloth else
                [sim.create_surface_deformable_body_view(envroot+'/'+name) for name in ('cloth_left','cloth_right')])
         if blade.count!=1 or handle.count!=1 or any(v.count!=1 for v in views):
@@ -387,13 +401,22 @@ def main():
         # steps are outside this hook and explicitly reported as unobserved.
         # Keeping their state requires a freshly constructed scene per trial;
         # no material/body state is rewound during control execution.
-        cutter=ThreadCutter([len(t['bodies']) for t in threads],CutParameters(thread_radius_m=runtime_config.CONFIG.thread_radius_m))
+        cut_parameters=CutParameters(thread_radius_m=runtime_config.CONFIG.thread_radius_m,
+            minimum_edge_force_n=.05 if a.sharp_edge_cut else .25,
+            sustained_seconds=.010 if a.sharp_edge_cut else .040)
+        report['cutting_law']={'minimum_edge_force_n':cut_parameters.minimum_edge_force_n,
+            'sustained_seconds':cut_parameters.sustained_seconds,
+            'calibration':'Explicit engineering approximation of a sharp thread-cutting edge; not measured tool calibration. Only native contact directed into the blade qualifies.'}
+        report['averaged_panel_strain_role']='telemetry_only_rigid_facets' if a.rigid_panel_strain_telemetry else 'domain_stop'
+        cutter=ThreadCutter([len(t['bodies']) for t in threads],cut_parameters)
         damage=DamageAudit();strain=[StrainAudit(m.rest,m.faces,maximum_stretch=a.maximum_stretch) for m in cloth]
-        crossing=[ThreadClothAudit(m.faces) for m in cloth]
+        boundary_tolerance=.0001 if a.boundary_contact_envelope else 0.
+        report['boundary_contact_tolerance_m']=boundary_tolerance
+        crossing=[ThreadClothAudit(m.faces,boundary_tolerance_m=boundary_tolerance) for m in cloth]
         lengths=np.concatenate([t['lengths'] for t in threads])
         from thread_integrity import ThreadIntegrity,ClosedJunctionCrossings
         integrity=ThreadIntegrity([len(t['lengths']) for t in threads],runtime_config.CONFIG.thread_radius_m)
-        junctions=ClosedJunctionCrossings([m.faces for m in cloth],len(lengths)) if a.audit_junctions else None
+        junctions=ClosedJunctionCrossings([m.faces for m in cloth],len(lengths),boundary_tolerance_m=boundary_tolerance) if a.audit_junctions else None
         contact_history=None
         if a.contact_forensics:
             from contact_history import ContactHistory
@@ -462,8 +485,9 @@ def main():
             state['previous_edge']=edge.copy()
             facet_invalid=native_solid_invalid or (a.facet_cloth and any(view.first_failure for view in views))
             state['non_strain_invalid']=bool(facet_invalid or junction_invalid or damage.crossed_faces or any(s.first_failure for s in crossing))
-            state['hard_invalid']=bool(facet_invalid or junction_invalid or damage.crossed_faces or any(s.first_excursion for s in strain))
-            invalid=bool(state['non_strain_invalid'] or any(s.first_excursion for s in strain))
+            strain_invalid=not a.rigid_panel_strain_telemetry and any(s.first_excursion for s in strain)
+            state['hard_invalid']=bool(facet_invalid or junction_invalid or damage.crossed_faces or strain_invalid)
+            invalid=bool(state['non_strain_invalid'] or strain_invalid)
             if invalid:
                 state['invalid']=True
                 if 'first_invalid_substep' not in report:

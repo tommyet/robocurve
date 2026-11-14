@@ -31,6 +31,8 @@ class SeamRuntime:
     solver: str = 'TGS'
     clear_thread_sampling: bool = False
     passive_thread_bending: bool = False
+    thread_long_side_links: int = 10
+    thread_inertia_scale: float = 1.
 
 
 CONFIG=SeamRuntime()

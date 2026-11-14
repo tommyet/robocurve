@@ -38,7 +38,8 @@ def _spawn(path,cfg,translation=None,orientation=None,**kwargs):
     stage=get_current_stage();root=str(path)[:-len(cfg.body_name)-1]
     if cfg.assembly_name not in ASSEMBLIES:
         metadata=build_scene(stage,root=root,include_table=False,include_papers=False,
-            reset_profile=runtime_config.RESET_PROFILE,mesh_profile=runtime_config.MESH_PROFILE)
+            reset_profile=runtime_config.RESET_PROFILE,mesh_profile=runtime_config.MESH_PROFILE,
+            paper_profile=runtime_config.PAPER_PROFILE)
         if PANEL_CONTACT_CANDIDATE:
             from coordinate_frame import OFFSET_M
             UsdGeom.Xform.Define(stage,root).AddTranslateOp().Set(Gf.Vec3d(*OFFSET_M))

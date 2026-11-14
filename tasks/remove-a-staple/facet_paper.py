@@ -88,12 +88,12 @@ def box_coupon_mesh():
     return _rectangular_mesh(xs,ys,holes)
 
 
-def box_task_mesh(index):
+def box_task_mesh(index,spacing=.012):
     """Full210×148mm sheet candidate, matching the established task layout."""
     from full_scene import SHEET_CENTRES,STAPLE_XY
     cx,cy=SHEET_CENTRES[index]
     centres=[(STAPLE_XY[0]-cx,STAPLE_XY[1]+side*.0064-cy) for side in (-1,1)]
-    return rectangular_panel_mesh((.21,.148),centres,(.0008,.0006))
+    return rectangular_panel_mesh((.21,.148),centres,(.0008,.0006),spacing=spacing)
 
 
 def rotation_quaternion(matrix):
@@ -320,7 +320,8 @@ def measured_surface(shell,poses,maximum_gap_m=.000025,*,geometry_aperture_m=Non
             geometry=dict(measurement='conservative_endpoint_bound',
                 maximum_empty_aperture_upper_bound_m=gap,shared_edge_overlap_proven=True)
         else:
-            geometry=geometric_edge_measurements(model,world,rotations)
+            geometry=geometric_edge_measurements(model,world,rotations,
+                thickness_m=shell.get('material',ShellMaterial()).thickness_m)
             geometry['measurement']='native_edge_geometry'
         result.update(continuity_method='geometric_empty_aperture',
             endpoint_distance_is_stop_condition=False,

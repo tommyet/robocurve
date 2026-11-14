@@ -3,6 +3,8 @@ RESET_PROFILE='floating-reference'
 MESH_PROFILE='baseline'
 REFINED_CONTACT=False
 MAX_DEPENETRATION_M_S=None
+PAPER_PROFILE='office-80gsm'
+PANEL_SPACING_M=.012
 
 
 def configure(reset_profile,mesh_profile,refined_contact,max_depenetration_m_s):

@@ -120,17 +120,19 @@ def patch(left=True,*,hole_half=HOLE_HALF,hole_mesh_spacing=None):
     return mesh if hole_mesh_spacing is None else refine_hole_neighborhood(mesh,hole_half,hole_mesh_spacing)
 
 
-def stitch_loop(y,spacing=.001,*,clear_capsules=False):
+def stitch_loop(y,spacing=.001,*,clear_capsules=False,long_side_links=10):
     """Closed 10 x 2.4 mm centreline; spans both layers through real holes."""
     points=np.array([[.295,y,TABLE_TOP+.0048],[.305,y,TABLE_TOP+.0048],
                      [.305,y,TABLE_TOP+.0024],[.295,y,TABLE_TOP+.0024]])
     nodes=[]
     if clear_capsules and spacing!=.001:raise ValueError('Clear-capsule sampling has fixed physical segment counts')
+    if long_side_links not in (4,10) or (long_side_links!=10 and not clear_capsules):
+        raise ValueError('Reduced thread discretization requires clear capsules')
     for edge,(a,b) in enumerate(zip(points,np.roll(points,-1,axis=0))):
         # At0.8mm diameter, three0.8mm links on the short side make
         # non-neighbouring caps exactly tangent. Two1.2mm links retain the
         # identical centreline while giving ordinary self-contact clearance.
-        n=(10,2,10,2)[edge] if clear_capsules else max(1,int(np.ceil(np.linalg.norm(b-a)/spacing)))
+        n=(long_side_links,2,long_side_links,2)[edge] if clear_capsules else max(1,int(np.ceil(np.linalg.norm(b-a)/spacing)))
         nodes.extend(a+(b-a)*s/n for s in range(n))
     return np.asarray(nodes)
 

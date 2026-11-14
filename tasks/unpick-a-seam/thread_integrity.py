@@ -55,9 +55,9 @@ class ClosedJunctionCrossings:
     and previous arrays together, while retaining every other connector's sweep
     history. Collapsing its endpoint instead would create a fictitious sweep.
     """
-    def __init__(self,faces,number_of_joints):
+    def __init__(self,faces,number_of_joints,*,boundary_tolerance_m=0.):
         from contact_audit import ThreadClothAudit
-        self.audits=[ThreadClothAudit(f) for f in faces]
+        self.audits=[ThreadClothAudit(f,boundary_tolerance_m=boundary_tolerance_m) for f in faces]
         self.active=np.arange(number_of_joints)
         self.severed=set()
 

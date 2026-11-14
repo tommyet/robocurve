@@ -56,7 +56,7 @@ else:
     INITIAL=[mesh.rest.copy() for mesh in MESHES]
 
 def thread_nodes(y):
-    nodes=stitch_loop(y,clear_capsules=CONFIG.clear_thread_sampling);nodes[:,2]-=CONFIG.seam_lowering_m
+    nodes=stitch_loop(y,clear_capsules=CONFIG.clear_thread_sampling,long_side_links=CONFIG.thread_long_side_links);nodes[:,2]-=CONFIG.seam_lowering_m
     if CONFIG.sewing_clamp:
         from clamp_layout import transform
         nodes=transform(nodes,lower_edge_supported=CONFIG.supported_clamp)
@@ -99,7 +99,8 @@ OBJECTS=[
           fabric=FABRIC,color=(.25,.42,.66),contact_refinement=CONFIG.contact_refinement,
           **({'primitive_boxes':CONFIG.box_panels} if CONFIG.facet_cloth else {})),
     *[Thread(f'stitch_{i}',pos=(0.,0.,0.),size=(.011,2*CONFIG.thread_radius_m,.003),
-             nodes=to_native(thread_nodes(y)),radius_m=CONFIG.thread_radius_m,bending=THREAD_BENDING) for i,y in enumerate(STITCH_Y)],
+             nodes=to_native(thread_nodes(y)),radius_m=CONFIG.thread_radius_m,bending=THREAD_BENDING,
+             density_kg_m3=1400.*CONFIG.thread_inertia_scale) for i,y in enumerate(STITCH_Y)],
     *FIXTURE,
     Box('ripper_handle',pos=(.20,-.12,TABLE_TOP+.008),size=HANDLE_SIZE,mass=.018,color=(.2,.45,.25)),
     Box('ripper_blade',pos=(.25,-.12,TABLE_TOP+.008),size=BLADE_SIZE,mass=.001,color=(.7,.72,.74)),

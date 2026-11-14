@@ -93,8 +93,9 @@ def linking_number(first,second):
                 minimum_projected_crossing_separation_m=min(clearances,default=None))
 
 
-def solid_contacts(model,poses,segments,radius=.0004,thickness=.0004):
+def solid_contacts(model,poses,segments,radius=.0004,thickness=.0004,*,boundary_tolerance_m=0.):
     """Static native capsule/box measurements; no shared-vertex averaging."""
+    if not 0.<=boundary_tolerance_m<=.0001:raise ValueError('Boundary tolerance outside0–0.1mm')
     points=model['points'];u=points[:,1]-points[:,0];v=points[:,3]-points[:,0]
     width=np.linalg.norm(u,axis=1);height=np.linalg.norm(v,axis=1)
     basis=np.stack((u/width[:,None],v/height[:,None],model['normals']),axis=2)
@@ -127,9 +128,34 @@ def solid_contacts(model,poses,segments,radius=.0004,thickness=.0004):
     intersections=[dict(panel=int(panel[k]),segment=int(segment[k]),
                         nearest_panel_edge_m=float(np.min(h[k,:2]-np.abs(plane[k,:2]))),
                         point_box_frame_m=plane[k].tolist()) for k in np.flatnonzero(inside)]
+    tolerated=[]
+    if boundary_tolerance_m and intersections:
+        # Only actual outer/hole boundaries count. Interior triangulation or
+        # panel edges cannot exempt a crossing through intact fabric.
+        if '_boundary_panel_corners' not in model:
+            owners=defaultdict(list)
+            for i,ids in enumerate(model['vertex_ids']):
+                for j in range(len(ids)):
+                    owners[tuple(sorted((int(ids[j]),int(ids[(j+1)%len(ids)]))))].append((i,j,(j+1)%len(ids)))
+            model['_boundary_panel_corners']=np.asarray([v[0] for v in owners.values() if len(v)==1],int)
+        bp=model['_boundary_panel_corners']
+        raw_rotation=Rotation.from_quat(np.asarray(poses)[:,3:]).as_matrix()
+        local_edges=model['points'][bp[:,0,None],bp[:,1:]]-model['centres'][bp[:,0],None]
+        ends=np.einsum('bij,bkj->bki',raw_rotation[bp[:,0]],local_edges)+poses[bp[:,0],None,:3]
+        delta=ends[:,1]-ends[:,0];length2=np.sum(delta*delta,axis=1)
+        retained=[]
+        for row in intersections:
+            point=rotation[row['panel']]@np.asarray(row['point_box_frame_m'])+poses[row['panel'],:3]
+            along=np.clip(np.divide(np.sum((point-ends[:,0])*delta,axis=1),length2,
+                out=np.zeros_like(length2),where=length2>0.),0.,1.)
+            depth=float(np.linalg.norm(ends[:,0]+along[:,None]*delta-point,axis=1).min())
+            row['distance_to_actual_boundary_m']=depth
+            (tolerated if depth<=boundary_tolerance_m else retained).append(row)
+        intersections=retained
     return dict(overlapping_pairs=len(rows),maximum_capsule_overlap_lower_bound_m=max(
                     (r['capsule_overlap_lower_bound_m'] for r in rows),default=0.),
                 native_midplane_intersections=intersections,
+                boundary_tolerance_m=boundary_tolerance_m,tolerated_boundary_intersections=tolerated,
                 deepest_pairs=sorted(rows,key=lambda r:r['axis_to_solid_distance_m'])[:8])
 
 def inspect(directory):

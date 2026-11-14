@@ -30,6 +30,7 @@ def main():
     p.add_argument('--solver-position-iterations',type=int,choices=(16,32,64,128,255),default=128)
     p.add_argument('--gpu-physics',action='store_true',help='Compare native GPU rigid physics with the CPU reference')
     p.add_argument('--batch-sdf-notices',action='store_true',help='Write identical Float defaults through cached Sdf specs in one notice batch per native substep')
+    p.add_argument('--material-stride',type=int,choices=(1,5),default=1,help='Explicit material sample-and-hold candidate; native physics and torque application remain at every substep')
     p.add_argument('--recenter-at-axle',action='store_true',help='Translate the entire fixture and world joint anchors before attachment; coordinate precision diagnostic only')
     p.add_argument('--relocated-fixture-diagnostic',action='store_true',help='Explicit10mm-forward/50mm-right/10mm-lower wheel and10mm shorter stand')
     p.add_argument('--external-forces-every-iteration',action='store_true',help='Match the YAM TGS external-force integration option; diagnostic only')
@@ -57,6 +58,8 @@ def main():
             'solver_velocity_iterations':args.solver_velocity_iterations,
             'solver_type':args.solver_type,
             'batch_sdf_notices':args.batch_sdf_notices,
+            'material_stride':args.material_stride,
+            'material_sample_hz':1/(args.dt*args.material_stride),
             'recenter_at_axle':args.recenter_at_axle,
             'fixture_layout':fixture_layout,
             'reset_profile':args.reset_profile,'nipple_flat_phase_deg':args.nipple_flat_phase_deg,'wheel_clocking_deg':args.wheel_clocking_deg,
@@ -149,7 +152,7 @@ def main():
         momentum=MomentumAudit(io.view,metadata['wrench_path'])
         record['native_mass_properties']=momentum.properties()
         if io.view.count!=130:raise RuntimeError('Expected 130 native wheel/wrench bodies')
-        coupling=NativeThreadCoupler(stage_id,metadata,native_io=io,batch_sdf_notices=args.batch_sdf_notices)
+        coupling=NativeThreadCoupler(stage_id,metadata,native_io=io,batch_sdf_notices=args.batch_sdf_notices,material_stride=args.material_stride)
         timings={'material_s':0.,'native_simulation_s':0.,'observation_s':0.,'checkpoint_s':0.}
         record['timing']=timings
         steps=round(args.seconds/args.dt);record['phase']='simulate';last_checkpoint=time.monotonic()

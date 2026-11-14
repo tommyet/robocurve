@@ -11,6 +11,7 @@ class Thread(Box):
     nodes: object=None
     radius_m: float=.0002
     bending: object=None
+    density_kg_m3: float=1400.
     @property
     def free(self):return False
 
@@ -39,6 +40,7 @@ def spawn(path,cfg,**kwargs):
     spec=SPECS[cfg.thread_name]
     if not stage.GetPrimAtPath(str(path)):
         item=author_thread(stage,root,np.asarray(spec.nodes),radius=spec.radius_m,
+                           density=spec.density_kg_m3,
                            joint_kind='d6' if spec.bending is not None else 'spherical',bending=spec.bending)
         SPAWNED[spec.name]=item
         from cpu_scene import configure_native

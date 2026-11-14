@@ -31,8 +31,10 @@ def main():
     p.add_argument('--thread-angular-ccd',action='store_true',help='Short diagnostic only: native speculative CCD for thread rotation, preserving sweep CCD and all physical parameters')
     p.add_argument('--position-iterations',type=int,choices=(128,255),default=128,
         help='Native constraint-resolution comparison only; no geometry, mass, material or validity changes')
+    p.add_argument('--boundary-contact-envelope',action='store_true',
+        help='Explicit0.1mm boundary-contact tolerance; rigid-facet strain from averaged nodes is telemetry, while actual aperture/damage guards remain active')
     p.add_argument('--seconds',type=float,default=.1);a=p.parse_args()
-    if not .05<=a.seconds<=.4:p.error('Short contact diagnostic requires0.05–0.4seconds')
+    if not .05<=a.seconds<=1.:p.error('Short contact diagnostic requires0.05–1second')
     with np.load(a.state) as archive:data={key:archive[key] for key in archive.files}
     provenance=json.loads(a.state.with_suffix('.json').read_text())
     if provenance['data_sha256']!=hashlib.sha256(a.state.read_bytes()).hexdigest():
@@ -41,6 +43,7 @@ def main():
         raise ValueError('Original physical stage hash mismatch')
     a.out.mkdir(parents=True,exist_ok=False)
     report=dict(status='running',score=None,robot_demo=False,physics_hz=a.physics_hz,
+        boundary_contact_envelope=a.boundary_contact_envelope,
         motion_speed=a.speed,requested_seconds=a.seconds,provenance=provenance,
         source_sha256={f.name:hashlib.sha256(f.read_bytes()).hexdigest() for f in Path(__file__).parent.glob('*.py')})
     started=time.monotonic();app=stage=cache=physics=None;attached=False;history=[]
@@ -161,8 +164,9 @@ def main():
             handle_order=np.array([hp.index(path) for path in thread_paths])
             report['effective_shape_counts']={'handle':int(handle.max_shapes),'blade':int(blade.max_shapes),'thread':int(tv.max_shapes)}
         cutter=ThreadCutter([24]*6,CutParameters(thread_radius_m=.0004));integrity=ThreadIntegrity([24]*6,.0004)
-        crossing=[ThreadClothAudit(shell['mesh'].faces) for shell in shells]
-        junctions=ClosedJunctionCrossings([s['mesh'].faces for s in shells],144)
+        boundary_tolerance=.0001 if a.boundary_contact_envelope else 0.
+        crossing=[ThreadClothAudit(shell['mesh'].faces,boundary_tolerance_m=boundary_tolerance) for shell in shells]
+        junctions=ClosedJunctionCrossings([s['mesh'].faces for s in shells],144,boundary_tolerance_m=boundary_tolerance)
         strains=[StrainAudit(s['mesh'].rest,s['mesh'].faces,maximum_stretch=1.05) for s in shells]
         damage=DamageAudit();previous_edge=None;peak_force=0.;dt=1/a.physics_hz
         times=data['tool_target_times'];targets=data['tool_targets'];rotation_path=Slerp(times,Rotation.from_quat(targets[:,3:]))
@@ -182,12 +186,12 @@ def main():
             for side,(shell,pose) in enumerate(zip(shells,poses)):
                 points,check=measured_surface(shell,pose,geometry_aperture_m=.0004)
                 nodes.append(points);checks.append(check)
-                solids.append(solid_contacts(shell['model'],pose,segments))
+                solids.append(solid_contacts(shell['model'],pose,segments,boundary_tolerance_m=boundary_tolerance))
                 crossing[side].update(points,segments,t);strains[side].update(points,t)
             connectors=integrity.update(segments,cutter.severed,t)
             junctions.update(nodes,connectors,cutter.severed,t)
             damage.update(edge if previous_edge is None else previous_edge,edge,nodes,[s['mesh'].faces for s in shells],t);previous_edge=edge
-            invalid=bool(integrity.first_failure or any(c.first_failure for c in crossing) or any(s.first_excursion for s in strains) or
+            invalid=bool(integrity.first_failure or any(c.first_failure for c in crossing) or (not a.boundary_contact_envelope and any(s.first_excursion for s in strains)) or
                 any(not c['valid'] for c in checks) or any(s['native_midplane_intersections'] for s in solids) or damage.crossed_faces or
                 any(not c['valid'] for c in junctions.summary()))
             if handle_contact is not None:

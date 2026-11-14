@@ -1,51 +1,49 @@
 # Six-task batch: submission status
 
-Updated 13 November 2026, 23:11 UTC. The user has authorized one PR per task.
-**Cake is submitted. The other five are not submission-ready.**
+Updated 14 November 2026, 21:05 UTC. The user has authorized one PR per task.
+**Cake has a PR. The other five still need complete demonstrations.**
 
-| Task | Current evidence | What prevents submission |
+| Task | Latest evidence | Remaining work |
 | --- | --- | --- |
-| [Cake](https://github.com/robocurve/benchmark-tasks/pull/1919) | Full robot demo scores 1.0; Dream scores 0.0; independent rescoring, media and setup checks complete. Received as TK-XPE4K7. | Awaiting review; no acceptance or revision decision yet. |
-| [Wheel](../tasks/true-a-bicycle-wheel/README.md) | Native wrench engagement and partial nipple rotation. A new ordinary left-hand rim-bracing plan passes all 1,182 commanded-pose collision checks. | The latest native trial loses its wrench grip during the first turn. The bracing candidate is untested. Full repair, released rotation and numeric judging are absent. |
-| [T-shirt](../tasks/peg-out-a-tshirt/README.md) | Flexible garment, physical spring pegs, native pickup and one-hand retention diagnostics. | Retained cloth has a 0.367 mm triangle overlap with a finger. A finer mesh settles clearly but its fresh pickup was stopped for runtime before reaching the grasp. No complete two-peg hang exists. |
-| [Staple](../tasks/remove-a-staple/README.md) | Plastic steel bending and flexible, punctured paper; real remover contact. | Paper panels separate beyond the declared continuity limit before extraction. Higher solver iteration counts and a smaller timestep have not resolved this. |
-| [Seam](../tasks/unpick-a-seam/README.md) | Flexible panels, real thread loops and contact-qualified cutting. | Loaded blade contact causes excessive fabric strain or thread/fabric crossing before a valid cut. A stationary short control passes, but this does not establish cutting. |
-| [Necktie](../tasks/tie-a-necktie/README.md) | Adult collar drape, wide-end transfer and narrow-end pickup. A refined 40-action contact diagnostic passes five sampled robot, fixture and transverse self-crossing checks. | No complete physical knot, wearable adjustment or released retention. The short test reconstructs a recorded state and is not demonstration evidence. |
+| [Cake PR1919](https://github.com/robocurve/benchmark-tasks/pull/1919) | Demo1.0 and Dream0.0; uploaded media and independent judging complete. Revised category/context after the jobs-importance rejection. | The board returned an ingestion server error twice. No revised receipt yet. Keep the same PR. |
+| [Wheel](../tasks/true-a-bicycle-wheel/README.md) | Physical wrench engagement; a rim-braced trial is running. A cheaper timestep changed spoke tension and was rejected. | Finish the adjustment, release/spin the wheel, and measure the final result. |
+| [T-shirt](../tasks/peg-out-a-tshirt/README.md) | Flexible cloth retained after one-hand release at480Hz/128 iterations;180 actions completed in301s. First-peg continuation is running. | Complete both clips, released retention, then a full fresh-start episode. |
+| [Staple](../tasks/remove-a-staple/README.md) | Heavier paper reached lever engagement without wire crossing or native fracture; stopped on a153µm numerical panel gap. | New250µm aperture candidate remains below the300µm wire thickness and retains damage/crossing guards. Full extraction is being tested. |
+| [Seam](../tasks/unpick-a-seam/README.md) | First contact-qualified thread cut at13.3677s using the declared sharp-edge approximation. | Verify removal and fabric preservation using actual panel/contact geometry, then finish all six stitches. |
+| [Necktie](../tasks/tie-a-necktie/README.md) | Adult collar drape, physical handoffs and ordinary wrapping motions. | The fabric moved outside the attempted wrap. No complete knot, final fit or released retention yet. |
 
-## Compute and saved work
+These are development results, not acceptance claims. Reconstructed checkpoints
+save iteration time but cannot be spliced into submission demonstrations.
 
-All Runpod GPUs are stopped. A fully paginated account check at **23:11 UTC**
-found six Pods and **zero active Pods**. The last GPU stopped at 23:10 UTC.
-All final trial archives were downloaded and SHA-256 checked before shutdown.
-Stopped Pods retain their disks; this is a GPU shutdown, not disk deletion.
+## Compute
 
-Estimated cumulative compute is **$23.70**, compared with the original **$18**
-batch target. This uses recorded elapsed rental time and API hourly rates. It
-excludes storage and Dream charges and is neither an invoice nor a remaining
-account balance. No additional Dream runs were made for the five blocked tasks.
+Two A40 Pods are currently active at$0.59/hour each. Their independent shutdown
+watchdogs currently have deadlines22:14 UTC and22:01 UTC, respectively. Trials
+have separate process caps; stop early after collecting completed evidence.
+Lifecycle records are in ignored local folders:
 
-Code and current validation records are on `codex/six-task-completion-2026-11-13`.
-Detailed findings and reproducible evidence locations are in
-[TEAM_LEARNINGS.md](../TEAM_LEARNINGS.md). Full recordings and private lifecycle
-records remain in ignored local `artifacts/` folders. The cake PR contains only
-its validated task folder, from a separate fresh-upstream submission branch.
+- `artifacts/submission-fresh-2026-11-14/`
+- `artifacts/submission-materials-2026-11-14/`
 
-## Required before the other PRs
+The earlier cumulative compute estimate was$23.70, excluding storage and Dream.
+Add this session's elapsed rental cost after shutdown. This is not an invoice or
+remaining balance. No new Dream calls have been made for the unfinished tasks.
+Stopped older Pods still retain their disks.
 
-1. Resolve the defining interaction without hidden attachments, state animation,
-   invalid material crossings or weakened scoring conditions.
-2. Record one complete fresh-start full-score robot demo. Short reconstructed
-   diagnostics cannot be joined together or promoted into a task episode.
-3. Run Dream with the same reset and physics, then independently rescore and
-   inspect both videos. Disclose extra state used by any feasibility controller;
-   Dream must receive its ordinary policy observations.
-4. Refresh ownership/novelty checks, finalize concise setup and fidelity text,
-   upload anonymous media and submit only that task folder.
+## Submission requirements
 
-The latest board check at 22:20 UTC covered 599 tasks and found no new direct
-title match for the five unfinished tasks. This is a dated screen, not a claim
-reservation or assurance of acceptance.
+Use one complete full-score demonstration, a Dream run on the same setup,
+independent scoring, anonymous media and concise reproducible instructions.
+Numerical and material approximations must be explicit and preserve the defining
+skill. Accepted tasks provide useful examples of practical approximations; they
+do not remove the need to demonstrate the actual task.
 
-The ten additional ideas requested after this batch remain unbuilt and
-unresearched. Their investigation has not started because the requested PR stage
-is incomplete. No compute has been used on them.
+Refresh ownership/novelty before each submission. Create a separate branch from
+fresh upstream/main containing only the validated task folder. Keep shared notes
+and private evidence out of the upstream PR. User authorization to submit is
+already in place.
+
+Current code is on `codex/six-task-completion-2026-11-13`; detailed findings and
+reproducible evidence locations are in [TEAM_LEARNINGS.md](../TEAM_LEARNINGS.md).
+The ten additional ideas remain deferred until this PR batch and GPU shutdown,
+as requested. No compute has been used on them.
