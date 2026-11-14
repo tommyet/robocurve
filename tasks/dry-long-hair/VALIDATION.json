@@ -1,0 +1,15 @@
+{
+  "status": "engineering_design_no_native_trial",
+  "date": "2026-11-14",
+  "local_model_tests_passed": 4,
+  "native_runtime": false,
+  "demo_score": null,
+  "video": null,
+  "remaining": [
+    "Native long-hair dynamics and self-contact",
+    "Mannequin/scalp and dryer/switch assets",
+    "Geometry-derived airflow and occlusion",
+    "Calibrate heat/moisture model",
+    "Bimanual controller and actual scored video"
+  ]
+}

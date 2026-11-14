@@ -60,6 +60,37 @@ developers and their agents, not a competition submission document.
 
 ## Review findings
 
+
+### 2026-11-14 — Ethernet and hair-drying batch added; spray continues
+
+- Root agent, branch codex/ethernet-hair-batch, based on fresh origin/main
+  5a225a9. User explicitly requested two more jobs and said not to stop spray:
+  crowded 4x2 RJ45 insertion/removal with real clip manipulation; uniform
+  long-hair drying with a handheld dryer. Earlier carton jobs remain queued.
+- Deliver one composite MP4 per task in ignored `artifacts/task-previews/`,
+  containing videos only. Keep source/audits/screenshots/failed trials elsewhere.
+  The folder is created but no dummy previews or completion claims are added.
+  Batch record: docs/task-batch-2026-11-14.md.
+- Read-only current scan covers 1,958 upstream PRs. No direct Ethernet/RJ45 or
+  actual hair-drying match found; dryer-from-sink #860 is a different task.
+  DataCenterBench includes joining Ethernet connectors and explicitly lists
+  network-cable unplug/latch release among omitted candidates. Crowding alone
+  is not sufficient novelty; demonstrate bimanual obstruction and real latch
+  retention/release. DYMO-Hair is relevant manipulation research, not evidence
+  of this drying task's feasibility. Primary sources are linked in batch notes.
+- Added parameterized latch-release history (four tests) and energy-limited
+  moisture patch model (four tests). All eight pass locally. These are only
+  engineering kernels: neither task has a native scene, controller, scored
+  rollout or preview video. VALIDATION.json records substantive gaps; no scores
+  or media IDs fabricated. Connector dimensions and hair/heat calibration are
+  not frozen from synthetic unit-test values.
+- GPU operator remains root on yam-eval-launchable-72837c for spray correction,
+  one simulator at a time. Do not launch a concurrent batch trial. The active
+  spray run and bounded stop supervisor are recorded on the spray branch;
+  final STOPPED/evidence notes follow after that run. No GPU/model charge for
+  these two local kernels and no new competition PR authorized.
+
+
 ### 2026-11-13 — Runpod Isaac/YAM compatibility test passed
 
 - The user authorized one short GPU compatibility test. The final probe passed

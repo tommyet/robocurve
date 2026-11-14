@@ -1,0 +1,14 @@
+{
+  "status": "engineering_design_no_native_trial",
+  "date": "2026-11-14",
+  "local_model_tests_passed": 4,
+  "native_runtime": false,
+  "demo_score": null,
+  "video": null,
+  "remaining": [
+    "Select real connector CAD/dimensions",
+    "Native flexible latch and retained jack engagement",
+    "Flexible crowded cables and bimanual access",
+    "Robot controller and actual scored video"
+  ]
+}
