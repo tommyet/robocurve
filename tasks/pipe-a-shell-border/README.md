@@ -3,7 +3,7 @@
 Pipe a joined row of ridged icing shells between two marks on a cake, then set
 the dispenser down. The task tests coordinated pressure and tool motion.
 
-**Ready for user review.** Native trial 111 scores 1.0:
+Native demo: **1.0**. Dream-1 baseline: **0.0**. Native trial 111 scores 1.0:
 six ridged shells covering 87 mm, with the dispenser released and no icing outside
 the permitted strip. Independent review of the native top, side and detail
 photographs agrees with the six-shell result.
@@ -11,7 +11,7 @@ Dream completes the full 2,400-action episode and scores 0.0: it deposits no ici
 The judging guide specifies calibrated projected-section photographs for the
 small ridge-depth check, including independent reference-step checks and retakes
 for unresolved measurements. This physical judging procedure has not been tested
-on real icing here. No media has been uploaded and no PR has been opened.
+on real icing here. Videos and the setup screenshot are linked by the media ID in `task.json`.
 
 ## Setup
 
@@ -134,3 +134,17 @@ and feedback on [caulking #1454](https://github.com/robocurve/benchmark-tasks/pu
 and [cake smoothing #674](https://github.com/robocurve/benchmark-tasks/pull/674)
 informed the need for causal material manipulation. Those decisions do not
 establish acceptance of this task. No other team's task code was copied.
+
+## Rescore the included records without a GPU
+
+```bash
+mkdir -p artifacts/cake-records
+tar xzf tasks/pipe-a-shell-border/evidence/demo-record.tar.gz -C artifacts/cake-records
+tar xzf tasks/pipe-a-shell-border/evidence/dream-record.tar.gz -C artifacts/cake-records
+python tasks/pipe-a-shell-border/audit_run.py artifacts/cake-records/demo --out artifacts/cake-records/demo-audit.json
+python tasks/pipe-a-shell-border/audit_run.py artifacts/cake-records/dream --out artifacts/cake-records/dream-audit.json
+```
+
+The extracted records independently reproduce demo 1.0 and Dream 0.0. Videos and the setup screenshot are uploaded separately to Robocurve.
+`task.json` records their media ID. The native record archives provide reproducible
+geometry and contact evidence; they do not replace watching the videos.

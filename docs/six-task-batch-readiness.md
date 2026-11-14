@@ -1,49 +1,43 @@
 # Six-task batch: submission status
 
-Updated 14 November 2026, 22:23 UTC. The user has authorized one PR per task.
-**Cake has a PR. The other five still need complete demonstrations.**
+Updated 2026-11-14 23:03 UTC. One PR per task is authorized.
+**Cake is awaiting review. The other five are not ready to submit.**
 
-| Task | Latest evidence | Remaining work |
+| Task | Current result | Submission blocker |
 | --- | --- | --- |
-| [Cake PR1919](https://github.com/robocurve/benchmark-tasks/pull/1919) | Demo1.0 and Dream0.0; uploaded media and independent judging complete. Revised category/context after the jobs-importance rejection. | The board returned an ingestion server error twice. No revised receipt yet. Keep the same PR. |
-| [Wheel](../tasks/true-a-bicycle-wheel/README.md) | The first turn unwinds during withdrawal. No retained repair yet. | Finish the adjustment, release/spin the wheel, and measure the final result. |
-| [T-shirt](../tasks/peg-out-a-tshirt/README.md) | The first-clip continuation still loses the grip or carries a closed peg; a shorter pickup correction is running. | Complete both clips, released retention, then a full fresh-start episode. |
-| [Staple](../tasks/remove-a-staple/README.md) | The latest stop was an overly conservative wire-endpoint check; actual steel boxes still overlap. The solid-geometry audit is corrected. | Complete extraction, released hold and independent judging; full193 is running. |
-| [Seam](../tasks/unpick-a-seam/README.md) | One cut and clean reverse withdrawal completed in327 actions, with no reported damage. Full six-cut191 is running. | Verify removal and fabric preservation using actual panel/contact geometry, then finish all six stitches. |
-| [Necktie](../tasks/tie-a-necktie/README.md) | Adult collar drape, physical handoffs and ordinary wrapping motions. | The narrow-end grip slips during repositioning. A deeper pinch is being tested; no knot or released fit yet. |
+| [Cake PR1919](https://github.com/robocurve/benchmark-tasks/pull/1919) | Demo1.0, Dream0.0; anonymous media and judging complete. Requested category/context revision received as **TK-LE2FKY** at22:50 UTC. | Await organizer review. Do not change the pending submission. |
+| [Wheel](../tasks/true-a-bicycle-wheel/README.md) | Robot turns a nipple, but withdrawal undoes the adjustment. | Retained repair, released full revolution and final measurement. |
+| [T-shirt](../tasks/peg-out-a-tshirt/README.md) | Flexible hem pickup; peg manipulation still fails. | Both clips must capture the garment and line, followed by released retention. |
+| [Staple](../tasks/remove-a-staple/README.md) | Remover lifts away without extracting the staple. The clinch also changes before robot contact. | Correct and verify the passive reset before another extraction attempt. |
+| [Seam](../tasks/unpick-a-seam/README.md) | One thread cut; second feed exceeds the flexible-panel model's supported aperture. | Remove all six stitches while preserving the fabric. |
+| [Necktie](../tasks/tie-a-necktie/README.md) | Wide-tip pickup works; narrow strip slips during repositioning. | Reliable moving grip, actual threading/tightening and released wearable fit. |
 
-These are development results, not acceptance claims. Reconstructed checkpoints
-save iteration time but cannot be spliced into submission demonstrations.
+No new PRs were opened for the five failed demonstrations. No task score is
+claimed for them. Reconstructed checkpoints save iteration time but cannot be
+spliced into submission demonstrations. Each still needs a complete full-score
+fresh-start demo, matching Dream run, independent judging and anonymous media.
 
-## Compute
+## Compute and evidence
 
-Two A40 Pods are currently active at$0.59/hour each. Their independent shutdown
-watchdogs read current deadlines from the lifecycle files below. Trials have
-separate process caps; stop early after collecting completed evidence.
-Lifecycle records are in ignored local folders:
+Both A40 Pods are confirmed **EXITED** after local archive verification.
+This batch used approximately **$3.25** in elapsed compute at$0.59/hour per
+Pod. The cumulative working estimate is **$26.95**, including the earlier
+$23.70 subtotal. Storage and Dream charges are excluded; this is not a bill or
+remaining balance. No new Dream calls were made for the unfinished tasks.
+Stopped Pods retain their disks.
 
-- `artifacts/submission-fresh-2026-11-14/`
-- `artifacts/submission-materials-2026-11-14/`
+Exact lifecycle records and SHA256-verified result/source archives are in the
+ignored local `artifacts/submission-fresh-2026-11-14/` and
+`artifacts/submission-materials-2026-11-14/` directories. Detailed findings and
+reusable evidence locations are in [TEAM_LEARNINGS.md](../TEAM_LEARNINGS.md).
 
-The earlier cumulative compute estimate was$23.70, excluding storage and Dream.
-Add this session's elapsed rental cost after shutdown. This is not an invoice or
-remaining balance. No new Dream calls have been made for the unfinished tasks.
-Stopped older Pods still retain their disks.
+## Submission workflow
 
-## Submission requirements
+Keep each submission on a separate branch from fresh upstream/main containing
+only its validated task folder. Keep shared notes and private evidence out of
+the upstream PR. User approval to submit is already in place. Refresh novelty
+and ownership before submission; the22:52 title screen found no matching titles
+for these five, but it is not an exhaustive novelty guarantee.
 
-Use one complete full-score demonstration, a Dream run on the same setup,
-independent scoring, anonymous media and concise reproducible instructions.
-Numerical and material approximations must be explicit and preserve the defining
-skill. Accepted tasks provide useful examples of practical approximations; they
-do not remove the need to demonstrate the actual task.
-
-Refresh ownership/novelty before each submission. Create a separate branch from
-fresh upstream/main containing only the validated task folder. Keep shared notes
-and private evidence out of the upstream PR. User authorization to submit is
-already in place.
-
-Current code is on `codex/six-task-completion-2026-11-13`; detailed findings and
-reproducible evidence locations are in [TEAM_LEARNINGS.md](../TEAM_LEARNINGS.md).
-The ten additional ideas remain deferred until this PR batch and GPU shutdown,
-as requested. No compute has been used on them.
+The ten additional ideas remain deferred until this submission batch is done,
+as requested. No GPU or Dream compute has been used on them.

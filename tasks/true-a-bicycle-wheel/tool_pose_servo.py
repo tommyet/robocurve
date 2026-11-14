@@ -200,6 +200,10 @@ class ToolPoseServo:
             key=engagement_key(spoke,frame['stage'])
             clear_settle=frame['stage'].startswith('Approach nipple ') and frame['stage'].endswith(' settle')
             realign=False
+            if frame.get('realign_square_before_withdrawal',False):
+                if not frame['stage'].endswith('relax square fit'):
+                    raise ValueError('Post-turn realignment requires an explicit unloaded-fit stage')
+                realign=True
             if clear_settle and key not in self.realigned_approaches:
                 candidate,_=nipple_alignment(centre,nR,measured_nipple_pose)
                 self.approach_settle_samples.append(candidate)

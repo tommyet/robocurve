@@ -36,7 +36,7 @@ def main():
     plan=json.loads(args.plan.read_text())
     actions=np.asarray([frame['action14'] for frame in plan['frames']],float)
     if (plan.get('checkpoint_sha256')!=digest or actions.ndim!=2 or
-            actions.shape[1]!=14 or not 1<=len(actions)<=400 or not np.isfinite(actions).all()):
+            actions.shape[1]!=14 or not 1<=len(actions)<=600 or not np.isfinite(actions).all()):
         raise ValueError('Expected bounded ordinary commands for this checkpoint')
     if state['nodes'].shape!=state['velocities'].shape or state['action'].shape!=(14,):
         raise ValueError('Incomplete measured state')

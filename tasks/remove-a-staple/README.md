@@ -1,9 +1,10 @@
 # Remove a staple without tearing the papers
 
-**Development package; not submission-ready.** The flexible-paper reset and
-short YAM integration pass. A one-handed lever attempt reaches the paper but
-overshoots its contact target. Complete removal, a full-score demo, a Dream run
-and media are still missing.
+**Development package; not ready to submit.** The latest remover attempt
+leaves the staple in the sheets after lifting away. More importantly, the
+staple's clinch changes during the first 50 ms, before robot contact. Validate
+and correct that passive reset before another full extraction run. No successful
+demo, Dream baseline or submission score exists.
 
 The robot uses a forked remover to release a clinched staple while preserving
 the thin paper around its holes. This is a document-preparation task. The
@@ -12,13 +13,17 @@ released for three seconds. It may rest on the released remover.
 
 ## Current model
 
-Two free 210×148×0.1 mm,80 gsm sheets lie on a 210×128×20 mm support. The upper
+The latest candidate uses two free 210×148×0.2 mm, 200 gsm sheets on a
+210×128×20 mm support. The upper
 sheet starts 12 mm forward. A 1.5×16×8 mm pocket clears the clinched staple legs.
 The staple has a 12.8 mm crown,6 mm legs and 500×300 µm steel section, passing
 through existing 0.8×0.6 mm punctures. A 45 g forked steel/ABS lever remover rests
-beside the sheets. `setup.json` defines the fixed dimensions and coordinates.
+beside the sheets. `setup.json` retains the earlier 80 gsm reference;
+`task.draft.json` describes
+the 200 gsm candidate. These must be consolidated before submission.
 
-Each sheet consists of native 100 µm box panels joined by passive bending
+Each candidate sheet consists of 190 native 200 µm box panels joined by passive
+bending
 hinges with finite breaking strength. The sheets are flexible, have no pins
 or attachments, and move through native gravity and contact. Analytic boxes
 avoid the collision cooker's minimum thickness for thin triangular meshes.

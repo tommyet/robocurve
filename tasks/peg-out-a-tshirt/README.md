@@ -1,9 +1,10 @@
 # Peg a T-shirt onto a clothesline
 
-**Development only; not ready to submit.** The latest pickup misses the hem,
-and an independent audit finds front/back fabric intersections in its reset.
-The longer trial is held. A valid two-peg hang, full-score demo, Dream run and
-submission media are still missing; no score is claimed.
+**Development package; not ready to submit.** The corrected flexible-cloth
+setup supports a measured hem pickup. The latest continuation carries a closed
+peg instead of opening it around the fabric and line. Neither a two-peg hang
+nor a released full-score result has been demonstrated. Dream and final media
+remain pending.
 
 Hang a small T-shirt using two spring pegs, then let go. The garment has two
 sewn fabric layers and open neck, cuffs and hem. Each wooden peg has two free

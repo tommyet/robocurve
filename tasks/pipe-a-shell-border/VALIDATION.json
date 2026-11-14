@@ -1,5 +1,5 @@
 {
-  "status": "submitted_pending_review",
+  "status": "validated_submission",
   "checked_utc": "2026-11-13T13:30:09.718740+00:00",
   "cpu_tests_passed": 55,
   "native_simulator_run": true,
@@ -10,192 +10,10 @@
     "demo": 1.0,
     "dream": 0.0
   },
-  "paid_compute_used_usd": null,
   "remaining_gates": [
-    "Robocurve review"
-  ],
-  "sources_sha256": {
-    "test_release.py": "d2b6b9b3388736c2a8e6d85cba253c43086dcfab7885be8b7a3973b0e7523f19",
-    "preview_yam.py": "d4bb3bf7b30da1088bde94a707936f76d29d727dcbf45935d5ae1a2892b00f22",
-    "plan.py": "d30d85b075a439865d750dee90a7a059637f21f9330a8e0aa0924ce4e0eb9c2b",
-    "run.py": "3f23a922f9bba0e959c19624107defc95f13e580f0cd9efee832e4ae1b88b893",
-    "test_learn_tracking.py": "e6c8af0d8ec9e91edbacbaf9dbb728e8534af7e4d4288d2cbda00e6a3bc7fd74",
-    "material.py": "49a59537b8b3c7e26808715b68e12c5f1cddbc30c6387d825936aac28ab6ea54",
-    "probe_native.py": "8aa6cc9d6ee650d364e2681896e360d08c03d768053a568377a5d7e2dab38515",
-    "scripted_plan.py": "27a6c93162569cc520c8949fe67780e8a77afdcdb82f224bdda249ec47300b32",
-    "scoring.py": "4c3af236413ef7ca851b46203e74e0e4c1c53bf9734d693bd0581782fbf7f2d4",
-    "test_photo_profile.py": "82f9d24f858fc8a5c9e0276739b4f9425dc90a2404a7b3bdd70afe0e7debf0e3",
-    "test_material.py": "93515a0b290a4095b6aead10e6f5a9ac664fae6516cc077844e30d44f2eb9334",
-    "photo_profile.py": "e60fd0215eeef154e4fcb46d05a0ad8477a81acdf1e0037992c99c8d45b58fe6",
-    "replay_material.py": "fffc379bd85001fabb01bde5ae425701dce38cd2f32f5670446065ceff6ff680",
-    "scene.py": "893a2016851d05ec62ca47f22cb3aca3c11fc19a2ef81333372132dd856dfcf5",
-    "native.py": "449756a20db7a7f585a5d5a7a702209e57c55ba2c8b55092ffaf4f9bdd2f73cc",
-    "test_scripted_servo.py": "f5c48f4db8c9958760f702e8a2615aeae3ef263d71477351aaa91a3962f9c1af",
-    "probe_shell_shape.py": "a4e2ab3a31c23b0acc9baeef718887a8d9e74c8fca1f2ed91659c2aa9732289e",
-    "plot_judging.py": "9103ca615f3dcfa3e6985ac116bbd1d7f9353a307a6ed46c50a4a7410bfaf592",
-    "probe.py": "dc2421d3342eda2052d7340d10bbf856493ad5b30b121ad839fddda7c7a57c17",
-    "joint_tracking.py": "a5e2cee60f6a84e0a46d95240f1a098794e95a12c1ac166b3c7d5be184ff3a44",
-    "scripted_servo.py": "485d391accda6b836864334bb2d074d7695e27bc6b6c3b111aefae902c320a55",
-    "dream_policy.py": "ad92ac9ddcf4c1d48c9985fcd0a0fc116144a995d8d4b0368e476b3f432b611b",
-    "contact_audit.py": "789e5285c8283d915fee82c2a5deab0519e44005edba0085d6f37f3a6062f147",
-    "audit_run.py": "27a34c14178caa3e6d76689437917d9d40503eb38a75453536d94778ca50a6a9",
-    "learn_tracking.py": "1cb75143d727ed3977c66c7fa1f58a836a0c5001fd6621cba6ecece0c8709663",
-    "review_views.py": "e0530fb097624103fd40f8bff6be89ee0c604189252231b43e1aafe8ec901f07",
-    "finish_plan.py": "7367e11702d3ddbaa8083bc3406107105819f17734e4c2b9a3eca487cff2c758"
-  },
-  "cpu_probe": {
-    "simulated_seconds": 1.500000000000022,
-    "wall_seconds": 0.19254487499711104,
-    "volume_balance": {
-      "initial_m3": 2e-05,
-      "reservoir_m3": 1.9433358691964363e-05,
-      "deposited_m3": 5.666413080356378e-07,
-      "airborne_m3": 0.0,
-      "lost_m3": 0.0,
-      "error_m3": -4.235164736271502e-22
-    },
-    "meaning": "one prescribed-motion material deposit, not robot or shell demonstration"
-  },
-  "compute_note": "Shared bounded native session; allocation recorded by batch orchestrator.",
-  "native_mechanism_evidence": "evidence/native-passive-2026-11-13.json",
-  "native_robot_diagnostics": [
-    "evidence/native-press-011.json",
-    "evidence/native-robot-extrusion-014-015.json",
-    "evidence/native-single-shell-021.json",
-    "evidence/native-three-shell-026.json",
-    "evidence/native-three-shell-030-031.json",
-    "evidence/native-three-shell-033-035.json",
-    "evidence/native-three-shell-038-042.json",
-    "evidence/native-six-shell-099.json",
-    "evidence/native-six-shell-111.json"
+    "PR ingestion confirmation."
   ],
   "full_score_demo": true,
-  "state_assisted_scripted_demo": {
-    "status": "native_full_score_demo_verified",
-    "assistance": "Native barrel/plunger poses guide ordinary bounded robot joint commands; no physics/object/material writes; Dream unchanged.",
-    "fixed_recipe_constitutive_probe": {
-      "kind": "prescribed-input material diagnostic, not robot evidence",
-      "shells": 6,
-      "valid_decorated_length_mm": 83,
-      "score_diagnostic": 1.0,
-      "source_recipe": "scripted_plan.py",
-      "evidence": "Local ignored cake-recipe-cpu artifacts"
-    },
-    "integration_control055": "Once-per-step integration disrupts pickup; default iteration mode retained. Instantaneous coupled pose correction also destabilized pressure; filtered grasp estimate retained.",
-    "native058_062": "Complete838 actions; clean release; current score0.0. Next bounded correction filters measured common barrel translation into the pressing-arm reference.",
-    "native065_073": "Measured common-motion correction alone leaves delayed tail travel. Higher feedback gains oscillate; moderate gains with faster slew stay clean but still score0.0. Prior applied-minus-observed right-arm joint offsets are compiled into an openly recorded feedforward plan, with unchanged nozzle/piston recipe and motor limits.",
-    "measured_piston_counterfactual": "Actual065 piston motion plus intended nozzle path produces3 ridged shells/46mm in a local prescribed-input replay. This diagnoses motion tracking and is not robot feasibility evidence.",
-    "learned_feedforward": "Frozen080 smoothed right-arm joint offsets, bounded0.16rad with tail-load anticipation, improves to three valid shapes/45mm (score0.5). Unchanged nozzle, recipe, motors and scoring. Ridges still fail.",
-    "native080_pose_replay": "Interpolating the actual20Hz tool pose and piston trace into240Hz produces three ridged shells/47.5mm in an offline prescribed-input diagnostic. This is not robot evidence; unrecorded within-action motion and pressure are under investigation."
-  },
-  "cpu_checks_current": {
-    "test_count": 55,
-    "result": "passed",
-    "command": "python -m unittest discover -s tasks/pipe-a-shell-border -p test_*.py"
-  },
-  "scoring_tail_endpoint_correction": {
-    "date": "2026-11-13",
-    "change": "Measure the farthest qualifying connected tail section, not first equal-width minimum. Never bridge an empty gap to a different mound.",
-    "shape_thresholds_changed": false,
-    "round_mound_and_plain_line_rejection": "passed",
-    "six_shell_constitutive_probe": "83 mm, six ridged elongated shells; not robot evidence",
-    "source_sha256": "96408e0ee9e663fb799c6f91572f900794aa4f304d505ccbb9c778524b658073"
-  },
-  "native_integration_diagnostic": {
-    "status": "complete_partial_score",
-    "batch": "087",
-    "physics_hz": 960,
-    "actions": 838,
-    "score": 0.5,
-    "valid_shells": 3,
-    "valid_length_mm": 48.5,
-    "continuous_ridge_length_mm": [
-      1.0,
-      1.0,
-      1.0
-    ],
-    "release_passed": true,
-    "material_changes": false,
-    "wall_seconds": 1161.12,
-    "finding": "Finer integration alone does not preserve qualifying ridges; no full-border claim."
-  },
-  "native_input_replay": {
-    "steps": 40224,
-    "maximum_cell_volume_error_m3": 4.818327068121386e-23,
-    "sum_absolute_volume_error_m3": 3.974631713062631e-21,
-    "meaning": "Independent deterministic material replay agrees with the actual native input record; not a new robot run.",
-    "recording_limitation": "First substep recorder rounded scalar outputs tofloat32 via NumPy weak-scalar promotion. Native float32 poses/velocities are exact; replay uses exact native timestep from report. Future recorder preserves scalar float64 precision."
-  },
-  "boundary_motion_correction": {
-    "status": "CPU controls and native111 full-score demo verified",
-    "date": "2026-11-13",
-    "method": "Unsmoothed measured point displacement per preceding native step, including rotation; reset primed; no clamping or smoothing. Forces applied at body origin with moments about same origin.",
-    "material_and_scoring_changed": false,
-    "kinematic_controls": [
-      "stationary surface with nonzero reported solver velocity",
-      "constant translation including large displacement",
-      "finite rotation of every face sample",
-      "episode reset"
-    ],
-    "local_replay": {
-      "kind": "prescribed-input diagnostic, not robot evidence",
-      "valid_shells": 3,
-      "ridge_lengths_mm": [
-        8.5,
-        9.0,
-        4.0
-      ],
-      "length_mm": 47.5,
-      "score": 0.5
-    },
-    "source": "https://nvidia-omniverse.github.io/PhysX/physx/5.4.0/docs/RigidBodyDynamics.html"
-  },
-  "native095": {
-    "status": "complete_partial_score",
-    "actions": 838,
-    "physics_hz": 240,
-    "wall_seconds": 362,
-    "score": 0.5,
-    "valid_shells": 3,
-    "length_mm": 49,
-    "continuous_ridge_mm": [
-      4,
-      2.5,
-      1.5
-    ],
-    "released_clear": true,
-    "spill_mm2": 0,
-    "damage_mm": 0,
-    "exact_replay_max_cell_volume_error_m3": 3.4043652085385545e-23
-  },
-  "next_nozzle": {
-    "star_depth": 0.35,
-    "mean_radius_mm": 2.5,
-    "inner_radius_range_mm": [
-      1.625,
-      3.375
-    ],
-    "metal_outer_radius_mm": 4,
-    "minimum_wall_mm": 0.625,
-    "native_status": "Verified in native099,105 and111",
-    "local_095_input_counterfactual_ridge_mm": [
-      10.5,
-      3.5,
-      4
-    ],
-    "material_properties_and_scoring_changed": false
-  },
-  "full_border_099": {
-    "score": 1.0,
-    "action_count": 994,
-    "simulated_seconds": 49.7,
-    "valid_shells": 6,
-    "valid_length_mm": 87.0,
-    "scoring_sha256": "744ec375c9a0b5c2e09f0190d278f74839a40d5dcc84426a58d44064afcf1601",
-    "photo_agreement": "Six-shell interpretation independently confirmed; precise ridge dimensions require the final close-ups.",
-    "outside_strip_film_maximum_height_mm": 0.09668354
-  },
-  "final_demo_evidence": "evidence/native-six-shell-111.json",
   "full_border_111": {
     "score": 1.0,
     "actions": 1114,
@@ -203,12 +21,6 @@
     "valid_shells": 6,
     "valid_length_mm": 87.0,
     "outside_strip_material_m3": 0.0
-  },
-  "connectivity_correction": {
-    "two_dimensional_connected_footprint": true,
-    "thresholds_changed": false,
-    "tests": 46,
-    "demo_score_unchanged": true
   },
   "dream_evidence": {
     "control_steps": 2400,
@@ -227,11 +39,37 @@
     "optional_helper": "photo_profile.py",
     "synthetic_geometry_tests": 9
   },
-  "submission": {
-    "pr": 1919,
-    "task_id": "TK-XPE4K7",
-    "media": "M-S6DRFK",
-    "commit": "4a14700",
-    "received_utc": "2026-11-13T17:26:31Z"
+  "sources_sha256": {
+    "test_release.py": "d2b6b9b3388736c2a8e6d85cba253c43086dcfab7885be8b7a3973b0e7523f19",
+    "preview_yam.py": "d4bb3bf7b30da1088bde94a707936f76d29d727dcbf45935d5ae1a2892b00f22",
+    "run.py": "3f23a922f9bba0e959c19624107defc95f13e580f0cd9efee832e4ae1b88b893",
+    "test_learn_tracking.py": "e6c8af0d8ec9e91edbacbaf9dbb728e8534af7e4d4288d2cbda00e6a3bc7fd74",
+    "material.py": "49a59537b8b3c7e26808715b68e12c5f1cddbc30c6387d825936aac28ab6ea54",
+    "scoring.py": "4c3af236413ef7ca851b46203e74e0e4c1c53bf9734d693bd0581782fbf7f2d4",
+    "test_photo_profile.py": "82f9d24f858fc8a5c9e0276739b4f9425dc90a2404a7b3bdd70afe0e7debf0e3",
+    "test_material.py": "93515a0b290a4095b6aead10e6f5a9ac664fae6516cc077844e30d44f2eb9334",
+    "photo_profile.py": "e60fd0215eeef154e4fcb46d05a0ad8477a81acdf1e0037992c99c8d45b58fe6",
+    "replay_material.py": "fffc379bd85001fabb01bde5ae425701dce38cd2f32f5670446065ceff6ff680",
+    "scene.py": "893a2016851d05ec62ca47f22cb3aca3c11fc19a2ef81333372132dd856dfcf5",
+    "native.py": "449756a20db7a7f585a5d5a7a702209e57c55ba2c8b55092ffaf4f9bdd2f73cc",
+    "test_scripted_servo.py": "f5c48f4db8c9958760f702e8a2615aeae3ef263d71477351aaa91a3962f9c1af",
+    "plot_judging.py": "9103ca615f3dcfa3e6985ac116bbd1d7f9353a307a6ed46c50a4a7410bfaf592",
+    "joint_tracking.py": "a5e2cee60f6a84e0a46d95240f1a098794e95a12c1ac166b3c7d5be184ff3a44",
+    "scripted_servo.py": "485d391accda6b836864334bb2d074d7695e27bc6b6c3b111aefae902c320a55",
+    "dream_policy.py": "ad92ac9ddcf4c1d48c9985fcd0a0fc116144a995d8d4b0368e476b3f432b611b",
+    "contact_audit.py": "789e5285c8283d915fee82c2a5deab0519e44005edba0085d6f37f3a6062f147",
+    "audit_run.py": "27a34c14178caa3e6d76689437917d9d40503eb38a75453536d94778ca50a6a9",
+    "learn_tracking.py": "1cb75143d727ed3977c66c7fa1f58a836a0c5001fd6621cba6ecece0c8709663",
+    "review_views.py": "e0530fb097624103fd40f8bff6be89ee0c604189252231b43e1aafe8ec901f07"
+  },
+  "evidence": [
+    "evidence/demo-audit.json",
+    "evidence/dream-audit.json",
+    "evidence/native-six-shell-111.json",
+    "evidence/runtime-source-match-111.json"
+  ],
+  "native_record_archives": {
+    "demo-record.tar.gz": "38541410e4fe6f40d3f8e61a508be90ba043213b4a2094b0d253bd39612af53e",
+    "dream-record.tar.gz": "2fc2f33b8e5bc62b61d184a32e24b271ffc5dc741728501ca3531a0de68a44a6"
   }
 }

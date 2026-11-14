@@ -4,24 +4,17 @@ Remove the six tacking stitches joining two canvas patches without cutting or
 tearing either patch, then put the seam ripper down. Patch relocation is not
 required. See `JUDGING.md` for the final inspection and safe-release criteria.
 
-**Development package; not ready to submit.** No robot demo, Dream run, media or
-task score exists. `task.draft.json` is a draft. The current flexible-panel and
-passive-thread candidate retained every stitch for2s. Its CPU/YAM reset and
-two-action bridge pass. The robot then physically picked up the ripper and
-reached the first tack in265actions. No thread was cut or removed; an uncut
-thread joint became physically disjoint under tool loading. Full task
-feasibility remains unproven. Short contact replays now confirm gross thread
-penetration into the tool guard; neither slower motion nor finer stepping
-provides a physically valid cutting result.
+**Development package; not ready to submit.** The latest first-cut trial
+cuts one thread through native blade contact and withdraws cleanly. The six-cut
+continuation stops during the second feed when the flexible-panel model exceeds
+its supported aperture. No stitch is yet fully removed. Complete removal,
+fabric preservation, a full-score demo and a matching Dream run remain unproven.
 
-The 960 Hz replay reproduces joint disconnection after 52 ms. At 3,840 Hz it
-completes 100 ms without tripping the existing cloth/joint guards, but a separate
-finite-solid audit finds 0.894 mm overlap between the thread and long guard,
-whose combined radii are 0.900 mm. That is a contact failure, not a successful
-trial. Quarter-speed motion still disconnects an uncut joint. These are
-reconstructed, unscored diagnostics, never alternative task resets. See
-`evidence/native-contact-replay-120-123.json`. Actual native guard contact must
-be verified and corrected before another full robot attempt.
+Earlier failures in `evidence/native-contact-replay-120-123.json` are
+development history, not submission evidence.
+The current candidate uses twelve physical links per loop, a declared numerical
+mass increase and a contact-qualified sharp-edge cutting law. These approximations
+still need a successful complete episode.
 
 ## Setup
 

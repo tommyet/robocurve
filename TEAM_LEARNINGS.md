@@ -4,6 +4,68 @@ Last updated: 2026-11-14 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-14 23:03 UTC — batch closed; cake revision received, five demos still blocked
+
+- Operator: repository agent, `codex/six-task-completion-2026-11-13`.
+  The user asked for practical acceptance-standard work and authorized PRs.
+  No full-score result exists for the five unfinished tasks; do not submit
+  diagnostic clips or present a reconstructed checkpoint as a complete demo.
+- Cake PR1919 now has a successful revision receipt: **TK-LE2FKY**, pending
+  review at22:50:05 UTC. Commit97f715f retried the unchanged category/context
+  revision after the earlier two server-side ingestion errors. It replaces
+  TK-XPE4K7 for this review. Do not push further changes while review is pending.
+- Wheel199 reconstructs action572 with zero reported pose/joint reset error,
+  then loses the wrench grip at610 during square-fit relaxation.173 already
+  showed the adjustment unwinding during withdrawal. The isolated196 load/
+  release control retains its adjusted nipple; neither control proves repair.
+  No more identical whole-pickup retries are justified by these results.
+- Shirt194 completes300 actions in557.76s, but the peg mouth closes to0.143mm.
+  The trial does not grasp an open peg or clip the garment. The corrected
+  flexible-cloth setup and earlier retained hem are useful intermediate results.
+- Staple193 passes the corrected steel-volume continuity check, but the tool
+  leaves the staple in the sheets after lifting. It was stopped early at405
+  logged actions, before unused release motion. More seriously, before robot
+  contact the minimum wire-centre height changes from−0.360mm at reset to
+  −4.909mm after action1, and stays near−5.10mm. The passive clinch changes in
+  the first50ms; investigate this before another extraction run. No initial
+  nonadjacent steel-box overlap was found by the local SAT check, so do not
+  assert that as its cause. No extraction score is claimed.
+  Isaac's signal handling terminated the process without refreshing its final
+  report: `preview.json` says running, but `termination.json` records the actual
+  interruption. Treat it as interrupted, never completed or still active.
+- Seam191 stops at383 actions during the second feed: actual panel aperture
+  0.443mm exceeds the declared0.400mm domain. One contact-qualified cut exists,
+  no fully removed stitch. Do not relax the domain merely to label this success.
+- Tie197 (deeper22mm pinch, fixed pinch orientation) and200 (material1.40m
+  pickup and shorter slack-preserving repositioning) both complete500 actions,
+  but the narrow strip slips. At200's end the target material patch is about
+ 154mm from its TCP; the actual wide tip stays at the left fingers. No knot.
+  New routes must first prove a moving narrow-strip grip; repeating whole wraps
+  before that is wasteful. No attachment model has been implemented.
+- Both A40 Pods are confirmed **EXITED**. Session estimates:
+  k6yi0tfzyuh133: 2026-11-14T20:00:04.987000+00:00 to 2026-11-14T22:45:24.379733+00:00, $1.63 at$0.59/hour.
+  wbti6lecu6am1a: 2026-11-14T20:18:26.338000+00:00 to 2026-11-14T23:03:40.370148+00:00, $1.62 at$0.59/hour.
+  Final account inventory confirms eight stopped Pods and zero active rentals.
+  Batch approximately **$3.25**; cumulative working estimate **$26.95**
+  including the earlier$23.70 subtotal. These are elapsed compute estimates,
+  not invoices or remaining balances; storage and Dream charges are excluded.
+  No new Dream calls were made for the five unfinished tasks. Stopped disks
+  are retained; shutdown is not disk deletion.
+- Final result/source archives were downloaded and SHA256 verified before stop:
+  `completed198-199.tar.gz`:69db4890c5d20edd61cfb5a7d701f6b4383b012e2aec63047f152d31cf541f8a;
+  `completed193-200-final.tar.gz`:989c75a1eac805f6d7f96e5a6494c086cc85c2efc3b63dbf5e999b5f01b6a978;
+  `completed178-late-wraps.tar.gz`:d7724eaa6cf1cb8d3d7441a1b5b2d2effb966cfc59a989970ca89ad1eadee7a1.
+  Earlier completed173,174–180,183,184–196,178-before-position,181-position178,
+  and182–192 archives are also local. Detailed records remain ignored under
+  `artifacts/submission-{fresh,materials,standard}-2026-11-14/`.
+- The submitted cake metadata, README, validation and compact demo/Dream
+  scoring records have been copied into the shared development package.
+  Other task folders remain explicitly marked not ready.
+- Board refresh at22:52 contained506 entries and confirms cake pending. No
+  matching titles for the five unfinished tasks were found; this limited
+  screen is not a guarantee of novelty. Refresh before any eventual submission.
+  The ten follow-on ideas remain deferred and have consumed no GPU/Dream compute.
+
 ## 2026-11-14 — completion checks, 22:23 UTC
 
 - Wheel173 completes650 actions, but its first turn does **not** survive

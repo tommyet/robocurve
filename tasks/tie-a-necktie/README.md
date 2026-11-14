@@ -1,8 +1,10 @@
 # Tie a necktie on a collar form
 
-**Development draft; not ready to submit.** An adult tie reset and physical
-pickup work. A complete knot, released fit, Dream run and final media are
-still missing. No task score has been claimed.
+**Development package; not ready to submit.** The adult collar drape and
+wide-tip pickup work. The narrow strip slips during repositioning, including
+the deeper-grasp and slack-preserving candidates. Wrapping motions therefore
+do not establish a knot. A complete knot, released fit, Dream run and final
+media are missing.
 
 Tie a simple (Oriental) knot on a collar form and leave the tie ready to wear.
 This requires managing a flat strip, threading two real openings, preserving

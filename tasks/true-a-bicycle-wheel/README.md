@@ -1,18 +1,10 @@
 # True a wobbly bicycle wheel
 
-**Development package. Not ready to submit.** Native112 rotates one nipple
-90.54° during its tightening stroke, but early contact loosens it and withdrawal
-stays engaged. The trial stops at379/380 actions. Rim integrity and the sampled
-unintended-collision screen pass; intended jaw contact has up to0.451mm authored
-solid overlap and still needs improvement. The clearer122 entry stops at174/448:
-native tracking overshoots into the nipple, and re-alignment then exceeds the
-wrist workspace. A full repair, released revolution and Dream baseline are
-still required. No further manipulation run is released.
-
-A locally screened alternative now moves the fixture 10 mm forward / 50 mm toward
-the right arm and shortens the stand 10 mm. Its slower 652-action first-quarter
-route and matching explicit native flag are described in
-`RELOCATION_DIAGNOSTIC.md`. Native reset, contact and withdrawal remain untested.
+**Development package; not ready to submit.** The latest full first-turn
+trial turns one nipple, but the adjustment unwinds while the wrench withdraws.
+A shorter release continuation loses the wrench grip. A separate unloaded
+control holds its adjustment; that does not demonstrate robot repair. A complete
+repair, released revolution, measured score and matching Dream run are missing.
 
 The task is to adjust the spoke nipples until the wheel runs straight, remains
 centred and spins freely. Scoring uses the resulting wheel geometry and spoke
