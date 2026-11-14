@@ -41,11 +41,21 @@ class RobotTests(unittest.TestCase):
 
  def test_press_commands_right_tip_left_finger(self):
   env=environment();probe=ReleaseProbe(env,np.array(port(SERVICE)));probe.phase='depress_clip'
+  measured={s:probe.arm(s) for s in ('left','right')}
+  q,_,_,_=measured['right'];rotation=probe.pressR
+  measured['right']=(q,np.array((-.028,-.028)),np.array(port(SERVICE))+probe.local_contact+[0,0,.0041]-rotation@probe.point,rotation)
+  probe.arm=lambda side:measured[side]
   output,report=probe.command(9.)
   self.assertFalse(np.array_equal(output[7:13],np.array(READY)))
   self.assertLess(output[13],1.)
   self.assertEqual(report['phase'],'depress_clip')
   self.assertEqual(len(report['arms'][1]['actual_finger_joints_m']),2)
+
+ def test_pressing_witness_outside_real_tab_does_not_advance(self):
+  probe=ReleaseProbe(environment(),np.array(port(SERVICE)));probe.phase='depress_clip'
+  _,report=probe.command(9.)
+  self.assertEqual(report['press_depth_m'],0.)
+  self.assertIn('physical clip tab footprint',report['failure'])
 
  def test_withdrawal_pauses_when_measured_clip_returns(self):
   probe=ReleaseProbe(environment(),np.array(port(SERVICE)))
@@ -83,7 +93,7 @@ class RobotTests(unittest.TestCase):
  def test_certified_waypoints_have_continuous_reachable_ik(self):
   spec=json.loads(Path(__file__).with_name('press_point.json').read_text())
   rotation=np.array(spec['rotation']);point=np.array(spec['point_tcp'])
-  plug=np.array(port(SERVICE));above=plug+[-.010,0,.0086]-rotation@point
+  plug=np.array(port(SERVICE));above=plug+np.array(spec['contact'])+[0,0,.0041]-rotation@point
   q=np.array(READY)
   for offset in [(-.040*(1.-s),0,.025*(1.-s)) for s in np.linspace(0.,1.,21)]+[(0,0,-.006),(-.025,0,-.006),(-.105,0,.044)]:
    q,error,angle=ik.solve(above+offset,ik.matrix_to_quat_xyzw(rotation),q,base_pos=(0,-.305,.75),iters=300)
@@ -99,9 +109,9 @@ class BimanualGeometryTests(unittest.TestCase):
   def sweep(start,end):
    return [np.concatenate([(a-point)@rotation.T+position for position in (np.array(start),np.array(end))])
            for _,a in geometry.pieces([-.028,-.028])]
-  far=(-.050,0,.0336);above=(-.010,0,.0086)
+  above=np.array(spec['contact'])+[0,0,.0041];far=above+[-.040,0,.025]
   self.assertGreater(minimum_separation(left,sweep(far,above)),.0002)
-  self.assertEqual(minimum_separation(left,sweep(far,(-.050,0,.0086))),0.)
+  self.assertEqual(minimum_separation(left,sweep(far,above+[-.040,0,0])),0.)
 
  def test_press_handoff_checks_whole_leg_before_transition(self):
   from unittest.mock import patch
@@ -123,11 +133,54 @@ class BimanualGeometryTests(unittest.TestCase):
   self.assertEqual(probe.press_approach_certificate['wire_gap_m'],0.)
   self.assertIsNone(probe.failure)
 
+ def test_entire_press_stroke_checks_housing_excluding_only_intended_clip(self):
+  from unittest.mock import patch
+  probe=ReleaseProbe(environment(),np.array(port(SERVICE)));probe.phase='approach_above_clip';probe.stable_frames=4
+  plug=np.r_[port(SERVICE),0,0,0,1.];measured=[probe.arm(s) for s in ('left','right')]
+  above=plug[:3]+probe.local_contact+[0,0,.0041]-probe.pressR@probe.point
+  measured[1]=(measured[1][0],np.array((-.028,-.028)),above,probe.pressR)
+  targets=(measured[0][2],measured[0][3],GRIP,above,probe.pressR,PRESS_GRIP)
+  blocked={'rigid_gap_m':0.,'wire_gap_m':0.,'minimum_gap_m':0.}
+  with patch('robot.clearance',return_value=blocked) as check,patch('robot.snapshot',return_value=({},{},{})),patch('robot.minimum_separation',return_value=.005):
+   probe.release_targets(4.,4.,probe.phase,plug,np.eye(3),0.,measured,targets)
+  self.assertEqual(probe.phase,'approach_above_clip')
+  self.assertIn('sweep clearance',probe.failure)
+  self.assertEqual(check.call_args.kwargs['exclude'],((f'clip_{SERVICE}','tab'),(f'clip_{SERVICE}','hook')))
+  self.assertEqual(probe.press_approach_certificate['next_phase'],'depress_clip')
+
+ def test_full_press_clears_native_socket_boxes_at_recorded_guided_attitudes(self):
+  from collision_geometry import FingerGeometry,minimum_separation
+  from geometry import socket_boxes,box_triangles
+  from yam_arena.urdf import quat_xyzw_to_matrix
+  spec=json.loads(Path(__file__).with_name('press_point.json').read_text());geometry=FingerGeometry()
+  # Measured source poses from release014, before/during its blocked stroke.
+  poses=(
+   [.40410491824,-.02440889925,.94978857040,-.00013160703,-.02550235577,.01587020420,.99954873323],
+   [.40409517288,-.02430232055,.94978797436,-.00026333713,-.02543388307,.01727148145,.99952727556],
+   [.40409025550,-.02431264892,.94978612661,-.00047534870,-.02516027912,.01696897484,.99953925610])
+  obstacles=[box_triangles(center,size) for _,center,size,_ in socket_boxes()]
+  for pose in poses:
+   pose=np.array(pose);body=quat_xyzw_to_matrix(pose[3:]);rotation=body@np.array(spec['rotation'])
+   contact=pose[:3]+body@np.array(spec['contact']);point=np.array(spec['point_tcp'])
+   sweep=[np.concatenate([(a-point)@rotation.T+contact+body@np.array((0,0,z)) for z in (.0041,-.0023)])
+          for _,a in geometry.pieces([-.028,-.028])]
+   self.assertGreater(minimum_separation(sweep,obstacles),.0002)
+
+ def test_actual_right_housing_proximity_stops_press_before_more_depth(self):
+  probe=ReleaseProbe(environment(),np.array(port(SERVICE)));probe.phase='depress_clip'
+  measured=[probe.arm(s) for s in ('left','right')]
+  probe.stationary_hold_clearance={'right_non_target_rigid_gap_m':.0001}
+  targets=(measured[0][2],measured[0][3],GRIP,measured[1][2],measured[1][3],PRESS_GRIP)
+  result=probe.release_targets(5.,5.,probe.phase,np.r_[port(SERVICE),0,0,0,1.],np.eye(3),0.,measured,targets)
+  self.assertEqual(probe.press_depth,0.)
+  np.testing.assert_array_equal(result[3],measured[1][2])
+  self.assertIn('clearance during press approach',probe.failure)
+
  def test_loaded_hands_have_separating_planes_for_entire_press_stroke(self):
   from collision_geometry import FingerGeometry,minimum_separation
   spec=json.loads(Path(__file__).with_name('press_point.json').read_text())
   rotation,point=np.array(spec['rotation']),np.array(spec['point_tcp']);geometry=FingerGeometry()
-  sweep=[np.concatenate([(a-point)@rotation.T+[-.010,0,z] for z in (.0022,.0086)])
+  sweep=[np.concatenate([(a-point)@rotation.T+[spec['contact'][0],spec['contact'][1],z] for z in (.0022,.0086)])
          for _,a in geometry.pieces([-.028,-.028])]
   for jaw in (-.0035,-.0038,-.0045,-.005):
    left=[a@R_GRIP.T+BOOT_LOCAL for _,a in geometry.pieces([jaw,jaw])]
@@ -141,7 +194,7 @@ class BimanualGeometryTests(unittest.TestCase):
   def translated_sweep(start,delta):
    return [np.concatenate([(a-point)@rotation.T+start+fraction*np.array(delta) for fraction in (0.,1.)])
            for _,a in geometry.pieces([-.028,-.028])]
-  contact=np.array((-.010,0,.0022))
+  contact=np.array((spec['contact'][0],spec['contact'][1],.0022))
   # The earlier, more forward grasp made direct diagonal retreat unsafe.
   old_left=[a@R_GRIP.T+[-.0265,.0005,-.0005] for _,a in geometry.pieces([-.0038,-.0038])]
   self.assertEqual(minimum_separation(old_left,translated_sweep(contact,(-.080,0,.050))),0.)

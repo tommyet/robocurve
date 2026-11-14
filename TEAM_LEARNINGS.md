@@ -2249,3 +2249,12 @@ editing, merge both agents' findings, and commit/push the update with the work.
   was rejected as unreachable before GPU. Neighbor5_0 flexible contact remains
   disclosed, not certified clear; unchanged native retention/scoring gates.
   Native release014 running; no complete-task result yet.
+
+- Release014 diagonal approach PASSED28.75s; clip press failed39.3s with
+  actualfinger still1.57mm aboveclip, rightTCP4.23mm offgoal. Exactnative
+  geometry: neighbor5_0wire contact then upperemptytargetside4 collision.
+  Idealpressrigidcertificate alone(.814mm) didnotcoverloadedtrackingerror.
+- Release015 rollsrightwrist15deg aboutplugX, usesnewphysicalsupportvertex
+  andtabcontactY−1.5mm. SampledallpathIK<=61.8um; rigid>=.685mm, cables>=.527mm,
+  hand>=3.142mm. Actualrightrigid/footprintguardsadded; no servo/physics/scoring
+  changes. Native release015 running; no task-success claim.

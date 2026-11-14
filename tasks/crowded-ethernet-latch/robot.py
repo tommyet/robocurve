@@ -90,9 +90,13 @@ class GraspProbe:
         clips={i:self.object_pose(f'clip_{i}') for i in USED_PORTS}
         left=[a@measured[0][3].T+measured[0][2] for _,a in self.geometry.pieces(measured[0][1])]
         right=[a@measured[1][3].T+measured[1][2] for _,a in self.geometry.pieces(measured[1][1])]
-        rigid=[a for owner,name,a in object_obstacles(plugs,clips,include_wires=False)
-               if (owner,name)!=(f'plug_{SERVICE}','boot_bound')]
-        return {'rigid_gap_m':minimum_separation(left,rigid),'other_hand_gap_m':minimum_separation(left,right)}
+        obstacles=object_obstacles(plugs,clips,include_wires=False)
+        rigid=[a for owner,name,a in obstacles if (owner,name)!=(f'plug_{SERVICE}','boot_bound')]
+        result={'rigid_gap_m':minimum_separation(left,rigid),'other_hand_gap_m':minimum_separation(left,right)}
+        if self.release and self.phase in ('approach_above_clip','depress_clip'):
+            non_target=[a for owner,name,a in obstacles if (owner,name) not in ((f'clip_{SERVICE}','tab'),(f'clip_{SERVICE}','hook'))]
+            result['right_non_target_rigid_gap_m']=minimum_separation(right,non_target)
+        return result
 
     def command(self,t):
         dt=.05 if self.last_t is None else float(np.clip(t-self.last_t,0.,.1));self.last_t=t
@@ -247,7 +251,7 @@ class GraspProbe:
             point=self.point.copy();point[0]+=measured[1][1][0]+.028
             witness=measured[1][2]+measured[1][3]@point
             report.update({'measured_press_point':witness.tolist(),'measured_press_point_plug_local':(rotation.T@(witness-plug[:3])).tolist(),
-                           'target_press_point':(rp+rr@point).tolist(),'press_depth_m':self.press_depth,'press_approach_certificate':self.press_approach_certificate,'flexible_press_contact_possible':bool(self.press_approach_certificate is not None and self.press_approach_certificate['wire_gap_m']<.0002),'withdraw_target_distance_m':self.pull_distance,'measured_hook_front_x_m':getattr(self,'measured_hook_front',None),'guide_geometry':self.guide_geometry,'insertion_command_x_m':self.insertion_x,'insertion_retries':self.insertion_retries,'full_release_clearance':self.final_clearance,'released_hold_s':self.retention_gate_s})
+                           'target_press_point':(rp+rr@point).tolist(),'actual_press_point_clip_local':self.actual_tab_witness,'press_depth_m':self.press_depth,'press_approach_certificate':self.press_approach_certificate,'flexible_press_contact_possible':bool(self.press_approach_certificate is not None and self.press_approach_certificate['wire_gap_m']<.0002),'withdraw_target_distance_m':self.pull_distance,'measured_hook_front_x_m':getattr(self,'measured_hook_front',None),'guide_geometry':self.guide_geometry,'insertion_command_x_m':self.insertion_x,'insertion_retries':self.insertion_retries,'full_release_clearance':self.final_clearance,'released_hold_s':self.retention_gate_s})
         return out,report
 
 
@@ -256,12 +260,14 @@ class ReleaseProbe(GraspProbe):
         super().__init__(env,plug);self.release=True
         spec=json.loads(Path(__file__).with_name('press_point.json').read_text())
         self.point=np.array(spec['point_tcp']);self.pressR=np.array(spec['rotation'])
+        self.local_contact=np.array(spec['contact'])
         self.press_depth=0.;self.pull_distance=0.;self.source_clear=False;self.target_origin=np.array(port(TARGET))
         self.alignment_bias=np.zeros(3);self.alignment_rotation_bias=np.zeros(3);self.insertion_x=None;self.insertion_retries=0;self.bad_fit_frames=0
         self.guide_geometry=None;self.final_clearance=None;self.retention_gate_s=0.;self.retention_last_position=None;self.escape_count=0
         self.press_approach_certificate=None
+        self.actual_tab_witness=None
 
-    def certify_press_path(self,measured,target,rotation,next_phase):
+    def certify_press_path(self,measured,target,rotation,next_phase,exclude=()):
         """Certify the complete next leg from the actual loaded hand poses.
 
         Convex hulls of sampled rigid poses cover translation. Deduct the
@@ -277,18 +283,21 @@ class ReleaseProbe(GraspProbe):
         angle=np.radians(rotation_angle_deg(startR,rotation))
         radius=max(float(np.linalg.norm(a,axis=2).max()) for _,a in pieces)
         chord_bound=radius*(1.-np.cos(angle/8.))
-        cert=clearance(sweep,snapshot(self.object_pose),wire_margin=.0002)
+        cert=clearance(sweep,snapshot(self.object_pose),wire_margin=.0002,exclude=exclude)
         left=[a@measured[0][3].T+measured[0][2] for _,a in self.geometry.pieces(measured[0][1])]
         cert.update({'other_hand_gap_m':minimum_separation(left,sweep),
-                     'rotation_chord_bound_m':chord_bound,'next_phase':next_phase})
+                     'rotation_chord_bound_m':chord_bound,'next_phase':next_phase,
+                     'intended_contact_exclusions':[list(pair) for pair in exclude]})
         self.press_approach_certificate=cert
         safe=(min(cert['rigid_gap_m'],cert['other_hand_gap_m'])-chord_bound>=.0002)
         if not safe:self.failure='press approach lacks measured 0.2 mm rigid/interhand sweep clearance'
         return safe
 
-    def press_handoff(self,condition,age,duration,next_phase,t,measured,next_target,rotation):
+    def press_handoff(self,condition,age,duration,next_phase,t,measured,next_target,rotation,exclude=()):
         if condition and age>=duration and self.stable_frames>=4:
-            condition=self.certify_press_path(measured,next_target,rotation,next_phase)
+            condition=self.certify_press_path(measured,next_target,rotation,next_phase,exclude)
+            if next_phase=='depress_clip' and self.press_approach_certificate is not None:
+                self.hand_clearance=self.press_approach_certificate['other_hand_gap_m']
         self.gate(condition,age,duration,5.,next_phase,t)
 
     def release_targets(self,t,age,phase,plug,bodyR,travel,measured,targets):
@@ -297,15 +306,26 @@ class ReleaseProbe(GraspProbe):
         # Selected support is tip_left, also when used by the RIGHT arm.
         point[0]+=measured[1][1][0]+.028
         rr=bodyR@self.pressR;rg=PRESS_GRIP
-        local_contact=np.array((-.010,0,CLIP_Z+.0005))
+        local_contact=self.local_contact
         above=plug[:3]+bodyR@(local_contact+np.array((0,0,.0041)))-rr@point
         front=above+bodyR@np.array((-.040,0,0))
         far=front+bodyR@np.array((0,0,.025))
         actual_left,actual_right=measured[0][2:],measured[1][2:]
+        clip_pose=getattr(self,'measured_clip',None)
+        if clip_pose is None:clip_pose=self.object_pose(f'clip_{SERVICE}')
+        witness=measured[1][2]+measured[1][3]@point
+        self.actual_tab_witness=(quat_xyzw_to_matrix(clip_pose[3:]).T@(witness-clip_pose[:3])).tolist()
+        tx,ty,_=self.actual_tab_witness
+        tab_xy_safe=bool(np.isfinite(self.actual_tab_witness).all() and -.0127<=tx<=.0067 and abs(ty)<=.0022)
         left_ok=self.settled(actual_left,(lp,lr),.0015)
         jaw_ok=np.max(np.abs(measured[1][1]-PRESS_JAW))<.001
-        if phase=='approach_above_clip' and self.stationary_hold_clearance is not None and not self.stationary_hold_safe:
+        actual_right_safe=(self.stationary_hold_clearance is None or
+                           self.stationary_hold_clearance.get('right_non_target_rigid_gap_m',float('inf'))>=.0002)
+        if phase in ('approach_above_clip','depress_clip') and (not actual_right_safe or not self.stationary_hold_safe):
             self.failure='measured stationary hold lost rigid/interhand clearance during press approach'
+            return lp,lr,lg,measured[1][2],measured[1][3],rg
+        if phase=='depress_clip' and not tab_xy_safe:
+            self.failure='actual pressing witness left physical clip tab footprint'
             return lp,lr,lg,measured[1][2],measured[1][3],rg
 
         if phase=='prepare_press':
@@ -316,13 +336,12 @@ class ReleaseProbe(GraspProbe):
             # A direct diagonal bypasses the loaded left jaw at the rear
             # standoff, without an unreachable high-forward waypoint.
             rp=far+(above-far)*ik.smoothstep(min(1.,age/4.))
-            settled=self.settled(actual_right,(above,rr)) and jaw_ok and left_ok
-            if settled and age>=4.:
-                left=[a@measured[0][3].T+measured[0][2] for _,a in self.geometry.pieces(measured[0][1])]
-                sweep=[np.concatenate([a@rr.T+above-bodyR@np.array((0,0,depth)) for depth in (0.,.0064)]) for _,a in self.geometry.pieces(measured[1][1])]
-                self.hand_clearance=minimum_separation(left,sweep)
-                if self.hand_clearance<.0002:self.failure='measured loaded hands lack 0.2 mm certificate over clip press stroke'
-            self.gate(settled and self.hand_clearance is not None and self.hand_clearance>=.0002,age,4.,5.,'depress_clip',t)
+            settled=self.settled(actual_right,(above,rr)) and jaw_ok and left_ok and tab_xy_safe
+            # The clip is intended contact; all housing, guides, plugs and
+            # other clips must clear the COMPLETE stroke before it begins.
+            self.press_handoff(settled,age,4.,'depress_clip',t,measured,
+                               above-bodyR@np.array((0,0,.0064)),rr,
+                               ((f'clip_{SERVICE}','tab'),(f'clip_{SERVICE}','hook')))
         elif phase=='depress_clip':
             self.press_depth=min(.0023,-.0041+.0007*age)
             rp=plug[:3]+bodyR@(local_contact-np.array((0,0,self.press_depth)))-rr@point

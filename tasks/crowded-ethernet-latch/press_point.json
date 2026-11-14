@@ -1,17 +1,14 @@
 {
-  "tilt": 70,
-  "roll": 40,
-  "yaw": 30,
   "gap": 0.028,
   "contact": [
     -0.01,
-    0.0,
-    0.0026
+    -0.0015,
+    0.0045
   ],
   "point_tcp": [
-    -0.03042686063599489,
-    0.006902028411254979,
-    0.012030490558052831
+    -0.030653321033238395,
+    0.007386470749602414,
+    0.011364706675911718
   ],
   "rotation": [
     [
@@ -20,24 +17,17 @@
       -0.00581325405150277
     ],
     [
-      0.27945382066437685,
-      -0.6634139481689384,
-      0.6941091380258463
+      0.20212039206455706,
+      -0.4744429907139731,
+      0.8567678773588857
     ],
     [
-      0.2620026302293851,
-      -0.6427876096865393,
-      -0.7198463103929541
+      0.3254030781088331,
+      -0.7925893175876234,
+      -0.5156694778666681
     ]
   ],
-  "tcp": [
-    0.4185322312027778,
-    -0.01965866905704198,
-    0.9736685601011443
-  ],
-  "pe": 6.977788913470074e-05,
-  "re": 0.0002153543917672547,
-  "purpose": "Unmodified tip_left support vertex on RIGHT robot; nominal environment and bimanual CPU certificates recorded separately. Native validation pending.",
+  "purpose": "Unmodified RIGHT tip_left support vertex; +15 degree plug-X wrist correction and outboard tab contact clear actual guided socket housing. CPU certificates only; native validation pending.",
   "finger_joint": -0.028,
   "boot_tcp_local": [
     -0.038,
@@ -69,14 +59,10 @@
     -1.2452682532195705,
     -1.5708116668794554
   ],
-  "press_ik_seed": [
-    0.38013360351143405,
-    2.3180461241818167,
-    2.521956228815609,
-    -1.4374962413675747,
-    -0.7032805010332176,
-    -1.4612519013210035
-  ],
-  "boot_note": "Force-balanced rear-boot pose with same R_GRIP. Includes 69.657 g finger gravity; 3.04001 mm common preload opening estimates about 2.5 N opposed normals. Native holding remains unvalidated.",
-  "hold_opening_m": 0.00304001
+  "boot_note": "Force-balanced rear-boot pose and ordinary 3.04001 mm preload; native GRASP012 passed. Full release remains unvalidated.",
+  "hold_opening_m": 0.00304001,
+  "above_offset": 0.0041,
+  "press_depth_limit": 0.0023,
+  "selected_link": "tip_left",
+  "worstIK": 6.180456734615184e-05
 }
