@@ -23,6 +23,11 @@ if ADULT_COLLAR:
     from adult_layout import make_mesh,settled_initial_layout as adult_initial,NECK,TABLE
     MESH=make_mesh()
     INITIAL=adult_initial(MESH,inside_out=INSIDE_OUT_RESET)
+if os.environ.get('ROBOCURVE_TIE_STAGED_START','0')=='1':
+    if not ADULT_COLLAR:
+        raise ValueError('Staged grasp requires the adult collar')
+    from staged_grasp import initial_layout as staged_initial
+    INITIAL=staged_initial(MESH)
 TIE_FABRIC=Fabric(thickness=.0012,density=500.,youngs_modulus=3e6,
                   dynamic_friction=.45,bend_modulus=2.5e5,
                   contact_offset=.001,rest_offset=.0006,

@@ -8,8 +8,9 @@ from adult_handoff import receive_tip, _compile
 from knot_demo import compile_segment
 from cross_motion import yaw_rotation
 
-STAGES = {281: 'handoff', 581: 'wrap', 1121: 'neck', 1481: 'front',
-          1841: 'cinch'}
+# Only the reliable pickup/handoff is automatic. Knotting continues through
+# reviewed ordinary action segments after the measured handoff boundary.
+STAGES = {281: 'handoff'}
 
 def compile_stage(stage, start, rest, nodes):
     if stage=='handoff':

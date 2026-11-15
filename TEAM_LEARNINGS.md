@@ -4,6 +4,97 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 14:01 UTC — disclose a simpler untied starting grasp
+
+- Demo303's wide-end handoff released the narrow strand and the loose wrap
+  collapsed. It stopped at1,831 actions without a knot. Full native evidence
+  is retained locally as`tie303-diagnostic-retained.tar.gz`, SHA256
+  `0601ea2ea35ba6432500bd84bafbc97364d80137f6b03eea4a3840c532e56251`.
+- Reset diagnostic306 starts with the wide tip in the left fingers and the two
+  untied standing strands in the right fingers. Only the narrow starting drape
+  was authored; there is no preformed knot, wrap or threaded loop. Natural
+  geometric capture retained18 left and59 right nodes through100 native steps.
+  Initial and final native photographs show the untied layout. Evidence:
+  `artifacts/final-five-2026-11-15/staged-start-review`.
+- This is an explicit experimenter-loaded starting grasp, not a material-state
+  controller. The shared reset loads cloth and robot initial conditions once,
+  then settles for5seconds with ordinary joint targets and the unchanged grip
+  and rear-collar contact laws. The task text now declares these starting grasps.
+- Full demo307 starts from this fixed reset and must form, tighten, adjust and
+  release the entire knot. A fresh matching Dream trial is required;297 is now
+  superseded for this setup and cannot be paired with307. No complete tie demo,
+  score or upstream tie PR exists yet. OneA40 remains actively supervised.
+
+## 2026-11-15 13:10 UTC — use a handoff for the necktie threading stage
+
+- Fresh303's lower narrow-tip grip retained18 nodes while the wide-tip grip
+  retained25. Native action1121 clearly shows the wide band around the narrow
+  standing strand. The following neck pass brought part of that band around
+  the left wrist. Moving the hand sideways freed the wrist but changed the
+  opening; it is not evidence of a completed front-loop passage.
+- The demo returns through the neck opening and takes an immediate measured
+  handoff: right grasps around material150mm from the wide tip, leaving a free
+  tail to feed while the gripper stays outside the front loop. The left hand
+  will release only after the actual receiving grip is verified.
+- All changes are saved ordinary controls in the same fresh episode. Scoring,
+  native cloth, contact model and matching Dream297 are unchanged. No tie
+  success, media upload or PR is claimed yet. OneA40 remains supervised;
+  complete paginated inventory confirms the other eight pods areEXITED.
+
+## 2026-11-15 12:51 UTC — retain the narrow tip below the loop
+
+- Normal-feed probes301/302 also leave a loose loop, not a valid knot. The wide
+  U sags while the narrow end is held at material1.30m, letting the wrap approach
+  the free narrow tail. A feed through the nominal former opening misses the
+  moving loop. Do not count it as completed threading.
+- Fresh303 uses the same physical model as completed Dream297. It pauses with
+  one ordinary hold after its measured handoff. A20-degree wrist tilt lets the
+  right hand grasp material1.395–1.410m and retain it at about820mm height.
+  Native action861 has25 wide-tip nodes and18 narrow-tip nodes retained. The
+  wide loop can now be wrapped around a standing strand held below it.
+- This is an ordinary controller change only. The new wrap and behind-strand
+  neck-pass paths pass the existing joint/speed and rigid-clearance checks.
+  No new material measurements or scoring requirements were introduced.
+- GitHub necktie/collar searches currently return no competing necktie PR.
+  Cake1919, seam2113 and shirt2126 remain open and awaiting review.
+
+## 2026-11-15 12:36 UTC — complete matching baseline, continue loop routing
+
+- Dream297 completed3,600 actions on the current covered-finger/compliant-grip
+  model. It leaves an untied drape, with no knot in the final native views.
+  The SDK reports478 requests,33 sessions and32 expiry recoveries; the simulator
+  stayed continuous. Preserve these counts and disclose recovery limitations.
+- Full native evidence is saved locally under`tie-dream` and archive SHA256
+  `e5a3b1ad4e3a75288edc86db316091e04bf209773c1f828325448af99ae18613`.
+- Demo296 was stopped at2,421 actions after a failed front-loop feed. Its actual
+  child process exited. The complete unsuccessful record is retained locally as
+  `tie296-diagnostic-retained.tar.gz`, SHA256
+  `df532526cfc6f7bebf348eeceed3d71e157ef124cd312188fe01468f66f14d7d`.
+- Both end grips hold reliably in short probes299–301. The front loop hangs in a
+  vertical plane and moves as the wide end is lowered; fixed stage names and
+  nominal downward waypoints do not establish passage. Probe302 tests drawing
+  a normal-to-loop feed through. Checkpoint probes remain unscored diagnostics,
+  never full demonstrations. The material model and scoring are unchanged.
+
+## 2026-11-15 11:53 UTC — use actual strand geometry for the tie route
+
+- Fresh demo296 retained the intended wide-tip and narrow-end grips through
+  action1481. The inspection pause is a single ordinary hold action; no reset.
+- Native boundary photographs and material-centreline plots exposed a routing
+  problem: the earlier nominal “behind” path was too shallow relative to the
+  sloping narrow strand. Fixed stage names are not evidence of an actual wrap
+  or neck-loop pass. This is a centimetre-scale motion issue, not a material
+  accuracy gate. The correction wraps at x=0.46m, then carries the tip behind
+  the standing strands at x=0.41m before moving forward through the opening.
+- Both corrected paths pass the ordinary joint/speed and sampled rigid-volume
+  checks. Their actual native outcomes remain to be reviewed. No score claimed.
+  Diagnostic298 successfully grips material170–185mm and reduces loop slack
+  with an ordinary pull; it is not a complete or scored demonstration.
+- The standard tying order was checked against the maker’s illustrated guide:
+  https://www.ties.com/how-to-tie-a-tie/simple . It calls for tightening the wide
+  end before sliding the knot up. The task permits conventional necktie knots;
+  it does not score a prescribed action sequence.
+
 ## 2026-11-15 11:33 UTC — review decisions and final tie contact test
 
 - Fresh GitHub reads show wheel PR #2091 closed as “Not accepted: final”:

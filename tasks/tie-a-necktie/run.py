@@ -116,6 +116,7 @@ def main():
     p.add_argument('--seed',type=int,default=0)
     p.add_argument('--inside-out-reset',action='store_true',help='Explicit diagnostic reset for a simple (Oriental) knot; default remains front-face drape')
     p.add_argument('--adult-collar',action='store_true',help='Explicit diagnostic145cm tie and standalone folded-collar form')
+    p.add_argument('--staged-start',action='store_true',help='Fixed untied experimenter-loaded starting grasps, shared by every policy')
     p.add_argument('--grip-refined',action='store_true',help='Conforming1.25mm mesh around the wide-end grip; unchanged material')
     p.add_argument('--state-assisted-grasp',action='store_true',help='Disclosed scripted adult pickup: use measured reset cloth to select ordinary finger targets')
     p.add_argument('--state-assisted-handoff',action='store_true',help='Disclosed scripted adult tip transfer: measure the held free tip before ordinary receiving-finger actions')
@@ -126,7 +127,7 @@ def main():
     p.add_argument('--joint-tracking-from',type=int,help='Bounded bimanual joint feedback after this action; scripted demo only')
     p.add_argument('--pinch-approximation',action='store_true',help='Use the disclosed contact-gated dry pinch for both hands, identically for demo and Dream')
     p.add_argument('--judging-views',action='store_true',help='Record additional native640×480 front/rear/side assessor videos')
-    p.add_argument('--interactive-demo-start',type=int,default=2181,choices=(281,581,2181),help='First operator-planned ordinary action after the verified pickup prefix')
+    p.add_argument('--interactive-demo-start',type=int,default=2181,choices=(1,281,581,2181),help='First operator-planned ordinary action after the verified pickup prefix')
     p.add_argument('--interactive-demo-dir',type=Path,help='Receive audited ordinary action segments after the complete knotting prefix; no scene writes')
     p.add_argument('--automatic-demo-prefix',action='store_true',help='Compile ordinary pickup, wrap and threading stages; pause before release and fitting')
     p.add_argument('--out',type=Path)
@@ -183,7 +184,11 @@ def main():
         from adult_handoff import RECEIVING_ROUTE_RELEASED
         if not RECEIVING_ROUTE_RELEASED:
             p.error('Receiving route is held until the forward-carried cloth is measured and its new approach is screened')
-    if args.interactive_demo_dir is not None and not (complete_handoff_plan and args.steps==3600):
+    if args.staged_start and not (args.adult_collar and args.pinch_approximation and args.collar_friction_approximation):
+        p.error('Staged start requires adult collar and the shared grip/contact model')
+    if args.staged_start and (args.state_assisted_grasp or args.state_assisted_handoff):
+        p.error('Staged start uses its own fixed reset, without a pickup prefix')
+    if args.interactive_demo_dir is not None and not ((complete_handoff_plan or args.staged_start) and args.steps==3600):
         p.error('Interactive demonstration requires the complete 3600-action-capacity motion plan')
     if args.automatic_demo_prefix and args.interactive_demo_dir is None:
         p.error('Automatic prefix requires the continuous demo action interface')
@@ -235,6 +240,7 @@ def main():
     previous_sigterm=signal.signal(signal.SIGTERM,terminate)
     try:
         os.environ.setdefault('OMNI_KIT_ACCEPT_EULA','YES')
+        os.environ['ROBOCURVE_TIE_STAGED_START']='1' if args.staged_start else '0'
         os.environ['ROBOCURVE_TIE_INSIDE_OUT_RESET']='1' if args.inside_out_reset else '0'
         os.environ['ROBOCURVE_TIE_ADULT_COLLAR']='1' if args.adult_collar else '0'
         os.environ['ROBOCURVE_TIE_GRIP_REFINED']='1' if args.grip_refined else '0'
@@ -269,12 +275,17 @@ def main():
         from reset_scene import reset_and_settle
         report['reset']={'method':'raw reset plus five seconds of fixed native settling','status':'requested'}
         save()
-        report['reset']=reset_and_settle(emb)
+        pinches={};collar_friction={}
+        if args.staged_start:
+            from reset_scene import reset_staged_and_settle
+            report['reset'],pinches,collar_friction=reset_staged_and_settle(emb)
+        else:
+            report['reset']=reset_and_settle(emb)
         stage=omni.usd.get_context().get_stage()
         names=list(arena_cloth.SPECS)+list(PEG_SPECS)
         if not names:
             raise RuntimeError('Task custom assets were not registered')
-        report['native_scene_audit']=native_audit(stage,list(arena_cloth.SPECS),list(PEG_SPECS))
+        report['native_scene_audit']=native_audit(stage,list(arena_cloth.SPECS),list(PEG_SPECS),allow_pinch=args.staged_start,allow_collar=args.staged_start)
         if args.surface_contact_diagnostic:
             actual=report['native_scene_audit']['cloth']['tie']
             if actual['speculative_ccd'] is not True or actual['collision_pair_update_frequency']!=8:
@@ -322,16 +333,14 @@ def main():
             report['state_assisted_grasp']=fixed_plan['grasp']
             fixed_actions=np.asarray([f['action14'] for f in fixed_plan['frames']],float)
             if len(fixed_actions)<args.steps:raise RuntimeError('Measured plan does not cover the requested bounded trial')
-        pinches={}
         if args.pinch_approximation:
             from pinch_constraint import install
-            pinches=install(base,'tie')
+            if not args.staged_start:pinches=install(base,'tie')
             report['pinch_material']='Geometric compliant cloth grip with 9.4 mm minimum joint clearance. Enclosed cloth captures within a closing 30 mm gap and releases above 40 mm. Closing seats the enclosed patch. Same action/contact law for both policies; force-limited slip uncalibrated.'
-            report['native_scene_audit']=native_audit(stage,list(arena_cloth.SPECS),list(PEG_SPECS),allow_pinch=True)
-        collar_friction={}
+            report['native_scene_audit']=native_audit(stage,list(arena_cloth.SPECS),list(PEG_SPECS),allow_pinch=True,allow_collar=args.staged_start)
         if args.collar_friction_approximation:
             from collar_friction import install as install_collar
-            collar_friction=install_collar(base)
+            if not args.staged_start:collar_friction=install_collar(base)
             report['collar_friction']=collar_friction
             report['native_scene_audit']=native_audit(stage,list(arena_cloth.SPECS),list(PEG_SPECS),allow_pinch=args.pinch_approximation,allow_collar=True)
         report['initial_physics_step_count']=int(base.sim._physics_step_count)
@@ -421,7 +430,7 @@ def main():
                 native=arena_cloth.state(emb._env,'tie');mesh=arena_cloth.SPECS['tie'].mesh
                 request=args.interactive_demo_dir/f'state-{step:04d}.npz'
                 np.savez_compressed(request,nodes=native.nodes,velocities=native.velocities,rest=mesh.rest,faces=mesh.faces,
-                    action=np.asarray(emb._observation().state['joint_pos'],float),reference_action=fixed_actions[step-2],
+                    action=np.asarray(emb._observation().state['joint_pos'],float),reference_action=ready if step==1 else fixed_actions[step-2],
                     pinches_json=np.array(json.dumps({side:p.indices.tolist() for side,p in pinches.items()})))
                 for camera,rgb in emb._observation().images.items():
                     Image.fromarray(np.asarray(rgb,dtype=np.uint8)).save(args.interactive_demo_dir/f'state-{step:04d}-{camera}.png')
@@ -446,7 +455,7 @@ def main():
                         (args.interactive_demo_dir/f'actions-{step:04d}.json').write_text(json.dumps(payload,indent=2)+'\n')
                 if payload is None:
                     payload=wait_control(args.interactive_demo_dir,step)
-                frames=validate_control(payload,step=step,previous=fixed_actions[step-2],low=emb._low,high=emb._high,
+                frames=validate_control(payload,step=step,previous=ready if step==1 else fixed_actions[step-2],low=emb._low,high=emb._high,
                     limits=delta_limit,remaining=3601-step)
                 end=step-1+len(frames)
                 fixed_plan['frames'][step-1:end]=frames
