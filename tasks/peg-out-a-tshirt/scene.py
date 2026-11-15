@@ -8,10 +8,10 @@ TABLE=.7475
 LINE_X=.52
 LINE_Z=1.09
 LINE_HALF_SPAN=.25
-SUPPORT_SIZE=(.20,.44,.155 if os.environ.get('ROBOCURVE_SHIRT_RAISED_SUPPORT')=='1' else .10)
+SUPPORT_SIZE=(.10,.44,.155 if os.environ.get('ROBOCURVE_SHIRT_RAISED_SUPPORT')=='1' else .10)
 SUPPORT_BOARD_THICKNESS=.008
 PHYSICS_HZ=480
-SUPPORT_CENTER=(.36,0.,TABLE+SUPPORT_SIZE[2]/2)
+SUPPORT_CENTER=(.31,0.,TABLE+SUPPORT_SIZE[2]/2)
 SUPPORT_TOP=TABLE+SUPPORT_SIZE[2]
 HEM_X=.195
 
@@ -27,7 +27,7 @@ def support_geometry(board_thickness=None):
     thickness=SUPPORT_BOARD_THICKNESS if board_thickness is None else board_thickness
     props={'Board':dict(kind='box',size=(SUPPORT_SIZE[0],SUPPORT_SIZE[1],thickness),
                        center=(SUPPORT_CENTER[0],0.,SUPPORT_TOP-thickness/2))}
-    for ix,x in enumerate((.35,.425)):
+    for ix,x in enumerate((.325,.3475)):
         for iy,y in enumerate((-.185,.185)):
             props[f'Leg{ix}{iy}']=dict(kind='box',size=(.015,.015,SUPPORT_SIZE[2]-thickness),
                          center=(x,y,TABLE+(SUPPORT_SIZE[2]-thickness)/2))
@@ -49,7 +49,7 @@ def rack_geometry():
 def author_support(stage,path='/World/LaundrySupport'):
     """Fixed raised laundry board with clear space beneath the thin top.
 
-    The ordinary support has a 200 x 440 x 8 mm plastic top on four 15 mm
+    The ordinary support has a 100 x 440 x 8 mm plastic top on four 15 mm
     square legs. Its top is 100 mm above the table; the hem overhangs its near edge by 65 mm. The front edge is at x=.26. There are no attachments.
     """
     from pxr import UsdGeom

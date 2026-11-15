@@ -384,7 +384,7 @@ def main():
         if args.mode=='dream':
             from inspect_robots import Scene
             from dream_policy import make_policy
-            dream=make_policy(request_audit,session_audit,rows_per_request=4)
+            dream=make_policy(request_audit,session_audit,rows_per_request=2)
             dream.bind(emb.info);dream.reset(Scene(id='tie-a-necktie',instruction=draft['instruction']))
             report['dream_model']=dream.info.checkpoint
         report['status']='running'
@@ -542,7 +542,7 @@ def main():
                 save()
                 if presence['obvious_empty_pinch']:
                     raise RuntimeError('Wide tip is outside the receiving finger region; physical transfer is not established')
-            knot_stages={581:('wrap',540),1841:('cinch',340),2181:('fit',520)}
+            knot_stages={581:('wrap',540),1841:('cinch',340),2181:('release_tip',160),2341:('fit',600)}
             if fixed_plan is not None and fixed_plan.get('continue_after_handoff') and step in knot_stages:
                 from knot_demo import compile_segment
                 stage_name,count=knot_stages[step]

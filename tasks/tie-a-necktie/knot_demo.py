@@ -38,19 +38,34 @@ def compile_segment(stage,start,rest,nodes):
           (4.,'right',(.29,-.08,.94),0.,yaw_rotation(30.),'tension narrow end below knot','cartesian'),
           (4.,'left',(.24,.035,.85),0.,yaw_rotation(90.),'draw wide end through front loop','cartesian'),
           (2.,'left',(.24,.035,.85),0.,yaw_rotation(90.),'settle tightened knot','cartesian')]
+    elif stage=='release_tip':
+        rx=np.array([[1.,0.,0.],[0.,0.,1.],[0.,-1.,0.]])
+        R=lR@rx
+        g={'method':'turn fingers down before opening; no material selection'}
+        schedule=[(3.,'left',lp,0.,R,'turn fingers downward before releasing','cartesian'),
+          (1.,'left',lp,1.,R,'release wide tip downward','cartesian'),
+          (2.,'left',lp-.08*R[:,2],1.,R,'withdraw along open finger axis','cartesian'),
+          (2.,'left',lp-.08*R[:,2],1.,R,'allow wide end to fall','cartesian')]
     elif stage=='fit':
-        g=grasp_frame(rest,nodes,longitudinal=.45,side='left');R=yaw_rotation(90.)
+        g=grasp_frame(rest,nodes,longitudinal=.45,side='left');R=yaw_rotation(120.)
         t=np.asarray(g['center_m'])+.012*R[:,2];pre=t-.075*R[:,2]
-        schedule=[(1.,'left',lp,1.,lR,'release wide tip for adjustment','cartesian'),
-          (3.,'left',pre,1.,R,'approach front of knot','joint'),(2.,'left',t,1.,R,'surround knot body','cartesian'),
-          (1.,'left',t,0.,R,'hold knot body','cartesian'),(1.,'left',t,0.,R,'retain knot body','cartesian'),
-          (5.,'left',(.31,0.,1.175),0.,R,'slide knot toward collar','cartesian'),
-          (2.,'left',(.31,0.,1.175),0.,R,'settle collar fit','cartesian'),
-          (1.,'left',(.31,0.,1.175),1.,R,'release knot body','cartesian'),
-          (2.,'left',(.20,.15,1.15),1.,R,'clear knot with left hand','cartesian'),
-          (1.,'right',rp,1.,rR,'release narrow end','cartesian'),
-          (2.,'right',(.20,-.20,1.08),1.,yaw_rotation(30.),'clear tie with right hand','cartesian'),
-          (5.,'right',(.20,-.20,1.08),1.,yaw_rotation(30.),'observe released knot','cartesian')]
+        target=np.array((.31,0.,1.175));Rfit=yaw_rotation(90.)
+        rx=np.array([[1.,0.,0.],[0.,0.,1.],[0.,-1.,0.]])
+        rightdown=rR@rx
+        ready_p,ready_R=ik.tcp_pose(np.array([0.,1.,1.,-.6,0.,0.]),station.BASES['right'])
+        schedule=[(3.,'left',pre,1.,R,'approach front of knot','joint'),
+          (2.,'left',t,1.,R,'surround knot body','cartesian'),
+          (1.,'left',t,0.,R,'hold knot body','cartesian'),
+          (1.,'left',t,0.,R,'retain knot body','cartesian'),
+          (5.,'left',target,0.,Rfit,'slide knot toward collar','cartesian'),
+          (2.,'left',target,0.,Rfit,'settle collar fit','cartesian'),
+          (1.,'left',target,1.,Rfit,'release knot body','cartesian'),
+          (2.,'left',target-.12*Rfit[:,2],1.,Rfit,'withdraw from knot body','cartesian'),
+          (2.,'right',rp,0.,rightdown,'turn narrow-tip fingers downward','cartesian'),
+          (1.,'right',rp,1.,rightdown,'release narrow end','cartesian'),
+          (2.,'right',rp,1.,rightdown,'allow narrow end to fall','cartesian'),
+          (3.,'right',ready_p,1.,ready_R,'clear right hand','joint'),
+          (5.,'right',ready_p,1.,ready_R,'observe released knot','cartesian')]
     else:raise ValueError('Unknown knot demonstration stage')
     plan=_compile(start,schedule,robust_joint=True)
     check=audit(dict(plan,frames=plan['frames'][::5]))

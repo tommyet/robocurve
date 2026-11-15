@@ -26,6 +26,7 @@ def main():
     parser.add_argument('--collar-friction-approximation',action='store_true',help='Disclosed ideal static collar contact')
     parser.add_argument('--pinch-approximation',action='store_true',help='Disclosed contact-gated dry-pinch material variant, identical for every policy')
     parser.add_argument('--joint-tracking',action='store_true',help='Bounded bimanual joint feedback; normal motor and action limits remain')
+    parser.add_argument('--restore-recorded-pinches',action='store_true',help='Reconstruct already-active recorded static contacts, without moving cloth')
     args=parser.parse_args()
     source=Path(__file__).resolve().parent
     provenance=json.loads(args.state.with_suffix('.json').read_text())
@@ -118,7 +119,12 @@ def main():
         pinches={}
         if args.pinch_approximation:
             from pinch_constraint import install
-            pinches=install(base,'tie')
+            recorded=None
+            if args.restore_recorded_pinches:
+                row=json.loads(args.state.with_suffix('.row.json').read_text())
+                recorded={side:value['indices'] for side,value in row['pinches'].items()}
+                report['restored_recorded_pinches']=recorded
+            pinches=install(base,'tie',recorded_contacts=recorded)
         collar_friction={}
         if args.collar_friction_approximation:
             from collar_friction import install as install_collar

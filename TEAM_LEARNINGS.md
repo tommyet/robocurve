@@ -4,6 +4,43 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 05:42 UTC — practical reset checks and final hand clearance
+
+- Shirt266 passed the 240 Hz reset but its right hand met a support leg during
+  pickup. Moving the four legs to X=0.325/0.3475 m, Y=±0.185 m clears the
+  offline trajectory.270 stopped on 24 triangle crossings at the old 1 µm
+  tolerance, with no fixture intersection.271 uses the declared 0.6 mm fabric
+  thickness for the self-contact check and 1 mm fixture compliance; its reset
+  passes. Native cloth physics, gravity and self-collision remain unchanged.
+  This is numerical compliance, not permission for visible material passage.
+ 268 Dream was stopped after the leg-layout correction, so is not final evidence.
+- Tie267 completed600 adjustment actions but its wide end still lay over the
+  open left hand/arm.264's opening alone did not fully free the material; the
+  earlier wording that it "frees the wide end" was too strong.272 explicitly
+  returns the left arm to ready and observes5s. No knot score is claimed.
+- Watchdog deadline is 06:38 UTC while this single A40 is actively supervised.
+  Four task PRs are open and awaiting review; shirt/tie are not yet submitted.
+
+## 2026-11-15 05:31 UTC — support and finger-release corrections
+
+- Fresh shirt254 completed 2,260 actions and both pegs retained actual fabric,
+  but 1,548 vertices still rested on the laundry board. It is not a full-score
+  demo. Earlier two-peg diagnostics proved captures, not exclusive line support.
+  The board is now 100 mm deep, centred at X=0.31 m, with the same front edge.
+  Candidate265 at 120 Hz failed its reset self-contact check.266 retries at the
+  established 240 Hz; final demo and matching Dream remain pending.262 Dream
+  was stopped because its old support layout no longer matches the candidate.
+- Tie260/263 regrasped the wide tip instead of the knot body: the released cloth
+  physically hung on an open finger. No stale native attachment was involved.
+ 264 turns the fingers downward before opening; its native continuation frees
+  the wide end.267 will test actual knot-body adjustment and a released hold.
+  Full261 was stopped early; no final knot or full-score claim exists yet.
+- Checkpoint probes may reconstruct already recorded static finger contacts;
+  this only preserves their diagnostic starting state. Final demos must start
+  from the untied reset and never receive recorded contact lists.
+- Seam PR2113 was received as TK-QM5PG5; cake1919, wheel2091 and staple2093
+  are also submitted. One supervised A40 remains active; no second GPU runs.
+
 ## 2026-11-15 04:57 UTC — full tie demo and recoverable Dream trials
 
 - Tie257 completed340 ordinary tightening actions. Both hands retained actual

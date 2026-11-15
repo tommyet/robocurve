@@ -95,7 +95,7 @@ def install_projected(base, cloth_name):
     return {side: pinch for side, *_, pinch in hands}
 
 
-def install(base, cloth_name):
+def install(base, cloth_name, *, recorded_contacts=None):
     """Native hard static-friction approximation, with two-way reaction.
 
     A vertex attachment is created only after measured contact qualifies.
@@ -128,8 +128,11 @@ def install(base, cloth_name):
         enabled=prim.CreateAttribute('omniphysics:attachmentEnabled',Sdf.ValueTypeNames.Bool);enabled.Set(False)
         indices=prim.CreateAttribute('omniphysics:vtxIndicesSrc0',Sdf.ValueTypeNames.IntArray);indices.Set([])
         positions=prim.CreateAttribute('omniphysics:localPositionsSrc1',Sdf.ValueTypeNames.Point3fArray);positions.Set([])
+        pinch=Pinch()
+        if recorded_contacts and recorded_contacts.get(side):
+            pinch.restore_indices=np.asarray(recorded_contacts[side],dtype=int)
         hands.append((side,robot,list(robot.body_names).index('gripper'),
-            robot.find_joints(list(FINGER_JOINTS),preserve_order=True)[0],Pinch(),enabled,indices,positions))
+            robot.find_joints(list(FINGER_JOINTS),preserve_order=True)[0],pinch,enabled,indices,positions))
     original=base.scene.write_data_to_sim
     def array(value):return getattr(value,'torch',value).detach().cpu().numpy()
     def apply(*args,**kwargs):
@@ -140,6 +143,15 @@ def install(base, cloth_name):
             tcp=pose[:3]+R@np.asarray(TCP_OFFSET)
             gap=float(abs(array(robot.data.joint_pos)[0,fingers]).sum())
             was=bool(len(pinch.indices))
+            if hasattr(pinch,'restore_indices'):
+                # Diagnostic checkpoint reconstruction only: preserve a real
+                # already-held patch from the recorded contact state. Capture
+                # its current hand-local coordinates without moving any node.
+                restored=pinch.restore_indices;del pinch.restore_indices
+                if gap>.008 or np.any(restored<0) or np.any(restored>=len(points)):
+                    raise ValueError('Recorded pinch is incompatible with the checkpoint')
+                pinch.indices=restored;pinch.local=(points[restored]-tcp)@R
+                pinch.events.append(dict(time_s=pinch.time,event='restored_recorded_contact',count=len(restored)))
             # Selection and failure checks run on copies. Native state remains
             # untouched; the native vertex attachment enforces the constraint.
             pinch.update(points.copy(),np.zeros_like(points),tcp,R,gap,float(base.physics_dt))
