@@ -15,7 +15,8 @@ from inspect_robots.types import Action,ActionChunk
 from inspect_robots_yam.packing import pack
 from config import *
 import telemetry
-from control_math import grip_fraction,ramp_scalar,ramp_translation
+from control_math import (grip_fraction,ramp_scalar,ramp_translation,GRASP_OFFSET,RELEASE_DISTANCE,RELEASE_SPEED,
+                          RELEASE_DEADLINE,calibrated_hand_target,grasp_drift,release_target,release_clearance,release_gate_frames)
 
 LEFT_PRELOAD_SPEED=.005
 RIGHT_PRESS_SPEED=.010
@@ -27,6 +28,7 @@ RIGHT_R=np.array([[1.,0.,0.],[0.,0.,1.],[0.,-1.,0.]])
 _FACE=json.loads(Path(__file__).with_name('press_face.json').read_text())
 PRESS_POINT=np.array(_FACE['point_tcp'])
 PRESS_R=np.array(_FACE['rotation_can_from_tcp'])
+PRESS_FACE=np.array(_FACE['triangle_tcp'])
 
 
 class SprayDemo(YamScriptedPolicy):
@@ -39,17 +41,19 @@ class SprayDemo(YamScriptedPolicy):
 
     def initialize(self):
         self.started=True;self.index=-1;self.failure=None;self.moves=[]
-        self.press_depth=.0027;self.grasp_calibrated=False;self.press_enabled=True
+        self.press_depth=.0027;self.grasp_calibrated=False;self.holding_can=False;self.press_enabled=True
         self.contact_time=0.;self.press_grip=grip_fraction(-.028,FINGER_OPEN)
         self.targets=[];self.q=[]
         self.position_bias=[np.zeros(3),np.zeros(3)]
         self.left_preload=0.;self.left_preload_target=0.
+        self.release_state=None;self.release_frames=0;self.release_gap=None
+        self.last_actions=[np.r_[h['joints'],h['opening']] for h in telemetry.latest['hands']]
         self.rotation_bias=[np.zeros(3),np.zeros(3)]
         for h in telemetry.latest['hands']:
             self.targets.append([np.array(h['tcp']),np.array(h['rotation']),h['opening']])
             self.q.append(np.array(h['joints']))
         can=np.array(telemetry.latest['can']);cap=np.array(telemetry.latest['cap'])
-        left=can+np.array((0.,0.,-.025))
+        left=can+GRASP_OFFSET
         self.grip=grip_fraction(-.021,FINGER_OPEN);cap_grip=grip_fraction(-.025,FINGER_OPEN)
         def move(label,seconds,L=None,R=None,check=None,follow=False,aim=None):
             self.moves.append(dict(label=label,seconds=seconds,L=L,R=R,check=check,follow=follow,aim=aim))
@@ -71,20 +75,21 @@ class SprayDemo(YamScriptedPolicy):
             move('diagnostic_hold',1.)
             return
         can_center=np.array((CAN_START[0],0.,TARGET_CENTER[1]-.077))
-        move('can_lift',2.,L=lp(can_center+(0.,0.,-.025),self.grip))
+        move('can_lift',2.,L=lp(can_center+GRASP_OFFSET,self.grip))
         move('press_approach',2.,R=(can_center+(0.,-.08,.14),PRESS_R,self.press_grip))
         move('press_hover',1.5,follow='hover')
         for index,(y,z) in enumerate([(-.035,-.035),(-.035,.035),(.035,.035),(.035,-.035)]):
-            p=can_center+np.array((0.,y,z-.025))
+            p=can_center+np.array((0.,y,z))+GRASP_OFFSET
             aim=(y,TARGET_CENTER[1]+z)
             move('coat_position_'+str(index),1.8,L=lp(p,self.grip),follow='hover')
             move('coat_aim_'+str(index),1.2,follow='hover',aim=aim)
             move('coat_shot_'+str(index),8.,follow='press',aim=aim)
-            move('coat_unpress_'+str(index),.6,follow='hover')
+            move('coat_unpress_'+str(index),RELEASE_DEADLINE,follow='release')
         move('finish_coating',.3,check='coat')
         move('press_retreat',2.,R=rp(can_center+(0.,-.09,.07),1.))
-        move('can_lower',3.,L=lp((CAN_PAD[0],CAN_PAD[1],TOP+.097),self.grip))
-        move('can_release',1.,L=lp((CAN_PAD[0],CAN_PAD[1],TOP+.097),1.))
+        placement=np.array((CAN_PAD[0],CAN_PAD[1],CAN_REST_HEIGHT))+GRASP_OFFSET
+        move('can_lower',3.,L=lp(placement,self.grip))
+        move('can_release',1.,L=lp(placement,1.))
         move('brace_retreat',2.,L=lp((CAN_PAD[0],CAN_PAD[1]+.12,TOP+.13),1.))
         move('finish_hold',2.)
         if self.press_only:self.moves=self.moves[:3]+self.moves[11:]
@@ -94,19 +99,30 @@ class SprayDemo(YamScriptedPolicy):
         self.starts=[(p.copy(),r.copy(),g) for p,r,g in self.targets]
         if self.index>=len(self.moves):return
         step=self.moves[self.index]
+        if step['label']=='can_release':self.holding_can=False
         if step['label'].startswith('coat_shot'):
             self.left_preload_target=.014
             self.contact_time=0.
         if step['label'].startswith('coat_unpress'):
-            self.left_preload_target=0.
+            s=telemetry.latest;hand=s['hands'][1]
+            start=np.array(hand['tcp']);rotation=np.array(hand['rotation'])
+            axis=np.array(s['can_rotation'])[:,2]
+            self.release_state=(start.copy(),rotation.copy(),axis.copy());self.release_frames=0
+            commandp,commandR=ik.tcp_pose(self.q[1],self._bases['right'])
+            self.position_bias[1]=commandp-start
+            self.rotation_bias[1]=ik._rot_error(commandR,rotation)
+            if np.max(np.abs(self.position_bias[1]))>.020 or np.max(np.abs(self.rotation_bias[1]))>.12:
+                self.failure='release achieved-pose command compensation exceeds existing bounds'
         if step['label']=='can_lift' and not self.grasp_calibrated:
             s=telemetry.latest;can_rot=np.array(s['can_rotation'])
             hand=s['hands'][0];offset=can_rot.T@(np.array(hand['tcp'])-np.array(s['can']))
             hold_rotation=can_rot.T@np.array(hand['rotation'])
+            self.grasp_offset=offset.copy();self.grasp_rotation=hold_rotation.copy()
             for future in self.moves[self.index:]:
                 if future['L'] is not None:
-                    p,r,g=future['L'];future['L']=(p+offset-np.array((0.,0.,-.025)),hold_rotation,g)
+                    p,r,g=future['L'];future['L']=(calibrated_hand_target(p,offset),hold_rotation,g)
             self.grasp_calibrated=True
+            self.holding_can=True
         if isinstance(step['R'],str) and step['R']=='unpress':
             p=np.array(telemetry.latest['can'])+np.array((0.,-.006,.12))
             step['R']=(p,RIGHT_R,0.)
@@ -117,10 +133,20 @@ class SprayDemo(YamScriptedPolicy):
         now=float(observation.state_time);s=telemetry.latest
         if self.index<0:self.next(now)
         if abs(s['time']-now)>.075:raise RuntimeError('stale demo telemetry')
+        if self.grasp_calibrated and self.holding_can:
+            hand=s['hands'][0]
+            self.failure=self.failure or grasp_drift(s['can'],s['can_rotation'],hand['tcp'],hand['rotation'],self.grasp_offset,self.grasp_rotation)
         finished=False
         if self.index<len(self.moves):
             step=self.moves[self.index];elapsed=now-self.t0
             finished=elapsed>=step['seconds']
+            if step['follow']=='release':
+                start,rotation,axis=self.release_state;hand=s['hands'][1]
+                self.release_gap=release_clearance(hand['tcp'],hand['rotation'],PRESS_FACE,hand['finger_joints'][0],s['button'],np.array(s['can_rotation'])[:,2],axis)
+                self.release_frames=release_gate_frames(s['button_travel'],self.release_gap,self.release_frames)
+                if elapsed*RELEASE_SPEED>=RELEASE_DISTANCE:self.left_preload_target=0.
+                finished=self.release_frames>=5 and elapsed*RELEASE_SPEED>=RELEASE_DISTANCE and self.left_preload<=1e-9
+                if elapsed>=RELEASE_DEADLINE and not finished:self.failure='button release/20 mm face clearance/preload settle timed out'
             if step['label'].startswith('coat_shot'):
                 n=np.array(s['nozzle']);a=np.array(s['axis'])
                 if a[0]>.5:
@@ -144,7 +170,10 @@ class SprayDemo(YamScriptedPolicy):
                 if goal is not None:
                     p0,r0,g0=self.starts[i];p,r,g=goal
                     self.targets[i]=[p0+f*(p-p0),ik.slerp_matrix(r0,r,f),g0+f*(g-g0)]
-            if step['follow']:
+            if step['follow']=='release':
+                p,r=release_target(*self.release_state,now-self.t0+self._dt)
+                self.targets[1]=[p,r,self.press_grip]
+            elif step['follow']:
                 # Press a physically moving piston with the other arm. The
                 # target follows the measured can, not a changed button pose.
                 can=np.array(s['can']);rot=np.array(s['can_rotation'])
@@ -176,6 +205,9 @@ class SprayDemo(YamScriptedPolicy):
                 position=ramp_translation(self.targets[1][0],target,speed,self._dt)
                 self.targets[1]=[np.asarray(position),rot@PRESS_R,self.press_grip]
         actions=[];errors={}
+        if self.failure:
+            telemetry.command=dict(phase=phase,errors={},failure=self.failure,release_clearance_m=self.release_gap,release_frames=self.release_frames)
+            return ActionChunk(actions=[Action(data=pack(*self.last_actions),meta={'request_stop':True})],control_hz=1/self._dt)
         for i,side in enumerate(('left','right')):
             p,r,g=self.targets[i]
             hand=s['hands'][i]
@@ -192,12 +224,20 @@ class SprayDemo(YamScriptedPolicy):
             applied_bias=self.position_bias[i].copy()
             if i==0:applied_bias[2]=np.clip(applied_bias[2]+self.left_preload,-bound,bound)
             q,pe,re=ik.solve(p+applied_bias,ik.matrix_to_quat_xyzw(compensated),self.q[i],base_pos=self._bases[side],iters=90)
+            early=phase.startswith(('brace_','cap_')) or phase=='can_lift'
+            limit=.015 if early else .005;angle_limit=.12 if early else .05
+            if not np.isfinite(np.r_[q,pe,re]).all() or pe>limit or re>angle_limit:
+                self.failure=f'{side} {phase} IK exceeds {limit*1000:g} mm / {angle_limit:g} rad bounds'
+                telemetry.command=dict(phase=phase,errors=errors,failure=self.failure)
+                return ActionChunk(actions=[Action(data=pack(*self.last_actions),meta={'request_stop':True})],control_hz=1/self._dt)
             self.q[i]=q;errors[side]=dict(position=pe,rotation=re,
                                          tracking_position=float(np.linalg.norm(error)),tracking_rotation=float(np.linalg.norm(rotation_error)),
                                          position_bias=self.position_bias[i].tolist(),applied_position_bias=applied_bias.tolist())
             actions.append(np.r_[q,np.clip(g,0.,1.)])
         telemetry.command=dict(phase=phase,errors=errors,failure=self.failure,commanded_depression=self.press_depth,measured_contact_time=self.contact_time,
-                               left_preload_m=self.left_preload,left_preload_target_m=self.left_preload_target,right_press_speed_m_s=RIGHT_PRESS_SPEED)
+                               left_preload_m=self.left_preload,left_preload_target_m=self.left_preload_target,right_press_speed_m_s=RIGHT_PRESS_SPEED,
+                               release_clearance_m=self.release_gap,release_frames=self.release_frames)
+        self.last_actions=[a.copy() for a in actions]
         meta={'request_stop':True} if self.failure or self.index>=len(self.moves) else {}
         return ActionChunk(actions=[Action(data=pack(*actions),meta=meta)],control_hz=1/self._dt)
 

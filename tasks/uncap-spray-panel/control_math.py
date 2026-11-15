@@ -1,5 +1,52 @@
 """Gripper unit conversion with a guard against the original positive-sign bug."""
 import math
+import numpy as np
+
+GRASP_Z=.005
+GRASP_OFFSET=np.array((0.,0.,GRASP_Z))
+RELEASE_DISTANCE=.030
+RELEASE_SPEED=.010
+RELEASE_DEADLINE=6.
+
+
+def calibrated_hand_target(nominal,actual_offset):
+    """Replace the common nominal grasp offset with its measured value."""
+    return np.asarray(nominal)+np.asarray(actual_offset)-GRASP_OFFSET
+
+
+def grasp_drift(can,can_rotation,hand,hand_rotation,offset,relative_rotation):
+    """Measured can-to-hand drift; return None only inside the safety bounds."""
+    values=[np.asarray(v,dtype=float) for v in (can,can_rotation,hand,hand_rotation,offset,relative_rotation)]
+    if not all(np.isfinite(v).all() for v in values):return 'nonfinite calibrated grasp state'
+    can,rotation,hand,handR,offset,relativeR=values
+    if rotation[2,2]<math.cos(math.radians(25)):return 'can tilted beyond 25 degrees'
+    if np.linalg.norm(rotation.T@(hand-can)-offset)>.008:return 'can grasp offset drift exceeded 8 mm'
+    error=relativeR.T@(rotation.T@handR)
+    angle=math.acos(float(np.clip((np.trace(error)-1)/2,-1.,1.)))
+    if angle>math.radians(15):return 'can grasp relative angle exceeded 15 degrees'
+    return None
+
+
+def release_target(start,rotation,axis,elapsed):
+    """Retract from the achieved pose along one latched unit axis."""
+    axis=np.asarray(axis,dtype=float)
+    if not np.isfinite(axis).all() or abs(np.linalg.norm(axis)-1)>.001 or not math.isfinite(elapsed):
+        raise ValueError('release requires finite elapsed time and a latched unit axis')
+    distance=min(RELEASE_DISTANCE,max(0.,elapsed)*RELEASE_SPEED)
+    return np.asarray(start)+distance*axis,np.asarray(rotation).copy()
+
+
+def release_clearance(tcp,rotation,face,finger,button,can_axis,axis):
+    """Minimum physical pressing-face clearance from the current button top."""
+    vertices=np.asarray(face).copy();vertices[:,0]+=finger+.028
+    world=vertices@np.asarray(rotation).T+tcp
+    top=np.asarray(button)+.005*np.asarray(can_axis)
+    return float(((world-top)@np.asarray(axis)).min())
+
+
+def release_gate_frames(button_travel,clearance,previous):
+    if not math.isfinite(button_travel) or not math.isfinite(clearance):return 0
+    return previous+1 if button_travel<.0005 and clearance>=.020 else 0
 
 
 def grip_fraction(joint_target,open_joint):

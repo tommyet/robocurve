@@ -2239,22 +2239,59 @@ editing, merge both agents' findings, and commit/push the update with the work.
 
 ### 2026-11-15 — retained Nebius VM recovered; spray GPU validation resumed
 
-- Root, spray branch7128335: cb0da2/q1wqpw5jx was inaccessible. Brev healthcheck
-  healthy; legacy workspace state STOPPING conflicted with environment STOPPED.
-  API task history showed previous start failed internal server error after
-  ~31min. Controlled stop succeeded; ordinary start rejected stale STOPPING.
-- Read public brev-cli source43f3834: list uses environment state; start does
-  legacy workspace localvalidation. Same authenticated PUT/workspaces/id/start
-  returned HTTP429 ResourceExhaustedError (capacity/quota/conflictingoperation
-  undetermined). New13:00:28UTC start task later succeeded; underlying state
-  stopping→pending. DirectSSH+L40S verified13:11:49UTC. Do not call the429
-  definitiveGPUcapacityproof or claim we know which backendoperation fixed it.
-- Retained disk159GBfree; desktopserviceactive. No replacementVM, reset, delete,
-  Dreamcall or supportmessage sent. Recovered Ethernet031 result:744steps,
-  controllerfailure stationaryholdlostrigid/interhandclearance; cliprelease
-  false. Ethernet remainspaused. Latestlocal recovery evidence/state in main
-  ignored artifacts/spray-retry and native-four-task-20261114/CURRENT_STATE.json.
-- Spray7128335uploaded to~/robotics-batch/spray-retry-7128335; diagnostic
-  spray-press-face-003 launched13:11:52UTC,700steps,uncappedstagepress forced
-  score0. First51native samples valid at2.5s,brace_enter,nofailure. No full
-  successclaimed; cappedstagefull stillrequired. Retrywatcherexitedafterlaunch.
+- Root, spray branch 7128335: cb0da2/q1wqpw5jx was inaccessible. Brev healthcheck
+  passed; legacy workspace state STOPPING conflicted with environment STOPPED.
+  API history showed a previous start failed with an internal server error
+  after about 31 minutes. Controlled stop succeeded; ordinary start rejected
+  the stale STOPPING state. Provider: Nebius, region eu-north1.
+- Public brev-cli source 43f3834 shows list uses environment state while start
+  checks legacy workspace state. The same authenticated PUT workspace start
+  request returned HTTP 429 ResourceExhaustedError. Capacity, quota or an
+  operation conflict was not distinguished. A new 13:00:28 UTC start task
+  later succeeded, and the instance moved from stopping to pending. Direct
+  SSH and L40S access were verified at 13:11:49 UTC. Do not claim the exact
+  backend cause or which operation fixed it is known.
+- Retained disk has 159 GB free; desktop service is active, and the local
+  6080 tunnel returned HTTP 200. No replacement, reset, deletion, Dream call
+  or support message. Main ignored artifacts/spray-retry contains recovery
+  logs; native-four-task-20261114/CURRENT_STATE.json records active work.
+- Recovered Ethernet clip031: 744 steps, stationary hold lost rigid/interhand
+  clearance during press approach; no measured clip release. Ethernet paused.
+- Spray candidate uploaded to ~/robotics-batch/spray-retry-7128335. Diagnostic
+  spray-press-face-003 launched at 13:11:52 UTC. Actual first contact passed:
+  2.4368 mm piston travel, 1.2 s spray, 4.66 N peak button force and zero
+  measured interarm contact force. RTX ERROR_DEVICE_LOST and kernel Xid 109
+  CTX SWITCH TIMEOUT crashed rendering at 24.25 s; no finalized summary.
+- Full capped run spray-full-008 completed without a renderer crash: 1,409
+  samples, 70.4 s, score 0.5, cap removed and parked, coverage 74.49%, overspray
+  3.516%, spray supply used 4.2 s. All-sample offline replay passed. The fourth
+  shot failed after the can overturned. No complete preview is claimed.
+- Astra found rolling about the pinch 25 mm below the body centre begins
+  before the third release; Sol found pressing joint4 reaches its upper limit
+  as tilt grows. Interarm contact follows overturn. Geometry review supports
+  a raised grasp with the corrected finger-face pose. Investigate stable
+  grasp and guarded release, not added pressure/time or a weaker scorer.
+- Raw source/trace/summary/log evidence for available Ethernet 024–031 and
+  spray 003/008 is backed up in main ignored artifacts/native-four-task-20261114/
+  ethernet024-031-spray003-008-evidence.tgz. Frames remain on the retained VM.
+- User explicitly restricted recovery to the existing VM; no replacement is
+  authorized. The current VM recovered before this reply arrived. User then
+  asked continued autonomous work for several hours, completed previews in one
+  folder, and shutdown only after the batch and exports are finished.
+- Astra geometry scripts /private/tmp/astra_spray_com_grip.py and
+  astra_spray_final_retreat.py support a +5 mm pinch: cap handling hand gap
+  at least 30.61 mm, spraying at least 36.65 mm. Nominal final retreat has
+  41.875 mm other-hand and 4.987 mm can clearance after interpolation allowance.
+  These are nominal hand-mesh checks, not all-link certification of every tilt.
+- Sol implemented shared grasp coordinates, unchanged physical can return pose,
+  latched achieved-orientation 30 mm withdrawal at 10 mm/s, actual button and
+  pressing-face clearance gate for five frames, then preload removal. Deadline
+  six seconds per release keeps the worst programmed sequence below 120 s.
+  Loss guards: 15 degree relative grasp rotation, 8 mm offset, 25 degree world
+  tilt; they turn off at intentional can release. Failed IK returns previous
+  safe commands. No physics, force limit, material or scorer changes.
+- Root rerun: 33 CPU tests pass in 3.228 s. New full capped spray-full-009
+  launched from ~/robotics-batch/spray-raised-grip-009; controller hash
+  e9314a5ac5c8b3cf20cd5ecfae020e5032b38e448ad0b035323837ca17ef897d.
+  Native outcome still pending. Old draft MP4s moved into main ignored
+  artifacts/task-preview-drafts; task-previews contains completed demos only.

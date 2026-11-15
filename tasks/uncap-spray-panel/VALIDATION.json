@@ -1,19 +1,19 @@
 {
-  "status": "spray_priority_resumed_cpu_checks_pass_vm_starting",
+  "status": "raised_grasp_release_candidate_native_run_in_progress",
   "checked_date": "2026-11-15",
   "local_scorer_tests": {
-    "passed": 25
+    "passed": 33
   },
   "native_runtime_tested": true,
-  "scripted_demo_score": null,
+  "scripted_demo_score": 0.5,
   "dream_score": null,
   "media": null,
   "gpu_started_for_this_task": true,
   "remaining": [
-    "Validate lower brace grip and unobstructed nozzle actuation",
-    "Complete >=90% coverage with <=15% overspray and released parking",
-    "Audit and visually review the complete capped-start successful run",
-    "Publish one composite preview in the batch video-only folder",
+    "Stabilize physical can grasp and release; prevent rolling and stop on loss of pose",
+    "Complete >=90% coverage with <=15% overspray and released upright parking",
+    "Audit and visually review a complete capped-start successful run",
+    "Publish one completed composite preview in the batch video-only folder",
     "Dream run and broader force/material calibration remain separate submission work"
   ],
   "diagnostic_probe": {
@@ -63,15 +63,46 @@
       "diagnostic": true,
       "score": 0.0,
       "finding": "native force data indicates cross-arm interference; clearance fix prepared but not run"
+    },
+    "spray-press-face-003": {
+      "diagnostic": true,
+      "finalized": false,
+      "piston_peak_m": 0.002436813482400088,
+      "first_shot_seconds": 1.2,
+      "first_shot_peak_button_force_N": 4.6553,
+      "first_shot_interarm_contact_force_N": 0.0,
+      "renderer_failure": "RTX ERROR_DEVICE_LOST; kernel Xid109 CTX SWITCH TIMEOUT at24.25simseconds; no successful diagnostic summary"
+    },
+    "spray-full-008": {
+      "source_commit": "7128335",
+      "score": 0.5,
+      "samples": 1409,
+      "duration_s": 70.4,
+      "cap_removed_and_parked": true,
+      "coverage": 0.7448979591836735,
+      "overspray": 0.035156796256146615,
+      "spray_seconds": 4.2,
+      "controller_failure": "insufficient measured spray contact at fourth position; can rolled in below-COM grasp before third release",
+      "offline_replay_passed": true,
+      "complete": false
     }
   },
-  "native_latest_prepared_frame_tested": false,
+  "native_latest_prepared_frame_tested": true,
   "compute_state": {
-    "yam-eval-launchable-cb0da2": "STARTING, shell NOT READY, GPU not yet assigned in brev ls; SSH closed"
+    "yam-eval-launchable-cb0da2": "SSH and NVIDIA L40S verified; desktop active; recovery succeeded; GPU idle during targeted controller review"
   },
   "prepared_contact_ramp": {
     "left_preload_speed_m_s": 0.005,
     "right_press_speed_m_s": 0.01,
-    "native_tested": false
+    "native_tested": true
+  },
+  "raised_grasp_release_candidate": {
+    "grasp_z_m": 0.005,
+    "release_speed_m_s": 0.01,
+    "release_distance_m": 0.03,
+    "button_released_m": 0.0005,
+    "minimum_actual_face_clearance_m": 0.02,
+    "release_consecutive_frames": 5,
+    "native_result": null
   }
 }
