@@ -14,15 +14,13 @@ and fit, not a prescribed arm sequence.
 - **0.5:** a valid knot remains for five seconds but one or more dressing
   conditions below fail.
 - **1:** the retained knot is within 20 mm horizontally of the marked collar centreline; the
-  neckband's greatest gap from the form is no more than 15 mm; the wide end's
-  face points outward without an axial half-twist; the narrow end is behind the
+  neckband's greatest gap from the form is no more than 15 mm; the wide blade hangs flat without an axial half-twist; the narrow end is behind the
   wide end with its tip at least 10 mm above the wide tip; and the wide tip lies
   350–440 mm below the collar's lower edge.
 
-With the wide tip pointing down, its front face shows the pale edge mark on
-the viewer's left and the gold edge mark on the right. The reverse pattern is
-the back face. Check the whole visible wide end for a half-twist; a correctly
-oriented tip alone is insufficient.
+This plain tie is reversible: either face may point outward. The pale and gold
+edge marks reveal twists. Check the whole hanging wide blade for an axial
+half-twist; a flat tip alone is insufficient.
 
 The five-second hold must finish within the run limit. Pulling the knot apart
 after achieving it loses credit. Any torn cloth, visible ribbon passage through itself or a solid, secret grasp

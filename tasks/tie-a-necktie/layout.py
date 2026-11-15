@@ -30,11 +30,10 @@ def fixture_geometry():
 
 
 def face_colors(mesh):
-    """Asymmetric edge marks make the visible wide-end face check unambiguous.
+    """Opposite edge marks reveal twists in the reversible strip.
 
-    With the wide tip down, the front face has a pale left edge and gold right
-    edge. The back reverses that pattern. These are colours on material nodes,
-    not added rigid markers or geometry updates during the episode.
+    Either face may point outward. These are fixed material coordinates, not
+    rigid markers or geometry updates during the episode.
     """
     colours=np.tile((.50,.08,.17),(len(mesh.rest),1))
     for row in mesh.markers['row_nodes'][1:-1]:

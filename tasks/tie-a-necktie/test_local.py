@@ -74,11 +74,11 @@ class Judging(unittest.TestCase):
     def record(self):
         return dict(evidence_sha256={k:'0'*64 for k in ('released_video','front_photo','rear_photo')},
                     integrity_checked=True,intact=True,simple_knot_verified=True,released_hold_s=5.,
-                    wide_face_out=True,narrow_end_hidden=True,knot_zone_offset_mm=10.,
+                    wide_end_untwisted=True,narrow_end_hidden=True,knot_zone_offset_mm=10.,
                     neckband_gap_mm=5.,wide_tip_below_collar_mm=420.,narrow_tip_above_wide_tip_mm=50.)
     def test_complete_and_retained_but_undressed_knot(self):
         j=self.record();self.assertEqual(score(j),1.)
-        j['wide_face_out']=False;self.assertEqual(score(j),.5)
+        j['wide_end_untwisted']=False;self.assertEqual(score(j),.5)
         j['simple_knot_verified']=False;self.assertEqual(score(j),0.)
     def test_physical_invalidity_erases_credit(self):
         j=self.record();j['intact']=False;self.assertEqual(score(j),0.)

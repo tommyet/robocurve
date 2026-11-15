@@ -4,6 +4,17 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 07:32 UTC — reversible tie construction
+
+- The tie uses one plain cloth shell and has no sewn front/back seam. Describe
+  it as reversible and accept either face outward; retain the requirement that
+  the whole wide blade is flat and has no axial half-twist. The pale/gold edges
+  still make twisting visible. This removes a construction detail the model
+  does not represent, not the threading, genuine knot, released hold or fit.
+- This design clarification was made during the continuous demo, before its
+  final outcome. Raw recordings and prior source hashes remain unchanged.
+  Both policies receive the same general instruction and physical model.
+
 ## 2026-11-15 07:19 UTC — final cloth baseline and honest material limits
 
 - Shirt Dream275 completed all2,400 actions from the shared reset:1,184
