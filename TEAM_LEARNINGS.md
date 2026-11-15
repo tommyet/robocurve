@@ -2189,3 +2189,50 @@ editing, merge both agents' findings, and commit/push the update with the work.
   No simultaneous GPU trials or new instance creation. Record actual fallback
   outcome and both final states. User explicitly wants Brev compute off after
   the whole batch, and it is also stopped during offline preparation.
+
+### 2026-11-14 — GPU unavailable, no successful spray preview yet
+
+- Primary restart attempts repeatedly end in FAILURE with no GPU assigned;
+  SSH is closed. Shutdown requests were accepted but status returns FAILURE
+  rather than confirmed STOPPED. The fallback robocurve-dice remains STOPPED;
+  CLI start by both name and listed ID returns a local-path-not-found message.
+  No fallback compute started and no new resources were created. User was
+  asked asynchronously to check/restore console access/capacity. Do not claim
+  the primary's failure state proves provider cleanup or a billing amount.
+- All independent stop supervisors from completed/failed sessions are now
+  cancelled. Before starting any future session, check live states again and
+  use a fresh supervised deadline. Both listed instances are non-running at
+  the last read; primary lacks a GPU, fallback is STOPPED.
+- Latest prepared pressing pose comes from the exact unchanged collision
+  face tip_left_014.stl (centroid verified against FK at joint7=-28 mm to
+  numerical precision). The 62 mm² face is horizontal at the planned press
+  orientation; the spare jaw is above the button. A forward outlet ray does
+  not hit the finger meshes in this pose. 21 CPU tests pass. These checks do
+  not establish physical success: GPU could not run the prepared probe.
+- The requested batch is incomplete. Do not create fake/placeholder MP4s or
+  call prior diagnostic attempts full demos. Pending GPU validation includes
+  capped-start spray completion and every other batch preview. Preserve
+  previews-only delivery at artifacts/task-previews/, then stop/verify Brev
+  once all jobs/evidence exports finish, as explicitly requested by the user.
+
+### 2026-11-15 — user-approved serial pivot to spray
+
+- Root, codex/uncap-spray-object (base 2626126): user selected ease order
+  spray, hair drying, carton packing, carton breakdown, Ethernet. Ethernet is
+  paused; no completed release/reinsert demonstration is claimed.
+- Read-only Sol audit and root rerun both pass all 21 spray CPU tests. Prepared
+  press face matches pinned tip_left_014.stl. Next native trial is diagnostic
+  `--policy demo --stage press --max-steps 700`; this starts uncapped and must
+  remain score zero. Completion requires a separate capped `--stage full` run,
+  measured full score, offline replay and visual review.
+- Retained cb0da2 reports STARTING / shell NOT READY / no GPU shown; direct
+  SSH port 13124 is closed. Idempotent brev start returned already starting.
+  Latest Ethernet clip031 final evidence is not recovered yet. No new spray
+  GPU trial or Dream call occurred during these checks. Root state file under
+  artifacts/native-four-task-20261114 records the pivot. Provider startup
+  remains uncertain; do not infer stopped billing from unavailable SSH.
+- CPU-only Sol implementation removes instantaneous +14mm holding-arm preload:
+  separate preload ramps at 5mm/s, pressing hand translation at 10mm/s. Same
+  physics/scoring/effort limits. Root rerun passes 25 tests in 0.672s, including
+  ramp release/rate/finite-input regressions. Full sequence worst scheduled
+  duration 84.2s is within120s; native tracking/contact remains unverified.

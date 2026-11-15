@@ -1,8 +1,8 @@
 {
-  "status": "physical_cap_success_spray_completion_unresolved",
-  "checked_date": "2026-11-14",
+  "status": "spray_priority_resumed_cpu_checks_pass_vm_starting",
+  "checked_date": "2026-11-15",
   "local_scorer_tests": {
-    "passed": 19
+    "passed": 25
   },
   "native_runtime_tested": true,
   "scripted_demo_score": null,
@@ -64,5 +64,14 @@
       "score": 0.0,
       "finding": "native force data indicates cross-arm interference; clearance fix prepared but not run"
     }
+  },
+  "native_latest_prepared_frame_tested": false,
+  "compute_state": {
+    "yam-eval-launchable-cb0da2": "STARTING, shell NOT READY, GPU not yet assigned in brev ls; SSH closed"
+  },
+  "prepared_contact_ramp": {
+    "left_preload_speed_m_s": 0.005,
+    "right_press_speed_m_s": 0.01,
+    "native_tested": false
   }
 }

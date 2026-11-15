@@ -15,7 +15,10 @@ from inspect_robots.types import Action,ActionChunk
 from inspect_robots_yam.packing import pack
 from config import *
 import telemetry
-from control_math import grip_fraction
+from control_math import grip_fraction,ramp_scalar,ramp_translation
+
+LEFT_PRELOAD_SPEED=.005
+RIGHT_PRESS_SPEED=.010
 
 LEFT_R=np.array([[-1.,0.,0.],[0.,0.,-1.],[0.,-1.,0.]])
 RIGHT_R=np.array([[1.,0.,0.],[0.,0.,1.],[0.,-1.,0.]])
@@ -40,6 +43,7 @@ class SprayDemo(YamScriptedPolicy):
         self.contact_time=0.;self.press_grip=grip_fraction(-.028,FINGER_OPEN)
         self.targets=[];self.q=[]
         self.position_bias=[np.zeros(3),np.zeros(3)]
+        self.left_preload=0.;self.left_preload_target=0.
         self.rotation_bias=[np.zeros(3),np.zeros(3)]
         for h in telemetry.latest['hands']:
             self.targets.append([np.array(h['tcp']),np.array(h['rotation']),h['opening']])
@@ -91,10 +95,10 @@ class SprayDemo(YamScriptedPolicy):
         if self.index>=len(self.moves):return
         step=self.moves[self.index]
         if step['label'].startswith('coat_shot'):
-            self.position_bias[0][2]=min(.05,self.position_bias[0][2]+.014)
+            self.left_preload_target=.014
             self.contact_time=0.
         if step['label'].startswith('coat_unpress'):
-            self.position_bias[0][2]-=.014
+            self.left_preload_target=0.
         if step['label']=='can_lift' and not self.grasp_calibrated:
             s=telemetry.latest;can_rot=np.array(s['can_rotation'])
             hand=s['hands'][0];offset=can_rot.T@(np.array(hand['tcp'])-np.array(s['can']))
@@ -132,6 +136,7 @@ class SprayDemo(YamScriptedPolicy):
             if check=='coat' and s['metrics']['coverage']<.9:self.failure='coverage below 90%'
             self.next(now)
         phase='done' if self.index>=len(self.moves) else self.moves[self.index]['label']
+        self.left_preload=ramp_scalar(self.left_preload,self.left_preload_target,LEFT_PRELOAD_SPEED,self._dt)
         if not self.failure and self.index<len(self.moves):
             step=self.moves[self.index];f=ik.smoothstep(min(1.,(now-self.t0+self._dt)/step['seconds']))
             for i,key in enumerate(('L','R')):
@@ -167,10 +172,9 @@ class SprayDemo(YamScriptedPolicy):
                 # accounting for finger spring deflection instead of guessing
                 # a contact height from the generic TCP marker.
                 target=can+rot@(np.array((0.,0.,height))-PRESS_R@point)
-                previous=self.targets[1][0]
-                delta=target-previous
-                delta*=min(1.,.005/max(1e-9,np.linalg.norm(delta)))
-                self.targets[1]=[previous+delta,rot@PRESS_R,self.press_grip]
+                speed=RIGHT_PRESS_SPEED if pressing else .100
+                position=ramp_translation(self.targets[1][0],target,speed,self._dt)
+                self.targets[1]=[np.asarray(position),rot@PRESS_R,self.press_grip]
         actions=[];errors={}
         for i,side in enumerate(('left','right')):
             p,r,g=self.targets[i]
@@ -185,12 +189,15 @@ class SprayDemo(YamScriptedPolicy):
             self.rotation_bias[i]=np.clip(self.rotation_bias[i]+.04*rotation_error,-.12,.12)
             rv=self.rotation_bias[i];angle=np.linalg.norm(rv)
             compensated=(axis_angle_matrix(rv/angle,angle)@r if angle>1e-9 else r)
-            q,pe,re=ik.solve(p+self.position_bias[i],ik.matrix_to_quat_xyzw(compensated),self.q[i],base_pos=self._bases[side],iters=90)
+            applied_bias=self.position_bias[i].copy()
+            if i==0:applied_bias[2]=np.clip(applied_bias[2]+self.left_preload,-bound,bound)
+            q,pe,re=ik.solve(p+applied_bias,ik.matrix_to_quat_xyzw(compensated),self.q[i],base_pos=self._bases[side],iters=90)
             self.q[i]=q;errors[side]=dict(position=pe,rotation=re,
                                          tracking_position=float(np.linalg.norm(error)),tracking_rotation=float(np.linalg.norm(rotation_error)),
-                                         position_bias=self.position_bias[i].tolist())
+                                         position_bias=self.position_bias[i].tolist(),applied_position_bias=applied_bias.tolist())
             actions.append(np.r_[q,np.clip(g,0.,1.)])
-        telemetry.command=dict(phase=phase,errors=errors,failure=self.failure,commanded_depression=self.press_depth,measured_contact_time=self.contact_time)
+        telemetry.command=dict(phase=phase,errors=errors,failure=self.failure,commanded_depression=self.press_depth,measured_contact_time=self.contact_time,
+                               left_preload_m=self.left_preload,left_preload_target_m=self.left_preload_target,right_press_speed_m_s=RIGHT_PRESS_SPEED)
         meta={'request_stop':True} if self.failure or self.index>=len(self.moves) else {}
         return ActionChunk(actions=[Action(data=pack(*actions),meta=meta)],control_hz=1/self._dt)
 
