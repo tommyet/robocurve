@@ -175,6 +175,37 @@ class PolicyGuardTests(unittest.TestCase):
                     self.assertLessEqual(pe,.015,(move['label'],pe));self.assertLessEqual(re,.12,(move['label'],re));joints[i]=q
                 poses[i]=(end,rotation)
 
+    def test_yawed_grip_entry_exit_and_all_left_waypoints_keep_safe_side_and_ik(self):
+        from yam_arena import ik
+        sample=self.sample();self.module.telemetry.latest=sample
+        policy=self.module.SprayDemo();policy.initialize();moves={m['label']:m for m in policy.moves}
+        R=self.module.LEFT_R
+        np.testing.assert_array_equal(R,np.array(((0,0,1),(-1,0,0),(0,-1,0))))
+        np.testing.assert_allclose(R.T@R,np.eye(3));self.assertAlmostEqual(np.linalg.det(R),1.)
+        grasp=np.array(sample['can'])+GRASP_OFFSET
+        placement=np.array((CAN_PAD[0],CAN_PAD[1],CAN_REST_HEIGHT))+GRASP_OFFSET
+        np.testing.assert_allclose(moves['brace_approach']['L'][0],grasp+(-.060,0,.015))
+        np.testing.assert_allclose(moves['brace_enter']['L'][0],grasp)
+        np.testing.assert_allclose(moves['can_lower']['L'][0],placement)
+        np.testing.assert_allclose(moves['brace_retreat']['L'][0],placement+(-.060,0,.060))
+        # Same-side entry/exit avoid sweeping open jaws across the can.
+        self.assertLess(moves['brace_approach']['L'][0][0],grasp[0])
+        self.assertLess(moves['brace_retreat']['L'][0][0],placement[0])
+        start=np.array(sample['hands'][0]['tcp']);startR=np.array(sample['hands'][0]['rotation'])
+        seed=np.array(sample['hands'][0]['joints'])
+        for move in policy.moves:
+            if move['L'] is None:continue
+            end,rotation,_=move['L'];np.testing.assert_array_equal(rotation,R)
+            for fraction in np.linspace(0,1,21):
+                p=start+fraction*(end-start);r=ik.slerp_matrix(startR,rotation,fraction)
+                seed,pe,re=ik.solve(p,ik.matrix_to_quat_xyzw(r),seed,base_pos=policy._bases['left'],iters=90)
+                # Actual existing phase guard, including READY approach interpolation.
+                early=move['label'].startswith('brace_')
+                self.assertLessEqual(pe,.015 if early else .005,(move['label'],fraction,pe))
+                self.assertLessEqual(re,.12 if early else .05,(move['label'],fraction,re))
+                if fraction==1:self.assertLessEqual(pe,.0001,(move['label'],pe))
+            start,startR=end,rotation
+
     def test_initial_grip_is_unchanged_and_loaded_hold_ramps_over_existing_lift(self):
         from yam_arena.constants import FINGER_OPEN,GRIPPER
         sample=self.sample();self.module.telemetry.latest=sample

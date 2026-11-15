@@ -2420,3 +2420,49 @@ editing, merge both agents' findings, and commit/push the update with the work.
   sealed-start32/8 run before more coupons; record native COM6Dvel/inertia to
   enable faithful released-state reproducer if needed. If still unstable, test
   timestep1/960 with20Hzcontrol/unchanged physicalparameters and scorer.
+- Full02032/8 FAILED105.55s duringcan_lower atrelativegrasp15deg guard;
+  coverage96.94%/overspray3.09%/spray5.6s/all4pressreleasespassed, score0.75.
+  It was already~10degtilted whileheld96.5–103.25s (017~.5deg); supportcontact
+  at105.05 then16degtilt while77Npinchremained. This is NOT017postrelease
+  instability. Full2112rowcapture/nativeCOM6D/inertia/source backed locally
+  /private/tmp/spray-state-020; tarSHA3c3b39b1048a9c2be3ec633c9eefff7d6317f2a79e2c80c037a36231e22875c7.
+- NativeTGS warns >4velocityiterations. Astra corrected earliergeneric32/8
+  suggestion after officialPhysX5.3migration/ovphysxlimitations review
+  15:53:42–15:54:41UTC: oldversionsconvertedvelocitypasses>4topositionpasses;
+  newversionsreallyexecutevelocitypasses, andTGS+D6drives have documented
+  limitations. Warning alone is not proof of failurecause. Nextfulltrial:
+  EXACT017baseline can/buttoniterationconfiguration, physics1/960,20Hzcontrol,
+  robot16/4unchanged. Do not stack32/4orchangecontroller/materials/scoring.
+  Sources: https://nvidia-omniverse.github.io/PhysX/physx/latest/docs/MigrationTo53.html
+  https://nvidia-omniverse.github.io/PhysX/ovphysx/0.6.4/guides/limitations.html
+- Full021 is running sealed-start at960Hz physics,20Hz arm control. Runtime
+  readback confirms dt1/960,decimation48,step_dt.05. Recursive017/021 manifest
+  comparison finds ONLY physics_dt and PhysicsScene timeStepsPerSecond changed;
+  all nativeasset/URDF/collision/mass/material/joint/body/robot properties match.
+  Root retained baseline body settings, without32/8.63 CPU tests pass(1PXRskip).
+  Source run.py SHA34f53785da345a93bb8aec6c3b0f45cbb214109a06ee052ff3ad1c6d40766b81.
+- Full021 stopped safely at68.35s before the third spray: relative grasp angle
+  exceeded15deg. Coverage50.51%, overspray4.08%, spray2.35s. This did not reach
+  released rest and therefore cannot establish whether960Hz fixes017 settling.
+  Full1368-row native capture is backed locally; no further trial auto-launched.
+- Astra review16:06:52–16:10:54 found rotation almost entirely around the jaw
+  closing axis while measured normal force stays78N and fingers do not widen.
+  First press adds~8deg roll; no-contact transport preserves it. Right arm touches
+  only the button. Nominal torsional capacity from authored radii is misleading:
+  PhysX torsionalPatchRadius applies only to single-anchor friction patches;
+  multi-anchor mesh contacts use distributed friction. Do not increase material
+  friction or radius to win. Source: PhysX5.8 PxShape API documentation.
+- Next ordinary controller correction rotates LEFT_R90deg around worldZ to
+  [[0,0,1],[-1,0,0],[0,-1,0]]. Closing direction becomes worldY, letting regular
+  friction forces across52mm oppose the observed roll about worldX. Keep−18mm
+  grip target and all hardware/force/angle/scoring limits. New front entry offset
+  (-.060,0,+.015), final retreat offset(-.060,0,+.060). Astra sampled critical
+  path/endpoints with full315-piece arm mutual clearance>=12.19mm, entry/exit
+  can/cap/button clearance>=17.98/20.98mm, finalTCP84.85mm fromcan. IK<=.051mm
+  and.019deg. Full continuous execution remains unverified; Sol implements022.
+- Sol's022 production change is exactly three controller lines: LEFT_R and
+  entry/exit offsets.64 tests pass(1PXRskip); all left waypoint21-point IK
+  interpolations pass fromREADY. Independent full315-piece sampled initial
+  approach clears rightREADY by133.174mm; max IK.0586mm/.01835deg. Runtime022
+  confirms960Hz physics/20Hz control. At6.3s new grasp closes and cap approach
+  begins, with~.98deg can tilt and no failure. Full result remains pending.

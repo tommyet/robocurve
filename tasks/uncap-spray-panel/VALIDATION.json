@@ -1,8 +1,8 @@
 {
-  "status": "full_sealed_start_32_8_solver_trial020_in_progress",
+  "status": "yawed_grasp_full_trial022_in_progress",
   "checked_date": "2026-11-15",
   "local_scorer_tests": {
-    "main_suite_tests": 61,
+    "main_suite_tests": 64,
     "main_suite_skipped_pxr": 1,
     "separate_usd_tests_passed": 5
   },
@@ -168,14 +168,42 @@
     },
     "spray-state-020": {
       "complete": false,
-      "in_progress": true,
+      "in_progress": false,
       "capped_start": true,
       "can_button_solver_iterations": [
         32,
         8
       ],
       "native_dynamics_telemetry": true,
-      "controller_unchanged_from_017": true
+      "controller_unchanged_from_017": true,
+      "score": 0.75,
+      "coverage": 0.9693877551,
+      "overspray": 0.0309,
+      "spray_seconds": 5.6,
+      "controller_failure": "can grasp relative angle exceeded15degrees duringcan_lower at105.55s"
+    },
+    "spray-state-021": {
+      "in_progress": false,
+      "complete": false,
+      "capped_start": true,
+      "physics_hz": 960,
+      "control_hz": 20,
+      "baseline_body_solver": true,
+      "manifest_matches_017_except_timestep": true,
+      "score": 0.5,
+      "duration_s": 68.35,
+      "controller_failure": "can grasp relative angle exceeded15degrees beforethirdspray",
+      "coverage": 0.5051,
+      "overspray": 0.0408
+    },
+    "spray-state-022": {
+      "in_progress": true,
+      "complete": false,
+      "physics_hz": 960,
+      "control_hz": 20,
+      "capped_start": true,
+      "grasp_change": "LeftclosingaxisworldY; frontentry(-.06,0,.015),exit(-.06,0,.06)",
+      "grip_and_guards_unchanged": true
     }
   },
   "native_latest_prepared_frame_tested": true,

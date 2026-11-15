@@ -6,6 +6,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from types import SimpleNamespace
 import numpy as np
 from config import TOP,RISER_HEIGHT,CAP_PAD
 
@@ -32,6 +33,44 @@ class PassiveRestTests(unittest.TestCase):
         self.assertAlmostEqual(result['linear_kinetic_J'],1.75)
         self.assertAlmostEqual(result['rotational_kinetic_J'],.5)
         self.assertAlmostEqual(result['gravitational_J'],4.905)
+
+    def test_timestep_selection_restores_adapter_global_and_keeps_twenty_hz_control(self):
+        # Execute the actual pinned adapter callback body without loading Isaac.
+        import ast
+        import yam_arena
+        source=Path(yam_arena.__file__).with_name('scene.py').read_text()
+        tree=ast.parse(source);callback=next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='env_cfg_callback')
+        namespace=dict(PHYSICS_DT=1/240,DECIMATION=24,RENDER_INTERVAL=24,
+                       make_configclass=lambda *a:lambda:None,
+                       RecorderManagerBaseCfg=lambda **kw:None,DatasetExportMode=SimpleNamespace(EXPORT_NONE=0),
+                       VisualizerCfg=lambda **kw:None,WINDOW_EYE=(0,0,0),WINDOW_LOOKAT=(0,0,0))
+        exec(compile(ast.Module(body=[callback],type_ignores=[]),'<pinned env_cfg_callback>','exec'),namespace)
+        class SceneProxy:
+            @property
+            def PHYSICS_DT(self):return namespace['PHYSICS_DT']
+            @PHYSICS_DT.setter
+            def PHYSICS_DT(self,value):namespace['PHYSICS_DT']=value
+        scene=SceneProxy()
+        for hz,decimation in ((240,12),(960,48)):
+            with runner.physics_timestep(scene,hz):
+                cfg=SimpleNamespace(sim=SimpleNamespace())
+                namespace['env_cfg_callback'](control_hz=20)(cfg)
+                base=SimpleNamespace(cfg=cfg,step_dt=cfg.sim.dt*cfg.decimation)
+                result=runner.physics_timing_readback(base,hz)
+                self.assertEqual(result['decimation'],decimation)
+                self.assertAlmostEqual(result['control_dt_s'],.05)
+            self.assertEqual(scene.PHYSICS_DT,1/240)
+        with self.assertRaisesRegex(RuntimeError,'construction failed'):
+            with runner.physics_timestep(scene,960):raise RuntimeError('construction failed')
+        self.assertEqual(scene.PHYSICS_DT,1/240)
+        with self.assertRaisesRegex(RuntimeError,'timing readback'):
+            runner.physics_timing_readback(base,240)
+
+    def test_unsupported_physics_rate_rejected_before_output_or_simulation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            out=Path(directory)/'must-not-exist'
+            result=subprocess.run([sys.executable,str(PATH),'--physics-hz','480','--log-dir',str(out)],capture_output=True,text=True)
+            self.assertEqual(result.returncode,2);self.assertIn('invalid choice',result.stderr);self.assertFalse(out.exists())
 
     def test_solver_override_cannot_modify_an_ordinary_task_run(self):
         with tempfile.TemporaryDirectory() as directory:

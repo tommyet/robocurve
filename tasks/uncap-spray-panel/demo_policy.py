@@ -22,7 +22,7 @@ from control_math import (grip_fraction,ramp_scalar,ramp_translation,GRASP_OFFSE
 LEFT_PRELOAD_SPEED=.005
 RIGHT_PRESS_SPEED=.010
 
-LEFT_R=np.array([[-1.,0.,0.],[0.,0.,-1.],[0.,-1.,0.]])
+LEFT_R=np.array([[0.,0.,1.],[-1.,0.,0.],[0.,-1.,0.]])
 RIGHT_R=np.array([[1.,0.,0.],[0.,0.,1.],[0.,-1.,0.]])
 # A real lower-finger face from the pinned YAM collision meshes, at joint7=-28mm.
 # This orientation makes that face horizontal; the spare jaw stays above it.
@@ -62,7 +62,7 @@ class SprayDemo(YamScriptedPolicy):
             self.moves.append(dict(label=label,seconds=seconds,L=L,R=R,check=check,follow=follow,aim=aim))
         def lp(p,g):return (np.array(p),LEFT_R,g)
         def rp(p,g):return (np.array(p),RIGHT_R,g)
-        move('brace_approach',2.,L=lp(left+(0.,.10,.015),1.))
+        move('brace_approach',2.,L=lp(left+(-.060,0.,.015),1.))
         move('brace_enter',2.,L=lp(left,1.))
         move('brace_grip',1.5,L=lp(left,self.grip))
         move('cap_approach',2.,R=rp(cap+(0.,-.10,.0),1.))
@@ -93,7 +93,7 @@ class SprayDemo(YamScriptedPolicy):
         placement=np.array((CAN_PAD[0],CAN_PAD[1],CAN_REST_HEIGHT))+GRASP_OFFSET
         move('can_lower',3.,L=lp(placement,self.hold_grip))
         move('can_release',1.,L=lp(placement,1.))
-        move('brace_retreat',2.,L=lp((CAN_PAD[0],CAN_PAD[1]+.12,TOP+.13),1.))
+        move('brace_retreat',2.,L=lp(placement+(-.060,0.,.060),1.))
         move('finish_hold',6.)
         if self.press_only:self.moves=self.moves[:3]+self.moves[11:]
 

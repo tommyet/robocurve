@@ -4,6 +4,7 @@ import atexit
 import hashlib
 import json
 import os
+from contextlib import contextmanager
 from pathlib import Path
 from config import *
 from scoring import SprayScorer
@@ -143,9 +144,32 @@ def physics_manifest(stage,assets,urdf,physics_dt,control_dt):
                 scope='URDF/collision/native-asset bytes and authored collider/body/joint/mass/PhysicsScene properties. Sensor cameras and dynamic transforms excluded; trajectory identity is not asserted.')
 
 
+@contextmanager
+def physics_timestep(scene_module,physics_hz):
+    """Temporarily select the pinned adapter's environment-construction step."""
+    if physics_hz not in (240,960):raise ValueError('physics_hz must be 240 or 960')
+    previous=scene_module.PHYSICS_DT
+    scene_module.PHYSICS_DT=1./physics_hz
+    try:yield
+    finally:scene_module.PHYSICS_DT=previous
+
+
+def physics_timing_readback(base,physics_hz):
+    """Reject a requested integration rate unless the constructed env matches."""
+    import math
+    actual=float(base.cfg.sim.dt);control=float(base.step_dt);decimation=int(base.cfg.decimation)
+    expected_decimation=round(physics_hz/20.)
+    if not (math.isclose(actual,1./physics_hz,rel_tol=0.,abs_tol=1e-12) and
+            math.isclose(control,.05,rel_tol=0.,abs_tol=1e-12) and decimation==expected_decimation):
+        raise RuntimeError('physics/control timing readback does not match requested rate')
+    return dict(requested_physics_hz=physics_hz,physics_dt_s=actual,control_dt_s=control,
+                control_hz=20.,decimation=decimation,scope='constructed native environment cfg.sim.dt, cfg.decimation and step_dt')
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--policy',choices=['probe','capprobe','demo','dream','rest-probe'],default='probe')
+    parser.add_argument('--physics-hz',type=int,choices=[240,960],default=240,help='Physics integration frequency; controller remains20Hz')
     parser.add_argument('--body-solver-32-8',action='store_true',help='Explicit can/button PhysX solver precision; all other physics unchanged')
     parser.add_argument('--rest-solver',choices=['baseline','32-8'],default='baseline',help='Unscored passive-rest coupon only')
     parser.add_argument('--stage',choices=['cap','press','full'],default='full')
@@ -254,11 +278,14 @@ def main():
                     spawner_cfg=cfg,
                     initial_pose=sc.Pose(position_xyz=tuple(position),rotation_xyzw=orientation))
             sc.task_object=make
-            try:super()._ensure_sim(goal)
+            try:
+                with physics_timestep(sc,args.physics_hz):super()._ensure_sim(goal)
             finally:
                 sc.task_object=original
                 BimanualYamEmbodiment.__init__=original_init
                 robot_module.RENDERER=original_renderer
+            timing=physics_timing_readback(self._base,args.physics_hz)
+            (out/'physics-timing-readback.json').write_text(json.dumps(timing,indent=2)+'\n')
             if args.no_video:
                 # The pinned adapter renders four times explicitly after its
                 # settle loop. Also suppress any render request from env.step.
@@ -515,7 +542,7 @@ def main():
         policy=register_policy(cap_only=args.stage=='cap',press_only=args.stage=='press')
     diagnostic=args.no_video or args.policy in ('probe','capprobe') or (args.policy=='demo' and args.stage!='full')
     (out/'mode.json').write_text(json.dumps(dict(policy=args.policy,stage=args.stage,diagnostic=diagnostic,render_sync=args.render_sync,
-                                               state_only=args.no_video,media_eligible=not diagnostic,body_solver_32_8=args.body_solver_32_8,passive_rest=args.policy=='rest-probe',rest_solver=args.rest_solver if args.policy=='rest-probe' else None)))
+                                               state_only=args.no_video,media_eligible=not diagnostic,physics_hz=args.physics_hz,body_solver_32_8=args.body_solver_32_8,passive_rest=args.policy=='rest-probe',rest_solver=args.rest_solver if args.policy=='rest-probe' else None)))
     return cli(['run','--embodiment','uncap_spray_prototype','--policy',policy,
                 '-E',f'task={Path(__file__).parent / "task.py"}','-E','object_jitter=0',
                 '-E','control_hz=20','-E','cam_width=320','-E','cam_height=176',
