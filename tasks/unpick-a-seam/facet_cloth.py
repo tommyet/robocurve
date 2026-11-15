@@ -21,6 +21,7 @@ class ShellMaterial:
     poissons_ratio: float=.3
     damping_ratio: float=.15
     friction: float=.55
+    minimum_panel_mass_kg: float=0.
 
     @property
     def rigidity_nm(self):
@@ -72,7 +73,7 @@ def mechanics(mesh,material=ShellMaterial(),primitive_boxes=False):
                 np.allclose(np.sum(edge1*edge2,axis=1),0.,atol=1e-14)):
             raise ValueError('Native box panels must be rectangles')
         areas*=2
-    masses=areas*material.thickness_m*material.density_kg_m3
+    masses=np.maximum(areas*material.thickness_m*material.density_kg_m3,material.minimum_panel_mass_kg)
     edges=defaultdict(list);vertices=defaultdict(list)
     for face,ids in enumerate(vertex_ids):
         for vertex in ids:vertices[int(vertex)].append(face)

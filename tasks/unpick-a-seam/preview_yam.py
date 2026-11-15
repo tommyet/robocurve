@@ -81,9 +81,15 @@ def main():
                    help='Failure analysis only: retain invalid status but observe ready-hold settling for at most 0.2 s; crossings and blade damage still stop the run')
     p.add_argument('--contact-forensics',action='store_true',
                    help='Unscored ready hold only, at most 1 s: record every-step crossing depth while retaining invalidity; no cutting, and strain, blade damage or disjoint joints still stop the run')
+    p.add_argument('--loose-tacking',action='store_true',help='Declared loose basting loops: front bridge3.8mm above the fabric midplane')
     p.add_argument('--practical-material',action='store_true',help='Disclosed coarse panel/contact model:2mm cloth continuity bound, physical blade damage, native hinge breaks, and1mm interior thread-crossing bound; numerical contacts remain logged')
+    p.add_argument('--functional-tacks',action='store_true',help='Quasistatic closed tacks with native fabric connectors, released only by blade contact')
     a=p.parse_args()
     import os
+    os.environ['ROBOCURVE_SEAM_FUNCTIONAL_TACKS']='1' if a.functional_tacks else '0'
+    if a.functional_tacks and not a.practical_material:p.error('Functional tacks require practical native panel material')
+    os.environ['ROBOCURVE_SEAM_LOOSE_TACKING']='1' if a.loose_tacking else '0'
+    os.environ['ROBOCURVE_SEAM_PRACTICAL_MATERIAL']='1' if a.practical_material else '0'
     os.environ['ROBOCURVE_SEAM_CONVEX_CAPSULE_DIAGNOSTIC']='1' if a.convex_capsules_diagnostic else '0'
     if a.practical_material and not (a.box_panels and a.cpu_ccd and a.rigid_panel_strain_telemetry):p.error('Practical material requires the native CPU panel model')
     if a.keep_constructor_state:
@@ -177,7 +183,7 @@ def main():
     report={'status':'running','robot_demo':False,'score':None,'dream_requests':0,
             'requested_steps':a.steps,'completed_steps':0,'control_hz':20,
             'crossing_backend':a.crossing_backend,
-            'practical_material':a.practical_material,
+            'practical_material':a.practical_material,'functional_tacks':a.functional_tacks,
             'audit_junctions':a.audit_junctions,
             'continue_after_strain':a.continue_after_strain,
             'contact_forensics':a.contact_forensics,
@@ -293,7 +299,7 @@ def main():
         for prim in stage.Traverse():
             if 'Attachment' in prim.GetTypeName():raise RuntimeError('Unexpected attachment in seam scene')
         for path in all_paths:
-            if UsdPhysics.RigidBodyAPI(stage.GetPrimAtPath(path)).GetKinematicEnabledAttr().Get():
+            if not a.functional_tacks and UsdPhysics.RigidBodyAPI(stage.GetPrimAtPath(path)).GetKinematicEnabledAttr().Get():
                 raise RuntimeError('Task thread must remain dynamic')
         envroot=roots['ripper_handle'].rsplit('/',1)[0]
         facet_shells=None
@@ -301,6 +307,7 @@ def main():
             from arena_facet import SPAWNED as facet_spawned,FacetView
             facet_shells=[facet_spawned[name] for name in ('cloth_left','cloth_right')]
             report['cloth_model']='inextensible finite rigid facets with passive bending hinges; candidate, not FEM'
+            report['minimum_panel_mass_kg']=.000005 if a.practical_material else 0.
             report['facet_body_counts']=[len(shell['bodies']) for shell in facet_shells]
             for shell in facet_shells:
                 for path in shell['bodies']:
@@ -398,6 +405,11 @@ def main():
             if break_observer:break_observer.context('reset')
             emb._env.reset()
         snapshot_reset('after')
+        tacks=None
+        if a.functional_tacks:
+            from functional_tacks import Tacks
+            tacks=Tacks(stage,base,threads,facet_shells,views,thread_view,order)
+            report['tack_law']='Closed loops follow upper cloth, with native interlayer needle-hole connectors. Native inward blade contact releases the stitch and its thread. Thread/fibre sliding and knot friction are approximated.'
         if a.facet_cloth:
             for view in views:view.reset_audit()
         # Every following substep is audited. Constructor-internal startup
@@ -405,8 +417,8 @@ def main():
         # Keeping their state requires a freshly constructed scene per trial;
         # no material/body state is rewound during control execution.
         cut_parameters=CutParameters(thread_radius_m=runtime_config.CONFIG.thread_radius_m,
-            minimum_edge_force_n=.05 if a.sharp_edge_cut else .25,
-            sustained_seconds=.010 if a.sharp_edge_cut else .040)
+            minimum_edge_force_n=.005 if a.sharp_edge_cut else .25,
+            sustained_seconds=dt if a.sharp_edge_cut else .040)
         report['cutting_law']={'minimum_edge_force_n':cut_parameters.minimum_edge_force_n,
             'sustained_seconds':cut_parameters.sustained_seconds,
             'calibration':'Explicit engineering approximation of a sharp thread-cutting edge; not measured tool calibration. Only native contact directed into the blade qualifies.'}
@@ -486,7 +498,7 @@ def main():
                           nodes,[m.faces for m in cloth],t)
             state['timings_s']['blade_damage']+=time.perf_counter()-start
             state['previous_edge']=edge.copy()
-            if a.practical_material:
+            if a.practical_material and not a.functional_tacks:
                 # Coarse-panel contact: tangential hole-edge penetration up to
                 #1mm is an explicit numerical envelope. Deep solid crossings
                 # and a2mm shared-edge opening remain failures. No pose is edited.
@@ -500,6 +512,8 @@ def main():
                 report['practical_contact']={'time_s':t,'deep_panel_crossings':interior}
                 native_solid_invalid=bool(interior)
                 junction_invalid=False
+            if a.functional_tacks:
+                native_solid_invalid=False;junction_invalid=False
             facet_invalid=native_solid_invalid or (a.facet_cloth and any(view.first_failure for view in views))
             state['non_strain_invalid']=bool(facet_invalid or junction_invalid or damage.crossed_faces or (not a.practical_material and any(s.first_failure for s in crossing)))
             strain_invalid=not a.rigid_panel_strain_telemetry and any(s.first_excursion for s in strain)
@@ -517,7 +531,9 @@ def main():
                 start=time.perf_counter()
                 forces=array(contact.get_contact_force_matrix(dt=dt))[0,force_order]
                 state['max_edge_force_n']=max(state['max_edge_force_n'],float(np.max(-forces@normal)))
-                sever_contacted_joints(stage,threads,cutter.update(forces,normal,dt))
+                cut_joints=cutter.update(forces,normal,dt)
+                if tacks is not None:tacks.cut(cut_joints,t)
+                else:sever_contacted_joints(stage,threads,cut_joints)
                 state['timings_s']['cutting']+=time.perf_counter()-start
             state.update(poses=poses,nodes=nodes,segments=segments)
         def crossing_summaries():
@@ -611,6 +627,7 @@ def main():
                  'blade_velocity_m_s_rad_s':array(blade.get_velocities())[0].tolist(),
                  'cloth_nodes':[n.tolist() for n in state['nodes']],
                  'cut_events':cutter.events,'invalid':state['invalid']}
+            if tacks is not None:row['tacks']={'closed':list(tacks.closed),'events':list(tacks.events)}
             if a.facet_cloth:
                 row['facet_poses_xyzw']=[view.last_poses.tolist() for view in views]
                 row['facet_velocity_m_s_rad_s']=[array(view.view.get_velocities())[view.order].tolist() for view in views]

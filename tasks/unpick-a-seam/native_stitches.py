@@ -90,6 +90,9 @@ def author_thread(stage,path,nodes,*,radius=.0002,density=1400.,open_diagnostic=
                           'stiffness_nm_rad':bend_stiffness.tolist(),'damping_nms_rad':bend_damping.tolist(),
                           'straight_rest':True,'axial_twist_free':True,'hard_angular_limits':False}
     import os
+    if os.environ.get('ROBOCURVE_SEAM_FUNCTIONAL_TACKS')=='1':
+        from functional_tacks import prepare_thread
+        prepare_thread(stage,result)
     if os.environ.get('ROBOCURVE_SEAM_CONVEX_CAPSULE_DIAGNOSTIC')=='1':
         from convex_capsule import replace_capsules
         result['convex_capsule_candidate']=replace_capsules(stage,[body+'/Shape' for body in bodies])
@@ -198,7 +201,12 @@ def restore_separated_cut_contacts(stage,threads,capsule_axes):
 
 def restore_thread_joints(stage,thread):
     """Reset-only restoration; cannot be called by the action policy."""
-    for index in range(len(thread['joints'])):set_joint_enabled(stage,thread,index,True)
+    import os
+    if os.environ.get('ROBOCURVE_SEAM_FUNCTIONAL_TACKS')=='1':
+        from functional_tacks import prepare_thread
+        prepare_thread(stage,thread)
+    else:
+        for index in range(len(thread['joints'])):set_joint_enabled(stage,thread,index,True)
 
 
 def sever_contacted_joints(stage,threads,global_indices,*,defer_end_contact=True):

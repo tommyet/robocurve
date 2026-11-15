@@ -1,8 +1,43 @@
 # Shared working notes
 
-Last updated: 2026-11-14 UTC. Read this before starting work; update it when an
+Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
+
+## 2026-11-15 01:26 UTC — wheel submitted; practical cloth integration continues
+
+- Wheel PR2091 is open and acknowledged as **TK-D39FEF**. Media **M-MFGFHV**.
+  Clean upstream-based branch `codex/submit-true-bicycle-wheel`, commit909d9cb,
+  contains only the task folder. Do not push pending-review changes to it.
+  Demo1782 actions scores1.0; Dream2400 actions scores0.0 in one session.
+  Native rim measurement:0.4667mm lateral, radial bound0.1513mm, dish0.0874mm,
+  tensions468–855N,1.082 released revolutions. Eight scorer/model tests pass.
+  Public source and compact evidence copied to the shared task folder.
+- Official urllib media uploads return403 in this environment; this is the
+  previously observed transport issue, not an expired token. GET `/api/media`
+  confirmed no uncertain upload. The official multipart builder with curl
+  succeeds. Private receipt and media hashes: `artifacts/final-five-2026-11-15/`.
+- Staple212 completes596 actions at score1.0: both legs extracted, no native
+  paper hinge break or material-model damage, >103mm clearance for3s released.
+  Two Dream attempts expired; the sequential attempt had an18.1s idle gap.
+  Shared-key concurrency is NOT established as the cause. A rows-per-request4
+  baseline is running from the final clean package; no staple PR yet.
+- Correction to00:26: USD peg transforms did NOT move native GPU bodies.
+ 218 proves direct native tensor transforms move them. However the kinematic
+  peg contacts push apart the prescribed grip during carry.220 excludes the
+  duplicated native robot/peg contacts; measured handle capture/compression
+  remains mandatory. Cloth stays native flexible FEM. Awaiting new result.
+- Seam219 loose tacks fail during reset at action3, before robot contact.
+ 221 replaces microscopic thread-through-hole binding with disclosed native
+  interlayer connectors and quasistatic closed-loop shape; actual inward
+  blade contact releases a tack. Blade damage and fabric continuity remain
+  checked. This is a new model, not a retroactive pass for219.
+- Tie207 near-collar grip retains both hands through540 actions, but inspection
+  shows a slack wide-end fold, not a knot. No completed tie demo is claimed.
+- Only A40 `7dszjx6tuony0y` is active at$0.59/hour, continuously supervised.
+  Read its current lifecycle deadline; the attempted second restart failed
+  for capacity. Historical compute subtotal$26.95 excludes this session,
+  retained disks and Dream charges. No follow-on research compute used.
 
 ## 2026-11-15 00:26 UTC — retained adjustments and real extraction; completion continues
 

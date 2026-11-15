@@ -17,13 +17,24 @@ def ry(a):
 
 
 def configure(stage, root):
-    from pxr import UsdPhysics,PhysxSchema
+    from pxr import UsdPhysics,PhysxSchema,Sdf
+    from yam_arena.embodiment import SIDES
+    # Hand/peg contact is resolved by the measured handle-grip law below.
+    # Also solving those contacts against a prescribed kinematic peg injects
+    # a second, incompatible constraint and pushes the fingers apart.
+    robot_parts=[p.GetPath() for p in stage.Traverse()
+        if p.HasAPI(UsdPhysics.RigidBodyAPI) and
+        any('/'+SIDES[s]['prim']+'/' in str(p.GetPath()) for s in ('left','right'))]
+    if not robot_parts:
+        raise RuntimeError('Expected robot bodies for the explicit peg grip model')
     for prim in stage.Traverse():
         if str(prim.GetPath()).startswith(root+'/'):
             if prim.IsA(UsdPhysics.Joint):UsdPhysics.Joint(prim).CreateJointEnabledAttr(False)
             if prim.HasAPI(UsdPhysics.RigidBodyAPI):
                 UsdPhysics.RigidBodyAPI(prim).CreateKinematicEnabledAttr(True)
                 PhysxSchema.PhysxRigidBodyAPI.Apply(prim).CreateEnableCCDAttr(False)
+                pairs=UsdPhysics.FilteredPairsAPI.Apply(prim).CreateFilteredPairsRel()
+                pairs.SetTargets(list(dict.fromkeys(list(pairs.GetTargets())+robot_parts)))
 
 
 class Peg:
@@ -118,16 +129,19 @@ def install(base,cloth_name='tshirt'):
                 enabled.Set(False)
                 if peg.indices:
                     indices.Set(peg.indices);positions.Set(Vt.Vec3fArray(peg.local.tolist()));enabled.Set(True)
-            # GPU rigid-body tensors do not implement kinematic targets in
-            # this Isaac build. PhysX reads ordinary USD transforms for
-            # kinematic bodies; retain the native colliders and attachments.
-            with Sdf.ChangeBlock():
-                for (translation,orient),R in zip(ops,(peg.R,peg.R@ry(peg.opening))):
-                    q=Rotation.from_matrix(R).as_quat()
-                    translation.Set(Gf.Vec3d(*map(float,peg.p)))
-                    value=Gf.Quatd(float(q[3]),Gf.Vec3d(*map(float,q[:3])))
-                    if orient.GetPrecision()==UsdGeom.XformOp.PrecisionFloat:value=Gf.Quatf(value)
-                    orient.Set(value)
+            # GPU kinematic targets and runtime USD transform edits are not
+            # supported by this build. Apply the explicitly kinematic material
+            # poses through the native rigid-body API and verify the readback.
+            targets=view.get_transforms().clone()
+            old=array(targets).copy()
+            for index,R in zip(order,(peg.R,peg.R@ry(peg.opening))):
+                q=Rotation.from_matrix(R).as_quat()
+                targets[index]=torch.as_tensor(np.r_[peg.p,q],device=targets.device,dtype=targets.dtype)
+            indices_all=torch.arange(view.count,device=targets.device,dtype=torch.int32)
+            view.set_transforms(targets,indices_all)
+            actual=array(view.get_transforms())
+            if not np.allclose(actual[:,:3],array(targets)[:,:3],rtol=0.,atol=2e-6):
+                raise RuntimeError('Native peg pose update was not applied')
         return result
     base.scene.write_data_to_sim=apply
     # Keep the parent tensor view alive for the complete simulation.

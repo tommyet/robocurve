@@ -15,7 +15,9 @@ METAL_PARTS=(
 )
 # Axial start, length, vertical offset, radius. Capsule height is the length
 # between hemisphere centres, so its physical tip extends another radius.
-GUARDS=((.048,.014,-.0026,.0005),(.048,.009,.0026,.0005))
+GUARDS=((.048,.014,-.0013,.00025),(.048,.009,.0026,.0005))
+# A fine long point fits between the thread bridge and the fabric. Its
+# 0.5 mm diameter is explicit geometry, not a collision exemption.
 
 
 def blade_edge_samples(count=9):

@@ -189,7 +189,7 @@ def main():
         tracking=JointTracking()
         track_start=plan.get('requires_joint_feedback_from')
         window=plan.get('clip_servo_window')
-        servo=PegMouthServo(start=window[0],end=window[1]) if window else None
+        servo=PegMouthServo(start=window[0],end=window[1],functional_jaws=args.functional_pegs) if window else None
         active=state['action'].copy()
         for step,reference in enumerate(actions,1):
             observed=np.asarray(emb._observation().state['joint_pos'],float)

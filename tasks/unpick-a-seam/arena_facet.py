@@ -36,7 +36,9 @@ SPECS={};SPAWNED={}
 
 def material(spec):
     f=spec.fabric
-    return ShellMaterial(f.thickness,f.density,f.bend_modulus,f.poissons_ratio,.15,f.dynamic_friction)
+    import os
+    return ShellMaterial(f.thickness,f.density,f.bend_modulus,f.poissons_ratio,.15,f.dynamic_friction,
+                        .000005 if os.environ.get('ROBOCURVE_SEAM_PRACTICAL_MATERIAL')=='1' else 0.)
 
 
 def initial(spec):

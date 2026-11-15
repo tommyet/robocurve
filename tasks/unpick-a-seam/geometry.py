@@ -122,7 +122,9 @@ def patch(left=True,*,hole_half=HOLE_HALF,hole_mesh_spacing=None):
 
 def stitch_loop(y,spacing=.001,*,clear_capsules=False,long_side_links=10):
     """Closed 10 x 2.4 mm centreline; spans both layers through real holes."""
-    points=np.array([[.295,y,TABLE_TOP+.0048],[.305,y,TABLE_TOP+.0048],
+    import os
+    bridge=.0078 if os.environ.get('ROBOCURVE_SEAM_LOOSE_TACKING')=='1' else .0048
+    points=np.array([[.295,y,TABLE_TOP+bridge],[.305,y,TABLE_TOP+bridge],
                      [.305,y,TABLE_TOP+.0024],[.295,y,TABLE_TOP+.0024]])
     nodes=[]
     if clear_capsules and spacing!=.001:raise ValueError('Clear-capsule sampling has fixed physical segment counts')
