@@ -58,9 +58,16 @@ def install_joints(s,parent,include_dryer=True):
  if include_dryer:install_slider(s,parent)
 
 def install_slider(s,parent):
- # A frictional slide switch, not a software timer or a controller power flag.
+ # A passive sampled two-well spring. A physics-substep callback selects the
+ # nearest well from measured joint displacement; native drive supplies the
+ # equal/opposite joint reaction. No policy phase or power flag selects it.
  j=UsdPhysics.PrismaticJoint.Define(s,parent+'/dryer/power_slider');j.CreateBody0Rel().SetTargets([parent+'/dryer']);j.CreateBody1Rel().SetTargets([parent+'/switch']);j.CreateAxisAttr('Z');j.CreateLocalPos0Attr(Gf.Vec3f(-.037,0,-.045));j.CreateLocalPos1Attr(Gf.Vec3f(0,0,0));j.CreateLowerLimitAttr(0.);j.CreateUpperLimitAttr(SWITCH_TRAVEL);j.CreateCollisionEnabledAttr(False);j.CreateExcludeFromArticulationAttr(True)
+ # Preserve the authored dimensionless friction coefficient. PhysX applies
+ # this property to articulations only; this excluded standalone joint does
+ # not acquire a 0.08 N retention force from it.
  PhysxSchema.PhysxJointAPI.Apply(j.GetPrim()).CreateJointFrictionAttr(.08)
+ d=UsdPhysics.DriveAPI.Apply(j.GetPrim(),'linear');d.CreateTypeAttr('force');d.CreateTargetPositionAttr(0.)
+ d.CreateStiffnessAttr(SWITCH_DETENT_STIFFNESS);d.CreateDampingAttr(SWITCH_DETENT_DAMPING)
 
 
 def export_hair(path):

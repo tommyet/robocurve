@@ -2470,3 +2470,54 @@ editing, merge both agents' findings, and commit/push the update with the work.
   fourframes+reset+fiveframes/FKreferenceorigin; no productionchanges.
   FullCPU suiteALL119PASS13.228s, diffclean. CurrentrobotSHA
   c9f584f74c22e178bc781c5d163aae6dea7ffcdecc6fd3fcac7acefd54cb40e2.
+
+### 2026-11-15 — queued hair review while spray uses sole GPU
+
+- User changed priority to spray, then tasks in ease order; retained cb0da2 only.
+  Hair GPU work remains paused until spray completion/export. Astra read-only
+  review15:47:19–15:49:03 found install_slider has4mm limits/friction but NO
+  detent/spring/latch. robot.py implements powered pickup only; drying/off/return
+  remain unwritten. Proposed documented passive two-well constitutive drive:
+  U=.5*k*min(q²,(q-L)²),L4mm,k100N/m,c.05Ns/m =>.2N peak/.2mJ barrier.
+  Candidate only, uncalibrated; measured joint q alone, no phase/power overrides.
+  Needs physical ON→withdraw→tilt/lift→OFF bench and substep-update review.
+- Coverage must include all240 patches/worst<=10%, including roots/innerfaces;
+  airflow.py has incidence/occlusion/scalp blockers. Audit reachable unoccluded
+  viewpoints before timedsweeps; ordinary right-hand lock manipulation may be
+  necessary. Do not weaken patchscore, moisture or heat to fit old80s powerprobe.
+  Present6.4g water needs~13,017.6Jlatent+1,073Jwarming for90% removal; establish
+  honest fullrun limit after exposure/drying benchmark. Helpers in /private/tmp:
+  astra_hair_hands_audit.py,sol_hair_grasp25_validate.py,sol_hair_sweep_validate.py.
+  Hair013 reported transientON90%/24.8C/18.57J not independently recovered yet.
+- Hair013 evidence recovered locally at /private/tmp/hair-power013 and backed
+  in root artifacts/native-four-task-20261114/hair-power013-evidence.tgz.
+  Exact failure: slider lost ON after horizontal retraction; max24.7905C and
+  delivered18.5698J, score0.0. Existing result's diagnostic:false was misleading
+  for a power-only probe; future power probes are explicitly unscored.
+- Astra coverage review15:56:16–16:04 found no scalp-embedded thermal patches
+  (minimum clearance.118mm), but patch66 is.708mm inside a neighboring capsule
+  and needs physical lock separation.239/240 have sampled clear nozzle views;
+  23 representative endpoints also pass measured-grasp IK and actual gripper
+  mesh clearance>=1mm. Full arm paths are not certified. A nonoptimal thermal-only
+  static schedule takes5058.7s for239patches, excluding66; this is not an executable
+  robot plan or global lower bound. First demonstrate one manipulated lock's20
+  patches before choosing an honest full run limit. Analysis helpers/results:
+  /private/tmp/astra_hair_{coverage,reach,gripper,tool_rolls,sequential}.json.
+- Passive switch CPU candidate:25 tests pass, native retention unverified.
+  Astra review16:04:23–16:05:15 found no source blocker; PRE_PHYSICS_STEP/raw
+  native transforms match official IsaacLab3 lifecycle API. Retargeting to the
+  nearest well cannot increase stored spring energy. Counting24callbacks/action
+  and reading USD attributes does NOT prove immediate PhysX target consumption.
+  Sol adds bounded substep crossing/response telemetry before native validation.
+- Hair switch diagnostic is CPU-ready after review, not native-validated.
+ 35 tests pass. The7.7s fixture coupon pushes ON, removes force, gently ramps a
+  reverse0.10N load, removes it/rechecks ON, then pushes OFF and checks retention.
+  Every480Hz sample contributes to retention/integrity extrema. The crossing
+  ring retains8pre/24post samples, capped16events, so long runs remain bounded.
+  Actual native target latency stays explicitly unverified; reaction is inferred
+  from COM acceleration, not a force sensor. No robot/hair score from this coupon.
+- Official schema correction: PhysxJointAPI.jointFriction=.08 is dimensionless
+  and articulation-only. This standalone excluded slider ignores it; it never
+  supplied.08N retention. Authored value preserved for historical continuity,
+  docs corrected. Astra recommends a gentle ramp because an abrupt reverse load
+  can cross the lightly damped detent even when below static peak force.

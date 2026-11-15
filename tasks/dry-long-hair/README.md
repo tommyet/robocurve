@@ -48,7 +48,78 @@ The hair model is a coarse bundle approximation, not individual-fibre CFD.
 ```bash
 /data/IsaacLab-Arena/.venv/bin/python run.py --mode dynamics --out /path/to/new-probe
 /data/IsaacLab-Arena/.venv/bin/python run.py --mode power-probe --out /path/to/new-attempt
+/data/IsaacLab-Arena/.venv/bin/python run.py --mode slider-coupon --out /path/to/new-slider-coupon
 ```
+
+All modes are unscored diagnostics. Power-only runs report any scorer readback
+separately; operating and lifting the dryer does not demonstrate complete drying.
+
+### Passive slider retention candidate
+
+The earlier hair-power013 trial reached full measured travel, then returned to
+OFF during finger retraction. Its joint had travel limits and an authored friction attribute, without
+a detent. The current candidate adds the passive constitutive potential
+`U(q) = 0.5 k min(q², (q − L)²)`, with `L = 4 mm`, `k = 100 N/m`, and native
+joint damping `c = 0.05 N s/m`. Both wells have equal energy; the elastic peak
+is 0.2 N and the barrier is 0.2 mJ. Original authored friction, mass, geometry, travel,
+thermal parameters and task scoring remain unchanged. These values are an
+uncalibrated approximation, not a selected commercial switch mechanism.
+The [`jointFriction = 0.08` attribute](https://docs.omniverse.nvidia.com/kit/docs/omni_usd_schema_physics/latest/physxschema/class_physx_schema_physx_joint_a_p_i.html) is dimensionless and articulation-only;
+the current standalone slider excludes articulation, so this attribute is
+ignored. It does not provide a 0.08 N friction force.
+
+A native linear joint drive supplies the reaction. A measured-coordinate-only
+callback chooses the nearest well before each configured 480 Hz physics step,
+using direct native rigid-body transforms. It has no robot-phase, power-flag,
+timer or pose-write input. The harness checks 24 callbacks per 20 Hz action and
+records selected targets and the spring-energy change at each target switch.
+The [PhysX pre-step callback](https://isaac-sim.github.io/IsaacLab/v3.0.0/source/concepts/physics-backends/physx.html)
+is distinct from policy-rate updates. This remains a **sampled approximation**:
+CPU energy tests and callback counts do not establish native drive-update
+latency or physical retention. Those native claims remain unverified.
+
+`slider-crossings.json` contains bounded response windows: eight raw native
+samples before each well crossing, the crossing sample, and 24 after it,
+retaining at most 16 events and counting evictions. Each sample includes callback
+index, displacement, body poses/COM velocities, selected/authored target,
+constitutive potential and its change. These observations can reveal target
+freshness or delayed response; attribute readback alone never marks native
+target-application latency verified. Long steady drying adds no trace events.
+
+The separate 7.7-second `slider-coupon` mode spawns only the ordinary dryer and
+slider, with an explicitly diagnostic native world-to-dryer clamp. It applies
+an unscored +0.35 N axial pulse from 1–1.5 s, removes force for two seconds,
+ramps a reverse load to −0.10 N over 0.2 s, holds it for 0.3 s, ramps back over
+0.2 s, then observes one second of zero-force recovery. It finally applies
+−0.35 N from 5.2–5.7 s and removes force for two seconds. The ramp is updated
+at every 480 Hz substep. No robot,
+hair scorer, video or demo credit is involved; these external pulses and the
+fixture cannot enter the robot harness. Every native substep contributes to
+retention extrema, avoiding 20 Hz aliasing: final one-second ON/OFF holds must
+remain above 80% / below 10%, reverse-load travel must remain above 2 mm, and
+the final 0.25 s of recovery must remain above 80% ON. The coupon measures
+substep attachment/overtravel errors. Joint reaction is inferred
+from native COM acceleration minus known external force and gravity, including
+drive and limits; it is not a direct native force-sensor measurement.
+This prepares a native mechanism check; it has not been run. Even a passing
+coupon would leave robot withdrawal, tilt/lift and OFF operation to validate.
+
+Before using it for a drying demonstration, run this separate retention plan:
+
+1. Verify OFF at rest and native drive/limit readback; record raw displacement,
+   callback cadence and lateral/angular slider-joint error.
+2. Use ordinary robot contact to push ON, verify travel above 90% for five
+   frames, retract the finger horizontally, and observe at least two seconds
+   above 80% with no switch contact.
+3. Verify a real 75 mm or greater lift. With collision/reach certificates,
+   tilt the held dryer through orientations that reverse its slider-axis
+   gravity load, holding each for two seconds without touching the switch.
+4. Press the actual upper slider face downward using ordinary robot commands.
+   Verify travel below 10% for five frames, withdraw, and retain OFF for two
+   seconds. Inspect both directions for overtravel or joint separation.
+5. Verify that measured OFF produces no new drying, and review native target
+   application timing and switch-energy telemetry. Do not credit the test as
+   all-patch drying, switch-off/parking completion, or a successful task demo.
 
 The first separate-body hair probe passed its passive test, but moving-head
 robot trials exposed excessive joint error. A reduced-coordinate tree is now

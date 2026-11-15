@@ -17,6 +17,9 @@ DRY_FRACTION=.10
 DRYER_START=(.23,0.,TOP+.21)
 SWITCH_START=(DRYER_START[0]-.037,DRYER_START[1],DRYER_START[2]-.045)
 SWITCH_TRAVEL=.004
+# Candidate passive detent approximation, not a calibrated switch mechanism.
+SWITCH_DETENT_STIFFNESS=100.  # N/m
+SWITCH_DETENT_DAMPING=.05    # N s/m
 
 def points(k):
  import math
