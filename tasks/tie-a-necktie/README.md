@@ -1,17 +1,39 @@
-# Tie a necktie on a collar form
+# Finish tying a pre-wrapped necktie — development
 
-Current practical material variant (2026-11-15): Native surface FEM models strip width, bending, stretch and self-contact; one effective shell approximates the sewn/interlined tie. A contact-gated native vertex constraint represents static grip only for a small patch already between closed fingers; opening releases it. This preserves flexible cloth while approximating static friction and grasp slip. No target knot or automatic tightening is supplied. The scripted demo may use material geometry to choose ordinary robot actions; Dream receives its normal observations. Completed knot retention is still being tested. Commands and earlier diagnostics below describe their named versions; do not treat them as validated submission evidence.
+**Not submission-ready. No successful complete demo or necktie PR exists.**
+The user approved narrowing the task to finish a prepared wrap: thread the
+wide end, tighten, fit to the collar, and release. `task.draft.json` describes
+this scope. The current fixed reset has a 90 mm free wide tail above the front
+opening, the outer band in the right fingers, and the narrow blade routed
+inside the wrap. There is no completed knot or automatic tightening.
 
+The current material experiment uses 25 kPa bending modulus, down from
+250 kPa; stretch resistance remains 3 MPa. These are uncalibrated engineering
+approximations. The final test315 still failed: the wide end came back out when the
+feeding hand released, and no retained necktie knot was demonstrated. Native gravity, self-contact, the compliant grip model,
+and rear-collar contact remain active. It must not be described as a validated
+necktie until a real knot, correct fit and hands-free hold are demonstrated.
 
-**Development package; not ready to submit.** The adult collar drape and
-wide-tip pickup work. The narrow strip slips during repositioning, including
-the deeper-grasp and slack-preserving candidates. Wrapping motions therefore
-do not establish a knot. A complete knot, released fit, Dream run and final
-media are missing.
+Generate an ordinary holding probe locally (this spends no compute):
 
-Tie a simple (Oriental) knot on a collar form and leave the tie ready to wear.
-This requires managing a flat strip, threading two real openings, preserving
-the outward face and adjusting the finished knot.
+```sh
+python tasks/tie-a-necktie/make_prewrapped_probe.py --out /tmp/tie-hold.json
+```
+
+On an authorized Isaac/YAM GPU session, inspect the shared reset with:
+
+```sh
+python tasks/tie-a-necktie/run.py --mode motion-probe --plan /tmp/tie-hold.json \
+  --adult-collar --inside-out-reset --staged-start --surface-contact-diagnostic \
+  --pinch-approximation --collar-friction-approximation --judging-views \
+  --out /tmp/tie-prewrapped-probe
+```
+
+A final submission needs a fresh fixed-action replay with no online hidden
+cloth-state feedback, a matching Dream run, simple photo/video judging,
+and uploaded media. Diagnostics read native geometry to plan ordinary actions;
+they are not scored demonstrations. Prior versions and commands below are
+historical; `TEAM_LEARNINGS.md` records the latest evidence and failed trials.
 
 ## Run
 

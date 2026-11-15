@@ -74,7 +74,7 @@ def reset_staged_and_settle(emb):
     for _ in range(RESET_SETTLE_STEPS):
         emb._env.step(emb._ready)
     emb._t=0.
-    report=dict(method='fixed untied experimenter-loaded grasps followed by native settling',
+    report=dict(method='fixed pre-wrapped experimenter-loaded grasps followed by native settling',
         status='completed',physics_step_count_before=before,
         physics_step_count_after_raw_reset=after_raw,
         physics_step_count_after=int(base.sim._physics_step_count),
@@ -83,7 +83,7 @@ def reset_staged_and_settle(emb):
         settle_action14=action.tolist(),wall_seconds=time.monotonic()-start,
         controller='constant ordinary starting joint targets; no object feedback',
         writes='cloth and robot initial conditions at reset only; no pose or node writes during settling',
-        starting_grasps='left wide tip; right two untied standing strands; no knot, wrap or threaded loop',
+        starting_grasps='left wide end with 90 mm free tail above unthreaded front loop; right outer band, narrow blade routed inside wrap; no completed knot',
         acquired_contact_nodes={side:len(p.indices) for side,p in pinches.items()})
     if min(report['acquired_contact_nodes'].values())<3:
         raise RuntimeError('Declared initial grasp failed during native settling')

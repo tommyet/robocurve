@@ -1,8 +1,9 @@
-"""Fixed, untied experimenter-loaded starting grasps shared by every policy.
+"""Fixed pre-wrapped, unthreaded starting layout shared by all policies.
 
-The left fingers hold the wide tip. The right fingers hold the two standing
-strands together below the collar, before any wrap or threading. This array is
-used only by reset; no runtime motion or knot is prescribed here.
+The wide end has a short free tail above an open front loop. The right hand
+holds its outer band; the narrow blade is routed inside the wrap.
+The robot must thread the end, tighten, fit and release the knot. This file is
+loaded only during reset, never to prescribe runtime cloth motion.
 """
 from pathlib import Path
 import numpy as np

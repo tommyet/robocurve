@@ -28,8 +28,9 @@ if os.environ.get('ROBOCURVE_TIE_STAGED_START','0')=='1':
         raise ValueError('Staged grasp requires the adult collar')
     from staged_grasp import initial_layout as staged_initial
     INITIAL=staged_initial(MESH)
+    INSTRUCTION='Finish tying the pre-wrapped necktie on the collar form and leave it ready to wear.'
 TIE_FABRIC=Fabric(thickness=.0012,density=500.,youngs_modulus=3e6,
-                  dynamic_friction=.45,bend_modulus=2.5e5,
+                  dynamic_friction=.45,bend_modulus=2.5e4,
                   contact_offset=.001,rest_offset=.0006,
                   solver_iterations=128 if ADULT_COLLAR else 32)
 OBJECTS=[

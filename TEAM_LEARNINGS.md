@@ -4,7 +4,85 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
-## 2026-11-15 15:57 UTC — use direct grasps instead of pushing a loose tail
+## 2026-11-15 17:01 UTC — GPU shutdown verified
+
+- Pod `7dszjx6tuony0y` is confirmed `EXITED`. A complete paginated inventory
+  at 17:01 UTC finds all nine listed pods `EXITED` and zero active pods.
+  Evidence: `artifacts/final-five-2026-11-15/pod-inventory-final.json`.
+- This A40 session ran approximately 17.55 hours at $0.59/hour, about
+  $10.36 in compute. This is a runtime estimate, not an invoice or account
+  balance; storage and Dream charges are excluded. No Dream requests were
+  made during this pre-wrapped continuation.
+- Necktie remains unsubmitted because no valid full-score demo exists. The
+  experimental source and failure findings are being saved to the shared fork;
+  do not describe that development checkpoint as submission-ready.
+
+## 2026-11-15 16:59 UTC — pre-wrapped necktie still fails the feasibility gate
+
+- The narrower scope is explicit: finish a pre-wrapped, unthreaded necktie,
+  then fit and release it. Trials309–315 used a fixed authored layout and
+  ordinary bounded robot controls, without a target-knot operation. None
+  established a complete, retained, correctly fitted necktie. No necktie
+  media upload, matching new Dream baseline or upstream PR was made.
+- Large-loop310 unwound after the attempted pass. Free-tail313 bunched above
+  the opening and followed the hand during upward withdrawal. Routing the
+  narrow blade inside the wrap in314 improved its initial location, but a
+  predicted two-layer grasp did not capture narrow material natively: the
+  right hand held only the outer wide band. Documentation now states the
+  actual layout instead of claiming an unverified narrow-blade grip.
+- Trial 315 tests a tenfold softer bending modulus (25 kPa versus 250 kPa), leaving
+  3 MPa stretch resistance, gravity, self-contact and grip laws unchanged.
+  The strip folds more readily, but after 210 actions its wide tip is back
+  above the opening and the narrow blade hangs separately. The feed/release
+  is unsuccessful; do not substitute a commanded route for actual passage.
+- The GPU session was stopped after preserving 315. Further isolated waypoint retries
+  are not justified by these results. A different grasp/routing or material
+  design needs a bounded feasibility test before another paid baseline.
+  The user wanted accepted-quality work; do not submit an incomplete demo
+  just to create a PR. 37 CPU checks pass, but do not prove physical feasibility.
+- Failed native310,313 and314 are locally hash-verified in
+  `artifacts/final-five-2026-11-15/tie*-diagnostic-retained.tar.gz`.
+  Final 315 is also hash-verified (50,512,053 bytes), SHA256
+  `a4c0000e762c5625e589acb12716c1e7ae06b946c40ef674211ef9cde720bbcc`.
+  `make_prewrapped_probe.py` creates an ordinary holding plan locally; the
+  updated taskREADME distinguishes this development reset from older trials.
+- Latest author-filtered GitHub reads at 16:57 UTC remain 13 submitted team PRs:
+  one accepted (overhand1153), three pending (cake1919, seam2113, shirt2126),
+  and nine final rejections. Eito has one submitted PR under Miyamura80,
+  parcel1953, rejected as a duplicate of another team's earlier task.
+  Staple2093 still appears to be duplicate ingestion of one PR; the drafted
+  correction has not been posted because explicit permission is pending.
+
+## 2026-11-15 16:22 UTC — finish a disclosed pre-wrapped necktie
+
+- User authorized the fastest acceptable narrower necktie scope: finish a
+  pre-wrapped but unthreaded tie, including threading, tightening, fitting and
+  release. The new reset explicitly prepares one loose front turn; it is not
+  a complete knot. Native309 settling retained40 wide-tip and25 outer-band
+  nodes, with the narrow strand separate. Its first action file was rejected
+  for a schema mismatch before movement;310 repeats the same fresh reset.
+- Native310 action80 puts the held wide tip below the opening. It remains a
+  diagnostic, not a scored demonstration. The next ordinary motion releases
+  the outer band and pulls the wide end. No successful tie demo or PR yet.
+- Final submission evidence must include a fresh fixed-action replay, without
+  online cloth-coordinate feedback. The brick reviews explicitly objected to
+  privileged pose correction; saved diagnostic commands alone should not be
+  described as an observation-based policy.
+- Failed307 completed3,414 actions including a released final hold. It remains
+  untied. Its full archive is verified locally at
+  `artifacts/final-five-2026-11-15/tie-demo307-final.tar.gz`, SHA256
+  `6b52afe8adea6542991ee4bc33cbdcd5640da6d96e9377171fffb050e5a63983`.
+- Fresh author-filtered GitHub reads find13 team PRs:12 bytommyet and1 by
+  Miyamura80. One merged (overhand1153), three pending (cake1919, seam2113,
+  shirt2126), nine final rejections. Eito's parcel1953 duplicates another
+  team's earlier taped-carton opening. The apparent double ingestion of
+  staple2093 remains unresolved; permission to post the drafted correction
+  is still pending. Full response snapshots are retained in
+  `artifacts/final-five-2026-11-15/team-pr-details.json`.
+- OneA40 remains actively supervised with an independent40-minute deadline;
+  no additional GPU or Dream baseline has been started in this continuation.
+
+## 2026-11-15 15:55 UTC — use direct grasps instead of pushing a loose tail
 
 - Free-tip pushes in307 bent the cloth over the loop rather than threading it.
   Native geometry at2501/2571/2641 disproved the rigid-offset prediction. The
