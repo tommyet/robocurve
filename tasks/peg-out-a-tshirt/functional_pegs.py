@@ -118,9 +118,14 @@ def install(base,cloth_name='tshirt'):
         peg=Peg(spec.pos,spec.base_angle)
         view=sim.create_rigid_body_view([root+name+'/lower',root+name+'/upper'])
         paths=list(view.prim_paths);order=[paths.index(root+name+'/'+s) for s in ('lower','upper')]
+        # A closed peg is stationary on the fixed line. Use an identity world
+        # anchor for its static jaw contact: this avoids this Isaac version's
+        # stale attachment transform cache for tensor-driven kinematic bodies.
+        # Only material actually inside the jaw at closure is retained.
+        anchor=UsdGeom.Xform.Define(stage,'/World/'+name+'_closed_jaw_anchor')
         attachment=stage.DefinePrim(root+name+'_cloth_grip','OmniPhysicsVtxXformAttachment')
         attachment.CreateRelationship('omniphysics:src0').SetTargets([Sdf.Path(cloth_path)])
-        attachment.CreateRelationship('omniphysics:src1').SetTargets([Sdf.Path(root+name+'/lower')])
+        attachment.CreateRelationship('omniphysics:src1').SetTargets([anchor.GetPath()])
         enabled=attachment.CreateAttribute('omniphysics:attachmentEnabled',Sdf.ValueTypeNames.Bool);enabled.Set(False)
         indices=attachment.CreateAttribute('omniphysics:vtxIndicesSrc0',Sdf.ValueTypeNames.IntArray);indices.Set([])
         positions=attachment.CreateAttribute('omniphysics:localPositionsSrc1',Sdf.ValueTypeNames.Point3fArray);positions.Set([])
@@ -143,6 +148,12 @@ def install(base,cloth_name='tshirt'):
             observed.append((side,pose[:3]+R@np.asarray(TCP_OFFSET),R,gap))
         for name,(peg,view,order,enabled,indices,positions,ops) in items.items():
             old=tuple(peg.indices)
+            if old:
+                expected=peg.local@(peg.R@ry(-peg.opening/2)).T+peg.p
+                peg.attachment_error_m=float(np.max(np.linalg.norm(points[peg.indices]-expected,axis=1)))
+                if peg.attachment_error_m>.020:
+                    enabled.Set(False);peg.indices=[]
+                    peg.events.append(dict(time_s=peg.time,event='failed_cloth_binding',residual_m=peg.attachment_error_m))
             if hasattr(peg,'restore_indices'):
                 peg.indices=peg.restore_indices;peg.local=peg.restore_local
                 del peg.restore_indices;del peg.restore_local
@@ -150,14 +161,19 @@ def install(base,cloth_name='tshirt'):
             if tuple(peg.indices)!=old:
                 enabled.Set(False)
                 if peg.indices:
-                    indices.Set(peg.indices);positions.Set(Vt.Vec3fArray(peg.local.tolist()));enabled.Set(True)
+                    target=peg.local@(peg.R@ry(-peg.opening/2)).T+peg.p
+                    indices.Set(peg.indices);positions.Set(Vt.Vec3fArray(target.tolist()));enabled.Set(True)
             # GPU kinematic targets and runtime USD transform edits are not
             # supported by this build. Apply the explicitly kinematic material
             # poses through the native rigid-body API and verify the readback.
             targets=view.get_transforms().clone()
             old=array(targets).copy()
-            for index,R in zip(order,(peg.R@ry(-peg.opening/2),peg.R@ry(peg.opening/2))):
+            for index,R,(translate,orient) in zip(order,(peg.R@ry(-peg.opening/2),peg.R@ry(peg.opening/2)),ops):
                 q=Rotation.from_matrix(R).as_quat()
+                # The native attachment API also reads the target Xform. Keep
+                # it coherent with the explicitly kinematic native body pose.
+                translate.Set(Gf.Vec3d(*peg.p))
+                orient.Set(Gf.Quatd(float(q[3]),Gf.Vec3d(*q[:3])))
                 targets[index]=torch.as_tensor(np.r_[peg.p,q],device=targets.device,dtype=targets.dtype)
             indices_all=torch.arange(view.count,device=targets.device,dtype=torch.int32)
             view.set_transforms(targets,indices_all)

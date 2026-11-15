@@ -178,7 +178,8 @@ def main():
                     'poses_xyzw':array(base.scene[name].data.body_link_pose_w)[0].tolist()}
                     for name in ('left_robot','right_robot')})
             if mechanisms:
-                row['functional_pegs']={name:dict(held=p.held,clipped=p.clipped,opening_rad=p.opening,captured_vertices=p.indices,events=p.events) for name,p in mechanisms['pegs'].items()}
+                row['functional_pegs']={name:dict(held=p.held,clipped=p.clipped,opening_rad=p.opening,captured_vertices=p.indices,attachment_error_m=getattr(p,'attachment_error_m',None),events=p.events) for name,p in mechanisms['pegs'].items()}
+                row['pinches']={side:dict(indices=p.indices.tolist(),correction_m=p.last_correction,events=p.events) for side,p in pinches.items()}
             trace.write(json.dumps(row,allow_nan=False)+'\n');trace.flush()
             pixels=np.asarray(obs.images['top_cam'],dtype=np.uint8);video.append_data(pixels)
             if step in (0,len(actions)):Image.fromarray(pixels).save(args.out/f'frame-{step:04d}.png')
@@ -188,19 +189,21 @@ def main():
         from joint_tracking import JointTracking
         from scripted_clip import PegMouthServo
         from arena_props import peg_state
-        tracking=JointTracking()
+        trackers=[JointTracking(side=side) for side in plan.get('tracking_sides',['right'])]
         track_start=plan.get('requires_joint_feedback_from')
         window=plan.get('clip_servo_window')
-        servo=PegMouthServo(start=window[0],end=window[1],functional_jaws=args.functional_pegs) if window else None
+        servo=PegMouthServo(start=window[0],end=window[1],side=plan.get('clip_side','right'),
+            target=plan.get('clip_target',(.52,.115,1.09)),functional_jaws=args.functional_pegs) if window else None
         active=state['action'].copy()
         for step,reference in enumerate(actions,1):
             observed=np.asarray(emb._observation().state['joint_pos'],float)
             action=reference.copy()
             if servo is not None:
-                poses=peg_state(emb._env,'left_peg').body_poses if servo.start<step<=servo.end+1 else None
+                poses=peg_state(emb._env,plan.get('clip_peg','left_peg')).body_poses if servo.start<step<=servo.end+1 else None
                 action=servo.action(step,action,observed,poses)
                 report['peg_alignment']=servo.records
-            action=tracking.action(action,observed,enabled=track_start is not None and step>track_start)
+            for tracking in trackers:
+                action=tracking.action(action,observed,enabled=track_start is not None and step>track_start)
             bounded=np.clip(action,emb._low,emb._high)
             active=active+np.clip(bounded-active,-limits,limits)
             action=active.copy()

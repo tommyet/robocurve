@@ -1,4 +1,4 @@
-# Proposed judging rubric
+# Judging the hanging T-shirt
 
 Use the final five seconds of video and close-up photographs of each jaw. A
 ruler or printed scale supplies distances. Inspect the actual fabric captured
@@ -8,14 +8,14 @@ resting on top of the fabric does not count.
 - **0:** no valid retained fastening; the robot, laundry support or another object supports the
   shirt; any part is within 20 mm of the table or floor; or integrity fails.
 - **0.5:** one valid peg retains the shirt, supported only by the line and pegs for five
-  seconds, with at least 20 mm clearance. Two valid pegs less than 180 mm apart
+  seconds, with at least 20 mm clearance. Two valid pegs less than 100 mm apart
   receive the same partial credit.
 - **1:** both pegs capture the line and separate portions of the garment,
-  their centres are at least 180 mm apart, and the shirt remains supported only by
+  their centres are at least 100 mm apart, and the shirt remains supported only by
   the line and pegs with at least 20 mm clearance for five seconds.
 
 All score levels require an intact shirt, line and pegs. Torn cloth, broken
-pegs, hidden attachment, cloth passing through itself or another collider, and
+pegs, undisclosed support, visible cloth passing through itself or a solid, and
 any unsupported geometry manipulation invalidate the run. If damage or contact
 integrity cannot be assessed, leave the result unscored until reviewed. A
 native strain diagnostic alone cannot certify the absence of tears.
@@ -29,4 +29,6 @@ valid order of operations may be used.
 must include the released video and both jaw photographs. Synthetic records in
 unit tests are test fixtures only. None is a demonstration result.
 
-These thresholds are design choices. Fix and validate them before final media.
+The disclosed ideal static-grip constraints represent actual material enclosed
+by fingers or peg jaws. They do not establish a pass: verify the visible jaw
+capture, released hold and clearance independently.

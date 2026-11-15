@@ -4,6 +4,60 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 03:07 UTC — native jaw anchor fixed; closer tie grip retained
+
+- Shirt232 now retains67 actual cloth vertices inside the physical first peg
+  after release, with about0.17mm native residual at action334. The previous
+  kinematic-body attachment target was cached incorrectly. A stationary,
+  identity-world jaw anchor now stores the actual enclosed world positions;
+  reopening disables it. Native cloth is never moved by the peg law. Final
+  released-hold inspection and a second clip still remain before any demo claim.
+- The child-shirt draft now specifies two pegs at least100mm apart, replacing
+  the provisional180mm requirement before final evidence. This still requires
+  two independent real captures,5s unsupported hold and20mm table clearance.
+  It permits useful drying with this small garment instead of an arbitrary
+  near-full-width spacing. No historical run is upgraded to a full score.
+- Tie232 successfully grips material1.20m,10cm nearer the collar than the old
+  grasp. Both native patches remain retained after200 ordinary actions. A
+  screened540-action continuation holds the narrow end at(.26,.04,1.00) and
+  attempts an under-over wrap. No knot yet. Local obsolete path searches stopped.
+- Seam230 stops at797 after three cuts because the work slides up/sideways in
+  the low-force bench clamp; material invalidity remains false.234 approximates
+  a tightened clamp by native fixed constraints on only the enclosed upper8mm.
+  Remaining118-panel fabric bends freely. No runtime cloth state writes. This
+  is an explicit fixture-model change requiring fresh demo/Dream evidence.
+- The singleA40 remains supervised with watchdog28315 and caffeinate28316.
+  Read the lifecycle deadline; it was extended during this active work. No
+  secondary GPU is running and no further upstream PR has been opened.
+
+## 2026-11-15 02:42 UTC — first-clip claim withdrawn after native-position audit
+
+- Shirt228 completed620 continuation actions and reported65 retained nodes,
+  but those nodes ended near y=0 while the peg was at y=0.1236m. The native
+  vertex attachment read the old USD Xform while tensor pose updates moved
+  the kinematic body. This is NOT a valid clip or demo. A rendered peg and a
+  logical captured-node flag are insufficient; compare actual native vertices
+  with the physical jaw. The reported first-clip support must be disregarded.
+-231 writes matching USD and native body poses, and releases/flags a binding
+  if its native material-to-jaw residual exceeds20mm. It is being retested,
+  not retroactively rescored. Its labelled checkpoint also moves the EMPTY
+  spare peg from y=0.20 to0.06m for an accessible left-hand approach. The
+  final fresh-reset setup must match this layout. No cloth checkpoint edit.
+- Seam229 cuts three stitches and retains the handle, then stops at789 on
+ 2.15mm numerical panel-junction separation; no blade damage or native hinge
+  break was reported.230 uses an explicit5mm coarse junction-compliance domain
+  while retaining blade/fabric damage and native fracture stops. Fine thread
+  penetration telemetry does not certify or invalidate this functional-tack
+  approximation. The physical rubric now measures visibly open cut ends,
+  allowing loose thread remnants; it no longer adds complete thread cleanup.
+- Tie228's under-over commands still leave separated strands: the narrow
+  strip moves as the collar band slides. A closer narrow grip and collision-
+  screened approach are being planned; no knot or full tie demo exists.
+- A second restart of k6yi0tfzyuh133 at02:15 failed for capacity and was
+  verified EXITED. Its new watchdog record is under final-second-gpu-2026-11-15.
+  Only7dszjx6tuony0y runs. Its supervised watchdog deadline was extended to
+ 03:09:45 UTC. Read and update the lifecycle file before that deadline.
+
 ## 2026-11-15 02:08 UTC — practical grip integration and continued cloth trials
 
 - Operator: repository agent, same development branch. Wheel PR2091 and

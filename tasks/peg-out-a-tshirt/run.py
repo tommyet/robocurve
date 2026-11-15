@@ -439,7 +439,7 @@ def main():
                          'poses_xyzw':arr(base.scene[name].data.body_link_pose_w)[0].tolist()}
                          for name in ('left_robot','right_robot')}}
             if mechanisms:
-                record['functional_pegs']={name:dict(held=p.held,clipped=p.clipped,opening_rad=p.opening,captured_vertices=p.indices,events=p.events) for name,p in mechanisms['pegs'].items()}
+                record['functional_pegs']={name:dict(held=p.held,clipped=p.clipped,opening_rad=p.opening,captured_vertices=p.indices,attachment_error_m=getattr(p,'attachment_error_m',None),events=p.events) for name,p in mechanisms['pegs'].items()}
                 record['pinches']={name:dict(indices=p.indices.tolist(),events=p.events,correction_m=p.last_correction) for name,p in pinches.items()}
             trace.write(json.dumps(record,allow_nan=False)+'\n')
             trace.flush()

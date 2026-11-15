@@ -36,7 +36,7 @@ class EntryTests(unittest.TestCase):
         controller.target([0,0,0],np.eye(3),hand,tool)
         tool[0]=.001;controller.target([0,0,0],np.eye(3),hand,tool)
         self.assertAlmostEqual(controller.translation[0],.0001)
-        tool[0]=.02
+        tool[0]=.025
         with self.assertRaises(RuntimeError):controller.target([0,0,0],np.eye(3),hand,tool)
 
 

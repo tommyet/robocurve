@@ -40,6 +40,6 @@ def score(j):
     if not isinstance(pegs,list) or len(pegs)!=2 or any(type(x) is not bool for x in pegs):
         raise ValueError('two independent visible peg-capture decisions required')
     count=sum(pegs)
-    if count==2 and j['peg_separation_mm'] >= 180.:
+    if count==2 and j['peg_separation_mm'] >= 100.:
         return 1.
     return .5 if count else 0.

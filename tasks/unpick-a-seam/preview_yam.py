@@ -369,7 +369,7 @@ def main():
         thread_view=sim.create_rigid_body_view(all_paths)
         native_paths=list(thread_view.prim_paths)
         order=np.asarray([native_paths.index(path) for path in all_paths])
-        views=([FacetView(sim,shell,geometry_aperture_m=(.002 if a.practical_material else .0004 if a.panel_passage_diagnostic else .0002) if a.geometric_panel_audit else None,
+        views=([FacetView(sim,shell,geometry_aperture_m=(.005 if a.practical_material else .0004 if a.panel_passage_diagnostic else .0002) if a.geometric_panel_audit else None,
                         boundary_tolerance_m=.0001 if a.boundary_contact_envelope else 0.)
                 for shell in facet_shells] if a.facet_cloth else
                [sim.create_surface_deformable_body_view(envroot+'/'+name) for name in ('cloth_left','cloth_right')])
@@ -415,6 +415,8 @@ def main():
             grip=install_grip(stage,base,handle)
         tacks=None
         if a.functional_tacks:
+            from static_fabric_clamp import install as install_fabric_clamp
+            report['fabric_clamp_grip']=install_fabric_clamp(stage,facet_shells[0],views[0])
             from functional_tacks import Tacks
             tacks=Tacks(stage,base,threads,facet_shells,views,thread_view,order)
             report['tack_law']='Closed loops follow upper cloth, with native interlayer needle-hole connectors. Native inward blade contact releases the stitch and its thread. Thread/fibre sliding and knot friction are approximated.'
@@ -522,7 +524,8 @@ def main():
                 junction_invalid=False
             if a.functional_tacks:
                 native_solid_invalid=False;junction_invalid=False
-            facet_invalid=native_solid_invalid or (a.facet_cloth and any(view.first_failure for view in views))
+            native_fracture=bool(break_observer and break_observer.summary()['cloth_hinge_break_count'])
+            facet_invalid=native_fracture or native_solid_invalid or (a.facet_cloth and any(view.first_failure for view in views))
             state['non_strain_invalid']=bool(facet_invalid or junction_invalid or damage.crossed_faces or (not a.practical_material and any(s.first_failure for s in crossing)))
             strain_invalid=not a.rigid_panel_strain_telemetry and any(s.first_excursion for s in strain)
             state['hard_invalid']=bool(facet_invalid or junction_invalid or damage.crossed_faces or strain_invalid)

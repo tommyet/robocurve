@@ -40,7 +40,7 @@ def _compile(start_action,schedule,*,robust_joint=False):
             pe_max=max(pe_max,float(pe));re_max=max(re_max,float(re));opening[side]=o0+t*(grip-o0)
             frames.append(dict(action14=np.r_[q['left'],opening['left'],q['right'],opening['right']].tolist(),stage=label))
         audits.append(dict(stage=label,max_position_error_m=pe_max,max_rotation_error_rad=re_max))
-    if any(a['max_position_error_m']>.004 or a['max_rotation_error_rad']>.04 for a in audits):raise ValueError('Measured handoff IK gate failed: '+json.dumps(audits))
+    if any(a['max_position_error_m']>.004 or a['max_rotation_error_rad']>.04 for a in audits):raise ValueError('Measured handoff IK gate failed: '+json.dumps([a for a in audits if a['max_position_error_m']>.004 or a['max_rotation_error_rad']>.04]))
     actions=np.asarray([start_action]+[f['action14'] for f in frames]);limits=np.tile([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/20],2)
     if np.any(abs(np.diff(actions,axis=0))>limits*1.001):raise ValueError('Handoff exceeds normal action speeds')
     return dict(schema='cloth-fixed-motion-fragment-v1',frames=frames,action_count=len(frames),kinematic_audit=audits,feedback='Explicit native-state scripted planning of ordinary robot actions only',score=None)

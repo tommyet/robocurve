@@ -15,7 +15,7 @@ OPEN_ANGLE=-.075
 def positions():
     if os.environ.get('ROBOCURVE_SHIRT_CENTER_PEG_DIAGNOSTIC')=='1':
         return {'Left':(LINE_X+.0011,0.,LINE_Z-.030),
-                'Right':(LINE_X+.0011,.20,LINE_Z-.030)}
+                'Right':(LINE_X+.0011,.06,LINE_Z-.030)}
     return {'Left':(LINE_X+.0011,.115,LINE_Z-.030),
             'Right':(LINE_X+.0011,-.115,LINE_Z-.030)}
 
