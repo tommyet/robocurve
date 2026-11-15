@@ -1,6 +1,7 @@
 """Read-only physical geometry for staged ordinary robot control."""
 import math
 import numpy as np
+from trajectory_control import bounded_joint_pi_step
 from yam_arena.urdf import quat_xyzw_to_matrix
 from collision_geometry import minimum_separation
 from geometry import object_obstacles,plug_boxes,box_triangles,wire_local_frame,GUIDE_BOTTOM
@@ -196,6 +197,25 @@ class JointEndpointCorrection:
         self.bias=np.clip(self.bias+np.clip(step,-limit,limit),-.02,.02)
     def command(self):
         return None if self.reference is None else self.reference+self.bias
+
+    def track(self,reference,actual,dt,lower,upper):
+        """Trajectory PI; reference stays unbiased, bias is never reset here."""
+        reference=np.asarray(reference,dtype=float);actual=np.asarray(actual,dtype=float)
+        if (reference.shape!=(6,) or actual.shape!=(6,) or not math.isfinite(dt) or dt<=0
+                or not np.isfinite(reference).all() or not np.isfinite(actual).all()):
+            self.invalid='nonfinite joint trajectory reference/state/timestep';return
+        try:step=bounded_joint_pi_step(self.bias,reference,actual,dt)-self.bias
+        except ValueError as error:self.invalid=str(error);return
+        candidate=reference+np.clip(self.bias+step,-.02,.02)
+        # Do not integrate farther into joint or per-action saturation.
+        step=np.where(((step>0)&(candidate>upper))|((step<0)&(candidate<lower)),0.,step)
+        self.reference=reference.copy();self.reference.setflags(write=False)
+        self.bias=np.clip(self.bias+step,-.02,.02);self.frozen=False;self.invalid=None
+
+
+def mesh_pose_distance(pieces,first,second):
+    """Maximum displacement of every unmodified gripper mesh vertex."""
+    return max(float(np.linalg.norm(a@first[1].T+first[0]-(a@second[1].T+second[0]),axis=2).max()) for _,a in pieces)
 
 
 def plug_fit(plug,target):

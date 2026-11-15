@@ -2346,3 +2346,30 @@ editing, merge both agents' findings, and commit/push the update with the work.
   jump.417mm/q6−6.56mrad. Preservefrozenbias+unbiasedIKonce; useFK(entryref)
   withdrawalorigin/R, refreshactualleft/right/mutual/tabguardsduringwithdraw.
   Localrepairpendingnativevalidation;022VMsourceunmodifiedwhileitran.
+
+- Tracking023isolatedprobeHOVERPASS(E.295mm/reserve.639mm), failedDURING
+  2mmprepressmotionat2.55s/300actions beforestationaryI: tooltrackingerror
+  .652→2.143mm whileactualrigidgap.818→.225mm then<.2guardstop. LeftREADY
+  ~36nmerror, noleftcontact. Both.5mm/2mmfrozen-biasmovesfail: lackofmoving
+  trajectoryfeedbackiscorecontrollerissue, notmoretimeoutorprecisiongates.
+  ReviewingboundedperjointtrajectoryPIwithunbiasedreference/antiwindup;
+  no hardwaregains/physics/travel/scoringchange. No scoredtaskprogressclaim.
+
+- Tracking023causalityreview: q3actuallystationarywhileunbiasedreference
+  error−2.60→−5.24mrad and frozenbias+2.067mrad; q4moveswitnessup.
+  Approvedall6JOINTtrajectoryPI Ki2/s (policygain), same±20mrad/.25mradstep,
+  noCartesianI/frictionFF/hardwaregainchanges. Adaptivepathclockmustnotjump
+  whenpaused. Referencewholemeshstepdelta<=.5*max(0,B−E), B=freshsame-world
+  nominalremainingrigid/handgap−chord−.2mm. E>=Bholdref/continuePIonlyfresh
+  actual→refsafe. Actualguardessential; triangleboundper-frameNOTfuture
+  physicsguarantee. Abandonedhalf-budgetprecisiongateasoverstrictproxy.
+
+- Tracking024 PREPRESS-onlytrajectoryPI/governor14affectedtestsPASS;
+  AstrafocusedreviewPASSwithmissing-refNonefix. HOVER/contactcontroller
+  unchangedforcausalprobe. All6Ki2/s,20mrad/.25mradcaps, joint/actionlimit
+  antiwindup, freshE/Bsame-framegeometry, FKmeshstep<=halfslack. Zero-slack
+  holdsreferencebutcontinuesPIonlysafeactualcorrection; cursorENDrequired
+  beforehandoff. Native024runningunscored; no nativeclaimyet.
+- Isolatedresultsummarycorrected: maxtrackingnowincludesbotharms(previous
+  fieldwasleft-only); HOVERmetriccannotclaimPREPRESSsuccess; completedand
+  loaded-error-targetflagsrequireacceptedPREPRESS. No TASKscorechanges.

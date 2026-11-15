@@ -189,7 +189,8 @@ def main():
    result['offcenter_load']={'force_plug_frame_N':[0,0,-.5],'application_point_clip_frame_m':[-.010,-.0015,.0005],
                            'nominal_torque_plug_frame_Nm':[.00075,-.005,0],'torque_scope':'actual clip-frame lever cross actual plug-frame force'}
   if robot:
-   result|={'robot_grasp_probe':a.mode!='press-tracking-probe','robot_press_tracking_probe':a.mode=='press-tracking-probe','max_tracking_error_m':max(r['robot_control']['position_error'] for r in samples),
+   tracking_by_arm={side:max(arm['position_error'] for r in samples for arm in r['robot_control']['arms'] if arm['side']==side) for side in ('left','right')}
+   result|={'robot_grasp_probe':a.mode!='press-tracking-probe','robot_press_tracking_probe':a.mode=='press-tracking-probe','max_tracking_error_m':max(tracking_by_arm.values()),'max_tracking_error_by_arm_m':tracking_by_arm,
             'final_plug_pose':samples[-1]['plug_pose'],'controller_failure':samples[-1]['robot_control'].get('failure'),
             'controller_complete':samples[-1]['robot_control'].get('complete',False),
             'probe_step_count':len(samples),
@@ -199,9 +200,12 @@ def main():
    if a.mode=='press-tracking-probe':
     handoff=samples[-1]['robot_control'].get('functional_handoff') or {}
     error=handoff.get('max_mesh_error_5_frames_m')
-    result['isolated_tracking']={'left_hand':'READY; no source grasp','stopped_before_clip_contact':bool(samples[-1]['robot_control'].get('complete')),
-                                'max_mesh_error_5_frames_m':error,'loaded_022_useful_error_limit_m':.000291,
-                                'meets_loaded_022_error_target':bool(error is not None and error<=.000291),
+    completed=bool(samples[-1]['robot_control'].get('complete') and handoff.get('stage')=='PREPRESS' and handoff.get('accepted'))
+    result['isolated_tracking']={'left_hand':'READY; no source grasp','prepress_completed':completed,
+                                'stopped_before_clip_press_stage':not any(s['phase']=='depress_clip' for s in samples),
+                                'max_abs_measured_clip_travel_m':max(abs(s['connector_fit'][str(SERVICE)]['clip_travel_m']) for s in samples),
+                                'handoff_stage':handoff.get('stage'),'max_mesh_error_5_frames_m':error,'loaded_022_useful_error_limit_m':.000291,
+                                'meets_loaded_022_error_target':bool(completed and error is not None and error<=.000291),
                                 'scope':'Unscored arm tracking only. Full loaded grasp, release and insertion still require native validation.'}
   if scorer is not None:result|={'diagnostic':False,'privileged_robot_attempt':True,'task_score':scorer.value,'metrics':samples[-1]['metrics']}
   (a.out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result))
