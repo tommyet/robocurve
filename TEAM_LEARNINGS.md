@@ -4,6 +4,40 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 — five household tasks in progress; bracelet submitted
+
+- User authorized completing and PRing bracelet fastening, gift wrapping, smooth
+  pram rocking, genuine knot removal and waxing. This supersedes their earlier
+  research-only status. Development branch `codex/five-household-tasks-2026-11-15`
+  is updated through shared main c53320b; no other team's task is modified.
+- Bracelet final native007 demo1/Dream0, 490/1,000 actions, 269.50/614.83 wall
+  seconds. Frozen-source replay agrees. Visual review confirms closure and
+  release around the supported wrist form. Reduced flexible strap, geometric
+  clasp and ideal captures are explicit. Media M-S6J36D; isolated upstream
+  branch commitab7b150; PR2187 received as TK-ZVS8SJ, waiting for review.
+  The board enforces a 500-character fidelity field; keep its concise summary
+  there and the full model limitations in README. An initial ingestion error
+  was corrected on this same PR before receipt.
+- Pram native007 full score1, ten cycles; maximum speed0.1924m/s,
+  acceleration0.5720m/s², released rest6.6s. Added native carrycot/doll collision
+  shells after the old Dream run exposed body penetration. Final Dream007 scores0, independently replayed and visually inspected.
+  Media M-6UKL98; isolated commitd1b7c9c; PR2190 received as TK-LGTDUX, waiting
+  for review. One-handed smooth rocking is a valid alternative, not a failure.
+- Wax correction: this YAM's TCP is134mm, while the distal finger mesh ends at
+  146.8425mm. Pad contact is therefore12.84mm beyond TCP. The old8mm offset
+  missed real form contact. Restrict a thin strip capture to opening<=0.08 to
+  prevent an open smoothing hand from becoming an unintended grasp. Replaying
+  native006 hands with these corrections scores1, but is only a debugging probe;
+  fresh native008 now confirms1.0, 658 actions/32.9s, 70.59% simultaneous
+  flat/smoothed contact and0.6s peel; replay agrees and demo visually checked.
+  Dream008 in progress. No hair/skin-treatment claim is made.
+- One A40 Pod vmtb7b46hnozdv at $0.59/hour started22:01:58UTC, 100GB temporary
+  disk, no persistent volume. Independent stop deadline currently00:22:26UTC
+  on16November, extended under supervision. Dream jobs serialized with a lock.
+  Do not stop the teammate's separate Brev VM. Private evidence/lifecycle under
+  `artifacts/five-household-2026-11-15/`; shared progress in
+  `docs/five-household-task-batch.md`. Remaining tasks are not yet submitted.
+
 ## 2026-11-15 — bounded carton opening searches; support/regrasp is next
 
 - Operator: Brev task agent, local CPU only. User explicitly resumed work; retainedBrev cb0da2 remains verifiedSTOPPED. No new Dream/native attempt or upstream submission. Spray2171 remains received/waiting for review.
