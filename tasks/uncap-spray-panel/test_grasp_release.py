@@ -175,6 +175,33 @@ class PolicyGuardTests(unittest.TestCase):
                     self.assertLessEqual(pe,.015,(move['label'],pe));self.assertLessEqual(re,.12,(move['label'],re));joints[i]=q
                 poses[i]=(end,rotation)
 
+    def test_initial_grip_is_unchanged_and_loaded_hold_ramps_over_existing_lift(self):
+        from yam_arena.constants import FINGER_OPEN,GRIPPER
+        sample=self.sample();self.module.telemetry.latest=sample
+        policy=self.module.SprayDemo();policy.initialize()
+        moves={move['label']:move for move in policy.moves}
+        self.assertAlmostEqual(moves['brace_grip']['L'][2]*FINGER_OPEN,-.021)
+        self.assertAlmostEqual(moves['cap_grip']['R'][2]*FINGER_OPEN,-.025)
+        self.assertEqual(moves['can_lift']['seconds'],2.)
+        for phase in ('can_lift','coat_position_0','coat_position_1','coat_position_2','coat_position_3','can_lower'):
+            self.assertAlmostEqual(moves[phase]['L'][2]*FINGER_OPEN,-.018)
+        self.assertEqual(moves['can_release']['L'][2],1.)
+        # Exercise the actual policy interpolation rather than a duplicated ramp.
+        policy.targets[0][2]=policy.grip
+        policy.index=next(i for i,m in enumerate(policy.moves) if m['label']=='can_lift')-1;policy.next(0.)
+        policy.holding_can=False # Synthetic kinematics isolate the command ramp.
+        previous=-.021;values=[]
+        with patch.object(self.module.ik,'solve',side_effect=lambda p,r,q,**kw:(q.copy(),0.,0.)):
+            for i in range(40):
+                sample['time']=i*.05;action=policy.act(SimpleNamespace(state_time=sample['time']))
+                command=action.actions[0].data[6]*FINGER_OPEN
+                self.assertGreaterEqual(command,previous-1e-15);self.assertLessEqual(command,-.018+1e-15)
+                self.assertLessEqual(command-previous,.003*1.5*.05/2.+1e-15)
+                self.assertAlmostEqual(self.module.telemetry.command['left_command_finger_joint_m'],command)
+                previous=command;values.append(command)
+        self.assertLess(values[0],-.0209);self.assertAlmostEqual(values[-1],-.018)
+        self.assertEqual(GRIPPER['effort'],50.)
+
     def test_intentional_opening_and_retreat_disable_only_the_grasp_loss_guard(self):
         sample=self.sample();self.module.telemetry.latest=sample
         policy=self.module.SprayDemo();policy.initialize();policy.grasp_calibrated=True;policy.holding_can=True

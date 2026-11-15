@@ -57,6 +57,7 @@ class SprayDemo(YamScriptedPolicy):
         can=np.array(telemetry.latest['can']);cap=np.array(telemetry.latest['cap'])
         left=can+GRASP_OFFSET
         self.grip=grip_fraction(-.021,FINGER_OPEN);cap_grip=grip_fraction(-.025,FINGER_OPEN)
+        self.hold_grip=grip_fraction(-.018,FINGER_OPEN)
         def move(label,seconds,L=None,R=None,check=None,follow=False,aim=None):
             self.moves.append(dict(label=label,seconds=seconds,L=L,R=R,check=check,follow=follow,aim=aim))
         def lp(p,g):return (np.array(p),LEFT_R,g)
@@ -77,20 +78,20 @@ class SprayDemo(YamScriptedPolicy):
             move('diagnostic_hold',1.)
             return
         can_center=np.array((CAN_START[0],0.,TARGET_CENTER[1]-.077))
-        move('can_lift',2.,L=lp(can_center+GRASP_OFFSET,self.grip))
+        move('can_lift',2.,L=lp(can_center+GRASP_OFFSET,self.hold_grip))
         move('press_approach',2.,R=(can_center+(0.,-.08,.14),PRESS_R,self.press_grip))
         move('press_hover',1.5,follow='hover')
         for index,(y,z) in enumerate([(-.035,-.035),(-.035,.035),(.035,.035),(.035,-.035)]):
             p=can_center+np.array((0.,y,z))+GRASP_OFFSET
             aim=(y,TARGET_CENTER[1]+z)
-            move('coat_position_'+str(index),1.8,L=lp(p,self.grip),follow='hover')
+            move('coat_position_'+str(index),1.8,L=lp(p,self.hold_grip),follow='hover')
             move('coat_aim_'+str(index),1.2,follow='hover',aim=aim)
             move('coat_shot_'+str(index),8.,follow='press',aim=aim)
             move('coat_unpress_'+str(index),RELEASE_DEADLINE,follow='release')
         move('finish_coating',.3,check='coat')
         move('press_retreat',2.,R=rp(can_center+(0.,-.09,.07),1.))
         placement=np.array((CAN_PAD[0],CAN_PAD[1],CAN_REST_HEIGHT))+GRASP_OFFSET
-        move('can_lower',3.,L=lp(placement,self.grip))
+        move('can_lower',3.,L=lp(placement,self.hold_grip))
         move('can_release',1.,L=lp(placement,1.))
         move('brace_retreat',2.,L=lp((CAN_PAD[0],CAN_PAD[1]+.12,TOP+.13),1.))
         move('finish_hold',2.)
@@ -146,7 +147,7 @@ class SprayDemo(YamScriptedPolicy):
         now=float(observation.state_time);s=telemetry.latest
         if now-self.episode_t0>=120.:
             self.failure=self.failure or '120 second episode limit reached before next action'
-            telemetry.command=dict(phase='episode_limit',errors={},failure=self.failure)
+            telemetry.command=dict(phase='episode_limit',errors={},failure=self.failure,left_command_finger_joint_m=float(self.last_actions[0][6]*FINGER_OPEN))
             return ActionChunk(actions=[Action(data=pack(*self.last_actions),meta={'request_stop':True})],control_hz=1/self._dt)
         if self.index<0:self.next(now)
         if abs(s['time']-now)>.075:raise RuntimeError('stale demo telemetry')
@@ -230,7 +231,8 @@ class SprayDemo(YamScriptedPolicy):
             try:press_contact=press_contact_state(s,PRESS_POINT)
             except ValueError as error:self.failure=str(error)
         if self.failure:
-            telemetry.command=dict(phase=phase,errors={},failure=self.failure,release_clearance_m=self.release_gap,release_frames=self.release_frames)
+            telemetry.command=dict(phase=phase,errors={},failure=self.failure,release_clearance_m=self.release_gap,release_frames=self.release_frames,
+                                   left_command_finger_joint_m=float(self.last_actions[0][6]*FINGER_OPEN))
             return ActionChunk(actions=[Action(data=pack(*self.last_actions),meta={'request_stop':True})],control_hz=1/self._dt)
         for i,side in enumerate(('left','right')):
             p,r,g=self.targets[i]
@@ -256,7 +258,7 @@ class SprayDemo(YamScriptedPolicy):
             limit=.015 if early else .005;angle_limit=.12 if early else .05
             if not np.isfinite(np.r_[q,pe,re]).all() or pe>limit or re>angle_limit:
                 self.failure=f'{side} {phase} IK exceeds {limit*1000:g} mm / {angle_limit:g} rad bounds'
-                telemetry.command=dict(phase=phase,errors=errors,failure=self.failure)
+                telemetry.command=dict(phase=phase,errors=errors,failure=self.failure,left_command_finger_joint_m=float(self.last_actions[0][6]*FINGER_OPEN))
                 return ActionChunk(actions=[Action(data=pack(*self.last_actions),meta={'request_stop':True})],control_hz=1/self._dt)
             self.q[i]=q;errors[side]=dict(position=pe,rotation=re,
                                          tracking_position=float(np.linalg.norm(error)),tracking_rotation=float(np.linalg.norm(rotation_error)),
@@ -266,6 +268,7 @@ class SprayDemo(YamScriptedPolicy):
                                left_preload_m=self.left_preload,left_preload_target_m=self.left_preload_target,right_press_speed_m_s=RIGHT_PRESS_SPEED,
                                release_clearance_m=self.release_gap,release_frames=self.release_frames)
         telemetry.command['press_contact']=press_contact
+        telemetry.command['left_command_finger_joint_m']=float(actions[0][6]*FINGER_OPEN)
         if self.release_path is not None:
             telemetry.command.update(release_path_duration_s=self.release_path['duration'],release_deadline_s=self.moves[self.index]['seconds'] if self.index<len(self.moves) and self.moves[self.index]['follow']=='release' else None)
         self.last_actions=[a.copy() for a in actions]

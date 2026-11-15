@@ -2355,3 +2355,25 @@ editing, merge both agents' findings, and commit/push the update with the work.
   No new VM/provider reset or deletion. This is an experimental repair, not proof
   it fixes Xid109. Real-camera stress013 (probe,1000steps/50s) now running before
   another full demo. Source: ~/robotics-batch/spray-pressure-013.
+- R595 real-camera stress013 passed1001 samples/50 s with no Xid; native
+  physical-input and body/joint/mass hashes exactly match camera-free012:
+  681 colliders,21 bodies,20 joints,21 mass prims,7 material prims. This is
+  matching authored physics, not a claim of bit-identical trajectories.
+- Full014 completed1453 samples/72.6 s without renderer failure. First two
+  press/release sequences passed, but third-shot relative grasp rotation
+  reached15.36 degrees (world16.18), triggering the unchanged15-degree stop.
+  Score0.5, coverage75.51%, overspray3.503%, spray3.9 s. Fingers stayed engaged;
+  callbacks contained no contact-point records, so no measured left normal
+  force/centre-of-pressure claim is possible from014. Button force was nearly
+  can-axial, with no right can-body/interarm collision before slip.
+- Astra review14:39:25–14:41:25 UTC recommended one ordinary tighter-grip
+  trial: retain-21 mm during brace/cap, ramp to-18 mm in existing2 s lift and
+  hold while painting/return. Given blocked jaws near-25.64/-26.15 mm, estimated
+  spring loads rise23/26 to38/41 N, below unchanged50 N-per-joint limits. These
+  are PD estimates. Same geometry, material, actuator gains, pressure and guards.
+- Sol implemented this single-factor change; root49 tests pass in3.422 s.
+  Root added native left-can contact-matrix logging to verify actual normals.
+  Full015 now running from ~/robotics-batch/spray-hold-015 with real RGB/sync;
+  first samples confirm left force matrix exists. Controller SHA
+  94d30c52edb646ada71a2d3f3b05306d4ec2b514230cad7584b33baaa21d88ef.
+  No full completion or new completed preview claimed yet.

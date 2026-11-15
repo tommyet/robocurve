@@ -125,6 +125,7 @@ def main():
                 kw['enable_cameras']=not args.no_video
                 original_init(instance,*a,**kw)
                 stem=instance.scene_config.left_contacts.prim_path.rsplit('/.*',1)[0]
+                instance.scene_config.left_contacts.filter_prim_paths_expr=['{ENV_REGEX_NS}/spray_can']
                 instance.scene_config.right_contacts.filter_prim_paths_expr=[
                     '{ENV_REGEX_NS}/spray_can','{ENV_REGEX_NS}/button',
                     *[stem+instance.link_paths[n] for n in ('gripper','tip_left','tip_right')]]
@@ -309,6 +310,11 @@ def main():
             sample['right_contact_net']=array(sensor.data.net_forces_w)[0].tolist()
             if sensor.data.force_matrix_w is not None:
                 sample['right_contact_matrix']=array(sensor.data.force_matrix_w)[0].tolist()
+            left_sensor=self._base.scene['left_contacts']
+            sample['left_contact_bodies']=left_sensor.body_names
+            sample['left_contact_net']=array(left_sensor.data.net_forces_w)[0].tolist()
+            if left_sensor.data.force_matrix_w is not None:
+                sample['left_can_contact_matrix']=array(left_sensor.data.force_matrix_w)[0].tolist()
             self.contact_acc={}
             telemetry.latest=sample
             self.audit.write(json.dumps(sample,allow_nan=False)+'\n');self.audit.flush()
