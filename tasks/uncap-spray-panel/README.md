@@ -153,3 +153,35 @@ the physical block. This setup revision is not yet a validated full demo.
 `--stage press` is an explicitly uncapped diagnostic. It bypasses cap removal
 only to inspect nozzle contacts and is forced to score zero. Completion must
 come from `--stage full`, starting capped and finishing with released parking.
+
+### Recorded-physics video fallback
+
+On the retained instance, native PhysX runs are stable but RTX camera capture
+can fail with driver Xid109. `--no-video --policy demo` therefore records an
+explicitly camera-free diagnostic: measured native body poses, flattened scene,
+calibrated cameras, paint colors and aerosol visualization. It does not return
+images to a model. This mode cannot run Dream and is not native camera footage.
+
+For a **completed, independently audited** capture, `replay_usd.py` can compose
+an offline USD replay from every actual 20 Hz body pose. It does not run physics,
+reconstruct poses with forward kinematics, or fill in missing frames. The default
+requires a measured full score and an audit bound to the trajectory SHA-256.
+`--diagnostic` permits incomplete captures for internal inspection only; the
+completed preview tools refuse them.
+
+```sh
+# Requires Python 3.12 with usd-core 25.11 and the complete capture/source folder.
+python replay_usd.py CAPTURE --out REPLAY --trace-sha256 TRACE_SHA256 \
+  --preview-light-scale .001
+# On macOS with Apple's USD tools; renders all three recorded calibrated views.
+python render_replay_views.py REPLAY
+# Requires OpenCV, NumPy and /opt/homebrew/bin/ffmpeg.
+python render_replay_preview.py CAPTURE REPLAY
+```
+
+The explicit 0.001 light multiplier makes native high-intensity lights readable
+in Storm. Geometry, materials, poses and captured coating updates are preserved;
+photometric equivalence with RTX is not claimed. The composite is labelled
+**scripted physics replay**, shows measured score/coverage, and includes all
+recorded frames through task completion. This preview is distinct from a
+Dream-1 video and does not establish policy performance.

@@ -2377,3 +2377,46 @@ editing, merge both agents' findings, and commit/push the update with the work.
   first samples confirm left force matrix exists. Controller SHA
   94d30c52edb646ada71a2d3f3b05306d4ec2b514230cad7584b33baaa21d88ef.
   No full completion or new completed preview claimed yet.
+- Full015 again hit Xid109 at7.15 s on595.99.02. Driver upgrade is NOT a
+  renderer cure. Native camera-free016/017 are stable. Output-only capture now
+  records all21 actual body actor poses, camera calibration, exact surface
+  display-color updates and mist points, plus flattened source USD and hashes.
+  No actor-pose writes or FK reconstruction are used for replay. Mac's built-in
+  USD Storm renderer successfully rendered exact captured frame1200; native
+  lights need explicit0.001 preview normalization. Such videos must be labelled
+  offline physics replay, not native RTX camera footage. Default export requires
+  score1, no controllerfailure and a trace-SHA-bound independent audit.
+- Native016 reached96.94% coating/4.181% overspray/all4 spray sectors, but old
+  finalhold IK guard stopped111.65 s. Finalhold now freezes previous safe joint
+  commands and waits actual score1 for at most6 s within unchanged120 s limit.
+- Native017 reaches the same coating result but times out117.65 s at score0.75:
+  release108.5 s is supported (can geometry bottom exactly riser top), tilt0.76
+  deg and speed0.0039 m/s. Left-can force becomes exactly0 by108.85 s and stays
+  zero. Can subsequently rocks to13.32 deg/.126 m/s with COM rising about4 mm.
+  Native pose finite-difference speed agrees with native velocity (correlation
+  .9868), so this is real simulation motion, not stale/wrong-shaped velocity.
+  Button lateral constraint error is only1–1.5 micrometres. Independent Astra
+  review15:26:12–15:27:39 UTC and Sol diagnosis agree placement recalibration or
+  longer held placement is not supported. Next: passive uncapped-can rest coupon,
+  baseline vs32/8 can+button solver iterations; keep masses/materials/scorer fixed.
+- Astra read-only replay/export review15:38:40–15:39:40 UTC passed:21 native
+  world-reset owners avoid nested-arm double transforms; wrist calibration is
+  parented to measured gripper; exact20 Hz integer frames/paint changes retained.
+  USD physics schemas remain inert in usdrecord.017's2354 rows are contiguous
+  and correctly diagnostic-only at0.75. Completed composite guard requires
+  native1/no finalcontrollerfailure, trace-bound audit and exact source integrity.
+  Local replay scene has no external asset dependencies. Browser6080 HTTP200.
+- Passive018b baseline and01932/8 each completed241samples/12s, both quiet and
+  held existing rest criteria. Baseline maxspeed0.001029m/s/tilt0.000901deg,
+  delta mechanicalenergy+0.481microJ;32/8 maxspeed0.000578m/s/tilt0.000265deg,
+  deltaenergy-0.00728microJ. Normal0.5s resetsettle already removed authored1deg
+  tilt; neither coupon reproduces post-manipulation017. Do not call this a fix.
+  Readback is live composed USD solver schema, not an unavailable nativeengine
+  getter; installed spawner preserves authored counts when rigid_props=None.
+- Actual physicsdt is1/240s; button authored2200N/m,damping1Ns/m,mass3g
+  (prior summary20 damping was wrong). Isolated naturalfrequency136.29Hz,
+  dampingratio0.1946,1.76samples/cycle. This flags transientaccuracy, not proof
+  implicit PhysX must be unstable. Astra review15:44:46 recommends one full
+  sealed-start32/8 run before more coupons; record native COM6Dvel/inertia to
+  enable faithful released-state reproducer if needed. If still unstable, test
+  timestep1/960 with20Hzcontrol/unchanged physicalparameters and scorer.

@@ -38,7 +38,7 @@ def audit(run):
     summary=json.loads((run/'score-summary.json').read_text())
     if abs(summary['score']-scorer.value)>1e-7:raise ValueError('summary score mismatch')
     if scorer.value==1. and (not detached or not presses):raise ValueError('full score without physical cap/press evidence')
-    return dict(passed=True,samples=len(rows),control_steps=len(rows)-1,
+    return dict(passed=True,trace_sha256=hashlib.sha256((run/'trajectory.jsonl').read_bytes()).hexdigest(),samples=len(rows),control_steps=len(rows)-1,
                 duration=rows[-1]['time'],score=scorer.value,cap_detached=detached,
                 depressed_control_samples=presses,max_planned_ik_error_m=max_ik,
                 max_planned_ik_rotation_rad=max_rot,metrics=scorer.result(),

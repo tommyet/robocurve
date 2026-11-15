@@ -94,7 +94,7 @@ class SprayDemo(YamScriptedPolicy):
         move('can_lower',3.,L=lp(placement,self.hold_grip))
         move('can_release',1.,L=lp(placement,1.))
         move('brace_retreat',2.,L=lp((CAN_PAD[0],CAN_PAD[1]+.12,TOP+.13),1.))
-        move('finish_hold',2.)
+        move('finish_hold',6.)
         if self.press_only:self.moves=self.moves[:3]+self.moves[11:]
 
     def next(self,now):
@@ -158,6 +158,10 @@ class SprayDemo(YamScriptedPolicy):
         if self.index<len(self.moves):
             step=self.moves[self.index];elapsed=now-self.t0
             finished=elapsed>=step['seconds']
+            if step['label']=='finish_hold':
+                finished=s['metrics']['score']==1.
+                if elapsed>=step['seconds'] and not finished:
+                    self.failure=self.failure or 'final measured parking conditions did not settle before hold deadline'
             if step['follow']=='release':
                 start,rotation,axis=self.release_state;hand=s['hands'][1]
                 self.release_gap=release_clearance(hand['tcp'],hand['rotation'],PRESS_FACE,hand['finger_joints'][0],s['button'],np.array(s['can_rotation'])[:,2],axis)
@@ -181,6 +185,13 @@ class SprayDemo(YamScriptedPolicy):
             if check=='coat' and s['metrics']['coverage']<.9:self.failure='coverage below 90%'
             if not self.failure:self.next(now)
         phase='done' if self.index>=len(self.moves) else self.moves[self.index]['label']
+        if not self.failure and phase in ('finish_hold','done'):
+            # Both hands have already retreated. Keep the previous valid motor
+            # targets while the free can settles; do not wind up Cartesian IK
+            # around an intentionally stationary, already-clear retreat pose.
+            telemetry.command=dict(phase=phase,errors={},failure=None,holding_final_joint_command=True,
+                                   left_command_finger_joint_m=float(self.last_actions[0][6]*FINGER_OPEN))
+            return ActionChunk(actions=[Action(data=pack(*self.last_actions),meta={'request_stop':True} if phase=='done' else {})],control_hz=1/self._dt)
         self.left_preload=ramp_scalar(self.left_preload,self.left_preload_target,LEFT_PRELOAD_SPEED,self._dt)
         if not self.failure and self.index<len(self.moves):
             step=self.moves[self.index];f=ik.smoothstep(min(1.,(now-self.t0+self._dt)/step['seconds']))

@@ -1,19 +1,21 @@
 {
-  "status": "stronger_ordinary_grasp_native_trial_in_progress",
+  "status": "full_sealed_start_32_8_solver_trial020_in_progress",
   "checked_date": "2026-11-15",
   "local_scorer_tests": {
-    "passed": 49
+    "main_suite_tests": 61,
+    "main_suite_skipped_pxr": 1,
+    "separate_usd_tests_passed": 5
   },
   "native_runtime_tested": true,
-  "scripted_demo_score": 0.5,
+  "scripted_demo_score": 0.75,
   "dream_score": null,
   "media": null,
   "gpu_started_for_this_task": true,
   "remaining": [
-    "Stabilize physical can grasp and release; prevent rolling and stop on loss of pose",
-    "Complete >=90% coverage with <=15% overspray and released upright parking",
-    "Audit and visually review a complete capped-start successful run",
-    "Publish one completed composite preview in the batch video-only folder",
+    "Resolve passive support numerical instability without changing scorer/materials/masses",
+    "Demonstrate released upright parking with native full score1",
+    "Audit and visually review complete capped-start run",
+    "Publish one labelled completed composite preview in batch folder",
     "Dream run and broader force/material calibration remain separate submission work"
   ],
   "diagnostic_probe": {
@@ -127,11 +129,58 @@
       "controller_failure": "can grasp relative angle exceeded15degrees duringthirdshot",
       "renderer_crash": false,
       "complete": false
+    },
+    "spray-full-015": {
+      "complete": false,
+      "renderer_failure": "Xid109 at7.15s on595.99.02; driver upgrade not cure"
+    },
+    "spray-state-016": {
+      "score": 0.75,
+      "duration_s": 111.65,
+      "samples": 2234,
+      "coverage": 0.9693877551020408,
+      "overspray": 0.04181,
+      "spray_seconds": 5.6,
+      "all_four_press_release_sequences_passed": true,
+      "complete": false,
+      "native_rtx_capture": false,
+      "controller_failure": "old finalhold IK guard"
+    },
+    "spray-state-017": {
+      "score": 0.75,
+      "duration_s": 117.65,
+      "samples": 2354,
+      "coverage": 0.9693877551020408,
+      "overspray": 0.04181,
+      "spray_seconds": 5.6,
+      "all_four_press_release_sequences_passed": true,
+      "complete": false,
+      "native_rtx_capture": false,
+      "controller_failure": "passive can rocking finalhold timeout",
+      "return_diagnosis": "At108.5s upright0.76deg/speed.0039m/s; exactzero leftcontact after108.85. Passive support motion grows to13.32deg/.126m/s; poseFD confirms actualmotion."
+    },
+    "passive-rest-018b-019": {
+      "diagnostic": true,
+      "both_stable_after_reset": true,
+      "reproduces_post_manipulation_instability": false,
+      "physics_dt_s": 0.004166666666666667,
+      "control_dt_s": 0.05
+    },
+    "spray-state-020": {
+      "complete": false,
+      "in_progress": true,
+      "capped_start": true,
+      "can_button_solver_iterations": [
+        32,
+        8
+      ],
+      "native_dynamics_telemetry": true,
+      "controller_unchanged_from_017": true
     }
   },
   "native_latest_prepared_frame_tested": true,
   "compute_state": {
-    "yam-eval-launchable-cb0da2": "Existing VM; loaded595.99.02; renderer stress50s and full01472.6s completed without Xid; current full015 running"
+    "yam-eval-launchable-cb0da2": "ExistingVM only, directSSH working.595.99.02 RTX stillunreliable, state-only PhysXstable. Passive solverconvergence diagnostic next."
   },
   "prepared_contact_ramp": {
     "left_preload_speed_m_s": 0.005,
@@ -145,7 +194,7 @@
     "button_released_m": 0.0005,
     "minimum_actual_face_clearance_m": 0.02,
     "release_consecutive_frames": 5,
-    "native_result": null
+    "native_result": "All4 actualrelease gates passed016/017."
   },
   "command_space_release_candidate": {
     "measured_aimed_dwell_s": 0.8,
@@ -155,7 +204,7 @@
     "first_failure_sticky": true,
     "actual_clearance_gates_unchanged": true,
     "episode_limit_s": 120,
-    "native_result": null
+    "native_result": "All4 passes016/017 within120s; final physicalparkingstillfails."
   },
   "stronger_grasp_candidate": {
     "brace_and_cap_target_m": -0.021,
@@ -164,6 +213,6 @@
     "native_joint_effort_limit_N_each": 50,
     "physical_attributes_unchanged": true,
     "native_left_can_force_logging_added": true,
-    "native_result": null
+    "native_result": "All4 loadedpress/release sequences passed016/017; finishing supportmotion unresolved."
   }
 }

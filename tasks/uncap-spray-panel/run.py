@@ -23,6 +23,93 @@ def joint_observation_state(scene,ids):
     return np.concatenate(per_arm).astype(np.float64)
 
 
+def native_body_owners(scene,link_paths):
+    """Map native rigid-link indices to the actual USD owners, not FK markers."""
+    owners={}
+    for side,prim in (('left','LeftArm'),('right','RightArm')):
+        entity=side+'_robot';names=list(scene[entity].body_names)
+        if len(names)!=9:raise ValueError('expected nine native rigid links for '+entity)
+        for index,name in enumerate(names):
+            path='/World/envs/env_0/'+prim+link_paths[name]
+            if path in owners:raise ValueError('duplicate native replay body owner '+path)
+            owners[path]=dict(kind='robot',entity=entity,body_name=name,body_index=index,
+                              source='ArticulationData.body_link_pose_w')
+    for name in ('spray_can','cap','button'):
+        owners['/World/envs/env_0/'+name]=dict(kind='object',entity=name,source='arena_world.get_pose_w')
+    if len(owners)!=21:raise ValueError('native replay requires exactly 21 rigid body owners')
+    for path,owner in owners.items():
+        parents=[candidate for candidate in owners if path.startswith(candidate+'/')]
+        owner['parent_body_owner']=max(parents,key=len) if parents else None
+    return owners
+
+
+def native_body_world_poses(scene,world,owners):
+    """Read all 21 actual actor-frame poses in [x,y,z,qx,qy,qz,qw] order."""
+    import numpy as np
+    def array(value):
+        value=value.torch if hasattr(value,'torch') else value
+        return value.detach().cpu().numpy()
+    robot_poses={};result={}
+    for path,owner in owners.items():
+        entity=owner['entity']
+        if owner['kind']=='robot':
+            if entity not in robot_poses:
+                robot_poses[entity]=array(scene[entity].data.body_link_pose_w)
+                if robot_poses[entity].shape!=(1,9,7):raise ValueError('invalid native body_link_pose_w shape for '+entity)
+            if scene[entity].body_names[owner['body_index']]!=owner['body_name']:raise ValueError('native replay body ordering changed')
+            pose=np.asarray(robot_poses[entity][0,owner['body_index']],dtype=float)
+        else:pose=np.asarray(array(world.get_pose_w(entity))[0],dtype=float)
+        if pose.shape!=(7,) or not np.isfinite(pose).all() or abs(np.linalg.norm(pose[3:])-1.)>.001:
+            raise ValueError('invalid actual native replay pose for '+path)
+        result[path]=pose.tolist()
+    if len(result)!=21:raise ValueError('incomplete native replay pose row')
+    return result
+
+
+def replay_camera_metadata(rig,owners,observation_width,observation_height):
+    """Pinned optical calibration; wrist parents use native gripper poses."""
+    from dataclasses import asdict
+    from yam_arena.constants import CAM_RENDER_WIDTH,CAM_RENDER_HEIGHT
+    cameras={'top_cam':dict(parent_body_owner=None,pose_space='world',**asdict(rig.top_cam))}
+    for side in ('left','right'):
+        parent=next(path for path,owner in owners.items() if owner.get('entity')==side+'_robot' and owner.get('body_name')=='gripper')
+        cameras[side+'_cam']=dict(parent_body_owner=parent,pose_space='parent_body_actor_frame',**asdict(rig.wrist_cams[side]))
+    return dict(source='pinned yam_arena Rig optical calibration, not fabricated camera observations',quaternion_order='xyzw',
+                native_render_width=CAM_RENDER_WIDTH,native_render_height=CAM_RENDER_HEIGHT,
+                policy_observation_width=observation_width,policy_observation_height=observation_height,cameras=cameras)
+
+
+def export_replay_scene(stage,path):
+    """Flatten into an output layer without changing the live stage."""
+    path=Path(path);layer=stage.Flatten()
+    if not layer.Export(str(path)):raise RuntimeError('composed replay scene export failed')
+    dependencies=getattr(layer,'GetExternalAssetDependencies',None)
+    return dict(scene_file=path.name,scene_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+                external_asset_dependencies=sorted(str(item) for item in dependencies()) if dependencies else None)
+
+
+def passive_rest_initial():
+    """One-degree, already-supported initial layout, authored before spawn."""
+    import math
+    import numpy as np
+    angle=math.radians(1.);c,s=math.cos(angle),math.sin(angle)
+    rotation=np.array(((1.,0.,0.),(0.,c,-s),(0.,s,c)))
+    center=np.array((CAN_START[0],CAN_START[1],TOP+RISER_HEIGHT+.070*c+.026*s))
+    quat=(math.sin(angle/2),0.,0.,math.cos(angle/2))
+    return {'spray_can':(tuple(map(float,center)),quat),'button':(tuple(map(float,center+rotation@np.array((0.,0.,.077)))),quat),
+            'cap':((CAP_PAD[0],CAP_PAD[1],TOP+.019),(0.,0.,0.,1.))}
+
+
+def passive_body_energy(mass,inertia,actor_rotation,com_pose,com_velocity,gravity):
+    """Native inertia is at COM, column-major, expressed in actor axes."""
+    import numpy as np
+    tensor=np.asarray(inertia,dtype=float).reshape(3,3,order='F')
+    velocity=np.asarray(com_velocity,dtype=float);omega=np.asarray(actor_rotation).T@velocity[3:]
+    return {'linear_kinetic_J':float(.5*mass*(velocity[:3]@velocity[:3])),
+            'rotational_kinetic_J':float(.5*omega@tensor@omega),
+            'gravitational_J':float(-mass*np.asarray(gravity)@np.asarray(com_pose)[:3])}
+
+
 def physics_manifest(stage,assets,urdf,physics_dt,control_dt):
     """Camera-independent authored physics and collision-input comparison."""
     import xml.etree.ElementTree as ET
@@ -58,7 +145,9 @@ def physics_manifest(stage,assets,urdf,physics_dt,control_dt):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--policy',choices=['probe','capprobe','demo','dream'],default='probe')
+    parser.add_argument('--policy',choices=['probe','capprobe','demo','dream','rest-probe'],default='probe')
+    parser.add_argument('--body-solver-32-8',action='store_true',help='Explicit can/button PhysX solver precision; all other physics unchanged')
+    parser.add_argument('--rest-solver',choices=['baseline','32-8'],default='baseline',help='Unscored passive-rest coupon only')
     parser.add_argument('--stage',choices=['cap','press','full'],default='full')
     parser.add_argument('--max-steps',type=int,default=2400)
     parser.add_argument('--render-sync',action='store_true',help='Use real RGB cameras with FXAA and synchronous rendering for the device-loss mitigation trial')
@@ -66,7 +155,9 @@ def main():
     parser.add_argument('--log-dir',type=Path,required=True)
     args=parser.parse_args()
     if not 1 <= args.max_steps <= 2400:parser.error('max-steps must be 1..2400')
-    if args.no_video and args.policy!='demo':parser.error('--no-video is allowed only with --policy demo; image-based policies require cameras')
+    if args.policy=='rest-probe':args.stage='press';args.no_video=True
+    elif args.rest_solver!='baseline':parser.error('--rest-solver is allowed only with --policy rest-probe')
+    if args.no_video and args.policy not in ('demo','rest-probe'):parser.error('--no-video is allowed only with --policy demo/rest-probe; image-based policies require cameras')
     if args.no_video and args.render_sync:parser.error('--no-video cannot be combined with --render-sync')
     out=args.log_dir.expanduser().resolve();out.mkdir(parents=True,exist_ok=False)
     (out/'source').mkdir()
@@ -134,6 +225,11 @@ def main():
             from mechanics import asset,stand_asset
             assets={name:asset(out/(name+'.usda'),name) for name in ('spray_can','cap','button')}
             assets['stand']=stand_asset(out/'stand.usda')
+            if args.body_solver_32_8 or (args.policy=='rest-probe' and args.rest_solver=='32-8'):
+                from pxr import Usd,PhysxSchema
+                for name in ('spray_can','button'):
+                    stage=Usd.Stage.Open(str(assets[name]));api=PhysxSchema.PhysxRigidBodyAPI.Apply(stage.GetDefaultPrim())
+                    api.CreateSolverPositionIterationCountAttr(32);api.CreateSolverVelocityIterationCountAttr(8);stage.GetRootLayer().Save()
             self.native_assets=assets
             original=sc.task_object
             def make(spec):
@@ -152,9 +248,11 @@ def main():
                     cfg.func=spawn
                 position=spec.pos
                 if spec.name=='cap' and args.stage=='press':position=(CAP_PAD[0],CAP_PAD[1],TOP+.019)
+                orientation=(0.,0.,0.,1.)
+                if args.policy=='rest-probe' and spec.name in passive_rest_initial():position,orientation=passive_rest_initial()[spec.name]
                 return sc.Object(name=spec.name,object_type=sc.ObjectType.BASE if spec.name=='stand' else sc.ObjectType.RIGID,
                     spawner_cfg=cfg,
-                    initial_pose=sc.Pose(position_xyz=tuple(position),rotation_xyzw=(0.,0.,0.,1.)))
+                    initial_pose=sc.Pose(position_xyz=tuple(position),rotation_xyzw=orientation))
             sc.task_object=make
             try:super()._ensure_sim(goal)
             finally:
@@ -234,12 +332,42 @@ def main():
             # _ensure_sim spawns both native joints before reset settles.
             self._ensure_sim(None)
             self._ensure_joints()
+            from pxr import PhysxSchema,UsdPhysics
+            readback={'readback_scope':'live composed USD PhysxRigidBodyAPI and DriveAPI attributes; not native engine solver getter'}
+            for name in ('spray_can','button'):
+                prim=self.stage.GetPrimAtPath(self.paths[name]);api=PhysxSchema.PhysxRigidBodyAPI(prim)
+                readback[name]={'position_iterations':api.GetSolverPositionIterationCountAttr().Get(),
+                                'velocity_iterations':api.GetSolverVelocityIterationCountAttr().Get()}
+            drive=UsdPhysics.DriveAPI.Get(self.stage.GetPrimAtPath(self.paths['spray_can']+'/button_slide'),'linear')
+            readback['button_drive']={'stiffness_N_m':drive.GetStiffnessAttr().Get(),'damping_N_s_m':drive.GetDampingAttr().Get()}
+            self.rest_drive_stiffness=float(readback['button_drive']['stiffness_N_m'])
+            if (args.body_solver_32_8 or args.rest_solver=='32-8') and any(readback[name]!={'position_iterations':32,'velocity_iterations':8} for name in ('spray_can','button')):
+                raise RuntimeError('passive-rest solver readback mismatch')
+            (out/'body-physics-readback.json').write_text(json.dumps(readback,indent=2)+'\n')
+            self.rest_samples=[];self.rest_hold=0.;self.rest_last_t=None;self.rest_initial_energy=None
             from yam_arena import YAM_URDF
             physical=physics_manifest(self.stage,self.native_assets,YAM_URDF,self._base.cfg.sim.dt,self._base.step_dt)
             (out/'physics-manifest.json').write_text(json.dumps(physical,indent=2)+'\n')
             self.detached=args.stage=='press'
             self.tracker=SprayScorer()
             observation=super().reset(scene,seed=seed)
+            # Export composed appearance once after settling. This writes a
+            # separate layer only; it never edits the live physics stage.
+            from yam_arena.robot import asset_link_paths
+            self.replay_owners=native_body_owners(self._base.scene,asset_link_paths())
+            for path in self.replay_owners:
+                if not self.stage.GetPrimAtPath(path):raise RuntimeError('missing native replay owner '+path)
+            scene_export=export_replay_scene(self.stage,out/'replay-scene.usdc')
+            cameras=replay_camera_metadata(self.rig,self.replay_owners,self.cam_width,self.cam_height)
+            replay=dict(**scene_export,
+                        pose_order=['x','y','z','qx','qy','qz','qw'],quaternion_order='xyzw',pose_space='simulation_world',
+                        native_pose_source='ArticulationData.body_link_pose_w actor frames and arena_world.get_pose_w; no URDF FK reconstruction',
+                        capture_hz=20.,frame_zero='post-reset-settle at simulation t=0',interpolated=False,
+                        owners=self.replay_owners,cameras=cameras,
+                        surface_cells=[dict(index=i,prim_path=str(obj.GetPrim().GetPath()),target=target) for i,(obj,target) in enumerate(self.tiles)],
+                        appearance_updates='Per-row exact native displayColor writes, scorer dose and mist point positions; replay only, not real camera capture',
+                        source_sha256=json.loads((out/'source-sha256.json').read_text()),state_only=args.no_video,media_eligible=False)
+            (out/'replay-manifest.json').write_text(json.dumps(replay,indent=2)+'\n')
             self.task.module._tracker=self.tracker
             self.task.module._diagnostic=args.stage=='press'
             self.contact_acc={}
@@ -258,7 +386,7 @@ def main():
                 speed=float(np.linalg.norm(array(world.get_root_linear_velocity_w(name))[0]))
                 return pose[:3],quat_xyzw_to_matrix(pose[3:]),speed
             can,rot,can_speed=state('spray_can')
-            cap,_,cap_speed=state('cap');button,_,_=state('button')
+            cap,cap_rotation,cap_speed=state('cap');button,button_rotation,_=state('button')
             cap_local=rot.T@(cap-can);button_local=rot.T@(button-can)
             if not self.detached and cap_local[2]-.087 >= .004:
                 self.stage.RemovePrim(self.paths['spray_can']+'/cap_guide')
@@ -278,8 +406,30 @@ def main():
                         upright=float(rot[2,2]),can_speed=can_speed,cap_speed=cap_speed,
                         hand_tcp=[t.tolist() for t in hands],
                         hands=hand_states,can_rotation=rot.tolist(),can_axis=rot[:,2].tolist(),button=button.tolist(),
+                        cap_rotation=cap_rotation.tolist(),button_rotation=button_rotation.tolist(),
+                        native_pose_quaternion_order='xyzw',native_body_world_poses=native_body_world_poses(self._base.scene,world,self.replay_owners),
                         hands_clear=all(min(np.linalg.norm(t-can),np.linalg.norm(t-cap))>.07 for t in hands))
             sample['metrics']=self.tracker.update(sample)
+            gravity=getattr(self._base.cfg.sim,'gravity',(0.,0.,-9.81));bodies={};energy=0.
+            for name,rotation in (('spray_can',rot),('button',button_rotation)):
+                data=self._base.scene[name].data
+                mass=float(array(data.body_mass).reshape(-1)[0]);inertia=array(data.body_inertia).reshape(-1).tolist()
+                com_pose=array(data.root_com_pose_w)[0];velocity=array(data.root_com_vel_w)[0]
+                kinetic=passive_body_energy(mass,inertia,rotation,com_pose,velocity,gravity)
+                energy+=sum(kinetic.values())
+                bodies[name]=dict(mass_kg=mass,inertia_actor_frame_column_major=inertia,com_pose_xyzw=com_pose.tolist(),
+                                  com_linear_velocity_w=velocity[:3].tolist(),angular_velocity_w=velocity[3:].tolist(),**kinetic)
+            sample['native_body_dynamics']=bodies
+            spring=.5*self.rest_drive_stiffness*sample['button_travel']**2;energy+=spring
+            if self.rest_initial_energy is None:self.rest_initial_energy=energy
+            dt=0. if self.rest_last_t is None else self._t-self.rest_last_t;self.rest_last_t=self._t
+            self.rest_hold=self.rest_hold+dt if can_speed<.02 and sample['upright']>=np.cos(np.radians(10.)) else 0.
+            bottom=can[2]-.005*rot[2,2]-.065*abs(rot[2,2])-.026*np.sqrt(max(0.,1-rot[2,2]**2))
+            rest=dict(bodies=bodies,tilt_deg=float(np.degrees(np.arccos(np.clip(rot[2,2],-1.,1.)))),
+                      can_body_support_gap_m=float(bottom-(TOP+RISER_HEIGHT)),existing_criterion_hold_s=float(self.rest_hold),
+                      total_mechanical_energy_J=energy,energy_change_from_first_sample_J=energy-self.rest_initial_energy,button_spring_energy_J=spring)
+            if args.policy=='rest-probe':
+                self.rest_samples.append(dict(time=float(self._t),can_speed=can_speed,**rest));sample['passive_rest']=rest
             from pxr import Gf
             # Appearance only: a sparse animated aerosol visualization, gated
             # by measured piston travel and remaining spray supply. No forces,
@@ -296,12 +446,17 @@ def main():
                     points.append(Gf.Vec3f(*position))
             self.mist.GetPointsAttr().Set(points)
             self.mist.GetWidthsAttr().Set([.0015]*len(points))
+            sample['spray_mist_points']=[[float(v) for v in point] for point in points]
+            sample['spray_surface_dose']=[float(value) for value in self.tracker.dose]
+            sample['spray_surface_updates']=[]
             for i,(tile,target) in enumerate(self.tiles):
                 coat=min(1.,self.tracker.dose[i]/COAT_DOSE)
                 if abs(coat-self.coat_cache[i])<1e-5:continue
                 self.coat_cache[i]=coat
                 base=(.95,.95,.95) if target else BACKING_COLOR
-                tile.GetDisplayColorAttr().Set([Gf.Vec3f(*[(1-coat)*v+coat*b for v,b in zip(base,(.08,.3,.85))])])
+                color=Gf.Vec3f(*[(1-coat)*v+coat*b for v,b in zip(base,(.08,.3,.85))])
+                tile.GetDisplayColorAttr().Set([color])
+                sample['spray_surface_updates'].append(dict(index=i,color=[float(v) for v in color]))
             sample['controller']=telemetry.command
             sample['contacts']=self.contact_acc
             sample['contact_errors']=self.contact_errors
@@ -327,11 +482,18 @@ def main():
                 if args.stage=='press':summary=dict(score=0.,diagnostic=True,milestones=summary)
                 if args.no_video:summary.update(diagnostic=True,state_only=True,media_eligible=False)
                 (out/'score-summary.json').write_text(json.dumps(summary,indent=2))
+                if args.policy=='rest-probe' and self.rest_samples:
+                    samples=self.rest_samples;final=samples[-1]
+                    result=dict(diagnostic=True,task_score=0.,solver=args.rest_solver,samples=len(samples),duration_s=final['time'],
+                                final=final,max_tilt_deg=max(s['tilt_deg'] for s in samples),max_speed_m_s=max(s['can_speed'] for s in samples),
+                                existing_rest_criterion_held_final_1s=final['existing_criterion_hold_s']>=1.,
+                                scope='passive can/button native state and rigid-body energy; no forces or actor-pose writes after reset; contact energy not represented')
+                    (out/'passive-rest-summary.json').write_text(json.dumps(result,indent=2)+'\n')
             super().close()
 
     register('embodiment','uncap_spray_prototype')(SprayEmbodiment)
     policy=args.policy
-    if policy=='probe':
+    if policy in ('probe','rest-probe'):
         from dataclasses import replace
         from yam_arena.scripted import YamScriptedPolicy
         from yam_arena.constants import READY
@@ -353,7 +515,7 @@ def main():
         policy=register_policy(cap_only=args.stage=='cap',press_only=args.stage=='press')
     diagnostic=args.no_video or args.policy in ('probe','capprobe') or (args.policy=='demo' and args.stage!='full')
     (out/'mode.json').write_text(json.dumps(dict(policy=args.policy,stage=args.stage,diagnostic=diagnostic,render_sync=args.render_sync,
-                                               state_only=args.no_video,media_eligible=not diagnostic)))
+                                               state_only=args.no_video,media_eligible=not diagnostic,body_solver_32_8=args.body_solver_32_8,passive_rest=args.policy=='rest-probe',rest_solver=args.rest_solver if args.policy=='rest-probe' else None)))
     return cli(['run','--embodiment','uncap_spray_prototype','--policy',policy,
                 '-E',f'task={Path(__file__).parent / "task.py"}','-E','object_jitter=0',
                 '-E','control_hz=20','-E','cam_width=320','-E','cam_height=176',

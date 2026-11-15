@@ -145,7 +145,7 @@ class PolicyGuardTests(unittest.TestCase):
         for side in ('left','right'):
             p,r=ik.tcp_pose(np.array(READY),(0,.305 if side=='left' else -.305,.75))
             hands.append(dict(tcp=p.tolist(),rotation=r.tolist(),joints=list(READY),opening=1.,finger_joints=[-.04695]*2))
-        return dict(time=0.,hands=hands,can=list(CAN_START),cap=list(CAP_START),can_rotation=np.eye(3).tolist(),
+        return dict(time=0.,hands=hands,can=list(CAN_START),cap=list(CAP_START),can_rotation=np.eye(3).tolist(),metrics=dict(score=0.),
                     button=[CAN_START[0],CAN_START[1],CAN_START[2]+.077],button_travel=0.,
                     nozzle=[.27,-.035,TARGET_CENTER[1]-.035],axis=[1.,0.,0.],right_contact_matrix=np.zeros((9,5,3)).tolist())
 
@@ -223,6 +223,30 @@ class PolicyGuardTests(unittest.TestCase):
             action=policy.act(SimpleNamespace(state_time=0.))
         self.assertIn('IK exceeds 5 mm',policy.failure)
         self.assertTrue(action.actions[0].meta['request_stop']);np.testing.assert_array_equal(action.actions[0].data,previous)
+
+    def test_final_settle_holds_valid_commands_without_replanning_retreat_ik(self):
+        sample=self.sample();sample['metrics']['score']=.75;self.module.telemetry.latest=sample
+        policy=self.module.SprayDemo();policy.initialize()
+        policy.index=next(i for i,m in enumerate(policy.moves) if m['label']=='finish_hold')-1;policy.next(0.)
+        previous=np.concatenate(policy.last_actions);bias=[b.copy() for b in policy.position_bias]
+        with patch.object(self.module.ik,'solve',side_effect=AssertionError('settling must retain previous valid joints')):
+            for now in (0.,1.,2.5):
+                sample['time']=now;action=policy.act(SimpleNamespace(state_time=now))
+                np.testing.assert_array_equal(action.actions[0].data,previous)
+                self.assertFalse(action.actions[0].meta.get('request_stop',False))
+            sample['metrics']['score']=1.;sample['time']=2.55
+            action=policy.act(SimpleNamespace(state_time=2.55))
+        self.assertTrue(action.actions[0].meta['request_stop']);self.assertIsNone(policy.failure)
+        for actual,expected in zip(policy.position_bias,bias):np.testing.assert_array_equal(actual,expected)
+
+    def test_final_settle_timeout_does_not_claim_completion(self):
+        sample=self.sample();sample['metrics']['score']=.75;self.module.telemetry.latest=sample
+        policy=self.module.SprayDemo();policy.initialize()
+        policy.index=next(i for i,m in enumerate(policy.moves) if m['label']=='finish_hold')-1;policy.next(0.)
+        sample['time']=6.
+        with patch.object(self.module.ik,'solve',side_effect=AssertionError('timeout must stop')):
+            action=policy.act(SimpleNamespace(state_time=6.))
+        self.assertIn('parking conditions',policy.failure);self.assertTrue(action.actions[0].meta['request_stop'])
 
     def test_release_entry_preserves_motor_command_without_larger_integral(self):
         sample=self.sample();self.module.telemetry.latest=sample
