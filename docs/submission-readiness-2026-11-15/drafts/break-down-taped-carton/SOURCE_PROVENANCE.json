@@ -1,0 +1,42 @@
+{
+  "metadata_only": true,
+  "not_submission_ready": true,
+  "source_worktree": "/private/tmp/robocurve-cartons",
+  "source_commit": "663da39d042cfadc46cd952d04a47ecc5125f129",
+  "source_branch": "codex/carton-breakdown-packing",
+  "source_task_dirty_status": [],
+  "source_hashes": {
+    "check_material_geometry.py": "62a0aecd7d889a4c3b28ce5ccda8b8e4c74639e603ba0219e55c721f589c35d0",
+    "task.py": "eff5b8b9e564ffdd037fb263eb6f792bd8831d8dc8947c4a280ddfcce75eb3c9",
+    "run.py": "6385e496a005d763b3d60e6c1264003b73949cf55275a323c83434cfb3ff0643",
+    "crease.py": "b10e0175fa7cd4e3f4d53e19cf32023a3ddc2b7eb242149a2c83fb8be53ccb33",
+    "test_feedback_geometry.py": "a5b682a2de99840b680328ec36fce303afaa2f66317c04c7141ae4e066b96c2f",
+    "config.py": "61e89314e16ff500893cd0b569e002f4b5da62cf2b2e3f46803a4519542548f8",
+    "scoring.py": "10600c84958bfe25af3cbe8ae18525453c551dbe85cc51415778b5cffdfdf58d",
+    "scene.py": "9ec9aa6f20455b76f6f3ff044377ab74e9bf21d9eeaf32f3fe97b63d4e27a478",
+    "native.py": "00cbf8c27d3ba9d85357c8252bdbc4d35925b900ce581ddea079344692082b54",
+    "test_scoring.py": "33906d50289ea7bd7c9f05c1278bdfe5cae1a7ddd7fb2f1b1e3964c83d8dd981",
+    "review.py": "80d9044fc7ee67d5a12bb198611d2351f2cf6b315a107e63b64a23237ed8dd39",
+    "model.py": "b979a306381ce0cbfa89e75e61a981e9098215d9aac3177c6f86f005a236ba50",
+    "README.md": "1a51e06ba217c531e913b0243e724a0b72a3c84006040c52b186b5ee5242e3ac",
+    "test_cut_feedback.py": "74e09dcd3b74890833796563231a92d7cde7c837164238f178040d096488dbf0",
+    "capture.py": "1db2d047cfec374069d2a640f2cd6f11882fd74fa9ab1b28f63f0cc37206742a",
+    "test_crease.py": "fb554c44f0020f61e9f490770d2d1cf9e1362e72262b79e64b0e25d639276d41",
+    ".gitignore": "6feaded4e28ea86e001a6751b4e3d960e8b7c31b9616ff9936b79297086e809b",
+    "feedback_geometry.py": "c69971f54e37b2b1224812782ee970289dbd11d39b8f3ab2356f5453964d561a",
+    "VALIDATION.json": "12696554a01f1f09c14a716977c5ea29e3e3cd46da19310c40a5cf7338ae1795",
+    "test_cut_controller.py": "6fa20582c5f1caf5a6360d4d882220bca2adbfe3fe102de9786a3543a3072e6f",
+    "test_capture.py": "2f0882beb50b8cbad485e766e01de503c3396b2a6b1777786e511058cb550145",
+    "robot.py": "ddb602ddb179a6215d886c5242b5d3148612a2a654098ba9acbde87e18f8b225",
+    "test_scene.py": "5a76e70b1dc0b96bd9d9ac985c47d81fd862cd77c864d59a9833e750bec90999",
+    "collapse_geometry.py": "c7ffc2cb7d25a5f70bf4a6ed47eff07b2db10bfe48136293d5dbd5fca7ffd5c8"
+  },
+  "conservative_metadata_targets": {
+    "fidelity": 500,
+    "scores": 300
+  },
+  "target_limit_source": "Prior taskboard errors reported by parent; not independently currentAPIvalidated",
+  "actual_model_score": null,
+  "media": null,
+  "source_task_modified": false
+}

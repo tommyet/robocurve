@@ -1,0 +1,12 @@
+{
+  "title": "Dry all layers of long hair with a handheld dryer",
+  "category": "Societal relatability",
+  "instruction": "Keep the mannequin head fixed. Pick up and operate the dryer, use the other hand to separate or lift locks as needed, dry every side and inner layer without overheating, then switch off, park the dryer and release both hands.",
+  "setup": "World metres,tablez=0.7475. Head at(0.43,0,1.045)/identity,65mm scalp radius,600g head+50g fixed collision skin,on ordinary110x110x120mm stand with WORLD FixedJoint.12locks×5passive50mm capsule segments,radius7mm,total32g drymass+6.4g water,240thermal surfacepatches;rest geometry generated inconfig.py.480gdryer root(0.23,0,0.9575),58mm motor/36mm nozzle/ordinary85mmhandle,3g4mm-travel slider,openUholder;180x140x2mm pad and580x600x2mm mat. Onlyarms/dryer/hairmove; no headswivel or grasp handles.",
+  "scoring": "0.25:actual measured powered airflow removes water.0.50:≥50% surfacepatches dry;0.75:≥90%dry.1.00:everypatch has≤10% originalwater,realpowerOFF,dryerparked/speed<20mm/s,hands clear for1s. Temperature>50C,root/strand separation>5mm,drop>30mm belowtable,missing/nonfinite samples invalidate. Head translation>2mm or rotation>1deg fromdeclaredHEAD/identity,or missing/nonfinite headpose, invalidates evenpartialcredit. Patches dry from dose/energy/occlusion,never controllerphase.",
+  "run_limit": "DRAFT:1,600controls/80s currently bounds only power/pickup diagnostic; full all-patch drying allowance is not set.",
+  "reset_notes": "Fresh native reset to the declared layout and original material state; do not restore manipulated poses or carry score/coverage between attempts.",
+  "fidelity": "Coarse12articulatedlocks/60passiveDOFs,not fibre CFD.45C source/800W cap,energy-limited moisture and geometric capsule/scalp occlusion are uncalibrated. Head is physically world-fixed; CPU/USD42tests pass,nativepending. Two-well4mm sliderdetent is sampled480Hz/native-drive approximation; native latency/retention unproved. Historical swivelhead013 is outdated and not fixedhead proof.",
+  "scores": "Genuine model attempt:pending. Historical swivelhead power013:0.0,no drying,ONretentionfailed. Fixedhead revision and full drying demo/media:pending.",
+  "media": null
+}

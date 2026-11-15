@@ -1,0 +1,12 @@
+{
+  "title": "Release and move a crowded Ethernet plug",
+  "category": "Other",
+  "instruction": "Press the orange cable plug clip before withdrawing it from the marked lower port. Seat and latch it in the marked empty upper port, release both hands and leave the six other cables connected.",
+  "setup": "World metres,tablez=0.7475. Fixed2x4RJ45-like panel housing65.91x27.30x31.23mm nearx0.413;horizontalpitch16.26mm,provisionalverticalpitch13.72mm. Plugrootsx0.403,y=(col−1.5)×.01626,z=.95+row×.01372. Seven connected8gplugs with300mg clips;sourceport0 loweroutsidecolumn,target4 emptyabove,six others occupied. Eachcable12passive16mm segments,radius2.5mm,1g/segment,restcurvesfromconfig.py;24x12x8mm shell withordinaryboot,2.4mm springcliptravel. Internalguidechannels:26mm long,width2.5mm,y±4.75mm,z4.3..6.8mm. OriginalYAMgrippers,580x600x2mm mat; no enlargedpitch/handles.",
+  "scoring": "0.25:measuredclipdepression≥1.8mm while sourceinsertion>6mm,then sourceinsertion<−2mm.0.50:above and targetinsertion>8mm,lateralerror<1mm,axisangle<5deg,cliptravel<0.3mm,actualhookretained.0.75:seated,hands genuinelyclear,speed<10mm/s for1s;1.00:same2s. Cliptravel>2.6mm,plugcentrebelowtable−20mm,neighbourwithdrawal>8mm,withdrawalwithoutrelease,missing/nonfinite samples invalidate. Real measured clip face and fullgripper/cable clearance determine retention/hands-clear; no software latch flags.",
+  "run_limit": "2,400controls/120s at20Hz is current release-probe cap; full release/insertion feasibility within it is unproved.",
+  "reset_notes": "Fresh native reset to the declared layout and original material state; do not restore manipulated poses or carry score/coverage between attempts.",
+  "fidelity": "Procedural RJ45-like shell,rigidtab/prismatic250N/m spring,ledge and jointed cables; not calibrated flexible-beam/vendorCAD. Horizontalpitch has drawingreference;verticalpitch/internalguides approximate.64/16solveriterations improve staticclipconstraint but pull/impact fidelity remains limited. Native1Nretention/pressedpull benches are unscored. No complete robot transfer proof.",
+  "scores": "Genuine model attempt:pending. Scored robot release attempts:0.0. Grasp012/fit-retention benches and right-only tracking/press coupons are unscored; no transfer demo/media.",
+  "media": null
+}

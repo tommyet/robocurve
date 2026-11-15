@@ -1,0 +1,111 @@
+{
+  "checked_utc": "2026-11-15T20:42:38.092356+00:00",
+  "purpose": "Read-only risk/cost triage for first compliant submissions; no task edits, GPU runs, staff contact or PR.",
+  "review_evidence": {
+    "path": "/private/tmp/robocurve-rejection-review-20261115.json",
+    "sha256": "ba27d717575c4b40231b6c0e80a9c808bfdf81d3224cc5d415cd8e980cf93928"
+  },
+  "decision": {
+    "next_submission_after_spray": "No other task currently has a bounded submission-ready full demo.",
+    "next_development_candidate": "break-down-taped-carton, conditional on a credible outcome-level distinction from accepted seam-cutting and the rejected flattening task.",
+    "reason": "It has the strongest current native milestone among remaining tasks: all158cuts, real unlock and cutter parking in one fresh episode. Opening and collapse are still substantial missing work.",
+    "avoid": "Do not open four partial placeholder PRs or change their required outcomes to relabel existing scores."
+  },
+  "common_required_before_submission": [
+    "Preserve each user-approved task and numeric scorer; no combining partial trials or restored coupons into a success.",
+    "One same-episode standard-reset full-score demonstration within an honestly chosen run limit, with controller using only policy-available observations/time/proprioception; privileged teacher traces alone are not eligible feasibility evidence under prior reviews.",
+    "A genuine Dream/model attempt; zero is acceptable. Lack of time/budget is not a no_model_video_reason. Only a genuine pre-action failure/refusal with exact error can support the published exception.",
+    "Final scorer/source-bound audit, honest videos/screenshot and complete task.json/media; copy only the task folder onto a fresh upstream submission branch.",
+    "Check the board/current competing task status before allocating a new development batch; saved searches are not exhaustive novelty clearance."
+  ],
+  "tasks": [
+    {
+      "rank_after_spray": 1,
+      "task": "break-down-taped-carton",
+      "status": "Fresh cut011 reaches0.25: all158 tape cells, native unlock, cutter parked. No full opening or collapse.",
+      "novelty": "Conditional. Accepted1856 owns carton cutting;1953 shows extra cuts/item placement are insufficient. Rejected1858 warns against oversimplified flattening. Real intact collapse must be the distinct outcome, not additional simulation detail.",
+      "next_checkpoint": "Repair the saved scoop approach collision before one post-cut presentation coupon. The current direct park-to-staging path penetrates a hard panel by4.148mm and is not executable.",
+      "required_full_work": [
+        "Physically present and open all four actual drooped flaps; solve support-to-grasp transfer.",
+        "Implement and validate intact shear/tip collapse, slab/table limits, cutter parking and released final hold.",
+        "Integrate everything into one fresh episode, then obtain a nonprivileged full demo and a genuine Dream attempt."
+      ],
+      "stop": "No GPU batch if the novelty case is merely more tape cutting. No handles, spring helpers, pose writes or weaker flat/open criteria. Reassess after two repeated physical failures.",
+      "cost": "Closest remaining native milestone, but substantial opening/collapse work remains.",
+      "references": [
+        "https://github.com/robocurve/benchmark-tasks/pull/1856",
+        "https://github.com/robocurve/benchmark-tasks/pull/1953#issuecomment-6873083366",
+        "https://github.com/robocurve/benchmark-tasks/pull/1858#issuecomment-6886271911"
+      ]
+    },
+    {
+      "rank_after_spray": 2,
+      "task": "dry-long-hair",
+      "status": "Historical transient-power probe scores0. Current fixed-head and passive-detent revisions lack native full validation.",
+      "novelty": "More promising familiar physical outcome than the other unfinished ideas. Saved searches found no direct drying duplicate; that is not exhaustive clearance.",
+      "next_checkpoint": "Fixed-head reach/visibility audit, then the prepared passive-switch coupon. Neither proves robot drying.",
+      "required_full_work": [
+        "Native fixed-head integrity, physical ON retention, pickup, OFF and parking.",
+        "Recompute all240 patch access for the fixed head and manipulate locks to expose roots/inner surfaces. The old swivelling-head schedule is obsolete; patch66 required actual separation.",
+        "Prove one complete20-patch lock under unchanged water/heat rules before measuring a realistic full-run allowance.",
+        "Complete all locks and safe termination in one fresh nonprivileged demo, then Dream/media."
+      ],
+      "stop": "Do not swivel the head, omit patches or change water/heat to fit a power-probe budget. The old5058.7s nonoptimal thermal schedule is neither an executable plan nor a lower bound.",
+      "cost": "High: missing manipulation/control stages and potentially long exposure.",
+      "references": [
+        "https://github.com/robocurve/benchmark-tasks/pull/860#issuecomment-6818902358"
+      ]
+    },
+    {
+      "rank_after_spray": 3,
+      "task": "crowded-ethernet-latch",
+      "status": "Grasp/fit/component probes exist; full controlled disconnect, repatch, retention and hands-clear completion remain unproved.",
+      "novelty": "Very high risk. Pending2141 already demonstrates latch depression plus unplugging with demo1 and Dream0. Smaller pitch or more neighbors may be treated as a layout variant.",
+      "next_checkpoint": "Novelty stop/go first; only then one bounded actual contact/release test.",
+      "required_full_work": [
+        "Retain the plug while physically depressing the clip and withdrawing without constraint damage.",
+        "Transfer, seat and re-engage the target while preserving neighboring cables and proving released retention.",
+        "Fresh full nonprivileged demo and genuine Dream/media; diagnostic forces/restored starts do not count."
+      ],
+      "stop": "Hold if distinctness is only crowding. Do not add software engagement, welds, altered connector geometry or weaker damage/alignment gates.",
+      "cost": "High coupled-contact control effort plus a direct pending competitor.",
+      "references": [
+        "https://github.com/robocurve/benchmark-tasks/pull/2141"
+      ]
+    },
+    {
+      "rank_after_spray": 4,
+      "task": "pack-and-tape-carton",
+      "status": "Partial packing/closure and material coupons exist. No ordinary-roll robot peeling/sealing full demo; material integrity remains unproved.",
+      "novelty": "Very high risk. Merged1893 already covers seam tape, tearing and pressed end tabs. Genuine flush-end roll peeling/film handling is a possible distinction; extra packing alone is not.2043 rejects heavy hinged tape substitutes.",
+      "next_checkpoint": "Novelty/material stop/go, then one thin-film peel/adhesion/sever/retention coupon before any complete robot attempt.",
+      "required_full_work": [
+        "Acquire an unmodified ordinary roll edge; validate finite payout and strain with negative controls against spontaneous unwinding.",
+        "Validate pressure-dependent finite adhesion, physical cutting and released seal retention.",
+        "Integrate product packing, four-flap closure, tape application and parked tools in one fresh episode.",
+        "Obtain a nonprivileged full demo and genuine Dream/media."
+      ],
+      "stop": "No starter handles/tabs, thick hinged leaders, seal credit from tool travel, or fixture-assisted full demo. Stop if the distinction from1893 is only implementation detail.",
+      "cost": "Highest material-plus-controller burden; last priority for cheap submissions.",
+      "references": [
+        "https://github.com/robocurve/benchmark-tasks/pull/1893",
+        "https://github.com/robocurve/benchmark-tasks/pull/2043#issuecomment-6887690940"
+      ]
+    }
+  ],
+  "spray_media_open_issue": {
+    "published_rule": "The saved README requires a full-score demo video but does not expressly mandate native RTX/RGB capture or forbid faithful offline rendering.",
+    "review_evidence": "The privileged-pose rejections concern policy feedback, not rendering provenance. They do not decide offline-video eligibility.",
+    "local_guard": "run.py marks no-video runs diagnostic/media_eligible=false; RECORDED_DEMO.md calls them media-ineligible. This is an explicit local guard, not evidence of a public RGB-only rule. Do not silently bypass it.",
+    "resolution": [
+      "Prefer native RGB recording of the fresh successful clock policy if available.",
+      "Alternatively, make an explicit documented decision about a source/trace/score-bound offline Storm render of that SAME fresh episode, retaining its offline-rendered/state-only provenance. Reviewer acceptance remains unresolved."
+    ],
+    "forbidden_shortcuts": [
+      "Do not present old029 teacher footage as fresh030 clock-policy footage.",
+      "Do not equate offline pose rendering with fresh physical action playback.",
+      "Do not use budget/rendering inconvenience as an automatic no-model exception."
+    ],
+    "dream": "A genuine Dream run must receive actual permitted camera observations. Preserve partial footage; only a genuine pre-action failure/refusal supports the published exception, with exact error text."
+  }
+}

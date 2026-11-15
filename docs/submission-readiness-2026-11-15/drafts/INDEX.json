@@ -1,0 +1,58 @@
+[
+  {
+    "task": "break-down-taped-carton",
+    "source_commit": "663da39d042cfadc46cd952d04a47ecc5125f129",
+    "source_branch": "codex/carton-breakdown-packing",
+    "fidelity_chars": 379,
+    "scores_chars": 163,
+    "ready": false,
+    "blockers": [
+      "Implement and demonstrate same-episode four-flap opening/intact flattening/full released hold; no fullscore feasibility proof.",
+      "Genuine observation-limited model attempt and fullscore observation-limited demo policy; existing development cutter uses privileged native feedback.",
+      "Fulltask allowance/runtime/dependencies, setup screenshot, model/demo videos and real mediaID remain pending.",
+      "Public task text/setup must consistently use the CURRENT bottom-up presentation; do not copy stale turnover instructions."
+    ]
+  },
+  {
+    "task": "pack-and-tape-carton",
+    "source_commit": "663da39d042cfadc46cd952d04a47ecc5125f129",
+    "source_branch": "codex/carton-breakdown-packing",
+    "fidelity_chars": 393,
+    "scores_chars": 178,
+    "ready": false,
+    "blockers": [
+      "No full-score robot peel/payout/adhesion/cut/releasedseal demonstration; ordinary flush tape-edge acquisition unproved.",
+      "Fresh native repeat of scored packing under current floorcontact convention; offline rescore alone is not a new trial.",
+      "Validate measured bond pressure, peel, break, released retention and negativecontrols; no pose/path-triggered deposition.",
+      "Model attempt, observation-limited demo, actualmedia/setup, portable runtime and fulltask allowance pending."
+    ]
+  },
+  {
+    "task": "dry-long-hair",
+    "source_commit": "5d1e68532269db44f542e817917ac013bad5ac2b",
+    "source_branch": "codex/ethernet-hair-batch",
+    "fidelity_chars": 385,
+    "scores_chars": 149,
+    "ready": false,
+    "blockers": [
+      "Native fixedhead motion/skin/strand integrity validation after new requirement; historical movingheadvideo cannot validate it.",
+      "Passive slider native detent consumption/retention, physicalON\u2192withdraw\u2192lift\u2192OFF needed.",
+      "No all-patch drying/separation controller or fullscore proof; embedded/occluded patches require ordinary manipulation.",
+      "Set demonstrated fulltask allowance, genuine model attempt, observation-limited demo, actualmedia/setup and pinnedruntime pending."
+    ]
+  },
+  {
+    "task": "crowded-ethernet-latch",
+    "source_commit": "5d1e68532269db44f542e817917ac013bad5ac2b",
+    "source_branch": "codex/ethernet-hair-batch",
+    "fidelity_chars": 381,
+    "scores_chars": 172,
+    "ready": false,
+    "blockers": [
+      "No scored robot release\u2192withdraw\u2192target insertion\u2192genuine released retention/fullscore demonstration.",
+      "Check cliplocked-axis fidelity undercontrolledpull; staticbenchsuccessdoesnotvalidatefreeimpact.",
+      "Existing robot uses privileged geometry/state; observation-limited demo/model attempts need genuine fixedsource execution.",
+      "Runtime/fullbudget, model/demo videos/setupimage/mediaID pending; novelty overlap withDataCenterBench must be reviewed."
+    ]
+  }
+]

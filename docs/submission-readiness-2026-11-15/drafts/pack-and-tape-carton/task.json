@@ -1,0 +1,12 @@
+{
+  "title": "Pack two products and seal a carton with a loose tape roll",
+  "category": "Societal relatability",
+  "instruction": "Put both products inside the carton, close all four top flaps and seal the seam and both end faces using one connected strip peeled from the ordinary tape roll. Cut the strip, park the roll/cutter and release the sealed carton.",
+  "setup": "World metres,tablez=0.7475.220x180x100mm carton,3mm corrugated board,twelve passive panel bodies; bottom factory sealed,top flaps initially160deg open,referencecentre(0.32,0,0.7535). ProductA80x50x30mm/100g at(0.12,0.20,0.7645);B60x40x30mm/70g at(0.22,0.24,0.7645). Loose160g roll at(0.14,−0.15,0.7740),100mmOD/76.2mmcore,48mmwide,50um film;72explicit5mmcells wound flush with no leader.55g guarded cutter at(0.36,−0.22,0.7675),orange160x70x2mm pad and580x600x2mm mat. Two ordinary YAM arms; no pre-laid tape/handles.",
+  "scoring": "0.25:both complete productAABBs inside carton boundsx±104mm,y±84mm,z5.8..92mm,speeds<20mm/s.0.50:above and all4topflaps within5deg closed,inner flaps beneath outer.0.75:above plus one cut-connected strip detached fromroll,≥80% bondedwidth in EVERY44seamcell(5mmeach),and≥35mm bonded on each40mm endwrap.1.00:above, hands clear,roll/cutterparked,cartonspeed<10mm/s for2s afterrelease. Invalidmaterialaccounting,strain>5%,creasegap>4mm,object>30mm belowtable,missing/nonfinite samples invalidates allcredit. Floor0.2mm contact tolerance is explicit.",
+  "run_limit": "DRAFT:4,800controls/240s at20Hz proposed; no full packing/sealing demonstration validates this allowance.",
+  "reset_notes": "Fresh native reset to the declared layout and original material state; do not restore manipulated poses or carry score/coverage between attempts.",
+  "fidelity": "Rigid board panels and jointed50um film approximate carton/tape.72finite ribboncells and shrinking roll ledger conserve supply. Compression/dwell-gated passive bonds (0.5N,100ms;2N break) and blade severing need native validation/calibration. Flush edge has no pull tab. Broken-but-coincident bond detection is limited. Product-only partial score is offline rescore, not native fullseal proof.",
+  "scores": "Genuine model attempt:pending. Products002:0.25 by offline rescore of36s native trace with0.2mm floor-contact tolerance; originalscore0,notrerun. Full sealing demo/media:pending.",
+  "media": null
+}

@@ -1,0 +1,41 @@
+{
+  "metadata_only": true,
+  "not_submission_ready": true,
+  "source_worktree": "/private/tmp/robocurve-ethernet-hair",
+  "source_commit": "5d1e68532269db44f542e817917ac013bad5ac2b",
+  "source_branch": "codex/ethernet-hair-batch",
+  "source_task_dirty_status": [],
+  "source_hashes": {
+    "test_airflow.py": "220c550e1e4fd05588787767af34c0c71a3b2150b7390a76d23e34dacb79315b",
+    "slider_coupon.py": "f74891dc2ed2329b8b050752d6701724c2fb6b52236bd8741c898e978e5b4ef1",
+    "test_switch_detent.py": "e493868ca1b6b6f08212479c8bafda166ba5af30928e5f1d0226c37490cedda0",
+    "task.py": "a6593c8bd0dfa9e6403733d3e94a0b57cd26973a1361be9a746f172edd59f4f7",
+    "run.py": "028e91e27c1380e69fe7af80cffff814317985ed9b995f1f818976e13a62cacc",
+    "test_strands.py": "bde6d4d22e11aef4bd40013184fe8301ac744e7ae9b57bae3a3656d1a2e53537",
+    "airflow.py": "4e8f2dcc4b65e513dbd047ba07de72a51daa09b58992806bfe6b240cf6fbcc04",
+    "config.py": "534c3a82c53f3095648a1a98e9d016742e0af8d70c5cb2119c65337012aada24",
+    "test_slider_coupon.py": "3df05266a84be94ddf9d787c912fa0e784cd0e2c22120e662c97f4a99d4d2d43",
+    "switch_detent.py": "ad67ff7d7ce2119f063899b27aa6800177c00b5c39b4297ae18246811c3e7da6",
+    "switch_point.json": "2f0e9bebe318903ed4262a3161f40f6260ebed600d6284441a3d2ec28e6c4576",
+    "scoring.py": "d9159c6ad950adaf10e7a520d8d22f50a085bfe18897fe99ddc7a1b8ce5fb6a1",
+    "switch_geometry.py": "424946d60aab4af7143043ee6d93d288beed1b3cf8ff6e415c75dbe1efde3f44",
+    "native.py": "80a676d010a8252bb223894347a24f5f1f8c3525e8aeeaa25c217fcae510bfca",
+    "review.py": "80d9044fc7ee67d5a12bb198611d2351f2cf6b315a107e63b64a23237ed8dd39",
+    "README.md": "43653230f4a441c21bf75f6aafcaad095fe84f3c7a5f3cb518328802be0c263d",
+    "test_moisture.py": "52ac4aba3a7a4b6096b005026d0ce6b85f0a7b738e7ca79afab141ad40b5f073",
+    "test_fixed_head.py": "d8920717c29ad3769bb29cd3f0660786023812b605476f49ea0fdecb1d51187a",
+    ".gitignore": "6feaded4e28ea86e001a6751b4e3d960e8b7c31b9616ff9936b79297086e809b",
+    "VALIDATION.json": "d4f606c565c61b7e84216b7a9a352ed5f7e7dc829f0be48f9edfc4adbda5ea01",
+    "moisture.py": "e461f8823d9fb2950301269c87f7230986faaf89012a0c40c1ebf89a82d55c05",
+    "robot.py": "8b14b9c71c90d0cbea2516ac4f45eece10f0ce981481133c4011fef4d2264705",
+    "test_switch_geometry.py": "674cb76149861d3fcd47b1904dc5630f88b5b841449b296642fee87f802014ab"
+  },
+  "conservative_metadata_targets": {
+    "fidelity": 500,
+    "scores": 300
+  },
+  "target_limit_source": "Prior taskboard errors reported by parent; not independently currentAPIvalidated",
+  "actual_model_score": null,
+  "media": null,
+  "source_task_modified": false
+}
