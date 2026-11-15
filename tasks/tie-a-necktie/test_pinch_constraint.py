@@ -26,6 +26,17 @@ class TestPinch(unittest.TestCase):
         c.update(p,v,np.zeros(3),np.eye(3),.02,.004)
         self.assertFalse(len(c.indices))
 
+    def test_folded_cloth_capture_and_opening_hysteresis(self):
+        p=self.patch(); c=Pinch(); v=np.zeros_like(p)
+        c.update(p,v,np.zeros(3),np.eye(3),.011,.004)
+        self.assertEqual(len(c.indices),9)
+        c.update(p,v,np.zeros(3),np.eye(3),.015,.004)
+        self.assertEqual(len(c.indices),9)
+        c.update(p,v,np.zeros(3),np.eye(3),.017,.004)
+        self.assertFalse(len(c.indices))
+        c.update(p,v,np.zeros(3),np.eye(3),.013,.004)
+        self.assertFalse(len(c.indices))
+
     def test_open_or_missed_grasp_cannot_attach(self):
         for tcp,gap in ((np.zeros(3),.02),(np.array([.02,0,0]),.002)):
             p=self.patch(); before=p.copy(); c=Pinch()

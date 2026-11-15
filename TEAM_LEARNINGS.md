@@ -4,6 +4,24 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 08:22 UTC — folded-cloth grip and fresh matching trials
+
+- Tie283's third knot-body grasp also missed: actual gap10.388mm exceeded the
+  old10mm capture threshold. Geometric enclosure was present. The compliant
+  pad approximation now captures at12mm and releases above16mm, retaining the
+  same9.4mm minimum joint gap and12mm patch radius. Both policies use it.
+  This models gripping folded cloth; slip forces remain uncalibrated.
+- Superseded incomplete demo283 and Dream286 were stopped before new trials.
+  Fresh demo287 and Dream288 use the revised physical model. No score or final
+  feasibility is claimed until their complete recordings have been reviewed.
+- An automatic controller now compiles the already-tested ordinary action
+  stages from measured cloth, removing manual pauses. It does not write any
+  material state and pauses after the final fit (or if its knot grasp misses).
+  Every segment is still bounded, saved and hash-linked to its measured state.
+- All37 development tests pass, including folded-cloth capture and release.
+  Five tasks are submitted; only the tie remains. One A40 is active with a
+  supervised hourly watchdog extension; no additional GPU was started.
+
 ## 2026-11-15 08:10 UTC — shirt submitted; five of six PRs received
 
 - Shirt PR2126 is received asTK-T6ZGSF, mediaM-S2MEEJ, head693b3bd.

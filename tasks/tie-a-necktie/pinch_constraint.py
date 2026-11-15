@@ -13,7 +13,7 @@ The same material rule applies to every policy, including Dream.
 import numpy as np
 
 # A small compliant-pad clearance avoids driving thin cloth into rigid pads.
-MIN_CLOTH_OPENING=.10  # 9 mm joint gap; identical for all policies
+MIN_CLOTH_OPENING=.10  # 9.4 mm joint gap; identical for all policies
 
 def contact_command(action):
     result=np.asarray(action,float).copy()
@@ -33,14 +33,14 @@ class Pinch:
     def update(self, points, velocities, tcp, rotation, gap, dt):
         self.time += dt
         p = np.asarray(points)
-        if gap > .014:
+        if gap > .016:
             if len(self.indices):
                 self.events.append(dict(time_s=self.time, event='opened', count=len(self.indices)))
             self.indices = np.empty(0, dtype=int)
             self.blocked_until_open = False
             return
         if not len(self.indices):
-            if gap > .010 or self.blocked_until_open:
+            if gap > .012 or self.blocked_until_open:
                 return
             local = (p - tcp) @ rotation
             inside = ((abs(local[:, 0]) <= gap / 2 + .0012) &
@@ -165,7 +165,7 @@ def install(base, cloth_name, *, recorded_contacts=None):
                 # already-held patch from the recorded contact state. Capture
                 # its current hand-local coordinates without moving any node.
                 restored=pinch.restore_indices;del pinch.restore_indices
-                if gap>.014 or np.any(restored<0) or np.any(restored>=len(points)):
+                if gap>.016 or np.any(restored<0) or np.any(restored>=len(points)):
                     raise ValueError('Recorded pinch is incompatible with the checkpoint')
                 pinch.indices=restored;pinch.local=(points[restored]-tcp)@R
                 pinch.events.append(dict(time_s=pinch.time,event='restored_recorded_contact',count=len(restored)))

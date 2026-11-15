@@ -128,6 +128,7 @@ def main():
     p.add_argument('--judging-views',action='store_true',help='Record additional native960×720 front/rear assessor videos')
     p.add_argument('--interactive-demo-start',type=int,default=2181,choices=(281,581,2181),help='First operator-planned ordinary action after the verified pickup prefix')
     p.add_argument('--interactive-demo-dir',type=Path,help='Receive audited ordinary action segments after the complete knotting prefix; no scene writes')
+    p.add_argument('--automatic-demo-prefix',action='store_true',help='Compile ordinary state-assisted stages until the final fit review; no material writes')
     p.add_argument('--out',type=Path)
     p.add_argument('--check-only',action='store_true',help='Compile source and check JSON without loading a simulator')
     args=p.parse_args()
@@ -184,6 +185,8 @@ def main():
             p.error('Receiving route is held until the forward-carried cloth is measured and its new approach is screened')
     if args.interactive_demo_dir is not None and not (complete_handoff_plan and args.steps==3600):
         p.error('Interactive demonstration requires the complete 3600-action-capacity motion plan')
+    if args.automatic_demo_prefix and args.interactive_demo_dir is None:
+        p.error('Automatic prefix requires the continuous demo action interface')
     source_hashes=sources()
     if args.check_only:
         print(json.dumps({'status':'local_syntax_and_json_passed','source_sha256':source_hashes,
@@ -320,7 +323,7 @@ def main():
         if args.pinch_approximation:
             from pinch_constraint import install
             pinches=install(base,'tie')
-            report['pinch_material']='Contact-gated native cloth grip with 9 mm minimum joint clearance approximating compliant pads. Closing seats the enclosed patch; opening releases it. Same action/contact law for both policies; force-limited slip uncalibrated.'
+            report['pinch_material']='Contact-gated native cloth grip with 9.4 mm minimum joint clearance approximating compliant pads. Enclosed folded fabric captures below 12 mm and releases above 16 mm. Closing seats the enclosed patch. Same action/contact law for both policies; force-limited slip uncalibrated.'
             report['native_scene_audit']=native_audit(stage,list(arena_cloth.SPECS),list(PEG_SPECS),allow_pinch=True)
         collar_friction={}
         if args.collar_friction_approximation:
@@ -421,7 +424,15 @@ def main():
                     for camera,rgb in control_images(base).items():
                         Image.fromarray(rgb).save(args.interactive_demo_dir/f'state-{step:04d}-{camera}.png')
                 report.update(status='awaiting_demo_actions',next_action=step);save()
-                payload=wait_control(args.interactive_demo_dir,step)
+                payload=None
+                if args.automatic_demo_prefix:
+                    from continuous_demo import prefix_payload
+                    payload=prefix_payload(step,fixed_actions[step-2],mesh.rest,native.nodes,
+                        len(pinches['left'].indices) if 'left' in pinches else 0)
+                    if payload is not None:
+                        (args.interactive_demo_dir/f'actions-{step:04d}.json').write_text(json.dumps(payload,indent=2)+'\n')
+                if payload is None:
+                    payload=wait_control(args.interactive_demo_dir,step)
                 frames=validate_control(payload,step=step,previous=fixed_actions[step-2],low=emb._low,high=emb._high,
                     limits=delta_limit,remaining=3601-step)
                 end=step-1+len(frames)
