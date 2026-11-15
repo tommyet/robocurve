@@ -55,12 +55,10 @@ class RobotTests(unittest.TestCase):
   self.assertAlmostEqual(report['left_target'][0],port(SERVICE)[0]+BOOT_LOCAL[0]-.020)
 
  def test_press_commands_right_tip_left_finger(self):
-  env=environment();probe=ReleaseProbe(env,np.array(port(SERVICE)));probe.phase='depress_clip'
-  measured={s:probe.arm(s) for s in ('left','right')}
-  q,_,_,_=measured['right'];rotation=probe.pressR
-  measured['right']=(q,np.array((-.028,-.028)),np.array(port(SERVICE))+probe.local_contact+[0,0,.0041]-rotation@probe.point,rotation)
-  probe.arm=lambda side:measured[side]
-  output,report=probe.command(9.)
+  from unittest.mock import patch
+  probe,_=PressEndpointTests().endpoint()
+  with patch.object(probe,'rigid_motion_certificate',return_value={'rigid_gap_m':.01,'other_hand_gap_m':.01,'rotation_chord_bound_m':0.}),patch.object(probe,'stationary_hold_safety',return_value={'rigid_gap_m':.01,'other_hand_gap_m':.01,'right_non_target_rigid_gap_m':.01}):
+   output,report=probe.command(9.)
   self.assertFalse(np.array_equal(output[7:13],np.array(READY)))
   self.assertLess(output[13],1.)
   self.assertEqual(report['phase'],'depress_clip')
@@ -279,6 +277,10 @@ class PressEndpointTests(unittest.TestCase):
    return actual,np.array((-.028,-.028)),tcp,rotation
   probe.arm=arm
   probe.previous[7:13]=reference;probe.q[1]=reference.copy()
+  if not hover and not prepress:
+   start,_,_=ik.solve(goal+[0,0,.0044],ik.matrix_to_quat_xyzw(probe.pressR),reference,base_pos=(0,-.305,.75),iters=350,tol=1e-6)
+   probe.press_joint_servo.latch(start);probe.press_servo_stage='PREPRESS'
+   probe.previous[7:13]=start;probe.q[1]=start.copy()
   return probe,actual
 
  def test_hover_bias_is_carried_once_into_unbiased_governed_prepress(self):
@@ -348,28 +350,29 @@ class PressEndpointTests(unittest.TestCase):
    for t in (3.05,3.1,3.15,3.2,3.25,3.3):probe.command(t)
    self.assertEqual(probe.phase,'depress_clip');self.assertTrue(probe.press_joint_servo.frozen)
    self.assertAlmostEqual(probe.press_depth,-(.0041-PREPRESS_DISTANCE))
-   before=probe.press_joint_servo.bias.copy();action,report=probe.command(probe.phase_start+.5)
-   np.testing.assert_array_equal(probe.press_joint_servo.bias,before)
-   self.assertGreater(np.linalg.norm(action[7:13]-(reference+before)),1e-4)
-   self.assertEqual(report['press_servo_stage'],'PREPRESS');self.assertIsNone(report['failure'])
-   self.assertAlmostEqual(probe.press_depth,-(.0041-PREPRESS_DISTANCE)+.0007*.5)
+   before=probe.press_joint_servo.bias.copy()
+   with patch.object(probe,'rigid_motion_certificate',return_value={'rigid_gap_m':.01,'other_hand_gap_m':.01,'rotation_chord_bound_m':0.}):action,report=probe.command(probe.phase_start+.5)
+   self.assertLessEqual(np.max(np.abs(probe.press_joint_servo.bias-before)),.00025+1e-15)
+   np.testing.assert_allclose(action[7:13],probe.press_joint_servo.command(),atol=1e-12)
+   self.assertEqual(report['press_servo_stage'],'CONTACT_MOTION');self.assertIsNone(report['failure'])
+   self.assertGreater(probe.contact_path['clock'],0.);self.assertLessEqual(probe.contact_path['clock'],probe.command_dt)
+   self.assertLess(probe.press_depth,.0023)
 
- def test_right_fixed_reference_integrates_only_after_stationary_max_depth(self):
+ def test_right_contact_integrates_during_motion_using_unbiased_reference(self):
   from unittest.mock import patch
   probe,actual=self.endpoint()
-  with patch.object(probe,'stationary_hold_safety',return_value={'rigid_gap_m':.01,'other_hand_gap_m':.01,'right_non_target_rigid_gap_m':.01}),patch.object(probe,'certify_press_path',return_value=True):
+  with patch.object(probe,'stationary_hold_safety',return_value={'rigid_gap_m':.01,'other_hand_gap_m':.01,'right_non_target_rigid_gap_m':.01}),patch.object(probe,'rigid_motion_certificate',return_value={'rigid_gap_m':.01,'other_hand_gap_m':.01,'rotation_chord_bound_m':0.}):
    for t in (8.5,8.55,8.6):probe.command(t)
-   self.assertIsNone(probe.press_joint_servo.reference)
-   np.testing.assert_array_equal(probe.press_joint_servo.bias,np.zeros(6))
-   for t in (9.2,9.25,9.3):action,report=probe.command(t)
+   self.assertIsNotNone(probe.press_joint_servo.reference)
+   self.assertGreater(np.linalg.norm(probe.press_joint_servo.bias),0.)
    reference=probe.press_joint_servo.reference.copy();before=probe.press_joint_servo.bias.copy()
-   self.assertLess(before[2],0.)
+   self.assertGreater(before[2]*(reference[2]-actual[2]),0.)
    action,report=probe.command(9.35)
-   np.testing.assert_array_equal(probe.press_joint_servo.reference,reference)
-   np.testing.assert_allclose(action[7:13],reference+probe.press_joint_servo.bias,atol=1e-6)
+   np.testing.assert_array_equal(probe.press_joint_servo.reference,probe.contact_path['reference'])
+   np.testing.assert_allclose(action[7:13],probe.press_joint_servo.command(),atol=1e-6)
    np.testing.assert_array_equal(probe.entry_joint_servo.bias,np.zeros(6))
-   self.assertAlmostEqual(report['press_depth_m'],.0023)
-   self.assertLessEqual(np.abs(probe.press_joint_servo.bias-before).max(),.00025)
+   self.assertLessEqual(report['press_depth_m'],.0023)
+   self.assertLessEqual(np.abs(probe.press_joint_servo.bias-before).max(),.00025+1e-15)
 
  def test_clip_constraint_failure_stops_right_integral_and_command(self):
   from unittest.mock import patch
@@ -392,7 +395,7 @@ class PressEndpointTests(unittest.TestCase):
  def test_measured_release_freezes_bias_for_moving_clip_follow(self):
   from unittest.mock import patch
   probe,_=self.endpoint()
-  with patch.object(probe,'stationary_hold_safety',return_value={'rigid_gap_m':.01,'other_hand_gap_m':.01,'right_non_target_rigid_gap_m':.01}),patch.object(probe,'certify_press_path',return_value=True):
+  with patch.object(probe,'stationary_hold_safety',return_value={'rigid_gap_m':.01,'other_hand_gap_m':.01,'right_non_target_rigid_gap_m':.01}),patch.object(probe,'rigid_motion_certificate',return_value={'rigid_gap_m':.01,'other_hand_gap_m':.01,'rotation_chord_bound_m':0.}):
    for t in (9.2,9.25,9.3,9.35):probe.command(t)
    before=probe.press_joint_servo.bias.copy();read=probe.object_pose
    def released(name):
@@ -402,6 +405,7 @@ class PressEndpointTests(unittest.TestCase):
    probe.object_pose=released
    for t in (9.4,9.45,9.5,9.55,9.6):probe.command(t)
    self.assertEqual(probe.phase,'withdraw_with_clip_pressed');self.assertTrue(probe.press_joint_servo.frozen)
+   before=probe.press_joint_servo.bias.copy()
    probe.command(9.65)
    np.testing.assert_array_equal(probe.press_joint_servo.bias,before)
 

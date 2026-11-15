@@ -99,10 +99,13 @@ clearance, measured grasp slip, target seating and clip return gate later
 phases. Both hands retreat before the retention rest.
 
 The trace records both measured finger joints, TCP tracking and the actual
-pressing support point. The right arm settles fixed joint references at hover,
-after a 2 mm downward step over 3 seconds, and when needed at full press depth.
-The total press stroke and final depth remain unchanged. Its bounded joint bias is frozen
-between stationary endpoints. The adaptive engineering probe permits up to 2,400 actions / 120 s;
+pressing support point. The right arm settles at hover, then uses bounded joint
+PI-D during a 2 mm prepress move and the complete contact stroke. A measured
+mesh-clearance governor advances the unbiased reference only as tracking slack
+allows; its path clock pauses independently of elapsed time. Contact support-point
+reference speed is at most 0.7 mm/s, and maximum press depth remains 2.3 mm.
+Inner actuator gains and friction are unchanged. The left hand preserves its
+bounded learned compensation while carrying the connector. The adaptive engineering probe permits up to 2,400 actions / 120 s;
 it stops on a measured failure or completed retention rest. Nominal CPU mesh
 and IK checks do not establish full-arm/cable clearance or native success.
 

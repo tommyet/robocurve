@@ -47,6 +47,7 @@ class FunctionalHandoffTests(unittest.TestCase):
    probe.press_approach_certificate=deepcopy(case[kind])
    c=probe.press_approach_certificate
    return min(c['rigid_gap_m'],c['other_hand_gap_m'])-c['rotation_chord_bound_m']>=.0002
+  probe.rigid_motion_certificate=lambda *a,**kw:{k:case['nominal_certificate'][k] for k in ('rigid_gap_m','other_hand_gap_m','rotation_chord_bound_m')}
   args=(measured,target,rotation,'prepress_endpoint','HOVER',position,rotation,plug,quat_xyzw_to_matrix(plug[3:]),point,())
   return probe,case,args,certificate
 

@@ -5,7 +5,7 @@ import numpy as np
 from yam_arena import ik
 from yam_arena.constants import READY
 from robot import ReleaseProbe,GRIP,PRESS_GRIP
-from config import SERVICE,port
+from config import SERVICE,port,CLIP_Z,RELEASE_TRAVEL
 from test_robot import environment
 
 
@@ -52,13 +52,29 @@ class LeftTransportTests(unittest.TestCase):
   self.assertIsNone(fresh.entry_joint_servo.reference);np.testing.assert_array_equal(fresh.entry_joint_servo.bias,np.zeros(6))
 
  def test_withdrawal_uses_reference_fk_position_and_rotation(self):
-  probe,reference=self.probe();probe.phase='depress_clip';probe.stable_frames=4
+  probe,reference=self.probe();probe.phase='depress_clip'
   p,r=ik.tcp_pose(reference,probe.env.rig.bases['left']);probe.boot_goal=p+[.003,.002,.001]
   measured=[probe.arm(s) for s in ('left','right')];plug=np.r_[port(SERVICE),0,0,0,1.]
-  rightp=plug[:3]+probe.local_contact-probe.pressR@probe.point
-  measured[1]=(measured[1][0],np.array((-.028,-.028)),rightp,probe.pressR)
+  travel=.0019
+  probe.measured_clip=np.r_[plug[:3]+[0,0,CLIP_Z-travel],0,0,0,1.]
+  rightp=plug[:3]+probe.local_contact-[0,0,travel]-probe.pressR@probe.point
+  rightq,error,_=ik.solve(rightp,ik.matrix_to_quat_xyzw(probe.pressR),measured[1][0],base_pos=probe.env.rig.bases['right'],iters=350,tol=1e-6)
+  self.assertLess(error,1e-6)
+  rightp,rightr=ik.tcp_pose(rightq,probe.env.rig.bases['right'])
+  measured[1]=(rightq,np.array((-.028,-.028)),rightp,rightr)
   targets=(probe.boot_goal,probe.boot_rotation,GRIP,rightp,probe.pressR,PRESS_GRIP)
-  probe.release_targets(1.,1.,'depress_clip',plug,np.eye(3),.0019,measured,targets)
+  # Isolate transport handoff from trajectory tracking, retaining the real
+  # measured-travel counter, actual tab footprint, and reference-FK logic.
+  with patch.object(probe,'governed_prepress',return_value=(rightp,rightr,False)) as governor:
+   for i in range(4):
+    probe.release_targets(1.+.05*i,1.+.05*i,'depress_clip',plug,np.eye(3),travel,measured,targets)
+    self.assertEqual(probe.phase,'depress_clip')
+   probe.release_targets(1.2,1.2,'depress_clip',plug,np.eye(3),RELEASE_TRAVEL-.0001,measured,targets)
+   self.assertEqual(probe.stable_frames,0)
+   for i in range(5):
+    probe.release_targets(1.25+.05*i,1.25+.05*i,'depress_clip',plug,np.eye(3),travel,measured,targets)
+    self.assertEqual(probe.phase,'withdraw_with_clip_pressed' if i==4 else 'depress_clip')
+   self.assertEqual(governor.call_count,10)
   self.assertEqual(probe.phase,'withdraw_with_clip_pressed');self.assertTrue(probe.entry_joint_servo.frozen)
   np.testing.assert_allclose(probe.withdraw_start,p);np.testing.assert_allclose(probe.withdraw_rotation,r)
   result=probe.release_targets(1.,0.,probe.phase,plug,np.eye(3),0.,measured,targets)

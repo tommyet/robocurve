@@ -2438,3 +2438,35 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Test-onlycleanupreconciledoldfixtureswithactual2mm3s/adaptiveclock/native
   velocity/tabwitness/realhookfrontcontracts; no productionguardweakening.
   FullCPU suiteALL107PASS9.118s; prior5failuresandonefixtureerrorresolved.
+
+- Coordinationfix: rootqueuedcontactimplementationwithsend_messageafter
+  helperhadcompleted/parked; thisdoesNOTrestartagent. list_agents later
+  showedcompleted, sofullcontactworkhadnotrunwhileharnesswasbuilt. Root
+  explicitlyrestartedwithfollowup_task. ALWAYSusefollowup_taskforNEWwork
+  assignments; send_messageonlyclarificationsduringconfirmedrunningwork.
+  CheckagentstatusbeforeclaimingimplementationisactiveorwaitingonETA.
+
+- FullcontactgovernedPI-D core60affectedtestsPASS/AstrareviewPASS. Keeps
+  strict.5deg/.1mmclipguards/64pos16vel, maxphysicaldepth2.3mm, actual1.8mm
+  release5frames. FreezesfoldI+DintoI once toavoidpressurecommandkick.
+- Warm030unscoredalternateinitialrobotCFGpassedhw/hash/fit/constraint/quiet
+  checks butfirstpressurestepcorrectlyFAILEDtabfootprint(y−3.055mm vs±2.2
+  margin): object/cableequilibriumwithparkedarmdiffersfrom028. No pressure
+  validation. RootremovedOWNuncommittedwarmCLIprototype/test; preserved030
+  archive+rawdata. Do notaddwarmalignmentarchitecture now; canonicalstart.
+- Measured029wall645.408s:policy509.400s vsphysics120.249s. Rootidentified
+  rejectedfunctionalhandoffscalculateactual+nominalWIREclearancealthough
+  wiregaptelemetryonly. ApprovednominalRIGID/HANDreserveFIRST, earlyreject
+  beforeactual/cablework; actualfullcert+wiretelemetrymuststillpassbefore
+  acceptance. SameacceptanceANDpredicate/guards; rejectedhypothetical-path
+  failuremaybedeferred,documentnotbyte-identicalepisodebehavior. Pending
+  helperparity/performancecheckbeforecanonical031.
+
+- Canonical031nowrunningfullgentlecontactPI-D (no warmstart), strictclip
+  jointguardsandphysics unchanged. EarlyreserveOPT replayexactaccepted/
+  rejected028decisions/reserves; CPUmedianrejected.82737→.28307s(2.923x),
+  accepted.76720→.65063s(1.179x). Fulltrialwallgainnotyetmeasured.
+- Test-onlylefttransportfixtureupdatedphysicalcontactpose/actualrelease
+  fourframes+reset+fiveframes/FKreferenceorigin; no productionchanges.
+  FullCPU suiteALL119PASS13.228s, diffclean. CurrentrobotSHA
+  c9f584f74c22e178bc781c5d163aae6dea7ffcdecc6fd3fcac7acefd54cb40e2.
