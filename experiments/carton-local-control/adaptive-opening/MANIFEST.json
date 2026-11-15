@@ -1,0 +1,21 @@
+{
+  "created_utc": "2026-11-15T22:08:50.784061+00:00",
+  "candidate_only": true,
+  "files": {
+    "PROVENANCE.json": "1cc0d1b71080e7add01b07a3bc2432b415138fc006ea11ecc80ba2870ef636a2",
+    "README.md": "01078562f0a98ca6d891efbd0194390ccc7f7f3ff00123c31d76e61b1d40380f",
+    "dependency-review.json": "119b67cf1ed9e6d4643edc7db47ffcdd2068d97b044dfe1c53f2fd4a74a73f0b",
+    "dependency-review185.json": "ba336e3e9add05b85a859f4fec9cc0b8d279d2ea85ece4f601fe648144530c72",
+    "dependency_review.py": "a80057073d1a64594ff4fa1a18c43659b58af77b04af8ba714945695a1bca9aa",
+    "dependency_review185.py": "67909fa2e6574feac016769e0e3748899f940d8d2e98be455e9df45387c21dff",
+    "executed-planner.py": "3fa66c70f35d9cfaf8fd6fa0cdbe28e0ce690df548bf8c7450ccc02950f04a7d",
+    "failure-poses.json": "e62b3a8092973b0fe79228ffa00d01d9a7872571b1fb96e4fbfad7c8459b3495",
+    "geometry.py": "4e2b74a9bf3875701ae8494bcd396bc3cdfb797a9f999136227158cb3b7370dc",
+    "initial-rectangle-interpretation-report.json": "9d9625b117b364cc5eaf395a11413380f353ac13e72ff27ffc7e1b0491aefa23",
+    "planner-report.json": "f7b4a3d2e5029c27d0d9c097ca4f0eef4772f3ebd466bcf0e8b61e7f827f69cb",
+    "planner.py": "d6dd53a1dd471031af55c6cb87a97bfddaf13da2312886898bc2c0b2a01dfb4e",
+    "retained-left-validation.json": "b1dbf0f4c6111c76a2389f0a056bc855bdae13f20d2f4533f2a0194ad21ec5a9",
+    "test_planner_geometry.py": "40b7d2a6fa6c2d5fe71a45d10736a7798a8010722c2518911bef97482fe1c6ce",
+    "validate_retained_left.py": "eb563d497c51ba14bdb16eccafd0503e917ee9b264f5ca7e593bc4922a846ba4"
+  }
+}

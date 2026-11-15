@@ -1,0 +1,13 @@
+{
+  "created_utc": "2026-11-15T22:13:47.896584+00:00",
+  "candidate_only": true,
+  "files": {
+    "PROVENANCE.json": "6e992aae4403a21d66b603be49a0160cd3af504648012c589e628afd83c03c39",
+    "README.md": "1277ff7d3c2805c406b3c208f5592698344ee04e0609e5cfe69f3f0f2ed31f79",
+    "conditional-report.json": "19ed8ad5656afe95a69bcc5e18aba9f728392588f7d2b44408f56f6510e82f74",
+    "conditional185.py": "9afc87547372fae0e434d9e60e316be263072954fc3d02f505529609fb36763f",
+    "geometry.py": "4e2b74a9bf3875701ae8494bcd396bc3cdfb797a9f999136227158cb3b7370dc",
+    "planner.py": "d6dd53a1dd471031af55c6cb87a97bfddaf13da2312886898bc2c0b2a01dfb4e",
+    "test_conditional185.py": "8a5994d6a980eafe2c0c0496b5feeff0e54c5fba4cc449cf93ebf7098da6ac7e"
+  }
+}

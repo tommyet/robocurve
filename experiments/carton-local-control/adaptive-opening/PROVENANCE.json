@@ -1,0 +1,46 @@
+{
+  "created_utc": "2026-11-15T22:08:50.783787+00:00",
+  "stage_start_utc": "2026-11-15T21:57:29Z",
+  "status": "BOUNDED_SEARCH_STOPPED_NO185_PREFIX; REVIEW_PENDING; NO_NATIVE",
+  "executed_report_code_hashes": {
+    "/private/tmp/carton-adaptive-opening/planner.py": "3fa66c70f35d9cfaf8fd6fa0cdbe28e0ce690df548bf8c7450ccc02950f04a7d",
+    "/private/tmp/carton-adaptive-opening/geometry.py": "4e2b74a9bf3875701ae8494bcd396bc3cdfb797a9f999136227158cb3b7370dc",
+    "/private/tmp/carton-grasp-topology-audit/adaptive-heading-plan.json": "9d4138599543eb2502dea78f0659c5811d1044ca95a0dd8751b11f259aed3d3f",
+    "/private/tmp/carton-grasp-topology-audit/shallow-side-arc.json": "be715affff0fe0efad7517226b6a3e40477e78959d50c625390a3d2f86ffd916",
+    "/private/tmp/carton-open-coupon/start/source-row.json": "7f853198402b1ca3c9582cb99eb39db4afd04237aa873123b5ae33294056444f",
+    "/private/tmp/spray-yam-source/yam_arena/assets/yam/yam_arm.urdf": "d6cc3fca8d6848aad36c0d2bb8798de391fcf5ef8f41180fe7618eda141f0bef",
+    "/private/tmp/carton-scoop-guard-profile/fast_safety.py": "64af6ff63e1646466a41e6183de7562e0d1ae2e8cd95026afaa93fbb666e4f5c",
+    "/private/tmp/carton-open-coupon/task/scoop_safety.py": "b10826b42913bdc326b76513788e352f6380a845d00ba4a95bc0c55ba8c750ba"
+  },
+  "executed_planner_preserved_at": "executed-planner.py",
+  "final_code_only_postrun_delta": "heading int\u2192float in unreached densification record; no search change/re-execution",
+  "frozen_originals_verified_unchanged": {
+    "task/scoop_controller.py": "5e845320e986f282d65b58b8227c5005f7cc98923b8f901778af67e8d21cb192",
+    "task/scoop_safety.py": "b10826b42913bdc326b76513788e352f6380a845d00ba4a95bc0c55ba8c750ba",
+    "MANIFEST.json": "3ea6816f7e40c466927f2061494120e85a3ccc82be6c4b5ee0dda344b5b0a79d"
+  },
+  "budget_totals": {
+    "ik": 61,
+    "full315_certificates": 252,
+    "sum_execution_wall_s": 81.0980942499591,
+    "limits": [
+      2000,
+      300,
+      180
+    ]
+  },
+  "tests": {
+    "passed": 6,
+    "wall_s": 3.328
+  },
+  "dependency_scope": "Python/NumPy and pinned local YAM; no shapely/scipy installed or used; only scalarSAT and exact polygon union",
+  "no_changes": [
+    "native",
+    "GPU",
+    "remote",
+    "physics",
+    "scorer",
+    "production",
+    "frozen coupon"
+  ]
+}

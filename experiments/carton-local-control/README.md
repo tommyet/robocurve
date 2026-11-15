@@ -8,3 +8,7 @@ CPU-reviewed helpers, not integrated into a native task or competition submissio
 Dependencies: NumPy; geometry code additionally needs the pinned YAM adapter/assets described in the included provenance. Captured replay inputs and geometric hypotheses are development evidence only. No object poses, native drive gains, task scores, collision thresholds or production policies were changed. The original post-cut013 diagnostic was cancelled before contact because its100s controller allowance would be exhausted by actuator tracking lag; its data does not demonstrate opening.
 
 The adaptive opening search and physical carton reorientation remain separate, unproved work. GPU remains stopped until there is a viable test.
+
+## Bounded opening searches
+
+`adaptive-opening` records a clear idle-arm retreat and an original-box NORTH prefix to−45deg, then collision blocks. `conditional-opening-order` records the hypothetical SOUTH185 prerequisite: the NORTH prefix extends to−40deg but the fixed SOUTH wall blocks the next step. These are limited-family CPU searches, not global impossibility proofs or native opening demonstrations. Changing other articulated-flap positions is a dependency hypothesis, not a physical accomplishment. Original execution sources, counters and negative results are retained.

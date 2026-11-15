@@ -1,0 +1,322 @@
+{
+  "scope": "Threealreadyfailed\u221240nodes headings30/35/40 replayedfrombest\u221245prefix, identicalIKseed/contact/otherarm. ConditionalSOUTHbottom185 is NOT controllerachievement and mayneedbodyreposition; no newbeam/grid. Allotherpanelsfixedactualrotated011.",
+  "original_report_sha256": "f7b4a3d2e5029c27d0d9c097ca4f0eef4772f3ebd466bcf0e8b61e7f827f69cb",
+  "conditional_south": {
+    "from_angle_deg": -78.57177734375,
+    "to_angle_deg": 185,
+    "position": [
+      0.3419814157357721,
+      0.09467608620292016,
+      1.0490630337745055
+    ],
+    "rotation": [
+      [
+        -2.09725073733966e-06,
+        0.08713687869278712,
+        0.9961963483005145
+      ],
+      [
+        -0.7071300467603009,
+        -0.7043941446608653,
+        0.06161157307083017
+      ],
+      [
+        0.7070835148441628,
+        -0.7044402411412671,
+        0.061618582395716194
+      ]
+    ],
+    "lowest_vertex_z_m": 0.9426695193229414,
+    "table_penetration_m": 0.0,
+    "panel_pair_checks": [
+      {
+        "other": "north",
+        "gap_m": 0.17888811985360623
+      },
+      {
+        "other": "north_top",
+        "gap_m": 0.18536828395922894
+      },
+      {
+        "other": "north_bottom",
+        "gap_m": 0.12388558391607458
+      },
+      {
+        "other": "east",
+        "gap_m": 0.010613393174966616
+      },
+      {
+        "other": "east_top",
+        "gap_m": 0.10482909026080815
+      },
+      {
+        "other": "east_bottom",
+        "gap_m": 0.008186452469974348
+      },
+      {
+        "other": "south_top",
+        "gap_m": 0.019878499863746645
+      },
+      {
+        "other": "west",
+        "gap_m": 0.010609309081773502
+      },
+      {
+        "other": "west_top",
+        "gap_m": 0.10559508367400104
+      },
+      {
+        "other": "west_bottom",
+        "gap_m": 0.008185803464834395
+      }
+    ]
+  },
+  "replayed_nodes": [
+    {
+      "angle_deg": -40,
+      "heading_deg": 30,
+      "contact_valid": true,
+      "original_cheap": {
+        "safe": false,
+        "hard_gap": [
+          -0.003137739432104204,
+          "gripper",
+          "south_bottom"
+        ],
+        "finger_target_gaps": {
+          "tip_left": 0.0015310817415704167,
+          "tip_right": 0.001531718427725614
+        }
+      },
+      "conditional_cheap": {
+        "safe": true,
+        "hard_gap": [
+          0.0004104564215475482,
+          "gripper",
+          "south"
+        ],
+        "finger_target_gaps": {
+          "tip_left": 0.0015310817415704167,
+          "tip_right": 0.001531718427725614
+        }
+      },
+      "q": [
+        1.0874375868764734,
+        1.9705884546848864,
+        1.7665082563943069,
+        -1.178826029017538,
+        0.5782980374361466,
+        -0.9791385932789177
+      ],
+      "pe_m": 3.796854036010467e-07,
+      "re_rad": 1.3066264257090343e-06,
+      "original_full": {
+        "safe": false,
+        "hard_gap_m": -0.003137364256111476,
+        "hard_pair": [
+          "gripper",
+          "south_bottom"
+        ],
+        "target_gap_m": -5.956983117720582e-08,
+        "target_pair": [
+          "tip_left",
+          "north_bottom"
+        ],
+        "other_arm_gap_m": 0.0957762669772482,
+        "other_arm_pair": [
+          195,
+          287,
+          "link4",
+          "tip_right"
+        ],
+        "exact_mutual_refinements": []
+      },
+      "conditional_full": {
+        "safe": true,
+        "hard_gap_m": 0.00041093621706102387,
+        "hard_pair": [
+          "gripper",
+          "south"
+        ],
+        "target_gap_m": -5.956983117720582e-08,
+        "target_pair": [
+          "tip_left",
+          "north_bottom"
+        ],
+        "other_arm_gap_m": 0.0957762669772482,
+        "other_arm_pair": [
+          195,
+          287,
+          "link4",
+          "tip_right"
+        ],
+        "exact_mutual_refinements": []
+      }
+    },
+    {
+      "angle_deg": -40,
+      "heading_deg": 35,
+      "contact_valid": true,
+      "original_cheap": {
+        "safe": false,
+        "hard_gap": [
+          -0.0010253637547247656,
+          "gripper",
+          "south_bottom"
+        ],
+        "finger_target_gaps": {
+          "tip_left": 0.0015310817415703937,
+          "tip_right": 0.0015317184277256462
+        }
+      },
+      "conditional_cheap": {
+        "safe": true,
+        "hard_gap": [
+          0.004764385116983148,
+          "gripper",
+          "south"
+        ],
+        "finger_target_gaps": {
+          "tip_left": 0.0015310817415703937,
+          "tip_right": 0.0015317184277256462
+        }
+      },
+      "q": [
+        1.057658058013806,
+        1.9101588657084976,
+        1.697606076849557,
+        -1.098963366366539,
+        0.49774552048515325,
+        -1.0407128549773974
+      ],
+      "pe_m": 4.99532110735518e-07,
+      "re_rad": 1.7240703728896315e-06,
+      "original_full": {
+        "safe": false,
+        "hard_gap_m": -0.0010248657698444144,
+        "hard_pair": [
+          "gripper",
+          "south_bottom"
+        ],
+        "target_gap_m": -3.814723098256173e-08,
+        "target_pair": [
+          "tip_right",
+          "north_bottom"
+        ],
+        "other_arm_gap_m": 0.11113394276921604,
+        "other_arm_pair": [
+          195,
+          287,
+          "link4",
+          "tip_right"
+        ],
+        "exact_mutual_refinements": []
+      },
+      "conditional_full": {
+        "safe": true,
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "target_gap_m": -3.814723098256173e-08,
+        "target_pair": [
+          "tip_right",
+          "north_bottom"
+        ],
+        "other_arm_gap_m": 0.11113394276921604,
+        "other_arm_pair": [
+          195,
+          287,
+          "link4",
+          "tip_right"
+        ],
+        "exact_mutual_refinements": []
+      }
+    },
+    {
+      "angle_deg": -40,
+      "heading_deg": 40,
+      "contact_valid": true,
+      "original_cheap": {
+        "safe": true,
+        "hard_gap": [
+          0.0017333769797479256,
+          "gripper",
+          "south_bottom"
+        ],
+        "finger_target_gaps": {
+          "tip_left": 0.0015310817415704206,
+          "tip_right": 0.0015317184277255937
+        }
+      },
+      "conditional_cheap": {
+        "safe": true,
+        "hard_gap": [
+          0.004475327010293751,
+          "gripper",
+          "south"
+        ],
+        "finger_target_gaps": {
+          "tip_left": 0.0015310817415704206,
+          "tip_right": 0.0015317184277255937
+        }
+      },
+      "q": [
+        1.0246097123845905,
+        1.8566825118678785,
+        1.6360919711636392,
+        -1.0286872017576874,
+        0.4117434626682266,
+        -1.0965473251153377
+      ],
+      "pe_m": 1.8090378622054873e-07,
+      "re_rad": 6.248326343584332e-07,
+      "original_full": {
+        "safe": false,
+        "hard_gap_m": -0.002148144065990995,
+        "hard_pair": [
+          "link4",
+          "south_top"
+        ],
+        "target_gap_m": -1.8166024521931376e-07,
+        "target_pair": [
+          "tip_left",
+          "north_bottom"
+        ],
+        "other_arm_gap_m": 0.12689757722598247,
+        "other_arm_pair": [
+          195,
+          287,
+          "link4",
+          "tip_right"
+        ],
+        "exact_mutual_refinements": []
+      },
+      "conditional_full": {
+        "safe": false,
+        "hard_gap_m": -0.002148144065990995,
+        "hard_pair": [
+          "link4",
+          "south_top"
+        ],
+        "target_gap_m": -1.8166024521931376e-07,
+        "target_pair": [
+          "tip_left",
+          "north_bottom"
+        ],
+        "other_arm_gap_m": 0.12689757722598247,
+        "other_arm_pair": [
+          195,
+          287,
+          "link4",
+          "tip_right"
+        ],
+        "exact_mutual_refinements": []
+      }
+    }
+  ],
+  "conclusion": "Seeexactfullguardresults; aconditionalclear-node provesonlydependency, notopeningorderfeasibility orwholearc.",
+  "native_authorized": false,
+  "script_sha256": "67909fa2e6574feac016769e0e3748899f940d8d2e98be455e9df45387c21dff"
+}

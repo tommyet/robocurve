@@ -1,0 +1,62 @@
+{
+  "kind": "Bounded strategyreview, no newplanner search/nativeapproval",
+  "inputs_sha256": {
+    "planner-report.json": "f7b4a3d2e5029c27d0d9c097ca4f0eef4772f3ebd466bcf0e8b61e7f827f69cb",
+    "failure-poses.json": "e62b3a8092973b0fe79228ffa00d01d9a7872571b1fb96e4fbfad7c8459b3495",
+    "dependency-review.json": "119b67cf1ed9e6d4643edc7db47ffcdd2068d97b044dfe1c53f2fd4a74a73f0b",
+    "dependency-review185.json": "ba336e3e9add05b85a859f4fec9cc0b8d279d2ea85ece4f601fe648144530c72"
+  },
+  "finding": "Frozen SOUTH-bottom obstructs NORTH continuation; this is an opening-order dependency, not a fixedwall orglobalinfeasibility proof.",
+  "actual_replays": [
+    {
+      "north_angle_deg": -40,
+      "heading_deg": 30,
+      "conditional_south_angle_deg": 185,
+      "full315_hard_min_m": 0.00041093621706102387,
+      "hard_pair": [
+        "gripper",
+        "south"
+      ],
+      "other_arm_gap_m": 0.0957762669772482,
+      "IK_error_m": 3.796854036010467e-07
+    },
+    {
+      "north_angle_deg": -40,
+      "heading_deg": 35,
+      "conditional_south_angle_deg": 185,
+      "full315_hard_min_m": 0.0013988879699513568,
+      "hard_pair": [
+        "base",
+        "table"
+      ],
+      "gripper_to_south_wall_gap_m": 0.004764385116983148,
+      "other_arm_gap_m": 0.11113394276921604,
+      "IK_error_m": 4.99532110735518e-07
+    },
+    {
+      "north_angle_deg": -40,
+      "heading_deg": 40,
+      "conditional_south_angle_deg": 185,
+      "remaining_collision": "RIGHTlink4/south_top",
+      "gap_m": -0.002148144065990995
+    }
+  ],
+  "conditional_validity": {
+    "south185": "No SOUTH185 versusotherpanel OBBpenetration in thisstatic\u221240 configuration; lowestSvertex.9426695m >table. This is geometrically possible, not achieved orpassivelyheld.",
+    "south270": "Rejectasclaimedachievedstate: penetratesactualsouth_top2.91723mm. Modelmustallowactualtopflapmotion, notdeleteitscollider.",
+    "held_other_flaps": "All others retainactual011poses. This conservativeassumption canrejectlegitimatearticulatedmotion but cannotbeignoredwithoutconstructingthemotion."
+  },
+  "recommended_single_next_CPU_checkpoint": {
+    "goal": "Conditional COMPLETE NORTH continuation fromexisting\u221245prefix to\u2265185 withSOUTHbottom185, actualSOUTHtop unchanged, sameboundedbeam/guards. Stoponfailure; do notlaunchanotherprefixGPUcoupon.",
+    "why": "Onlyonehypothesis changes andalreadyverified\u221240 obstructiondisappears. It testswhetherordercanremovebottleneck acrossfullremainingopeningbeforebuildingSOUTHcontroller.",
+    "required_followup_before_any_native": "A real SOUTH-first trajectory andmeasuredretention/body-supportmechanism mustexist, thenrealNtrajectorywithactualotherarmconfiguration. SOUTH185 maydriftunder45degtiltedhinge; LEFTREADYconditionalcertificate doesnotpermitassumingLEFTsimultaneouslyholdsSOUTH.",
+    "if_full_N_continuation_fails": "Returnnextspecificdependency/cycle andstop; no claimboxunopenable orblindgridenlargement."
+  },
+  "vertical_hinge_alternative": "Exactverticalhinge/bodybrace canallowordinaryquietrelease/regrasp orretentionofpreviouslyopenedflaps withoutgravitytorque. This is a promisingmechanicalsequence change ifconditionalorderplan fails, but requires actualroll/brace/support/regrasp paths. Do notassumestaticfriction orstabletableplacement.",
+  "incidental_contact_policy": "Ordinarycontrolledcontactwithfreeflaps is legitimate, but arm/linkpenetration is not automaticallya validpush. Reclassifyapaironlywithspecificcontactface/lever/force/angularguards andalljoint/body/otherobstacles intact. Noarm-table/cutter/selfcollision exemptions.",
+  "scope_limits": [
+    "TwoSOUTHpositions andthreeexistingNORTHnodes only; no newgrid.",
+    "No physicalSOUTHopening, fullNarc, all4simultaneous150, collapse ornativefullscore proved.",
+    "All scoring/hardware/material/geometry/sourceproductionunchanged."
+  ]
+}

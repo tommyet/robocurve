@@ -1,0 +1,44 @@
+{
+  "created_utc": "2026-11-15T22:13:47.894962+00:00",
+  "start_utc": "2026-11-15T22:10:36Z",
+  "status": "CPU_CONDITIONAL_NEXT_ANGLE_BLOCKED_NOT_NATIVE",
+  "budget": {
+    "ik": 8,
+    "full315": 166,
+    "execution_wall_s": 18.507795541954692,
+    "caps": [
+      2000,
+      600,
+      180
+    ]
+  },
+  "tests": {
+    "passed": 3,
+    "wall_s": 0.151
+  },
+  "copied_sources_verified_identical": [
+    "planner.py",
+    "geometry.py"
+  ],
+  "original_report_verified_unchanged": "f7b4a3d2e5029c27d0d9c097ca4f0eef4772f3ebd466bcf0e8b61e7f827f69cb",
+  "frozen_native_sources_verified_unchanged": {
+    "task/scoop_controller.py": "5e845320e986f282d65b58b8227c5005f7cc98923b8f901778af67e8d21cb192",
+    "task/scoop_safety.py": "b10826b42913bdc326b76513788e352f6380a845d00ba4a95bc0c55ba8c750ba",
+    "MANIFEST.json": "3ea6816f7e40c466927f2061494120e85a3ccc82be6c4b5ee0dda344b5b0a79d"
+  },
+  "inputs_sha256": {
+    "/private/tmp/carton-opening-order185/conditional185.py": "9afc87547372fae0e434d9e60e316be263072954fc3d02f505529609fb36763f",
+    "/private/tmp/carton-opening-order185/planner.py": "d6dd53a1dd471031af55c6cb87a97bfddaf13da2312886898bc2c0b2a01dfb4e",
+    "/private/tmp/carton-opening-order185/geometry.py": "4e2b74a9bf3875701ae8494bcd396bc3cdfb797a9f999136227158cb3b7370dc",
+    "/private/tmp/carton-adaptive-opening/planner-report.json": "f7b4a3d2e5029c27d0d9c097ca4f0eef4772f3ebd466bcf0e8b61e7f827f69cb",
+    "/private/tmp/carton-adaptive-opening/dependency-strategy.json": "9be72bc1c74a38dde8ccc2e143b89dfabe81d22d77cd981c098a8c49aa7b73b6"
+  },
+  "conditional_only": [
+    "S185notphysicallyachieved",
+    "NoSretention",
+    "NoLEFTbodybrace",
+    "Noboxroll",
+    "No185Nprefix",
+    "NoGPUapproval"
+  ]
+}
