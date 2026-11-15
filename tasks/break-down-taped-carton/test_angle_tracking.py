@@ -87,4 +87,27 @@ class AngleTrackingTests(unittest.TestCase):
             ContinuousBottomAngles({n:50000. for n in BODIES})
 
 
+    def test_arbitrary_common_world_rotation_cancels(self):
+        t=self.tracker()
+        def multiply(a,b):
+            va,wa=np.array(a[:3]),a[3];vb,wb=np.array(b[:3]),b[3]
+            return [*(wa*vb+wb*va+np.cross(va,vb)),wa*wb-np.dot(va,vb)]
+        axis=np.array([1.,2.,3.]);axis/=np.linalg.norm(axis)
+        for k in range(1,97):
+            p,v=state([k*2.]*4)
+            half=math.radians(k*3.)/2
+            q=[*(axis*math.sin(half)),math.cos(half)]
+            for n in BODIES:p[n][3:]=multiply(q,p[n][3:])
+            self.assertTrue(t.advance(k,k*PHYSICS_DT,p,v),t.failure)
+        np.testing.assert_allclose(t.angles,[192.]*4,atol=1e-10)
+
+    def test_timestamp_gap_rejected(self):
+        t=self.tracker()
+        self.assertFalse(t.advance(1,2*PHYSICS_DT,*state()))
+
+    def test_nonfinite_data_rejected(self):
+        t=self.tracker();p,v=state();p['east'][3]=float('nan')
+        self.assertFalse(t.advance(1,PHYSICS_DT,p,v))
+
+
 if __name__=='__main__':unittest.main()

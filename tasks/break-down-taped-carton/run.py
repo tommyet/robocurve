@@ -52,6 +52,10 @@ def main():
   base=env._base
   capture.suppress_state_only_rendering(base,no_video=a.no_video)
   env._env.reset();env._instruction='Native carton mechanics probe';env._t=0.
+  from native_angle_binding import install as install_angle_observer
+  angle_observer=install_angle_observer(base)
+  from native_angle_binding import PINS
+  (a.out/'angle-tracking-reset.json').write_text(json.dumps(dict(version=__import__('angle_tracking').VERSION,source_pins=PINS,caps_deg_s=angle_observer.tracker.caps,initial_state=angle_observer.initial_state),indent=2)+'\n')
   if not a.no_video:review.place(base,(.32,0.,.82))
   from yam_arena.robot import asset_link_paths
   owners=capture.native_body_owners(base.scene,asset_link_paths(),[part['name'] for part in parts])
@@ -82,14 +86,18 @@ def main():
     if robot:
      target,control=robot.command(step*.05);phase=control[0]['phase'];action=torch.tensor(target[None,:],device=base.device,dtype=torch.float32)
     else:action=env._ready
+    angle_observer.begin_control()
     env._env.step(action);env._t=(step+1)*.05
+    if len(base._reset_env_ids):angle_observer.tracker.invalidate('native episode reset')
+    angle_evidence=angle_observer.end_control()
+    if not angle_evidence['valid']:raise RuntimeError(angle_evidence['failure'])
     pp={s['name']:pose(s['name']) for s in parts};rr={n:quat_xyzw_to_matrix(v[3:]) for n,v in pp.items()};sep=0.
     angles={}
     for h in hs:
      pa=pp[h['a']][:3]+rr[h['a']]@np.array(h['anchor_a']);pb=pp[h['b']][:3]+rr[h['b']]@np.array(h['anchor_b']);sep=max(sep,float(np.linalg.norm(pa-pb)))
      rel=rr[h['a']].T@rr[h['b']]
      raw=float(np.degrees(np.arctan2(rel[2,1],rel[1,1]) if h['axis']=='X' else np.arctan2(rel[1,0],rel[0,0])))
-     angles[h['name']]=physical_bottom_angle(raw) if h['b'].endswith('_bottom') else raw
+     angles[h['name']]=float(angle_observer.tracker.angles[['north','south','east','west'].index(h['a'])]) if h['b'].endswith('_bottom') else raw
     vertices=[]
     for s in parts:
      for x in [-1,1]:
@@ -100,6 +108,8 @@ def main():
     for side in ['left','right']:
      ids,fids=env._ids[side+'_robot'];qnative=arr(base.scene[side+'_robot'].data.joint_pos)[0];tcpnative,rnative=ik.tcp_pose(qnative[ids],env.rig.bases[side]);native_hands.append({'side':side,'joints':qnative[ids].tolist(),'finger_joints':qnative[fids].tolist(),'tcp':tcpnative.tolist(),'tcp_rotation':rnative.tolist(),'opening':float(np.clip(qnative[fids].mean()/FINGER_OPEN,0,1))})
     row={'time':env._t,'phase':phase,'robot_control':control,'action_14d':arr(action)[0].tolist(),'native_hands':native_hands,'cutter_pose':pose('cutter').tolist(),'poses':{n:v.tolist() for n,v in pp.items()},'angles_deg':angles,'max_crease_separation_m':sep,'lowest_vertex_m':low,'highest_vertex_m':high,'force_N':f}
+    row['angle_evidence']=angle_evidence
+    row['angle_substeps']=angle_observer.samples
     row['native_owner_poses']=capture.native_body_world_poses(base.scene,owners,{**pp,'cutter':row['cutter_pose']})
     if tracker is not None:
      cutter=pose('cutter');cr=quat_xyzw_to_matrix(cutter[3:]);tip=cutter[:3]+cr@np.array((.062,0,-.020));reference=rr['north'];origin=pp['north'][:3]-reference@np.array((0,WIDTH/2,HEIGHT/2));localtip=reference.T@(tip-origin);hands=[];held=False
@@ -107,7 +117,7 @@ def main():
       ids,fids=env._ids[side+'_robot'];q=arr(base.scene[side+'_robot'].data.joint_pos)[0];tcp,rotation=ik.tcp_pose(q[ids],env.rig.bases[side]);opening=float(np.clip(q[fids].mean()/FINGER_OPEN,0,1));hands.append(tcp);held|=np.linalg.norm(tcp-cutter[:3])<.035 and .08<opening<.38
      bottom=[angles[n+'_bottom_hinge'] for n in ['north','south','east','west']];top=[(-angles[n+'_top_hinge'])%360 for n in ['north','south','east','west']];top=[0. if x>350 else x for x in top]
      speed=0. if previous_positions is None else max(float(np.linalg.norm(pp[n][:3]-previous_positions[n])/ .05) for n in pp);cspeed=0. if previous_cutter is None else float(np.linalg.norm(cutter[:3]-previous_cutter)/.05);previous_positions={n:p[:3].copy() for n,p in pp.items()};previous_cutter=cutter[:3].copy();vmin=vertices.min(0);vmax=vertices.max(0)
-     sample={'time':env._t,'blade_tip_local':localtip.tolist(),'blade_alignment':float(-np.dot(cr[:,2],reference[:,2])),'cutter_held':bool(held),'bottom_angles':bottom,'top_angles':top,'crease_separation':sep,'min_height':low,'max_height':high,'carton_speed':speed,'cutter_height':float(cutter[2]-TOP),'cutter_parked':bool(np.linalg.norm(cutter[:3]-np.array(CUTTER_START))<.05 and cspeed<.02),'hands_clear':all(np.linalg.norm(h-np.clip(h,vmin,vmax))>.07 and np.linalg.norm(h-cutter[:3])>.065 for h in hands)}
+     sample={'angle_evidence':angle_evidence,'time':env._t,'blade_tip_local':localtip.tolist(),'blade_alignment':float(-np.dot(cr[:,2],reference[:,2])),'cutter_held':bool(held),'bottom_angles':bottom,'top_angles':top,'crease_separation':sep,'min_height':low,'max_height':high,'carton_speed':speed,'cutter_height':float(cutter[2]-TOP),'cutter_parked':bool(np.linalg.norm(cutter[:3]-np.array(CUTTER_START))<.05 and cspeed<.02),'hands_clear':all(np.linalg.norm(h-np.clip(h,vmin,vmax))>.07 and np.linalg.norm(h-cutter[:3])>.065 for h in hands)}
      row['score_sample']=sample;row['metrics']=tracker.update(sample);row['cutter_pose']=cutter.tolist()
      if tracker.coverage.complete and not released:
       for name in ['north','south']:

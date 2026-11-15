@@ -13,7 +13,9 @@ class AngleStepObserver:
         self.control_index=0;self.in_control=False;self.samples=[]
 
     def initialize(self):
-        return self.tracker.initialize(self.read_counter(),self.read_time(),*self.read_state())
+        poses,velocities=self.read_state()
+        self.initial_state=dict(counter=self.read_counter(),time_s=self.read_time(),poses=poses,velocities=velocities)
+        return self.tracker.initialize(self.initial_state['counter'],self.initial_state['time_s'],poses,velocities)
 
     def begin_control(self):
         if self.in_control or self.tracker.failure:
@@ -49,4 +51,10 @@ class AngleStepObserver:
         self.in_control=False;self.control_index+=1
         if len(self.samples)!=SUBSTEPS or self.read_counter()!=self.tracker.counter:
             self.tracker.invalidate('incomplete native control interval')
+        elif not self.tracker.failure:
+            poses,velocities=self.read_state()
+            # A reset or unobserved state change after the last substep cannot
+            # borrow the preceding interval's continuity evidence.
+            if poses!=self.samples[-1]['poses'] or velocities!=self.samples[-1]['velocities']:
+                self.tracker.invalidate('native endpoint changed after last substep')
         return self.tracker.evidence(self.control_index,len(self.samples))

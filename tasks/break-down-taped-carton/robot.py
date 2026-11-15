@@ -258,8 +258,9 @@ class CartonOpenProbe(CartonGripProbe):
  def edge(self,name,angle=None):
   from yam_arena.urdf import axis_angle_matrix
   h=self.hinges[name];wp,wr=self.pose(name);fp,fr=self.pose(name+'_bottom')
-  from crease import physical_bottom_angle
-  a=physical_bottom_angle(np.degrees(np.arctan2((wr.T@fr)[2,1],(wr.T@fr)[1,1])))
+  observer=getattr(self.env._base,'_carton_angle_observer',None)
+  if observer is None or observer.tracker.failure:raise RuntimeError('trusted continuous carton angles unavailable')
+  a=float(observer.tracker.angles[['north','south','east','west'].index(name)])
   if angle is not None:
    fr=wr@axis_angle_matrix(np.array([1.,0,0]),np.radians(angle));fp=wp+wr@np.array(h['anchor_a'])-fr@np.array(h['anchor_b'])
   offset=np.array((0.,-(.18/2-.003)/2+.010,-.006)) if self.offset is None else self.offset

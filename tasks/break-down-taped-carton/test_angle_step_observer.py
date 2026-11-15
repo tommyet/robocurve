@@ -23,7 +23,7 @@ class StepObserverTests(unittest.TestCase):
         for _ in range(12):self.assertEqual(o.step(render=False),'unchanged-result')
         e=o.end_control();self.assertTrue(e['valid']);self.assertEqual(e['counter'],12)
         self.assertEqual(len(o.samples),12)
-        self.assertEqual([x[0] for x in self.events],['step','read']*12)
+        self.assertEqual([x[0] for x in self.events],['step','read']*12+['read'])
         self.assertEqual(o.samples[-1]['angles_deg'],[12.]*4)
 
     def test_short_interval_invalidates(self):
@@ -46,5 +46,19 @@ class StepObserverTests(unittest.TestCase):
         with self.assertRaises(RuntimeError):o.step()
         self.assertEqual(self.counter,0)
 
+    def test_native_step_failure_is_sticky(self):
+        o=self.build();o.begin_control()
+        def failed():raise RuntimeError('test integration failure')
+        o.original=failed
+        with self.assertRaises(RuntimeError):o.step()
+        self.assertIn('continuity unknown',o.tracker.failure)
+
+    def test_post_step_endpoint_change_is_rejected(self):
+        o=self.build();o.begin_control()
+        for _ in range(12):o.step()
+        o.read_state=lambda:state([99.]*4)
+        self.assertFalse(o.end_control()['valid'])
+        self.assertIn('endpoint changed',o.tracker.failure)
 
 if __name__=='__main__':unittest.main()
+
