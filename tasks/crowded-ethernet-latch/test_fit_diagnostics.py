@@ -5,7 +5,7 @@ import numpy as np
 from yam_arena.urdf import axis_angle_matrix,quat_xyzw_to_matrix
 from yam_arena import ik
 from geometry import socket_boxes,object_obstacles,wire_local_frame,GUIDE_X_MIN,GUIDE_X_MAX,GUIDE_Y,GUIDE_WIDTH,GUIDE_BOTTOM,GUIDE_TOP
-from diagnostics import connector_fit,fit_summary,bench_command
+from diagnostics import connector_fit,fit_summary,bench_command,offcenter_clip_wrench,clip_constraint_summary
 from config import *
 
 class CandidateFitTests(unittest.TestCase):
@@ -56,8 +56,32 @@ class CandidateFitTests(unittest.TestCase):
   values[str(bad)]['clip_travel_m']=.00035
   self.assertFalse(fit_summary([sample])['task_fit_pass'])
 
- def test_only_retention_diagnostic_can_request_external_bench_loads(self):
+ def test_only_explicit_bench_diagnostics_can_request_external_loads(self):
   for mode in ('fit-probe','grasp-probe','release-probe'):
    self.assertTrue(all(bench_command(step,mode)[1:]==(0.,0.) for step in range(180)))
   self.assertEqual(bench_command(45,'retention-probe'),('pull_engaged',-1.,0.))
   self.assertEqual(bench_command(90,'retention-probe'),('pull_pressed',-1.,-.70))
+  self.assertEqual(bench_command(90,'clip-constraint-probe'),('pull_pressed',-1.,-.50))
+
+ def test_offcenter_force_includes_actual_tab_moment(self):
+  plug=np.r_[port(SERVICE),0,0,0,1];clip=plug.copy();clip[2]+=CLIP_Z
+  force,torque=offcenter_clip_wrench(plug,clip,-.5)
+  np.testing.assert_allclose(force,[0,0,-.5]);np.testing.assert_allclose(torque,[.00075,-.005,0])
+  rotation=axis_angle_matrix(np.array((1.,0,0)),.15);clip[3:]=ik.matrix_to_quat_xyzw(rotation)
+  force,torque=offcenter_clip_wrench(plug,clip,-.5)
+  np.testing.assert_allclose(torque,np.cross(rotation@[-.010,-.0015,.0005],force))
+  self.assertGreater(np.linalg.norm(torque-[.00075,-.005,0]),1e-5)
+
+ def test_all_seven_slider_constraints_detect_rotation_xy_and_overtravel(self):
+  plugs={str(i):np.r_[port(i),0,0,0,1] for i in USED}
+  clips={str(i):np.r_[np.array(port(i))+[0,0,CLIP_Z],0,0,0,1] for i in USED}
+  sample={'plug_poses':plugs,'clip_poses':clips}
+  self.assertTrue(clip_constraint_summary([sample])['pass'])
+  bad=str(USED[-1]);initial=clips[bad].copy()
+  clips[bad][3:]=ik.matrix_to_quat_xyzw(axis_angle_matrix(np.array((1.,0,0)),math.radians(7.9)))
+  result=clip_constraint_summary([sample]);self.assertFalse(result['pass'])
+  self.assertAlmostEqual(result['connectors'][bad]['max_relative_angle_deg'],7.9)
+  clips[bad]=initial.copy();clips[bad][0]+=.00011
+  self.assertFalse(clip_constraint_summary([sample])['pass'])
+  clips[bad]=initial.copy();clips[bad][2]-=CLIP_TRAVEL+.00002
+  self.assertFalse(clip_constraint_summary([sample])['pass'])

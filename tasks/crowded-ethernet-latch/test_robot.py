@@ -228,6 +228,68 @@ class EntryEndpointTests(unittest.TestCase):
    np.testing.assert_array_equal(probe.entry_joint_servo.reference,reference)
    self.assertFalse(probe.entry_joint_servo.frozen)
 
+class PressEndpointTests(unittest.TestCase):
+ def endpoint(self):
+  probe=ReleaseProbe(environment(),np.array(port(SERVICE)));probe.phase='depress_clip'
+  goal=np.array(port(SERVICE))+probe.local_contact-[0,0,.0023]-probe.pressR@probe.point
+  reference,_,_=ik.solve(goal,ik.matrix_to_quat_xyzw(probe.pressR),np.array(READY),base_pos=(0,-.305,.75),iters=350,tol=1e-6)
+  actual=reference.copy();actual[2]+=.003
+  tcp,rotation=ik.tcp_pose(actual,(0,-.305,.75));left=probe.arm('left')
+  probe.arm=lambda side:left if side=='left' else (actual,np.array((-.028,-.028)),tcp,rotation)
+  probe.previous[7:13]=reference;probe.q[1]=reference.copy()
+  return probe,actual
+
+ def test_right_fixed_reference_integrates_only_after_stationary_max_depth(self):
+  from unittest.mock import patch
+  probe,actual=self.endpoint()
+  with patch.object(probe,'stationary_hold_safety',return_value={'rigid_gap_m':.01,'other_hand_gap_m':.01,'right_non_target_rigid_gap_m':.01}),patch.object(probe,'certify_press_path',return_value=True):
+   for t in (8.5,8.55,8.6):probe.command(t)
+   self.assertIsNone(probe.press_joint_servo.reference)
+   np.testing.assert_array_equal(probe.press_joint_servo.bias,np.zeros(6))
+   for t in (9.2,9.25,9.3):action,report=probe.command(t)
+   reference=probe.press_joint_servo.reference.copy();before=probe.press_joint_servo.bias.copy()
+   self.assertLess(before[2],0.)
+   action,report=probe.command(9.35)
+   np.testing.assert_array_equal(probe.press_joint_servo.reference,reference)
+   np.testing.assert_allclose(action[7:13],reference+probe.press_joint_servo.bias,atol=1e-6)
+   np.testing.assert_array_equal(probe.entry_joint_servo.bias,np.zeros(6))
+   self.assertAlmostEqual(report['press_depth_m'],.0023)
+   self.assertLessEqual(np.abs(probe.press_joint_servo.bias-before).max(),.00025)
+
+ def test_clip_constraint_failure_stops_right_integral_and_command(self):
+  from unittest.mock import patch
+  probe,actual=self.endpoint();read=probe.object_pose
+  def bad(name):
+   value=read(name)
+   if name==f'clip_{USED_PORTS[-1]}':value[3:]=[np.sin(np.radians(.5)),0,0,np.cos(np.radians(.5))]
+   return value
+  # The numerical constraint is checked for every connector, including one
+  # outside the source/target pair. It cannot silently keep integrating.
+  from config import USED as USED_PORTS
+  probe.object_pose=bad
+  with patch.object(probe,'stationary_hold_safety',return_value={'rigid_gap_m':.01,'other_hand_gap_m':.01,'right_non_target_rigid_gap_m':.01}):
+   action,report=probe.command(9.5)
+  self.assertIn('slider constraint guard',report['failure'])
+  np.testing.assert_allclose(action[7:13],actual,atol=1e-6)
+  np.testing.assert_array_equal(probe.press_joint_servo.bias,np.zeros(6))
+  self.assertEqual(len(report['clip_joint_constraints']),7)
+
+ def test_measured_release_freezes_bias_for_moving_clip_follow(self):
+  from unittest.mock import patch
+  probe,_=self.endpoint()
+  with patch.object(probe,'stationary_hold_safety',return_value={'rigid_gap_m':.01,'other_hand_gap_m':.01,'right_non_target_rigid_gap_m':.01}),patch.object(probe,'certify_press_path',return_value=True):
+   for t in (9.2,9.25,9.3,9.35):probe.command(t)
+   before=probe.press_joint_servo.bias.copy();read=probe.object_pose
+   def released(name):
+    value=read(name)
+    if name==f'clip_{SERVICE}':value[2]-=.0019
+    return value
+   probe.object_pose=released
+   for t in (9.4,9.45,9.5,9.55,9.6):probe.command(t)
+   self.assertEqual(probe.phase,'withdraw_with_clip_pressed');self.assertTrue(probe.press_joint_servo.frozen)
+   probe.command(9.65)
+   np.testing.assert_array_equal(probe.press_joint_servo.bias,before)
+
 class ReleaseGeometryGateTests(unittest.TestCase):
  def make_state(self,phase):
   probe=ReleaseProbe(environment(),np.array(port(SERVICE)));probe.phase=phase

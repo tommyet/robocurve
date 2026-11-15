@@ -41,6 +41,12 @@ def export(path,name):
         UsdPhysics.RigidBodyAPI.Apply(root.GetPrim())
         mass=.0003 if name.startswith('clip') else .008 if name.startswith('plug') else .001
         UsdPhysics.MassAPI.Apply(root.GetPrim()).CreateMassAttr(mass)
+        if name.startswith(('plug','clip')):
+            # Resolve the slider's locked angular/transverse axes accurately
+            # under an off-centre tab load; no added inertia or spring force.
+            body=PhysxSchema.PhysxRigidBodyAPI.Apply(root.GetPrim())
+            body.CreateSolverPositionIterationCountAttr(64)
+            body.CreateSolverVelocityIterationCountAttr(16)
         PhysxSchema.PhysxContactReportAPI.Apply(root.GetPrim()).CreateThresholdAttr(0.)
         if name.startswith('plug'):
             i=int(name.split('_')[1]);col=(1.,.38,.025) if i==SERVICE else (.05,.36,.75)

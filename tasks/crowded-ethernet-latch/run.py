@@ -5,7 +5,7 @@ from config import *
 
 def main():
  started=time.monotonic();timings={key:0. for key in ('setup_s','ensure_sim_s','controller_build_s','policy_s','physics_step_s','telemetry_s','video_s')}
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--mode',choices=['fit-probe','retention-probe','grasp-probe','release-probe'],default='retention-probe');p.add_argument('--out',type=Path,required=True);p.add_argument('--no-video',action='store_true',help='State-only engineering run; final media require the default video mode');a=p.parse_args()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--mode',choices=['fit-probe','retention-probe','clip-constraint-probe','grasp-probe','release-probe'],default='retention-probe');p.add_argument('--out',type=Path,required=True);p.add_argument('--no-video',action='store_true',help='State-only engineering run; final media require the default video mode');a=p.parse_args()
  a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=False)
  (a.out/'source').mkdir()
  for f in [*Path(__file__).parent.glob('*.py'),Path(__file__).with_name('press_point.json')]:shutil.copy2(f,a.out/'source'/f.name)
@@ -22,7 +22,7 @@ def main():
   import isaaclab.sim as sim
   from native import export,install_joints
   import task
-  from diagnostics import bench_command,connector_fit,fit_summary,robot_snapshot
+  from diagnostics import bench_command,connector_fit,fit_summary,robot_snapshot,offcenter_clip_wrench,clip_constraint_summary
   wrapper._APP=app
   assets={s.name:export(a.out/(s.name+'.usda'),s.name) for s in task.OBJECTS if s.name!='mat'}
   original=sc.task_object
@@ -57,12 +57,22 @@ def main():
   from yam_arena import YAM_URDF
   physical=manifest(base.scene.stage,assets,YAM_URDF,sc.PHYSICS_DT,20)
   (a.out/'physics-manifest.json').write_text(json.dumps(physical,indent=2)+'\n')
+  from pxr import PhysxSchema
+  solver_readback={}
+  for prim in base.scene.stage.Traverse():
+   if prim.GetName() not in {f'{kind}_{i}' for kind in ('plug','clip') for i in USED}:continue
+   api=PhysxSchema.PhysxRigidBodyAPI(prim)
+   solver_readback[str(prim.GetPath())]={'position':api.GetSolverPositionIterationCountAttr().Get(),
+                                      'velocity':api.GetSolverVelocityIterationCountAttr().Get()}
+  if len(solver_readback)!=2*len(USED) or any(v!={'position':64,'velocity':16} for v in solver_readback.values()):
+   raise RuntimeError('native plug/clip solver iteration readback does not match 64/16: '+str(solver_readback))
+  (a.out/'native-solver-readback.json').write_text(json.dumps(solver_readback,indent=2)+'\n')
   def arr(v):
    v=v.torch if hasattr(v,'torch') else v
    return v.detach().cpu().numpy()
   def pose(name):return arr(base.arena_world.get_pose_w(name))[0]
-  def force(name,f):
-   base.scene[name].permanent_wrench_composer.set_forces_and_torques_index(forces=torch.tensor([[f]],device=base.device,dtype=torch.float32),torques=torch.zeros((1,1,3),device=base.device),is_global=True)
+  def force(name,f,torque=(0.,0.,0.)):
+   base.scene[name].permanent_wrench_composer.set_forces_and_torques_index(forces=torch.as_tensor(np.asarray(f)[None,None,:],device=base.device,dtype=torch.float32),torques=torch.as_tensor(np.asarray(torque)[None,None,:],device=base.device,dtype=torch.float32),is_global=True)
   if not a.no_video:video=imageio.get_writer(str(a.out/'diagnostic.mp4'),fps=20,codec='libx264',pixelformat='yuv420p',macro_block_size=1,ffmpeg_params=['-movflags','+faststart'])
   samples=[]
   body_names=[n for i in USED for n in (f'plug_{i}',f'clip_{i}')]+[f'wire_{i}_{k}' for i in USED for k in range(LINKS)]
@@ -94,8 +104,12 @@ def main():
      target,control=robot.command(step*.05);phase=control['phase'];pull=press=0.
      action=torch.tensor(target[None,:],device=base.device,dtype=torch.float32)
     else:
-     if a.mode=='retention-probe':
-      force(f'plug_{SERVICE}',(pull,0,0));force(f'clip_{SERVICE}',(0,0,press))
+     if a.mode in ('retention-probe','clip-constraint-probe'):
+      force(f'plug_{SERVICE}',(pull,0,0))
+      if a.mode=='clip-constraint-probe':
+       load,moment=offcenter_clip_wrench(pose(f'plug_{SERVICE}'),pose(f'clip_{SERVICE}'),press)
+       force(f'clip_{SERVICE}',load,moment)
+      else:force(f'clip_{SERVICE}',(0,0,press))
      action=env._ready
     timings['policy_s']+=time.monotonic()-policy_started
     step_started=time.monotonic();env._env.step(action);env._t=(step+1)*.05
@@ -148,12 +162,13 @@ def main():
   rest=[r for r in samples if 1.5<=r['time']<=2.000001] if a.mode!='fit-probe' else samples[-20:]
   baseline=fit_summary(rest)
   result={'diagnostic':True,'task_score':None,'robot_demo':False,'untouched_fit':baseline,
-          'probe_mode':a.mode,'external_bench_forces':a.mode=='retention-probe','no_video':a.no_video,
+          'probe_mode':a.mode,'external_bench_forces':a.mode in ('retention-probe','clip-constraint-probe'),'no_video':a.no_video,
           'state_only_diagnostic':a.no_video,'media_eligible':not a.no_video,
           'elapsed_wall_s_to_stop':wall_to_stop,'timings_s':timings,
           'timing_scope':'physics_step_s measures env._env.step, including internal sensor rendering when enabled; video_s measures readback/encoding. Setup includes app startup. Shutdown excluded.',
           'physics_manifest':{key:physical[key] for key in ('physical_input_sha256','body_joint_mass_sha256','counts')}}
-  if a.mode=='retention-probe':
+  result['native_solver_readback']=solver_readback
+  if a.mode in ('retention-probe','clip-constraint-probe'):
    x0=samples[39]['plug_pose'][0];xe=samples[59]['plug_pose'][0];xr=min(r['plug_pose'][0] for r in samples[80:120])
    cliptravel=max(r['connector_fit'][str(SERVICE)]['clip_travel_m'] for r in samples[60:120])
    tips=[r['plug_pose'][0]+float((quat_xyzw_to_matrix(np.array(r['plug_pose'][3:]))@np.array((.012,0,0)))[0]) for r in samples[40:60]]
@@ -163,6 +178,13 @@ def main():
             'checks':{'untouched_all_connectors_fit':baseline['pass'],
                       'retains_engaged':min(tips)>(.412-.027/2)+.005 and settled_span<.0015,
                       'releases_pressed':x0-xr>.020,'clip_depresses':cliptravel>RELEASE_TRAVEL}}
+  result['clip_joint_constraints']=clip_constraint_summary(samples)
+  if a.mode=='clip-constraint-probe':
+   result['checks']['clip_joint_constraints']=result['clip_joint_constraints']['pass']
+   result['clip_joint_constraints_by_phase']={phase:clip_constraint_summary([s for s in samples if s['phase']==phase])
+                                             for phase in dict.fromkeys(s['phase'] for s in samples)}
+   result['offcenter_load']={'force_plug_frame_N':[0,0,-.5],'application_point_clip_frame_m':[-.010,-.0015,.0005],
+                           'nominal_torque_plug_frame_Nm':[.00075,-.005,0],'torque_scope':'actual clip-frame lever cross actual plug-frame force'}
   if robot:
    result|={'robot_grasp_probe':True,'max_tracking_error_m':max(r['robot_control']['position_error'] for r in samples),
             'final_plug_pose':samples[-1]['plug_pose'],'controller_failure':samples[-1]['robot_control'].get('failure'),

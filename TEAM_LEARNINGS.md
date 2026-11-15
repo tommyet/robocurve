@@ -2258,3 +2258,31 @@ editing, merge both agents' findings, and commit/push the update with the work.
   andtabcontactY−1.5mm. SampledallpathIK<=61.8um; rigid>=.685mm, cables>=.527mm,
   hand>=3.142mm. Actualrightrigid/footprintguardsadded; no servo/physics/scoring
   changes. Native release015 running; no task-success claim.
+
+### 2026-11-15 — Ethernet prismatic-constraint fidelity issue
+
+- Release015 made actual tab contact and reached0.96mm clip travel but failed
+ 1.8mm release requirement. Actualselectedsupport lies onclip-local+.5mmface
+ within75um. RightTCP loaderror~.9mm; clip ALSO rotated7.91degrelativeplug
+ despiteintended prismaticZ angularlock. Angle<.0005deg beforecontact.
+- Offcentertabcontact lever absorbs~.69mm stroke; perfectsameendpoint would
+ yieldonly~1.69mmcentertravel inbadtiltedstate. Do not claim feedbackalonefixes.
+- Approvedexplicitplug+clip solver64position/16velocity only; geometry/mass/
+ spring250N/m/travel2.4mm unchanged. Newunscored offcenterbenchFz−.5N plus
+ torque(+.00075,−.005,0)Nm must showangle<.5deg/lateralanchorerror<.1mm and
+ approximately2mm travel before robot feedbackcorrection. Implementationpending.
+
+- Constraint016 API64/16readbackPASS, untouchedtaskfitPASS, retentionholds and
+  pressedreleasePASS. AggregateconstraintFAIL mustbephase-qualified: static
+  offcenterpress angle<=.0246deg/lateral<=1.3um/travel1.974–2.008mmPASS;
+  engagedpull strictmarginFAIL(.655deg/147.5um); uncontrolled1Nfreewithdraw
+  launchesplug~153mm/50ms then tableimpact55deg. Not equivalentslowrobotpull.
+- Keep64/16, deferarticulationrewrite. Nextrobotpilotaddsall7angular/XY
+  monitoring andboundedrightstationaryq*feedback, same2.3mmendpoint/gains.
+  Abortactualcontrolledjointviolation; revisitarticulationifthatregimefails.
+
+- Release01761CPUtestsPASS: boundedrightjointendpointI only2.3mmendpoint
+  plus3lowvelocityframes/freshactualcorridor; ±.02rad/.25mradstep/.5s.
+  Frozenbiasfollowswithdraw thenresetatfingerlift. All7clipangle>.5deg or
+  XYmisclosure>.1mm abortafter2ssettle. Goaldrift>.2mmfails; no movingI.
+  Presswaitbudget+8s, whole100scontrolcap unchanged. Native017running.

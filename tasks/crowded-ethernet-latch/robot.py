@@ -14,6 +14,7 @@ from config import SERVICE,TARGET,CLIP_Z,CLIP_TRAVEL,RELEASE_TRAVEL,port,USED as
 from collision_geometry import FingerGeometry,minimum_separation
 from feedback import snapshot,clearance,gripper_sweep,BootJawPredictor,BootJawContactCache,EndpointCorrection,JointEndpointCorrection,plug_fit,plug_hand_target,retaining_face,closing_opening,predicted_jaw_normal_forces,boot_contact_force_gate
 from geometry import object_obstacles
+from diagnostics import clip_joint_geometry
 
 _angle=np.radians(80.)
 R_GRIP=np.array([[0.,np.cos(_angle),np.sin(_angle)],[0.,-np.sin(_angle),np.cos(_angle)],[1.,0.,0.]])
@@ -100,13 +101,23 @@ class GraspProbe:
 
     def command(self,t):
         dt=.05 if self.last_t is None else float(np.clip(t-self.last_t,0.,.1));self.last_t=t
+        self.command_dt=dt
         measured=[self.arm(side) for side in ('left','right')]
+        if self.release:
+            self.right_joint_velocity=None if self.last_right_joints is None else (measured[1][0]-self.last_right_joints)/max(dt,.001)
+            self.last_right_joints=measured[1][0].copy()
         self.left_tcp_speed=None if self.last_left_tcp is None else float(np.linalg.norm(measured[0][2]-self.last_left_tcp)/max(dt,.001))
         self.last_left_tcp=measured[0][2].copy()
         self.left_joint_velocity=None if self.last_left_joints is None else ((measured[0][0]-self.last_left_joints)/max(dt,.001)).tolist()
         self.last_left_joints=measured[0][0].copy()
         plug=self.object_pose(f'plug_{SERVICE}');rotation=quat_xyzw_to_matrix(plug[3:])
         clip=self.object_pose(f'clip_{SERVICE}');self.measured_clip=clip.copy()
+        if self.release:
+            self.clip_constraints={str(i):clip_joint_geometry(plug if i==SERVICE else self.object_pose(f'plug_{i}'),
+                                                            clip if i==SERVICE else self.object_pose(f'clip_{i}')) for i in USED_PORTS}
+            self.clip_constraints_safe=all(np.isfinite(list(v.values())).all() and v['relative_angle_deg']<=.5
+                                           and v['lateral_anchor_error_m']<=.0001 for v in self.clip_constraints.values())
+            if t>=2. and not self.clip_constraints_safe:self.failure='controlled connector exceeded 0.5 degree / 0.1 mm slider constraint guard'
         travel=float(CLIP_Z-(rotation.T@(clip[:3]-plug[:3]))[2])
         age=t-self.phase_start;phase=self.phase
         if self.hold_offset is None and phase in ('approach_boot','narrow_in_front_of_boot','enter_boot','close_on_boot'):
@@ -229,11 +240,18 @@ class GraspProbe:
             # Contact retains bounded learned gravity/stiction compensation;
             # there is no new integral and no decay that erases the preload.
             fixed_entry_phases=('enter_boot','close_on_boot','verified_boot_hold','prepare_press','approach_above_clip','depress_clip')
-            if i==0 and self.entry_joint_servo.reference is not None and phase in fixed_entry_phases:
+            if i==1 and self.release and self.failure is not None:
+                self.q[i]=measured[i][0].copy();pe=re=0.
+            elif i==1 and self.release and self.press_joint_servo.reference is not None and phase=='depress_clip':
+                self.q[i]=self.press_joint_servo.command();pe,re=self.press_reference_error
+            elif i==0 and self.entry_joint_servo.reference is not None and phase in fixed_entry_phases:
                 self.q[i]=self.entry_joint_servo.command();pe,re=self.entry_reference_error
             else:
                 if i==0 and self.entry_joint_servo.reference is not None:self.entry_joint_servo.reset()
                 self.q[i],pe,re=ik.solve(p+self.bias[i],ik.matrix_to_quat_xyzw(r),self.q[i],base_pos=self.env.rig.bases[side],iters=110)
+                if i==1 and self.release and self.press_joint_servo.reference is not None:
+                    if phase=='withdraw_with_clip_pressed':self.q[i]=self.q[i]+self.press_joint_servo.bias
+                    else:self.press_joint_servo.reset()
             out[7*i:7*i+6],out[7*i+6]=self.q[i],g
             arms.append({'side':side,'tcp':actual.tolist(),'target':p.tolist(),'position_error':float(np.linalg.norm(error)),
                          'rotation_error_deg':rotation_angle_deg(actualr,r),'ik_position_error':float(pe),'ik_rotation_error':float(re),
@@ -251,7 +269,7 @@ class GraspProbe:
             point=self.point.copy();point[0]+=measured[1][1][0]+.028
             witness=measured[1][2]+measured[1][3]@point
             report.update({'measured_press_point':witness.tolist(),'measured_press_point_plug_local':(rotation.T@(witness-plug[:3])).tolist(),
-                           'target_press_point':(rp+rr@point).tolist(),'actual_press_point_clip_local':self.actual_tab_witness,'press_depth_m':self.press_depth,'press_approach_certificate':self.press_approach_certificate,'flexible_press_contact_possible':bool(self.press_approach_certificate is not None and self.press_approach_certificate['wire_gap_m']<.0002),'withdraw_target_distance_m':self.pull_distance,'measured_hook_front_x_m':getattr(self,'measured_hook_front',None),'guide_geometry':self.guide_geometry,'insertion_command_x_m':self.insertion_x,'insertion_retries':self.insertion_retries,'full_release_clearance':self.final_clearance,'released_hold_s':self.retention_gate_s})
+                           'target_press_point':(rp+rr@point).tolist(),'actual_press_point_clip_local':self.actual_tab_witness,'press_depth_m':self.press_depth,'press_approach_certificate':self.press_approach_certificate,'flexible_press_contact_possible':bool(self.press_approach_certificate is not None and self.press_approach_certificate['wire_gap_m']<.0002),'press_joint_reference':None if self.press_joint_servo.reference is None else self.press_joint_servo.reference.tolist(),'press_joint_bias_rad':self.press_joint_servo.bias.tolist(),'press_joint_frozen':self.press_joint_servo.frozen,'right_joint_velocity_rad_s':None if self.right_joint_velocity is None else self.right_joint_velocity.tolist(),'press_endpoint_low_velocity_frames':self.press_endpoint_low_velocity_frames,'press_endpoint_goal_drift_m':self.press_endpoint_goal_drift,'clip_joint_constraints':self.clip_constraints,'withdraw_target_distance_m':self.pull_distance,'measured_hook_front_x_m':getattr(self,'measured_hook_front',None),'guide_geometry':self.guide_geometry,'insertion_command_x_m':self.insertion_x,'insertion_retries':self.insertion_retries,'full_release_clearance':self.final_clearance,'released_hold_s':self.retention_gate_s})
         return out,report
 
 
@@ -266,6 +284,9 @@ class ReleaseProbe(GraspProbe):
         self.guide_geometry=None;self.final_clearance=None;self.retention_gate_s=0.;self.retention_last_position=None;self.escape_count=0
         self.press_approach_certificate=None
         self.actual_tab_witness=None
+        self.press_joint_servo=JointEndpointCorrection();self.press_latched_pose=None;self.press_reference_error=(0.,0.)
+        self.last_right_joints=None;self.right_joint_velocity=None;self.press_endpoint_low_velocity_frames=0;self.press_endpoint_goal_drift=0.
+        self.clip_constraints={};self.clip_constraints_safe=True
 
     def certify_press_path(self,measured,target,rotation,next_phase,exclude=()):
         """Certify the complete next leg from the actual loaded hand poses.
@@ -345,10 +366,30 @@ class ReleaseProbe(GraspProbe):
         elif phase=='depress_clip':
             self.press_depth=min(.0023,-.0041+.0007*age)
             rp=plug[:3]+bodyR@(local_contact-np.array((0,0,self.press_depth)))-rr@point
+            at_endpoint=self.press_depth>=.0023-1e-10
+            slow=self.right_joint_velocity is not None and np.isfinite(self.right_joint_velocity).all() and np.max(np.abs(self.right_joint_velocity))<.01
+            self.press_endpoint_low_velocity_frames=self.press_endpoint_low_velocity_frames+1 if at_endpoint and slow else 0
+            if self.press_joint_servo.reference is None and self.press_endpoint_low_velocity_frames>=3 and self.failure is None and self.clip_constraints_safe:
+                if self.certify_press_path(measured,rp,rr,'stationary_press_endpoint',((f'clip_{SERVICE}','tab'),(f'clip_{SERVICE}','hook'))):
+                    reference,pe,re=ik.solve(rp,ik.matrix_to_quat_xyzw(rr),measured[1][0],base_pos=self.env.rig.bases['right'],iters=220,tol=1e-6)
+                    if pe>.0001 or re>.001:self.failure='stationary press endpoint IK exceeds 0.1 mm / 1 mrad'
+                    else:
+                        self.press_joint_servo.latch(reference);self.press_reference_error=(float(pe),float(re))
+                        self.press_latched_pose=(rp.copy(),rr.copy())
+            if self.press_joint_servo.reference is not None:
+                self.press_endpoint_goal_drift=float(np.linalg.norm(rp-self.press_latched_pose[0]))
+                if self.press_endpoint_goal_drift>.0002:self.failure='fixed press endpoint moved more than 0.2 mm; explicit replan required'
+                rp,rr=self.press_latched_pose
+                # No moving-target integration. The fixed endpoint rejects
+                # load only while actual solid geometry/tab/joint guards pass.
+                self.press_joint_servo.update(measured[1][0],getattr(self,'command_dt',.05),
+                                              allowed=self.failure is None and self.clip_constraints_safe and travel<RELEASE_TRAVEL)
+                if self.press_joint_servo.invalid:self.failure=self.press_joint_servo.invalid
             self.stable_frames=self.stable_frames+1 if travel>=RELEASE_TRAVEL else 0
             if self.stable_frames>=5:
+                self.press_joint_servo.freeze()
                 self.withdraw_start=lp.copy();self.withdraw_plug=plug[:3].copy();self.pull_distance=0.;self.transition('withdraw_with_clip_pressed',t)
-            elif age>10.5:self.failure='clip did not reach measured release travel within bounded 2.3 mm depression'
+            elif age>18.5:self.failure='clip did not reach release travel within 2.3 mm stroke and bounded endpoint correction'
         elif phase=='withdraw_with_clip_pressed':
             # Maintain real clip travel while advancing the grasp target slowly;
             # the pressing hand follows the measured plug, not a stale point.

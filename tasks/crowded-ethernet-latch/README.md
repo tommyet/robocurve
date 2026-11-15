@@ -36,10 +36,21 @@ The switch is fixed on a stand; plugs and cables have real rigid-body dynamics.
 ```bash
 /data/IsaacLab-Arena/.venv/bin/python run.py --mode fit-probe --out /path/to/new-fit
 /data/IsaacLab-Arena/.venv/bin/python run.py --mode retention-probe --out /path/to/new-run
+/data/IsaacLab-Arena/.venv/bin/python run.py --mode clip-constraint-probe --no-video --out /path/to/new-constraint-check
 /data/IsaacLab-Arena/.venv/bin/python run.py --mode release-probe --out /path/to/new-attempt
 ```
 
 Retention probes apply external bench forces and cannot receive task credit.
+The separate clip-constraint probe retains the 1 N engaged pull and pressed
+withdrawal sequence, applying 0.5 N along the plug's downward Z axis at the
+actual tab point (-10, -1.5, +0.5) mm, including its moment about the clip centre.
+It checks all seven clips for relative rotation below 0.5 degrees, transverse
+joint error below 0.1 mm and slider limits within a stated 10 micrometre numerical
+tolerance. Plug and clip bodies now explicitly request 64 position and 16 velocity
+solver iterations to resolve the slider's locked axes. This is an unvalidated
+numerical fidelity candidate; masses, inferred geometric inertias, spring force,
+colliders and 2.4 mm travel remain unchanged. Its external loads are diagnostic
+only and never run in robot/scored mode.
 Release attempts use bounded normal robot joint/gripper commands and privileged
 native telemetry, never object pose writes or software latch-release toggles.
 Actual source release, target alignment, clip return, six neighbours and a

@@ -2,7 +2,7 @@
 import math
 import numpy as np
 from yam_arena.urdf import quat_xyzw_to_matrix
-from config import CLIP_Z,USED,port
+from config import CLIP_Z,CLIP_TRAVEL,USED,port
 
 FIT_MAX_PITCH_DEG=3.5
 FIT_MAX_CLIP_TRAVEL=.0002
@@ -10,9 +10,41 @@ FIT_MAX_CLIP_TRAVEL=.0002
 
 def bench_command(step,mode):
     if mode=='fit-probe':return 'untouched_fit',0.,0.
-    if mode!='retention-probe':return 'robot',0.,0.
+    if mode not in ('retention-probe','clip-constraint-probe'):return 'robot',0.,0.
     phase='settle' if step<40 else 'pull_engaged' if step<60 else 'press_clip' if step<80 else 'pull_pressed' if step<120 else 'release'
-    return phase,(-1. if phase in ('pull_engaged','pull_pressed') else 0.),(-.70 if phase in ('press_clip','pull_pressed') else 0.)
+    load=.50 if mode=='clip-constraint-probe' else .70
+    return phase,(-1. if phase in ('pull_engaged','pull_pressed') else 0.),(-load if phase in ('press_clip','pull_pressed') else 0.)
+
+
+def offcenter_clip_wrench(plug,clip,press):
+    """Diagnostic force at the actual ordinary tab; never used in robot mode."""
+    force=quat_xyzw_to_matrix(np.asarray(plug[3:]))@np.array((0.,0.,press))
+    lever=quat_xyzw_to_matrix(np.asarray(clip[3:]))@np.array((-.010,-.0015,.0005))
+    return force,np.cross(lever,force)
+
+
+def clip_joint_geometry(plug,clip):
+    body=quat_xyzw_to_matrix(np.asarray(plug[3:]));relative=body.T@quat_xyzw_to_matrix(np.asarray(clip[3:]))
+    local=body.T@(np.asarray(clip[:3])-np.asarray(plug[:3]))
+    return {'relative_angle_deg':math.degrees(math.acos(float(np.clip((np.trace(relative)-1.)/2.,-1.,1.)))),
+            'lateral_anchor_error_m':float(np.linalg.norm(local[:2])),
+            'travel_m':float(CLIP_Z-local[2])}
+
+
+def clip_constraint_summary(samples):
+    """Engineering constraint check, independent of unchanged task scoring."""
+    if not samples:raise ValueError('An actual constraint sample window is required')
+    limits={'relative_angle_deg_strict':.5,'lateral_anchor_error_m_strict':.0001,'travel_tolerance_m':.00001}
+    result={}
+    for i in USED:
+        values=[clip_joint_geometry(s['plug_poses'][str(i)],s['clip_poses'][str(i)]) for s in samples]
+        angle=max(v['relative_angle_deg'] for v in values);lateral=max(v['lateral_anchor_error_m'] for v in values)
+        low=min(v['travel_m'] for v in values);high=max(v['travel_m'] for v in values)
+        valid=all(math.isfinite(v) for value in values for v in value.values())
+        result[str(i)]={'max_relative_angle_deg':angle,'max_lateral_anchor_error_m':lateral,
+                        'min_travel_m':low,'max_travel_m':high,
+                        'pass':bool(valid and angle<.5 and lateral<.0001 and low>=-.00001 and high<=CLIP_TRAVEL+.00001)}
+    return {'limits':limits,'connectors':result,'pass':all(v['pass'] for v in result.values())}
 
 
 def connector_fit(plug,clip,port_index=None):
