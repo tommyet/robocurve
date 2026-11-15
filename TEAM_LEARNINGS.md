@@ -2521,3 +2521,29 @@ editing, merge both agents' findings, and commit/push the update with the work.
   supplied.08N retention. Authored value preserved for historical continuity,
   docs corrected. Astra recommends a gentle ramp because an abrupt reverse load
   can cross the lightly damped detent even when below static peak force.
+
+
+### 2026-11-15 — user requires a physically fixed hair mannequin head
+
+- New user steering supersedes all head-swivel coverage plans: head stays at
+  declared HEAD(.43,0,1.045)m/identity; only arms/dryer and flexible hair move.
+  Native neck_bearing is now a world FixedJoint with the same rest anchors and
+  explicit identity local rotations, excluded from the articulation. No pose
+  write/reset loop or head motor was added. All60 passive hair bends, scalp-skin
+  attachment, slider/detent, masses, thermal/moisture and drying limits remain
+  unchanged (unaffected native functions checked by AST/source hashes).
+- Runner records raw head pose plus measured translation/angle and maxima;
+  scorer independently compares raw pose with the DECLARED reference, never its
+  first sample. Translation>2mm or rotation>1deg invalidates all credit, including
+  partial drying. Missing/nonfinite head state or zero quaternion fails closed;
+  quaternion sign does not change the measured angle. Prior invalidity latches.
+- All42 tests pass in local OpenUSD environment; normal NumPy environment passes
+ 40 with2USD topology tests skipped. Topology checks use REAL UsdPhysics joints,
+  anchors/rotations and60 bends/skin attachment. Local USD lacks PhysxSchema:
+  tests supply only an unused import namespace for functions that do not invoke
+  that plugin, not a simulated PhysX replacement. This proves CPU topology and
+  scorer guards, NOT native fixed-mount accuracy. No new GPU trial was run.
+- Historical hair013 swivelling-head video remains score0 (power did not stayON)
+  and is OUTDATED for this fixed-head task. Passive-detent retention and actual
+  all-patch drying remain native-unproved. Do not reuse a swivel-head coverage
+  certificate as a fixed-head executable plan or claim a successful demo.

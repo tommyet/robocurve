@@ -27,9 +27,12 @@ this implementation can model or complete drying. See the batch record.
 
 ## Current implementation and probes
 
-The mannequin has a passive swivel neck bearing and separate articulated locks;
-robot contact must turn its head. The bearing has no policy-driven angle or
-motor. A normal open U-shaped dryer holder supports the barrel with its handle
+The mannequin head is fixed to its ordinary stand by a passive world fixed
+joint at its declared HEAD position and identity orientation. It cannot swivel
+for coverage: only the arms/dryer and the flexible hair locks may move. The
+sixty passive hair bending joints remain free; no head motor, kinematic pose
+write or reset loop maintains the mount. This fixed-head revision has CPU/USD
+tests only; native constraint accuracy and a new robot run remain pending. A normal open U-shaped dryer holder supports the barrel with its handle
 accessible below; no extra grasp handles are added. The real handle slider
 sets power from measured travel. The robot braces the handle, pushes the
 slider using measured phase gates, confirms retained power after horizontal
@@ -42,7 +45,7 @@ Local heat/moisture loss is energy limited; power-off and hidden patches do
 not dry. Candidate pressure drag is capped at 0.25 N total with equal/opposite
 dryer recoil. The dryer uses an ordinary **45 °C low-heat setting**; the scoring limit
 remains 50 °C. This candidate source temperature is not an empirical
-calibration. Heat, moisture, drag and bearing values remain uncalibrated.
+calibration. Heat, moisture and drag values remain uncalibrated.
 The hair model is a coarse bundle approximation, not individual-fibre CFD.
 
 ```bash
@@ -56,7 +59,9 @@ separately; operating and lifting the dryer does not demonstrate complete drying
 
 ### Passive slider retention candidate
 
-The earlier hair-power013 trial reached full measured travel, then returned to
+The historical hair-power013 trial used the superseded swivelling-head mount.
+Its video does not demonstrate this fixed-head task. It reached full measured
+travel, then returned to
 OFF during finger retraction. Its joint had travel limits and an authored friction attribute, without
 a detent. The current candidate adds the passive constitutive potential
 `U(q) = 0.5 k min(q², (q − L)²)`, with `L = 4 mm`, `k = 100 N/m`, and native
@@ -156,3 +161,30 @@ physical radius are unchanged; it is an anatomical rigid attachment, not a
 robot grasp constraint. Native maximum attachment gap0.645micrometres, strand
 anchor gap0.242micrometres; sphere/capsule contact check passed throughout the
 9-second force diagnostic. This is not a drying-completion demonstration.
+
+
+## Fixed-head requirement and measured scoring guard
+
+The declared reference is HEAD=(0.43,0,1.045)m with identity world rotation,
+not the first measured frame. The stand mount uses a world-to-head FixedJoint,
+with the same rest anchors and identity local rotations; it is excluded from
+the hair articulation. All60 passive bending DOFs, skin attachment, dryer
+slider/detent, masses, temperatures, moisture parameters and drying thresholds
+are unchanged. Covering hidden locks must use physical hair manipulation and
+arm/dryer motion; moving the head cannot earn even partial credit.
+
+Every native trace row includes `head_pose` and numeric `head_motion` translation
+in metres/rotation in degrees; result checks report maximum displacement and
+`head_fixed`. The scorer independently reads the raw measured pose and latches
+invalidation for translation greater than2mm or rotation greater than1degree.
+Missing/nonfinite poses and invalid zero quaternions also invalidate, including
+partial drying scores. Quaternion signs are equivalent; values are normalized
+for motion measurement without rebasing the declared reference.
+
+Forty-two CPU tests pass in the local USD environment, including real OpenUSD
+FixedJoint/rest-anchor topology, all60 passive joints, retained skin attachment
+and scorer negative controls. The local USD wheel omits NVIDIA PhysxSchema;
+its topology tests provide only an unused import namespace and exercise real
+UsdPhysics APIs, not PhysX simulation or mocked constraint behavior. Native
+fixed-head retention remains pending. Older swivel-head traces/videos, including
+hair-power013 (score0, ON retention failure), are historical evidence only.

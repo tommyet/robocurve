@@ -85,11 +85,11 @@ def main():
   if a.mode=='power-probe':
    from robot import DryerProbe, MAX_PROBE_STEPS
    robot=DryerProbe(env)
-  from scoring import HairScorer
+  from scoring import HairScorer,measured_head_motion,MAX_HEAD_TRANSLATION_M,MAX_HEAD_ROTATION_DEG
   from yam_arena import ik
   tracker=HairScorer() if robot else None;previous_dryer=None
   if tracker is not None:task._tracker=tracker;task._diagnostic=True
-  active_wind=set()
+  active_wind=set();max_head_translation=0.;max_head_rotation=0.
   with (a.out/'trajectory.jsonl').open('w') as trace:
    for step in range(MAX_PROBE_STEPS if robot else 180):
     phase='settle' if step<60 else 'lateral_force_probe' if step<100 else 'passive_return'
@@ -101,7 +101,11 @@ def main():
     before_steps,before_time=detent.detent.steps,detent.detent.sim_time
     env._env.step(action);env._t=(step+1)*.05
     detent.detent.check_interval(before_steps,before_time,.05)
-    poses=all_poses();segments=[];sep=0.;headpose=poses[0];headrot=quat_xyzw_to_matrix(headpose[3:])
+    poses=all_poses();segments=[];sep=0.;headpose=poses[0]
+    head_motion=measured_head_motion(headpose.tolist())
+    if not head_motion['head_pose_valid']:raise RuntimeError('missing or nonfinite native head pose')
+    max_head_translation=max(max_head_translation,head_motion['head_translation_m']);max_head_rotation=max(max_head_rotation,head_motion['head_rotation_deg'])
+    headrot=quat_xyzw_to_matrix(headpose[3:])
     for k in range(LOCKS):
      previous=None
      for j in range(SEGMENTS):
@@ -123,14 +127,15 @@ def main():
      for side in ['left','right']:
       ids,_=env._ids[side+'_robot'];q=arr(base.scene[side+'_robot'].data.joint_pos)[0,ids];hands.append(ik.tcp_pose(q,env.rig.bases[side])[0])
      speed=0. if previous_dryer is None else float(np.linalg.norm(dryer[:3]-previous_dryer)/.05);previous_dryer=dryer[:3].copy()
-     measured_score=tracker.update({'time':env._t,'root_separation':sep,'min_height':float(min(dryer[2]-.11,min(s['pos'][2]-LENGTH/2 for s in segments))-TOP),'dry_fraction':m['dry_fraction'],'worst_remaining_water_fraction':m['worst_remaining_water_fraction'],'max_temperature_C':m['max_temperature_C'],'dryer_speed':speed,'power_on':power>.5,'water_removed_step_kg':m['water_removed_step_kg'],'dryer_parked':bool(np.linalg.norm(dryer[:3]-np.array(DRYER_START))<.025),'hands_clear':all(np.linalg.norm(h-dryer[:3])>.12 for h in hands)})
-    row={'time':env._t,'phase':phase,'robot_control':control,'hair':segments,'head_pose':headpose.tolist(),'dryer_pose':dryer.tolist(),'switch_pose':switch.tolist(),'power_slider_fraction':power,'slider_detent':detent.snapshot(),'crease_separation':sep,'min_scalp_capsule_clearance_m':m['min_scalp_capsule_clearance_m'],'skin_attachment_error_m':skin_gap,'thermal':m,'score_metrics':measured_score};trace.write(json.dumps(row)+'\n');samples.append(row)
+     measured_score=tracker.update({'time':env._t,'head_pose':headpose.tolist(),'root_separation':sep,'min_height':float(min(dryer[2]-.11,min(s['pos'][2]-LENGTH/2 for s in segments))-TOP),'dry_fraction':m['dry_fraction'],'worst_remaining_water_fraction':m['worst_remaining_water_fraction'],'max_temperature_C':m['max_temperature_C'],'dryer_speed':speed,'power_on':power>.5,'water_removed_step_kg':m['water_removed_step_kg'],'dryer_parked':bool(np.linalg.norm(dryer[:3]-np.array(DRYER_START))<.025),'hands_clear':all(np.linalg.norm(h-dryer[:3])>.12 for h in hands)})
+    row={'time':env._t,'phase':phase,'robot_control':control,'hair':segments,'head_pose':headpose.tolist(),'head_motion':head_motion,'dryer_pose':dryer.tolist(),'switch_pose':switch.tolist(),'power_slider_fraction':power,'slider_detent':detent.snapshot(),'crease_separation':sep,'min_scalp_capsule_clearance_m':m['min_scalp_capsule_clearance_m'],'skin_attachment_error_m':skin_gap,'thermal':m,'score_metrics':measured_score};trace.write(json.dumps(row)+'\n');samples.append(row)
     if not np.isfinite(dryer).all() or sep>.03:raise RuntimeError('unstable native hair dynamics')
     panels=review.panels(base);canvas=np.zeros((594,960,3),dtype=np.uint8);canvas[36:306,240:720]=panels[0];canvas[306:576,:480]=panels[1];canvas[306:576,480:]=panels[2]
     cv2.putText(canvas,('ROBOT DRYER POWER/PICKUP | ' if robot else 'NATIVE FLEXIBLE HAIR | ')+phase,(12,25),cv2.FONT_HERSHEY_SIMPLEX,.6,(255,255,255),1,cv2.LINE_AA);cv2.putText(canvas,('Ordinary robot commands; incomplete drying attempt. Actual moisture measured.' if robot else 'Diagnostic force test, not robot drying. Actual moisture/geometry measured.'),(12,590),cv2.FONT_HERSHEY_SIMPLEX,.45,(255,205,120),1,cv2.LINE_AA);video.append_data(canvas)
     if step in (59,99,139,179,239,319,379,459,619):imageio.imwrite(a.out/f'step-{step}.png',canvas)
     if control is not None and (control.get('failure') or control.get('complete')):break
   result={'elapsed_wall_s':time.monotonic()-started,'diagnostic':True,'task_score':None,'robot_demo':False,'max_joint_separation_m':worst_sep,'max_lock_motion_m':max_motion,'thermal':thermal.result(),'max_skin_attachment_error_m':worst_skin_attachment,'checks':{'scalp_contact_respected':all(s['thermal']['min_scalp_capsule_clearance_m']>=-.0002 for s in samples),'joints_intact':worst_sep<.005,'locks_move':max_motion>.005,'power_off_no_drying':all(s['thermal']['water_removed_step_kg']==0 for s in samples if s['power_slider_fraction']<.5)}}
+  result['max_head_translation_m']=max_head_translation;result['max_head_rotation_deg']=max_head_rotation;result['checks']['head_fixed']=max_head_translation<=MAX_HEAD_TRANSLATION_M and max_head_rotation<=MAX_HEAD_ROTATION_DEG
   result['slider_detent']=detent.snapshot();result['checks']['detent_callback_cadence_verified']=True
   if robot:result|={'robot_power_probe':True,'diagnostic':True,'task_score':None,'diagnostic_score_readback':tracker.value,'score_invalid':tracker.invalid,'controller_complete':samples[-1]['robot_control']['complete'],'controller_failure':samples[-1]['robot_control']['failure'],'final_measured_power_fraction':samples[-1]['power_slider_fraction'],'final_dryer_pose':samples[-1]['dryer_pose']}
   (a.out/'result.json').write_text(json.dumps(result,indent=2)+'\n')

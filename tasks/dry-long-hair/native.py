@@ -44,9 +44,9 @@ def export(path,name):
    c=UsdGeom.Capsule.Define(s,'/Object/lock');c.CreateRadiusAttr(RADIUS);c.CreateHeightAttr(LENGTH-2*RADIUS);c.CreateAxisAttr('Z');c.CreateDisplayColorAttr([Gf.Vec3f(.055,.025,.012)]);collider(c)
  s.GetRootLayer().Save();return str(Path(path).resolve())
 def install_joints(s,parent,include_dryer=True):
- # Passive yaw bearing on an ordinary mannequin stand. Robot contact must turn
- # the head; no policy or timer sets its angle or applies a head motor.
- pivot=UsdPhysics.RevoluteJoint.Define(s,parent+'/head/neck_bearing');pivot.CreateBody1Rel().SetTargets([parent+'/head']);pivot.CreateAxisAttr('Z');pivot.CreateLocalPos0Attr(Gf.Vec3f(HEAD[0],HEAD[1],TOP+.12));pivot.CreateLocalPos1Attr(Gf.Vec3f(0,0,TOP+.12-HEAD[2]));pivot.CreateLowerLimitAttr(-180.);pivot.CreateUpperLimitAttr(180.);pivot.CreateExcludeFromArticulationAttr(True);PhysxSchema.PhysxJointAPI.Apply(pivot.GetPrim()).CreateJointFrictionAttr(.02)
+ # The ordinary stand fixes the mannequin head to the world. The head's
+ # declared HEAD/identity rest pose is physical, never maintained by pose writes.
+ pivot=UsdPhysics.FixedJoint.Define(s,parent+'/head/neck_bearing');pivot.CreateBody1Rel().SetTargets([parent+'/head']);pivot.CreateLocalPos0Attr(Gf.Vec3f(HEAD[0],HEAD[1],TOP+.12));pivot.CreateLocalPos1Attr(Gf.Vec3f(0,0,TOP+.12-HEAD[2]));pivot.CreateLocalRot0Attr(Gf.Quatf(1.));pivot.CreateLocalRot1Attr(Gf.Quatf(1.));pivot.CreateExcludeFromArticulationAttr(True)
  for k in range(LOCKS):
   for n in range(SEGMENTS):
    child=f'{parent}/hair_{k}_{n}';child_q=segment_quat(k,n)
