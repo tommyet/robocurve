@@ -58,7 +58,7 @@ def package_versions():
     return values
 
 
-def native_audit(stage,cloth_names,peg_names):
+def native_audit(stage,cloth_names,peg_names,allow_pinch=False):
     """Fail closed if a custom asset silently becomes a rigid/proxy object."""
     from pxr import UsdPhysics
     result={'cloth':{},'pegs':{},'attachments':[],'physics_scenes':[]}
@@ -88,7 +88,9 @@ def native_audit(stage,cloth_names,peg_names):
                     entry['joints'].append({'path':path,'type':prim.GetTypeName(),
                         'body0':[str(p) for p in prim.GetRelationship('physics:body0').GetTargets()],
                         'body1':[str(p) for p in prim.GetRelationship('physics:body1').GetTargets()]})
-    if result['attachments']:
+    expected_suffixes=tuple('/'+name+'_'+side+'_dry_pinch' for name in cloth_names for side in ('left','right'))
+    unexpected=[path for path in result['attachments'] if not (allow_pinch and path.endswith(expected_suffixes))]
+    if unexpected:
         raise RuntimeError('Unexpected attachment in this attachment-free scene')
     for name in cloth_names:
         item=result['cloth'].get(name)
@@ -120,6 +122,7 @@ def main():
     p.add_argument('--state-assisted-regrasp',action='store_true',help='Extend the verified handoff with a screened carry and measured ordinary near-tip regrasp')
     p.add_argument('--state-assisted-narrow',action='store_true',help='After the wide regrasp, clear the collar and measure a screened ordinary narrow-end pinch')
     p.add_argument('--surface-contact-diagnostic',action='store_true',help='Native speculative cloth contact and eight within-step collision-pair updates; no material or rest-gap changes')
+    p.add_argument('--pinch-approximation',action='store_true',help='Use the disclosed contact-gated dry pinch for both hands, identically for demo and Dream')
     p.add_argument('--judging-views',action='store_true',help='Record additional native960×720 front/rear assessor videos')
     p.add_argument('--out',type=Path)
     p.add_argument('--check-only',action='store_true',help='Compile source and check JSON without loading a simulator')
@@ -292,6 +295,12 @@ def main():
             report['state_assisted_grasp']=fixed_plan['grasp']
             fixed_actions=np.asarray([f['action14'] for f in fixed_plan['frames']],float)
             if len(fixed_actions)<args.steps:raise RuntimeError('Measured plan does not cover the requested bounded trial')
+        pinches={}
+        if args.pinch_approximation:
+            from pinch_constraint import install
+            pinches=install(base,'tie')
+            report['pinch_material']='Contact-gated native hard cloth-to-hand constraint; opening releases. Native two-way reaction; no calibrated force-limited slip.'
+            report['native_scene_audit']=native_audit(stage,list(arena_cloth.SPECS),list(PEG_SPECS),allow_pinch=True)
         report['initial_physics_step_count']=int(base.sim._physics_step_count)
         report['initial_snapshot']='After one raw reset and the declared five-second native cloth/peg settling period'
         (args.out/'meshes.json').write_text(json.dumps({name:{'rest':spec.mesh.rest.tolist(),
@@ -325,6 +334,7 @@ def main():
             observation=emb._observation()
             state=scene.object_states(emb._env,names)
             record={'step':step,'time_s':step/CONTROL_HZ,'action14':active_action.tolist(),
+                    'pinches':{side:dict(indices=p.indices.tolist(),correction_m=p.last_correction,events=p.events) for side,p in pinches.items()},
                     'measured_joint_pos':encode(np.asarray(observation.state['joint_pos'])),
                     'objects':encode(state),'physics_step_count':int(base.sim._physics_step_count),
                     'robot_links':{name:{'names':list(base.scene[name].body_names),

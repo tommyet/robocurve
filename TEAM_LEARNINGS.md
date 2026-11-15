@@ -4,6 +4,66 @@ Last updated: 2026-11-14 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 00:26 UTC — retained adjustments and real extraction; completion continues
+
+- Same single A40 remains active, supervised, with its watchdog extended by one
+  hour from the latest lifecycle update. Do not infer the original00:42 deadline
+  is current; read `artifacts/practical-models-2026-11-14/gpu-lifecycle.json`.
+- Native tie207 hard vertex pinches hold both selected material patches for500
+  ordinary actions, with final residuals below1mm. These use native two-way
+  constraints; no cloth node or robot pose is written during execution. The
+  initial slack wrap slides off the narrow end. Lower-tail207 retains both
+  grips and is the starting state for a screened320-action neck/front threading
+  continuation. Neither checkpoint is a knot or fresh-start episode.
+- Wheel206 retains a quarter-turn after key withdrawal. Full208 exposed a rim
+  contact test using210mm centre radius instead of220mm outer surface; stopped
+  and explicitly marked interrupted. Corrected211 indexes the wheel and engages
+  the second loose nipple. Its full repair/spin outcome is still running.
+- Staple209 completes584 actions in1020.86s. Both legs clear, but the first
+  approximation incorrectly glued the crown to its first fork contact and
+  reported lateral damage. Actual recorded tool motion also withdraws slightly
+  during the lever stage. The corrected law uses the authored fork wedge plane
+  and permits normal lengthwise sliding; crosswise pulling still fails. Native
+  paper hinge break count is zero, while numerical panel residuals are about
+ 0.6mm, not physical tear certificates.212 tests a seated straight lift at240Hz.
+- Shirt209 failed before action1: GPU rigid-body tensor kinematic targets are
+  unimplemented in this Isaac build.213 uses ordinary USD kinematic transforms,
+  which PhysX reads, and tests the same contact-driven peg model. The garment
+  remains native flexible FEM. NVIDIA reference: rigid-bodies documentation,
+  https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.2/dev_guide/rigid_bodies_articulations/rigid_bodies.html
+- Seam210 is queued with explicitly coarser contact limits:2mm panel opening,
+ 1mm interior thread crossing, with blade-damage checks retained. No new seam
+  outcome yet. Draft fidelity text describes all approximations and unverified
+  status; old no-attachment prose must be replaced in the final clean packages.
+- Local focused tests: wheel2, staple4, pinch3 pass using unittest. Pytest is not
+  installed. No new Dream call or upstream PR has been made for these five.
+
+## 2026-11-14 23:58 UTC — practical material approximations in progress
+
+- User explicitly requested completion using honest skill-preserving material
+  approximations. Accepted board precedents include contact-driven O-ring seating,
+  analytic tape wrapping and hinged ice-tray release. Cached evidence:
+  `artifacts/submission-standard-2026-11-14/accepted-model-comparisons.json`.
+- A new A40 Pod `7dszjx6tuony0y` is ACTIVE from23:27:07 UTC at$0.59/hour.
+  Both previous restart requests failed for capacity. This fresh runtime installed
+  successfully. Its independent local stop watchdog deadline is00:42 UTC Nov15;
+  extend only during supervised work and stop after verified downloads. Lifecycle
+  and source snapshots: `artifacts/practical-models-2026-11-14/`.
+- Wheel206 uses an elastic ring/spoke equilibrium, geometric key-slot engagement,
+  and native free wrench/robot. At580 actions a measured key turn has adjusted
+  spoke0 from−0.75 to−0.598 turns; complete withdrawal is still being checked.
+  This is not a complete repair or submitted demo. A1782-action full candidate
+  includes the second nipple, key release and released wheel spin.
+- Staple functional candidate retains native flexible paper and a free remover;
+  contact-qualified fork lift plastically straightens clinches through the original
+  holes. Sideways withdrawal damages the sheets. Native integration gate pending.
+- Tie201's contact-gated projected pinch retained the narrow strip through
+  repositioning but slipped during wrapping.207 now tests native vertex-to-hand
+  constraints, selected only from actual pinched material. Native cloth remains
+  flexible; hard static grip is an explicit approximation. No knot exists yet.
+- No new Dream requests or upstream PRs for the five tasks. No diagnostic
+  checkpoint reconstruction may be represented as a fresh-start submission demo.
+
 ## 2026-11-14 23:03 UTC — batch closed; cake revision received, five demos still blocked
 
 - Operator: repository agent, `codex/six-task-completion-2026-11-13`.

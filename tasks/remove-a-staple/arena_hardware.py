@@ -28,6 +28,7 @@ BODY_NAMES=tuple(f'staple/wire_{i:03d}' for i in range(len(clinched_staple_cente
 ASSEMBLIES={}
 PANEL_CONTACT_CANDIDATE=False
 PANEL_POSITION_ITERATIONS=128
+FUNCTIONAL_MODEL=False
 
 
 def _spawn(path,cfg,translation=None,orientation=None,**kwargs):
@@ -40,6 +41,9 @@ def _spawn(path,cfg,translation=None,orientation=None,**kwargs):
         metadata=build_scene(stage,root=root,include_table=False,include_papers=False,
             reset_profile=runtime_config.RESET_PROFILE,mesh_profile=runtime_config.MESH_PROFILE,
             paper_profile=runtime_config.PAPER_PROFILE)
+        if FUNCTIONAL_MODEL:
+            from functional_staple import configure
+            configure(stage,metadata)
         if PANEL_CONTACT_CANDIDATE:
             from coordinate_frame import OFFSET_M
             UsdGeom.Xform.Define(stage,root).AddTranslateOp().Set(Gf.Vec3d(*OFFSET_M))

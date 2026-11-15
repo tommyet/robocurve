@@ -1,5 +1,8 @@
 # Peg a T-shirt onto a clothesline
 
+Current practical material variant (2026-11-15): Native surface FEM models two sewn fabric layers, bending, gravity and self-contact. A small material patch between nearly closed fingers uses a contact-gated native vertex constraint for static grip; opening releases it. The practical peg variant maps actual handle compression to jaw opening. Releasing can retain the line and only the fabric vertices actually inside the mouth. Peg spring force and grip slip are approximated. Taut line and rack are rigid. Cotton anisotropy, yarns and wetness are omitted. The same mechanism applies to scripted and Dream policies. Complete two-peg retention is not yet verified. Commands and earlier diagnostics below describe their named versions; do not treat them as validated submission evidence.
+
+
 **Development package; not ready to submit.** The corrected flexible-cloth
 setup supports a measured hem pickup. The latest continuation carries a closed
 peg instead of opening it around the fabric and line. Neither a two-peg hang

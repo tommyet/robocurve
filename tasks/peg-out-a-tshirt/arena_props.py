@@ -49,6 +49,10 @@ def _peg_spawn(path,cfg,translation=None,orientation=None,**kwargs):
         # The lower body is first in the collection, so both jaws exist now.
         author_peg_hinge(stage,str(path).rsplit('/',1)[0],position,
                          fixed_lower=False,spring=True)
+    import os
+    if cfg.upper and os.environ.get('ROBOCURVE_SHIRT_FUNCTIONAL_PEGS')=='1':
+        from functional_pegs import configure
+        configure(stage,str(path).rsplit('/',1)[0])
     return prim
 
 

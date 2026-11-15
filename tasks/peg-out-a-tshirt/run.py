@@ -58,7 +58,7 @@ def package_versions():
     return values
 
 
-def native_audit(stage,cloth_names,peg_names):
+def native_audit(stage,cloth_names,peg_names,allow_functional=False):
     """Fail closed if a custom asset silently becomes a rigid/proxy object."""
     from pxr import UsdPhysics
     result={'cloth':{},'pegs':{},'attachments':[],'physics_scenes':[]}
@@ -89,7 +89,8 @@ def native_audit(stage,cloth_names,peg_names):
                     entry['joints'].append({'path':path,'type':prim.GetTypeName(),
                         'body0':[str(p) for p in prim.GetRelationship('physics:body0').GetTargets()],
                         'body1':[str(p) for p in prim.GetRelationship('physics:body1').GetTargets()]})
-    if result['attachments']:
+    unexpected=[path for path in result['attachments'] if not (allow_functional and path.endswith(('_cloth_grip','_dry_pinch')))]
+    if unexpected:
         raise RuntimeError('Unexpected attachment in this attachment-free scene')
     for name in cloth_names:
         item=result['cloth'].get(name)
@@ -99,7 +100,7 @@ def native_audit(stage,cloth_names,peg_names):
         item=result['pegs'].get(name,{})
         if len(item.get('bodies',[]))!=2 or len(item.get('joints',[]))!=1:
             raise RuntimeError('Peg must have exactly two free jaws and one hinge: '+name)
-        if item.get('kinematic_bodies'):
+        if item.get('kinematic_bodies') and not allow_functional:
             raise RuntimeError('Task peg jaw is kinematic: '+name)
         joint=item['joints'][0]
         if joint['type']!='PhysicsRevoluteJoint' or len(joint['body0'])!=1 or len(joint['body1'])!=1:

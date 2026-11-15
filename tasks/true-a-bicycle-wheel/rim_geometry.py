@@ -33,7 +33,9 @@ def sector_mesh(radius=.210, radial_depth=.020, axial_width=.022, sectors=32,
             faces.extend(((a,b,c),(a,c,d)))
     faces.extend(((0,2,1),(0,3,2)))
     last=4*subdivisions;faces.extend(((last,last+1,last+2),(last,last+2,last+3)))
-    return local,np.asarray(faces,int)
+    # The traversal above winds the volume inward. Reverse each triangle so
+    # the renderer sees the exterior faces (the convex collision hull is unchanged).
+    return local,np.asarray(faces,int)[:,::-1]
 
 
 def maximum_radial_chord_error_m(radius=.220,sectors=32,subdivisions=6):

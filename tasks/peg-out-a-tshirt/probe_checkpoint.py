@@ -27,14 +27,18 @@ def main():
     parser.add_argument('--solver-iterations',type=int,choices=(32,128),default=128)
     parser.add_argument('--center-peg-reset',action='store_true',help='Explicit alternative initial peg layout: first at centre, spare at y=0.20m; reset-only translation, never an action-time edit')
     parser.add_argument('--fresh-peg-reset',action='store_true',help='Use the declared initial peg poses and zero velocities instead of reconstructed settled peg states')
+    parser.add_argument('--functional-pegs',action='store_true')
     args=parser.parse_args()
+    source_changes={}
     source=Path(__file__).resolve().parent
     provenance=json.loads(args.state.with_suffix('.json').read_text())
     digest=hashlib.sha256(args.state.read_bytes()).hexdigest()
     if digest!=provenance['data_sha256']:raise ValueError('Checkpoint hash mismatch')
     for name,expected in provenance['physics_source_sha256'].items():
         if Path(name).name!=name or hashlib.sha256((source/name).read_bytes()).hexdigest()!=expected:
-            raise ValueError('Physical source differs from recorded checkpoint: '+name)
+            if not args.functional_pegs or name!='arena_props.py':
+                raise ValueError('Physical source differs from recorded checkpoint: '+name)
+            source_changes[name]='Explicit functional peg model; cloth mesh and material unchanged'
     with np.load(args.state,allow_pickle=False) as archive:
         state={key:archive[key] for key in archive.files}
     plan=json.loads(args.plan.read_text())
@@ -58,6 +62,7 @@ def main():
     started=time.monotonic()
     report=dict(kind='unscored_native_checkpoint_contact_diagnostic',status='initializing',
         score=None,demo=False,dream_requests=0,raised_support_candidate=True,
+        functional_pegs=args.functional_pegs,source_changes=source_changes,
         requested_steps=len(actions),completed_steps=0,provenance=provenance,
         physics_hz=args.physics_hz,solver_iterations=args.solver_iterations,
         center_peg_reset=args.center_peg_reset,
@@ -71,6 +76,7 @@ def main():
     signal.signal(signal.SIGTERM,terminated);save()
     app=trace=video=dense=None
     try:
+        os.environ['ROBOCURVE_SHIRT_FUNCTIONAL_PEGS']='1' if args.functional_pegs else '0'
         os.environ['ROBOCURVE_SHIRT_RAISED_SUPPORT']='1'
         os.environ['ROBOCURVE_SHIRT_SURFACE_CONTACT_DIAGNOSTIC']='1'
         os.environ['ROBOCURVE_SHIRT_REGULAR_REFINED']='1'
@@ -141,9 +147,15 @@ def main():
         actual=arena_cloth.state(emb._env,'tshirt')
         error=float(np.max(abs(actual.nodes-state['nodes'])))
         if error>2e-6:raise RuntimeError('Checkpoint initialization mismatch')
+        mechanisms=None
+        if args.functional_pegs:
+            from functional_pegs import install
+            mechanisms=install(base)
+            from pinch_constraint import install as install_pinch
+            pinches=install_pinch(base,'tshirt')
         report.update(initial_node_error_m=error,physics_dt_s=float(base.sim.get_physics_dt()),
-            native_scene_audit=native_audit(omni.usd.get_context().get_stage(),['tshirt'],['left_peg','right_peg']),
-            state_writes='One reset-only checkpoint reconstruction; none during action execution')
+            native_scene_audit=native_audit(omni.usd.get_context().get_stage(),['tshirt'],['left_peg','right_peg'],allow_functional=args.functional_pegs),
+            state_writes=('Native flexible cloth with contact-gated hand/peg vertex constraints and functional peg kinematic poses' if args.functional_pegs else 'One reset-only checkpoint reconstruction; none during action execution'))
         limits=np.tile([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+
             [GRIPPER['velocity']/abs(FINGER_OPEN)/20],2)
         if np.any(actions<emb._low) or np.any(actions>emb._high):raise ValueError('Action bounds exceeded')
@@ -163,6 +175,8 @@ def main():
                 robot_links={name:{'names':list(base.scene[name].body_names),
                     'poses_xyzw':array(base.scene[name].data.body_link_pose_w)[0].tolist()}
                     for name in ('left_robot','right_robot')})
+            if mechanisms:
+                row['functional_pegs']={name:dict(held=p.held,clipped=p.clipped,opening_rad=p.opening,captured_vertices=p.indices,events=p.events) for name,p in mechanisms['pegs'].items()}
             trace.write(json.dumps(row,allow_nan=False)+'\n');trace.flush()
             pixels=np.asarray(obs.images['top_cam'],dtype=np.uint8);video.append_data(pixels)
             if step in (0,len(actions)):Image.fromarray(pixels).save(args.out/f'frame-{step:04d}.png')

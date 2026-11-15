@@ -46,6 +46,7 @@ DISTANCE_TOLERANCE_COMPENSATION_M = 0.
 BATCH_SDF_NOTICES = False
 MATERIAL_STRIDE = 1
 SOLVER_TYPE = 'TGS'
+FUNCTIONAL_MODEL = False
 FIXTURE_LAYOUT = 'reference'
 RESET_DIAGNOSTICS = []
 
@@ -65,6 +66,9 @@ def _spawn(path, cfg, translation=None, orientation=None, **kwargs):
             central_spring_candidate=CENTRAL_SPRING_CANDIDATE,
             distance_spring_tolerance_m=DISTANCE_TOLERANCE_COMPENSATION_M,
             fixture_layout=FIXTURE_LAYOUT)
+        if FUNCTIONAL_MODEL:
+            from functional_wheel import configure
+            configure(stage,metadata)
         if PRELOADED_RESET_CANDIDATE:
             from preloaded_reset import author_preloaded_configuration
             author_preloaded_configuration(stage,metadata)

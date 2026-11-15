@@ -23,14 +23,19 @@ def main():
     parser.add_argument('--state',type=Path,required=True)
     parser.add_argument('--plan',type=Path,required=True)
     parser.add_argument('--out',type=Path,required=True)
+    parser.add_argument('--pinch-approximation',action='store_true',help='Disclosed contact-gated dry-pinch material variant, identical for every policy')
     args=parser.parse_args()
     source=Path(__file__).resolve().parent
     provenance=json.loads(args.state.with_suffix('.json').read_text())
     digest=hashlib.sha256(args.state.read_bytes()).hexdigest()
     if digest!=provenance['data_sha256']:raise ValueError('Checkpoint hash mismatch')
+    source_changes={}
     for name,expected in provenance['physics_source_sha256'].items():
         if Path(name).name!=name or hashlib.sha256((source/name).read_bytes()).hexdigest()!=expected:
-            raise ValueError('Physical source differs from recorded checkpoint: '+name)
+            if args.pinch_approximation and name=='adult_layout.py':
+                source_changes[name]={'checkpoint':expected,'current':hashlib.sha256((source/name).read_bytes()).hexdigest(),
+                    'verification':'Actual rest mesh and faces must match exactly below; optional refinement is disabled'}
+            else:raise ValueError('Physical source differs from recorded checkpoint: '+name)
     with np.load(args.state,allow_pickle=False) as archive:
         state={key:archive[key] for key in archive.files}
     plan=json.loads(args.plan.read_text())
@@ -54,6 +59,7 @@ def main():
         score=None,demo=False,dream_requests=0,adult_collar_candidate=True,
         requested_steps=len(actions),completed_steps=0,provenance=provenance,
         plan_sha256=hashlib.sha256(args.plan.read_bytes()).hexdigest())
+    report.update(pinch_approximation=args.pinch_approximation,source_changes=source_changes)
     def save():
         report['wall_seconds']=time.monotonic()-started
         tmp=args.out/'run.tmp.json';tmp.write_text(json.dumps(report,indent=2)+'\n')
@@ -107,9 +113,14 @@ def main():
         actual=arena_cloth.state(emb._env,'tie')
         error=float(np.max(abs(actual.nodes-state['nodes'])))
         if error>2e-6:raise RuntimeError('Checkpoint initialization mismatch')
+        pinches={}
+        if args.pinch_approximation:
+            from pinch_constraint import install
+            pinches=install(base,'tie')
         report.update(initial_node_error_m=error,physics_dt_s=float(base.sim.get_physics_dt()),
-            native_scene_audit=native_audit(omni.usd.get_context().get_stage(),['tie'],[]),
-            state_writes='One reset-only checkpoint reconstruction; none during action execution')
+            native_scene_audit=native_audit(omni.usd.get_context().get_stage(),['tie'],[],allow_pinch=args.pinch_approximation),
+            state_writes=('Reset reconstruction only; contact-gated native vertex attachments resolve pinches without runtime pose writes'
+                if args.pinch_approximation else 'One reset-only checkpoint reconstruction; none during action execution'))
         limits=np.tile([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+
             [GRIPPER['velocity']/abs(FINGER_OPEN)/20],2)
         if np.any(actions<emb._low) or np.any(actions>emb._high):raise ValueError('Action bounds exceeded')
@@ -124,6 +135,7 @@ def main():
         def snapshot(step,action):
             obs=emb._observation()
             row=dict(step=step,time_s=step/20,action14=action.tolist(),
+                pinches={side:dict(indices=p.indices.tolist(),correction_m=p.last_correction,events=p.events) for side,p in pinches.items()},
                 measured_joint_pos=encode(np.asarray(obs.state['joint_pos'])),
                 objects=dense.record(scene.object_states(emb._env,['tie']),step,encode),
                 robot_links={name:{'names':list(base.scene[name].body_names),

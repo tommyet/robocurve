@@ -1,5 +1,8 @@
 # Remove a staple without tearing the papers
 
+Current practical material variant (2026-11-15): Both paper sheets use native dynamic box panels and passive bending hinges. A5mg minimum panel mass stabilizes small panels. The steel clinch uses a disclosed quasistatic approximation: only a remover fork beneath the crown can lift and straighten the legs through their original holes. Sideways withdrawal before the legs clear is recorded as damage. A cleared staple rests ideally on the upward-facing fork until it tips off; then it falls under gravity. Steel bending force and frictional slip are not calibrated. Complete extraction and paper preservation are being tested. Commands and earlier diagnostics below describe their named versions; do not treat them as validated submission evidence.
+
+
 **Development package; not ready to submit.** The latest remover attempt
 leaves the staple in the sheets after lifting away. More importantly, the
 staple's clinch changes during the first 50 ms, before robot contact. Validate

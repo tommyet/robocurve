@@ -1,5 +1,8 @@
 # Unpick a seam
 
+Current practical material variant (2026-11-15): Flexible canvas uses118 native dynamic panels per patch joined by passive bending hinges. Each thread loop has12 contacting capsule segments and passive bending, with explicit numerical mass0.1745g per loop. Measured inward blade contact of50mN for10ms severs a thread joint. A practical contact variant logs small panel residuals, rejects openings over2mm and thread crossings deeper than1mm into a solid panel, and retains blade-damage and native fracture checks. These are coarse numerical contact approximations, not textile microstructure or calibrated cutting forces. Complete seam opening remains unverified. Commands and earlier diagnostics below describe their named versions; do not treat them as validated submission evidence.
+
+
 Remove the six tacking stitches joining two canvas patches without cutting or
 tearing either patch, then put the seam ripper down. Patch relocation is not
 required. See `JUDGING.md` for the final inspection and safe-release criteria.

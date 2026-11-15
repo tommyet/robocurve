@@ -1,5 +1,8 @@
 # True a wobbly bicycle wheel
 
+Current practical material variant (2026-11-15): A quasistatic elastic ring and spoke model computes rim shape and tension from the nipple settings. The measured key must surround a nipple and rotate to change spoke rest length by0.454mm per turn. The robot and free key use native rigid-body contact. Wheel sectors follow the computed elastic shape; a rim pinch drives the axle, which coasts with bearing drag after release. Thread torque, fast vibration, plastic damage and force-controlled spoke adjustment are not calibrated. Wrong nipple settings or turning direction can worsen the wheel. Full repair verification is in progress. Commands and earlier diagnostics below describe their named versions; do not treat them as validated submission evidence.
+
+
 **Development package; not ready to submit.** The latest full first-turn
 trial turns one nipple, but the adjustment unwinds while the wrench withdraws.
 A shorter release continuation loses the wrench grip. A separate unloaded

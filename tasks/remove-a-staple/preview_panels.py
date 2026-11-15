@@ -8,10 +8,11 @@ from pathlib import Path
 import time
 import traceback
 import signal
+import shutil
 import numpy as np
 
 
-def native_audit(stage):
+def native_audit(stage,quasistatic=False):
     from pxr import UsdPhysics
     from arena_hardware import BODY_NAMES
     from arena_panels import SHELLS
@@ -20,7 +21,7 @@ def native_audit(stage):
         path=str(prim.GetPath());schemas=prim.GetAppliedSchemas()
         if any('Attachment' in x for x in schemas) or 'Attachment' in prim.GetTypeName():attachments.append(path)
         if '/hardware/' in path and prim.HasAPI(UsdPhysics.RigidBodyAPI):
-            if UsdPhysics.RigidBodyAPI(prim).GetKinematicEnabledAttr().Get():raise RuntimeError('Kinematic hardware')
+            if UsdPhysics.RigidBodyAPI(prim).GetKinematicEnabledAttr().Get() and not (quasistatic and '/staple/' in path):raise RuntimeError('Unexpected kinematic hardware')
             hardware.append(path)
         if '/hardware/staple/' in path and prim.IsA(UsdPhysics.Joint):
             if not prim.GetRelationship('physics:body0').GetTargets() or not prim.GetRelationship('physics:body1').GetTargets():fixed.append(path)
@@ -35,13 +36,14 @@ def native_audit(stage):
         papers[name]={'dynamic_panels':len(shell['bodies']),'passive_hinges':len(shell['joints']),
                       'surface_area_m2':shell['mesh'].audit()['surface_area_m2']}
     if len(papers)!=2 or len(hardware)!=len(BODY_NAMES) or attachments or fixed:raise RuntimeError('Incomplete native paper or hidden attachment')
-    return dict(paper=papers,dynamic_hardware_bodies=len(hardware),attachments=attachments,fixed_material_joints=fixed)
+    return dict(paper=papers,hardware_bodies=len(hardware),quasistatic_wire=quasistatic,attachments=attachments,fixed_material_joints=fixed)
 
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--out',type=Path,required=True);p.add_argument('--steps',type=int,default=10)
-    p.add_argument('--physics-hz',type=int,choices=(2000,5000,10000),default=10000)
+    p.add_argument('--physics-hz',type=int,choices=(240,480,2000,5000,10000),default=10000)
+    p.add_argument('--quasistatic',action='store_true',help='Contact-driven clinch bending approximation, identical for demo and Dream')
     p.add_argument('--paper-profile',choices=('office-80gsm','heavy-200gsm-candidate'),default='office-80gsm')
     p.add_argument('--panel-spacing-m',type=float,choices=(.012,.04),default=.012)
     p.add_argument('--plan',type=Path)
@@ -92,9 +94,13 @@ def main():
         if plan.get('panel_spacing_m',.012)!=a.panel_spacing_m:p.error('Plan and panel spacing must match')
         if hashlib.sha256(Path(YAM_URDF).read_bytes()).hexdigest()!=plan['urdf_sha256']:raise RuntimeError('Plan URDF mismatch')
         for name,digest in plan['source_sha256'].items():
+            if a.quasistatic:continue # New material variant is fully snapshotted below, not represented as the old physics.
             if hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()!=digest:raise RuntimeError('Stale plan source: '+name)
     if not version('isaacsim').startswith('6.1.'):raise RuntimeError('Use the pinned Isaac6.1 environment')
     a.out.mkdir(parents=True,exist_ok=False);started=time.monotonic()
+    frozen=a.out/'task-source';frozen.mkdir()
+    for source in Path(__file__).parent.glob('*.py'):shutil.copyfile(source,frozen/source.name)
+    if a.plan:shutil.copyfile(a.plan,frozen/'fixed-plan.json')
     report={'kind':'staple_panel_yam_integration_preview','status':'running','score':None,'robot_demo':False,
         'joint_tracking':a.joint_tracking,'solver_type':a.solver_type,'position_iterations':a.position_iterations,
         'tool_pose_servo':a.tool_pose_servo,
@@ -108,6 +114,7 @@ def main():
                   'State-assisted scripted tool-pose servo; ordinary bounded joint commands' if a.tool_pose_servo else
                   'ordinary fixed joint commands; no object state feedback'),
         'paper_model':'native analytic box panels with passive bending/strength hinges',
+        'quasistatic_wire':a.quasistatic,
         'paper_profile':a.paper_profile,'panel_spacing_m':a.panel_spacing_m,
         'world_coordinate_offset_m':coordinate_frame.OFFSET_M.tolist(),
         'plan_sha256':hashlib.sha256(a.plan.read_bytes()).hexdigest() if a.plan else None,
@@ -119,7 +126,7 @@ def main():
         temporary=a.out/'preview.tmp.json';temporary.write_text(json.dumps(report,indent=2,allow_nan=False)+'\n');temporary.replace(a.out/'preview.json')
     def terminated(signum,frame):raise TimeoutError('Preview stopped by external watchdog')
     signal.signal(signal.SIGTERM,terminated);checkpoint()
-    app=video=trace=dream_policy=break_observer=None;monitors=[];request_audit=[];session_audit={'session_count':0}
+    app=video=trace=dream_policy=break_observer=wire_model=None;monitors=[];request_audit=[];session_audit={'session_count':0}
     try:
         from isaaclab.app import AppLauncher
         app=AppLauncher(headless=True,enable_cameras=True,device='cpu').app
@@ -130,6 +137,7 @@ def main():
         from PIL import Image
         import omni.usd
         import arena_panels,arena_hardware
+        arena_hardware.FUNCTIONAL_MODEL=a.quasistatic
         arena_hardware.PANEL_CONTACT_CANDIDATE=True
         arena_hardware.PANEL_POSITION_ITERATIONS=a.position_iterations
         arena_panels.POSITION_ITERATIONS=a.position_iterations
@@ -168,9 +176,14 @@ def main():
         report['coordinate_configuration_audit']=list(coordinate_frame.CONFIG_AUDIT)
         base=emb._base;stage=omni.usd.get_context().get_stage()
         report['phase']='reset';break_observer.context('reset');emb._env.reset()
-        report['native_audit']=native_audit(stage)
-        arena_panels.install_material_hook(base,stage)
-        monitors=[x['monitor'] for x in arena_hardware.ASSEMBLIES.values()]
+        report['native_audit']=native_audit(stage,a.quasistatic)
+        if a.quasistatic:
+            from functional_staple import install
+            wire_model=install(base,next(iter(arena_hardware.ASSEMBLIES.values()))['metadata'])
+            report['wire_fidelity']='Causal fork engagement and quasistatic plastic unbending; kinematic steel segments, no bending-force feedback. Native flexible paper and remover. Sideways extraction damages paper.'
+        else:
+            arena_panels.install_material_hook(base,stage)
+            monitors=[x['monitor'] for x in arena_hardware.ASSEMBLIES.values()]
         report['physics_dt_s']=float(base.sim.get_physics_dt())
         report['effective_device']=str(base.device)
         if report['effective_device']!='cpu':raise RuntimeError('Expected CPU native panel dynamics')
@@ -246,6 +259,7 @@ def main():
             paper=[arena_panels.state(emb._env,'paper_'+str(i)) for i in range(2)]
             hardware=arena_hardware.hardware_state(emb._env,'hardware')
             trace.write(json.dumps({'step':step,'time_s':step/20,'joint_pos':np.asarray(observation.state['joint_pos']).tolist(),
+                'quasistatic_wire':None if wire_model is None else wire_model.record(),
                 'commanded_action14':None if step==0 else issued.tolist(),
                 'dream_requested_action14':None if requested is None else requested.tolist(),
                 'joint_tracking':None if tracker is None else tracker.last,
@@ -268,6 +282,7 @@ def main():
             video.append_data(frame)
             if step in (0,a.steps):Image.fromarray(frame).save(a.out/('setup.png' if not step else 'final.png'))
             report['completed_steps']=step
+            if wire_model is not None:report['quasistatic_state']=wire_model.record()
             if step%5==0:trace.flush();checkpoint()
         if a.judging_views:
             from review_views import capture_final

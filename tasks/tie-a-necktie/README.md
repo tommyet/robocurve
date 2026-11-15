@@ -1,5 +1,8 @@
 # Tie a necktie on a collar form
 
+Current practical material variant (2026-11-15): Native surface FEM models strip width, bending, stretch and self-contact; one effective shell approximates the sewn/interlined tie. A contact-gated native vertex constraint represents static grip only for a small patch already between closed fingers; opening releases it. This preserves flexible cloth while approximating static friction and grasp slip. No target knot or automatic tightening is supplied. The scripted demo may use material geometry to choose ordinary robot actions; Dream receives its normal observations. Completed knot retention is still being tested. Commands and earlier diagnostics below describe their named versions; do not treat them as validated submission evidence.
+
+
 **Development package; not ready to submit.** The adult collar drape and
 wide-tip pickup work. The narrow strip slips during repositioning, including
 the deeper-grasp and slack-preserving candidates. Wrapping motions therefore

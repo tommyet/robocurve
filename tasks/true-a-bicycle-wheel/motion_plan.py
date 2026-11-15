@@ -112,7 +112,7 @@ def load(path):
     plan=json.loads(Path(path).read_text())
     if plan.get('schema')!='wheel-fixed-motion-v1' or plan.get('control_hz')!=20:raise ValueError('Unexpected wheel action plan')
     actions=np.asarray([r['action14'] for r in plan['frames']],float)
-    if actions.ndim!=2 or actions.shape[1]!=14 or not 1<=len(actions)<=1200 or not np.isfinite(actions).all():raise ValueError('Invalid bounded14-D commands')
+    if actions.ndim!=2 or actions.shape[1]!=14 or not 1<=len(actions)<=2400 or not np.isfinite(actions).all():raise ValueError('Invalid bounded14-D commands')
     if np.any(actions[:,[6,13]]<0) or np.any(actions[:,[6,13]]>1):raise ValueError('Invalid gripper opening')
     return plan,actions
 

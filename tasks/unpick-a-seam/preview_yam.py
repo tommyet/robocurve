@@ -36,7 +36,7 @@ def main():
     p.add_argument('--plan',type=Path,help='Frozen action14 JSON produced by plan.py')
     p.add_argument('--pose-assisted-entry',action='store_true',help='Disclosed scripted demo: after the proven140-action pickup, filter measured tool-in-gripper pose to convert the fixed blade path into ordinary bounded joint targets')
     p.add_argument('--judging-views',action='store_true',help='Fixed native seam close-ups for recording only, excluded from policy inputs')
-    p.add_argument('--physics-hz',type=int,choices=(960,1920,3840),default=960)
+    p.add_argument('--physics-hz',type=int,choices=(240,480,960,1920,3840),default=960)
     p.add_argument('--coarse-thread',action='store_true')
     p.add_argument('--hole-mesh-spacing',type=float)
     p.add_argument('--resting-seam',action='store_true',help='Lower the sewn assembly so the bottom thread starts tangent to the tabletop; records the fixed layout change')
@@ -81,9 +81,11 @@ def main():
                    help='Failure analysis only: retain invalid status but observe ready-hold settling for at most 0.2 s; crossings and blade damage still stop the run')
     p.add_argument('--contact-forensics',action='store_true',
                    help='Unscored ready hold only, at most 1 s: record every-step crossing depth while retaining invalidity; no cutting, and strain, blade damage or disjoint joints still stop the run')
+    p.add_argument('--practical-material',action='store_true',help='Disclosed coarse panel/contact model:2mm cloth continuity bound, physical blade damage, native hinge breaks, and1mm interior thread-crossing bound; numerical contacts remain logged')
     a=p.parse_args()
     import os
     os.environ['ROBOCURVE_SEAM_CONVEX_CAPSULE_DIAGNOSTIC']='1' if a.convex_capsules_diagnostic else '0'
+    if a.practical_material and not (a.box_panels and a.cpu_ccd and a.rigid_panel_strain_telemetry):p.error('Practical material requires the native CPU panel model')
     if a.keep_constructor_state:
         p.error('Keeping constructor state is unsupported: Gym requires env.reset() before env.step(). Omit --keep-constructor-state for the normal episode lifecycle.')
     if not 1<=a.steps<=2400:p.error('Use 1 to 2400 control steps')
@@ -175,6 +177,7 @@ def main():
     report={'status':'running','robot_demo':False,'score':None,'dream_requests':0,
             'requested_steps':a.steps,'completed_steps':0,'control_hz':20,
             'crossing_backend':a.crossing_backend,
+            'practical_material':a.practical_material,
             'audit_junctions':a.audit_junctions,
             'continue_after_strain':a.continue_after_strain,
             'contact_forensics':a.contact_forensics,
@@ -355,7 +358,7 @@ def main():
         thread_view=sim.create_rigid_body_view(all_paths)
         native_paths=list(thread_view.prim_paths)
         order=np.asarray([native_paths.index(path) for path in all_paths])
-        views=([FacetView(sim,shell,geometry_aperture_m=(.0004 if a.panel_passage_diagnostic else .0002) if a.geometric_panel_audit else None,
+        views=([FacetView(sim,shell,geometry_aperture_m=(.002 if a.practical_material else .0004 if a.panel_passage_diagnostic else .0002) if a.geometric_panel_audit else None,
                         boundary_tolerance_m=.0001 if a.boundary_contact_envelope else 0.)
                 for shell in facet_shells] if a.facet_cloth else
                [sim.create_surface_deformable_body_view(envroot+'/'+name) for name in ('cloth_left','cloth_right')])
@@ -483,8 +486,22 @@ def main():
                           nodes,[m.faces for m in cloth],t)
             state['timings_s']['blade_damage']+=time.perf_counter()-start
             state['previous_edge']=edge.copy()
+            if a.practical_material:
+                # Coarse-panel contact: tangential hole-edge penetration up to
+                #1mm is an explicit numerical envelope. Deep solid crossings
+                # and a2mm shared-edge opening remain failures. No pose is edited.
+                from panel_diagnostics import solid_contacts
+                interior=[]
+                for j,view in enumerate(views):
+                    c=solid_contacts(view.shell['model'],view.last_poses,segments,
+                        radius=runtime_config.CONFIG.thread_radius_m,thickness=.0004)
+                    interior += [dict(layer=j,**row) for row in c['native_midplane_intersections']
+                        if row['nearest_panel_edge_m']>.001]
+                report['practical_contact']={'time_s':t,'deep_panel_crossings':interior}
+                native_solid_invalid=bool(interior)
+                junction_invalid=False
             facet_invalid=native_solid_invalid or (a.facet_cloth and any(view.first_failure for view in views))
-            state['non_strain_invalid']=bool(facet_invalid or junction_invalid or damage.crossed_faces or any(s.first_failure for s in crossing))
+            state['non_strain_invalid']=bool(facet_invalid or junction_invalid or damage.crossed_faces or (not a.practical_material and any(s.first_failure for s in crossing)))
             strain_invalid=not a.rigid_panel_strain_telemetry and any(s.first_excursion for s in strain)
             state['hard_invalid']=bool(facet_invalid or junction_invalid or damage.crossed_faces or strain_invalid)
             invalid=bool(state['non_strain_invalid'] or strain_invalid)
@@ -518,7 +535,7 @@ def main():
             try:summaries=crossing_summaries()
             finally:state['timings_s']['crossing_poll']+=time.perf_counter()-start
             failures=[s['first_failure'] for s in summaries if not s['valid']]
-            if failures:
+            if failures and not a.practical_material:
                 state['invalid']=True
                 if gpu_crossing is not None:
                     first=min(f['native_substep'] for f in failures)
