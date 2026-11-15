@@ -27,6 +27,8 @@ def main():
     parser.add_argument('--pinch-approximation',action='store_true',help='Disclosed contact-gated dry-pinch material variant, identical for every policy')
     parser.add_argument('--joint-tracking',action='store_true',help='Bounded bimanual joint feedback; normal motor and action limits remain')
     parser.add_argument('--restore-recorded-pinches',action='store_true',help='Reconstruct already-active recorded static contacts, without moving cloth')
+    parser.add_argument('--smooth-finger-covers',action='store_true',help='Diagnostic comparison with visible smooth convex finger covers')
+    parser.add_argument('--judging-views',action='store_true',help='Save final native front/rear/side views')
     args=parser.parse_args()
     source=Path(__file__).resolve().parent
     provenance=json.loads(args.state.with_suffix('.json').read_text())
@@ -91,10 +93,20 @@ def main():
         from yam_arena import inspect_embodiment as wrapper,scene
         from yam_arena.constants import ARM_JOINTS,FINGER_JOINTS,FINGER_OPEN,SHOULDER,WRIST,GRIPPER
         from run import encode,native_audit
+        if args.judging_views:
+            from review_views import configure
+            original_make_env=scene.make_env
+            def with_views(embodiment,**kwargs):
+                configure(embodiment)
+                return original_make_env(embodiment,**kwargs)
+            scene.make_env=with_views
         wrapper._APP=app
         emb=wrapper.YamArenaEmbodiment(task=str(source/'task.py'),object_jitter=0.,
             control_hz=20,cam_width=224,cam_height=224)
         emb._ensure_sim(None);base=emb._base;emb._env.reset()
+        if args.smooth_finger_covers:
+            from finger_covers import install as install_covers
+            report['finger_covers']=install_covers(omni.usd.get_context().get_stage())
         ids=torch.tensor([0],device=base.device,dtype=torch.long)
         for side,offset in (('left',0),('right',7)):
             robot=base.scene[side+'_robot']
@@ -157,6 +169,10 @@ def main():
             trace.write(json.dumps(row,allow_nan=False)+'\n');trace.flush()
             pixels=np.asarray(obs.images['top_cam'],dtype=np.uint8);video.append_data(pixels)
             if step in (0,len(actions)):Image.fromarray(pixels).save(args.out/f'frame-{step:04d}.png')
+            if args.judging_views and step in (0,len(actions)):
+                from review_views import images
+                for name,pixels in images(base).items():
+                    Image.fromarray(pixels).save(args.out/f'{name}-{step:04d}.png')
         signal.signal(signal.SIGTERM,terminated)
         base.sim.render();base.scene.update(0.)
         snapshot(0,state['action']);report['status']='running';save()

@@ -13,7 +13,8 @@ def screen(plan,nodes,faces,steps=range(1,81),side='right',inflation=.001):
  from yam_arena.constants import ARM_JOINTS,FINGER_OPEN
  from audit_robot_contact import clipped_triangles
  if not 0.<=inflation<=.002:raise ValueError('Unexpected approach inflation')
- hulls=link_hulls();tri=nodes[faces];low=tri.min(1);high=tri.max(1);out=[]
+ from finger_covers import collision_hulls
+ hulls=collision_hulls();tri=nodes[faces];low=tri.min(1);high=tri.max(1);out=[]
  for i,f in enumerate(plan['frames']):
   if steps is not None and i+1 not in steps:continue
   offset=0 if side=='left' else 7

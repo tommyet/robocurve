@@ -125,7 +125,7 @@ def main():
     p.add_argument('--collar-friction-approximation',action='store_true',help='Ideal static contact at the back of the collar; same model for all policies')
     p.add_argument('--joint-tracking-from',type=int,help='Bounded bimanual joint feedback after this action; scripted demo only')
     p.add_argument('--pinch-approximation',action='store_true',help='Use the disclosed contact-gated dry pinch for both hands, identically for demo and Dream')
-    p.add_argument('--judging-views',action='store_true',help='Record additional native960×720 front/rear assessor videos')
+    p.add_argument('--judging-views',action='store_true',help='Record additional native640×480 front/rear/side assessor videos')
     p.add_argument('--interactive-demo-start',type=int,default=2181,choices=(281,581,2181),help='First operator-planned ordinary action after the verified pickup prefix')
     p.add_argument('--interactive-demo-dir',type=Path,help='Receive audited ordinary action segments after the complete knotting prefix; no scene writes')
     p.add_argument('--automatic-demo-prefix',action='store_true',help='Compile ordinary pickup, wrap and threading stages; pause before release and fitting')
@@ -227,7 +227,7 @@ def main():
         temporary.write_text(json.dumps(report,indent=2,allow_nan=False)+'\n')
         temporary.replace(args.out/'run.json')
     save()
-    app=video=trace=emb=dream=None
+    app=video=trace=emb=dream=dense_trace=None
     request_audit=[];session_audit={'session_count':0}
     judging_videos={}
     def terminate(signum,frame):
@@ -262,6 +262,9 @@ def main():
                                       control_hz=CONTROL_HZ,cam_width=224,cam_height=224)
         emb._ensure_sim(None)
         base=emb._base
+        if args.pinch_approximation:
+            from finger_covers import install as install_finger_covers
+            report['finger_covers']=install_finger_covers(omni.usd.get_context().get_stage())
         emb._instruction=draft['instruction']
         from reset_scene import reset_and_settle
         report['reset']={'method':'raw reset plus five seconds of fixed native settling','status':'requested'}
@@ -343,6 +346,8 @@ def main():
                     args.out/(camera['name'].replace('_','-')+'.mp4'),fps=CONTROL_HZ,
                     codec='libx264',pixelformat='yuv420p',ffmpeg_params=['-movflags','+faststart'],macro_block_size=1)
         trace=gzip.open(args.out/'trace.jsonl.gz','wt',compresslevel=1)
+        from trace_data import DenseClothTrace
+        dense_trace=DenseClothTrace(args.out,arena_cloth.SPECS,args.steps+1)
         ready=emb._ready.detach().cpu().numpy()[0].copy()
         if ready.shape!=(14,) or not np.isfinite(ready).all():
             raise RuntimeError('Invalid ready action')
@@ -366,7 +371,7 @@ def main():
             record={'step':step,'time_s':step/CONTROL_HZ,'action14':active_action.tolist(),
                     'pinches':{side:dict(indices=p.indices.tolist(),correction_m=p.last_correction,events=p.events) for side,p in pinches.items()},
                     'measured_joint_pos':encode(np.asarray(observation.state['joint_pos'])),
-                    'objects':encode(state),'physics_step_count':int(base.sim._physics_step_count),
+                    'objects':dense_trace.record(state,step,encode),'physics_step_count':int(base.sim._physics_step_count),
                     'robot_links':{name:{'names':list(base.scene[name].body_names),
                          'poses_xyzw':arr(base.scene[name].data.body_link_pose_w)[0].tolist()}
                          for name in ('left_robot','right_robot')}}
@@ -657,6 +662,7 @@ def main():
         # Preserve status even if an interrupted encoder cannot finish closing.
         save()
         if trace is not None:trace.close()
+        if dense_trace is not None:dense_trace.flush()
         if video is not None:video.close()
         for recorder in judging_videos.values():recorder.close()
         if dream is not None:

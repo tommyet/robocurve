@@ -4,6 +4,38 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 10:55 UTC — smooth finger covers resolve the tie release diagnostic
+
+- Operator: repository agent, six-task completion branch. Five task PRs remain
+  submitted. Continuous tie289 stopped at2,900 actions without a successful
+  release; no final score is claimed. Its native videos, source and ordinary
+  action segments are retained in`artifacts/final-five-2026-11-15/tie289-diagnostic-retained.tar.gz`
+  (SHA256085dc89920f609a2de4cde9ad266bf65b1541cea1425259cd399e71e5ceb3117).
+- Repeated open-hand withdrawals did not free the wide tip. Six neighbouring
+  cloth nodes were inside the original finger collision geometry by up to2.54mm.
+  Re-grasping and reopening did not fix it. This is a contact-model limitation,
+  not evidence that the real dressing skill needs these recovery motions.
+- Candidate smooth convex finger covers replace45/47 overlapping collision
+  pieces per finger with one visible convex sleeve of the original outline,
+  rounded on a0.25mm geometry grid. Original motors/mass remain; sleeve mass
+  is neglected. Native cloth, self-contact and contact-gated grasp/release remain.
+  No cloth-state projection or target-knot operation was added.
+- Diagnostic290 reconstructs the recorded pre-release state, then executes140
+  ordinary release actions. The wide blade falls clear; left grip0, right narrow
+  grip36, knot remains threaded. Evidence:`cover-release-review` under the same
+  artifact directory. This checkpoint diagnostic is not a full demo or score.
+- Fresh continuous291 starts from the shared untied reset with covers. Short
+  diagnostic292 tests outer-knot grasp and collar adjustment. Matching Dream
+  and final released-fit evidence are still required before submission.
+- Recording now stores every native cloth position/velocity losslessly as
+  float32 arrays beside lightweight JSON. Review cameras become640x480;
+  policy cameras remain224x224. These recording changes do not alter physics.
+  All37 existing CPU checks pass. Collision screens now include the covers.
+- The secondaryA40 restart again failed host capacity and was verifiedEXITED.
+  Only7dszjx6tuony0y is running, with a supervised stop watchdog. Cumulative
+  GPU time estimate is about$34 (prior subtotal$26.95 plus current$0.59/hour
+  elapsed rental), excluding Dream/storage; the original~$18 target is exceeded.
+
 ## 2026-11-15 09:30 UTC — verify the grasped material before collar adjustment
 
 - Fresh tie287 completed the wrap/threading but is not a successful demo.

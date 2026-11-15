@@ -35,7 +35,8 @@ def audit(plan):
             angles=np.arange(64)*2*np.pi/64;radius=s['radius']/np.cos(np.pi/64)
             p=np.array([(radius*np.cos(t),radius*np.sin(t),z) for t in angles for z in (-s['height']/2,s['height']/2)])
         props.append(convex(name,p@np.asarray(s.get('rotation',np.eye(3))).T+s['center']))
-    hulls=link_hulls();violations=[]
+    from finger_covers import collision_hulls
+    hulls=collision_hulls();violations=[]
     for step,f in enumerate(plan['frames']):
         robots=[]
         for i,side in enumerate(('left','right')):

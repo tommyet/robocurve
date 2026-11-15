@@ -44,7 +44,11 @@ def main():
     p.add_argument('--steps',default='240,380,400,440,480,520,560,600,640');p.add_argument('--shrink',type=float,default=.0002)
     args=p.parse_args();wanted={int(x) for x in args.steps.split(',')}
     from yam_arena.analysis import link_hulls
-    hulls=link_hulls();meshes=json.loads((args.trial/'meshes.json').read_text());name=next(iter(meshes));faces=np.array(meshes[name]['faces']);samples=[]
+    hulls=link_hulls()
+    if json.loads((args.trial/'run.json').read_text()).get('finger_covers'):
+        from finger_covers import collision_hulls
+        hulls=collision_hulls()
+    meshes=json.loads((args.trial/'meshes.json').read_text());name=next(iter(meshes));faces=np.array(meshes[name]['faces']);samples=[]
     with gzip.open(args.trial/'trace.jsonl.gz','rt') as f:
         for line in f:
             row=json.loads(line)
