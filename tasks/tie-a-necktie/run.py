@@ -128,7 +128,7 @@ def main():
     p.add_argument('--judging-views',action='store_true',help='Record additional native960×720 front/rear assessor videos')
     p.add_argument('--interactive-demo-start',type=int,default=2181,choices=(281,581,2181),help='First operator-planned ordinary action after the verified pickup prefix')
     p.add_argument('--interactive-demo-dir',type=Path,help='Receive audited ordinary action segments after the complete knotting prefix; no scene writes')
-    p.add_argument('--automatic-demo-prefix',action='store_true',help='Compile ordinary state-assisted stages until the final fit review; no material writes')
+    p.add_argument('--automatic-demo-prefix',action='store_true',help='Compile ordinary pickup, wrap and threading stages; pause before release and fitting')
     p.add_argument('--out',type=Path)
     p.add_argument('--check-only',action='store_true',help='Compile source and check JSON without loading a simulator')
     args=p.parse_args()
@@ -416,7 +416,8 @@ def main():
                 native=arena_cloth.state(emb._env,'tie');mesh=arena_cloth.SPECS['tie'].mesh
                 request=args.interactive_demo_dir/f'state-{step:04d}.npz'
                 np.savez_compressed(request,nodes=native.nodes,velocities=native.velocities,rest=mesh.rest,faces=mesh.faces,
-                    action=np.asarray(emb._observation().state['joint_pos'],float),reference_action=fixed_actions[step-2])
+                    action=np.asarray(emb._observation().state['joint_pos'],float),reference_action=fixed_actions[step-2],
+                    pinches_json=np.array(json.dumps({side:p.indices.tolist() for side,p in pinches.items()})))
                 for camera,rgb in emb._observation().images.items():
                     Image.fromarray(np.asarray(rgb,dtype=np.uint8)).save(args.interactive_demo_dir/f'state-{step:04d}-{camera}.png')
                 if args.judging_views:
@@ -425,7 +426,7 @@ def main():
                         Image.fromarray(rgb).save(args.interactive_demo_dir/f'state-{step:04d}-{camera}.png')
                 report.update(status='awaiting_demo_actions',next_action=step);save()
                 payload=None
-                if args.automatic_demo_prefix:
+                if args.automatic_demo_prefix and not (args.interactive_demo_dir/f'actions-{step:04d}.json').exists():
                     from continuous_demo import prefix_payload
                     payload=prefix_payload(step,fixed_actions[step-2],mesh.rest,native.nodes,
                         len(pinches['left'].indices) if 'left' in pinches else 0)

@@ -4,6 +4,27 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 09:30 UTC — verify the grasped material before collar adjustment
+
+- Fresh tie287 completed the wrap/threading but is not a successful demo.
+  Its full-open release left the wide tip hooked on an open finger. The later
+  intended knot grasp instead captured material25–90mm from the wide tip,
+  then the lift unthreaded the knot. A nonzero grip count alone is insufficient.
+  The interrupted take's native videos, source, controls and snapshots are
+  preserved locally in`artifacts/final-five-2026-11-15/tie287-diagnostic-retained.tar.gz`.
+- New demo289 keeps the same physical model and reset as Dream288; only the
+  controller/recording changes. Its automatic prefix pauses after tightening.
+  The planned release opens to23.5mm (above the16mm release threshold) before
+  pointing fingers down and withdrawing, rather than spreading to94mm and
+  dragging the wide blade over a finger. This is an ordinary command change,
+  still awaiting native validation. The narrow end remains held during it.
+- Before lifting, verify that the actual captured material is the outer knot
+  and that the narrow strand remains free to slide. New boundary snapshots
+  include actual contact indices, avoiding repeated full-trace reads. Keep
+  review pauses before declaring a final hold; do not auto-finish on grip count.
+- Dream288 remains a matching baseline. Five other task PRs are received and
+  pending review. One A40 remains supervised with the hourly stop watchdog.
+
 ## 2026-11-15 08:22 UTC — folded-cloth grip and fresh matching trials
 
 - Tie283's third knot-body grasp also missed: actual gap10.388mm exceeded the

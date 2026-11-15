@@ -1,7 +1,7 @@
 """Compile ordinary robot actions from the measured cloth at stage boundaries.
 
 The prefix uses the same joint/finger commands as the saved demo segments.
-It cannot change cloth, fixtures, physics, or scores. Stop for review after fit.
+It cannot change cloth, fixtures, physics, or scores. Stop before release and fit.
 """
 import numpy as np
 from adult_handoff import receive_tip, _compile
@@ -9,8 +9,7 @@ from knot_demo import compile_segment
 from cross_motion import yaw_rotation
 
 STAGES = {281: 'handoff', 581: 'wrap', 1121: 'neck', 1481: 'front',
-          1841: 'cinch', 2181: 'release_tip', 2341: 'clear_left',
-          2501: 'fit', 2641: 'finish_fit'}
+          1841: 'cinch'}
 
 def compile_stage(stage, start, rest, nodes):
     if stage=='handoff':
@@ -54,7 +53,7 @@ def compile_stage(stage, start, rest, nodes):
 
 
 def prefix_payload(step, start, rest, nodes, left_grip_count):
-    if step not in STAGES or (step == 2641 and left_grip_count < 3):
+    if step not in STAGES:
         return None
     plan = compile_stage(STAGES[step], start, rest, nodes)
     frames = plan['frames'][:140] if step == 2501 else plan['frames']
