@@ -398,7 +398,7 @@ class ReleaseProbe(GraspProbe):
             rp=far+(above-far)*ik.smoothstep(min(1.,age/4.))
             if age>=4.:rp,rr=self.stationary_press_correction(above,rr,measured,'HOVER',travel)
             settled=self.press_endpoint_ready(measured,above,rr,'HOVER') and jaw_ok and left_ok and tab_xy_safe
-            self.press_handoff(settled,age,4.,'prepress_endpoint',t,measured,prepress,rr,timeout=8.)
+            self.press_handoff(settled,age,4.,'prepress_endpoint',t,measured,prepress,rr,timeout=12.)
         elif phase=='prepress_endpoint':
             # Reverse the shoulder's direction while still 3.6 mm above the
             # tab, then settle its bounded fixed-reference compensation.
@@ -411,7 +411,7 @@ class ReleaseProbe(GraspProbe):
             # other clips must clear the COMPLETE stroke before it begins.
             self.press_handoff(settled,age,.75,'depress_clip',t,measured,
                                above-bodyR@np.array((0,0,.0064)),rr,
-                               ((f'clip_{SERVICE}','tab'),(f'clip_{SERVICE}','hook')),timeout=8.)
+                               ((f'clip_{SERVICE}','tab'),(f'clip_{SERVICE}','hook')),timeout=12.)
         elif phase=='depress_clip':
             self.press_depth=min(.0023,-.0036+.0007*age)
             rp=plug[:3]+bodyR@(local_contact-np.array((0,0,self.press_depth)))-rr@point

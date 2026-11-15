@@ -229,6 +229,18 @@ class EntryEndpointTests(unittest.TestCase):
    self.assertFalse(probe.entry_joint_servo.frozen)
 
 class PressEndpointTests(unittest.TestCase):
+ def test_hover_and_prepress_allow_12s_settle_without_changing_precision_gates(self):
+  for phase,duration in (('approach_above_clip',4.),('prepress_endpoint',.75)):
+   with self.subTest(phase=phase):
+    probe=ReleaseProbe(environment(),np.array(port(SERVICE)));probe.phase=phase
+    measured=[probe.arm(s) for s in ('left','right')]
+    plug=np.r_[port(SERVICE),0,0,0,1.]
+    targets=(measured[0][2],measured[0][3],GRIP,measured[1][2],measured[1][3],PRESS_GRIP)
+    probe.release_targets(duration+9.,duration+9.,phase,plug,np.eye(3),0.,measured,targets)
+    self.assertIsNone(probe.failure);self.assertEqual(probe.phase,phase)
+    probe.release_targets(duration+12.05,duration+12.05,phase,plug,np.eye(3),0.,measured,targets)
+    self.assertIn('settle gate',probe.failure)
+
  def endpoint(self,hover=False,prepress=False):
   probe=ReleaseProbe(environment(),np.array(port(SERVICE)));probe.phase='approach_above_clip' if hover else 'prepress_endpoint' if prepress else 'depress_clip'
   goal=np.array(port(SERVICE))+probe.local_contact+[0,0,.0041 if hover else .0036 if prepress else -.0023]-probe.pressR@probe.point

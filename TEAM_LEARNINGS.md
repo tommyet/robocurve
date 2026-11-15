@@ -2313,3 +2313,8 @@ editing, merge both agents' findings, and commit/push the update with the work.
   fiveframes,8ssettlebudgets.17affectedtestsPASS; samephysicaldepth/gains.
   Actualprepresscert rigid.879mm/wire.257mm/hand4.972mm; totalcap2400=120s
   matchesdeclaredlimit. Native020running; taskfullcompletionunverified.
+
+- Release020 precisehover timedout at12sphase(8sIbudget): TCP.219mm vs.2,
+  maxjointresidual.579mrad vs.5; qdot0sixframes, rigid.873mm/hand3.519mm.
+  No prepressreached. Reviewinglast2sconvergence; authorizedmax12ssettle
+  windowswithoutgate/gain/caploosening, total120slimit unchanged.
