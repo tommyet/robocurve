@@ -178,10 +178,12 @@ class JointEndpointCorrection:
     def __init__(self):self.reset()
     def reset(self):
         self.reference=None;self.bias=np.zeros(6);self.frozen=False;self.invalid=None
-    def latch(self,reference):
+    def latch(self,reference,*,preserve_bias=False):
         reference=np.asarray(reference,dtype=float)
         if reference.shape!=(6,) or not np.isfinite(reference).all():raise ValueError('nonfinite or invalid joint endpoint reference')
-        self.reference=reference.copy();self.reference.setflags(write=False);self.bias[:]=0.;self.frozen=False;self.invalid=None
+        self.reference=reference.copy();self.reference.setflags(write=False)
+        if not preserve_bias:self.bias[:]=0.
+        self.frozen=False;self.invalid=None
     def freeze(self):self.frozen=True
     def update(self,actual,dt,allowed=True):
         if self.reference is None or self.frozen or not allowed:return

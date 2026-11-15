@@ -2292,3 +2292,10 @@ editing, merge both agents' findings, and commit/push the update with the work.
   vs1mmgate, left22um andhandgap11.383mm. No endpointI reached.
   Nextcandidateusesalreadyestablished2mm/2deg CERTIFIEDFREEgateonlyafter
   freshactualnext-diagonalclearance; clipcontactgates unchanged. Pending.
+
+- Release018 certifiedfreefarPASS butstrictaboveclip1mmgateFAIL: right
+  1.292mm/.595deg residual,left24um; rightactualrigid1.778mm/mutual4.680mm,
+  all7clipconstraintsPASS. No pressendpointI reached. Astraactual→above
+  correction sweepPASS rigid.893mm/wires.317mm/hand4.679mm. Nextcandidate
+  boundedfixedrightq*I atabove endpoint, frozenbiasduringpress, re-latchsame
+  maxdepthreference preservingbias. No movingintegration/contactgateloosen.

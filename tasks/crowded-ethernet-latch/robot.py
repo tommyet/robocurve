@@ -242,7 +242,9 @@ class GraspProbe:
             fixed_entry_phases=('enter_boot','close_on_boot','verified_boot_hold','prepare_press','approach_above_clip','depress_clip')
             if i==1 and self.release and self.failure is not None:
                 self.q[i]=measured[i][0].copy();pe=re=0.
-            elif i==1 and self.release and self.press_joint_servo.reference is not None and phase=='depress_clip':
+            elif i==1 and self.release and self.press_joint_servo.reference is not None and (
+                    (phase=='approach_above_clip' and self.press_servo_stage=='HOVER') or
+                    (phase=='depress_clip' and self.press_servo_stage=='PRESS_ENDPOINT')):
                 self.q[i]=self.press_joint_servo.command();pe,re=self.press_reference_error
             elif i==0 and self.entry_joint_servo.reference is not None and phase in fixed_entry_phases:
                 self.q[i]=self.entry_joint_servo.command();pe,re=self.entry_reference_error
@@ -250,8 +252,8 @@ class GraspProbe:
                 if i==0 and self.entry_joint_servo.reference is not None:self.entry_joint_servo.reset()
                 self.q[i],pe,re=ik.solve(p+self.bias[i],ik.matrix_to_quat_xyzw(r),self.q[i],base_pos=self.env.rig.bases[side],iters=110)
                 if i==1 and self.release and self.press_joint_servo.reference is not None:
-                    if phase=='withdraw_with_clip_pressed':self.q[i]=self.q[i]+self.press_joint_servo.bias
-                    else:self.press_joint_servo.reset()
+                    if phase in ('depress_clip','withdraw_with_clip_pressed'):self.q[i]=self.q[i]+self.press_joint_servo.bias
+                    else:self.press_joint_servo.reset();self.press_servo_stage=None;self.press_latched_pose=None
             out[7*i:7*i+6],out[7*i+6]=self.q[i],g
             arms.append({'side':side,'tcp':actual.tolist(),'target':p.tolist(),'position_error':float(np.linalg.norm(error)),
                          'rotation_error_deg':rotation_angle_deg(actualr,r),'ik_position_error':float(pe),'ik_rotation_error':float(re),
@@ -269,7 +271,7 @@ class GraspProbe:
             point=self.point.copy();point[0]+=measured[1][1][0]+.028
             witness=measured[1][2]+measured[1][3]@point
             report.update({'measured_press_point':witness.tolist(),'measured_press_point_plug_local':(rotation.T@(witness-plug[:3])).tolist(),
-                           'target_press_point':(rp+rr@point).tolist(),'actual_press_point_clip_local':self.actual_tab_witness,'press_depth_m':self.press_depth,'press_approach_certificate':self.press_approach_certificate,'flexible_press_contact_possible':bool(self.press_approach_certificate is not None and self.press_approach_certificate['wire_gap_m']<.0002),'press_joint_reference':None if self.press_joint_servo.reference is None else self.press_joint_servo.reference.tolist(),'press_joint_bias_rad':self.press_joint_servo.bias.tolist(),'press_joint_frozen':self.press_joint_servo.frozen,'right_joint_velocity_rad_s':None if self.right_joint_velocity is None else self.right_joint_velocity.tolist(),'press_endpoint_low_velocity_frames':self.press_endpoint_low_velocity_frames,'press_endpoint_goal_drift_m':self.press_endpoint_goal_drift,'clip_joint_constraints':self.clip_constraints,'withdraw_target_distance_m':self.pull_distance,'measured_hook_front_x_m':getattr(self,'measured_hook_front',None),'guide_geometry':self.guide_geometry,'insertion_command_x_m':self.insertion_x,'insertion_retries':self.insertion_retries,'full_release_clearance':self.final_clearance,'released_hold_s':self.retention_gate_s})
+                           'target_press_point':(rp+rr@point).tolist(),'actual_press_point_clip_local':self.actual_tab_witness,'press_depth_m':self.press_depth,'press_approach_certificate':self.press_approach_certificate,'flexible_press_contact_possible':bool(self.press_approach_certificate is not None and self.press_approach_certificate['wire_gap_m']<.0002),'press_servo_stage':self.press_servo_stage,'press_joint_reference':None if self.press_joint_servo.reference is None else self.press_joint_servo.reference.tolist(),'press_joint_bias_rad':self.press_joint_servo.bias.tolist(),'press_joint_frozen':self.press_joint_servo.frozen,'right_joint_velocity_rad_s':None if self.right_joint_velocity is None else self.right_joint_velocity.tolist(),'press_endpoint_low_velocity_frames':self.press_endpoint_low_velocity_frames,'press_endpoint_goal_drift_m':self.press_endpoint_goal_drift,'clip_joint_constraints':self.clip_constraints,'withdraw_target_distance_m':self.pull_distance,'measured_hook_front_x_m':getattr(self,'measured_hook_front',None),'guide_geometry':self.guide_geometry,'insertion_command_x_m':self.insertion_x,'insertion_retries':self.insertion_retries,'full_release_clearance':self.final_clearance,'released_hold_s':self.retention_gate_s})
         return out,report
 
 
@@ -287,6 +289,29 @@ class ReleaseProbe(GraspProbe):
         self.press_joint_servo=JointEndpointCorrection();self.press_latched_pose=None;self.press_reference_error=(0.,0.)
         self.last_right_joints=None;self.right_joint_velocity=None;self.press_endpoint_low_velocity_frames=0;self.press_endpoint_goal_drift=0.
         self.clip_constraints={};self.clip_constraints_safe=True
+        self.press_servo_stage=None
+
+    def stationary_press_correction(self,position,rotation,measured,stage,travel,exclude=()):
+        slow=self.right_joint_velocity is not None and np.isfinite(self.right_joint_velocity).all() and np.max(np.abs(self.right_joint_velocity))<.01
+        self.press_endpoint_low_velocity_frames=self.press_endpoint_low_velocity_frames+1 if slow else 0
+        if self.press_servo_stage!=stage and self.press_endpoint_low_velocity_frames>=3 and self.failure is None and self.clip_constraints_safe:
+            if self.certify_press_path(measured,position,rotation,'stationary_'+stage.lower(),exclude):
+                reference,pe,re=ik.solve(position,ik.matrix_to_quat_xyzw(rotation),measured[1][0],base_pos=self.env.rig.bases['right'],iters=220,tol=1e-6)
+                if pe>.0001 or re>.001:self.failure='stationary press endpoint IK exceeds 0.1 mm / 1 mrad'
+                else:
+                    # Reacquire the NEW unbiased endpoint once. The moving
+                    # stroke carries the frozen hover bias, never its q*.
+                    self.press_joint_servo.latch(reference,preserve_bias=stage=='PRESS_ENDPOINT')
+                    self.press_reference_error=(float(pe),float(re));self.press_latched_pose=(position.copy(),rotation.copy())
+                    self.press_servo_stage=stage
+        if self.press_joint_servo.reference is not None and self.press_servo_stage==stage:
+            self.press_endpoint_goal_drift=float(np.linalg.norm(position-self.press_latched_pose[0]))
+            if self.press_endpoint_goal_drift>.0002:self.failure='fixed press endpoint moved more than 0.2 mm; explicit replan required'
+            position,rotation=self.press_latched_pose
+            self.press_joint_servo.update(measured[1][0],getattr(self,'command_dt',.05),
+                                          allowed=self.failure is None and self.clip_constraints_safe and travel<RELEASE_TRAVEL)
+            if self.press_joint_servo.invalid:self.failure=self.press_joint_servo.invalid
+        return position,rotation
 
     def certify_press_path(self,measured,target,rotation,next_phase,exclude=()):
         """Certify the complete next leg from the actual loaded hand poses.
@@ -319,6 +344,7 @@ class ReleaseProbe(GraspProbe):
             condition=self.certify_press_path(measured,next_target,rotation,next_phase,exclude)
             if next_phase=='depress_clip' and self.press_approach_certificate is not None:
                 self.hand_clearance=self.press_approach_certificate['other_hand_gap_m']
+                if condition:self.press_joint_servo.freeze();self.press_endpoint_low_velocity_frames=0
         self.gate(condition,age,duration,5.,next_phase,t)
 
     def release_targets(self,t,age,phase,plug,bodyR,travel,measured,targets):
@@ -359,6 +385,7 @@ class ReleaseProbe(GraspProbe):
             # A direct diagonal bypasses the loaded left jaw at the rear
             # standoff, without an unreachable high-forward waypoint.
             rp=far+(above-far)*ik.smoothstep(min(1.,age/4.))
+            if age>=4.:rp,rr=self.stationary_press_correction(above,rr,measured,'HOVER',travel)
             settled=self.settled(actual_right,(above,rr)) and jaw_ok and left_ok and tab_xy_safe
             # The clip is intended contact; all housing, guides, plugs and
             # other clips must clear the COMPLETE stroke before it begins.
@@ -369,24 +396,8 @@ class ReleaseProbe(GraspProbe):
             self.press_depth=min(.0023,-.0041+.0007*age)
             rp=plug[:3]+bodyR@(local_contact-np.array((0,0,self.press_depth)))-rr@point
             at_endpoint=self.press_depth>=.0023-1e-10
-            slow=self.right_joint_velocity is not None and np.isfinite(self.right_joint_velocity).all() and np.max(np.abs(self.right_joint_velocity))<.01
-            self.press_endpoint_low_velocity_frames=self.press_endpoint_low_velocity_frames+1 if at_endpoint and slow else 0
-            if self.press_joint_servo.reference is None and self.press_endpoint_low_velocity_frames>=3 and self.failure is None and self.clip_constraints_safe:
-                if self.certify_press_path(measured,rp,rr,'stationary_press_endpoint',((f'clip_{SERVICE}','tab'),(f'clip_{SERVICE}','hook'))):
-                    reference,pe,re=ik.solve(rp,ik.matrix_to_quat_xyzw(rr),measured[1][0],base_pos=self.env.rig.bases['right'],iters=220,tol=1e-6)
-                    if pe>.0001 or re>.001:self.failure='stationary press endpoint IK exceeds 0.1 mm / 1 mrad'
-                    else:
-                        self.press_joint_servo.latch(reference);self.press_reference_error=(float(pe),float(re))
-                        self.press_latched_pose=(rp.copy(),rr.copy())
-            if self.press_joint_servo.reference is not None:
-                self.press_endpoint_goal_drift=float(np.linalg.norm(rp-self.press_latched_pose[0]))
-                if self.press_endpoint_goal_drift>.0002:self.failure='fixed press endpoint moved more than 0.2 mm; explicit replan required'
-                rp,rr=self.press_latched_pose
-                # No moving-target integration. The fixed endpoint rejects
-                # load only while actual solid geometry/tab/joint guards pass.
-                self.press_joint_servo.update(measured[1][0],getattr(self,'command_dt',.05),
-                                              allowed=self.failure is None and self.clip_constraints_safe and travel<RELEASE_TRAVEL)
-                if self.press_joint_servo.invalid:self.failure=self.press_joint_servo.invalid
+            if at_endpoint:rp,rr=self.stationary_press_correction(rp,rr,measured,'PRESS_ENDPOINT',travel,((f'clip_{SERVICE}','tab'),(f'clip_{SERVICE}','hook')))
+            else:self.press_endpoint_low_velocity_frames=0
             self.stable_frames=self.stable_frames+1 if travel>=RELEASE_TRAVEL else 0
             if self.stable_frames>=5:
                 self.press_joint_servo.freeze()

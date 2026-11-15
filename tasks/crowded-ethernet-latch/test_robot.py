@@ -229,15 +229,56 @@ class EntryEndpointTests(unittest.TestCase):
    self.assertFalse(probe.entry_joint_servo.frozen)
 
 class PressEndpointTests(unittest.TestCase):
- def endpoint(self):
-  probe=ReleaseProbe(environment(),np.array(port(SERVICE)));probe.phase='depress_clip'
-  goal=np.array(port(SERVICE))+probe.local_contact-[0,0,.0023]-probe.pressR@probe.point
+ def endpoint(self,hover=False):
+  probe=ReleaseProbe(environment(),np.array(port(SERVICE)));probe.phase='approach_above_clip' if hover else 'depress_clip'
+  goal=np.array(port(SERVICE))+probe.local_contact+[0,0,.0041 if hover else -.0023]-probe.pressR@probe.point
   reference,_,_=ik.solve(goal,ik.matrix_to_quat_xyzw(probe.pressR),np.array(READY),base_pos=(0,-.305,.75),iters=350,tol=1e-6)
   actual=reference.copy();actual[2]+=.003
-  tcp,rotation=ik.tcp_pose(actual,(0,-.305,.75));left=probe.arm('left')
-  probe.arm=lambda side:left if side=='left' else (actual,np.array((-.028,-.028)),tcp,rotation)
+  left=probe.arm('left')
+  probe.boot_goal=left[2].copy();probe.boot_rotation=left[3].copy()
+  def arm(side):
+   if side=='left':return left
+   tcp,rotation=ik.tcp_pose(actual,(0,-.305,.75))
+   return actual,np.array((-.028,-.028)),tcp,rotation
+  probe.arm=arm
   probe.previous[7:13]=reference;probe.q[1]=reference.copy()
   return probe,actual
+
+ def test_hover_reference_freezes_then_moving_press_uses_new_ik_plus_bias(self):
+  from unittest.mock import patch
+  probe,actual=self.endpoint(hover=True)
+  def certified(*args,**kwargs):
+   probe.press_approach_certificate={'other_hand_gap_m':.01,'wire_gap_m':.01}
+   return True
+  with patch.object(probe,'stationary_hold_safety',return_value={'rigid_gap_m':.01,'other_hand_gap_m':.01,'right_non_target_rigid_gap_m':.01}),patch.object(probe,'certify_press_path',side_effect=certified):
+   probe.command(3.9);self.assertIsNone(probe.press_joint_servo.reference)
+   for t in (4.05,4.1,4.15,4.2):probe.command(t)
+   self.assertEqual(probe.press_servo_stage,'HOVER')
+   reference=probe.press_joint_servo.reference.copy();actual[:]=reference
+   for t in (4.25,4.3,4.35,4.4,4.45):probe.command(t)
+   self.assertEqual(probe.phase,'depress_clip');self.assertTrue(probe.press_joint_servo.frozen)
+   before=probe.press_joint_servo.bias.copy()
+   action,report=probe.command(7.45)
+   np.testing.assert_array_equal(probe.press_joint_servo.bias,before)
+   np.testing.assert_array_equal(probe.press_joint_servo.reference,reference)
+   self.assertGreater(np.linalg.norm(action[7:13]-(reference+before)),1e-4)
+   self.assertIsNone(report['failure']);self.assertEqual(report['press_servo_stage'],'HOVER')
+
+ def test_max_depth_relatches_unbiased_reference_preserving_bias_once(self):
+  from unittest.mock import patch
+  probe,actual=self.endpoint();measured=[probe.arm(side) for side in ('left','right')]
+  goal=np.array(port(SERVICE))+probe.local_contact-[0,0,.0023]-probe.pressR@probe.point
+  old_reference=actual+.01;probe.press_joint_servo.latch(old_reference)
+  learned=np.arange(6)*.001;probe.press_joint_servo.bias[:]=learned;probe.press_joint_servo.freeze()
+  probe.press_servo_stage='HOVER';probe.press_latched_pose=(goal+[0,0,.0064],probe.pressR)
+  probe.right_joint_velocity=np.zeros(6);probe.press_endpoint_low_velocity_frames=2
+  expected,_,_=ik.solve(goal,ik.matrix_to_quat_xyzw(probe.pressR),actual,base_pos=(0,-.305,.75),iters=220,tol=1e-6)
+  with patch.object(probe,'certify_press_path',return_value=True) as certify:
+   for _ in range(2):probe.stationary_press_correction(goal,probe.pressR,measured,'PRESS_ENDPOINT',RELEASE_TRAVEL)
+  self.assertEqual(certify.call_count,1);self.assertEqual(probe.press_servo_stage,'PRESS_ENDPOINT')
+  np.testing.assert_array_equal(probe.press_joint_servo.bias,learned)
+  np.testing.assert_allclose(probe.press_joint_servo.reference,expected,atol=1e-12)
+  self.assertFalse(probe.press_joint_servo.frozen);self.assertAlmostEqual(probe.press_endpoint_goal_drift,0.)
 
  def test_right_fixed_reference_integrates_only_after_stationary_max_depth(self):
   from unittest.mock import patch
