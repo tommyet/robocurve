@@ -2413,3 +2413,15 @@ editing, merge both agents' findings, and commit/push the update with the work.
   twohook-release/withdrawalexpectations. 30tests bothbaseline/current5fail.
   Do notclaimfullsuitegreen; PIDintroducesnonewfailures. Needreconcilethese
   regressionsbeforefinaltaskpackaging,notweakenactualphysicalguards.
+
+- Native027readbackbotharmsK[80×3,10×3],D[5×3,1.5×3],staticfriction
+  [.3×3,.06×3]Nm,dynamicALL0,viscousALL0. Confirmsstrongbreakawaydrop;
+  unchangedphysics. PI-D027failed5.15sphase/352actions beforeendcursor2.085,
+  actualrigidguardstop. Nativeinstantvelkey=right_native_joint_velocity_rad_s;
+  oldright_joint_velocity_rad_s remainsFD.
+- AstrafoundOURpriorconditionalIspecwrong: away-only-unwindveto blocked
+  correctiveq4I38/39frames whilee−2.6..−3mrad,vonly+.02..+.08mrad/saway.
+  b4stayed0..−.25mrad; otheraxeswoundupthenbrokeawaycoupled. Approved028
+  removeAWAYvetoANDzero-crossingclamp; normalerror-directedIrestorative.
+  RetainKi2/Kd.05/toward-horizonfreeze/allbounds/governor/safety. Noextra
+  frictionresetorstrongerDuntilthisdefinitebugfixed.

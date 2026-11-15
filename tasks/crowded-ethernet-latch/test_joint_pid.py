@@ -22,11 +22,11 @@ class JointPidTests(unittest.TestCase):
   np.testing.assert_array_equal(bias,np.full(6,.002));self.assertFalse(mask.any())
   np.testing.assert_allclose(d,-.0008);np.testing.assert_allclose(total,.0012)
 
- def test_away_only_unwinds_and_never_crosses_zero(self):
+ def test_away_motion_keeps_restorative_error_directed_integral(self):
   bias,_,_,mask=self.step(.002,.001,-.01)
-  np.testing.assert_allclose(bias,.002);self.assertFalse(mask.any())
+  np.testing.assert_allclose(bias,.0021);self.assertTrue(mask.all())
   bias,_,_,mask=self.step(.00001,-.001,.01)
-  np.testing.assert_allclose(bias,0,atol=1e-18);self.assertTrue(mask.all())
+  np.testing.assert_allclose(bias,-.00009);self.assertTrue(mask.all())
 
  def test_rest_normal_integral_and_total_twenty_milliradian_cap(self):
   bias,d,total,mask=self.step(0,.001,0)
@@ -60,14 +60,28 @@ class JointPidTests(unittest.TestCase):
 
  def test_total_correction_saturation_also_blocks_outward_integral(self):
   servo=JointEndpointCorrection();servo.latch(np.zeros(6));servo.bias[:]=.019
-  # Negative velocity generates positive D while positive bias cannot wind
-  # farther during away motion. Exercise total saturation independently by
-  # negative error with a negative bias, toward but below the freeze speed.
+  # Positive away velocity generates negative D; proposed negative I would
+  # wind farther into total-correction saturation and must be rejected.
   servo.bias[:]=-.019
   servo.track(np.zeros(6),np.full(6,.1),.05,-np.ones(6),np.ones(6),velocity=np.full(6,.04))
   np.testing.assert_allclose(servo.bias,-.019)
   np.testing.assert_allclose(servo.command(),-.02)
   self.assertFalse(servo.integral_mask.any())
+
+ @unittest.skipUnless(Path('/private/tmp/ethernet-tracking027.jsonl').exists(),'local native027 artifact')
+ def test_027_q4_away_motion_does_not_veto_corrective_integral(self):
+  rows=[json.loads(line) for line in Path('/private/tmp/ethernet-tracking027.jsonl').read_text().splitlines()]
+  witnessed=0
+  for row in rows:
+   if row['phase']!='prepress_endpoint':continue
+   control=row['robot_control'];reference=np.asarray(control['press_joint_reference'])
+   actual=np.asarray(control['arms'][1]['actual_joints']);old=np.asarray(control['press_joint_bias_rad'])
+   velocity=np.asarray(control['right_native_joint_velocity_rad_s'])
+   if reference[3]-actual[3]<-.002 and velocity[3]>0 and old[3]<=0:
+    bias,d,total,mask=bounded_joint_pid_step(old,reference,actual,velocity,.05)
+    self.assertTrue(mask[3]);self.assertLess(bias[3],old[3]);self.assertLess(d[3],0)
+    self.assertLessEqual(abs(total[3]),.02);witnessed+=1
+  self.assertGreater(witnessed,0)
 
  def test_proxy_native_velocity_selected_instead_of_finite_difference(self):
   env=environment();probe=PressTrackingProbe(env,np.array(port(SERVICE)))

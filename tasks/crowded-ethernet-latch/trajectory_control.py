@@ -54,12 +54,9 @@ def bounded_joint_pid_step(bias, reference, actual, velocity, dt):
         raise ValueError('native joint velocity must be finite shape (6,)')
     step = proposed-bias
     toward = velocity*error > 0
-    away = velocity*error < 0
     mask = ~(toward & (np.abs(velocity)*.1 >= np.abs(error)))
-    # Away motion may unwind existing preload, but cannot wind past zero.
-    mask &= ~away | (step*bias < 0)
+    # Error-directed integration also brakes motion away from the reference.
     step = np.where(mask,step,0.)
-    step = np.where(away,np.sign(step)*np.minimum(np.abs(step),np.abs(bias)),step)
     updated = np.clip(bias+step,-.02,.02)
     damping = np.clip(-.05*velocity,-.002,.002)
     return updated,damping,np.clip(updated+damping,-.02,.02),mask
