@@ -2295,3 +2295,13 @@ editing, merge both agents' findings, and commit/push the update with the work.
   e9314a5ac5c8b3cf20cd5ecfae020e5032b38e448ad0b035323837ca17ef897d.
   Native outcome still pending. Old draft MP4s moved into main ignored
   artifacts/task-preview-drafts; task-previews contains completed demos only.
+- Full009 crashed in the RTX renderer before testing the revised controller;
+  kernel Xid109 CTX SWITCH TIMEOUT repeated. GPU reset remained blocked even
+  after temporarily stopping lightdm and persistence services; all services
+  restored. A guest reboot of the SAME retained VM succeeded; SSH/L40S verified
+  at 13:43:58 UTC. No provider stop/start or replacement was needed for reboot.
+- Root added explicit --render-sync mitigation trial: FXAA and synchronous
+  real RGB capture, with settings in both AppLauncher and renderer config and
+  post-construction readback assertion. Physics/controller/cameras unchanged.
+  This is not a proven cure for Xid109. Full010 now testing the raised grasp
+  with this rendering option; inspect renderer-readback.json and final result.

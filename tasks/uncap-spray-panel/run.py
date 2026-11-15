@@ -14,6 +14,7 @@ def main():
     parser.add_argument('--policy',choices=['probe','capprobe','demo','dream'],default='probe')
     parser.add_argument('--stage',choices=['cap','press','full'],default='full')
     parser.add_argument('--max-steps',type=int,default=2400)
+    parser.add_argument('--render-sync',action='store_true',help='Use real RGB cameras with FXAA and synchronous rendering for the device-loss mitigation trial')
     parser.add_argument('--log-dir',type=Path,required=True)
     args=parser.parse_args()
     if not 1 <= args.max_steps <= 2400:parser.error('max-steps must be 1..2400')
@@ -39,10 +40,21 @@ def main():
             if adapter._APP is None:
                 os.environ.setdefault('OMNI_KIT_ACCEPT_EULA','YES')
                 from isaaclab.app import AppLauncher
-                adapter._APP=AppLauncher(headless=True,device=self.device,enable_cameras=True).app
+                kit_args='--/rtx/post/aa/op=2 --/app/asyncRendering=false --/omni/replicator/asyncRendering=false --/exts/isaacsim.core.throttling/enable_async=false' if args.render_sync else ''
+                adapter._APP=AppLauncher(headless=True,device=self.device,enable_cameras=True,kit_args=kit_args).app
                 atexit.register(adapter._close_app_at_exit)
             from yam_arena import scene as sc
             from yam_arena.embodiment import BimanualYamEmbodiment
+            from yam_arena import embodiment as robot_module
+            original_renderer=robot_module.RENDERER
+            if args.render_sync:
+                import copy
+                robot_module.RENDERER=copy.deepcopy(original_renderer)
+                settings=robot_module.RENDERER.global_settings
+                settings.antialiasing_mode='FXAA'
+                settings.carb_settings={**(settings.carb_settings or {}),
+                    '/app/asyncRendering':False,'/omni/replicator/asyncRendering':False,
+                    '/exts/isaacsim.core.throttling/enable_async':False}
             original_init=BimanualYamEmbodiment.__init__
             def sensor_init(instance,*a,**kw):
                 kw['contact_sensors']=True
@@ -81,6 +93,15 @@ def main():
             finally:
                 sc.task_object=original
                 BimanualYamEmbodiment.__init__=original_init
+                robot_module.RENDERER=original_renderer
+            if args.render_sync:
+                import carb.settings
+                settings=carb.settings.get_settings()
+                expected={'/rtx/post/aa/op':2,'/app/asyncRendering':False,
+                    '/omni/replicator/asyncRendering':False,'/exts/isaacsim.core.throttling/enable_async':False}
+                actual={key:settings.get(key) for key in expected}
+                (out/'renderer-readback.json').write_text(json.dumps(dict(requested=expected,actual=actual),indent=2))
+                if actual!=expected:raise RuntimeError('renderer settings do not match the requested synchronous FXAA mode')
 
         def reset(self,scene,*,seed=None):
             if hasattr(self,'audit'):raise RuntimeError('one trial per process')
@@ -247,7 +268,7 @@ def main():
         from demo_policy import register_policy
         policy=register_policy(cap_only=args.stage=='cap',press_only=args.stage=='press')
     diagnostic=args.policy in ('probe','capprobe') or (args.policy=='demo' and args.stage!='full')
-    (out/'mode.json').write_text(json.dumps(dict(policy=args.policy,stage=args.stage,diagnostic=diagnostic)))
+    (out/'mode.json').write_text(json.dumps(dict(policy=args.policy,stage=args.stage,diagnostic=diagnostic,render_sync=args.render_sync)))
     return cli(['run','--embodiment','uncap_spray_prototype','--policy',policy,
                 '-E',f'task={Path(__file__).parent / "task.py"}','-E','object_jitter=0',
                 '-E','control_hz=20','-E','cam_width=320','-E','cam_height=176',
