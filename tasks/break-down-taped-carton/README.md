@@ -1,6 +1,6 @@
 # Cut the bottom tape, unfold the flaps and flatten a used carton
 
-Native mechanics/controller draft.63CPU checks pass, including hinge geometry, scorer outcomes, tool-frame feedback and cut handoff/watchdogs. Camera-free native capture and source-bound pose/scorer audits pass. No run has completed all158 cuts plus cutter parking; no full cutting/opening/flattening demo or Dream score exists.
+Native mechanics/controller draft.63CPU checks pass, including hinge geometry, scorer outcomes, tool-frame feedback and cut handoff/watchdogs. Camera-free native capture and source-bound pose/scorer audits pass. Fresh sealed cut011 completed all158 cuts and cutter parking at score0.25; physical opening/flattening and a full demonstration or Dream score remain incomplete.
 
 Start with an **empty used carton**, upright with its four top flaps open and
 its four bottom flaps closed and taped. Turn it over, use a guarded cutter to
@@ -28,8 +28,8 @@ past 12 degrees. Future runtime releases native hinge limits only after every
 path is cut; it must never set flap poses to simulate opening.
 
 The bottom cutter and marked pad use an ordinary guarded tool, now integrated
-with native geometry and measured robot feedback. Cutter return remains
-unvalidated after a complete sealed-start cutting pass. Carton placement and safe turnover need
+with native geometry and measured robot feedback. Cutter return and released parking passed in sealed-start cut011; this is only
+the cutting/parking milestone. Carton placement and safe turnover need
 robot reach and self-collision checks before the setup is frozen.
 
 ## Proposed score
@@ -184,6 +184,7 @@ world-frame Cartesian bias once, within the same±3mm bounds.
 | cut008 camera-free |109/110,0/24,2/24 |20s no-cursor-advance watchdog at92.1s; return/repasses not reached. |
 | cut009 camera-free |108/110,0/24,2/24 | Grasp rotated12.57deg; front orientation reached a joint limit. |
 | cut010 camera-free |109/110,24/24,21/24 |154/158 cells at125.75s; boundary seam-repass safety stop before unlock/parking. |
+| cut011 camera-free |110/110,24/24,24/24 |Score0.25 at179s; all cells first complete157.55s, cutter parked/released, controller complete. |
 
 The cut007 and cut008 captures pass source/scene hashes, all31 actual rigid-owner pose streams,
 and exact captured-scorer replay (1729 and1842 samples, firstt=.05s). Creases
@@ -230,7 +231,8 @@ stays the same; this is a regression check, not native credit. Four actual010
 grasps pass803 remaining-route IK samples each and all±3mm endpoint corners.
 A separate273-sample nominal mesh review passes (minimum cutter gap0.750mm).
 These sampled checks do not prove the live tracking envelope or future
-post-unlock flap positions. Fresh native validation of the candidate is pending.
+post-unlock flap positions. Fresh native cut011 validates this candidate through cutting and released cutter
+parking; it does not validate opening or collapse.
 
 The native012 control fixes remain: matching hover-to-lower nominal pose and
 WORLD bias carry, one exact14D handoff tick, lowering peak10mm/s, and full-vector
@@ -240,5 +242,22 @@ original−0.275mm depth and translates centrally at(0,−50,−40)mm before cha
 yaw, with explicit incoming orientation. Any cleanup seam span outside
 [−107,+106.5]mm fails before phase insertion; it is not clipped and no coverage
 is fabricated. The physical/scoring/hardware limits and weak22mm jaw command
-are unchanged. Full158-cut completion, cutter parking, opening and collapse
-still require same-episode native proof.
+are unchanged. Full158-cut completion and released cutter parking now have same-episode
+native proof in cut011; opening and collapse remain unproved.
+
+
+## Cut011 milestone: actual cuts, unlock and released cutter parking
+
+Fresh sealed cut011 used source commit`1cc0eed` without further policy/physics
+changes. All158 cells first became cut at157.55s; the native outer-flap limits
+released and measured bottom flaps subsequently moved to approximately−78.56,
+−78.57,−84.87,−84.87deg. The cut/park controller completed at179s, score0.25,
+with actual cutter_parked=true and cutter_held=false. Its3580 rows and110,980
+native owner poses pass source/scene and independent geometry/scorer audits.
+Final hands_clear=false, bottom_opened=false and flat-release hold0: no full
+opening, flattening, task completion or eligible final media is claimed.
+
+Archive-preserved file mtimes are mode19:57:50 and result20:05:12 on2026-11-15:
+442s (about7.4min) for the recorded loop-to-result interval, at one-second mtime
+resolution. This is not monotonic profiling and excludes startup before mode
+creation; startup/render/export overhead must not be inferred from it.

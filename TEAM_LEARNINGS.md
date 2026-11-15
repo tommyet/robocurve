@@ -2399,3 +2399,31 @@ editing, merge both agents' findings, and commit/push the update with the work.
   It is not native task credit. All63 task CPU tests, compilation and diff checks
   pass. Fresh candidate run remains pending; full cuts+cutter parking, then
   actual four-flap opening and intact collapse are still incomplete.
+
+
+### 2026-11-15 — fresh cut011 proves the cut/unlock/park milestone, score0.25
+
+- Unchanged source1cc0eed fresh sealed cut011 first reached all158 measured tape
+  cells at157.55s, then native limit release let bottom flaps move beyond the
+  sealed12deg range. Controller completed179s without failure, score0.25/invalid
+  null: actual cutter_parked=true, cutter_held=false. Final bottom angles are
+  −78.5576/−78.5718/−84.8700/−84.8696deg; this is not150deg physical opening.
+  Final hands_clear=false, bottom_opened=false, flat_release_hold0. Cutting and
+  released cutter parking are proved; full carton breakdown/media remain false.
+- Whole capture3580rows/110,980 actual owner poses and all3580geometry/scorer
+  rows pass independent source/scene/pose audit. Trace SHA256
+  f7398d3c3d51f3446d56a71eb85730542826167e2db8f2854986f91b99bced2d.
+  Local `/private/tmp/carton-cut011-no-video` and matching audit preserve the
+  evidence. No Dream run, media upload or upstream submission occurred.
+- Archive-preserved mode.json19:57:50/result.json20:05:12 give442s (~7.4min)
+  loop-to-result interval on2026-11-15, at1s mtime resolution. It excludes startup
+  before mode creation and is not monotonic profiling; do not call it total
+  process time or attribute all overhead to the policy.
+- Independent bounded return preflight explicitly checked the BACK-only cleanup
+  branch (without seam-repass staging/yawπ) using actual011164.75post-unlock
+  panels/grasp and010settledpad. Direct260/cleanup313 IK samples and104endpoint
+  ±3mm corners pass. Corrected136gripper pieces+cutter sample clearances pass
+  through opening fingers/retreat; minimumgripper8.562mm/cutter.7501mm. This
+  sampled check excludes315full-arm/continuous/bias-envelope proof; native011
+  return/parking observations are authoritative. No task source edits were made
+  for this check.

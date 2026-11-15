@@ -1,5 +1,5 @@
 {
-  "status": "sealed_cut010_154_of158_fold_offset_candidate_cpu_reviewed",
+  "status": "sealed_cut011_all158_cut_and_cutter_parked_score025",
   "date": "2026-11-15",
   "local_tests_passed": 63,
   "native_runtime_verified": true,
@@ -7,11 +7,9 @@
   "dream_score": null,
   "media": null,
   "remaining": [
-    "Validate inward fold-plane/shallower depth candidate and8mm/s cleanup in a fresh sealed native trial",
-    "Complete all158 actual tape cells and release/park cutter in one sealed-start trial",
-    "Integrate and validate opening of all four bottom flaps after actual cutting",
+    "Integrate and validate same-episode opening of all four bottom flaps after actual cutting",
     "Implement and validate intact physical collapse; no collapse controller currently exists",
-    "Set full-task allowance from a successful complete demonstration"
+    "Reach released hands-clear final hold and set honest full-task allowance from a successful complete demonstration"
   ],
   "native_mechanics_probe": {
     "run": "carton-native-001",
@@ -24,26 +22,39 @@
   "native_runtime": true,
   "local_model_tests_passed": 63,
   "latest_robot_cut": {
-    "run": "carton-cut010-no-video",
-    "score": 0.0,
-    "seam_cells": 109,
+    "run": "carton-cut011-no-video",
+    "validated_source_commit": "1cc0eed791b15015f5bef2615ae9e7648efe0bc1",
+    "score": 0.25,
+    "seam_cells": 110,
     "front_fold_cells": 24,
-    "back_fold_cells": 21,
+    "back_fold_cells": 24,
     "total_required_cells": 158,
-    "controller_completed": false,
-    "cutter_return_reached": false,
-    "controller_failure": "unreviewed seam repass X span [-0.105, -0.113] for 1 missing cells; reviewed interior [-0.107, 0.1065]m",
-    "duration_s": 125.75,
-    "samples": 2515,
-    "max_crease_separation_m": 4.16142517161981e-06,
+    "all_cells_first_complete_s": 157.55,
+    "controller_completed": true,
+    "cutter_return_reached": true,
+    "cutter_parked": true,
+    "cutter_held": false,
+    "hands_clear": false,
+    "bottom_opened": false,
+    "flat_release_hold_s": 0.0,
+    "controller_failure": null,
+    "duration_s": 179.0,
+    "samples": 3580,
+    "native_pose_samples": 110980,
+    "max_crease_separation_m": 1.0012071419635016e-05,
     "invalid": null,
     "independent_audit_passed": true,
-    "trace_sha256": "10e769f1f3eeecb6f8bbd4ef55835ba00e81f1901c7a325675937baa962f2856",
-    "maximum_grasp_rotation_drift_deg": 0.03393,
-    "maximum_tip_offset_drift_m": 4.715e-05
+    "trace_sha256": "f7398d3c3d51f3446d56a71eb85730542826167e2db8f2854986f91b99bced2d",
+    "final_bottom_angles_deg": [
+      -78.55758666992188,
+      -78.57177734375,
+      -84.87000274658203,
+      -84.86955261230469
+    ],
+    "native_outer_limit_release_observed": true
   },
   "superseded_geometry_note": "Unshifted -275 degree D6 limit was clamped to -180 by PhysX, pulling folded-back top flaps closed. Current top joints use a -135 degree local reference frame, with supported relative limits; native validation pending.",
-  "work_state": "reviewed_fold_candidate_pending_fresh_native_validation",
+  "work_state": "cutting_parking_milestone_verified_opening_collapse_pending",
   "full_completion_verified": false,
   "native_camera_free_capture_verified": true,
   "camera_free_trials": {
@@ -98,6 +109,40 @@
       "maximum_tip_offset_drift_m": 4.715e-05,
       "full_task_complete": false,
       "independent_geometry_audit_passed": true
+    },
+    "carton-cut011-no-video": {
+      "run": "carton-cut011-no-video",
+      "validated_source_commit": "1cc0eed791b15015f5bef2615ae9e7648efe0bc1",
+      "score": 0.25,
+      "seam_cells": 110,
+      "front_fold_cells": 24,
+      "back_fold_cells": 24,
+      "total_required_cells": 158,
+      "all_cells_first_complete_s": 157.55,
+      "controller_completed": true,
+      "cutter_return_reached": true,
+      "cutter_parked": true,
+      "cutter_held": false,
+      "hands_clear": false,
+      "bottom_opened": false,
+      "flat_release_hold_s": 0.0,
+      "controller_failure": null,
+      "duration_s": 179.0,
+      "samples": 3580,
+      "native_pose_samples": 110980,
+      "max_crease_separation_m": 1.0012071419635016e-05,
+      "invalid": null,
+      "independent_audit_passed": true,
+      "trace_sha256": "f7398d3c3d51f3446d56a71eb85730542826167e2db8f2854986f91b99bced2d",
+      "final_bottom_angles_deg": [
+        -78.55758666992188,
+        -78.57177734375,
+        -84.87000274658203,
+        -84.86955261230469
+      ],
+      "native_outer_limit_release_observed": true,
+      "full_task_complete": false,
+      "independent_geometry_audit_passed": true
     }
   },
   "capture_protocol": {
@@ -115,7 +160,7 @@
     "no_accepted_cursor_advance_watchdog_s": 20,
     "scope": "cut-only engineering probe; full-task allowance not yet demonstrated"
   },
-  "tracking_review": "Fresh010 retained grasp and reached all orientations; remaining seam boundary missed by transverse distance and three back cells by invalid film depth. Candidate changes commanded fold planes/depth and cleanup speed only; thresholds/coverage cells remain unchanged.",
+  "tracking_review": "Cut011 with unchanged reviewed controls/foldoffset achievedall158actualcells and releasedcutterparking; alloriginalorientations passed. Opening/collapse remain unvalidated.",
   "previous_latest_robot_cut": {
     "run": "carton-cut008-no-video",
     "score": 0.0,
@@ -151,7 +196,7 @@
     "scope": "Diagnostic controller-prefix retention evidence, not a fresh task or all158cuts/parking proof."
   },
   "fold_candidate": {
-    "native_validated": false,
+    "native_validated": true,
     "fold_x_m": [
       -0.1095,
       0.1095
@@ -181,6 +226,33 @@
     "minimum_nominal_cutter_gap_m": 0.000750363,
     "counterfactual_cells": 158,
     "counterfactual_native_credit": false,
-    "limitations": "Sampled IK/mesh and shifted actual crossing regressions only; residual tracking and post-unlock dynamic panels require native validation."
+    "limitations": "Sampled IK/mesh and shifted actual crossing regressions only; residual tracking and post-unlock dynamic panels require native validation.",
+    "native_validation_scope": "cut011 all158actualcuts and releasedcutterparking atscore0.25; no opening/collapse or fulltask proof"
+  },
+  "prior_robot_cut010": {
+    "run": "carton-cut010-no-video",
+    "score": 0.0,
+    "seam_cells": 109,
+    "front_fold_cells": 24,
+    "back_fold_cells": 21,
+    "total_required_cells": 158,
+    "controller_completed": false,
+    "cutter_return_reached": false,
+    "controller_failure": "unreviewed seam repass X span [-0.105, -0.113] for 1 missing cells; reviewed interior [-0.107, 0.1065]m",
+    "duration_s": 125.75,
+    "samples": 2515,
+    "max_crease_separation_m": 4.16142517161981e-06,
+    "invalid": null,
+    "independent_audit_passed": true,
+    "trace_sha256": "10e769f1f3eeecb6f8bbd4ef55835ba00e81f1901c7a325675937baa962f2856",
+    "maximum_grasp_rotation_drift_deg": 0.03393,
+    "maximum_tip_offset_drift_m": 4.715e-05
+  },
+  "loop_walltime_estimate": {
+    "method": "archive-preserved mode.json/result.json mtimes, one-second resolution; not monotonic profiler",
+    "mode_mtime": "2026-11-15 19:57:50",
+    "result_mtime": "2026-11-15 20:05:12",
+    "interval_s": 442,
+    "excludes_startup": true
   }
 }
