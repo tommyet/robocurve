@@ -1,0 +1,16 @@
+{
+  "source": "/private/tmp/carton-open-coupon",
+  "controller_sha256": "5e845320e986f282d65b58b8227c5005f7cc98923b8f901778af67e8d21cb192",
+  "safety_sha256": "b10826b42913bdc326b76513788e352f6380a845d00ba4a95bc0c55ba8c750ba",
+  "route321_sha256": "cc30949b7c0843f548d9881dd77715aa5b81c65fca188bfb82e3f8558f733a88",
+  "copied_files": {
+    "crease.py": "b10e0175fa7cd4e3f4d53e19cf32023a3ddc2b7eb242149a2c83fb8be53ccb33",
+    "route321.json": "cc30949b7c0843f548d9881dd77715aa5b81c65fca188bfb82e3f8558f733a88",
+    "config.py": "61e89314e16ff500893cd0b569e002f4b5da62cf2b2e3f46803a4519542548f8",
+    "scoop_controller.py": "5e845320e986f282d65b58b8227c5005f7cc98923b8f901778af67e8d21cb192",
+    "scene.py": "9ec9aa6f20455b76f6f3ff044377ab74e9bf21d9eeaf32f3fe97b63d4e27a478",
+    "baseline_safety.py": "b10826b42913bdc326b76513788e352f6380a845d00ba4a95bc0c55ba8c750ba",
+    "capture.py": "1db2d047cfec374069d2a640f2cd6f11882fd74fa9ab1b28f63f0cc37206742a",
+    "snapshot-row.json": "7f853198402b1ca3c9582cb99eb39db4afd04237aa873123b5ae33294056444f"
+  }
+}

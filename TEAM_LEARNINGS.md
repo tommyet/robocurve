@@ -4,6 +4,14 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 — carton CPU controls and grasp topology audit
+
+- Operator: Brev task agent, fork branch `codex/carton-local-control`. Brev cb0da2 was verified STOPPED after backing up cancelled opening013 (601rows/30.05simsec/18,631 actual body poses/1,803 raw contact snapshots, geometry/source/time auditPASS). No contact or opening success, scorer disabled. The arm had2.249mm median reference tracking error against a2mm advance gate; extrapolated approach completion84simsec would miss the100s controller cap before the rest of the route.
+- Reviewed CPU helpers are saved under `experiments/carton-local-control/`, not production. Joint PI uses own joint state only;9tests/AstraPASS. It preserves the loaded first command, but cannot assume arbitrary inherited bias for later references. Reject/abort BEFORE native env.step; the old coupon loop advanced one held-command step before its bottom-of-loop failure check. No active/frozen source was mutated.
+- Exact geometry batching retains all315x15 obstacle pairs, numeric thresholds and scalarSAT fallback.321route+12negative cases matched exactly,6focusedtests passed;2.855x warm CPU workload speedup. RIGHT FK cache is keyed by exactjoint+finger values; object transforms rebuild everycall. This is not native stability/throughput proof.
+- Topology audit corrected a search assumption: TCP is13mm behind pad tips. OldTCP12mm insideflap implied~25mm tip purchase. ShallowTCP8mm outside gives~4.84mm purchase and clears8initial side-oriented grasps, but current constant-heading arcs hitjointlimits/interarmcollision. Earlier96larger-box failures do NOT prove every normal pinch impossible. GPU remains off while a bounded adaptive-heading/clear-idle-arm path is implemented locally; actualbox reorientation/grasp/slip/regrasp still unproved.
+- Production physics/scoring and pending sprayPR2171 are unchanged. No new task was submitted. Source/raw capture evidence stays under ignored local artifacts; preserve independent source hashes when revising controls.
+
 ## 2026-11-15 — follow-up idea research; bracelet saved for later
 
 - User explicitly asked for research without GPUs and selected **help fasten a

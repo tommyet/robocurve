@@ -1,0 +1,472 @@
+{
+  "status": "READ_ONLY_RECOMMENDATION_NOT_IMPLEMENTED",
+  "native013_status": "intentionally_cancelled_before_contact_not_controller_failure",
+  "window_s": [
+    23.0,
+    27.950000000000003
+  ],
+  "samples": 100,
+  "reference_hold_rows": 86,
+  "median_command_minus_actual_joint_rad": [
+    -0.0030174851417541504,
+    0.0010475516319274902,
+    0.0020107030868530273,
+    0.004102766513824463,
+    0.003979694098234177,
+    -0.008347809314727783
+  ],
+  "held_cursor_median_joint_residual_rad": [
+    -0.0029993653297424316,
+    0.001037895679473877,
+    0.001987934112548828,
+    0.003926992416381836,
+    0.00394100695848465,
+    -0.008301138877868652
+  ],
+  "median_commandFK_minus_postactual_TCP_m": [
+    7.778013508055737e-06,
+    -0.002040824770848146,
+    0.0006211984252875169
+  ],
+  "median_reference_minus_preactual_TCP_m": [
+    9.901111529407591e-05,
+    -0.002147512958597768,
+    0.0006166046608645503
+  ],
+  "reference_to_issuedFK_m": {
+    "median": 5.5442755180315467e-05,
+    "max": 8.202649560754248e-05
+  },
+  "issuedFK_to_postactual_rotation_deg": {
+    "median": 0.47354184541024347,
+    "max": 0.563017993168009
+  },
+  "reported_hand_contact_force_max_N": {
+    "target": 0.0,
+    "other": 0.0
+  },
+  "hypothetical_same_scene_checks": [
+    {
+      "time_s": 23.0,
+      "candidate_q": [
+        -0.7319948077201843,
+        1.387857973575592,
+        1.249861478805542,
+        -1.2402035593986511,
+        0.10085615888237953,
+        -0.9713337421417236
+      ],
+      "nominal": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.23122853564331708,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      },
+      "augmented": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.2301691733693482,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      }
+    },
+    {
+      "time_s": 23.5,
+      "candidate_q": [
+        -0.7319948077201843,
+        1.387857973575592,
+        1.249861478805542,
+        -1.2402035593986511,
+        0.10085615888237953,
+        -0.9713337421417236
+      ],
+      "nominal": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.23122836946808886,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      },
+      "augmented": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.23016900719411998,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      }
+    },
+    {
+      "time_s": 24.0,
+      "candidate_q": [
+        -0.7319948077201843,
+        1.387857973575592,
+        1.249861478805542,
+        -1.2402035593986511,
+        0.10085615888237953,
+        -0.9713337421417236
+      ],
+      "nominal": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.23122820433583569,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      },
+      "augmented": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.2301688420618668,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      }
+    },
+    {
+      "time_s": 24.5,
+      "candidate_q": [
+        -0.7333224415779114,
+        1.3920333981513977,
+        1.2517763376235962,
+        -1.2302022576332092,
+        0.10156137868762016,
+        -0.9826867580413818
+      ],
+      "nominal": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.22985705332019696,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      },
+      "augmented": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.22879696684549383,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      }
+    },
+    {
+      "time_s": 25.0,
+      "candidate_q": [
+        -0.7333224415779114,
+        1.3920333981513977,
+        1.2517763376235962,
+        -1.2302022576332092,
+        0.10156137868762016,
+        -0.9826867580413818
+      ],
+      "nominal": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.22985688818823638,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      },
+      "augmented": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.22879680171353325,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      }
+    },
+    {
+      "time_s": 25.5,
+      "candidate_q": [
+        -0.7346850037574768,
+        1.3962092995643616,
+        1.2536566257476807,
+        -1.220151126384735,
+        0.10216335579752922,
+        -0.9940781593322754
+      ],
+      "nominal": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.2284784555655497,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      },
+      "augmented": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.22741770123995547,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      }
+    },
+    {
+      "time_s": 26.0,
+      "candidate_q": [
+        -0.7357954978942871,
+        1.3990288376808167,
+        1.2548249959945679,
+        -1.2132540345191956,
+        0.1024145595729351,
+        -1.001966416835785
+      ],
+      "nominal": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.22750255924503854,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      },
+      "augmented": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.2264414287062568,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      }
+    },
+    {
+      "time_s": 26.5,
+      "candidate_q": [
+        -0.7357954978942871,
+        1.3990288376808167,
+        1.2548249959945679,
+        -1.2132540345191956,
+        0.1024145595729351,
+        -1.001966416835785
+      ],
+      "nominal": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.22750239411351686,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      },
+      "augmented": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.22644126357473512,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      }
+    },
+    {
+      "time_s": 27.0,
+      "candidate_q": [
+        -0.7365074157714844,
+        1.4016823172569275,
+        1.2560477256774902,
+        -1.206721007823944,
+        0.10282368585467339,
+        -1.0092702507972717
+      ],
+      "nominal": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.22665811341011136,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      },
+      "augmented": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.22559660272368948,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      }
+    },
+    {
+      "time_s": 27.5,
+      "candidate_q": [
+        -0.7372140884399414,
+        1.4032074809074402,
+        1.2566488981246948,
+        -1.2031202912330627,
+        0.10284055396914482,
+        -1.013417661190033
+      ],
+      "nominal": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.22611184242259458,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      },
+      "augmented": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.2250501395762565,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      }
+    },
+    {
+      "time_s": 27.950000000000003,
+      "candidate_q": [
+        -0.7379493713378906,
+        1.4058660864830017,
+        1.2578541040420532,
+        -1.1965581774711609,
+        0.10318196192383766,
+        -1.02074533700943
+      ],
+      "nominal": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.22526221029338903,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      },
+      "augmented": {
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "base",
+          "table"
+        ],
+        "other_arm_aabb_gap_m": 0.22420016053360767,
+        "intended_target_gap_m": null,
+        "intended_pair": null,
+        "safe": true,
+        "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+      }
+    }
+  ],
+  "all_sampled_augmented_commands_safe": true,
+  "minimum_augmented_hard_gap_m": 0.0013988879699513568,
+  "minimum_augmented_other_arm_gap_m": 0.22420016053360767,
+  "universal_frozen_bias_route_scope_probe": {
+    "cases": 321,
+    "unsafe_count": 1,
+    "minimum_hard_gap_m": -0.0012340426234970434,
+    "minimum_other_arm_gap_m": 0.10916920020784956,
+    "limiting_case": {
+      "index": 265,
+      "phase": "underedge_insert",
+      "hard_gap_m": -0.0012340426234970434,
+      "hard_pair": [
+        "tip_right",
+        "north_bottom"
+      ],
+      "other_arm_aabb_gap_m": 0.10919050316012549,
+      "intended_target_gap_m": null,
+      "intended_pair": null,
+      "safe": false,
+      "scope": "actualorcommandFK315pieces,current12panels+cutter+table;onlytip_right/north_bottom contactexception;otherarmpositivepieceAABBcertificate"
+    },
+    "warning": "Constant above-aperture residual is configuration-dependent; not a validated transfer to supported contact."
+  },
+  "recommendation": {
+    "controller_change": "Bounded proprioceptive joint target offset PI is justified for a separate reviewed free-space test. No gate relaxation or mechanical gain changes.",
+    "reference": "Store unbiased q reference separately from augmented ordinary14D action; add b exactly once. Do not seed a new nominal reference from augmented FK and then add b again. Preserve exact previous command at handoffs.",
+    "bounds": "Candidate initial review: existing +/-20mrad total bias and <=.25mrad/frame, explicit joint/action-limit antiwindup; gain/velocity damping to be agreed with Astra before implementation. The 8.35mrad joint6 residual fits this envelope.",
+    "safety": "Run unchanged315-piece actual and actual augmented-action candidate guard every tick; retain precontact north_bottom as hard obstacle. No unreviewed contact extension.",
+    "reuse_cut_I": "Existing Ki.5/s Cartesian I (75um normstep,3mm component cap) covers the observed translation scale but does not itself compensate rotation and would need the same independent-unbiased-reference/handoff proof. Joint PI addresses both pose components.",
+    "proof_limit": "Read-only replay proves a residual and checks hypothetical command geometry, not closed-loop stability, all-substep contact absence, or future native retention."
+  },
+  "source_sha256": {
+    "recent100-raw.jsonl": "bda2a622adf90cec36f38989ed170a7b54c8843f2df3ae72a74b681bb6b920d1",
+    "recent100-diagnosis.json": "df98c6b4231073f43c7546a5d6a427062a75254090166a5a741959024b0a6bb8",
+    "recent100-estimate.json": "207d9da6b64f6f03f90578b07d18a77f55ab1b8bbd061b6351c8032b03a07de1"
+  }
+}

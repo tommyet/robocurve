@@ -1,0 +1,60 @@
+{
+  "route_cases": 321,
+  "total_finite_cases": 336,
+  "maximum_numeric_difference_m": 0.0,
+  "all_pairs_identifiers_scope_decisions_match": true,
+  "negative_collision_cases": 12,
+  "actual_inplace_scene_mutation_preserved": true,
+  "right_cache_exact_value_invalidation_tested": true,
+  "all321_exceptions_and_thresholds_unchanged": true,
+  "parity_elapsed_s": 76.15337058296427,
+  "measurements": [
+    {
+      "name": "baseline",
+      "ticks_per_batch": 9,
+      "checks_per_batch": 18,
+      "seconds": [
+        2.831225208006799,
+        2.822089584020432,
+        2.8260235830093734
+      ],
+      "median_s": 2.8260235830093734
+    },
+    {
+      "name": "fast",
+      "ticks_per_batch": 9,
+      "checks_per_batch": 18,
+      "seconds": [
+        0.9925861660158262,
+        0.989983832987491,
+        0.9841394999530166
+      ],
+      "median_s": 0.989983832987491
+    }
+  ],
+  "speedup": 2.8546158925456733,
+  "fast_dispatch_counts": {
+    "checks": 410,
+    "all_piece_box_pairs": 1937250,
+    "narrowphase_calls": 564,
+    "min_tie_refinements": 88,
+    "right_fk_builds": 3,
+    "right_fk_exact_cache_hits": 407
+  },
+  "baseline_profile": "baseline-profile.txt",
+  "fast_profile": "fast-profile.txt",
+  "source_sha256": {
+    "crease.py": "b10e0175fa7cd4e3f4d53e19cf32023a3ddc2b7eb242149a2c83fb8be53ccb33",
+    "config.py": "61e89314e16ff500893cd0b569e002f4b5da62cf2b2e3f46803a4519542548f8",
+    "scoop_controller.py": "5e845320e986f282d65b58b8227c5005f7cc98923b8f901778af67e8d21cb192",
+    "scene.py": "9ec9aa6f20455b76f6f3ff044377ab74e9bf21d9eeaf32f3fe97b63d4e27a478",
+    "workload.py": "5e51b1ef5ef525b27ef70b964853b5cded39a66fd3d63d02afe4bf6c974d97fb",
+    "model.py": "b979a306381ce0cbfa89e75e61a981e9098215d9aac3177c6f86f005a236ba50",
+    "baseline_safety.py": "b10826b42913bdc326b76513788e352f6380a845d00ba4a95bc0c55ba8c750ba",
+    "capture.py": "1db2d047cfec374069d2a640f2cd6f11882fd74fa9ab1b28f63f0cc37206742a",
+    "profile_baseline.py": "ff6c79e7a444c342154aff9f408714aad3b95c38e452f67628d1f8bb680e6c12",
+    "fast_safety.py": "1ef09fdfb430791f5621c620c5cfaa6a1cb457059f09797e99003dbda634da32",
+    "compare.py": "b5725d12a0f5f5d6a1a6851680791720f60c334c96e2a33e7361d7b313806f84"
+  },
+  "scope": "ISOLATED CPU candidate only, all315\u00d715pairs kept. Same scalarSAT/refinement andthresholds. RightFKmemo exactvaluesonly; allscene/cutterposesfresh. No active013/coupon/source/GPU edits or nativeperformance/equivalence claim."
+}

@@ -1,0 +1,14 @@
+{
+  "created_utc": "2026-11-15T21:15:51.807628+00:00",
+  "scope": "ISOLATED_CPU_ONLY; no active source edits or native performance claim",
+  "frozen_originals_verified_unchanged": {
+    "task/scoop_controller.py": "5e845320e986f282d65b58b8227c5005f7cc98923b8f901778af67e8d21cb192",
+    "task/scoop_safety.py": "b10826b42913bdc326b76513788e352f6380a845d00ba4a95bc0c55ba8c750ba",
+    "MANIFEST.json": "3ea6816f7e40c466927f2061494120e85a3ccc82be6c4b5ee0dda344b5b0a79d"
+  },
+  "pinned_urdf": "/private/tmp/spray-yam-source/yam_arena/assets/yam/yam_arm.urdf",
+  "pinned_urdf_sha256": "d6cc3fca8d6848aad36c0d2bb8798de391fcf5ef8f41180fe7618eda141f0bef",
+  "full_parity_candidate_sha256": "1ef09fdfb430791f5621c620c5cfaa6a1cb457059f09797e99003dbda634da32",
+  "final_candidate_sha256": "64af6ff63e1646466a41e6183de7562e0d1ae2e8cd95026afaa93fbb666e4f5c",
+  "only_post_parity_delta": "Absent target panel mask preserves original empty intended result; six focused tests, including baseline absent-target parity, PASS."
+}

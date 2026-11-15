@@ -1,0 +1,80 @@
+{
+  "created_utc": "2026-11-15T21:55:02.310045+00:00",
+  "stage_start_utc": "2026-11-15T21:50:10Z",
+  "status": "CPU_HELPER_REVIEW_PASS_NOT_INTEGRATED",
+  "pure_helper_imports": [
+    "dataclasses",
+    "math",
+    "numpy"
+  ],
+  "frozen_originals_verified_unchanged": {
+    "task/scoop_controller.py": "5e845320e986f282d65b58b8227c5005f7cc98923b8f901778af67e8d21cb192",
+    "task/scoop_safety.py": "b10826b42913bdc326b76513788e352f6380a845d00ba4a95bc0c55ba8c750ba",
+    "MANIFEST.json": "3ea6816f7e40c466927f2061494120e85a3ccc82be6c4b5ee0dda344b5b0a79d"
+  },
+  "guard_manifest_sha256": "5e73d2517606352829a058b9b72a9b18f4b2c4d34636a7a45021e49b9d364a90",
+  "external_inputs_sha256": {
+    "/private/tmp/carton-open013-approved-source/recent100-raw.jsonl": "bda2a622adf90cec36f38989ed170a7b54c8843f2df3ae72a74b681bb6b920d1",
+    "/private/tmp/carton-open013-approved-source/recent100-diagnosis.json": "df98c6b4231073f43c7546a5d6a427062a75254090166a5a741959024b0a6bb8",
+    "/private/tmp/carton-open013-approved-source/recent100-estimate.json": "207d9da6b64f6f03f90578b07d18a77f55ab1b8bbd061b6351c8032b03a07de1",
+    "/private/tmp/carton-scoop-guard-profile/fast_safety.py": "64af6ff63e1646466a41e6183de7562e0d1ae2e8cd95026afaa93fbb666e4f5c",
+    "/private/tmp/carton-scoop-guard-profile/baseline_safety.py": "b10826b42913bdc326b76513788e352f6380a845d00ba4a95bc0c55ba8c750ba",
+    "/private/tmp/carton-scoop-guard-profile/route321.json": "cc30949b7c0843f548d9881dd77715aa5b81c65fca188bfb82e3f8558f733a88",
+    "/private/tmp/carton-scoop-guard-profile/snapshot-row.json": "7f853198402b1ca3c9582cb99eb39db4afd04237aa873123b5ae33294056444f",
+    "/private/tmp/spray-yam-source/yam_arena/assets/yam/yam_arm.urdf": "d6cc3fca8d6848aad36c0d2bb8798de391fcf5ef8f41180fe7618eda141f0bef",
+    "/private/tmp/carton-proprio-tracking/joint_position_pi.py": "50e463323228bec1387ad6204761af12d88f23ac5af0732552e9c6bc15e26422"
+  },
+  "urdf_joint_limits": {
+    "joint_names": [
+      "joint1",
+      "joint2",
+      "joint3",
+      "joint4",
+      "joint5",
+      "joint6"
+    ],
+    "lower": [
+      -2.61799,
+      -8.88178e-16,
+      0.0,
+      -1.69297,
+      -1.5708,
+      -2.0944
+    ],
+    "upper": [
+      3.14159,
+      3.66519,
+      3.14159,
+      1.5708,
+      1.5708,
+      2.0944
+    ]
+  },
+  "tests": {
+    "count": 9,
+    "passed": 9,
+    "command": "/private/tmp/robocurve-media-env/bin/python -m unittest -v test_joint_position_pi.py",
+    "wall_s_reported_by_unittest": 0.05
+  },
+  "native_changes": "NONE",
+  "limitations": [
+    "No closed-loop native convergence/stability proof",
+    "Old route contact feasibility not assumed",
+    "Strict fresh actual and exact augmented-command guards remain required",
+    "Observed clocks can advance after rejection; issued targets, integral and path time cannot"
+  ],
+  "review": {
+    "reviewer": "Astra",
+    "scope": "pure helper only; not integration, native stability, route or GPU approval",
+    "helper_sha256": "50e463323228bec1387ad6204761af12d88f23ac5af0732552e9c6bc15e26422",
+    "independent_tests": {
+      "passed": 9,
+      "wall_s_reported_by_unittest": 0.041
+    },
+    "integration_caveats": [
+      "begin preserves first command but starts bias0; nominal path continuity or inherited-bias transfer needs review",
+      "Caller must halt/abort on guard rejection; retained command is not itself safe-hold proof"
+    ]
+  },
+  "stage_end_utc": "2026-11-15T21:55:28.952186+00:00"
+}

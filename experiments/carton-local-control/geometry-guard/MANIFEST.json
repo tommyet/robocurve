@@ -1,0 +1,33 @@
+{
+  "created_utc": "2026-11-15T21:16:12.890575+00:00",
+  "candidate_only": true,
+  "native_integration": false,
+  "files": {
+    "BASELINE_PROVENANCE.json": "55410584b9fef5d8d78cfc61d43864236d055217c52f4ce186f672be7ee4da40",
+    "FINAL_PROVENANCE.json": "8bf3d5e21f751f325f2ce6063fba0759280ff4629c6be5f211d428e9b11625eb",
+    "README.md": "3315f83c63a41bd385e8b58eddbb4a6197b97c621a1b96931cb28371caf92496",
+    "baseline-profile-summary.json": "0ad699e19068bb80ca5d9bb6d3a56bf9048c334197f22e3198e5ca398bad8b12",
+    "baseline-profile.txt": "431249a6b66014e76c678b4d2e52a40b0307d1714caff8c2544c5e912cc24850",
+    "baseline.prof": "3d9e124b4828f78f05900f2229381bf9688d98527e3ded0dd26cdfe9b3f1acb9",
+    "baseline_safety.py": "b10826b42913bdc326b76513788e352f6380a845d00ba4a95bc0c55ba8c750ba",
+    "capture.py": "1db2d047cfec374069d2a640f2cd6f11882fd74fa9ab1b28f63f0cc37206742a",
+    "compare.py": "b5725d12a0f5f5d6a1a6851680791720f60c334c96e2a33e7361d7b313806f84",
+    "comparison-report.json": "c79b4f2e1356e7a244db1c2daadbc921a217e64de30aad2cce2feab84dae0efe",
+    "comparison-summary.json": "f983e09cdffb2e34e7c0b5a77f600cdf79805ac2e7a69f1f00e1427c7b25d2fc",
+    "config.py": "61e89314e16ff500893cd0b569e002f4b5da62cf2b2e3f46803a4519542548f8",
+    "crease.py": "b10e0175fa7cd4e3f4d53e19cf32023a3ddc2b7eb242149a2c83fb8be53ccb33",
+    "fast-profile.txt": "aa95e9a96925a39fe6c78addeda3895bb3bd8949e9f6a924e114a0423e3fde9e",
+    "fast.prof": "1ecb5ccf74513e7cfd7be82a3d88d4c3c049490b09629e08b3ca37c5e2dda6b9",
+    "fast_safety.py": "64af6ff63e1646466a41e6183de7562e0d1ae2e8cd95026afaa93fbb666e4f5c",
+    "model.py": "b979a306381ce0cbfa89e75e61a981e9098215d9aac3177c6f86f005a236ba50",
+    "profile_baseline.py": "ff6c79e7a444c342154aff9f408714aad3b95c38e452f67628d1f8bb680e6c12",
+    "route321.json": "cc30949b7c0843f548d9881dd77715aa5b81c65fca188bfb82e3f8558f733a88",
+    "scene.py": "9ec9aa6f20455b76f6f3ff044377ab74e9bf21d9eeaf32f3fe97b63d4e27a478",
+    "scoop_controller.py": "5e845320e986f282d65b58b8227c5005f7cc98923b8f901778af67e8d21cb192",
+    "snapshot-row.json": "7f853198402b1ca3c9582cb99eb39db4afd04237aa873123b5ae33294056444f",
+    "test_fast_safety.py": "6901962ad1b8ec08eb33d9acf217db3886e8ef9816f549b3fac12fa1581193e8",
+    "tracking-recommendation.json": "526770212ac63dd4fbe0414068c458421646debb5f239ac489c0d50da9d3a9b1",
+    "tracking_diagnosis.py": "4ed68be9aee71c9b9d97411502960c1099def4ea8c912936fec4379c9d434f2f",
+    "workload.py": "5e51b1ef5ef525b27ef70b964853b5cded39a66fd3d63d02afe4bf6c974d97fb"
+  }
+}
