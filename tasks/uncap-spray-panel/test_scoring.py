@@ -3,13 +3,15 @@ import copy
 import math
 import unittest
 from config import *
-from scoring import SprayScorer
+from scoring import SprayScorer,opposing_left_can_contacts,right_tcp_clear
 
 
 def sample(**changes):
     s=dict(time=0.,can=CAN_START,cap=CAP_START,button_travel=0.,
            nozzle=(TARGET_X-.20,TARGET_CENTER[0],TARGET_CENTER[1]),axis=(1.,0.,0.),
-           can_speed=0.,cap_speed=0.,upright=1.,cap_detached=False,hands_clear=False)
+           can_speed=0.,cap_speed=0.,upright=1.,cap_detached=False,hands_clear=False,
+           hands=[dict(tcp=list(CAN_START)),dict(tcp=[0.,-.305,1.])],
+           left_contact_bodies=['tip_left','tip_right'],left_can_contact_matrix=[[[0.,1.,0.]],[[0.,-1.,0.]]])
     s.update(changes)
     return s
 
@@ -87,7 +89,7 @@ class ScoringTests(unittest.TestCase):
         t=SprayScorer();t.update(sample(upright=math.nan))
         self.assertEqual(t.value,0);self.assertIsNotNone(t.invalid)
 
-    def test_full_score_requires_release_and_park(self):
+    def test_full_score_requires_nozzle_off_opposing_grip_and_right_clear(self):
         # Seed deposit only to exercise the end-state rubric, not to claim
         # that any physical policy created this coat.
         t=SprayScorer()
@@ -96,8 +98,44 @@ class ScoringTests(unittest.TestCase):
         t.emitted=1.;t.off_target=.1
         s=sample(cap_detached=True,cap=(CAP_PAD[0],CAP_PAD[1],TOP+.017))
         t.update(s);self.assertEqual(t.value,.75)
-        s['hands_clear']=True;self.tick(t,s,21);self.assertEqual(t.value,1.)
+        # Held finish can be away from the pad, with LEFT deliberately close.
+        s['can']=(.30,-.08,.95);s['hands'][0]['tcp']=list(s['can'])
+        s['hands_clear']=False;self.tick(t,s,21);self.assertEqual(t.value,1.)
         s['button_travel']=.0025;self.tick(t,s,1);self.assertLess(t.value,1.)
+
+    def test_opposing_contact_gate_resolves_names_and_rejects_missing_nonfinite_or_parallel(self):
+        good=sample();self.assertTrue(opposing_left_can_contacts(good))
+        permuted={**good,'left_contact_bodies':['base','tip_right','tip_left'],
+                  'left_can_contact_matrix':[[[0,0,0]],[[0,-2,0]],[[0,3,0]]]}
+        self.assertTrue(opposing_left_can_contacts(permuted))
+        for mode in ('missing','duplicate','shape','nan','one_contact','parallel','weak'):
+            s=copy.deepcopy(good)
+            if mode=='missing':del s['left_can_contact_matrix']
+            if mode=='duplicate':s['left_contact_bodies']=['tip_left','tip_left']
+            if mode=='shape':s['left_can_contact_matrix'][0].append([0,1,0])
+            if mode=='nan':s['left_can_contact_matrix'][0][0][0]=math.nan
+            if mode=='one_contact':s['left_can_contact_matrix'][1][0]=[0,0,0]
+            if mode=='parallel':s['left_can_contact_matrix'][1][0]=[0,1,0]
+            if mode=='weak':s['left_can_contact_matrix'][1][0]=[0,-.099,0]
+            self.assertFalse(opposing_left_can_contacts(s),mode)
+
+    def test_held_finish_continuity_and_native_safety_bounds(self):
+        t=SprayScorer()
+        for i,_,target in t.cells():
+            if target:t.dose[i]=COAT_DOSE
+        t.emitted=1.;t.off_target=.1
+        s=sample(cap_detached=True,cap=(CAP_PAD[0],CAP_PAD[1],TOP+.017));t.update(s)
+        self.tick(t,s,10);self.assertLess(t.value,1.)
+        s['left_can_contact_matrix'][0][0]=[0,0,0];self.tick(t,s,1);self.assertEqual(t.finish_hold,0.)
+        s['left_can_contact_matrix'][0][0]=[0,1,0];self.tick(t,s,21);self.assertEqual(t.value,1.)
+        for mode in ('speed','tilt','button','right_near_cap','right_near_can'):
+            x=copy.deepcopy(s)
+            if mode=='speed':x['can_speed']=.02
+            if mode=='tilt':x['upright']=math.cos(math.radians(10.1))
+            if mode=='button':x['button_travel']=.0005
+            if mode=='right_near_cap':x['hands'][1]['tcp']=list(x['cap'])
+            if mode=='right_near_can':x['hands'][1]['tcp']=list(x['can'])
+            self.tick(t,x,1);self.assertEqual(t.finish_hold,0.,mode);self.assertLess(t.value,1.,mode)
 
     def test_overspray_prevents_coating_credit(self):
         t=SprayScorer()

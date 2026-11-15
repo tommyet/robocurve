@@ -468,6 +468,16 @@ def main():
                         cap_rotation=cap_rotation.tolist(),button_rotation=button_rotation.tolist(),
                         native_pose_quaternion_order='xyzw',native_body_world_poses=native_body_world_poses(self._base.scene,world,self.replay_owners),
                         hands_clear=all(min(np.linalg.norm(t-can),np.linalg.norm(t-cap))>.07 for t in hands))
+            sensor=self._base.scene['right_contacts']
+            sample['right_contact_bodies']=sensor.body_names
+            sample['right_contact_net']=array(sensor.data.net_forces_w)[0].tolist()
+            if sensor.data.force_matrix_w is not None:
+                sample['right_contact_matrix']=array(sensor.data.force_matrix_w)[0].tolist()
+            left_sensor=self._base.scene['left_contacts']
+            sample['left_contact_bodies']=left_sensor.body_names
+            sample['left_contact_net']=array(left_sensor.data.net_forces_w)[0].tolist()
+            if left_sensor.data.force_matrix_w is not None:
+                sample['left_can_contact_matrix']=array(left_sensor.data.force_matrix_w)[0].tolist()
             sample['metrics']=self.tracker.update(sample)
             gravity=getattr(self._base.cfg.sim,'gravity',(0.,0.,-9.81));bodies={};energy=0.
             for name,rotation in (('spray_can',rot),('button',button_rotation)):
@@ -518,16 +528,6 @@ def main():
             sample['controller']=telemetry.command
             sample['contacts']=self.contact_acc
             sample['contact_errors']=self.contact_errors
-            sensor=self._base.scene['right_contacts']
-            sample['right_contact_bodies']=sensor.body_names
-            sample['right_contact_net']=array(sensor.data.net_forces_w)[0].tolist()
-            if sensor.data.force_matrix_w is not None:
-                sample['right_contact_matrix']=array(sensor.data.force_matrix_w)[0].tolist()
-            left_sensor=self._base.scene['left_contacts']
-            sample['left_contact_bodies']=left_sensor.body_names
-            sample['left_contact_net']=array(left_sensor.data.net_forces_w)[0].tolist()
-            if left_sensor.data.force_matrix_w is not None:
-                sample['left_can_contact_matrix']=array(left_sensor.data.force_matrix_w)[0].tolist()
             if args.contact_diagnostic:
                 from native_contact_reader import read_sensor_native_contacts,ContactReadError
                 sample['native_contacts']={}

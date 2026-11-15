@@ -1,11 +1,12 @@
 # Uncap a spray can and coat one circular plaque
 
 This task now asks for one stationary coating position: remove and park the cap,
-coat the fixed white circular plaque, release the button, and leave the can
-upright on its pad with both hands clear. The prior four-zone panel task is
-retired. Its failed trials and sources remain development evidence, not a
-demonstration of this revised task. **A fresh capped-start full-score trial is
-pending.** No Dream score, submission media, or completed demo is claimed.
+coat the fixed white circular plaque, release the button, and finish with the
+can upright and steady in the left gripper and the right hand clear. The user
+explicitly selected this held finish after the earlier parking variant failed.
+The prior four-zone and single-plaque parking trials remain development
+evidence, not demonstrations of this revised endpoint. **A fresh capped-start
+held-finish trial is pending.** No Dream score, submission media, or completed demo is claimed.
 
 ## Fixed setup
 
@@ -35,17 +36,22 @@ table invalidates all credit.
   45 mm horizontally and 12 mm vertically, with speed below 20 mm/s.
 - 0.50: above, at least 50% plaque coverage and at most 15% cumulative overspray.
 - 0.75: above, at least 90% plaque coverage.
-- 1.00: above, can on its pad within 35 mm horizontally and 12 mm vertically,
-  upright within 10°, speed below 20 mm/s, button travel below 0.5 mm, and both
-  TCPs more than 70 mm from can/cap centres, continuously for one second.
+- 1.00: above, can upright within 10°, speed below 20 mm/s, button travel below
+  0.5 mm, and right TCP more than 70 mm from both can and cap, continuously for
+  one second. The left `tip_left` and `tip_right` must each report at least
+  0.1 N of native normal contact with the can, with opposing directions
+  (normalized dot product at most -0.5). Bodies are resolved by unique names;
+  missing, nonfinite or malformed contact data cannot establish this finish.
+  This is contact presence, not a calibrated high grip-force threshold. No can
+  pad position, left-hand clearance or off-support condition is required.
 
 Coverage samples a 10 mm grid: 52 cell centres lie inside the exact 40 mm
 radius. A cell needs 0.08 effective centre-plume seconds. The plume retains its
 12° half-angle, 120–300 mm scored range and 12-second supply. At least 2 mm
 actual button travel emits paint after cap removal. Overspray includes emitted
 flux missing the circle, backing, range, facing direction, or coarse occluders;
-it cannot be erased by later paint. These thresholds are unchanged from the
-retired task; only the target geometry and single-position scope changed.
+it cannot be erased by later paint. The paint and cap thresholds are unchanged. The single circle and the held
+endpoint are explicit task-definition revisions, not a rescore of old trials.
 
 Appearance uses the same measured per-cell doses. Cell meshes partition white
 plaque and grey backing at an inscribed 128-sided circle (under 13 micrometres
@@ -64,7 +70,10 @@ sphere occlusion is coarse. Mist points and surface colors are appearance only.
 ## Reproduction and validation
 
 The current CPU tests cover circular dose/layout, exactly one coating sequence,
-calibrated grasp/return, physical release gates and captured color replay. Old
+calibrated grasp retention, opposing-contact/right-clear finish gates, physical
+button release and captured color replay. The policy never opens the left
+gripper after coating; it retreats the right arm and holds the last issued
+joint commands, with the original measured-grasp safety guard still active. Old
 027 first-shot rays retrospectively cover this circle, but that is only a
 feasibility diagnostic. It does not establish the revised task's native score.
 
@@ -74,7 +83,7 @@ baseline body solver settings, and the unchanged limit of 2400 actions/120 s:
 ```sh
 /data/IsaacLab-Arena/.venv/bin/python tasks/uncap-spray-panel/run.py \
   --policy demo --stage full --physics-hz 960 --no-video \
-  --max-steps 2400 --log-dir ~/yam-eval/spray-single-028
+  --max-steps 2400 --log-dir ~/yam-eval/spray-held-029
 ```
 
 `--no-video` is a state-only engineering run, with no native camera images or

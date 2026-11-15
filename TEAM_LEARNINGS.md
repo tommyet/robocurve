@@ -2526,3 +2526,25 @@ editing, merge both agents' findings, and commit/push the update with the work.
   OFF,960Hz physics/20Hz control,2400maxsteps. Native startup confirms21dynamic
   owners and1296surfacecells. Actual t0 offline render passes visual inspection
   at explicit lightscale.0003. Full score and parking remain pending.
+
+### 2026-11-15 — user selects held finish
+
+- Fresh028 completed real cap removal and100% plaque coverage with5.24%
+  overspray, then failed its parking endpoint at59s(score0.75). Preserve that
+  result under its original definition. The can was already supported on the
+  riser edge; dragging a clamped can laterally caused tilt/windup and toppling.
+- User explicitly chose 'Finish held, nozzle off — fastest'. Revised029 ends
+  with the can upright/steady in the left grip, nozzle released and right TCP
+  clear. No setdown, ungripping, or off-support requirement. A separate parking
+  prototype is archived under /private/tmp/spray-parking-prototype and removed
+  from the active controller; it is not validated or part of this task.
+- Full held gate requires actual same-sample named tip_left/tip_right normal
+  contacts>=0.1N each and normalized dot<=-0.5, canupright<=10deg/speed<20mm/s,
+  buttontravel<0.5mm, rightTCP>70mm fromcan/cap, plus existing cap/90%coat/15%
+  overspray, continuously1s. Contactpresence is not calibrated grip strength.
+  The original grasp safety reference/guard remains active through frozen hold.
+- Native contact matrices and body names are now read before scoring and logged
+  unchanged, so independent replay sees the same inputs.97 main tests run with
+  one USD-dependent skip; seven separate USD tests pass. Astra exact-source
+  held review passes. Freshspray-held-029 is running with diagnostic flagsOFF;
+  no new full-score claim until its measured result and audit.

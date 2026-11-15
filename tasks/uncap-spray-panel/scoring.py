@@ -28,6 +28,26 @@ def blocked(origin, endpoint, spheres):
     return False
 
 
+def opposing_left_can_contacts(sample):
+    """Policy-independent opposing contact presence, not a grip-force calibration."""
+    try:
+        names=sample['left_contact_bodies'];matrix=sample['left_can_contact_matrix']
+        if names.count('tip_left')!=1 or names.count('tip_right')!=1 or len(matrix)!=len(names):return False
+        if any(len(row)!=1 or len(row[0])!=3 for row in matrix):return False
+        if not all(math.isfinite(v) for row in matrix for v in row[0]):return False
+        left=matrix[names.index('tip_left')][0];right=matrix[names.index('tip_right')][0]
+        a=math.sqrt(dot(left,left));b=math.sqrt(dot(right,right))
+        return a>=.1 and b>=.1 and dot(left,right)<=-.5*a*b
+    except (KeyError,TypeError,ValueError,IndexError,AttributeError):return False
+
+
+def right_tcp_clear(sample):
+    try:
+        tcp=sample['hands'][1]['tcp']
+        return len(tcp)==3 and all(math.isfinite(v) for v in tcp) and all(distance(tcp,sample[name])>.070 for name in ('can','cap'))
+    except (KeyError,TypeError,ValueError,IndexError):return False
+
+
 class SprayScorer:
     def __init__(self):
         self.dose = [0.] * (GRID*GRID)
@@ -38,6 +58,7 @@ class SprayScorer:
         self.cap_removed = False
         self.finish_hold = 0.
         self.value = 0.
+        self.held_contact=False;self.right_clear=False
 
     @staticmethod
     def cells():
@@ -109,11 +130,10 @@ class SprayScorer:
         overspray = self.off_target/self.emitted if self.emitted else 0.
         cap_parked = (distance(s['cap'][:2], CAP_PAD[:2]) <= .045 and
                       abs(s['cap'][2]-(TOP+.017)) <= .012 and s['cap_speed'] < .02)
-        can_parked = (distance(s['can'][:2], CAN_PAD[:2]) <= .035 and
-                      abs(s['can'][2]-CAN_REST_HEIGHT) <= .012 and
-                      s['upright'] >= math.cos(math.radians(10)) and s['can_speed'] < .02)
-        finished = (self.cap_removed and coverage >= .90 and overspray <= .15 and
-                    cap_parked and can_parked and s['button_travel'] < .0005 and s['hands_clear'])
+        self.held_contact=opposing_left_can_contacts(s);self.right_clear=right_tcp_clear(s)
+        finished = (self.cap_removed and coverage >= .90 and overspray <= .15 and cap_parked and
+                    self.held_contact and self.right_clear and s['upright']>=math.cos(math.radians(10)) and
+                    s['can_speed']<.02 and s['button_travel']<.0005)
         self.finish_hold = self.finish_hold+dt if finished else 0.
         if self.invalid:
             self.value = 0.
@@ -134,4 +154,5 @@ class SprayScorer:
         return dict(score=self.value, invalid=self.invalid, cap_removed=self.cap_removed,
                     coverage=sum(d >= COAT_DOSE for d in target_doses)/len(target_doses),
                     overspray=self.off_target/self.emitted if self.emitted else 0.,
-                    spray_seconds=self.spray_seconds, finish_hold=self.finish_hold)
+                    spray_seconds=self.spray_seconds, finish_hold=self.finish_hold,
+                    opposing_left_can_contacts=self.held_contact,right_tcp_clear=self.right_clear)

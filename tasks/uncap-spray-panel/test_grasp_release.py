@@ -188,7 +188,7 @@ class PolicyGuardTests(unittest.TestCase):
                     self.assertLessEqual(pe,.015,(move['label'],pe));self.assertLessEqual(re,.12,(move['label'],re));joints[i]=q
                 poses[i]=(end,rotation)
 
-    def test_yawed_grip_entry_exit_and_all_left_waypoints_keep_safe_side_and_ik(self):
+    def test_yawed_grip_entry_and_all_left_waypoints_keep_safe_side_and_ik(self):
         from yam_arena import ik
         sample=self.sample();self.module.telemetry.latest=sample
         policy=self.module.SprayDemo();policy.initialize();moves={m['label']:m for m in policy.moves}
@@ -200,11 +200,8 @@ class PolicyGuardTests(unittest.TestCase):
         placement=np.array((CAN_PAD[0],CAN_PAD[1],CAN_REST_HEIGHT))+GRASP_OFFSET
         np.testing.assert_allclose(moves['brace_approach']['L'][0],grasp+(-.060,0,.015))
         np.testing.assert_allclose(moves['brace_enter']['L'][0],grasp)
-        np.testing.assert_allclose(moves['can_lower']['L'][0],placement)
-        np.testing.assert_allclose(moves['brace_retreat']['L'][0],placement+(-.060,0,.060))
-        # Same-side entry/exit avoid sweeping open jaws across the can.
+        # Front entry avoids sweeping open jaws across the can.
         self.assertLess(moves['brace_approach']['L'][0][0],grasp[0])
-        self.assertLess(moves['brace_retreat']['L'][0][0],placement[0])
         start=np.array(sample['hands'][0]['tcp']);startR=np.array(sample['hands'][0]['rotation'])
         seed=np.array(sample['hands'][0]['joints'])
         for move in policy.moves:
@@ -244,22 +241,22 @@ class PolicyGuardTests(unittest.TestCase):
         self.assertGreater(ik.UPPER[3]-q[3],np.radians(60.))
         self.assertGreater(np.min(np.minimum(q-ik.LOWER,ik.UPPER-q)),np.radians(10.))
 
-    def test_single_plaque_sequence_preserves_transit_hold_and_safe_parking(self):
+    def test_single_plaque_sequence_preserves_transit_and_finishes_held(self):
         sample=self.sample();self.module.telemetry.latest=sample;policy=self.module.SprayDemo();policy.initialize()
         moves={m['label']:m for m in policy.moves};labels=list(moves)
         self.assertEqual([x for x in labels if x.startswith('coat_position_')],['coat_position_0'])
         self.assertEqual([x for x in labels if x.startswith('coat_shot_')],['coat_shot_0'])
         self.assertEqual([x for x in labels if x.startswith('coat_unpress_')],['coat_unpress_0'])
         self.assertLess(labels.index('cap_retreat'),labels.index('coat_position_0'))
-        self.assertLess(labels.index('coat_unpress_0'),labels.index('can_lower'))
-        self.assertEqual(labels[-4:],['can_lower','can_release','brace_retreat','finish_hold'])
+        self.assertEqual(labels[-3:],['finish_coating','press_retreat','finish_hold'])
+        self.assertFalse(any(label in labels for label in ('can_lower','can_release','brace_retreat')))
+        self.assertTrue(all(m['L'] is None for m in policy.moves[labels.index('coat_unpress_0'):]))
         np.testing.assert_allclose(moves['can_lift']['L'][0]-GRASP_OFFSET,(.26,0,.9105))
         np.testing.assert_allclose(moves['coat_position_0']['L'][0]-GRASP_OFFSET,(.26,-.035,.8755))
         np.testing.assert_allclose(moves['press_approach']['R'][0],np.array((.26,0,.9105))+(0,-.08,.14))
         np.testing.assert_allclose(moves['press_retreat']['R'][0],np.array((.26,0,.9105))+(0,-.09,.07))
         self.assertEqual(moves['coat_aim_0']['aim'],TARGET_CENTER);self.assertEqual(moves['coat_shot_0']['aim'],TARGET_CENTER)
         self.assertEqual(moves['coat_shot_0']['seconds'],8.)
-        self.assertAlmostEqual(moves['can_lower']['L'][0][2]-GRASP_OFFSET[2],CAN_REST_HEIGHT)
 
     def test_initial_grip_is_unchanged_and_loaded_hold_ramps_over_existing_lift(self):
         from yam_arena.constants import FINGER_OPEN,GRIPPER
@@ -269,9 +266,9 @@ class PolicyGuardTests(unittest.TestCase):
         self.assertAlmostEqual(moves['brace_grip']['L'][2]*FINGER_OPEN,-.021)
         self.assertAlmostEqual(moves['cap_grip']['R'][2]*FINGER_OPEN,-.025)
         self.assertEqual(moves['can_lift']['seconds'],2.)
-        for phase in ('can_lift','coat_position_0','can_lower'):
+        for phase in ('can_lift','coat_position_0'):
             self.assertAlmostEqual(moves[phase]['L'][2]*FINGER_OPEN,-.018)
-        self.assertEqual(moves['can_release']['L'][2],1.)
+        self.assertIsNone(moves['finish_hold']['L'])
         # Exercise the actual policy interpolation rather than a duplicated ramp.
         policy.targets[0][2]=policy.grip
         policy.index=next(i for i,m in enumerate(policy.moves) if m['label']=='can_lift')-1;policy.next(0.)
@@ -288,17 +285,15 @@ class PolicyGuardTests(unittest.TestCase):
         self.assertLess(values[0],-.0209);self.assertAlmostEqual(values[-1],-.018)
         self.assertEqual(GRIPPER['effort'],50.)
 
-    def test_intentional_opening_and_retreat_disable_only_the_grasp_loss_guard(self):
+    def test_held_finish_keeps_original_grasp_guard_active(self):
         sample=self.sample();self.module.telemetry.latest=sample
         policy=self.module.SprayDemo();policy.initialize();policy.grasp_calibrated=True;policy.holding_can=True
         policy.grasp_offset=np.zeros(3);policy.grasp_rotation=np.eye(3)
-        for phase in ('can_release','brace_retreat','finish_hold'):
-            policy.index=next(i for i,m in enumerate(policy.moves) if m['label']==phase)-1
-            policy.next(0.)
-            self.assertFalse(policy.holding_can)
-            with patch.object(self.module,'grasp_drift',side_effect=AssertionError('intentional release is not grasp loss')),patch.object(self.module.ik,'solve',side_effect=lambda p,r,q,**kw:(q.copy(),0.,0.)):
-                policy.act(SimpleNamespace(state_time=0.))
-            self.assertIsNone(policy.failure)
+        policy.index=next(i for i,m in enumerate(policy.moves) if m['label']=='finish_hold')-1;policy.next(0.)
+        self.assertTrue(policy.holding_can)
+        with patch.object(self.module.ik,'solve',side_effect=AssertionError('must stop before new command')):
+            action=policy.act(SimpleNamespace(state_time=0.))
+        self.assertIn('grasp offset',policy.failure);self.assertTrue(action.actions[0].meta['request_stop'])
 
     def test_unreachable_paint_ik_returns_previous_action(self):
         sample=self.sample();self.module.telemetry.latest=sample
@@ -483,7 +478,7 @@ class PolicyGuardTests(unittest.TestCase):
     def test_even_minimum_future_work_rejects_impossible_release_budget(self):
         sample=self.sample();self.module.telemetry.latest=sample;policy=self.module.SprayDemo();policy.initialize()
         policy.index=next(i for i,m in enumerate(policy.moves) if m['label']=='coat_unpress_0')-1
-        policy.next(100.)
+        policy.next(115.)
         self.assertIn('remaining 120 second episode budget',policy.failure)
 
 

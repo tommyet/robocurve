@@ -28,4 +28,4 @@ BACKING_COLOR = (.60, .63, .66)
 WORKTOP_COLOR = (.36, .39, .42)
 INSTRUCTION = ('Remove the cap from the spray-paint can and put it on the blue pad. '
                'Spray a blue coat over the single white circular plaque, keeping paint off the surrounding backing. '
-               'Leave the can upright on its grey pad with the nozzle released.')
+               'Finish holding the can upright and steady in the left gripper, with its nozzle released and the right hand clear.')

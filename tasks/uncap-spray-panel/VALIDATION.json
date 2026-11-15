@@ -1,8 +1,8 @@
 {
-  "status": "single_plaque_cpu_prepared_fresh_native_trial_pending",
+  "status": "single_plaque_held_finish_cpu_prepared_fresh_native_trial_pending",
   "checked_date": "2026-11-15",
   "local_scorer_tests": {
-    "main_suite_tests": 95,
+    "main_suite_tests": 97,
     "main_suite_skipped_pxr": 1,
     "separate_usd_tests_passed": 7
   },
@@ -12,10 +12,10 @@
   "media": null,
   "gpu_started_for_this_task": true,
   "remaining": [
-    "Review revised geometry/controller/scorer and color replay changes",
-    "Run fresh sealed-start single-plaque native full trial",
-    "Require measured full score and independent trace audit including upright parking",
-    "Review exact-pose offline replay; no eligible native media is claimed",
+    "Review held-finish scorer/controller/contact capture order",
+    "Run fresh sealed-start single-plaque held-finish029 native trial",
+    "Require measured full score and matching-source independent trace audit",
+    "Review exact native pose/color replay; no eligible native camera media is claimed",
     "Dream trial and submission remain separate work"
   ],
   "diagnostic_probe": {
@@ -281,7 +281,7 @@
   },
   "legacy_four_zone_scripted_demo_score": 0.75,
   "legacy_native_runtime_tested": true,
-  "task_revision": "single stationary 80 mm circular plaque; approved scope change 2026-11-15",
+  "task_revision": "Single stationary80mm circular plaque; user-approved left-held/nozzle-off finish2026-11-15",
   "current_scope": {
     "target_front_x_m": 0.47,
     "target_center_yz_m": [
@@ -298,7 +298,8 @@
     "control_hz": 20,
     "max_actions": 2400,
     "native_demo": null,
-    "media": null
+    "media": null,
+    "end_condition": "Upright<=10deg/speed<.02m/s/nozzle<.0005m/opposing actual left-finger can contacts>=.1N each/cos<=-.5/rightTCP>70mm bothobjects for1s; no can-pad,left-clear or off-support requirement"
   },
   "legacy_evidence_scope": "All existing latest_results/trial histories refer to the retired four-zone task. No old run is relabelled as a completed revised task.",
   "native_full_success": false,
@@ -309,5 +310,15 @@
     "coverage": 1.0,
     "overspray": 0.05128,
     "status": "retrospective diagnostic only; not a revised-task native demonstration"
+  },
+  "legacy_single_plaque_parking_028": {
+    "score": 0.75,
+    "coverage": 1.0,
+    "overspray": 0.05241520351424118,
+    "spray_seconds": 0.95,
+    "duration_s": 59.0,
+    "failure": "can toppled during lowering/opening; final parking gate failed",
+    "scope": "retired parking endpoint; not rescored as held-finish success",
+    "capture": "/private/tmp/spray-plaque-028"
   }
 }

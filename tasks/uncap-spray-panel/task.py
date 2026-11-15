@@ -1,4 +1,4 @@
-"""Uncap a spray can, coat one circular plaque, and put the can down. Use run.py."""
+"""Uncap a spray can, coat one circular plaque, and finish holding the can with its nozzle off. Use run.py."""
 from yam_arena.task_file import Box
 from config import *
 
