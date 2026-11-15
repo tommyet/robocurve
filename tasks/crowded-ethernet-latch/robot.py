@@ -105,6 +105,9 @@ class GraspProbe:
         measured=[self.arm(side) for side in ('left','right')]
         if self.release:
             self.right_joint_velocity=None if self.last_right_joints is None else (measured[1][0]-self.last_right_joints)/max(dt,.001)
+            if self.phase=='prepress_endpoint' and self.last_right_joints is not None:
+                movement=float(measured[1][0][2]-self.last_right_joints[2])
+                if abs(movement)>1e-5:self.prepress_last_q3_movement=movement
             self.last_right_joints=measured[1][0].copy()
         self.left_tcp_speed=None if self.last_left_tcp is None else float(np.linalg.norm(measured[0][2]-self.last_left_tcp)/max(dt,.001))
         self.last_left_tcp=measured[0][2].copy()
@@ -272,7 +275,7 @@ class GraspProbe:
             point=self.point.copy();point[0]+=measured[1][1][0]+.028
             witness=measured[1][2]+measured[1][3]@point
             report.update({'measured_press_point':witness.tolist(),'measured_press_point_plug_local':(rotation.T@(witness-plug[:3])).tolist(),
-                           'target_press_point':(rp+rr@point).tolist(),'actual_press_point_clip_local':self.actual_tab_witness,'press_depth_m':self.press_depth,'press_approach_certificate':self.press_approach_certificate,'flexible_press_contact_possible':bool(self.press_approach_certificate is not None and self.press_approach_certificate['wire_gap_m']<.0002),'press_servo_stage':self.press_servo_stage,'press_joint_reference':None if self.press_joint_servo.reference is None else self.press_joint_servo.reference.tolist(),'press_joint_bias_rad':self.press_joint_servo.bias.tolist(),'press_joint_frozen':self.press_joint_servo.frozen,'right_joint_velocity_rad_s':None if self.right_joint_velocity is None else self.right_joint_velocity.tolist(),'press_endpoint_low_velocity_frames':self.press_endpoint_low_velocity_frames,'press_endpoint_goal_drift_m':self.press_endpoint_goal_drift,'clip_joint_constraints':self.clip_constraints,'withdraw_target_distance_m':self.pull_distance,'measured_hook_front_x_m':getattr(self,'measured_hook_front',None),'guide_geometry':self.guide_geometry,'insertion_command_x_m':self.insertion_x,'insertion_retries':self.insertion_retries,'full_release_clearance':self.final_clearance,'released_hold_s':self.retention_gate_s})
+                           'target_press_point':(rp+rr@point).tolist(),'actual_press_point_clip_local':self.actual_tab_witness,'press_depth_m':self.press_depth,'press_approach_certificate':self.press_approach_certificate,'flexible_press_contact_possible':bool(self.press_approach_certificate is not None and self.press_approach_certificate['wire_gap_m']<.0002),'functional_handoff':self.functional_handoff_report,'press_servo_stage':self.press_servo_stage,'press_joint_reference':None if self.press_joint_servo.reference is None else self.press_joint_servo.reference.tolist(),'press_joint_bias_rad':self.press_joint_servo.bias.tolist(),'press_joint_frozen':self.press_joint_servo.frozen,'right_joint_velocity_rad_s':None if self.right_joint_velocity is None else self.right_joint_velocity.tolist(),'press_endpoint_low_velocity_frames':self.press_endpoint_low_velocity_frames,'press_endpoint_goal_drift_m':self.press_endpoint_goal_drift,'clip_joint_constraints':self.clip_constraints,'withdraw_target_distance_m':self.pull_distance,'measured_hook_front_x_m':getattr(self,'measured_hook_front',None),'guide_geometry':self.guide_geometry,'insertion_command_x_m':self.insertion_x,'insertion_retries':self.insertion_retries,'full_release_clearance':self.final_clearance,'released_hold_s':self.retention_gate_s})
         return out,report
 
 
@@ -291,6 +294,7 @@ class ReleaseProbe(GraspProbe):
         self.last_right_joints=None;self.right_joint_velocity=None;self.press_endpoint_low_velocity_frames=0;self.press_endpoint_goal_drift=0.
         self.clip_constraints={};self.clip_constraints_safe=True
         self.press_servo_stage=None
+        self.functional_errors=[];self.functional_handoff_report=None;self.hover_departure=None;self.prepress_last_q3_movement=None
 
     def stationary_press_correction(self,position,rotation,measured,stage,travel,exclude=()):
         slow=self.right_joint_velocity is not None and np.isfinite(self.right_joint_velocity).all() and np.max(np.abs(self.right_joint_velocity))<.01
@@ -304,7 +308,7 @@ class ReleaseProbe(GraspProbe):
                     # stroke carries the frozen hover bias, never its q*.
                     self.press_joint_servo.latch(reference,preserve_bias=stage in ('PREPRESS','PRESS_ENDPOINT'))
                     self.press_reference_error=(float(pe),float(re));self.press_latched_pose=(position.copy(),rotation.copy())
-                    self.press_servo_stage=stage
+                    self.press_servo_stage=stage;self.functional_errors=[]
         if self.press_joint_servo.reference is not None and self.press_servo_stage==stage:
             self.press_endpoint_goal_drift=float(np.linalg.norm(position-self.press_latched_pose[0]))
             if self.press_endpoint_goal_drift>.0002:self.failure='fixed press endpoint moved more than 0.2 mm; explicit replan required'
@@ -316,11 +320,52 @@ class ReleaseProbe(GraspProbe):
 
     def press_endpoint_ready(self,measured,position,rotation,stage):
         reference=self.press_joint_servo.reference
-        return bool(reference is not None and self.press_servo_stage==stage
-                    and self.settled(measured[1][2:],(position,rotation),.0002,1.)
-                    and np.max(np.abs(reference-measured[1][0]))<=.0005
-                    and self.right_joint_velocity is not None and np.isfinite(self.right_joint_velocity).all()
-                    and np.max(np.abs(self.right_joint_velocity))<=.002)
+        stationary=bool(reference is not None and self.press_servo_stage==stage
+                        and self.right_joint_velocity is not None and np.isfinite(self.right_joint_velocity).all()
+                        and np.max(np.abs(self.right_joint_velocity))<=.002)
+        if not stationary:self.functional_errors=[];return False
+        pieces=self.geometry.pieces(measured[1][1])
+        error=max(float(np.linalg.norm(a@measured[1][3].T+measured[1][2]-(a@rotation.T+position),axis=2).max()) for _,a in pieces)
+        if not np.isfinite(error):self.functional_errors=[];return False
+        self.functional_errors=(self.functional_errors+[error])[-5:]
+        return True
+
+    def functional_press_certificate(self,measured,next_target,next_rotation,next_phase,stage,position,rotation,plug,bodyR,point,exclude):
+        """Use measured geometry and progress, rather than all-joint precision."""
+        if len(self.functional_errors)<5:return False
+        witness=measured[1][2]+measured[1][3]@point
+        local=bodyR.T@(witness-plug[:3]);next_witness=next_target+next_rotation@point
+        down=float((witness-next_witness)@bodyR[:,2])
+        qnext,pe,re=ik.solve(next_target,ik.matrix_to_quat_xyzw(next_rotation),self.press_joint_servo.reference,
+                             base_pos=self.env.rig.bases['right'],iters=220,tol=1e-6)
+        dq3=float(qnext[2]-measured[1][0][2]);error=max(self.functional_errors)
+        report={'stage':stage,'max_mesh_error_5_frames_m':error,'next_witness_down_m':down,'next_q3_delta_rad':dq3,
+                'wire_scope':'Measured gaps only; error reserve applies to non-target rigid geometry and other hand', 'accepted':False}
+        self.functional_handoff_report=report
+        if not np.isfinite([down,dq3,pe,re]).all() or pe>.0001 or re>.001 or down<=0. or dq3>=0.:return False
+        if stage=='PREPRESS':
+            if self.hover_departure is None:return False
+            departed=self.hover_departure
+            progress=float(departed['witness_local_z_m']-local[2]);qprogress=float(departed['q3_rad']-measured[1][0][2])
+            report.update({'measured_down_progress_m':progress,'required_down_progress_m':.5*departed['planned_down_m'],
+                           'measured_negative_q3_progress_rad':qprogress,'required_negative_q3_progress_rad':-.5*departed['planned_q3_delta_rad'],
+                           'last_substantial_q3_movement_rad':self.prepress_last_q3_movement})
+            if (progress<.5*departed['planned_down_m'] or qprogress<-.5*departed['planned_q3_delta_rad']
+                    or self.prepress_last_q3_movement is None or self.prepress_last_q3_movement>=0.):return False
+        actual_safe=self.certify_press_path(measured,next_target,next_rotation,next_phase,exclude)
+        actual=dict(self.press_approach_certificate);report['actual_path']=actual
+        if not actual_safe:return False
+        nominal=[measured[0],(measured[1][0],measured[1][1],position,rotation)]
+        nominal_safe=self.certify_press_path(nominal,next_target,next_rotation,'nominal_'+next_phase,exclude)
+        planned=dict(self.press_approach_certificate);self.press_approach_certificate=actual;report['nominal_path']=planned
+        reserve=min(planned['rigid_gap_m'],planned['other_hand_gap_m'])-planned['rotation_chord_bound_m']-error
+        report['non_target_rigid_and_hand_reserve_m']=reserve
+        accepted=bool(nominal_safe and reserve>=.0002);report['accepted']=accepted
+        if accepted and stage=='HOVER':
+            self.hover_departure={'witness_local_z_m':float(local[2]),'q3_rad':float(measured[1][0][2]),
+                                  'planned_down_m':down,'planned_q3_delta_rad':dq3}
+            self.prepress_last_q3_movement=None
+        return accepted
 
     def certify_press_path(self,measured,target,rotation,next_phase,exclude=()):
         """Certify the complete next leg from the actual loaded hand poses.
@@ -348,9 +393,10 @@ class ReleaseProbe(GraspProbe):
         if not safe:self.failure='press approach lacks measured 0.2 mm rigid/interhand sweep clearance'
         return safe
 
-    def press_handoff(self,condition,age,duration,next_phase,t,measured,next_target,rotation,exclude=(),timeout=5.):
+    def press_handoff(self,condition,age,duration,next_phase,t,measured,next_target,rotation,exclude=(),timeout=5.,functional=None):
         if condition and age>=duration and self.stable_frames>=4:
-            condition=self.certify_press_path(measured,next_target,rotation,next_phase,exclude)
+            if functional is None:condition=self.certify_press_path(measured,next_target,rotation,next_phase,exclude)
+            else:condition=self.functional_press_certificate(measured,next_target,rotation,next_phase,*functional,exclude)
             if next_phase=='depress_clip' and self.press_approach_certificate is not None:
                 self.hand_clearance=self.press_approach_certificate['other_hand_gap_m']
             if condition and next_phase in ('prepress_endpoint','depress_clip'):
@@ -397,8 +443,9 @@ class ReleaseProbe(GraspProbe):
             # standoff, without an unreachable high-forward waypoint.
             rp=far+(above-far)*ik.smoothstep(min(1.,age/4.))
             if age>=4.:rp,rr=self.stationary_press_correction(above,rr,measured,'HOVER',travel)
-            settled=self.press_endpoint_ready(measured,above,rr,'HOVER') and jaw_ok and left_ok and tab_xy_safe
-            self.press_handoff(settled,age,4.,'prepress_endpoint',t,measured,prepress,rr,timeout=12.)
+            settled=self.press_endpoint_ready(measured,rp,rr,'HOVER') and jaw_ok and left_ok and tab_xy_safe
+            self.press_handoff(settled,age,4.,'prepress_endpoint',t,measured,prepress,rr,timeout=12.,
+                               functional=('HOVER',rp,rr,plug,bodyR,point))
         elif phase=='prepress_endpoint':
             # Reverse the shoulder's direction while still 3.6 mm above the
             # tab, then settle its bounded fixed-reference compensation.
@@ -406,12 +453,13 @@ class ReleaseProbe(GraspProbe):
             self.press_depth=-.0041+.0005*s
             if age>=.75:rp,rr=self.stationary_press_correction(prepress,rr,measured,'PREPRESS',travel)
             else:self.press_endpoint_low_velocity_frames=0
-            settled=self.press_endpoint_ready(measured,prepress,rr,'PREPRESS') and jaw_ok and left_ok and tab_xy_safe
+            settled=self.press_endpoint_ready(measured,rp,rr,'PREPRESS') and jaw_ok and left_ok and tab_xy_safe
             # The clip is intended contact; all housing, guides, plugs and
             # other clips must clear the COMPLETE stroke before it begins.
             self.press_handoff(settled,age,.75,'depress_clip',t,measured,
                                above-bodyR@np.array((0,0,.0064)),rr,
-                               ((f'clip_{SERVICE}','tab'),(f'clip_{SERVICE}','hook')),timeout=12.)
+                               ((f'clip_{SERVICE}','tab'),(f'clip_{SERVICE}','hook')),timeout=12.,
+                               functional=('PREPRESS',rp,rr,plug,bodyR,point))
         elif phase=='depress_clip':
             self.press_depth=min(.0023,-.0036+.0007*age)
             rp=plug[:3]+bodyR@(local_contact-np.array((0,0,self.press_depth)))-rr@point

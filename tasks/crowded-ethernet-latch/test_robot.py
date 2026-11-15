@@ -135,17 +135,14 @@ class BimanualGeometryTests(unittest.TestCase):
 
  def test_entire_press_stroke_checks_housing_excluding_only_intended_clip(self):
   from unittest.mock import patch
-  probe=ReleaseProbe(environment(),np.array(port(SERVICE)));probe.phase='prepress_endpoint';probe.stable_frames=4
-  plug=np.r_[port(SERVICE),0,0,0,1.];measured=[probe.arm(s) for s in ('left','right')]
-  above=plug[:3]+probe.local_contact+[0,0,.0041]-probe.pressR@probe.point
-  measured[1]=(measured[1][0],np.array((-.028,-.028)),above-[0,0,.0005],probe.pressR)
-  targets=(measured[0][2],measured[0][3],GRIP,above,probe.pressR,PRESS_GRIP)
+  probe=ReleaseProbe(environment(),np.array(port(SERVICE)))
+  measured=[probe.arm(s) for s in ('left','right')]
   blocked={'rigid_gap_m':0.,'wire_gap_m':0.,'minimum_gap_m':0.}
-  with patch.object(probe,'press_endpoint_ready',return_value=True),patch('robot.clearance',return_value=blocked) as check,patch('robot.snapshot',return_value=({},{},{})),patch('robot.minimum_separation',return_value=.005):
-   probe.release_targets(.75,.75,probe.phase,plug,np.eye(3),0.,measured,targets)
-  self.assertEqual(probe.phase,'prepress_endpoint')
+  exclusions=((f'clip_{SERVICE}','tab'),(f'clip_{SERVICE}','hook'))
+  with patch('robot.clearance',return_value=blocked) as check,patch('robot.snapshot',return_value=({},{},{})),patch('robot.minimum_separation',return_value=.005):
+   self.assertFalse(probe.certify_press_path(measured,measured[1][2]-[0,0,.0064],measured[1][3],'depress_clip',exclusions))
   self.assertIn('sweep clearance',probe.failure)
-  self.assertEqual(check.call_args.kwargs['exclude'],((f'clip_{SERVICE}','tab'),(f'clip_{SERVICE}','hook')))
+  self.assertEqual(check.call_args.kwargs['exclude'],exclusions)
   self.assertEqual(probe.press_approach_certificate['next_phase'],'depress_clip')
 
  def test_full_press_clears_native_socket_boxes_at_recorded_guided_attitudes(self):
@@ -262,7 +259,7 @@ class PressEndpointTests(unittest.TestCase):
   def certified(*args,**kwargs):
    probe.press_approach_certificate={'other_hand_gap_m':.01,'wire_gap_m':.01}
    return True
-  with patch.object(probe,'stationary_hold_safety',return_value={'rigid_gap_m':.01,'other_hand_gap_m':.01,'right_non_target_rigid_gap_m':.01}),patch.object(probe,'certify_press_path',side_effect=certified):
+  with patch.object(probe,'stationary_hold_safety',return_value={'rigid_gap_m':.01,'other_hand_gap_m':.01,'right_non_target_rigid_gap_m':.01}),patch.object(probe,'functional_press_certificate',return_value=True),patch.object(probe,'certify_press_path',side_effect=certified):
    probe.command(3.9);self.assertIsNone(probe.press_joint_servo.reference)
    for t in (4.05,4.1,4.15,4.2):probe.command(t)
    self.assertEqual(probe.press_servo_stage,'HOVER')
@@ -292,13 +289,13 @@ class PressEndpointTests(unittest.TestCase):
   np.testing.assert_allclose(probe.press_joint_servo.reference,expected,atol=1e-12)
   self.assertFalse(probe.press_joint_servo.frozen);self.assertAlmostEqual(probe.press_endpoint_goal_drift,0.)
 
- def test_precise_joint_gate_rejects_small_tcp_error_with_unsettled_wrist(self):
+ def test_stationary_endpoint_collects_mesh_error_without_all_joint_proxy(self):
   probe,actual=self.endpoint(hover=True);reference=probe.q[1].copy();actual[:]=reference;actual[5]+=.001
   probe.press_joint_servo.latch(reference);probe.press_servo_stage='HOVER';probe.right_joint_velocity=np.zeros(6)
   goal=np.array(port(SERVICE))+probe.local_contact+[0,0,.0041]-probe.pressR@probe.point
   measured=[probe.arm(s) for s in ('left','right')]
   self.assertLess(np.linalg.norm(measured[1][2]-goal),.0002)
-  self.assertFalse(probe.press_endpoint_ready(measured,goal,probe.pressR,'HOVER'))
+  self.assertTrue(probe.press_endpoint_ready(measured,goal,probe.pressR,'HOVER'))
   actual[5]=reference[5]+.00025;measured=[probe.arm(s) for s in ('left','right')]
   self.assertTrue(probe.press_endpoint_ready(measured,goal,probe.pressR,'HOVER'))
 
@@ -311,7 +308,7 @@ class PressEndpointTests(unittest.TestCase):
   def certified(*args,**kwargs):
    probe.press_approach_certificate={'other_hand_gap_m':.01,'wire_gap_m':.01}
    return True
-  with patch.object(probe,'stationary_hold_safety',return_value={'rigid_gap_m':.01,'other_hand_gap_m':.01,'right_non_target_rigid_gap_m':.01}),patch.object(probe,'certify_press_path',side_effect=certified):
+  with patch.object(probe,'stationary_hold_safety',return_value={'rigid_gap_m':.01,'other_hand_gap_m':.01,'right_non_target_rigid_gap_m':.01}),patch.object(probe,'functional_press_certificate',return_value=True),patch.object(probe,'certify_press_path',side_effect=certified):
    for t in (.8,.85,.9,.95):probe.command(t)
    self.assertEqual(probe.press_servo_stage,'PREPRESS');self.assertFalse(probe.press_joint_servo.frozen)
    reference=probe.press_joint_servo.reference.copy();actual[:]=reference

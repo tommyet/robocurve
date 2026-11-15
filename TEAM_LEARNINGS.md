@@ -2318,3 +2318,18 @@ editing, merge both agents' findings, and commit/push the update with the work.
   maxjointresidual.579mrad vs.5; qdot0sixframes, rigid.873mm/hand3.519mm.
   No prepressreached. Reviewinglast2sconvergence; authorizedmax12ssettle
   windowswithoutgate/gain/caploosening, total120slimit unchanged.
+
+- Release021 extra4ssettleFAILEDsameplateau: TCP.219032mm at16sphase,
+  maxqprecisionproxyblocked,777actions; no prepress. No furtherblindtimeout
+  extension. Astrafunctionalcriterionreview showsfullmesherror.241mm leaves
+  rigidreserve.638mm (existingguard.2), nextpathactualclear; wiresnotcovered
+  byreserve. Approvedstable/freshactualsweep/errorreserve/direction+actual
+  PREPRESSprogressgate, unchangedTASKscoring/actuation/depth. Pending022.
+
+- Candidate022 functionalhandoff22affectedtestsPASS, AstrareviewPASSafter
+  usinglatchedrp/rrforbothmesherrorcalls. Recorded020E.240794mm actualpath
+  rigid.873160/hand5.051472mm; nominalreserveafterE.639689mm ACCEPT.
+  Recorded019partialreject; testsunsafe/unstable/wrongdirection/noactual
+  progressreject. PREPRESSmustshowhalfactuallegdownwitness+q3negativeprogress
+  andlastnegativeq3motion. Wiresgapsreported,noreservedwireclaim. Taskscore,
+  cliptravel, actuation, runtimeguards/budgets unchanged. Native022running.
