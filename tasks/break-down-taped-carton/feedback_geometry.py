@@ -74,3 +74,38 @@ def cut_watchdog(elapsed,idle):
     if elapsed>100.:return 'cut phase exceeded100second hard cap'
     if idle>20.:return 'cut cursor had no accepted advance for20seconds'
     return None
+
+
+def cut_endpoint_ready(fraction,film_valid,local_tip,local_endpoint,endpoint_rotation):
+    """Existing measured endpoint gate, shared for regression against native samples."""
+    return bool(fraction>=1.-1e-12 and film_valid and
+                np.linalg.norm((np.asarray(local_tip)-local_endpoint)[:2])<.00075 and endpoint_rotation<.06)
+
+
+def matching_hover_lower(previous,phase,local_goal,local_rotation):
+    """Only a matching nominal hover endpoint can seed its lower stroke."""
+    if previous is None or not phase.endswith('_lower') or phase.startswith('return_'):return False
+    stem=phase[:-6]
+    return bool(previous['phase'] in (stem+'_hover',stem+'_hover_reposition') and
+                previous.get('local_endpoint') is not None and previous.get('local_rotation') is not None and
+                np.allclose(np.asarray(previous['local_endpoint'])[:2],np.asarray(local_goal)[:2],rtol=0.,atol=1e-6) and
+                np.allclose(previous['local_rotation'],local_rotation,rtol=0.,atol=1e-6))
+
+
+def bounded_cut_integral(bias,error,dt):
+    """Full-vector .5/s I, existing3mm bounds, vector update at most75um."""
+    bias=np.asarray(bias,dtype=float);error=np.asarray(error,dtype=float)
+    if bias.shape!=(3,) or error.shape!=(3,) or not np.isfinite(bias).all() or not np.isfinite(error).all() or np.any(abs(bias)>.003):raise ValueError('finite3vectors and bounded bias required')
+    if not np.isfinite(dt) or not 0<=dt<=.05:raise ValueError('dt must be within0..0.05')
+    increment=.5*dt*error if np.linalg.norm(error)<.012 else -.05*bias
+    size=np.linalg.norm(increment)
+    if size>75e-6:increment*=75e-6/size
+    return np.clip(bias+increment,-.003,.003)
+
+
+def lower_lateral_advance(local_tip,local_endpoint,cut_direction=(1.,0.,0.)):
+    """Absolute next-cut cross-track gate: seamY or transverse foldX."""
+    direction=np.asarray(cut_direction,dtype=float)[:2];length=np.linalg.norm(direction)
+    if not np.isfinite(direction).all() or length<=1e-12:raise ValueError('nonzero finite planar cut direction required')
+    error=(np.asarray(local_tip)-np.asarray(local_endpoint))[:2]
+    return bool(abs(error[0]*direction[1]-error[1]*direction[0])/length<=.00065)

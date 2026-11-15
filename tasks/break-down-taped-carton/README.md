@@ -1,6 +1,6 @@
 # Cut the bottom tape, unfold the flaps and flatten a used carton
 
-Native mechanics/controller draft.46CPU checks pass, including hinge geometry, scorer outcomes, tool-frame feedback and cut handoff/watchdogs. Camera-free native capture and source-bound pose/scorer audits pass. No run has completed all158 cuts plus cutter parking; no full cutting/opening/flattening demo or Dream score exists.
+Native mechanics/controller draft.63CPU checks pass, including hinge geometry, scorer outcomes, tool-frame feedback and cut handoff/watchdogs. Camera-free native capture and source-bound pose/scorer audits pass. No run has completed all158 cuts plus cutter parking; no full cutting/opening/flattening demo or Dream score exists.
 
 Start with an **empty used carton**, upright with its four top flaps open and
 its four bottom flaps closed and taped. Turn it over, use a guarded cutter to
@@ -126,7 +126,9 @@ finger opening and hand distance. Cutting uses the rotated TCP-to-blade offset:
 turning the tool also changes the required TCP translation. Separate staging,
 orientation, hover, lowering, cutting and lifting phases advance only when the
 actual blade follows the current command and settles at the endpoint. Tool
-travel pauses above 6 mm tracking error or 0.07 rad orientation error. Elapsed
+travel pauses above 6 mm tracking error or 0.07 rad orientation error; cutting
+uses a stricter 2.5 mm tracking gate. Non-return lowering additionally requires
+absolute cross-track error at most 0.65 mm relative to its following cut. Elapsed
 time can cause an explicit failure; it cannot advance the cut to the next path.
 The scorer still counts only actual native blade sweeps.
 
@@ -154,14 +156,14 @@ progress. The cut probe has at most 4,800 controls (240 s), stopping early on
 controller failure or completion of its cutting/parking attempt. Completion of
 this probe is not a full carton-breakdown demonstration.
 
-Forty-six CPU tests pass with NumPy available:
+Sixty-three CPU tests pass with NumPy available:
 
 ```bash
 /private/tmp/robocurve-media-env/bin/python -m unittest discover -s tasks/break-down-taped-carton -p 'test_*.py' -v
 python3 -m compileall -q tasks/break-down-taped-carton
 ```
 
-An ideal attached-tool FK dry run reached every revised cutting/parking phase
+An earlier ideal attached-tool FK dry run reached its then-current cutting/parking phases
 in 63.8 simulated seconds without an IK failure. It assumes perfect joint
 tracking and rigid tool retention and includes no contacts; it is not native
 physics evidence. Native grip retention, blade alignment under load, inter-arm
@@ -180,8 +182,10 @@ world-frame Cartesian bias once, within the same±3mm bounds.
 | cut006 |45/110,24/24,24/24 | Cutter-return alignment timeout at78.5s; no complete cut set. |
 | cut007 camera-free |53/110,0/24,1/24 | Existing phase deadline ended an advancing seam at86.45s. |
 | cut008 camera-free |109/110,0/24,2/24 |20s no-cursor-advance watchdog at92.1s; return/repasses not reached. |
+| cut009 camera-free |108/110,0/24,2/24 | Grasp rotated12.57deg; front orientation reached a joint limit. |
+| cut010 camera-free |109/110,24/24,21/24 |154/158 cells at125.75s; boundary seam-repass safety stop before unlock/parking. |
 
-Both new captures pass source/scene hashes, all31 actual rigid-owner pose streams,
+The cut007 and cut008 captures pass source/scene hashes, all31 actual rigid-owner pose streams,
 and exact captured-scorer replay (1729 and1842 samples, firstt=.05s). Creases
 remained intact; scorer invalidation was null. Both scored0, and neither is
 completed media. Counts from different trials cannot be combined. Full opening
@@ -194,3 +198,47 @@ TCP target/rotation and same-seed IK result; resetting bias would jump3.72mm.
 Cut008 reached109 seam cells, but its final2.925mm tracking residual exceeded the
 unchanged2.5mm progress gate. Blade/inner-flap geometric contact is now under
 review; do not assume that increasing force or loosening gates is appropriate.
+
+
+## Current controller candidate and measured limits
+
+The restored-start012 diagnostic completed its seam/lift/front-orientation route
+in47.95s (959 native rows), with maximum grasp rotation0.044055deg and tip-offset
+change47.69micrometres. Hover-to-lower issued exactly the previous14D command
+on its first tick, with no integration or path advance. Its18 west-root contact
+candidate rows had zero reported normal force and positive separation at least
+0.2338mm; contact candidates alone are not forces. This was a synthetic,
+pose-only restored start with scorer disabled, not a fresh task demonstration.
+
+Fresh sealed cut010 then retained its pickup grasp within0.03393deg/47.15um
+and passed all original tool orientations. Its2515 actual rows pass independent
+source/scene/31-owner and exact geometry/scorer audits; score0,154/158 cells.
+The remaining seam cell atX−109mm was1.318mm from the measured front crossing,
+outside the unchanged1.1mm sweep radius. Three back-fold gaps (Y−13,−9,+1mm)
+were crossed while actual blade depth was below the unchanged−1.55mm film
+limit. The guard rejected the requested−113mm boundary retrace instead of
+forcing the tool through the known flap-root region. No unlock or parking
+milestone was reached, and counts from separate trials are never combined.
+
+The current CPU-reviewed candidate commands both fold planes0.5mm inward,
+atX±109.5mm, and fold lower/cut depth−0.75mm; hover/lift stay−20mm. First passes
+and cleanup spans share those parameters, while all158 coverage cells remain
+at their original coordinates, including fold rootsX±110mm. First-pass average
+speeds remain12mm/s seam and16mm/s folds; all cleanup cuts use8mm/s. A numeric
+counterfactual of the010 crossing windows fills158 cells if residual tracking
+stays the same; this is a regression check, not native credit. Four actual010
+grasps pass803 remaining-route IK samples each and all±3mm endpoint corners.
+A separate273-sample nominal mesh review passes (minimum cutter gap0.750mm).
+These sampled checks do not prove the live tracking envelope or future
+post-unlock flap positions. Fresh native validation of the candidate is pending.
+
+The native012 control fixes remain: matching hover-to-lower nominal pose and
+WORLD bias carry, one exact14D handoff tick, lowering peak10mm/s, and full-vector
+lower/cut integral gain0.5/s with75um norm steps and±3mm component bounds. The
+initial seam is+106.5→−107mm at−1mm depth. Internal seam cleanup retains its
+original−0.275mm depth and translates centrally at(0,−50,−40)mm before changing
+yaw, with explicit incoming orientation. Any cleanup seam span outside
+[−107,+106.5]mm fails before phase insertion; it is not clipped and no coverage
+is fabricated. The physical/scoring/hardware limits and weak22mm jaw command
+are unchanged. Full158-cut completion, cutter parking, opening and collapse
+still require same-episode native proof.

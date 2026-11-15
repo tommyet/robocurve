@@ -2358,3 +2358,44 @@ editing, merge both agents' findings, and commit/push the update with the work.
   (71 tests, Astra read-only core review19:35UTC), NOT native-proved improvements.
   Review evidence `/private/tmp/astra-carton011-control-review.json`. Full158cuts,
   cutter parking, same-episode opening and collapse remain undemonstrated.
+
+
+### 2026-11-15 — native012 control retention and fresh cut010; next fold candidate
+
+- The previously proposed011 controller repairs now pass the bounded native012
+  restored-start coupon:47.95s/959 rows, seam/lift/original−90deg orientation
+  completed, exact first hover→lower14D delta0, maximum grasp drift0.044055deg/
+ 47.69um, crease error2.283um. Eighteen west-root contact candidate rows report
+  zero normal force and positive separation≥0.2338mm; candidate generation inside
+  contact offset is not itself applied force. Capture/source/geometry audits
+  pass. Synthetic pose-only start/scorer-disabled/media-ineligible remain true;
+  this does not prove a fresh task. Trace SHA256
+ 3d1f33950be02a9d8ecbfffa3b316e6be53ec6e6c3ed856de719459e725bc18f.
+- Fresh sealed cut010 with the ported controls retained pickup G within
+ 0.03393deg/47.15um and passed all original orientations. Audited2515 native
+  rows/125.75s score0, invalidnull:109/110 seam,24/24 front,21/24 back. Four
+  cells remain; no unlock/parking occurred. Independent31-owner/geometry/scorer
+  replay passes. Trace SHA256
+ 10e769f1f3eeecb6f8bbd4ef55835ba00e81f1901c7a325675937baa962f2856.
+- Front cut actually crossedX−110.318mm: distance1.318mm to seam cell−109
+  exceeds unchanged1.1mm coverage radius. Three back holesY−13,−9,+1mm were
+  missed ONLY because crossing Z fell below FILM_Z−1.55mm, with otherwise valid
+  XY/alignment/holding. Twenty-six of838 backcut frames fail this depth window.
+  The atomic seam guard correctly stopped requested[−105,−113]mm cleanup before
+  an unreviewed flap-root retrace. Do not move/delete cells or bypass the guard.
+- Root/Astra approved the next POLICY candidate: all first/repass fold planes
+  X±109.5mm, lower/cutZ−.75mm, hover/liftZ−20mm; coverage roots remain±110mm.
+  All cleanup cuts now average8mm/s; firstpass seam12/fold16mm/s are unchanged.
+  Native012 controls, initial+106.5→−107mm seam at−1mm, central explicit-yaw
+  internal seam cleanup/original−.275mm depth, hardware/grip/scorer remain fixed.
+  Four coherent actual010G/q/panel states each pass803 remaining IK samples
+  plus184 bias corners (±3mm); worst route error79.055um, smallest corner joint
+  margin1.114deg. Astra273-pose nominal gripper/cutter review passes, minimum
+  cutter.750363mm/gripper13.9546mm. These are sampled/frozen geometry bounds,
+  not a live tracking envelope or post-unlock flap proof.
+- A numeric actual010 crossing counterfactual recovers158 cells after the
+  proposed offsets IF tracking residuals repeat. Its regression seeds the
+  measured154-cell mask only inside a CPU TEST; production never writes cuts.
+  It is not native task credit. All63 task CPU tests, compilation and diff checks
+  pass. Fresh candidate run remains pending; full cuts+cutter parking, then
+  actual four-flap opening and intact collapse are still incomplete.

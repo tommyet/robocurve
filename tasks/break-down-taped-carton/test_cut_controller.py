@@ -22,18 +22,22 @@ class CutControllerTests(unittest.TestCase):
   probe=CartonCutProbe.__new__(CartonCutProbe)
   probe.index=0;probe.phases=[('return_hover',None,None)];probe.repass_round=0
   probe.cuts_verified=False;probe.failure=None;probe.seam_depth=-.000275
-  coverage=BladeCoverage();task=SimpleNamespace(_tracker=SimpleNamespace(coverage=coverage))
+  coverage=BladeCoverage()
+  # Boundary retraces now fail closed; exercise bounded retries with only
+  # reviewed interior seam cells missing plus the two ordinary end folds.
+  coverage.cut={i for i,(group,p) in enumerate(coverage.cells) if group=='seam' and abs(p[0])>.100}
+  before=coverage.cut.copy();task=SimpleNamespace(_tracker=SimpleNamespace(coverage=coverage))
   with patch.dict(sys.modules,{'task':task}):
    for repeat in range(3):
     probe.index=next(i for i,p in enumerate(probe.phases) if p[0]=='return_hover')
     probe.schedule_remaining_cuts()
     self.assertEqual(probe.repass_round,repeat+1)
     self.assertTrue(probe.phases[probe.index][0].startswith('repass_'))
-    self.assertEqual(coverage.cut,set())
+    self.assertEqual(coverage.cut,before)
     self.assertFalse(probe.cuts_verified)
    probe.schedule_remaining_cuts()
   self.assertIn('three measured physical retraces',probe.failure)
-  self.assertEqual(coverage.cut,set())
+  self.assertEqual(coverage.cut,before)
 
  def test_empty_kernel_is_not_mistaken_for_success(self):
   probe=CartonCutProbe.__new__(CartonCutProbe);probe.failure=None
@@ -113,3 +117,51 @@ class CutHandoffRegressionTests(unittest.TestCase):
   self.assertIsNone(cut_watchdog(80.,0.)) # Actual cursor increment resets idle.
   self.assertIsNone(cut_watchdog(100.,0.))
   self.assertIn('hard cap',cut_watchdog(100.01,0.))
+
+class ShortSeamRouteTests(unittest.TestCase):
+ def probe(self):
+  env=SimpleNamespace(_ready=Array(np.r_[READY,1.,READY,1.]),
+                      rig=SimpleNamespace(bases={'left':(0,.305,.75),'right':(0,-.305,.75)}))
+  return CartonCutProbe(env)
+
+ def test_initial_seam_lifts_vertically_at_same_short_endpoint(self):
+  p=self.probe();phases={name:(np.array(goal) if goal is not None else None,yaw) for name,goal,yaw in p.phases}
+  end,R=phases['seam_cut'];lift,liftR=phases['seam_lift'];front,frontR=phases['front_hover']
+  np.testing.assert_array_equal(end[:2],(-.107,0.));np.testing.assert_array_equal(lift[:2],end[:2])
+  self.assertEqual(end[2],p.seam_depth);self.assertEqual(lift[2],-.020);self.assertEqual(R,liftR)
+  self.assertEqual(front[2],lift[2]);self.assertEqual(phases['front_cut'][0][0],-.1095)
+  self.assertEqual(phases['front_cut'][1],-np.pi/2)
+
+ def test_recorded008_five_frames_meet_unchanged_short_endpoint_gate(self):
+  from feedback_geometry import cut_endpoint_ready
+  from model import FILM_Z
+  # Actual008 samples71.60–71.80s; this is feasibility evidence, not new native success.
+  samples=[(-.10751897404395508,.0005295424392580729,-.000046565355226453855,.012950603844897973),
+           (-.10752842517038806,.0005004241179973961,-.00004603767058127422,.01295280643834029),
+           (-.10753256205256592,.0004901967226581529,-.000046788576400718266,.013058056717491686),
+           (-.1075376958436561,.00045787665839316417,-.000046424526043669265,.013131538649596097),
+           (-.10753872897285309,.0004297535118023698,-.00003199999408801004,.013169223181254545)]
+  end=np.array((-.107,0.,-.000275));frames=0
+  for x,y,z,angle in samples:
+   ready=cut_endpoint_ready(1.,FILM_Z<=z<=.001,np.array((x,y,z)),end,angle)
+   frames=frames+1 if ready else 0
+  self.assertEqual(frames,5)
+  self.assertFalse(cut_endpoint_ready(.99,True,end,end,0.))
+  self.assertFalse(cut_endpoint_ready(1.,False,end,end,0.))
+  self.assertFalse(cut_endpoint_ready(1.,True,end+[0,.000751,0],end,0.))
+  self.assertFalse(cut_endpoint_ready(1.,True,end,end,.06001))
+
+ def test_transverse_endfolds_physically_connect_both_boundary_seam_cells(self):
+  p=self.probe();phases={name:np.array(goal) for name,goal,yaw in p.phases if goal is not None};coverage=BladeCoverage()
+  def sweep(a,b):
+   coverage.update(a+[0,0,-.02],1.,True,.05)
+   for f in np.linspace(0,1,int(np.linalg.norm(b-a)/.0005)+2):coverage.update(a+f*(b-a),1.,True,.05)
+  sweep(phases['seam_lower'],phases['seam_cut'])
+  # The reviewed+106.5→−107mm seam leaves BOTH boundary cells for the
+  # physical transverse end folds; their depths/coverage kernel are unchanged.
+  self.assertEqual(coverage.groups()['seam']['cut'],108)
+  sweep(phases['front_lower'],phases['front_cut'])
+  self.assertEqual(coverage.groups()['seam']['cut'],109)
+  sweep(phases['back_lower'],phases['back_cut'])
+  self.assertEqual(coverage.groups()['seam']['cut'],110)
+  self.assertTrue(coverage.complete);self.assertEqual(len(coverage.cut),158)
