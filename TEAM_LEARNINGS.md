@@ -4,6 +4,31 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 04:22 UTC — two-peg hold and tie wrap physically demonstrated
+
+- Shirt244 completes1060 diagnostic actions. Both hands release; both pegs
+  retain actual native fabric through the final5s. Peg centres are103.964mm
+  apart, minimum clothZ0.890058m (142.558mm above the table), with67/27 retained
+  vertices and final native residuals0.719/0.590mm. Local state/frame evidence:
+  artifacts/practical-models-2026-11-14/shirt-two244.*. This remains a labelled
+  continuation, not the final fresh-reset demo.254 is the fresh2260-action run.
+- Fresh246 stopped before action1: the default lateral pickup had never been
+  validated for this setup. Native161 used the edge-patch/full-opening pickup.
+ 254 restores those explicit options at240Hz for the functional peg model,
+  saves measured reset nodes, and smoothly blends measured pickup into the
+  planned lift. At240 it retains49/54 actual cloth vertices. No board change
+  beyond155mm was made; exploratory175/170mm local checks were discarded.
+- Tie242 retains a real wrap around the narrow strand with ideal rear-collar
+  static contact.249 carries the wide tip through the neck opening and forward.
+  Both complete, with actual geometry downloaded as tie-collar242.* and
+  tie-neck249.*.256 is testing downward passage through the front loop after
+  releasing the narrow hand. This is still not a complete, released necktie.
+- Seam245 reaches1240 with all six tacks open and material_invalid=false.
+  Its final tool release and visible endpoint score remain to be checked.
+ 255 runs the matching Dream baseline.86 seam tests and3 meaningful peg
+  failure tests pass. The retained secondary restart at04:12 again failed for
+  capacity; k6yi0tfzyuh133 is verifiedEXITED. Only the primary A40 runs.
+
 ## 2026-11-15 — practical completion updates (active trials242–246)
 
 - Shirt232's final released hold retains67 actual vertices, roughly0.5–1mm

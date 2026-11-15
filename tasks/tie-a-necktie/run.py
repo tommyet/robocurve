@@ -123,11 +123,14 @@ def main():
     p.add_argument('--state-assisted-narrow',action='store_true',help='After the wide regrasp, clear the collar and measure a screened ordinary narrow-end pinch')
     p.add_argument('--surface-contact-diagnostic',action='store_true',help='Native speculative cloth contact and eight within-step collision-pair updates; no material or rest-gap changes')
     p.add_argument('--collar-friction-approximation',action='store_true',help='Ideal static contact at the back of the collar; same model for all policies')
+    p.add_argument('--joint-tracking-from',type=int,help='Bounded bimanual joint feedback after this action; scripted demo only')
     p.add_argument('--pinch-approximation',action='store_true',help='Use the disclosed contact-gated dry pinch for both hands, identically for demo and Dream')
     p.add_argument('--judging-views',action='store_true',help='Record additional native960×720 front/rear assessor videos')
     p.add_argument('--out',type=Path)
     p.add_argument('--check-only',action='store_true',help='Compile source and check JSON without loading a simulator')
     args=p.parse_args()
+    if args.joint_tracking_from is not None and (args.mode!='motion-probe' or args.joint_tracking_from<0):
+        p.error('Joint tracking is for a scripted motion with a nonnegative start')
     os.environ['ROBOCURVE_TIE_SURFACE_CONTACT_DIAGNOSTIC']='1' if args.surface_contact_diagnostic else '0'
     fixed_plan=fixed_actions=None
     if args.mode=='motion-probe':
@@ -268,6 +271,12 @@ def main():
             from adult_layout import fixture_geometry
             report['fixture_geometry']=fixture_geometry()
         if args.state_assisted_grasp:
+            # A final demo may append ordinary knotting actions to the measured
+            # pickup/handoff. Preserve that suffix when rebuilding the pickup.
+            requested_motion=fixed_plan
+            preserve_knot=bool(requested_motion.get('continue_after_handoff'))
+            if preserve_knot and (not args.state_assisted_handoff or args.state_assisted_regrasp):
+                raise ValueError('Knot continuation requires the ordinary tip handoff')
             from adult_motion import compile_pickup
             from audit_adult_motion import audit
             nodes=arena_cloth.state(emb._env,'tie').nodes
@@ -284,6 +293,10 @@ def main():
             if args.state_assisted_handoff:
                 from adult_handoff import template
                 fixed_plan=template(fixed_plan)
+                if preserve_knot:
+                    fixed_plan['frames'][280:]=requested_motion['frames'][280:]
+                    fixed_plan['continue_after_handoff']=True
+                    fixed_plan['action_count']=len(fixed_plan['frames'])
                 if args.state_assisted_regrasp:
                     import copy
                     fixed_plan['frames'] += [copy.deepcopy(fixed_plan['frames'][-1]) for _ in range(600 if args.state_assisted_narrow else 300)]
@@ -368,7 +381,7 @@ def main():
         if args.mode=='dream':
             from inspect_robots import Scene
             from dream_policy import make_policy
-            dream=make_policy(request_audit,session_audit,rows_per_request=8)
+            dream=make_policy(request_audit,session_audit,rows_per_request=4)
             dream.bind(emb.info);dream.reset(Scene(id='tie-a-necktie',instruction=draft['instruction']))
             report['dream_model']=dream.info.checkpoint
         report['status']='running'
@@ -377,6 +390,9 @@ def main():
         signal.signal(signal.SIGTERM,terminate)
         save()
         command=torch.as_tensor(ready[None,:],device=base.device,dtype=torch.float32)
+        from joint_tracking import JointTracking
+        trackers=[JointTracking(side=side) for side in ('left','right')]
+        report['joint_tracking_from']=args.joint_tracking_from
         receiving_check_steps=set()
         for step in range(1,args.steps+1):
             if args.state_assisted_handoff and step==281:
@@ -393,6 +409,14 @@ def main():
                 (args.out/'handoff-cloth-approach-audit.json').write_text(json.dumps(selected['approach'],indent=2)+'\n')
                 report['handoff_route_selection']=selected['selection']
                 fixed_plan['frames'][280:580]=continuation['frames'];fixed_plan['handoff_calibration']=continuation['grasp']
+                if fixed_plan.get('continue_after_handoff'):
+                    # Smooth the first second into the already planned wrap.
+                    start=np.asarray(fixed_plan['frames'][579]['action14'],float)
+                    end=np.asarray(fixed_plan['frames'][599]['action14'],float)
+                    for i in range(20):
+                        t=(i+1)/20;t=t*t*(3-2*t)
+                        fixed_plan['frames'][580+i]=dict(action14=(start+t*(end-start)).tolist(),
+                            stage='smooth transition from measured handoff into wrap')
                 if args.state_assisted_regrasp:
                     # The unplanned suffix must hold this measured endpoint,
                     # not the stale endpoint from the initial template.
@@ -516,7 +540,12 @@ def main():
                 if presence['obvious_empty_pinch']:
                     raise RuntimeError('Wide tip is outside the receiving finger region; physical transfer is not established')
             if fixed_actions is not None:
-                active_action=fixed_actions[step-1].copy()
+                reference=fixed_actions[step-1].copy()
+                if args.joint_tracking_from is not None and step>args.joint_tracking_from:
+                    observed=np.asarray(emb._observation().state['joint_pos'],float)
+                    for tracker in trackers:reference=tracker.action(reference,observed,enabled=True)
+                bounded=np.clip(reference,emb._low,emb._high)
+                active_action=active_action+np.clip(bounded-active_action,-delta_limit,delta_limit)
                 command=torch.as_tensor(active_action[None,:],device=base.device,dtype=torch.float32)
             elif dream is not None:
                 chunk=dream.act(emb._observation())

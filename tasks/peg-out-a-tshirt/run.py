@@ -196,7 +196,7 @@ def main():
         p.error('State-assisted reset grasp requires at least200 scripted motion actions')
     if args.continuous_pad_diagnostic and not (args.state_assisted_grasp and args.raised_support_diagnostic):
         p.error('Continuous-pad diagnostic requires the raised-support scripted grasp')
-    if args.edge_patch_diagnostic and not (args.continuous_pad_diagnostic and args.lift_turn_diagnostic and args.physics_hz==960):
+    if args.edge_patch_diagnostic and not (args.continuous_pad_diagnostic and args.lift_turn_diagnostic and (args.physics_hz==960 or args.functional_pegs)):
         p.error('Edge patch requires the finer-timestep measured lift-turn diagnostic')
     if args.wide_insertion_diagnostic and not args.continuous_pad_diagnostic:
         p.error('Wide insertion requires the measured continuous-pad diagnostic')
@@ -356,6 +356,9 @@ def main():
                 from scripted_grasp import calibrate
             from audit_motion import audit
             reset_cloth=arena_cloth.state(emb._env,'tshirt')
+            np.savez_compressed(args.out/'measured-reset-cloth.npz',
+                nodes=reset_cloth.nodes,rest=arena_cloth.SPECS['tshirt'].mesh.rest,
+                faces=arena_cloth.SPECS['tshirt'].mesh.faces)
             options=([{'edge_patch':True,'clear_height':.035,'left_closing_tilt':tilt} for tilt in (0.,-10.,10.)]+
                 [{'edge_patch':True,'clear_height':height,'left_closing_tilt':-10.} for height in (0.,.02,.05)]
                 if args.edge_patch_diagnostic else [{}])
@@ -491,6 +494,8 @@ def main():
                     # Re-observe only the grasp; retain the separately planned
                     # lift/carry after action200. Commands remain rate limited.
                     candidate['frames'][200:]=fixed_plan['frames'][200:]
+                    from lateral_grasp import blend_lift
+                    blend_lift(candidate)
                 rejection=audit(dict(candidate,frames=candidate['frames'][:380 if args.no_turn_lift_diagnostic else 320]))
                 (args.out/'continuous-pad-hull-audit.json').write_text(json.dumps(rejection,indent=2)+'\n')
                 if not rejection['passed_rejection_check']:

@@ -8,6 +8,17 @@ import numpy as np
 from fixed_motion import ROTATIONS
 
 
+def blend_lift(plan):
+    """Join a measured pickup to the fixed carry with ordinary smooth joints."""
+    if not plan.get('blend_measured_pickup') or len(plan['frames'])<260:return
+    start=np.asarray(plan['frames'][199]['action14'],float)
+    end=np.asarray(plan['frames'][259]['action14'],float)
+    for i in range(60):
+        t=(i+1)/60;t=t*t*(3-2*t)
+        plan['frames'][200+i]=dict(action14=(start+t*(end-start)).tolist(),
+            stage='lift measured held hem into planned carry')
+
+
 def calibrate(reference,rest,nodes,*,edge_patch=False,clear_height=None,clear_x=.15,left_angle=-10.,right_angle=-10.,flip_left=False,left_patch_x=-.13,left_closing_tilt=0.):
     from yam_arena import ik,station
     from yam_arena.constants import READY,SHOULDER,WRIST,GRIPPER,FINGER_OPEN
@@ -88,6 +99,7 @@ def calibrate(reference,rest,nodes,*,edge_patch=False,clear_height=None,clear_x=
         result['edge_grasp_material_x']=dict(left=float(left_patch_x),right=.12)
         result['edge_grasp_left_closing_tilt']=float(left_closing_tilt)
     result['frames'][:200]=[dict(action14=a['action']+b['action'],stage=a['stage']) for a,b in zip(arms['left'],arms['right'])]
+    blend_lift(result)
     actions=np.array([np.r_[READY,1.,READY,1.]]+[f['action14'] for f in result['frames']])
     limits=np.tile([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/20],2)
     if np.any(abs(np.diff(actions,axis=0))>limits*1.001):raise ValueError('Lateral grasp exceeds ordinary action speed')
