@@ -4,6 +4,16 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 — bounded carton opening searches; support/regrasp is next
+
+- Operator: Brev task agent, local CPU only. User explicitly resumed work; retainedBrev cb0da2 remains verifiedSTOPPED. No new Dream/native attempt or upstream submission. Spray2171 remains received/waiting for review.
+- Grasp audit confirms TCPX is the closing axis; pad tips extend12.84mm pastTCP. OldTCP12mm insideedge implied~25mm purchase. ShallowTCP8mm outside yields~4.84mm purchase and eight clear starting grips. Prior96larger-box failures were against the earlier deep-grip family, not a global impossibility proof.
+- Sol's bounded adaptive-heading planner certifies LEFTactualpark→READY and reaches NORTH−45deg; next poses collide. ConditionalSOUTH185 revalidates49prefixes and extendsNORTH to−40, but fixedSOUTHwall blocks−35. Tests/source and negative evidence are preserved on fork branch `codex/carton-local-control` at a52015d, under experiments; no complete arc or physical opening is claimed.
+- One320x240x160 medium candidate uses freshcoherenthingeanchors and actualsmall-boxrelativejointrotations. Those oldsettledangles overlapnewneighbors; a geometry-derived outercontactlimit is−44.03183deg. The explicitlyhypothetical clear−42.03183deg start still fails the testedgraspfamily. This is not native settling evidence or proof every medium-box strategy fails; do not transfer oldcut011proof to changed dimensions.
+- Reorienting about worldY90 leaves the actual NORTHhinge tilted45deg. A derived exactframe maps it toworldZ: idealgravitytorque aboutthis hinge iszero, with neutral/damped angle and no inventedstiction. Release/regrasp is therefore a possibleordinarysequence with actualdrift checks—not freeorientation inside a rigidgrasp. Placementusinglowestallvertices rests onprotrudingWEST_TOPwing90.7mm belowWESTwall, so LEFTmustphysicallyhold the body; READYdoesnotbraceit.
+- Actual011 topflap rawangles areN/S91.855/91.857 (back~268deg),E/W168.117/171.517 (fallenwing~192/188deg). They cannotbeassumedfixed duringrealrolling/lowering. Articulatedflapobstacles maylegitimatelymove; neverdelete theircollisions or claim a teleported prerequisite as achieved.
+- Next local checkpoint: real LEFTbody-rim brace plus paired RIGHTrelease/regrasp branches around verticalhinge, followed by openingN/S and a physicalquarter-roll forE/W. Everybrace/roll/grip/retention/collapse remainsunproved. KeepGPUoff until a coherent candidate, and distinguish fixedcontact/heading/seed searchrestrictions from taskrequirements.
+
 ## 2026-11-15 — carton CPU controls and grasp topology audit
 
 - Operator: Brev task agent, fork branch `codex/carton-local-control`. Brev cb0da2 was verified STOPPED after backing up cancelled opening013 (601rows/30.05simsec/18,631 actual body poses/1,803 raw contact snapshots, geometry/source/time auditPASS). No contact or opening success, scorer disabled. The arm had2.249mm median reference tracking error against a2mm advance gate; extrapolated approach completion84simsec would miss the100s controller cap before the rest of the route.

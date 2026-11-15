@@ -1,0 +1,65 @@
+{
+  "review_started_utc": "2026-11-15T22:10:24Z",
+  "review_completed_utc": "2026-11-15T22:22:27.077519+00:00",
+  "status": "NO_COMPLETE_KINEMATIC_OPENING_SEQUENCE; NO_GPU_APPROVAL",
+  "scope": "CPU-only strategy ownership; production, scorer, hardware, native scene and frozen source unchanged",
+  "evidence": {
+    "/private/tmp/carton-opening-order185/conditional-report.json": {
+      "sha256": "19ed8ad5656afe95a69bcc5e18aba9f728392588f7d2b44408f56f6510e82f74"
+    },
+    "/private/tmp/carton-medium-opening/medium-initial-native-angle-report.json": {
+      "sha256": "8b5490cbf0d7aabd2324d8e91790e7a0755fd873e94e3584db9818bf47fde216"
+    },
+    "/private/tmp/carton-medium-opening/equilibrium-trials.json": {
+      "sha256": "15edf690f31c608068ff3da9d010b3864f2edc3c639e46d7e24bceceed9ba338"
+    },
+    "/private/tmp/carton-medium-opening/contact-limit-report.json": {
+      "sha256": "1763501f484ce101277527c427ad5d7c0980ab9981588866307d71fb2c034a88"
+    },
+    "/private/tmp/carton-grasp-topology-audit/vertical-hinge-strategy.json": {
+      "sha256": "3715f4461f48e126c8bda037d16cbb00ca607da102d0f7d09c22febe3d584fa0"
+    }
+  },
+  "results": [
+    {
+      "candidate": "Original220x180x100; conditional SOUTH185, actual other panels",
+      "prefix_last_N_deg": -40,
+      "next_N_deg": -35,
+      "failure": "All eight tested successors hit fixed SOUTH wall; best heading45 overlap0.172095mm. S-first and retention not proved."
+    },
+    {
+      "candidate": "Medium320x240x160; same native-relative child rotations, coherent new anchors",
+      "failure": "Actual small-box negative flap angles produce four adjacent bottom-flap overlaps2.629..2.633mm. Outer -75/-70/-60 remain invalid. Not proof medium geometry intrinsically invalid."
+    },
+    {
+      "candidate": "Same medium; deterministic geometric contact-limit construction",
+      "contact_limit_deg": -44.031829833984375,
+      "hypothetical_initial_outer_deg": -42.031829833984375,
+      "failure": "Heading0 IK51.943mm/0.3853rad; heading30 link4/SOUTH_TOP overlap35.319mm; heading45 palm/SOUTH_BOTTOM overlap1.458mm. No valid initial pose among six finite trials. Native equilibrium not proved."
+    }
+  ],
+  "interpretation": [
+    "Failures apply to fixed +55mm material contact, restricted heading/normal sign, frozen other-flap poses and selected side orientation. They are not proofs of general carton unopenability.",
+    "Top raw angles must not be interpreted as physical unfolded angles: N/S are approximately269deg folded back, E/W approximately192/188deg wings.",
+    "A hypothetical rigid transform and table placement do not prove body support, actual reorientation or persistent passive flap angles.",
+    "No additional size/heading grids or component GPU coupons are recommended from these results alone."
+  ],
+  "preferred_next_composite_strategy_hypothesis": [
+    "Retain original carton unless a complete alternative configuration is established. Physically support it on an E/W wall with N/S hinge axes vertical, using the measured-axis rotation already recorded; folded top wings must be moved by real table/hand contact before wall support is claimed.",
+    "LEFT maintains actual body brace/contact; RIGHT opens N and S in short positive-angle segments, pausing at measured low angular velocity and releasing/regrasping to change jaw-normal sign, wrist heading or IK branch. Vertical axes remove gravity torque but provide neutral, not restoring, angle stability. Pad twist is not assumed rigid sticking.",
+    "Carry N/S all the way to actual folded-back270deg against their walls/top stack, not just185deg. Actual backing contact is needed for retention.",
+    "With ordinary wall-plus-folded-flap grip where accessible, quarter-roll the body about its longitudinal height axis onto an N/S wall. At the final supported pose, one completed outer flap can be gravity-backed on the upper wall and the other trapped between its wall and the table. This is a physical support hypothesis; rolling/contact retention remains unproved.",
+    "E/W axes are now vertical. Brace the body and open E/W via the same release/regrasp logic to folded-back270. Only measured simultaneous all-four >=150 earns opening credit.",
+    "With all flaps genuinely folded against walls, press/shear opposing walls into the previously geometry-certified near-flat parallelogram, then release and verify the unchanged24mm slab, crease, tool-park and quiet-state criteria."
+  ],
+  "next_single_CPU_checkpoint": "Find a complete supported-body contact configuration in the exact-vertical-hinge frame plus two alternative RIGHT pinch poses spanning a release/regrasp overlap. Include all315 arm pieces, table, parked cutter and current panels; explicit LEFT-wall contact, not LEFTREADY. No further prefix native test until this composite checkpoint exists.",
+  "unproved": [
+    "Physical box roll and stable wall/table support",
+    "Top-wing folding during placement",
+    "LEFT body brace without premature wall shear",
+    "Two grasp branches with safe retreat/re-entry and actual force closure",
+    "Retention of already-opened flaps during quarter-roll",
+    "All-four opening and full collapse robot trajectory",
+    "Any new-layout cutting feasibility or native success"
+  ]
+}
