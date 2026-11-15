@@ -51,7 +51,7 @@ def raise_for_transfer(start_action):
     return _compile(start_action,[(3.,'right',(.23,-.16,1.30),0.,yaw_rotation(30.),'bring held wide strip in front of collar for transfer','cartesian')])
 
 
-def receive_tip(start_action,rest,nodes,approach_tilt_degrees=0.,receiving_opening=1.):
+def receive_tip(start_action,rest,nodes,approach_tilt_degrees=0.,receiving_opening=1.,clear_alignment=None):
     from adult_motion import grasp_frame
     from cross_motion import yaw_rotation
     if receiving_opening!=1. or approach_tilt_degrees!=0.:
@@ -60,14 +60,14 @@ def receive_tip(start_action,rest,nodes,approach_tilt_degrees=0.,receiving_openi
     R=np.asarray(grasp['rotation'])
     target=np.asarray(grasp['center_m'])+.010*R[:,2]
     pre=target-.090*R[:,2]
-    align=np.array((.16,.02,max(.94,target[2]+.04)))
+    align=np.array((.12,-.04,1.02)) if clear_alignment is None else np.asarray(clear_alignment,float)
     grasp.update(rotation=R.tolist(),target_tcp_m=target.tolist(),desired_material_tcp_depth_m=-.010,
         receiving_opening=1.,approach='Orient outside the wide edge, then enter along the finger axis')
     if not (.17<target[0]<.34 and -.27<target[1]<-.06 and .80<target[2]<1.02):
         raise ValueError('Measured wide tip lies outside the receiving workspace: '+repr(target.tolist()))
     schedule=[(1.5,'left',(.18,.25,1.03),1.,yaw_rotation(90.),'withdraw in front of both strands','joint'),
         (1.5,'left',align,1.,yaw_rotation(180.),'move around the wide-strip edge','cartesian'),
-        (1.,'left',align,1.,R,'orient outside the cloth','cartesian'),
+        (1.,'left',align,1.,R,'orient outside the cloth','joint'),
         (2.,'left',pre,1.,R,'align outside the wide-tip edge','cartesian'),
         (2.,'left',target,1.,R,'insert along the open finger axis','cartesian'),
         (1.,'left',target,0.,R,'pinch the wide tip','cartesian'),
@@ -75,7 +75,7 @@ def receive_tip(start_action,rest,nodes,approach_tilt_degrees=0.,receiving_openi
         (1.,'right',(.23,-.16,1.30),1.,yaw_rotation(30.),'release original pinch after raising the tip','cartesian'),
         (2.,'right',(.23,-.24,1.30),1.,yaw_rotation(30.),'withdraw original hand','cartesian'),
         (1.,'left',(.24,-.14,1.16),0.,yaw_rotation(150.),'hold transferred wide tip','cartesian')]
-    plan=_compile(start_action,schedule)
+    plan=_compile(start_action,schedule,robust_joint=True)
     plan.update(grasp=grasp,approach_steps=160,release_original_from=221,release_original_through=240,
         native_nodes_sha256=hashlib.sha256(np.ascontiguousarray(nodes).tobytes()).hexdigest())
     return plan

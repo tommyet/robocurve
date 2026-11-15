@@ -4,6 +4,22 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 06:29 UTC — full shirt fastening and continuous tie planning
+
+- Shirt271 reached the second fastening with71 actual vertices retained by
+  the first peg. Its final released hold and matching Dream275 remain active.
+- Fresh tie280 retained21 wide-strip vertices but stopped at action280 on an
+  unreachable receiving orientation. No handoff or knot score is claimed.
+  Moving the ordinary alignment pose to(0.12,-0.04,1.02)m passes the offline
+  kinematic and rigid-body screens on its actual measured cloth state.
+- Native render281 exposed black cloth and an occluded front camera.283 uses
+  constant visual materials on static triangle subsets for the two edge marks,
+  plus an oblique front camera. These are visual changes only.283 starts fresh
+  and pauses at action281 for ordinary operator-planned command segments;
+  it never reloads material state between segments. Final evidence is pending.
+- Cake1919 revision, wheel2091, staple2093 and seam2113 remain received and
+  awaiting review. Do not change pending submissions merely for style.
+
 ## 2026-11-15 06:12 UTC — continuous tie demo and practical grip approximation
 
 - Shirt271 is the fresh 2,260-action demo with the 100 mm board, revised legs,

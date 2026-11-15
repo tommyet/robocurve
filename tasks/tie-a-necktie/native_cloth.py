@@ -96,6 +96,28 @@ def author_cloth(stage, path, mesh, material=Fabric(), points=None, color=(.08,.
                      'physxDeformableMaterial:bendDamping':material.bend_damping}.items():
         _set(m,attr,val)
     UsdShade.MaterialBindingAPI.Apply(prim).Bind(mat,UsdShade.Tokens.weakerThanDescendants,'physics')
+    # Explicit visual binding: RTX does not reliably use displayColor as a
+    # fallback once a separate physics-purpose material is bound.
+    from pxr import Sdf
+    def visual_material(name,rgb):
+        visual=UsdShade.Material.Define(stage,path+'/Visual_'+name)
+        shader=UsdShade.Shader.Define(stage,path+'/Visual_'+name+'/Surface')
+        shader.CreateIdAttr('UsdPreviewSurface')
+        shader.CreateInput('roughness',Sdf.ValueTypeNames.Float).Set(.8)
+        shader.CreateInput('diffuseColor',Sdf.ValueTypeNames.Color3f).Set(Gf.Vec3f(*rgb))
+        shader.CreateOutput('surface',Sdf.ValueTypeNames.Token)
+        visual.CreateSurfaceOutput().ConnectToSource(shader.ConnectableAPI(),'surface')
+        return visual
+    binding=UsdShade.MaterialBindingAPI.Apply(prim)
+    binding.Bind(visual_material('fabric',color),UsdShade.Tokens.weakerThanDescendants)
+    if vertex_colors is not None:
+        # Static material subsets follow the native deforming triangles. RTX's
+        # generic primvar reader did not render the vertex colours reliably.
+        for name,rgb in [('pale',(.92,.92,.88)),('gold',(.85,.63,.12))]:
+            marked=np.all(np.isclose(colors,rgb),axis=1)
+            face_ids=np.flatnonzero(marked[np.asarray(mesh.faces)].any(axis=1))
+            subset=binding.CreateMaterialBindSubset(name,Vt.IntArray(face_ids.tolist()))
+            UsdShade.MaterialBindingAPI.Apply(subset.GetPrim()).Bind(visual_material(name,rgb))
     return tri
 
 

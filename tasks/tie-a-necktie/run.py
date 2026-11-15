@@ -126,7 +126,7 @@ def main():
     p.add_argument('--joint-tracking-from',type=int,help='Bounded bimanual joint feedback after this action; scripted demo only')
     p.add_argument('--pinch-approximation',action='store_true',help='Use the disclosed contact-gated dry pinch for both hands, identically for demo and Dream')
     p.add_argument('--judging-views',action='store_true',help='Record additional native960×720 front/rear assessor videos')
-    p.add_argument('--interactive-demo-start',type=int,default=2181,choices=(581,2181),help='First operator-planned ordinary action after the verified pickup prefix')
+    p.add_argument('--interactive-demo-start',type=int,default=2181,choices=(281,581,2181),help='First operator-planned ordinary action after the verified pickup prefix')
     p.add_argument('--interactive-demo-dir',type=Path,help='Receive audited ordinary action segments after the complete knotting prefix; no scene writes')
     p.add_argument('--out',type=Path)
     p.add_argument('--check-only',action='store_true',help='Compile source and check JSON without loading a simulator')
@@ -414,6 +414,12 @@ def main():
                 request=args.interactive_demo_dir/f'state-{step:04d}.npz'
                 np.savez_compressed(request,nodes=native.nodes,velocities=native.velocities,rest=mesh.rest,faces=mesh.faces,
                     action=np.asarray(emb._observation().state['joint_pos'],float),reference_action=fixed_actions[step-2])
+                for camera,rgb in emb._observation().images.items():
+                    Image.fromarray(np.asarray(rgb,dtype=np.uint8)).save(args.interactive_demo_dir/f'state-{step:04d}-{camera}.png')
+                if args.judging_views:
+                    from review_views import images as control_images
+                    for camera,rgb in control_images(base).items():
+                        Image.fromarray(rgb).save(args.interactive_demo_dir/f'state-{step:04d}-{camera}.png')
                 report.update(status='awaiting_demo_actions',next_action=step);save()
                 payload=wait_control(args.interactive_demo_dir,step)
                 frames=validate_control(payload,step=step,previous=fixed_actions[step-2],low=emb._low,high=emb._high,
@@ -433,7 +439,7 @@ def main():
                     actions_sha256=hashlib.sha256((frozen/f'operator-actions-{step:04d}.json').read_bytes()).hexdigest()))
                 report['executed_plan_sha256']=hashlib.sha256((frozen/'fixed-motion.json').read_bytes()).hexdigest()
                 report['status']='running';save()
-            if args.state_assisted_handoff and step==281:
+            if args.state_assisted_handoff and step==281 and not (args.interactive_demo_dir is not None and args.interactive_demo_start<=281):
                 from adult_handoff import select_receiving_plan
                 native=arena_cloth.state(emb._env,'tie');mesh=arena_cloth.SPECS['tie'].mesh
                 np.savez_compressed(args.out/'handoff-input-cloth.npz',positions=native.nodes,rest=mesh.rest,faces=mesh.faces)
