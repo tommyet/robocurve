@@ -1,7 +1,7 @@
 """Read-only physical geometry for staged ordinary robot control."""
 import math
 import numpy as np
-from trajectory_control import bounded_joint_pi_step
+from trajectory_control import bounded_joint_pid_step
 from yam_arena.urdf import quat_xyzw_to_matrix
 from collision_geometry import minimum_separation
 from geometry import object_obstacles,plug_boxes,box_triangles,wire_local_frame,GUIDE_BOTTOM
@@ -179,14 +179,17 @@ class JointEndpointCorrection:
     def __init__(self):self.reset()
     def reset(self):
         self.reference=None;self.bias=np.zeros(6);self.frozen=False;self.invalid=None
+        self.damping=np.zeros(6);self.integral_mask=np.ones(6,dtype=bool)
     def latch(self,reference,*,preserve_bias=False):
         reference=np.asarray(reference,dtype=float)
         if reference.shape!=(6,) or not np.isfinite(reference).all():raise ValueError('nonfinite or invalid joint endpoint reference')
         self.reference=reference.copy();self.reference.setflags(write=False)
         if not preserve_bias:self.bias[:]=0.
+        self.damping[:]=0.
         self.frozen=False;self.invalid=None
-    def freeze(self):self.frozen=True
+    def freeze(self):self.frozen=True;self.damping[:]=0.
     def update(self,actual,dt,allowed=True):
+        self.damping[:]=0.
         if self.reference is None or self.frozen or not allowed:return
         actual=np.asarray(actual,dtype=float)
         if not math.isfinite(dt) or dt<=0:
@@ -196,21 +199,27 @@ class JointEndpointCorrection:
         step=.5*dt*(self.reference-actual);limit=.00025*min(1.,dt/.05)
         self.bias=np.clip(self.bias+np.clip(step,-limit,limit),-.02,.02)
     def command(self):
-        return None if self.reference is None else self.reference+self.bias
+        return None if self.reference is None else self.reference+np.clip(self.bias+self.damping,-.02,.02)
 
-    def track(self,reference,actual,dt,lower,upper):
-        """Trajectory PI; reference stays unbiased, bias is never reset here."""
+    def track(self,reference,actual,dt,lower,upper,velocity=None):
+        """Trajectory PI-D; native velocity damping remains outside I state."""
         reference=np.asarray(reference,dtype=float);actual=np.asarray(actual,dtype=float)
         if (reference.shape!=(6,) or actual.shape!=(6,) or not math.isfinite(dt) or dt<=0
                 or not np.isfinite(reference).all() or not np.isfinite(actual).all()):
             self.invalid='nonfinite joint trajectory reference/state/timestep';return
-        try:step=bounded_joint_pi_step(self.bias,reference,actual,dt)-self.bias
+        try:
+            proposed,damping,total,mask=bounded_joint_pid_step(self.bias,reference,actual,velocity,dt)
         except ValueError as error:self.invalid=str(error);return
-        candidate=reference+np.clip(self.bias+step,-.02,.02)
+        step=proposed-self.bias
+        candidate=reference+total
         # Do not integrate farther into joint or per-action saturation.
-        step=np.where(((step>0)&(candidate>upper))|((step<0)&(candidate<lower)),0.,step)
+        saturated=((step>0)&(candidate>upper))|((step<0)&(candidate<lower))
+        raw_total=proposed+damping
+        saturated|=((step>0)&(raw_total>.02))|((step<0)&(raw_total<-.02))
+        step=np.where(saturated,0.,step)
         self.reference=reference.copy();self.reference.setflags(write=False)
         self.bias=np.clip(self.bias+step,-.02,.02);self.frozen=False;self.invalid=None
+        self.damping=damping;self.integral_mask=mask & ~saturated
 
 
 def mesh_pose_distance(pieces,first,second):

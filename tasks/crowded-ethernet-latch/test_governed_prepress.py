@@ -17,6 +17,7 @@ class GovernedPrepressTests(unittest.TestCase):
   probe.phase='prepress_endpoint';probe.press_joint_servo.latch(case['reference'])
   probe.press_joint_servo.bias[:]=[.001,-.002,.003,.004,-.005,.006];probe.press_joint_servo.freeze()
   probe.press_servo_stage='HOVER';probe.command_dt=.05
+  probe.right_native_joint_velocity=np.zeros(6)
   measured=[tuple(np.array(v) for v in arm) for arm in case['measured']]
   position,rotation=ik.tcp_pose(np.array(case['reference']),(0,-.305,.75))
   endpoint=position+np.array((0,0,-.002))
@@ -73,9 +74,9 @@ class GovernedPrepressTests(unittest.TestCase):
 
  def test_conditional_antiwindup_respects_native_and_action_limits(self):
   servo=JointEndpointCorrection();servo.latch(np.zeros(6));servo.bias[:]=.01
-  before=servo.bias.copy();servo.track(np.zeros(6),-np.ones(6),.05,np.full(6,-.04),np.full(6,.01))
+  before=servo.bias.copy();servo.track(np.zeros(6),-np.ones(6),.05,np.full(6,-.04),np.full(6,.01),velocity=np.zeros(6))
   np.testing.assert_array_equal(servo.bias,before)
-  servo.track(np.zeros(6),np.ones(6),.05,np.full(6,-.04),np.full(6,.01))
+  servo.track(np.zeros(6),np.ones(6),.05,np.full(6,-.04),np.full(6,.01),velocity=np.zeros(6))
   np.testing.assert_allclose(servo.bias,before-.00025)
 
  def test_native_numpy_certificate_telemetry_is_json_serializable(self):

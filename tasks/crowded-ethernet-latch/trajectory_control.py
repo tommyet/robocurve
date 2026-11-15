@@ -38,3 +38,28 @@ def mesh_reference_step_allowance(budget_m, error_m):
     if np.ndim(error_m) != 0 or not np.isfinite(error_m) or error_m < 0:
         raise ValueError("error_m must be a finite nonnegative scalar")
     return 0.5 * max(0.0, float(budget_m) - float(error_m))
+
+
+def bounded_joint_pid_step(bias, reference, actual, velocity, dt):
+    """Conditional trajectory I and transient native-velocity damping.
+
+    Return integral bias, D correction, capped total correction, and the
+    conditional integration mask. D is never stored in the integral bias.
+    """
+    proposed = bounded_joint_pi_step(bias, reference, actual, dt)
+    bias = np.asarray(bias,dtype=float)
+    error = np.asarray(reference,dtype=float)-np.asarray(actual,dtype=float)
+    velocity = np.asarray(velocity,dtype=float)
+    if velocity.shape != (6,) or not np.isfinite(velocity).all():
+        raise ValueError('native joint velocity must be finite shape (6,)')
+    step = proposed-bias
+    toward = velocity*error > 0
+    away = velocity*error < 0
+    mask = ~(toward & (np.abs(velocity)*.1 >= np.abs(error)))
+    # Away motion may unwind existing preload, but cannot wind past zero.
+    mask &= ~away | (step*bias < 0)
+    step = np.where(mask,step,0.)
+    step = np.where(away,np.sign(step)*np.minimum(np.abs(step),np.abs(bias)),step)
+    updated = np.clip(bias+step,-.02,.02)
+    damping = np.clip(-.05*velocity,-.002,.002)
+    return updated,damping,np.clip(updated+damping,-.02,.02),mask

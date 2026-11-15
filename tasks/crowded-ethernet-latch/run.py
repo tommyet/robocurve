@@ -70,6 +70,15 @@ def main():
   def arr(v):
    v=v.torch if hasattr(v,'torch') else v
    return v.detach().cpu().numpy()
+  actuator_readback={}
+  for side in ('left','right'):
+   arm=base.scene[side+'_robot']
+   actuator_readback[side]={'joint_names':list(arm.joint_names)}
+   for field in ('joint_stiffness','joint_damping','joint_friction_coeff','joint_dynamic_friction_coeff','joint_viscous_friction_coeff'):
+    value=getattr(arm.data,field,None)
+    actuator_readback[side][field]=None if value is None else arr(value)[0].tolist()
+  actuator_readback['semantics']='Installed isaaclab_physx: static/dynamic friction are efforts for Isaac Sim >=5.0; viscous friction is effort per velocity. Read only; no parameter changes.'
+  (a.out/'native-actuator-readback.json').write_text(json.dumps(actuator_readback,indent=2)+'\n')
   def pose(name):return arr(base.arena_world.get_pose_w(name))[0]
   def force(name,f,torque=(0.,0.,0.)):
    base.scene[name].permanent_wrench_composer.set_forces_and_torques_index(forces=torch.as_tensor(np.asarray(f)[None,None,:],device=base.device,dtype=torch.float32),torques=torch.as_tensor(np.asarray(torque)[None,None,:],device=base.device,dtype=torch.float32),is_global=True)
@@ -171,6 +180,7 @@ def main():
           'timing_scope':'physics_step_s measures env._env.step, including internal sensor rendering when enabled; video_s measures readback/encoding. Setup includes app startup. Shutdown excluded.',
           'physics_manifest':{key:physical[key] for key in ('physical_input_sha256','body_joint_mass_sha256','counts')}}
   result['native_solver_readback']=solver_readback
+  result['native_actuator_readback']=actuator_readback
   if a.mode in ('retention-probe','clip-constraint-probe'):
    x0=samples[39]['plug_pose'][0];xe=samples[59]['plug_pose'][0];xr=min(r['plug_pose'][0] for r in samples[80:120])
    cliptravel=max(r['connector_fit'][str(SERVICE)]['clip_travel_m'] for r in samples[60:120])

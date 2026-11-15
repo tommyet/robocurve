@@ -18,7 +18,7 @@ class Array:
 def environment():
  ready=np.array(READY+[1.]+READY+[1.])
  joints=Array([READY+[FINGER_OPEN,FINGER_OPEN]])
- scene={s+'_robot':SimpleNamespace(data=SimpleNamespace(joint_pos=joints)) for s in ('left','right')}
+ scene={s+'_robot':SimpleNamespace(data=SimpleNamespace(joint_pos=joints,joint_vel=Array([np.zeros(8)]))) for s in ('left','right')}
  def pose(name):
   p=np.array(port(SERVICE))
   if name.startswith('clip'):p=p+[0,0,CLIP_Z]

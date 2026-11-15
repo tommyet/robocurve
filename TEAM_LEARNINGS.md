@@ -2389,3 +2389,27 @@ editing, merge both agents' findings, and commit/push the update with the work.
   native025states/sweeps/overlap/degenerate/mutation. Samegap
   .0005400177484465307m;5sampleCPUmedian.952861→.222507s (4.282x).
   Fullnativewalltimespeedupnotyetmeasured. Samecontroller026running.
+
+- Tracking026optimizedPI reached2mmreferenceEND at4.85sphase. Settlingthen
+  failedactualrigidguard5.45s: E.526mm@5.0→85.6um@5.15→1.384mm@5.3→1.931mm
+  /gap.148mm@5.45. q2staticbreakawayovershoot +.56mradresidual→−2.14mrad,
+  finite-differencevelocityfromnativeq5→16.1→18.3mrad/s. Notlag/orgatefailure; alljointPIneeds
+  velocitydamping/conditionalantiwindup understatic→dynamicbreakaway.
+- Approvedisolated027PI-D: nativeinstantaneousjoint_vel, D=clip(−.05v,±2mrad)
+  separatetransient; TOTALI+D bounded20mrad. KeepKi2; freezeIwhenmovingtoward
+  and|v|*.1>=|e|; movingawayonlyallowbias-unwindingincrements. Finalcommand
+  antiwindupincludesD. Nohardwaregains/friction/geometry/scoringchanges.
+- Installedisaaclab_physxsource confirms>=5.0frictionfieldsarestatic/dynamic
+  EFFORTS(Nm rotational), olderAPIlegacyunitless. NextnativeprobeREADSactual
+  static/dynamic/viscousarrays, stiffness/damping into dedicatedJSONbefore
+  assumingmodelvalues. NVIDIAofficialactuator docsagree; no parameterwrites.
+
+- Candidate027PI-D23affectedtestsPASS/compile/diff/AstraPASS. Nativevelocity
+  required; FDloggedseparately. Dtransient±2mrad, TOTALI+D<=20mrad; conditional
+  I freezesfasttowardmotion/onlyunwindsaway, joint/action/totalrawsaturation
+  antiwindupincludesD. Nohardware/settings/depth/scorechanges. Native027running.
+- Broadtest_robot has5EXISTINGfailures reproducedEXACTLYwithbaseline7c47b0c
+  frozenmodules/realfixtures: threelegacyfixedhover/prepressexpectations,
+  twohook-release/withdrawalexpectations. 30tests bothbaseline/current5fail.
+  Do notclaimfullsuitegreen; PIDintroducesnonewfailures. Needreconcilethese
+  regressionsbeforefinaltaskpackaging,notweakenactualphysicalguards.

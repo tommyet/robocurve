@@ -60,6 +60,15 @@ class GraspProbe:
         p,r=ik.tcp_pose(q,self.env.rig.bases[side])
         return q,f,p,r
 
+    def native_joint_velocity(self,side):
+        ids,_=self.env._ids[side+'_robot']
+        data=self.base.scene[side+'_robot'].data.joint_vel
+        data=data.torch if hasattr(data,'torch') else data
+        velocity=np.asarray(data.detach().cpu().numpy()[0][ids],dtype=float)
+        if velocity.shape!=(6,) or not np.isfinite(velocity).all():
+            raise ValueError('native right joint velocity is missing or nonfinite')
+        return velocity.copy()
+
     def object_pose(self,name):
         data=self.base.arena_world.get_pose_w(name)
         data=data.torch if hasattr(data,'torch') else data
@@ -111,6 +120,9 @@ class GraspProbe:
         if self.release:self.current_press_obstacles=None;self.current_press_left=None
         measured=[self.arm(side) for side in ('left','right')]
         if self.release:
+            self.right_native_joint_velocity=None
+            try:self.right_native_joint_velocity=self.native_joint_velocity('right')
+            except (AttributeError,ValueError,IndexError,TypeError):self.failure='native right joint velocity is missing or nonfinite'
             self.right_joint_velocity=None if self.last_right_joints is None else (measured[1][0]-self.last_right_joints)/max(dt,.001)
             if self.phase=='prepress_endpoint' and self.last_right_joints is not None:
                 movement=float(measured[1][0][2]-self.last_right_joints[2])
@@ -295,6 +307,10 @@ class GraspProbe:
             witness=measured[1][2]+measured[1][3]@point
             report.update({'measured_press_point':witness.tolist(),'measured_press_point_plug_local':(rotation.T@(witness-plug[:3])).tolist(),
                            'target_press_point':(rp+rr@point).tolist(),'actual_press_point_clip_local':self.actual_tab_witness,'press_depth_m':self.press_depth,'press_approach_certificate':self.press_approach_certificate,'flexible_press_contact_possible':bool(self.press_approach_certificate is not None and self.press_approach_certificate['wire_gap_m']<.0002),'trajectory_governor':self.trajectory_governor,'functional_handoff':self.functional_handoff_report,'press_servo_stage':self.press_servo_stage,'press_joint_reference':None if self.press_joint_servo.reference is None else self.press_joint_servo.reference.tolist(),'press_joint_bias_rad':self.press_joint_servo.bias.tolist(),'press_joint_frozen':self.press_joint_servo.frozen,'right_joint_velocity_rad_s':None if self.right_joint_velocity is None else self.right_joint_velocity.tolist(),'press_endpoint_low_velocity_frames':self.press_endpoint_low_velocity_frames,'press_endpoint_goal_drift_m':self.press_endpoint_goal_drift,'clip_joint_constraints':self.clip_constraints,'withdraw_target_distance_m':self.pull_distance,'measured_hook_front_x_m':getattr(self,'measured_hook_front',None),'guide_geometry':self.guide_geometry,'insertion_command_x_m':self.insertion_x,'insertion_retries':self.insertion_retries,'full_release_clearance':self.final_clearance,'released_hold_s':self.retention_gate_s})
+            report.update({'right_native_joint_velocity_rad_s':None if self.right_native_joint_velocity is None else self.right_native_joint_velocity.tolist(),
+                           'press_joint_d_rad':self.press_joint_servo.damping.tolist(),
+                           'press_joint_total_correction_rad':np.clip(self.press_joint_servo.bias+self.press_joint_servo.damping,-.02,.02).tolist(),
+                           'press_joint_conditional_integral_mask':self.press_joint_servo.integral_mask.tolist()})
         return out,report
 
 
@@ -310,7 +326,7 @@ class ReleaseProbe(GraspProbe):
         self.press_approach_certificate=None
         self.actual_tab_witness=None
         self.press_joint_servo=JointEndpointCorrection();self.press_latched_pose=None;self.press_reference_error=(0.,0.)
-        self.last_right_joints=None;self.right_joint_velocity=None;self.press_endpoint_low_velocity_frames=0;self.press_endpoint_goal_drift=0.
+        self.last_right_joints=None;self.right_joint_velocity=None;self.right_native_joint_velocity=None;self.press_endpoint_low_velocity_frames=0;self.press_endpoint_goal_drift=0.
         self.clip_constraints={};self.clip_constraints_safe=True
         self.press_servo_stage=None
         self.current_press_obstacles=None;self.current_press_left=None;self.prepress_path=None;self.trajectory_governor=None
@@ -411,7 +427,7 @@ class ReleaseProbe(GraspProbe):
             return current[0],current[1],False
         path['clock'],path['reference']=chosen_clock,chosen_q.copy()
         lower=np.maximum(self.env._low[7:13],self.previous[7:13]-.04);upper=np.minimum(self.env._high[7:13],self.previous[7:13]+.04)
-        self.press_joint_servo.track(chosen_q,measured[1][0],dt,lower,upper)
+        self.press_joint_servo.track(chosen_q,measured[1][0],dt,lower,upper,velocity=self.right_native_joint_velocity)
         if self.press_joint_servo.invalid:self.failure=self.press_joint_servo.invalid
         at_end=chosen_clock>=PREPRESS_DURATION-1e-9
         stage='PREPRESS' if at_end else 'PREPRESS_MOTION'
