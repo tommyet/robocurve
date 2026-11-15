@@ -190,6 +190,8 @@ def main():
             'final_plug_pose':samples[-1]['plug_pose'],'controller_failure':samples[-1]['robot_control'].get('failure'),
             'controller_complete':samples[-1]['robot_control'].get('complete',False),
             'probe_step_count':len(samples),
+            'control_step_limit':MAX_RELEASE_STEPS if a.mode=='release-probe' else 600,
+            'control_time_limit_s':.05*(MAX_RELEASE_STEPS if a.mode=='release-probe' else 600),
             'probe_end_reason':'controller_completed' if samples[-1]['robot_control'].get('complete') else 'controller_failure' if samples[-1]['robot_control'].get('failure') else 'control_step_limit'}
   if scorer is not None:result|={'diagnostic':False,'privileged_robot_attempt':True,'task_score':scorer.value,'metrics':samples[-1]['metrics']}
   (a.out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result))

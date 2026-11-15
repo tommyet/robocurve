@@ -2299,3 +2299,17 @@ editing, merge both agents' findings, and commit/push the update with the work.
   correction sweepPASS rigid.893mm/wires.317mm/hand4.679mm. Nextcandidate
   boundedfixedrightq*I atabove endpoint, frozenbiasduringpress, re-latchsame
   maxdepthreference preservingbias. No movingintegration/contactgateloosen.
+
+- Release019 HOVERIpassed1mmgatebutfrozeafter~.9s learning(q6bias−2.06mrad
+  vs~10mradstaticoffset). Movingpresserror.314→1.958mm thenactualrigidguard
+  stoppedat.192mm beforeclipcontact. Allclipconstraints remainedsafe.
+  Investigatingcomplete.2mmhovercompensationbeforefreeze; notmovingI or
+  weakercontactgates. Nativeguardworked, taskstill0.
+
+- Review019: q3 reverses+2.95mradhovertrackingerror→−3.3..−4.2mradpress;
+  URDFfriction.3Nm/K80=3.75mrad. Precisehoveralonecouldlearnwrong-signbias.
+  Candidate020 addsONE.5mmDOWNWARDstationaryprepress endpoint beforefreezing
+  forremaining5.9mmstroke. HOVER/PREPRESS gatesTCP.2mm/q*.5mrad/qdot.002rad/s
+  fiveframes,8ssettlebudgets.17affectedtestsPASS; samephysicaldepth/gains.
+  Actualprepresscert rigid.879mm/wire.257mm/hand4.972mm; totalcap2400=120s
+  matchesdeclaredlimit. Native020running; taskfullcompletionunverified.

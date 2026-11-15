@@ -135,15 +135,15 @@ class BimanualGeometryTests(unittest.TestCase):
 
  def test_entire_press_stroke_checks_housing_excluding_only_intended_clip(self):
   from unittest.mock import patch
-  probe=ReleaseProbe(environment(),np.array(port(SERVICE)));probe.phase='approach_above_clip';probe.stable_frames=4
+  probe=ReleaseProbe(environment(),np.array(port(SERVICE)));probe.phase='prepress_endpoint';probe.stable_frames=4
   plug=np.r_[port(SERVICE),0,0,0,1.];measured=[probe.arm(s) for s in ('left','right')]
   above=plug[:3]+probe.local_contact+[0,0,.0041]-probe.pressR@probe.point
-  measured[1]=(measured[1][0],np.array((-.028,-.028)),above,probe.pressR)
+  measured[1]=(measured[1][0],np.array((-.028,-.028)),above-[0,0,.0005],probe.pressR)
   targets=(measured[0][2],measured[0][3],GRIP,above,probe.pressR,PRESS_GRIP)
   blocked={'rigid_gap_m':0.,'wire_gap_m':0.,'minimum_gap_m':0.}
-  with patch('robot.clearance',return_value=blocked) as check,patch('robot.snapshot',return_value=({},{},{})),patch('robot.minimum_separation',return_value=.005):
-   probe.release_targets(4.,4.,probe.phase,plug,np.eye(3),0.,measured,targets)
-  self.assertEqual(probe.phase,'approach_above_clip')
+  with patch.object(probe,'press_endpoint_ready',return_value=True),patch('robot.clearance',return_value=blocked) as check,patch('robot.snapshot',return_value=({},{},{})),patch('robot.minimum_separation',return_value=.005):
+   probe.release_targets(.75,.75,probe.phase,plug,np.eye(3),0.,measured,targets)
+  self.assertEqual(probe.phase,'prepress_endpoint')
   self.assertIn('sweep clearance',probe.failure)
   self.assertEqual(check.call_args.kwargs['exclude'],((f'clip_{SERVICE}','tab'),(f'clip_{SERVICE}','hook')))
   self.assertEqual(probe.press_approach_certificate['next_phase'],'depress_clip')
@@ -229,9 +229,9 @@ class EntryEndpointTests(unittest.TestCase):
    self.assertFalse(probe.entry_joint_servo.frozen)
 
 class PressEndpointTests(unittest.TestCase):
- def endpoint(self,hover=False):
-  probe=ReleaseProbe(environment(),np.array(port(SERVICE)));probe.phase='approach_above_clip' if hover else 'depress_clip'
-  goal=np.array(port(SERVICE))+probe.local_contact+[0,0,.0041 if hover else -.0023]-probe.pressR@probe.point
+ def endpoint(self,hover=False,prepress=False):
+  probe=ReleaseProbe(environment(),np.array(port(SERVICE)));probe.phase='approach_above_clip' if hover else 'prepress_endpoint' if prepress else 'depress_clip'
+  goal=np.array(port(SERVICE))+probe.local_contact+[0,0,.0041 if hover else .0036 if prepress else -.0023]-probe.pressR@probe.point
   reference,_,_=ik.solve(goal,ik.matrix_to_quat_xyzw(probe.pressR),np.array(READY),base_pos=(0,-.305,.75),iters=350,tol=1e-6)
   actual=reference.copy();actual[2]+=.003
   left=probe.arm('left')
@@ -244,7 +244,7 @@ class PressEndpointTests(unittest.TestCase):
   probe.previous[7:13]=reference;probe.q[1]=reference.copy()
   return probe,actual
 
- def test_hover_reference_freezes_then_moving_press_uses_new_ik_plus_bias(self):
+ def test_precise_hover_freezes_then_moving_prepress_uses_new_ik_plus_bias(self):
   from unittest.mock import patch
   probe,actual=self.endpoint(hover=True)
   def certified(*args,**kwargs):
@@ -255,10 +255,10 @@ class PressEndpointTests(unittest.TestCase):
    for t in (4.05,4.1,4.15,4.2):probe.command(t)
    self.assertEqual(probe.press_servo_stage,'HOVER')
    reference=probe.press_joint_servo.reference.copy();actual[:]=reference
-   for t in (4.25,4.3,4.35,4.4,4.45):probe.command(t)
-   self.assertEqual(probe.phase,'depress_clip');self.assertTrue(probe.press_joint_servo.frozen)
+   for t in (4.25,4.3,4.35,4.4,4.45,4.5):probe.command(t)
+   self.assertEqual(probe.phase,'prepress_endpoint');self.assertTrue(probe.press_joint_servo.frozen)
    before=probe.press_joint_servo.bias.copy()
-   action,report=probe.command(7.45)
+   action,report=probe.command(4.75)
    np.testing.assert_array_equal(probe.press_joint_servo.bias,before)
    np.testing.assert_array_equal(probe.press_joint_servo.reference,reference)
    self.assertGreater(np.linalg.norm(action[7:13]-(reference+before)),1e-4)
@@ -270,7 +270,7 @@ class PressEndpointTests(unittest.TestCase):
   goal=np.array(port(SERVICE))+probe.local_contact-[0,0,.0023]-probe.pressR@probe.point
   old_reference=actual+.01;probe.press_joint_servo.latch(old_reference)
   learned=np.arange(6)*.001;probe.press_joint_servo.bias[:]=learned;probe.press_joint_servo.freeze()
-  probe.press_servo_stage='HOVER';probe.press_latched_pose=(goal+[0,0,.0064],probe.pressR)
+  probe.press_servo_stage='PREPRESS';probe.press_latched_pose=(goal+[0,0,.0059],probe.pressR)
   probe.right_joint_velocity=np.zeros(6);probe.press_endpoint_low_velocity_frames=2
   expected,_,_=ik.solve(goal,ik.matrix_to_quat_xyzw(probe.pressR),actual,base_pos=(0,-.305,.75),iters=220,tol=1e-6)
   with patch.object(probe,'certify_press_path',return_value=True) as certify:
@@ -279,6 +279,38 @@ class PressEndpointTests(unittest.TestCase):
   np.testing.assert_array_equal(probe.press_joint_servo.bias,learned)
   np.testing.assert_allclose(probe.press_joint_servo.reference,expected,atol=1e-12)
   self.assertFalse(probe.press_joint_servo.frozen);self.assertAlmostEqual(probe.press_endpoint_goal_drift,0.)
+
+ def test_precise_joint_gate_rejects_small_tcp_error_with_unsettled_wrist(self):
+  probe,actual=self.endpoint(hover=True);reference=probe.q[1].copy();actual[:]=reference;actual[5]+=.001
+  probe.press_joint_servo.latch(reference);probe.press_servo_stage='HOVER';probe.right_joint_velocity=np.zeros(6)
+  goal=np.array(port(SERVICE))+probe.local_contact+[0,0,.0041]-probe.pressR@probe.point
+  measured=[probe.arm(s) for s in ('left','right')]
+  self.assertLess(np.linalg.norm(measured[1][2]-goal),.0002)
+  self.assertFalse(probe.press_endpoint_ready(measured,goal,probe.pressR,'HOVER'))
+  actual[5]=reference[5]+.00025;measured=[probe.arm(s) for s in ('left','right')]
+  self.assertTrue(probe.press_endpoint_ready(measured,goal,probe.pressR,'HOVER'))
+
+ def test_prepress_relatches_then_freezes_bias_for_remaining_5p9mm_stroke(self):
+  from unittest.mock import patch
+  probe,actual=self.endpoint(prepress=True)
+  goal=np.array(port(SERVICE))+probe.local_contact+[0,0,.0036]-probe.pressR@probe.point
+  probe.press_joint_servo.latch(actual+.01);probe.press_joint_servo.bias[:]=.001
+  probe.press_joint_servo.freeze();probe.press_servo_stage='HOVER';probe.press_latched_pose=(goal+[0,0,.0005],probe.pressR)
+  def certified(*args,**kwargs):
+   probe.press_approach_certificate={'other_hand_gap_m':.01,'wire_gap_m':.01}
+   return True
+  with patch.object(probe,'stationary_hold_safety',return_value={'rigid_gap_m':.01,'other_hand_gap_m':.01,'right_non_target_rigid_gap_m':.01}),patch.object(probe,'certify_press_path',side_effect=certified):
+   for t in (.8,.85,.9,.95):probe.command(t)
+   self.assertEqual(probe.press_servo_stage,'PREPRESS');self.assertFalse(probe.press_joint_servo.frozen)
+   reference=probe.press_joint_servo.reference.copy();actual[:]=reference
+   for t in (1.,1.05,1.1,1.15,1.2,1.25):probe.command(t)
+   self.assertEqual(probe.phase,'depress_clip');self.assertTrue(probe.press_joint_servo.frozen)
+   self.assertAlmostEqual(probe.press_depth,-.0036)
+   before=probe.press_joint_servo.bias.copy();action,report=probe.command(1.75)
+   np.testing.assert_array_equal(probe.press_joint_servo.bias,before)
+   self.assertGreater(np.linalg.norm(action[7:13]-(reference+before)),1e-4)
+   self.assertEqual(report['press_servo_stage'],'PREPRESS');self.assertIsNone(report['failure'])
+   self.assertAlmostEqual(probe.press_depth,-.0036+.0007*.5)
 
  def test_right_fixed_reference_integrates_only_after_stationary_max_depth(self):
   from unittest.mock import patch

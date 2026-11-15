@@ -89,8 +89,9 @@ clearance, measured grasp slip, target seating and clip return gate later
 phases. Both hands retreat before the retention rest.
 
 The trace records both measured finger joints, TCP tracking and the actual
-pressing support point. Bias is limited to 1 mm and frozen/decayed during
-contact. The adaptive engineering probe permits up to 2,000 actions / 100 s;
+pressing support point. The right arm settles fixed joint references at hover, after a 0.5 mm downward
+step, and when needed at full press depth. Its bounded joint bias is frozen
+between stationary endpoints. The adaptive engineering probe permits up to 2,400 actions / 120 s;
 it stops on a measured failure or completed retention rest. Nominal CPU mesh
 and IK checks do not establish full-arm/cable clearance or native success.
 
