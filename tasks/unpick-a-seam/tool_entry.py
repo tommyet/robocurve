@@ -53,7 +53,9 @@ class ToolEntryCompensation:
         slip_r=float(np.linalg.norm(Rotation.from_matrix(relative_r@self.reference_r.T).as_rotvec()))
         self.maximum_grasp_position_change_m=max(self.maximum_grasp_position_change_m,slip_p)
         self.maximum_grasp_rotation_change_rad=max(self.maximum_grasp_rotation_change_rad,slip_r)
-        if slip_p>.010 or slip_r>np.deg2rad(15.):
+        # The handle is70mm long. Up to20mm of axial regrasp still leaves
+        # the18mm pads on the handle; the40mm enclosure guard above remains.
+        if slip_p>.020 or slip_r>np.deg2rad(15.):
             raise RuntimeError('Measured tool slip exceeds entry compensation domain')
         self.updates+=1
         desired_hand_r=target_r@self.rotation.T

@@ -16,6 +16,7 @@ def prepare_thread(stage, item):
     cloth=[p.GetPath() for p in stage.Traverse() if p.HasAPI(UsdPhysics.RigidBodyAPI)
            and any('/'+name+'/' in str(p.GetPath()) for name in ('cloth_left','cloth_right'))]
     if not cloth:raise RuntimeError('Tacking model requires native fabric panels')
+    item['approximated_cloth_pairs']=[str(p) for p in cloth]
     for path in item['bodies']:
         prim=stage.GetPrimAtPath(path)
         UsdPhysics.RigidBodyAPI(prim).CreateKinematicEnabledAttr(True)
@@ -89,7 +90,11 @@ class Tacks:
             for path in self.connections[index]:
                 UsdPhysics.Joint(self.stage.GetPrimAtPath(path)).GetJointEnabledAttr().Set(False)
             for path in t['bodies']:
-                UsdPhysics.RigidBodyAPI(self.stage.GetPrimAtPath(path)).GetKinematicEnabledAttr().Set(False)
+                prim=self.stage.GetPrimAtPath(path)
+                UsdPhysics.RigidBodyAPI(prim).GetKinematicEnabledAttr().Set(False)
+                pairs=UsdPhysics.FilteredPairsAPI(prim).GetFilteredPairsRel()
+                pairs.SetTargets([p for p in pairs.GetTargets()
+                    if str(p) not in t['approximated_cloth_pairs']])
             for j in range(len(t['joints'])):
                 set_joint_enabled(self.stage,t,j,j!=cut,restore_contact=False)
             self.events.append(dict(time_s=float(time_s),stitch=index,cut_joint=cut))

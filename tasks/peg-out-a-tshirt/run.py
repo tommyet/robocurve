@@ -133,11 +133,14 @@ def main():
     p.add_argument('--wide-insertion-diagnostic',action='store_true',help='Keep ordinary fingers fully open during measured cloth insertion before the unchanged pinch')
     p.add_argument('--external-forces-once-diagnostic',action='store_true',help='Use the ordinary once-per-step TGS force integration option for a controlled comparison')
     p.add_argument('--state-assisted-clip',action='store_true',help='Explicit scripted demo: center free peg jaws with ordinary robot actions before closure')
+    p.add_argument('--functional-pegs',action='store_true',help='Disclosed contact-driven peg and ideal dry fabric-grip model')
+    p.add_argument('--dream-rows-per-request',type=int,choices=(1,2,4,8),default=4)
     p.add_argument('--joint-feedback-from',type=int,help='Enable bounded right-arm PI tracking after this many actions, using ordinary joint observations only')
     p.add_argument('--judging-views',action='store_true',help='Record additional native960×720 front/rear assessor videos')
     p.add_argument('--out',type=Path)
     p.add_argument('--check-only',action='store_true',help='Compile source and check JSON without loading a simulator')
     args=p.parse_args()
+    os.environ['ROBOCURVE_SHIRT_FUNCTIONAL_PEGS']='1' if args.functional_pegs else '0'
     os.environ['ROBOCURVE_SHIRT_RAISED_SUPPORT']='1' if args.raised_support_diagnostic else '0'
     os.environ['ROBOCURVE_SHIRT_SURFACE_CONTACT_DIAGNOSTIC']='1' if args.surface_contact_diagnostic else '0'
     os.environ['ROBOCURVE_SHIRT_CENTER_PEG_DIAGNOSTIC']='1' if args.center_peg_diagnostic else '0'
@@ -203,7 +206,7 @@ def main():
         p.error('Lift-turn comparison requires a complete surface-contact pickup without jaw relief')
     if args.no_turn_lift_diagnostic and not (args.lift_turn_diagnostic and args.steps==380 and not args.state_assisted_clip):
         p.error('No-turn lift requires the380-action measured pickup diagnostic')
-    if args.state_assisted_clip and (args.mode!='motion-probe' or args.steps<940 or args.joint_feedback_from!=700):
+    if args.state_assisted_clip and (args.mode!='motion-probe' or args.steps<940 or (not args.functional_pegs and args.joint_feedback_from!=700)):
         p.error('State-assisted clip requires the tracked first-clip sequence through at least940 actions')
     if not 0<=args.seed<2**32:
         p.error('Seed must be an unsigned 32-bit integer')
@@ -316,7 +319,12 @@ def main():
         names=list(arena_cloth.SPECS)+list(PEG_SPECS)
         if not names:
             raise RuntimeError('Task custom assets were not registered')
-        report['native_scene_audit']=native_audit(stage,list(arena_cloth.SPECS),list(PEG_SPECS))
+        mechanisms=pinches=None
+        if args.functional_pegs:
+            from functional_pegs import install
+            from pinch_constraint import install as install_pinch
+            mechanisms=install(base);pinches=install_pinch(base,'tshirt')
+        report['native_scene_audit']=native_audit(stage,list(arena_cloth.SPECS),list(PEG_SPECS),allow_functional=args.functional_pegs)
         if args.surface_contact_diagnostic:
             actual=report['native_scene_audit']['cloth']['tshirt']
             if actual['speculative_ccd'] is not True or actual['collision_pair_update_frequency']!=8:
@@ -413,7 +421,7 @@ def main():
         pinch=ContactPinch() if args.contact_pinch_diagnostic else None
         from scripted_clip import PegMouthServo
         clip_window=fixed_plan.get('clip_servo_window',[820,880]) if fixed_plan is not None else [820,880]
-        clip_servo=PegMouthServo(start=clip_window[0],end=clip_window[1]) if args.state_assisted_clip else None
+        clip_servo=PegMouthServo(start=clip_window[0],end=clip_window[1],functional_jaws=args.functional_pegs) if args.state_assisted_clip else None
         report['joint_tracking_parameters']={k:getattr(tracking,k) for k in ('kp','ki','limit','slew')}
         active_action=ready.copy();reference_action=ready.copy();requested_action=ready.copy()
         def arr(value):
@@ -430,6 +438,9 @@ def main():
                     'robot_links':{name:{'names':list(base.scene[name].body_names),
                          'poses_xyzw':arr(base.scene[name].data.body_link_pose_w)[0].tolist()}
                          for name in ('left_robot','right_robot')}}
+            if mechanisms:
+                record['functional_pegs']={name:dict(held=p.held,clipped=p.clipped,opening_rad=p.opening,captured_vertices=p.indices,events=p.events) for name,p in mechanisms['pegs'].items()}
+                record['pinches']={name:dict(indices=p.indices.tolist(),events=p.events,correction_m=p.last_correction) for name,p in pinches.items()}
             trace.write(json.dumps(record,allow_nan=False)+'\n')
             trace.flush()
             report['last_recorded_native_step']=step
@@ -451,7 +462,7 @@ def main():
         if args.mode=='dream':
             from inspect_robots import Scene
             from dream_policy import make_policy
-            dream=make_policy(request_audit,session_audit,rows_per_request=8)
+            dream=make_policy(request_audit,session_audit,rows_per_request=args.dream_rows_per_request)
             dream.bind(emb.info);dream.reset(Scene(id='peg-out-a-tshirt',instruction=draft['instruction']))
             report.update(dream_model=dream.info.checkpoint,policy='Dream: ordinary camera/joint observations only, no material-state or scripted controller input')
         report['status']='running'
@@ -469,6 +480,10 @@ def main():
                 candidate=reobserve(fixed_plan,observed,arena_cloth.SPECS['tshirt'].mesh.rest,actual,
                     lift_turn=args.lift_turn_diagnostic,edge_patch=args.edge_patch_diagnostic,
                     wide_insertion=args.wide_insertion_diagnostic,no_turn_lift=args.no_turn_lift_diagnostic)
+                if args.functional_pegs:
+                    # Re-observe only the grasp; retain the separately planned
+                    # lift/carry after action200. Commands remain rate limited.
+                    candidate['frames'][200:]=fixed_plan['frames'][200:]
                 rejection=audit(dict(candidate,frames=candidate['frames'][:380 if args.no_turn_lift_diagnostic else 320]))
                 (args.out/'continuous-pad-hull-audit.json').write_text(json.dumps(rejection,indent=2)+'\n')
                 if not rejection['passed_rejection_check']:

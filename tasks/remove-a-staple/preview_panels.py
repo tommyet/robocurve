@@ -211,7 +211,7 @@ def main():
         if a.dream:
             from inspect_robots import Scene
             from dream_policy import make_policy
-            instruction=json.loads(Path(__file__).with_name('task.draft.json').read_text())['instruction']
+            instruction=json.loads(Path(__file__).with_name('task.json').read_text())['instruction']
             emb._instruction=instruction;observation=emb._observation()
             dream_policy=make_policy(request_audit,session_audit,rows_per_request=a.dream_rows_per_request)
             dream_policy.bind(emb.info);dream_policy.reset(Scene(id='remove-a-staple',instruction=instruction))

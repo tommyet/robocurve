@@ -1,4 +1,4 @@
-"""Full-size flexible panel-paper candidate; unscored until robot validation."""
+"""Scene adapter; completed trials are judged with scoring.py and JUDGING.md."""
 import numpy as np
 from arena_panels import PanelPaper
 from arena_hardware import StapleHardware
@@ -12,7 +12,7 @@ import runtime_config
 SCENE='station'
 SCORE_OVER='end'
 INSTRUCTION='Remove the staple without tearing either sheet. Leave the complete staple at least 10 mm clear of both sheets.'
-DEVELOPMENT_ONLY=True
+EXTERNAL_JUDGING=True
 OBJECTS=[]
 paper=paper_material(runtime_config.PAPER_PROFILE)
 shell_material=ShellMaterial(thickness_m=paper.thickness_m,

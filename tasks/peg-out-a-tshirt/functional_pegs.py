@@ -26,7 +26,12 @@ def configure(stage, root):
         if p.HasAPI(UsdPhysics.RigidBodyAPI) and
         any('/'+SIDES[s]['prim']+'/' in str(p.GetPath()) for s in ('left','right'))]
     if not robot_parts:
-        raise RuntimeError('Expected robot bodies for the explicit peg grip model')
+        # Props are spawned before the robot. USD relationships may target
+        # these known YAM rigid links before their prims are authored.
+        parent=root.rsplit('/',1)[0]
+        names=('base_link','link1','link2','link3','link4','link5','gripper','tip_left','tip_right')
+        robot_parts=[Sdf.Path(parent+'/'+SIDES[s]['prim']+'/'+name)
+                     for s in ('left','right') for name in names]
     for prim in stage.Traverse():
         if str(prim.GetPath()).startswith(root+'/'):
             if prim.IsA(UsdPhysics.Joint):UsdPhysics.Joint(prim).CreateJointEnabledAttr(False)

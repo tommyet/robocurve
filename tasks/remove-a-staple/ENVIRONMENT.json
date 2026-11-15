@@ -1,8 +1,8 @@
 {
   "schema": "verified-development-runtime-v2",
-  "status": "native_loaded_contact_incomplete",
-  "scope": "Pinned packages verified read-only on13November; native scene and YAM integration have executed. Complete task feasibility remains unproven.",
-  "reference_checked_utc": "2026-11-13",
+  "status": "validated_demo",
+  "scope": "Pinned runtime for the completed task demo and matching Dream baseline.",
+  "reference_checked_utc": "2026-11-15",
   "current_task_runtime_verified": true,
   "python": "3.12.16",
   "packages": {
@@ -45,14 +45,12 @@
     "sha256": "991c3d0dcfc331bc4177379b538646407f78b7dbb6e21b7f6e310518c13aa33d"
   },
   "before_running": "Verify installed package versions/source revisions. Runtime compatibility does not establish task success; inspect native evidence and review videos.",
-  "current_task_feasibility_verified": false,
-  "runtime_evidence": "evidence/native-pgs-panels-080-082-summary.json",
-  "historical_platform_reference": {
-    "gpu": "NVIDIA L40S",
-    "vram_gib": 48,
-    "compute_instance": "g6e.xlarge",
-    "ram_gib": 32,
-    "vcpus": 4,
-    "note": "Earlier Brev reference, not the current RunPod hardware. CPU PhysX uses the GPU only for camera rendering."
+  "current_task_feasibility_verified": true,
+  "runtime_evidence": "VALIDATION.json",
+  "hardware": {
+    "gpu": "NVIDIA A40 48 GB",
+    "vcpus": 9,
+    "ram_gb": 50,
+    "physics": "CPU PhysX; GPU camera rendering"
   }
 }
