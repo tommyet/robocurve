@@ -2466,3 +2466,42 @@ editing, merge both agents' findings, and commit/push the update with the work.
   approach clears rightREADY by133.174mm; max IK.0586mm/.01835deg. Runtime022
   confirms960Hz physics/20Hz control. At6.3s new grasp closes and cap approach
   begins, with~.98deg can tilt and no failure. Full result remains pending.
+- Full022 yaw90 stopped29.10s before spraying: actual calibrated+compensated
+  left target reached joint4 upper1.5708rad; IK5.22531mm/2.7405deg. Nominal
+  waypoints missed this correction envelope. Capture583 rows preserved in
+  /private/tmp/spray-state-022; never relax the5mm guard to count this as success.
+- Astra review16:20:03–16:24:34 rejected yaw75 (still hits joint4) and pitch
+  alone (overlaps cap gripper). Recommended paired ordinary-posture correction:
+  retainYclosingaxis, pitch15deg downward about worldY and lowerGRASP_Z15mm
+  from+.005 to-.010. Existing front entry/diagonal exit offsets remain. Actual
+  failed target then solves25.7um/.0106deg, q4reserve66.49deg;99 actual022issued
+  commands replay within78.3um withminimumjointmargin19.60deg.320 tested
+  correction corners allpass<.055mm/.016deg, minimumjointmargin4.09deg.
+  These cover observedXYbias±10mm/Z0..50mm androtationbias±.15rad; not arbitrary
+  unobserved±50mmXY. Sampled full-arm capclearance>=6.64mm/pressure>=15.73mm,
+  entry/exitcanbounds>=17.98/20.98mm. Native holding remains unverified.
+  Candidate /private/tmp/astra_spray022_candidate.json; Sol prepares023.
+- Full023 passed the calibratedIK stage and first spray without grip/IK loss,
+  then stopped56.90s for insufficient second-shot aimedcontact(.50/.80s). Actual
+  spray1.95s, coverage48.47%, overspray9.03%, score0.25. RightZbias−28.457mm
+  was below its−30mm cap and was UNWINDING nearfailure, not converging monotonically.
+- Astra actual-command replay found a frame error: the can moves up to39.7mm/s
+  while the entire right world target was limited to10mm/s. The resulting stale
+  target lags the live button by up to7.24mm. Extra deadline would leave this bug.
+  Next correction carries only the unbiased right target with measured can
+  rigid motion, then limits approach/press motion RELATIVE to the can at existing
+  speed. World gravity bias and command-anchored release stay separate. No dwell,
+  force, geometry or episode limits change. Review ended16:38:55UTC; Sol prepares024.
+- Full024 passed first aimed spray but stopped46.45s on firstrelease: actual
+  face clearance15.478mm, below unchanged20mm. Button released13.7um/preload0;
+  no grip/IK loss. Native can rose10.431mm during unloading while the retreat
+  target stayed world-fixed. Hand did retreat30.220mm; button spring return and
+  finger relaxation consume the remaining gap. Do not increase distance/time
+  to mask this coordinate-frame error.
+- Astra review16:50:30–16:52:15 recommends carrying the entry-frame retreat
+  position, achieved orientation and latched measurement axis with live can
+  SE3 motion. Preserve exact entry motor command, zero release integral, same
+  30mm relative retreat/10mm/s/path duration/deadline/20mmfive-frame gate. On
+  all184 actual024samples, transported targets solve continuous IK<=67um,
+  min jointmargin13.9deg; predicted physicalgap25.642mm. Native execution is
+  still pending. Sol prepares025; original pressure/dwell/120s limits stay.

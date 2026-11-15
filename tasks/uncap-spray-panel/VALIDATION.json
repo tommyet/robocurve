@@ -1,8 +1,8 @@
 {
-  "status": "yawed_grasp_full_trial022_in_progress",
+  "status": "moving_can_release_full_trial025_in_progress",
   "checked_date": "2026-11-15",
   "local_scorer_tests": {
-    "main_suite_tests": 64,
+    "main_suite_tests": 74,
     "main_suite_skipped_pxr": 1,
     "separate_usd_tests_passed": 5
   },
@@ -197,18 +197,54 @@
       "overspray": 0.0408
     },
     "spray-state-022": {
-      "in_progress": true,
+      "in_progress": false,
       "complete": false,
       "physics_hz": 960,
       "control_hz": 20,
       "capped_start": true,
       "grasp_change": "LeftclosingaxisworldY; frontentry(-.06,0,.015),exit(-.06,0,.06)",
-      "grip_and_guards_unchanged": true
+      "grip_and_guards_unchanged": true,
+      "score": 0.25,
+      "duration_s": 29.1,
+      "controller_failure": "actual calibrated+compensated target hitsjoint4upperlimit;pe5.225mm"
+    },
+    "spray-state-023": {
+      "in_progress": false,
+      "complete": false,
+      "score": 0.25,
+      "duration_s": 56.9,
+      "coverage": 0.4847,
+      "overspray": 0.0903,
+      "spray_seconds": 1.95,
+      "grasp_and_IK_passed": true,
+      "controller_failure": "secondaimeddwellinsufficient;worldtargetlaggedmovingcan"
+    },
+    "spray-state-024": {
+      "in_progress": false,
+      "complete": false,
+      "physics_hz": 960,
+      "control_hz": 20,
+      "change": "Unbiasedrighttargetcarriedwithcanrigidmotion;existing10mm/srelativepresslimiter",
+      "limits_unchanged": true,
+      "score": 0.25,
+      "duration_s": 46.45,
+      "coverage": 0.3061,
+      "overspray": 0.0484,
+      "spray_seconds": 2.7,
+      "controller_failure": "fixedworldreleasegoal;canrose10.43mm,actualclearance15.48mm"
+    },
+    "spray-state-025": {
+      "in_progress": true,
+      "complete": false,
+      "change": "entryanchoredreleasepose/axiscarriedwithlivecanSE3",
+      "entry_command_and_limits_unchanged": true,
+      "physics_hz": 960,
+      "control_hz": 20
     }
   },
   "native_latest_prepared_frame_tested": true,
   "compute_state": {
-    "yam-eval-launchable-cb0da2": "ExistingVM only, directSSH working.595.99.02 RTX stillunreliable, state-only PhysXstable. Passive solverconvergence diagnostic next."
+    "yam-eval-launchable-cb0da2": "Existing VM only, camera-free native025 running. Offline exact-pose replay available; RTX still unreliable."
   },
   "prepared_contact_ramp": {
     "left_preload_speed_m_s": 0.005,

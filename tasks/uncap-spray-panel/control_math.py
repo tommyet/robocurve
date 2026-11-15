@@ -2,7 +2,7 @@
 import math
 import numpy as np
 
-GRASP_Z=.005
+GRASP_Z=-.010
 GRASP_OFFSET=np.array((0.,0.,GRASP_Z))
 RELEASE_DISTANCE=.030
 RELEASE_SPEED=.010
@@ -133,3 +133,29 @@ def ramp_translation(current,target,speed,dt):
     length=math.sqrt(sum(v*v for v in delta))
     fraction=min(1.,speed*dt/max(1e-12,length))
     return [a+fraction*d for a,d in zip(current,delta)]
+
+
+def can_frame_ramp_translation(current,target,previous_pose,current_pose,speed,dt):
+    """Carry an unbiased reference with measured can motion, then limit relative travel."""
+    current=np.asarray(current,dtype=float);target=np.asarray(target,dtype=float)
+    center,rotation=(np.asarray(v,dtype=float) for v in current_pose)
+    if current.shape!=(3,) or target.shape!=(3,) or center.shape!=(3,) or rotation.shape!=(3,3) or not all(np.isfinite(v).all() for v in (current,target,center,rotation)):
+        raise ValueError('can following requires finite positions and rotations')
+    carried=current.copy()
+    if previous_pose is not None:
+        previous_center,previous_rotation=(np.asarray(v,dtype=float) for v in previous_pose)
+        if previous_center.shape!=(3,) or previous_rotation.shape!=(3,3) or not all(np.isfinite(v).all() for v in (previous_center,previous_rotation)):
+            raise ValueError('can following requires finite previous pose')
+        carried=center+rotation@previous_rotation.T@(current-previous_center)
+    return ramp_translation(carried,target,speed,dt)
+
+
+def transport_can_reference(position,rotation,entry_pose,current_pose):
+    """Express an entry-world reference after the measured can's rigid motion."""
+    position=np.asarray(position,dtype=float);rotation=np.asarray(rotation,dtype=float)
+    center0,canR0=(np.asarray(v,dtype=float) for v in entry_pose)
+    center,canR=(np.asarray(v,dtype=float) for v in current_pose)
+    if position.shape!=(3,) or rotation.shape!=(3,3) or center0.shape!=(3,) or center.shape!=(3,) or canR0.shape!=(3,3) or canR.shape!=(3,3) or not all(np.isfinite(v).all() for v in (position,rotation,center0,center,canR0,canR)):
+        raise ValueError('release transport requires finite poses')
+    turn=canR@canR0.T
+    return center+turn@(position-center0),turn@rotation

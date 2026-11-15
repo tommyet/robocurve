@@ -64,7 +64,7 @@ class GraspReleaseTests(unittest.TestCase):
         actual=np.array((.001,-.002,.006))
         origins=[np.array(CAN_START),np.array((CAN_PAD[0],CAN_PAD[1],CAN_REST_HEIGHT))]
         origins.extend(np.array((CAN_START[0],y,TARGET_CENTER[1]-.077+z)) for y,z in ((-.035,-.035),(-.035,.035),(.035,.035),(.035,-.035)))
-        self.assertEqual(GRASP_Z,.005)
+        self.assertEqual(GRASP_Z,-.010)
         for origin in origins:
             hand=calibrated_hand_target(origin+GRASP_OFFSET,actual)
             np.testing.assert_allclose(hand-actual,origin,atol=1e-15)
@@ -79,6 +79,19 @@ class GraspReleaseTests(unittest.TestCase):
         a=np.radians(25.1);tilt=np.array(((1,0,0),(0,np.cos(a),-np.sin(a)),(0,np.sin(a),np.cos(a))))
         self.assertIn('tilted',grasp_drift(can,tilt,tilt@offset,tilt,offset,R))
         self.assertIn('nonfinite',grasp_drift(can,R,[np.nan,0,0],R,offset,R))
+
+    def test_transported_release_preserves_actual_face_gap_when_can_rises(self):
+        from control_math import transport_can_reference
+        face=json.loads(Path(__file__).with_name('press_face.json').read_text())
+        pressR=np.array(face['rotation_can_from_tcp']);point=np.array(face['point_tcp']);tri=np.array(face['triangle_tcp'])
+        C=np.array((.26,0,.8675));button=C+[0,0,.077]
+        tcp=button+[0,0,.005+.025]-pressR@point
+        a=.03;R=np.array(((1,0,0),(0,np.cos(a),-np.sin(a)),(0,np.sin(a),np.cos(a))))
+        nowC=C+[0,0,.010];nowButton=nowC+R@np.array((0,0,.077));axis=R[:,2]
+        moved,movedR=transport_can_reference(tcp,pressR,(C,np.eye(3)),(nowC,R))
+        gap=release_clearance(moved,movedR,tri,-.028,nowButton,axis,axis)
+        self.assertAlmostEqual(gap,.025,delta=1e-8)
+        self.assertLess(release_clearance(tcp,pressR,tri,-.028,nowButton,axis,axis),.020)
 
     def test_latched_retreat_is_continuous_and_keeps_achieved_rotation(self):
         start=np.array((.26,0,1.));R=np.array(((0,-1,0),(1,0,0),(0,0,1.)))
@@ -180,8 +193,9 @@ class PolicyGuardTests(unittest.TestCase):
         sample=self.sample();self.module.telemetry.latest=sample
         policy=self.module.SprayDemo();policy.initialize();moves={m['label']:m for m in policy.moves}
         R=self.module.LEFT_R
-        np.testing.assert_array_equal(R,np.array(((0,0,1),(-1,0,0),(0,-1,0))))
-        np.testing.assert_allclose(R.T@R,np.eye(3));self.assertAlmostEqual(np.linalg.det(R),1.)
+        np.testing.assert_array_equal(R[:,0],(0.,-1.,0.))
+        self.assertAlmostEqual(R[2,2],-np.sin(np.radians(15.)))
+        np.testing.assert_allclose(R.T@R,np.eye(3),atol=1e-15);self.assertAlmostEqual(np.linalg.det(R),1.)
         grasp=np.array(sample['can'])+GRASP_OFFSET
         placement=np.array((CAN_PAD[0],CAN_PAD[1],CAN_REST_HEIGHT))+GRASP_OFFSET
         np.testing.assert_allclose(moves['brace_approach']['L'][0],grasp+(-.060,0,.015))
@@ -205,6 +219,30 @@ class PolicyGuardTests(unittest.TestCase):
                 self.assertLessEqual(re,.12 if early else .05,(move['label'],fraction,re))
                 if fraction==1:self.assertLessEqual(pe,.0001,(move['label'],pe))
             start,startR=end,rotation
+
+    def test_recorded_022_biased_command_has_joint_reserve_with_pitched_lower_grasp(self):
+        from yam_arena import ik
+        from yam_arena.urdf import axis_angle_matrix
+        # Actual022 command rejected at29.05s: retain measured calibration and
+        # accumulated correction, rather than testing only an unbiased waypoint.
+        position=np.array((.2608570172620284,-.033393422571934075,.893862970657222))
+        calibration=np.array(((-.006325689825803152,.0629604703781418,.9979959743495916),
+                              (-.9999780533379853,-.002363795929586545,-.00618912846662249),
+                              (.0019693883824218714,-.9980132221762228,.06297404124584018)))
+        rv=np.array((-.044323377968408136,-.020497574595067097,-.004246474684677953))
+        correction=axis_angle_matrix(rv/np.linalg.norm(rv),np.linalg.norm(rv))
+        seed=np.array((-1.3033600556251954,2.1399736057875387,.8032035034966832,1.5708,-1.2845804946639516,.2219040002314723))
+        oldR=correction@calibration
+        _,old_pe,_=ik.solve(position,ik.matrix_to_quat_xyzw(oldR),seed,base_pos=(0,.305,.75),iters=90)
+        self.assertGreater(old_pe,.005)
+        old_nominal=np.array(((0.,0.,1.),(-1.,0.,0.),(0.,-1.,0.)))
+        posture_change=self.module.LEFT_R@old_nominal.T
+        newR=correction@posture_change@calibration
+        position[2]+=GRASP_Z-.005
+        q,pe,re=ik.solve(position,ik.matrix_to_quat_xyzw(newR),seed,base_pos=(0,.305,.75),iters=90)
+        self.assertLess(pe,.0001);self.assertLess(re,.001)
+        self.assertGreater(ik.UPPER[3]-q[3],np.radians(60.))
+        self.assertGreater(np.min(np.minimum(q-ik.LOWER,ik.UPPER-q)),np.radians(10.))
 
     def test_initial_grip_is_unchanged_and_loaded_hold_ramps_over_existing_lift(self):
         from yam_arena.constants import FINGER_OPEN,GRIPPER
@@ -279,14 +317,26 @@ class PolicyGuardTests(unittest.TestCase):
             action=policy.act(SimpleNamespace(state_time=6.))
         self.assertIn('parking conditions',policy.failure);self.assertTrue(action.actions[0].meta['request_stop'])
 
+    def test_follow_pose_persists_between_hover_press_and_clears_on_nonfollow(self):
+        sample=self.sample();self.module.telemetry.latest=sample
+        policy=self.module.SprayDemo();policy.initialize();self.assertIsNone(policy.follow_can_pose)
+        pose=(np.array(sample['can']),np.eye(3));policy.follow_can_pose=pose
+        for label in ('press_hover','coat_position_0','coat_aim_0','coat_shot_0'):
+            policy.index=next(i for i,m in enumerate(policy.moves) if m['label']==label)-1;policy.next(0.)
+            self.assertIs(policy.follow_can_pose,pose)
+        policy.index=next(i for i,m in enumerate(policy.moves) if m['label']=='press_retreat')-1;policy.next(0.)
+        self.assertIsNone(policy.follow_can_pose)
+
     def test_release_entry_preserves_motor_command_without_larger_integral(self):
         sample=self.sample();self.module.telemetry.latest=sample
         policy=self.module.SprayDemo();policy.initialize()
         original_q=policy.q[1].copy();commandp,commandR=self.module.ik.tcp_pose(original_q,policy._bases['right'])
         sample['hands'][1]['tcp']=(commandp+[0,0,.0245529]).tolist()
         policy.position_bias[1][:]=[0,0,-.02]
+        policy.follow_can_pose=(np.array([1.,2.,3.]),np.eye(3))
         policy.index=next(i for i,m in enumerate(policy.moves) if m['label']=='coat_unpress_0')-1;policy.next(0.)
         self.assertIsNone(policy.failure)
+        self.assertIsNone(policy.follow_can_pose)
         self.assertAlmostEqual(policy.release_path['duration'],5.45529)
         self.assertAlmostEqual(policy.moves[policy.index]['seconds'],5.45529+2.8+.5)
         with patch.object(self.module.ik,'solve',side_effect=lambda p,r,q,**kw:(q.copy(),0.,0.)) as solve:
@@ -299,7 +349,30 @@ class PolicyGuardTests(unittest.TestCase):
             policy.act(SimpleNamespace(state_time=.05))
         expected,_,_=release_command_target(policy.release_path['start'],policy.release_path['goal'],.05)
         np.testing.assert_allclose(solve.call_args_list[-1].args[0],expected,atol=1e-15)
+        self.assertIsNone(policy.follow_can_pose)
         np.testing.assert_array_equal(policy.position_bias[1],np.zeros(3))
+
+    def test_release_tracks_can_motion_without_integral_or_entry_command_change(self):
+        from control_math import transport_can_reference
+        sample=self.sample();self.module.telemetry.latest=sample
+        policy=self.module.SprayDemo();policy.initialize();initial_q=policy.q[1].copy()
+        policy.position_bias[1][:]=(0,0,-.028)
+        policy.index=next(i for i,m in enumerate(policy.moves) if m['label']=='coat_unpress_0')-1;policy.next(0.)
+        entryC=np.array(sample['can']);entryR=np.array(sample['can_rotation'])
+        with patch.object(self.module.ik,'solve',side_effect=lambda p,r,q,**kw:(q.copy(),0.,0.)):
+            action=policy.act(SimpleNamespace(state_time=0.))
+        np.testing.assert_array_equal(action.actions[0].data[7:13],initial_q)
+        a=.03;canR=np.array(((1,0,0),(0,np.cos(a),-np.sin(a)),(0,np.sin(a),np.cos(a))))
+        sample['can']=(entryC+[0,.002,.010]).tolist();sample['can_rotation']=canR.tolist();sample['time']=.05
+        with patch.object(self.module.ik,'solve',side_effect=lambda p,r,q,**kw:(q.copy(),0.,0.)) as solve:
+            policy.act(SimpleNamespace(state_time=.05))
+        path=policy.release_path;p,f,_=release_command_target(path['start'],path['goal'],.05)
+        r=self.module.ik.slerp_matrix(path['rotation'],path['goal_rotation'],f)
+        expected,expectedR=transport_can_reference(p,r,(entryC,entryR),(sample['can'],canR))
+        np.testing.assert_allclose(solve.call_args_list[-1].args[0],expected,atol=1e-15)
+        np.testing.assert_allclose(self.module.ik.quat_xyzw_to_matrix(solve.call_args_list[-1].args[1]),expectedR,atol=1e-12)
+        np.testing.assert_array_equal(policy.position_bias[1],np.zeros(3));np.testing.assert_array_equal(policy.rotation_bias[1],np.zeros(3))
+        self.assertIsNone(policy.follow_can_pose)
 
     def test_first_shot_failure_is_not_overwritten_or_advanced(self):
         sample=self.sample();self.module.telemetry.latest=sample

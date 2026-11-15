@@ -15,14 +15,16 @@ from inspect_robots.types import Action,ActionChunk
 from inspect_robots_yam.packing import pack
 from config import *
 import telemetry
-from control_math import (grip_fraction,ramp_scalar,ramp_translation,GRASP_OFFSET,RELEASE_DISTANCE,RELEASE_SPEED,
+from control_math import (grip_fraction,ramp_scalar,can_frame_ramp_translation,transport_can_reference,GRASP_OFFSET,RELEASE_DISTANCE,RELEASE_SPEED,
                           RELEASE_DEADLINE,MEASURED_DWELL,calibrated_hand_target,grasp_drift,release_command_target,release_clearance,release_gate_frames,
                           minimum_future_seconds,press_contact_state,press_bias_step)
 
 LEFT_PRELOAD_SPEED=.005
 RIGHT_PRESS_SPEED=.010
 
-LEFT_R=np.array([[0.,0.,1.],[-1.,0.,0.],[0.,-1.,0.]])
+_GRASP_PITCH=np.radians(15.)
+LEFT_R=np.array([[0.,-np.sin(_GRASP_PITCH),np.cos(_GRASP_PITCH)],
+                 [-1.,0.,0.],[0.,-np.cos(_GRASP_PITCH),-np.sin(_GRASP_PITCH)]])
 RIGHT_R=np.array([[1.,0.,0.],[0.,0.,1.],[0.,-1.,0.]])
 # A real lower-finger face from the pinned YAM collision meshes, at joint7=-28mm.
 # This orientation makes that face horizontal; the spare jaw stays above it.
@@ -49,6 +51,7 @@ class SprayDemo(YamScriptedPolicy):
         self.position_bias=[np.zeros(3),np.zeros(3)]
         self.left_preload=0.;self.left_preload_target=0.
         self.release_state=None;self.release_path=None;self.release_frames=0;self.release_gap=None
+        self.follow_can_pose=None
         self.last_actions=[np.r_[h['joints'],h['opening']] for h in telemetry.latest['hands']]
         self.rotation_bias=[np.zeros(3),np.zeros(3)]
         for h in telemetry.latest['hands']:
@@ -103,6 +106,7 @@ class SprayDemo(YamScriptedPolicy):
         self.starts=[(p.copy(),r.copy(),g) for p,r,g in self.targets]
         if self.index>=len(self.moves):return
         step=self.moves[self.index]
+        if step['follow'] not in ('hover','press'):self.follow_can_pose=None
         if step['label']=='can_release':self.holding_can=False
         if step['label'].startswith('coat_shot'):
             self.left_preload_target=.014
@@ -123,7 +127,8 @@ class SprayDemo(YamScriptedPolicy):
                 self.failure='release command path cannot fit the remaining 120 second episode budget';return
             step['seconds']=deadline
             self.release_path=dict(start=commandp.copy(),rotation=commandR.copy(),goal=goal.copy(),
-                                   goal_rotation=rotation.copy(),duration=duration,initial_q=self.q[1].copy())
+                                   goal_rotation=rotation.copy(),duration=duration,initial_q=self.q[1].copy(),
+                                   can_pose=(np.array(s['can']).copy(),np.array(s['can_rotation']).copy()))
             # The already-issued motor command is the path anchor. Do not
             # reinterpret its load deflection as a larger Cartesian integral.
             self.position_bias[1][:]=0.;self.rotation_bias[1][:]=0.
@@ -164,6 +169,7 @@ class SprayDemo(YamScriptedPolicy):
                     self.failure=self.failure or 'final measured parking conditions did not settle before hold deadline'
             if step['follow']=='release':
                 start,rotation,axis=self.release_state;hand=s['hands'][1]
+                axis=np.array(s['can_rotation'])@self.release_path['can_pose'][1].T@axis
                 self.release_gap=release_clearance(hand['tcp'],hand['rotation'],PRESS_FACE,hand['finger_joints'][0],s['button'],np.array(s['can_rotation'])[:,2],axis)
                 self.release_frames=release_gate_frames(s['button_travel'],self.release_gap,self.release_frames)
                 path_end=elapsed>=self.release_path['duration']
@@ -204,6 +210,8 @@ class SprayDemo(YamScriptedPolicy):
                 path=self.release_path
                 p,fraction,_=release_command_target(path['start'],path['goal'],now-self.t0)
                 r=ik.slerp_matrix(path['rotation'],path['goal_rotation'],fraction)
+                try:p,r=transport_can_reference(p,r,path['can_pose'],(s['can'],s['can_rotation']))
+                except ValueError as error:self.failure=str(error)
                 self.targets[1]=[p,r,self.press_grip]
             elif step['follow']:
                 # Press a physically moving piston with the other arm. The
@@ -234,7 +242,10 @@ class SprayDemo(YamScriptedPolicy):
                 # a contact height from the generic TCP marker.
                 target=can+rot@(np.array((0.,0.,height))-PRESS_R@point)
                 speed=RIGHT_PRESS_SPEED if pressing else .100
-                position=ramp_translation(self.targets[1][0],target,speed,self._dt)
+                try:position=can_frame_ramp_translation(self.targets[1][0],target,self.follow_can_pose,(can,rot),speed,self._dt)
+                except ValueError as error:
+                    self.failure=str(error);position=self.targets[1][0]
+                self.follow_can_pose=(can.copy(),rot.copy())
                 self.targets[1]=[np.asarray(position),rot@PRESS_R,self.press_grip]
         actions=[];errors={};press_contact=None
         pressing=self.index<len(self.moves) and self.moves[self.index]['follow']=='press'
