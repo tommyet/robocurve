@@ -38,9 +38,10 @@ def line_capture(body_poses, line_x=.52, line_z=1.09, radius=.0015):
 
 
 class PegMouthServo:
-    def __init__(self,start=820,end=880,target=(.52,.115,1.09),side='right',functional_jaws=False):
+    def __init__(self,start=820,end=880,target=(.52,.115,1.09),side='right',functional_jaws=False,align_y=False):
         if side not in ('left','right'):raise ValueError('Unknown robot arm')
         self.functional_jaws=functional_jaws
+        self.align_y=align_y
         self.side=side;self.indices=slice(0,6) if side=='left' else slice(7,13)
         self.start=start;self.end=end;self.target=np.asarray(target,float)
         self.offset=np.zeros(6);self.records=[];self.last_error=None
@@ -57,7 +58,7 @@ class PegMouthServo:
                    if self.functional_jaws else np.mean(inner,0))
             error=self.target-mouth
             # Any valid position along the line is useful; align its radial x/z.
-            error[1]=0.
+            if not self.align_y:error[1]=0.
             distance=float(np.linalg.norm(error))
             gap=float(np.linalg.norm(inner[1]-inner[0]))
             if distance>.065 or gap<.006 or gap>(.016 if self.functional_jaws else .012):raise RuntimeError('Peg alignment lost its held open-jaw geometry')

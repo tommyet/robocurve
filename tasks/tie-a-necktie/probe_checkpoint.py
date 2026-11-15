@@ -23,6 +23,7 @@ def main():
     parser.add_argument('--state',type=Path,required=True)
     parser.add_argument('--plan',type=Path,required=True)
     parser.add_argument('--out',type=Path,required=True)
+    parser.add_argument('--collar-friction-approximation',action='store_true',help='Disclosed ideal static collar contact')
     parser.add_argument('--pinch-approximation',action='store_true',help='Disclosed contact-gated dry-pinch material variant, identical for every policy')
     parser.add_argument('--joint-tracking',action='store_true',help='Bounded bimanual joint feedback; normal motor and action limits remain')
     args=parser.parse_args()
@@ -118,8 +119,13 @@ def main():
         if args.pinch_approximation:
             from pinch_constraint import install
             pinches=install(base,'tie')
+        collar_friction={}
+        if args.collar_friction_approximation:
+            from collar_friction import install as install_collar
+            collar_friction=install_collar(base)
+            report['collar_friction']=collar_friction
         report.update(initial_node_error_m=error,physics_dt_s=float(base.sim.get_physics_dt()),
-            native_scene_audit=native_audit(omni.usd.get_context().get_stage(),['tie'],[],allow_pinch=args.pinch_approximation),
+            native_scene_audit=native_audit(omni.usd.get_context().get_stage(),['tie'],[],allow_pinch=args.pinch_approximation,allow_collar=args.collar_friction_approximation),
             state_writes=('Reset reconstruction only; contact-gated native vertex attachments resolve pinches without runtime pose writes'
                 if args.pinch_approximation else 'One reset-only checkpoint reconstruction; none during action execution'))
         limits=np.tile([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+
@@ -135,7 +141,7 @@ def main():
         dense=DenseClothTrace(args.out,arena_cloth.SPECS,len(actions)+1)
         def snapshot(step,action):
             obs=emb._observation()
-            row=dict(step=step,time_s=step/20,action14=action.tolist(),
+            row=dict(step=step,time_s=step/20,action14=action.tolist(),collar_friction=collar_friction,
                 pinches={side:dict(indices=p.indices.tolist(),correction_m=p.last_correction,events=p.events) for side,p in pinches.items()},
                 measured_joint_pos=encode(np.asarray(obs.state['joint_pos'])),
                 objects=dense.record(scene.object_states(emb._env,['tie']),step,encode),

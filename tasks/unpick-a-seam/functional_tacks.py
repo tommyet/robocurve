@@ -92,9 +92,11 @@ class Tacks:
             for path in t['bodies']:
                 prim=self.stage.GetPrimAtPath(path)
                 UsdPhysics.RigidBodyAPI(prim).GetKinematicEnabledAttr().Set(False)
-                pairs=UsdPhysics.FilteredPairsAPI(prim).GetFilteredPairsRel()
-                pairs.SetTargets([p for p in pairs.GetTargets()
-                    if str(p) not in t['approximated_cloth_pairs']])
+                # The coarse tack model does not resolve fibre-scale sliding
+                # through the needle holes. Keep thread/fabric contact omitted
+                # after severing as well: restoring overlapping tiny contacts
+                # injects nonphysical impulses into the canvas. Open fragments
+                # remain native dynamic chains with tool/table contact.
             for j in range(len(t['joints'])):
                 set_joint_enabled(self.stage,t,j,j!=cut,restore_contact=False)
             self.events.append(dict(time_s=float(time_s),stitch=index,cut_joint=cut))

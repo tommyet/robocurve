@@ -193,7 +193,8 @@ def main():
         track_start=plan.get('requires_joint_feedback_from')
         window=plan.get('clip_servo_window')
         servo=PegMouthServo(start=window[0],end=window[1],side=plan.get('clip_side','right'),
-            target=plan.get('clip_target',(.52,.115,1.09)),functional_jaws=args.functional_pegs) if window else None
+            target=plan.get('clip_target',(.52,.115,1.09)),functional_jaws=args.functional_pegs,
+            align_y=plan.get('clip_align_y',False)) if window else None
         active=state['action'].copy()
         for step,reference in enumerate(actions,1):
             observed=np.asarray(emb._observation().state['joint_pos'],float)

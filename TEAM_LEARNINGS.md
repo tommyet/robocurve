@@ -4,6 +4,37 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 — practical completion updates (active trials242–246)
+
+- Shirt232's final released hold retains67 actual vertices, roughly0.5–1mm
+  native jaw residual and148mm table clearance.238 proves pickup of the
+  second peg. The board is now155mm tall (25mm lower), clearing the robot's
+  elbow; this requires fresh evidence for both policies.244 keeps the original
+  cloth grasp while approaching the second fastening from below. The new
+  route passes fixture, inter-arm and first-peg geometry screens.246 assembles
+  a2260-action fresh-reset candidate; no two-peg success is claimed yet.
+- Tie242 adds explicitly selected ideal static friction at a10mm rear-collar
+  contact patch. It selects actual touching vertices geometrically and uses
+  a native attachment; the rest remains self-colliding flexible cloth. Force-
+  limited slip is not calibrated. Earlier wraps slid the neckband around the
+  form and pushed the narrow strand aside instead of encircling it. This new
+  model is under test, not knot evidence; a final Dream must use it too.
+- Seam234's blade damage was real; outward withdrawal after actual severing
+  fixed that trajectory issue.236's later failure was numerical panel
+  separation, not blade damage.240 cut three tacks without blade damage or
+  native fracture, then stopped on133micrometres of lost tangential panel-edge
+  overlap. The measured empty gap was2.51mm, below the declared5mm numerical
+  domain.245 allows bounded tangential panel slip, retaining5mm endpoint/gap,
+  native fracture and blade-damage failures. Fibre-scale thread/fabric contact
+  remains explicitly omitted after cutting; it is not used to certify damage.
+  Unused crossing diagnostics no longer consume CPU on every substep for this
+  approximate model. Eleven targeted panel tests pass, including rejection of
+  excessive displacement. A fresh complete demo and Dream are still required.
+- All ongoing runs use one supervisedA40,7dszjx6tuony0y. Watchdog28315 and
+  caffeinate28316 are alive; read gpu-lifecycle.json for the current deadline.
+  Cake, wheel and staple have upstream PRs; no cloth-task PR yet. Development
+  evidence is private under artifacts/practical-models-2026-11-14.
+
 ## 2026-11-15 03:07 UTC — native jaw anchor fixed; closer tie grip retained
 
 - Shirt232 now retains67 actual cloth vertices inside the physical first peg

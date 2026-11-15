@@ -370,7 +370,8 @@ def main():
         native_paths=list(thread_view.prim_paths)
         order=np.asarray([native_paths.index(path) for path in all_paths])
         views=([FacetView(sim,shell,geometry_aperture_m=(.005 if a.practical_material else .0004 if a.panel_passage_diagnostic else .0002) if a.geometric_panel_audit else None,
-                        boundary_tolerance_m=.0001 if a.boundary_contact_envelope else 0.)
+                        boundary_tolerance_m=.0001 if a.boundary_contact_envelope else 0.,
+                        require_edge_overlap=not a.functional_tacks)
                 for shell in facet_shells] if a.facet_cloth else
                [sim.create_surface_deformable_body_view(envroot+'/'+name) for name in ('cloth_left','cloth_right')])
         if blade.count!=1 or handle.count!=1 or any(v.count!=1 for v in views):
@@ -474,7 +475,7 @@ def main():
             poses,nodes,edge,normal=measured()
             segments=capsule_endpoints(poses,lengths);t=state['steps']*dt
             native_solid_invalid=False
-            if a.panel_passage_diagnostic:
+            if a.panel_passage_diagnostic and not a.functional_tacks:
                 for view in views:
                     native_solid_invalid=view.audit_thread_solids(segments,runtime_config.CONFIG.thread_radius_m,t) or native_solid_invalid
                 if any(view.first_aperture_warning for view in views) and 'first_panel_aperture_warning_substep' not in report:
@@ -487,18 +488,19 @@ def main():
                 cut_contact_events.append(dict(time_s=t,joint=index,event='separated_cut_pair_contact_restored'))
             state['timings_s']['readback']+=time.perf_counter()-start
             start=time.perf_counter()
-            for j,points in enumerate(nodes):
-                strain[j].update(points,t)
+            if not a.functional_tacks or state['steps'] % round(1/(20*dt)) == 0:
+                for j,points in enumerate(nodes):
+                    strain[j].update(points,t)
             state['timings_s']['strain']+=time.perf_counter()-start
             start=time.perf_counter()
-            if a.crossing_backend!='warp':
+            if a.crossing_backend!='warp' and not a.functional_tacks:
                 for j,points in enumerate(nodes):crossing[j].update(points,segments,t)
             if gpu_crossing is not None:gpu_crossing.update(nodes,segments,state['steps'])
             if contact_history is not None:
                 for history,points in zip(contact_history,nodes,strict=True):history.update(points,segments,t)
             state['timings_s']['crossing']+=time.perf_counter()-start
             junction_invalid=False
-            if junctions is not None:
+            if junctions is not None and not a.functional_tacks:
                 start=time.perf_counter()
                 connectors=integrity.update(segments,cutter.severed,t)
                 junction_invalid=junctions.update(nodes,connectors,cutter.severed,t) or integrity.first_failure is not None

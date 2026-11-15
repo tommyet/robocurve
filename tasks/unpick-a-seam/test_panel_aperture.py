@@ -70,6 +70,15 @@ class ApertureTests(unittest.TestCase):
         row=self.geometry((-.00015,0,.00055))
         self.assertAlmostEqual(row['maximum_empty_aperture_m'],np.hypot(.00015,.00015))
 
+    def test_practical_panel_slip_still_has_a_bounded_junction(self):
+        shell=pair();poses=np.c_[shell['model']['centres'],np.tile((0.,0.,0.,1.),(2,1))]
+        poses[0,1]+=.002
+        self.assertTrue(measured_surface(shell,poses,geometry_aperture_m=.005,
+            require_edge_overlap=False)[1]['valid'])
+        poses[0,1]+=.004
+        self.assertFalse(measured_surface(shell,poses,geometry_aperture_m=.005,
+            require_edge_overlap=False)[1]['valid'])
+
     def test_passage_envelope_retains_warning_and_rejects_larger_hole(self):
         shell=pair();poses=np.c_[shell['model']['centres'],np.tile((0.,0.,0.,1.),(2,1))]
         poses[0,0]-=.00025

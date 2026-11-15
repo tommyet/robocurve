@@ -119,7 +119,7 @@ def main():
     p.add_argument('--regular-refined',action='store_true',help='Use the regular2.5mm cloth grid for every policy reset, preserving1.6mm seam width')
     p.add_argument('--pad-refined',action='store_true',help='Conforming1.25mm contact refinement at the two hem grips; unchanged material')
     p.add_argument('--no-turn-lift-diagnostic',action='store_true',help='380-action pickup with vertical lift and right release, preserving pinch orientation')
-    p.add_argument('--raised-support-diagnostic',action='store_true',help='Use an explicitly180mm laundry support and a measured lateral grasp; otherwise100mm')
+    p.add_argument('--raised-support-diagnostic',action='store_true',help='Use an explicitly155mm laundry support and a measured lateral grasp; otherwise100mm')
     p.add_argument('--continuous-pad-diagnostic',action='store_true',help='Reobserve the garment at action100 and target the continuous finger pads with ordinary joint commands')
     p.add_argument('--surface-contact-diagnostic',action='store_true',help='Native speculative cloth CCD and eight collision-pair updates; unchanged cloth material and thickness')
     p.add_argument('--contact-pinch-diagnostic',action='store_true',help='Ordinary jaw relief from measured pad penetration during the short cloth pickup; no attachments or state writes')
@@ -235,7 +235,7 @@ def main():
             'source_sha256':source_hashes,'versions':versions,'seed':args.seed,
             'control_hz':CONTROL_HZ,'requested_steps':args.steps,'completed_steps':0,
             'policy':('constant adapter-ready joint targets' if fixed_plan is None else 'frozen fixed joint trajectory')+'; no object/assessor feedback',
-            'instruction':draft['instruction'],'joint_feedback_from':args.joint_feedback_from,'state_assisted_grasp':args.state_assisted_grasp,'contact_refined':args.contact_refined,'regular_refined':args.regular_refined,'support_height_m':.18 if args.raised_support_diagnostic else .10,'solver_iterations':args.solver_iterations,'external_forces_once_diagnostic':args.external_forces_once_diagnostic}
+            'instruction':draft['instruction'],'joint_feedback_from':args.joint_feedback_from,'state_assisted_grasp':args.state_assisted_grasp,'contact_refined':args.contact_refined,'regular_refined':args.regular_refined,'support_height_m':.155 if args.raised_support_diagnostic else .10,'solver_iterations':args.solver_iterations,'external_forces_once_diagnostic':args.external_forces_once_diagnostic}
     report.update(pad_refined=args.pad_refined,no_turn_lift_diagnostic=args.no_turn_lift_diagnostic)
     if args.joint_feedback_from is not None:
         report['policy']='frozen joint reference with bounded right-arm PI from ordinary joint observations; no object/assessor feedback'
@@ -420,8 +420,15 @@ def main():
         from contact_pinch import ContactPinch
         pinch=ContactPinch() if args.contact_pinch_diagnostic else None
         from scripted_clip import PegMouthServo
-        clip_window=fixed_plan.get('clip_servo_window',[820,880]) if fixed_plan is not None else [820,880]
-        clip_servo=PegMouthServo(start=clip_window[0],end=clip_window[1],functional_jaws=args.functional_pegs) if args.state_assisted_clip else None
+        clip_servos=[]
+        if args.state_assisted_clip:
+            configurations=fixed_plan.get('clip_servos') or [dict(
+                window=fixed_plan.get('clip_servo_window',[820,880]),peg='left_peg')]
+            for config in configurations:
+                window=config['window']
+                clip_servos.append((config['peg'],PegMouthServo(start=window[0],end=window[1],
+                    target=config.get('target',(.52,.115,1.09)),side=config.get('side','right'),
+                    align_y=config.get('align_y',False),functional_jaws=args.functional_pegs)))
         report['joint_tracking_parameters']={k:getattr(tracking,k) for k in ('kp','ki','limit','slew')}
         active_action=ready.copy();reference_action=ready.copy();requested_action=ready.copy()
         def arr(value):
@@ -518,11 +525,11 @@ def main():
                         reference_action[joint]=pinch.action(side,reference_action[joint],observed[joint],
                             cloth_nodes,poses,step,release=releasing)
                     report['contact_pinch_feedback']=pinch.records
-                if clip_servo is not None:
+                for peg_name,clip_servo in clip_servos:
                     from arena_props import peg_state
-                    body_poses=peg_state(emb._env,'left_peg').body_poses if clip_servo.start<step<=clip_servo.end+1 else None
+                    body_poses=peg_state(emb._env,peg_name).body_poses if clip_servo.start<step<=clip_servo.end+1 else None
                     reference_action=clip_servo.action(step,reference_action,observed,body_poses)
-                    report['peg_alignment']=clip_servo.records
+                    report.setdefault('peg_alignments',{})[peg_name]=clip_servo.records
                 requested_action=tracking.action(reference_action,observed,enabled=args.joint_feedback_from is not None and step>args.joint_feedback_from)
                 bounded=np.clip(requested_action,emb._low,emb._high)
                 active_action=active_action+np.clip(bounded-active_action,-delta_limit,delta_limit)

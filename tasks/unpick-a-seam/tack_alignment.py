@@ -21,6 +21,11 @@ class TackAlignment:
             if closed[index]:self.frozen[index]=measured-self.reference[index]
             wanted=self.frozen.get(index,np.zeros(3))
             if np.linalg.norm(wanted)>.012:raise RuntimeError('Stitch moved outside the supported sewing window')
+            if not closed[index]:
+                # Once actual blade contact has opened the tack, withdraw
+                # normal to the canvas before continuing the lateral return.
+                # This is demo feedback through ordinary robot targets only.
+                wanted=wanted+np.array((-.006,0.,0.))
         self.offset+=np.clip((wanted-self.offset)*.2,-.0003,.0003)
         if step%20==0:self.records.append(dict(step=step,stitch=index,translation_m=self.offset.tolist()))
         return np.asarray(position)+self.offset

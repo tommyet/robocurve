@@ -58,7 +58,7 @@ def package_versions():
     return values
 
 
-def native_audit(stage,cloth_names,peg_names,allow_pinch=False):
+def native_audit(stage,cloth_names,peg_names,allow_pinch=False,allow_collar=False):
     """Fail closed if a custom asset silently becomes a rigid/proxy object."""
     from pxr import UsdPhysics
     result={'cloth':{},'pegs':{},'attachments':[],'physics_scenes':[]}
@@ -89,7 +89,7 @@ def native_audit(stage,cloth_names,peg_names,allow_pinch=False):
                         'body0':[str(p) for p in prim.GetRelationship('physics:body0').GetTargets()],
                         'body1':[str(p) for p in prim.GetRelationship('physics:body1').GetTargets()]})
     expected_suffixes=tuple('/'+name+'_'+side+'_dry_pinch' for name in cloth_names for side in ('left','right'))
-    unexpected=[path for path in result['attachments'] if not (allow_pinch and path.endswith(expected_suffixes))]
+    unexpected=[path for path in result['attachments'] if not ((allow_pinch and path.endswith(expected_suffixes)) or (allow_collar and path.endswith('/tie_collar_static_friction')))]
     if unexpected:
         raise RuntimeError('Unexpected attachment in this attachment-free scene')
     for name in cloth_names:
@@ -122,6 +122,7 @@ def main():
     p.add_argument('--state-assisted-regrasp',action='store_true',help='Extend the verified handoff with a screened carry and measured ordinary near-tip regrasp')
     p.add_argument('--state-assisted-narrow',action='store_true',help='After the wide regrasp, clear the collar and measure a screened ordinary narrow-end pinch')
     p.add_argument('--surface-contact-diagnostic',action='store_true',help='Native speculative cloth contact and eight within-step collision-pair updates; no material or rest-gap changes')
+    p.add_argument('--collar-friction-approximation',action='store_true',help='Ideal static contact at the back of the collar; same model for all policies')
     p.add_argument('--pinch-approximation',action='store_true',help='Use the disclosed contact-gated dry pinch for both hands, identically for demo and Dream')
     p.add_argument('--judging-views',action='store_true',help='Record additional native960×720 front/rear assessor videos')
     p.add_argument('--out',type=Path)
@@ -301,6 +302,12 @@ def main():
             pinches=install(base,'tie')
             report['pinch_material']='Contact-gated native hard cloth-to-hand constraint; opening releases. Native two-way reaction; no calibrated force-limited slip.'
             report['native_scene_audit']=native_audit(stage,list(arena_cloth.SPECS),list(PEG_SPECS),allow_pinch=True)
+        collar_friction={}
+        if args.collar_friction_approximation:
+            from collar_friction import install as install_collar
+            collar_friction=install_collar(base)
+            report['collar_friction']=collar_friction
+            report['native_scene_audit']=native_audit(stage,list(arena_cloth.SPECS),list(PEG_SPECS),allow_pinch=args.pinch_approximation,allow_collar=True)
         report['initial_physics_step_count']=int(base.sim._physics_step_count)
         report['initial_snapshot']='After one raw reset and the declared five-second native cloth/peg settling period'
         (args.out/'meshes.json').write_text(json.dumps({name:{'rest':spec.mesh.rest.tolist(),

@@ -67,7 +67,10 @@ fixed constraints approximate a tightened clamp’s nonslip grip on the top edge
 minimum panel mass stabilizes small pieces. Closed tacks follow the adjacent
 fabric and connect the layers at the two original needle holes. Measured
 inward blade contact of at least 5 mN for one physics step releases those
-connectors and the tack becomes a flexible, open 12-link thread. Its numerical
+connectors and the tack becomes a flexible, open 12-link thread. Thread/fabric
+contact is omitted, including after cutting; tool and table contacts remain.
+This approximates loose fragments sliding free of the original needle holes,
+not the detailed removal of fibres. Its numerical
 mass is 0.175 g. A measured, enclosed handle grip enables an ideal static-friction
 constraint; opening the hand releases it. These rules apply to any policy.
 

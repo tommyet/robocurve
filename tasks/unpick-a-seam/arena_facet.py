@@ -98,9 +98,10 @@ def asset(spec):
 class FacetView:
     """Read-only surface adapter; preserve every-substep hinge-gap evidence."""
     count=1
-    def __init__(self,simulation,shell,*,geometry_aperture_m=None,boundary_tolerance_m=0.):
+    def __init__(self,simulation,shell,*,geometry_aperture_m=None,boundary_tolerance_m=0.,require_edge_overlap=True):
         self.shell=shell;self.view=simulation.create_rigid_body_view(shell['bodies'])
         self.geometry_aperture_m=geometry_aperture_m
+        self.require_edge_overlap=require_edge_overlap
         if not 0.<=boundary_tolerance_m<=.0001:raise ValueError('Boundary tolerance outside0–0.1mm')
         self.boundary_tolerance_m=boundary_tolerance_m
         paths=list(self.view.prim_paths)
@@ -121,7 +122,8 @@ class FacetView:
         import torch
         self.last_poses=self.poses()
         points,check=measured_surface(self.shell,self.last_poses,
-                                     geometry_aperture_m=self.geometry_aperture_m)
+                                     geometry_aperture_m=self.geometry_aperture_m,
+                                     require_edge_overlap=self.require_edge_overlap)
         self.last_check=check
         self.maximum_gap=max(self.maximum_gap,check['maximum_hinge_endpoint_gap_m'])
         if check['legacy_endpoint_warning'] and self.first_endpoint_warning is None:

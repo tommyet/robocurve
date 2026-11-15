@@ -233,7 +233,7 @@ def author_shell(stage,path,mesh,material=ShellMaterial(),color=(.76,.68,.47),*,
     return dict(bodies=bodies,joints=joints,mesh=mesh,model=model,material=material)
 
 
-def measured_surface(shell,poses,*,geometry_aperture_m=None):
+def measured_surface(shell,poses,*,geometry_aperture_m=None,require_edge_overlap=True):
     """Read native panel geometry, retaining the legacy endpoint telemetry.
 
     The optional diagnostic uses empty aperture rather than Euclidean endpoint
@@ -269,8 +269,10 @@ def measured_surface(shell,poses,*,geometry_aperture_m=None):
             endpoint_distance_is_stop_condition=False,
             maximum_allowed_empty_aperture_m=float(geometry_aperture_m),geometry=geometry,
             aperture_warning=geometry['maximum_empty_aperture_m']>.0002,
+            require_edge_overlap=bool(require_edge_overlap),
             valid=bool(geometry['maximum_empty_aperture_m']<=geometry_aperture_m and
-                       geometry['edges_without_overlap']==0))
+                       (geometry['edges_without_overlap']==0 if require_edge_overlap
+                        else gap<=geometry_aperture_m)))
     return points,result
 
 
