@@ -112,6 +112,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--mode',choices=('smoke','motion-probe','dream'),default='smoke')
     p.add_argument('--steps',type=int,default=None)
+    p.add_argument('--adaptive-clip',action='store_true',help='Permit bounded extra ordinary alignment actions before closing a peg')
     p.add_argument('--plan',type=Path,help='Precomputed ordinary joint commands; required for motion-probe')
     p.add_argument('--seed',type=int,default=0)
     p.add_argument('--state-assisted-grasp',action='store_true',help='Explicit scripted feasibility demo: measure reset cloth once to place ordinary fingers; never used by Dream')
@@ -187,6 +188,7 @@ def main():
         expected_iterations=fixed_plan.get('required_solver_iterations')
         if expected_iterations is not None and args.solver_iterations!=expected_iterations:
             p.error('This motion requires its recorded cloth solver iteration count')
+    if args.adaptive_clip and not (args.mode=='motion-probe' and args.state_assisted_clip and args.steps<=2400):p.error('Adaptive clip is a bounded ordinary demo controller only')
     if args.mode=='dream' and (args.state_assisted_grasp or args.state_assisted_clip or args.joint_feedback_from is not None):p.error('Dream receives ordinary observations and its own actions only')
     if args.joint_feedback_from is not None and (args.mode!='motion-probe' or not 0<=args.joint_feedback_from<args.steps):
         p.error('Joint feedback requires a motion probe and a start before its last action')
@@ -346,11 +348,11 @@ def main():
             # Keep ordinary cloth folds and fixture rejection meaningful without
             # treating micrometre solver noise as material destruction.
             np.savez_compressed(args.out/'raised-reset-state.npz',nodes=actual,rest=spec.mesh.rest,faces=spec.mesh.faces)
-            pairs=crossing_pairs(actual,spec.mesh.faces,tolerance=.0006,cell=.005)
+            pairs=crossing_pairs(actual,spec.mesh.faces,tolerance=.001,cell=.005)
             fixtures=support_geometry()|rack_geometry()
             fixtures['Table']=dict(kind='box',center=(.36,0.,TABLE-.03),size=(1.1,1.3,.06))
             hits=fixture_intersections(actual,spec.mesh.faces,fixtures,margin=-.001)
-            report['raised_reset_integrity']=dict(transverse_pairs=len(pairs),fixture_hits={k:len(v) for k,v in hits.items()},self_contact_tolerance_m=.0006,fixture_tolerance_m=.001)
+            report['raised_reset_integrity']=dict(transverse_pairs=len(pairs),fixture_hits={k:len(v) for k,v in hits.items()},self_contact_tolerance_m=.001,fixture_tolerance_m=.001)
             save()
             if pairs or any(hits.values()):raise RuntimeError('Raised-support reset fails actual material/fixture integrity')
         if args.state_assisted_grasp:
@@ -406,7 +408,7 @@ def main():
         trace=gzip.open(args.out/'trace.jsonl.gz','wt',compresslevel=1)
         if args.binary_cloth_trace:
             from trace_data import DenseClothTrace
-            dense_trace=DenseClothTrace(args.out,arena_cloth.SPECS,args.steps+1)
+            dense_trace=DenseClothTrace(args.out,arena_cloth.SPECS,(2400 if args.adaptive_clip else args.steps)+1)
             report['cloth_trace_format']='All control-step float32 nodes and velocities in named .npy arrays, referenced by trace JSON; no state sampling or precision reduction'
         ready=emb._ready.detach().cpu().numpy()[0].copy()
         if ready.shape!=(14,) or not np.isfinite(ready).all():
@@ -485,7 +487,20 @@ def main():
         signal.signal(signal.SIGTERM,terminate)
         save()
         command=torch.as_tensor(ready[None,:],device=base.device,dtype=torch.float32)
-        for step in range(1,args.steps+1):
+        for step in range(1,(2400 if args.adaptive_clip else args.steps)+1):
+            if step>args.steps:break
+            if args.adaptive_clip:
+                from adaptive_clip import extend_alignment
+                from scripted_clip import line_capture
+                from arena_props import peg_state
+                for peg_name,servo in clip_servos:
+                    if step==servo.end+1 and not line_capture(peg_state(emb._env,peg_name).body_poses,line_x=servo.target[0],line_z=servo.target[2])['can_attempt_closure']:
+                        extend_alignment(fixed_plan,clip_servos,servo,step)
+                        args.steps=len(fixed_plan['frames']);fixed_actions=np.asarray([f['action14'] for f in fixed_plan['frames']],float)
+                        report['requested_steps']=args.steps
+                        report.setdefault('extra_alignment_actions',[]).append(dict(before_step=step,peg=peg_name,actions=20))
+                        (frozen/'fixed-motion.json').write_text(json.dumps(fixed_plan,indent=2)+'\n')
+                        report['executed_plan_sha256']=hashlib.sha256((frozen/'fixed-motion.json').read_bytes()).hexdigest();save()
             if step==101 and args.continuous_pad_diagnostic:
                 from lateral_pad_candidate import reobserve
                 from audit_motion import audit

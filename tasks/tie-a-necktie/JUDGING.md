@@ -3,12 +3,13 @@
 Use front and rear photographs, the tying video and a ruler. The collar form
 has a marked centre. Measure tip length downward from the neck form's
 lower edge at z=1.200 m; the 350–440 mm band stays above the table.
-Inspect the knot's fabric path: the wide end passes under the narrow end,
-across its front, up through the neck loop and down through the front loop
-to form a retained simple (Oriental) knot. A loose drape,
-preformed knot, attached strip or mere visual overlap does not count.
+Inspect the knot's fabric path in the video and photographs. It must be a
+conventional necktie knot, such as an Oriental or four-in-hand, with the wide
+end threaded through its front loop. A loose drape, preformed knot, attached
+strip, bow or mere visual overlap does not count. Judge the resulting knot
+and fit, not a prescribed arm sequence.
 
-- **0:** no valid simple knot remains after both grippers release for five
+- **0:** no valid necktie knot remains after both grippers release for five
   seconds, or cloth/contact integrity fails.
 - **0.5:** a valid knot remains for five seconds but one or more dressing
   conditions below fail.

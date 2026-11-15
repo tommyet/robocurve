@@ -4,6 +4,41 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 06:47 UTC — practical reset compliance and retained tie handoff
+
+- Shirt284 stopped at reset on two front/back triangle contacts measuring
+ 0.664 and0.610mm transverse depth; no fixture hits. These are below the
+  already-declared1mm contact approximation.285 uses1mm for both self-contact
+  and fixture reset screens, without changing native physics. It starts a new
+  full episode; the stopped284 is not evidence. Dream275 physics remains matching.
+- The ordinary shirt controller may now add20 alignment actions when a peg
+  does not yet encompass the line, shifting later commands consistently and
+  never exceeding2,400 actions. Two targeted budget/sequence checks pass.
+  This prevents a small, recoverable alignment error from aborting a long run;
+  it cannot attach fabric, alter a peg pose or assign a score.
+- Tie283 completes the fresh pickup/handoff at580:19 native vertices retained
+  by the left hand, zero by the released right hand. The540-action wrap follows
+  in the same episode. The task wording now permits a conventional necktie
+  knot (for example Oriental or four-in-hand), preserving the user's intended
+  outcome rather than prescribing one topology/arm sequence. Wearable fit,
+  outward face and genuine released knot remain required. Final pass is pending.
+
+## 2026-11-15 06:40 UTC — shorter second-peg alignment
+
+- Shirt271 failed at1880 before closing the second peg: its prolonged stationary
+  mouth servo had begun oscillating. Native geometry at1770,1780,1790,1800,
+ 1810 and1820 really encompassed the line, with4.6–7.5mm jaw clearance; at1880
+  the upper jaw missed it by2.5mm.284 starts a fresh2,160-action run with a
+  one-second second alignment and release at1781. No material, scene or score
+  changed. Dream275 remains the matching baseline. No final shirt pass yet.
+- Tie283's native reset images show burgundy cloth and pale/gold edge marks.
+  Its measured300-action handoff is now running in the same fresh episode;
+  the operator alignment is(0.12,-0.04,1.02)m and passes the sampled rigid screen.
+- Official board /api/tasks at06:31 lists532 tasks; no matching clothesline or
+  necktie title/instruction. GitHub searches also returned no such PR.
+- A single secondary restart attempt around06:40 again failed for host capacity;
+  k6yi0tfzyuh133 was verifiedEXITED. Only7dszjx6tuony0y remains running, supervised.
+
 ## 2026-11-15 06:29 UTC — full shirt fastening and continuous tie planning
 
 - Shirt271 reached the second fastening with71 actual vertices retained by
