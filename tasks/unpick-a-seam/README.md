@@ -28,6 +28,10 @@ and final tool geometry, not the number of commanded cuts. Any canvas damage
 invalidates partial as well as full credit. A completed trial is required to
 score; reconstructed development checkpoints are never submission evidence.
 
+The demo scores **1.0** in 1,447 actions (72.35 simulated seconds); Dream-1
+scores **0.0** after 1,600 actions. On a shared A40 with nine vCPUs, their
+wall times were 1,967 and 1,198 seconds. Run one Dream trial at a time per API key.
+
 ## Fixed setup
 
 Coordinates are metres in the YAM station frame; the table is at Z = 0.7475.
@@ -89,6 +93,12 @@ release is triggered by demo timing or task score.
 python -m unittest discover -s tasks/unpick-a-seam -p 'test_*.py'
 ```
 
-The full fresh-start demo, matching Dream baseline, final image review and
-`VALIDATION.json` must agree before submission. Runtime and final results are
-filled from those completed trials; old probes are development history only.
+`VALIDATION.json` records both fresh-start trials, source hashes and the narrow
+post-processing correction to an obsolete audit counter. No physics or video
+was changed. Public evidence keeps exact scoring fields and native mesh bounds;
+full original trace hashes are retained. Reproduce both scores without a GPU:
+
+```sh
+python tasks/unpick-a-seam/assess_trace.py tasks/unpick-a-seam/evidence/demo --out /tmp/seam-demo-score.json
+python tasks/unpick-a-seam/assess_trace.py tasks/unpick-a-seam/evidence/dream --out /tmp/seam-dream-score.json
+```

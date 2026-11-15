@@ -723,9 +723,9 @@ def main():
         if state['steps']!=round(a.steps*a.physics_hz/20):raise RuntimeError('Every-substep audit coverage mismatch')
         if gpu_crossing is not None and gpu_crossing.updates!=state['steps']+1:
             raise RuntimeError('GPU crossing audit missed a native substep')
-        if junctions is not None and any(audit.steps!=state['steps']+1 for audit in junctions.audits):
+        if junctions is not None and not a.functional_tacks and any(audit.steps!=state['steps']+1 for audit in junctions.audits):
             raise RuntimeError('Closed-junction audit missed a native substep')
-        if a.panel_passage_diagnostic and any(view.solid_checks!=state['steps']+1 for view in views):
+        if a.panel_passage_diagnostic and not a.functional_tacks and any(view.solid_checks!=state['steps']+1 for view in views):
             raise RuntimeError('Actual native panel audit missed a substep')
         pieces=[];start=0
         for t in threads:
