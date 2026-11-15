@@ -4,6 +4,36 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 06:12 UTC — continuous tie demo and practical grip approximation
+
+- Shirt271 is the fresh 2,260-action demo with the 100 mm board, revised legs,
+  240 Hz physics and declared reset tolerance. It retains36/47 actual hem
+  vertices after pickup and is approaching the first fastening.275 is its
+  matching Dream trial (2 rows/request). No final shirt score yet.
+- Tie267/272/273/274/276 did not free the wide tip: a few neighbouring native
+  nodes remained trapped inside a rigid finger pad despite an open hand.
+  The first local normal-compression fix in278 did not suffice. Do not use
+  these as a knot demonstration or claim that transverse withdrawal solved it.
+- Candidate280 starts afresh with an explicit compliant-pad approximation:
+  minimum finger joint clearance9mm, contact-gated grip below10mm and release
+  above14mm. Closing seats only the enclosed patch normally, without changing
+  tangential targets; other cloth stays native. The same command/contact rule
+  applies to Dream. Four targeted contact tests pass; native validation is
+  underway, not yet established. All earlier checkpoints are diagnostics only.
+- To avoid replaying the long prefix for each control adjustment,280 records
+  one continuous fresh episode. After action580 it pauses simulation between
+  actions for bounded, data-only operator-planned joint commands. It never
+  reloads cloth, resets the episode or writes object poses. Each input state,
+  action segment and executed plan is saved with hashes. The limit remains
+ 3,600 actions; three control-boundary tests pass. Label any resulting demo
+  state-assisted/teleoperated honestly, and publish its ordinary commands.
+- Official DreamPolicy buffers only the first rows_per_request rows of each
+  generated chunk. Two rows increases request count fourfold versus its normal
+ 8-row setting. Future tie baseline uses8 and the SDK's ordinary per-request
+  timeout/recovery, under the whole-trial timeout and GPU watchdog. The custom
+ 12-expiry lifetime limit was unnecessary. This transport-only change does not
+  alter demo physics. Do not restart the active shirt baseline merely for this.
+
 ## 2026-11-15 05:42 UTC — practical reset checks and final hand clearance
 
 - Shirt266 passed the 240 Hz reset but its right hand met a support leg during

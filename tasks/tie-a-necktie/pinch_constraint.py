@@ -3,12 +3,22 @@
 PhysX surface cloth has dynamic but no static friction. This approximation
 holds a small patch already between nearly closed pads in the measured hand
 frame. It does not attract cloth, select task landmarks, or move unheld nodes.
-Opening the hand releases the patch. Native hard vertex attachments resolve
+Closing compresses the held patch into the actual finger gap, approximating
+soft pads; reopening does not pull it back into a pad. Opening releases it.
+Native hard vertex attachments resolve
 cloth and hand together; a >20 mm residual releases a failed binding. Finite
 static friction and force-limited grasp slip are not calibrated.
 The same material rule applies to every policy, including Dream.
 """
 import numpy as np
+
+# A small compliant-pad clearance avoids driving thin cloth into rigid pads.
+MIN_CLOTH_OPENING=.10  # 9 mm joint gap; identical for all policies
+
+def contact_command(action):
+    result=np.asarray(action,float).copy()
+    result[[6,13]]=np.maximum(result[[6,13]],MIN_CLOTH_OPENING)
+    return result
 
 
 class Pinch:
@@ -23,14 +33,14 @@ class Pinch:
     def update(self, points, velocities, tcp, rotation, gap, dt):
         self.time += dt
         p = np.asarray(points)
-        if gap > .008:
+        if gap > .014:
             if len(self.indices):
                 self.events.append(dict(time_s=self.time, event='opened', count=len(self.indices)))
             self.indices = np.empty(0, dtype=int)
             self.blocked_until_open = False
             return
         if not len(self.indices):
-            if gap > .004 or self.blocked_until_open:
+            if gap > .010 or self.blocked_until_open:
                 return
             local = (p - tcp) @ rotation
             inside = ((abs(local[:, 0]) <= gap / 2 + .0012) &
@@ -48,6 +58,13 @@ class Pinch:
             self.local = local[indices].copy()
             self.events.append(dict(time_s=self.time, event='pinched', count=len(indices),
                                     indices=indices.tolist(), gap_m=float(gap)))
+        # A grasp is first detected before the fingers finish closing. Keeping
+        # that original normal coordinate would bury cloth inside the moving
+        # pad. Approximate pad compression by reducing only the enclosed
+        # patch normal extent as the measured gap closes. Do not re-expand it
+        # into a retreating pad on opening. No tangential target changes occur.
+        half_gap=max(0.,gap/2-.0006)
+        self.local[:,0]=np.clip(self.local[:,0],-half_gap,half_gap)
         targets = self.local @ rotation.T + tcp
         correction = targets - p[self.indices]
         self.last_correction = float(np.max(np.linalg.norm(correction, axis=1)))
@@ -148,7 +165,7 @@ def install(base, cloth_name, *, recorded_contacts=None):
                 # already-held patch from the recorded contact state. Capture
                 # its current hand-local coordinates without moving any node.
                 restored=pinch.restore_indices;del pinch.restore_indices
-                if gap>.008 or np.any(restored<0) or np.any(restored>=len(points)):
+                if gap>.014 or np.any(restored<0) or np.any(restored>=len(points)):
                     raise ValueError('Recorded pinch is incompatible with the checkpoint')
                 pinch.indices=restored;pinch.local=(points[restored]-tcp)@R
                 pinch.events.append(dict(time_s=pinch.time,event='restored_recorded_contact',count=len(restored)))
@@ -156,10 +173,13 @@ def install(base, cloth_name, *, recorded_contacts=None):
             # untouched; the native vertex attachment enforces the constraint.
             pinch.update(points.copy(),np.zeros_like(points),tcp,R,gap,float(base.physics_dt))
             now=bool(len(pinch.indices))
-            if now and not was:
-                indices.Set(pinch.indices.tolist())
-                positions.Set(Vt.Vec3fArray((pinch.local+np.asarray(TCP_OFFSET)).tolist()))
-                enabled.Set(True)
+            if now:
+                if not was:indices.Set(pinch.indices.tolist())
+                local=pinch.local+np.asarray(TCP_OFFSET)
+                if not was or not np.array_equal(local,getattr(pinch,'bound_local',None)):
+                    positions.Set(Vt.Vec3fArray(local.tolist()))
+                    pinch.bound_local=local.copy()
+                if not was:enabled.Set(True)
             elif was and not now:enabled.Set(False)
         return result
     base.scene.write_data_to_sim=apply

@@ -24,7 +24,7 @@ the back face. Check the whole visible wide end for a half-twist; a correctly
 oriented tip alone is insufficient.
 
 The five-second hold must finish within the run limit. Pulling the knot apart
-after achieving it loses credit. Any torn cloth, mesh crossing, secret grasp
+after achieving it loses credit. Any torn cloth, visible ribbon passage through itself or a solid, secret grasp
 attachment, vertex animation or unsupported tightening invalidates the result.
 Unknown integrity must be reviewed before assigning a score. No centreline
 topology measure or edge-strain threshold substitutes for the flat-fabric and

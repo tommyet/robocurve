@@ -16,6 +16,16 @@ class TestPinch(unittest.TestCase):
         np.testing.assert_allclose(p[:9],original[:9]+[0,0,.005])
         np.testing.assert_array_equal(p[9],original[9])
 
+    def test_closing_does_not_bury_contact_patch_in_finger(self):
+        p=self.patch();p[:9,0]=-.0018;c=Pinch();v=np.zeros_like(p)
+        c.update(p,v,np.zeros(3),np.eye(3),.004,.004)
+        c.update(p,v,np.zeros(3),np.eye(3),0.,.004)
+        np.testing.assert_allclose(c.local[:,0],0.)
+        c.update(p,v,np.zeros(3),np.eye(3),.006,.004)
+        np.testing.assert_allclose(c.local[:,0],0.)
+        c.update(p,v,np.zeros(3),np.eye(3),.02,.004)
+        self.assertFalse(len(c.indices))
+
     def test_open_or_missed_grasp_cannot_attach(self):
         for tcp,gap in ((np.zeros(3),.02),(np.array([.02,0,0]),.002)):
             p=self.patch(); before=p.copy(); c=Pinch()

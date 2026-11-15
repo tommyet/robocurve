@@ -65,8 +65,6 @@ def recoverable_client_class(base, expired_error, request_audit, session_audit):
             except expired_error:
                 event['status']='session_expired_retryable'
                 session_audit['expiry_count']=session_audit.get('expiry_count',0)+1
-                if session_audit['expiry_count']>12:
-                    raise RuntimeError('Repeated Dream service expiry exceeded the bounded recovery allowance') from None
                 raise
             except Exception as error:
                 event.update(status='error',error_type=type(error).__name__);raise

@@ -126,6 +126,8 @@ def main():
     p.add_argument('--joint-tracking-from',type=int,help='Bounded bimanual joint feedback after this action; scripted demo only')
     p.add_argument('--pinch-approximation',action='store_true',help='Use the disclosed contact-gated dry pinch for both hands, identically for demo and Dream')
     p.add_argument('--judging-views',action='store_true',help='Record additional native960×720 front/rear assessor videos')
+    p.add_argument('--interactive-demo-start',type=int,default=2181,choices=(581,2181),help='First operator-planned ordinary action after the verified pickup prefix')
+    p.add_argument('--interactive-demo-dir',type=Path,help='Receive audited ordinary action segments after the complete knotting prefix; no scene writes')
     p.add_argument('--out',type=Path)
     p.add_argument('--check-only',action='store_true',help='Compile source and check JSON without loading a simulator')
     args=p.parse_args()
@@ -180,6 +182,8 @@ def main():
         from adult_handoff import RECEIVING_ROUTE_RELEASED
         if not RECEIVING_ROUTE_RELEASED:
             p.error('Receiving route is held until the forward-carried cloth is measured and its new approach is screened')
+    if args.interactive_demo_dir is not None and not (complete_handoff_plan and args.steps==3600):
+        p.error('Interactive demonstration requires the complete 3600-action-capacity motion plan')
     source_hashes=sources()
     if args.check_only:
         print(json.dumps({'status':'local_syntax_and_json_passed','source_sha256':source_hashes,
@@ -316,7 +320,7 @@ def main():
         if args.pinch_approximation:
             from pinch_constraint import install
             pinches=install(base,'tie')
-            report['pinch_material']='Contact-gated native hard cloth-to-hand constraint; opening releases. Native two-way reaction; no calibrated force-limited slip.'
+            report['pinch_material']='Contact-gated native cloth grip with 9 mm minimum joint clearance approximating compliant pads. Closing seats the enclosed patch; opening releases it. Same action/contact law for both policies; force-limited slip uncalibrated.'
             report['native_scene_audit']=native_audit(stage,list(arena_cloth.SPECS),list(PEG_SPECS),allow_pinch=True)
         collar_friction={}
         if args.collar_friction_approximation:
@@ -384,7 +388,7 @@ def main():
         if args.mode=='dream':
             from inspect_robots import Scene
             from dream_policy import make_policy
-            dream=make_policy(request_audit,session_audit,rows_per_request=2)
+            dream=make_policy(request_audit,session_audit,rows_per_request=8)
             dream.bind(emb.info);dream.reset(Scene(id='tie-a-necktie',instruction=draft['instruction']))
             report['dream_model']=dream.info.checkpoint
         report['status']='running'
@@ -397,7 +401,38 @@ def main():
         trackers=[JointTracking(side=side) for side in ('left','right')]
         report['joint_tracking_from']=args.joint_tracking_from
         receiving_check_steps=set()
+        next_control_step=args.interactive_demo_start if args.interactive_demo_dir is not None else None
+        if next_control_step is not None:
+            args.interactive_demo_dir.mkdir(parents=True,exist_ok=True)
+            report['policy']='Continuous state-assisted teleoperated demo; saved ordinary actions only, no mid-episode reset or material-state writes'
+            report['action_limit']=3600
         for step in range(1,args.steps+1):
+            if step>args.steps:break
+            if step==next_control_step:
+                from demo_control import wait as wait_control,validate as validate_control
+                native=arena_cloth.state(emb._env,'tie');mesh=arena_cloth.SPECS['tie'].mesh
+                request=args.interactive_demo_dir/f'state-{step:04d}.npz'
+                np.savez_compressed(request,nodes=native.nodes,velocities=native.velocities,rest=mesh.rest,faces=mesh.faces,
+                    action=np.asarray(emb._observation().state['joint_pos'],float),reference_action=fixed_actions[step-2])
+                report.update(status='awaiting_demo_actions',next_action=step);save()
+                payload=wait_control(args.interactive_demo_dir,step)
+                frames=validate_control(payload,step=step,previous=fixed_actions[step-2],low=emb._low,high=emb._high,
+                    limits=delta_limit,remaining=3601-step)
+                end=step-1+len(frames)
+                fixed_plan['frames'][step-1:end]=frames
+                next_control_step=None if payload['final'] else end+1
+                if payload['final']:
+                    args.steps=end;report['requested_steps']=end
+                    fixed_plan['frames']=fixed_plan['frames'][:end]
+                fixed_plan['action_count']=len(fixed_plan['frames'])
+                fixed_actions=np.asarray([f['action14'] for f in fixed_plan['frames']],float)
+                (frozen/f'operator-actions-{step:04d}.json').write_text(json.dumps(payload,indent=2)+'\n')
+                (frozen/'fixed-motion.json').write_text(json.dumps(fixed_plan,indent=2)+'\n')
+                report.setdefault('ordinary_control_segments',[]).append(dict(start_step=step,end_step=end,
+                    final=payload['final'],input_state_sha256=hashlib.sha256(request.read_bytes()).hexdigest(),
+                    actions_sha256=hashlib.sha256((frozen/f'operator-actions-{step:04d}.json').read_bytes()).hexdigest()))
+                report['executed_plan_sha256']=hashlib.sha256((frozen/'fixed-motion.json').read_bytes()).hexdigest()
+                report['status']='running';save()
             if args.state_assisted_handoff and step==281:
                 from adult_handoff import select_receiving_plan
                 native=arena_cloth.state(emb._env,'tie');mesh=arena_cloth.SPECS['tie'].mesh
@@ -543,7 +578,7 @@ def main():
                 if presence['obvious_empty_pinch']:
                     raise RuntimeError('Wide tip is outside the receiving finger region; physical transfer is not established')
             knot_stages={581:('wrap',540),1841:('cinch',340),2181:('release_tip',160),2341:('fit',600)}
-            if fixed_plan is not None and fixed_plan.get('continue_after_handoff') and step in knot_stages:
+            if fixed_plan is not None and fixed_plan.get('continue_after_handoff') and step in knot_stages and (args.interactive_demo_dir is None or step<args.interactive_demo_start):
                 from knot_demo import compile_segment
                 stage_name,count=knot_stages[step]
                 native=arena_cloth.state(emb._env,'tie');mesh=arena_cloth.SPECS['tie'].mesh
@@ -578,6 +613,10 @@ def main():
                 if requested.shape!=(14,) or not np.isfinite(requested).all():raise ValueError('Invalid Dream joint action')
                 bounded=np.clip(requested,emb._low,emb._high)
                 active_action=active_action+np.clip(bounded-active_action,-delta_limit,delta_limit)
+                command=torch.as_tensor(active_action[None,:],device=base.device,dtype=torch.float32)
+            if args.pinch_approximation:
+                from pinch_constraint import contact_command
+                active_action=contact_command(active_action)
                 command=torch.as_tensor(active_action[None,:],device=base.device,dtype=torch.float32)
             emb._env.step(command)
             emb._t=step/CONTROL_HZ

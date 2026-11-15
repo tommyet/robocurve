@@ -170,6 +170,9 @@ def main():
                 for tracker in trackers:action=tracker.action(action,observed,enabled=True)
                 action=np.clip(action,emb._low,emb._high)
                 action=active+np.clip(action-active,-limits,limits)
+            if args.pinch_approximation:
+                from pinch_constraint import contact_command
+                action=contact_command(action)
             active=action.copy()
             emb._env.step(torch.as_tensor(action[None],device=base.device,dtype=torch.float32))
             snapshot(step,action);report['completed_steps']=step
