@@ -4,6 +4,24 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 07:19 UTC — final cloth baseline and honest material limits
+
+- Shirt Dream275 completed all2,400 actions from the shared reset:1,184
+  requests, one session,4,449.6s wall time. Native front/rear images show both
+  peg mouths empty and the garment on the board. The evidence-bound score is
+ 0.0. The full1.58GB raw archive and submission video are saved locally under
+ `artifacts/final-five-2026-11-15`; no new GPU work is needed for that baseline.
+- Tie283 continues one fresh episode. The actual19-vertex left grasp survives
+  wrapping and passage through the neck loop through1,480 actions; the front
+  threading segment is now running. It is not yet a retained-knot demonstration.
+- Tie286 Dream initially rejected an unsupported CLI flag before any API call.
+  The corrected launch uses the source's8 rows/request and is running with the
+  same native material, compliant-pad grip and rear-collar contact as283.
+- Final shirt/tie fidelity statements explicitly say tearing is not modelled.
+  Their tests concern handling, fastening and knotting, not textile strength.
+  Visible material passage still invalidates a result; sub-millimetre solver
+  residuals alone are not a damage test. No final demo score exists yet.
+
 ## 2026-11-15 06:59 UTC — final scoring and replay packaging
 
 - Public shirt source checks20 tests, including three peg failure/release
