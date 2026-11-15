@@ -2264,3 +2264,97 @@ editing, merge both agents' findings, and commit/push the update with the work.
   repasses are implemented but not yet exercised after all158 cuts. Opening is
   still an unsealed diagnostic; collapse control is absent. GPU is idle; no
   extra run or upstream PR authorized by this checkpoint. Root retains artifacts.
+
+
+### 2026-11-15 — installed joint API and restored contact coupons010/011
+
+- Read-only installed-backend review confirms this runner uses Kit/Omni PhysX,
+  not the separate ovphysx embedding API. Installed PhysxManager calls
+  `omni.physx.simulate()`/`fetch_results()`; the shipped PhysicsJoint test
+  explicitly changes standalone revolute limits and retests physical stops
+  without reset (PhysicsJoint.py:863–947; physicsBase.py:201–225). Existing
+  coverage-gated USD lower/upper limit edits therefore have a supported live
+  update path; no articulation-only setter rewrite is indicated. This is source
+  evidence, not execution of that test or proof the task's particular release
+  occurred. Observe actual flap motion beyond sealed12deg with intact anchors
+  after158 cuts. Local detail: `/private/tmp/carton-full-integration/API_REVIEW.md`.
+- The raw contact reader is now exercised against native010/011 buffers:
+  `get_contact_data(dt=physics_dt)` gives magnitudes/points/normals/separations/
+  counts/starts; `get_friction_data(dt=physics_dt)` gives vectors/anchors/counts/
+  starts. Copy ALL normal arrays AND indices before the friction getter: their
+  count/start buffers alias. Read only each valid `[start:start+count]`, retain
+  explicit body/filter ordering, and fail explicitly on invalid/nonfinite data.
+  Contact-point/friction tracking and64 data slots per prim must be configured
+  before sensor construction. Carton native dt is1/240s, not spray's1/960s or
+  control dt1/20s; pass the ACTUAL physics dt. Both native sensor streams have
+  valid snapshots400/400 OLD and1000/1000 NEW, including nonempty normal and
+  friction slices. These validate this native extraction path, not a contact
+  material model. Preserve raw magnitudes×normals, friction vectors and their
+  respective positions without sign flips or assumed torque/COP. Sensor mean
+  contact position is arithmetic mean, not center of pressure. At20Hz these
+  record the last native-substep buffer, not all intervening contacts.
+- Matched coupons restore actual recorded00922.50s panel/cutter/arm/finger poses
+  ONCE, zero velocities, hold the recorded ordinary14D command for at least2s,
+  and require five quiet frames with opposing cutter contacts. Fresh tool-in-hand
+  transform is measured after hold; no G0/grasp weld is injected. This synthetic
+  pose-only start does not restore full dynamic history, is explicitly unscored
+  and media-ineligible, and cannot demonstrate a fresh task. Both audited native
+  captures contain all31 actual owners, start0.05s, and preserve sealed hinges:
+  OLD010400 rows/20s, NEW0111000 rows/50s; neither completed orientation route.
+  Local captures `/private/tmp/carton-coupon010-old-weak` and
+  `/private/tmp/carton-coupon011-new-weak` include raw contacts and restore proofs.
+  Trace SHA256 OLD b8dfc99b9906fdaa250f92d367e58b23e667c6d84359e9ee4f688bc2b4f387a0;
+  NEW a476a1902ee42d3453331487597a56fad4265a006347357c33bc27eb9dc2a110.
+- Actual009 after-contact grasp changed12.5669deg about almost tool−Y and
+ 15.091mm tip offset relative to coherent7.05s pickup. Mixing pre-action
+  robot_control with post-step cutter poses fabricates offsets: derive G/off
+  from SAME post-step native_hands and cutter_pose. Native/FK TCP agree within
+ 0.45um in checked009 snapshots. At92.9s front_orient hit q4 lower−1.69297004rad
+  with9.532mm IK error; actual q4−1.691446rad. A finite multiseed/yaw search did
+  not recover that slipped-grasp route; this is not a global-unreachability proof.
+  Counterfactual retained-initial-G0 original route passes803 IK samples with
+  central staging BEFORE repass yaw (direct corner repass fails). Its corrected
+ 136-piece gripper/cutter geometry pass is frozen PRE-unlock only;23 critical
+ 315-piece arm poses are not a continuous full-arm sweep or retention proof.
+- Root-approved NEW route keeps weak−.011m per jaw (22mm commanded opening),
+  repositions high to cartonX+106.5mm, lowers toZ−1mm, cuts to−107mm, then lifts
+  vertically and uses original−90deg fold yaw. Exact218 nominal samples at two
+  actual panel states are nonpenetrating: cutter minimum0.264194mm, gripper
+ 10.772964mm; finite initial4mm/.06rad error cases minimum0.346128mm. Pair
+  contact-generation range is0.4mm (0.2mm per shape, rest0); these are INSIDE
+  that band, not skin-clear/1mm-buffer certificates. Ongoing6mm tracking and
+ 3mm bias envelopes are not geometry-proved. NEW phase SHA256
+ 92a2e1aee7fdb23dc58310a9fedc1d1328831c4e9465ed29da43c99e54c7d766;
+  exact IK input SHA2562923ec0aaba8430802b299d06257e8b814fb5a4f8f731a841645b4b8db7012df.
+- OLD010 safe hold retained initial grasp to0.0425deg/23.8um; original+120mm
+  lower then caused4.85deg/6.18mm drift by cut entry and5.82deg/7.39mm final.
+  Cutter/east-bottom contacts appeared351 rows (peak2.62N, minimum separation
+  −91.9um); east-wall contacts27 rows (peak3.47N). NEW011 improved but did NOT
+  preserve G0: lowering's actual transverse excursion−3.597mm contacted
+  south_bottom before4.6907deg/6.0444mm stable grasp drift. After50s its seam
+  cursor was only0.20515; actual tip[85.963,.459,−1.021]mm, tracking2.771mm.
+  No controller failure does not mean completed cut or safe grasp retention.
+- NEW011 actual40s/50s G/off, actual joint seed and current carton poses pass
+  remaining seam/lift and front orientation/cut, but FAIL front_lift/back_hover
+  at q4 lower bound (worst18.47mm IK residual); back_lift/repass staging reach
+ 8.513mm error. Same result with continuous actual-seam seed;19/152 endpoint
+  ±3mm corners fail. Each suffix has805 samples with current frame subdivision.
+  Do not reuse retained-G0 feasibility as proof this intermediate grasp can
+  finish. Local preflight report SHA256
+ 47616baf0c730633dde4e39f6be9e4f645ccb865b0c0390dbbb02825a63d8e9d.
+- Astra's bounded011 controller review identifies TWO concrete defects:
+  hover→lower resets learned WORLD I[−.800,−1.961,+.993]mm to0 and rebases nominal
+  start to actual pose, cancelling preload; first command FK jumps1.9634mm/
+ 0.44769deg. Nominal40mm/s smoothstep peaks60mm/s, reaching depth in0.5s while
+ 6mm tracking permits the observed cross-track excursion. Separately cutting
+  projects out along-track I, preserving inherited wrong-sign+1.629mm along bias:
+ 343/401 last20s rows exceed2.5mm tracking, median along error−2.539mm. Those401
+  last-substep snapshots contain no normal/friction points; they do NOT prove
+  all-substep contact-free motion. Proposed012: matching nominal hover endpoint/R
+  and WORLD I carry; exact previous14D first tick with no integration/advance;
+  lower peak10mm/s plus absolute0.65mm next-cut cross-track gate; full-vector
+  Ki0.5/s I,75um norm step and existing3mm component cap. Hardware, weak grip,
+  scoring and physical gates remain unchanged. These are PROPOSED/CPU-reviewed
+  (71 tests, Astra read-only core review19:35UTC), NOT native-proved improvements.
+  Review evidence `/private/tmp/astra-carton011-control-review.json`. Full158cuts,
+  cutter parking, same-episode opening and collapse remain undemonstrated.
