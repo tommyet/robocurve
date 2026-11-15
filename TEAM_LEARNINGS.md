@@ -2425,3 +2425,16 @@ editing, merge both agents' findings, and commit/push the update with the work.
   removeAWAYvetoANDzero-crossingclamp; normalerror-directedIrestorative.
   RetainKi2/Kd.05/toward-horizonfreeze/allbounds/governor/safety. Noextra
   frictionresetorstrongerDuntilthisdefinitebugfixed.
+
+- FINAL028PASSED537actions/no failure: prepress_completedtrue, E.225429mm
+  <=loaded022useful.291mm, no clippressstageexecuted. Oldfunctionalhandoff
+  convergedwithinexistingbudget. SpeculativeachievedreplanlegitimatebutNOT
+  NEEDEDNOW: helperstoppedandremovedunvalidatedscaffold; productionhashes
+  exactlyrestored028. Do notclaimreplanimplemented.
+- RootaddedUNSCOREDclip-press-probe usingLEFTREADY/validated028controller;
+  stopsafteractualrelease>=1.8mmfiveframesBEFOREpull. Independentpoststep
+  measuredconsecutiveframecountreported; no taskscore/mediaeligible. Native
+  clip029runningUNCHANGED028production (onlyharnessmodeexpanded).
+- Test-onlycleanupreconciledoldfixtureswithactual2mm3s/adaptiveclock/native
+  velocity/tabwitness/realhookfrontcontracts; no productionguardweakening.
+  FullCPU suiteALL107PASS9.118s; prior5failuresandonefixtureerrorresolved.

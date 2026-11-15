@@ -5,7 +5,7 @@ import unittest
 import numpy as np
 from yam_arena import ik
 from yam_arena.urdf import quat_xyzw_to_matrix
-from robot import ReleaseProbe
+from robot import ReleaseProbe,PREPRESS_DISTANCE,PREPRESS_DURATION
 from test_robot import environment
 from config import SERVICE,port
 from handoff_fixtures import CASES
@@ -13,13 +13,27 @@ from handoff_fixtures import CASES
 
 class FunctionalHandoffTests(unittest.TestCase):
  def test_mesh_error_uses_latched_pose_when_live_goal_drifts(self):
-  for phase,age in (('approach_above_clip',4.),('prepress_endpoint',.75)):
+  for phase,age in (('approach_above_clip',4.),('prepress_endpoint',PREPRESS_DURATION)):
    probe=ReleaseProbe(environment(),np.array(port(SERVICE)));probe.phase=phase
    measured=[probe.arm(s) for s in ('left','right')];plug=np.r_[port(SERVICE),0,0,0,1.]
    latched=np.array((.418,-.025,.980));rotation=probe.pressR
+   if phase=='prepress_endpoint':
+    live=plug[:3]+probe.local_contact+[0,0,.0041-PREPRESS_DISTANCE]-rotation@probe.point
+    reference,pe,re=ik.solve(live+[.0001,0,0],ik.matrix_to_quat_xyzw(rotation),measured[1][0],base_pos=(0,-.305,.75),iters=350,tol=1e-6)
+    self.assertLess(pe,1e-6)
+    latched,rotation=ik.tcp_pose(reference,(0,-.305,.75))
+    probe.press_joint_servo.latch(reference);probe.press_servo_stage='PREPRESS'
+    probe.right_native_joint_velocity=np.zeros(6)
+    measured[1]=(reference,np.array((-.028,-.028)),latched.copy(),rotation.copy())
+    probe.prepress_path={'clock':PREPRESS_DURATION,'reference':reference.copy(),
+                        'start':(latched+[0,0,PREPRESS_DISTANCE],rotation),'end':(latched,rotation),'target':latched.copy()}
+    self.assertGreater(np.linalg.norm(latched-live),0.)
+    self.assertLess(np.linalg.norm(latched-live),.0002)
    targets=(measured[0][2],measured[0][3],.1,measured[1][2],measured[1][3],.6)
-   with patch.object(probe,'stationary_press_correction',return_value=(latched,rotation)),patch.object(probe,'press_endpoint_ready',return_value=False) as ready:
+   safe={'rigid_gap_m':.01,'other_hand_gap_m':.01,'rotation_chord_bound_m':0.}
+   with patch.object(probe,'stationary_press_correction',return_value=(latched,rotation)),patch.object(probe,'rigid_motion_certificate',return_value=safe),patch.object(probe,'press_endpoint_ready',return_value=False) as ready:
     probe.release_targets(age,age,phase,plug,np.eye(3),0.,measured,targets)
+   self.assertIsNone(probe.failure)
    np.testing.assert_array_equal(ready.call_args.args[1],latched)
 
  def fixture(self,name='safe020'):
