@@ -2236,3 +2236,25 @@ editing, merge both agents' findings, and commit/push the update with the work.
   physics/scoring/effort limits. Root rerun passes 25 tests in 0.672s, including
   ramp release/rate/finite-input regressions. Full sequence worst scheduled
   duration 84.2s is within120s; native tracking/contact remains unverified.
+
+### 2026-11-15 — retained Nebius VM recovered; spray GPU validation resumed
+
+- Root, spray branch7128335: cb0da2/q1wqpw5jx was inaccessible. Brev healthcheck
+  healthy; legacy workspace state STOPPING conflicted with environment STOPPED.
+  API task history showed previous start failed internal server error after
+  ~31min. Controlled stop succeeded; ordinary start rejected stale STOPPING.
+- Read public brev-cli source43f3834: list uses environment state; start does
+  legacy workspace localvalidation. Same authenticated PUT/workspaces/id/start
+  returned HTTP429 ResourceExhaustedError (capacity/quota/conflictingoperation
+  undetermined). New13:00:28UTC start task later succeeded; underlying state
+  stopping→pending. DirectSSH+L40S verified13:11:49UTC. Do not call the429
+  definitiveGPUcapacityproof or claim we know which backendoperation fixed it.
+- Retained disk159GBfree; desktopserviceactive. No replacementVM, reset, delete,
+  Dreamcall or supportmessage sent. Recovered Ethernet031 result:744steps,
+  controllerfailure stationaryholdlostrigid/interhandclearance; cliprelease
+  false. Ethernet remainspaused. Latestlocal recovery evidence/state in main
+  ignored artifacts/spray-retry and native-four-task-20261114/CURRENT_STATE.json.
+- Spray7128335uploaded to~/robotics-batch/spray-retry-7128335; diagnostic
+  spray-press-face-003 launched13:11:52UTC,700steps,uncappedstagepress forced
+  score0. First51native samples valid at2.5s,brace_enter,nofailure. No full
+  successclaimed; cappedstagefull stillrequired. Retrywatcherexitedafterlaunch.
