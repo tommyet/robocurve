@@ -4,6 +4,41 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 19:04 UTC — staple correction posted; Runpod costs reconciled
+
+- The user explicitly authorized the staple correction. Posted and verified
+  [the request for human review on PR2093](https://github.com/robocurve/benchmark-tasks/pull/2093#issuecomment-6899624821).
+  The bot created TK-LMHRHE and TK-75DZ4E on this same PR seven seconds apart,
+  then rejected the latter as a duplicate of the former. The PR remains closed;
+  posting the correction does not restore its status or guarantee acceptance.
+- Fresh author-filtered GitHub reads still find 12 PRs by tommyet and one by
+  Miyamura80: one accepted (overhand1153), three pending (cake1919, seam2113,
+  shirt2126), and nine final rejections, including the challenged staple2093.
+  Eito's sole submitted PR remains parcel1953, rejected as a duplicate. No new
+  decisions or additional submissions were found. Necktie is unsubmitted.
+- Recomputed every successful Pod session directly from its API `startedAt`,
+  locally recorded confirmed-stop timestamp, and hourly rate. Nine sessions
+  total 45.2119 GPU-hours and **$36.7106 estimated compute**, including $10.3565
+  for the last A40 session. Failed capacity requests are excluded. This is not
+  an invoice. Evidence: ignored `artifacts/pr-cost-status-2026-11-15/` contains
+  the per-Pod ledger, fresh inventory, billing-access response and PR snapshots.
+- Correction to earlier cumulative estimates: the initial $14.55 subtotal
+  included $0.42 of Dream and $0.17 of disk estimates. Later notes carried it
+  forward under a compute-only label, overstating Runpod compute by about $0.59
+  plus rounding. Use the new ledger, not the old $26.95 subtotal, for accounting.
+- All nine Pods are EXITED in the complete inventory at 19:03:37 UTC. Each has
+  a 100 GB container disk and no persistent mounts; network volumes are empty.
+  At the [published container-disk price](https://docs.runpod.io/pods/pricing)
+  of $0.10/GB/month, those running hours add roughly $0.63 (30-day proration),
+  for approximately **$37.34 Runpod compute plus temporary storage**, excluding
+  Dream and any taxes/account adjustments. Container disks are not charged when
+  stopped. Earlier blanket statements that these disks remain retained were
+  inaccurate: container disks are temporary; local verified archives are the
+  retained evidence. No persistent storage charge is evidenced by this inventory.
+- A fresh billing read returned 403: the saved key still lacks `billing:read`.
+  Actual billed usage and remaining balance therefore remain unverified. No
+  compute was started for this status/cost check.
+
 ## 2026-11-15 17:01 UTC — GPU shutdown verified
 
 - Pod `7dszjx6tuony0y` is confirmed `EXITED`. A complete paginated inventory
