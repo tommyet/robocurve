@@ -291,6 +291,32 @@ class PressEndpointTests(unittest.TestCase):
    np.testing.assert_array_equal(probe.press_joint_servo.bias,before)
 
 class ReleaseGeometryGateTests(unittest.TestCase):
+ def test_only_certified_free_press_standoff_accepts_1p3mm_tracking_offset(self):
+  from unittest.mock import patch
+  for certificate in (False,True):
+   probe=ReleaseProbe(environment(),np.array(port(SERVICE)));probe.phase='prepare_press'
+   plug=np.r_[port(SERVICE),0,0,0,1.];measured=[probe.arm(s) for s in ('left','right')]
+   above=plug[:3]+probe.local_contact+[0,0,.0041]-probe.pressR@probe.point
+   far=above+[-.040,0,.025];probe.press_start=(far.copy(),probe.pressR)
+   measured[1]=(measured[1][0],np.array((-.028,-.028)),far+[.00074,0,-.00107],probe.pressR)
+   targets=(measured[0][2],measured[0][3],GRIP,far,probe.pressR,PRESS_GRIP)
+   with patch.object(probe,'certify_press_path',return_value=certificate) as check:
+    for i in range(5):probe.release_targets(4.+i*.05,4.+i*.05,probe.phase,plug,np.eye(3),0.,measured,targets)
+   self.assertEqual(check.call_count,1)
+   self.assertEqual(probe.phase,'approach_above_clip' if certificate else 'prepare_press')
+   np.testing.assert_allclose(check.call_args.args[1],above)
+
+ def test_same_1p3mm_offset_does_not_pass_clip_contact_waypoint(self):
+  from unittest.mock import patch
+  probe=ReleaseProbe(environment(),np.array(port(SERVICE)));probe.phase='approach_above_clip'
+  plug=np.r_[port(SERVICE),0,0,0,1.];measured=[probe.arm(s) for s in ('left','right')]
+  above=plug[:3]+probe.local_contact+[0,0,.0041]-probe.pressR@probe.point
+  measured[1]=(measured[1][0],np.array((-.028,-.028)),above+[.0013,0,0],probe.pressR)
+  targets=(measured[0][2],measured[0][3],GRIP,above,probe.pressR,PRESS_GRIP)
+  with patch.object(probe,'certify_press_path') as check:
+   for i in range(5):probe.release_targets(4.+i*.05,4.+i*.05,probe.phase,plug,np.eye(3),0.,measured,targets)
+  self.assertEqual(probe.phase,'approach_above_clip');check.assert_not_called()
+
  def make_state(self,phase):
   probe=ReleaseProbe(environment(),np.array(port(SERVICE)));probe.phase=phase
   measured=[probe.arm(side) for side in ('left','right')]

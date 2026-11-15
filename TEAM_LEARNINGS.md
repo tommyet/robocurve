@@ -2286,3 +2286,9 @@ editing, merge both agents' findings, and commit/push the update with the work.
   Frozenbiasfollowswithdraw thenresetatfingerlift. All7clipangle>.5deg or
   XYmisclosure>.1mm abortafter2ssettle. Goaldrift>.2mmfails; no movingI.
   Presswaitbudget+8s, whole100scontrolcap unchanged. Native017running.
+
+- Release017 solverchanges preservegrasp; allclipconstraintsremainclear.
+  Failedfreeprepare_presswaypoint at27.5s: rightTCP1.305mmerror/.368deg
+  vs1mmgate, left22um andhandgap11.383mm. No endpointI reached.
+  Nextcandidateusesalreadyestablished2mm/2deg CERTIFIEDFREEgateonlyafter
+  freshactualnext-diagonalclearance; clipcontactgates unchanged. Pending.

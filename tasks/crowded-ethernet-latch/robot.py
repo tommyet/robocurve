@@ -351,7 +351,9 @@ class ReleaseProbe(GraspProbe):
 
         if phase=='prepare_press':
             p0,r0=self.press_start;s=ik.smoothstep(min(1.,age/4.));rp=p0+s*(far-p0);rr=ik.slerp_matrix(r0,rr,s);rg=1.+(PRESS_GRIP-1.)*s
-            self.press_handoff(self.settled(actual_right,(far,bodyR@self.pressR)) and jaw_ok and left_ok,
+            # This is a clear free-space standoff. Its wider settle gate still
+            # requires a fresh complete next-leg rigid/interhand certificate.
+            self.press_handoff(self.settled(actual_right,(far,bodyR@self.pressR),.002,2.) and jaw_ok and left_ok,
                                age,4.,'approach_above_clip',t,measured,above,bodyR@self.pressR)
         elif phase=='approach_above_clip':
             # A direct diagonal bypasses the loaded left jaw at the rear
