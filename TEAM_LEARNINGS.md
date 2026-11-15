@@ -2575,3 +2575,18 @@ editing, merge both agents' findings, and commit/push the update with the work.
   No new GPU work/cost for this documentation stage, Dream call, media upload
   or upstream PR. RTX reliability and optional extra cleanup remain separate
   from this measured task result; no additional native success is inferred.
+
+### 2026-11-15 — clock-only spray playback prepared, native proof pending
+
+- Standalone `recorded_demo.py` reads only observation state_time and replays
+  the unchanged029 actionlog (779 vectors, SHA18c5770b6db55699669193644402a8e3ccc033e656436fc910a9111e3ff0bd63).
+  The privileged teacher is used only offline to supply that disclosed dataset;
+  no teacher/telemetry/scene/native-object/FK import or fallback is in playback.
+- All recorded vectors are within pinned URDF bounds; original clipping was
+  identity.40 final hold ticks append at most2s/819 controls/40.95s total.
+  Clock skips/reversal/nonfinite/reset misuse and dataset tampering fail closed.
+- `run.py --policy recorded-demo` requires full stage/960Hz/baseline solver and
+  permits state-only no-video capture. Existing hardware/scorer/materials and
+ 120s limit are unchanged. No VM restart, GPU trial, Dream run, upload or PR
+  was performed. Teacher029's1.0 does NOT establish this policy's fresh-reset
+  feasibility; that score remains pending a newly authorized native run.
