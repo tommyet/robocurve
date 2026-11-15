@@ -37,9 +37,9 @@ def main():
     source_changes={}
     for name,expected in provenance['physics_source_sha256'].items():
         if Path(name).name!=name or hashlib.sha256((source/name).read_bytes()).hexdigest()!=expected:
-            if args.pinch_approximation and name=='adult_layout.py':
+            if args.pinch_approximation and name in ('adult_layout.py','pinch_constraint.py'):
                 source_changes[name]={'checkpoint':expected,'current':hashlib.sha256((source/name).read_bytes()).hexdigest(),
-                    'verification':'Actual rest mesh and faces must match exactly below; optional refinement is disabled'}
+                    'verification':'Unscored material/contact diagnostic; actual rest mesh and faces must match. A fresh full trial is required before any success claim.'}
             else:raise ValueError('Physical source differs from recorded checkpoint: '+name)
     with np.load(args.state,allow_pickle=False) as archive:
         state={key:archive[key] for key in archive.files}

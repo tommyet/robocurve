@@ -13,7 +13,7 @@ STAGES = {281: 'handoff', 581: 'wrap', 1121: 'neck', 1481: 'front',
 
 def compile_stage(stage, start, rest, nodes):
     if stage=='handoff':
-     plan=receive_tip(start,rest,nodes,clear_alignment=(.12,-.04,1.02))
+     plan=receive_tip(start,rest,nodes,clear_alignment=(.12,-.04,1.02),receiving_yaw=210.)
     elif stage in ('wrap','cinch','release_tip','fit'):
      plan=compile_segment(stage,start,rest,nodes)
     elif stage=='neck':
@@ -55,6 +55,8 @@ def compile_stage(stage, start, rest, nodes):
 def prefix_payload(step, start, rest, nodes, left_grip_count):
     if step not in STAGES:
         return None
+    if step>281 and left_grip_count<3:
+        raise RuntimeError('Wide-tip grip is missing; pause for an ordinary correction')
     plan = compile_stage(STAGES[step], start, rest, nodes)
     frames = plan['frames'][:140] if step == 2501 else plan['frames']
     return dict(schema='ordinary-demo-actions-v1', start_step=step,

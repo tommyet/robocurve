@@ -1,13 +1,16 @@
-"""Contact-gated ideal dry pinch for native flexible cloth.
+"""Geometric compliant pinch for native flexible cloth.
 
 PhysX surface cloth has dynamic but no static friction. This approximation
-holds a small patch already between nearly closed pads in the measured hand
+holds a small patch enclosed by closing pads in the measured hand
 frame. It does not attract cloth, select task landmarks, or move unheld nodes.
 Closing compresses the held patch into the actual finger gap, approximating
 soft pads; reopening does not pull it back into a pad. Opening releases it.
 Native hard vertex attachments resolve
 cloth and hand together; a >20 mm residual releases a failed binding. Finite
 static friction and force-limited grasp slip are not calibrated.
+Capture within a30mm gap approximates compliant pads retaining folded cloth
+while the rigid fingers finish closing. It is geometric, not a measured contact
+force or calibrated friction law. Opening beyond40mm releases the patch.
 The same material rule applies to every policy, including Dream.
 """
 import numpy as np
@@ -33,14 +36,14 @@ class Pinch:
     def update(self, points, velocities, tcp, rotation, gap, dt):
         self.time += dt
         p = np.asarray(points)
-        if gap > .016:
+        if gap > .040:
             if len(self.indices):
                 self.events.append(dict(time_s=self.time, event='opened', count=len(self.indices)))
             self.indices = np.empty(0, dtype=int)
             self.blocked_until_open = False
             return
         if not len(self.indices):
-            if gap > .012 or self.blocked_until_open:
+            if gap > .030 or self.blocked_until_open:
                 return
             local = (p - tcp) @ rotation
             inside = ((abs(local[:, 0]) <= gap / 2 + .0012) &
@@ -165,7 +168,7 @@ def install(base, cloth_name, *, recorded_contacts=None):
                 # already-held patch from the recorded contact state. Capture
                 # its current hand-local coordinates without moving any node.
                 restored=pinch.restore_indices;del pinch.restore_indices
-                if gap>.016 or np.any(restored<0) or np.any(restored>=len(points)):
+                if gap>.040 or np.any(restored<0) or np.any(restored>=len(points)):
                     raise ValueError('Recorded pinch is incompatible with the checkpoint')
                 pinch.indices=restored;pinch.local=(points[restored]-tcp)@R
                 pinch.events.append(dict(time_s=pinch.time,event='restored_recorded_contact',count=len(restored)))

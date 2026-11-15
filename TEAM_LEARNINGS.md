@@ -4,6 +4,66 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 11:33 UTC — review decisions and final tie contact test
+
+- Fresh GitHub reads show wheel PR #2091 closed as “Not accepted: final”:
+  the reviewer considers truing a wheel a specialist repair, outside broad
+  societal relatability and the jobs workforce threshold. Do not resubmit it
+  under a cosmetic category change. Cake #1919, seam #2113 and shirt #2126
+  remain open and waiting for review.
+- Staple #2093 was closed for duplicating TK-LMHRHE, although both TK-LMHRHE
+  and TK-75DZ4E were created on this one PR seven seconds apart. This is an
+  apparent ingestion error. A concise human-review correction is drafted;
+  user approval to send that message is pending. Do not create another PR.
+- Diagnostic295 captures material 460–480 mm with the compliant grip and
+  releases both hands successfully. It still leaves a loose loop: lifting the
+  outer fold is not proof of a wearable knot. Full demo296 continues from the
+  untied reset; matching Dream297 uses identical physical source. Testing
+  ordinary free-end tension before final collar fitting. No tie success claimed.
+- The public staging package has25 passing focused CPU tests. It remains
+  unsubmitted, without a claimed score or media ID, until complete evidence.
+
+## 2026-11-15 11:19 UTC — verify the simulator child exits
+
+- Signalling294's`timeout` wrapper did not stop the simulator child; it continued
+  to action641 and shared GPU capacity with295/296. Direct SIGTERM to child69669
+  produced`interrupted`, then`/proc/69669` disappeared within3seconds. The old
+  take is not final evidence. Verify both recorded status and actual child exit;
+  a successful signal call alone is not shutdown confirmation. Pod billing was
+  unchanged because all processes used the same already-runningA40.
+
+## 2026-11-15 11:13 UTC — retain enclosed folds while the pads close
+
+- Deep grasp diagnostic293 still missed: at a27.1mm finger gap,18 actual cloth
+  nodes (material460–485mm) remained enclosed; by20.8mm only one remained and
+  the fold was pushed beyond the fingertips before the old12mm capture band.
+  No grasp, fit or task success is claimed for293.
+- The disclosed geometric compliant-grip approximation now captures an enclosed
+  patch inside a closing30mm gap, seats it normally as the fingers finish closing,
+  and releases above40mm. Minimum joint clearance remains9.4mm. This is an
+  approximate padded grip, not calibrated contact forces. Both policies share it;
+  it selects no task landmark and cannot form or tighten a knot automatically.
+- All37 CPU checks pass, including missed-grasp, release and slip cases.295 is
+  the bounded diagnostic of grasp, fit and release;296 is the next fresh demo.
+  Superseded294 was stopped. No new Dream baseline has been called yet.
+
+## 2026-11-15 11:06 UTC — recover controller errors without discarding a trial
+
+- Covered-finger demo291 stopped at action280 because the measured receiving
+  wrist angle was unreachable. The runner now catches ordinary planner errors
+  at a saved boundary and waits for corrected ordinary commands, preserving the
+  continuous episode. Missing wide-tip grip also pauses before later stages.
+- A210-degree receiving yaw with the existing clear alignment is reachable on
+ 291's actual held tip; a20mm bite places more fabric between the pads. Fresh
+  demo294 uses this controller. No material or scoring change is involved.
+- Diagnostic292's shallow outer-fold grasp missed: closing the smooth cover
+  pushed the fabric beyond the fingertips; no lift/grasp success is claimed.
+ 293 tests a25mm-deep grasp before the same collar lift. The recorded failed
+  diagnostic and its arrays remain in`cover-fit-review` for comparison.
+- Finger covers remain the single physical-model change. A new matching Dream
+  run is required; the older288 baseline and its review were renamed with288
+  explicitly, so they cannot be accidentally finalized with the new demo.
+
 ## 2026-11-15 10:55 UTC — smooth finger covers resolve the tie release diagnostic
 
 - Operator: repository agent, six-task completion branch. Five task PRs remain

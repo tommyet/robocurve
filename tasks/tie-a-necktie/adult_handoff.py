@@ -51,17 +51,21 @@ def raise_for_transfer(start_action):
     return _compile(start_action,[(3.,'right',(.23,-.16,1.30),0.,yaw_rotation(30.),'bring held wide strip in front of collar for transfer','cartesian')])
 
 
-def receive_tip(start_action,rest,nodes,approach_tilt_degrees=0.,receiving_opening=1.,clear_alignment=None):
+def receive_tip(start_action,rest,nodes,approach_tilt_degrees=0.,receiving_opening=1.,clear_alignment=None,reverse_approach=False,receiving_yaw=None):
     from adult_motion import grasp_frame
     from cross_motion import yaw_rotation
     if receiving_opening!=1. or approach_tilt_degrees!=0.:
         raise ValueError('This released route uses a full opening and the measured material plane')
     grasp=grasp_frame(rest,nodes,longitudinal=.03,side='left')
     R=np.asarray(grasp['rotation'])
-    target=np.asarray(grasp['center_m'])+.010*R[:,2]
+    if reverse_approach:
+        R=R@np.diag((-1.,1.,-1.))
+    if receiving_yaw is not None:
+        R=yaw_rotation(float(receiving_yaw))
+    target=np.asarray(grasp['center_m'])+.020*R[:,2]
     pre=target-.090*R[:,2]
     align=np.array((.12,-.04,1.02)) if clear_alignment is None else np.asarray(clear_alignment,float)
-    grasp.update(rotation=R.tolist(),target_tcp_m=target.tolist(),desired_material_tcp_depth_m=-.010,
+    grasp.update(rotation=R.tolist(),target_tcp_m=target.tolist(),desired_material_tcp_depth_m=-.020,
         receiving_opening=1.,approach='Orient outside the wide edge, then enter along the finger axis')
     if not (.17<target[0]<.34 and -.27<target[1]<-.06 and .80<target[2]<1.02):
         raise ValueError('Measured wide tip lies outside the receiving workspace: '+repr(target.tolist()))

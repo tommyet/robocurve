@@ -326,7 +326,7 @@ def main():
         if args.pinch_approximation:
             from pinch_constraint import install
             pinches=install(base,'tie')
-            report['pinch_material']='Contact-gated native cloth grip with 9.4 mm minimum joint clearance approximating compliant pads. Enclosed folded fabric captures below 12 mm and releases above 16 mm. Closing seats the enclosed patch. Same action/contact law for both policies; force-limited slip uncalibrated.'
+            report['pinch_material']='Geometric compliant cloth grip with 9.4 mm minimum joint clearance. Enclosed cloth captures within a closing 30 mm gap and releases above 40 mm. Closing seats the enclosed patch. Same action/contact law for both policies; force-limited slip uncalibrated.'
             report['native_scene_audit']=native_audit(stage,list(arena_cloth.SPECS),list(PEG_SPECS),allow_pinch=True)
         collar_friction={}
         if args.collar_friction_approximation:
@@ -433,8 +433,15 @@ def main():
                 payload=None
                 if args.automatic_demo_prefix and not (args.interactive_demo_dir/f'actions-{step:04d}.json').exists():
                     from continuous_demo import prefix_payload
-                    payload=prefix_payload(step,fixed_actions[step-2],mesh.rest,native.nodes,
-                        len(pinches['left'].indices) if 'left' in pinches else 0)
+                    try:
+                        payload=prefix_payload(step,fixed_actions[step-2],mesh.rest,native.nodes,
+                            len(pinches['left'].indices) if 'left' in pinches else 0)
+                    except (ValueError,RuntimeError) as error:
+                        # Planning failure is recoverable while the native scene
+                        # remains paused. It must not discard a valid prefix.
+                        report.setdefault('planning_pauses',[]).append(dict(
+                            step=step,error_type=type(error).__name__,message=str(error)))
+                        save()
                     if payload is not None:
                         (args.interactive_demo_dir/f'actions-{step:04d}.json').write_text(json.dumps(payload,indent=2)+'\n')
                 if payload is None:
