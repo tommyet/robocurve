@@ -1,8 +1,8 @@
-"""Normal Dream adapter with an auditable, uninterrupted server episode.
+"""Normal Dream adapter with recorded server-session recovery.
 
 Credentials are resolved by dreamlabs-client itself from DREAM_API_KEY or its
 existing credential file (DREAM_CREDENTIALS / ~/.dreamlabs/credentials). They
-are never copied into run artifacts. A replaced episode is a failed execution.
+are never copied into run artifacts. The official adapter may recover expired server sessions; every recovery is recorded.
 """
 from __future__ import annotations
 
@@ -48,12 +48,38 @@ def continuous_client_class(base, expired_error, request_audit, session_audit):
     return ContinuousDreamClient
 
 
+def recoverable_client_class(base, expired_error, request_audit, session_audit):
+    """Keep the official SDK retry path, recording server-session recoveries."""
+    class AuditedDreamClient(base):
+        def get_action(self, *, commanded=None):
+            started=time.monotonic();before=self.session_id
+            event={'request':len(request_audit)+1};request_audit.append(event)
+            try:
+                reply=super().get_action(commanded=commanded)
+                after=self.session_id
+                seen=getattr(self,'_audit_seen_sessions',set())
+                if after is not None:seen.add(after)
+                self._audit_seen_sessions=seen;session_audit['session_count']=len(seen)
+                event.update(status='success',session_changed=before is not None and after!=before)
+                return reply
+            except expired_error:
+                event['status']='session_expired_retryable'
+                session_audit['expiry_count']=session_audit.get('expiry_count',0)+1
+                if session_audit['expiry_count']>12:
+                    raise RuntimeError('Repeated Dream service expiry exceeded the bounded recovery allowance') from None
+                raise
+            except Exception as error:
+                event.update(status='error',error_type=type(error).__name__);raise
+            finally:event['wall_seconds']=time.monotonic()-started
+    return AuditedDreamClient
+
+
 def make_policy(request_audit, session_audit, *, rows_per_request=8):
     import dream
     from inspect_robots_dream import DreamPolicy
     from inspect_robots_dream.session import DreamSession
     warnings.filterwarnings("ignore", category=dream.DreamSlowNetworkWarning)
-    client = continuous_client_class(dream.DreamClient, dream.DreamSessionExpired,
+    client = recoverable_client_class(dream.DreamClient, dream.DreamSessionExpired,
                                      request_audit, session_audit)
     return DreamPolicy(rows_per_request=rows_per_request,
                        session=DreamSession(make_client=client))

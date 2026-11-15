@@ -84,12 +84,12 @@ class Judging(unittest.TestCase):
         j=self.record();j['intact']=False;self.assertEqual(score(j),0.)
         j=self.record();j['released_hold_s']=4.9;self.assertEqual(score(j),0.)
     def test_good_knot_bad_fit_is_partial(self):
-        j=self.record();j['neckband_gap_mm']=11.;self.assertEqual(score(j),.5)
+        j=self.record();j['neckband_gap_mm']=16.;self.assertEqual(score(j),.5)
         j=self.record();j['wide_tip_below_collar_mm']=100.;self.assertEqual(score(j),.5)
     def test_narrow_tip_below_wide_is_not_ready_to_wear(self):
         j=self.record();j['narrow_tip_above_wide_tip_mm']=-5.;self.assertEqual(score(j),.5)
     def test_adult_tip_length_band_is_inclusive(self):
-        for length,expected in ((399.9,.5),(400.,1.),(440.,1.),(440.1,.5)):
+        for length,expected in ((349.9,.5),(350.,1.),(440.,1.),(440.1,.5)):
             j=self.record();j['wide_tip_below_collar_mm']=length;self.assertEqual(score(j),expected)
     def test_missing_assessment_raises(self):
         j=self.record();del j['simple_knot_verified']

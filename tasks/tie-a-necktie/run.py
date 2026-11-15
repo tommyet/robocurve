@@ -168,7 +168,10 @@ def main():
     if args.grip_refined and not args.adult_collar:p.error('Grip refinement requires the adult tie mesh')
     if not 0<=args.seed<2**32:
         p.error('Seed must be an unsigned 32-bit integer')
-    if args.state_assisted_grasp and (args.mode!='motion-probe' or not args.adult_collar or args.steps not in ((1180,) if args.state_assisted_narrow else (880,) if args.state_assisted_regrasp else (280,580) if args.state_assisted_handoff else (220,))):
+    complete_handoff_plan=bool(fixed_plan and fixed_plan.get('continue_after_handoff') and
+        args.state_assisted_handoff and not args.state_assisted_regrasp and 600<=args.steps<=3600)
+    if args.state_assisted_grasp and (args.mode!='motion-probe' or not args.adult_collar or
+            (not complete_handoff_plan and args.steps not in ((1180,) if args.state_assisted_narrow else (880,) if args.state_assisted_regrasp else (280,580) if args.state_assisted_handoff else (220,)))):
         p.error('Adult scripted pickup requires 220 actions; the transfer permits a 280-action held-pose diagnostic or 580 actions')
     if args.state_assisted_handoff and not args.state_assisted_grasp:p.error('Tip transfer requires the measured adult pickup prefix')
     if args.state_assisted_regrasp and not (args.state_assisted_handoff and args.surface_contact_diagnostic):p.error('Regrasp requires the validated surface-contact handoff')
@@ -539,6 +542,27 @@ def main():
                 save()
                 if presence['obvious_empty_pinch']:
                     raise RuntimeError('Wide tip is outside the receiving finger region; physical transfer is not established')
+            knot_stages={581:('wrap',540),1841:('cinch',340),2181:('fit',520)}
+            if fixed_plan is not None and fixed_plan.get('continue_after_handoff') and step in knot_stages:
+                from knot_demo import compile_segment
+                stage_name,count=knot_stages[step]
+                native=arena_cloth.state(emb._env,'tie');mesh=arena_cloth.SPECS['tie'].mesh
+                fragment=compile_segment(stage_name,fixed_actions[step-2],mesh.rest,native.nodes)
+                if len(fragment['frames'])!=count:raise RuntimeError('Knot stage length changed')
+                fixed_plan['frames'][step-1:step-1+count]=fragment['frames']
+                end=step-1+count
+                if end+20<=len(fixed_plan['frames']):
+                    a0=np.asarray(fragment['frames'][-1]['action14']);a1=np.asarray(fixed_plan['frames'][end+19]['action14'])
+                    for i in range(20):
+                        t=(i+1)/20;t=t*t*(3-2*t)
+                        fixed_plan['frames'][end+i]=dict(action14=(a0+t*(a1-a0)).tolist(),stage='smooth measured stage transition')
+                fixed_actions=np.asarray([f['action14'] for f in fixed_plan['frames']],float)
+                if np.any(fixed_actions<emb._low) or np.any(fixed_actions>emb._high):raise ValueError('Knot actions exceed joint bounds')
+                if np.any(abs(np.diff(fixed_actions,axis=0))>delta_limit*1.001):raise ValueError('Knot actions exceed ordinary action speeds')
+                (args.out/f'knot-{stage_name}-plan.json').write_text(json.dumps(fragment,indent=2)+'\n')
+                (frozen/'fixed-motion.json').write_text(json.dumps(fixed_plan,indent=2)+'\n')
+                report.setdefault('measured_knot_grasps',[]).append(dict(step=step,stage=stage_name,grasp=fragment['grasp']))
+                report['executed_plan_sha256']=hashlib.sha256((frozen/'fixed-motion.json').read_bytes()).hexdigest();save()
             if fixed_actions is not None:
                 reference=fixed_actions[step-1].copy()
                 if args.joint_tracking_from is not None and step>args.joint_tracking_from:

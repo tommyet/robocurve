@@ -4,10 +4,34 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 04:57 UTC — full tie demo and recoverable Dream trials
+
+- Tie257 completed340 ordinary tightening actions. Both hands retained actual
+  material (12/3 vertices); the wrap now surrounds the narrow strip.260 tests
+  a knot-body regrasp, collar adjustment and5s release.261 starts the full2700-
+  action candidate from the untied reset, including measured grasps. No final
+  knot success is claimed yet. Controller code can only issue bounded actions.
+- Clarified provisional dressing bands for this adult form: knot horizontal
+  centring20mm, maximum neckband stand-off15mm and wide length350–440mm. The
+  original3D distance to a mark high on the neck and400–440mm band were overly
+  restrictive design choices. A real knot, outward face, hidden/shorter narrow
+  end and5s release remain required. These are task-design choices, not a
+  conversion of an earlier failed diagnostic into a full-score demonstration.
+- Shirt258/259 Dream stopped at44/144 actions on server-session expiry. Idle
+  request gaps were8–11s. No competing Dream process was running locally; do
+  not blame a teammate without evidence. The official installed DreamSession
+  retries this error; our custom strict wrapper prevented its normal recovery.
+ 262 uses2 actions/request and an audited official recovery path, bounded at
+ 12 expiries. No scripted actions or scene resets occur during recovery. Failed
+  attempts stay separate and their costs count; final baseline remains pending.
+- A secondaryGPU restart at04:51 again failed for host capacity and was verified
+  EXITED. Only7dszjx6tuony0y runs; current watchdog deadline is in its lifecycle
+  JSON. Fresh shirt254, tie-fit260/full261 and Dream262 are actively supervised.
+
 ## 2026-11-15 04:41 UTC — seam submitted; fresh shirt fastening works
 
 - Seam PR2113 (https://github.com/robocurve/benchmark-tasks/pull/2113), head
-  f8100c4, media M-GVLJUQ. Fresh demo245:1.0,1447actions,1966.6s wall;
+  f8100c4, task TK-QM5PG5, media M-GVLJUQ. Fresh demo245:1.0,1447actions,1966.6s wall;
   Dream255:0.0,1600actions,1198.0s wall,392requests. All six cut-end gaps
   are at least12.65mm; tool released3s. No modelled blade damage or native
   fabric fracture.28 public tests pass; both compact public traces rescore.

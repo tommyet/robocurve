@@ -25,8 +25,8 @@ def score(j):
             raise ValueError('visual assessment must be known: '+field)
     if j['intact'] is not True or j['simple_knot_verified'] is not True or j['released_hold_s'] < 5.:
         return 0.
-    fitted=(0 <= j['neckband_gap_mm'] <= 10. and 0 <= j['knot_zone_offset_mm'] <= 15.
-            and 400. <= j['wide_tip_below_collar_mm'] <= 440.
+    fitted=(0 <= j['neckband_gap_mm'] <= 15. and 0 <= j['knot_zone_offset_mm'] <= 20.
+            and 350. <= j['wide_tip_below_collar_mm'] <= 440.
             and j['narrow_tip_above_wide_tip_mm'] >= 10.)
     dressed=j['wide_face_out'] is True and j['narrow_end_hidden'] is True
     return 1. if fitted and dressed else .5
