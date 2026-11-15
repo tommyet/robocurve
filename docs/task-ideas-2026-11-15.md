@@ -10,6 +10,27 @@ RoboDojo and relevant primary research. A missing match is not a guarantee of
 novelty. Recheck the live board and ownership immediately before development.
 The feasibility assessments below are engineering judgments, not test results.
 
+## Shortlisted for later
+
+- **Help fasten a bracelet — selected by the user on 15 November.** Keep this
+  on the development shortlist; this selection is not authorization to build
+  or spend compute yet. Fit and fasten a functional, real-size clasp on a
+  flexible bracelet around a wrist form, then release it.
+- **Wrap a present — stronger conditional candidate after the follow-up.**
+  The user's intended task is folding paper around a box, holding the folds
+  and taping them closed. BEHAVIOR's published goal does not require those
+  closure mechanics. See the [follow-up comparison](task-ideas-followup-2026-11-15.md).
+- **Genuine charging-cable knot removal — research reserve.** More promising
+  than necklace untangling for the current grippers, but not a new research
+  problem and not yet demonstrated in our simulator.
+- **Rock a pram — conditional backup.** Keep the physical dynamics realistic;
+  extra repetitions or arbitrary timing constraints do not establish novelty.
+
+The follow-up also screens waxing, trap setting, suitcase packing, tattooing
+and cocktail shaking. None has been authorized for implementation by this
+research request. The recommendations below record the earlier screen;
+the recommended order has been updated using the follow-up findings.
+
 ## Findings
 
 | Idea | Existing coverage | Viability and decision |
@@ -33,12 +54,13 @@ The feasibility assessments below are engineering judgments, not test results.
    a clear end state and an apparent gap. Before spending, choose a real clasp
    whose working surfaces are accessible to YAM fingers. Score closure and
    retention on the wrist form after release, with an intact band and clasp.
-2. **Pram rocking:** reserve option with simpler mechanics. Establish why the
+2. **Gift wrapping:** a stronger conditional candidate after comparing the
+   actual BEHAVIOR goal. Focus on folding and securing a loose sheet around
+   a box, with the wrapper retained after release. Existing carton taping is
+   adjacent accepted work, so tape alone is not the distinction.
+3. **Pram rocking:** reserve option with simpler mechanics. Establish why the
    controlled motion is a worthwhile task, using observable travel, timing,
    upright retention and stopping criteria. No claim about infant response.
-3. **Gift wrapping:** retain only if the proposed folds and retained adhesive
-   closure meaningfully distinguish it from BEHAVIOR's gift-box task. It has
-   more material-development risk than the first two.
 
 Real knot removal and full-size extinguisher operation can remain longer-term
 possibilities. Neither is a sensible automatic next build on a small budget.

@@ -4,6 +4,33 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 — follow-up idea research; bracelet saved for later
+
+- User explicitly asked for research without GPUs and selected **help fasten a
+  bracelet** for the later shortlist. Saved it in
+  [the central list](docs/task-ideas-2026-11-15.md#shortlisted-for-later), with
+  detailed comparisons in [the follow-up](docs/task-ideas-followup-2026-11-15.md).
+  No GPU, Dream, simulation, implementation or upstream PR was used for this work.
+- Refreshed 2,172 PR titles and 548 board records; raw snapshots/reviews are
+  ignored in `artifacts/idea-followup-2026-11-15/`. Read mechanism-level matches,
+  not just exact idea names: rat-trap setting1444 is pending, cocktail520/1956
+  are inside revision holds, and overfull-case zipper707 was finally rejected
+  for replacing the mechanical zipper with a separate slider/software lock.
+- Corrected the strength of the gift-wrapping overlap: BEHAVIOR's published
+  goal is paper `overlaid` on a box, with no tape or retained-fold requirement.
+  The user's fold/hold/tape workflow could differ meaningfully. Accepted carton
+  sealing1893 uses simplified tape cells; do not demand a full adhesion solver.
+  Our distinct skill must remain shaping and securing loose wrapping paper.
+- Genuine knot removal is different from the accepted hidden-cable plug-routing
+  task12 and rejected uncrossing13, but has substantial prior research and
+  real self-contact/topology requirements. Prefer a charging cable over necklace
+  links for a first test. The prepared necktie's fixed-topology model cannot
+  demonstrate knot removal. Pram rocking remains an importance-risk backup.
+- No close waxing or tattoo task found. Their core material interactions need
+  credible representation; sticker peeling or rigid-surface drawing would not
+  support those claims. Tattoo practice substrates have published precedents.
+  All feasibility judgments are untested; no new task was authorized to build.
+
 ## 2026-11-15 21:02 UTC — spray first submission received; four candidates still incomplete
 
 - Operator: primary Brev agent. User authorized first submissions and requested submission readiness, while preferring early feedback over perfection. Full-score feasibility demo plus genuine model attempt remain required; a nonzero partial score alone does not satisfy the rules. Existing cb0da2/q1wqpw5jx only; no replacement VM is authorized.
