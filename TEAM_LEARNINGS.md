@@ -2324,3 +2324,34 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Full capped spray-full-011 is running from ~/robotics-batch/spray-release-011,
   with --render-sync. Controller SHA35a918f3f2c53749695d11a22cedfc758c70ddcb86991de51db2509aa5a4a0e5.
   Native result pending; no complete preview claimed yet.
+- Full011 again hit renderer Xid109 at32.75 s despite guest reboot and verified
+  FXAA/synchronous capture. Do not describe that mitigation as a cure. State-only
+  mode now disables camera construction/capture and render calls, returns real
+  14D joints with empty images, forbids Dream/no-video and frame output, and
+  labels results diagnostic/media-ineligible. Authored physics manifests permit
+  video/state comparisons. Root48-test rerun passed in3.373 s after later fixes.
+- State012 completed first release with29.61 mm physical clearance and70 clean
+  frames, then failed second spray dwell. Native trace shows right Z software
+  compensation saturated at-20 mm for63 samples; piston median1.876 mm versus
+  2 mm activation. Button force2.385–4.128 N, footprint inside2.94 mm radius,
+  IK residual<=63 micrometres; no right can-body/interarm contact. Raised grasp
+  remained stable. Do not shorten dwell again to hide insufficient activation.
+- Astra/Sol approved press-only negative Z compensation up to-30 mm, extra
+  growth<=5 mm/s only with native contact/valid footprint/travel<2.7 mm.
+  Gate loss freezes extra growth without snapping the stored bias; unwind stays
+  allowed. Button force>=8 N or unexpected can/interarm force>1 N stops safely.
+  Joint efforts, physical assets, gains, materials and scorer remain unchanged.
+  Release maximum10 s covers extra unloading. Scheduling reserves minimum future
+  work, with native2400-step/pre-action120 s hard limits unchanged. Root corrected
+  future shot minimum to1 s because the controller also requires elapsed>=1 s.
+- Existing-VM driver repair: Ubuntu24.04.5, kernel6.11.0-1016-nvidia, BIOS boot,
+  matching headers. Repacked14 removed580 packages plus2 conflicting EGL modules
+  into ~/gpu-recovery-20261115/rollback (about220 MB). Apt plan, package list,
+  preferences and logs saved beside them. Installed official Ubuntu595.99.02
+  open driver; removed the duplicate old EGL XCB/Xlib packages rather than force
+  overwriting files. DKMS built for exact kernel, initramfs regenerated, dpkg
+  audit clean; core userspace595 matched module. DCGM4.7 exceeds4.3 requirement.
+  Guest reboot completed; nvidia-smi and/proc driver both595.99.02 at14:22:55 UTC.
+  No new VM/provider reset or deletion. This is an experimental repair, not proof
+  it fixes Xid109. Real-camera stress013 (probe,1000steps/50s) now running before
+  another full demo. Source: ~/robotics-batch/spray-pressure-013.

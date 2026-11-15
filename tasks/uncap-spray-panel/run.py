@@ -9,15 +9,65 @@ from config import *
 from scoring import SprayScorer
 
 
+def joint_observation_state(scene,ids):
+    """The real adapter 14D joint observation, without touching camera sensors."""
+    import numpy as np
+    from yam_arena.constants import FINGER_OPEN
+    per_arm=[]
+    for name in ('left_robot','right_robot'):
+        arm_ids,finger_ids=ids[name]
+        value=scene[name].data.joint_pos
+        value=value.torch if hasattr(value,'torch') else value
+        q=value.detach().cpu().numpy()[0]
+        per_arm.append(np.r_[q[arm_ids],np.clip(q[finger_ids].mean()/FINGER_OPEN,0.,1.)])
+    return np.concatenate(per_arm).astype(np.float64)
+
+
+def physics_manifest(stage,assets,urdf,physics_dt,control_dt):
+    """Camera-independent authored physics and collision-input comparison."""
+    import xml.etree.ElementTree as ET
+    urdf=Path(urdf)
+    meshes={}
+    for mesh in ET.parse(urdf).getroot().findall('.//collision/geometry/mesh'):
+        name=mesh.get('filename');meshes[name]=hashlib.sha256((urdf.parent/name).read_bytes()).hexdigest()
+    inputs={'urdf_sha256':hashlib.sha256(urdf.read_bytes()).hexdigest(),'collision_mesh_sha256':meshes,
+            'native_asset_sha256':{name:hashlib.sha256(Path(path).read_bytes()).hexdigest() for name,path in sorted(assets.items())},
+            'physics_source_sha256':{name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest() for name in ('mechanics.py','config.py','task.py')},
+            'physics_dt_s':float(physics_dt),'control_dt_s':float(control_dt)}
+    physical=[];counts={'colliders':0,'bodies':0,'joints':0,'mass_prims':0,'material_prims':0}
+    for prim in stage.Traverse():
+        schemas=list(prim.GetAppliedSchemas());kind=str(prim.GetTypeName())
+        collision=any('CollisionAPI' in s for s in schemas);body=any('RigidBodyAPI' in s for s in schemas)
+        joint='Joint' in kind and kind.startswith(('Physics','Physx'));mass=any('MassAPI' in s for s in schemas)
+        material=any('MaterialAPI' in s for s in schemas)
+        if not (collision or body or joint or mass or material or kind=='PhysicsScene'):continue
+        for key,value in (('colliders',collision),('bodies',body),('joints',joint),('mass_prims',mass),('material_prims',material)):counts[key]+=int(value)
+        attributes={}
+        for attr in prim.GetAttributes():
+            name=attr.GetName()
+            if name.startswith(('physics:','physx','drive:')) and name not in ('physics:velocity','physics:angularVelocity'):
+                value=attr.Get()
+                if value is not None:attributes[name]=str(value)
+        relationships={rel.GetName():[str(p) for p in rel.GetTargets()] for rel in prim.GetRelationships() if rel.GetName().startswith(('physics:','physx'))}
+        physical.append(dict(path=str(prim.GetPath()),type=kind,schemas=sorted(s for s in schemas if 'Physics' in s or 'Physx' in s),attributes=attributes,relationships=relationships))
+    physical.sort(key=lambda item:item['path'])
+    digest=lambda value:hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    return dict(physical_input_sha256=digest(inputs),body_joint_mass_sha256=digest(physical),inputs=inputs,counts=counts,body_joint_mass=physical,
+                scope='URDF/collision/native-asset bytes and authored collider/body/joint/mass/PhysicsScene properties. Sensor cameras and dynamic transforms excluded; trajectory identity is not asserted.')
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--policy',choices=['probe','capprobe','demo','dream'],default='probe')
     parser.add_argument('--stage',choices=['cap','press','full'],default='full')
     parser.add_argument('--max-steps',type=int,default=2400)
     parser.add_argument('--render-sync',action='store_true',help='Use real RGB cameras with FXAA and synchronous rendering for the device-loss mitigation trial')
+    parser.add_argument('--no-video',action='store_true',help='State-only demo engineering run; no camera renderer, images or eligible final media')
     parser.add_argument('--log-dir',type=Path,required=True)
     args=parser.parse_args()
     if not 1 <= args.max_steps <= 2400:parser.error('max-steps must be 1..2400')
+    if args.no_video and args.policy!='demo':parser.error('--no-video is allowed only with --policy demo; image-based policies require cameras')
+    if args.no_video and args.render_sync:parser.error('--no-video cannot be combined with --render-sync')
     out=args.log_dir.expanduser().resolve();out.mkdir(parents=True,exist_ok=False)
     (out/'source').mkdir()
     sources=list(Path(__file__).parent.glob('*.py'))
@@ -34,6 +84,20 @@ def main():
     import telemetry
 
     class SprayEmbodiment(YamArenaEmbodiment):
+        def __init__(self,*a,**kw):
+            super().__init__(*a,**kw)
+            if args.no_video:
+                from dataclasses import replace
+                from inspect_robots_yam.config import observation_space
+                self.info=replace(self.info,observation_space=observation_space(self.cam_height,self.cam_width,()))
+
+        def _observation(self):
+            if not args.no_video:return super()._observation()
+            from inspect_robots.types import Observation
+            from inspect_robots_yam.packing import STATE_KEY
+            return Observation(images={},state={STATE_KEY:joint_observation_state(self._base.scene,self._ids)},
+                               instruction=self._instruction,image_times={},state_time=self._t)
+
         def _ensure_sim(self,goal):
             if self._env is not None and goal == self._goal:return
             from yam_arena import inspect_embodiment as adapter
@@ -41,7 +105,7 @@ def main():
                 os.environ.setdefault('OMNI_KIT_ACCEPT_EULA','YES')
                 from isaaclab.app import AppLauncher
                 kit_args='--/rtx/post/aa/op=2 --/app/asyncRendering=false --/omni/replicator/asyncRendering=false --/exts/isaacsim.core.throttling/enable_async=false' if args.render_sync else ''
-                adapter._APP=AppLauncher(headless=True,device=self.device,enable_cameras=True,kit_args=kit_args).app
+                adapter._APP=AppLauncher(headless=True,device=self.device,enable_cameras=not args.no_video,kit_args=kit_args).app
                 atexit.register(adapter._close_app_at_exit)
             from yam_arena import scene as sc
             from yam_arena.embodiment import BimanualYamEmbodiment
@@ -58,6 +122,7 @@ def main():
             original_init=BimanualYamEmbodiment.__init__
             def sensor_init(instance,*a,**kw):
                 kw['contact_sensors']=True
+                kw['enable_cameras']=not args.no_video
                 original_init(instance,*a,**kw)
                 stem=instance.scene_config.left_contacts.prim_path.rsplit('/.*',1)[0]
                 instance.scene_config.right_contacts.filter_prim_paths_expr=[
@@ -68,6 +133,7 @@ def main():
             from mechanics import asset,stand_asset
             assets={name:asset(out/(name+'.usda'),name) for name in ('spray_can','cap','button')}
             assets['stand']=stand_asset(out/'stand.usda')
+            self.native_assets=assets
             original=sc.task_object
             def make(spec):
                 if spec.name not in assets:return original(spec)
@@ -94,6 +160,14 @@ def main():
                 sc.task_object=original
                 BimanualYamEmbodiment.__init__=original_init
                 robot_module.RENDERER=original_renderer
+            if args.no_video:
+                # The pinned adapter renders four times explicitly after its
+                # settle loop. Also suppress any render request from env.step.
+                self._base.sim.render=lambda *a,**kw:None
+                cameras=[name for name in adapter.DEFAULT_CAMERAS if name in self._base.scene.sensors]
+                if cameras:raise RuntimeError('state-only mode unexpectedly created camera sensors: '+str(cameras))
+                (out/'renderer-readback.json').write_text(json.dumps(dict(state_only=True,camera_sensors=cameras,
+                    render_requests_suppressed=True,rtx_camera_capture_enabled=False),indent=2))
             if args.render_sync:
                 import carb.settings
                 settings=carb.settings.get_settings()
@@ -159,6 +233,9 @@ def main():
             # _ensure_sim spawns both native joints before reset settles.
             self._ensure_sim(None)
             self._ensure_joints()
+            from yam_arena import YAM_URDF
+            physical=physics_manifest(self.stage,self.native_assets,YAM_URDF,self._base.cfg.sim.dt,self._base.step_dt)
+            (out/'physics-manifest.json').write_text(json.dumps(physical,indent=2)+'\n')
             self.detached=args.stage=='press'
             self.tracker=SprayScorer()
             observation=super().reset(scene,seed=seed)
@@ -242,6 +319,7 @@ def main():
                 self.audit.close()
                 summary=self.tracker.result()
                 if args.stage=='press':summary=dict(score=0.,diagnostic=True,milestones=summary)
+                if args.no_video:summary.update(diagnostic=True,state_only=True,media_eligible=False)
                 (out/'score-summary.json').write_text(json.dumps(summary,indent=2))
             super().close()
 
@@ -267,13 +345,14 @@ def main():
     elif policy=='demo':
         from demo_policy import register_policy
         policy=register_policy(cap_only=args.stage=='cap',press_only=args.stage=='press')
-    diagnostic=args.policy in ('probe','capprobe') or (args.policy=='demo' and args.stage!='full')
-    (out/'mode.json').write_text(json.dumps(dict(policy=args.policy,stage=args.stage,diagnostic=diagnostic,render_sync=args.render_sync)))
+    diagnostic=args.no_video or args.policy in ('probe','capprobe') or (args.policy=='demo' and args.stage!='full')
+    (out/'mode.json').write_text(json.dumps(dict(policy=args.policy,stage=args.stage,diagnostic=diagnostic,render_sync=args.render_sync,
+                                               state_only=args.no_video,media_eligible=not diagnostic)))
     return cli(['run','--embodiment','uncap_spray_prototype','--policy',policy,
                 '-E',f'task={Path(__file__).parent / "task.py"}','-E','object_jitter=0',
                 '-E','control_hz=20','-E','cam_width=320','-E','cam_height=176',
                 '--instruction',INSTRUCTION,'--scorer','task_score',
-                '--max-steps',str(args.max_steps),'--store-frames','--seed','0',
+                '--max-steps',str(args.max_steps),*([] if args.no_video else ['--store-frames']),'--seed','0',
                 '--no-prompt','--grader','none','--log-dir',str(out)])
 
 if __name__=='__main__':main()

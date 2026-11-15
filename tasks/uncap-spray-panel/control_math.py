@@ -6,8 +6,57 @@ GRASP_Z=.005
 GRASP_OFFSET=np.array((0.,0.,GRASP_Z))
 RELEASE_DISTANCE=.030
 RELEASE_SPEED=.010
-RELEASE_DEADLINE=9. # Per-release reservation; actual deadline is path-derived.
+RELEASE_DEADLINE=10. # Maximum permitted path-derived release deadline.
 MEASURED_DWELL=.8
+
+
+def minimum_future_seconds(moves):
+    """Necessary future work, rather than a sum of failure deadlines."""
+    total=0.
+    for move in moves:
+        if move['follow']=='release':total+=RELEASE_DISTANCE/RELEASE_SPEED+.014/.005+.5
+        elif move['label'].startswith('coat_shot'):total+=max(1.,MEASURED_DWELL)
+        else:total+=move['seconds']
+    return total
+
+
+def press_contact_state(sample,point):
+    """Read native contact and actual support geometry; no synthetic forces."""
+    try:
+        matrix=np.asarray(sample['right_contact_matrix'],dtype=float)
+        hand=sample['hands'][1];tcp=np.asarray(hand['tcp'],dtype=float);rotation=np.asarray(hand['rotation'],dtype=float)
+        canR=np.asarray(sample['can_rotation'],dtype=float);button=np.asarray(sample['button'],dtype=float)
+        finger=float(hand['finger_joints'][0]);travel=float(sample['button_travel'])
+        if matrix.ndim!=3 or matrix.shape[0]==0 or matrix.shape[1:]!=(5,3):raise ValueError('invalid native contact matrix shape')
+        if tcp.shape!=(3,) or button.shape!=(3,) or rotation.shape!=(3,3) or canR.shape!=(3,3):raise ValueError('invalid measured contact geometry shape')
+        if not all(np.isfinite(v).all() for v in (matrix,tcp,rotation,canR,button,finger,travel)):raise ValueError('nonfinite contact state')
+    except (KeyError,IndexError,TypeError,ValueError) as error:
+        raise ValueError('missing or invalid native press contact state: '+str(error)) from error
+    button_force=float(np.linalg.norm(matrix[:,1],axis=-1).sum())
+    unexpected=float(np.linalg.norm(matrix[:,[0,2,3,4]],axis=-1).sum())
+    support=np.asarray(point,dtype=float).copy();support[0]+=finger+.028
+    local=canR.T@(tcp+rotation@support-button)
+    radius=float(np.linalg.norm(local[:2]))
+    if button_force>=8.:raise ValueError('native button contact reached 8 N pressure guard')
+    if unexpected>1.:raise ValueError('unexpected can/interarm contact exceeded 1 N pressure guard')
+    return dict(button_force_N=button_force,unexpected_force_N=unexpected,witness_radius_m=radius,travel_m=travel,
+                extra_pressure_allowed=bool(button_force>.1 and radius<=.0075 and travel<.0027))
+
+
+def press_bias_step(bias,error,dt,contact):
+    """Extend only negative press Z; limit extra loading and allow unwind."""
+    bias=np.asarray(bias,dtype=float);error=np.asarray(error,dtype=float)
+    if bias.shape!=(3,) or error.shape!=(3,) or not np.isfinite([bias,error]).all() or not math.isfinite(dt) or not 0<=dt<=.1:
+        raise ValueError('invalid measured pressure feedback state/timestep')
+    if np.any(np.abs(bias[:2])>.020) or not -.030<=bias[2]<=.020:
+        raise ValueError('pressure feedback bias exceeds its existing bounds')
+    proposed=np.clip(bias+.08*error,[-.020,-.020,-.030],[.020,.020,.020])
+    if contact['travel_m']>=.0027:proposed[2]=max(proposed[2],bias[2])
+    if proposed[2]<-.020:
+        floor=min(bias[2],-.020)
+        if contact['extra_pressure_allowed']:floor-=.005*dt
+        proposed[2]=max(proposed[2],floor)
+    return proposed
 
 
 def release_command_target(start,goal,elapsed):

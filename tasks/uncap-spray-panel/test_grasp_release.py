@@ -9,11 +9,57 @@ import unittest
 from unittest.mock import patch
 import numpy as np
 from control_math import (GRASP_OFFSET,GRASP_Z,calibrated_hand_target,grasp_drift,
-                          release_target,release_clearance,release_gate_frames,release_command_target,MEASURED_DWELL)
+                          release_target,release_clearance,release_gate_frames,release_command_target,MEASURED_DWELL,
+                          minimum_future_seconds,press_contact_state,press_bias_step)
 from config import CAN_REST_HEIGHT,CAN_PAD,CAN_START,CAP_START,TARGET_CENTER
 
 
 class GraspReleaseTests(unittest.TestCase):
+    def contact_sample(self):
+        matrix=np.zeros((9,5,3));matrix[7,1,2]=3.5
+        return dict(right_contact_matrix=matrix.tolist(),hands=[{},dict(tcp=[0,0,.005],rotation=np.eye(3).tolist(),finger_joints=[-.028,-.028])],
+                    can_rotation=np.eye(3).tolist(),button=[0,0,0],button_travel=.0018)
+
+    def test_extra_press_budget_requires_real_contact_margin_and_rate_limit(self):
+        sample=self.contact_sample();contact=press_contact_state(sample,np.zeros(3));self.assertTrue(contact['extra_pressure_allowed'])
+        bias=np.array((0.,0.,-.020))
+        updated=press_bias_step(bias,[0,0,-.01],.05,contact)
+        self.assertAlmostEqual(updated[2],-.02025)
+        for _ in range(80):
+            previous=updated.copy();updated=press_bias_step(updated,[1.,-1.,-.01],.05,contact)
+            self.assertLessEqual(previous[2]-updated[2],.00025+1e-15)
+        np.testing.assert_allclose(updated,[.020,-.020,-.030])
+        self.assertAlmostEqual(press_bias_step([0,0,0],[0,0,1],.05,contact)[2],.020)
+        for field,value in (('force',.1),('radius',.0076),('travel',.0027)):
+            changed=self.contact_sample()
+            if field=='force':changed['right_contact_matrix'][7][1][2]=value
+            if field=='radius':changed['hands'][1]['tcp'][0]=value
+            if field=='travel':changed['button_travel']=value
+            denied=press_contact_state(changed,np.zeros(3));self.assertFalse(denied['extra_pressure_allowed'])
+            np.testing.assert_array_equal(press_bias_step(bias,[0,0,-.01],.05,denied),bias)
+
+    def test_contact_gate_drop_keeps_accumulated_bias_and_allows_unwind(self):
+        sample=self.contact_sample();sample['right_contact_matrix'][7][1][2]=0.
+        contact=press_contact_state(sample,np.zeros(3));bias=np.array((0.,0.,-.025))
+        np.testing.assert_array_equal(press_bias_step(bias,[0,0,-.01],.05,contact),bias)
+        self.assertGreater(press_bias_step(bias,[0,0,.01],.05,contact)[2],bias[2])
+        sample['button_travel']=.0027;contact=press_contact_state(sample,np.zeros(3))
+        np.testing.assert_array_equal(press_bias_step(bias,[0,0,-.01],.05,contact),bias)
+        self.assertGreater(press_bias_step(bias,[0,0,.01],.05,contact)[2],bias[2])
+
+    def test_native_pressure_limits_missing_and_nonfinite_state_fail_closed(self):
+        for mode in ('button8','unexpected','missing','nonfinite'):
+            sample=self.contact_sample()
+            if mode=='button8':sample['right_contact_matrix'][7][1][2]=8.
+            if mode=='unexpected':sample['right_contact_matrix'][7][2][0]=1.001
+            if mode=='missing':del sample['right_contact_matrix']
+            if mode=='nonfinite':sample['right_contact_matrix'][7][1][2]=np.nan
+            with self.subTest(mode=mode),self.assertRaises(ValueError):press_contact_state(sample,np.zeros(3))
+
+    def test_future_budget_reserves_required_work_not_failure_deadlines(self):
+        future=[dict(label='coat_shot_2',follow='press',seconds=8.),dict(label='coat_unpress_2',follow='release',seconds=10.),dict(label='can_lower',follow=False,seconds=3.)]
+        self.assertAlmostEqual(minimum_future_seconds(future),1.+3.+2.8+.5+3.)
+
     def test_all_can_goals_and_return_use_one_calibrated_offset(self):
         actual=np.array((.001,-.002,.006))
         origins=[np.array(CAN_START),np.array((CAN_PAD[0],CAN_PAD[1],CAN_REST_HEIGHT))]
@@ -101,7 +147,7 @@ class PolicyGuardTests(unittest.TestCase):
             hands.append(dict(tcp=p.tolist(),rotation=r.tolist(),joints=list(READY),opening=1.,finger_joints=[-.04695]*2))
         return dict(time=0.,hands=hands,can=list(CAN_START),cap=list(CAP_START),can_rotation=np.eye(3).tolist(),
                     button=[CAN_START[0],CAN_START[1],CAN_START[2]+.077],button_travel=0.,
-                    nozzle=[.27,-.035,TARGET_CENTER[1]-.035],axis=[1.,0.,0.])
+                    nozzle=[.27,-.035,TARGET_CENTER[1]-.035],axis=[1.,0.,0.],right_contact_matrix=np.zeros((9,5,3)).tolist())
 
     def test_grasp_abort_emits_previous_action_without_solving_new_ik(self):
         sample=self.sample();self.module.telemetry.latest=sample
@@ -197,10 +243,24 @@ class PolicyGuardTests(unittest.TestCase):
 
     def test_release_path_budget_is_bounded_by_unchanged_episode_limit(self):
         sample=self.sample();self.module.telemetry.latest=sample;policy=self.module.SprayDemo();policy.initialize()
-        self.assertLess(sum(m['seconds'] for m in policy.moves)+len(policy.moves)*policy._dt,120.)
+        self.assertLess(minimum_future_seconds(policy.moves)+len(policy.moves)*policy._dt,120.)
         sample['hands'][1]['tcp'][2]+=1.
         policy.index=next(i for i,m in enumerate(policy.moves) if m['label']=='coat_unpress_0')-1
         policy.next(0.);self.assertIn('120 second episode budget',policy.failure)
+
+    def test_hard_120s_stop_precedes_new_action_even_before_first_phase(self):
+        sample=self.sample();self.module.telemetry.latest=sample;policy=self.module.SprayDemo();policy.initialize()
+        previous=np.concatenate(policy.last_actions);sample['time']=120.
+        with patch.object(policy,'next',side_effect=AssertionError('must not enter another phase')),patch.object(self.module.ik,'solve',side_effect=AssertionError('must not issue new IK')):
+            action=policy.act(SimpleNamespace(state_time=120.))
+        self.assertIn('120 second episode limit',policy.failure)
+        self.assertTrue(action.actions[0].meta['request_stop']);np.testing.assert_array_equal(action.actions[0].data,previous)
+
+    def test_even_minimum_future_work_rejects_impossible_release_budget(self):
+        sample=self.sample();self.module.telemetry.latest=sample;policy=self.module.SprayDemo();policy.initialize()
+        policy.index=next(i for i,m in enumerate(policy.moves) if m['label']=='coat_unpress_0')-1
+        policy.next(100.)
+        self.assertIn('remaining 120 second episode budget',policy.failure)
 
 
 if __name__=='__main__':unittest.main()

@@ -16,7 +16,8 @@ from inspect_robots_yam.packing import pack
 from config import *
 import telemetry
 from control_math import (grip_fraction,ramp_scalar,ramp_translation,GRASP_OFFSET,RELEASE_DISTANCE,RELEASE_SPEED,
-                          RELEASE_DEADLINE,MEASURED_DWELL,calibrated_hand_target,grasp_drift,release_command_target,release_clearance,release_gate_frames)
+                          RELEASE_DEADLINE,MEASURED_DWELL,calibrated_hand_target,grasp_drift,release_command_target,release_clearance,release_gate_frames,
+                          minimum_future_seconds,press_contact_state,press_bias_step)
 
 LEFT_PRELOAD_SPEED=.005
 RIGHT_PRESS_SPEED=.010
@@ -116,7 +117,7 @@ class SprayDemo(YamScriptedPolicy):
             except ValueError as error:self.failure=str(error);return
             deadline=duration+.014/LEFT_PRELOAD_SPEED+.5
             future=self.moves[self.index+1:]
-            reserve=sum(move['seconds'] for move in future)+(len(future)+1)*self._dt
+            reserve=minimum_future_seconds(future)+(len(future)+1)*self._dt
             if deadline>RELEASE_DEADLINE or now-self.episode_t0+deadline+reserve>120.:
                 self.failure='release command path cannot fit the remaining 120 second episode budget';return
             step['seconds']=deadline
@@ -143,6 +144,10 @@ class SprayDemo(YamScriptedPolicy):
     def act(self,observation):
         if not self.started:self.initialize()
         now=float(observation.state_time);s=telemetry.latest
+        if now-self.episode_t0>=120.:
+            self.failure=self.failure or '120 second episode limit reached before next action'
+            telemetry.command=dict(phase='episode_limit',errors={},failure=self.failure)
+            return ActionChunk(actions=[Action(data=pack(*self.last_actions),meta={'request_stop':True})],control_hz=1/self._dt)
         if self.index<0:self.next(now)
         if abs(s['time']-now)>.075:raise RuntimeError('stale demo telemetry')
         if self.grasp_calibrated and self.holding_can:
@@ -219,7 +224,11 @@ class SprayDemo(YamScriptedPolicy):
                 speed=RIGHT_PRESS_SPEED if pressing else .100
                 position=ramp_translation(self.targets[1][0],target,speed,self._dt)
                 self.targets[1]=[np.asarray(position),rot@PRESS_R,self.press_grip]
-        actions=[];errors={}
+        actions=[];errors={};press_contact=None
+        pressing=self.index<len(self.moves) and self.moves[self.index]['follow']=='press'
+        if pressing and not self.failure:
+            try:press_contact=press_contact_state(s,PRESS_POINT)
+            except ValueError as error:self.failure=str(error)
         if self.failure:
             telemetry.command=dict(phase=phase,errors={},failure=self.failure,release_clearance_m=self.release_gap,release_frames=self.release_frames)
             return ActionChunk(actions=[Action(data=pack(*self.last_actions),meta={'request_stop':True})],control_hz=1/self._dt)
@@ -234,7 +243,8 @@ class SprayDemo(YamScriptedPolicy):
             gain=.16 if i==0 else .08
             releasing=i==1 and self.index<len(self.moves) and self.moves[self.index]['follow']=='release'
             if not releasing:
-                self.position_bias[i]=np.clip(self.position_bias[i]+gain*error,-bound,bound)
+                if i==1 and pressing:self.position_bias[i]=press_bias_step(self.position_bias[i],error,self._dt,press_contact)
+                else:self.position_bias[i]=np.clip(self.position_bias[i]+gain*error,-bound,bound)
                 self.rotation_bias[i]=np.clip(self.rotation_bias[i]+.04*rotation_error,-.12,.12)
             rv=self.rotation_bias[i];angle=np.linalg.norm(rv)
             compensated=(axis_angle_matrix(rv/angle,angle)@r if angle>1e-9 else r)
@@ -255,6 +265,7 @@ class SprayDemo(YamScriptedPolicy):
         telemetry.command=dict(phase=phase,errors=errors,failure=self.failure,commanded_depression=self.press_depth,measured_contact_time=self.contact_time,
                                left_preload_m=self.left_preload,left_preload_target_m=self.left_preload_target,right_press_speed_m_s=RIGHT_PRESS_SPEED,
                                release_clearance_m=self.release_gap,release_frames=self.release_frames)
+        telemetry.command['press_contact']=press_contact
         if self.release_path is not None:
             telemetry.command.update(release_path_duration_s=self.release_path['duration'],release_deadline_s=self.moves[self.index]['seconds'] if self.index<len(self.moves) and self.moves[self.index]['follow']=='release' else None)
         self.last_actions=[a.copy() for a in actions]
