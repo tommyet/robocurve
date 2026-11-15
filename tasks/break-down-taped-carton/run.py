@@ -7,16 +7,17 @@ from model import WIDTH,HEIGHT
 from crease import physical_bottom_angle,joint_parameters
 
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True);p.add_argument('--mode',choices=['dynamics','grip-probe','cut-probe','open-probe'],default='dynamics');p.add_argument('--unsealed',action='store_true',help='Explicit unscored starting condition for folding diagnostics');a=p.parse_args();
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True);p.add_argument('--mode',choices=['dynamics','grip-probe','cut-probe','open-probe'],default='dynamics');p.add_argument('--unsealed',action='store_true',help='Explicit unscored starting condition for folding diagnostics');p.add_argument('--no-video',action='store_true',help='State-only engineering run: omit camera sensors/rendering and record exact native poses, without eligible media');a=p.parse_args();
  if a.mode=='open-probe' and not a.unsealed:p.error('open-probe requires --unsealed and cannot count as task completion')
  a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=False);(a.out/'source').mkdir()
  for f in Path(__file__).parent.glob('*.py'):shutil.copy2(f,a.out/'source'/f.name)
  (a.out/'source-sha256.json').write_text(json.dumps({f.name:hashlib.sha256(f.read_bytes()).hexdigest() for f in Path(__file__).parent.glob('*.py')},indent=2))
  os.environ.setdefault('OMNI_KIT_ACCEPT_EULA','YES')
  from isaaclab.app import AppLauncher
- app=AppLauncher(headless=True,enable_cameras=True).app;video=None
+ app=AppLauncher(headless=True,enable_cameras=not a.no_video).app;video=None
  try:
-  import numpy as np,torch,cv2,imageio.v2 as imageio
+  import numpy as np,torch
+  if not a.no_video:import cv2,imageio.v2 as imageio
   from yam_arena import inspect_embodiment as wrapper
   from yam_arena import scene as sc
   from yam_arena.urdf import quat_xyzw_to_matrix
@@ -39,28 +40,41 @@ def main():
    return sc.Object(name=spec.name,object_type=sc.ObjectType.RIGID,spawner_cfg=cfg,initial_pose=sc.Pose(position_xyz=pos,rotation_xyzw=(*q[1:],q[0])))
   from yam_arena.embodiment import BimanualYamEmbodiment
   import review
+  import capture
   original_init=BimanualYamEmbodiment.__init__
   def with_reviews(instance,*args,**kwargs):
-   kwargs['cam_width']=320;kwargs['cam_height']=180;original_init(instance,*args,**kwargs);review.add_cameras(instance)
+   capture.configure_embodiment(instance,args,kwargs,original_init,review,no_video=a.no_video)
   BimanualYamEmbodiment.__init__=with_reviews
   sc.task_object=make
   try:
    env=wrapper.YamArenaEmbodiment(task=str(Path(__file__).with_name('task.py')),object_jitter=0.,control_hz=20,headless=True,cam_width=320,cam_height=180);env._ensure_sim(None)
   finally:sc.task_object=original;BimanualYamEmbodiment.__init__=original_init
-  base=env._base;env._env.reset();env._instruction='Native carton mechanics probe';env._t=0.
-  review.place(base,(.32,0.,.82))
+  base=env._base
+  capture.suppress_state_only_rendering(base,no_video=a.no_video)
+  env._env.reset();env._instruction='Native carton mechanics probe';env._t=0.
+  if not a.no_video:review.place(base,(.32,0.,.82))
+  from yam_arena.robot import asset_link_paths
+  owners=capture.native_body_owners(base.scene,asset_link_paths(),[part['name'] for part in parts])
+  for path in owners:
+   if not base.scene.stage.GetPrimAtPath(path):raise RuntimeError('missing native capture owner '+path)
+  view_cfg=sim.PinholeCameraCfg(focal_length=18.,clipping_range=(.03,20.)) if a.no_video else base.scene[review.NAMES[0]].cfg.spawn
+  manifest=capture.capture_manifest(capture.export_scene(base.scene.stage,a.out/'capture-scene.usdc'),owners,
+      json.loads((a.out/'source-sha256.json').read_text()),capture.virtual_review_views(view_cfg),no_video=a.no_video)
+  (a.out/'capture-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+  (a.out/'mode.json').write_text(json.dumps({'mode':a.mode,'unsealed_start':a.unsealed,'state_only':a.no_video,'camera_observations':not a.no_video,'media_eligible':False,'control_hz':20,'cut_probe_max_control_steps':4800,'cut_probe_limit_s':240.},indent=2)+'\n')
   def arr(v):
    v=v.torch if hasattr(v,'torch') else v
    return v.detach().cpu().numpy()
   def pose(name):return arr(base.arena_world.get_pose_w(name))[0]
-  video=imageio.get_writer(str(a.out/'diagnostic.mp4'),fps=20,codec='libx264',pixelformat='yuv420p',macro_block_size=1,ffmpeg_params=['-movflags','+faststart']);worst=0.;minz=10.;bestflat=10.;robot=None
+  if not a.no_video:video=imageio.get_writer(str(a.out/'diagnostic.mp4'),fps=20,codec='libx264',pixelformat='yuv420p',macro_block_size=1,ffmpeg_params=['-movflags','+faststart'])
+  worst=0.;minz=10.;bestflat=10.;robot=None
   if a.mode in ('grip-probe','cut-probe','open-probe'):
    from robot import CartonGripProbe,CartonCutProbe,CartonOpenProbe
    robot=({'cut-probe':CartonCutProbe,'open-probe':CartonOpenProbe}.get(a.mode,CartonGripProbe))(env)
   tracker=BreakdownScorer() if a.mode=='cut-probe' else None;released=False;previous_positions=None;previous_cutter=None
   if tracker is not None:task._tracker=tracker;task._diagnostic=False
   with (a.out/'trajectory.jsonl').open('w') as trace:
-   for step in range(2400 if a.mode=='open-probe' else 3600 if a.mode=='cut-probe' else 440 if robot else 180):
+   for step in range(2400 if a.mode=='open-probe' else 4800 if a.mode=='cut-probe' else 440 if robot else 180):
     phase='settle' if step<60 else 'wall_load' if step<120 else 'release'
     f=(0.,-.25,0.) if phase=='wall_load' and not robot else (0.,0.,0.)
     base.scene['east'].permanent_wrench_composer.set_forces_and_torques_index(forces=torch.tensor([[f]],device=base.device),torques=torch.zeros((1,1,3),device=base.device),is_global=True)
@@ -86,6 +100,7 @@ def main():
     for side in ['left','right']:
      ids,fids=env._ids[side+'_robot'];qnative=arr(base.scene[side+'_robot'].data.joint_pos)[0];tcpnative,rnative=ik.tcp_pose(qnative[ids],env.rig.bases[side]);native_hands.append({'side':side,'joints':qnative[ids].tolist(),'finger_joints':qnative[fids].tolist(),'tcp':tcpnative.tolist(),'tcp_rotation':rnative.tolist(),'opening':float(np.clip(qnative[fids].mean()/FINGER_OPEN,0,1))})
     row={'time':env._t,'phase':phase,'robot_control':control,'action_14d':arr(action)[0].tolist(),'native_hands':native_hands,'cutter_pose':pose('cutter').tolist(),'poses':{n:v.tolist() for n,v in pp.items()},'angles_deg':angles,'max_crease_separation_m':sep,'lowest_vertex_m':low,'highest_vertex_m':high,'force_N':f}
+    row['native_owner_poses']=capture.native_body_world_poses(base.scene,owners,{**pp,'cutter':row['cutter_pose']})
     if tracker is not None:
      cutter=pose('cutter');cr=quat_xyzw_to_matrix(cutter[3:]);tip=cutter[:3]+cr@np.array((.062,0,-.020));reference=rr['north'];origin=pp['north'][:3]-reference@np.array((0,WIDTH/2,HEIGHT/2));localtip=reference.T@(tip-origin);hands=[];held=False
      for side in ['left','right']:
@@ -100,14 +115,17 @@ def main():
       released=True
     trace.write(json.dumps(row)+'\n')
     if not np.isfinite(vertices).all() or sep>.03:raise RuntimeError('unstable carton/crease failure')
-    panels=review.panels(base);canvas=np.zeros((594,960,3),dtype=np.uint8);canvas[36:306,240:720]=panels[0];canvas[306:576,:480]=panels[1];canvas[306:576,480:]=panels[2]
-    cv2.putText(canvas,('CARTON ROBOT GRIP PROBE | ' if robot else 'NATIVE CARTON | ')+phase+(' | unsealed diagnostic' if a.unsealed else ' | sealed bottom'),(12,25),cv2.FONT_HERSHEY_SIMPLEX,.57,(255,255,255),1,cv2.LINE_AA);cv2.putText(canvas,(('Measured cutting score: '+str(tracker.value)+' | incomplete task attempt' if tracker else 'Ordinary robot commands. Rim grip/lift diagnostic, not task completion.') if robot else 'Free rigid panels and physical creases. Force probe, not robot completion.'),(12,590),cv2.FONT_HERSHEY_SIMPLEX,.45,(255,205,120),1,cv2.LINE_AA);video.append_data(canvas)
-    if step in (59,119,179,279,399,599,799,999,1199):imageio.imwrite(a.out/f'step-{step}.png',canvas)
+    if not a.no_video:
+     panels=review.panels(base);canvas=np.zeros((594,960,3),dtype=np.uint8);canvas[36:306,240:720]=panels[0];canvas[306:576,:480]=panels[1];canvas[306:576,480:]=panels[2]
+     cv2.putText(canvas,('CARTON ROBOT GRIP PROBE | ' if robot else 'NATIVE CARTON | ')+phase+(' | unsealed diagnostic' if a.unsealed else ' | sealed bottom'),(12,25),cv2.FONT_HERSHEY_SIMPLEX,.57,(255,255,255),1,cv2.LINE_AA);cv2.putText(canvas,(('Measured cutting score: '+str(tracker.value)+' | incomplete task attempt' if tracker else 'Ordinary robot commands. Rim grip/lift diagnostic, not task completion.') if robot else 'Free rigid panels and physical creases. Force probe, not robot completion.'),(12,590),cv2.FONT_HERSHEY_SIMPLEX,.45,(255,205,120),1,cv2.LINE_AA);video.append_data(canvas)
+     if step in (59,119,179,279,399,599,799,999,1199):imageio.imwrite(a.out/f'step-{step}.png',canvas)
     if robot is not None and (getattr(robot,"failure",None) or getattr(robot,"done",False)):break
     if a.mode=='open-probe' and robot.index>=4:break
   result={'diagnostic':True,'task_score':None,'unsealed_start':a.unsealed,'max_crease_separation_m':worst,'lowest_vertex_m':minz,'smallest_height_span_m':bestflat,'checks':{'creases_intact':worst<.004,'above_table':minz>-.004}}
   if a.mode=='open-probe':result|={'controller_failure':robot.failure,'flaps_completed':robot.index,'final_angles_deg':angles}
   if tracker is not None:result|={'diagnostic':False,'task_score':tracker.value,'privileged_robot_attempt':True,'metrics':tracker.result(),'bottom_up_start':True,'controller_failure':robot.failure,'controller_completed_cut_attempt':robot.done}
+  result|={'state_only':a.no_video,'media_eligible':False,'capture_manifest':'capture-manifest.json'}
+  if a.no_video:result|={'diagnostic':True,'diagnostic_reason':'camera-free engineering run; measured scorer values retained, no final media'}
   (a.out/'result.json').write_text(json.dumps(result,indent=2)+'\n')
  except BaseException as error:
   import traceback;traceback.print_exc();(a.out/'error.json').write_text(json.dumps({'error':str(error),'type':type(error).__name__},indent=2));raise

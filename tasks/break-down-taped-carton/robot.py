@@ -40,7 +40,7 @@ class CartonCutProbe:
   from yam_arena.demo import ArmPlan,Waypoint as W
   from model import FILM_Z
   self.env=env;self.previous=env._ready.detach().cpu().numpy().reshape(-1).copy();self.failure=None;self.done=False;self.index=0;self.motion=None;self.bias=np.zeros(3);self.last_time=0.;self.calibrated=False
-  self.rest_tool=None;self.rest_time=None;self.repass_round=0;self.cuts_verified=False;self.coverage_report=None
+  self.rest_tool=None;self.rest_time=None;self.completed_motion=None;self.repass_round=0;self.cuts_verified=False;self.coverage_report=None
   x,y,z=CUTTER_START;hover=TOP+.17;grip=-.011
   self.pickup=ArmPlan([W(2.,(x,y,hover),FINGER_OPEN),W(2.,(x,y,z+.006),FINGER_OPEN),W(1.,(x,y,z+.006),grip),W(2.,(x,y,hover),grip)],env.rig.bases['left'])
   self.park=ArmPlan([W(3.,(.13,-.24,TOP+.17),FINGER_OPEN)],env.rig.bases['right'])
@@ -89,7 +89,7 @@ class CartonCutProbe:
 
  def command(self,time):
   from yam_arena.urdf import axis_angle_matrix
-  from feedback_geometry import blade_tcp_target,measured_blade_grasp,TrackedProgress
+  from feedback_geometry import blade_tcp_target,measured_blade_grasp,TrackedProgress,cut_entry_bias,cut_watchdog,matching_lower_cut
   from model import WIDTH,HEIGHT,FILM_Z
   dt=min(.05,max(.001,time-self.last_time));self.last_time=time
   ids,fids=self.env._ids['left_robot'];d=self.env._base.scene['left_robot'].data.joint_pos;d=d.torch if hasattr(d,'torch') else d;actualq=d.detach().cpu().numpy()[0];qa=actualq[ids];tcp,rhand=ik.tcp_pose(qa,self.env.rig.bases['left']);opening=float(np.clip(actualq[fids].mean()/FINGER_OPEN,0,1));cutter,rc=self.pose('cutter')
@@ -139,10 +139,12 @@ class CartonCutProbe:
     speed=(.008 if self.repass_round else .012) if cutting and 'seam' in phase else .016 if cutting else .040
     progress=TrackedProgress(length,angle,speed=speed)
     self.motion={'p0':p0,'r0':r0,'goal':goal,'rotation':tool_rotation,'progress':progress,'started':time,
-                 'timeout':max(12.,length/speed*2.5+angle/.35+8.),'hand_path':hand_path,'precision_frames':0}
+                 'timeout':100. if cutting else max(12.,length/speed*2.5+angle/.35+8.),'hand_path':hand_path,'precision_frames':0,'last_advance':time}
     if not phase.startswith(('return_','release_','retreat')):
      self.motion.update(local_start=reference.T@(p0-origin),local_goal=reference.T@(goal-origin),local_r0=reference.T@r0,local_r1=reference.T@tool_rotation)
-    self.bias[:]=0.
+    previous_bias=self.bias.copy()
+    self.bias=cut_entry_bias(previous_bias,getattr(self,'completed_motion',None),phase,self.motion.get('local_start'),self.motion.get('local_r0')) if cutting else np.zeros(3)
+    self.motion['bias_carried_from_lower']=bool(cutting and matching_lower_cut(getattr(self,'completed_motion',None),phase,self.motion.get('local_start'),self.motion.get('local_r0')))
    m=self.motion
    if 'local_goal' in m:m.update(p0=origin+reference@m['local_start'],goal=origin+reference@m['local_goal'],r0=reference@m['local_r0'],rotation=reference@m['local_r1'])
    actual_point=tcp if m['hand_path'] else tip;actual_rotation=rhand if m['hand_path'] else rc
@@ -164,10 +166,15 @@ class CartonCutProbe:
    if xy_length>1e-10:lateral_error=float(abs(local_error[0]*xy_direction[1]-local_error[1]*xy_direction[0])/xy_length)
    film_valid=bool(FILM_Z<=local_tip[2]<=.001)
    cut_gate=not cutting or (film_valid and lateral_error<=.00065)
+   old_fraction=progress.fraction
    complete=progress.update(dt,float(np.linalg.norm(command_error)),orientation_error,endpoint_error,endpoint_rotation,
                             position_tolerance=.0015 if cutting or lowering else .004,
                             tracking_tolerance=.0025 if cutting else .006,
                             rotation_tracking_tolerance=.05 if cutting else .07,advance_allowed=cut_gate)
+   if progress.fraction>old_fraction+1e-12:m['last_advance']=time
+   if cutting:
+    timeout=cut_watchdog(elapsed,time-m['last_advance'])
+    if timeout:self.failure=phase+': '+timeout
    if cutting or lowering:
     # End-fold depth may be limited by the real board surface. Require the
     # actual valid film window and XY endpoint, not penetration to a fixed Z.
@@ -177,7 +184,7 @@ class CartonCutProbe:
    if phase=='release_cutter':
     rest_position,_=self.rest_tool
     complete=complete and elapsed>=1.2 and opening>.8 and np.linalg.norm(cutter-rest_position)<.01
-   if elapsed>m['timeout']:self.failure=phase+' timed out waiting for actual '+('hand' if m['hand_path'] else 'blade')+' alignment'
+   if elapsed>m['timeout'] and not self.failure:self.failure=phase+' timed out waiting for actual '+('hand' if m['hand_path'] else 'blade')+' alignment'
    if phase not in ('release_cutter','retreat') and (opening<.06 or opening>.5 or np.linalg.norm(cutter-tcp)>.065):self.failure='cutter grip lost during '+phase
    report=[{'side':'left','phase':phase,'position_error':endpoint_error,'tracking_error':float(np.linalg.norm(command_error)),'orientation_error_rad':endpoint_rotation,
             'path_fraction':progress.fraction,'blade_target':m['goal'].tolist() if not m['hand_path'] else None,'blade_command':command_point.tolist() if not m['hand_path'] else None,
@@ -186,9 +193,11 @@ class CartonCutProbe:
             'tool_in_hand_rotation':self.tool_in_hand.tolist(),'tip_in_hand':self.tip_in_hand.tolist(),
             'tip_grasp_drift_m':float(np.linalg.norm(self.tip_in_hand-self.initial_tip_in_hand)),
             'opening':opening,'ik_error':pe,'ik_rotation_error':re,'bias_m':self.bias.tolist(),'hand_retreat':m['hand_path'],
+            'bias_carried_from_lower':m['bias_carried_from_lower'],'accepted_cursor_idle_s':time-m['last_advance'],'phase_timeout_s':m['timeout'],
             'native_coverage':self.coverage_report,'physical_repass_round':self.repass_round,'cuts_verified':self.cuts_verified,'rest_pose_capture_time':self.rest_time,'failure':self.failure},
            {'side':'right','phase':'park'}]
    if complete:
+    self.completed_motion=dict(phase=phase,local_endpoint=m.get('local_goal'),local_rotation=m.get('local_r1'))
     self.index+=1;self.motion=None
     if self.index<len(self.phases) and self.phases[self.index][0]=='return_hover':self.schedule_remaining_cuts()
     if self.index>=len(self.phases):self.done=True

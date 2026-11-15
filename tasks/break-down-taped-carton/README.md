@@ -1,6 +1,6 @@
 # Cut the bottom tape, unfold the flaps and flatten a used carton
 
-Native mechanics/controller draft. Thirteen local checks pass, including hinge-anchor geometry and scorer outcomes. A native free-carton stability probe passes, but no full cutting/unfolding/flattening robot demo or Dream score exists.
+Native mechanics/controller draft.46CPU checks pass, including hinge geometry, scorer outcomes, tool-frame feedback and cut handoff/watchdogs. Camera-free native capture and source-bound pose/scorer audits pass. No run has completed all158 cuts plus cutter parking; no full cutting/opening/flattening demo or Dream score exists.
 
 Start with an **empty used carton**, upright with its four top flaps open and
 its four bottom flaps closed and taped. Turn it over, use a guarded cutter to
@@ -27,9 +27,9 @@ of the seam earns nothing. The sealed outer bottom flaps may not be forced
 past 12 degrees. Future runtime releases native hinge limits only after every
 path is cut; it must never set flap poses to simulate opening.
 
-The bottom cutter and initial marked parking pad will reuse the guarded
-tool from the validated unboxing task, but its geometry/controller have not
-yet been integrated into this draft. Carton placement and safe turnover need
+The bottom cutter and marked pad use an ordinary guarded tool, now integrated
+with native geometry and measured robot feedback. Cutter return remains
+unvalidated after a complete sealed-start cutting pass. Carton placement and safe turnover need
 robot reach and self-collision checks before the setup is frozen.
 
 ## Proposed score
@@ -48,8 +48,9 @@ orientation and choice of collapse direction are unrestricted.
 
 The 24 mm slab is a provisional engineering tolerance for multiple 3 mm
 layers, not demonstrated feasibility. Numeric limits must be checked against
-native contacts and a real carton before submission. Proposed allowance is
-3,600 control steps at 20 Hz; set the final limit from a successful demo.
+native contacts and a real carton before submission. A full-task allowance is not yet validated. The current cut-only diagnostic
+allows4,800 controls (240 seconds at20Hz); set the complete task limit from
+a successful cutting/opening/flattening demonstration.
 
 ## Checks and remaining work
 
@@ -62,16 +63,38 @@ python scene.py /tmp/recycling-carton.usda
 Next: native closed-loop stability, finite-thickness folding/corner clearance,
 free-carton turnover, cutter contacts and live pose readback, tape rendering
 and fracture coupling, a physical four-flap opening demo, collapse/release
-tests, then a matching Dream trial. `scoring.py` currently accepts a measured
-state schema; there is no robot adapter supplying those measurements yet.
-No controller can set these scoring inputs directly in the eventual runtime.
+tests, then a matching Dream trial. `run.py` supplies the scorer from actual native geometry, blade pose and
+measured hand state. Controllers cannot set scorer inputs or tape coverage.
 
 ## Native development probes
 
 ```bash
 /data/IsaacLab-Arena/.venv/bin/python run.py --mode dynamics --out /path/to/new-probe
 /data/IsaacLab-Arena/.venv/bin/python run.py --mode grip-probe --out /path/to/new-attempt
+/data/IsaacLab-Arena/.venv/bin/python run.py --mode cut-probe --no-video --out /path/to/new-state-only-attempt
 ```
+
+`--no-video` is optional for all existing modes. It omits robot/review camera
+sensors, render requests, RGB/video writing and screenshots. Native control,
+geometry, physical camera housings, forces, timestep, scoring and mode-specific
+starting conditions are unchanged. It is an engineering diagnostic, with no
+eligible final media. This option has CPU contract tests; native camera-free dynamics and31-owner pose capture passed a9-second smoke.
+A video/state physics equivalence experiment remains unverified.
+
+Every run exports output-only `capture-scene.usdc` after the existing reset and
+`capture-manifest.json` with scene/source hashes, external asset dependencies,
+31 native owner paths and parent-owner metadata. Each existing trajectory row
+adds all 18 actual robot `body_link_pose_w` actor poses, the twelve measured
+panel roots and measured cutter pose in world XYZ/XYZW order. No FK animation,
+object pose writes, interpolation or synthetic initial sample is used. The
+first row remains at 0.05 s, at 20 Hz; scorer initialization is unchanged.
+
+The manifest records the fixed `review.py` eye/target definitions and actual
+18 mm focal/aperture spawn configuration as **virtual offline view
+configuration**, without claiming camera observations. The flattened scene
+preserves static native appearance for later offline replay. A replay renderer,
+compositor, source-bound outcome audit and final task demonstration are not
+implemented by this capture change.
 
 The carton has twelve genuinely free rigid panels and twelve physical creases.
 The stability probe kept crease errors below 0.06 mm. The first robot grip
@@ -127,11 +150,11 @@ object-pose write or automatic flap opening is used.
 Every new trace records normalized fourteen-dimensional actions, native arm and
 finger joints, and FK TCP positions/rotations for both arms. Cutter reports
 include actual/commanded/endpoint blade positions, orientation error and path
-progress. The cut probe has at most 3,600 controls (180 s), stopping early on
+progress. The cut probe has at most 4,800 controls (240 s), stopping early on
 controller failure or completion of its cutting/parking attempt. Completion of
 this probe is not a full carton-breakdown demonstration.
 
-Twenty-three CPU tests pass with NumPy available:
+Forty-six CPU tests pass with NumPy available:
 
 ```bash
 /private/tmp/robocurve-media-env/bin/python -m unittest discover -s tasks/break-down-taped-carton -p 'test_*.py' -v
@@ -143,3 +166,31 @@ in 63.8 simulated seconds without an IK failure. It assumes perfect joint
 tracking and rigid tool retention and includes no contacts; it is not native
 physics evidence. Native grip retention, blade alignment under load, inter-arm
 clearance and all four physical flap grasps remain to be tested.
+
+Cut timing: each physical cut has a100-second hard phase cap and a20-second
+watchdog since its last accepted adaptive-cursor advance. These limits permit
+slow valid tracking; they do not relax blade depth, lateral/orientation gates,
+scoring or hardware limits. A matching lower-to-cut handoff retains the existing
+world-frame Cartesian bias once, within the same±3mm bounds.
+
+## Latest sealed cutting baselines (not task completion)
+
+| Run | Actual cuts: seam / front / back | End state |
+|---|---|---|
+| cut006 |45/110,24/24,24/24 | Cutter-return alignment timeout at78.5s; no complete cut set. |
+| cut007 camera-free |53/110,0/24,1/24 | Existing phase deadline ended an advancing seam at86.45s. |
+| cut008 camera-free |109/110,0/24,2/24 |20s no-cursor-advance watchdog at92.1s; return/repasses not reached. |
+
+Both new captures pass source/scene hashes, all31 actual rigid-owner pose streams,
+and exact captured-scorer replay (1729 and1842 samples, firstt=.05s). Creases
+remained intact; scorer invalidation was null. Both scored0, and neither is
+completed media. Counts from different trials cannot be combined. Full opening
+exists only as an unsealed diagnostic; integrated sealed cut-to-open control and
+collapse remain unfinished.
+
+The matching lower-to-cut handoff retains its existing WORLD bias once, within
+±3mm, without rotating or doubling it. A recorded007 regression preserves the
+TCP target/rotation and same-seed IK result; resetting bias would jump3.72mm.
+Cut008 reached109 seam cells, but its final2.925mm tracking residual exceeded the
+unchanged2.5mm progress gate. Blade/inner-flap geometric contact is now under
+review; do not assume that increasing force or loosening gates is appropriate.

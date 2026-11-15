@@ -52,3 +52,25 @@ class TrackedProgress:
         ready=self.fraction>=1.-1e-12 and endpoint_error<=position_tolerance and endpoint_rotation<=.06
         self.settled=self.settled+1 if ready else 0
         return self.settled>=3
+
+
+def cut_entry_bias(bias,previous,phase,local_start,local_rotation):
+    """Carry a matching lower endpoint's WORLD bias unchanged into its cut."""
+    value=np.asarray(bias,dtype=float)
+    if value.shape!=(3,) or not np.isfinite(value).all() or np.any(abs(value)>.003):
+        raise ValueError('cut entry bias must be finite within existing3mm bounds')
+    return value.copy() if matching_lower_cut(previous,phase,local_start,local_rotation) else np.zeros(3)
+
+
+def matching_lower_cut(previous,phase,local_start,local_rotation):
+    return (previous is not None and phase.endswith('_cut') and
+              previous['phase']==phase[:-4]+'_lower' and
+              np.allclose(previous['local_endpoint'],local_start,rtol=0.,atol=1e-6) and
+              np.allclose(previous['local_rotation'],local_rotation,rtol=0.,atol=1e-6))
+
+
+def cut_watchdog(elapsed,idle):
+    """Honest wall limits; an accepted cursor increment resets only idle time."""
+    if elapsed>100.:return 'cut phase exceeded100second hard cap'
+    if idle>20.:return 'cut cursor had no accepted advance for20seconds'
+    return None

@@ -1,16 +1,17 @@
 {
-  "status": "native_carton_robot_cut_incomplete_joint_reference_fix_pending",
-  "date": "2026-11-13",
-  "local_tests_passed": 12,
-  "native_runtime_verified": false,
+  "status": "sealed_cut008_incomplete_tracking_gate_watchdog",
+  "date": "2026-11-15",
+  "local_tests_passed": 46,
+  "native_runtime_verified": true,
   "demo_score": null,
   "dream_score": null,
   "media": null,
   "remaining": [
-    "Validate corrected top fold reference frame",
-    "Complete all three physical blade cut paths",
-    "Unfold all four bottom flaps with plain-edge grasps",
-    "Collapse free wall loop, park cutter and release for full scored demo"
+    "Review actual blade/inner-flap contact near seam end without weakening physical gates",
+    "Complete all158 actual tape cells and release/park cutter in one sealed-start trial",
+    "Integrate and validate opening of all four bottom flaps after actual cutting",
+    "Implement and validate intact physical collapse; no collapse controller currently exists",
+    "Set full-task allowance from a successful complete demonstration"
   ],
   "native_mechanics_probe": {
     "run": "carton-native-001",
@@ -21,16 +22,72 @@
     "task_score": null
   },
   "native_runtime": true,
-  "local_model_tests_passed": 16,
+  "local_model_tests_passed": 46,
   "latest_robot_cut": {
-    "run": "carton-cut004",
+    "run": "carton-cut008-no-video",
     "score": 0.0,
-    "seam_cells": 0,
-    "front_fold_cells": 24,
-    "back_fold_cells": 0,
-    "max_crease_separation_m": 0.0004282501
+    "seam_cells": 109,
+    "front_fold_cells": 0,
+    "back_fold_cells": 2,
+    "total_required_cells": 158,
+    "controller_completed": false,
+    "cutter_return_reached": false,
+    "controller_failure": "seam_cut: cut cursor had no accepted advance for20seconds",
+    "duration_s": 92.1,
+    "max_crease_separation_m": 0.0001329615683551998,
+    "invalid": null
   },
   "superseded_geometry_note": "Unshifted -275 degree D6 limit was clamped to -180 by PhysX, pulling folded-back top flaps closed. Current top joints use a -135 degree local reference frame, with supported relative limits; native validation pending.",
-  "work_state": "paused_by_user_serial_ethernet_priority",
-  "full_completion_verified": false
+  "work_state": "serial_breakdown_cpu_review_gpu_idle",
+  "full_completion_verified": false,
+  "native_camera_free_capture_verified": true,
+  "camera_free_trials": {
+    "carton-cut007-no-video": {
+      "score": 0.0,
+      "duration_s": 86.45,
+      "samples": 1729,
+      "cuts": {
+        "seam": 53,
+        "front_fold": 0,
+        "back_fold": 1
+      },
+      "controller_failure": "seam_cut timed out waiting for actual blade alignment",
+      "independent_audit_passed": true,
+      "full_task_complete": false,
+      "trace_sha256": "bb2fc601cbb28bdbabe45761beb855eda62e86caf09e285b1406033899b06bc1",
+      "archive_sha256": "26c7051ca2ea8d59fff019e9384b4905ab90e264cca98e3c6e7f206b6affce58"
+    },
+    "carton-cut008-no-video": {
+      "score": 0.0,
+      "duration_s": 92.1,
+      "samples": 1842,
+      "cuts": {
+        "seam": 109,
+        "front_fold": 0,
+        "back_fold": 2
+      },
+      "controller_failure": "seam_cut: cut cursor had no accepted advance for20seconds",
+      "independent_audit_passed": true,
+      "independent_geometry_audit_passed": true,
+      "full_task_complete": false,
+      "trace_sha256": "b14ef2a568e016193d7f8102adc7b99b63681816c1eabc0e6dab07b772b8cd3c",
+      "archive_sha256": "56aaeeb9b92f3727756d36590138a51a7abe1deae99ea393c29d2a959031891a"
+    }
+  },
+  "capture_protocol": {
+    "native_owners": 31,
+    "control_hz": 20,
+    "first_sample_s": 0.05,
+    "actual_native_poses": true,
+    "native_camera_observations": false,
+    "media_eligible": false
+  },
+  "cut_probe_budget": {
+    "max_controls": 4800,
+    "max_seconds": 240,
+    "cut_phase_hard_cap_s": 100,
+    "no_accepted_cursor_advance_watchdog_s": 20,
+    "scope": "cut-only engineering probe; full-task allowance not yet demonstrated"
+  },
+  "tracking_review": "Final008 tracking2.925mm exceeded2.5mm advance tolerance, while film depth/lateral/orientation gates were valid. Actual-pose blade/inner-flap contact is under review; this is not proof of free-space stiction."
 }

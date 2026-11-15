@@ -1,6 +1,6 @@
 # Shared working notes
 
-Last updated: 2026-11-13 UTC. Read this before starting work; update it when an
+Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
@@ -2202,3 +2202,65 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Future scope order: finish Ethernet, then resume one remaining task at a
   time. No upstream PR or new media upload is authorized. Retain the user's
   request to shut compute down after the completed batch.
+
+### 2026-11-15 — current serial order and read-only restart review
+
+- User's later instruction is spray first, then order of ease. The older
+  Ethernet-first note is superseded. Existing cb0da2 only; direct SSH works,
+  RTX remains unreliable after driver595.99.02. Camera-free native physics and
+  exact-pose offline Mac USD replay are available; no new VM or submission.
+- Astra source/evidence review16:28:02–16:30:31 ranks breakdown before packing
+  and hair. Cut006 really cut45/110 seam cells and24/24 on BOTH end folds before
+  cutter-return alignment failure at78.5s. Current source adds measured missing
+  span repasses. Next milestone: all158 cells cut and cutter released on pad.
+  Opening controller exists only as unsealed diagnostic; collapse is unwritten.
+- Repeated723-pose OBB audit passes: final slab18.456mm at270deg,23.005mm at
+ 268.5deg. This proves geometry existence, not native robot collapse. New zero
+  inner-flap spring can let flaps fall inward; edge() still uses theta=max(35,50-a)
+  without the formerly proposed85deg cap. Inspect actual negative angles and
+  certify above-box entry before a long opening attempt. Do not assume rest0.
+- Packing products002 native replay reached0.25 at26s/final36s. Closure's
+ 131.3s ideal path remains CPU-only. Tape004 material coupon passed, but normal
+  flush-edge peeling/payout/application/cutting controllers are absent. Validate
+  pressure adhesion, released retention, overload break and no-credit negative
+  controls before sealing. USD jointEnabled is not a reliable native break flag;
+  broken-but-coincident bonds must not remain credited.
+- The72-body filtered ContactSensor pattern exceeds the documented one-to-many
+  contract. Our installed arm sensors return plausible9-body matrices, so do not
+  assume crash or correctness: run a two-film/two-target native isolation coupon
+  and inspect installed backend. No new carton native trial in this review.
+- Breakdown's180s proposed full limit is unproven; current phases suggest3–5min
+  including still-unwritten collapse. Select the demonstrated honest full limit,
+  without weakening cut, joint-integrity or slab conditions. Both task validation
+  JSONs/old README claims need reconciliation after native proof.
+
+### 2026-11-15 — audited camera-free carton cut007/008; incomplete milestones
+
+- Sol ran only the existing VM serially after root released it. Camera-free
+  capture records all31 actual owners (18 robot links,12 cardboard panels,
+  cutter), starting at0.05s/20Hz; no artificialt0 frame or RTX images. The9s
+  dynamics smoke and source/scene/pose audits pass. Sources were uploaded with
+  COPYFILE_DISABLE=1; preserve every source-manifest entry during download.
+- Cut007 ended86.45s on the seam phase deadline, with53/110 seam,0/24 front
+  and1/24 back. Its late blade motion was advancing.1729 samples pass exact
+  captured-scorer replay, score0/invalidnull; no all-cut or parking milestone.
+  Archive SHA25626c7051ca2ea8d59fff019e9384b4905ab90e264cca98e3c6e7f206b6affce58.
+- Cut008 retains existing WORLD Cartesian bias only across a matching local
+  lower-to-cut endpoint/orientation, once within±3mm. Recorded007 regression
+  reproduces target/rotation and same-seed IK; a zero reset would jump3.72mm.
+  It adds20s no accepted cursor advance,100s hard cut-phase cap and an honest
+  cut-only4800-control/240s allowance; physical cut/scoring/hardware gates unchanged.
+- Cut008 reached109/110 seam,0/24 front,2/24 back, then the20s watchdog
+  stopped it at92.1s. Final tracking2.925mm exceeded2.5mm while film/lateral/
+  orientation gates were valid.1842 samples pass source/scene/31-pose/scorer
+  audit and root independent geometry audit; score0/invalidnull, intact creases.
+  Archive SHA25656aaeeb9b92f3727756d36590138a51a7abe1deae99ea393c29d2a959031891a.
+- Astra actual-pose OBB review identifies blade contact with WEST_BOTTOM near
+  the008 seam stall. Do not classify the residual as free-space stiction or
+  increase along-path force/integral before reviewing physical contact. Old
+  cross-task gripper mesh certificates omitted body collision-origin RPY; they
+  are not complete-gripper clearance passes until recomputed.
+- 46 CPU tests pass. Native measured rest-pose return and physical missing-span
+  repasses are implemented but not yet exercised after all158 cuts. Opening is
+  still an unsealed diagnostic; collapse control is absent. GPU is idle; no
+  extra run or upstream PR authorized by this checkpoint. Root retains artifacts.
