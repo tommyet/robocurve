@@ -6,7 +6,7 @@ the guide joint. No object pose is changed. The real snap-fit is not modelled.
 import math
 from pathlib import Path
 from pxr import Gf, Usd, UsdGeom, UsdPhysics, PhysxSchema
-from config import CAN_COLOR,CAP_COLOR
+from config import CAN_COLOR,CAP_COLOR,TARGET_RADIUS
 
 
 def collider(shape):
@@ -70,6 +70,16 @@ def asset(path,kind):
         box(stage,'/Object/outlet',(.001,.004,.003),(.0092,0.,0.),(.05,.05,.05),False)
     stage.GetRootLayer().Save()
     return str(Path(path).resolve())
+
+
+def panel_asset(path):
+    """Fixed 80 mm plaque, 2 mm thick, local front face x=-1 mm."""
+    stage=Usd.Stage.CreateNew(str(path));UsdGeom.SetStageMetersPerUnit(stage,1.)
+    UsdGeom.SetStageUpAxis(stage,UsdGeom.Tokens.z)
+    root=UsdGeom.Xform.Define(stage,'/Plaque');stage.SetDefaultPrim(root.GetPrim())
+    obj=cylinder(stage,'/Plaque/face',TARGET_RADIUS,.002,(0.,0.,0.),(.95,.95,.95))
+    obj.GetAxisAttr().Set('X')
+    stage.GetRootLayer().Save();return str(Path(path).resolve())
 
 
 def stand_asset(path):

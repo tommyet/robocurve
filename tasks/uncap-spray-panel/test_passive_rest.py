@@ -72,6 +72,18 @@ class PassiveRestTests(unittest.TestCase):
             result=subprocess.run([sys.executable,str(PATH),'--physics-hz','480','--log-dir',str(out)],capture_output=True,text=True)
             self.assertEqual(result.returncode,2);self.assertIn('invalid choice',result.stderr);self.assertFalse(out.exists())
 
+    def test_contact_reporting_options_are_opt_in_and_cannot_enable_on_full_task(self):
+        defaults=dict(track_contact_points=False,track_friction_forces=False,max_contact_data_count_per_prim=4)
+        configs=[SimpleNamespace(**defaults),SimpleNamespace(**defaults)]
+        runner.configure_contact_diagnostic(configs,False)
+        for cfg in configs:self.assertEqual(vars(cfg),defaults)
+        runner.configure_contact_diagnostic(configs,True)
+        for cfg in configs:self.assertEqual(vars(cfg),dict(track_contact_points=True,track_friction_forces=True,max_contact_data_count_per_prim=64))
+        with tempfile.TemporaryDirectory() as directory:
+            out=Path(directory)/'must-not-exist'
+            result=subprocess.run([sys.executable,str(PATH),'--policy','demo','--stage','full','--contact-diagnostic','--log-dir',str(out)],capture_output=True,text=True)
+            self.assertEqual(result.returncode,2);self.assertIn('unscored',result.stderr);self.assertFalse(out.exists())
+
     def test_solver_override_cannot_modify_an_ordinary_task_run(self):
         with tempfile.TemporaryDirectory() as directory:
             out=Path(directory)/'must-not-exist'

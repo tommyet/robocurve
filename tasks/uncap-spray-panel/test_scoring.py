@@ -8,7 +8,7 @@ from scoring import SprayScorer
 
 def sample(**changes):
     s=dict(time=0.,can=CAN_START,cap=CAP_START,button_travel=0.,
-           nozzle=(TARGET_X-.20,0.,TARGET_CENTER[1]),axis=(1.,0.,0.),
+           nozzle=(TARGET_X-.20,TARGET_CENTER[0],TARGET_CENTER[1]),axis=(1.,0.,0.),
            can_speed=0.,cap_speed=0.,upright=1.,cap_detached=False,hands_clear=False)
     s.update(changes)
     return s
@@ -47,12 +47,24 @@ class ScoringTests(unittest.TestCase):
         t=SprayScorer();s=sample(cap_detached=True,cap=(.3,.2,TOP+.02))
         t.update(s);self.assertEqual(t.value,0)
 
-    def test_center_spray_coats_only_footprint(self):
+    def test_center_spray_coats_the_circle_and_preserves_overspray_accounting(self):
         t=SprayScorer();s=sample(cap_detached=True,cap=(CAP_PAD[0],CAP_PAD[1],TOP+.017),button_travel=.003)
         t.update(s);self.tick(t,s,40)
-        self.assertGreater(t.result()['coverage'],.1)
-        self.assertLess(t.result()['coverage'],.5)
+        self.assertGreaterEqual(t.result()['coverage'],.9)
         self.assertLess(t.result()['overspray'],.15)
+
+    def test_circular_mask_uses_radius_not_square_and_has_fifty_two_sample_cells(self):
+        cells=list(SprayScorer.cells());targets=[(p,t) for _,p,t in cells if t]
+        self.assertEqual(len(targets),52)
+        for _,p,target in cells:
+            dy,dz=p[1]-TARGET_CENTER[0],p[2]-TARGET_CENTER[1]
+            self.assertEqual(target,dy*dy+dz*dz<=TARGET_RADIUS**2)
+        corners=[t for _,p,t in cells if .029<abs(p[1]-TARGET_CENTER[0])<.036 and .029<abs(p[2]-TARGET_CENTER[1])<.036]
+        self.assertTrue(corners);self.assertFalse(any(corners))
+        tracker=SprayScorer()
+        for index,_,target in cells:
+            if not target:tracker.dose[index]=COAT_DOSE*100
+        self.assertEqual(tracker.result()['coverage'],0.)
 
     def test_budget_is_finite(self):
         t=SprayScorer();s=sample(cap_detached=True,cap=(CAP_PAD[0],CAP_PAD[1],TOP+.017),button_travel=.003)
@@ -97,7 +109,7 @@ class ScoringTests(unittest.TestCase):
 
     def test_hand_in_spray_blocks_target(self):
         t=SprayScorer();s=sample(cap_detached=True,cap=(CAP_PAD[0],CAP_PAD[1],TOP+.017),
-                               button_travel=.003,hand_tcp=[(TARGET_X-.18,0.,TARGET_CENTER[1])])
+                               button_travel=.003,hand_tcp=[(TARGET_X-.18,TARGET_CENTER[0],TARGET_CENTER[1])])
         t.update(s);self.tick(t,s,20)
         self.assertFalse(any(t.dose))
 
@@ -111,11 +123,9 @@ class ScoringTests(unittest.TestCase):
         # release rubric. It is not a robot-feasibility demonstration.
         t=SprayScorer();s=sample(cap_detached=True,cap=(CAP_PAD[0],CAP_PAD[1],TOP+.017))
         t.update(s)
-        for y in (-.035,.035):
-            for z in (-.035,.035):
-                s['can']=(CAN_START[0],y,TARGET_CENTER[1]-.077+z)
-                s['nozzle']=(CAN_START[0]+.009,y,TARGET_CENTER[1]+z)
-                s['button_travel']=.0027;self.tick(t,s,16)
+        s['can']=SPRAY_HELD_CAN
+        s['nozzle']=(CAN_START[0]+.009,*TARGET_CENTER)
+        s['button_travel']=.0027;self.tick(t,s,16)
         self.assertGreaterEqual(t.result()['coverage'],.9)
         self.assertLess(t.result()['overspray'],.15)
         s.update(can=CAN_START,button_travel=0.,hands_clear=True)

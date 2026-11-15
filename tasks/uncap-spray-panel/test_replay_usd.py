@@ -5,7 +5,7 @@ from pathlib import Path
 import tempfile
 import unittest
 try:
-    from pxr import Usd,UsdGeom,UsdLux,Gf,Vt
+    from pxr import Usd,UsdGeom,UsdLux,UsdPhysics,Gf,Vt
 except ModuleNotFoundError:
     raise unittest.SkipTest('offline writer tests require the dedicated usd-core environment')
 spec=importlib.util.spec_from_file_location('_offline_replay',Path(__file__).with_name('replay_usd.py'))
@@ -68,6 +68,53 @@ class ReplayUsdTests(unittest.TestCase):
             self.assertEqual(len(UsdGeom.Points(stage.GetPrimAtPath('/World/spray_mist')).GetPointsAttr().Get(1)),1)
             self.assertEqual(writer.sha(root/'replay-scene.usdc'),original)
             self.assertTrue(result['diagnostic']);self.assertFalse(result['native_rtx_capture']);self.assertIn('NOT NATIVE RTX',result['label'])
+
+    def test_native_plaque_geometry_is_fixed_x_axis_and_has_no_rigid_body_owner(self):
+        # Execute the real geometry builders with USD collision reporting only;
+        # PhysX contact-offset schema is not provided by the local usd-core wheel.
+        import ast
+        source=Path(__file__).with_name('mechanics.py').read_text();tree=ast.parse(source)
+        functions=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name in ('cylinder','panel_asset')]
+        namespace=dict(Usd=Usd,UsdGeom=UsdGeom,Gf=Gf,Path=Path,TARGET_RADIUS=.04,
+                       collider=lambda shape:UsdPhysics.CollisionAPI.Apply(shape.GetPrim()))
+        exec(compile(ast.Module(body=functions,type_ignores=[]),'<native plaque builders>','exec'),namespace)
+        with tempfile.TemporaryDirectory() as directory:
+            path=namespace['panel_asset'](Path(directory)/'plaque.usda');stage=Usd.Stage.Open(path)
+            cylinder=UsdGeom.Cylinder(stage.GetPrimAtPath('/Plaque/face'))
+            self.assertEqual(cylinder.GetAxisAttr().Get(),'X');self.assertEqual(cylinder.GetRadiusAttr().Get(),.04)
+            self.assertEqual(cylinder.GetHeightAttr().Get(),.002)
+            self.assertTrue(cylinder.GetPrim().HasAPI(UsdPhysics.CollisionAPI))
+            self.assertFalse(any(p.HasAPI(UsdPhysics.RigidBodyAPI) or p.HasAPI(UsdPhysics.MassAPI) for p in stage.Traverse()))
+
+    def test_multiface_colors_keep_uniform_interpolation_and_exact_integer_samples(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)/'input';manifest,rows,_=self.fixture(root)
+            stage=Usd.Stage.Open(str(root/'replay-scene.usdc'));cell=UsdGeom.Mesh.Define(stage,'/World/cell')
+            cell.CreatePointsAttr([Gf.Vec3f(0,0,0),Gf.Vec3f(0,1,0),Gf.Vec3f(0,0,1),Gf.Vec3f(0,1,1)])
+            cell.CreateFaceVertexCountsAttr([3,3]);cell.CreateFaceVertexIndicesAttr([0,1,2,1,3,2])
+            initial=[[.95,.95,.95],[.60,.63,.66]];cell.CreateDisplayColorAttr([Gf.Vec3f(*c) for c in initial])
+            cell.GetDisplayColorPrimvar().SetInterpolation('uniform');stage.GetRootLayer().Save()
+            manifest['scene_sha256']=writer.sha(root/'replay-scene.usdc')
+            manifest['surface_cells'][0].update(display_color_interpolation='uniform',face_vertex_counts=[3,3])
+            (root/'replay-manifest.json').write_text(json.dumps(manifest))
+            middle=[[.5,.6,.8],[.4,.5,.7]];final=[[.08,.3,.85],[.09,.31,.86]]
+            rows[1]['spray_surface_updates']=[dict(index=0,colors=middle)];rows[2]['spray_surface_updates']=[dict(index=0,colors=final)]
+            expected=self.write_rows(root,rows);writer.build_replay(root,Path(directory)/'out',expected,True)
+            replay=Usd.Stage.Open(str(Path(directory)/'out/replay.usdc'));prim=replay.GetPrimAtPath('/World/cell')
+            self.assertEqual(UsdGeom.Gprim(prim).GetDisplayColorPrimvar().GetInterpolation(),'uniform')
+            self.assertEqual(list(UsdGeom.Mesh(prim).GetFaceVertexCountsAttr().Get()),[3,3])
+            attr=prim.GetAttribute('primvars:displayColor')
+            for frame,colors in enumerate((initial,middle,final)):
+                actual=attr.Get(frame);self.assertEqual(len(actual),2)
+                for a,b in zip(actual,colors):
+                    for u,v in zip(a,b):self.assertAlmostEqual(u,v,places=6)
+            for bad in ([final[0]],[[float('nan'),0,0],final[1]]):
+                rows[2]['spray_surface_updates']=[dict(index=0,colors=bad)]
+                with self.assertRaises(ValueError):writer.build_replay(root,Path(directory)/('bad'+str(len(bad))),self.write_rows(root,rows),True)
+            rows[2]['spray_surface_updates']=[dict(index=0,colors=final)]
+            manifest['surface_cells'][0]['face_vertex_counts']=[4,3];(root/'replay-manifest.json').write_text(json.dumps(manifest))
+            with self.assertRaisesRegex(ValueError,'topology metadata'):
+                writer.build_replay(root,Path(directory)/'bad-topology',self.write_rows(root,rows),True)
 
     def test_camera_intrinsics_conventions_and_native_parent(self):
         for convention,forward,up in (('opengl',(0,0,-1),(0,1,0)),('ros',(0,0,1),(0,-1,0)),('world',(1,0,0),(0,0,1))):

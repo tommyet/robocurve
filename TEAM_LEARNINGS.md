@@ -2505,3 +2505,24 @@ editing, merge both agents' findings, and commit/push the update with the work.
   all184 actual024samples, transported targets solve continuous IK<=67um,
   min jointmargin13.9deg; predicted physicalgap25.642mm. Native execution is
   still pending. Sol prepares025; original pressure/dwell/120s limits stay.
+
+### 2026-11-15 — user-approved single-plaque scope
+
+- User approved removing the four-position coating sweep. The revised task is
+  capped start, cap removal/parking, one stationary circular plaque, released
+  button, and safe upright can parking. Legacy four-zone runs are not demos of
+  this revision. No new submission or media upload is authorized.
+- Plaque is an80mm diameter,2mm thick fixed cylinder facing-X, frontx=.47,
+  centre(y,z)=(-.035,.9525). Retain90% sampled coverage,15% overspray,.08dose,
+ 12deg cone,120–300mm range,12s supply and all hardware/parking conditions.
+  Separate transit(.26,0,.9105) preserves the old approach; held can pose is
+  (.26,-.035,.8755), previously exercised as the first spray position.
+- Astra core and remaining replay reviews pass.95 main tests run with one
+  USD-dependent skip; seven USD tests pass separately. Surface cell meshes
+  partition a128-sided circle with exact per-face native color arrays; replay
+  preserves those arrays and supports legacy scalar colors. All pose, time,
+  source/scene/trace hash and audited-full-score guards remain.
+- Fresh capped spray-plaque-028 is running on retained cb0da2; contact diagnostic
+  OFF,960Hz physics/20Hz control,2400maxsteps. Native startup confirms21dynamic
+  owners and1296surfacecells. Actual t0 offline render passes visual inspection
+  at explicit lightscale.0003. Full score and parking remain pending.

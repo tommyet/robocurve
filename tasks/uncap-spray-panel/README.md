@@ -1,187 +1,92 @@
-# Uncap a spray can and coat a panel
+# Uncap a spray can and coat one circular plaque
 
-Development prototype: local scorer checks pass. Native scene initialized and
-ran a 150-step stability probe. A 600-step two-arm cap-removal diagnostic
-failed to detach the cap; no paint was emitted. Robot access, cap removal,
-nozzle operation and a full-score demonstration remain **unverified**.
-No model score, successful demo, media ID or submission is claimed. A complete
-601-frame three-camera H.264 diagnostic video exists locally; it is explicitly
-labelled as a prototype, not a spraying demonstration.
-
-The robot removes an ordinary friction cap, parks it, grips the cylindrical
-can and presses its button while sweeping blue spray over a white panel. This
-tests bimanual tool use and spatial coverage rather than a priming rule.
+This task now asks for one stationary coating position: remove and park the cap,
+coat the fixed white circular plaque, release the button, and leave the can
+upright on its pad with both hands clear. The prior four-zone panel task is
+retired. Its failed trials and sources remain development evidence, not a
+demonstration of this revised task. **A fresh capped-start full-score trial is
+pending.** No Dream score, submission media, or completed demo is claimed.
 
 ## Fixed setup
 
-World metres; table surface z=0.7475. No object jitter. See `config.py` and
-`task.py` for all positions. Paint and fixtures are procedural assets.
+World metres; table z=0.7475. No object jitter. Configuration is in `config.py`.
 
-| Object | Geometry, material and starting state |
+| Object | Geometry and starting state |
 |---|---|
-| Can | Orange aluminium cylinder, 52 mm diameter × 140 mm overall body height, 250 g, upright at (0.26,0), nozzle points +x. No handles. |
-| Cap | Hollow charcoal plastic friction cap, 60 mm outside diameter × 34 mm height, 18 g, approximately 3 mm side wall and 2 mm lid. Initially on the can. Compound 24-segment rigid ring. |
-| Button | White plastic 18 mm diameter × 10 mm high actuator, 3 g, 3 mm native prismatic stroke. Starts released, centre 77 mm above can centre. |
-| Target | Fixed white steel panel, 140 × 140 × 2 mm, vertical face x=0.47, centre y=0,z=0.9875. |
-| Backing | Neutral grey backing, 360 × 360 × 12 mm, fixed behind target. |
-| Stand | Two-foot steel frame with 18 mm square uprights, diagonal braces, crossbar and four panel mounts behind the backing. |
-| Pads | Blue cap pad and grey can pad, each 100 × 100 × 2 mm, fixed on table. |
+| Can | Orange aluminium cylinder, 52 mm diameter, 140 mm overall height, 250 g. Starts upright at (0.26,0,0.8675), nozzle +x, on a 50 mm riser. |
+| Cap | Hollow charcoal plastic friction cap, 60 mm diameter × 34 mm height, 18 g; initially seated. Compound 24-segment ring, approximately 3 mm wall and 2 mm lid. |
+| Button | White plastic 18 mm diameter × 10 mm actuator, 3 g; native 3 mm prismatic travel, initially released. |
+| Target | Fixed white circular plaque, 80 mm diameter × 2 mm thick, axis x. Front x=0.47; centre (y,z)=(-0.035,0.9525). No rigid-body dynamics. |
+| Backing | Fixed grey 360 × 360 × 12 mm board, aligned with plaque centre. |
+| Stand | Fixed steel frame behind the backing; two feet, uprights, braces, crossbar and mounts. |
+| Pads | Blue cap pad at (0.34,-0.10); grey can pad/riser at (0.26,0), each pad 100 × 100 × 2 mm. |
 
-## Proposed rubric
+The controller retains a separate transit can anchor (0.26,0,0.9105) and uses
+one coating hold at (0.26,-0.035,0.8755). Changing plaque centre does not move
+the transit twice. It uses privileged measured state and ordinary bounded
+14-dimensional robot commands; it does not write object poses or paint doses.
 
-End-state score, with irreversible invalidation if the can or cap falls more
-than 30 mm below the tabletop or telemetry is invalid:
+## Scoring
 
-- 0.25: cap detached, cap centre moved more than 60 mm from its seated position at least
-  once, cap subsequently on its pad (45 mm horizontal tolerance, 12 mm vertical
-  tolerance, speed below 20 mm/s).
-- 0.50: above, and at least 50% of the target receives the minimum coat, with
-  no more than 15% cumulative overspray.
-- 0.75: above, and at least 90% coverage.
-- 1.00: above, can upright within 10 degrees on its pad (35 mm horizontal,
-  12 mm height tolerance; speed below 20 mm/s), nozzle released to below 0.5 mm
-  depression, both TCPs more than 70 mm from can/cap centres, held for 1 second.
+End-state score; invalid telemetry or a can/cap drop more than 30 mm below the
+table invalidates all credit.
 
-Coverage uses 10 mm square cells and at least 0.08 effective centre-plume
-seconds per cell. Overspray is emitted flux missing the panel, including rays
-that miss the backing, face away or hit conservative cap/hand occluders.
-It is cumulative and cannot be erased by a later successful pass. The can has
-a finite 12-second spray supply. A press is at least 2 mm actuator displacement.
-The cap must have been removed before spraying can receive credit.
+- 0.25: cap removed at least 60 mm from its seated position and parked within
+  45 mm horizontally and 12 mm vertically, with speed below 20 mm/s.
+- 0.50: above, at least 50% plaque coverage and at most 15% cumulative overspray.
+- 0.75: above, at least 90% plaque coverage.
+- 1.00: above, can on its pad within 35 mm horizontally and 12 mm vertically,
+  upright within 10°, speed below 20 mm/s, button travel below 0.5 mm, and both
+  TCPs more than 70 mm from can/cap centres, continuously for one second.
 
-## Fidelity and unresolved work
+Coverage samples a 10 mm grid: 52 cell centres lie inside the exact 40 mm
+radius. A cell needs 0.08 effective centre-plume seconds. The plume retains its
+12° half-angle, 120–300 mm scored range and 12-second supply. At least 2 mm
+actual button travel emits paint after cap removal. Overspray includes emitted
+flux missing the circle, backing, range, facing direction, or coarse occluders;
+it cannot be erased by later paint. These thresholds are unchanged from the
+retired task; only the target geometry and single-position scope changed.
 
-Can, cap and button use native rigid colliders. The cap uses a guided axial
-spring detent (1,800 N/m) released after 4 mm travel; this approximates a snap
-fit and is not calibrated to a commercial product. The nozzle is a native
-spring-return piston (2,200 N/m). The cap has no extra robot grasp features.
+Appearance uses the same measured per-cell doses. Cell meshes partition white
+plaque and grey backing at an inscribed 128-sided circle (under 13 micrometres
+radial approximation error); scoring uses the exact radius at cell centres.
+Recorded per-face color arrays preserve that boundary in offline replay.
 
-Paint is a geometric 12-degree half-angle cone, integrated at 20 Hz with
-centre-weighted angular flux on a fixed plane. Scored range is 120–300 mm.
-There are no aerosol particles, airflow, droplets, wet-film flow or drying.
-Coloured surface tiles visualize measured accumulated dose. Sparse spray-mist
-points are appearance only, enabled by measured actuator depression; they
-do not apply forces or contribute to scoring. A 35 mm cap sphere
-and 10 mm TCP spheres provide coarse occlusion; full finger/arm mesh raycasting
-remains missing. TCP spheres do not represent complete gripper geometry.
-Mass conservation uses a small-angle quadrature approximation. Numerical coat
-thresholds require validation before any real-world fidelity claim.
+## Fidelity
 
-First verify collision geometry, joints created before physics initialization,
-cap retention force and clearance, normal grasp access, button contact and
-release, and actual current/force limits. Then implement a feedback robot demo
-using only ordinary arm commands, record a full-score run and repeat from a
-sealed start. Only then spend Dream requests. Reproduce scores from measured
-telemetry, review all three camera views, and retain hashes of final sources.
+Native rigid colliders, guided cap detent (1800 N/m) and spring-return button
+(2200 N/m, damping 1 N·s/m) approximate the mechanism. The can's finite torsional
+contact patch is an uncalibrated finger-pad approximation. No material, mass,
+actuator gain, force limit or grasp feature was changed for the scope revision.
+Paint is geometric cone quadrature, not aerosol/fluid simulation. Cap/hand
+sphere occlusion is coarse. Mist points and surface colors are appearance only.
 
-The native runner completed a no-model hold probe on the existing L40S. This
-is the command to reproduce it:
-to check geometry, initial stability, joints and camera views. This probe holds
-the arms ready and cannot demonstrate cap removal or nozzle actuation:
+## Reproduction and validation
+
+The current CPU tests cover circular dose/layout, exactly one coating sequence,
+calibrated grasp/return, physical release gates and captured color replay. Old
+027 first-shot rays retrospectively cover this circle, but that is only a
+feasibility diagnostic. It does not establish the revised task's native score.
+
+A fresh full trial uses 960 Hz physics, 20 Hz control (48 physics steps/action),
+baseline body solver settings, and the unchanged limit of 2400 actions/120 s:
 
 ```sh
 /data/IsaacLab-Arena/.venv/bin/python tasks/uncap-spray-panel/run.py \
-  --policy probe --max-steps 150 --log-dir ~/yam-eval/spray-probe-001
+  --policy demo --stage full --physics-hz 960 --no-video \
+  --max-steps 2400 --log-dir ~/yam-eval/spray-single-028
 ```
 
-The `--policy capprobe` mode uses `task.demo()` for a diagnostic cap-removal
-attempt. Its first 600-step run failed: measured cap/can centre separation
-never exceeded 86.998 mm, cap guide never released, and no spray was emitted.
-This is a failed attempt, not a successful task demo. A working feedback
-controller and nozzle/painting sequence remain outstanding. Draft run limit is 2,400 controls (120 seconds at
-20 Hz); adjust to the demonstrated task before submission.
-
-## Local checks
+`--no-video` is a state-only engineering run, with no native camera images or
+eligible submission media. Exact native body/paint captures can be replayed
+separately with an explicit offline-physics-replay label. `--contact-diagnostic`
+is opt-in for unscored stages only and records raw native normal/friction
+snapshots; it is disabled for the fresh full trial. No ordinary full run can
+silently enable it.
 
 ```sh
-python3 -m unittest discover -s tasks/uncap-spray-panel -p 'test_*.py' -v
+PYTHONPATH=/private/tmp/spray-yam-source /private/tmp/robocurve-media-env/bin/python \
+  -m unittest discover -s tasks/uncap-spray-panel -p 'test*.py'
+/private/tmp/robocurve-usd-env/bin/python -m unittest discover \
+  -s tasks/uncap-spray-panel -p test_replay_usd.py
 ```
-
-Fifteen tests cover capped/no-press states, detent release without removal,
-wrong-facing and out-of-range spray, footprint coverage, hand occlusion,
-overspray, finite supply, drop invalidation and final release/parking. Synthetic
-states validate the rubric, not the robot's ability to reach these states.
-
-## Related submissions
-
-Read-only search of all 1,953 current upstream PRs on 2026-11-13 found no
-direct uncap-and-spray-coat task. #1770 applies primer with a brush. Inhaler
-priming #795 was finally rejected for non-robotic difficulty and an unspecified
-product protocol. This task must demonstrate physical cap removal, actuator
-use and spatial coating; changing the container alone is not novelty.
-The task board itself required sign-in. Recheck novelty before submission.
-
-## November 14 corrections in progress
-
-The first failure used positive Waypoint finger targets even though the pinned
-YAM uses negative metre values (-0.04695 open to 0 closed); those commands were
-clipped fully closed. Corrected target signs and replaced simultaneous vertical
-wrist access with a privileged feedback side-grasp controller using ordinary
-14D actions. Cap-only run `spray-v2-cap-002` physically detached and parked the
-cap, score 0.25 after 23.2 seconds. Full coating validation follows separately.
-
-The revised orange can, dark cap and blue paint are distinct from the grey work
-surface and white panel. The stand has two feet, uprights, diagonal braces,
-crossbar and bolted-style mounting bars instead of a single support post.
-Neither the can nor cap gains extra grip handles. Material/force calibration
-and full gripper/arm spray occlusion remain approximations.
-
-### Contact and controller changes
-
-The can body uses a 3 mm torsional contact patch (minimum 1.5 mm), smaller than
-its finger contact face, to represent finite pad twist resistance rather than
-point contact that freely rolls under an off-centre nozzle press. This is an
-explicit, uncalibrated contact approximation; no weld, pose lock, extra handle
-or increased hardware effort limit holds the can. NVIDIA documents these
-contact-patch parameters in the [PhysX collision schema](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.2/dev_guide/schemas/physxschema.html).
-
-The privileged scripted controller calibrates its grasp from measured can and
-hand poses, compensates bounded arm PD deflection and adjusts press height
-using measured piston travel (2.7 mm target). It sends ordinary joint targets;
-only the environment's geometric spray model writes accumulated surface dose.
-The sparse aerosol points are a visual aid, not simulated fluid particles.
-
-### Clearance diagnostic revision
-
-Native force filtering observed brief button contact followed by large right
-finger net forces outside the can/button pairs. The next clearance probe adds
-the other arm as a filter, braces the can 25 mm below its centre, and starts it
-on an ordinary 80x80x50 mm support block. The block enables a reachable lower
-grasp; it does not constrain the can during painting. Return height follows
-the physical block. This setup revision is not yet a validated full demo.
-
-`--stage press` is an explicitly uncapped diagnostic. It bypasses cap removal
-only to inspect nozzle contacts and is forced to score zero. Completion must
-come from `--stage full`, starting capped and finishing with released parking.
-
-### Recorded-physics video fallback
-
-On the retained instance, native PhysX runs are stable but RTX camera capture
-can fail with driver Xid109. `--no-video --policy demo` therefore records an
-explicitly camera-free diagnostic: measured native body poses, flattened scene,
-calibrated cameras, paint colors and aerosol visualization. It does not return
-images to a model. This mode cannot run Dream and is not native camera footage.
-
-For a **completed, independently audited** capture, `replay_usd.py` can compose
-an offline USD replay from every actual 20 Hz body pose. It does not run physics,
-reconstruct poses with forward kinematics, or fill in missing frames. The default
-requires a measured full score and an audit bound to the trajectory SHA-256.
-`--diagnostic` permits incomplete captures for internal inspection only; the
-completed preview tools refuse them.
-
-```sh
-# Requires Python 3.12 with usd-core 25.11 and the complete capture/source folder.
-python replay_usd.py CAPTURE --out REPLAY --trace-sha256 TRACE_SHA256 \
-  --preview-light-scale .001
-# On macOS with Apple's USD tools; renders all three recorded calibrated views.
-python render_replay_views.py REPLAY
-# Requires OpenCV, NumPy and /opt/homebrew/bin/ffmpeg.
-python render_replay_preview.py CAPTURE REPLAY
-```
-
-The explicit 0.001 light multiplier makes native high-intensity lights readable
-in Storm. Geometry, materials, poses and captured coating updates are preserved;
-photometric equivalence with RTX is not claimed. The composite is labelled
-**scripted physics replay**, shows measured score/coverage, and includes all
-recorded frames through task completion. This preview is distinct from a
-Dream-1 video and does not establish policy performance.

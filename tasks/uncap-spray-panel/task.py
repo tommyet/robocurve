@@ -1,4 +1,4 @@
-"""Uncap a spray can, coat a panel, and put the can down. Use run.py."""
+"""Uncap a spray can, coat one circular plaque, and put the can down. Use run.py."""
 from yam_arena.task_file import Box
 from config import *
 
@@ -15,11 +15,11 @@ OBJECTS = [
     Box('can_pad', pos=CAN_PAD, size=(.10,.10,.002), color=(.20,.23,.26)),
     Box('can_riser',pos=(CAN_PAD[0],CAN_PAD[1],TOP+RISER_HEIGHT/2),
         size=(.08,.08,RISER_HEIGHT),color=(.48,.50,.52)),
-    Box('backing', pos=(TARGET_X+.008,0.,TARGET_CENTER[1]),
+    Box('backing', pos=(TARGET_X+.008,TARGET_CENTER[0],TARGET_CENTER[1]),
         size=(.012,.36,.36), color=BACKING_COLOR),
-    Box('panel', pos=(TARGET_X+.001,0.,TARGET_CENTER[1]),
-        size=(.002,.14,.14), color=(.95,.95,.95)),
-    Box('stand', pos=(TARGET_X+.05,0.,TOP),
+    Box('panel', pos=(TARGET_X+.001,TARGET_CENTER[0],TARGET_CENTER[1]),
+        size=(.002,2*TARGET_RADIUS,2*TARGET_RADIUS), color=(.95,.95,.95)),
+    Box('stand', pos=(TARGET_X+.05,TARGET_CENTER[0],TOP),
         size=(.12,.29,.45), color=(.18,.24,.28)),
 ]
 _tracker = None

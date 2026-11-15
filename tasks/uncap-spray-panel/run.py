@@ -166,9 +166,18 @@ def physics_timing_readback(base,physics_hz):
                 control_hz=20.,decimation=decimation,scope='constructed native environment cfg.sim.dt, cfg.decimation and step_dt')
 
 
+def configure_contact_diagnostic(configs,enabled):
+    """Set reporting-only sensor options before construction, explicitly opt-in."""
+    if enabled:
+        from native_contact_reader import SENSOR_CONSTRUCTION_REQUIREMENTS
+        for cfg in configs:
+            for name,value in SENSOR_CONSTRUCTION_REQUIREMENTS.items():setattr(cfg,name,value)
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--policy',choices=['probe','capprobe','demo','dream','rest-probe'],default='probe')
+    parser.add_argument('--contact-diagnostic',action='store_true',help='Unscored stages only: raw native contact points/friction; no forces applied')
     parser.add_argument('--physics-hz',type=int,choices=[240,960],default=240,help='Physics integration frequency; controller remains20Hz')
     parser.add_argument('--body-solver-32-8',action='store_true',help='Explicit can/button PhysX solver precision; all other physics unchanged')
     parser.add_argument('--rest-solver',choices=['baseline','32-8'],default='baseline',help='Unscored passive-rest coupon only')
@@ -181,6 +190,7 @@ def main():
     if not 1 <= args.max_steps <= 2400:parser.error('max-steps must be 1..2400')
     if args.policy=='rest-probe':args.stage='press';args.no_video=True
     elif args.rest_solver!='baseline':parser.error('--rest-solver is allowed only with --policy rest-probe')
+    if args.contact_diagnostic and not (args.policy=='rest-probe' or (args.policy=='demo' and args.stage!='full')):parser.error('--contact-diagnostic requires an explicitly unscored demo stage or rest-probe')
     if args.no_video and args.policy not in ('demo','rest-probe'):parser.error('--no-video is allowed only with --policy demo/rest-probe; image-based policies require cameras')
     if args.no_video and args.render_sync:parser.error('--no-video cannot be combined with --render-sync')
     out=args.log_dir.expanduser().resolve();out.mkdir(parents=True,exist_ok=False)
@@ -239,6 +249,7 @@ def main():
                 kw['contact_sensors']=True
                 kw['enable_cameras']=not args.no_video
                 original_init(instance,*a,**kw)
+                configure_contact_diagnostic((instance.scene_config.left_contacts,instance.scene_config.right_contacts),args.contact_diagnostic)
                 stem=instance.scene_config.left_contacts.prim_path.rsplit('/.*',1)[0]
                 instance.scene_config.left_contacts.filter_prim_paths_expr=['{ENV_REGEX_NS}/spray_can']
                 instance.scene_config.right_contacts.filter_prim_paths_expr=[
@@ -246,9 +257,10 @@ def main():
                     *[stem+instance.link_paths[n] for n in ('gripper','tip_left','tip_right')]]
             BimanualYamEmbodiment.__init__=sensor_init
             import isaaclab.sim as sim
-            from mechanics import asset,stand_asset
+            from mechanics import asset,stand_asset,panel_asset
             assets={name:asset(out/(name+'.usda'),name) for name in ('spray_can','cap','button')}
             assets['stand']=stand_asset(out/'stand.usda')
+            assets['panel']=panel_asset(out/'panel.usda')
             if args.body_solver_32_8 or (args.policy=='rest-probe' and args.rest_solver=='32-8'):
                 from pxr import Usd,PhysxSchema
                 for name in ('spray_can','button'):
@@ -274,7 +286,7 @@ def main():
                 if spec.name=='cap' and args.stage=='press':position=(CAP_PAD[0],CAP_PAD[1],TOP+.019)
                 orientation=(0.,0.,0.,1.)
                 if args.policy=='rest-probe' and spec.name in passive_rest_initial():position,orientation=passive_rest_initial()[spec.name]
-                return sc.Object(name=spec.name,object_type=sc.ObjectType.BASE if spec.name=='stand' else sc.ObjectType.RIGID,
+                return sc.Object(name=spec.name,object_type=sc.ObjectType.BASE if spec.name in ('stand','panel') else sc.ObjectType.RIGID,
                     spawner_cfg=cfg,
                     initial_pose=sc.Pose(position_xyz=tuple(position),rotation_xyzw=orientation))
             sc.task_object=make
@@ -345,15 +357,23 @@ def main():
             # help the robot manipulate either the cap or the can.
             self.tiles=[]
             self.coat_cache=[0.]*(GRID*GRID)
-            from pxr import UsdGeom
+            from pxr import UsdGeom,Gf
             self.mist=UsdGeom.Points.Define(self.stage,'/World/spray_mist')
             self.mist.CreatePointsAttr([]);self.mist.CreateWidthsAttr([])
             self.mist.CreateDisplayColorAttr([(.45,.70,1.)])
+            from surface_geometry import circle_cell_parts
             for i,p,target in SprayScorer.cells():
-                obj=box(self.stage,f'/World/spray_surface/cell_{i}',
-                        (.0001,CELL*.98,CELL*.98),(TARGET_X-.0001,p[1],p[2]),
-                        (.95,.95,.95) if target else BACKING_COLOR,False)
-                self.tiles.append((obj,target))
+                parts=circle_cell_parts(p[1],p[2],CELL*.49,TARGET_CENTER,TARGET_RADIUS)
+                obj=UsdGeom.Mesh.Define(self.stage,f'/World/spray_surface/cell_{i}')
+                points=[];counts=[];indices=[];bases=[]
+                for polygon,white in parts:
+                    counts.append(len(polygon));indices.extend(range(len(points),len(points)+len(polygon)))
+                    points.extend(Gf.Vec3f(TARGET_X-.0001,y,z) for y,z in polygon)
+                    bases.append((.95,.95,.95) if white else BACKING_COLOR)
+                obj.CreatePointsAttr(points);obj.CreateFaceVertexCountsAttr(counts);obj.CreateFaceVertexIndicesAttr(indices)
+                obj.CreateSubdivisionSchemeAttr('none');obj.CreateDoubleSidedAttr(True)
+                obj.CreateDisplayColorAttr([Gf.Vec3f(*base) for base in bases]);obj.GetDisplayColorPrimvar().SetInterpolation('uniform')
+                self.tiles.append((obj,target,bases))
 
         def _reset_with_joints(self,scene,seed):
             # _ensure_sim spawns both native joints before reset settles.
@@ -375,6 +395,16 @@ def main():
             from yam_arena import YAM_URDF
             physical=physics_manifest(self.stage,self.native_assets,YAM_URDF,self._base.cfg.sim.dt,self._base.step_dt)
             (out/'physics-manifest.json').write_text(json.dumps(physical,indent=2)+'\n')
+            if args.contact_diagnostic:
+                from native_contact_reader import SENSOR_CONSTRUCTION_REQUIREMENTS
+                readback={}
+                for side in ('left','right'):
+                    sensor=self._base.scene.sensors[side+'_contacts'];view=sensor.contact_view
+                    actual={key:getattr(sensor.cfg,key) for key in SENSOR_CONSTRUCTION_REQUIREMENTS}
+                    if actual!=SENSOR_CONSTRUCTION_REQUIREMENTS:raise RuntimeError('diagnostic sensor config mismatch')
+                    readback[side]=dict(config=actual,sensor_paths=view.sensor_paths,filter_paths=view.filter_paths,
+                        sensor_count=view.sensor_count,filter_count=view.filter_count,max_contact_data_count=view.max_contact_data_count)
+                (out/'contact-diagnostic-readback.json').write_text(json.dumps(dict(physics_dt_s=float(self._base.cfg.sim.dt),sensors=readback),indent=2)+'\n')
             self.detached=args.stage=='press'
             self.tracker=SprayScorer()
             observation=super().reset(scene,seed=seed)
@@ -391,7 +421,9 @@ def main():
                         native_pose_source='ArticulationData.body_link_pose_w actor frames and arena_world.get_pose_w; no URDF FK reconstruction',
                         capture_hz=20.,frame_zero='post-reset-settle at simulation t=0',interpolated=False,
                         owners=self.replay_owners,cameras=cameras,
-                        surface_cells=[dict(index=i,prim_path=str(obj.GetPrim().GetPath()),target=target) for i,(obj,target) in enumerate(self.tiles)],
+                        surface_cells=[dict(index=i,prim_path=str(obj.GetPrim().GetPath()),target=target,
+                            display_color_interpolation='uniform',face_vertex_counts=list(obj.GetFaceVertexCountsAttr().Get()))
+                            for i,(obj,target,bases) in enumerate(self.tiles)],
                         appearance_updates='Per-row exact native displayColor writes, scorer dose and mist point positions; replay only, not real camera capture',
                         source_sha256=json.loads((out/'source-sha256.json').read_text()),state_only=args.no_video,media_eligible=False)
             (out/'replay-manifest.json').write_text(json.dumps(replay,indent=2)+'\n')
@@ -476,14 +508,13 @@ def main():
             sample['spray_mist_points']=[[float(v) for v in point] for point in points]
             sample['spray_surface_dose']=[float(value) for value in self.tracker.dose]
             sample['spray_surface_updates']=[]
-            for i,(tile,target) in enumerate(self.tiles):
+            for i,(tile,target,bases) in enumerate(self.tiles):
                 coat=min(1.,self.tracker.dose[i]/COAT_DOSE)
                 if abs(coat-self.coat_cache[i])<1e-5:continue
                 self.coat_cache[i]=coat
-                base=(.95,.95,.95) if target else BACKING_COLOR
-                color=Gf.Vec3f(*[(1-coat)*v+coat*b for v,b in zip(base,(.08,.3,.85))])
-                tile.GetDisplayColorAttr().Set([color])
-                sample['spray_surface_updates'].append(dict(index=i,color=[float(v) for v in color]))
+                colors=[Gf.Vec3f(*[(1-coat)*v+coat*b for v,b in zip(base,(.08,.3,.85))]) for base in bases]
+                tile.GetDisplayColorAttr().Set(colors)
+                sample['spray_surface_updates'].append(dict(index=i,colors=[[float(v) for v in color] for color in colors]))
             sample['controller']=telemetry.command
             sample['contacts']=self.contact_acc
             sample['contact_errors']=self.contact_errors
@@ -497,6 +528,13 @@ def main():
             sample['left_contact_net']=array(left_sensor.data.net_forces_w)[0].tolist()
             if left_sensor.data.force_matrix_w is not None:
                 sample['left_can_contact_matrix']=array(left_sensor.data.force_matrix_w)[0].tolist()
+            if args.contact_diagnostic:
+                from native_contact_reader import read_sensor_native_contacts,ContactReadError
+                sample['native_contacts']={}
+                for side,contact_sensor in (('left',left_sensor),('right',sensor)):
+                    try:raw=read_sensor_native_contacts(contact_sensor,physics_dt=float(self._base.cfg.sim.dt))
+                    except ContactReadError as error:raw=error.as_dict()
+                    sample['native_contacts'][side]=raw
             self.contact_acc={}
             telemetry.latest=sample
             self.audit.write(json.dumps(sample,allow_nan=False)+'\n');self.audit.flush()
@@ -506,7 +544,7 @@ def main():
             if hasattr(self,'audit'):
                 self.audit.close()
                 summary=self.tracker.result()
-                if args.stage=='press':summary=dict(score=0.,diagnostic=True,milestones=summary)
+                if args.stage=='press' or args.contact_diagnostic:summary=dict(score=0.,diagnostic=True,milestones=summary)
                 if args.no_video:summary.update(diagnostic=True,state_only=True,media_eligible=False)
                 (out/'score-summary.json').write_text(json.dumps(summary,indent=2))
                 if args.policy=='rest-probe' and self.rest_samples:
@@ -542,7 +580,7 @@ def main():
         policy=register_policy(cap_only=args.stage=='cap',press_only=args.stage=='press')
     diagnostic=args.no_video or args.policy in ('probe','capprobe') or (args.policy=='demo' and args.stage!='full')
     (out/'mode.json').write_text(json.dumps(dict(policy=args.policy,stage=args.stage,diagnostic=diagnostic,render_sync=args.render_sync,
-                                               state_only=args.no_video,media_eligible=not diagnostic,physics_hz=args.physics_hz,body_solver_32_8=args.body_solver_32_8,passive_rest=args.policy=='rest-probe',rest_solver=args.rest_solver if args.policy=='rest-probe' else None)))
+                                               state_only=args.no_video,media_eligible=not diagnostic,contact_diagnostic=args.contact_diagnostic,physics_hz=args.physics_hz,body_solver_32_8=args.body_solver_32_8,passive_rest=args.policy=='rest-probe',rest_solver=args.rest_solver if args.policy=='rest-probe' else None)))
     return cli(['run','--embodiment','uncap_spray_prototype','--policy',policy,
                 '-E',f'task={Path(__file__).parent / "task.py"}','-E','object_jitter=0',
                 '-E','control_hz=20','-E','cam_width=320','-E','cam_height=176',

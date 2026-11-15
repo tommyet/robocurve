@@ -1,22 +1,22 @@
 {
-  "status": "moving_can_release_full_trial025_in_progress",
+  "status": "single_plaque_cpu_prepared_fresh_native_trial_pending",
   "checked_date": "2026-11-15",
   "local_scorer_tests": {
-    "main_suite_tests": 74,
+    "main_suite_tests": 95,
     "main_suite_skipped_pxr": 1,
-    "separate_usd_tests_passed": 5
+    "separate_usd_tests_passed": 7
   },
-  "native_runtime_tested": true,
-  "scripted_demo_score": 0.75,
+  "native_runtime_tested": false,
+  "scripted_demo_score": null,
   "dream_score": null,
   "media": null,
   "gpu_started_for_this_task": true,
   "remaining": [
-    "Resolve passive support numerical instability without changing scorer/materials/masses",
-    "Demonstrate released upright parking with native full score1",
-    "Audit and visually review complete capped-start run",
-    "Publish one labelled completed composite preview in batch folder",
-    "Dream run and broader force/material calibration remain separate submission work"
+    "Review revised geometry/controller/scorer and color replay changes",
+    "Run fresh sealed-start single-plaque native full trial",
+    "Require measured full score and independent trace audit including upright parking",
+    "Review exact-pose offline replay; no eligible native media is claimed",
+    "Dream trial and submission remain separate work"
   ],
   "diagnostic_probe": {
     "steps": 150,
@@ -278,5 +278,36 @@
     "physical_attributes_unchanged": true,
     "native_left_can_force_logging_added": true,
     "native_result": "All4 loadedpress/release sequences passed016/017; finishing supportmotion unresolved."
+  },
+  "legacy_four_zone_scripted_demo_score": 0.75,
+  "legacy_native_runtime_tested": true,
+  "task_revision": "single stationary 80 mm circular plaque; approved scope change 2026-11-15",
+  "current_scope": {
+    "target_front_x_m": 0.47,
+    "target_center_yz_m": [
+      -0.035,
+      0.9525
+    ],
+    "target_radius_m": 0.04,
+    "coverage_grid_m": 0.01,
+    "target_cells": 52,
+    "coverage_required": 0.9,
+    "max_overspray": 0.15,
+    "coat_dose_s": 0.08,
+    "physics_hz": 960,
+    "control_hz": 20,
+    "max_actions": 2400,
+    "native_demo": null,
+    "media": null
+  },
+  "legacy_evidence_scope": "All existing latest_results/trial histories refer to the retired four-zone task. No old run is relabelled as a completed revised task.",
+  "native_full_success": false,
+  "legacy_four_zone_best_score": 0.75,
+  "retrospective_geometry_feasibility": {
+    "source": "old 027 first shot only",
+    "target_cells": 52,
+    "coverage": 1.0,
+    "overspray": 0.05128,
+    "status": "retrospective diagnostic only; not a revised-task native demonstration"
   }
 }

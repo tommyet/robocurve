@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from control_math import grip_fraction,ramp_translation,can_frame_ramp_translation,transport_can_reference,release_command_target
+from control_math import grip_fraction,ramp_translation,can_frame_ramp_translation,transport_can_reference,release_command_target,actual_face_tcp_target
 
 
 class GripperUnitTests(unittest.TestCase):
@@ -73,6 +73,33 @@ class CanFrameFollowingTests(unittest.TestCase):
         current=np.array((.2,.3,.4));before=current.copy()
         with self.assertRaises(ValueError):can_frame_ramp_translation(current,current,([np.nan,0,0],np.eye(3)),([0,0,0],np.eye(3)),.01,.05)
         np.testing.assert_array_equal(current,before)
+
+
+class ActualFaceFeedbackTests(unittest.TestCase):
+    def test_translation_error_equals_physical_point_error_under_deflection(self):
+        a=.13;actualR=np.array(((np.cos(a),0,np.sin(a)),(0,1,0),(-np.sin(a),0,np.cos(a))))
+        C=np.array((.26,-.035,.9));canR=np.eye(3);point=np.array((.004,-.018,.08));tcp=np.array((.25,-.02,.91))
+        target=actual_face_tcp_target(C,canR,.0793,actualR,point)
+        desired=C+canR@np.array((0,0,.0793));actual=tcp+actualR@point
+        np.testing.assert_allclose(target-tcp,desired-actual,atol=1e-15)
+        # The old ideal-orientation subtraction misses this physical offset.
+        self.assertGreater(np.linalg.norm((C+[0,0,.0793]-point)-target),.001)
+
+    def test_ideal_orientation_equivalence_and_world_se3_covariance(self):
+        a=.2;R=np.array(((1,0,0),(0,np.cos(a),-np.sin(a)),(0,np.sin(a),np.cos(a))))
+        C=np.array((.26,0,.9));point=np.array((.01,.02,.03));height=.08
+        actual=actual_face_tcp_target(C,R,height,R,point)
+        np.testing.assert_allclose(actual,C+R@(np.array((0,0,height))-point),atol=1e-15)
+        b=.4;Q=np.array(((np.cos(b),-np.sin(b),0),(np.sin(b),np.cos(b),0),(0,0,1)));shift=np.array((.2,.1,.3))
+        changed=actual_face_tcp_target(Q@C+shift,Q@R,height,Q@R,point)
+        np.testing.assert_allclose(changed,Q@actual+shift,atol=1e-15)
+
+    def test_nonfinite_or_incomplete_geometry_rejected(self):
+        for C,R,h,H,p in (([np.nan,0,0],np.eye(3),.08,np.eye(3),[0,0,0]),
+                         ([0,0,0],np.eye(3),float('inf'),np.eye(3),[0,0,0]),
+                         ([0,0,0],np.eye(3),.08,np.eye(2),[0,0,0]),
+                         ([0,0,0],np.eye(3),.08,np.eye(3),[0,0])):
+            with self.assertRaises(ValueError):actual_face_tcp_target(C,R,h,H,p)
 
 
 if __name__=='__main__':unittest.main()

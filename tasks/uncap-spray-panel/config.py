@@ -8,8 +8,11 @@ BUTTON_START = (.26, 0., CAN_REST_HEIGHT + .077)
 CAP_PAD = (.34, -.10, TOP + .001)
 CAN_PAD = (.26, 0., TOP + .001)
 TARGET_X = .47
-TARGET_CENTER = (0., TOP + .24)  # y,z
-TARGET_HALF = .07
+TARGET_CENTER = (-.035, TOP + .205)  # fixed plaque y,z
+TARGET_RADIUS = .040
+# Transit remains the old four-zone anchor; changing the target must not shift it.
+SPRAY_TRANSIT_CAN = (.26, 0., .9105)
+SPRAY_HELD_CAN = (.26, -.035, .8755)
 BOARD_HALF = .18
 CELL = .01
 GRID = 36
@@ -24,5 +27,5 @@ CAP_COLOR = (.055, .065, .075)
 BACKING_COLOR = (.60, .63, .66)
 WORKTOP_COLOR = (.36, .39, .42)
 INSTRUCTION = ('Remove the cap from the spray-paint can and put it on the blue pad. '
-               'Spray a blue coat over the white panel, keeping paint off the surrounding backing. '
+               'Spray a blue coat over the single white circular plaque, keeping paint off the surrounding backing. '
                'Leave the can upright on its grey pad with the nozzle released.')

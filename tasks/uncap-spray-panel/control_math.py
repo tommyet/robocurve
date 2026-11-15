@@ -159,3 +159,12 @@ def transport_can_reference(position,rotation,entry_pose,current_pose):
         raise ValueError('release transport requires finite poses')
     turn=canR@canR0.T
     return center+turn@(position-center0),turn@rotation
+
+
+def actual_face_tcp_target(can,can_rotation,height,actual_hand_rotation,point):
+    """TCP translation making its error equal the selected physical point's error."""
+    can=np.asarray(can,dtype=float);can_rotation=np.asarray(can_rotation,dtype=float)
+    actual_hand_rotation=np.asarray(actual_hand_rotation,dtype=float);point=np.asarray(point,dtype=float)
+    if can.shape!=(3,) or point.shape!=(3,) or can_rotation.shape!=(3,3) or actual_hand_rotation.shape!=(3,3) or not all(np.isfinite(v).all() for v in (can,can_rotation,actual_hand_rotation,point)) or not math.isfinite(height):
+        raise ValueError('selected face target requires finite geometry')
+    return can+can_rotation@np.array((0.,0.,height))-actual_hand_rotation@point

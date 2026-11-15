@@ -45,8 +45,7 @@ class SprayScorer:
             y = TARGET_CENTER[0] - BOARD_HALF + (i+.5)*CELL
             for j in range(GRID):
                 z = TARGET_CENTER[1] - BOARD_HALF + (j+.5)*CELL
-                target = (abs(y-TARGET_CENTER[0]) < TARGET_HALF and
-                          abs(z-TARGET_CENTER[1]) < TARGET_HALF)
+                target = ((y-TARGET_CENTER[0])**2+(z-TARGET_CENTER[1])**2 <= TARGET_RADIUS**2)
                 yield i*GRID+j, (TARGET_X, y, z), target
 
     def update(self, s):

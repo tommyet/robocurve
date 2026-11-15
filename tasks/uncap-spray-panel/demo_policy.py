@@ -15,7 +15,7 @@ from inspect_robots.types import Action,ActionChunk
 from inspect_robots_yam.packing import pack
 from config import *
 import telemetry
-from control_math import (grip_fraction,ramp_scalar,can_frame_ramp_translation,transport_can_reference,GRASP_OFFSET,RELEASE_DISTANCE,RELEASE_SPEED,
+from control_math import (grip_fraction,ramp_scalar,can_frame_ramp_translation,transport_can_reference,actual_face_tcp_target,GRASP_OFFSET,RELEASE_DISTANCE,RELEASE_SPEED,
                           RELEASE_DEADLINE,MEASURED_DWELL,calibrated_hand_target,grasp_drift,release_command_target,release_clearance,release_gate_frames,
                           minimum_future_seconds,press_contact_state,press_bias_step)
 
@@ -52,6 +52,7 @@ class SprayDemo(YamScriptedPolicy):
         self.left_preload=0.;self.left_preload_target=0.
         self.release_state=None;self.release_path=None;self.release_frames=0;self.release_gap=None
         self.follow_can_pose=None
+        self.face_witness_previous=None;self.face_diagnostics={}
         self.last_actions=[np.r_[h['joints'],h['opening']] for h in telemetry.latest['hands']]
         self.rotation_bias=[np.zeros(3),np.zeros(3)]
         for h in telemetry.latest['hands']:
@@ -80,17 +81,16 @@ class SprayDemo(YamScriptedPolicy):
         if self.cap_only:
             move('diagnostic_hold',1.)
             return
-        can_center=np.array((CAN_START[0],0.,TARGET_CENTER[1]-.077))
+        can_center=np.array(SPRAY_TRANSIT_CAN)
         move('can_lift',2.,L=lp(can_center+GRASP_OFFSET,self.hold_grip))
         move('press_approach',2.,R=(can_center+(0.,-.08,.14),PRESS_R,self.press_grip))
         move('press_hover',1.5,follow='hover')
-        for index,(y,z) in enumerate([(-.035,-.035),(-.035,.035),(.035,.035),(.035,-.035)]):
-            p=can_center+np.array((0.,y,z))+GRASP_OFFSET
-            aim=(y,TARGET_CENTER[1]+z)
-            move('coat_position_'+str(index),1.8,L=lp(p,self.hold_grip),follow='hover')
-            move('coat_aim_'+str(index),1.2,follow='hover',aim=aim)
-            move('coat_shot_'+str(index),8.,follow='press',aim=aim)
-            move('coat_unpress_'+str(index),RELEASE_DEADLINE,follow='release')
+        # One stationary plaque, using the previously exercised first-sector hold.
+        p=np.array(SPRAY_HELD_CAN)+GRASP_OFFSET
+        move('coat_position_0',1.8,L=lp(p,self.hold_grip),follow='hover')
+        move('coat_aim_0',1.2,follow='hover',aim=TARGET_CENTER)
+        move('coat_shot_0',8.,follow='press',aim=TARGET_CENTER)
+        move('coat_unpress_0',RELEASE_DEADLINE,follow='release')
         move('finish_coating',.3,check='coat')
         move('press_retreat',2.,R=rp(can_center+(0.,-.09,.07),1.))
         placement=np.array((CAN_PAD[0],CAN_PAD[1],CAN_REST_HEIGHT))+GRASP_OFFSET
@@ -106,7 +106,8 @@ class SprayDemo(YamScriptedPolicy):
         self.starts=[(p.copy(),r.copy(),g) for p,r,g in self.targets]
         if self.index>=len(self.moves):return
         step=self.moves[self.index]
-        if step['follow'] not in ('hover','press'):self.follow_can_pose=None
+        if step['follow'] not in ('hover','press'):
+            self.follow_can_pose=None;self.face_witness_previous=None;self.face_diagnostics={}
         if step['label']=='can_release':self.holding_can=False
         if step['label'].startswith('coat_shot'):
             self.left_preload_target=.014
@@ -222,7 +223,7 @@ class SprayDemo(YamScriptedPolicy):
                     nozzle=np.array(s['nozzle']);axis=np.array(s['axis'])
                     hit=nozzle+axis*((TARGET_X-nozzle[0])/axis[0])
                     aim_error=np.array(step['aim'])-hit[1:]
-                    correction=np.clip(.20*aim_error,-.0007,.0007)
+                    correction=np.clip(.05*aim_error,-.000175,.000175)
                     self.targets[0][0]+=np.array((0.,*correction))
                     if max(abs(aim_error))>.014:self.press_enabled=False
                     elif max(abs(aim_error))<.008:self.press_enabled=True
@@ -240,7 +241,21 @@ class SprayDemo(YamScriptedPolicy):
                 # Command the actual horizontal face onto the actuator's top,
                 # accounting for finger spring deflection instead of guessing
                 # a contact height from the generic TCP marker.
-                target=can+rot@(np.array((0.,0.,height))-PRESS_R@point)
+                actualR=np.array(s['hands'][1]['rotation'])
+                try:target=actual_face_tcp_target(can,rot,height,actualR,point)
+                except ValueError as error:self.failure=str(error);target=self.targets[1][0]
+                witness=rot.T@(np.array(s['hands'][1]['tcp'])+actualR@point-can)
+                face_normal=np.cross(PRESS_FACE[1]-PRESS_FACE[0],PRESS_FACE[2]-PRESS_FACE[0])
+                face_normal=actualR@(face_normal/np.linalg.norm(face_normal))
+                face_angle=float(np.degrees(np.arccos(np.clip(abs(face_normal@rot[:,2]),0.,1.))))
+                velocity=None
+                if self.face_witness_previous is not None:
+                    previous_time,previous_witness=self.face_witness_previous;dt=float(s['time'])-previous_time
+                    if dt>0:velocity=((witness[:2]-previous_witness[:2])/dt).tolist()
+                self.face_witness_previous=(float(s['time']),witness.copy())
+                self.face_diagnostics=dict(selected_face_plane_angle_deg=face_angle,can_relative_witness_m=witness.tolist(),
+                    witness_tangential_velocity_can_m_s=velocity,
+                    witness_velocity_scope='20 Hz finite-difference selected mesh-point proxy; not contact center or friction force')
                 speed=RIGHT_PRESS_SPEED if pressing else .100
                 try:position=can_frame_ramp_translation(self.targets[1][0],target,self.follow_can_pose,(can,rot),speed,self._dt)
                 except ValueError as error:
@@ -288,7 +303,7 @@ class SprayDemo(YamScriptedPolicy):
             actions.append(np.r_[q,np.clip(g,0.,1.)])
         telemetry.command=dict(phase=phase,errors=errors,failure=self.failure,commanded_depression=self.press_depth,measured_contact_time=self.contact_time,
                                left_preload_m=self.left_preload,left_preload_target_m=self.left_preload_target,right_press_speed_m_s=RIGHT_PRESS_SPEED,
-                               release_clearance_m=self.release_gap,release_frames=self.release_frames)
+                               release_clearance_m=self.release_gap,release_frames=self.release_frames,**self.face_diagnostics)
         telemetry.command['press_contact']=press_contact
         telemetry.command['left_command_finger_joint_m']=float(actions[0][6]*FINGER_OPEN)
         if self.release_path is not None:

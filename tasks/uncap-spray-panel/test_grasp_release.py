@@ -11,7 +11,7 @@ import numpy as np
 from control_math import (GRASP_OFFSET,GRASP_Z,calibrated_hand_target,grasp_drift,
                           release_target,release_clearance,release_gate_frames,release_command_target,MEASURED_DWELL,
                           minimum_future_seconds,press_contact_state,press_bias_step)
-from config import CAN_REST_HEIGHT,CAN_PAD,CAN_START,CAP_START,TARGET_CENTER
+from config import CAN_REST_HEIGHT,CAN_PAD,CAN_START,CAP_START,TARGET_CENTER,SPRAY_TRANSIT_CAN,SPRAY_HELD_CAN
 
 
 class GraspReleaseTests(unittest.TestCase):
@@ -63,7 +63,7 @@ class GraspReleaseTests(unittest.TestCase):
     def test_all_can_goals_and_return_use_one_calibrated_offset(self):
         actual=np.array((.001,-.002,.006))
         origins=[np.array(CAN_START),np.array((CAN_PAD[0],CAN_PAD[1],CAN_REST_HEIGHT))]
-        origins.extend(np.array((CAN_START[0],y,TARGET_CENTER[1]-.077+z)) for y,z in ((-.035,-.035),(-.035,.035),(.035,.035),(.035,-.035)))
+        origins.extend(np.array(p) for p in (SPRAY_TRANSIT_CAN,SPRAY_HELD_CAN))
         self.assertEqual(GRASP_Z,-.010)
         for origin in origins:
             hand=calibrated_hand_target(origin+GRASP_OFFSET,actual)
@@ -160,7 +160,7 @@ class PolicyGuardTests(unittest.TestCase):
             hands.append(dict(tcp=p.tolist(),rotation=r.tolist(),joints=list(READY),opening=1.,finger_joints=[-.04695]*2))
         return dict(time=0.,hands=hands,can=list(CAN_START),cap=list(CAP_START),can_rotation=np.eye(3).tolist(),metrics=dict(score=0.),
                     button=[CAN_START[0],CAN_START[1],CAN_START[2]+.077],button_travel=0.,
-                    nozzle=[.27,-.035,TARGET_CENTER[1]-.035],axis=[1.,0.,0.],right_contact_matrix=np.zeros((9,5,3)).tolist())
+                    nozzle=[.27,*TARGET_CENTER],axis=[1.,0.,0.],right_contact_matrix=np.zeros((9,5,3)).tolist())
 
     def test_grasp_abort_emits_previous_action_without_solving_new_ik(self):
         sample=self.sample();self.module.telemetry.latest=sample
@@ -244,6 +244,23 @@ class PolicyGuardTests(unittest.TestCase):
         self.assertGreater(ik.UPPER[3]-q[3],np.radians(60.))
         self.assertGreater(np.min(np.minimum(q-ik.LOWER,ik.UPPER-q)),np.radians(10.))
 
+    def test_single_plaque_sequence_preserves_transit_hold_and_safe_parking(self):
+        sample=self.sample();self.module.telemetry.latest=sample;policy=self.module.SprayDemo();policy.initialize()
+        moves={m['label']:m for m in policy.moves};labels=list(moves)
+        self.assertEqual([x for x in labels if x.startswith('coat_position_')],['coat_position_0'])
+        self.assertEqual([x for x in labels if x.startswith('coat_shot_')],['coat_shot_0'])
+        self.assertEqual([x for x in labels if x.startswith('coat_unpress_')],['coat_unpress_0'])
+        self.assertLess(labels.index('cap_retreat'),labels.index('coat_position_0'))
+        self.assertLess(labels.index('coat_unpress_0'),labels.index('can_lower'))
+        self.assertEqual(labels[-4:],['can_lower','can_release','brace_retreat','finish_hold'])
+        np.testing.assert_allclose(moves['can_lift']['L'][0]-GRASP_OFFSET,(.26,0,.9105))
+        np.testing.assert_allclose(moves['coat_position_0']['L'][0]-GRASP_OFFSET,(.26,-.035,.8755))
+        np.testing.assert_allclose(moves['press_approach']['R'][0],np.array((.26,0,.9105))+(0,-.08,.14))
+        np.testing.assert_allclose(moves['press_retreat']['R'][0],np.array((.26,0,.9105))+(0,-.09,.07))
+        self.assertEqual(moves['coat_aim_0']['aim'],TARGET_CENTER);self.assertEqual(moves['coat_shot_0']['aim'],TARGET_CENTER)
+        self.assertEqual(moves['coat_shot_0']['seconds'],8.)
+        self.assertAlmostEqual(moves['can_lower']['L'][0][2]-GRASP_OFFSET[2],CAN_REST_HEIGHT)
+
     def test_initial_grip_is_unchanged_and_loaded_hold_ramps_over_existing_lift(self):
         from yam_arena.constants import FINGER_OPEN,GRIPPER
         sample=self.sample();self.module.telemetry.latest=sample
@@ -252,7 +269,7 @@ class PolicyGuardTests(unittest.TestCase):
         self.assertAlmostEqual(moves['brace_grip']['L'][2]*FINGER_OPEN,-.021)
         self.assertAlmostEqual(moves['cap_grip']['R'][2]*FINGER_OPEN,-.025)
         self.assertEqual(moves['can_lift']['seconds'],2.)
-        for phase in ('can_lift','coat_position_0','coat_position_1','coat_position_2','coat_position_3','can_lower'):
+        for phase in ('can_lift','coat_position_0','can_lower'):
             self.assertAlmostEqual(moves[phase]['L'][2]*FINGER_OPEN,-.018)
         self.assertEqual(moves['can_release']['L'][2],1.)
         # Exercise the actual policy interpolation rather than a duplicated ramp.
@@ -316,6 +333,58 @@ class PolicyGuardTests(unittest.TestCase):
         with patch.object(self.module.ik,'solve',side_effect=AssertionError('timeout must stop')):
             action=policy.act(SimpleNamespace(state_time=6.))
         self.assertIn('parking conditions',policy.failure);self.assertTrue(action.actions[0].meta['request_stop'])
+
+    def test_outer_aim_gain_hard_cap_and_tiny_error_have_no_deadband(self):
+        for error,expected in (((.001,-.002),(.00005,-.0001)),((.1,-.1),(.000175,-.000175)),
+                               ((1e-8,-1e-8),(5e-10,-5e-10)),((0.,0.),(0.,0.))):
+            with self.subTest(error=error):
+                sample=self.sample();self.module.telemetry.latest=sample;policy=self.module.SprayDemo();policy.initialize()
+                policy.index=next(i for i,m in enumerate(policy.moves) if m['label']=='coat_aim_0')-1;policy.next(0.)
+                aim=np.array(policy.moves[policy.index]['aim']);sample['axis']=[1.,0.,0.]
+                sample['nozzle']=[.27,*(aim-np.array(error))]
+                before=policy.targets[0][0].copy()
+                with patch.object(self.module.ik,'solve',side_effect=lambda p,r,q,**kw:(q.copy(),0.,0.)):
+                    policy.act(SimpleNamespace(state_time=0.))
+                np.testing.assert_allclose(policy.targets[0][0],before+np.array((0.,*expected)),atol=1e-15)
+                self.assertLessEqual(max(abs(policy.targets[0][0][1:]-before[1:])),.000175+1e-15)
+
+    def test_outer_aim_full_position_response_for_steady_and_followed_error(self):
+        # Exercise actual target integration, with the action transport/IK only
+        # stubbed. Fixed measured error must remain restorative at each tick.
+        for follows in (False,True):
+            sample=self.sample();self.module.telemetry.latest=sample;policy=self.module.SprayDemo();policy.initialize()
+            policy.index=next(i for i,m in enumerate(policy.moves) if m['label']=='coat_aim_0')-1;policy.next(0.)
+            aim=np.array(policy.moves[policy.index]['aim']);initial=np.array((.003,-.002));error=initial.copy()
+            start=policy.targets[0][0].copy();sample['axis']=[1.,0.,0.]
+            with patch.object(self.module.ik,'solve',side_effect=lambda p,r,q,**kw:(q.copy(),0.,0.)):
+                for tick in range(20):
+                    sample['nozzle']=[.27,*(aim-error)];sample['time']=tick*.05
+                    policy.act(SimpleNamespace(state_time=sample['time']))
+                    if follows:error=initial-(policy.targets[0][0][1:]-start[1:])
+            accumulated=initial*(1-.95**20) if follows else initial*.05*20
+            np.testing.assert_allclose(policy.targets[0][0],start+np.array((0.,*accumulated)),atol=1e-14)
+            self.assertIsNone(policy.failure)
+
+    def test_follow_uses_actual_face_point_but_keeps_desired_rotation_and_relative_ramp(self):
+        sample=self.sample();self.module.telemetry.latest=sample;policy=self.module.SprayDemo();policy.initialize()
+        a=.10;actualR=np.array(((1,0,0),(0,np.cos(a),-np.sin(a)),(0,np.sin(a),np.cos(a))))@self.module.PRESS_R
+        sample['hands'][1]['rotation']=actualR.tolist();sample['hands'][1]['finger_joints'][0]=-.030
+        policy.index=next(i for i,m in enumerate(policy.moves) if m['label']=='press_hover')-1;policy.next(0.)
+        start=policy.targets[1][0].copy();point=self.module.PRESS_POINT.copy();point[0]+=-.030+.028
+        expected_goal=np.array(sample['can'])+[0,0,.105]-actualR@point
+        with patch.object(self.module.ik,'solve',side_effect=lambda p,r,q,**kw:(q.copy(),0.,0.)):
+            policy.act(SimpleNamespace(state_time=0.))
+        expected=np.array(self.module.can_frame_ramp_translation(start,expected_goal,None,(sample['can'],np.eye(3)),.1,.05))
+        np.testing.assert_allclose(policy.targets[1][0],expected,atol=1e-15)
+        np.testing.assert_allclose(policy.targets[1][1],self.module.PRESS_R,atol=1e-15)
+        self.assertLessEqual(np.linalg.norm(expected-start),.005+1e-15)
+        diag=self.module.telemetry.command
+        self.assertIsNone(diag['witness_tangential_velocity_can_m_s']);self.assertIn('not contact center',diag['witness_velocity_scope'])
+        sample['time']=.05;sample['hands'][1]['tcp'][0]+=.001
+        with patch.object(self.module.ik,'solve',side_effect=lambda p,r,q,**kw:(q.copy(),0.,0.)):
+            policy.act(SimpleNamespace(state_time=.05))
+        np.testing.assert_allclose(self.module.telemetry.command['witness_tangential_velocity_can_m_s'],(.02,0),atol=1e-12)
+        self.assertAlmostEqual(self.module.telemetry.command['selected_face_plane_angle_deg'],np.degrees(a),places=6)
 
     def test_follow_pose_persists_between_hover_press_and_clears_on_nonfollow(self):
         sample=self.sample();self.module.telemetry.latest=sample

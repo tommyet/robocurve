@@ -95,7 +95,17 @@ def build_replay(directory,out,trace_hash,diagnostic=False,audit_path=None,previ
         index=cell['index'];require(index not in colors,'duplicate surface cell index')
         prim=stage.GetPrimAtPath(cell['prim_path']);require(bool(prim),'missing surface cell')
         attr=prim.GetAttribute('primvars:displayColor');color=attr.Get(Usd.TimeCode.Default())
-        require(color is not None and len(color)==1,'missing captured base surface color')
+        require(color is not None and len(color)>0,'missing captured base surface color')
+        for value in color:vector(list(value),3)
+        interpolation=UsdGeom.Primvar(attr).GetInterpolation()
+        require(interpolation in ('constant','uniform'),'unsupported captured color interpolation')
+        if interpolation=='uniform':
+            require(prim.IsA(UsdGeom.Mesh),'uniform surface colors require captured Mesh topology')
+            counts=list(UsdGeom.Mesh(prim).GetFaceVertexCountsAttr().Get())
+            require(len(color)==len(counts),'color count does not match captured face topology')
+            if 'face_vertex_counts' in cell:require(cell['face_vertex_counts']==counts,'capture face topology metadata mismatch')
+        else:require(len(color)==1,'constant color must contain one value')
+        if 'display_color_interpolation' in cell:require(cell['display_color_interpolation']==interpolation,'capture color interpolation metadata mismatch')
         attributes[index]=attr;colors[index]=color;attr.Set(color,0)
     mist=UsdGeom.Points(stage.GetPrimAtPath('/World/spray_mist'));require(bool(mist),'missing captured mist prim')
     for frame,row in enumerate(rows):
@@ -104,7 +114,10 @@ def build_replay(directory,out,trace_hash,diagnostic=False,audit_path=None,previ
         changed=set()
         for update in row['spray_surface_updates']:
             index=update['index'];require(index in colors and index not in changed,'invalid/duplicate surface update');changed.add(index)
-            color=Vt.Vec3fArray([Gf.Vec3f(*vector(update['color'],3))]);attr=attributes[index]
+            require(('color' in update)!=('colors' in update),'surface update needs exactly one color protocol')
+            values=update['colors'] if 'colors' in update else [update['color']]
+            require(isinstance(values,list) and len(values)==len(colors[index]),'surface update color count mismatch')
+            color=Vt.Vec3fArray([Gf.Vec3f(*vector(value,3)) for value in values]);attr=attributes[index]
             # USD consumers choose interpolation at runtime. Seed the previous
             # integer sample so even a reopened linear consumer cannot tween
             # colors at any actual captured 20 Hz frame.
