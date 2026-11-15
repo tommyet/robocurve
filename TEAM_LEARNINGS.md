@@ -2333,3 +2333,16 @@ editing, merge both agents' findings, and commit/push the update with the work.
   progressreject. PREPRESSmustshowhalfactuallegdownwitness+q3negativeprogress
   andlastnegativeq3motion. Wiresgapsreported,noreservedwireclaim. Taskscore,
   cliptravel, actuation, runtimeguards/budgets unchanged. Native022running.
+
+- Release022 functionalHOVERPASS, PREPRESSFAIL after12.75s: actualq3negative
+  progress2.282mrad butwitnessUP88um vsrequiredDOWN125um. E.512mm/TCP.443mm,
+  q4/q5~1mradstaticresidual, rightnon-targetrigid.902mm. Progressguardcorrect.
+- Review2mmPREPRESS (sameoverall6.4stroke/2.3depth) over3s crossesdominant
+  q3/q4deadbands; actual/nominalrigid.839mm andIK<=.474um. Remainingpress
+  rigid.491mm requiresE<=.291mm for.2reserve; notprooflargerstepaloneworks.
+  Approvedshortunscoredrighttrackingprobe,leftREADY/noobjectwrites/forces,
+  samehardware/housing/cables, stopbeforeclipcontact. Fullloadedrepeatneeded.
+- Parallelnextstagereviewfoundleftentrybiasresetatwithdraw: replaycommand
+  jump.417mm/q6−6.56mrad. Preservefrozenbias+unbiasedIKonce; useFK(entryref)
+  withdrawalorigin/R, refreshactualleft/right/mutual/tabguardsduringwithdraw.
+  Localrepairpendingnativevalidation;022VMsourceunmodifiedwhileitran.

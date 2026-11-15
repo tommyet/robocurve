@@ -5,7 +5,7 @@ from config import *
 
 def main():
  started=time.monotonic();timings={key:0. for key in ('setup_s','ensure_sim_s','controller_build_s','policy_s','physics_step_s','telemetry_s','video_s')}
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--mode',choices=['fit-probe','retention-probe','clip-constraint-probe','grasp-probe','release-probe'],default='retention-probe');p.add_argument('--out',type=Path,required=True);p.add_argument('--no-video',action='store_true',help='State-only engineering run; final media require the default video mode');a=p.parse_args()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--mode',choices=['fit-probe','retention-probe','clip-constraint-probe','grasp-probe','release-probe','press-tracking-probe'],default='retention-probe');p.add_argument('--out',type=Path,required=True);p.add_argument('--no-video',action='store_true',help='State-only engineering run; final media require the default video mode');a=p.parse_args()
  a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=False)
  (a.out/'source').mkdir()
  for f in [*Path(__file__).parent.glob('*.py'),Path(__file__).with_name('press_point.json')]:shutil.copy2(f,a.out/'source'/f.name)
@@ -85,23 +85,26 @@ def main():
    return {name:rows[j] for j,name in enumerate(body_names)}
   timings['setup_s']=time.monotonic()-started-timings['ensure_sim_s']
   build_started=time.monotonic();robot=None
-  if a.mode in ('grasp-probe','release-probe'):
-   from robot import GraspProbe,ReleaseProbe,MAX_RELEASE_STEPS
-   robot=(ReleaseProbe if a.mode=='release-probe' else GraspProbe)(env,pose(f'plug_{SERVICE}')[:3])
+  if a.mode in ('grasp-probe','release-probe','press-tracking-probe'):
+   from robot import GraspProbe,ReleaseProbe,PressTrackingProbe,MAX_RELEASE_STEPS
+   robot={'grasp-probe':GraspProbe,'release-probe':ReleaseProbe,'press-tracking-probe':PressTrackingProbe}[a.mode](env,pose(f'plug_{SERVICE}')[:3])
   timings['controller_build_s']=time.monotonic()-build_started
   scorer=None;previous_plug=None
   if a.mode=='release-probe':
    from feedback import retaining_face,clearance
    from scoring import EthernetScorer
    scorer=EthernetScorer();task._tracker=scorer;task._diagnostic=False
+  step_limit=MAX_RELEASE_STEPS if a.mode=='release-probe' else 1000 if a.mode=='press-tracking-probe' else 600 if robot else 120 if a.mode=='fit-probe' else 180
   with (a.out/'trajectory.jsonl').open('w') as trace:
-   for step in range(MAX_RELEASE_STEPS if a.mode=='release-probe' else 600 if robot else 120 if a.mode=='fit-probe' else 180):
+   for step in range(step_limit):
     policy_started=time.monotonic()
     phase,pull,press=bench_command(step,a.mode)
     if phase=='pull_pressed' and pose(f'plug_{SERVICE}')[0]<PLUG_X-.035:pull=0.
     control=None
     if robot:
      target,control=robot.command(step*.05);phase=control['phase'];pull=press=0.
+     if a.mode=='press-tracking-probe' and robot.phase=='depress_clip' and not control.get('failure'):
+      control['complete']=True;control['diagnostic_stop']='prepress complete; stopped before clip contact'
      action=torch.tensor(target[None,:],device=base.device,dtype=torch.float32)
     else:
      if a.mode in ('retention-probe','clip-constraint-probe'):
@@ -152,8 +155,8 @@ def main():
      video_started=time.monotonic()
      panels=review.panels(base)
      canvas=np.zeros((594,960,3),dtype=np.uint8);canvas[36:306,240:720]=panels[0];canvas[306:576,:480]=panels[1];canvas[306:576,480:]=panels[2]
-     cv2.putText(canvas,(('ETHERNET ROBOT RELEASE ATTEMPT | ' if scorer else 'ETHERNET ROBOT GRASP PROBE | ') if robot else 'ETHERNET UNTOUCHED FIT | ' if a.mode=='fit-probe' else 'ETHERNET NATIVE FORCE PROBE | ')+phase,(12,25),cv2.FONT_HERSHEY_SIMPLEX,.60,(255,255,255),1,cv2.LINE_AA)
-     cv2.putText(canvas,(('Ordinary robot commands. Measured score: '+str(scorer.value) if scorer else 'Ordinary robot commands, grasp diagnostic only. Task score: unscored') if robot else 'No external force or robot motion; all seven connector fits measured.' if a.mode=='fit-probe' else 'External test forces, not a robot demonstration. Task score: unscored'),(12,590),cv2.FONT_HERSHEY_SIMPLEX,.46,(255,205,120),1,cv2.LINE_AA);video.append_data(canvas)
+     cv2.putText(canvas,(('ETHERNET ROBOT RELEASE ATTEMPT | ' if scorer else 'ETHERNET RIGHT ARM TRACKING PROBE | ' if a.mode=='press-tracking-probe' else 'ETHERNET ROBOT GRASP PROBE | ') if robot else 'ETHERNET UNTOUCHED FIT | ' if a.mode=='fit-probe' else 'ETHERNET NATIVE FORCE PROBE | ')+phase,(12,25),cv2.FONT_HERSHEY_SIMPLEX,.60,(255,255,255),1,cv2.LINE_AA)
+     cv2.putText(canvas,(('Ordinary robot commands. Measured score: '+str(scorer.value) if scorer else 'Ordinary robot commands; isolated diagnostic only. Task score: unscored') if robot else 'No external force or robot motion; all seven connector fits measured.' if a.mode=='fit-probe' else 'External test forces, not a robot demonstration. Task score: unscored'),(12,590),cv2.FONT_HERSHEY_SIMPLEX,.46,(255,205,120),1,cv2.LINE_AA);video.append_data(canvas)
      if step in (39,59,79,119,179,259,299,359,459,539,619,719,819):imageio.imwrite(a.out/f'step-{step}.png',canvas)
      timings['video_s']+=time.monotonic()-video_started
     if control is not None and (control.get('failure') or control.get('complete')):break
@@ -163,7 +166,7 @@ def main():
   baseline=fit_summary(rest)
   result={'diagnostic':True,'task_score':None,'robot_demo':False,'untouched_fit':baseline,
           'probe_mode':a.mode,'external_bench_forces':a.mode in ('retention-probe','clip-constraint-probe'),'no_video':a.no_video,
-          'state_only_diagnostic':a.no_video,'media_eligible':not a.no_video,
+          'state_only_diagnostic':a.no_video,'media_eligible':not a.no_video and a.mode!='press-tracking-probe',
           'elapsed_wall_s_to_stop':wall_to_stop,'timings_s':timings,
           'timing_scope':'physics_step_s measures env._env.step, including internal sensor rendering when enabled; video_s measures readback/encoding. Setup includes app startup. Shutdown excluded.',
           'physics_manifest':{key:physical[key] for key in ('physical_input_sha256','body_joint_mass_sha256','counts')}}
@@ -186,13 +189,20 @@ def main():
    result['offcenter_load']={'force_plug_frame_N':[0,0,-.5],'application_point_clip_frame_m':[-.010,-.0015,.0005],
                            'nominal_torque_plug_frame_Nm':[.00075,-.005,0],'torque_scope':'actual clip-frame lever cross actual plug-frame force'}
   if robot:
-   result|={'robot_grasp_probe':True,'max_tracking_error_m':max(r['robot_control']['position_error'] for r in samples),
+   result|={'robot_grasp_probe':a.mode!='press-tracking-probe','robot_press_tracking_probe':a.mode=='press-tracking-probe','max_tracking_error_m':max(r['robot_control']['position_error'] for r in samples),
             'final_plug_pose':samples[-1]['plug_pose'],'controller_failure':samples[-1]['robot_control'].get('failure'),
             'controller_complete':samples[-1]['robot_control'].get('complete',False),
             'probe_step_count':len(samples),
-            'control_step_limit':MAX_RELEASE_STEPS if a.mode=='release-probe' else 600,
-            'control_time_limit_s':.05*(MAX_RELEASE_STEPS if a.mode=='release-probe' else 600),
+            'control_step_limit':step_limit,
+            'control_time_limit_s':.05*step_limit,
             'probe_end_reason':'controller_completed' if samples[-1]['robot_control'].get('complete') else 'controller_failure' if samples[-1]['robot_control'].get('failure') else 'control_step_limit'}
+   if a.mode=='press-tracking-probe':
+    handoff=samples[-1]['robot_control'].get('functional_handoff') or {}
+    error=handoff.get('max_mesh_error_5_frames_m')
+    result['isolated_tracking']={'left_hand':'READY; no source grasp','stopped_before_clip_contact':bool(samples[-1]['robot_control'].get('complete')),
+                                'max_mesh_error_5_frames_m':error,'loaded_022_useful_error_limit_m':.000291,
+                                'meets_loaded_022_error_target':bool(error is not None and error<=.000291),
+                                'scope':'Unscored arm tracking only. Full loaded grasp, release and insertion still require native validation.'}
   if scorer is not None:result|={'diagnostic':False,'privileged_robot_attempt':True,'task_score':scorer.value,'metrics':samples[-1]['metrics']}
   (a.out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result))
  except BaseException as error:

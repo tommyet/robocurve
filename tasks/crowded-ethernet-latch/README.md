@@ -37,6 +37,7 @@ The switch is fixed on a stand; plugs and cables have real rigid-body dynamics.
 /data/IsaacLab-Arena/.venv/bin/python run.py --mode fit-probe --out /path/to/new-fit
 /data/IsaacLab-Arena/.venv/bin/python run.py --mode retention-probe --out /path/to/new-run
 /data/IsaacLab-Arena/.venv/bin/python run.py --mode clip-constraint-probe --no-video --out /path/to/new-constraint-check
+/data/IsaacLab-Arena/.venv/bin/python run.py --mode press-tracking-probe --no-video --out /path/to/new-tracking-check
 /data/IsaacLab-Arena/.venv/bin/python run.py --mode release-probe --out /path/to/new-attempt
 ```
 
@@ -47,10 +48,19 @@ actual tab point (-10, -1.5, +0.5) mm, including its moment about the clip centr
 It checks all seven clips for relative rotation below 0.5 degrees, transverse
 joint error below 0.1 mm and slider limits within a stated 10 micrometre numerical
 tolerance. Plug and clip bodies now explicitly request 64 position and 16 velocity
-solver iterations to resolve the slider's locked axes. This is an unvalidated
-numerical fidelity candidate; masses, inferred geometric inertias, spring force,
+solver iterations to resolve the slider's locked axes. The static off-centre
+load check passed (rotation at most 0.0246 degrees, transverse error 1.3 micrometres,
+travel 1.974–2.008 mm). The strict engaged-pull margin and the uncontrolled
+free-withdrawal/table-impact check failed; this is not a comprehensive constraint
+pass. Masses, inferred geometric inertias, spring force,
 colliders and 2.4 mm travel remain unchanged. Its external loads are diagnostic
 only and never run in robot/scored mode.
+The isolated press-tracking probe leaves the left hand at READY, uses the same
+native switch, cables and robot, and stops after the right-hand prepress stage
+before clip contact. It uses no external test forces or object pose writes and
+has no task score or eligible submission media. Its 0.291 mm mesh-error target
+comes from the remaining rigid-clearance reserve in loaded trial 022; passing
+this diagnostic still requires a full loaded release/insertion run.
 Release attempts use bounded normal robot joint/gripper commands and privileged
 native telemetry, never object pose writes or software latch-release toggles.
 Actual source release, target alignment, clip return, six neighbours and a
@@ -89,8 +99,9 @@ clearance, measured grasp slip, target seating and clip return gate later
 phases. Both hands retreat before the retention rest.
 
 The trace records both measured finger joints, TCP tracking and the actual
-pressing support point. The right arm settles fixed joint references at hover, after a 0.5 mm downward
-step, and when needed at full press depth. Its bounded joint bias is frozen
+pressing support point. The right arm settles fixed joint references at hover,
+after a 2 mm downward step over 3 seconds, and when needed at full press depth.
+The total press stroke and final depth remain unchanged. Its bounded joint bias is frozen
 between stationary endpoints. The adaptive engineering probe permits up to 2,400 actions / 120 s;
 it stops on a measured failure or completed retention rest. Nominal CPU mesh
 and IK checks do not establish full-arm/cable clearance or native success.
