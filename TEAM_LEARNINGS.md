@@ -4,6 +4,23 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 06:59 UTC — final scoring and replay packaging
+
+- Public shirt source checks20 tests, including three peg failure/release
+  controls. Public tie source checks24 tests. Missing/inapplicable dressing
+  measurements are no longer invented for a run with no retained knot; its
+  reviewed zero is decided first. A retained knot still requires all fit values.
+- Tie283 has real19/28-vertex left/right grasps during wrapping. Its static
+  subset colours render correctly. The public replay uses recorded ordinary
+  control segments in one continuous episode, with no mid-episode state load.
+-285 passes its1mm reset screen and begins the full shirt pickup.286 is queued
+  to start the matching tie Dream baseline only after275 finishes and exits,
+  using8 actions/request. Physical cloth/contact parameters remain unchanged.
+- The supplied review-agent v21 URL is still inaccessible (GitHub404 and web
+  cache miss); the local empty review-v21.md is not a reviewed prompt. The
+  current AGENTS checklist, task-board rules and downloaded accepted examples
+  remain the actual available review references. Do not imply the prompt was read.
+
 ## 2026-11-15 06:47 UTC — practical reset compliance and retained tie handoff
 
 - Shirt284 stopped at reset on two front/back triangle contacts measuring

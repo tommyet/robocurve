@@ -4,8 +4,7 @@ import math
 
 def score(j):
     required=('evidence_sha256','integrity_checked','intact','simple_knot_verified',
-              'released_hold_s','wide_face_out','narrow_end_hidden','knot_zone_offset_mm',
-              'neckband_gap_mm','wide_tip_below_collar_mm','narrow_tip_above_wide_tip_mm')
+              'released_hold_s')
     if any(k not in j for k in required):
         raise ValueError('incomplete judging record')
     evidence=j['evidence_sha256']
@@ -16,15 +15,24 @@ def score(j):
         raise ValueError('invalid evidence digest')
     if j['integrity_checked'] is not True:
         raise ValueError('cloth self-contact and integrity require review')
-    for field in ('released_hold_s','knot_zone_offset_mm','neckband_gap_mm','wide_tip_below_collar_mm','narrow_tip_above_wide_tip_mm'):
-        value=j[field]
-        if type(value) not in (int,float) or not math.isfinite(value) or (value < 0 and field!='narrow_tip_above_wide_tip_mm'):
-            raise ValueError('invalid measurement: '+field)
-    for field in ('intact','simple_knot_verified','wide_face_out','narrow_end_hidden'):
+    hold=j['released_hold_s']
+    if type(hold) not in (int,float) or not math.isfinite(hold) or hold<0:
+        raise ValueError('invalid released hold measurement')
+    for field in ('intact','simple_knot_verified'):
         if type(j[field]) is not bool:
             raise ValueError('visual assessment must be known: '+field)
-    if j['intact'] is not True or j['simple_knot_verified'] is not True or j['released_hold_s'] < 5.:
+    if not j['intact'] or not j['simple_knot_verified'] or hold<5.:
         return 0.
+    # Dressing measurements are meaningful only after a real retained knot.
+    fit_fields=('wide_face_out','narrow_end_hidden','knot_zone_offset_mm',
+                'neckband_gap_mm','wide_tip_below_collar_mm','narrow_tip_above_wide_tip_mm')
+    if any(k not in j for k in fit_fields):raise ValueError('retained knot needs dressing assessment')
+    for field in fit_fields[2:]:
+        value=j[field]
+        if type(value) not in (int,float) or not math.isfinite(value) or (value<0 and field!='narrow_tip_above_wide_tip_mm'):
+            raise ValueError('invalid measurement: '+field)
+    for field in fit_fields[:2]:
+        if type(j[field]) is not bool:raise ValueError('visual assessment must be known: '+field)
     fitted=(0 <= j['neckband_gap_mm'] <= 15. and 0 <= j['knot_zone_offset_mm'] <= 20.
             and 350. <= j['wide_tip_below_collar_mm'] <= 440.
             and j['narrow_tip_above_wide_tip_mm'] >= 10.)

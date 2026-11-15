@@ -91,6 +91,11 @@ class Judging(unittest.TestCase):
     def test_adult_tip_length_band_is_inclusive(self):
         for length,expected in ((349.9,.5),(350.,1.),(440.,1.),(440.1,.5)):
             j=self.record();j['wide_tip_below_collar_mm']=length;self.assertEqual(score(j),expected)
+    def test_no_knot_needs_no_invented_fit_measurements(self):
+        j={k:v for k,v in self.record().items() if k in ('evidence_sha256','integrity_checked','intact','simple_knot_verified','released_hold_s')}
+        j['simple_knot_verified']=False;self.assertEqual(score(j),0.)
+        j['simple_knot_verified']=True
+        with self.assertRaises(ValueError):score(j)
     def test_missing_assessment_raises(self):
         j=self.record();del j['simple_knot_verified']
         with self.assertRaises(ValueError):score(j)
