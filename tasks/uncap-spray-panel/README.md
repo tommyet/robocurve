@@ -5,8 +5,10 @@ coat the fixed white circular plaque, release the button, and finish with the
 can upright and steady in the left gripper and the right hand clear. The user
 explicitly selected this held finish after the earlier parking variant failed.
 The prior four-zone and single-plaque parking trials remain development
-evidence, not demonstrations of this revised endpoint. **A fresh capped-start
-held-finish trial is pending.** No Dream score, submission media, or completed demo is claimed.
+evidence, not demonstrations of this revised endpoint. **Fresh capped-start
+held-finish trial 029 reached native score 1.0 and passed independent trace
+audit on 2026-11-15.** A completed video shows an explicitly labelled offline
+exact recorded physics replay. No Dream run, media upload or PR was performed.
 
 ## Fixed setup
 
@@ -69,13 +71,43 @@ sphere occlusion is coarse. Mist points and surface colors are appearance only.
 
 ## Reproduction and validation
 
+Validated source commit: `b54d516`. Fresh `spray-held-029` reached score **1.0**
+in **38.95 simulated seconds**, with 780 recorded rows (including the initial
+sample), **100% coverage** and **5.24152% overspray**. It emitted paint for
+0.95 s and maintained the approved finish for 1.05 s: cap parked, can upright
+and steady with opposing measured left-finger contacts, button released and
+right TCP clear. The final button travel was 0.0137 mm, can tilt 1.793° and
+speed 1.441 mm/s; right TCP distances were 117.0 mm from the can and 242.6 mm
+from the cap. Independent source-integrity/all-sample scorer replay passed,
+bound to trace SHA-256
+`724856a92bb31df854fd49403fdf10c83415855133be994331406b2ab5550997`.
+
+Native task termination occurred during `coat_unpress_0`. The controller's
+auxiliary 20 mm finger-face cleanup gate had not completed: its final measured
+face clearance was 0.643 mm and it recorded zero passing cleanup frames.
+The successful evidence establishes the user-approved held/nozzle-off endpoint;
+it does not establish completion of that additional cleanup sequence or can
+parking. Earlier failed parking trials retain their original outcomes.
+
+Local evidence is in `/private/tmp/spray-held-029/` (`audit.json`,
+`score-summary.json`, source snapshot and exact native pose/paint trace).
+The completed preview is `artifacts/task-previews/spray-cap-off-and-coat-demo.mp4`:
+780 H.264 frames at 20 Hz, 39.0 s, SHA-256
+`25fbc85be01718f6065e9eb3b9e3ad38f8b35ff968303563502f454b17c45ba9`.
+It is **offline exact recorded physics replay**, with actual native actor poses
+and recorded paint colors, not native RTX camera footage. Its trace-bound
+assembly record is
+`artifacts/native-four-task-20261114/spray-held-029-completed-video.json`.
+No task-board media ID or submission is claimed.
+
 The current CPU tests cover circular dose/layout, exactly one coating sequence,
 calibrated grasp retention, opposing-contact/right-clear finish gates, physical
 button release and captured color replay. The policy never opens the left
 gripper after coating; it retreats the right arm and holds the last issued
 joint commands, with the original measured-grasp safety guard still active. Old
 027 first-shot rays retrospectively cover this circle, but that is only a
-feasibility diagnostic. It does not establish the revised task's native score.
+feasibility diagnostic. The fresh 029 result above supplies the revised task's
+native score; the older run was not rescored as held-finish success.
 
 A fresh full trial uses 960 Hz physics, 20 Hz control (48 physics steps/action),
 baseline body solver settings, and the unchanged limit of 2400 actions/120 s:

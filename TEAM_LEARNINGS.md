@@ -2548,3 +2548,30 @@ editing, merge both agents' findings, and commit/push the update with the work.
   one USD-dependent skip; seven separate USD tests pass. Astra exact-source
   held review passes. Freshspray-held-029 is running with diagnostic flagsOFF;
   no new full-score claim until its measured result and audit.
+
+### 2026-11-15 — fresh held-finish spray029 succeeds
+
+- Sol documentation-only finalization on codex/uncap-spray-object; validated
+  source b54d516 remains unchanged. Fresh capped-start 029 reached native 1.0,
+  100% of 52 plaque cells, 5.24152035% cumulative overspray and 0.95 s spray.
+  It recorded 780 rows / 779 controls / 38.95 simulated seconds at 960 Hz physics
+  and 20 Hz control. Approved held/nozzle-off/right-clear conditions held 1.05 s.
+  Independent source-integrity/all-sample scorer audit passed; no contact-force
+  calibration claim. Evidence: /private/tmp/spray-held-029, trace SHA-256
+  724856a92bb31df854fd49403fdf10c83415855133be994331406b2ab5550997.
+- Final button travel 0.01371 mm, can tilt 1.793 degrees / speed 1.441 mm/s,
+  right TCP 117.037 mm from can / 242.617 mm from cap, opposing actual named
+  left-finger contacts present. Native task terminated in coat_unpress_0 with
+  no controller failure. Auxiliary 20 mm finger-face cleanup was unfinished
+  (0.643 mm / zero passing frames); do not claim complete cleanup or parking.
+  User-approved held endpoint is established; old 028 parking failure and
+  earlier failed task variants keep their original outcomes.
+- Completed 39.0 s / 780-frame / H.264 video is explicitly OFFLINE exact recorded
+  physics replay, not native RTX camera footage. Main ignored artifact:
+  artifacts/task-previews/spray-cap-off-and-coat-demo.mp4; SHA-256
+  25fbc85be01718f6065e9eb3b9e3ad38f8b35ff968303563502f454b17c45ba9.
+  Trace-bound assembly record:
+  artifacts/native-four-task-20261114/spray-held-029-completed-video.json.
+  No new GPU work/cost for this documentation stage, Dream call, media upload
+  or upstream PR. RTX reliability and optional extra cleanup remain separate
+  from this measured task result; no additional native success is inferred.
