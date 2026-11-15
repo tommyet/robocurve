@@ -16,7 +16,7 @@ from inspect_robots_yam.packing import pack
 from config import *
 import telemetry
 from control_math import (grip_fraction,ramp_scalar,ramp_translation,GRASP_OFFSET,RELEASE_DISTANCE,RELEASE_SPEED,
-                          RELEASE_DEADLINE,calibrated_hand_target,grasp_drift,release_target,release_clearance,release_gate_frames)
+                          RELEASE_DEADLINE,MEASURED_DWELL,calibrated_hand_target,grasp_drift,release_command_target,release_clearance,release_gate_frames)
 
 LEFT_PRELOAD_SPEED=.005
 RIGHT_PRESS_SPEED=.010
@@ -41,12 +41,13 @@ class SprayDemo(YamScriptedPolicy):
 
     def initialize(self):
         self.started=True;self.index=-1;self.failure=None;self.moves=[]
+        self.episode_t0=float(telemetry.latest['time'])
         self.press_depth=.0027;self.grasp_calibrated=False;self.holding_can=False;self.press_enabled=True
         self.contact_time=0.;self.press_grip=grip_fraction(-.028,FINGER_OPEN)
         self.targets=[];self.q=[]
         self.position_bias=[np.zeros(3),np.zeros(3)]
         self.left_preload=0.;self.left_preload_target=0.
-        self.release_state=None;self.release_frames=0;self.release_gap=None
+        self.release_state=None;self.release_path=None;self.release_frames=0;self.release_gap=None
         self.last_actions=[np.r_[h['joints'],h['opening']] for h in telemetry.latest['hands']]
         self.rotation_bias=[np.zeros(3),np.zeros(3)]
         for h in telemetry.latest['hands']:
@@ -95,6 +96,7 @@ class SprayDemo(YamScriptedPolicy):
         if self.press_only:self.moves=self.moves[:3]+self.moves[11:]
 
     def next(self,now):
+        if self.failure:return
         self.index+=1;self.t0=now
         self.starts=[(p.copy(),r.copy(),g) for p,r,g in self.targets]
         if self.index>=len(self.moves):return
@@ -109,10 +111,20 @@ class SprayDemo(YamScriptedPolicy):
             axis=np.array(s['can_rotation'])[:,2]
             self.release_state=(start.copy(),rotation.copy(),axis.copy());self.release_frames=0
             commandp,commandR=ik.tcp_pose(self.q[1],self._bases['right'])
-            self.position_bias[1]=commandp-start
-            self.rotation_bias[1]=ik._rot_error(commandR,rotation)
-            if np.max(np.abs(self.position_bias[1]))>.020 or np.max(np.abs(self.rotation_bias[1]))>.12:
-                self.failure='release achieved-pose command compensation exceeds existing bounds'
+            goal=start+RELEASE_DISTANCE*axis
+            try:_,_,duration=release_command_target(commandp,goal,0.)
+            except ValueError as error:self.failure=str(error);return
+            deadline=duration+.014/LEFT_PRELOAD_SPEED+.5
+            future=self.moves[self.index+1:]
+            reserve=sum(move['seconds'] for move in future)+(len(future)+1)*self._dt
+            if deadline>RELEASE_DEADLINE or now-self.episode_t0+deadline+reserve>120.:
+                self.failure='release command path cannot fit the remaining 120 second episode budget';return
+            step['seconds']=deadline
+            self.release_path=dict(start=commandp.copy(),rotation=commandR.copy(),goal=goal.copy(),
+                                   goal_rotation=rotation.copy(),duration=duration,initial_q=self.q[1].copy())
+            # The already-issued motor command is the path anchor. Do not
+            # reinterpret its load deflection as a larger Cartesian integral.
+            self.position_bias[1][:]=0.;self.rotation_bias[1][:]=0.
         if step['label']=='can_lift' and not self.grasp_calibrated:
             s=telemetry.latest;can_rot=np.array(s['can_rotation'])
             hand=s['hands'][0];offset=can_rot.T@(np.array(hand['tcp'])-np.array(s['can']))
@@ -144,23 +156,24 @@ class SprayDemo(YamScriptedPolicy):
                 start,rotation,axis=self.release_state;hand=s['hands'][1]
                 self.release_gap=release_clearance(hand['tcp'],hand['rotation'],PRESS_FACE,hand['finger_joints'][0],s['button'],np.array(s['can_rotation'])[:,2],axis)
                 self.release_frames=release_gate_frames(s['button_travel'],self.release_gap,self.release_frames)
-                if elapsed*RELEASE_SPEED>=RELEASE_DISTANCE:self.left_preload_target=0.
-                finished=self.release_frames>=5 and elapsed*RELEASE_SPEED>=RELEASE_DISTANCE and self.left_preload<=1e-9
-                if elapsed>=RELEASE_DEADLINE and not finished:self.failure='button release/20 mm face clearance/preload settle timed out'
+                path_end=elapsed>=self.release_path['duration']
+                if path_end:self.left_preload_target=0.
+                finished=self.release_frames>=5 and path_end and self.left_preload<=1e-9
+                if elapsed>=step['seconds'] and not finished:self.failure=self.failure or 'button release/20 mm face clearance/preload settle timed out'
             if step['label'].startswith('coat_shot'):
                 n=np.array(s['nozzle']);a=np.array(s['axis'])
                 if a[0]>.5:
                     hit=n+a*((TARGET_X-n[0])/a[0])
                     if s['button_travel']>=PRESS_TRAVEL and max(abs(np.array(step['aim'])-hit[1:]))<.012:
                         self.contact_time+=self._dt
-                finished=finished or (elapsed>=1. and self.contact_time>=1.2)
-                if elapsed>=step['seconds'] and self.contact_time<1.2:self.failure='insufficient measured spray contact'
-        if finished:
+                finished=finished or (elapsed>=1. and self.contact_time>=MEASURED_DWELL)
+                if elapsed>=step['seconds'] and self.contact_time<MEASURED_DWELL:self.failure=self.failure or 'insufficient measured spray contact'
+        if finished and not self.failure:
             check=self.moves[self.index]['check']
             if check=='detached' and not s['cap_detached']:self.failure='cap pull failed'
             if check=='parked' and not s['metrics']['cap_removed']:self.failure='cap was not removed'
             if check=='coat' and s['metrics']['coverage']<.9:self.failure='coverage below 90%'
-            self.next(now)
+            if not self.failure:self.next(now)
         phase='done' if self.index>=len(self.moves) else self.moves[self.index]['label']
         self.left_preload=ramp_scalar(self.left_preload,self.left_preload_target,LEFT_PRELOAD_SPEED,self._dt)
         if not self.failure and self.index<len(self.moves):
@@ -171,7 +184,9 @@ class SprayDemo(YamScriptedPolicy):
                     p0,r0,g0=self.starts[i];p,r,g=goal
                     self.targets[i]=[p0+f*(p-p0),ik.slerp_matrix(r0,r,f),g0+f*(g-g0)]
             if step['follow']=='release':
-                p,r=release_target(*self.release_state,now-self.t0+self._dt)
+                path=self.release_path
+                p,fraction,_=release_command_target(path['start'],path['goal'],now-self.t0)
+                r=ik.slerp_matrix(path['rotation'],path['goal_rotation'],fraction)
                 self.targets[1]=[p,r,self.press_grip]
             elif step['follow']:
                 # Press a physically moving piston with the other arm. The
@@ -217,13 +232,16 @@ class SprayDemo(YamScriptedPolicy):
             # gravity and button load; hardware force/velocity limits unchanged.
             bound=.05 if i==0 else .020
             gain=.16 if i==0 else .08
-            self.position_bias[i]=np.clip(self.position_bias[i]+gain*error,-bound,bound)
-            self.rotation_bias[i]=np.clip(self.rotation_bias[i]+.04*rotation_error,-.12,.12)
+            releasing=i==1 and self.index<len(self.moves) and self.moves[self.index]['follow']=='release'
+            if not releasing:
+                self.position_bias[i]=np.clip(self.position_bias[i]+gain*error,-bound,bound)
+                self.rotation_bias[i]=np.clip(self.rotation_bias[i]+.04*rotation_error,-.12,.12)
             rv=self.rotation_bias[i];angle=np.linalg.norm(rv)
             compensated=(axis_angle_matrix(rv/angle,angle)@r if angle>1e-9 else r)
             applied_bias=self.position_bias[i].copy()
             if i==0:applied_bias[2]=np.clip(applied_bias[2]+self.left_preload,-bound,bound)
-            q,pe,re=ik.solve(p+applied_bias,ik.matrix_to_quat_xyzw(compensated),self.q[i],base_pos=self._bases[side],iters=90)
+            if releasing and now-self.t0<=1e-12:q=self.release_path['initial_q'].copy();pe=re=0.
+            else:q,pe,re=ik.solve(p+applied_bias,ik.matrix_to_quat_xyzw(compensated),self.q[i],base_pos=self._bases[side],iters=90)
             early=phase.startswith(('brace_','cap_')) or phase=='can_lift'
             limit=.015 if early else .005;angle_limit=.12 if early else .05
             if not np.isfinite(np.r_[q,pe,re]).all() or pe>limit or re>angle_limit:
@@ -237,6 +255,8 @@ class SprayDemo(YamScriptedPolicy):
         telemetry.command=dict(phase=phase,errors=errors,failure=self.failure,commanded_depression=self.press_depth,measured_contact_time=self.contact_time,
                                left_preload_m=self.left_preload,left_preload_target_m=self.left_preload_target,right_press_speed_m_s=RIGHT_PRESS_SPEED,
                                release_clearance_m=self.release_gap,release_frames=self.release_frames)
+        if self.release_path is not None:
+            telemetry.command.update(release_path_duration_s=self.release_path['duration'],release_deadline_s=self.moves[self.index]['seconds'] if self.index<len(self.moves) and self.moves[self.index]['follow']=='release' else None)
         self.last_actions=[a.copy() for a in actions]
         meta={'request_stop':True} if self.failure or self.index>=len(self.moves) else {}
         return ActionChunk(actions=[Action(data=pack(*actions),meta=meta)],control_hz=1/self._dt)

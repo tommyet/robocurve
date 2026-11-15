@@ -9,7 +9,7 @@ import unittest
 from unittest.mock import patch
 import numpy as np
 from control_math import (GRASP_OFFSET,GRASP_Z,calibrated_hand_target,grasp_drift,
-                          release_target,release_clearance,release_gate_frames)
+                          release_target,release_clearance,release_gate_frames,release_command_target,MEASURED_DWELL)
 from config import CAN_REST_HEIGHT,CAN_PAD,CAN_START,CAP_START,TARGET_CENTER
 
 
@@ -60,6 +60,15 @@ class GraspReleaseTests(unittest.TestCase):
         self.assertEqual(release_gate_frames(0.,.0199,count),0)
         self.assertEqual(release_gate_frames(0.,np.nan,count),0)
 
+    def test_command_path_unloads_inherited_offset_under_same_rate_limit(self):
+        actual=np.array((.26,0.,1.));command=actual-[0,0,.0245529];goal=actual+[0,0,.03]
+        previous=command.copy()
+        for elapsed in np.arange(0.,5.6,.05):
+            p,fraction,duration=release_command_target(command,goal,float(elapsed))
+            self.assertLessEqual(np.linalg.norm(p-previous),.0005+1e-15);previous=p
+        self.assertAlmostEqual(duration,5.45529);np.testing.assert_array_equal(previous,goal)
+        self.assertLessEqual(duration+2.8+.5,9.)
+
 
 def policy_module():
     """Stub only the unavailable action transport; retain real YAM IK."""
@@ -90,7 +99,9 @@ class PolicyGuardTests(unittest.TestCase):
         for side in ('left','right'):
             p,r=ik.tcp_pose(np.array(READY),(0,.305 if side=='left' else -.305,.75))
             hands.append(dict(tcp=p.tolist(),rotation=r.tolist(),joints=list(READY),opening=1.,finger_joints=[-.04695]*2))
-        return dict(time=0.,hands=hands,can=list(CAN_START),cap=list(CAP_START),can_rotation=np.eye(3).tolist())
+        return dict(time=0.,hands=hands,can=list(CAN_START),cap=list(CAP_START),can_rotation=np.eye(3).tolist(),
+                    button=[CAN_START[0],CAN_START[1],CAN_START[2]+.077],button_travel=0.,
+                    nozzle=[.27,-.035,TARGET_CENTER[1]-.035],axis=[1.,0.,0.])
 
     def test_grasp_abort_emits_previous_action_without_solving_new_ik(self):
         sample=self.sample();self.module.telemetry.latest=sample
@@ -139,6 +150,57 @@ class PolicyGuardTests(unittest.TestCase):
             action=policy.act(SimpleNamespace(state_time=0.))
         self.assertIn('IK exceeds 5 mm',policy.failure)
         self.assertTrue(action.actions[0].meta['request_stop']);np.testing.assert_array_equal(action.actions[0].data,previous)
+
+    def test_release_entry_preserves_motor_command_without_larger_integral(self):
+        sample=self.sample();self.module.telemetry.latest=sample
+        policy=self.module.SprayDemo();policy.initialize()
+        original_q=policy.q[1].copy();commandp,commandR=self.module.ik.tcp_pose(original_q,policy._bases['right'])
+        sample['hands'][1]['tcp']=(commandp+[0,0,.0245529]).tolist()
+        policy.position_bias[1][:]=[0,0,-.02]
+        policy.index=next(i for i,m in enumerate(policy.moves) if m['label']=='coat_unpress_0')-1;policy.next(0.)
+        self.assertIsNone(policy.failure)
+        self.assertAlmostEqual(policy.release_path['duration'],5.45529)
+        self.assertAlmostEqual(policy.moves[policy.index]['seconds'],5.45529+2.8+.5)
+        with patch.object(self.module.ik,'solve',side_effect=lambda p,r,q,**kw:(q.copy(),0.,0.)) as solve:
+            action=policy.act(SimpleNamespace(state_time=0.))
+            self.assertEqual(solve.call_count,1) # Right first action reuses q exactly.
+        np.testing.assert_array_equal(action.actions[0].data[7:13],original_q)
+        np.testing.assert_array_equal(policy.position_bias[1],np.zeros(3));np.testing.assert_array_equal(policy.rotation_bias[1],np.zeros(3))
+        sample['time']=.05
+        with patch.object(self.module.ik,'solve',side_effect=lambda p,r,q,**kw:(q.copy(),0.,0.)) as solve:
+            policy.act(SimpleNamespace(state_time=.05))
+        expected,_,_=release_command_target(policy.release_path['start'],policy.release_path['goal'],.05)
+        np.testing.assert_allclose(solve.call_args_list[-1].args[0],expected,atol=1e-15)
+        np.testing.assert_array_equal(policy.position_bias[1],np.zeros(3))
+
+    def test_first_shot_failure_is_not_overwritten_or_advanced(self):
+        sample=self.sample();self.module.telemetry.latest=sample
+        policy=self.module.SprayDemo();policy.initialize()
+        policy.index=next(i for i,m in enumerate(policy.moves) if m['label']=='coat_shot_0')-1;policy.next(0.)
+        previous=np.concatenate(policy.last_actions);index=policy.index;sample['time']=8.
+        with patch.object(policy,'next',wraps=policy.next) as advance,patch.object(self.module.ik,'solve',side_effect=AssertionError('failed shot must stop')):
+            action=policy.act(SimpleNamespace(state_time=8.))
+        self.assertEqual(policy.failure,'insufficient measured spray contact');self.assertEqual(policy.index,index);advance.assert_not_called()
+        np.testing.assert_array_equal(action.actions[0].data,previous)
+        policy.next(9.);self.assertEqual(policy.index,index);self.assertEqual(policy.failure,'insufficient measured spray contact')
+
+    def test_measured_dwell_is_seconds_and_requires_sixteen_qualified_ticks(self):
+        self.assertEqual(MEASURED_DWELL,.8)
+        sample=self.sample();sample['button_travel']=.0027;self.module.telemetry.latest=sample
+        policy=self.module.SprayDemo();policy.initialize()
+        policy.index=next(i for i,m in enumerate(policy.moves) if m['label']=='coat_shot_0')-1;policy.next(0.)
+        with patch.object(self.module.ik,'solve',side_effect=lambda p,r,q,**kw:(q.copy(),0.,0.)):
+            for i in range(16):
+                sample['time']=1.+i*.05;policy.act(SimpleNamespace(state_time=sample['time']))
+                self.assertAlmostEqual(policy.contact_time,(i+1)*.05)
+                self.assertEqual(policy.moves[policy.index]['label'],'coat_unpress_0' if i==15 else 'coat_shot_0')
+
+    def test_release_path_budget_is_bounded_by_unchanged_episode_limit(self):
+        sample=self.sample();self.module.telemetry.latest=sample;policy=self.module.SprayDemo();policy.initialize()
+        self.assertLess(sum(m['seconds'] for m in policy.moves)+len(policy.moves)*policy._dt,120.)
+        sample['hands'][1]['tcp'][2]+=1.
+        policy.index=next(i for i,m in enumerate(policy.moves) if m['label']=='coat_unpress_0')-1
+        policy.next(0.);self.assertIn('120 second episode budget',policy.failure)
 
 
 if __name__=='__main__':unittest.main()

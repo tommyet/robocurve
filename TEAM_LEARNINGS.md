@@ -2305,3 +2305,22 @@ editing, merge both agents' findings, and commit/push the update with the work.
   post-construction readback assertion. Physics/controller/cameras unchanged.
   This is not a proven cure for Xid109. Full010 now testing the raised grasp
   with this rendering option; inspect renderer-readback.json and final result.
+- Full010 renderer readback matched FXAA2 and all three asynchronous settings
+  false. It ran 776 samples/38.75 s without a renderer crash. The +5 mm grasp
+  stayed within 5.707 degrees of upright; first sector had 47/49 coated cells
+  after 0.8 s aimed physical spray, overspray 6.65%. Score 0.25. The old 1.2 s
+  dwell timed out, then next() overwrote that failure with a release bias cap
+  error. Rebased Cartesian bias needed 24.55 mm despite an already valid prior
+  joint command. No physical force or grip failure explains this stop.
+- Sol fixed the representation: release starts at last commanded joint FK,
+  moves at <=10 mm/s toward achieved TCP+30 mm/achieved R, disables duplicate
+  right integral compensation, and keeps actual button/face clearance gates.
+  Path-derived deadline includes 2.8 s preload removal and 0.5 s settling,
+  with <=9 s per release and remaining worst-phase reserve inside 120 s.
+  Shared measured aimed dwell is now 0.8 s, supported by recorded 47/49 cells
+  and existing four-by-0.8 geometric coverage test. Rubric/dose unchanged.
+  Failures are sticky and cannot advance the phase. Root rerun:38 tests pass
+  in3.339 s. Astra targeted implementation review13:57:22–13:57:42 UTC passed.
+- Full capped spray-full-011 is running from ~/robotics-batch/spray-release-011,
+  with --render-sync. Controller SHA35a918f3f2c53749695d11a22cedfc758c70ddcb86991de51db2509aa5a4a0e5.
+  Native result pending; no complete preview claimed yet.

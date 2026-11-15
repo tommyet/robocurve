@@ -6,7 +6,18 @@ GRASP_Z=.005
 GRASP_OFFSET=np.array((0.,0.,GRASP_Z))
 RELEASE_DISTANCE=.030
 RELEASE_SPEED=.010
-RELEASE_DEADLINE=6.
+RELEASE_DEADLINE=9. # Per-release reservation; actual deadline is path-derived.
+MEASURED_DWELL=.8
+
+
+def release_command_target(start,goal,elapsed):
+    """Linear command-space retreat, including inherited load deflection."""
+    start=np.asarray(start,dtype=float);goal=np.asarray(goal,dtype=float)
+    if start.shape!=(3,) or goal.shape!=(3,) or not np.isfinite([start,goal]).all() or not math.isfinite(elapsed):
+        raise ValueError('release command path requires finite three-component positions and time')
+    distance=float(np.linalg.norm(goal-start));duration=distance/RELEASE_SPEED
+    fraction=min(1.,max(0.,elapsed)/duration) if duration>0 else 1.
+    return start+fraction*(goal-start),fraction,duration
 
 
 def calibrated_hand_target(nominal,actual_offset):

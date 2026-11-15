@@ -1,8 +1,8 @@
 {
-  "status": "raised_grasp_release_candidate_native_run_in_progress",
+  "status": "command_space_release_candidate_native_run_in_progress",
   "checked_date": "2026-11-15",
   "local_scorer_tests": {
-    "passed": 33
+    "passed": 38
   },
   "native_runtime_tested": true,
   "scripted_demo_score": 0.5,
@@ -85,6 +85,27 @@
       "controller_failure": "insufficient measured spray contact at fourth position; can rolled in below-COM grasp before third release",
       "offline_replay_passed": true,
       "complete": false
+    },
+    "spray-full-009": {
+      "complete": false,
+      "controller_tested": false,
+      "renderer_failure": "startup RTX device lost / Xid109"
+    },
+    "spray-full-010": {
+      "score": 0.25,
+      "samples": 776,
+      "duration_s": 38.75,
+      "coverage": 0.23979591836734693,
+      "first_sector_cells_coated": 47,
+      "first_sector_cells": 49,
+      "overspray": 0.0665067685598928,
+      "spray_seconds": 0.8,
+      "max_can_tilt_degrees": 5.707,
+      "raised_grasp_physically_stable": true,
+      "render_sync_readback_passed": true,
+      "first_failure": "insufficient measured spray contact; old1.2s dwell",
+      "overwritten_stop_reason": "release achieved-pose command compensation exceeds existing bounds",
+      "complete": false
     }
   },
   "native_latest_prepared_frame_tested": true,
@@ -103,6 +124,16 @@
     "button_released_m": 0.0005,
     "minimum_actual_face_clearance_m": 0.02,
     "release_consecutive_frames": 5,
+    "native_result": null
+  },
+  "command_space_release_candidate": {
+    "measured_aimed_dwell_s": 0.8,
+    "release_translation_speed_m_s": 0.01,
+    "release_path_anchor": "last issued right joint-command FK",
+    "right_integrator_disabled_during_release": true,
+    "first_failure_sticky": true,
+    "actual_clearance_gates_unchanged": true,
+    "episode_limit_s": 120,
     "native_result": null
   }
 }
