@@ -47,7 +47,7 @@ class Judging(unittest.TestCase):
         j['retained_pegs']=[True,False];self.assertEqual(score(j),.5)
         j['retained_pegs']=[False,False];self.assertEqual(score(j),0.)
     def test_held_or_resting_garment_fails(self):
-        for field,value in [('unsupported_hold_s',4.99),('minimum_clearance_mm',19.99),('intact',False),('supported_only_by_line_and_pegs',False)]:
+        for field,value in [('unsupported_hold_s',4.99),('minimum_clearance_mm',19.99),('minimum_clearance_mm',-1.),('intact',False),('supported_only_by_line_and_pegs',False)]:
             j=self.record();j[field]=value;self.assertEqual(score(j),0.)
     def test_missing_integrity_or_evidence_cannot_score(self):
         for field in ('integrity_checked','evidence_sha256'):

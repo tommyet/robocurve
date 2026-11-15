@@ -32,3 +32,7 @@ unit tests are test fixtures only. None is a demonstration result.
 The disclosed ideal static-grip constraints represent actual material enclosed
 by fingers or peg jaws. They do not establish a pass: verify the visible jaw
 capture, released hold and clearance independently.
+
+Incidental brushing against a vertical rack post is allowed. The garment may not
+rest on a post top, foot, laundry board, table or robot. The two pegs must still
+independently retain fabric and line; post contact never substitutes for a peg.

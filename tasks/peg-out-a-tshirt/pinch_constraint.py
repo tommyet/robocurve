@@ -62,38 +62,6 @@ class Pinch:
         p[self.indices] = targets
 
 
-def install_projected(base, cloth_name):
-    """Install once after reset. Native measured hand motion drives the pinch."""
-    import torch
-    from interpret_motion import rotation_xyzw
-    from yam_arena.constants import FINGER_JOINTS, TCP_OFFSET
-    cloth = base.scene[cloth_name]
-    hands = []
-    for side in ('left', 'right'):
-        robot = base.scene[side+'_robot']
-        hands.append((side, robot, list(robot.body_names).index('gripper'),
-                      robot.find_joints(list(FINGER_JOINTS), preserve_order=True)[0], Pinch()))
-    ids = torch.tensor([0], device=base.device, dtype=torch.long)
-    original = base.scene.write_data_to_sim
-    def array(value):
-        return getattr(value, 'torch', value).detach().cpu().numpy()
-    def apply(*args, **kwargs):
-        result = original(*args, **kwargs)
-        positions = array(cloth.data.nodal_pos_w)[0].copy()
-        velocities = array(cloth.data.nodal_vel_w)[0].copy()
-        for side, robot, body, fingers, pinch in hands:
-            pose = array(robot.data.body_link_pose_w)[0, body]
-            rotation = rotation_xyzw(pose[3:])
-            tcp = pose[:3] + rotation @ np.asarray(TCP_OFFSET)
-            gap = float(abs(array(robot.data.joint_pos)[0, fingers]).sum())
-            pinch.update(positions, velocities, tcp, rotation, gap, float(base.physics_dt))
-        if any(len(p.indices) for *_, p in hands):
-            value = torch.as_tensor(np.c_[positions, velocities][None], device=base.device, dtype=torch.float32)
-            cloth.write_nodal_state_to_sim_index(value, env_ids=ids)
-        return result
-    base.scene.write_data_to_sim = apply
-    return {side: pinch for side, *_, pinch in hands}
-
 
 def install(base, cloth_name):
     """Native hard static-friction approximation, with two-way reaction.

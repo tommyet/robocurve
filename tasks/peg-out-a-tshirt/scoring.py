@@ -24,7 +24,7 @@ def score(j):
         raise ValueError('fabric, peg and contact integrity needs review')
     for field in ('unsupported_hold_s','minimum_clearance_mm','peg_separation_mm'):
         value=j[field]
-        if type(value) not in (int,float) or not math.isfinite(value) or value < 0:
+        if type(value) not in (int,float) or not math.isfinite(value) or (value < 0 and field != 'minimum_clearance_mm'):
             raise ValueError('invalid measurement: '+field)
     if type(j['intact']) is not bool:
         raise ValueError('integrity outcome must be known')

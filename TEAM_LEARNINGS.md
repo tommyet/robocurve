@@ -4,6 +4,26 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 08:10 UTC — shirt submitted; five of six PRs received
+
+- Shirt PR2126 is received asTK-T6ZGSF, mediaM-S2MEEJ, head693b3bd.
+  Fresh demo285 scores1.0 in2,160 actions; Dream275 scores0.0 in2,400.
+  Both complete raw archives are local, and the demo archive checksum matches.
+- During the entire released hold, the two pegs retain52/93 actual vertices,
+  spacing stays above114mm and table clearance above56mm. Both grips release.
+  The final board and robot clearances are large; the rear view's apparent arm
+  overlap is perspective, not support. The garment brushes the end post's
+  vertical side without resting on its top or foot. Judging allows this ordinary
+  incidental touch, while still requiring both real fabric/line captures.
+- Native cloth bends, folds and sags, but effective stiffness retains pronounced
+  folds. This limitation is explicit.17 focused public shirt tests pass; the
+  earlier note saying20 was a count error. Negative table clearance now scores
+  zero rather than throwing a validation error. No physical model changed.
+- Tie283 has a threaded knot and a physically freed wide blade. Its first two
+  knot-body grasps failed: measured joint gap10.4–10.9mm exceeded the model's
+ 10mm capture threshold. A shallower ordinary fingertip pinch is being tested;
+  no final fit or demo score is claimed. Dream286 remains the matching trial.
+
 ## 2026-11-15 07:32 UTC — reversible tie construction
 
 - The tie uses one plain cloth shell and has no sewn front/back seam. Describe

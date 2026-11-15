@@ -230,7 +230,7 @@ def main():
     if args.plan is not None:
         shutil.copyfile(args.plan,frozen/'fixed-motion.json')
         source_hashes['fixed-motion.json']=hashlib.sha256(args.plan.read_bytes()).hexdigest()
-    draft=json.loads((HERE/'task.draft.json').read_text())
+    draft=json.loads((HERE/('task.json' if (HERE/'task.json').exists() else 'task.draft.json')).read_text())
     started=time.monotonic()
     report={'kind':'diagnostic_yam_'+args.mode+'_not_submission_evidence','status':'initializing',
             'score':None,'demo':False,'dream_requests':0,'started_utc':datetime.now(timezone.utc).isoformat(),
