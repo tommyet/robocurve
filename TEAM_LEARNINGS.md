@@ -4,6 +4,68 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 15:57 UTC — use direct grasps instead of pushing a loose tail
+
+- Free-tip pushes in307 bent the cloth over the loop rather than threading it.
+  Native geometry at2501/2571/2641 disproved the rigid-offset prediction. The
+  attempt remained untied; do not infer success from the commanded route.
+- Direct handoff2681→2761 retained18 nodes at the actual wide tip0–5mm. After
+  releasing the right grip and pulling,2853 still shows a loose fold. A right
+  grasp at material430–445mm then retained14 nodes, allowing the two hands to
+  hold the tip and outer fold separately. No narrow material was in that grip.
+- Pulling the outer fold forward moved the whole loop rather than opening the
+  assumed vertical passage. The current ordinary correction spreads it sideways
+  and approaches the measured opening diagonally. No completed knot, full demo
+  score, matching Dream308 or necktie PR exists yet.
+- Development856a500 is now also on origin/main, after a fresh fetch confirmed
+  no unseen teammate changes. Native checkpoints and commands remain local in
+  `artifacts/final-five-2026-11-15/tie307-*`. Same supervised singleA40; no new
+  GPU or Dream session was started during these corrections.
+
+## 2026-11-15 15:34 UTC — leave a free cloth tail for threading
+
+- Continuous307 reached a verified right-hand grasp at wide material160–180mm,
+  leaving about170mm of free cloth. The original left grip released completely;
+  left then captured only wide-loop material595–615mm. Native boundaries2111,
+  2171 and2281 preserve the successful transfers and photographs.
+- A free cloth tip does not follow a rigid offset from the wrist. During the
+  attempted feed it curled over the opening, despite the arm reaching its
+  command. Boundary2501 remains an uncompleted knot; no tie success is claimed.
+  Inspect the native cloth, not predicted endpoint transforms or stage labels.
+- Ordinary reachable poses can be selected near a requested waypoint without
+  making millimetre-level IK error a task-quality criterion. Native collisions,
+  action bounds, actual passage and the released knot remain the relevant checks.
+- No material laws or scoring rules changed in this continuation. Matching
+  Dream308 is prepared but has not been launched. The singleA40 remains under
+  the local stop watchdog, extended while actively supervised. Five task PRs
+  exist; cake1919, seam2113 and shirt2126 remain pending as of15:25UTC.
+
+## 2026-11-15 14:45 UTC — distinguish grasp, threading and actual arm motion
+
+- Fresh307 validates the staged reset:18 left wide-tip nodes and40 right
+  base-grip nodes remain after the declared five-second native settling.
+  It continues in one episode; every inspected boundary and action segment
+  is retained under`artifacts/final-five-2026-11-15/tie307-*`.
+- A broad geometric grasp prediction is not an actual material selection.
+  The first narrow-end grasp also caught the wide fold. Easing that fold away
+  exposed the narrow tip; the subsequent native grasp retained only material
+  1.410–1.420m. Both free-end grasps then held during ordinary tension.
+- A sideways front-loop feed pushed the loop aside. The revised feed points
+  the fingers along the opening. Native photographs still require review after
+  tightening; neither a planned passage nor an open-centreline knot diagnostic
+  is sufficient to claim a conventional wearable necktie.
+- The next downward command did not reach its target: the measured wide-tip
+  height remained around0.99m against a0.85m target. The hands are close, with
+  predicted contact in the initial pose. Separate the hands before attributing
+  all resistance to cloth. The separating command records the coarse hull's
+  submillimetre initial-contact warning instead of treating it as a rejection;
+  actual native contact and visible integrity remain the evidence.
+- No completed tie score, media upload or tie PR exists yet. A replacement
+  Dream trial has not started; avoid spending API credit before a full demo.
+  Same singleA40, supervised watchdog extended to15:33UTC. Current shared
+  reset and notes are on development commit856a500; origin/main has no unseen
+  teammate changes. Clean submission branch remains based on fresh upstream.
+
 ## 2026-11-15 14:01 UTC — disclose a simpler untied starting grasp
 
 - Demo303's wide-end handoff released the narrow strand and the loose wrap
