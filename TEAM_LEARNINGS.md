@@ -4,6 +4,81 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 20:13 UTC — prepared necktie submitted; all GPUs stopped
+
+- Operator: repository agent, `codex/necktie-finish-2026-11-15`. The user asked
+  for the smallest credible solution and had authorized the task PRs. New task
+  `tasks/fit-a-loose-necktie` deliberately starts with an already-threaded loose
+  knot. It tests tightening, fitting and release. It does not validate the old
+  full-cloth threading experiments in `tasks/tie-a-necktie`.
+- Native FEM317 again failed its initial grasp during settling, before an
+  action. We switched to an openly documented reduced sliding model, informed
+  by accepted reduced-model tasks such as [O-ring PR1576](https://github.com/robocurve/benchmark-tasks/pull/1576).
+  Fixed topology, front-plane constraint, idealized closing-finger capture and
+  gravitational drape are explicit limitations. No full cloth contact, internal
+  folds, reaction-force calibration or tying-from-scratch claim is made.
+  The dynamics read actual robot poses/openings, not demo labels, target poses,
+  elapsed task time or score. Wrong/reversed relative motion can loosen it;
+  pulling without holding the knot does not tighten the wrap. Five CPU tests
+  cover these negative cases, slipping, length conservation and released scoring.
+- Demos319,320 and final321 scored 1.0. Final321 used 580 bounded ordinary YAM
+  actions (29 s), 238.62 wall seconds. The 52 x 52 mm knot finishes at the
+  collar, wide tip 406.14 mm below it, narrow tip 118.05 mm higher, lateral
+  offset 1.44 mm and 7.55 s released. Front/side final views and the grasp/pull/
+  release sequence were visually checked. No object-pose feedback enters the
+  demo; its tracker reads only the robot's own joint state.
+- Dream320 stopped at 32 actions because its API interpreted the instruction
+  as tightening a tie on a person. That refusal is retained in public evidence.
+  The final instruction explicitly names the rigid plastic collar form and
+  absence of a person. Dream321 then completed 1,200 actions (60 s), 146
+  requests, one session and no further refusal; score 0.0, no grasp. Wall time
+  523.56 s. Both final runs use matching runtime source and the same material
+  rules; only descriptive metadata, scores/media and docs were finalized later.
+- Uploaded anonymous H.264 front/side media as **M-YCTY75**. Submission commit
+  `f06866b` contains only 22 files under `tasks/fit-a-loose-necktie`, created from
+  fresh upstream/main. [PR2168](https://github.com/robocurve/benchmark-tasks/pull/2168)
+  was received as **TK-KYVRXZ**, waiting for review. Do not change this pending
+  submission or describe the receipt as acceptance. Shared notes stay out of it.
+- Pod `4uh5b9d1j36hlh` ran for 0.9330 hours at $0.59/hour and was confirmed
+  EXITED after both final archives were downloaded and hash-matched. The Dream
+  credential was removed first. Complete inventory at 20:12:55 UTC found all
+  ten Pods EXITED and no active Pods or persistent mounts. Estimated session
+  compute **$0.5505**, temporary disk **$0.0130**, Dream charges separate. The
+  75-minute independent stop watchdog was active throughout.
+- Cumulative reconciled Runpod estimate is now **$37.26 compute**, roughly
+  **$37.90 including temporary disk**, excluding Dream/taxes/adjustments.
+  Billing-read permission is still absent, so this is not an invoice/balance.
+  Evidence: ignored `artifacts/necktie-finish-2026-11-15/`, including final
+  inventory/cost, lifecycle, paired source/video archives and the upload receipt.
+- Fresh six-task status: cake1919, seam2113, shirt2126 and necktie2168 pending;
+  wheel2091 finally rejected; staple2093 still closed, with our duplicate-
+  ingestion correction posted and no reply. Updated the stale batch handoff
+  and README so another agent does not restart already completed demos.
+
+## 2026-11-15 — twelve additional ideas screened without paid compute
+
+- After PR2168 and GPU shutdown, searched 2,167 PR titles and 542 current board
+  records, inspected relevant review histories, and checked BEHAVIOR, RoboCasa,
+  RoboDojo and primary research. Findings and links are in
+  [the idea screen](docs/task-ideas-2026-11-15.md); raw snapshots are ignored in
+  `artifacts/new-ideas-2026-11-15/`. No new task was implemented or simulated.
+- Bracelet fitting/fastening is the strongest apparent gap, contingent on a
+  real clasp accessible to these grippers. Pram rocking is a backup with a
+  complexity/relevance concern. Gift wrapping has BEHAVIOR overlap and material
+  risk. Genuine knot removal and full-size extinguisher operation need stronger
+  differentiation and feasibility work before spending.
+- Already occupied or heavily overlapping: furniture/cam locks, mouse clicking,
+  low-toast retrieval, vegetable peeling, generic pan cleaning, spray/wipe and
+  pruning. Mouse1840, cucumber1899 and hedge1059 are accepted; cam-lock1520,
+  toaster1457, griddle2019 and rose1298 are pending. Do not confuse a revised
+  pending task with its earlier rejected record.
+- Extinguisher1928/1016 were finally rejected for miniature scale, light loads
+  and shortened working distance. Window1978 was rejected for existing benchmark
+  overlap. Hedge1059 succeeded after physical judging changed from prescribed
+  blade angles to actual severing; rose1298 had to invalidate later bud damage.
+  These are concrete standards to reuse, not blanket permission for arbitrary
+  simplified physics or a guarantee that another variant will be accepted.
+
 ## 2026-11-15 19:04 UTC — staple correction posted; Runpod costs reconciled
 
 - The user explicitly authorized the staple correction. Posted and verified

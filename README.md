@@ -47,19 +47,25 @@ limitations. Check the live task board before choosing a new objective.
   .venv/bin/python tasks/join-two-2x2-blocks/replay.py tasks/join-two-2x2-blocks/evidence/demo.jsonl.gz
   ```
 
-  The included demo scores 1.0. Simulator runs require the competition environment;
-  on the shared VM, source `/data/IsaacLab-Arena/yam.env` and follow the task's run commands.
-  Coordinate VM use, use fresh artifact directories and batch GPU trials.
+  The included demo scores 1.0. Simulator runs require the pinned environment
+  in the chosen task's `ENVIRONMENT.json`; follow its README and the current
+  [Runpod setup](tools/runpod_smoke/README.md). Coordinate GPU use, set an
+  independent shutdown deadline, use fresh artifact directories and batch trials.
 - The retained VM was updated and validated on November 7. For the brick/die tasks
   with Inspect 1.0, run `python tools/prepare_review_media.py RUN` after exporting
   camera videos and before the task's `render_review.py`. The rope runner records
   its own review camera; follow its README. See the shared notes for version details.
 - Credentials, private reference PDFs, full videos and raw trial artifacts are intentionally
   ignored. A clone includes code, CAD and curated numeric evidence. Arrange Brev access and
-  credentials privately; full recordings are backed up on Tom's machine and the retained VM.
-- The [six-task development batch](docs/six-task-batch-readiness.md) records the
-  current validation gaps and compute budget. Cake is submitted as PR1919;
-  the other five remain development drafts.
+  credentials privately; current Runpod recordings are backed up on Tom's machine.
+  Temporary container disks are not a retained backup.
+- The [six-task batch](docs/six-task-batch-readiness.md) has now been submitted.
+  It records the current review outcomes and reconciled compute estimate.
+  The [prepared necktie task](tasks/fit-a-loose-necktie/README.md) is a small,
+  validated example of a disclosed reduced material model. Its original
+  full-cloth threading experiment remains separate and unsubmitted.
+- The [latest idea screen](docs/task-ideas-2026-11-15.md) records existing
+  competitors, review lessons and candidates that have not yet been built.
 
 Development branches start from this fork's `main`. **Competition submission branches start
 from `upstream/main` and contain only one `tasks/<name>/` folder.** Keep team notes and other

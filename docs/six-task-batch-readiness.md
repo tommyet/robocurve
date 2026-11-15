@@ -1,43 +1,59 @@
 # Six-task batch: submission status
 
-Updated 2026-11-14 23:03 UTC. One PR per task is authorized.
-**Cake is awaiting review. The other five are not ready to submit.**
+Updated 2026-11-15, after the necktie receipt. All six have now been submitted.
+Four await review; two are closed, with a correction request posted for staple
+removal. An open PR or ingestion receipt is not acceptance.
 
-| Task | Current result | Submission blocker |
-| --- | --- | --- |
-| [Cake PR1919](https://github.com/robocurve/benchmark-tasks/pull/1919) | Demo1.0, Dream0.0; anonymous media and judging complete. Requested category/context revision received as **TK-LE2FKY** at22:50 UTC. | Await organizer review. Do not change the pending submission. |
-| [Wheel](../tasks/true-a-bicycle-wheel/README.md) | Robot turns a nipple, but withdrawal undoes the adjustment. | Retained repair, released full revolution and final measurement. |
-| [T-shirt](../tasks/peg-out-a-tshirt/README.md) | Flexible hem pickup; peg manipulation still fails. | Both clips must capture the garment and line, followed by released retention. |
-| [Staple](../tasks/remove-a-staple/README.md) | Remover lifts away without extracting the staple. The clinch also changes before robot contact. | Correct and verify the passive reset before another extraction attempt. |
-| [Seam](../tasks/unpick-a-seam/README.md) | One thread cut; second feed exceeds the flexible-panel model's supported aperture. | Remove all six stitches while preserving the fabric. |
-| [Necktie](../tasks/tie-a-necktie/README.md) | Wide-tip pickup works; narrow strip slips during repositioning. | Reliable moving grip, actual threading/tightening and released wearable fit. |
+| Task | PR / current outcome | Note |
+|---|---|---|
+| Cake border | [#1919](https://github.com/robocurve/benchmark-tasks/pull/1919), pending TK-LE2FKY | Category/context revision received. |
+| Bicycle wheel | [#2091](https://github.com/robocurve/benchmark-tasks/pull/2091), final rejection | Reviewer found the specialist repair did not meet the selected relevance domain. |
+| Peg out a T-shirt | [#2126](https://github.com/robocurve/benchmark-tasks/pull/2126), pending TK-T6ZGSF | Flexible garment demo and matching baseline submitted. |
+| Staple removal | [#2093](https://github.com/robocurve/benchmark-tasks/pull/2093), closed after duplicate rejection | The bot created two task IDs for one PR. A correction requesting human review is posted; no reply yet. |
+| Unpick a seam | [#2113](https://github.com/robocurve/benchmark-tasks/pull/2113), pending TK-QM5PG5 | Completed demo and matching baseline submitted. |
+| Fit a loose necktie | [#2168](https://github.com/robocurve/benchmark-tasks/pull/2168), pending TK-KYVRXZ | Narrowed to tightening and fitting an already-threaded knot. Demo 1.0; Dream 0.0. |
 
-No new PRs were opened for the five failed demonstrations. No task score is
-claimed for them. Reconstructed checkpoints save iteration time but cannot be
-spliced into submission demonstrations. Each still needs a complete full-score
-fresh-start demo, matching Dream run, independent judging and anonymous media.
+## Necktie scope and evidence
 
-## Compute and evidence
+Use [`tasks/fit-a-loose-necktie`](../tasks/fit-a-loose-necktie/README.md).
+The earlier `tie-a-necktie` folder preserves failed full-cloth threading
+experiments; it is not the submitted task.
 
-Both A40 Pods are confirmed **EXITED** after local archive verification.
-This batch used approximately **$3.25** in elapsed compute at$0.59/hour per
-Pod. The cumulative working estimate is **$26.95**, including the earlier
-$23.70 subtotal. Storage and Dream charges are excluded; this is not a bill or
-remaining balance. No new Dream calls were made for the unfinished tasks.
-Stopped Pods retain their disks.
+The new task uses a disclosed fixed-topology model with idealized geometric
+grasp capture and relative sliding. It preserves material length, allows
+loosening and missed/slipped grasps, and requires a released final fit. It does
+not resolve full cloth contact, internal folds or material reaction forces.
 
-Exact lifecycle records and SHA256-verified result/source archives are in the
-ignored local `artifacts/submission-fresh-2026-11-14/` and
-`artifacts/submission-materials-2026-11-14/` directories. Detailed findings and
-reusable evidence locations are in [TEAM_LEARNINGS.md](../TEAM_LEARNINGS.md).
+Final native YAM demo: 1.0 after 580 actions / 29 seconds, including 7.55 seconds
+released. Matching Dream: 0.0 after all 1,200 actions, 146 requests, one session.
+Both use identical runtime code. The earlier Dream wording refusal is recorded
+separately; the final instruction explicitly names a plastic form with no person.
+Media M-YCTY75 and the single-folder PR have an official ingestion receipt.
 
-## Submission workflow
+## Compute and retained evidence
 
-Keep each submission on a separate branch from fresh upstream/main containing
-only its validated task folder. Keep shared notes and private evidence out of
-the upstream PR. User approval to submit is already in place. Refresh novelty
-and ownership before submission; the22:52 title screen found no matching titles
-for these five, but it is not an exhaustive novelty guarantee.
+All ten listed Runpod Pods were confirmed EXITED at 20:12:55 UTC; no active
+Pods or persistent mounts were present. The finishing session lasted about
+56 minutes, estimated at $0.5505 compute plus $0.0130 temporary container disk.
+Dream charges are separate. These are rental-time estimates, not an invoice.
 
-The ten additional ideas remain deferred until this submission batch is done,
-as requested. No GPU or Dream compute has been used on them.
+Through that stop, the reconciled cumulative estimate is about **$37.26 Runpod
+compute**, or **$37.90 including temporary disk**, excluding Dream, taxes and
+account adjustments. The key lacks billing-read access. Older subtotals and
+claims that Runpod container disks remain retained were incorrect; use the
+dated accounting in [TEAM_LEARNINGS.md](../TEAM_LEARNINGS.md).
+
+Verified raw recordings, source snapshots and lifecycle records are local in
+ignored `artifacts/necktie-finish-2026-11-15/` and the earlier evidence folders.
+The repository contains curated numeric evidence and reproducible task code.
+
+## Next work
+
+The [twelve new ideas](task-ideas-2026-11-15.md) were researched after submission
+and GPU shutdown. No GPU or Dream compute was spent on them, and none was built.
+Bracelet fastening is the strongest lead; pram rocking is a backup. Several
+other suggestions already have accepted or pending counterparts.
+
+Pending submissions are frozen. Do not push changes expecting another review
+until feedback arrives. New competition submissions must start from fresh
+upstream/main and contain only their own validated task folder.

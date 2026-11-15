@@ -1,6 +1,10 @@
 # Finish tying a pre-wrapped necktie — development
 
-**Not submission-ready. No successful complete demo or necktie PR exists.**
+**This full-cloth experiment is not submission-ready.** The submitted,
+narrower task is [Tighten and fit a loose necktie](../fit-a-loose-necktie/README.md),
+[PR #2168](https://github.com/robocurve/benchmark-tasks/pull/2168). It starts
+already threaded and uses a disclosed reduced model; it does not validate
+the threading experiment below. Do not resume these failed trials by default.
 The user approved narrowing the task to finish a prepared wrap: thread the
 wide end, tighten, fit to the collar, and release. `task.draft.json` describes
 this scope. The current fixed reset has a 90 mm free wide tail above the front
