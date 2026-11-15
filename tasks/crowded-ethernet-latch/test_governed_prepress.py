@@ -1,4 +1,5 @@
 """FK-based reference governor and trajectory PI integration regressions."""
+import json
 import unittest
 from unittest.mock import patch
 import numpy as np
@@ -76,6 +77,14 @@ class GovernedPrepressTests(unittest.TestCase):
   np.testing.assert_array_equal(servo.bias,before)
   servo.track(np.zeros(6),np.ones(6),.05,np.full(6,-.04),np.full(6,.01))
   np.testing.assert_allclose(servo.bias,before-.00025)
+
+ def test_native_numpy_certificate_telemetry_is_json_serializable(self):
+  probe,measured,endpoint,rotation=self.fixture()
+  safe={'rigid_gap_m':np.float64(.01),'other_hand_gap_m':np.float64(.01),'rotation_chord_bound_m':np.float64(0.)}
+  with patch.object(probe,'rigid_motion_certificate',return_value=safe):
+   probe.governed_prepress(measured,endpoint,rotation)
+  restored=json.loads(json.dumps(probe.trajectory_governor))
+  self.assertIs(restored['correction_safe'],True)
 
 
 if __name__=='__main__':unittest.main()

@@ -400,7 +400,7 @@ class ReleaseProbe(GraspProbe):
                 if attempt==0:break
             else:high=candidate_clock
         correction=self.rigid_motion_certificate(measured,measured[1][2:],chosen_pose,pieces)
-        safe=(min(correction['rigid_gap_m'],correction['other_hand_gap_m'])-correction['rotation_chord_bound_m']>=.0002)
+        safe=bool(min(correction['rigid_gap_m'],correction['other_hand_gap_m'])-correction['rotation_chord_bound_m']>=.0002)
         self.trajectory_governor={'path_clock_s':chosen_clock,'duration_s':PREPRESS_DURATION,'mesh_error_m':error,
                                  'tracking_budget_m':budget,'allowed_mesh_step_m':allowance,'accepted_mesh_step_m':step,
                                  'nominal_remaining':remaining,'actual_to_reference':correction,'correction_safe':safe,

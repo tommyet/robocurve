@@ -2373,3 +2373,8 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Isolatedresultsummarycorrected: maxtrackingnowincludesbotharms(previous
   fieldwasleft-only); HOVERmetriccannotclaimPREPRESSsuccess; completedand
   loaded-error-targetflagsrequireacceptedPREPRESS. No TASKscorechanges.
+
+- Tracking024endedfirstPREPRESStickfromJSONTypeError: NumPybool in
+  trajectory_governor.correction_safe. No motion-control result. Rootcast
+  bool explicitly andaddednativeNumPycertificateJSONroundtriptestPASS.
+  Samealgorithmrerunning025;donotcount024asphysicalcontrollerfailure.
