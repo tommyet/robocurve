@@ -8,6 +8,24 @@ from yam_arena.constants import TCP_OFFSET
 from yam_arena.urdf import forward_kinematics, rpy_matrix
 
 
+def _prepare_piece(triangles):
+    vertices = np.unique(triangles.reshape(-1,3),axis=0)
+    axes = np.cross(triangles[:,1]-triangles[:,0],triangles[:,2]-triangles[:,0])
+    lengths = np.linalg.norm(axes,axis=1)
+    axes = np.unique(np.round(axes[lengths>1e-12]/lengths[lengths>1e-12,None],8),axis=0)
+    return vertices,axes
+
+
+def _prepared_gap(first, second, gap):
+    av,aa = first
+    bv,ba = second
+    axes = np.unique(np.concatenate((aa,ba)),axis=0)
+    for start in range(0,len(axes),128):
+        a,b = av@axes[start:start+128].T,bv@axes[start:start+128].T
+        gap = max(gap,float(np.maximum(a.min(0)-b.max(0),b.min(0)-a.max(0)).max()))
+    return max(0.,gap)
+
+
 def separating_gap(first, second):
     """Conservative separating-plane gap for collision triangle sets.
 
@@ -19,16 +37,9 @@ def separating_gap(first, second):
     gap = float(np.maximum(av.min(0)-bv.max(0),bv.min(0)-av.max(0)).max())
     if gap > .003:
         return gap
-    triangles = np.concatenate((first,second))
-    axes = np.cross(triangles[:,1]-triangles[:,0],triangles[:,2]-triangles[:,0])
-    lengths = np.linalg.norm(axes,axis=1)
-    axes = np.unique(np.round(axes[lengths>1e-12]/lengths[lengths>1e-12,None],8),axis=0)
     # Any of these planes is a sufficient absence certificate, without making
     # an assumption that the dense collision pieces are perfectly convex.
-    for start in range(0,len(axes),128):
-        a,b = av@axes[start:start+128].T,bv@axes[start:start+128].T
-        gap = max(gap,float(np.maximum(a.min(0)-b.max(0),b.min(0)-a.max(0)).max()))
-    return max(0.,gap)
+    return _prepared_gap(_prepare_piece(first),_prepare_piece(second),gap)
 
 
 def minimum_separation(first_pieces, second_pieces):
@@ -38,8 +49,12 @@ def minimum_separation(first_pieces, second_pieces):
     second_min = np.array([p.min((0,1)) for p in second_pieces])
     second_max = np.array([p.max((0,1)) for p in second_pieces])
     gaps = np.maximum(first_min[:,None]-second_max[None,:],second_min[None,:]-first_max[:,None]).max(2)
+    # Lifetime is this call only: measured meshes may change every frame.
+    first_prepared,second_prepared = {},{}
     for i,j in np.argwhere(gaps <= .003):
-        gaps[i,j] = separating_gap(first_pieces[i],second_pieces[j])
+        if i not in first_prepared:first_prepared[i] = _prepare_piece(first_pieces[i])
+        if j not in second_prepared:second_prepared[j] = _prepare_piece(second_pieces[j])
+        gaps[i,j] = _prepared_gap(first_prepared[i],second_prepared[j],gaps[i,j])
     return float(gaps.min())
 
 

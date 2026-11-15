@@ -2378,3 +2378,14 @@ editing, merge both agents' findings, and commit/push the update with the work.
   trajectory_governor.correction_safe. No motion-control result. Rootcast
   bool explicitly andaddednativeNumPycertificateJSONroundtriptestPASS.
   Samealgorithmrerunning025;donotcount024asphysicalcontrollerfailure.
+
+- MovingPI025q3unlockedwhilegovernorheldreference; no finalresult. Root
+  interruptedFORPERFORMANCE afterprofile~4s/tick geometryCPU, notphysical
+  failure. Markerartifacts/native-four-task-20261114/ethernet-tracking025-
+  interruption.json. VerifiednoGPUprocessbefore026restart.
+- Solpreparedgeometryoptimization retains.003AABBthreshold, samefaceaxes
+  normalization/round8 andsupportvalues; uniquevertices and lazyper-piece
+  preparationWITHINONECALL only, nostalegeometry.4paritytestsPASS inclthree
+  native025states/sweeps/overlap/degenerate/mutation. Samegap
+  .0005400177484465307m;5sampleCPUmedian.952861→.222507s (4.282x).
+  Fullnativewalltimespeedupnotyetmeasured. Samecontroller026running.
