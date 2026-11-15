@@ -4,6 +4,33 @@ Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-15 02:08 UTC — practical grip integration and continued cloth trials
+
+- Operator: repository agent, same development branch. Wheel PR2091 and
+  staple PR2093 remain pending; the fresh board also lists cake TK-LE2FKY
+  pending. No final shirt, seam or tie success is claimed yet.
+- Shirt227 retains an opened peg through240 ordinary actions. The native
+  robot paths are nested under Geometry/base/link1/.../gripper; earlier flat
+  collision-filter targets were wrong. The disclosed kinematic peg law now
+  uses handle-span enclosure, symmetric jaw rotation and a14mm commanded
+  carrying gap. Native flexible garment physics and measured capture remain.
+ 228 continues from that labelled checkpoint to attempt the first real clip.
+- Seam224 ends596 actions with two tacks cut, no blade-damage/native hinge
+  fracture, but13.6mm axial handle slip and11.1degrees rotation cause an IK
+  failure.227 adds measured-enclosure native static handle grip; it retains
+  the tool and cuts the first tack, but later fixed feeds miss.229 adds bounded
+  joint feedback, observed stitch translation and2s feed holds. These are
+  ordinary demo controls, not object-state edits or Dream observations.
+- Tie226 completes600 slow tracked wrapping actions. It improves actual
+  corner tracking but is not knot evidence.228 follows the Oriental knot's
+  under-then-over sequence from the retained prewrap state; neck/front-loop
+  threading and final released fit still need demonstration. Method reference:
+  https://www.ties.com/how-to-tie-a-tie/simple .
+- One A40 remains supervised at$0.59/hour. Current lifecycle/deadline and
+  source snapshots are in artifacts/practical-models-2026-11-14. Reconstructed
+  checkpoints remain explicitly unscored; each final submission needs a full
+  fresh episode. Do not rerun or edit pending PRs merely to clean diagnostics.
+
 ## 2026-11-15 01:34 UTC — staple submitted
 
 - Staple PR2093 is open, latest receipt **TK-75DZ4E**, media **M-DZDU9P**.

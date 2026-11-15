@@ -34,6 +34,8 @@ def main():
     p.add_argument('--out',type=Path,required=True)
     p.add_argument('--steps',type=int,default=20)
     p.add_argument('--plan',type=Path,help='Frozen action14 JSON produced by plan.py')
+    p.add_argument('--dream',action='store_true',help='Run Dream with standard camera and joint observations only')
+    p.add_argument('--dream-rows-per-request',type=int,choices=(1,2,4,8),default=4)
     p.add_argument('--pose-assisted-entry',action='store_true',help='Disclosed scripted demo: after the proven140-action pickup, filter measured tool-in-gripper pose to convert the fixed blade path into ordinary bounded joint targets')
     p.add_argument('--judging-views',action='store_true',help='Fixed native seam close-ups for recording only, excluded from policy inputs')
     p.add_argument('--physics-hz',type=int,choices=(240,480,960,1920,3840),default=960)
@@ -85,6 +87,7 @@ def main():
     p.add_argument('--practical-material',action='store_true',help='Disclosed coarse panel/contact model:2mm cloth continuity bound, physical blade damage, native hinge breaks, and1mm interior thread-crossing bound; numerical contacts remain logged')
     p.add_argument('--functional-tacks',action='store_true',help='Quasistatic closed tacks with native fabric connectors, released only by blade contact')
     a=p.parse_args()
+    if a.dream and (a.plan is not None or a.pose_assisted_entry):p.error('Dream cannot use scripted actions or tool-pose feedback')
     import os
     os.environ['ROBOCURVE_SEAM_FUNCTIONAL_TACKS']='1' if a.functional_tacks else '0'
     if a.functional_tacks and not a.practical_material:p.error('Functional tacks require practical native panel material')
@@ -126,7 +129,7 @@ def main():
         p.error('Drape shape requires --pre-draped-seam')
     if a.max_depenetration_m_s is not None and not .01<=a.max_depenetration_m_s<=1.:
         p.error('Diagnostic depenetration velocity must be 0.01 to 1 m/s')
-    if a.plan is None and a.steps>200:p.error('Ready-hold preview limited to 200 steps')
+    if a.plan is None and not a.dream and a.steps>200:p.error('Ready-hold preview limited to 200 steps')
     if a.pose_assisted_entry and (a.plan is None or a.steps<=140):
         p.error('Pose-assisted entry requires a frozen plan extending beyond the140-action pickup')
     if a.continue_after_strain and (a.plan is not None or a.steps>4):
@@ -199,6 +202,7 @@ def main():
         report['pose_assistance_actions']={'first':141,'last':entry_stop,
             'after_last':'frozen joint targets with ordinary position/rate limits; no live tool-pose compensation'}
     app=video=trace=emb=break_observer=None
+    dream=None;request_audit=[];session_audit={'session_count':0}
     profiler=None
     if a.profile_steps:
         import cProfile
@@ -405,6 +409,10 @@ def main():
             if break_observer:break_observer.context('reset')
             emb._env.reset()
         snapshot_reset('after')
+        grip=None
+        if a.functional_tacks:
+            from tool_grip import install as install_grip
+            grip=install_grip(stage,base,handle)
         tacks=None
         if a.functional_tacks:
             from functional_tacks import Tacks
@@ -585,6 +593,9 @@ def main():
             return result
         base.scene.update=after_physics
         ready=array(emb._ready)[0]
+        from yam_arena.constants import SHOULDER,WRIST,GRIPPER,FINGER_OPEN
+        limits=np.tile(np.array([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+
+                               [GRIPPER['velocity']/abs(FINGER_OPEN)/20]),2)
         if actions is not None:
             from yam_arena.constants import SHOULDER,WRIST,GRIPPER,FINGER_OPEN
             limits=np.tile(np.array([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+
@@ -627,6 +638,7 @@ def main():
                  'blade_velocity_m_s_rad_s':array(blade.get_velocities())[0].tolist(),
                  'cloth_nodes':[n.tolist() for n in state['nodes']],
                  'cut_events':cutter.events,'invalid':state['invalid']}
+            if grip is not None:row['tool_grip']=dict(grip)
             if tacks is not None:row['tacks']={'closed':list(tacks.closed),'events':list(tacks.events)}
             if a.facet_cloth:
                 row['facet_poses_xyzw']=[view.last_poses.tolist() for view in views]
@@ -639,13 +651,39 @@ def main():
             trace.write(json.dumps(row,allow_nan=False)+'\n');trace.flush()
         snapshot(0,ready);save()
         if state['invalid']:raise RuntimeError('Authored seam reset fails material/contact audit')
+        if a.dream:
+            from inspect_robots import Scene
+            from dream_policy import make_policy
+            spec_path=HERE/('task.json' if (HERE/'task.json').exists() else 'task.draft.json')
+            instruction=json.loads(spec_path.read_text())['instruction']
+            emb._instruction=instruction
+            dream=make_policy(request_audit,session_audit,rows_per_request=a.dream_rows_per_request)
+            dream.bind(emb.info);dream.reset(Scene(id='unpick-a-seam',instruction=instruction))
+            report.update(dream_model=dream.info.checkpoint,dream_rows_per_request=a.dream_rows_per_request,
+                policy='Dream: standard cameras and proprioception only; identical material model')
+        from joint_tracking import JointTracking
+        tracking=JointTracking(side='right')
+        alignment=None
+        if entry is not None and tacks is not None:
+            from tack_alignment import TackAlignment
+            alignment=TackAlignment(state['poses'],[len(t['bodies']) for t in threads])
         previous_action=ready.copy()
         for step in range(1,a.steps+1):
             action=ready.copy() if actions is None else actions[step-1].copy()
+            if dream is not None:
+                chunk=dream.act(emb._observation())
+                if len(chunk.actions)!=1:raise RuntimeError('Expected one normal Dream action')
+                action=np.asarray(chunk.actions[0].data,float)
+                if action.shape!=(14,) or not np.isfinite(action).all():raise ValueError('Invalid Dream joint action')
+                action=np.clip(action,emb._low,emb._high)
+                action=previous_action+np.clip(action-previous_action,-limits,limits)
             if entry is not None and 140<step<=entry_stop:
                 nominal_tcp,nominal_hand_r=ik.tcp_pose(action[7:13],station.BASES['right'])
                 nominal_tool_r=nominal_hand_r@DOWN.T
                 nominal_tool_p=nominal_tcp-nominal_tool_r@GRASP_OFFSET
+                if alignment is not None:
+                    nominal_tool_p=alignment.apply(nominal_tool_p,plan['frames'][step-1].get('phase',''),state['poses'],tacks.closed,step)
+                    report['stitch_alignment']=alignment.records
                 measured_hand=array(right_robot.data.body_link_pose_w)[0,right_gripper_index]
                 measured_tool=array(handle.get_transforms())[0]
                 # IK bases and frozen plan remain in station coordinates.
@@ -658,6 +696,7 @@ def main():
                 if position_error>.001 or rotation_error>np.deg2rad(.5):
                     raise RuntimeError('Pose-assisted entry target is not reachable within the ordinary robot limits')
                 action[7:13]=q
+                action=tracking.action(action,np.asarray(emb._observation().state['joint_pos'],float),enabled=True)
             if entry is not None and step>140:
                 # Also retain rate limits when the plan deliberately releases
                 # the handle and returns to frozen, unassisted targets.
@@ -672,6 +711,7 @@ def main():
                 if profiler is not None:profiler.disable()
                 state['timings_s']['control_steps_total']+=time.perf_counter()-start
             check_crossing_boundary()
+            emb._t=step/20
             snapshot(step,action);report['completed_steps']=step
             previous_action=action.copy()
             if step%20==0:save()
@@ -763,6 +803,11 @@ def main():
         if break_observer:
             report['native_joint_breaks']=break_observer.summary()
             break_observer.close()
+        if dream is not None:
+            from dream_policy import public_transcript
+            (a.out/'dream-transcript.json').write_text(json.dumps(public_transcript(dream),indent=2)+'\n')
+            (a.out/'dream-requests.json').write_text(json.dumps(request_audit,indent=2)+'\n')
+            report.update(dream_requests=len(request_audit),dream_session_audit=session_audit)
         save()
         if app:app.close()
 

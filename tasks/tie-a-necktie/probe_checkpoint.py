@@ -24,6 +24,7 @@ def main():
     parser.add_argument('--plan',type=Path,required=True)
     parser.add_argument('--out',type=Path,required=True)
     parser.add_argument('--pinch-approximation',action='store_true',help='Disclosed contact-gated dry-pinch material variant, identical for every policy')
+    parser.add_argument('--joint-tracking',action='store_true',help='Bounded bimanual joint feedback; normal motor and action limits remain')
     args=parser.parse_args()
     source=Path(__file__).resolve().parent
     provenance=json.loads(args.state.with_suffix('.json').read_text())
@@ -147,7 +148,17 @@ def main():
         signal.signal(signal.SIGTERM,terminated)
         base.sim.render();base.scene.update(0.)
         snapshot(0,state['action']);report['status']='running';save()
-        for step,action in enumerate(actions,1):
+        from joint_tracking import JointTracking
+        trackers=[JointTracking(side=s) for s in ('left','right')]
+        active=state['action'].copy()
+        for step,reference in enumerate(actions,1):
+            action=reference.copy()
+            if args.joint_tracking:
+                observed=np.asarray(emb._observation().state['joint_pos'],float)
+                for tracker in trackers:action=tracker.action(action,observed,enabled=True)
+                action=np.clip(action,emb._low,emb._high)
+                action=active+np.clip(action-active,-limits,limits)
+            active=action.copy()
             emb._env.step(torch.as_tensor(action[None],device=base.device,dtype=torch.float32))
             snapshot(step,action);report['completed_steps']=step
             if step%20==0:save()

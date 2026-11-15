@@ -29,9 +29,12 @@ def configure(stage, root):
         # Props are spawned before the robot. USD relationships may target
         # these known YAM rigid links before their prims are authored.
         parent=root.rsplit('/',1)[0]
-        names=('base_link','link1','link2','link3','link4','link5','gripper','tip_left','tip_right')
+        chain=['Geometry/base']
+        for name in ('link1','link2','link3','link4','link5','gripper'):
+            chain.append(chain[-1]+'/'+name)
+        chain += [chain[-1]+'/tip_left',chain[-1]+'/tip_right']
         robot_parts=[Sdf.Path(parent+'/'+SIDES[s]['prim']+'/'+name)
-                     for s in ('left','right') for name in names]
+                     for s in ('left','right') for name in chain]
     for prim in stage.Traverse():
         if str(prim.GetPath()).startswith(root+'/'):
             if prim.IsA(UsdPhysics.Joint):UsdPhysics.Joint(prim).CreateJointEnabledAttr(False)
@@ -53,8 +56,10 @@ class Peg:
         if self.held is None:
             for side,tcp,R,gap in hands:
                 handle=(np.asarray(tcp)-self.p)@self.R
-                # Handle centre and pad-closing direction, measured in jaw frame.
-                if (np.linalg.norm(handle-[-.0175,0,0])<.012 and
+                # The18mm pads can enclose a section of the35mm handles;
+                # their centres need not coincide. Require the handle span,
+                # lateral overlap and matching compression direction.
+                if (-.033<handle[0]<-.003 and abs(handle[1])<.012 and abs(handle[2])<.006 and
                     abs(float(R[:,0]@self.R[:,2]))>.80 and gap<.024):
                     self.held=side;self.grip_p=R.T@(self.p-tcp);self.grip_R=R.T@self.R
                     self.events.append(dict(time_s=self.time,event='handles_grasped',side=side));break
@@ -62,7 +67,7 @@ class Peg:
             side,tcp,R,gap=next(h for h in hands if h[0]==self.held)
             self.p=np.asarray(tcp)+R@self.grip_p;self.R=R@self.grip_R
             if gap<.027:
-                self.opening=-float(np.clip((.022-gap+.0003)/.0175,.075,.45))
+                self.opening=-float(np.clip((.022-gap)/.0175,.075,.45))
                 if self.opening<-.15:
                     if self.clipped:self.events.append(dict(time_s=self.time,event='opened'))
                     self.clipped=False;self.indices=[]
@@ -77,7 +82,7 @@ class Peg:
                 if self.clipped:
                     q=(points-self.p)@self.R
                     inside=(q[:,0]>.015)&(q[:,0]<.036)&(abs(q[:,1])<.005)&(abs(q[:,2])<.006)
-                    self.indices=np.flatnonzero(inside).tolist();self.local=q[self.indices].copy()
+                    self.indices=np.flatnonzero(inside).tolist();self.local=q[self.indices]@ry(-self.opening/2)
                 self.events.append(dict(time_s=self.time,event='released',clipped=self.clipped,captured_vertices=len(self.indices)))
         elif not self.clipped:
             self.v[2]-=9.81*dt;self.p+=self.v*dt
@@ -93,6 +98,14 @@ def install(base,cloth_name='tshirt'):
     from yam_arena.constants import FINGER_JOINTS,TCP_OFFSET
     from arena_props import PEG_SPECS
     stage=omni.usd.get_context().get_stage();cache=UsdUtils.StageCache.Get()
+    # Confirm that every pre-authored pair resolves after robot construction.
+    for name in PEG_SPECS:
+        for part in ('lower','upper'):
+            prim=stage.GetPrimAtPath('/World/envs/env_0/'+name+'/'+part)
+            from pxr import UsdPhysics
+            pairs=UsdPhysics.FilteredPairsAPI(prim).GetFilteredPairsRel().GetTargets()
+            if any(not stage.GetPrimAtPath(p).IsValid() for p in pairs):
+                raise RuntimeError('Peg collision filter has an unresolved native body')
     stage_id=cache.GetId(stage).ToLongInt()
     if stage_id<0:cache.Insert(stage);stage_id=cache.GetId(stage).ToLongInt()
     sim=tensors.create_simulation_view('torch',stage_id);sim.set_subspace_roots('/')
@@ -129,7 +142,11 @@ def install(base,cloth_name='tshirt'):
             pose=array(r.data.body_link_pose_w)[0,body];R=rotation_xyzw(pose[3:]);gap=float(abs(array(r.data.joint_pos)[0,fingers]).sum())
             observed.append((side,pose[:3]+R@np.asarray(TCP_OFFSET),R,gap))
         for name,(peg,view,order,enabled,indices,positions,ops) in items.items():
-            old=tuple(peg.indices);peg.update(observed,points,float(base.physics_dt))
+            old=tuple(peg.indices)
+            if hasattr(peg,'restore_indices'):
+                peg.indices=peg.restore_indices;peg.local=peg.restore_local
+                del peg.restore_indices;del peg.restore_local
+            peg.update(observed,points,float(base.physics_dt))
             if tuple(peg.indices)!=old:
                 enabled.Set(False)
                 if peg.indices:
@@ -139,7 +156,7 @@ def install(base,cloth_name='tshirt'):
             # poses through the native rigid-body API and verify the readback.
             targets=view.get_transforms().clone()
             old=array(targets).copy()
-            for index,R in zip(order,(peg.R,peg.R@ry(peg.opening))):
+            for index,R in zip(order,(peg.R@ry(-peg.opening/2),peg.R@ry(peg.opening/2))):
                 q=Rotation.from_matrix(R).as_quat()
                 targets[index]=torch.as_tensor(np.r_[peg.p,q],device=targets.device,dtype=targets.dtype)
             indices_all=torch.arange(view.count,device=targets.device,dtype=torch.int32)
@@ -151,3 +168,28 @@ def install(base,cloth_name='tshirt'):
     base.scene.write_data_to_sim=apply
     # Keep the parent tensor view alive for the complete simulation.
     return dict(simulation_view=sim,pegs={name:item[0] for name,item in items.items()})
+
+
+def restore_checkpoint(mechanisms, state, provenance, base):
+    """Reset-only reconstruction for a labelled, unscored continuation probe."""
+    from scipy.spatial.transform import Rotation
+    from yam_arena.constants import TCP_OFFSET
+    if not provenance.get('functional_pegs'):return
+    for name,record in provenance['functional_pegs'].items():
+        peg=mechanisms['pegs'][name];pose=state[name+'_body_poses'][0]
+        peg.p=pose[:3].copy();peg.opening=float(record['opening_rad'])
+        peg.R=Rotation.from_quat(pose[3:]).as_matrix()@ry(peg.opening/2)
+        peg.clipped=bool(record['clipped']);peg.held=record['held'];peg.indices=[]
+        # If a clip held fabric, the normal attachment callback initializes it
+        # from the recorded native material on the first physics step.
+        ids=list(record['captured_vertices'])
+        if ids:
+            peg.restore_indices=ids
+            peg.restore_local=(state['nodes'][ids]-peg.p)@(peg.R@ry(-peg.opening/2))
+        if peg.held:
+            r=base.scene[peg.held+'_robot'];body=list(r.body_names).index('gripper')
+            value=getattr(r.data.body_link_pose_w,'torch',r.data.body_link_pose_w)
+            hand=value.detach().cpu().numpy()[0,body];R=Rotation.from_quat(hand[3:]).as_matrix()
+            tcp=hand[:3]+R@np.asarray(TCP_OFFSET)
+            peg.grip_p=R.T@(peg.p-tcp);peg.grip_R=R.T@peg.R
+        peg.events=[dict(event='checkpoint_reconstruction',source_step=provenance['source_step'])]

@@ -53,7 +53,7 @@ class PegMouthServo:
             poses=np.asarray(body_poses,float)
             if poses.shape!=(2,7) or not np.isfinite(poses).all():raise ValueError('Invalid free peg observations')
             inner=[p[:3]+rotation_xyzw(p[3:])@np.array((.030,0.,sign*.0005)) for p,sign in zip(poses,(-1.,1.))]
-            mouth=(poses[0,:3]+rotation_xyzw(poses[0,3:])@np.array((.030,0.,.0011))
+            mouth=(np.mean(inner,0)
                    if self.functional_jaws else np.mean(inner,0))
             error=self.target-mouth
             # Any valid position along the line is useful; align its radial x/z.

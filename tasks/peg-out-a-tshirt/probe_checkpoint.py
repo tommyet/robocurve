@@ -132,7 +132,7 @@ def main():
                 continue
             peg=base.scene[name]
             peg_poses=state[name+'_body_poses'].copy()
-            if args.center_peg_reset:
+            if args.center_peg_reset and not provenance.get('peg_layout_already_centered'):
                 # These offsets change the declared INITIAL layout only.
                 # The later actions must physically remove, carry and clip it.
                 delta=-.115 if name=='left_peg' else .315
@@ -151,6 +151,8 @@ def main():
         if args.functional_pegs:
             from functional_pegs import install
             mechanisms=install(base)
+            from functional_pegs import restore_checkpoint
+            restore_checkpoint(mechanisms,state,provenance,base)
             from pinch_constraint import install as install_pinch
             pinches=install_pinch(base,'tshirt')
         report.update(initial_node_error_m=error,physics_dt_s=float(base.sim.get_physics_dt()),

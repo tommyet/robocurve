@@ -128,7 +128,7 @@ def main():
     p.add_argument('--reset-diagnostic',action='store_true',help='Read-only early reset native nodes and topology; unchanged reset physics')
     p.add_argument('--binary-cloth-trace',action='store_true',help='Preserve all native float32 cloth states in binary arrays, reducing diagnostic JSON overhead')
     p.add_argument('--solver-iterations',type=int,choices=(32,128),default=32,help='Native cloth numerical convergence diagnostic; material unchanged')
-    p.add_argument('--physics-hz',type=int,choices=(480,960),default=480,help='Native timestep convergence diagnostic; material and control rate unchanged')
+    p.add_argument('--physics-hz',type=int,choices=(240,480,960),default=480,help='Native timestep convergence diagnostic; material and control rate unchanged')
     p.add_argument('--edge-patch-diagnostic',action='store_true',help='Use a shorter approach and left hem patch130mm from centre for the finer-timestep reset')
     p.add_argument('--wide-insertion-diagnostic',action='store_true',help='Keep ordinary fingers fully open during measured cloth insertion before the unchanged pinch')
     p.add_argument('--external-forces-once-diagnostic',action='store_true',help='Use the ordinary once-per-step TGS force integration option for a controlled comparison')
