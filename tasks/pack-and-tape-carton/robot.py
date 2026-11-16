@@ -107,9 +107,9 @@ class ClosureProbe:
   poses={n:self.pose(n) for n in names};qs=[];fs=[]
   for other in ('left','right'):
    aid,fid=self.env._ids[other+'_robot'];v=self.env._base.scene[other+'_robot'].data.joint_pos;v=v.torch if hasattr(v,'torch') else v;v=v.detach().cpu().numpy()[0];qs.append(v[aid]);fs.append(v[fid])
-  contact=stage_before in ('enter','pinch','fold','release','clear_edge')
-  actual=self.geometry.check(qs,fs,poses,contact,contact_targets={name+'_top'},contact_side=i)
-  issued=self.geometry.check([out[:6],out[7:13]],[[FINGER_OPEN*out[6]]*2,[FINGER_OPEN*out[13]]*2],poses,contact,contact_targets={name+'_top'},contact_side=i)
+  contact_allowed=stage_before in ('enter','pinch','fold','release','clear_edge')
+  actual=self.geometry.check(qs,fs,poses,contact_allowed,contact_targets={name+'_top'},contact_side=i)
+  issued=self.geometry.check([out[:6],out[7:13]],[[FINGER_OPEN*out[6]]*2,[FINGER_OPEN*out[13]]*2],poses,contact_allowed,contact_targets={name+'_top'},contact_side=i)
   if not actual['safe'] or not issued['safe']:
    self.failure=name+':'+stage_before+' full315 unrelated-object clearance rejected'
    return self.previous.copy(),{'phase':name+':'+stage_before,'failure':self.failure,'clearance_actual':actual,'clearance_issued':issued,'not_issued':True}
