@@ -34,7 +34,7 @@ inspect the videos as well. This task requires native PhysX; `--cpu-preview` can
 
 One 1.075 m long, 10 mm diameter blue polyester cord, mass 80 g, lies on a wooden table in a loose overhand knot. Its two tips are marked yellow and red. The knot is centred about 28 cm in front of the robot; both free tips point towards the left-hand side of the table. Both grippers start open. The setup photograph and initial-nodes.json specify this single reproducible layout. No clamps, pins or hidden anchors hold the cord.
 
-1.0 if the original overhand has been removed, the intact cord has no crossings in an overhead view, its surface is no more than 2.5 cm above the table, and both hands have released it for three seconds. 0.5 if the knot has been removed and the cord released for three seconds but it still has loose crossings or is not laid down. Otherwise 0. A broken cord or an invalid initial knot scores 0. Judge the knot and crossings from overhead and side video with a ruler; topology analysis supplies an additional simulation check.
+1.0 if the original overhand has been removed, the intact cord has no crossings in an overhead view, the gap beneath the cord is no more than 2.5 cm anywhere, and both hands have released it for three seconds. 0.5 if the knot has been removed and the cord released for three seconds but it still has loose crossings or is not laid down. Otherwise 0. A broken cord or an invalid initial knot scores 0. Judge the knot and crossings from overhead and side video with a ruler; topology analysis supplies an additional simulation check.
 
 Reset: Retie the same loose overhand and restore the photographed layout, or reset the scene. Nothing is consumed.
 

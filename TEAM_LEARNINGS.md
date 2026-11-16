@@ -16,8 +16,9 @@ developers and their agents, not a competition submission document.
   Media M-R4FZXS; isolated commitcaff5b0; PR2197 received as TK-R879EX.
 - Knot014 retained a knot. A short-lived open-curve “unknot” classification
   during manipulation is not proof of successful removal. Extend the end feed
-  beyond the far loop boundary before withdrawing; native016 is the current
-  trial. No knot PR until a released full-score result is visually confirmed.
+  beyond the far loop boundary before withdrawing. Native016 still reties on
+  return; native017 releases after feeding and before wrist withdrawal. No
+  knot PR until a released full-score result is visually confirmed.
 - Before syncing a new demo, wait for the offline planner to finish and verify
   its exit status and expected stages. A failed planner leaves the old plan in
   place. The mistaken013 launch was stopped during initialization at zero steps.

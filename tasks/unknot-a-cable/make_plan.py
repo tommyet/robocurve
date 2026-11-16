@@ -24,12 +24,12 @@ if __name__=='__main__':
  move('left',[.328,-.025,.762],F,0.,4.,'feed the end back through the arch')
  # Carry the tip beyond the far edge of the loop before lifting it.
  move('left',[.328,-.14,.762],F,0.,3.,'carry the end fully through the loop')
- move('left',[.22,-.14,.82],G,0.,3.,'withdraw outside the loop')
- move('left',[.15,.05,.88],G,0.,3.,'lift the free end beside the cord')
- move('left',[.20,.30,.89],G,0.,3.,'draw the free end away')
- move('right',[.42,-.18,.82],S,0.,4.,'spread the opened cord')
- p.add(3.,'lay the opened cord down',{'left':(np.array([.20,.30,.754])-.009*G[:,2],G,0.),'right':(np.array([.42,-.18,.754])-.009*S[:,2],S,0.)})
- p.add(1.,'release the cord',{'left':(np.array([.20,.30,.754])-.009*G[:,2],G,.8),'right':(np.array([.42,-.18,.754])-.009*S[:,2],S,.8)})
- p.add(3.,'clear the table',{'left':(np.array([.18,.36,.96]),G,.8),'right':(np.array([.25,-.30,.98]),D,.8)})
- p.add(4.,'released judging',{})
+ # Release outside the loop before returning either wrist.
+ from yam_arena import ik,station
+ targets={}
+ for side,offset in [('left',0),('right',7)]:
+  point,rotation=ik.tcp_pose(p.a[offset:offset+6],station.BASES[side]);targets[side]=(point,rotation,.8)
+ p.add(1.,'release the unthreaded cord',targets)
+ p.add(4.,'clear the table',{'left':(np.array([.18,.36,.96]),G,.8),'right':(np.array([.25,-.30,.98]),D,.8)})
+ p.add(6.,'released judging',{})
  print(json.dumps(p.save(Path(__file__).with_name('demo-plan.json'))))
