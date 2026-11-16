@@ -4580,3 +4580,5 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - No capextension used because032 ended naturally01:30:46UTC. Root instructedstopafterverifiedbackup, no moretrial. Brevstoprequested ~01:34UTC, ackpending. Ethernet2210 is still feedback-only DRAFT (no taskboardentry), updated tohonest032failure/fa8e982. Allfourfeedbackdraftsopen; GPUworkpaused tosavehoursuntilfeedback. Spray2171 remainsawaitingreview.
 
 - Final controller/readback distinction: guard decision used clip0.54036mm andrelativeangle0.65132degree; the final already-issued physics step reached peak0.597121mm/0.749612degree in result clip_constraint_summary. Neither is release (threshold1.8mm). Stop acknowledged; providerSTOPPING/SHELLNOTREADY/GPUdash at01:35:14UTC, notyetverifiedSTOPPED.
+
+- FINAL stop verification: provider STOPPED forcb0da2/q1wqpw5jx at01:36:53UTC, shellnotready/GPUdash. One additional032job only, no extension. Startrequest01:17→verifiedstop01:36:53 is ~20min wall window; actualbillingbalanceunverified. Completebackup verified, no further native work/restart authorized while awaiting feedback.
