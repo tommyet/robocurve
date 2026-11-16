@@ -4,6 +4,64 @@ Last updated: 2026-11-16 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-16 19:55 UTC — packing trial blocked by startup; both VMs STOPPED
+
+- Onecb0da2startrequested; it remainedSTARTING/noSSH through the useful trial
+  window. No source was transferred, no simulator/controller launched, no
+  Dream call, no score/video generated. Native face-push trial count is ZERO,
+  not a failed physical closure. Candidatef9a253d stays CPU-reviewed only.
+- Earlystoprequested at19:48:40UTC (~4.91min afterwatchdogarm). Watchdogrecorded
+  16stopcalls:14returnedHTTP500; firstsuccess at19:53:40 reportedSTOPPING.
+  BrevbackendhealthcheckwasHealthy; specificVMstart/stop remainedfaulty.
+  CachedCLIreviewfound no non-destructive force/cancel alternative; directAPI
+  would use the sameendpoint. No reset/delete/newVM, no externalsupportmessage.
+- Provider confirmedSTOPPED19:54:29UTC; independentfresh `brev ls --all`
+  confirmed BOTHcb0da2anddiceSTOPPED. Watchdog completed and its awakehelper
+  endswithit. No pendingstartclient or GPUjob remains. The user's console
+  question is superseded by verifiedshutdown; no manualactionrequired now.
+- Conservativewindow10.72020747min exceededplanned8.5min becauseprovider
+  rejected shutdown. Aggregatefromtheuser'slatest60minestimate is62.02326587min,
+  so assume no remaining compute allowance. Actualproviderbilling/balance is
+  UNKNOWN: start-request-to-STOPPED elapsedtime is not an invoice. Do not start
+  anothertrial/newVM or silentlyrefresh thehour budget.
+- Private lifecycle/sourcearchive/hashmanifest and exacterrors remain under
+  ignored `artifacts/packing-face-prefix-20261116/`. Code+numeric CPUevidence
+  are pushed toforkbranch `codex/packing-sealing-completion`; no upstreamPR
+  was opened or modified, no existingpreviewwas replaced with simulatedsuccess.
+  Remainingwork: physicalclosureproof and ordinary-roll payout/application/cut/
+  retention, then fullscore demo/model attempt/media if resourcespermit.
+
+
+## 2026-11-16 19:43 UTC — packing candidate frozen for one native prefix
+
+- New development branch `codex/packing-sealing-completion` is pushed at
+  f9a253d (reviewed runtime commit4887aa9 plus whitespace cleanup). All93packing
+  tests and5separate mesh/replay experiments pass. The full numeric positive/
+  negative CPU reports are compressed in the experiment evidence archive.
+- NORTH/SOUTH relief now passes active−175/−174.5deg endpoints with unrelated
+  open neighbors−175/−174.5deg: existing above-box standoff, unrelieved transfer/
+  lower, separate2mmnormalrelief, FREE lateral insertion, then normal approach.
+  SOUTH requires the mirrored RIGHT seed with positive q3/q4. Previously closed
+  flaps remain modeled exactly0; actual-scene guards stay authoritative.
+- Astra approved bounded EAST-only diagnostic after exactfloat32slew checks,
+  individual hover/highIK residual checks, certified approach matching, verified
+  singleton force gate, measured hinge progress and successful-step ACK rollback.
+  Total force-depth planning declines toward release;0.65mm bounds reference/
+  extra preload, not every appliedtotal transient (extra+lookahead may~0.78mm).
+  The original−1mm intended guard is unchanged. No positionPI or physicswrites.
+- Four-flap route nominally needs~220simseconds before tracking waits. Only
+  optin facepush diagnostic has6,000control/300s cap; oldrimlimit stays3,600.
+  This native attempt explicitly requests1flap/1,400controls, not fullsealing.
+  Prefix completion is diagnostic and cannot claim fulltasksuccess.
+- Correction to preceding NGCForbidden note: retrying read-only `brev ls --all`
+  outside sandbox succeeded; BOTHcb0da2anddice confirmedSTOPPED. No user login
+  or credential change was needed. Do not infer expiredauth from that failure.
+- Existingcb0da2 start requestedonce under independentlyarmed8.5min watchdog
+  at19:43:45UTC, stoprequestdue19:50:15, finaldeadline19:52:15. Both prior ledgers
+  are subtracted fromuser's60minallowance, leaving8.69694min before thiswindow.
+  Native result/shutdown/accounting entry MUST follow; startup is not a result.
+
+
 ## 2026-11-16 19:25 UTC — packing closure diagnosis and CPU preparation
 
 - User authorized continuing carton sealing after the spray revision. Development
