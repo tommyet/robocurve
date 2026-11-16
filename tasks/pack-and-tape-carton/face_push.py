@@ -161,7 +161,7 @@ class FacePushClosureProbe:
    for j in range(14):
     if abs(out[j]-self.previous[j])>delta[j]:out[j]=float(np.nextafter(np.float32(out[j]),np.float32(self.previous[j])))
    if np.any(abs(out-self.previous)>delta):raise ValueError('float32 target slew exceeded')
-   
+
    if np.any(out<self.env._low)or np.any(out>self.env._high):raise ValueError('float32 canonical target exceeds jointbound')
    actual=self.full_guard(out,m,poses,contact,name,side,actual=True)
    if not actual['safe']:raise ValueError('measured full315 clearance rejected')

@@ -91,4 +91,3 @@ class SingletonTests(unittest.TestCase):
   for sensor in sb.values():sensor._timestamp[:]=.05;sensor._timestamp_last_update[:]=.05
   self.assertEqual(parent.read(.05,target='west_top')['sample_id'],2)
 if __name__=='__main__':unittest.main()
-
