@@ -1,8 +1,9 @@
 # Six-task batch: submission status
 
-Updated 2026-11-15, after the necktie receipt. All six have now been submitted.
-Four await review; two are closed, with a correction request posted for staple
-removal. An open PR or ingestion receipt is not acceptance.
+Updated 2026-11-16, after the necktie reproducibility revision. All six have
+been submitted. Four await review, including the received necktie revision, and
+two are closed, with a correction request posted for staple removal. An open
+PR or ingestion receipt is not acceptance.
 
 | Task | PR / current outcome | Note |
 |---|---|---|
@@ -11,7 +12,7 @@ removal. An open PR or ingestion receipt is not acceptance.
 | Peg out a T-shirt | [#2126](https://github.com/robocurve/benchmark-tasks/pull/2126), pending TK-T6ZGSF | Flexible garment demo and matching baseline submitted. |
 | Staple removal | [#2093](https://github.com/robocurve/benchmark-tasks/pull/2093), closed after duplicate rejection | The bot created two task IDs for one PR. A correction requesting human review is posted; no reply yet. |
 | Unpick a seam | [#2113](https://github.com/robocurve/benchmark-tasks/pull/2113), pending TK-QM5PG5 | Completed demo and matching baseline submitted. |
-| Fit a loose necktie | [#2168](https://github.com/robocurve/benchmark-tasks/pull/2168), pending TK-KYVRXZ | Narrowed to tightening and fitting an already-threaded knot. Demo 1.0; Dream 0.0. |
+| Fit a loose necktie | [#2168](https://github.com/robocurve/benchmark-tasks/pull/2168), revision pending TK-HMYHKL | Specifies the Simple knot, threading diagram, both blade poses and reset. Demo 1.0; Dream 0.0. |
 
 ## Necktie scope and evidence
 
@@ -28,11 +29,18 @@ Final native YAM demo: 1.0 after 580 actions / 29 seconds, including 7.55 second
 released. Matching Dream: 0.0 after all 1,200 actions, 146 requests, one session.
 Both use identical runtime code. The earlier Dream wording refusal is recorded
 separately; the final instruction explicitly names a plastic form with no person.
-Media M-YCTY75 and the single-folder PR have an official ingestion receipt.
+Original media M-YCTY75 was received as TK-KYVRXZ, then returned for a clearer
+threading/reset specification. Revision commit115c231 adds this specification
+and a labelled diagram. Media **M-HUSZ3C** retains the same videos with an
+expanded setup image. Source hashes match; five CPU tests and both saved-run
+scores pass. No additional GPU or Dream compute was used.
+The revision was received at 09:33:27 UTC on 16 November as **TK-HMYHKL**,
+a revision of TK-KYVRXZ. It is waiting for review, not accepted.
 
 ## Compute and retained evidence
 
-All ten listed Runpod Pods were confirmed EXITED at 20:12:55 UTC; no active
+At the original necktie completion on 15 November, all ten listed Runpod Pods
+were confirmed EXITED at 20:12:55 UTC; no active
 Pods or persistent mounts were present. The finishing session lasted about
 56 minutes, estimated at $0.5505 compute plus $0.0130 temporary container disk.
 Dream charges are separate. These are rental-time estimates, not an invoice.
@@ -49,10 +57,9 @@ The repository contains curated numeric evidence and reproducible task code.
 
 ## Next work
 
-The [twelve new ideas](task-ideas-2026-11-15.md) were researched after submission
-and GPU shutdown. No GPU or Dream compute was spent on them, and none was built.
-Bracelet fastening is the strongest lead; pram rocking is a backup. Several
-other suggestions already have accepted or pending counterparts.
+The later bracelet, pram, present-wrapping, untying and waxing submissions are
+tracked in [the five-task batch](five-household-task-batch.md). Use the latest
+dated team notes for subsequent compute totals and review decisions.
 
 Pending submissions are frozen. Do not push changes expecting another review
 until feedback arrives. New competition submissions must start from fresh

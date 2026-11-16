@@ -4,6 +4,36 @@ Last updated: 2026-11-16 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-16 — necktie reproducibility revision
+
+- Read the exact [PR2168 review](https://github.com/robocurve/benchmark-tasks/pull/2168#issuecomment-6909329891)
+  and the revision/acceptance histories of [PR618](https://github.com/robocurve/benchmark-tasks/pull/618),
+  [PR1019](https://github.com/robocurve/benchmark-tasks/pull/1019),
+  [PR1554](https://github.com/robocurve/benchmark-tasks/pull/1554) and
+  [PR1766](https://github.com/robocurve/benchmark-tasks/pull/1766). Successful
+  revisions fixed the named defects: compatible real fasteners and disclosed
+  simulated pitch; a scoring mismatch plus chalk-line materials/tension;
+  reproducible conveyor resistance plus an unreachable destination; realistic
+  plier handles. These are evidence for targeted fixes, not a guarantee that
+  a documentation-only change always suffices.
+- PR2168's failed criterion was the prepared knot/reset specification. Added
+  an explicit Simple (Oriental) physical reference, under/over threading,
+  front-view diagram, wide/narrow blade lengths and poses, and operator reset.
+  The internal folds remain unmodeled: the diagram specifies the physical
+  counterpart, not newly simulated topology. Keep this distinction explicit.
+- Reused the original videos after verifying byte hashes and all ten runtime/
+  plan source hashes. The five existing CPU tests passed; both initial states
+  match the documented dimensions and saved runs rescore to demo1.0/Dream0.0.
+  New media **M-HUSZ3C** contains the original videos and expanded setup image.
+  No GPU was rented and no Dream calls were made: **$0 added compute**.
+- Pushed revision commit **115c231** to the existing
+  `codex/submit-fit-loose-necktie` branch. Only five files in that task folder
+  changed. Received at **09:33:27 UTC as TK-HMYHKL**, a revision of TK-KYVRXZ,
+  [waiting for review](https://github.com/robocurve/benchmark-tasks/pull/2168#issuecomment-6912680717).
+  This is receipt, not acceptance; do not push further changes while pending.
+  Shared notes stay out of the upstream PR. Evidence and research:
+  ignored `artifacts/necktie-revision-2026-11-16/`.
+
 ## 2026-11-16 09:12 UTC — fresh team PR status and three new decisions
 
 - Read all-state PRs by `tommyet` and `Miyamura80`, then fetched each PR's
