@@ -97,7 +97,8 @@ def union_area_in_rectangle(polygons, rect):
 
 
 class Geometry:
-    def __init__(self):
+    def __init__(self,cache_parts=False):
+        self._cache_parts=bool(cache_parts);self._parts_cache={}
         self.model = ScoopSafety()
         self.names = self.model.names
         p, R = ik.tcp_pose(np.zeros(6))
@@ -106,8 +107,22 @@ class Geometry:
                      if n in ('gripper', 'tip_left', 'tip_right')]
         self.contact_cache = {}
 
+    def clear_parts_cache(self):
+        self._parts_cache.clear()
+
     def parts(self, side, q, fingers):
-        return self.model.world(q, fingers, BASES[side])
+        if not self._cache_parts:return self.model.world(q, fingers, BASES[side])
+        # Cache ONLY exact immutable rigid-robot transforms, never obstacle
+        # poses or collision answers. Current scene geometry is checked afresh.
+        q=np.asarray(q,dtype=float);fingers=np.asarray(fingers,dtype=float);base=np.asarray(BASES[side],dtype=float)
+        if q.shape!=(6,) or fingers.shape!=(2,) or base.shape!=(3,) or not all(np.isfinite(v).all()for v in(q,fingers,base)):raise ValueError('invalid exact robot-transform cache key')
+        key=(side,q.tobytes(),fingers.tobytes(),base.tobytes())
+        if key not in self._parts_cache:
+            pieces=self.model.world(q,fingers,base)
+            for _,tri in pieces:tri.setflags(write=False)
+            if len(self._parts_cache)>=32:self._parts_cache.pop(next(iter(self._parts_cache)))
+            self._parts_cache[key]=tuple(pieces)
+        return self._parts_cache[key]
 
     def guard(self, side, q, fingers, obstacles, other, *, intended=False,
               intended_targets=('north_bottom',)):
