@@ -56,19 +56,19 @@ def native_body_owners(scene,link_paths,object_names,*,env_path='/World/envs/env
     return owners
 
 
-def native_body_world_poses(scene,owners,object_poses):
+def native_body_world_poses(scene,owners,object_poses,*,articulation_poses=None):
     """Read actor frames; reuse this row's measured native object root poses.
 
     object_poses must come from arena_world.get_pose_w in the current post-step
     row. Robot body_link_pose_w is copied once per arm. There is no FK fallback.
     """
-    robot_poses={};result={}
+    robot_poses={} if articulation_poses is None else dict(articulation_poses);result={}
     for path,owner in owners.items():
         entity=owner['entity']
         if owner['kind'] in ('robot','articulation'):
             if entity not in robot_poses:
                 robot_poses[entity]=array(scene[entity].data.body_link_pose_w)
-                if robot_poses[entity].shape!=(1,len(scene[entity].body_names),7):raise ValueError('invalid body_link_pose_w shape for '+entity)
+            if robot_poses[entity].shape!=(1,len(scene[entity].body_names),7):raise ValueError('invalid body_link_pose_w shape for '+entity)
             if scene[entity].body_names[owner['body_index']]!=owner['body_name']:
                 raise ValueError('native robot body ordering changed')
             pose=np.asarray(robot_poses[entity][0,owner['body_index']],dtype=float)
@@ -80,6 +80,40 @@ def native_body_world_poses(scene,owners,object_poses):
         result[path]=pose.tolist()
     if len(result)!=len(owners):raise ValueError('incomplete native pose capture')
     return result
+
+
+def read_poststep_snapshot(scene,owners,arena_world,*,cat=None):
+    """Batch current-step actor arrays into one CPU pose-snapshot packet.
+
+    Multiple actor/device arrays are still queried; callback/action reads are
+    separate. No retained cross-step cache. Invoke after physics and use
+    returned buffers only for that same row. CPU views reuse the one copied
+    native tensor, never FK, authored transforms or pre-step detent samples.
+    `cat` is injectable solely for CPU tests of grouping/readback equivalence.
+    """
+    if cat is None:
+        import torch
+        cat=torch.cat
+    groups=[];articulations={};objects={};seen=set();offset=0
+    for owner in owners.values():
+        entity=owner['entity']
+        if entity in seen:continue
+        seen.add(entity)
+        articulation=owner['kind'] in ('robot','articulation')
+        value=scene[entity].data.body_link_pose_w if articulation else arena_world.get_pose_w(entity)
+        value=value.torch if hasattr(value,'torch') else value
+        expected=(1,len(scene[entity].body_names),7) if articulation else (1,7)
+        if tuple(value.shape)!=expected:raise ValueError('invalid current native pose shape for '+entity)
+        size=expected[-2]
+        groups.append((value.reshape(-1,7),entity,articulation,offset,size))
+        offset+=size
+    packed=array(cat([entry[0] for entry in groups],dim=0))
+    if packed.shape!=(offset,7):raise ValueError('invalid packed native pose shape')
+    for _,entity,articulation,start,size in groups:
+        if articulation:articulations[entity]=packed[start:start+size][None,:]
+        else:objects[entity]=packed[start]
+    poses=native_body_world_poses(scene,owners,objects,articulation_poses=articulations)
+    return {'owner_poses':poses,'articulation_poses':articulations,'object_poses':objects}
 
 
 def export_scene(stage,path):

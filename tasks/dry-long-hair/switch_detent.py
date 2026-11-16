@@ -137,19 +137,49 @@ class NativeDetentBinding:
             if hasattr(value,'detach'):value=value.detach().cpu().numpy()
             else:value=value.numpy()
             return value
+        def read_native(view,method):
+            import time
+            start=time.perf_counter()
+            try:return native_array(getattr(view,method)())
+            finally:
+                self._host_timing['native_api_copy_calls']+=1
+                self._host_timing['native_api_and_copy_wall_s']+=time.perf_counter()-start
         def sample_native():
-            return {'dryer_pose':native_array(views[0].get_transforms()).reshape(-1,7)[0].tolist(),
-                    'switch_pose':native_array(views[1].get_transforms()).reshape(-1,7)[0].tolist(),
-                    'dryer_velocity_com_w':native_array(views[0].get_velocities()).reshape(-1,6)[0].tolist(),
-                    'switch_velocity_com_w':native_array(views[1].get_velocities()).reshape(-1,6)[0].tolist()}
+            return {'dryer_pose':read_native(views[0],'get_transforms').reshape(-1,7)[0].tolist(),
+                    'switch_pose':read_native(views[1],'get_transforms').reshape(-1,7)[0].tolist(),
+                    'dryer_velocity_com_w':read_native(views[0],'get_velocities').reshape(-1,6)[0].tolist(),
+                    'switch_velocity_com_w':read_native(views[1],'get_velocities').reshape(-1,6)[0].tolist()}
+        self._host_timing={'native_sample_calls':0,'native_api_copy_calls':0,'native_api_and_copy_wall_s':0.,'callback_calls':0,'callback_wall_s':0.,'scope':'Host elapsed API/readback/synchronization and callback time, not GPU kernel profiling'}
+        raw_sample_native=sample_native
+        def timed_sample_native():
+            import time
+            start=time.perf_counter()
+            try:return raw_sample_native()
+            finally:
+                self._host_timing['native_sample_calls']+=1
+                self._host_timing['native_sample_wall_s']=self._host_timing.get('native_sample_wall_s',0.)+time.perf_counter()-start
+        sample_native=timed_sample_native
         self.sample_native=sample_native;latest={};self.latest_native_sample=latest
         def read_q():
             latest.clear();latest.update(sample_native())
             return slider_coordinate(latest['dryer_pose'],latest['switch_pose'])
         self.detent=SubstepDetent(read_q,self.target_attr.Set,float(base.sim.cfg.dt),law,float(self.target_attr.Get()),
                                  read_sample=lambda:dict(latest),read_target=self.target_attr.Get)
-        self.handle=self.manager.register_callback(self.detent.on_physics_step,IsaacEvents.PRE_PHYSICS_STEP,
+        def timed_callback(dt):
+            import time
+            start=time.perf_counter()
+            try:return self.detent.on_physics_step(dt)
+            finally:
+                self._host_timing['callback_calls']+=1
+                self._host_timing['callback_wall_s']+=time.perf_counter()-start
+        self.handle=self.manager.register_callback(timed_callback,IsaacEvents.PRE_PHYSICS_STEP,
                                                    name='passive_dryer_slider_detent',wrap_weak_ref=False)
+
+    def host_timing(self):
+        result=dict(self._host_timing)
+        result['callback_other_host_wall_s']=max(0.,result['callback_wall_s']-result['native_api_and_copy_wall_s'])
+        result['other_scope']='Host callback remainder includes coordinate math, USD attribute get/set, trace bookkeeping and dispatch; not isolated arithmetic/GPU kernel time'
+        return result
 
     def close(self):
         if self.handle is not None:self.manager.deregister_callback(self.handle);self.handle=None

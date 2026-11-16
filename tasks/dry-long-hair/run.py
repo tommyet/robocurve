@@ -13,7 +13,7 @@ def main():
   from slider_coupon import run_coupon
   run_coupon(a.out);return
  from isaaclab.app import AppLauncher
- app=AppLauncher(headless=True,enable_cameras=not a.no_video).app;video=None;detent=None
+ app=AppLauncher(headless=True,enable_cameras=not a.no_video).app;video=None;detent=None;timings=None
  try:
   import numpy as np,torch,cv2,imageio.v2 as imageio
   from yam_arena import inspect_embodiment as wrapper
@@ -63,18 +63,7 @@ def main():
   def arr(v):
    v=v.torch if hasattr(v,'torch') else v
    return v.detach().cpu().numpy()
-  def pose(name):
-   if name in hair_ids:return arr(hair.data.body_link_pose_w)[0,hair_ids[name]]
-   return arr(base.arena_world.get_pose_w(name))[0]
-  pose_names=['head','dryer','switch']+[f'hair_{k}_{j}' for k in range(LOCKS) for j in range(SEGMENTS)]
   ordered_ids=[hair_ids['head']]+[hair_ids[f'hair_{k}_{j}'] for k in range(LOCKS) for j in range(SEGMENTS)]
-  def all_poses():
-   d=hair.data.body_link_pose_w;d=d.torch if hasattr(d,'torch') else d
-   h=d[0,ordered_ids]
-   ds=[]
-   for name in ['dryer','switch']:
-    v=base.arena_world.get_pose_w(name);ds.append(v.torch if hasattr(v,'torch') else v)
-   return torch.cat([h[:1],*ds,h[1:]],dim=0).detach().cpu().numpy()
   import native_capture as capture
   from yam_arena.robot import asset_link_paths
   owners=capture.native_body_owners(base.scene,asset_link_paths(),['dryer','switch','scalp_collision'])
@@ -102,6 +91,12 @@ def main():
   tracker=HairScorer() if robot else None;previous_dryer=None
   if tracker is not None:task._tracker=tracker;task._diagnostic=True
   active_wind=set();max_head_translation=0.;max_head_rotation=0.
+  timings={'initialization_wall_s':time.monotonic()-started,'completed_rows':0,'phase_wall_s':{},'scope':'Host elapsed time; env_step includes physics, callback, API synchronization and scheduling, not GPU kernel time'}
+  def account(name,began):
+   timings['phase_wall_s'][name]=timings['phase_wall_s'].get(name,0.)+time.perf_counter()-began
+  def write_timings():
+   if detent is not None:timings['detent_host_timing']=detent.host_timing()
+   (a.out/'host-timings.json').write_text(json.dumps(timings,indent=2)+'\n')
   with (a.out/'trajectory.jsonl').open('w') as trace:
    for step in range(MAX_PROBE_STEPS if robot else 180):
     phase='passive_orientation_check' if a.mode=='orientation-check' else 'settle' if step<60 else 'lateral_force_probe' if step<100 else 'passive_return'
@@ -114,9 +109,13 @@ def main():
     if control is not None and control.get('failure'):
      (a.out/'rejected-command.json').write_text(json.dumps({'time':env._t,'control':control,'not_issued':True},indent=2)+'\n');break
     before_steps,before_time=detent.detent.steps,detent.detent.sim_time
-    env._env.step(action);env._t=(step+1)*.05
-    detent.detent.check_interval(before_steps,before_time,.05)
-    poses=all_poses();segments=[];sep=0.;headpose=poses[0]
+    phase_start=time.perf_counter();env._env.step(action);env._t=(step+1)*.05
+    detent.detent.check_interval(before_steps,before_time,.05);account('env_step_including_detent',phase_start)
+    phase_start=time.perf_counter();snapshot=capture.read_poststep_snapshot(base.scene,owners,base.arena_world)
+    hair_native=snapshot['articulation_poses']['hair_model'][0]
+    poses=np.concatenate([hair_native[ordered_ids[:1]],snapshot['object_poses']['dryer'][None,:],snapshot['object_poses']['switch'][None,:],hair_native[ordered_ids[1:]]])
+    skin=snapshot['object_poses']['scalp_collision'];account('native_pose_batch_copy_and_validation',phase_start)
+    phase_start=time.perf_counter();segments=[];sep=0.;headpose=poses[0]
     head_motion=measured_head_motion(headpose.tolist())
     if not head_motion['head_pose_valid']:raise RuntimeError('missing or nonfinite native head pose')
     max_head_translation=max(max_head_translation,head_motion['head_translation_m']);max_head_rotation=max(max_head_rotation,head_motion['head_rotation_deg'])
@@ -127,10 +126,12 @@ def main():
       p0=poses[3+k*SEGMENTS+j];r=quat_xyzw_to_matrix(p0[3:]);pos=p0[:3];tip0=pos+r@np.array((0,0,LENGTH/2));tip1=pos+r@np.array((0,0,-LENGTH/2))
       sep=max(sep,float(np.linalg.norm(tip0-(headpose[:3]+headrot@np.array(root_local(k)) if previous is None else previous))));previous=tip1
       segments.append({'pos':pos.tolist(),'rotation':r.tolist()})
-    skin=pose('scalp_collision');skin_gap=float(np.linalg.norm(skin[:3]-headpose[:3]));worst_skin_attachment=max(worst_skin_attachment,skin_gap)
+    skin_gap=float(np.linalg.norm(skin[:3]-headpose[:3]));worst_skin_attachment=max(worst_skin_attachment,skin_gap)
     if skin_gap>.001:raise RuntimeError('scalp collision body detached from measured head')
     dryer=poses[1];switch=poses[2];r=quat_xyzw_to_matrix(dryer[3:]);local=r.T@(switch[:3]-dryer[:3]);power=float(np.clip((local[2]+.045)/SWITCH_TRAVEL,0,1))
+    account('geometry_and_constraint_checks',phase_start);phase_start=time.perf_counter()
     m=thermal.step(.05,segments,(dryer[:3]+r@np.array((.088,0,0))).tolist(),r[:,0].tolist(),power,headpose[:3].tolist(),patch_samples=bool(robot))
+    account('thermal',phase_start);phase_start=time.perf_counter()
     current_wind={i for i,f in enumerate(m['wind_forces_N']) if sum(v*v for v in f)>1e-12}
     if robot and (current_wind or active_wind):
      force_array=torch.tensor([m['wind_forces_N']],device=base.device,dtype=torch.float32);zero=torch.zeros_like(force_array);hair.permanent_wrench_composer.set_forces_and_torques_index(forces=force_array,torques=zero,body_ids=ordered_ids[1:],is_global=True)
@@ -146,16 +147,19 @@ def main():
     if measured_score is not None and measured_score['invalid']:
      robot.failure=measured_score['invalid'];control['failure']=robot.failure
     row={'time':env._t,'phase':phase,'robot_control':control,'hair':segments,'head_pose':headpose.tolist(),'head_motion':head_motion,'nose_direction_world':(headrot@np.array((-1.,0.,0.))).tolist(),'dryer_pose':dryer.tolist(),'switch_pose':switch.tolist(),'power_slider_fraction':power,'slider_detent':detent.snapshot(),'crease_separation':sep,'min_scalp_capsule_clearance_m':m['min_scalp_capsule_clearance_m'],'skin_attachment_error_m':skin_gap,'thermal':m,'score_metrics':measured_score}
-    row['native_owner_poses']=capture.native_body_world_poses(base.scene,owners,{'dryer':dryer,'switch':switch,'scalp_collision':skin})
+    row['native_owner_poses']=snapshot['owner_poses']
     row['action_14d']=arr(action)[0].tolist()
-    trace.write(json.dumps(row)+'\n');samples.append(row)
+    trace.write(json.dumps(row)+'\n');samples.append(row);account('forces_score_and_serialization',phase_start)
+    timings['completed_rows']+=1
+    if timings['completed_rows']%10==0:write_timings()
     if not np.isfinite(dryer).all() or sep>.03:raise RuntimeError('unstable native hair dynamics')
     if not a.no_video:
      panels=review.panels(base);canvas=np.zeros((594,960,3),dtype=np.uint8);canvas[36:306,240:720]=panels[0];canvas[306:576,:480]=panels[1];canvas[306:576,480:]=panels[2]
      cv2.putText(canvas,('ROBOT DRYER POWER/PICKUP | ' if robot else 'NATIVE FLEXIBLE HAIR | ')+phase,(12,25),cv2.FONT_HERSHEY_SIMPLEX,.6,(255,255,255),1,cv2.LINE_AA);cv2.putText(canvas,('Ordinary robot commands; incomplete drying attempt. Actual moisture measured.' if robot else 'Diagnostic force test, not robot drying. Actual moisture/geometry measured.'),(12,590),cv2.FONT_HERSHEY_SIMPLEX,.45,(255,205,120),1,cv2.LINE_AA);video.append_data(canvas)
      if step in (59,99,139,179,239,319,379,459,619):imageio.imwrite(a.out/f'step-{step}.png',canvas)
     if control is not None and (control.get('failure') or control.get('complete')):break
-  result={'elapsed_wall_s':time.monotonic()-started,'no_video':a.no_video,'state_only_diagnostic':a.no_video,'media_eligible':False,'hair_discretization':{'locks':LOCKS,'segments_per_lock':SEGMENTS,'passive_bending_dofs':LOCKS*SEGMENTS,'patches':LOCKS*SEGMENTS*PATCHES_PER_SEGMENT,'capsule_length_m':LENGTH,'capsule_radius_m':RADIUS},'head_rest_quaternion_xyzw':HEAD_QUAT,'probe_mode':a.mode,'diagnostic':True,'task_score':None,'robot_demo':False,'max_joint_separation_m':worst_sep,'max_lock_motion_m':max_motion,'thermal':thermal.result(),'max_skin_attachment_error_m':worst_skin_attachment,'checks':{'scalp_contact_respected':all(s['thermal']['min_scalp_capsule_clearance_m']>=-.0002 for s in samples),'joints_intact':worst_sep<.005,'locks_move':max_motion>.005,'power_off_no_drying':all(s['thermal']['water_removed_step_kg']==0 for s in samples if s['power_slider_fraction']<.5)}}
+  write_timings()
+  result={'host_timings':timings,'elapsed_wall_s':time.monotonic()-started,'no_video':a.no_video,'state_only_diagnostic':a.no_video,'media_eligible':False,'hair_discretization':{'locks':LOCKS,'segments_per_lock':SEGMENTS,'passive_bending_dofs':LOCKS*SEGMENTS,'patches':LOCKS*SEGMENTS*PATCHES_PER_SEGMENT,'capsule_length_m':LENGTH,'capsule_radius_m':RADIUS},'head_rest_quaternion_xyzw':HEAD_QUAT,'probe_mode':a.mode,'diagnostic':True,'task_score':None,'robot_demo':False,'max_joint_separation_m':worst_sep,'max_lock_motion_m':max_motion,'thermal':thermal.result(),'max_skin_attachment_error_m':worst_skin_attachment,'checks':{'scalp_contact_respected':all(s['thermal']['min_scalp_capsule_clearance_m']>=-.0002 for s in samples),'joints_intact':worst_sep<.005,'locks_move':max_motion>.005,'power_off_no_drying':all(s['thermal']['water_removed_step_kg']==0 for s in samples if s['power_slider_fraction']<.5)}}
   result['max_head_translation_m']=max_head_translation;result['max_head_rotation_deg']=max_head_rotation;result['checks']['head_fixed']=max_head_translation<=MAX_HEAD_TRANSLATION_M and max_head_rotation<=MAX_HEAD_ROTATION_DEG
   result['slider_detent']=detent.snapshot();result['checks']['detent_callback_cadence_verified']=True
   if robot:result|={'robot_power_probe':a.mode=='power-probe','robot_sweep_probe':a.mode=='sweep-probe','diagnostic':True,'task_score':None,'diagnostic_score_readback':tracker.value,'score_invalid':tracker.invalid,'controller_complete':bool(control and control.get('complete')),'controller_failure':None if control is None else control.get('failure'),'final_measured_power_fraction':samples[-1]['power_slider_fraction'],'final_dryer_pose':samples[-1]['dryer_pose']}
@@ -163,6 +167,7 @@ def main():
  except BaseException as error:
   import traceback;traceback.print_exc();(a.out/'error.json').write_text(json.dumps({'error':str(error),'type':type(error).__name__},indent=2));raise
  finally:
+  if timings is not None:write_timings()
   if detent is not None:
    try:detent.write_trace(a.out/'slider-crossings.json')
    finally:detent.close()

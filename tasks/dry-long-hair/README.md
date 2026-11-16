@@ -258,3 +258,25 @@ The head is world-fixed at the opposite-facing rest rotation: the nose points al
 Actual-arm attempts physically switched ON and retained power after the finger withdrew, but failed during holder pickup. Sweep002 recorded 813 controls/40.65 seconds; no hair dried. Payload-gravity compensation used ordinary joint targets with unchanged actuator settings, preserved the original grasp reference, and did not resolve the obstruction. A subsequent CPU audit of recorded native poses finds fingertip-carrier overlap with the holder cradle. Candidate egress paths are not native-validated. No full-score demo/model result is claimed.
 
 Native refinement follow-up: 86 controls / 4.3 simulated seconds were recorded before the 120-second wall timeout interrupted the planned nine-second passive check. All 262 actors were captured. Observed head translation stayed below0.47µm, joint separation below0.26µm, skin attachment error below0.76µm. This is a partial passive observation, not a completed smoke test or drying demonstration.
+
+### Host readback timing and same-step capture reuse
+
+A follow-up output-only optimization batches the three actual articulation pose
+arrays and three rigid roots into one post-step pose-snapshot packet copied
+to CPU. It still queries multiple native actor/device arrays; it is not one
+GPU read/copy for the entire controller or physics callback. The full hair/head
+array is read once for the post-step packet instead of reading it again for
+capture. That same row's copied
+hair/head/skin values feed the constraint, thermal and all262-owner capture
+checks; no previous-step buffers or FK-derived actor poses are reused. CPU replay
+of all86 rows from granular-orientation001 reproduces every captured pose exactly
+and the thermal reference within1e-12. The native API batching still requires a
+fresh native integration check; no native speedup is claimed from CPU replay.
+
+`host-timings.json` now records initialization, env.step, actual pose readback,
+geometry, thermal and output time, including partial-run finalization. The480Hz
+detent separately reports actual API/copy call counts and host duration; its
+cadence, four existing native reads, constitutive law and crossing trace are
+unchanged. Host API/step times include synchronization and scheduling and are
+not GPU kernel profiling. The initial120-second granular run timed out at86
+controls without this timing split, so its solver-versus-callback cost is unknown.

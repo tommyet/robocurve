@@ -1,7 +1,7 @@
 {
   "status": "granular_native_observed_4p3s_timeout_full_task_incomplete",
   "date": "2026-11-16",
-  "local_model_tests_passed": 57,
+  "local_model_tests_passed": 60,
   "native_runtime": true,
   "demo_score": null,
   "video": null,
@@ -149,5 +149,15 @@
     "dry_fraction": 0.0,
     "trace_sha256": "e09f1457a3fcfe2aac0a8a01324fd10e5cf180f859ff6596dde4a0df1e15f783",
     "full_drying_demo": false
+  },
+  "host_readback_candidate": {
+    "native_validated": false,
+    "capture_equivalence_rows": 86,
+    "native_owners_each_row": 262,
+    "capture_equivalence": "exact float-list equality",
+    "thermal_reference_tolerance": 1e-12,
+    "reference_trace_sha256": "e09f1457a3fcfe2aac0a8a01324fd10e5cf180f859ff6596dde4a0df1e15f783",
+    "timings": "host-timings.json; host durations only; native solver/callback split unmeasured before instrumentation",
+    "physics_changed": false
   }
 }
