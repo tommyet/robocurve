@@ -111,6 +111,8 @@ def main():
     else:
      if a.mode=='dynamics':force(f'hair_{LOCKS//2}_{SEGMENTS-2}',(.004 if phase=='lateral_force_probe' else 0.,0,0))
      action=env._ready
+    if control is not None and control.get('failure'):
+     (a.out/'rejected-command.json').write_text(json.dumps({'time':env._t,'control':control,'not_issued':True},indent=2)+'\n');break
     before_steps,before_time=detent.detent.steps,detent.detent.sim_time
     env._env.step(action);env._t=(step+1)*.05
     detent.detent.check_interval(before_steps,before_time,.05)
@@ -156,7 +158,7 @@ def main():
   result={'elapsed_wall_s':time.monotonic()-started,'no_video':a.no_video,'state_only_diagnostic':a.no_video,'media_eligible':False,'head_rest_quaternion_xyzw':HEAD_QUAT,'probe_mode':a.mode,'diagnostic':True,'task_score':None,'robot_demo':False,'max_joint_separation_m':worst_sep,'max_lock_motion_m':max_motion,'thermal':thermal.result(),'max_skin_attachment_error_m':worst_skin_attachment,'checks':{'scalp_contact_respected':all(s['thermal']['min_scalp_capsule_clearance_m']>=-.0002 for s in samples),'joints_intact':worst_sep<.005,'locks_move':max_motion>.005,'power_off_no_drying':all(s['thermal']['water_removed_step_kg']==0 for s in samples if s['power_slider_fraction']<.5)}}
   result['max_head_translation_m']=max_head_translation;result['max_head_rotation_deg']=max_head_rotation;result['checks']['head_fixed']=max_head_translation<=MAX_HEAD_TRANSLATION_M and max_head_rotation<=MAX_HEAD_ROTATION_DEG
   result['slider_detent']=detent.snapshot();result['checks']['detent_callback_cadence_verified']=True
-  if robot:result|={'robot_power_probe':a.mode=='power-probe','robot_sweep_probe':a.mode=='sweep-probe','diagnostic':True,'task_score':None,'diagnostic_score_readback':tracker.value,'score_invalid':tracker.invalid,'controller_complete':samples[-1]['robot_control']['complete'],'controller_failure':samples[-1]['robot_control']['failure'],'final_measured_power_fraction':samples[-1]['power_slider_fraction'],'final_dryer_pose':samples[-1]['dryer_pose']}
+  if robot:result|={'robot_power_probe':a.mode=='power-probe','robot_sweep_probe':a.mode=='sweep-probe','diagnostic':True,'task_score':None,'diagnostic_score_readback':tracker.value,'score_invalid':tracker.invalid,'controller_complete':bool(control and control.get('complete')),'controller_failure':None if control is None else control.get('failure'),'final_measured_power_fraction':samples[-1]['power_slider_fraction'],'final_dryer_pose':samples[-1]['dryer_pose']}
   (a.out/'result.json').write_text(json.dumps(result,indent=2)+'\n')
  except BaseException as error:
   import traceback;traceback.print_exc();(a.out/'error.json').write_text(json.dumps({'error':str(error),'type':type(error).__name__},indent=2));raise

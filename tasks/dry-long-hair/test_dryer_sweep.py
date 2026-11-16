@@ -63,6 +63,17 @@ class DryerSweepTests(unittest.TestCase):
   np.testing.assert_array_equal(probe.sweep_right,issued[7:])
 
 
+ def test_payload_handoff_anchor_does_not_add_feedforward_twice(self):
+  _,hand,dryer=self.fixture();probe=DryerSweepProbe.__new__(DryerSweepProbe)
+  q,pe,re=ik.solve(hand[0],ik.matrix_to_quat_xyzw(hand[1]),np.array(READY[:6]),base_pos=(0,.305,.75),iters=220,tol=1e-6)
+  offset=np.array([.005,-.01,.02,.15,.01,0.]);issued=np.r_[q+offset,.1,np.array(READY[:6]),1.]
+  probe.sweep=None;probe.failure=None;probe.payload_bias=offset;probe.env=SimpleNamespace(rig=SimpleNamespace(bases={'left':(0,.305,.75)}));probe.read_arm=lambda side:(q,np.array((-.015,-.015)),*hand);probe.pose=lambda name:np.r_[dryer[0],0,0,0,1]
+  with patch.object(DryerProbe,'command',return_value=(issued,{'complete':True,'failure':None})):out,control=probe.command(40.)
+  np.testing.assert_array_equal(out,issued);p,R=probe.sweep.target(0.);expected=ik.tcp_pose(issued[:6]-offset,(0,.305,.75));np.testing.assert_allclose(p,expected[0],atol=1e-12);np.testing.assert_allclose(R,expected[1],atol=1e-12)
+ def test_original_pre_lift_grasp_is_not_rebased_after_lift(self):
+  _,hand,dryer=self.fixture();probe=DryerProbe.__new__(DryerProbe);probe.failure=None;p,R=hand;probe.original_payload_grasp=(R.T@(dryer[0]-p),R.T@dryer[1]);body=np.r_[dryer[0]+[.006,0,0],0,0,0,1]
+  self.assertFalse(probe.check_payload_grasp((None,None,p,R),body));self.assertIn('original pre-lift',probe.failure)
+
  def test_live_sweep_guard_reads_native_hair_and_freezes_bad_grasp(self):
   plan,hand,dryer=self.fixture();probe=DryerSweepProbe.__new__(DryerSweepProbe)
   q,pe,re=ik.solve(hand[0],ik.matrix_to_quat_xyzw(hand[1]),np.array(READY[:6]),base_pos=(0,.305,.75),iters=220,tol=1e-6)
