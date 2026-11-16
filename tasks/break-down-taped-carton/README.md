@@ -4,7 +4,7 @@ Development prototype: no full-score demonstration or genuine model result exist
 
 ## Physical setup
 
-Empty 220 × 180 × 100 mm carton, 3 mm board: four 35 g walls and eight 18 g flaps, joined by native crease hinges. Packing tape is 48 mm wide with 40 mm end-wall tails. The ordinary guarded cutter is 55 g and starts on its pad. Exact poses, colors and shapes are in config.py, scene.py and native.py. The rigid-panel/hinge model approximates cardboard; it is not continuum board or tape-film simulation.
+Empty 220 × 180 × 180 mm carton, 3 mm board: four 35 g walls and eight 18 g flaps, joined by native crease hinges. Packing tape is 48 mm wide with 40 mm end-wall tails. The ordinary guarded cutter is 55 g and starts on its pad. Exact poses, colors and shapes are in config.py, scene.py and native.py. The rigid-panel/hinge model approximates cardboard; it is not continuum board or tape-film simulation.
 
 Bottom hinges now permit only outward opening, from 0 to 274.9 degrees. The old negative-angle range allowed flaps to fall into the empty box; it is removed. Sealed outer flaps remain restrained until all 158 sampled seam/end-fold cells have been cut by a valid held blade sweep. Continuous 240 Hz relative-pose tracking prevents inward motion or a wrapped negative angle from counting as opening. Missing native samples and substantial inward motion fail closed.
 
