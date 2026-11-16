@@ -6,11 +6,10 @@
   "demo_score": null,
   "video": null,
   "remaining": [
-    "Validate the fixed-world head mount under native contact and every-row head-motion limits",
-    "Complete real switch actuation and dryer pickup",
-    "Manipulate and expose every hair surface with live airflow",
-    "Power off, park and release after all patches dry",
-    "Validate material parameters and full scored demo"
+    "Redesign the measured dryer-holder egress path/grasp without collisions or saturated joint targets",
+    "Native loaded sweep, lower/inner hair access and all240patch drying",
+    "Calibrate passive bundles and airflow/thermal approximations",
+    "Full-score feedback-free demo, genuine Dream attempt and media"
   ],
   "native_mechanics_probe": {
     "run": "hair-native-001",

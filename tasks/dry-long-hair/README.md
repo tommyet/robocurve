@@ -224,3 +224,9 @@ Lower raster bands fail the current upright wrist IK, so they are deliberately
 not included or credited. Thermal state always comes from measured live
 nozzle geometry/physical switch, with original occlusion, moisture, temperature
 and all240-patch full-score conditions unchanged.
+
+## 2026-11-16 native revision evidence
+
+The head is world-fixed at the opposite-facing rest rotation: the nose points along world +X. The same rigid rotation is applied consistently to the scalp, passive-lock roots, segment frames and scoring reference. Native orientation002 passed 180 controls/9 seconds with head translation below 0.5 micrometres and rotation below 0.00004 degrees. This is a setup/mechanics check, not drying.
+
+Actual-arm attempts physically switched ON and retained power after the finger withdrew, but failed during holder pickup. Sweep002 recorded 813 controls/40.65 seconds; no hair dried. Payload-gravity compensation used ordinary joint targets with unchanged actuator settings, preserved the original grasp reference, and did not resolve the obstruction. A subsequent CPU audit of recorded native poses finds fingertip-carrier overlap with the holder cradle. Candidate egress paths are not native-validated. No full-score demo/model result is claimed.
