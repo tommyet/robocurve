@@ -22,13 +22,12 @@ if __name__=='__main__':
  move('left',[.328,.19,.82],F,0.,3.,'face the open arch')
  move('left',[.328,.19,.762],F,0.,2.,'lower outside the loop')
  move('left',[.328,-.025,.762],F,0.,4.,'feed the end back through the arch')
- move('left',[.328,-.025,.815],F,0.,2.,'lift through the open loop')
- # Move the supporting loop away before returning the free end. Returning
- # the end along its entry corridor can thread it through the loop again.
- move('right',[.42,-.18,.82],S,0.,4.,'draw the loop away from the unthreaded end')
- move('left',[.328,-.025,.815],G,0.,2.,'turn the free end for withdrawal')
- move('left',[.28,.04,.89],G,0.,2.,'lift clear of the remaining cord')
- move('left',[.20,.30,.89],G,0.,3.,'draw the free end away above the cord')
+ # Carry the tip beyond the far edge of the loop before lifting it.
+ move('left',[.328,-.14,.762],F,0.,3.,'carry the end fully through the loop')
+ move('left',[.22,-.14,.82],G,0.,3.,'withdraw outside the loop')
+ move('left',[.15,.05,.88],G,0.,3.,'lift the free end beside the cord')
+ move('left',[.20,.30,.89],G,0.,3.,'draw the free end away')
+ move('right',[.42,-.18,.82],S,0.,4.,'spread the opened cord')
  p.add(3.,'lay the opened cord down',{'left':(np.array([.20,.30,.754])-.009*G[:,2],G,0.),'right':(np.array([.42,-.18,.754])-.009*S[:,2],S,0.)})
  p.add(1.,'release the cord',{'left':(np.array([.20,.30,.754])-.009*G[:,2],G,.8),'right':(np.array([.42,-.18,.754])-.009*S[:,2],S,.8)})
  p.add(3.,'clear the table',{'left':(np.array([.18,.36,.96]),G,.8),'right':(np.array([.25,-.30,.98]),D,.8)})

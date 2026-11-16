@@ -41,7 +41,16 @@ Reset: Reset the paper to its original slightly raised creases and replace the t
 
 ## Model limits
 
-The robot and fixed box use native PhysX. The pre-creased paper has eight passive fold hinges: panels preserve their shape between creases, with gravity, damping, plastic crease memory, finger-pad contact, box contact and measured-hand grasp forces. It is a folding-paper approximation, not arbitrary cloth or crumpling. Tape bonds only after flat contact across an already folded overlap for 0.4 seconds, then holds that pair of flaps. Detailed adhesive traction, tape stretching and new creases are omitted. The box and paper centre remain fixed; grasp capture and feedback forces are simplified.
+The robot and fixed box use native PhysX. The pre-creased paper has eight passive fold hinges: panels preserve their shape between creases, with gravity, damping, plastic crease memory, finger-pad contact, box contact and measured-hand grasp forces. It is a folding-paper approximation, not arbitrary cloth or crumpling. Tape bonds after 0.4 seconds of flat contact across the exposed upper flap edge, with contact on both sides, then holds that pair of flaps. Grasp points cover the tape rectangle, including its accessible edges. Detailed adhesive traction, tape stretching and new creases are omitted. Closed side faces render 0.6 mm outside the box to avoid coincident-surface artifacts; this does not change the material state or score. The box and paper centre remain fixed; grasp capture and feedback forces are simplified.
 
-Final native run counts, scores, timings and media are recorded in
-`VALIDATION.json` once validation is complete.
+## Recorded trials
+
+- Demo: **1.0**, 1596 actions / 79.8 simulated seconds; 803.6 wall seconds including startup.
+- Dream: **0.0**, 1600 actions / 80 simulated seconds; 920.7 wall seconds including startup.
+
+Both trials use the same physics and starting layout. The demo adds a 0.6 mm rendering offset for closed paper sides. The baseline never closes a side far enough to enter that draw-only branch; its observations are unchanged. Exact source differences and trace checks are in VALIDATION.json. Independent
+trace replay agrees with both scores. Videos were visually checked. Timings
+include GPU startup and shared-host contention; they are not a speed benchmark.
+`VALIDATION.json` records hashes and review details; compressed measured traces
+and summaries are in `evidence/`. The uploaded videos preserve every native
+frame at 20 fps, with two judging views placed side by side.

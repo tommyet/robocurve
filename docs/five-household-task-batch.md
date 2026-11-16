@@ -8,9 +8,9 @@ and the required genuine Dream attempt have been recorded and inspected.
 | Task | Current state |
 |---|---|
 | Fasten a bracelet | Final native demo007 1.0, Dream007 0.0; independent replay and visual review passed. Media M-S6J36D uploaded; [PR2187](https://github.com/robocurve/benchmark-tasks/pull/2187) received as TK-ZVS8SJ; waiting for review. |
-| Wrap a present | Pre-cut, pre-creased cross-shaped paper, four folding flaps and two tape strips. CPU007 full score; native010 tests the corrected tape pickup clearance, finger-pad holding contact and true edge-bridging tape bond. |
+| Wrap a present | Native012 full score 1.0, independently replayed. Native015 records a draw-only offset that makes the closed paper sides visible above the coplanar box faces; physics is unchanged. Dream012 is finishing. |
 | Rock a pram smoothly | Final native demo007 scores 1.0 with carrycot/doll collision shells; ten cycles and released stop. Dream007 0.0; replay and visual review passed. Media M-6UKL98; [PR2190](https://github.com/robocurve/benchmark-tasks/pull/2190) opened. |
-| Genuine knot removal | A 1.075 m, 10 mm polyester cord with a loose overhand. Native eight-second settling probe retains the knot. Native008 support grasp works but free-end grasp closes along the cord and slips. Native011 grasps and briefly unthreads it, but returns through the loop. Native014 moves the loop aside before withdrawing the free end. |
+| Genuine knot removal | A 1.075 m, 10 mm polyester cord with a loose overhand. Native eight-second settling probe retains the knot. Native008 support grasp works but free-end grasp closes along the cord and slips. Native011 grasps and briefly unthreads it, but returns through the loop. Native014 still leaves a knot. Native016 extends the feed beyond the far loop boundary before withdrawing. No successful final knot demo or PR yet. |
 | Apply, smooth and peel a wax strip | Flexible strip on silicone leg form; native006 revealed a fingertip geometry and capture issue. Corrected native008 scores 1.0; replay agrees, visible peel completes in 0.6 s. Dream008 0.0; source-matched, rescored and visually checked. Media M-SSD6AZ; [PR2192](https://github.com/robocurve/benchmark-tasks/pull/2192) received as TK-AGWK73. No hair-removal claim. |
 
 Fresh board check found no direct matches. Prior comparison and adjacent

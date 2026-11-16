@@ -111,6 +111,8 @@ class Model:
   d.box('paper_under_box',[.35,0,TABLE+.0002],[.120,.160,.0004],(.18,.48,.68))
   for k in range(4):
    p=self.joints(k);across=np.cross(self.out[k],[0,0,1])*self.width[k]/2;verts=np.array([q+s*across for q in p for s in [-1,1]])
+   # Render paper just outside a coplanar box face; physics uses the original fold.
+   if self.angles[k,0]>np.radians(89.9):verts[:4]+=self.out[k]*.0006
    d.mesh('paper_flap_'+str(k),verts,[(0,1,3,2),(2,3,5,4)],(.18,.48,.68))
   for j in range(2):
    size=[.012,.040,.0007] if j==0 else [.040,.012,.0007]

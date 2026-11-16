@@ -1,8 +1,25 @@
 # Shared working notes
 
-Last updated: 2026-11-15 UTC. Read this before starting work; update it when an
+Last updated: 2026-11-16 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
+
+## 2026-11-16 — wrapping visual correction; final knot withdrawal in progress
+
+- Wrapping native012 scored 1.0, but visual inspection found paper side faces
+  coplanar with the native box. Offset only the closed-side drawing by 0.6 mm;
+  native015 again reaches 1.0. Physics, scoring and actions are unchanged.
+  Dream012 completed 1,600 actions at 0.0. Its largest side fold was 29.1897°;
+  the added drawing branch activates above 89.9°, so it never changes this
+  baseline's observations. Preserve both actual source hashes and disclose
+  this exact render-only difference; do not claim byte-identical source.
+- Knot014 retained a knot. A short-lived open-curve “unknot” classification
+  during manipulation is not proof of successful removal. Extend the end feed
+  beyond the far loop boundary before withdrawing; native016 is the current
+  trial. No knot PR until a released full-score result is visually confirmed.
+- Before syncing a new demo, wait for the offline planner to finish and verify
+  its exit status and expected stages. A failed planner leaves the old plan in
+  place. The mistaken013 launch was stopped during initialization at zero steps.
 
 ## 2026-11-15 — five household tasks in progress; bracelet submitted
 
