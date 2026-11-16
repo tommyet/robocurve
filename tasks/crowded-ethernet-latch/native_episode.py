@@ -40,7 +40,7 @@ class NativeEpisode:
   layer=self.base.scene.stage.Flatten();scene=self.out/'capture-scene.usdc'
   if not layer.Export(str(scene)):raise RuntimeError('native scene export failed')
   x,y,z=.41,0.,.96
-  cameras=[dict(name=n,eye=list(e),target=[x,y,z],focal_length_mm=18.,width=480,height=270) for n,e in zip(('review_top','review_left','review_right'),((x-.40,y-.32,z+.43),(x-.30,y+.32,z+.25),(x-.30,y-.30,z+.23)))]
+  cameras=[dict(name=n,eye=list(e),target=[x,y,z],focal_length_mm=18.,width=480,height=270) for n,e in zip(('review_top','review_left','review_right'),((x-.40,y-.32,z+.43),(x-.18,y+.10,z+.12),(x-.18,y-.10,z+.10)))]
   manifest=dict(scene_file=scene.name,scene_sha256=hashlib.sha256(scene.read_bytes()).hexdigest(),owners=self.owners,capture_hz=20,quaternion_order='xyzw',pose_space='world',interpolated=False,virtual_review_views=cameras,scope='actual native poses; offline rendering is not native RGB')
   (self.out/'capture-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
   self.stream=(self.out/'trajectory.jsonl').open('w')
