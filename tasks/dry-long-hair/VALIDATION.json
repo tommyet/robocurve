@@ -1,7 +1,7 @@
 {
-  "status": "opposite_fixed_head_and_partial_sweep_cpu_verified_native_pending",
+  "status": "fixed_opposite_head_native_verified_power_on_lift_incomplete",
   "date": "2026-11-16",
-  "local_model_tests_passed": 48,
+  "local_model_tests_passed": 53,
   "native_runtime": true,
   "demo_score": null,
   "video": null,
@@ -112,5 +112,12 @@
     "partial_sweep_bands": 2,
     "partial_sweep_native_validated": false,
     "full_drying_controller": false
+  },
+  "native_full_demo_verified": false,
+  "latest_native": {
+    "orientation": "hair-opposite-orientation-002:180rows/9s,headtranslation4.22e-7m/rotation3.41e-5deg,nose+X",
+    "switch": "PhysicalsliderONretainedafterfingerwithdrawal",
+    "sweep": "hair-opposite-sweep-002:813rows/40.65s,failedlift,0drying,unscored",
+    "trace_sha256": "13fa63aa7e0b893a45e043decf2ad84e1e66777bcd5b5f9838b5712c6418ddb9"
   }
 }
