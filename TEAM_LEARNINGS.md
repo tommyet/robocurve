@@ -13,6 +13,7 @@ developers and their agents, not a competition submission document.
   the added drawing branch activates above 89.9°, so it never changes this
   baseline's observations. Preserve both actual source hashes and disclose
   this exact render-only difference; do not claim byte-identical source.
+  Media M-R4FZXS; isolated commitcaff5b0; PR2197 received as TK-R879EX.
 - Knot014 retained a knot. A short-lived open-curve “unknot” classification
   during manipulation is not proof of successful removal. Extend the end feed
   beyond the far loop boundary before withdrawing; native016 is the current
