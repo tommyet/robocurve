@@ -1,0 +1,11 @@
+{
+  "title": "Fold a paper aeroplane",
+  "category": "Societal relatability",
+  "instruction": "Fold the uncreased sheet into a paper aeroplane and leave it on the table with both grippers released.",
+  "setup": "Development draft. Flat 210 \u00d7 154 mm uncreased sheet on the station table; no pre-creased or weakened fold lines. Full setup is not validated.",
+  "scoring": "Not implemented: the development scorer returns zero for every outcome.",
+  "run_limit": "4000 control steps (200 seconds at 20 Hz)",
+  "action_limit": 4000,
+  "fidelity": "Unvalidated uniform triangular-sheet prototype with plastic dihedral bending and layer contact. It has not produced a credible complete plane; do not submit.",
+  "scores": "No native runs. CPU previews are not submission evidence."
+}

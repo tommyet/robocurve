@@ -30,10 +30,24 @@ developers and their agents, not a competition submission document.
   float32 conversion error was below 0.00000006 m. The public evidence replays
   on CPU; do not remove this evidence just to shrink the submission.
 - The user requires **strictly uncreased paper** for the aeroplane. No pre-creased
-  fallback, weakened fold lines or prefolded start is authorized. The draft has
-  no successful full-plane demonstration and must not be submitted yet. CPU
-  experiments and superseded models are private under
-  `artifacts/plane-spoon-cake-2026-11-16/`. The draft scorer returns zero.
+  fallback or weakened fold lines. After further local tests, the draft remains
+  **blocked, not submission-ready**: nose folds can be retained in CPU previews,
+  but the centre fold slid, twisted or over-stretched the sheet. Bimanual edge
+  paths and a straightedge probe did not solve it. No paper GPU/Dream run,
+  media upload or PR was made. Its checked-in plan is a two-nose-fold prefix;
+  `VALIDATION.json` prevents treating it as a validated submission.
+- Paper numerical findings: a compiled Numba kernel matched the original
+  NumPy solver to 3.4e-16 m over a short contact sequence and reduced a flat
+  step to about 0.05 s locally. Signed-dihedral gradient and no-contact flat
+  stability tests pass, but this is **not** a fidelity pass. Even the better
+  nose preview has 7.1% peak edge stretch. The one-hand centre attempt reached
+  25.5%, opposite-edge closure 22.2%, and the tool probe 58.2%. Keep these as
+  failed approximations; do not hide the deformation or relax the scoring to
+  call them a plane. Generic pinches need a finite strip to resist free yaw,
+  and swept layer contact must compare each frame's own triangle plane.
+  Current source, explicit draft README and local reproduction commands are
+  preserved under `tasks/fold-a-paper-aeroplane/`; detailed private experiments
+  are under `artifacts/plane-spoon-cake-2026-11-16/`.
 - Development branch: `codex/plane-spoon-cake-2026-11-16`, from shared main.
   GPU `stz9j8z3yx2zt4` ran 21:36:34–22:28:18 UTC at $0.59/hour, approximately
   **$0.51 compute**. It is EXITED; a complete account inventory confirmed zero

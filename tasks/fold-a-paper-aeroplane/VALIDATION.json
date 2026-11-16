@@ -1,0 +1,31 @@
+{
+  "status": "development_blocked",
+  "submission_ready": false,
+  "starting_sheet": "strictly uncreased; uniform initial stiffness and zero rest angles",
+  "native_demo": false,
+  "dream_run": false,
+  "media_uploaded": false,
+  "pr_opened": false,
+  "physics_sources_match": false,
+  "visual_review_passed": false,
+  "scores": {
+    "demo": null,
+    "dream": null
+  },
+  "remaining_gates": [
+    "Stable complete aeroplane from the uncreased sheet without excessive artificial stretching or unintended sliding/twisting",
+    "Implement outcome scoring and failure cases",
+    "Native YAM demo, Dream run, independent replay and visual review",
+    "Finalize setup, judging, fidelity and media; check current novelty before submission"
+  ],
+  "cpu_findings": {
+    "partial_prefix_steps": 1280,
+    "partial_prefix_maximum_edge_ratio": 1.0705829755473648,
+    "one_hand_centre_maximum_edge_ratio": 1.255186325355993,
+    "opposite_edges_centre_maximum_edge_ratio": 1.222412700893461,
+    "straightedge_probe_maximum_edge_ratio": 1.5816315082176708,
+    "same_edge_bimanual_result": "Sheet translated instead of making a centre crease",
+    "note": "These ratios and shapes are failures of the current approximation, not evidence of real-paper feasibility."
+  },
+  "checked_utc": "2026-11-16T23:02:11Z"
+}
