@@ -2,7 +2,7 @@
 
 Column ordering is not asserted. Only the sum over the entire named panel
 family is interpreted; vectors are forces on the sensor fingertips, not on the
-carton. This diagnostic never applies force or gates controller progress.
+carton. This reader never applies force. Controllers may use its verified measurements to gate contact acquisition.
 """
 import numpy as np
 TARGETS=('north','east','south','west','north_top','east_top','south_top','west_top','north_bottom','east_bottom','south_bottom','west_bottom')
@@ -24,12 +24,35 @@ def summarize(force,names):
  if not np.isfinite(force).all():raise ValueError('nonfinite carton contact force')
  net=force[0].sum(axis=(0,1))
  return dict(body_names=list(names),configured_target_family=list(TARGETS),individual_filter_column_order_native_verified=False,normal_force_matrix_w=force[0].tolist(),family_normal_force_on_fingertips_w_N=net.tolist(),family_normal_force_norm_N=float(np.linalg.norm(net)),family_sum_of_normal_force_magnitudes_N=float(np.linalg.norm(force[0],axis=-1).sum()))
+def native_array(value):
+ value=value.torch if hasattr(value,'torch') else value
+ if hasattr(value,'detach'):return value.detach().cpu().numpy()
+ if hasattr(value,'numpy'):return value.numpy()
+ return np.asarray(value)
 class Reader:
- def __init__(self,base):self.sensors={s:base.scene[s+'_carton_contacts']for s in SIDES}
- def read(self,time):
-  result={}
+ def __init__(self,base):
+  self.sensors={s:base.scene[s+'_carton_contacts']for s in SIDES};self.physics_dt=float(base.sim.get_physics_dt());self.last_clocks=None;self.last_requested=None;self.sample_id=0
+  if not np.isfinite(self.physics_dt)or not 0<self.physics_dt<=1/120:raise ValueError('unsupported native sensor timestep')
+ def read(self,time,phase='post_step'):
+  time=float(time)
+  if not np.isfinite(time)or time<0:raise ValueError('invalid force measurement request time')
+  result={};clocks={};updates={};tol=max(2e-6,self.physics_dt*.02)
   for side,sensor in self.sensors.items():
-   value=sensor.data.force_matrix_w;value=value.torch if hasattr(value,'torch')else value
-   value=value.detach().cpu().numpy()if hasattr(value,'detach')else np.asarray(value)
-   result[side]=summarize(value,list(sensor.body_names))
-  return dict(requested_control_time_s=float(time),measurement_phase='post_step_sensor_read',force_sample_interval='latest native sensor substep, not control-interval impulse',sides=result)
+   result[side]=summarize(native_array(sensor.data.force_matrix_w),list(sensor.body_names))
+   for field,dest in [('_timestamp',clocks),('_timestamp_last_update',updates)]:
+    if not hasattr(sensor,field):raise ValueError('native sensor clock contract unavailable: '+field)
+    value=np.asarray(native_array(getattr(sensor,field)),float)
+    if value.shape!=(1,)or not np.isfinite(value).all()or value[0]<0:raise ValueError('invalid native sensor clock')
+    dest[side]=float(value[0])
+   if abs(clocks[side]-updates[side])>tol:raise ValueError('native contact buffer was not refreshed to sensor time')
+  if abs(clocks['left']-clocks['right'])>tol:raise ValueError('left/right force clocks disagree')
+  if self.last_clocks is not None:
+   requested_delta=time-self.last_requested
+   if requested_delta<-tol:raise ValueError('force request clock moved backwards')
+   deltas=[clocks[s]-self.last_clocks[s]for s in SIDES]
+   if any(dt<-tol or abs(dt-requested_delta)>tol for dt in deltas):raise ValueError('stale/reset/unsynchronised native force sample')
+   new=all(dt>tol for dt in deltas)
+  else:new=True
+  if new:self.sample_id+=1
+  self.last_clocks=clocks.copy();self.last_requested=time
+  return dict(requested_control_time_s=time,sensor_clock_s=clocks,sensor_update_time_s=updates,sample_id=self.sample_id,clock_verified=True,native_clock_fields=['_timestamp','_timestamp_last_update'],measurement_phase=phase,force_sample_interval='latest native sensor substep, not control-interval impulse',sides=result)
