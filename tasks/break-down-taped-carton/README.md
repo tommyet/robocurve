@@ -31,3 +31,7 @@ Historical sealed cut011 completed all 158 cut cells and parked the cutter at a 
 ```
 
 This deliberately unsealed, bottom-up check has no task score. Camera-free outputs preserve the composed scene and actual native actor poses for labelled offline previews, not native RGB. Legacy cutting requires explicit `--bottom-up-start`; it cannot satisfy the revised full-task turnover requirement. Full feasibility, reproducible policy integration and model/media evidence remain unfinished.
+
+## Follow-up turnover candidate (native pending)
+
+The next physical diagnostic uses an ordinary 220×180×180mm carton at XY(250,−100)mm. Mesh-supported lateral fingertip contact permits fixed downward wrists: a low brace and high opposite push, followed by brace withdrawal at25°. The controller withdraws after the measured panel COM passes the leading table-support edge, and waits for actual gravity settling before the second push. It never sets object poses or adds a turnover force. CPU sampling covers122 contact postures,82 acquisition samples and164 withdrawal samples; these are finite geometry checks, not native contact or turnover proof. The changed dimensions invalidate historical native scene equivalence.
