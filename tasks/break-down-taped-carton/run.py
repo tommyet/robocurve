@@ -67,7 +67,7 @@ def main():
   from turnover_contacts import Reader
   contacts=Reader(base) if instrument_contacts else None
   capture.suppress_state_only_rendering(base,no_video=a.no_video)
-  env._env.reset();env._instruction='Native carton mechanics probe';env._t=0.
+  env._env.reset();env._instruction='Native carton mechanics probe';env._t=0.;env._turnover_contact_reader=contacts
   from native_angle_binding import install as install_angle_observer
   angle_observer=install_angle_observer(base)
   from native_angle_binding import PINS
