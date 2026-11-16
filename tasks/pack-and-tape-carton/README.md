@@ -32,3 +32,11 @@ Use the pinned Isaac Python and a fresh output directory:
 `closure-probe` remains an explicitly separate open-flap engineering diagnostic; its layout is not the revised sealing setup. `bench` and `adhesion-probe` use diagnostic loads/fixtures and cannot receive robot task credit. Camera-free runs capture the composed scene and actual native actor poses for clearly labelled offline previews. They do not provide RGB observations or a completed model run.
 
 Full ordinary-roll peeling, application and cutting remain unproved. No full-score demo or Dream score is claimed.
+
+Ordinary-roll checkpoint (not sealing; fresh output directory):
+
+```sh
+/data/IsaacLab-Arena/.venv/bin/python run.py --mode roll-pickup-probe --no-video --out /home/ubuntu/yam-eval/sealing-roll-pickup-001
+```
+
+The first native prefix timed out after 372 controls/18.6 simulated seconds, during closure of the fingers. One opposing-contact frame was observed; no lift, peel or seal was demonstrated. Its contact snapshot is pre-action, while actor poses are post-step; timestamps are retained. The force gate sums all 73 configured roll-family filters, so it does not depend on individual filter-column ordering, which is not independently read back. The checkpoint is explicitly unscored.
