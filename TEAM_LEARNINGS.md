@@ -87,6 +87,111 @@ developers and their agents, not a competition submission document.
   leave duplicate watchdogs: wait for the failed session's watcher to exit.
 
 
+## 2026-11-16 19:55 UTC — packing trial blocked by startup; both VMs STOPPED
+
+- Onecb0da2startrequested; it remainedSTARTING/noSSH through the useful trial
+  window. No source was transferred, no simulator/controller launched, no
+  Dream call, no score/video generated. Native face-push trial count is ZERO,
+  not a failed physical closure. Candidatef9a253d stays CPU-reviewed only.
+- Earlystoprequested at19:48:40UTC (~4.91min afterwatchdogarm). Watchdogrecorded
+  16stopcalls:14returnedHTTP500; firstsuccess at19:53:40 reportedSTOPPING.
+  BrevbackendhealthcheckwasHealthy; specificVMstart/stop remainedfaulty.
+  CachedCLIreviewfound no non-destructive force/cancel alternative; directAPI
+  would use the sameendpoint. No reset/delete/newVM, no externalsupportmessage.
+- Provider confirmedSTOPPED19:54:29UTC; independentfresh `brev ls --all`
+  confirmed BOTHcb0da2anddiceSTOPPED. Watchdog completed and its awakehelper
+  endswithit. No pendingstartclient or GPUjob remains. The user's console
+  question is superseded by verifiedshutdown; no manualactionrequired now.
+- Conservativewindow10.72020747min exceededplanned8.5min becauseprovider
+  rejected shutdown. Aggregatefromtheuser'slatest60minestimate is62.02326587min,
+  so assume no remaining compute allowance. Actualproviderbilling/balance is
+  UNKNOWN: start-request-to-STOPPED elapsedtime is not an invoice. Do not start
+  anothertrial/newVM or silentlyrefresh thehour budget.
+- Private lifecycle/sourcearchive/hashmanifest and exacterrors remain under
+  ignored `artifacts/packing-face-prefix-20261116/`. Code+numeric CPUevidence
+  are pushed toforkbranch `codex/packing-sealing-completion`; no upstreamPR
+  was opened or modified, no existingpreviewwas replaced with simulatedsuccess.
+  Remainingwork: physicalclosureproof and ordinary-roll payout/application/cut/
+  retention, then fullscore demo/model attempt/media if resourcespermit.
+
+
+## 2026-11-16 19:43 UTC — packing candidate frozen for one native prefix
+
+- New development branch `codex/packing-sealing-completion` is pushed at
+  f9a253d (reviewed runtime commit4887aa9 plus whitespace cleanup). All93packing
+  tests and5separate mesh/replay experiments pass. The full numeric positive/
+  negative CPU reports are compressed in the experiment evidence archive.
+- NORTH/SOUTH relief now passes active−175/−174.5deg endpoints with unrelated
+  open neighbors−175/−174.5deg: existing above-box standoff, unrelieved transfer/
+  lower, separate2mmnormalrelief, FREE lateral insertion, then normal approach.
+  SOUTH requires the mirrored RIGHT seed with positive q3/q4. Previously closed
+  flaps remain modeled exactly0; actual-scene guards stay authoritative.
+- Astra approved bounded EAST-only diagnostic after exactfloat32slew checks,
+  individual hover/highIK residual checks, certified approach matching, verified
+  singleton force gate, measured hinge progress and successful-step ACK rollback.
+  Total force-depth planning declines toward release;0.65mm bounds reference/
+  extra preload, not every appliedtotal transient (extra+lookahead may~0.78mm).
+  The original−1mm intended guard is unchanged. No positionPI or physicswrites.
+- Four-flap route nominally needs~220simseconds before tracking waits. Only
+  optin facepush diagnostic has6,000control/300s cap; oldrimlimit stays3,600.
+  This native attempt explicitly requests1flap/1,400controls, not fullsealing.
+  Prefix completion is diagnostic and cannot claim fulltasksuccess.
+- Correction to preceding NGCForbidden note: retrying read-only `brev ls --all`
+  outside sandbox succeeded; BOTHcb0da2anddice confirmedSTOPPED. No user login
+  or credential change was needed. Do not infer expiredauth from that failure.
+- Existingcb0da2 start requestedonce under independentlyarmed8.5min watchdog
+  at19:43:45UTC, stoprequestdue19:50:15, finaldeadline19:52:15. Both prior ledgers
+  are subtracted fromuser's60minallowance, leaving8.69694min before thiswindow.
+  Native result/shutdown/accounting entry MUST follow; startup is not a result.
+
+
+## 2026-11-16 19:25 UTC — packing closure diagnosis and CPU preparation
+
+- User authorized continuing carton sealing after the spray revision. Development
+  worktree `/private/tmp/robocurve-packing-completion`, branch
+  `codex/packing-sealing-completion`, starts from shared `origin/main`87870ce
+  and copies only the packing task baseline from e16f531. Existing dirty notes
+  in the original checkout and hair worktree were preserved.
+- Native closure002 scored0 and stopped before its engagement deadline. Exact
+  final-state CPU replay identifies intended issued fingertip/flap proxy depth
+  as the obstruction: previous−0.966mm against−1mm limit; every next fold
+  candidate rejects. Actual depth≈−0.022mm, unrelated minimum≈1.399mm.
+  This is distinct from the earlier8.6s unrelated-flap collision. Neither proves
+  insufficient actuator force. Compact fixture/replay tests retain all315
+  robot collider pieces and actual logged object poses.
+- Open-jaw lateral straddling with an inner-pad face push is being screened.
+  Sampled push-to−70deg, moving withdrawal, passive-fall clearance and park
+  paths exist for four flaps; north/south free approaches and runtime remain
+  unfinished. Gravity estimates and CPU collision checks are not native
+  completion evidence. No task score or preview was replaced.
+- Optional SAT passing certificates preserve original pair-specific thresholds
+  (−1mm intended; +0.2mm unrelated); unresolved pairs use original fullSAT.
+  Default geometry path remains unchanged. Seven focused regression tests and
+  independent Astra review passed. Local nine-state benchmarks show speedup,
+  not a native runtime speedup or force/penetration measurement.
+- Separate selected-flap singleton contact filters now verify native2sensor/
+  1filter counts, exact per-body target paths and force-row/finger identities.
+  Each read is anchored to a fresh verified family clock; repeated pre/post
+  reads retain their sampleID. Consume `(selected_target,sample_id)` once.
+  Astra independently approved13 reader tests. Installed native binding still
+  must validate failclosed at startup. Family sums cannot gate selected contact.
+- Live board comparison returned656tasks. Accepted tape-gun sealing
+  [PR1893](https://github.com/robocurve/benchmark-tasks/pull/1893)
+  is TK-HYQRVJ; accepted flap-folding pilot TK-S2WMM8 caused final duplicate
+  rejections ofPR885/1477. Open flaps or stronger physics alone do not establish
+  novelty. The proposed distinction is loose ordinary roll/free thin leader,
+  actual payout/tension/adhesion and a separate cutter. No exact loose-roll
+  title was found in29filtered carton/tape entries; this is not novelty clearance.
+  Our incomplete draftPR2209 has no receipt/reservation. Keep it honest.
+- GPU remained off throughout. Prior final-hour windows used32.6505991856min
+  plus18.6524592201min, leaving8.6969415943min of the user's latest1h estimate
+  (conservative start-request to confirmedSTOPPED, not an invoice). The spray
+  status file's8.4686min is a live deadline counter, not the aggregate balance.
+  At19:19UTC `brev ls --all` failed requesting the NGC token withForbidden;
+  no start/stop/reset request was issued. Last successful provider check was
+  STOPPED after spray. Retain both prior ledgers for any future watchdog arm.
+
+
 ## 2026-11-16 — broad creative task screen, no compute
 
 - Refreshed the complete upstream PR metadata index: **2,341 PRs through
@@ -4913,3 +5018,15 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Source, traces, audits and native RGB composite backups verified locally. New demo video1.42MB; the original model composite95.7MB exceeded upload cap, so H264CRF28 re-encoding retained every frame without denoising/cropping,45.83MB. Both are below50MB. Screenshot is the offline-rendered initial native scene. Deliverables in ignored `artifacts/spray-review-20261116`; exactlyfive requested previews remain in `artifacts/submission-review-videos`, with the new spray demo replacing its historical-rubric clip.
 - **Provider STOPPED verified17:41:41UTC.** Startrequest17:23:02.548010→stop17:41:41.695563 consumed18.652459 conservative wall minutes. Including the prior32.650599-minute window after the user's one-hour estimate gives51.303058minutes used, roughly8.696942minutes remaining. This is not provider invoice data. Watchdog finished, no restart scheduled; do not reset this remaining allowance. Original root/hair dirty notes are preserved.
 - Fork revision is pushed at `dc33337` on `codex/spray-photo-scoring-revision`; native code remains unchanged from56854fb. All130CPU/USD tests passed. Existing upstream PR2171 task-only worktree `/private/tmp/robocurve-submit-spray` is prepared but NOT pushed with mismatched old media. A new task-board upload using the previously supplied credential returned **HTTP403 Forbidden**; no new media ID was issued. The old media field was removed on development branch to prevent an accidental false revision. User was asked to save a refreshedT-39token in `~/.config/robocurve/token` (600) and reply set; never print/commit it. `.env.robocurve` is absent in known checkouts. A read-only Safari query did not return and was cancelled; no authenticated browser route was obtained. Once valid credential arrives, upload the ready files, insert returned media ID, update/push the EXISTING PR branch only; do not open a new PR or submit fork main/experiments/shared notes.
+
+### 2026-11-16 18:23 UTC — correction: valid token; uploader client header caused403
+
+- The user re-supplied the SAME existing T-39 token. Investigation showed that unauthenticated GETs ALSO returned Cloudflare HTTP403, text/plain `error code:1010`; the earlier conclusion that the token was invalid was wrong. Default Python urllib identification triggered the browser-integrity check. A descriptive application header `User-Agent:RobocurveMediaUploader/1.0` is Cloudflare's documented remedy (https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1010/). This is accurate client identification, not browser impersonation or disabling security. Unauthenticated API access then returned normal JSON401, and the SAME token successfully uploaded all three approved files as **M-U8HXMC**. No new credential or ~/.config/robocurve/token file was necessary. Secret was held only in upload-process environment, never printed/saved/committed.
+- Fixed tools/upload_media.py on the fork so other agents do not repeat the mistaken token-refresh request. Do not infer invalid credentials from generic403 without inspecting safe response metadata/body. The user was explicitly informed of this correction.
+- Existing spray PR2171 was revised, not replaced: task-only source commit5a9eb01 plus cleanupb5b6e32 excludes internal REVIEW_REVISION.json workflow notes. No tools/experiments/sharednotes in upstream PR. Title/body now describe household use, photo-area scoring, new demo1.0, completed Dream0.0 and its24session recoveries/noisyRGB. New mediaM-U8HXMC. Nativecode remains56854fb; robot/scorer unchanged after successful native trial. Verify task-board bot receipt separately; do not call the revision accepted merely because push/upload succeeded. Brev remains STOPPED, no extraGPU work was used.
+
+### 2026-11-16 18:25 UTC — spray revision received
+
+- PR2171 final task-only head `869c632` is received as **TK-A8RNWR**, a revision of TK-6QV5KK, and **waiting for review**. Receipt: https://github.com/robocurve/benchmark-tasks/pull/2171#issuecomment-6925259269. This is NOT acceptance; do not merge or push further upstream changes while pending review. MediaM-U8HXMC, new demo1.0 and completed Dream0.0 with disclosed confounds.
+- Bot initially rejected overlong fields. Actual limits: fidelity<=500characters, scores<=300characters. Final fields449/251characters, detailed evidence remains in README. The parser's extra “fill in” errors were consequences of length validation, not absent data. Descriptive uploader User-Agent fixed Cloudflare1010; user's original token was valid. No refreshed credential file is required.
+- Fork development headbb751a6 records the receipt; upstream excludes internal workflow notes, tools, experiments and shared notes. Provider independently recheckedSTOPPED after submission. No GPU work occurred during upload/revision. Preserve original dirtyroot/hairTEAMnotes. The earlier auth-block handoff is superseded.

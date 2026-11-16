@@ -48,7 +48,8 @@ def main():
             sys.exit(f"{name}: {path} not found")
     body, ctype = multipart({"task": task_dir.name}, files)
     req = urllib.request.Request(f"{BOARD}/api/media", data=body, method="POST",
-                                 headers={"Authorization": f"Bearer {team}:{token}", "Content-Type": ctype})
+                                 headers={"Authorization": f"Bearer {team}:{token}", "Content-Type": ctype,
+                                          "User-Agent": "RobocurveMediaUploader/1.0"})
     try:
         with urllib.request.urlopen(req, timeout=600) as res:
             media_id = json.load(res)["media_id"]
