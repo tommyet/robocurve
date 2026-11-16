@@ -1,0 +1,5 @@
+# CPU turnover planning evidence — 16 November 2026
+
+Internal team diagnostics, excluded from the competition task PR. Native physics and full turnover are unproved. The portable checker lives in tasks/break-down-taped-carton/check_refined_turnover.py on development branch codex/carton-sealing-revisions at74dcd3e. Its full report preserves runtime/dependency hashes and missing-path assumptions; 368 configurations pass, not a continuous collision certificate.
+
+The issued-lead helper is a scratch diagnostic with local source references, not a portable run command. It compares commanded hand meshes against the CURRENT carton rather than its predicted future pose. At seven first-roll angles, a1.2degree lookahead penetrates3.65–3.69mm and would fail the unchanged2mm issued-command guard.0.3degree produces1.07–1.08mm and passes that gate. Measured native penetration remains separately limited to0.6mm. The controller uses0.3degree. No force or physical rotation is inferred from this geometry.
