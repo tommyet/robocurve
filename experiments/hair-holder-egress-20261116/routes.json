@@ -1,0 +1,2270 @@
+{
+  "scope": "Nominal translated achieved physical grasp at fixed achieved R; signed SAT; cylinder is conservative96-sided circumscribed bound. NO native validation/full arm clearance/swept dynamics proof.",
+  "start_tcp": [
+    0.2111431830274637,
+    -0.003026672322165802,
+    0.8683050204860261
+  ],
+  "start_R": [
+    [
+      -0.9999997984956333,
+      0.00022264409274165223,
+      0.0005945067705024779
+    ],
+    [
+      -0.0005959734844779171,
+      -0.0066466239330111865,
+      -0.9999777333550477
+    ],
+    [
+      -0.00021868767227552937,
+      -0.9999778861654396,
+      0.006646755283663541
+    ]
+  ],
+  "routes": [
+    {
+      "name": "up15_yminus90_up85",
+      "physical_start_native_time_s": 32.65,
+      "hand_min": {
+        "leg": 2,
+        "fraction": 0.375,
+        "offset": [
+          0.0,
+          -0.09,
+          0.046875
+        ],
+        "hand_gap_m": -0.016690025305815807,
+        "hand_pair": [
+          "gripper",
+          "cradle_1"
+        ],
+        "tool_gap_m": 0.033144418682426256,
+        "tool_pair": [
+          "handle",
+          "cradle_0"
+        ],
+        "IK_position_error_m": 4.176917222436819e-07,
+        "IK_rotation_error_rad": 2.332980490593137e-06
+      },
+      "tool_min": {
+        "leg": 1,
+        "fraction": 0.375,
+        "offset": [
+          0.0,
+          -0.03375,
+          0.015
+        ],
+        "hand_gap_m": 0.004564918610638022,
+        "hand_pair": [
+          "tip_left",
+          "cradle_1"
+        ],
+        "tool_gap_m": -0.020796791187624914,
+        "tool_pair": [
+          "handle",
+          "cradle_0"
+        ],
+        "IK_position_error_m": 1.8734898373706558e-07,
+        "IK_rotation_error_rad": 1.0484958332158892e-06
+      },
+      "max_IK_error_m": 4.883545888921637e-07,
+      "max_IK_rotation_rad": 2.715515170442603e-06,
+      "rows": [
+        {
+          "leg": 0,
+          "fraction": 0.0,
+          "offset": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hand_gap_m": 0.019564918610638034,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": -1.500830879988882e-05,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 3.44009055602458e-07,
+          "IK_rotation_error_rad": 1.2936053199650781e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.0625,
+          "offset": [
+            0.0,
+            0.0,
+            0.0009375
+          ],
+          "hand_gap_m": 0.018627418610637998,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0005116369810072401,
+          "tool_pair": [
+            "barrel",
+            "cradle_1"
+          ],
+          "IK_position_error_m": 2.3221515852378594e-07,
+          "IK_rotation_error_rad": 1.362596579745129e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.125,
+          "offset": [
+            0.0,
+            0.0,
+            0.001875
+          ],
+          "hand_gap_m": 0.017689918610638074,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0010330976024355409,
+          "tool_pair": [
+            "barrel",
+            "cradle_1"
+          ],
+          "IK_position_error_m": 2.329944280615538e-07,
+          "IK_rotation_error_rad": 1.3680865833562072e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.1875,
+          "offset": [
+            0.0,
+            0.0,
+            0.0028125
+          ],
+          "hand_gap_m": 0.016752418610638038,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0015912916729388174,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 2.3338887972418676e-07,
+          "IK_rotation_error_rad": 1.3713335010087234e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.25,
+          "offset": [
+            0.0,
+            0.0,
+            0.00375
+          ],
+          "hand_gap_m": 0.015814918610638003,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0021627251024355833,
+          "tool_pair": [
+            "barrel",
+            "cradle_1"
+          ],
+          "IK_position_error_m": 2.336994594926461e-07,
+          "IK_rotation_error_rad": 1.3741023033208356e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.3125,
+          "offset": [
+            0.0,
+            0.0,
+            0.0046875
+          ],
+          "hand_gap_m": 0.01487741861063808,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.002744448135438792,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 2.3392631433379043e-07,
+          "IK_rotation_error_rad": 1.3763929314415082e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.375,
+          "offset": [
+            0.0,
+            0.0,
+            0.005625
+          ],
+          "hand_gap_m": 0.01395097724548656,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0033566834551238805,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 2.3406939540876633e-07,
+          "IK_rotation_error_rad": 1.3782041134342827e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.4375,
+          "offset": [
+            0.0,
+            0.0,
+            0.0065625
+          ],
+          "hand_gap_m": 0.013013477245486524,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.003974000271595432,
+          "tool_pair": [
+            "barrel",
+            "cradle_1"
+          ],
+          "IK_position_error_m": 2.3412875222920102e-07,
+          "IK_rotation_error_rad": 1.379535208647067e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.5,
+          "offset": [
+            0.0,
+            0.0,
+            0.0075
+          ],
+          "hand_gap_m": 0.0120759772454866,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.004604067086373852,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 2.3410454897453146e-07,
+          "IK_rotation_error_rad": 1.3803861831491901e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.5625,
+          "offset": [
+            0.0,
+            0.0,
+            0.0084375
+          ],
+          "hand_gap_m": 0.011138477245486564,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.005258188325687713,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 2.3399705811765423e-07,
+          "IK_rotation_error_rad": 1.3807576201640957e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.625,
+          "offset": [
+            0.0,
+            0.0,
+            0.009375
+          ],
+          "hand_gap_m": 0.010200977245486529,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0059225816125716285,
+          "tool_pair": [
+            "barrel",
+            "cradle_1"
+          ],
+          "IK_position_error_m": 2.3380665359707425e-07,
+          "IK_rotation_error_rad": 1.3806507171504039e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.6875,
+          "offset": [
+            0.0,
+            0.0,
+            0.010312499999999999
+          ],
+          "hand_gap_m": 0.009263477245486604,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0065856059837239855,
+          "tool_pair": [
+            "barrel",
+            "cradle_1"
+          ],
+          "IK_position_error_m": 2.3353381641340703e-07,
+          "IK_rotation_error_rad": 1.3800672772814306e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.75,
+          "offset": [
+            0.0,
+            0.0,
+            0.01125
+          ],
+          "hand_gap_m": 0.008325977245486569,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.006948523066430019,
+          "tool_pair": [
+            "barrel",
+            "bracket_0"
+          ],
+          "IK_position_error_m": 2.3317912992513475e-07,
+          "IK_rotation_error_rad": 1.379009703215047e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.8125,
+          "offset": [
+            0.0,
+            0.0,
+            0.0121875
+          ],
+          "hand_gap_m": 0.007388477245486533,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.006948523066430019,
+          "tool_pair": [
+            "barrel",
+            "bracket_0"
+          ],
+          "IK_position_error_m": 2.3274328180879142e-07,
+          "IK_rotation_error_rad": 1.3774809867762532e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.875,
+          "offset": [
+            0.0,
+            0.0,
+            0.013125
+          ],
+          "hand_gap_m": 0.0064509772454864975,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.006948523066430019,
+          "tool_pair": [
+            "barrel",
+            "bracket_0"
+          ],
+          "IK_position_error_m": 2.3222705603200892e-07,
+          "IK_rotation_error_rad": 1.375484702793118e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.9375,
+          "offset": [
+            0.0,
+            0.0,
+            0.014062499999999999
+          ],
+          "hand_gap_m": 0.005513477245486573,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.006948523066430019,
+          "tool_pair": [
+            "barrel",
+            "bracket_0"
+          ],
+          "IK_position_error_m": 2.3163133668396335e-07,
+          "IK_rotation_error_rad": 1.3730249965423417e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 1.0,
+          "offset": [
+            0.0,
+            0.0,
+            0.015
+          ],
+          "hand_gap_m": 0.0045759772454865375,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.006948523066430019,
+          "tool_pair": [
+            "barrel",
+            "bracket_0"
+          ],
+          "IK_position_error_m": 2.3095709980949516e-07,
+          "IK_rotation_error_rad": 1.3701065748254596e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.0,
+          "offset": [
+            0.0,
+            0.0,
+            0.015
+          ],
+          "hand_gap_m": 0.0045759772454865375,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.006948523066430019,
+          "tool_pair": [
+            "barrel",
+            "bracket_0"
+          ],
+          "IK_position_error_m": 2.3095709980949516e-07,
+          "IK_rotation_error_rad": 1.3701065748254596e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.0625,
+          "offset": [
+            0.0,
+            -0.005625,
+            0.015
+          ],
+          "hand_gap_m": 0.0045759772454865375,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0067990349832617175,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 3.618647536639338e-07,
+          "IK_rotation_error_rad": 2.1172842908564905e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.125,
+          "offset": [
+            0.0,
+            -0.01125,
+            0.015
+          ],
+          "hand_gap_m": 0.004564918610638022,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0014780632214124855,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 3.157048851195933e-07,
+          "IK_rotation_error_rad": 1.8262560138257586e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.1875,
+          "offset": [
+            0.0,
+            -0.016875,
+            0.015
+          ],
+          "hand_gap_m": 0.004564918610638022,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": -0.004142293678587514,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 2.75817138227443e-07,
+          "IK_rotation_error_rad": 1.5795891659622547e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.25,
+          "offset": [
+            0.0,
+            -0.0225,
+            0.015
+          ],
+          "hand_gap_m": 0.004564918610638022,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": -0.009762650578587514,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 2.417759666494116e-07,
+          "IK_rotation_error_rad": 1.372526820454035e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.3125,
+          "offset": [
+            0.0,
+            -0.028124999999999997,
+            0.015
+          ],
+          "hand_gap_m": 0.004564918610638022,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": -0.015383007478587512,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 2.125561091516685e-07,
+          "IK_rotation_error_rad": 1.1974572690136263e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.375,
+          "offset": [
+            0.0,
+            -0.03375,
+            0.015
+          ],
+          "hand_gap_m": 0.004564918610638022,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": -0.020796791187624914,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 1.8734898373706558e-07,
+          "IK_rotation_error_rad": 1.0484958332158892e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.4375,
+          "offset": [
+            0.0,
+            -0.039375,
+            0.015
+          ],
+          "hand_gap_m": 0.004597527036369739,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": -0.015176434287624914,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 4.883545888921637e-07,
+          "IK_rotation_error_rad": 2.715515170442603e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.5,
+          "offset": [
+            0.0,
+            -0.045,
+            0.015
+          ],
+          "hand_gap_m": 0.00464164601835094,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": -0.009556077387624916,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 4.4679776535327806e-07,
+          "IK_rotation_error_rad": 2.473032490460935e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.5625,
+          "offset": [
+            0.0,
+            -0.050624999999999996,
+            0.015
+          ],
+          "hand_gap_m": 0.00464164601835094,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": -0.0039357204876249215,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 4.0814502774804394e-07,
+          "IK_rotation_error_rad": 2.250473527532152e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.625,
+          "offset": [
+            0.0,
+            -0.056249999999999994,
+            0.015
+          ],
+          "hand_gap_m": 0.004703574908838002,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0016846364123750835,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 3.7341090366201146e-07,
+          "IK_rotation_error_rad": 2.0525584814069135e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.6875,
+          "offset": [
+            0.0,
+            -0.061875,
+            0.015
+          ],
+          "hand_gap_m": 0.0045926100163766834,
+          "hand_pair": [
+            "tip_left",
+            "cradle_0"
+          ],
+          "tool_gap_m": 0.005019418682426259,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 3.421403520510185e-07,
+          "IK_rotation_error_rad": 1.8760303387058167e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.75,
+          "offset": [
+            0.0,
+            -0.0675,
+            0.015
+          ],
+          "hand_gap_m": 0.0045759772454865375,
+          "hand_pair": [
+            "tip_right",
+            "cradle_0"
+          ],
+          "tool_gap_m": 0.006948523066430019,
+          "tool_pair": [
+            "barrel",
+            "bracket_0"
+          ],
+          "IK_position_error_m": 3.139436258588501e-07,
+          "IK_rotation_error_rad": 1.7181572520941442e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.8125,
+          "offset": [
+            0.0,
+            -0.073125,
+            0.015
+          ],
+          "hand_gap_m": 0.0045759772454865375,
+          "hand_pair": [
+            "tip_right",
+            "cradle_0"
+          ],
+          "tool_gap_m": 0.004618854767727103,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 2.8848769379573346e-07,
+          "IK_rotation_error_rad": 1.576647888263233e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.875,
+          "offset": [
+            0.0,
+            -0.07875,
+            0.015
+          ],
+          "hand_gap_m": 0.004564918610638022,
+          "hand_pair": [
+            "tip_left",
+            "cradle_0"
+          ],
+          "tool_gap_m": 0.006948523066430019,
+          "tool_pair": [
+            "barrel",
+            "bracket_0"
+          ],
+          "IK_position_error_m": 2.6548517106825326e-07,
+          "IK_rotation_error_rad": 1.44956228557555e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.9375,
+          "offset": [
+            0.0,
+            -0.08437499999999999,
+            0.015
+          ],
+          "hand_gap_m": 0.004564918610638022,
+          "hand_pair": [
+            "tip_left",
+            "cradle_0"
+          ],
+          "tool_gap_m": 0.006948523066430019,
+          "tool_pair": [
+            "barrel",
+            "bracket_0"
+          ],
+          "IK_position_error_m": 2.446859496273651e-07,
+          "IK_rotation_error_rad": 1.3352437646827986e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 1.0,
+          "offset": [
+            0.0,
+            -0.09,
+            0.015
+          ],
+          "hand_gap_m": 0.004564918610638022,
+          "hand_pair": [
+            "tip_left",
+            "cradle_0"
+          ],
+          "tool_gap_m": 0.006948523066430019,
+          "tool_pair": [
+            "barrel",
+            "bracket_0"
+          ],
+          "IK_position_error_m": 2.2587079074364824e-07,
+          "IK_rotation_error_rad": 1.232266794200094e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.0,
+          "offset": [
+            0.0,
+            -0.09,
+            0.015
+          ],
+          "hand_gap_m": 0.004564918610638022,
+          "hand_pair": [
+            "tip_left",
+            "cradle_0"
+          ],
+          "tool_gap_m": 0.006948523066430019,
+          "tool_pair": [
+            "barrel",
+            "bracket_0"
+          ],
+          "IK_position_error_m": 2.2587079074364824e-07,
+          "IK_rotation_error_rad": 1.232266794200094e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.0625,
+          "offset": [
+            0.0,
+            -0.09,
+            0.0203125
+          ],
+          "hand_gap_m": -0.0007475813893619201,
+          "hand_pair": [
+            "tip_left",
+            "cradle_0"
+          ],
+          "tool_gap_m": 0.006948523066430019,
+          "tool_pair": [
+            "barrel",
+            "bracket_0"
+          ],
+          "IK_position_error_m": 4.5687767716918217e-07,
+          "IK_rotation_error_rad": 2.499883736025789e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.125,
+          "offset": [
+            0.0,
+            -0.09,
+            0.025625000000000002
+          ],
+          "hand_gap_m": -0.006045315357989347,
+          "hand_pair": [
+            "tip_left",
+            "cradle_0"
+          ],
+          "tool_gap_m": 0.01213557376666686,
+          "tool_pair": [
+            "barrel",
+            "bracket_0"
+          ],
+          "IK_position_error_m": 4.529876483846687e-07,
+          "IK_rotation_error_rad": 2.4879254637582568e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.1875,
+          "offset": [
+            0.0,
+            -0.09,
+            0.0309375
+          ],
+          "hand_gap_m": -0.008207298037340438,
+          "hand_pair": [
+            "tip_left",
+            "cradle_0"
+          ],
+          "tool_gap_m": 0.0174480737666668,
+          "tool_pair": [
+            "barrel",
+            "bracket_0"
+          ],
+          "IK_position_error_m": 4.4689277369271434e-07,
+          "IK_rotation_error_rad": 2.4641350551129155e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.25,
+          "offset": [
+            0.0,
+            -0.09,
+            0.036250000000000004
+          ],
+          "hand_gap_m": -0.010732768932437946,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.022760573766666854,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 4.3883945479705854e-07,
+          "IK_rotation_error_rad": 2.4297137848578058e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.3125,
+          "offset": [
+            0.0,
+            -0.09,
+            0.0415625
+          ],
+          "hand_gap_m": -0.016044972514873482,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.028073073766666796,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 4.290305338402456e-07,
+          "IK_rotation_error_rad": 2.385628746569537e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.375,
+          "offset": [
+            0.0,
+            -0.09,
+            0.046875
+          ],
+          "hand_gap_m": -0.016690025305815807,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.033144418682426256,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 4.176917222436819e-07,
+          "IK_rotation_error_rad": 2.332980490593137e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.4375,
+          "offset": [
+            0.0,
+            -0.09,
+            0.052187500000000005
+          ],
+          "hand_gap_m": -0.016657174137788843,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.033144418682426256,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 4.050635143730647e-07,
+          "IK_rotation_error_rad": 2.272962147687638e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.5,
+          "offset": [
+            0.0,
+            -0.09,
+            0.0575
+          ],
+          "hand_gap_m": -0.016622554997114763,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.033144418682426256,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 3.913931994974762e-07,
+          "IK_rotation_error_rad": 2.206818477003217e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.5625,
+          "offset": [
+            0.0,
+            -0.09,
+            0.0628125
+          ],
+          "hand_gap_m": -0.016587288231489764,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.033144418682426256,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 3.7692741160649185e-07,
+          "IK_rotation_error_rad": 2.135807111261888e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.625,
+          "offset": [
+            0.0,
+            -0.09,
+            0.068125
+          ],
+          "hand_gap_m": -0.016552021465864764,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.033144418682426256,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 3.6190552007720085e-07,
+          "IK_rotation_error_rad": 2.0611633326450616e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.6875,
+          "offset": [
+            0.0,
+            -0.09,
+            0.0734375
+          ],
+          "hand_gap_m": -0.016516754700239764,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.033144418682426256,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 3.4655404770653745e-07,
+          "IK_rotation_error_rad": 1.9840700033512967e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.75,
+          "offset": [
+            0.0,
+            -0.09,
+            0.07875
+          ],
+          "hand_gap_m": -0.016481487934614764,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.033144418682426256,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 3.310822504903506e-07,
+          "IK_rotation_error_rad": 1.9056330657102132e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.8125,
+          "offset": [
+            0.0,
+            -0.09,
+            0.0840625
+          ],
+          "hand_gap_m": -0.016446221168989764,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.033144418682426256,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 3.1567894194169984e-07,
+          "IK_rotation_error_rad": 1.8268630332277545e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.875,
+          "offset": [
+            0.0,
+            -0.09,
+            0.08937500000000001
+          ],
+          "hand_gap_m": -0.013159755574040831,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.033144418682426256,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 3.005104391577407e-07,
+          "IK_rotation_error_rad": 1.7486625336432961e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.9375,
+          "offset": [
+            0.0,
+            -0.09,
+            0.09468750000000001
+          ],
+          "hand_gap_m": -0.007847372927165776,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.033144418682426256,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 2.8571962786655834e-07,
+          "IK_rotation_error_rad": 1.6718193502913066e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 1.0,
+          "offset": [
+            0.0,
+            -0.09,
+            0.1
+          ],
+          "hand_gap_m": -0.007262358523339153,
+          "hand_pair": [
+            "tip_right",
+            "cradle_0"
+          ],
+          "tool_gap_m": 0.033144418682426256,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 2.7142596037180876e-07,
+          "IK_rotation_error_rad": 1.5970044599059376e-06
+        }
+      ]
+    },
+    {
+      "name": "up15_xminus90_up85",
+      "physical_start_native_time_s": 32.65,
+      "hand_min": {
+        "leg": 0,
+        "fraction": 1.0,
+        "offset": [
+          0.0,
+          0.0,
+          0.015
+        ],
+        "hand_gap_m": 0.0045759772454865375,
+        "hand_pair": [
+          "tip_right",
+          "cradle_1"
+        ],
+        "tool_gap_m": 0.006948523066430019,
+        "tool_pair": [
+          "barrel",
+          "bracket_0"
+        ],
+        "IK_position_error_m": 2.3095709980949516e-07,
+        "IK_rotation_error_rad": 1.3701065748254596e-06
+      },
+      "tool_min": {
+        "leg": 0,
+        "fraction": 0.0,
+        "offset": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "hand_gap_m": 0.019564918610638034,
+        "hand_pair": [
+          "tip_left",
+          "cradle_1"
+        ],
+        "tool_gap_m": -1.500830879988882e-05,
+        "tool_pair": [
+          "barrel",
+          "cradle_0"
+        ],
+        "IK_position_error_m": 3.44009055602458e-07,
+        "IK_rotation_error_rad": 1.2936053199650781e-06
+      },
+      "max_IK_error_m": 5.879513449627639e-05,
+      "max_IK_rotation_rad": 0.00037109409795222606,
+      "rows": [
+        {
+          "leg": 0,
+          "fraction": 0.0,
+          "offset": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hand_gap_m": 0.019564918610638034,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": -1.500830879988882e-05,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 3.44009055602458e-07,
+          "IK_rotation_error_rad": 1.2936053199650781e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.0625,
+          "offset": [
+            0.0,
+            0.0,
+            0.0009375
+          ],
+          "hand_gap_m": 0.018627418610637998,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0005116369810072401,
+          "tool_pair": [
+            "barrel",
+            "cradle_1"
+          ],
+          "IK_position_error_m": 2.3221515852378594e-07,
+          "IK_rotation_error_rad": 1.362596579745129e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.125,
+          "offset": [
+            0.0,
+            0.0,
+            0.001875
+          ],
+          "hand_gap_m": 0.017689918610638074,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0010330976024355409,
+          "tool_pair": [
+            "barrel",
+            "cradle_1"
+          ],
+          "IK_position_error_m": 2.329944280615538e-07,
+          "IK_rotation_error_rad": 1.3680865833562072e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.1875,
+          "offset": [
+            0.0,
+            0.0,
+            0.0028125
+          ],
+          "hand_gap_m": 0.016752418610638038,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0015912916729388174,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 2.3338887972418676e-07,
+          "IK_rotation_error_rad": 1.3713335010087234e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.25,
+          "offset": [
+            0.0,
+            0.0,
+            0.00375
+          ],
+          "hand_gap_m": 0.015814918610638003,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0021627251024355833,
+          "tool_pair": [
+            "barrel",
+            "cradle_1"
+          ],
+          "IK_position_error_m": 2.336994594926461e-07,
+          "IK_rotation_error_rad": 1.3741023033208356e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.3125,
+          "offset": [
+            0.0,
+            0.0,
+            0.0046875
+          ],
+          "hand_gap_m": 0.01487741861063808,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.002744448135438792,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 2.3392631433379043e-07,
+          "IK_rotation_error_rad": 1.3763929314415082e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.375,
+          "offset": [
+            0.0,
+            0.0,
+            0.005625
+          ],
+          "hand_gap_m": 0.01395097724548656,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0033566834551238805,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 2.3406939540876633e-07,
+          "IK_rotation_error_rad": 1.3782041134342827e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.4375,
+          "offset": [
+            0.0,
+            0.0,
+            0.0065625
+          ],
+          "hand_gap_m": 0.013013477245486524,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.003974000271595432,
+          "tool_pair": [
+            "barrel",
+            "cradle_1"
+          ],
+          "IK_position_error_m": 2.3412875222920102e-07,
+          "IK_rotation_error_rad": 1.379535208647067e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.5,
+          "offset": [
+            0.0,
+            0.0,
+            0.0075
+          ],
+          "hand_gap_m": 0.0120759772454866,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.004604067086373852,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 2.3410454897453146e-07,
+          "IK_rotation_error_rad": 1.3803861831491901e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.5625,
+          "offset": [
+            0.0,
+            0.0,
+            0.0084375
+          ],
+          "hand_gap_m": 0.011138477245486564,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.005258188325687713,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 2.3399705811765423e-07,
+          "IK_rotation_error_rad": 1.3807576201640957e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.625,
+          "offset": [
+            0.0,
+            0.0,
+            0.009375
+          ],
+          "hand_gap_m": 0.010200977245486529,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0059225816125716285,
+          "tool_pair": [
+            "barrel",
+            "cradle_1"
+          ],
+          "IK_position_error_m": 2.3380665359707425e-07,
+          "IK_rotation_error_rad": 1.3806507171504039e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.6875,
+          "offset": [
+            0.0,
+            0.0,
+            0.010312499999999999
+          ],
+          "hand_gap_m": 0.009263477245486604,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0065856059837239855,
+          "tool_pair": [
+            "barrel",
+            "cradle_1"
+          ],
+          "IK_position_error_m": 2.3353381641340703e-07,
+          "IK_rotation_error_rad": 1.3800672772814306e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.75,
+          "offset": [
+            0.0,
+            0.0,
+            0.01125
+          ],
+          "hand_gap_m": 0.008325977245486569,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.006948523066430019,
+          "tool_pair": [
+            "barrel",
+            "bracket_0"
+          ],
+          "IK_position_error_m": 2.3317912992513475e-07,
+          "IK_rotation_error_rad": 1.379009703215047e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.8125,
+          "offset": [
+            0.0,
+            0.0,
+            0.0121875
+          ],
+          "hand_gap_m": 0.007388477245486533,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.006948523066430019,
+          "tool_pair": [
+            "barrel",
+            "bracket_0"
+          ],
+          "IK_position_error_m": 2.3274328180879142e-07,
+          "IK_rotation_error_rad": 1.3774809867762532e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.875,
+          "offset": [
+            0.0,
+            0.0,
+            0.013125
+          ],
+          "hand_gap_m": 0.0064509772454864975,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.006948523066430019,
+          "tool_pair": [
+            "barrel",
+            "bracket_0"
+          ],
+          "IK_position_error_m": 2.3222705603200892e-07,
+          "IK_rotation_error_rad": 1.375484702793118e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 0.9375,
+          "offset": [
+            0.0,
+            0.0,
+            0.014062499999999999
+          ],
+          "hand_gap_m": 0.005513477245486573,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.006948523066430019,
+          "tool_pair": [
+            "barrel",
+            "bracket_0"
+          ],
+          "IK_position_error_m": 2.3163133668396335e-07,
+          "IK_rotation_error_rad": 1.3730249965423417e-06
+        },
+        {
+          "leg": 0,
+          "fraction": 1.0,
+          "offset": [
+            0.0,
+            0.0,
+            0.015
+          ],
+          "hand_gap_m": 0.0045759772454865375,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.006948523066430019,
+          "tool_pair": [
+            "barrel",
+            "bracket_0"
+          ],
+          "IK_position_error_m": 2.3095709980949516e-07,
+          "IK_rotation_error_rad": 1.3701065748254596e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.0,
+          "offset": [
+            0.0,
+            0.0,
+            0.015
+          ],
+          "hand_gap_m": 0.0045759772454865375,
+          "hand_pair": [
+            "tip_right",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.006948523066430019,
+          "tool_pair": [
+            "barrel",
+            "bracket_0"
+          ],
+          "IK_position_error_m": 2.3095709980949516e-07,
+          "IK_rotation_error_rad": 1.3701065748254596e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.0625,
+          "offset": [
+            -0.005625,
+            0.0,
+            0.015
+          ],
+          "hand_gap_m": 0.0045926100163766834,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0071444186824262575,
+          "tool_pair": [
+            "handle",
+            "cradle_1"
+          ],
+          "IK_position_error_m": 4.1029904205480974e-07,
+          "IK_rotation_error_rad": 2.3608821239994508e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.125,
+          "offset": [
+            -0.01125,
+            0.0,
+            0.015
+          ],
+          "hand_gap_m": 0.0045926100163766834,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0071444186824262575,
+          "tool_pair": [
+            "handle",
+            "cradle_1"
+          ],
+          "IK_position_error_m": 4.0125931030232635e-07,
+          "IK_rotation_error_rad": 2.236218910409583e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.1875,
+          "offset": [
+            -0.016875,
+            0.0,
+            0.015
+          ],
+          "hand_gap_m": 0.0045926100163766834,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0071444186824262575,
+          "tool_pair": [
+            "handle",
+            "cradle_1"
+          ],
+          "IK_position_error_m": 3.828677010589861e-07,
+          "IK_rotation_error_rad": 2.067697847272151e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.25,
+          "offset": [
+            -0.0225,
+            0.0,
+            0.015
+          ],
+          "hand_gap_m": 0.0045926100163766834,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0071444186824262575,
+          "tool_pair": [
+            "handle",
+            "cradle_1"
+          ],
+          "IK_position_error_m": 3.5731925453698773e-07,
+          "IK_rotation_error_rad": 1.8711157275565533e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.3125,
+          "offset": [
+            -0.028124999999999997,
+            0.0,
+            0.015
+          ],
+          "hand_gap_m": 0.0045926100163766834,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0071444186824262575,
+          "tool_pair": [
+            "handle",
+            "cradle_1"
+          ],
+          "IK_position_error_m": 3.222923910404129e-07,
+          "IK_rotation_error_rad": 1.6375242185934048e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.375,
+          "offset": [
+            -0.03375,
+            0.0,
+            0.015
+          ],
+          "hand_gap_m": 0.0045926100163766834,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0071444186824262575,
+          "tool_pair": [
+            "handle",
+            "cradle_1"
+          ],
+          "IK_position_error_m": 2.748160728489076e-07,
+          "IK_rotation_error_rad": 1.3557408776150613e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.4375,
+          "offset": [
+            -0.039375,
+            0.0,
+            0.015
+          ],
+          "hand_gap_m": 0.0045926100163766834,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.00832379452172042,
+          "tool_pair": [
+            "handle",
+            "cradle_1"
+          ],
+          "IK_position_error_m": 4.6982409344433186e-07,
+          "IK_rotation_error_rad": 2.2140536645939566e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.5,
+          "offset": [
+            -0.045,
+            0.0,
+            0.015
+          ],
+          "hand_gap_m": 0.0045926100163766834,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.010119015751427547,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 3.2206630964113245e-07,
+          "IK_rotation_error_rad": 1.3805050483683137e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.5625,
+          "offset": [
+            -0.050624999999999996,
+            0.0,
+            0.015
+          ],
+          "hand_gap_m": 0.0045926100163766834,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.010119015751427547,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 2.2529842006176117e-07,
+          "IK_rotation_error_rad": 6.60517927529768e-07
+        },
+        {
+          "leg": 1,
+          "fraction": 0.625,
+          "offset": [
+            -0.056249999999999994,
+            0.0,
+            0.015
+          ],
+          "hand_gap_m": 0.0045926100163766834,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.010119015751427547,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 3.8462416944988894e-07,
+          "IK_rotation_error_rad": 1.3760839817042548e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.6875,
+          "offset": [
+            -0.061875,
+            0.0,
+            0.015
+          ],
+          "hand_gap_m": 0.007160919642939974,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.010119015751427547,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 3.3565860541942816e-07,
+          "IK_rotation_error_rad": 1.4125588564876905e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.75,
+          "offset": [
+            -0.0675,
+            0.0,
+            0.015
+          ],
+          "hand_gap_m": 0.012785919642939965,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.010119015751427547,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 5.813346039665662e-07,
+          "IK_rotation_error_rad": 2.399931359225319e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.8125,
+          "offset": [
+            -0.073125,
+            0.0,
+            0.015
+          ],
+          "hand_gap_m": 0.018380214129142987,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.010119015751427547,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 4.798522347527367e-07,
+          "IK_rotation_error_rad": 1.9461862655717372e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.875,
+          "offset": [
+            -0.07875,
+            0.0,
+            0.015
+          ],
+          "hand_gap_m": 0.024005214129142978,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.010119015751427547,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 3.881793765281007e-07,
+          "IK_rotation_error_rad": 1.5388376854758087e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 0.9375,
+          "offset": [
+            -0.08437499999999999,
+            0.0,
+            0.015
+          ],
+          "hand_gap_m": 0.029629761063985467,
+          "hand_pair": [
+            "tip_left",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.004323523066429975,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 5.633904841220576e-07,
+          "IK_rotation_error_rad": 2.182602787930935e-06
+        },
+        {
+          "leg": 1,
+          "fraction": 1.0,
+          "offset": [
+            -0.09,
+            0.0,
+            0.015
+          ],
+          "hand_gap_m": 0.033290839859754735,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.009948523066429994,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 5.879513449111756e-05,
+          "IK_rotation_error_rad": 0.00037109409794053126
+        },
+        {
+          "leg": 2,
+          "fraction": 0.0,
+          "offset": [
+            -0.09,
+            0.0,
+            0.015
+          ],
+          "hand_gap_m": 0.033290839859754735,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.009948523066429994,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 5.879513449627639e-05,
+          "IK_rotation_error_rad": 0.00037109409795222606
+        },
+        {
+          "leg": 2,
+          "fraction": 0.0625,
+          "offset": [
+            -0.09,
+            0.0,
+            0.0203125
+          ],
+          "hand_gap_m": 0.033290839859754735,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.009948523066429994,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 5.175605985520996e-07,
+          "IK_rotation_error_rad": 1.9658211048816213e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.125,
+          "offset": [
+            -0.09,
+            0.0,
+            0.025625000000000002
+          ],
+          "hand_gap_m": 0.033290839859754735,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.01213557376666686,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 4.2165151176868605e-07,
+          "IK_rotation_error_rad": 1.6034476476828152e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.1875,
+          "offset": [
+            -0.09,
+            0.0,
+            0.0309375
+          ],
+          "hand_gap_m": 0.033290839859754735,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0174480737666668,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 5.863744224040841e-07,
+          "IK_rotation_error_rad": 2.230774181590381e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.25,
+          "offset": [
+            -0.09,
+            0.0,
+            0.036250000000000004
+          ],
+          "hand_gap_m": 0.03298786131166676,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.022760573766666854,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 4.3950929891572895e-07,
+          "IK_rotation_error_rad": 1.671809388783673e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.3125,
+          "offset": [
+            -0.09,
+            0.0,
+            0.0415625
+          ],
+          "hand_gap_m": 0.03298786131166676,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.028073073766666796,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 5.971240944587389e-07,
+          "IK_rotation_error_rad": 2.270330912923045e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.375,
+          "offset": [
+            -0.09,
+            0.0,
+            0.046875
+          ],
+          "hand_gap_m": 0.03298786131166676,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.03338557376666685,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 4.2517995165994103e-07,
+          "IK_rotation_error_rad": 1.6157474913005655e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.4375,
+          "offset": [
+            -0.09,
+            0.0,
+            0.052187500000000005
+          ],
+          "hand_gap_m": 0.03298786131166676,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.0386980737666669,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 5.83933596935617e-07,
+          "IK_rotation_error_rad": 2.2182934543830886e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.5,
+          "offset": [
+            -0.09,
+            0.0,
+            0.0575
+          ],
+          "hand_gap_m": 0.03298786131166676,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.044010573766666845,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 4.0430577287606713e-07,
+          "IK_rotation_error_rad": 1.535992246717473e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.5625,
+          "offset": [
+            -0.09,
+            0.0,
+            0.0628125
+          ],
+          "hand_gap_m": 0.03298786131166676,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.04932307376666679,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 5.787018620280561e-07,
+          "IK_rotation_error_rad": 2.1999909807584926e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.625,
+          "offset": [
+            -0.09,
+            0.0,
+            0.068125
+          ],
+          "hand_gap_m": 0.03298786131166676,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.05463557376666684,
+          "tool_pair": [
+            "barrel",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 3.9791242395388525e-07,
+          "IK_rotation_error_rad": 1.5148552934961409e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.6875,
+          "offset": [
+            -0.09,
+            0.0,
+            0.0734375
+          ],
+          "hand_gap_m": 0.03298786131166676,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.05894879452172042,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 6.088802006828482e-07,
+          "IK_rotation_error_rad": 2.3234838010275145e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.75,
+          "offset": [
+            -0.09,
+            0.0,
+            0.07875
+          ],
+          "hand_gap_m": 0.03298786131166676,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.05894879452172042,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 4.2318559887829094e-07,
+          "IK_rotation_error_rad": 1.6203498460705152e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.8125,
+          "offset": [
+            -0.09,
+            0.0,
+            0.0840625
+          ],
+          "hand_gap_m": 0.03298786131166676,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.05894879452172042,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 2.921285202810037e-07,
+          "IK_rotation_error_rad": 1.123611898386425e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.875,
+          "offset": [
+            -0.09,
+            0.0,
+            0.08937500000000001
+          ],
+          "hand_gap_m": 0.03298786131166676,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.05894879452172042,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 5.026715726134957e-07,
+          "IK_rotation_error_rad": 1.944574128452326e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 0.9375,
+          "offset": [
+            -0.09,
+            0.0,
+            0.09468750000000001
+          ],
+          "hand_gap_m": 0.03298786131166676,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.05894879452172042,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 3.5749882973252813e-07,
+          "IK_rotation_error_rad": 1.392659360959671e-06
+        },
+        {
+          "leg": 2,
+          "fraction": 1.0,
+          "offset": [
+            -0.09,
+            0.0,
+            0.1
+          ],
+          "hand_gap_m": 0.03298786131166676,
+          "hand_pair": [
+            "gripper",
+            "cradle_1"
+          ],
+          "tool_gap_m": 0.05894879452172042,
+          "tool_pair": [
+            "handle",
+            "cradle_0"
+          ],
+          "IK_position_error_m": 2.5436230502328097e-07,
+          "IK_rotation_error_rad": 9.990883998419453e-07
+        }
+      ],
+      "minimum_joint_margin_deg": 0.0
+    }
+  ]
+}
