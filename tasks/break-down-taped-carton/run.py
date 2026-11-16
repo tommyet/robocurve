@@ -127,7 +127,10 @@ def main():
     for side in ['left','right']:
      ids,fids=env._ids[side+'_robot'];qnative=arr(base.scene[side+'_robot'].data.joint_pos)[0];tcpnative,rnative=ik.tcp_pose(qnative[ids],env.rig.bases[side]);native_hands.append({'side':side,'joints':qnative[ids].tolist(),'finger_joints':qnative[fids].tolist(),'tcp':tcpnative.tolist(),'tcp_rotation':rnative.tolist(),'opening':float(np.clip(qnative[fids].mean()/FINGER_OPEN,0,1))})
     row={'time':env._t,'phase':phase,'robot_control':control,'action_14d':arr(action)[0].tolist(),'native_hands':native_hands,'cutter_pose':pose('cutter').tolist(),'poses':{n:v.tolist() for n,v in pp.items()},'angles_deg':angles,'max_crease_separation_m':sep,'lowest_vertex_m':low,'highest_vertex_m':high,'force_N':f}
-    if contacts is not None:row['fingertip_carton_normal_forces']=contacts.read(env._t)
+    if contacts is not None:
+     row['fingertip_carton_normal_forces']=contacts.read(env._t)
+     from turnover_effort import read_current
+     row['current_motor_state']=read_current(base,env,env._t)
     row['angle_evidence']=angle_evidence
     row['angle_substeps']=angle_observer.samples
     row['native_owner_poses']=capture.native_body_world_poses(base.scene,owners,{**pp,'cutter':row['cutter_pose']})
