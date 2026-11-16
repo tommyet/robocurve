@@ -154,3 +154,45 @@ are too directly occupied to recommend now.
 
 No candidate above is promised acceptance or a $3 development cost. Recheck
 ownership and current feedback immediately before any authorized build.
+
+## 16 November: digging and planting in a small pot
+
+Research only, around 17:00 UTC; 641 current board records and targeted all-state
+PR searches checked. No GPU, Dream, simulation or task build. **Generic seedling
+planting is too occupied; actual excavation is a conditional candidate.**
+
+| Existing task | Current evidence and implication |
+|---|---|
+| [Plant a seedling while holding it upright #680](https://github.com/robocurve/benchmark-tasks/pull/680) | Returned on 12 November: too little soil to backfill its hole, and clod counts did not ensure coverage around the plug. Its original hold has elapsed, but a newer task overlaps. |
+| [Plant and firm a pepper seedling #2106](https://github.com/robocurve/benchmark-tasks/pull/2106) | Latest revision returned at 06:35 UTC on 16 November. The corrected height probes could still hit a shifted plug or miss its top. Its revision hold remains active until about 06:35 UTC on 18 November. Starts with a prepared hole; do not duplicate its placing/backfilling skill. |
+| [Expose a buried pipe with a spade #1057](https://github.com/robocurve/benchmark-tasks/pull/1057) | Final rejection: a shallow layer of large wooden cubes did not preserve digging, and hand-sweeping bypassed the spade. |
+| [Double-pot plants #854](https://github.com/robocurve/benchmark-tasks/pull/854), [plant strawberries #1048](https://github.com/robocurve/benchmark-tasks/pull/1048) | Final rejections for missing actual plants/soil/root insertion and replacing the work with placing cylinders. |
+
+BEHAVIOR already defines [plants in pots](https://behavior.stanford.edu/knowledgebase/tasks/planting_plants-0.html)
+and [seeds plus soil in a pot](https://behavior.stanford.edu/knowledgebase/tasks/planting_vegetables-0.html).
+Those published goals do not require digging an initial hole, controlling its
+depth or a specified burial orientation. This leaves a possible capability
+distinction, not an exemption from novelty review.
+
+The strongest narrow version is **dig a hole with a hand trowel, plant one
+dormant bulb at the required depth with its shoot end upwards, and backfill**.
+Start with an ordinary filled pot or small planter, not a pre-made socket.
+Use actual horticultural scale; a small pot is legitimate, a miniature farm is
+not the intended context. The [RHS bulb guide](https://www.rhs.org.uk/plants/types/bulbs/planting)
+supports this sequence and notes that dormant bulbs are normally planted
+without foliage or roots. This avoids inventing a need for complex growing
+plants, watering or growth simulation. Select a species and its planting depth
+before defining numeric targets.
+
+The distinct skill would be penetrating the substrate, levering/scooping
+material out and managing a hole that can slump, then replacing soil around
+the bulb. A disclosed granular approximation might suffice if it preserves
+these interactions and meaningful failures; large loose blocks, deleted soil
+or animated excavation would not. Species substitution alone adds no novelty.
+
+Keep scoring physical: hole/depth and bulb orientation visible before covering,
+final soil cover and spill, using recorded views and a ruler. A reliable final
+burial-depth check remains to be designed; do not infer it from particle counts
+or uncalibrated soil mass. PR2106 also shows why measurement must remain valid
+when the object moves. **Retain as a research reserve, probably Societal
+relatability, not a high-confidence quick submission or promised $3 build.**

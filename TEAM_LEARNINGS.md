@@ -4,6 +4,30 @@ Last updated: 2026-11-16 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-16 17:00 UTC — small-pot digging and planting screened, no compute
+
+- Read the current board (641 records), relevant all-state PR searches and
+  six review histories. Raw evidence is ignored under
+  `artifacts/planting-research-2026-11-16/`. No simulation, GPU, Dream call or
+  task implementation. Findings are in the gardening section of
+  `docs/task-ideas-followup-2026-11-15.md`.
+- Generic seedling planting is occupied: [PR2106](https://github.com/robocurve/benchmark-tasks/pull/2106)
+  was returned for another scoring correction at 06:35 UTC today; its
+  48-hour revision hold remains active. It starts with a dug hole. Earlier
+  [PR680](https://github.com/robocurve/benchmark-tasks/pull/680) was returned
+  for insufficient backfill and a clod-count score that did not measure coverage.
+- [Digging PR1057](https://github.com/robocurve/benchmark-tasks/pull/1057)
+  was finally rejected: shallow wooden cubes removed by hand did not preserve
+  soil excavation or the claimed spade skill. [PR854](https://github.com/robocurve/benchmark-tasks/pull/854)
+  and [PR1048](https://github.com/robocurve/benchmark-tasks/pull/1048) likewise
+  failed after replacing planted pots/seedlings with simple solid objects.
+- Conditional research candidate: excavate a hole in an initially filled,
+  real-size pot, orient a dormant bulb at the proper depth and backfill.
+  Genuine excavation is the proposed distinction; changing species alone
+  is not. No exact match found in this search, which is not novelty clearance.
+  Soil/tool interaction and a simple physical depth/coverage check remain
+  feasibility gates. Do not build or rent compute without the user's selection.
+
 ## 2026-11-16 — necktie reproducibility revision
 
 - Read the exact [PR2168 review](https://github.com/robocurve/benchmark-tasks/pull/2168#issuecomment-6909329891)
