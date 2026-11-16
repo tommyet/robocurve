@@ -71,7 +71,7 @@ def tool_and_hand_bounds(hand_triangles,dryer_pose):
  p,r=pose(dryer_pose)
  mins=[a.min((0,1)) for a in hand_triangles];maxs=[a.max((0,1)) for a in hand_triangles]
  # Boxes enclose the unmodified native cylindrical barrel/nozzle and handle.
- for center,size in (((0,0,0),(.09,.058,.058)),((.065,0,0),(.045,.036,.036)),((-.019,0,-.065),(.030,.026,.085))):
+ for center,size in (((0,0,0),(.09,.058,.058)),((.065,0,0),(.045,.036,.036)),((-.019,0,-.065),(.030,.026,.085)),((-.037,0,-.043),(.006,.013,.018))):
   corners=np.array([(x,y,z) for x in (-1,1) for y in (-1,1) for z in (-1,1)])*np.asarray(size)/2+center
   world=corners@r.T+p;mins.append(world.min(0));maxs.append(world.max(0))
  return np.array(mins),np.array(maxs)

@@ -339,7 +339,10 @@ class DryerSweepProbe(DryerProbe):
         values=data.detach().cpu().numpy()[0]
         mins=[];maxs=[]
         for name,v in zip(hair.body_names,values):
-            if name=='head':lo=v[:3]-HEAD_RADIUS;hi=v[:3]+HEAD_RADIUS
+            if name=='head':
+                # Enclose scalp, nose and neck, with the actual head rotation.
+                hr=quat_xyzw_to_matrix(v[3:]);center=v[:3]+hr@np.array((0,0,-.05));half=np.abs(hr)@np.array((.075,.075,.125))
+                lo=center-half;hi=center+half
             elif name.startswith('hair_'):
                 axis=quat_xyzw_to_matrix(v[3:])[:,2]*(LENGTH/2-RADIUS)
                 lo=v[:3]-np.abs(axis)-RADIUS;hi=v[:3]+np.abs(axis)+RADIUS
