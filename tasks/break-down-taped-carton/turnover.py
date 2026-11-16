@@ -107,7 +107,7 @@ class CartonTurnoverProbe:
    if self.stage=='approach':contact=[(),()]
    if age>=duration and all(np.max(np.abs(q-m[0]))<.02 for q,m in zip(path_q,measured)):self.change('contact' if self.stage=='approach' else 'first_roll',time,measured)
   elif self.stage in ('first_roll','second_roll'):
-   second=self.stage=='second_roll';limit=180. if second else 90.;lead=max(0.,min(1.2,limit-self.angle));goal_o,goal_R=advance_support(origin,R,vertices,lead);targets[1]=push_target(goal_o,goal_R,'bottom',self.front,.0002,roll_deg=90.) if second else wall_target(goal_o,goal_R,'right',HEIGHT,WIDTH,self.tip_vertices,.0002)
+   second=self.stage=='second_roll';limit=180. if second else 90.;lead=max(0.,min(.3,limit-self.angle));goal_o,goal_R=advance_support(origin,R,vertices,lead);targets[1]=push_target(goal_o,goal_R,'bottom',self.front,.0002,roll_deg=90.) if second else wall_target(goal_o,goal_R,'right',HEIGHT,WIDTH,self.tip_vertices,.0002)
    if second:contact[1]=('north_bottom','south_bottom','east_bottom','west_bottom')
    if second:targets[0]=park;contact[0]=()
    elif self.angle>25.:
