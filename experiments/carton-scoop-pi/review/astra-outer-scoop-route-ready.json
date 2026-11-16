@@ -1,0 +1,180 @@
+{
+  "reviewed_utc": "2026-11-15T20:46:15.388531+00:00",
+  "scope": "Sampled collision-free replacement for the formerly blocked park-to-staging segment. No native or task-completion claim.",
+  "source_trace_sha256": "f7398d3c3d51f3446d56a71eb85730542826167e2db8f2854986f91b99bced2d",
+  "snapshot_time_s": 179.0,
+  "arm": "left",
+  "flap": "north_bottom",
+  "gripper_joint_target_each_m": -0.003,
+  "cutter": "Remain parked and unheld. Included as three measured collision boxes.",
+  "waypoints": [
+    {
+      "name": "actual_park",
+      "tcp": [
+        0.12512760692258953,
+        0.19237119105371203,
+        0.8557990426607291
+      ],
+      "R": [
+        [
+          -0.09892242130735714,
+          -0.9935897084526717,
+          -0.054716047185670705
+        ],
+        [
+          -0.9949749960711516,
+          0.09790639057114066,
+          0.020954614731446063
+        ],
+        [
+          -0.015463238855486327,
+          0.05651398006038907,
+          -0.9982820534807947
+        ]
+      ]
+    },
+    {
+      "name": "raise_clear",
+      "tcp": [
+        0.12512760692258953,
+        0.19237119105371203,
+        0.91
+      ],
+      "R": [
+        [
+          -0.09892242130735714,
+          -0.9935897084526717,
+          -0.054716047185670705
+        ],
+        [
+          -0.9949749960711516,
+          0.09790639057114066,
+          0.020954614731446063
+        ],
+        [
+          -0.015463238855486327,
+          0.05651398006038907,
+          -0.9982820534807947
+        ]
+      ]
+    },
+    {
+      "name": "above_aperture",
+      "tcp": [
+        0.29565624051582506,
+        -0.017341078129940846,
+        0.91
+      ],
+      "R": [
+        [
+          0.5792432628694821,
+          -0.7070881058575399,
+          0.40559049911839984
+        ],
+        [
+          -0.5792126674056348,
+          -0.707125456022336,
+          -0.40556907594397895
+        ],
+        [
+          0.5735764363510462,
+          0.0,
+          -0.8191520442889918
+        ]
+      ]
+    },
+    {
+      "name": "scoop_staging",
+      "tcp": [
+        0.29565624051582506,
+        -0.017341078129940846,
+        0.84623047031539
+      ],
+      "R": [
+        [
+          0.5792432628694821,
+          -0.7070881058575399,
+          0.40559049911839984
+        ],
+        [
+          -0.5792126674056348,
+          -0.707125456022336,
+          -0.40556907594397895
+        ],
+        [
+          0.5735764363510462,
+          0.0,
+          -0.8191520442889918
+        ]
+      ]
+    }
+  ],
+  "continue_existing_waypoints_world": [
+    [
+      0.29565624051582506,
+      -0.017341078129940846,
+      0.77123047031539
+    ],
+    [
+      0.32040563147660683,
+      -0.042089161834954744,
+      0.77123047031539
+    ]
+  ],
+  "support_R": [
+    [
+      0.5792432628694821,
+      -0.7070881058575399,
+      0.40559049911839984
+    ],
+    [
+      -0.5792126674056348,
+      -0.707125456022336,
+      -0.40556907594397895
+    ],
+    [
+      0.5735764363510462,
+      0.0,
+      -0.8191520442889918
+    ]
+  ],
+  "actual_STL_point_TCP": [
+    0.006954508716650903,
+    0.005881295623088079,
+    0.010552623193168104
+  ],
+  "support_link": "tip_right",
+  "actual_finger_correction": "point.x += -actual_tip_right_joint_position -0.003; nominal point corresponds to q=-0.003m.",
+  "suggested_diagnostic_motion_limits": {
+    "free_translation_m_s": 0.02,
+    "free_rotation_rad_s": 0.35,
+    "inside_descent_insertion_and_supported_arc_m_s": 0.005,
+    "initial_contact_acquire_up_m": 0.0008,
+    "initial_contact_acquire_m_s": 0.001,
+    "measured_angle_lead_deg_max": 2.0,
+    "partial_goal_angle_deg": -30
+  },
+  "geometry": {
+    "new_approach_samples": 75,
+    "new_approach_min_hard_gap_m": 0.031738844492573345,
+    "new_approach_min_other_free_flap_gap_m": 0.0356253130201368,
+    "new_approach_min_otherhand_AABB_gap_m": 0.13268932260154837,
+    "max_IK_error_m": 8.025443500320924e-05,
+    "max_IK_rotation_rad": 0.0002042274234549043,
+    "existing_supported_arc_min_non_target_hard_gap_m": 0.0010221750190964954,
+    "conservative_non_target_gap_after_0p8mm_contact_translation_m": 0.0002221750190964954
+  },
+  "limitations": [
+    "75 desired-pose samples, not a continuous full-arm or servo-error envelope.",
+    "All panels and the unused hand use the measured179s snapshot. A materially different restored/settled state requires a fresh local clearance check rather than blind world-coordinate playback.",
+    "The existing supported arc is only a partial opening candidate. Actual contact normal, force, friction, lock continuity and angle progress need native proof.",
+    "No cutter support/handoff, full flap opening, collapse or observation-eligible demo is established.",
+    "No source, physics, scoring or GPU changes."
+  ],
+  "artifacts": {
+    "approach_certificate": "/private/tmp/astra-outer-scoop-approach-repair.json",
+    "approach_sha256": "bd87e3f28b2355f22ee5f8487e16a08b6c066a0554fcf99e20fab3870103bddd",
+    "script": "/private/tmp/astra_outer_scoop_approach_repair.py",
+    "prior_partial_certificate": "/private/tmp/astra-outer-scoop-certificate.json"
+  }
+}

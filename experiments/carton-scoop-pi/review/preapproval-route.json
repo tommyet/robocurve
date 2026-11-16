@@ -1,0 +1,125 @@
+{
+  "reviewed": false,
+  "review_status": "geometryPASS; controller finalread-onlyreview pending; nativejobnotauthorizedbythisfile",
+  "controller": "north_outer_scoop",
+  "active_hand": "left",
+  "target_flap": "north_bottom",
+  "prepare_aperture_m": 0.006,
+  "snapshot_sha256": "b13f0f2b3d10c1a784e0b03db7f1c8e1fa33897cb0a30946c2ed75f223593fd5",
+  "source_trace_sha256": "f7398d3c3d51f3446d56a71eb85730542826167e2db8f2854986f91b99bced2d",
+  "support_R": [
+    [
+      0.5792432628694821,
+      -0.7070881058575399,
+      0.40559049911839984
+    ],
+    [
+      -0.5792126674056348,
+      -0.707125456022336,
+      -0.40556907594397895
+    ],
+    [
+      0.5735764363510462,
+      0.0,
+      -0.8191520442889918
+    ]
+  ],
+  "support_point_tcp": [
+    0.006954508716650903,
+    0.005881295623088079,
+    0.010552623193168104
+  ],
+  "above_aperture": [
+    0.29565624051582506,
+    -0.017341078129940846,
+    0.91
+  ],
+  "staging": [
+    0.29565624051582506,
+    -0.017341078129940846,
+    0.84623047031539
+  ],
+  "inside": [
+    0.29565624051582506,
+    -0.017341078129940846,
+    0.77123047031539
+  ],
+  "insert": [
+    0.32040563147660683,
+    -0.042089161834954744,
+    0.77123047031539
+  ],
+  "partial_goal_angle_deg": -30.0,
+  "phases": [
+    {
+      "name": "raise_clear"
+    },
+    {
+      "name": "above_aperture"
+    },
+    {
+      "name": "scoop_staging"
+    },
+    {
+      "name": "inside_descend"
+    },
+    {
+      "name": "underedge_insert"
+    },
+    {
+      "name": "contact_acquire"
+    },
+    {
+      "name": "supported_arc"
+    }
+  ],
+  "guard_scope": {
+    "non_target_hard_gap_m": 0.0002,
+    "other_arm_aabb_gap_m": 0.0002,
+    "intended_exception": "ONLYtip_right\u2194north_bottom incontactacquire/supportedarc; actualintendedgapistelemetry,NOTzero-penetrationclaim",
+    "target_force_limit_N": 1.0,
+    "non_target_hand_force_limit_N": 0.1,
+    "minimum_supported_contact_force_N": 0.02,
+    "command_flap_lead_deg": 1.8,
+    "abort_flap_lead_deg": 2.0,
+    "angular_no_progress_timeout_s": 5.0,
+    "path_no_progress_timeout_s": 8.0,
+    "max_controller_time_s": 100.0,
+    "parked_cutter_displacement_limit_m": 0.002,
+    "command_entry": "preparedprevious14Dexact;FKofpreviousarmcommandstartsraise;no preloadcancellation"
+  },
+  "numerical_scope": {
+    "contact_IK_tolerance": 1e-06,
+    "contact_IK_max_iters": 800,
+    "nominal_intended_overlap_max_m": 6.239075526631721e-07,
+    "native_intended_overlap_verified": false
+  },
+  "evidence": {
+    "fullarm": {
+      "file": "review/fullarm-tight-contact-report.json",
+      "sha256": "cc30949b7c0843f548d9881dd77715aa5b81c65fca188bfb82e3f8558f733a88",
+      "scope": "CPUdiscrete315correctedcollisionpiecesperarm vs12panels/table/parkedcutter3boxes; otherarmALLpieceAABBpositiveseparation. CommandcontinuousFK(lastissuedq)approach repair + nominalfixedR0.8mmcontacttranslation/partialarc to\u221230. No continuous/servoerror/nativecontact/frictionproof. ONLYtip_right/north_bottom duringcontactacquire/supportedarc excludedfromhardmetrics; allotherbodypairs included. PinnedIKcontacttol1e\u22126, iters800; targetminimumreported."
+    },
+    "original_approach": {
+      "file": "review/astra-outer-scoop-approach-repair.json",
+      "sha256": "bd87e3f28b2355f22ee5f8487e16a08b6c066a0554fcf99e20fab3870103bddd",
+      "scope": "Original75poseGRIPPERONLY; supplementedbynew321pose315fullarmcheck"
+    },
+    "original_partial": {
+      "file": "review/astra-outer-scoop-certificate.json",
+      "sha256": "cc3b3ce4a5a0e4da882232fcae7e4b02edd0ce4784524f5ce172029f7018d88f",
+      "scope": "OriginaldirectparksegmentREJECTED; use repairedraisedapproachonly"
+    }
+  },
+  "diagnostic": true,
+  "scorer_enabled": false,
+  "task_score": 0.0,
+  "media_eligible": false,
+  "limitations": [
+    "Syntheticpostcutpose-onlysnapshot+zerovelocities,notafreshfulltask",
+    "Runtimeprivilegedgeometry/angle/forcesafetyreadbacksallowedONLYforthisunscoredcoupon",
+    "Full315armcertificateisDISCRETE321poses,notcontinuous/servoerror/nativefrictionproof",
+    "Noactualflapopening/contactproofuntilnativecoupon",
+    "Partial\u221230degpresentationonly;no150degopening/collapse/scoreclaim"
+  ]
+}

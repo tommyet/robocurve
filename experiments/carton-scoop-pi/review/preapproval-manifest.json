@@ -1,0 +1,43 @@
+{
+  "root": "/private/tmp/carton-open-coupon",
+  "diagnostic_only": true,
+  "native_tested": false,
+  "physics_scorer_source_hashes_unchanged": {
+    "test_crease.py": "fb554c44f0020f61e9f490770d2d1cf9e1362e72262b79e64b0e25d639276d41",
+    "test_cut_controller.py": "6fa20582c5f1caf5a6360d4d882220bca2adbfe3fe102de9786a3543a3072e6f",
+    "task.py": "eff5b8b9e564ffdd037fb263eb6f792bd8831d8dc8947c4a280ddfcce75eb3c9",
+    "collapse_geometry.py": "c7ffc2cb7d25a5f70bf4a6ed47eff07b2db10bfe48136293d5dbd5fca7ffd5c8",
+    "test_cut_feedback.py": "74e09dcd3b74890833796563231a92d7cde7c837164238f178040d096488dbf0",
+    "scene.py": "9ec9aa6f20455b76f6f3ff044377ab74e9bf21d9eeaf32f3fe97b63d4e27a478",
+    "feedback_geometry.py": "c69971f54e37b2b1224812782ee970289dbd11d39b8f3ab2356f5453964d561a",
+    "test_scoring.py": "33906d50289ea7bd7c9f05c1278bdfe5cae1a7ddd7fb2f1b1e3964c83d8dd981",
+    "model.py": "b979a306381ce0cbfa89e75e61a981e9098215d9aac3177c6f86f005a236ba50",
+    "review.py": "80d9044fc7ee67d5a12bb198611d2351f2cf6b315a107e63b64a23237ed8dd39",
+    "capture.py": "1db2d047cfec374069d2a640f2cd6f11882fd74fa9ab1b28f63f0cc37206742a",
+    "config.py": "61e89314e16ff500893cd0b569e002f4b5da62cf2b2e3f46803a4519542548f8",
+    "test_capture.py": "2f0882beb50b8cbad485e766e01de503c3396b2a6b1777786e511058cb550145",
+    "run.py": "6385e496a005d763b3d60e6c1264003b73949cf55275a323c83434cfb3ff0643",
+    "test_feedback_geometry.py": "a5b682a2de99840b680328ec36fce303afaa2f66317c04c7141ae4e066b96c2f",
+    "test_scene.py": "5a76e70b1dc0b96bd9d9ac985c47d81fd862cd77c864d59a9833e750bec90999",
+    "crease.py": "b10e0175fa7cd4e3f4d53e19cf32023a3ddc2b7eb242149a2c83fb8be53ccb33",
+    "native.py": "00cbf8c27d3ba9d85357c8252bdbc4d35925b900ce581ddea079344692082b54",
+    "scoring.py": "10600c84958bfe25af3cbe8ae18525453c551dbe85cc51415778b5cffdfdf58d",
+    "robot.py": "ddb602ddb179a6215d886c5242b5d3148612a2a654098ba9acbde87e18f8b225",
+    "check_material_geometry.py": "62a0aecd7d889a4c3b28ce5ccda8b8e4c74639e603ba0219e55c721f589c35d0"
+  },
+  "controller_files": {
+    "scoop_controller.py": "5e845320e986f282d65b58b8227c5005f7cc98923b8f901778af67e8d21cb192",
+    "scoop_safety.py": "b10826b42913bdc326b76513788e352f6380a845d00ba4a95bc0c55ba8c750ba",
+    "open_coupon.py": "5d4a76bcb36e1421a13b31bccf820689cc811213766ca59b8bede3f0f4e29523",
+    "open_run.py": "61911cb0d523037369de591c257311b16883bf2fffe2c3a9b0cd24011682d693",
+    "test_scoop_controller.py": "4905e221832c1fb9738349761b73fcaca04c4b3a8bd5eca8ebe781736b30295e"
+  },
+  "route_sha256": "c48bcfad2c3324ada4cb3aa3d428c6effedf490cc5c8b8f1e8df262babff4a4b",
+  "fullarm_report_sha256": "cc30949b7c0843f548d9881dd77715aa5b81c65fca188bfb82e3f8558f733a88",
+  "tests": {
+    "full_suite": 89,
+    "focused": 8,
+    "compile": true
+  },
+  "scope": "Awaitfinalreview/nativeauthorization;noGPU/production/taskscoreclaim"
+}
