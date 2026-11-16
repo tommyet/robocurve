@@ -4,6 +4,39 @@ Last updated: 2026-11-16 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-16 — broad creative task screen, no compute
+
+- Refreshed the complete upstream PR metadata index: **2,341 PRs through
+  #2342**, including closed and merged submissions. Authenticated board refresh:
+  **647 records**, comprising 180 accepted, 340 pending, 37 rejected/returned
+  and 90 pilots. The board is not the complete rejection history; do not
+  calculate an acceptance rate from these counts. Raw evidence is ignored in
+  `artifacts/creative-ideation-2026-11-16/`.
+- Screened that index and board text for candidate families, then read twelve
+  relevant review histories. This was a catalogue/feedback review, not a video
+  or code audit of every submission. Also checked the saved 1,016-entry BEHAVIOR
+  index, current RoboDojo catalogues and primary benchmark/manufacturer sources.
+- New research shortlist, in priority order: put a key on a split ring; tension
+  cloth in an embroidery hoop; free fabric trapped in a zip; untwist a seatbelt
+  through its sliding tongue; rethread a hoodie drawstring; patch a punctured
+  inner tube; fold a spring-framed sunshade. No exact submitted match found for
+  these scopes, but adjacent tasks and untested mechanics remain review risks.
+  Details and physical scoring proposals are in the latest section of
+  `docs/task-ideas-followup-2026-11-15.md`. No task was authorized for building.
+- Accepted [ice tray #1436](https://github.com/robocurve/benchmark-tasks/pull/1436)
+  and [O-ring #1576](https://github.com/robocurve/benchmark-tasks/pull/1576)
+  support disclosed reduced models; [zipper #1513](https://github.com/robocurve/benchmark-tasks/pull/1513)
+  and [floss #1341](https://github.com/robocurve/benchmark-tasks/pull/1341)
+  reject enlarged/rigid geometry that removes the physical skill. O-ring
+  revision also removed arm-home rewards and irrelevant release-angle penalties.
+- Dropped tuning from the new shortlist after finding closed, unmerged
+  [PR794](https://github.com/robocurve/benchmark-tasks/pull/794): its comments
+  show daily-limit ingestion failures, not a review decision. Do not call it
+  rejected or claim instrument tuning has never been proposed. Also dropped
+  ordinary blister pressing (PR725, too simple), hacksaw maintenance (PR1472,
+  weak stated importance), and flossing as a cheap build (PR1341, real-scale
+  geometry). No GPU rental, Dream call, simulation or upstream change.
+
 ## 2026-11-16 17:25 UTC — ketchup-on-burger idea screened, no compute
 
 - No exact match found in targeted all-state PR searches and the same-day

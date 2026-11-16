@@ -1,5 +1,10 @@
 # Follow-up: wrapping, rocking, untangling and five new ideas
 
+Latest research: the [16 November creative shortlist](#16-november-broad-creative-shortlist)
+below supersedes the earlier research priorities. It proposes seven new scopes;
+none has been built or selected for development. Earlier implementation status
+is historical; use the linked batch record and current PR decisions for status.
+
 Implementation update, 16 November: the user selected bracelet fastening,
 present wrapping, pram rocking, knot removal and wax-strip technique for
 building and submission. Current results and PRs are in the
@@ -241,3 +246,237 @@ credible, not proof of our simulator or actual ketchup behaviour. Reusing
 parts of the cake model might reduce effort, but neither acceptance nor a
 $3 build is established. **Keep for comparison with stronger novel ideas;
 do not build automatically.**
+
+## 16 November: broad creative shortlist
+
+**First investigate the split key ring and embroidery hoop.** Freeing a trapped
+zip is the next strongest everyday problem, with greater simulation risk.
+The seven ideas below have credible acceptance cases, not promised acceptance.
+All remain research proposals; no GPU, Dream, simulation or task implementation
+was used. The user's previous approximately $3-per-task preference is not a
+validated cost estimate for any of these.
+
+### Coverage and what the reviews show
+
+Downloaded all **2,341 upstream PR metadata records through #2342**, and an
+authenticated **647-record task board** on 16 November. Screened titles and
+board instructions/context for broad manipulation families and candidate
+synonyms, searched relevant PR bodies, and read twelve close review histories.
+This does not mean every submission's video or code was audited. The board
+contains 180 accepted, 340 pending, 37 rejected/returned and 90 pilot records;
+many historical rejections only appear in GitHub. Those counts are not a
+submission acceptance rate. Evidence: ignored
+`artifacts/creative-ideation-2026-11-16/`.
+
+The 1,016-entry BEHAVIOR task-name index and current
+[RoboDojo simulation](https://robodojo-benchmark.com/doc/sim-tasks/) and
+[real-task](https://robodojo-benchmark.com/doc/real-tasks/) catalogues did not
+reveal an exact match for the seven scopes. Other benchmark overviews were
+consulted, but this is not an exhaustive world-literature or implementation
+audit. A missing keyword match is not novelty clearance. Recheck ownership
+and the closest task's actual start/goal immediately before building.
+
+- [Ice-tray twisting #1436](https://github.com/robocurve/benchmark-tasks/pull/1436)
+  was accepted with two sprung rigid halves and twist-dependent cube release.
+  [Cucumber peeling #1899](https://github.com/robocurve/benchmark-tasks/pull/1899)
+  uses contact-dependent skin patches without peel ribbons. A complete
+  continuum-material solver is not a universal requirement.
+- [O-ring fitting #1576](https://github.com/robocurve/benchmark-tasks/pull/1576)
+  was accepted after its score rewarded useful progress and the final seal,
+  removing arm-home rewards and irrelevant release-angle penalties. Its
+  limited ring model is explicitly disclosed. Treat that as a precedent for
+  preserving the task with a reduced model, not permission to script success.
+- [Circlip fitting #1561](https://github.com/robocurve/benchmark-tasks/pull/1561)
+  had to remove an unrealistic fixed fixture and preserve the need to steady
+  the loose assembly. Convenient fixation can remove the task's difficulty.
+- [Enlarged zipper #1513](https://github.com/robocurve/benchmark-tasks/pull/1513),
+  [oversized floss model #1341](https://github.com/robocurve/benchmark-tasks/pull/1341)
+  and [our waxing #2192](https://github.com/robocurve/benchmark-tasks/pull/2192)
+  failed when the simplification removed essential scale, contact or material
+  interaction. Honest wording alone did not repair that.
+
+These ideas fit **Societal relatability** most naturally. Do not add an
+unsupported jobs-impact claim to make an ordinary household skill sound larger.
+Scoring below is a proposed physical approach; numerical thresholds must be
+chosen against the selected real objects before submission.
+
+### 1. Put a house key onto a split key ring
+
+**Task:** Put the loose key onto the split ring and leave the ring closed.
+Use a real key, a normal-size double-coil ring and a commercially available
+ring-opening tool. Separate the overlapping coils, start the key's hole over
+the exposed end, then advance it around the coil until it is fully captured.
+
+The proposed distinction is maintaining an opening while threading a closed
+hole around a spring coil. It differs from the accepted circlip, which expands
+over a shaft and seats in a groove, and from [hanging key rings #2213](https://github.com/robocurve/benchmark-tasks/pull/2213).
+[Rapala's split-ring pliers](https://www.rapala.com/us_en/mini-split-ring-pliers)
+provide a real one-handed tool precedent, not proof that a particular model
+fits a house-key ring or YAM fingers; choose compatible hardware first.
+
+**Judge:** key fully past the split and retained after both hands/tools release;
+ring returns closed and is not permanently bent. A photograph plus a small,
+specified retention pull suffices. Give partial credit for an intact key
+advanced onto the coil, not merely touching it. Opening force, helical contact
+and gripper access are the feasibility questions. No automatic attachment or
+enlarged ring gap. **Top priority; moderate expected development risk.**
+
+### 2. Mount fabric taut in an embroidery hoop
+
+**Task:** Secure the marked area of this cloth in the hoop, smooth and taut.
+Start with loose woven cloth and the two rings of a real screw-adjusted hoop.
+Align the cloth, seat the rings and adjust tension so the material remains
+usable after release. No stitching is needed. A
+[Prym beechwood hoop](https://de.handicraft.com/en/products/stickrahmen-buchenholz)
+is a concrete reference; [Singer's hooping instructions](https://www.singer.com.tr/assets/img/uploads/product-files/3020e8588727712d5e346657212221aa_en.pdf)
+describe mounting and securing fabric tension.
+
+This tests distributed tension retained by frictional clamping, distinct from
+folding clothing, pegging a shirt or ordinary rigid assembly. The cloth must
+stay deformable and able to slip or wrinkle; a flat sheet that becomes fixed
+when the rings approach would remove the skill.
+
+**Judge:** the marked region is inside the usable opening, the cloth is intact,
+and it stays clamped with limited deflection under a specified small weight.
+Use a photo, ruler and weight; keep the cloth's weave undistorted. Partial credit
+for seated/retained cloth before reaching usable tension. Define reproducible
+material, loading point and tolerances. **Top priority; moderate risk from
+cloth/hoop friction, with a relatively compact setup.**
+
+### 3. Free lining caught in a zip
+
+**Task:** Free the lining trapped in this zip and leave the zip working.
+Start with a reproducible snag in an ordinary flexible garment or pouch.
+Coordinate slider reversal with easing the caught material out. Confirm the
+slider can then pass the snag location without catching again.
+
+[YKK's instructions](https://ykkamericas.com/wp-content/uploads/2021/10/fastening-catalog-compressed-1.pdf)
+describe moving the slider gently while extracting caught fabric. Pending
+[PR2109](https://github.com/robocurve/benchmark-tasks/pull/2109) closes an already
+started baby-jacket zip; it does not start with a physical cloth jam. That is
+the proposed distinction, though related-task novelty still needs review.
+
+**Judge:** lining freed and intact, zipper functional across the affected
+section, no broken pull/teeth. Partial credit for freeing the fabric before
+the function check. The jam must arise from cloth trapped in slider geometry;
+a hidden lock released by a gesture is inadequate. Use a real-size pull or
+documented real attachment: PR2109's review specifically challenged an
+oversized simulated grasp block. **Strong relatable idea; higher development
+risk than the first two because contact creates the snag.**
+
+### 4. Remove a seatbelt twist through its sliding tongue
+
+**Task:** Remove the twist in this seatbelt and leave the webbing running flat.
+The relevant operation is passing a folded section of webbing through the
+sliding latch plate to reverse its orientation, with the belt anchors still
+attached. This is a documented
+[Mopar owner-manual procedure](https://vehicleinfo.mopar.com/assets/publications/en-us/Ram/2022/2500_3500/om_html/GUID-C4A92A2D-CDC9-4902-8069-20F4A16FC582.html).
+
+Pending [retractor tests #1866](https://github.com/robocurve/benchmark-tasks/pull/1866)
+and [#2164](https://github.com/robocurve/benchmark-tasks/pull/2164) test acceleration
+locking, not passage of folded webbing through a narrow slot. The rejected
+[child-harness fitting #861](https://github.com/robocurve/benchmark-tasks/pull/861)
+is adjacent and warns against miniature geometry and inaccessible mesh scores.
+
+**Judge:** visible flat, untwisted webbing on both sides of the plate, intact
+anchors/webbing, and free sliding over a stated test distance after release.
+A contrasting edge marker can make twist visible without changing the task.
+The actual slot must constrain a flexible strip that bends and folds, not a
+round rope. This is a bench manipulation task, not a crash-safety certification.
+**Good reserve; moderate-to-high risk from folded-webbing contact.**
+
+### 5. Rethread a hoodie drawstring
+
+**Task:** Put the drawstring back through the hood and leave both ends out.
+Use a real hoodie and blunt drawstring threader/bodkin. Attaching the cord to
+the tool can be a disclosed prepared step; the work is guiding the hidden tool
+through the flexible casing, gathering and releasing fabric without losing
+the trailing end. [Dritz's real tool](https://prymamericas.com/collections/sewing-notions/products/706)
+is designed for this operation.
+
+[Lamp-cord threading #2273](https://github.com/robocurve/benchmark-tasks/pull/2273)
+is adjacent but uses a rigid pipe. The cloth casing's bunching and redistribution
+must create the distinction; replacing it with a rigid channel would collapse
+that case. Drawstring-bin closure #2134 does not install a missing cord.
+
+**Judge:** the cord follows the existing casing, both ends extend by specified
+usable lengths, and a gentle pull cinches/releases the hood without new holes
+or detached seams. Partial credit for intact passage emerging at the outlet
+before adjusting the tails. Use photos and a simple pull test, not inferred
+path length through hidden meshes. **Strong everyday relevance; higher risk
+from enclosed flexible contact and reset reproducibility.**
+
+### 6. Patch one puncture in a bicycle inner tube
+
+**Task:** Patch the marked puncture so the inner tube no longer leaks.
+Start with the tube out of the tyre and a known puncture; omit wheel removal.
+Use the selected patch system's real preparation and application steps. A
+[pre-glued patch](https://www.parktool.com/assets/doc/product/GP-2_instructions.pdf)
+avoids modelling glue chemistry, but still requires clean/dry rubber, light
+abrasion and firm contact. Park Tool describes that product as an emergency
+repair; do not claim a permanent restored tube.
+
+The useful result is an airtight bond on compliant curved rubber, distinct
+from placing a sticker. [Tyre-bead mounting #1690](https://github.com/robocurve/benchmark-tasks/pull/1690)
+is occupied and is not part of this proposal. That review also demonstrates
+that a proposed force check is not evidence of an actually measured capability.
+
+**Judge:** the patch covers the puncture and survives a defined leak/pressure
+check after release. Partial credit for a securely applied patch before a
+passing seal test. Pressure loss/bubbles should agree with the physical
+check; patch-centre alignment alone cannot imply sealing. The tube must be
+supported appropriately during any physical inflation check, with a selected
+manufacturer-compatible procedure. **Appealing repair, but higher risk: the
+model must preserve poor adhesion, wrinkles and leakage.**
+
+### 7. Fold a pop-up car sunshade into its pouch
+
+**Task:** Fold the spring-framed sunshade and put it in its storage pouch.
+Coordinate both hands to twist the frame into overlapping loops, keep it
+compressed, and retain the bundle. This is the familiar awkward operation
+described in [Tesla's folding instructions](https://www.tesla.com/sites/default/files/pdfs/modelx_sunshade_installation.pdf).
+Select a commercially available size within YAM reach, not a scaled-down
+version of a large shade. The cited manual establishes the operation, not
+the dimensions or forces of a chosen build.
+
+No close submission was found. It is distinct from opening an umbrella or
+folding hinged furniture because the continuous elastic frame changes shape
+and can spring back. **Judge:** intact shade fully retained in the specified
+pouch after release; the frame still unfolds to its original usable shape.
+Partial credit can cover a compact held bundle before retention. A fold
+animation or preset hinged mechanism would not demonstrate the claimed skill.
+**Most visually distinctive reserve; high risk from elastic buckling and
+self-contact. Not the first choice for a small development budget.**
+
+### Ideas deliberately left out
+
+- **Tune an instrument:** [PR794](https://github.com/robocurve/benchmark-tasks/pull/794)
+  already proposed plucking a string and adjusting its key using a tuner.
+  It is closed/unmerged; the visible comments show daily-limit failures and no
+  review decision. It may be unclaimed, but is not a newly discovered idea,
+  and there is no acceptance feedback to rely on. Do not call it rejected.
+- **Change a hacksaw blade:** [PR1472](https://github.com/robocurve/benchmark-tasks/pull/1472)
+  failed its stated importance case and excluded valid wing-nut techniques.
+  Not a strong new recommendation merely by changing the tool to a coping saw.
+- **Push a tablet out of a blister:** [PR725](https://github.com/robocurve/benchmark-tasks/pull/725)
+  was judged a single press with a non-robotic calendar challenge. Avoid adding
+  reading or counting to manufacture difficulty.
+- **Floss teeth:** [PR1341](https://github.com/robocurve/benchmark-tasks/pull/1341)
+  and its appeal failed for oversized block teeth and missing real contours.
+  Real-scale floss contact is too uncertain for the economical shortlist.
+- **Load/draw up a sewing-machine bobbin:** no direct match found and
+  [Singer documents the operation](https://euhelp.singer.com/en-US/singer-machine-faqs-594705),
+  but the fine thread's actual capture/routing is central. A magical loop
+  appearing after turning the handwheel would repeat the fidelity failure.
+  Keep as a longer-term research idea rather than adding it to this build queue.
+- **Ketchup, generic wiping, another vegetable-peeling task, another basic
+  screw/plug task:** existing dispensing, cleaning, peeling and insertion
+  coverage makes these weaker novelty bets. Gardening remains the earlier
+  excavation research reserve, not a quick substitute for occupied planting.
+
+**Recommended next selection: split ring, embroidery hoop, then trapped zip.**
+First verify accessible real geometry and whether the minimum model can fail
+in the same meaningful ways as the real task. Only after the user selects
+tasks should any paid trial or implementation start. Keep the task small;
+score the useful final result, include partial credit and treat later damage
+as failure. Do not add prescribed paths or cosmetic precision for difficulty.
