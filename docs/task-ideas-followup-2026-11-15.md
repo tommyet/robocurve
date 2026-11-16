@@ -480,3 +480,28 @@ in the same meaningful ways as the real task. Only after the user selects
 tasks should any paid trial or implementation start. Keep the task small;
 score the useful final result, include partial credit and treat later damage
 as failure. Do not add prescribed paths or cosmetic precision for difficulty.
+
+## 16 November: broken plate, pancake, nail, paper aeroplane and medicine spoon
+
+Research only. Refreshed the board (661 records), searched current PRs in all
+states and read relevant review comments. Also screened the same-day complete
+PR title index, saved BEHAVIOR task names and current RoboDojo catalogues.
+Absence from these searches is not novelty clearance. Feasibility and acceptance
+ratings below are judgments, not measured success rates; no simulations run.
+
+| Idea | Evidence and novelty | Minimum credible model; recommendation |
+| --- | --- | --- |
+| Superglue a broken plate | No exact plate repair found, but pending [mug repair #2283](https://github.com/robocurve/benchmark-tasks/pull/2283) already applies glue, aligns fracture surfaces and presses them together. Earlier [#1610](https://github.com/robocurve/benchmark-tasks/pull/1610) needs revision for glue application and bond realism. | Technically plausible with two rigid ceramic fragments and a disclosed contact/coverage/hold-time bond model. Require actual dispensing, contacting fracture faces, product-appropriate hold time and retained attachment; no proximity-triggered snap. A different ceramic object alone adds little. **Low acceptance prospect as stated; park.** More fragments add cost without guaranteeing a distinct skill. |
+| Flip a pancake | [#1435](https://github.com/robocurve/benchmark-tasks/pull/1435) was finally rejected explicitly as a duplicate of earlier steak flipping. Egg flipping TK-84YE4P is already a board pilot. Utensil-free pan tossing is also proposed in pending [#2310](https://github.com/robocurve/benchmark-tasks/pull/2310). | A spatula/contact model is feasible; a pan toss needs inertial launch, rotation and catching. Gripper-turning must not bypass tool use. **Very low for a spatula flip; low for a pan toss given current overlap. Skip.** |
+| Knock in a nail | Pending [#2206](https://github.com/robocurve/benchmark-tasks/pull/2206) starts a loose nail with one hand while the other taps, then drives it home. Earlier [#142](https://github.com/robocurve/benchmark-tasks/pull/142) failed novelty against [DexJoCo Hammer Nail](https://github.com/brave-eai/dexjoco/blob/main/configs/multi_task/hammer_nail.yaml). | Straightforward reduced impact/resistance model in principle, but slow pressing must not substitute for impacts and unsupported nails must fall. **Very low novelty/acceptance prospect. Skip.** |
+| Make a paper aeroplane | No direct Robocurve match found. However the [IROS 2026 Robotic Origami Challenge](https://robotic-origami-challenge.github.io/) already benchmarks a six-fold plane, and [PaperBot](https://paperbot.cs.columbia.edu/) folds and throws planes on real robots. Our gift-wrap [#2197](https://github.com/robocurve/benchmark-tasks/pull/2197) is pending and tests pre-creased wrapping/taping, not forming a plane from an uncreased sheet. | Needs thin-sheet manipulation, forming and pressing lasting creases, and layered self-contact. Rigid panels with preinstalled hinges omit crease creation; a pre-creased version must be named honestly and has a weaker capability claim. Score measured alignment/symmetry and retained structure after release; flight would add aerodynamic validation and is unnecessary for a folding-only task. **Low-to-moderate, uncertain; substantial modelling cost. Research reserve, not an inexpensive build.** |
+| Administer medicine via a spoon | No exact match found, but [spoon feeding #713](https://github.com/robocurve/benchmark-tasks/pull/713) was finally rejected for a rectangular mouth pit, glass beads and no unsafe face-contact penalty. [Dosing #355](https://github.com/robocurve/benchmark-tasks/pull/355) failed for an unrecognizable solid dosing cup. Accepted [eye-drop #1981](https://github.com/robocurve/benchmark-tasks/pull/1981) shows a care-training manikin can be valid. | Conditional scope: deliver a specified quantity of inert test liquid with a proper medicine spoon to a representative training mouth, with measurable delivered volume, spillage and safe interface contact. Model contact and fluid transfer rather than teleporting liquid or deleting beads; do not claim to validate swallowing. A narrow physical delivery task is more defensible than complete clinical administration. **Low-to-moderate if built credibly; low for a cheap simplified version. Research reserve.** |
+
+A proper medicine spoon is a legitimate device; this is distinct from a kitchen
+teaspoon used as a measuring tool. [NHS England](https://www.england.nhs.uk/patient-safety/patient-safety-insight/patient-safety-alerts/enduring-standards/standards-that-remain-valid/medication-safety/)
+allows a medicine spoon or graduated measure where appropriate. This does not
+establish that a particular robot delivery protocol is clinically safe.
+
+None is an obvious next inexpensive submission. Plate, pancake and nail have
+strong overlap. Paper folding and spoon delivery retain interesting skills but
+need material/interface work and a stronger novelty case before paid testing.

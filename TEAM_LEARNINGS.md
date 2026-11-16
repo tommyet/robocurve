@@ -4,6 +4,36 @@ Last updated: 2026-11-16 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-16 — plate, pancake, nail, paper plane and medicine ideas screened
+
+- Research only: fresh authenticated board snapshot (661 records), current
+  all-state GitHub searches/review comments, same-day 2,341-PR title index,
+  saved BEHAVIOR task names and current primary benchmark sources. No GPU,
+  Dream, simulation, implementation or upstream changes. Evidence is ignored
+  under `artifacts/plate-pancake-nail-plane-spoon-2026-11-16/`.
+- Plate repair has strong overlap with pending mug repair
+  [2283](https://github.com/robocurve/benchmark-tasks/pull/2283). Earlier
+  [1610](https://github.com/robocurve/benchmark-tasks/pull/1610) failed for
+  nozzle-proximity glue credit, non-contact alignment and unsupported cure time.
+- Pancake [1435](https://github.com/robocurve/benchmark-tasks/pull/1435) was
+  finally rejected as a duplicate of steak flipping. Pan tossing is also
+  occupied by pending [2310](https://github.com/robocurve/benchmark-tasks/pull/2310).
+  Board egg-flipping TK-84YE4P is a **pilot**, not a verified accepted PR.
+- Nail starting/driving [2206](https://github.com/robocurve/benchmark-tasks/pull/2206)
+  is pending. Earlier [142](https://github.com/robocurve/benchmark-tasks/pull/142)
+  was finally rejected partly for duplicating DexJoCo Hammer Nail.
+- No direct Robocurve paper-plane match found, but the
+  [IROS 2026 origami challenge](https://robotic-origami-challenge.github.io/)
+  already benchmarks a six-fold plane. Real crease formation, retention and
+  layer contact are unresolved on our setup; pre-hinged paper changes scope.
+- Spoon feeding [713](https://github.com/robocurve/benchmark-tasks/pull/713)
+  was finally rejected for a fixed rectangular mouth pit, glass-bead soup and
+  absent face-contact protection. A realistic medicine-spoon delivery task is
+  conditional, not ruled out, but not a cheap baseline. Accepted eye-drop
+  [1981](https://github.com/robocurve/benchmark-tasks/pull/1981) establishes that
+  care manikins are not categorically excluded. Full comparisons are appended
+  to `docs/task-ideas-followup-2026-11-15.md`; no new task selected for building.
+
 ## 2026-11-16 — four repair tasks submitted; Runpod stopped
 
 User authorized these four PRs. Each submission uses a separate branch from
