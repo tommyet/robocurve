@@ -1,7 +1,7 @@
 {
   "review_pr": 2171,
   "review_utc": "2026-11-16T06:38:24Z",
-  "status": "Complete native proof and videos; task-board upload blockedHTTP403, refreshedT-39credential requested",
+  "status": "Revised media uploaded; existing PR2171 revision prepared",
   "addressed_locally": [
     "Societal relevance category and familiar household use case",
     "Photograph-measurable shared visible-area scoring",
@@ -10,8 +10,7 @@
     "Product-specific aerosol precautions"
   ],
   "outstanding": [
-    "Upload revised media with valid T-39token",
-    "Push prepared task-only revision to existingPR2171"
+    "Push task-only revision to existingPR2171 and verify receipt"
   ],
   "historical_demo_revised_score": 0.25,
   "historical_model_result": "RTX device loss before recorded action; no completed score",
@@ -24,5 +23,7 @@
   },
   "new_demo_score": 1.0,
   "new_model_score": 0.0,
-  "source_commit": "56854fb"
+  "source_commit": "56854fb",
+  "media": "M-U8HXMC",
+  "upload_fix": "Descriptive application User-Agent resolves Cloudflare1010; previous credential was valid, not an auth failure."
 }
