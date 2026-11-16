@@ -10,14 +10,14 @@ def state(**changes):
            items=[item,second],seam_bond=[0.]*44,end_bond=[0.,0.],carton_speed=0.,
            crease_separation=0.,max_strain=0.,canary_min_height=0.,
            inner_flaps_under_outer=False,single_strip=False,strip_still_on_roll=True,
-           hands_clear=False,tools_parked=False)
+           hands_clear=False,tools_parked=False,continuous_material=False)
     s.update(changes);return s
 
 
 def sealed():
     return state(payout=.32,ribbon_length=.32,flap_angles=[0.]*4,
                  seam_bond=[1.]*44,end_bond=[.04,.04],single_strip=True,
-                 strip_still_on_roll=False,inner_flaps_under_outer=True,
+                 strip_still_on_roll=False,inner_flaps_under_outer=True,continuous_material=True,
                  cut_coordinate=.32,blade_crossing=True,hands_clear=True,tools_parked=True)
 
 
@@ -58,8 +58,8 @@ class Tests(unittest.TestCase):
         self.assertEqual(t.value,.5)
 
     def test_disconnected_patches_not_a_seal(self):
-        t=PackingScorer();s=sealed();s['single_strip']=False;t.update(s)
-        self.assertEqual(t.value,.25)
+        t=PackingScorer();s=sealed();s['single_strip']=False;s['continuous_material']=False;t.update(s)
+        self.assertEqual(t.value,0.)
 
     def test_bond_cells_not_tool_path(self):
         t=PackingScorer();s=sealed();s['seam_bond'][10]=.2;t.update(s)

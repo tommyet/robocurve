@@ -5,7 +5,7 @@ from config import *
 from carton_scene import layout
 
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True);p.add_argument('--mode',choices=['bench','closure-probe','adhesion-probe','settle-probe'],default='closure-probe');p.add_argument('--no-video',action='store_true');a=p.parse_args();a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=False);(a.out/'source').mkdir()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True);p.add_argument('--mode',choices=['bench','closure-probe','adhesion-probe','settle-probe'],default='settle-probe');p.add_argument('--no-video',action='store_true');a=p.parse_args();a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=False);(a.out/'source').mkdir()
  for f in Path(__file__).parent.glob('*.py'):shutil.copy2(f,a.out/'source'/f.name)
  (a.out/'source-sha256.json').write_text(json.dumps({f.name:hashlib.sha256(f.read_bytes()).hexdigest() for f in Path(__file__).parent.glob('*.py')},indent=2));os.environ.setdefault('OMNI_KIT_ACCEPT_EULA','YES')
  from isaaclab.app import AppLauncher
@@ -19,6 +19,8 @@ def main():
   import isaaclab.sim as sim
   from carton_native import export as cexport
   from tape_native import export as texport,install_joints
+  import carton_scene
+  carton_scene.INITIAL_TOP_ANGLE=160. if a.mode=='closure-probe' else 0.
   import task
   task_path=Path(__file__).with_name('task.py')
   coupon_size=(.10,.10,.04);coupon_pos=(.15,.12,TOP+.022);coupon_start=np.array((.15,.12,TOP+.042+TAPE_THICKNESS/2+.0002))
@@ -55,7 +57,7 @@ def main():
      d=UsdPhysics.DriveAPI.Apply(j.GetPrim(),'linear');d.CreateTypeAttr('force');d.CreateStiffnessAttr(30.);d.CreateDampingAttr(.1);d.CreateMaxForceAttr(3.);d.CreateTargetPositionAttr(0.)
      return prim
     cfg.func=with_joints
-   pos=spec.pos
+   pos=tuple(u+v for u,v in zip(CENTER,byname[spec.name]['pos'])) if spec.name in byname else spec.pos
    if a.mode=='adhesion-probe' and spec.name==f'tape_{CELLS-1}':pos=tuple(float(v) for v in coupon_start);q=(math.sqrt(.5),-math.sqrt(.5),0.,0.)
    return sc.Object(name=spec.name,object_type=sc.ObjectType.RIGID,spawner_cfg=cfg,initial_pose=sc.Pose(position_xyz=pos,rotation_xyzw=(*q[1:],q[0])))
   from yam_arena.embodiment import BimanualYamEmbodiment
@@ -177,7 +179,7 @@ def main():
      seam_bond,end_bond=bonded_coverage(films,contacts.adhesion.active_patches(),component,origin,reference)
      detached=bool(component) and component<=peeled
      cut_coordinate=contacts.cut_coordinates[0] if len(contacts.cut_coordinates)==1 else None
-     sample={'time':env._t,'payout':payout,'ribbon_length':film_length,'flap_angles':angles,'items':item_states,'seam_bond':seam_bond,'end_bond':end_bond,'carton_speed':speed,'crease_separation':crease,'max_strain':sep/CELL_LENGTH,'canary_min_height':min(min(i['local_min'][2]+origin[2]-TOP for i in item_states),min(v[:,2].min()+origin[2]-TOP for v in carton_vertices.values())),'inner_flaps_under_outer':bool(inner_under),'single_strip':bool(len(contacts.blade.cuts)==1 and len(component)*CELL_LENGTH>=MIN_STRIP),'strip_still_on_roll':not detached,'hands_clear':bool(hand_clear),'tools_parked':bool(tools_parked)}
+     sample={'time':env._t,'payout':payout,'ribbon_length':film_length,'flap_angles':angles,'items':item_states,'seam_bond':seam_bond,'end_bond':end_bond,'carton_speed':speed,'crease_separation':crease,'max_strain':sep/CELL_LENGTH,'canary_min_height':min(min(i['local_min'][2]+origin[2]-TOP for i in item_states),min(v[:,2].min()+origin[2]-TOP for v in carton_vertices.values())),'inner_flaps_under_outer':bool(inner_under),'continuous_material':bool(component) and len(component)*CELL_LENGTH>=.055,'single_strip':bool(len(contacts.blade.cuts)==1 and len(component)*CELL_LENGTH>=MIN_STRIP),'strip_still_on_roll':not detached,'hands_clear':bool(hand_clear),'tools_parked':bool(tools_parked)}
      if cut_coordinate is not None:sample|={'cut_coordinate':cut_coordinate,'blade_crossing':True}
      row['score_sample']=sample;row['metrics']=tracker.update(sample)
     captured={name:pose(name) for name in capture_names}
