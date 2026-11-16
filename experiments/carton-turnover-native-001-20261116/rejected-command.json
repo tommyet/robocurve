@@ -1,0 +1,105 @@
+{
+  "time": 13.9,
+  "control": [
+    {
+      "phase": "first_roll",
+      "failure": "right issued turnover clearance failed",
+      "complete": false,
+      "roll_angle_deg": 0.009679755338822815,
+      "tracking_errors_m": [
+        0.00026789369741960645,
+        0.0011816748581998178
+      ],
+      "com_beyond_leading_support_m": -0.0899431975502363,
+      "clearance": [
+        {
+          "safe": true,
+          "hard_gap_m": 0.0013988879699513568,
+          "hard_pair": [
+            "base",
+            "table"
+          ],
+          "target_gap_m": -3.8180334835151e-05,
+          "target_pair": [
+            "tip_right",
+            "north"
+          ],
+          "other_arm_gap_m": 0.185747071165264,
+          "other_arm_pair": [
+            276,
+            238,
+            "tip_right",
+            "tip_left"
+          ],
+          "exact_mutual_refinements": []
+        },
+        {
+          "safe": true,
+          "hard_gap_m": 0.0013988879699513568,
+          "hard_pair": [
+            "base",
+            "table"
+          ],
+          "target_gap_m": -0.00012685512123676666,
+          "target_pair": [
+            "tip_right",
+            "north"
+          ],
+          "other_arm_gap_m": 0.18383829308300612,
+          "other_arm_pair": [
+            276,
+            237,
+            "tip_right",
+            "tip_left"
+          ],
+          "exact_mutual_refinements": []
+        },
+        {
+          "safe": true,
+          "hard_gap_m": 0.0013988879699513568,
+          "hard_pair": [
+            "base",
+            "table"
+          ],
+          "target_gap_m": -0.00018420780620566715,
+          "target_pair": [
+            "tip_left",
+            "south_top"
+          ],
+          "other_arm_gap_m": 0.185747071165264,
+          "other_arm_pair": [
+            238,
+            276,
+            "tip_left",
+            "tip_right"
+          ],
+          "exact_mutual_refinements": []
+        },
+        {
+          "safe": true,
+          "hard_gap_m": 0.0013988879699513568,
+          "hard_pair": [
+            "base",
+            "table"
+          ],
+          "target_gap_m": -0.0020042503275910922,
+          "target_pair": [
+            "tip_left",
+            "south_top"
+          ],
+          "other_arm_gap_m": 0.18383829308300612,
+          "other_arm_pair": [
+            237,
+            276,
+            "tip_left",
+            "tip_right"
+          ],
+          "exact_mutual_refinements": []
+        }
+      ],
+      "table_supported": true,
+      "lowest_vertex_above_table_m": -8.182681524027124e-06
+    }
+  ],
+  "failure": "right issued turnover clearance failed"
+}

@@ -1,0 +1,19 @@
+{
+  "diagnostic": true,
+  "task_score": null,
+  "unsealed_start": false,
+  "max_crease_separation_m": 3.1295920391797286e-05,
+  "lowest_vertex_m": -8.798343364646577e-06,
+  "smallest_height_span_m": 0.18149226024180765,
+  "checks": {
+    "creases_intact": true,
+    "above_table": true
+  },
+  "controller_failure": "right issued turnover clearance failed",
+  "turnover_completed": false,
+  "final_roll_angle_deg": 0.009679755338822815,
+  "state_only": true,
+  "media_eligible": false,
+  "capture_manifest": "capture-manifest.json",
+  "diagnostic_reason": "camera-free engineering run; measured scorer values retained, no final media"
+}
