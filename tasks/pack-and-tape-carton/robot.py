@@ -39,6 +39,22 @@ class ClosureProbe:
   for k in list(self.__dict__):
    if k not in fixed and k not in state:del self.__dict__[k]
   for k,v in state.items():setattr(self,k,copy.deepcopy(v))
+ def released_hold_clearance(self):
+  """Fresh scene and BOTH measured/issued arms; no intended hand contacts."""
+  names=[*self.parts,*[p[0] for p in PRODUCTS],'roll','cutter',*[f'tape_{j}' for j in range(CELLS)]]
+  try:
+   poses={n:self.pose(n) for n in names};qs=[];fs=[]
+   for side in ('left','right'):
+    ids,fids=self.env._ids[side+'_robot'];v=self.env._base.scene[side+'_robot'].data.joint_pos;v=v.torch if hasattr(v,'torch') else v;v=v.detach().cpu().numpy()[0];qs.append(v[ids]);fs.append(v[fids])
+   actual=self.geometry.check(qs,fs,poses,False)
+   action=np.asarray(self.previous)
+   if action.shape!=(14,) or not np.isfinite(action).all() or np.any(action<self.env._low-1e-10) or np.any(action>self.env._high+1e-10):
+    issued={'safe':False,'reason':'nonfinite_or_out_of_bounds_hold_command'}
+   else:issued=self.geometry.check([action[:6],action[7:13]],[[FINGER_OPEN*action[6]]*2,[FINGER_OPEN*action[13]]*2],poses,False)
+   return actual,issued
+  except (ValueError,KeyError,IndexError,TypeError) as error:
+   invalid={'safe':False,'reason':'invalid_fresh_hold_readback','detail':str(error)}
+   return invalid.copy(),invalid.copy()
  def command(self,time):
   from yam_arena import ik
   from yam_arena.demo import grip_rotation
@@ -51,10 +67,14 @@ class ClosureProbe:
    for n in self.order:
     fp,fr=self.pose(n+'_top');size=np.asarray(self.parts[n+'_top']['size']);vertices=np.array([fp+fr@(size*np.array((x,y,z))/2) for x in (-1,1) for y in (-1,1) for z in (-1,1)]);height=vertices@reference[:,2];heights[n]=(float(height.min()),float(height.max()))
    inner_under=max(heights[n][1] for n in ('east','west'))<=min(heights[n][0] for n in ('north','south'))+.0005
+   actual,issued=self.released_hold_clearance()
+   if not actual['safe'] or not issued['safe']:
+    self.failure='released final closure '+('measured' if not actual['safe'] else 'issued')+' full315 clearance rejected';self.done=False
+    return self.previous.copy(),{'phase':'verify_released_closure','flap_angles_deg':angles,'closed_hold_s':self.closed_hold,'failure':self.failure,'clearance_actual':actual,'clearance_issued':issued,'not_issued':True}
    self.closed_hold=self.closed_hold+dt if all(abs(a)<=5. for a in angles.values()) and inner_under else 0.
    if self.closed_hold>=1.:self.done=True
    elif time-self.started>5:self.failure='closed flap angles did not persist after both hands cleared'
-   return self.previous.copy(),{'phase':'verify_released_closure','flap_angles_deg':angles,'closed_hold_s':self.closed_hold,'inner_flaps_under_outer':bool(inner_under),'failure':self.failure}
+   return self.previous.copy(),{'phase':'verify_released_closure','flap_angles_deg':angles,'closed_hold_s':self.closed_hold,'inner_flaps_under_outer':bool(inner_under),'failure':self.failure,'clearance_actual':actual,'clearance_issued':issued}
   name=self.order[self.index];side=GRASPS[name][0];i=0 if side=='left' else 1
   ids,fids=self.env._ids[side+'_robot'];d=self.env._base.scene[side+'_robot'].data.joint_pos;d=d.torch if hasattr(d,'torch') else d;native=d.detach().cpu().numpy()[0];qa=native[ids];tcp,rhand=ik.tcp_pose(qa,self.env.rig.bases[side]);opening=float(np.clip(native[fids].mean()/FINGER_OPEN,0,1));gap=opening*2*abs(FINGER_OPEN);angle=angles[name]
   if self.stage=='preloaded':self.change('approach',time,tcp,rhand)
