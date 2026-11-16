@@ -1,4 +1,4 @@
-# Five household tasks — development record
+# Five household tasks — submission record
 
 User authorized implementation, paid validation, media upload and one PR per
 task on 15 November 2026. Use proportionate, disclosed material models and
@@ -9,15 +9,20 @@ and the required genuine Dream attempt have been recorded and inspected.
 |---|---|
 | Fasten a bracelet | Final native demo007 1.0, Dream007 0.0; independent replay and visual review passed. Media M-S6J36D uploaded; [PR2187](https://github.com/robocurve/benchmark-tasks/pull/2187) received as TK-ZVS8SJ; waiting for review. |
 | Wrap a present | Native demo015 1.0, Dream012 0.0; independent replay and visual review passed. Media M-R4FZXS; [PR2197](https://github.com/robocurve/benchmark-tasks/pull/2197) received as TK-R879EX. Exact draw-only source difference is disclosed and verified inactive in the baseline. |
-| Rock a pram smoothly | Final native demo007 scores 1.0 with carrycot/doll collision shells; ten cycles and released stop. Dream007 0.0; replay and visual review passed. Media M-6UKL98; [PR2190](https://github.com/robocurve/benchmark-tasks/pull/2190) opened. |
-| Genuine knot removal | A 1.075 m, 10 mm polyester cord with a loose overhand. Native eight-second settling probe retains the knot. Native008 support grasp works but free-end grasp closes along the cord and slips. Native011 grasps and briefly unthreads it, but returns through the loop. Native014 still leaves a knot. Native016 extends the feed but reties during the return. Native017 independently scores 0.5: genuine untying, but cord drapes over the open hand. Dream018 completed 1,800 actions at 0.0 and passed final rescoring/visual review. Demo018 remains caught on an open finger; native019 closes the empty finger before drawing the cord clear. No full-score knot demo or PR yet. |
+| Rock a pram smoothly | Final native demo007 scores 1.0 with carrycot/doll collision shells; ten cycles and released stop. Dream007 0.0; replay and visual review passed. Media M-6UKL98; [PR2190](https://github.com/robocurve/benchmark-tasks/pull/2190) received as TK-LGTDUX; waiting for review. |
+| Genuine knot removal | Final native demo020 **1.0**, 1,710 actions; Dream018 **0.0**, 1,800 actions. Both independent native-trace and compact public CPU replays agree. Initial overhand is fed out, cord freed from the finger, then both ends spread, laid down and released for 6.2 seconds with zero crossings. Media M-DZMUEU; [PR2211](https://github.com/robocurve/benchmark-tasks/pull/2211) received as TK-KHZLE4; waiting for review. |
 | Apply, smooth and peel a wax strip | Flexible strip on silicone leg form; native006 revealed a fingertip geometry and capture issue. Corrected native008 scores 1.0; replay agrees, visible peel completes in 0.6 s. Dream008 0.0; source-matched, rescored and visually checked. Media M-SSD6AZ; [PR2192](https://github.com/robocurve/benchmark-tasks/pull/2192) received as TK-AGWK73. No hair-removal claim. |
+
+All five PRs were checked at **01:44 UTC on 16 November**: received, open and
+waiting for review. Each contains only its own task folder; none includes shared
+team notes or private artifacts. All five demos score **1.0**; all five genuine
+Dream baselines score **0.0**. These are submissions, not acceptance decisions.
 
 Fresh board check found no direct matches. Prior comparison and adjacent
 accepted/rejected tasks: [research](task-ideas-followup-2026-11-15.md).
 Development branch: `codex/five-household-tasks-2026-11-15`.
 Private runs and cloud lifecycle records: ignored
-`artifacts/five-household-2026-11-15/`. One A40 Pod `vmtb7b46hnozdv` started at 22:01:58 UTC, $0.59/hour, no persistent volume. Independent stop watchdog deadline extended under supervision to 01:20 UTC on 16 November; current paid run uses the same Pod. All lifecycle state is in the ignored batch directory. Never stop the teammate’s separate Brev VM.
+`artifacts/five-household-2026-11-15/`. One A40 Pod `vmtb7b46hnozdv` started at 22:01:58 UTC, $0.59/hour, no persistent volume. The Pod was confirmed EXITED at 01:41:09 UTC on 16 November, before its 01:45 watchdog deadline. Fresh paginated inventory showed no active Runpod Pods and no persistent mounts on this rental. All final archives are saved locally; the temporary Dream credential was removed before shutdown. Whole-rental estimate: 3.653 hours at $0.59/hour = $2.155 compute, plus about $0.051 temporary disk, **$2.21 for the batch excluding Dream API charges**. This is a rate-based estimate, not an invoice. Lifecycle and cost evidence are in the ignored batch directory. The teammate’s separate Brev VM was not touched.
 
 Batch GPU work after useful CPU preparation; one separately supervised stop
 deadline per rental. Save evidence locally and verify shutdown. Each competition

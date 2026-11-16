@@ -4,7 +4,35 @@ Last updated: 2026-11-16 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
-## 2026-11-16 — wrapping visual correction; final knot withdrawal in progress
+## 2026-11-16 — all five demos validated; GPU stopped
+
+- Knot native020 reaches **1.0**: 1,710 actions / 85.5 simulated seconds,
+  1,071 wall seconds. Retract the empty finger before drawing the cord clear,
+  then regrasp both free tips, lift, spread, lay down and release. Final cord is
+  intact and flat on the tabletop, with zero crossings and 6.2 seconds released.
+  Dream018 completes 1,800 actions at 0.0. Both full native traces and compact
+  public traces independently replay to the recorded scores on CPU.
+- Initial overhand and native contact motion were visually checked from front,
+  rear and overhead views. Finite capsule overlap is disclosed; the largest
+  sampled overlap follows unthreading. No sampled centreline intersection was
+  found, which is not a continuous collision certificate. Do not claim exact
+  flexible-material physics. Final native source and baseline source differ
+  only in demo authoring/replay files and the explicitly audited score-only
+  support guard; physics, observations and instruction match.
+- Knot media **M-DZMUEU**, isolated commit **54c69f0**, **PR2211** received
+  as **TK-KHZLE4**, waiting for review. All five PR receipts and single-task
+  scopes were freshly checked at 01:44 UTC; none is accepted yet.
+  The other four received PRs are bracelet2187, pram2190, wax2192 and wrapping2197.
+  Keep the later decision status in `docs/five-household-task-batch.md`.
+- All evidence copied locally with the final archive checksum verified. Removed
+  the temporary Dream credential and confirmed Pod `vmtb7b46hnozdv` **EXITED at
+  01:41:09 UTC**; fresh complete inventory has **no active Runpod Pods**.
+  No persistent mounts. Whole rental: 3.653 hours, estimated **$2.155 compute +
+  $0.051 temporary disk = $2.21**, excluding Dream API charges. One GPU served
+  the entire batch; no second rental. This is an estimate, not an invoice.
+  Lifecycle, inventory and original raw runs are ignored local artifacts.
+
+## 2026-11-16 — wrapping visual correction and knot development history
 
 - Wrapping native012 scored 1.0, but visual inspection found paper side faces
   coplanar with the native box. Offset only the closed-side drawing by 0.6 mm;
@@ -21,8 +49,10 @@ developers and their agents, not a competition submission document.
   the knot is removed, but cord is draped over the open hand. Native018 adds
   regrasping the exposed end and turning the open hand to let the cord slide
   off. Demo018 still catches on the open finger; native019 retracts that
-  empty finger first. Dream018 completed1,800actions at0.0, independently
-  rescored and visually reviewed. Only the scripted demo plan changes.
+  empty finger first and releases the untied cord on the table (0.5, two loose
+  crossings). Native020 adds an ordinary two-ended lift/spread/lay/release,
+  1,710 actions within the 1,800-action limit. Dream018 completed 1,800 actions
+  at 0.0, independently rescored and visually reviewed. Physics are unchanged.
 - Final knot scorer now also requires the entire cord above and within the
   1.10x1.30m station tabletop; the old upper-height-only guard could count a
   cord on the floor. This is a score-only strengthening. Preserve original
@@ -68,7 +98,8 @@ developers and their agents, not a competition submission document.
 - One A40 Pod vmtb7b46hnozdv at $0.59/hour started22:01:58UTC, 100GB temporary
   disk, no persistent volume. Independent stop deadline currently01:03:44UTC
   on16November at that checkpoint; now extended under supervision to01:20UTC
-  for the final knot pair. Dream jobs serialized with a lock.
+  for the final knot pair, then to 01:45 UTC for final straightening. Dream jobs
+  serialized with a lock. No second GPU was rented.
   Do not stop the teammate's separate Brev VM. Private evidence/lifecycle under
   `artifacts/five-household-2026-11-15/`; shared progress in
   `docs/five-household-task-batch.md`. Remaining tasks are not yet submitted.

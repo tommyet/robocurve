@@ -46,4 +46,17 @@ if __name__=='__main__':
  move('right',[.28,-.38,.754],R,.8,1.,'release the straightened cord')
  p.add(3.,'clear both ends',{'left':(np.array([.18,.36,.96]),G,.8),'right':(np.array([.25,-.30,.98]),D,.8)})
  p.add(5.,'final released judging',{})
+ # Grasp the two free tips and spread above the loose coil before laying
+ # them down. These fixed coordinates are authored offline, not read at runtime.
+ A=down(-20);B=down(9)
+ yellow=np.array([.1795,.1236,.7525]);red_tip=np.array([.2926,-.3957,.7525])
+ p.add(3.,'approach both free tips',{'left':(yellow+[0,0,.07]-.009*A[:,2],A,.8),'right':(red_tip+[0,0,.07]-.009*B[:,2],B,.8)},'joint')
+ p.add(2.,'reach both free tips',{'left':(yellow-.009*A[:,2],A,.8),'right':(red_tip-.009*B[:,2],B,.8)})
+ p.add(1.,'grasp both free tips',{'left':(yellow-.009*A[:,2],A,0.),'right':(red_tip-.009*B[:,2],B,0.)})
+ p.add(1.5,'lift the tips above the loose coil',{'left':(yellow+[0,0,.0975]-.009*A[:,2],A,0.),'right':(red_tip+[0,0,.0975]-.009*B[:,2],B,0.)})
+ p.add(4.,'spread the untied cord',{'left':(np.array([.16,.51,.85])-.009*A[:,2],A,0.),'right':(np.array([.30,-.51,.85])-.009*B[:,2],B,0.)})
+ p.add(2.,'lay the spread cord on the table',{'left':(np.array([.16,.51,.754])-.009*A[:,2],A,0.),'right':(np.array([.30,-.51,.754])-.009*B[:,2],B,0.)})
+ p.add(1.,'release both tips',{'left':(np.array([.16,.51,.754])-.009*A[:,2],A,.8),'right':(np.array([.30,-.51,.754])-.009*B[:,2],B,.8)})
+ p.add(3.,'move clear of the finished cord',{'left':(np.array([.18,.36,.96]),G,.8),'right':(np.array([.25,-.30,.98]),D,.8)})
+ p.add(4.,'uncrossed released judging',{})
  print(json.dumps(p.save(Path(__file__).with_name('demo-plan.json'))))

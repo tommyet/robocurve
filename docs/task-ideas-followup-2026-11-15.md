@@ -1,5 +1,13 @@
 # Follow-up: wrapping, rocking, untangling and five new ideas
 
+Implementation update, 16 November: the user selected bracelet fastening,
+present wrapping, pram rocking, knot removal and wax-strip technique for
+building and submission. Current results and PRs are in the
+[five-task record](five-household-task-batch.md). The research below records
+the earlier screening; it is not the current development status. Waxing is
+scoped to applying, smoothing and peeling a strip on a practice form, without
+a hair-removal claim.
+
 Research only, 15 November 2026, with board/PR snapshots around 21:09 UTC. No GPU,
 Dream inference, simulation, task build or upstream submission was performed.
 

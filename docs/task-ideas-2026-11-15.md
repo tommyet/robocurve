@@ -1,5 +1,13 @@
 # New task ideas: novelty and viability
 
+Implementation update, 16 November: the user selected bracelet fastening,
+present wrapping, pram rocking, knot removal and wax-strip technique for
+building and submission. Current results and PRs are in the
+[five-task record](five-household-task-batch.md). The research below records
+the earlier screening; it is not the current development status. Waxing is
+scoped to applying, smoothing and peeling a strip on a practice form, without
+a hair-removal claim.
+
 Checked 15 November 2026, after the necktie submission and GPU shutdown.
 No simulation, GPU or Dream work was performed for these ideas.
 

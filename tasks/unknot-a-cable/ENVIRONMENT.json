@@ -1,8 +1,8 @@
 {
   "schema": "runtime-evidence-v1",
-  "status": "pinned_reference_environment",
-  "scope": "Reference environment only; current task validation pending.",
-  "current_task_runtime_verified": false,
+  "status": "native_runtime_verified",
+  "scope": "This task was run on the pinned environment for both recorded native trials.",
+  "current_task_runtime_verified": true,
   "python": "3.12.16",
   "packages": {
     "numpy": "2.5.4",
@@ -47,6 +47,6 @@
     "gpu": "NVIDIA A40 48GB",
     "physics": "CPU PhysX, GPU rendering"
   },
-  "before_running": "Check installed versions/source revisions and save a fresh per-run manifest. A source/API inspection is not runtime validation.",
-  "reference_checked_utc_date": "2026-11-15"
+  "reference_checked_utc_date": "2026-11-15",
+  "verified_utc_date": "2026-11-16"
 }

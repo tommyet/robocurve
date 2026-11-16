@@ -41,7 +41,7 @@ hashes are recorded in `VALIDATION.json`.
 
 The wooden tabletop measures 1.10 x 1.30 m. One 1.075 m long, 10 mm diameter blue polyester cord, mass 80 g, lies on a wooden table in a loose overhand knot. Its two tips are marked yellow and red. The knot is centred about 28 cm in front of the robot; both free tips point towards the left-hand side of the table. Both grippers start open. The setup photograph and initial-nodes.json specify this single reproducible layout. No clamps, pins or hidden anchors hold the cord.
 
-1.0 if the original overhand has been removed, the intact cord has no crossings in an overhead view, the gap beneath the cord is no more than 2.5 cm anywhere, and both hands have released it for three seconds. 0.5 if the knot has been removed and the cord released for three seconds but it still has loose crossings or is not laid down. Otherwise 0. A broken cord or an invalid initial knot scores 0. Judge the knot and crossings from overhead and side video with a ruler; topology analysis supplies an additional simulation check.
+1.0 if the original overhand has been removed, the intact cord is entirely on the tabletop and has no crossings in an overhead view, the gap beneath the cord is no more than 2.5 cm anywhere, and both hands have released it for three seconds. 0.5 if the knot has been removed and the cord released for three seconds but it still has loose crossings or is not laid down. Otherwise 0. A broken cord or an invalid initial knot scores 0. Judge the knot and crossings from overhead and side video with a ruler; topology analysis supplies an additional simulation check.
 
 Reset: Retie the same loose overhand and restore the photographed layout, or reset the scene. Nothing is consumed.
 
@@ -49,5 +49,18 @@ Reset: Retie the same loose overhand and restore the photographed layout, or res
 
 The cord is a native PhysX chain of 86 rounded capsules with bending constraints, gravity, friction, gripper contact and non-neighbour self-collision, simulated at 240 Hz. It is freely movable; no ideal grasp attachments, object teleports or scripted untying forces are used. A coarse link chain approximates bending, torsion and compression rather than individual fibres. Finite solver contacts can permit transient capsule overlap when squeezed; this is not a calibrated compression model. Static open-curve topology uses several closures and can be ambiguous; the final uncrossed, released cord and video remain the primary physical judging criteria.
 
-Final native run counts, scores, timings and media are recorded in
-`VALIDATION.json` once validation is complete.
+## Recorded trials
+
+- Demo: **1.0**, 1710 actions / 85.5 simulated seconds; 1071.0 wall seconds including startup.
+- Dream: **0.0**, 1800 actions / 90 simulated seconds; 1415.5 wall seconds including startup.
+
+Both trials use the same physics, cameras, instruction and starting layout. The scripted demonstration plan was updated after the baseline; Dream does not execute that plan or its offline authoring tools. Exact hashes and differences are recorded in VALIDATION.json. Independent
+trace replay agrees with both scores. Videos were visually checked. Timings
+include GPU startup and shared-host contention; they are not a speed benchmark.
+`VALIDATION.json` records hashes and review details; compressed measured traces
+and summaries are in `evidence/`. The uploaded videos preserve every native
+frame at 20 fps, with two judging views placed side by side.
+
+The final scorer adds a tabletop-support guard. Both native scores were rechecked
+and remain unchanged. This score-only change does not affect physics or policy
+observations; its exact patch is recorded in `VALIDATION.json`.
