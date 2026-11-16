@@ -75,6 +75,16 @@ def main():
    for name in ['dryer','switch']:
     v=base.arena_world.get_pose_w(name);ds.append(v.torch if hasattr(v,'torch') else v)
    return torch.cat([h[:1],*ds,h[1:]],dim=0).detach().cpu().numpy()
+  import native_capture as capture
+  from yam_arena.robot import asset_link_paths
+  owners=capture.native_body_owners(base.scene,asset_link_paths(),['dryer','switch','scalp_collision'])
+  for name,index in hair_ids.items():
+   owners['/World/envs/env_0/mannequin/'+name]={'kind':'articulation','entity':'hair_model','body_name':name,'body_index':index,'source':'ArticulationData.body_link_pose_w','parent_body_owner':None}
+  if len(owners)!=82:raise RuntimeError('expected82 actual robot/hair/object owners')
+  for path in owners:
+   if not base.scene.stage.GetPrimAtPath(path):raise RuntimeError('missing native actor '+path)
+  manifest=capture.capture_manifest(capture.export_scene(base.scene.stage,a.out/'capture-scene.usdc'),owners,json.loads((a.out/'source-sha256.json').read_text()),capture.virtual_review_views(sim.PinholeCameraCfg(focal_length=18.,clipping_range=(.03,20.)),target=(.36,0.,.99)),no_video=a.no_video)
+  (a.out/'capture-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
   from switch_detent import NativeDetentBinding
   detent=NativeDetentBinding(base)
   def force(name,f):
@@ -133,7 +143,10 @@ def main():
      measured_score=tracker.update({'time':env._t,'head_pose':headpose.tolist(),'root_separation':sep,'min_height':float(min(dryer[2]-.11,min(s['pos'][2]-LENGTH/2 for s in segments))-TOP),'dry_fraction':m['dry_fraction'],'worst_remaining_water_fraction':m['worst_remaining_water_fraction'],'max_temperature_C':m['max_temperature_C'],'dryer_speed':speed,'power_on':power>.5,'water_removed_step_kg':m['water_removed_step_kg'],'dryer_parked':bool(np.linalg.norm(dryer[:3]-np.array(DRYER_START))<.025),'hands_clear':all(np.linalg.norm(h-dryer[:3])>.12 for h in hands)})
     if measured_score is not None and measured_score['invalid']:
      robot.failure=measured_score['invalid'];control['failure']=robot.failure
-    row={'time':env._t,'phase':phase,'robot_control':control,'hair':segments,'head_pose':headpose.tolist(),'head_motion':head_motion,'nose_direction_world':(headrot@np.array((-1.,0.,0.))).tolist(),'dryer_pose':dryer.tolist(),'switch_pose':switch.tolist(),'power_slider_fraction':power,'slider_detent':detent.snapshot(),'crease_separation':sep,'min_scalp_capsule_clearance_m':m['min_scalp_capsule_clearance_m'],'skin_attachment_error_m':skin_gap,'thermal':m,'score_metrics':measured_score};trace.write(json.dumps(row)+'\n');samples.append(row)
+    row={'time':env._t,'phase':phase,'robot_control':control,'hair':segments,'head_pose':headpose.tolist(),'head_motion':head_motion,'nose_direction_world':(headrot@np.array((-1.,0.,0.))).tolist(),'dryer_pose':dryer.tolist(),'switch_pose':switch.tolist(),'power_slider_fraction':power,'slider_detent':detent.snapshot(),'crease_separation':sep,'min_scalp_capsule_clearance_m':m['min_scalp_capsule_clearance_m'],'skin_attachment_error_m':skin_gap,'thermal':m,'score_metrics':measured_score}
+    row['native_owner_poses']=capture.native_body_world_poses(base.scene,owners,{'dryer':dryer,'switch':switch,'scalp_collision':skin})
+    row['action_14d']=arr(action)[0].tolist()
+    trace.write(json.dumps(row)+'\n');samples.append(row)
     if not np.isfinite(dryer).all() or sep>.03:raise RuntimeError('unstable native hair dynamics')
     if not a.no_video:
      panels=review.panels(base);canvas=np.zeros((594,960,3),dtype=np.uint8);canvas[36:306,240:720]=panels[0];canvas[306:576,:480]=panels[1];canvas[306:576,480:]=panels[2]
