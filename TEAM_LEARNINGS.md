@@ -4559,3 +4559,20 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Native014 completed1205actions/60.25s through97%underedge insertion, no target contact, then the exact augmented-command guard rejected.1737228mm clearance vsunchanged.2mm BEFORE stepping. Nominal/augmented separation solved the earlier approach stall; tracking after pause recovered to.372mm during descent. Independent source/scene/action-bounds/idlearm/rawcontact/substep-angle audit PASS:14460substeps,37355poses,3615contact snapshots; maximumPIbias.0143933rad/20mrad cap, crease9.99um. Trace7b65fd981cb52f119686132d595852c36f40099aa87957a6bd3b0bc4595d739e. This is failed unscored engineering, not opening/fulltask proof. Capture `/private/tmp/carton-scoop014-capture/carton-scoop-pi014` and ignored retryarchive.
 - Revised015 branch codex/carton-scoop-pi1fa25d1 lowers inside/insert4mm and increases1mm/s acquisition stroke.8→4.8mm, preserving EXACTfinalcontactpoint.105CPUtests +459dense static nominal/014-end-bias guard samples PASS, minaugmented.503907mm. Force/speed/geometry/hinge/gain limits unchanged. Lower.5/1/2mm attempts failed CPU endpoint/route checks; no native run for them. Finite static checks do not guarantee unknown future bias; runtime guards remain.
 - SOLEnextGPUowner is bounded local015retry PID60051/session46270. ExistingVMstartaccepted00:28:15UTCafterfirstSTOPPINGrejection. It uploads frozen015archive, runs camera-free unscored open_run.py with240s sim/900s wall cap, downloads result, then allows20minutes for primary review/new-job HANDOFF before automaticstop. `HANDOFF` cancels that old watcher's stop only when primary explicitly takes ownership; `STOP_NOW` stopsaftercapture. No other native job should start concurrently. Status under ignored `carton-scoop-pi015-retry`. This idlegraceavoids repeated~14min stop/start delays while primaryactivelyiterates; no new VM/driver reset.
+
+### 2026-11-16 — Ethernet final031 diagnosis and bounded release candidate
+
+- Final031744rows enter depress_clip at26.8s and stop37.2s. The actual
+  tip_left collision piece58 to switch/side_0_m gap is0.187228518mm, below
+  unchanged0.2mm guard. Left/hand gaps exceed200mm. Historical PREPRESS mesh
+  error0.2254mm must not be confused with current CONTACT mesherror1.324mm.
+- Captured robot/collision geometry hashes match current source; FingerGeometry
+  already includes collision-origin RPY. Centering tabY worsens nominal housing
+  reserve, so it was rejected. ONLY candidate production change is contactX
+  -10→-10.5mm on the same physical tab, preserving wrist/gains/depth/hardware.
+  Recorded actual pose translated by this offset certifies0.678815mm;41-point
+  nominal hover-to-contact sweep and intervals remain>.95mm with IK<1um.
+  These scoped CPU certificates do not prove actual release or full cycle.
+- Self-contained final031 pose fixture and full-stroke regression added;121tests
+  and compile pass. Isolated codex/ethernet-release-readiness starts current
+  origin/main1d9f4fb; old Ethernet/hair dirtyREADME remains untouched.
