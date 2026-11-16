@@ -111,7 +111,7 @@ def main():
    robot=ClosureProbe(env) if a.mode=='closure-probe' else None;tracker=PackingScorer();task._tracker=tracker;task._diagnostic=False
   with (a.out/'trajectory.jsonl').open('w') as trace:
    for step in range(3600 if a.mode=='closure-probe' else 40 if a.mode=='settle-probe' else 120 if a.mode=='adhesion-probe' else 100):
-    phase='settle' if step<20 else 'peel_bench' if step<60 else 'hold'
+    phase='preloaded_stability' if a.mode=='settle-probe' else 'settle' if step<20 else 'peel_bench' if step<60 else 'hold'
     target=.06*min(1.,max(0.,(step-20)/40))
     control=None
     if robot:
@@ -191,7 +191,8 @@ def main():
     if robot is not None and (getattr(robot,'failure',None) or getattr(robot,'done',False)):break
   result={'diagnostic':True,'robot_demo':False,'task_score':None,'bench_fixtures':True,'physics_dt_s':float(base.sim.get_physics_dt()),'explicit_material_length_m':ACTIVE_LENGTH,'initial_wrap_displacement_m':initial_displacement,'max_anchor_separation_m':worst,'max_displaced_material_estimate_m':max_unwound,'native_contact':contacts.telemetry(),'contact_integration_native_validated':False,'checks':{'stays_wound_before_pull':initial_displacement<.0005,'material_connected':worst<CELL_LENGTH*MAX_STRAIN,'material_peels':max_unwound>.025}}
   if a.mode=='adhesion-probe':result|={'diagnostic':True,'task_score':None,'coupon_probe':True,'bench_fixtures':True,'final_coupon_film_height_m':float(states[-1,2]-coupon_start[2])}
-  if tracker is not None:result|={'diagnostic':False,'bench_fixtures':False,'privileged_robot_attempt':True,'task_score':tracker.value,'metrics':tracker.result(),'controller_failure':getattr(robot,'failure',None),'controller_completed':getattr(robot,'done',False),'control_steps':step+1,'elapsed_s':env._t}
+  if tracker is not None:result|={'diagnostic':False,'bench_fixtures':False,'privileged_robot_attempt':robot is not None,'task_score':tracker.value,'metrics':tracker.result(),'controller_failure':getattr(robot,'failure',None),'controller_completed':getattr(robot,'done',False),'control_steps':step+1,'elapsed_s':env._t}
+  result|={'no_video':a.no_video,'state_only_diagnostic':a.no_video,'media_eligible':False}
   (a.out/'native-events.json').write_text(json.dumps(events,indent=2)+'\n');(a.out/'result.json').write_text(json.dumps(result,indent=2)+'\n')
  except BaseException as error:
   import traceback;traceback.print_exc();(a.out/'error.json').write_text(json.dumps({'error':str(error),'type':type(error).__name__},indent=2));raise
