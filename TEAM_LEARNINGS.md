@@ -17,8 +17,20 @@ developers and their agents, not a competition submission document.
 - Knot014 retained a knot. A short-lived open-curve “unknot” classification
   during manipulation is not proof of successful removal. Extend the end feed
   beyond the far loop boundary before withdrawing. Native016 still reties on
-  return; native017 releases after feeding and before wrist withdrawal. No
-  knot PR until a released full-score result is visually confirmed.
+  return; native017 releases after feeding and independently scores 0.5:
+  the knot is removed, but cord is draped over the open hand. Native018 adds
+  regrasping the exposed end and turning the open hand to let the cord slide
+  off. Demo018 still catches on the open finger; native019 retracts that
+  empty finger first. Dream018 completed1,800actions at0.0, independently
+  rescored and visually reviewed. Only the scripted demo plan changes.
+- Final knot scorer now also requires the entire cord above and within the
+  1.10x1.30m station tabletop; the old upper-height-only guard could count a
+  cord on the floor. This is a score-only strengthening. Preserve original
+  native reports, explicitly record the exact patch and rescore existing
+  traces; physics, observations and instruction are unchanged. Public traces
+  retain all20Hz actions/hands/centrelines/gaps, omitting redundant link
+  velocities/poses to fit the code-size limit. CPU replay is included.
+  No knot PR until a released full-score result is visually confirmed.
 - Before syncing a new demo, wait for the offline planner to finish and verify
   its exit status and expected stages. A failed planner leaves the old plan in
   place. The mistaken013 launch was stopped during initialization at zero steps.
@@ -55,7 +67,8 @@ developers and their agents, not a competition submission document.
   No hair/skin-treatment claim is made.
 - One A40 Pod vmtb7b46hnozdv at $0.59/hour started22:01:58UTC, 100GB temporary
   disk, no persistent volume. Independent stop deadline currently01:03:44UTC
-  on16November, extended under supervision. Dream jobs serialized with a lock.
+  on16November at that checkpoint; now extended under supervision to01:20UTC
+  for the final knot pair. Dream jobs serialized with a lock.
   Do not stop the teammate's separate Brev VM. Private evidence/lifecycle under
   `artifacts/five-household-2026-11-15/`; shared progress in
   `docs/five-household-task-batch.md`. Remaining tasks are not yet submitted.

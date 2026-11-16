@@ -26,7 +26,9 @@ class Model:
  def score(self):
   m=self.measure()
   if self.failed or not self.initial_valid:return 0.
-  if self.kind=='unknot' and m['top_view_crossings']==0 and self.release>=3 and m['table_clearance_m']<.025:return 1.
+  # Whole cord above the 1.10 x 1.30 m station tabletop, allowing 2 mm contact tolerance.
+  on_table=np.all(self.points>=[-.185,-.645,.7505]) and np.all(self.points[:,:2]<=[.905,.645])
+  if self.kind=='unknot' and m['top_view_crossings']==0 and self.release>=3 and m['table_clearance_m']<.025 and on_table:return 1.
   return .5 if self.kind=='unknot' and self.release>=3 else 0.
  def state(self):return self.record
  def draw(self,d):pass

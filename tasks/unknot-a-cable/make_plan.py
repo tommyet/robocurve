@@ -32,4 +32,18 @@ if __name__=='__main__':
  p.add(1.,'release the unthreaded cord',targets)
  p.add(4.,'clear the table',{'left':(np.array([.18,.36,.96]),G,.8),'right':(np.array([.25,-.30,.98]),D,.8)})
  p.add(6.,'released judging',{})
+ # Pick the exposed end, then turn the open support hand to let the cord
+ # slide off its housing while the other hand draws the cord clear.
+ a=np.radians(-60);L=np.array([[np.cos(a),0,np.sin(a)],[0,1,0],[-np.sin(a),0,np.cos(a)]])@G
+ R=down(-65);tip=np.array([.160,-.045,.7525])
+ move('right',tip+[0,0,.07],R,.8,3.,'approach the exposed red tip')
+ move('right',tip,R,.8,2.,'reach the red tip')
+ move('right',tip,R,0.,1.,'grasp the red tip again')
+ point,rotation=ik.tcp_pose(p.a[:6],station.BASES['left'])
+ p.add(1.,'retract the empty finger from the cord',{'left':(point,rotation,0.)})
+ p.add(4.,'slide the untied cord off the open hand',{'left':(np.array([.24,.30,.92]),L,0.),'right':(np.array([.28,-.38,.79])-.009*R[:,2],R,0.)})
+ move('right',[.28,-.38,.754],R,0.,2.,'lay the cord down')
+ move('right',[.28,-.38,.754],R,.8,1.,'release the straightened cord')
+ p.add(3.,'clear both ends',{'left':(np.array([.18,.36,.96]),G,.8),'right':(np.array([.25,-.30,.98]),D,.8)})
+ p.add(5.,'final released judging',{})
  print(json.dumps(p.save(Path(__file__).with_name('demo-plan.json'))))

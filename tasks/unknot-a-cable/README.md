@@ -2,7 +2,7 @@
 
 Untie the overhand knot in the cord. Leave the cord on the table without any crossings, then let go.
 
-Removing a real knot from a flexible cord requires finding and feeding an end back through the loop. Simply moving crossed strands apart is not enough.
+Undoing accidental knots is a common problem with household cords. The robot must feed an end back through the loop without cutting or breaking the cord.
 
 ## Run and score
 
@@ -14,6 +14,8 @@ From the repository root:
 OMNI_KIT_ACCEPT_EULA=YES python tasks/unknot-a-cable/run.py --mode demo --out /tmp/unknot-a-cable-demo
 OMNI_KIT_ACCEPT_EULA=YES python tasks/unknot-a-cable/run.py --mode dream --out /tmp/unknot-a-cable-dream
 python tasks/unknot-a-cable/rescore.py /tmp/unknot-a-cable-demo
+# Re-score the included recordings on CPU, without Isaac:
+python tasks/unknot-a-cable/replay_evidence.py
 ```
 
 The layout is fixed; no random seed is used. The reset node geometry settles
@@ -30,9 +32,14 @@ camera video and initial/final photographs. `rescore.py` verifies frozen source
 hashes and recomputes topology from the measured native cord to check the recorded result. Always
 inspect the videos as well. This task requires native PhysX; `--cpu-preview` cannot run its cord physics.
 
+The public compressed traces retain every control step, action, measured hand
+pose, cord centreline and maximum joint gap. Redundant rigid-link velocities
+and poses are omitted to keep the submission small; the original raw trace
+hashes are recorded in `VALIDATION.json`.
+
 ## Setup and judging
 
-One 1.075 m long, 10 mm diameter blue polyester cord, mass 80 g, lies on a wooden table in a loose overhand knot. Its two tips are marked yellow and red. The knot is centred about 28 cm in front of the robot; both free tips point towards the left-hand side of the table. Both grippers start open. The setup photograph and initial-nodes.json specify this single reproducible layout. No clamps, pins or hidden anchors hold the cord.
+The wooden tabletop measures 1.10 x 1.30 m. One 1.075 m long, 10 mm diameter blue polyester cord, mass 80 g, lies on a wooden table in a loose overhand knot. Its two tips are marked yellow and red. The knot is centred about 28 cm in front of the robot; both free tips point towards the left-hand side of the table. Both grippers start open. The setup photograph and initial-nodes.json specify this single reproducible layout. No clamps, pins or hidden anchors hold the cord.
 
 1.0 if the original overhand has been removed, the intact cord has no crossings in an overhead view, the gap beneath the cord is no more than 2.5 cm anywhere, and both hands have released it for three seconds. 0.5 if the knot has been removed and the cord released for three seconds but it still has loose crossings or is not laid down. Otherwise 0. A broken cord or an invalid initial knot scores 0. Judge the knot and crossings from overhead and side video with a ruler; topology analysis supplies an additional simulation check.
 
@@ -40,7 +47,7 @@ Reset: Retie the same loose overhand and restore the photographed layout, or res
 
 ## Model limits
 
-The cord is a native PhysX chain of 86 rounded capsules with bending constraints, gravity, friction, gripper contact and non-neighbour self-collision, simulated at 240 Hz. It is freely movable; no ideal grasp attachments, object teleports or scripted untying forces are used. A coarse link chain approximates bending, torsion and compression rather than individual fibres. Static open-curve topology uses several closures and can be ambiguous; the final uncrossed, released cord and video remain the primary physical judging criteria.
+The cord is a native PhysX chain of 86 rounded capsules with bending constraints, gravity, friction, gripper contact and non-neighbour self-collision, simulated at 240 Hz. It is freely movable; no ideal grasp attachments, object teleports or scripted untying forces are used. A coarse link chain approximates bending, torsion and compression rather than individual fibres. Finite solver contacts can permit transient capsule overlap when squeezed; this is not a calibrated compression model. Static open-curve topology uses several closures and can be ambiguous; the final uncrossed, released cord and video remain the primary physical judging criteria.
 
 Final native run counts, scores, timings and media are recorded in
 `VALIDATION.json` once validation is complete.
