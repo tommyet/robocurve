@@ -1,4 +1,5 @@
 """Ordinary robot pickup/place prefix, no product or carton pose writes."""
+import copy
 import numpy as np
 from yam_arena.demo import ArmPlan,Waypoint as W
 from yam_arena.constants import FINGER_OPEN
@@ -30,6 +31,14 @@ class ClosureProbe:
                      self.contact_offset,self.rotation_offset)
  def change(self,stage,time,tcp,rotation):
   self.stage=stage;self.started=time;self.startp=tcp.copy();self.startr=rotation.copy();self.bias[:]=0.;self.settled=0
+ def candidate_state(self):
+  fixed={'env','geometry','parts','hinges','previous','last_time'}
+  return {k:copy.deepcopy(v) for k,v in self.__dict__.items() if k not in fixed}
+ def restore_candidate(self,state):
+  fixed={'env','geometry','parts','hinges','previous','last_time'}
+  for k in list(self.__dict__):
+   if k not in fixed and k not in state:del self.__dict__[k]
+  for k,v in state.items():setattr(self,k,copy.deepcopy(v))
  def command(self,time):
   from yam_arena import ik
   from yam_arena.demo import grip_rotation
@@ -50,6 +59,18 @@ class ClosureProbe:
   ids,fids=self.env._ids[side+'_robot'];d=self.env._base.scene[side+'_robot'].data.joint_pos;d=d.torch if hasattr(d,'torch') else d;native=d.detach().cpu().numpy()[0];qa=native[ids];tcp,rhand=ik.tcp_pose(qa,self.env.rig.bases[side]);opening=float(np.clip(native[fids].mean()/FINGER_OPEN,0,1));gap=opening*2*abs(FINGER_OPEN);angle=angles[name]
   if self.stage=='preloaded':self.change('approach',time,tcp,rhand)
   p,r,contact=self.target(name);elapsed=time-self.started;opened=.020/(2*abs(FINGER_OPEN));closed=.0015/(2*abs(FINGER_OPEN));stage_before=self.stage;g=opened
+  # Readback progress/slip clocks describe observations, not proposed motion.
+  # Retain these observations even if the next normal advance is backtracked.
+  if stage_before=='fold':
+   if angle>self.last_angle+1.:self.last_angle=angle;self.last_progress=time
+   if angle>self.engagement_angle+5.:self.engaged=True
+   acquired_error=float(np.linalg.norm(tcp+rhand[:,2]*PAD_CONTACT_FORWARD-contact))
+   bad_grip=acquired_error>.010 or gap<.0023 or gap>.014
+   self.slip_since=time if bad_grip and self.slip_since is None else self.slip_since if bad_grip else None
+   if self.slip_since is not None and time-self.slip_since>.5:self.failure=name+' plain-rim grasp slipped by native gap/contact-point readback'
+   if elapsed>3 and not self.engaged:self.failure=name+' pinch did not produce measured hinge motion'
+   if time-self.last_progress>4:self.failure=name+' flap stopped following the gripper'
+  candidate_state=self.candidate_state()
   if self.stage=='approach':
    blend=ik.smoothstep(elapsed/3);target=self.startp+blend*(p-r[:,2]*.040-self.startp);rotation=ik.slerp_matrix(self.startr,r,blend)
    if elapsed>=3 and np.linalg.norm(target-tcp)<.004 and np.linalg.norm(ik._rot_error(rotation,rhand))<.07 and gap>.016:self.change('enter',time,tcp,rhand)
@@ -63,14 +84,6 @@ class ClosureProbe:
    if self.settled>=3:
     fp,fr=self.pose(name+'_top');self.contact_offset=fr.T@(tcp+rhand[:,2]*PAD_CONTACT_FORWARD-fp);self.rotation_offset=r.T@rhand;self.command_angle=angle;self.engagement_angle=angle;self.last_angle=angle;self.last_progress=time;self.slip_since=None;self.engaged=False;self.change('fold',time,tcp,rhand)
   elif self.stage=='fold':
-   if angle>self.last_angle+1.:self.last_angle=angle;self.last_progress=time
-   if angle>self.engagement_angle+5.:self.engaged=True
-   acquired_error=float(np.linalg.norm(tcp+rhand[:,2]*PAD_CONTACT_FORWARD-contact))
-   bad_grip=acquired_error>.010 or gap<.0023 or gap>.014
-   self.slip_since=time if bad_grip and self.slip_since is None else self.slip_since if bad_grip else None
-   if self.slip_since is not None and time-self.slip_since>.5:self.failure=name+' plain-rim grasp slipped by native gap/contact-point readback'
-   if elapsed>3 and not self.engaged:self.failure=name+' pinch did not produce measured hinge motion'
-   if time-self.last_progress>4:self.failure=name+' flap stopped following the gripper'
    self.command_angle=min(1.,angle+8.,self.command_angle+20.*dt);target,rotation,_=self.target(name,self.command_angle);g=closed
    if angle>=-.3 and abs(angle)<=5.:self.change('release',time,tcp,rhand)
   elif self.stage=='release':
@@ -109,9 +122,23 @@ class ClosureProbe:
    aid,fid=self.env._ids[other+'_robot'];v=self.env._base.scene[other+'_robot'].data.joint_pos;v=v.torch if hasattr(v,'torch') else v;v=v.detach().cpu().numpy()[0];qs.append(v[aid]);fs.append(v[fid])
   contact_allowed=stage_before in ('enter','pinch','fold','release','clear_edge')
   actual=self.geometry.check(qs,fs,poses,contact_allowed,contact_targets={name+'_top'},contact_side=i)
-  issued=self.geometry.check([out[:6],out[7:13]],[[FINGER_OPEN*out[6]]*2,[FINGER_OPEN*out[13]]*2],poses,contact_allowed,contact_targets={name+'_top'},contact_side=i)
-  if not actual['safe'] or not issued['safe']:
-   self.failure=name+':'+stage_before+' full315 unrelated-object clearance rejected'
-   return self.previous.copy(),{'phase':name+':'+stage_before,'failure':self.failure,'clearance_actual':actual,'clearance_issued':issued,'not_issued':True}
+  def command_guard(action):
+   if action.shape!=(14,) or not np.isfinite(action).all() or np.any(action<self.env._low-1e-10) or np.any(action>self.env._high+1e-10):return {'safe':False,'reason':'nonfinite_or_out_of_bounds_command'}
+   return self.geometry.check([action[:6],action[7:13]],[[FINGER_OPEN*action[6]]*2,[FINGER_OPEN*action[13]]*2],poses,contact_allowed,contact_targets={name+'_top'},contact_side=i)
+  previous_guard=command_guard(self.previous);proposal=out.copy();proposed_stage=self.stage;proposed_angle=getattr(self,'command_angle',angle)
+  trials=[];fraction=0.;issued=previous_guard;rejected=False
+  if not actual['safe'] or not previous_guard['safe'] or self.failure:
+   failure=self.failure or name+':'+stage_before+(' measured full315 clearance rejected' if not actual['safe'] else ' previous command lost fresh full315 clearance')
+   self.restore_candidate(candidate_state);self.failure=failure
+   return self.previous.copy(),{'phase':name+':'+stage_before,'failure':failure,'clearance_actual':actual,'clearance_previous':previous_guard,'candidate_action_14d':proposal.tolist(),'candidate_stage':proposed_stage,'candidate_command_angle_deg':proposed_angle,'not_issued':True}
+  accepted=False
+  for alpha in (1.,.5,.25,.125,.0625):
+   candidate=self.previous+alpha*(proposal-self.previous);guard=command_guard(candidate)
+   trials.append({'fraction':alpha,'action_14d':candidate.tolist(),'clearance':guard})
+   if guard['safe']:out=candidate;issued=guard;fraction=alpha;accepted=True;break
+   rejected=True
+  if not accepted:out=self.previous.copy();issued=previous_guard
+  if rejected:self.restore_candidate(candidate_state)
+  advance={'candidate_stage':proposed_stage,'candidate_command_angle_deg':proposed_angle,'advance_fraction':fraction,'planner_and_integrator_frozen':rejected,'clearance_actual':actual,'clearance_previous':previous_guard,'clearance_issued':issued,'advance_trials':trials}
   self.previous=out
-  return out,{'phase':name+':'+stage_before,'flap_angles_deg':angles,'active_arm':side,'finger_gap_m':gap,'position_error_m':float(np.linalg.norm(error)),'rotation_error_rad':float(np.linalg.norm(ik._rot_error(rotation,rhand))),'tcp_actual':tcp.tolist(),'tcp_target':target.tolist(),'grip_contact_target':contact.tolist(),'command_angle_deg':getattr(self,'command_angle',angle),'engagement_verified':getattr(self,'engaged',False),'ik_error_m':pe,'ik_error_rad':re,'flaps_completed':self.index,'failure':self.failure}
+  return out,{'phase':name+':'+stage_before,'flap_angles_deg':angles,'active_arm':side,'finger_gap_m':gap,'position_error_m':float(np.linalg.norm(error)),'rotation_error_rad':float(np.linalg.norm(ik._rot_error(rotation,rhand))),'tcp_actual':tcp.tolist(),'tcp_target':target.tolist(),'grip_contact_target':contact.tolist(),'command_angle_deg':getattr(self,'command_angle',angle),'engagement_verified':getattr(self,'engaged',False),'ik_error_m':pe,'ik_error_rad':re,'flaps_completed':self.index,'failure':self.failure,**advance}

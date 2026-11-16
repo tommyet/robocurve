@@ -97,7 +97,7 @@ class Geometry:
   return obs
  def check(self,qs,fs,poses,contact=False,contact_targets=None,contact_side=1):
   if not all(np.isfinite(v).all() for v in [*qs,*fs,*[a for p in poses.values() for a in p]]):raise ValueError('nonfinite roll guard state')
-  hands=[self.pieces(s,q,f) for s,q,f in zip(('left','right'),qs,fs)];obs=self.obstacles(poses);hard=(10.,None);target=10.
+  hands=[self.pieces(s,q,f) for s,q,f in zip(('left','right'),qs,fs)];obs=self.obstacles(poses);hard=(10.,None);target=10.;target_pair=None
   centers=np.array([p for _,p,_,_ in obs]);extents=np.array([np.abs(R)@(np.array(size)/2) for _,_,R,size in obs]);omin,omax=centers-extents,centers+extents
   for side,pieces in enumerate(hands):
    pmin=np.array([t.min((0,1)) for _,t in pieces]);pmax=np.array([t.max((0,1)) for _,t in pieces])
@@ -105,7 +105,9 @@ class Geometry:
    for i,j in np.argwhere(gaps<=.003):
     n,p,R,size=obs[j];gaps[i,j]=box_gap(pieces[i][1],p,R,size)
    allowed=np.array([[contact and side==contact_side and name in ('tip_left','tip_right') and n in (FAMILY if contact_targets is None else contact_targets) for n,_,_,_ in obs] for name,_ in pieces])
-   if allowed.any():target=min(target,float(gaps[allowed].min()))
+   if allowed.any():
+    ti,tj=np.unravel_index(np.where(allowed,gaps,np.inf).argmin(),gaps.shape)
+    if gaps[ti,tj]<target:target=float(gaps[ti,tj]);target_pair=('left' if side==0 else 'right',pieces[ti][0],obs[tj][0])
    values=np.where(allowed,np.inf,gaps);i,j=np.unravel_index(values.argmin(),values.shape)
    if values[i,j]<hard[0]:hard=(float(values[i,j]),('left' if side==0 else 'right',pieces[i][0],obs[j][0]))
    table=pmin[:,2]-TOP;i=int(table.argmin())
@@ -117,7 +119,7 @@ class Geometry:
   gaps=np.maximum(amin[:,None]-bmax[None,:],bmin[None,:]-amax[:,None]).max(2)
   for i,j in np.argwhere(gaps<.0002):gaps[i,j]=mesh_gap(hands[0][i][1],hands[1][j][1])
   mutual=float(gaps.min())
-  return dict(safe=bool(hard[0]>=.0002 and mutual>=.0002 and target>=-.001),hard_gap_m=hard[0],hard_pair=hard[1],target_gap_m=target,other_arm_gap_m=mutual)
+  return dict(safe=bool(hard[0]>=.0002 and mutual>=.0002 and target>=-.001),hard_gap_m=hard[0],hard_pair=hard[1],target_gap_m=target,target_pair=target_pair,other_arm_gap_m=mutual)
 
 
 class RollPickupProbe:
