@@ -4,6 +4,89 @@ Last updated: 2026-11-16 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-16 — repair-task batch authorized and in development
+
+- User explicitly authorized building and PRing jammed-zip repair, seatbelt
+  untwisting, hoodie-drawstring rethreading and bicycle-tube patching, plus a
+  split key ring if straightforward. This supersedes the research-only status
+  below. Branch `codex/repair-task-batch-2026-11-16` starts at current shared
+  main `12cf2ac`. Current submission receipts are listed below.
+- Fresh authenticated board read succeeded. Local `.env.robocurve` remains
+  usable on this host; the credential problem in the separate spray notes is
+  not evidence that this host's token is invalid. No credentials were printed.
+- All four drafts pass CPU hand/IK-model checks; these are not native proof.
+  The remaining native demonstrations are being refined. Retain meaningful contact and
+  failure: a thin slot needs edge/intersection checks, not just point samples;
+  patch contact must not re-grasp during pressing; unsupported cloth must move.
+- Zip is now submitted as [PR2355](https://github.com/robocurve/benchmark-tasks/pull/2355),
+  media `M-J53WU6`, received as `TK-9XFVMM` and waiting for review. Native demo
+  380 actions / 19 s scores 1.0; Dream 800 actions / 40 s scores 0.0. Both
+  independently replay, and native camera evidence was inspected. No acceptance
+  claimed. Public evidence includes every measured action/hand/material step.
+- Dream's official `BridgeServer` / `BridgeSession` works through an SSH
+  reverse-loopback tunnel. The credential remains on the Mac; none was copied
+  to this Pod. Client versions and bridge hash are recorded with the evidence.
+  One Dream client at a time. Two simultaneous Isaac launches stalled the
+  second initialization on this host; serial trials made progress normally.
+- A tilted top-down pickup of a thin flat patch hit the native tabletop before
+  the fingers could close. The measured gap stayed about 35 mm despite a close
+  command. Use vertical fingertips with clearance; a CPU ideal-hand preview
+  cannot establish native grasp feasibility. Failed demos are not submissions.
+- Hoodie scoring explicitly requires 80 mm at BOTH ends. The previous local
+  draft checked only the leading length for full credit; this was corrected
+  before any native hoodie trial. A short trailing tail now receives at most
+  partial credit. The material dynamics did not change with this correction.
+- Thin-material native failures also exposed bimanual hand collisions. Keep
+  holding points well separated: patch counterhold moved onto the actual tube
+  at `(0.425, 0.1386)`; hoodie cloth holds moved farther around the casing.
+  Do not relax scores to compensate for a blocked arm. Record native measured
+  hands; a successful ideal-hand preview does not prove collision clearance.
+- The installed official DreamPolicy default is the full48-row chunk. Zip
+  used8 rows/request and completed in one server session. Patch016 used48: it
+  completed1,000 actions/21 requests but needed21 server sessions because
+  native execution between calls exceeded the provider idle window. Disclose
+  these recoveries; fewer requests are not automatically a better baseline.
+  Its score0 is not evidence solely of task difficulty. Full request records
+  are preserved. No robot/scene reset occurred during that completed episode.
+- Seatbelt native014 failed because the two hands collided during tongue
+  feeding and later withdrawal. CPU020 keeps the same model/scorer but angles
+  and lifts the holding hand, narrows the open approach and parks it clear of
+  the tongue path. CPU score1.0; native trial still pending. Finite per-piece
+  hand geometry was useful for spotting deep overlap before renting more time.
+- Before the seatbelt native014 trial, added the missing anchored-end extent
+  check: a tongue beyond either end receives0 even if the remaining webbing
+  is flat. Both full-score and detached-tongue CPU scoring controls pass.
+- Hoodie native015 and patch native016 have complete, replayed 1.0 demos.
+  Patch draw surfaces are offset by its actual0.4 mm thickness to avoid
+  coplanar flicker; fresh matching camera evidence was recorded. Hoodie tails
+  are127/207 mm, both above80 mm.
+- Patch [PR2362](https://github.com/robocurve/benchmark-tasks/pull/2362),
+  mediaM-2C2UPU, receivedTK-AXRQLZ and waiting for review. Demo1.0, completed
+  Dream1,000-action trial0.0 with disclosed21sessions/41attempts.
+- Hoodie [PR2363](https://github.com/robocurve/benchmark-tasks/pull/2363),
+  mediaM-5TMF5F, receivedTK-P4QQXE and waiting for review. Demo1.0; Dream
+  failed before its first action in two attempts with the SAME invalid
+  gripper response. Current live guide explicitly says partial/failed runs
+  are allowed. Actual32-step preroll video and both errors are published;
+  no completed baseline or task-performance claim. Guards remain unchanged.
+  `audit_failed_attempt.py` verifies a failed prefix without calling it
+  complete; ordinary `rescore.py` still rejects incomplete trials.
+- First hoodie Dream015 stopped at the first provider chunk (32 preroll
+  controls): official `_station.rows()` rejected a negative gripper value.
+  This is a failed attempt, not a completed zero-score model trial. A clean
+  session retry018 reproduced it. Do not clip away adapter validation failures.
+- One Runpod A40 **usiq8geb297ip6**, **$0.59/hour**, began **18:27:29 UTC**,
+  with 100 GB temporary disk and no persistent mounts. Root in this task owns
+  it. Independent watchdog PID5471, initial deadline **19:42:28 UTC**; inspect
+  `artifacts/repair-batch-2026-11-16/gpu-lifecycle.json` for any supervised
+  renewal (currently **21:05 UTC**, with the watcher verified alive). Source/bootstrap/first demos are bounded. Do not stop or use Eito's
+  Brev VM. Earlier capacity/validation refusals created no Pods.
+- Current Runpod SDK omits `cloud` for all pools; literal `"ALL"` is rejected
+  by REST v2. After verified refusals for the secure types, omitting the field
+  allocated a secure A40 at the usual rate. Do not retry uncertain creates or
+  leave duplicate watchdogs: wait for the failed session's watcher to exit.
+
+
 ## 2026-11-16 — broad creative task screen, no compute
 
 - Refreshed the complete upstream PR metadata index: **2,341 PRs through
