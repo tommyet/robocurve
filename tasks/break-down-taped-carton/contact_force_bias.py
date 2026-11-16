@@ -164,7 +164,7 @@ def intended_proxy_certificate(*,stage,q_nominal,q_augmented,q_actual,previous_i
                                now_s,force_time_s,native_force_clock_verified,
                                previous_accepted_force_world,previous_force_was_accepted,
                                previous_accepted_time_s,previous_accepted_ids,expected_previous_accepted_ids,
-                               stage_started_s,brace_clear_started_s=None,left_geometric_clear=False):
+                               stage_started_s,brace_clear_started_s=None,left_geometric_clear=False,issued_dtype='float64'):
     """Conditional per-arm guard certificate; never native feasibility evidence.
 
     Source-derived phase roles are acquire/push/release/inactive. LEFT may
@@ -181,10 +181,15 @@ def intended_proxy_certificate(*,stage,q_nominal,q_augmented,q_actual,previous_i
     always apply. Only active issued intended proxy depth can be exempted;
     inactive arms receive no bias or intended mask. Caller flags/IDs/provenance
     require native/source verification; this pure function cannot attest them.
+    issued_dtype='float32' explicitly requires exact float32(qnom+JcTF/K)
+    transport, checks limits/slew on that issued vector and adds K*abs(rounding)
+    to the current effort bound. Augmented geometry MUST be evaluated on this
+    same canonical vector by the native caller. Default float64 is unchanged.
     """
     result={'valid':False,'scope':'CPU-only proposed issued-INTENDED proxy exception; no native feasibility',
             'reasons':[],'replaces_only_issued_intended_depth':False}
     try:
+        if issued_dtype not in ('float64','float32'):raise ValueError('unknown issued transport dtype')
         clocks=_array([now_s,force_time_s,effort_bound_time_s,stage_started_s],(4,),'evidence clocks')
         if now_s<0 or stage_started_s<0 or stage_started_s>now_s or np.max(np.abs(clocks[1:3]-now_s))>1e-9:raise ValueError('stale or mismatched force/effort clock')
         if native_force_clock_verified is not True:raise ValueError('native force clock unverified')
@@ -216,10 +221,23 @@ def intended_proxy_certificate(*,stage,q_nominal,q_augmented,q_actual,previous_i
         magnitudes=_array(family_pair_norm_sums_N,(2,),'full family sum of pair norms');normals=_array(signed_resisting_normal_forces_N,(2,),'signed resisting normals')
         if np.any(magnitudes<0) or np.any(magnitudes>MAX_FAMILY_FORCE_N):raise ValueError('intended-family magnitude exceeds4N or invalid')
         if np.any(np.abs(normals)>magnitudes+1e-10):raise ValueError('signed normal exceeds measured family magnitude')
+        quantization=[];ulps=[];transport_efforts=[]
         for i in range(2):
             _joints(actual[i],'actual joints');_joints(prev[i],'previous issued joints')
             target=force_target(qn[i],forces[i],contacts[i],base[i],existing_effort_bound_nm=efforts[i])
-            if not np.allclose(qa[i],target['q_target'],rtol=0.,atol=1e-10):raise ValueError('augmented target is not exactly one nominal force bias')
+            mathematical=np.asarray(target['q_target'])
+            if issued_dtype=='float32':
+                wire=mathematical.astype(np.float32);canonical=wire.astype(np.float64)
+                if not np.array_equal(qa[i],canonical):raise ValueError('augmented target is not exact canonical float32 transport of one nominal bias')
+                residual=canonical-mathematical
+                effort=np.asarray(target['total_absolute_effort_bound_Nm'])+STIFFNESS*np.abs(residual)
+                spacing=np.abs(np.spacing(wire)).astype(np.float64)
+                if np.any(effort>EFFORT-EFFORT_MARGIN_NM):raise ValueError('float32 rounding exceeds unchanged motor effort margin')
+            else:
+                if not np.allclose(qa[i],mathematical,rtol=0.,atol=1e-10):raise ValueError('augmented target is not exactly one nominal force bias')
+                residual=np.zeros(6);spacing=np.abs(np.spacing(mathematical));effort=np.asarray(target['total_absolute_effort_bound_Nm'])
+            _joints(qa[i],'actual issued augmented joints')
+            quantization.append(residual.tolist());ulps.append(spacing.tolist());transport_efforts.append(effort.tolist())
             if np.any(np.abs(qa[i]-prev[i])>MAX_JOINT_SLEW_RAD+1e-12):raise ValueError('unchanged25mrad issued slew exceeded')
         for label,guards in [('nominal',nominal_guards),('augmented',augmented_guards),('actual',actual_guards)]:
             if len(guards)!=2:raise ValueError('both arms require '+label+' guards')
@@ -248,7 +266,9 @@ def intended_proxy_certificate(*,stage,q_nominal,q_augmented,q_actual,previous_i
                 if age>=1.-1e-9 and np.linalg.norm(forces[i])>1e-12:raise ValueError('release requires zero force after1s event deadline')
                 decay[i]=lam
         result.update(valid=True,replaces_only_issued_intended_depth=True,roles=list(roles),
-                      release_decay_lambda_by_arm=decay,active_contacts=list(active),
+                      release_decay_lambda_by_arm=decay,active_contacts=list(active),issued_dtype=issued_dtype,
+                      signed_transport_rounding_residual_rad=quantization,absolute_issued_ulp_rad=ulps,
+                      current_transport_effort_bound_Nm=transport_efforts,
                       augmented_intended_proxy_exceeds2mm=any(active[i] and g.target_gap_m < -MAX_NOMINAL_DEPTH_M for i,g in enumerate(augmented_guards)),
                       freshness_tolerance_s=1e-9,actual_depth_bound_m=MAX_ACTUAL_DEPTH_M,
                       nominal_depth_bound_m=MAX_NOMINAL_DEPTH_M,family_magnitude_bound_N=MAX_FAMILY_FORCE_N)

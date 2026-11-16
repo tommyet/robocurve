@@ -113,6 +113,29 @@ class CertificateTests(unittest.TestCase):
    good['signed_resisting_normal_forces_N']=[0.,0.];good['family_pair_norm_sums_N']=[0.,0.]
    for label in ('nominal_guards','augmented_guards','actual_guards'):good[label][0]=replace(good[label][0],intended_contact_enabled=False,target_gap_m=10.)
    self.reissue(good);out=intended_proxy_certificate(**good);self.assertTrue(out['valid'],out);self.assertEqual(out['roles'],['inactive','release']);self.assertEqual(out['release_decay_lambda_by_arm'],[None,.5])
+ def float32_inputs(self):
+  args=self.inputs();args['issued_dtype']='float32';args['q_augmented']=args['q_augmented'].astype(np.float32).astype(np.float64);return args
+ def test_explicit_float32_transport_is_canonical_and_reports_residual_ulps(self):
+  good=self.float32_inputs();out=intended_proxy_certificate(**good);self.assertTrue(out['valid'],out)
+  mathematical=self.inputs()['q_augmented'];residual=good['q_augmented']-mathematical
+  np.testing.assert_array_equal(out['signed_transport_rounding_residual_rad'],residual)
+  self.assertGreater(np.max(np.abs(residual)),0.)
+  self.assertTrue(np.all(np.asarray(out['absolute_issued_ulp_rad'])>0.))
+  bad=self.inputs();bad['issued_dtype']='float32';self.assertFalse(intended_proxy_certificate(**bad)['valid'])
+  bad=self.float32_inputs();bad['q_augmented']=(bad['q_nominal']+2*(mathematical-bad['q_nominal'])).astype(np.float32).astype(float);self.assertFalse(intended_proxy_certificate(**bad)['valid'])
+ def test_float32_rounded_joint_boundary_and_slew_excess_fail(self):
+  bad=self.float32_inputs();indices=np.flatnonzero(ik.UPPER.astype(np.float32).astype(float)>ik.UPPER);self.assertGreater(len(indices),0)
+  j=int(indices[0]);bad['q_nominal'][0,j]=ik.UPPER[j];bad['q_actual'][0,j]=ik.UPPER[j];bad['previous_issued'][0,j]=ik.UPPER[j]
+  bad['force_world'][0]=0.;self.reissue(bad);bad['q_augmented']=bad['q_augmented'].astype(np.float32).astype(float)
+  out=intended_proxy_certificate(**bad);self.assertFalse(out['valid']);self.assertIn('joint bounds',out['reasons'][0])
+  bad=self.float32_inputs();mathematical=self.inputs()['q_augmented'];residual=bad['q_augmented']-mathematical;i,j=np.unravel_index(np.argmax(residual),residual.shape);self.assertGreater(residual[i,j],1e-12)
+  bad['previous_issued']=bad['previous_issued'].copy();bad['previous_issued'][i,j]=mathematical[i,j]-MAX_JOINT_SLEW_RAD
+  out=intended_proxy_certificate(**bad);self.assertFalse(out['valid']);self.assertIn('slew',out['reasons'][0])
+ def test_float32_rounding_effort_is_counted_without_loosening_margin(self):
+  bad=self.float32_inputs();mathematical=self.inputs()['q_augmented'];residual=bad['q_augmented']-mathematical;i,j=np.unravel_index(np.argmax(np.abs(residual)),residual.shape)
+  original=force_target(bad['q_nominal'][i],bad['force_world'][i],bad['contact_tcp'][i],bad['bases'][i],existing_effort_bound_nm=np.zeros(6));tau=abs(original['bias_torque_Nm'][j])
+  bad['existing_effort_bound_nm'][i,j]=EFFORT[j]-.5-tau-STIFFNESS[j]*abs(residual[i,j])/2
+  out=intended_proxy_certificate(**bad);self.assertFalse(out['valid']);self.assertIn('rounding',out['reasons'][0])
  def test_summed_pair_force_cannot_hide_cancelling_excess(self):
   bad=self.inputs();summary=measured_force_summary([[[0,-2.1,0],[0,2.,0]],[[0,.3,0]]],bad['push_normals_world']);bad.update(summary)
   out=intended_proxy_certificate(**{k:v for k,v in bad.items()if k!='sign_contract'});self.assertFalse(out['valid']);self.assertIn('4N',out['reasons'][0])
