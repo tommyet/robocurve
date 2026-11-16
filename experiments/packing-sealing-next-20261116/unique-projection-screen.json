@@ -1,0 +1,145 @@
+{
+  "scope": "Experimental CPU deduplicated SAT projection; no production/runtime change",
+  "cases": [
+    {
+      "row": 0,
+      "original_seconds": 0.03323766705580056,
+      "dedup_seconds": 0.03314066701568663,
+      "exact_guard_equal": true
+    },
+    {
+      "row": 100,
+      "original_seconds": 0.035225083003751934,
+      "dedup_seconds": 0.03393425000831485,
+      "exact_guard_equal": true
+    },
+    {
+      "row": 171,
+      "original_seconds": 0.21187804103828967,
+      "dedup_seconds": 0.09482779202517122,
+      "exact_guard_equal": true
+    },
+    {
+      "row": 202,
+      "original_seconds": 0.22745216701878235,
+      "dedup_seconds": 0.09444062499096617,
+      "exact_guard_equal": true
+    }
+  ],
+  "near_pair_count": 14,
+  "max_gap_difference": 0.0,
+  "pairs": [
+    {
+      "triangles": 572,
+      "vertices": 323,
+      "original": -7.5789587277179295e-06,
+      "dedup": -7.5789587277179295e-06,
+      "difference": 0.0,
+      "dedup_seconds": 0.003542250022292137
+    },
+    {
+      "triangles": 590,
+      "vertices": 352,
+      "original": -8.883840476503393e-06,
+      "dedup": -8.883840476503393e-06,
+      "difference": 0.0,
+      "dedup_seconds": 0.0038321249885484576
+    },
+    {
+      "triangles": 1730,
+      "vertices": 1024,
+      "original": -1.004684186249583e-05,
+      "dedup": -1.004684186249583e-05,
+      "difference": 0.0,
+      "dedup_seconds": 0.023365208005998284
+    },
+    {
+      "triangles": 1684,
+      "vertices": 982,
+      "original": -1.4067343184785046e-05,
+      "dedup": -1.4067343184785046e-05,
+      "difference": 0.0,
+      "dedup_seconds": 0.013177499989978969
+    },
+    {
+      "triangles": 1720,
+      "vertices": 986,
+      "original": -2.090796714019922e-05,
+      "dedup": -2.090796714019922e-05,
+      "difference": 0.0,
+      "dedup_seconds": 0.013290333969052881
+    },
+    {
+      "triangles": 1714,
+      "vertices": 985,
+      "original": -1.897635080959424e-05,
+      "dedup": -1.897635080959424e-05,
+      "difference": 0.0,
+      "dedup_seconds": 0.013057167001534253
+    },
+    {
+      "triangles": 572,
+      "vertices": 332,
+      "original": -1.1989179741149925e-05,
+      "dedup": -1.1989179741149925e-05,
+      "difference": 0.0,
+      "dedup_seconds": 0.0025884999777190387
+    },
+    {
+      "triangles": 572,
+      "vertices": 312,
+      "original": -7.069058802650855e-06,
+      "dedup": -7.069058802650855e-06,
+      "difference": 0.0,
+      "dedup_seconds": 0.0025117910117842257
+    },
+    {
+      "triangles": 590,
+      "vertices": 339,
+      "original": -8.371405938177893e-06,
+      "dedup": -8.371405938177893e-06,
+      "difference": 0.0,
+      "dedup_seconds": 0.002521459013223648
+    },
+    {
+      "triangles": 1730,
+      "vertices": 1006,
+      "original": -9.515767854167273e-06,
+      "dedup": -9.515767854167273e-06,
+      "difference": 0.0,
+      "dedup_seconds": 0.013829666946548969
+    },
+    {
+      "triangles": 1684,
+      "vertices": 968,
+      "original": -1.3548813138317042e-05,
+      "dedup": -1.3548813138317042e-05,
+      "difference": 0.0,
+      "dedup_seconds": 0.013156457978766412
+    },
+    {
+      "triangles": 1720,
+      "vertices": 1001,
+      "original": -2.1570341241532046e-05,
+      "dedup": -2.1570341241532046e-05,
+      "difference": 0.0,
+      "dedup_seconds": 0.013565791014116257
+    },
+    {
+      "triangles": 1714,
+      "vertices": 997,
+      "original": -1.9653132429297247e-05,
+      "dedup": -1.9653132429297247e-05,
+      "difference": 0.0,
+      "dedup_seconds": 0.013482750044204295
+    },
+    {
+      "triangles": 572,
+      "vertices": 333,
+      "original": -1.249784300556573e-05,
+      "dedup": -1.249784300556573e-05,
+      "difference": 0.0,
+      "dedup_seconds": 0.0025172089808620512
+    }
+  ]
+}

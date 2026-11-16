@@ -1,0 +1,6 @@
+__pycache__/
+*.json
+!closure002-fixture-report.json
+!fast-certificates-benchmark.json
+!guard-profile-baseline.json
+!unique-projection-screen.json

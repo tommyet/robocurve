@@ -1,0 +1,359 @@
+{
+  "scope": "LOCAL CPU benchmark under concurrent work; not a native speed guarantee",
+  "trace_sha256": "6618b2634fbbc13fd3b6342685c534bf905475bc4ee27d7cd97cf5266faffd13",
+  "all_classifications_equal": true,
+  "all_fast_bounds_conservative": true,
+  "cases": [
+    {
+      "row": 0,
+      "case": "actual",
+      "full_seconds": 0.034022332984022796,
+      "fast_seconds": 0.033039874979294837,
+      "full": {
+        "safe": true,
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "left",
+          "base",
+          "table"
+        ],
+        "target_gap_m": 0.14943694871278967,
+        "target_pair": [
+          "left",
+          "tip_right",
+          "east_top"
+        ],
+        "other_arm_gap_m": 0.4077996479682512
+      },
+      "fast": {
+        "safe": true,
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "left",
+          "base",
+          "table"
+        ],
+        "target_gap_m": 0.14943694871278967,
+        "target_pair": [
+          "left",
+          "tip_right",
+          "east_top"
+        ],
+        "other_arm_gap_m": 0.4077996479682512,
+        "gap_reporting": "Conservative SAT separation bounds; all acceptance thresholds unchanged; not exact penetration or force"
+      }
+    },
+    {
+      "row": 100,
+      "case": "actual",
+      "full_seconds": 0.03318095795111731,
+      "fast_seconds": 0.032809625030495226,
+      "full": {
+        "safe": true,
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "left",
+          "base",
+          "table"
+        ],
+        "target_gap_m": 0.016095492977666798,
+        "target_pair": [
+          "left",
+          "tip_right",
+          "east_top"
+        ],
+        "other_arm_gap_m": 0.33737303794461326
+      },
+      "fast": {
+        "safe": true,
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "left",
+          "base",
+          "table"
+        ],
+        "target_gap_m": 0.016095492977666798,
+        "target_pair": [
+          "left",
+          "tip_right",
+          "east_top"
+        ],
+        "other_arm_gap_m": 0.33737303794461326,
+        "gap_reporting": "Conservative SAT separation bounds; all acceptance thresholds unchanged; not exact penetration or force"
+      }
+    },
+    {
+      "row": 171,
+      "case": "actual",
+      "full_seconds": 0.24861562496516854,
+      "fast_seconds": 0.03401362500153482,
+      "full": {
+        "safe": true,
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "left",
+          "base",
+          "table"
+        ],
+        "target_gap_m": -2.090796714019922e-05,
+        "target_pair": [
+          "left",
+          "tip_right",
+          "east_top"
+        ],
+        "other_arm_gap_m": 0.2994905333418531
+      },
+      "fast": {
+        "safe": true,
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "left",
+          "base",
+          "table"
+        ],
+        "target_gap_m": -2.090796714019922e-05,
+        "target_pair": [
+          "left",
+          "tip_right",
+          "east_top"
+        ],
+        "other_arm_gap_m": 0.2994905333418531,
+        "gap_reporting": "Conservative SAT separation bounds; all acceptance thresholds unchanged; not exact penetration or force"
+      }
+    },
+    {
+      "row": 202,
+      "case": "actual",
+      "full_seconds": 0.24058408400742337,
+      "fast_seconds": 0.03356524999253452,
+      "full": {
+        "safe": true,
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "left",
+          "base",
+          "table"
+        ],
+        "target_gap_m": -2.1570341241532046e-05,
+        "target_pair": [
+          "left",
+          "tip_right",
+          "east_top"
+        ],
+        "other_arm_gap_m": 0.2994909192068114
+      },
+      "fast": {
+        "safe": true,
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "left",
+          "base",
+          "table"
+        ],
+        "target_gap_m": -2.1570341241532046e-05,
+        "target_pair": [
+          "left",
+          "tip_right",
+          "east_top"
+        ],
+        "other_arm_gap_m": 0.2994909192068114,
+        "gap_reporting": "Conservative SAT separation bounds; all acceptance thresholds unchanged; not exact penetration or force"
+      }
+    },
+    {
+      "row": 202,
+      "case": "candidate_0",
+      "full_seconds": 0.20975933404406533,
+      "fast_seconds": 0.12728087499272078,
+      "full": {
+        "safe": false,
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "left",
+          "base",
+          "table"
+        ],
+        "target_gap_m": -0.002096316285185767,
+        "target_pair": [
+          "left",
+          "tip_left",
+          "east_top"
+        ],
+        "other_arm_gap_m": 0.299427955458048
+      },
+      "fast": {
+        "safe": false,
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "left",
+          "base",
+          "table"
+        ],
+        "target_gap_m": -0.002096316285185767,
+        "target_pair": [
+          "left",
+          "tip_left",
+          "east_top"
+        ],
+        "other_arm_gap_m": 0.299427955458048,
+        "gap_reporting": "Conservative SAT separation bounds; all acceptance thresholds unchanged; not exact penetration or force"
+      }
+    },
+    {
+      "row": 202,
+      "case": "candidate_1",
+      "full_seconds": 0.2446643749717623,
+      "fast_seconds": 0.12456583400489762,
+      "full": {
+        "safe": false,
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "left",
+          "base",
+          "table"
+        ],
+        "target_gap_m": -0.0015309218039024244,
+        "target_pair": [
+          "left",
+          "tip_left",
+          "east_top"
+        ],
+        "other_arm_gap_m": 0.29899310107554405
+      },
+      "fast": {
+        "safe": false,
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "left",
+          "base",
+          "table"
+        ],
+        "target_gap_m": -0.0015309218039024244,
+        "target_pair": [
+          "left",
+          "tip_left",
+          "east_top"
+        ],
+        "other_arm_gap_m": 0.29899310107554405,
+        "gap_reporting": "Conservative SAT separation bounds; all acceptance thresholds unchanged; not exact penetration or force"
+      }
+    },
+    {
+      "row": 202,
+      "case": "candidate_2",
+      "full_seconds": 0.24262195802293718,
+      "fast_seconds": 0.12420649995328858,
+      "full": {
+        "safe": false,
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "left",
+          "base",
+          "table"
+        ],
+        "target_gap_m": -0.0012481490896202574,
+        "target_pair": [
+          "left",
+          "tip_left",
+          "east_top"
+        ],
+        "other_arm_gap_m": 0.2987755362677571
+      },
+      "fast": {
+        "safe": false,
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "left",
+          "base",
+          "table"
+        ],
+        "target_gap_m": -0.0012481490896202574,
+        "target_pair": [
+          "left",
+          "tip_left",
+          "east_top"
+        ],
+        "other_arm_gap_m": 0.2987755362677571,
+        "gap_reporting": "Conservative SAT separation bounds; all acceptance thresholds unchanged; not exact penetration or force"
+      }
+    },
+    {
+      "row": 202,
+      "case": "candidate_3",
+      "full_seconds": 0.23966954200295731,
+      "fast_seconds": 0.12519229197641835,
+      "full": {
+        "safe": false,
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "left",
+          "base",
+          "table"
+        ],
+        "target_gap_m": -0.0011067441669370109,
+        "target_pair": [
+          "left",
+          "tip_left",
+          "east_top"
+        ],
+        "other_arm_gap_m": 0.2986667844151424
+      },
+      "fast": {
+        "safe": false,
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "left",
+          "base",
+          "table"
+        ],
+        "target_gap_m": -0.0011067441669370109,
+        "target_pair": [
+          "left",
+          "tip_left",
+          "east_top"
+        ],
+        "other_arm_gap_m": 0.2986667844151424,
+        "gap_reporting": "Conservative SAT separation bounds; all acceptance thresholds unchanged; not exact penetration or force"
+      }
+    },
+    {
+      "row": 202,
+      "case": "candidate_4",
+      "full_seconds": 0.24122954200720415,
+      "fast_seconds": 0.07853241602424532,
+      "full": {
+        "safe": false,
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "left",
+          "base",
+          "table"
+        ],
+        "target_gap_m": -0.0010360371020657429,
+        "target_pair": [
+          "left",
+          "tip_left",
+          "east_top"
+        ],
+        "other_arm_gap_m": 0.298612416136258
+      },
+      "fast": {
+        "safe": false,
+        "hard_gap_m": 0.0013988879699513568,
+        "hard_pair": [
+          "left",
+          "base",
+          "table"
+        ],
+        "target_gap_m": -0.0010360371020657429,
+        "target_pair": [
+          "left",
+          "tip_left",
+          "east_top"
+        ],
+        "other_arm_gap_m": 0.298612416136258,
+        "gap_reporting": "Conservative SAT separation bounds; all acceptance thresholds unchanged; not exact penetration or force"
+      }
+    }
+  ]
+}
