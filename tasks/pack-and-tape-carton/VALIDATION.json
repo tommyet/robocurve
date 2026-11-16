@@ -42,7 +42,7 @@
     "passes_strain_limit": false
   },
   "invalidated_result": "packing-native-002 displacement began before loading and was not causal peel evidence; superseded by geometry and initial-wrap negative-control fixes.",
-  "work_state": "active_serial_packing_CPU_preparation",
+  "work_state": "CPU_candidate_ready_native_validation_blocked_by_VM_startup",
   "full_completion_verified": false,
   "native_initial_state_verified": true,
   "native_full_demo_verified": false,
@@ -114,5 +114,18 @@
     "actual_scene_guards_required": true,
     "force_binding": "Separate singleton targets; native counts/paths/body-order/fresh-clock checks mustpass atstartup",
     "full_sealing_controller_implemented": false
+  },
+  "native_face_prefix_startup_attempt_001": {
+    "date": "2026-11-16",
+    "source_commit": "f9a253d8bdb22bc123cdbcf1e7206dc50a1efafc",
+    "VM_start_requests": 1,
+    "ssh_became_ready": false,
+    "simulator_trials": 0,
+    "new_video": false,
+    "outcome": "VM remainedSTARTING; earlyshutdownrequests returnedHTTP500; no controller or physics trial ran",
+    "provider_shutdown_verified": true,
+    "provider_stopped_utc": "2026-11-16T19:54:29.161924+00:00",
+    "conservative_start_to_stop_minutes": 10.72020746866862,
+    "billing": "Actualbillingunknown; elapsedwindowisnotaninvoice"
   }
 }

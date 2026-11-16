@@ -91,3 +91,9 @@ roughly 220 simulated seconds before tracking delays. Its separate diagnostic
 ceiling is 6,000 controls (300 seconds); the existing rim diagnostic keeps its
 3,600-control ceiling. A short GPU allowance is insufficient to assume the full
 prefix will finish. Bound wall time separately, including VM boot and shutdown.
+
+Native attempt on2026-11-16: the existing VM never became SSH-ready, so the
+face-push controller did not run. Early stop requests returned server errors;
+shutdown was ultimately confirmed. There is no new native score, motion evidence
+or video from that attempt. The93-task-test/5-experiment CPU results above remain
+the current evidence; physical closure and sealing still need validation.
