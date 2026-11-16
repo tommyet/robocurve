@@ -1,0 +1,40 @@
+{
+  "passed": true,
+  "trace_sha256": "3db73f7c4787f393ec9d1fe4be0bf8ed5b06918705b9c4a0d4ae1e990bc8a1e9",
+  "samples": 800,
+  "control_steps": 799,
+  "duration": 39.94999999999987,
+  "score": 1.0,
+  "cap_detached": true,
+  "depressed_control_samples": 19,
+  "max_planned_ik_error_m": 0.0,
+  "max_planned_ik_rotation_rad": 0.0,
+  "metrics": {
+    "score": 1.0,
+    "invalid": null,
+    "cap_removed": true,
+    "coverage": 0.9744786779083122,
+    "visible_plaque_area_m2": 0.0048982640889546365,
+    "off_plaque_painted_area_m2": 0.0003017359110453635,
+    "off_plaque_painted_area_cm2": 3.017359110453635,
+    "off_plaque_area_fraction": 0.060028452189007535,
+    "overspray": 0.060028452189007535,
+    "overspray_metric": "visible off-plaque painted area / fixed plaque area; not emitted mass",
+    "visible_dose_threshold": 0.04,
+    "visible_display_blend_fraction": 0.5,
+    "max_off_plaque_painted_area_cm2": 7.539822368615503,
+    "emitted_mass_seconds_diagnostic": 0.949999999999946,
+    "off_target_mass_fraction_diagnostic": 0.004182283117373371,
+    "spray_seconds": 0.949999999999946,
+    "finish_hold": 1.9999999999998863,
+    "opposing_left_can_contacts": true,
+    "right_tcp_clear": true
+  },
+  "final_full_score_hold": {
+    "first_full_score_time_s": 38.949999999999925,
+    "final_time_s": 39.94999999999987,
+    "full_score_elapsed_s": 0.9999999999999432,
+    "full_score_samples": 21
+  },
+  "scope": "source integrity, all-sample scorer replay and measured stage evidence; not contact-force calibration"
+}

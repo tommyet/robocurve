@@ -443,5 +443,6 @@
     "wall_start_utc": "2026-11-15T20:41:11Z",
     "wall_runtime_note": "Score-summary file written20:46:19.239827UTC,308.24s after launch including startup; not precise loop timing.",
     "summary_written_utc": "2026-11-15T20:46:19.239827Z"
-  }
+  },
+  "rubric_note": "HISTORICAL emitted-fraction rubric; not revised visible-area success evidence"
 }

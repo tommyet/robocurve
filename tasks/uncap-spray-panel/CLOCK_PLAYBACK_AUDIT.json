@@ -11,5 +11,6 @@
   "fresh_standard_reset": true,
   "restore": false,
   "native_result_score": 1.0,
-  "physical_manifests_equal029": true
+  "physical_manifests_equal029": true,
+  "rubric_note": "HISTORICAL emitted-fraction rubric; not revised visible-area success evidence"
 }

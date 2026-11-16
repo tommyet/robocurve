@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "applied_controls": 799,
+  "dataset_sha256": "a355dc44db2a9a238eb23617c947650560f40444ae953efee4c17d73526feb05",
+  "action_log_sha256": "d9ca2e52260ab95ef61ba1e06597a13ddd1e95b97a36ef9f873d58fcd0162265",
+  "trace_sha256": "3db73f7c4787f393ec9d1fe4be0bf8ed5b06918705b9c4a0d4ae1e990bc8a1e9",
+  "scope": "Actual commands match pinned offline-generated aim path; independent score audit required"
+}

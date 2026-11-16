@@ -1,64 +1,33 @@
 {
-  "kind": "genuine Dream attempt terminated by renderer infrastructure failure",
-  "start_utc": "2026-11-15T20:50:32Z",
-  "fatal_log_time_utc": "2026-11-15T20:51:24Z",
-  "primary_error": "VkResult: ERROR_DEVICE_LOST; submitToQueueCommon failed.; A GPU crash occurred. Exiting the application...",
-  "reported_exit_code": 139,
-  "trajectory_rows": 48,
-  "first_time_s": 0.0,
-  "last_time_s": 2.3499999999999996,
-  "last_sampled_metrics": {
-    "score": 0.0,
-    "invalid": null,
-    "cap_removed": false,
-    "coverage": 0.0,
-    "overspray": 0.0,
-    "spray_seconds": 0.0,
-    "finish_hold": 0.0,
-    "opposing_left_can_contacts": false,
-    "right_tcp_clear": true
-  },
-  "completed_model_score": null,
-  "score_summary_exists": false,
-  "action_jsonl_files": 0,
-  "model_record_jsonl_files": 0,
-  "native_rgb_frames": {
-    "top_cam": {
-      "count": 48,
-      "first": "frames/20261115_205033_a67261fa/~f1~scene-0-e0~top_cam_000000.npy",
-      "last": "frames/20261115_205033_a67261fa/~f1~scene-0-e0~top_cam_000047.npy",
-      "shape": [
-        176,
-        320,
-        3
-      ],
-      "dtype": "uint8"
-    },
-    "left_cam": {
-      "count": 48,
-      "first": "frames/20261115_205033_a67261fa/~f1~scene-0-e0~left_cam_000000.npy",
-      "last": "frames/20261115_205033_a67261fa/~f1~scene-0-e0~left_cam_000047.npy",
-      "shape": [
-        176,
-        320,
-        3
-      ],
-      "dtype": "uint8"
-    },
-    "right_cam": {
-      "count": 48,
-      "first": "frames/20261115_205033_a67261fa/~f1~scene-0-e0~right_cam_000000.npy",
-      "last": "frames/20261115_205033_a67261fa/~f1~scene-0-e0~right_cam_000047.npy",
-      "shape": [
-        176,
-        320,
-        3
-      ],
-      "dtype": "uint8"
-    }
-  },
-  "provider_request_started": "unknown; no action/provider response record established yet",
-  "trace_sha256": "404977053fef697c4c1282d7b96a3c23702778d7527cb0e228440778c6f17ce9",
-  "sdk_inference_call_entered": true,
-  "sdk_call_evidence": "Captured native Python stack references inspect_robots_dream/session.py:182; installed source line enters client.get_action(commanded=last). HTTP request delivery/completion remains unknown."
+  "completed": true,
+  "policy": "dream",
+  "framework": "Inspect Robots1.0.0",
+  "source_commit": "56854fb",
+  "score": 0.0,
+  "error": null,
+  "control_steps": 1200,
+  "standard_observation_preroll_controls": 32,
+  "model_target_controls": 1168,
+  "sim_seconds": 60.0,
+  "native_rgb_frames_per_camera": 1201,
+  "cameras": [
+    "top_cam",
+    "left_cam",
+    "right_cam"
+  ],
+  "composite_frames": 1201,
+  "video_seconds": 60.05,
+  "trace_sha256": "d1cb0608539186095988ab9ad6c8b1b835689bcb1a0c687963fe3c74c3355522",
+  "normal_guardrails": "clamp and delta-limit;18raw action rows modified by the standard guard",
+  "sdk_successful_requests": 25,
+  "sdk_attempts": 49,
+  "server_session_recoveries": 24,
+  "distinct_server_sessions": 25,
+  "limitations": [
+    "Repeated session recovery resets server memory; not an uninterrupted baseline",
+    "Actual native RTX RGB is visibly noisy",
+    "Raw RGB arrays retained on stopped VM; independently indexed/hashed3603arrays before stop"
+  ],
+  "independent_scoring_and_action_audit_passed": true,
+  "video": "Actual native RGB; H264CRF28, all frames retained; no denoising or synthetic observations"
 }

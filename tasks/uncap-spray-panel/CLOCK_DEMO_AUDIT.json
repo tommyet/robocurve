@@ -20,5 +20,6 @@
     "opposing_left_can_contacts": true,
     "right_tcp_clear": true
   },
-  "scope": "source integrity, all-sample scorer replay and measured stage evidence; not contact-force calibration"
+  "scope": "source integrity, all-sample scorer replay and measured stage evidence; not contact-force calibration",
+  "rubric_note": "HISTORICAL emitted-fraction rubric; not revised visible-area success evidence"
 }
