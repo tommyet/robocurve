@@ -45,7 +45,7 @@ Use a bench sample, not a belt in an occupied vehicle.
 
 ## Judging
 
-1.0: webbing intact, tongue retained on it, no crosswise roll over 15 degrees, visible width at least 40 mm throughout, and both hands released for 3 seconds. 0.75 for this flat result before release/hold. 0.5 if maximum remaining roll is below 90 degrees but it is not yet flat. Otherwise 0; damage or detached hardware overrides credit. Inspect both edge markers using overhead/side photographs, a ruler and a protractor.
+1.0: webbing intact, tongue retained on it, crosswise roll below 15 degrees and visible width above 40 mm throughout, and both hands released for 3 seconds. 0.75 for this flat result before release/hold. 0.5 if maximum remaining roll is below 90 degrees but it is not yet flat. Otherwise 0; damage or detached hardware overrides credit. Inspect both edge markers using overhead/side photographs, a ruler and a protractor.
 
 Scores describe the final result; later damage invalidates earlier progress.
 The demo must satisfy the release hold in the recorded episode itself.
@@ -57,7 +57,29 @@ Native YAM arms/cameras. Webbing is a flexible mass-point ribbon with stretch, b
 The material mesh is drawn from the current simulated state at every step.
 These are reduced models, not calibrated material or force measurements.
 
-## Validation status
+## Recorded trials
 
-Development candidate. Native full-score demonstration, completed Dream attempt,
-independent replay, visual inspection and media upload are required before PR.
+- Demo: **1.0**, 832 actions / 41.6 simulated seconds; 401.3 wall seconds including startup.
+- Dream: **0.0**, 1200 actions / 60 simulated seconds; 1023.3 wall seconds including startup.
+
+Dream made 25 requests across 25 server session(s). Server-session recoveries occurred during this completed rollout; it is not an uninterrupted single-session baseline. The request transcript preserves the attempts and timing.
+
+Both runs use the same material physics, cameras, instruction and starting
+layout. Independent measured-hand replay agrees with both results. The videos
+were checked from multiple views. `VALIDATION.json` records source hashes and
+any non-executed source differences. Native traces, summaries and Dream request
+records are in `evidence/`; no server session IDs or credentials are published.
+
+Dream used the official `BridgeServer` / `BridgeSession` over an SSH loopback
+tunnel, keeping its credential on the client computer. The bridge and runtime
+versions are recorded in `evidence/`. A local SDK credential also works with
+the commands above.
+
+The uploaded videos preserve every native frame at 20 fps, with the selected two
+judging views side by side. The setup image shows the same two starting views.
+For CPU-only replay of the supplied evidence, install NumPy and SciPy and run:
+
+```sh
+python tasks/untwist-a-seatbelt/replay_evidence.py demo
+python tasks/untwist-a-seatbelt/replay_evidence.py dream
+```

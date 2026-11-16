@@ -1,8 +1,8 @@
 {
   "schema": "runtime-evidence-v1",
-  "status": "target_runtime",
-  "scope": "Target versions inherited from the verified team runtime; this task has not yet run natively.",
-  "current_task_runtime_verified": false,
+  "status": "native_runtime_verified",
+  "scope": "Native robot physics and cameras verified by the completed demo and recorded model attempt in evidence/.",
+  "current_task_runtime_verified": true,
   "python": "3.12.16",
   "packages": {
     "numpy": "2.5.4",
@@ -48,5 +48,5 @@
     "physics": "CPU PhysX, GPU rendering"
   },
   "reference_checked_utc_date": "2026-11-15",
-  "verified_utc_date": "2026-11-15"
+  "verified_utc_date": "2026-11-16"
 }
