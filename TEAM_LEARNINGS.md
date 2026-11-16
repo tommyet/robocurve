@@ -4,6 +4,53 @@ Last updated: 2026-11-16 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-16 19:25 UTC — packing closure diagnosis and CPU preparation
+
+- User authorized continuing carton sealing after the spray revision. Development
+  worktree `/private/tmp/robocurve-packing-completion`, branch
+  `codex/packing-sealing-completion`, starts from shared `origin/main`87870ce
+  and copies only the packing task baseline from e16f531. Existing dirty notes
+  in the original checkout and hair worktree were preserved.
+- Native closure002 scored0 and stopped before its engagement deadline. Exact
+  final-state CPU replay identifies intended issued fingertip/flap proxy depth
+  as the obstruction: previous−0.966mm against−1mm limit; every next fold
+  candidate rejects. Actual depth≈−0.022mm, unrelated minimum≈1.399mm.
+  This is distinct from the earlier8.6s unrelated-flap collision. Neither proves
+  insufficient actuator force. Compact fixture/replay tests retain all315
+  robot collider pieces and actual logged object poses.
+- Open-jaw lateral straddling with an inner-pad face push is being screened.
+  Sampled push-to−70deg, moving withdrawal, passive-fall clearance and park
+  paths exist for four flaps; north/south free approaches and runtime remain
+  unfinished. Gravity estimates and CPU collision checks are not native
+  completion evidence. No task score or preview was replaced.
+- Optional SAT passing certificates preserve original pair-specific thresholds
+  (−1mm intended; +0.2mm unrelated); unresolved pairs use original fullSAT.
+  Default geometry path remains unchanged. Seven focused regression tests and
+  independent Astra review passed. Local nine-state benchmarks show speedup,
+  not a native runtime speedup or force/penetration measurement.
+- Separate selected-flap singleton contact filters now verify native2sensor/
+  1filter counts, exact per-body target paths and force-row/finger identities.
+  Each read is anchored to a fresh verified family clock; repeated pre/post
+  reads retain their sampleID. Consume `(selected_target,sample_id)` once.
+  Astra independently approved13 reader tests. Installed native binding still
+  must validate failclosed at startup. Family sums cannot gate selected contact.
+- Live board comparison returned656tasks. Accepted tape-gun sealing
+  [PR1893](https://github.com/robocurve/benchmark-tasks/pull/1893)
+  is TK-HYQRVJ; accepted flap-folding pilot TK-S2WMM8 caused final duplicate
+  rejections ofPR885/1477. Open flaps or stronger physics alone do not establish
+  novelty. The proposed distinction is loose ordinary roll/free thin leader,
+  actual payout/tension/adhesion and a separate cutter. No exact loose-roll
+  title was found in29filtered carton/tape entries; this is not novelty clearance.
+  Our incomplete draftPR2209 has no receipt/reservation. Keep it honest.
+- GPU remained off throughout. Prior final-hour windows used32.6505991856min
+  plus18.6524592201min, leaving8.6969415943min of the user's latest1h estimate
+  (conservative start-request to confirmedSTOPPED, not an invoice). The spray
+  status file's8.4686min is a live deadline counter, not the aggregate balance.
+  At19:19UTC `brev ls --all` failed requesting the NGC token withForbidden;
+  no start/stop/reset request was issued. Last successful provider check was
+  STOPPED after spray. Retain both prior ledgers for any future watchdog arm.
+
+
 ## 2026-11-16 — broad creative task screen, no compute
 
 - Refreshed the complete upstream PR metadata index: **2,341 PRs through
