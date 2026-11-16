@@ -10,7 +10,7 @@ from yam_arena import ik
 from yam_arena.constants import FINGER_OPEN,READY
 from yam_arena.demo import grip_rotation
 from yam_arena.urdf import quat_xyzw_to_matrix
-from config import TOP
+from config import TOP,CUTTER_PAD_START
 from model import HEIGHT,WIDTH
 from scene import layout
 from turnover_targets import wall_target,tip_vertices
@@ -256,6 +256,7 @@ class CartonTurnoverProbe:
   slew=np.array([.025]*6+[.04]+[.025]*6+[.04]);output=np.clip(output,self.previous-slew,self.previous+slew);output=np.clip(output,self.env._low,self.env._high)
   obs={n:(p,Q,self.parts[n]['size']) for n,(p,Q) in poses.items()};tool=self.env._base.arena_world.get_pose_w('cutter');tool=tool.torch if hasattr(tool,'torch') else tool;tool=tool.detach().cpu().numpy()[0];tr=quat_xyzw_to_matrix(tool[3:])
   for name,size,offset in [('handle',(.1,.025,.025),(0,0,0)),('guard',(.02,.03,.02),(.052,0,.002)),('blade',(.014,.0005,.008),(.062,0,-.016))]:obs['cutter_'+name]=(tool[:3]+tr@offset,tr,size)
+  obs['cutter_pad']=(np.array(CUTTER_PAD_START),np.eye(3),(.17,.07,.002))
   proposed_phase=self.stage;proposed_bias=[b.copy() for b in self.bias]
   def guarded_action(action):
    action=np.asarray(action,float)
