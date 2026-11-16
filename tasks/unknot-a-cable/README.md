@@ -16,7 +16,8 @@ OMNI_KIT_ACCEPT_EULA=YES python tasks/unknot-a-cable/run.py --mode dream --out /
 python tasks/unknot-a-cable/rescore.py /tmp/unknot-a-cable-demo
 ```
 
-The layout is fixed; no random seed is used. Each action is an ordinary bounded
+The layout is fixed; no random seed is used. The reset node geometry settles
+under native gravity for one second before step 0 and the initial knot check. Each action is an ordinary bounded
 14-element joint/gripper command at 20 Hz. The scripted demo follows a saved
 joint plan and reads only the robot's joint positions for tracking. It never
 reads the task state or scorer. Dream receives the normal three camera views

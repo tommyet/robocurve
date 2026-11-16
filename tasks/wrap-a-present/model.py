@@ -13,16 +13,16 @@ class Model:
   self.base=np.array([[.35,.080,TABLE+.0004],[.35,-.080,TABLE+.0004],[.410,0,TABLE+.0004],[.290,0,TABLE+.0004]])
   self.out=np.array([[0,1,0],[0,-1,0],[1,0,0],[-1,0,0]],float);self.width=[.120,.120,.160,.160];self.length=[.100,.100,.080,.080]
   self.angles=np.tile([0.,.30],(4,1));self.rest_angles=np.tile([0.,.45],(4,1));self.vel=np.zeros((4,2));self.grips=Grips();self.events=self.grips.events;self.failed=False;self.time=0.;self.release=0.
-  self.tape=np.array([[.22,.14,TABLE+.001],[.22,.24,TABLE+.001]]);self.tape_R=np.tile(np.eye(3),(2,1,1));self.relR={};self.bonded=np.zeros(2,bool);self.press_time=np.zeros(2)
+  self.tape=np.array([[.22,.14,TABLE+.001],[.22,.24,TABLE+.001]]);self.tape_R=np.tile(np.eye(3),(2,1,1));self.tape_offsets=[np.array([[0,0,0],[.005,0,0],[-.005,0,0],[0,.018,0],[0,-.018,0]]),np.array([[0,0,0],[.018,0,0],[-.018,0,0],[0,.005,0],[0,-.005,0]])];self.relR={};self.bonded=np.zeros(2,bool);self.press_time=np.zeros(2)
  def joints(self,k):
   a,b=self.angles[k];v=self.out[k];p=self.base[k];q=p+v*HEIGHT*np.cos(a)+[0,0,HEIGHT*np.sin(a)];r=q+v*self.length[k]*np.cos(b)+[0,0,self.length[k]*np.sin(b)];return np.array([p,q,r])
  def points(self):
-  return np.array([self.joints(k)[-1]+np.cross(self.out[k],[0,0,1])*self.width[k]*t for k in range(4) for t in [-.5,-.25,0,.25,.5]]+list(self.tape))
+  return np.array([self.joints(k)[-1]+np.cross(self.out[k],[0,0,1])*self.width[k]*t for k in range(4) for t in [-.5,-.25,0,.25,.5]]+[self.tape[j]+self.tape_R[j]@offset for j in range(2) for offset in self.tape_offsets[j]])
  def update(self,hands,dt=.05):
   self.time+=dt;old=set(self.grips.held);self.grips.update(self.points(),hands)
   for s in set(self.grips.held)-old:
    i=self.grips.held[s]['index']
-   if i>=20:self.relR[s]=hands[s]['rotation'].T@self.tape_R[i-20]
+   if i>=20:self.relR[s]=hands[s]['rotation'].T@self.tape_R[(i-20)//5]
   raw_goals=self.grips.targets(hands);goals={}
   for i,point in raw_goals.items():
    if i<20:
@@ -74,10 +74,12 @@ class Model:
        self.rest_angles[k,1]=max(self.rest_angles[k,1],self.angles[k,1]-.10)
   for s,g in self.grips.held.items():
    i=g['index']
-   if i>=20 and not self.bonded[i-20]:self.tape[i-20]=goals[i];self.tape_R[i-20]=hands[s]['rotation']@self.relR[s]
+   if i>=20 and not self.bonded[(i-20)//5]:
+    j=(i-20)//5;self.tape_R[j]=hands[s]['rotation']@self.relR[s]
+    self.tape[j]=goals[i]-self.tape_R[j]@self.tape_offsets[j][(i-20)%5]
   for j in range(2):
    if self.bonded[j]:continue
-   held=any(g['index']==j+20 for g in self.grips.held.values())
+   held=any(g['index']>=20 and (g['index']-20)//5==j for g in self.grips.held.values())
    if not held:self.tape[j,2]=max(TABLE+.001,self.tape[j,2]-dt*.10)
    pair=range(0,2) if j==0 else range(2,4)
    closed=all(self.angles[k,0]>np.radians(80) and self.angles[k,1]>np.radians(165) for k in pair)

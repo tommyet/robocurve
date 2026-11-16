@@ -30,9 +30,12 @@ developers and their agents, not a competition submission document.
   native006 hands with these corrections scores1, but is only a debugging probe;
   fresh native008 now confirms1.0, 658 actions/32.9s, 70.59% simultaneous
   flat/smoothed contact and0.6s peel; replay agrees and demo visually checked.
-  Dream008 in progress. No hair/skin-treatment claim is made.
+  Dream008 completed0; source-matched replay and visual review passed.
+  Media M-SSD6AZ; isolated commit116a99f; PR2192 received as TK-AGWK73.
+  Setup combines native front and top-camera views so the unused strip is visible.
+  No hair/skin-treatment claim is made.
 - One A40 Pod vmtb7b46hnozdv at $0.59/hour started22:01:58UTC, 100GB temporary
-  disk, no persistent volume. Independent stop deadline currently00:22:26UTC
+  disk, no persistent volume. Independent stop deadline currently01:03:44UTC
   on16November, extended under supervision. Dream jobs serialized with a lock.
   Do not stop the teammate's separate Brev VM. Private evidence/lifecycle under
   `artifacts/five-household-2026-11-15/`; shared progress in

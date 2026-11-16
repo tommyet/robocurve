@@ -43,5 +43,17 @@ Reset: Use a fresh strip and restore it to the flat starting position. Reset the
 
 The YAM arms and rigid practice form use native PhysX. A coarse 5 x 17 flexible sheet uses gravity, stretch, shear, bending and cylindrical contact constraints. Tacky contact creates breakable bonds; finger-pad contact smooths and bonds the sheet, and local tension releases a peel front. Grips are idealized closing-finger captures. Individual hairs, skin deformation, pain and real wax chemistry are not modelled. It measures strip handling only, not hair-removal effectiveness or skin safety.
 
-Final native run counts, scores, timings and media are recorded in
-`VALIDATION.json` once validation is complete.
+## Recorded trials
+
+- Demo: **1.0**, 658 actions / 32.9 simulated seconds; 519.2 wall seconds including startup.
+- Dream: **0.0**, 1000 actions / 50 simulated seconds; 705.6 wall seconds including startup.
+
+Both trials use the same runtime source and fixed starting layout. Independent
+trace replay agrees with both scores. Videos were visually checked. Timings
+include GPU startup and shared-host contention; they are not a speed benchmark.
+`VALIDATION.json` records hashes and review details; compressed measured traces
+and summaries are in `evidence/`. The uploaded videos preserve every native
+frame at 20 fps, with two judging views placed side by side.
+
+The setup image pairs the initial front view with the initial top policy camera
+(enlarged), which shows the unused strip beside the form.
