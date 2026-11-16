@@ -5,7 +5,7 @@ from config import *
 from carton_scene import layout
 
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True);p.add_argument('--mode',choices=['bench','closure-probe','adhesion-probe','settle-probe'],default='settle-probe');p.add_argument('--no-video',action='store_true');a=p.parse_args();a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=False);(a.out/'source').mkdir()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True);p.add_argument('--mode',choices=['bench','closure-probe','adhesion-probe','settle-probe','roll-pickup-probe'],default='settle-probe');p.add_argument('--no-video',action='store_true');a=p.parse_args();a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=False);(a.out/'source').mkdir()
  for f in Path(__file__).parent.glob('*.py'):shutil.copy2(f,a.out/'source'/f.name)
  (a.out/'source-sha256.json').write_text(json.dumps({f.name:hashlib.sha256(f.read_bytes()).hexdigest() for f in Path(__file__).parent.glob('*.py')},indent=2));os.environ.setdefault('OMNI_KIT_ACCEPT_EULA','YES')
  from isaaclab.app import AppLauncher
@@ -68,6 +68,9 @@ def main():
    if not a.no_video:review.add_cameras(instance)
    from contact_runtime import add_contact_sensor
    add_contact_sensor(instance,[*[p['name'] for p in parts],*(['adhesion_coupon'] if a.mode=='adhesion-probe' else []),'cutter'])
+   if a.mode=='roll-pickup-probe':
+    from roll_contacts import add_sensor
+    add_sensor(instance)
   BimanualYamEmbodiment.__init__=with_reviews
   sc.task_object=make
   try:
@@ -106,13 +109,19 @@ def main():
   except Exception as error:events.append({'subscription_error':str(error)})
   if not a.no_video:video=imageio.get_writer(str(a.out/'diagnostic.mp4'),fps=20,codec='libx264',pixelformat='yuv420p',macro_block_size=1,ffmpeg_params=['-movflags','+faststart'])
   worst=0.;max_unwound=0.;allposes=[];initial_displacement=0.;robot=None;tracker=None;previous_items=None;previous_parts=None
-  if a.mode in ('closure-probe','settle-probe'):
+  if a.mode in ('closure-probe','settle-probe','roll-pickup-probe'):
    from robot import ClosureProbe
    from scoring import PackingScorer
    from yam_arena import ik
    robot=ClosureProbe(env) if a.mode=='closure-probe' else None;tracker=PackingScorer();task._tracker=tracker;task._diagnostic=False
+  contact_reader=None
+  if a.mode=='roll-pickup-probe':
+   from roll_probe import RollPickupProbe
+   from roll_contacts import Reader
+   contact_reader=Reader(base,env);robot=RollPickupProbe(env,contact_reader)
+  steps_completed=0
   with (a.out/'trajectory.jsonl').open('w') as trace:
-   for step in range(3600 if a.mode=='closure-probe' else 40 if a.mode=='settle-probe' else 120 if a.mode=='adhesion-probe' else 100):
+   for step in range(1200 if a.mode=='roll-pickup-probe' else 3600 if a.mode=='closure-probe' else 40 if a.mode=='settle-probe' else 120 if a.mode=='adhesion-probe' else 100):
     phase='preloaded_stability' if a.mode=='settle-probe' else 'settle' if step<20 else 'peel_bench' if step<60 else 'hold'
     target=.06*min(1.,max(0.,(step-20)/40))
     control=None
@@ -124,7 +133,9 @@ def main():
      base.scene[f'tape_{CELLS-1}'].permanent_wrench_composer.set_forces_and_torques_index(forces=torch.tensor([[[0.,0.,f]]],device=base.device),torques=torch.zeros((1,1,3),device=base.device),is_global=True);action=env._ready
     elif a.mode=='bench':drive.GetTargetPositionAttr().Set(target);action=env._ready
     else:action=env._ready
-    env._env.step(action);env._t=(step+1)*.05
+    if control is not None and control.get('failure'):
+     (a.out/'rejected-command.json').write_text(json.dumps({'time':env._t,'not_issued':True,'control':control},indent=2)+'\n');break
+    env._env.step(action);env._t=(step+1)*.05;steps_completed+=1
     roll=pose('roll');rr=quat_xyzw_to_matrix(roll[3:]);tensors=[base.arena_world.get_pose_w(f'tape_{i}') for i in range(CELLS)];states=torch.cat([v.torch if hasattr(v,'torch') else v for v in tensors],dim=0).detach().cpu().numpy();local=[rr.T@(v[:3]-roll[:3]) for v in states];displaced=[];sep=0.;anchor_errors={}
     for i,v in enumerate(local):
      pos,_=tape_cell(i);displaced.append(float(np.linalg.norm(v-(np.array(pos)-np.array(ROLL_START)))))
@@ -183,6 +194,8 @@ def main():
      if cut_coordinate is not None:sample|={'cut_coordinate':cut_coordinate,'blade_crossing':True}
      row['score_sample']=sample;row['metrics']=tracker.update(sample)
     captured={name:pose(name) for name in capture_names}
+    row['action_14d']=arr(action)[0].tolist()
+    if contact_reader is not None:row['roll_grip_contact']=contact_reader.latest
     row['native_body_world_poses']=capture.native_body_world_poses(base.scene,owners,captured)
     trace.write(json.dumps(row)+'\n')
     if not np.isfinite(states).all() or sep>.02:raise RuntimeError('unstable ribbon or disconnected material')
@@ -193,7 +206,7 @@ def main():
     if robot is not None and (getattr(robot,'failure',None) or getattr(robot,'done',False)):break
   result={'diagnostic':True,'robot_demo':False,'task_score':None,'bench_fixtures':True,'physics_dt_s':float(base.sim.get_physics_dt()),'explicit_material_length_m':ACTIVE_LENGTH,'initial_wrap_displacement_m':initial_displacement,'max_anchor_separation_m':worst,'max_displaced_material_estimate_m':max_unwound,'native_contact':contacts.telemetry(),'contact_integration_native_validated':False,'checks':{'stays_wound_before_pull':initial_displacement<.0005,'material_connected':worst<CELL_LENGTH*MAX_STRAIN,'material_peels':max_unwound>.025}}
   if a.mode=='adhesion-probe':result|={'diagnostic':True,'task_score':None,'coupon_probe':True,'bench_fixtures':True,'final_coupon_film_height_m':float(states[-1,2]-coupon_start[2])}
-  if tracker is not None:result|={'diagnostic':False,'bench_fixtures':False,'privileged_robot_attempt':robot is not None,'task_score':tracker.value,'metrics':tracker.result(),'controller_failure':getattr(robot,'failure',None),'controller_completed':getattr(robot,'done',False),'control_steps':step+1,'elapsed_s':env._t}
+  if tracker is not None:result|={'diagnostic':False,'bench_fixtures':False,'privileged_robot_attempt':robot is not None,'task_score':tracker.value,'metrics':tracker.result(),'controller_failure':getattr(robot,'failure',None),'controller_completed':getattr(robot,'done',False),'control_steps':steps_completed,'elapsed_s':env._t}
   result|={'no_video':a.no_video,'state_only_diagnostic':a.no_video,'media_eligible':False}
   (a.out/'native-events.json').write_text(json.dumps(events,indent=2)+'\n');(a.out/'result.json').write_text(json.dumps(result,indent=2)+'\n')
  except BaseException as error:
