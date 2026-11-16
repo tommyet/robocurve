@@ -4,6 +4,46 @@ Last updated: 2026-11-16 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+
+## 2026-11-16 — cake revision and medicine spoon submitted; uncreased paper in development
+
+- Cake PR [1919](https://github.com/robocurve/benchmark-tasks/pull/1919) asked for
+  ordinary photo/ruler judging and a reproducible icing/crumbcoat setup. Revision
+  `4f1af5f` removes the physical groove-depth threshold, specifies ready-made
+  medium-consistency decorator icing and quick preparation, and preserves the
+  existing native material/controller/media. Independently rescored demo 1.0,
+  Dream 0.0; 55 CPU checks passed. Receipt **TK-34L7TM**, waiting for review.
+  Do not push again before review. The team copy contains the matching changes.
+- Medicine spoon PR [2380](https://github.com/robocurve/benchmark-tasks/pull/2380),
+  commit `43308cd`, receipt **TK-L8QPSV**, media **M-3FF6YM**: received, waiting
+  for review. Selected native demo005 scores 1.0 in 744 controls: 4.9412 ml
+  delivered, 0.0535 ml spilled, maximum insertion 7.92 mm, no contact invalidation.
+  Dream004 completed 1,000 controls, scoring 0.0; 121 requests in one server session.
+  Both independently replay from public evidence; 9 material checks passed.
+  A premeasured medicine spoon and life-size training manikin address the earlier
+  spoon-feeding rejection; coloured water does not simulate swallowing or prove
+  clinical readiness. No acceptance is guaranteed.
+- One assessor camera changed between selected spoon recordings because the old
+  view was occluded. Physics, instruction, controller and policy cameras match.
+  The differing camera file and limitation are published. Compact NPZ bounds
+  preserve all 630 native collision shapes and every face-contact decision;
+  float32 conversion error was below 0.00000006 m. The public evidence replays
+  on CPU; do not remove this evidence just to shrink the submission.
+- The user requires **strictly uncreased paper** for the aeroplane. No pre-creased
+  fallback, weakened fold lines or prefolded start is authorized. The draft has
+  no successful full-plane demonstration and must not be submitted yet. CPU
+  experiments and superseded models are private under
+  `artifacts/plane-spoon-cake-2026-11-16/`. The draft scorer returns zero.
+- Development branch: `codex/plane-spoon-cake-2026-11-16`, from shared main.
+  GPU `stz9j8z3yx2zt4` ran 21:36:34–22:28:18 UTC at $0.59/hour, approximately
+  **$0.51 compute**. It is EXITED; a complete account inventory confirmed zero
+  active pods. No persistent mounts were created. Paper work continues locally.
+- Startup lessons: YAM requires at least one task object (an empty OBJECTS list
+  fails before motion). USD prim names cannot contain decimal punctuation;
+  validate generated geometry identifiers locally before native initialization.
+  The first cold Isaac startup took about four minutes; subsequent startups
+  were under one minute. Use a single simulator process at a time.
+
 ## 2026-11-16 — plate, pancake, nail, paper plane and medicine ideas screened
 
 - Research only: fresh authenticated board snapshot (661 records), current
