@@ -207,6 +207,8 @@ def main():
   result={'diagnostic':True,'robot_demo':False,'task_score':None,'bench_fixtures':True,'physics_dt_s':float(base.sim.get_physics_dt()),'explicit_material_length_m':ACTIVE_LENGTH,'initial_wrap_displacement_m':initial_displacement,'max_anchor_separation_m':worst,'max_displaced_material_estimate_m':max_unwound,'native_contact':contacts.telemetry(),'contact_integration_native_validated':False,'checks':{'stays_wound_before_pull':initial_displacement<.0005,'material_connected':worst<CELL_LENGTH*MAX_STRAIN,'material_peels':max_unwound>.025}}
   if a.mode=='adhesion-probe':result|={'diagnostic':True,'task_score':None,'coupon_probe':True,'bench_fixtures':True,'final_coupon_film_height_m':float(states[-1,2]-coupon_start[2])}
   if tracker is not None:result|={'diagnostic':False,'bench_fixtures':False,'privileged_robot_attempt':robot is not None,'task_score':tracker.value,'metrics':tracker.result(),'controller_failure':getattr(robot,'failure',None),'controller_completed':getattr(robot,'done',False),'control_steps':steps_completed,'elapsed_s':env._t}
+  if a.mode=='roll-pickup-probe':
+   result|={'diagnostic':True,'scorer_readback':result.get('task_score'),'task_score':None,'scope':'Unscored loose-roll acquisition checkpoint; no peeling/sealing demonstration'}
   result|={'no_video':a.no_video,'state_only_diagnostic':a.no_video,'media_eligible':False}
   (a.out/'native-events.json').write_text(json.dumps(events,indent=2)+'\n');(a.out/'result.json').write_text(json.dumps(result,indent=2)+'\n')
  except BaseException as error:

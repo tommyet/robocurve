@@ -26,5 +26,5 @@ class Reader:
   if not np.isfinite(force).all():raise ValueError('nonfinite native roll normal force')
   # Reading data forces the sensor's current substep buffer update. Both
   # fingertips and every filtered target share this same native readback.
-  self.latest=dict(time_s=float(self.env._t),body_names=names,target_names=TARGETS,normal_force_matrix_w=force[0].tolist())
+  self.latest=dict(measurement_phase='pre_action',individual_filter_column_order_native_verified=False,time_s=float(self.env._t),body_names=names,target_names=TARGETS,normal_force_matrix_w=force[0].tolist())
   return self.latest
