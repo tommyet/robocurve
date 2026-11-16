@@ -196,3 +196,48 @@ burial-depth check remains to be designed; do not infer it from particle counts
 or uncalibrated soil mass. PR2106 also shows why measurement must remain valid
 when the object moves. **Retain as a research reserve, probably Societal
 relatability, not a high-confidence quick submission or promised $3 build.**
+
+## 16 November: squeeze ketchup onto a burger
+
+Research only, around 17:25 UTC. Targeted all-state PR searches for ketchup,
+condiments, mustard, mayonnaise, sauce, burger, squeezing and dispensing, plus
+the same-day 641-record board snapshot, found no exact ketchup-on-burger task.
+No GPU, Dream, simulation or task implementation. **Highly relatable and
+plausible, but only a conditional shortlist candidate because of overlap.**
+
+Our pending [cake piping #1919](https://github.com/robocurve/benchmark-tasks/pull/1919)
+already requires pressure-controlled viscous extrusion, stopping flow and a
+clean surrounding surface. [Glue dispensing #2283](https://github.com/robocurve/benchmark-tasks/pull/2283)
+is also waiting for review. A burger instead of a cake, or red material instead
+of icing, is not a sufficient capability distinction. Controlled dosing may
+give the ketchup version a different emphasis, but does not establish novelty
+by itself. Do not claim it is clearly distinct without revisiting these tasks.
+
+BEHAVIOR's [grill-burgers definition](https://behavior.stanford.edu/knowledgebase/tasks/grill_burgers-0.html)
+requires cooking patties and putting them on buns, not dispensing ketchup.
+Its [sandwich task](https://behavior.stanford.edu/knowledgebase/tasks/make_a_sandwich-0.html)
+already includes coating bread with peanut butter and jelly. These comparisons
+support a narrow possible distinction, not a claim that food coating is new.
+
+The simplest credible scope is: **add a specified portion of ketchup to the
+exposed burger, keep it on the food, then stop dispensing and put the bottle
+down.** Start with an open, filled squeeze bottle and an accessible burger;
+cap opening, cooking and decorative zigzags add little to this proposal.
+The useful skill is orienting and compressing a compliant bottle while
+regulating the deposited amount and ending the flow cleanly.
+
+Preserve a finite reservoir, squeeze- and orientation-dependent flow, visible
+deposition and meaningful underdosing, overdosing and spilling. A simplified
+material model may suffice; dispensing cannot be a target-aware animation.
+Score amount on the burger with a scale, plus placement/spill from photos
+and a separate spill collector. Specify the physical measurement arrangement
+and numeric tolerances before building; bottle mass loss alone also counts
+spilled material. Do not require an arbitrary arm path or particular pattern.
+
+[Instrumentation for Better Demonstrations](https://arxiv.org/abs/2504.18481)
+demonstrates robotic squeeze-bottle flow control with xanthan-thickened water
+on different hardware. This is evidence that the real manipulation is
+credible, not proof of our simulator or actual ketchup behaviour. Reusing
+parts of the cake model might reduce effort, but neither acceptance nor a
+$3 build is established. **Keep for comparison with stronger novel ideas;
+do not build automatically.**

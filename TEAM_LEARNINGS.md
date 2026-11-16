@@ -4,6 +4,24 @@ Last updated: 2026-11-16 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-16 17:25 UTC — ketchup-on-burger idea screened, no compute
+
+- No exact match found in targeted all-state PR searches and the same-day
+  641-record board snapshot. This is a search result, not novelty clearance.
+- Main overlap is our pending [cake piping #1919](https://github.com/robocurve/benchmark-tasks/pull/1919):
+  controlled pressure, viscous extrusion and stopping flow already feature
+  there. Pending [glue dispensing #2283](https://github.com/robocurve/benchmark-tasks/pull/2283)
+  is another adjacent task. A different food or nozzle alone is insufficient.
+- Conditional scope: dispense a measured portion onto an exposed burger,
+  avoid spills and stop the flow before putting the bottle down. Use a finite
+  reservoir and squeeze-dependent flow; judge dose and visible placement,
+  not a prescribed decorative path. Simulation feasibility remains untested.
+- [Real-robot squeeze-bottle research](https://arxiv.org/abs/2504.18481)
+  demonstrates controlled dispensing of xanthan-thickened water, not our
+  hardware or ketchup simulation. Keep as a conditional shortlist idea with
+  material similarity risk. Details in `docs/task-ideas-followup-2026-11-15.md`.
+  No GPU, Dream, simulation or task implementation was used for this check.
+
 ## 2026-11-16 17:00 UTC — small-pot digging and planting screened, no compute
 
 - Read the current board (641 records), relevant all-state PR searches and
