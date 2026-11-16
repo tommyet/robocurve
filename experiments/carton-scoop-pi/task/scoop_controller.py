@@ -41,12 +41,14 @@ class OuterNorthScoop:
   if issued.shape!=(14,)or not np.isfinite(issued).all():raise ValueError('finite14Dissuedcommand required')
   self.previous=issued.copy();self.nominal=issued.copy();self.pi=JointPositionPI(ik.LOWER,ik.UPPER);self.pi.begin(issued[:6],0.);p,R=ik.tcp_pose(issued[:6],self.env.rig.bases['left'])
   # The exact first arm command is retained; its FK is the free-approach start.
+  lift=float(self.route.get('contact_acquire_lift_m',.0008))
+  if not np.isfinite(lift) or not 0.<lift<=.006:raise ValueError('unreviewed contact acquisition stroke')
   self.waypoints=[('raise_clear',np.array([p[0],p[1],.910]),R,.020),
    ('above_aperture',np.array(self.route['above_aperture']),self.R,.020),
    ('scoop_staging',np.array(self.route['staging']),self.R,.020),
    ('inside_descend',np.array(self.route['inside']),self.R,.005),
    ('underedge_insert',np.array(self.route['insert']),self.R,.005),
-   ('contact_acquire',np.array(self.route['insert'])+[0,0,.0008],self.R,.001)]
+   ('contact_acquire',np.array(self.route['insert'])+[0,0,lift],self.R,.001)]
   self.first_pose=(p,R)
  def state(self):
   data={}
@@ -69,7 +71,7 @@ class OuterNorthScoop:
   forces=np.array(contacts);target_index=[p['name']for p in layout()[0]].index('north_bottom')
   target_force=float(np.linalg.norm(forces[2,target_index]));mask=np.ones((3,12),dtype=bool);mask[2,target_index]=False;otherforce=float(np.linalg.norm(forces,axis=2)[mask].max())
   return data,poses,cutter,angle,target_force,otherforce
- def stop(self,reason):self.failure=reason;return self.previous.copy(),[dict(phase='failed',failure=reason)]
+ def stop(self,reason,**details):self.failure=reason;return self.previous.copy(),[dict(phase='failed',failure=reason,**details)]
  def command(self,time):
   if self.previous is None:raise RuntimeError('begin(previous14D) required')
   if self.failure or self.done:return self.previous.copy(),[dict(phase='partial_scoop_complete'if self.done else'failed',failure=self.failure,partial_only=True)]
@@ -130,7 +132,7 @@ class OuterNorthScoop:
   out[:6]=proposal.command
   predicted=self.safety.check(out[:6],fingers,poses,cutter,rq,rf,contact=contact)
   resolution=self.pi.resolve(proposal,guard_safe=bool(actual['safe'] and predicted['safe']))
-  if not resolution.accepted:return self.stop('augmented command rejected before stepping: '+str(predicted))
+  if not resolution.accepted:return self.stop('augmented command rejected before stepping: '+str(predicted),rejected_command_14d=out.tolist(),nominal_candidate_14d=nominal_out.tolist(),proposed_bias_rad=list(proposal.proposed_bias),command_safety=predicted,actual_safety=actual,desired_tcp=point.tolist(),desired_R=rotation.tolist(),pi_committed=False)
   path_accepted=resolution.path_dt_s>0.
   if path_accepted:self.nominal=nominal_out
   self.previous=out

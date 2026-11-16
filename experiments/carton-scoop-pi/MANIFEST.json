@@ -1,22 +1,15 @@
 {
-  "created_utc": "2026-11-16T00:04:26.520809+00:00",
+  "created_utc": "2026-11-16T00:17:42.553548+00:00",
   "scope": "UNSCORED_ENGINEERING_ONLY",
-  "cpu_tests": 103,
-  "unchanged_physical_sources": [
-    "model.py",
-    "scene.py",
-    "native.py",
-    "config.py",
-    "coupon_support.py",
-    "native_contact_reader.py"
-  ],
+  "cpu_tests": 105,
   "files": {
-    "README-PI.md": "16eafee259154ffbb1fdc921322a53863c5680f3ba0336e271b35a104b92f7fd",
+    "README-PI.md": "92a51aa1353a8a7957a7980e47cf159157114b2897041bcd402ec1637bcbfaac",
     "README.md": "cab16dc4e71e025109a01d831e9d3cd0cb653f25cdd0795c0c78bbcfa47fe449",
-    "north-scoop-route.json": "aff36bb718c2c362b450c9ef7514f0e13d6d04a7d8d8de148fd3d72efc5ae654",
+    "north-scoop-route.json": "7f822ed28be9237ddddc15dbd373595476c8314e11473f74d99ec47a3a169096",
     "start/snapshot.json": "b13f0f2b3d10c1a784e0b03db7f1c8e1fa33897cb0a30946c2ed75f223593fd5",
     "start/source-row.json": "7f853198402b1ca3c9582cb99eb39db4afd04237aa873123b5ae33294056444f",
     "review/fullarm-tight-contact-report.json": "cc30949b7c0843f548d9881dd77715aa5b81c65fca188bfb82e3f8558f733a88",
+    "review/clearance015-report.json": "0e9871d32b632ae927ca2bd11bc17b3d80637616ec487b77b3b2eb8ed4a650a5",
     "review/astra-outer-scoop-certificate.json": "cc3b3ce4a5a0e4da882232fcae7e4b02edd0ce4784524f5ce172029f7018d88f",
     "review/fullarm-report.json": "8ff4e526948b72ff000ddf97eb3089bd1bb41021375bd1e95d7216d454bff2fd",
     "review/astra-outer-scoop-approach-repair.json": "bd87e3f28b2355f22ee5f8487e16a08b6c066a0554fcf99e20fab3870103bddd",
@@ -35,7 +28,7 @@
     "task/crease.py": "b10e0175fa7cd4e3f4d53e19cf32023a3ddc2b7eb242149a2c83fb8be53ccb33",
     "task/test_feedback_geometry.py": "a5b682a2de99840b680328ec36fce303afaa2f66317c04c7141ae4e066b96c2f",
     "task/config.py": "61e89314e16ff500893cd0b569e002f4b5da62cf2b2e3f46803a4519542548f8",
-    "task/scoop_controller.py": "0c95f330d2dd1729e524ade1839e0164874a5ffa358a6092c5448dba43c38b7f",
+    "task/scoop_controller.py": "a5223448d9e5bc6e23be53cb5a6042d6820ad78b1c8af48f33baff452a988d3d",
     "task/joint_position_pi.py": "50e463323228bec1387ad6204761af12d88f23ac5af0732552e9c6bc15e26422",
     "task/scoring.py": "10600c84958bfe25af3cbe8ae18525453c551dbe85cc51415778b5cffdfdf58d",
     "task/angle_tracking.py": "0f9f8e5cba77ae405690113328851d79665119341d2c0c5d6e4befe350a94e3f",
@@ -63,6 +56,6 @@
     "task/test_scene.py": "5a76e70b1dc0b96bd9d9ac985c47d81fd862cd77c864d59a9833e750bec90999",
     "task/coupon_support.py": "1b8beed6ad13c1b5b3a0fb7eb1ea6e3f6bbd7e7012adcdb47922bc87dac7fb4f",
     "task/collapse_geometry.py": "c7ffc2cb7d25a5f70bf4a6ed47eff07b2db10bfe48136293d5dbd5fca7ffd5c8",
-    "task/test_scoop_controller.py": "803aa1d2b2582f1dc318d27956fd05c5c3249b9013f52f07ea63c8390e0253ee"
+    "task/test_scoop_controller.py": "d65dbfb5e45da0e8b58b8d80f222388e6457cb2fb58b6cfb64b6b9dceebe8eb4"
   }
 }

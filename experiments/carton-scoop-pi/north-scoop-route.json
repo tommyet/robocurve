@@ -1,6 +1,6 @@
 {
   "reviewed": true,
-  "review_status": "Root integration103CPUtests; unchanged geometric route previously Astra reviewed. PI and fast guard components separately Astra reviewed; combined native controller NOT YET VALIDATED.",
+  "review_status": "Root105CPUtests +459static current014-pose samples with nominal and measured-end-bias command checks PASS, minimum augmented gap.503907mm. Native015 unverified; finalcontactpoint unchanged.",
   "controller": "north_outer_scoop",
   "active_hand": "left",
   "target_flap": "north_bottom",
@@ -42,12 +42,12 @@
   "inside": [
     0.29565624051582506,
     -0.017341078129940846,
-    0.77123047031539
+    0.76723047031539
   ],
   "insert": [
     0.32040563147660683,
     -0.042089161834954744,
-    0.77123047031539
+    0.76723047031539
   ],
   "partial_goal_angle_deg": -30.0,
   "phases": [
@@ -124,5 +124,6 @@
   ],
   "preapproval_route_sha256": "c48bcfad2c3324ada4cb3aa3d428c6effedf490cc5c8b8f1e8df262babff4a4b",
   "diagnostic_controller_limit_s": 220.0,
-  "full_task_evidence": false
+  "full_task_evidence": false,
+  "contact_acquire_lift_m": 0.0048
 }

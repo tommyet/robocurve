@@ -108,5 +108,20 @@ class ScoopControllerTests(unittest.TestCase):
   np.testing.assert_array_equal(seeds[1],expected)
   self.assertGreater(np.max(abs(expected-augmented)),0.)
 
+ def test_lower_insertion_preserves_final_contact_point(self):
+  p,issued,_,_=controller();plan=copy.deepcopy(PLAN)
+  plan['inside'][2]-=.004;plan['insert'][2]-=.004;plan['contact_acquire_lift_m']=.0048
+  with patch('scoop_controller.ScoopSafety',Safety):other=OuterNorthScoop(p.env,S,plan)
+  other.begin(issued)
+  np.testing.assert_allclose(other.waypoints[5][1],p.waypoints[5][1],atol=1e-15)
+  self.assertAlmostEqual(other.waypoints[4][1][2],p.waypoints[4][1][2]-.004)
+  self.assertEqual(other.waypoints[5][3],p.waypoints[5][3])
+
+ def test_invalid_acquisition_stroke_rejected(self):
+  p,issued,_,_=controller();plan=copy.deepcopy(PLAN);plan['contact_acquire_lift_m']=float('nan')
+  with patch('scoop_controller.ScoopSafety',Safety):other=OuterNorthScoop(p.env,S,plan)
+  with self.assertRaises(ValueError):other.begin(issued)
+
 if __name__=='__main__':unittest.main()
+
 
