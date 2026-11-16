@@ -4,6 +4,38 @@ Last updated: 2026-11-16 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-16 09:12 UTC — fresh team PR status and three new decisions
+
+- Read all-state PRs by `tommyet` and `Miyamura80`, then fetched each PR's
+  current metadata and full discussion through the GitHub connector. Evidence:
+  ignored `artifacts/pr-status-2026-11-16/team-pr-snapshot.json` (29 PRs).
+- Tom: 18 PRs — one accepted/merged (1153), seven waiting (1919 revision,
+  2113, 2126, 2187, 2190, 2197, 2211), one revision required (2168), and nine
+  finally rejected/closed (44, 364–367, 1305, 2091, 2093, 2192). Staple2093's
+  duplicate-ingestion appeal remains unanswered; closed is not restored review.
+- Eito: 11 PRs — five waiting (2195, 2203, 2212, 2228, 2232), one revision
+  required (2171), one finally rejected (1953), and four incomplete feedback
+  drafts (2207–2210). Drafts have no receipt and are not competition entries.
+- [Necktie2168](https://github.com/robocurve/benchmark-tasks/pull/2168#issuecomment-6909329891):
+  revision requested 06:37 UTC. Specify the prepared knot type, under/over
+  threading diagram, blade lengths/poses and repeatable reset procedure. The
+  ideal-grasp/fixed-topology fidelity concern is also flagged. Reservation ends
+  18 November 06:37 UTC unless revised.
+- [Spray2171](https://github.com/robocurve/benchmark-tasks/pull/2171#issuecomment-6909344222):
+  revision requested 06:38 UTC. Use Societal relatability; replace cumulative
+  emitted-paint overspray with photo-measurable painted area, complete Dream
+  through Inspect Robots, show the full-score hold, and specify aerosol safety.
+  Reservation ends 18 November 06:38 UTC unless revised.
+- [Wax2192](https://github.com/robocurve/benchmark-tasks/pull/2192#issuecomment-6909398366):
+  FINAL REJECTION at 06:41 UTC. Reviewers judge hair extraction and skin handling
+  essential to waxing; our disclosed strip-only practice-form task was not an
+  acceptable substitute. Disclosure alone does not rescue a simplification that
+  removes the claimed core skill. Revision is not permitted; a human-review
+  request is allowed until 18 November 06:41 UTC. No appeal posted this turn.
+- No new acceptances. None of the 12 queued submissions is over 48 hours from
+  its latest receipt (cake revision is oldest, about 34 hours). No GPU work,
+  PR changes or messages to organizers were performed for this status check.
+
 ## 2026-11-16 — all five demos validated; GPU stopped
 
 - Knot native020 reaches **1.0**: 1,710 actions / 85.5 simulated seconds,

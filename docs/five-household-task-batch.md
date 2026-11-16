@@ -1,5 +1,15 @@
 # Five household tasks — submission record
 
+## Latest review status — 16 November, 09:12 UTC
+
+Bracelet2187, pram2190, wrapping2197 and knot-removal2211 are still waiting for
+review. **Wax2192 was finally rejected at 06:41 UTC**: reviewers consider hair
+removal and skin handling central to waxing, so the hairless practice-form
+strip task fails importance and construct validity. It cannot be revised;
+a human-review request is permitted within 48 hours of that decision.
+[Decision](https://github.com/robocurve/benchmark-tasks/pull/2192#issuecomment-6909398366).
+No appeal has been posted. The validation/submission record below is historical.
+
 User authorized implementation, paid validation, media upload and one PR per
 task on 15 November 2026. Use proportionate, disclosed material models and
 plain descriptions. No submission until a full-score ordinary-action demo
