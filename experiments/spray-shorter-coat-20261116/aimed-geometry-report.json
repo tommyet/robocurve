@@ -1,0 +1,26 @@
+{
+  "scope": "Exact float32 transported commands: all315 corrected collision meshes per arm at all248 modified ordinary command waypoints; static table/riser/backing/compound stand and conservative parked-cap outer box; mutual AABB separation only. Predicted held-can body+shoulder conservative OBBs checked against all non-hand links; hand/held-can intended contacts excluded, preserved relative pose is checked separately. Held-can poses are source observations+offset proxy, NOT newly native-validated; deformation/dynamics unproved.",
+  "minimum_static_gap": {
+    "0": [
+      0.0013988879699513568,
+      531,
+      "base",
+      "table"
+    ],
+    "1": [
+      0.0013988879699513568,
+      531,
+      "base",
+      "table"
+    ]
+  },
+  "negative_static_gaps": [],
+  "minimum_mutual_aabb_gap": [
+    0.014093064162589708,
+    720,
+    "tip_left",
+    "tip_left"
+  ],
+  "waypoints": 248,
+  "robot_piece_count_per_arm": 315
+}

@@ -1,0 +1,34 @@
+{
+  "scope": "Historical trace rescored under new fixed photo-area rubric; NOT fresh native proof",
+  "source_trace_sha256": "5e471c1f9f3d183865c19e04f4f2dd39375f101185b18abc6279627f78f2353c",
+  "samples": 780,
+  "deposition_exact_all_samples": true,
+  "emission_diagnostic_exact_all_samples": true,
+  "historical_score": 1.0,
+  "revised_score": 0.25,
+  "metrics": {
+    "score": 0.25,
+    "invalid": null,
+    "cap_removed": true,
+    "coverage": 0.9968098347385393,
+    "visible_plaque_area_m2": 0.005010512726145042,
+    "off_plaque_painted_area_m2": 0.0013894872738549583,
+    "off_plaque_painted_area_cm2": 13.894872738549582,
+    "off_plaque_area_fraction": 0.27642970999662336,
+    "overspray": 0.27642970999662336,
+    "overspray_metric": "visible off-plaque painted area / fixed plaque area; not emitted mass",
+    "visible_dose_threshold": 0.04,
+    "visible_display_blend_fraction": 0.5,
+    "max_off_plaque_painted_area_cm2": 7.539822368615503,
+    "emitted_mass_seconds_diagnostic": 0.949999999999946,
+    "off_target_mass_fraction_diagnostic": 0.052415203514241185,
+    "spray_seconds": 0.949999999999946,
+    "finish_hold": 0.0,
+    "opposing_left_can_contacts": true,
+    "right_tcp_clear": true
+  },
+  "current_source_sha256": {
+    "config.py": "ba7cb707502cc36c90a92fae4d2a9d8af31ff994760ace39aa44af8addf9a7ca",
+    "scoring.py": "bcabd2a13061e3aa799b6b2679111ea0c009cca74021e4dfbb7cd73bb4e765be"
+  }
+}

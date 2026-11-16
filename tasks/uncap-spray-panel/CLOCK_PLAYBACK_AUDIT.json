@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "actual_applied_controls": 779,
+  "all14d_vectors_exactly_equal_frozen_dataset": true,
+  "initial_row_has_no_action": true,
+  "controller_telemetry_null_all_samples": true,
+  "actions_file": "actions/20261115_204112_baaa412a/scene-0-e0.jsonl",
+  "actions_sha256": "421d5bbd1508569f6abe9ff28979cbea2185e1e3f32bb1b850bb08e63e31eaa8",
+  "trace_sha256": "5e471c1f9f3d183865c19e04f4f2dd39375f101185b18abc6279627f78f2353c",
+  "source_policy_sha256": "552621f5190bccec8528c0dfaaa10f77b4de297cc690b4e1cb397d6b07a7eb09",
+  "fresh_standard_reset": true,
+  "restore": false,
+  "native_result_score": 1.0,
+  "physical_manifests_equal029": true
+}

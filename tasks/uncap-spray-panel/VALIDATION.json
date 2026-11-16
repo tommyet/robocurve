@@ -1,0 +1,447 @@
+{
+  "status": "submission_ready_full_clock_demo_and_genuine_failed_model_attempt",
+  "checked_date": "2026-11-15",
+  "submission_ready": true,
+  "current_source_commit": "67611f945263cf5af3ddefc5894c10469ccc58e8",
+  "current_demo_policy": "recorded-demo",
+  "scripted_demo_score": 1.0,
+  "dream_score": null,
+  "media": "M-Q4X9HF",
+  "fresh_clock_demo_validated": true,
+  "current_model_attempt": {
+    "performed": true,
+    "policy": "dream",
+    "score": null,
+    "error": "VkResult: ERROR_DEVICE_LOST; submitToQueueCommon failed.; A GPU crash occurred. Exiting the application...",
+    "exit_code": 139,
+    "actions_recorded": 0,
+    "captured_rgb_per_camera": 48,
+    "trajectory_rows": 48,
+    "last_capture_time_s": 2.35,
+    "provider_request_started": "unknown; no response/action record established",
+    "video": "Uploaded actual48-frame/camera RGB initialization clip; no actions or completed score",
+    "start_utc": "2026-11-15T20:50:32Z",
+    "fatal_utc": "2026-11-15T20:51:24Z",
+    "sdk_inference_call_entered": true
+  },
+  "remaining": [],
+  "local_package_tests": {
+    "main_tests_run": 105,
+    "main_skipped_missing_usd": 1,
+    "separate_usd_tests_passed": 7,
+    "mechanics_scoring_policies_dataset_unchanged": true
+  },
+  "submission_candidate": {
+    "source_commit": "67611f945263cf5af3ddefc5894c10469ccc58e8",
+    "policy": "recorded-demo",
+    "observation_input": "state_time only",
+    "teacher_actions_privileged_offline": true,
+    "fresh_native_demo_score": 1.0,
+    "genuine_model_attempt_score": null,
+    "media_id": "M-Q4X9HF",
+    "setup_screenshot": null,
+    "submission_ready": false,
+    "historical_teacher029_is_submission_proof": false,
+    "offline_demo_render_scope": "Separate clearly labelled SAMEfreshnativeepisode replay after full audit; raw no-video flags preserved; reviewer acceptance uncertain; never model camera observations"
+  },
+  "historical_privileged_teacher": {
+    "status": "single_plaque_held_finish_native_full_score_audited_offline_replay_available",
+    "checked_date": "2026-11-15",
+    "local_scorer_tests": {
+      "main_suite_tests": 97,
+      "main_suite_skipped_pxr": 1,
+      "separate_usd_tests_passed": 7
+    },
+    "native_runtime_tested": true,
+    "scripted_demo_score": 1.0,
+    "dream_score": null,
+    "media": null,
+    "gpu_started_for_this_task": true,
+    "remaining": [
+      "Dream run has not been performed",
+      "No task-board media upload or PR has been performed",
+      "Native RTX camera footage is unavailable; completed video is explicitly offline exact recorded physics replay",
+      "Auxiliary 20 mm finger-face cleanup sequence did not complete before native task termination; can parking is outside the approved held endpoint"
+    ],
+    "diagnostic_probe": {
+      "steps": 150,
+      "simulated_seconds": 7.5,
+      "score": 0.0,
+      "invalid": null
+    },
+    "cap_removal_diagnostic": {
+      "steps": 600,
+      "simulated_seconds": 30.0,
+      "score": 0.0,
+      "cap_detached": false,
+      "coverage": 0.0,
+      "spray_seconds": 0.0
+    },
+    "diagnostic_video": {
+      "frames": 601,
+      "fps": 20,
+      "codec": "h264",
+      "width": 640,
+      "height": 552,
+      "successful_spray_demo": false,
+      "local_path": "artifacts/spray-panel-20261113/spray-capprobe-001/diagnostic-preview.mp4"
+    },
+    "latest_results": {
+      "spray-v2-cap-002": {
+        "score": 0.25,
+        "cap_removed": true
+      },
+      "spray-v3-full-001": {
+        "score": 0.25,
+        "coverage": 0.6785714285714286,
+        "overspray": 0.42082066104420585
+      },
+      "spray-v6-full-001": {
+        "score": 0.25,
+        "coverage": 0.8061224489795918,
+        "overspray": 0.1708384380135244
+      },
+      "spray-v7-full-001": {
+        "score": 0.25,
+        "coverage": 0.49489795918367346,
+        "overspray": 0.12690796707927954
+      },
+      "spray-contact-002": {
+        "diagnostic": true,
+        "score": 0.0,
+        "finding": "native force data indicates cross-arm interference; clearance fix prepared but not run"
+      },
+      "spray-press-face-003": {
+        "diagnostic": true,
+        "finalized": false,
+        "piston_peak_m": 0.002436813482400088,
+        "first_shot_seconds": 1.2,
+        "first_shot_peak_button_force_N": 4.6553,
+        "first_shot_interarm_contact_force_N": 0.0,
+        "renderer_failure": "RTX ERROR_DEVICE_LOST; kernel Xid109 CTX SWITCH TIMEOUT at24.25simseconds; no successful diagnostic summary"
+      },
+      "spray-full-008": {
+        "source_commit": "7128335",
+        "score": 0.5,
+        "samples": 1409,
+        "duration_s": 70.4,
+        "cap_removed_and_parked": true,
+        "coverage": 0.7448979591836735,
+        "overspray": 0.035156796256146615,
+        "spray_seconds": 4.2,
+        "controller_failure": "insufficient measured spray contact at fourth position; can rolled in below-COM grasp before third release",
+        "offline_replay_passed": true,
+        "complete": false
+      },
+      "spray-full-009": {
+        "complete": false,
+        "controller_tested": false,
+        "renderer_failure": "startup RTX device lost / Xid109"
+      },
+      "spray-full-010": {
+        "score": 0.25,
+        "samples": 776,
+        "duration_s": 38.75,
+        "coverage": 0.23979591836734693,
+        "first_sector_cells_coated": 47,
+        "first_sector_cells": 49,
+        "overspray": 0.0665067685598928,
+        "spray_seconds": 0.8,
+        "max_can_tilt_degrees": 5.707,
+        "raised_grasp_physically_stable": true,
+        "render_sync_readback_passed": true,
+        "first_failure": "insufficient measured spray contact; old1.2s dwell",
+        "overwritten_stop_reason": "release achieved-pose command compensation exceeds existing bounds",
+        "complete": false
+      },
+      "spray-render-stress-013": {
+        "diagnostic": true,
+        "samples": 1001,
+        "duration_s": 50.0,
+        "renderer_crash": false,
+        "physical_input_manifest_matches_state_012": true,
+        "body_joint_mass_manifest_matches_state_012": true
+      },
+      "spray-full-014": {
+        "score": 0.5,
+        "samples": 1453,
+        "duration_s": 72.6,
+        "coverage": 0.7551020408163265,
+        "overspray": 0.03502595123260393,
+        "spray_seconds": 3.9,
+        "cap_removed_and_parked": true,
+        "first_two_press_and_release_sequences_passed": true,
+        "controller_failure": "can grasp relative angle exceeded15degrees duringthirdshot",
+        "renderer_crash": false,
+        "complete": false
+      },
+      "spray-full-015": {
+        "complete": false,
+        "renderer_failure": "Xid109 at7.15s on595.99.02; driver upgrade not cure"
+      },
+      "spray-state-016": {
+        "score": 0.75,
+        "duration_s": 111.65,
+        "samples": 2234,
+        "coverage": 0.9693877551020408,
+        "overspray": 0.04181,
+        "spray_seconds": 5.6,
+        "all_four_press_release_sequences_passed": true,
+        "complete": false,
+        "native_rtx_capture": false,
+        "controller_failure": "old finalhold IK guard"
+      },
+      "spray-state-017": {
+        "score": 0.75,
+        "duration_s": 117.65,
+        "samples": 2354,
+        "coverage": 0.9693877551020408,
+        "overspray": 0.04181,
+        "spray_seconds": 5.6,
+        "all_four_press_release_sequences_passed": true,
+        "complete": false,
+        "native_rtx_capture": false,
+        "controller_failure": "passive can rocking finalhold timeout",
+        "return_diagnosis": "At108.5s upright0.76deg/speed.0039m/s; exactzero leftcontact after108.85. Passive support motion grows to13.32deg/.126m/s; poseFD confirms actualmotion."
+      },
+      "passive-rest-018b-019": {
+        "diagnostic": true,
+        "both_stable_after_reset": true,
+        "reproduces_post_manipulation_instability": false,
+        "physics_dt_s": 0.004166666666666667,
+        "control_dt_s": 0.05
+      },
+      "spray-state-020": {
+        "complete": false,
+        "in_progress": false,
+        "capped_start": true,
+        "can_button_solver_iterations": [
+          32,
+          8
+        ],
+        "native_dynamics_telemetry": true,
+        "controller_unchanged_from_017": true,
+        "score": 0.75,
+        "coverage": 0.9693877551,
+        "overspray": 0.0309,
+        "spray_seconds": 5.6,
+        "controller_failure": "can grasp relative angle exceeded15degrees duringcan_lower at105.55s"
+      },
+      "spray-state-021": {
+        "in_progress": false,
+        "complete": false,
+        "capped_start": true,
+        "physics_hz": 960,
+        "control_hz": 20,
+        "baseline_body_solver": true,
+        "manifest_matches_017_except_timestep": true,
+        "score": 0.5,
+        "duration_s": 68.35,
+        "controller_failure": "can grasp relative angle exceeded15degrees beforethirdspray",
+        "coverage": 0.5051,
+        "overspray": 0.0408
+      },
+      "spray-state-022": {
+        "in_progress": false,
+        "complete": false,
+        "physics_hz": 960,
+        "control_hz": 20,
+        "capped_start": true,
+        "grasp_change": "LeftclosingaxisworldY; frontentry(-.06,0,.015),exit(-.06,0,.06)",
+        "grip_and_guards_unchanged": true,
+        "score": 0.25,
+        "duration_s": 29.1,
+        "controller_failure": "actual calibrated+compensated target hitsjoint4upperlimit;pe5.225mm"
+      },
+      "spray-state-023": {
+        "in_progress": false,
+        "complete": false,
+        "score": 0.25,
+        "duration_s": 56.9,
+        "coverage": 0.4847,
+        "overspray": 0.0903,
+        "spray_seconds": 1.95,
+        "grasp_and_IK_passed": true,
+        "controller_failure": "secondaimeddwellinsufficient;worldtargetlaggedmovingcan"
+      },
+      "spray-state-024": {
+        "in_progress": false,
+        "complete": false,
+        "physics_hz": 960,
+        "control_hz": 20,
+        "change": "Unbiasedrighttargetcarriedwithcanrigidmotion;existing10mm/srelativepresslimiter",
+        "limits_unchanged": true,
+        "score": 0.25,
+        "duration_s": 46.45,
+        "coverage": 0.3061,
+        "overspray": 0.0484,
+        "spray_seconds": 2.7,
+        "controller_failure": "fixedworldreleasegoal;canrose10.43mm,actualclearance15.48mm"
+      },
+      "spray-state-025": {
+        "in_progress": false,
+        "complete": false,
+        "change": "entryanchoredreleasepose/axiscarriedwithlivecanSE3",
+        "entry_command_and_limits_unchanged": true,
+        "physics_hz": 960,
+        "control_hz": 20
+      }
+    },
+    "native_latest_prepared_frame_tested": true,
+    "compute_state": {
+      "yam-eval-launchable-cb0da2": "Existing VM only. Fresh spray-held-029 finished; this evidence summary is not a live VM lifecycle status."
+    },
+    "prepared_contact_ramp": {
+      "left_preload_speed_m_s": 0.005,
+      "right_press_speed_m_s": 0.01,
+      "native_tested": true
+    },
+    "raised_grasp_release_candidate": {
+      "grasp_z_m": 0.005,
+      "release_speed_m_s": 0.01,
+      "release_distance_m": 0.03,
+      "button_released_m": 0.0005,
+      "minimum_actual_face_clearance_m": 0.02,
+      "release_consecutive_frames": 5,
+      "native_result": "All4 actualrelease gates passed016/017."
+    },
+    "command_space_release_candidate": {
+      "measured_aimed_dwell_s": 0.8,
+      "release_translation_speed_m_s": 0.01,
+      "release_path_anchor": "last issued right joint-command FK",
+      "right_integrator_disabled_during_release": true,
+      "first_failure_sticky": true,
+      "actual_clearance_gates_unchanged": true,
+      "episode_limit_s": 120,
+      "native_result": "All4 passes016/017 within120s; final physicalparkingstillfails."
+    },
+    "stronger_grasp_candidate": {
+      "brace_and_cap_target_m": -0.021,
+      "loaded_target_m": -0.018,
+      "ramp_stage": "existing2secondcan_lift",
+      "native_joint_effort_limit_N_each": 50,
+      "physical_attributes_unchanged": true,
+      "native_left_can_force_logging_added": true,
+      "native_result": "All4 loadedpress/release sequences passed016/017; finishing supportmotion unresolved."
+    },
+    "legacy_four_zone_scripted_demo_score": 0.75,
+    "legacy_native_runtime_tested": true,
+    "task_revision": "Single stationary80mm circular plaque; user-approved left-held/nozzle-off finish2026-11-15",
+    "current_scope": {
+      "target_front_x_m": 0.47,
+      "target_center_yz_m": [
+        -0.035,
+        0.9525
+      ],
+      "target_radius_m": 0.04,
+      "coverage_grid_m": 0.01,
+      "target_cells": 52,
+      "coverage_required": 0.9,
+      "max_overspray": 0.15,
+      "coat_dose_s": 0.08,
+      "physics_hz": 960,
+      "control_hz": 20,
+      "max_actions": 2400,
+      "native_demo": {
+        "trial": "spray-held-029",
+        "source_commit": "b54d516",
+        "capped_start": true,
+        "score": 1.0,
+        "coverage": 1.0,
+        "overspray": 0.052415203514241185,
+        "spray_seconds": 0.95,
+        "finish_hold_s": 1.05,
+        "samples": 780,
+        "control_steps": 779,
+        "duration_s": 38.95,
+        "physics_hz": 960,
+        "control_hz": 20,
+        "cap_removed_and_parked": true,
+        "opposing_left_can_contacts": true,
+        "right_tcp_clear": true,
+        "final_button_travel_m": 1.3710737171379606e-05,
+        "final_right_tcp_can_distance_m": 0.11703709591835339,
+        "final_right_tcp_cap_distance_m": 0.24261726245395318,
+        "final_can_tilt_deg": 1.7932899930918509,
+        "final_can_speed_m_s": 0.00144050494437919,
+        "controller_failure": null,
+        "termination_phase": "coat_unpress_0",
+        "auxiliary_cleanup": {
+          "completed": false,
+          "required_face_clearance_m": 0.02,
+          "final_face_clearance_m": 0.0006431907544433421,
+          "passing_frames": 0,
+          "scope": "Native approved held-finish task gate terminated before this additional controller cleanup gate; no cleanup or can-parking completion is claimed"
+        },
+        "independent_audit_passed": true,
+        "audit_scope": "source integrity, all-sample scorer replay and measured stage evidence; not contact-force calibration",
+        "trace_sha256": "724856a92bb31df854fd49403fdf10c83415855133be994331406b2ab5550997",
+        "evidence_path": "/private/tmp/spray-held-029",
+        "state_only": true,
+        "native_rtx_capture": false,
+        "contact_diagnostic": false,
+        "raw_native_result_diagnostic": true,
+        "raw_native_result_media_eligible": false,
+        "scope": "Fresh native full-score demonstration of user-approved single-plaque held/nozzle-off endpoint; raw state-only run labels retained; completed visualization is separate offline replay"
+      },
+      "media": null,
+      "end_condition": "Upright<=10deg/speed<.02m/s/nozzle<.0005m/opposing actual left-finger can contacts>=.1N each/cos<=-.5/rightTCP>70mm bothobjects for1s; no can-pad,left-clear or off-support requirement"
+    },
+    "legacy_evidence_scope": "latest_results through025 and legacy parking028 are historical development evidence, with original outcomes preserved. Fresh held-finish029 is recorded separately below; no failed old run is relabelled as success.",
+    "native_full_success": true,
+    "legacy_four_zone_best_score": 0.75,
+    "retrospective_geometry_feasibility": {
+      "source": "old 027 first shot only",
+      "target_cells": 52,
+      "coverage": 1.0,
+      "overspray": 0.05128,
+      "status": "retrospective diagnostic only; not a revised-task native demonstration"
+    },
+    "legacy_single_plaque_parking_028": {
+      "score": 0.75,
+      "coverage": 1.0,
+      "overspray": 0.05241520351424118,
+      "spray_seconds": 0.95,
+      "duration_s": 59.0,
+      "failure": "can toppled during lowering/opening; final parking gate failed",
+      "scope": "retired parking endpoint; not rescored as held-finish success",
+      "capture": "/private/tmp/spray-plaque-028"
+    },
+    "legacy_controller_candidates_scope": "prepared_contact_ramp, raised_grasp_release_candidate, command_space_release_candidate and stronger_grasp_candidate describe historical prototypes, not the full current b54d516 controller configuration.",
+    "completed_video": {
+      "video": "artifacts/task-previews/spray-cap-off-and-coat-demo.mp4",
+      "sha256": "25fbc85be01718f6065e9eb3b9e3ad38f8b35ff968303563502f454b17c45ba9",
+      "duration_s": 39.0,
+      "frames": 780,
+      "codec": "h264",
+      "measured_score": 1.0,
+      "coverage": 1.0,
+      "overspray": 0.052415203514241185,
+      "trace_sha256": "724856a92bb31df854fd49403fdf10c83415855133be994331406b2ab5550997",
+      "offline_physics_replay": true,
+      "native_rtx_capture": false,
+      "kind": "offline_exact_recorded_physics_replay",
+      "fps": 20,
+      "assembly_record": "artifacts/native-four-task-20261114/spray-held-029-completed-video.json",
+      "submission_uploaded": false,
+      "task_board_media_id": null
+    }
+  },
+  "clock_demo": {
+    "trial": "spray-recorded-030",
+    "score": 1.0,
+    "simulated_seconds": 38.95,
+    "controls": 779,
+    "rows": 780,
+    "trace_sha256": "5e471c1f9f3d183865c19e04f4f2dd39375f101185b18abc6279627f78f2353c",
+    "native_audit_passed": true,
+    "applied_actions_match": true,
+    "native_rgb": false,
+    "video": "labelled faithful offline rendering of this same episode",
+    "coverage": 1.0,
+    "overspray": 0.052415203514,
+    "wall_start_utc": "2026-11-15T20:41:11Z",
+    "wall_runtime_note": "Score-summary file written20:46:19.239827UTC,308.24s after launch including startup; not precise loop timing.",
+    "summary_written_utc": "2026-11-15T20:46:19.239827Z"
+  }
+}

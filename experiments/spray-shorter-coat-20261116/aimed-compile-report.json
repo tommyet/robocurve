@@ -1,0 +1,4769 @@
+{
+  "scope": "CPU all-waypoint IK/limits only; native trajectory and collisions unproved",
+  "dataset_sha256": "a355dc44db2a9a238eb23617c947650560f40444ae953efee4c17d73526feb05",
+  "metadata_sha256": "bc0ceb26ada7826af44df2ddb94e38e66c37f583361ca83cee523bf810b63e22",
+  "source_dataset_sha256": "18c5770b6db55699669193644402a8e3ccc033e656436fc910a9111e3ff0bd63",
+  "offset_world_m": [
+    0.022,
+    -0.002,
+    0.0
+  ],
+  "ramp_start_action": 530,
+  "ramp_end_action": 610,
+  "max_position_residual_m": 6.634508438542452e-09,
+  "max_rotation_residual_rad": 3.054469107591301e-08,
+  "original_max_joint_delta": [
+    0.07220279574894628,
+    0.058039601444453304,
+    0.029072535023764723,
+    0.03001743327800807,
+    0.06754278150857551,
+    0.05307050793638479,
+    0.027594840847236957,
+    0.02504718773850284,
+    0.04470286476402929,
+    0.03381840750468401,
+    0.11975270663805926,
+    0.06307408145088433,
+    0.08686759914155051,
+    0.034947018104366956
+  ],
+  "aimed_max_joint_delta": [
+    0.07220279574894628,
+    0.058039601444453304,
+    0.029072535023764723,
+    0.03001743327800807,
+    0.06754278150857551,
+    0.05307050793638479,
+    0.027594840847236957,
+    0.02504718773850284,
+    0.04470286476402929,
+    0.03381840750468401,
+    0.11975270663805926,
+    0.06307408145088433,
+    0.08686759914155051,
+    0.034947018104366956
+  ],
+  "maximum_joint_setpoint_speed_rad_s": [
+    1.4440559149789256,
+    1.160792028889066,
+    0.5814507004752945,
+    0.6003486655601614,
+    1.3508556301715102,
+    1.0614101587276958
+  ],
+  "rows": [
+    {
+      "action_index": 531,
+      "fraction": 0.0004648437500000001,
+      "offset_world_m": [
+        1.0226562500000002e-05,
+        -9.296875000000002e-07,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 4.072465286166364e-09,
+          "rotation_residual_rad": 2.8189380408732874e-08
+        },
+        {
+          "position_residual_m": 2.552921193773938e-09,
+          "rotation_residual_rad": 1.4788797940133345e-08
+        }
+      ]
+    },
+    {
+      "action_index": 532,
+      "fraction": 0.0018437500000000006,
+      "offset_world_m": [
+        4.056250000000001e-05,
+        -3.687500000000001e-06,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.4572749332426512e-09,
+          "rotation_residual_rad": 2.394064292511195e-08
+        },
+        {
+          "position_residual_m": 1.770524085100015e-09,
+          "rotation_residual_rad": 1.003988138595923e-08
+        }
+      ]
+    },
+    {
+      "action_index": 533,
+      "fraction": 0.00411328125,
+      "offset_world_m": [
+        9.049218749999998e-05,
+        -8.2265625e-06,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.0763254667837293e-09,
+          "rotation_residual_rad": 1.4381854364423423e-08
+        },
+        {
+          "position_residual_m": 1.5219478715547033e-09,
+          "rotation_residual_rad": 8.524939174756215e-09
+        }
+      ]
+    },
+    {
+      "action_index": 534,
+      "fraction": 0.007250000000000001,
+      "offset_world_m": [
+        0.00015950000000000003,
+        -1.4500000000000003e-05,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 5.104553586264516e-10,
+          "rotation_residual_rad": 2.791729829602332e-09
+        },
+        {
+          "position_residual_m": 1.192472807267905e-09,
+          "rotation_residual_rad": 6.548533440488369e-09
+        }
+      ]
+    },
+    {
+      "action_index": 535,
+      "fraction": 0.01123046875,
+      "offset_world_m": [
+        0.0002470703125,
+        -2.24609375e-05,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.584659549054481e-09,
+          "rotation_residual_rad": 1.7931876545030392e-08
+        },
+        {
+          "position_residual_m": 8.571756949829493e-10,
+          "rotation_residual_rad": 4.559228570405774e-09
+        }
+      ]
+    },
+    {
+      "action_index": 536,
+      "fraction": 0.01603125,
+      "offset_world_m": [
+        0.0003526875,
+        -3.20625e-05,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 8.868830116103944e-10,
+          "rotation_residual_rad": 6.153517716234008e-09
+        },
+        {
+          "position_residual_m": 7.09108278447199e-10,
+          "rotation_residual_rad": 3.701664348612312e-09
+        }
+      ]
+    },
+    {
+      "action_index": 537,
+      "fraction": 0.02162890625,
+      "offset_world_m": [
+        0.00047583593749999997,
+        -4.32578125e-05,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.539618769837365e-09,
+          "rotation_residual_rad": 1.0687056032799599e-08
+        },
+        {
+          "position_residual_m": 8.016302621263749e-10,
+          "rotation_residual_rad": 4.173563690249892e-09
+        }
+      ]
+    },
+    {
+      "action_index": 538,
+      "fraction": 0.028000000000000004,
+      "offset_world_m": [
+        0.000616,
+        -5.6000000000000006e-05,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.532826512503964e-09,
+          "rotation_residual_rad": 1.7596139212581304e-08
+        },
+        {
+          "position_residual_m": 9.087947572459582e-10,
+          "rotation_residual_rad": 4.645430205010519e-09
+        }
+      ]
+    },
+    {
+      "action_index": 539,
+      "fraction": 0.03512109375,
+      "offset_world_m": [
+        0.0007726640624999999,
+        -7.024218749999999e-05,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.9890352111552666e-09,
+          "rotation_residual_rad": 2.7731089223937704e-08
+        },
+        {
+          "position_residual_m": 8.174587536923388e-10,
+          "rotation_residual_rad": 4.195528380249224e-09
+        }
+      ]
+    },
+    {
+      "action_index": 540,
+      "fraction": 0.04296875,
+      "offset_world_m": [
+        0.0009453125,
+        -8.59375e-05,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 8.178522320616987e-10,
+          "rotation_residual_rad": 5.691889983931138e-09
+        },
+        {
+          "position_residual_m": 2.0324531674644123e-10,
+          "rotation_residual_rad": 5.431031906193774e-10
+        }
+      ]
+    },
+    {
+      "action_index": 541,
+      "fraction": 0.05151953125000001,
+      "offset_world_m": [
+        0.0011334296875,
+        -0.00010303906250000002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 9.126235634937538e-10,
+          "rotation_residual_rad": 6.359639240274566e-09
+        },
+        {
+          "position_residual_m": 4.726605003393886e-09,
+          "rotation_residual_rad": 2.30242934592691e-08
+        }
+      ]
+    },
+    {
+      "action_index": 542,
+      "fraction": 0.06075,
+      "offset_world_m": [
+        0.0013364999999999998,
+        -0.0001215,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 9.677548010450533e-10,
+          "rotation_residual_rad": 6.753300438832172e-09
+        },
+        {
+          "position_residual_m": 5.451682068027868e-09,
+          "rotation_residual_rad": 2.6949510220242647e-08
+        }
+      ]
+    },
+    {
+      "action_index": 543,
+      "fraction": 0.07063671875000001,
+      "offset_world_m": [
+        0.0015540078125,
+        -0.00014127343750000001,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 9.988556209469234e-10,
+          "rotation_residual_rad": 6.98068434645878e-09
+        },
+        {
+          "position_residual_m": 5.5827931202010745e-09,
+          "rotation_residual_rad": 2.7566885376313585e-08
+        }
+      ]
+    },
+    {
+      "action_index": 544,
+      "fraction": 0.08115624999999999,
+      "offset_world_m": [
+        0.0017854374999999995,
+        -0.00016231249999999997,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.014665211313313e-09,
+          "rotation_residual_rad": 7.1021199809682225e-09
+        },
+        {
+          "position_residual_m": 5.52717485341697e-09,
+          "rotation_residual_rad": 2.7366574450420992e-08
+        }
+      ]
+    },
+    {
+      "action_index": 545,
+      "fraction": 0.09228515625,
+      "offset_world_m": [
+        0.0020302734374999997,
+        -0.0001845703125,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.0203488374803821e-09,
+          "rotation_residual_rad": 7.153227211550561e-09
+        },
+        {
+          "position_residual_m": 5.104080581266666e-09,
+          "rotation_residual_rad": 2.5254321359574683e-08
+        }
+      ]
+    },
+    {
+      "action_index": 546,
+      "fraction": 0.10400000000000002,
+      "offset_world_m": [
+        0.0022880000000000005,
+        -0.00020800000000000004,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.0170855300578462e-09,
+          "rotation_residual_rad": 7.14195073171637e-09
+        },
+        {
+          "position_residual_m": 3.639993308454143e-09,
+          "rotation_residual_rad": 1.6810334219105374e-08
+        }
+      ]
+    },
+    {
+      "action_index": 547,
+      "fraction": 0.11627734375,
+      "offset_world_m": [
+        0.0025581015625,
+        -0.00023255468750000001,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.006723730273696e-09,
+          "rotation_residual_rad": 7.080938487009732e-09
+        },
+        {
+          "position_residual_m": 2.9266673845982673e-09,
+          "rotation_residual_rad": 1.2536772756260854e-08
+        }
+      ]
+    },
+    {
+      "action_index": 548,
+      "fraction": 0.12909375,
+      "offset_world_m": [
+        0.0028400625,
+        -0.0002581875,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 9.622887699851456e-10,
+          "rotation_residual_rad": 6.781278849103427e-09
+        },
+        {
+          "position_residual_m": 5.109818252721962e-10,
+          "rotation_residual_rad": 2.943741477501906e-09
+        }
+      ]
+    },
+    {
+      "action_index": 549,
+      "fraction": 0.14242578125,
+      "offset_world_m": [
+        0.0031333671874999997,
+        -0.0002848515625,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 4.074030941635355e-09,
+          "rotation_residual_rad": 2.8757512668256742e-08
+        },
+        {
+          "position_residual_m": 1.4123365678674433e-09,
+          "rotation_residual_rad": 8.156364475214012e-09
+        }
+      ]
+    },
+    {
+      "action_index": 550,
+      "fraction": 0.15625,
+      "offset_world_m": [
+        0.0034374999999999996,
+        -0.0003125,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 7.827738503304081e-10,
+          "rotation_residual_rad": 5.539503883894183e-09
+        },
+        {
+          "position_residual_m": 5.883429729115864e-10,
+          "rotation_residual_rad": 3.4896135114514737e-09
+        }
+      ]
+    },
+    {
+      "action_index": 551,
+      "fraction": 0.17054296875000002,
+      "offset_world_m": [
+        0.0037519453125000003,
+        -0.0003410859375000001,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.844460652633007e-09,
+          "rotation_residual_rad": 2.726784837071238e-08
+        },
+        {
+          "position_residual_m": 4.926757094379221e-09,
+          "rotation_residual_rad": 2.8936010651907918e-08
+        }
+      ]
+    },
+    {
+      "action_index": 552,
+      "fraction": 0.18528125000000004,
+      "offset_world_m": [
+        0.004076187500000001,
+        -0.00037056250000000007,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.1213366224379123e-09,
+          "rotation_residual_rad": 2.2184913897668906e-08
+        },
+        {
+          "position_residual_m": 2.977069624633485e-10,
+          "rotation_residual_rad": 1.803337536711366e-09
+        }
+      ]
+    },
+    {
+      "action_index": 553,
+      "fraction": 0.20044140624999995,
+      "offset_world_m": [
+        0.0044097109374999985,
+        -0.0004008828124999999,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.7870837690347153e-09,
+          "rotation_residual_rad": 1.9849557730766495e-08
+        },
+        {
+          "position_residual_m": 2.5297596586433323e-10,
+          "rotation_residual_rad": 1.3753008873415098e-09
+        }
+      ]
+    },
+    {
+      "action_index": 554,
+      "fraction": 0.216,
+      "offset_world_m": [
+        0.004751999999999999,
+        -0.000432,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.688554253506001e-09,
+          "rotation_residual_rad": 1.9189159191904038e-08
+        },
+        {
+          "position_residual_m": 3.9484180316377317e-10,
+          "rotation_residual_rad": 2.211069449165451e-09
+        }
+      ]
+    },
+    {
+      "action_index": 555,
+      "fraction": 0.23193359375,
+      "offset_world_m": [
+        0.0051025390625,
+        -0.00046386718750000003,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.7860085780586086e-09,
+          "rotation_residual_rad": 1.9928212068608265e-08
+        },
+        {
+          "position_residual_m": 6.798649321741627e-10,
+          "rotation_residual_rad": 3.845509439488882e-09
+        }
+      ]
+    },
+    {
+      "action_index": 556,
+      "fraction": 0.24821875000000004,
+      "offset_world_m": [
+        0.0054608125,
+        -0.0004964375000000001,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.0093195899449157e-09,
+          "rotation_residual_rad": 2.1571409039543687e-08
+        },
+        {
+          "position_residual_m": 1.0407045351603065e-09,
+          "rotation_residual_rad": 5.90496789056671e-09
+        }
+      ]
+    },
+    {
+      "action_index": 557,
+      "fraction": 0.26483203125000004,
+      "offset_world_m": [
+        0.0058263046875000005,
+        -0.0005296640625000001,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.4136536374277853e-09,
+          "rotation_residual_rad": 2.4523658170956576e-08
+        },
+        {
+          "position_residual_m": 2.4726495100961386e-10,
+          "rotation_residual_rad": 1.309993276228578e-09
+        }
+      ]
+    },
+    {
+      "action_index": 558,
+      "fraction": 0.28174999999999994,
+      "offset_world_m": [
+        0.006198499999999998,
+        -0.0005634999999999999,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 4.030598098618784e-09,
+          "rotation_residual_rad": 2.902644298754483e-08
+        },
+        {
+          "position_residual_m": 6.421608023112145e-10,
+          "rotation_residual_rad": 3.836750497467048e-09
+        }
+      ]
+    },
+    {
+      "action_index": 559,
+      "fraction": 0.29894921874999997,
+      "offset_world_m": [
+        0.006576882812499999,
+        -0.0005978984374999999,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 7.380777002532262e-10,
+          "rotation_residual_rad": 5.33174932454678e-09
+        },
+        {
+          "position_residual_m": 1.4679874942537951e-09,
+          "rotation_residual_rad": 8.719224289058529e-09
+        }
+      ]
+    },
+    {
+      "action_index": 560,
+      "fraction": 0.31640625,
+      "offset_world_m": [
+        0.006960937499999999,
+        -0.0006328125,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 8.231588745847085e-10,
+          "rotation_residual_rad": 5.96618554221542e-09
+        },
+        {
+          "position_residual_m": 2.0732943526036615e-09,
+          "rotation_residual_rad": 1.2400488379758949e-08
+        }
+      ]
+    },
+    {
+      "action_index": 561,
+      "fraction": 0.33409765625000004,
+      "offset_world_m": [
+        0.0073501484375000006,
+        -0.0006681953125000001,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 8.192697621467239e-10,
+          "rotation_residual_rad": 5.959896272927938e-09
+        },
+        {
+          "position_residual_m": 2.593020833558179e-09,
+          "rotation_residual_rad": 1.561211508842862e-08
+        }
+      ]
+    },
+    {
+      "action_index": 562,
+      "fraction": 0.3520000000000001,
+      "offset_world_m": [
+        0.007744000000000002,
+        -0.0007040000000000002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 7.643041527182789e-10,
+          "rotation_residual_rad": 5.582080028057426e-09
+        },
+        {
+          "position_residual_m": 2.8636609035242447e-09,
+          "rotation_residual_rad": 1.73739338101303e-08
+        }
+      ]
+    },
+    {
+      "action_index": 563,
+      "fraction": 0.3700898437499999,
+      "offset_world_m": [
+        0.008141976562499998,
+        -0.0007401796874999998,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 6.935545774457919e-10,
+          "rotation_residual_rad": 5.086105933868656e-09
+        },
+        {
+          "position_residual_m": 2.063409130258297e-09,
+          "rotation_residual_rad": 1.2660443072278977e-08
+        }
+      ]
+    },
+    {
+      "action_index": 564,
+      "fraction": 0.38834374999999993,
+      "offset_world_m": [
+        0.008543562499999997,
+        -0.0007766874999999999,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 6.399416104968677e-10,
+          "rotation_residual_rad": 4.712239557754023e-09
+        },
+        {
+          "position_residual_m": 1.289044597670992e-09,
+          "rotation_residual_rad": 8.030249493035156e-09
+        }
+      ]
+    },
+    {
+      "action_index": 565,
+      "fraction": 0.40673828125,
+      "offset_world_m": [
+        0.0089482421875,
+        -0.0008134765625,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.9688135010268735e-09,
+          "rotation_residual_rad": 2.934540683619559e-08
+        },
+        {
+          "position_residual_m": 7.67376125357562e-10,
+          "rotation_residual_rad": 4.869011272945639e-09
+        }
+      ]
+    },
+    {
+      "action_index": 566,
+      "fraction": 0.4252500000000001,
+      "offset_world_m": [
+        0.009355500000000001,
+        -0.0008505000000000001,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.926368882912897e-09,
+          "rotation_residual_rad": 2.9148405047862067e-08
+        },
+        {
+          "position_residual_m": 3.990978328120708e-10,
+          "rotation_residual_rad": 2.58601053961449e-09
+        }
+      ]
+    },
+    {
+      "action_index": 567,
+      "fraction": 0.4438554687500001,
+      "offset_world_m": [
+        0.009764820312500002,
+        -0.0008877109375000002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.939778884630171e-09,
+          "rotation_residual_rad": 2.936375068354917e-08
+        },
+        {
+          "position_residual_m": 2.2321401905416797e-10,
+          "rotation_residual_rad": 1.3916073508447802e-09
+        }
+      ]
+    },
+    {
+      "action_index": 568,
+      "fraction": 0.46253124999999995,
+      "offset_world_m": [
+        0.010175687499999999,
+        -0.0009250624999999999,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.949005076764375e-09,
+          "rotation_residual_rad": 2.9547269639937865e-08
+        },
+        {
+          "position_residual_m": 2.4201477332741955e-10,
+          "rotation_residual_rad": 1.5376367616214565e-09
+        }
+      ]
+    },
+    {
+      "action_index": 569,
+      "fraction": 0.48125390625,
+      "offset_world_m": [
+        0.0105875859375,
+        -0.0009625078124999999,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.8979967624788775e-09,
+          "rotation_residual_rad": 2.9277905162777096e-08
+        },
+        {
+          "position_residual_m": 4.450972311664758e-10,
+          "rotation_residual_rad": 2.9299930618515583e-09
+        }
+      ]
+    },
+    {
+      "action_index": 570,
+      "fraction": 0.5,
+      "offset_world_m": [
+        0.011,
+        -0.001,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.774705245080212e-09,
+          "rotation_residual_rad": 2.8459903461442655e-08
+        },
+        {
+          "position_residual_m": 7.711996339484869e-10,
+          "rotation_residual_rad": 5.033719316554769e-09
+        }
+      ]
+    },
+    {
+      "action_index": 571,
+      "fraction": 0.51874609375,
+      "offset_world_m": [
+        0.0114124140625,
+        -0.0010374921875,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.59391178987032e-09,
+          "rotation_residual_rad": 2.71990513269193e-08
+        },
+        {
+          "position_residual_m": 1.0344984845790098e-09,
+          "rotation_residual_rad": 6.725084475036049e-09
+        }
+      ]
+    },
+    {
+      "action_index": 572,
+      "fraction": 0.53746875,
+      "offset_world_m": [
+        0.0118243125,
+        -0.0010749375000000002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.3896211153329797e-09,
+          "rotation_residual_rad": 2.574873673109054e-08
+        },
+        {
+          "position_residual_m": 1.1984976489659217e-09,
+          "rotation_residual_rad": 7.791616515462925e-09
+        }
+      ]
+    },
+    {
+      "action_index": 573,
+      "fraction": 0.55614453125,
+      "offset_world_m": [
+        0.012235179687499998,
+        -0.0011122890625,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.1799841500204145e-09,
+          "rotation_residual_rad": 2.4245145092150196e-08
+        },
+        {
+          "position_residual_m": 1.2378422286093898e-09,
+          "rotation_residual_rad": 8.069082363776498e-09
+        }
+      ]
+    },
+    {
+      "action_index": 574,
+      "fraction": 0.5747500000000001,
+      "offset_world_m": [
+        0.012644500000000001,
+        -0.0011495000000000001,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.9909241028694907e-09,
+          "rotation_residual_rad": 2.2885938147783186e-08
+        },
+        {
+          "position_residual_m": 1.13795280401755e-09,
+          "rotation_residual_rad": 7.463524539233399e-09
+        }
+      ]
+    },
+    {
+      "action_index": 575,
+      "fraction": 0.59326171875,
+      "offset_world_m": [
+        0.013051757812499998,
+        -0.0011865234375,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.8378775034718724e-09,
+          "rotation_residual_rad": 2.179107405364487e-08
+        },
+        {
+          "position_residual_m": 7.757108671963249e-10,
+          "rotation_residual_rad": 5.172552924011982e-09
+        }
+      ]
+    },
+    {
+      "action_index": 576,
+      "fraction": 0.6116562499999999,
+      "offset_world_m": [
+        0.013456437499999998,
+        -0.0012233124999999998,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.728692860472079e-09,
+          "rotation_residual_rad": 2.1023787062145363e-08
+        },
+        {
+          "position_residual_m": 5.515784491331136e-10,
+          "rotation_residual_rad": 3.727820383679433e-09
+        }
+      ]
+    },
+    {
+      "action_index": 577,
+      "fraction": 0.6299101562500001,
+      "offset_world_m": [
+        0.013858023437500002,
+        -0.0012598203125000003,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.654436586633587e-09,
+          "rotation_residual_rad": 2.051838710014634e-08
+        },
+        {
+          "position_residual_m": 1.9681500434210844e-10,
+          "rotation_residual_rad": 1.2598247258622183e-09
+        }
+      ]
+    },
+    {
+      "action_index": 578,
+      "fraction": 0.648,
+      "offset_world_m": [
+        0.014256,
+        -0.001296,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.6230010082307027e-09,
+          "rotation_residual_rad": 2.0338586507594994e-08
+        },
+        {
+          "position_residual_m": 6.634508438542452e-09,
+          "rotation_residual_rad": 2.210519322752593e-08
+        }
+      ]
+    },
+    {
+      "action_index": 579,
+      "fraction": 0.6659023437500001,
+      "offset_world_m": [
+        0.014649851562500002,
+        -0.0013318046875000003,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.6282322948064117e-09,
+          "rotation_residual_rad": 2.04397035281495e-08
+        },
+        {
+          "position_residual_m": 2.40231916503251e-10,
+          "rotation_residual_rad": 1.1333903162007416e-09
+        }
+      ]
+    },
+    {
+      "action_index": 580,
+      "fraction": 0.68359375,
+      "offset_world_m": [
+        0.015039062499999999,
+        -0.0013671875000000001,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.004503402519609e-09,
+          "rotation_residual_rad": 2.3429109626134718e-08
+        },
+        {
+          "position_residual_m": 7.247629163708698e-10,
+          "rotation_residual_rad": 4.878630842420784e-09
+        }
+      ]
+    },
+    {
+      "action_index": 581,
+      "fraction": 0.70105078125,
+      "offset_world_m": [
+        0.015423117187499998,
+        -0.0014021015625,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.8021405789926666e-09,
+          "rotation_residual_rad": 2.1913952023458364e-08
+        },
+        {
+          "position_residual_m": 1.070274684420793e-09,
+          "rotation_residual_rad": 7.102008516550972e-09
+        }
+      ]
+    },
+    {
+      "action_index": 582,
+      "fraction": 0.71825,
+      "offset_world_m": [
+        0.0158015,
+        -0.0014365,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.639040097518059e-09,
+          "rotation_residual_rad": 2.0695465945795894e-08
+        },
+        {
+          "position_residual_m": 9.439794131402522e-10,
+          "rotation_residual_rad": 6.285552953141102e-09
+        }
+      ]
+    },
+    {
+      "action_index": 583,
+      "fraction": 0.73516796875,
+      "offset_world_m": [
+        0.0161736953125,
+        -0.0014703359375,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.52603745186951e-09,
+          "rotation_residual_rad": 1.9860907836940396e-08
+        },
+        {
+          "position_residual_m": 3.3289247627530053e-10,
+          "rotation_residual_rad": 2.2903067360920134e-09
+        }
+      ]
+    },
+    {
+      "action_index": 584,
+      "fraction": 0.7517812500000001,
+      "offset_world_m": [
+        0.0165391875,
+        -0.0015035625000000001,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.458162610411088e-09,
+          "rotation_residual_rad": 1.9374009216318743e-08
+        },
+        {
+          "position_residual_m": 4.049146631563564e-09,
+          "rotation_residual_rad": 1.7986588039297956e-08
+        }
+      ]
+    },
+    {
+      "action_index": 585,
+      "fraction": 0.76806640625,
+      "offset_world_m": [
+        0.016897460937499997,
+        -0.0015361328125,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.4331429697637278e-09,
+          "rotation_residual_rad": 1.9219164728296148e-08
+        },
+        {
+          "position_residual_m": 4.781680027904391e-10,
+          "rotation_residual_rad": 2.9061892701625692e-09
+        }
+      ]
+    },
+    {
+      "action_index": 586,
+      "fraction": 0.7839999999999999,
+      "offset_world_m": [
+        0.017247999999999996,
+        -0.001568,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.4463782036037805e-09,
+          "rotation_residual_rad": 1.9361850440514953e-08
+        },
+        {
+          "position_residual_m": 1.098629971834672e-09,
+          "rotation_residual_rad": 6.973540871989056e-09
+        }
+      ]
+    },
+    {
+      "action_index": 587,
+      "fraction": 0.79955859375,
+      "offset_world_m": [
+        0.0175902890625,
+        -0.0015991171875,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.483931017158304e-09,
+          "rotation_residual_rad": 1.9692870487750196e-08
+        },
+        {
+          "position_residual_m": 1.7936860085281552e-09,
+          "rotation_residual_rad": 1.1504125450915675e-08
+        }
+      ]
+    },
+    {
+      "action_index": 588,
+      "fraction": 0.81471875,
+      "offset_world_m": [
+        0.0179238125,
+        -0.0016294375,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.5419208950206243e-09,
+          "rotation_residual_rad": 2.0181805625778176e-08
+        },
+        {
+          "position_residual_m": 2.837605852314117e-09,
+          "rotation_residual_rad": 1.829061421155529e-08
+        }
+      ]
+    },
+    {
+      "action_index": 589,
+      "fraction": 0.82945703125,
+      "offset_world_m": [
+        0.0182480546875,
+        -0.0016589140625,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.2587783664326357e-09,
+          "rotation_residual_rad": 2.5897365907493607e-08
+        },
+        {
+          "position_residual_m": 2.740747864883462e-09,
+          "rotation_residual_rad": 1.7682754927082254e-08
+        }
+      ]
+    },
+    {
+      "action_index": 590,
+      "fraction": 0.84375,
+      "offset_world_m": [
+        0.0185625,
+        -0.0016875,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.5859309849599864e-09,
+          "rotation_residual_rad": 2.852448276938492e-08
+        },
+        {
+          "position_residual_m": 1.7390928328575182e-09,
+          "rotation_residual_rad": 1.1208794672764065e-08
+        }
+      ]
+    },
+    {
+      "action_index": 591,
+      "fraction": 0.85757421875,
+      "offset_world_m": [
+        0.0188666328125,
+        -0.0017151484374999999,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.75512246614674e-09,
+          "rotation_residual_rad": 2.989890015148473e-08
+        },
+        {
+          "position_residual_m": 1.8038006077986614e-09,
+          "rotation_residual_rad": 1.1625420641519735e-08
+        }
+      ]
+    },
+    {
+      "action_index": 592,
+      "fraction": 0.8709062500000001,
+      "offset_world_m": [
+        0.0191599375,
+        -0.0017418125000000003,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.832691835564377e-09,
+          "rotation_residual_rad": 3.054469107591301e-08
+        },
+        {
+          "position_residual_m": 1.6859657797581015e-09,
+          "rotation_residual_rad": 1.0857388891323253e-08
+        }
+      ]
+    },
+    {
+      "action_index": 593,
+      "fraction": 0.88372265625,
+      "offset_world_m": [
+        0.0194418984375,
+        -0.0017674453125000001,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.715028112527786e-09,
+          "rotation_residual_rad": 2.963785497472128e-08
+        },
+        {
+          "position_residual_m": 8.416302311220271e-10,
+          "rotation_residual_rad": 5.455019239760825e-09
+        }
+      ]
+    },
+    {
+      "action_index": 594,
+      "fraction": 0.8960000000000001,
+      "offset_world_m": [
+        0.019712,
+        -0.0017920000000000002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.494673578381339e-09,
+          "rotation_residual_rad": 2.79124659860051e-08
+        },
+        {
+          "position_residual_m": 5.271448317705921e-10,
+          "rotation_residual_rad": 3.429198816276053e-09
+        }
+      ]
+    },
+    {
+      "action_index": 595,
+      "fraction": 0.90771484375,
+      "offset_world_m": [
+        0.019969726562499998,
+        -0.0018154296875,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.2789100010961452e-09,
+          "rotation_residual_rad": 2.6220328270731812e-08
+        },
+        {
+          "position_residual_m": 4.923535702119688e-10,
+          "rotation_residual_rad": 3.1740317487404556e-09
+        }
+      ]
+    },
+    {
+      "action_index": 596,
+      "fraction": 0.91884375,
+      "offset_world_m": [
+        0.020214562499999998,
+        -0.0018376875,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.0680383533592135e-09,
+          "rotation_residual_rad": 2.456269593414622e-08
+        },
+        {
+          "position_residual_m": 4.2255116512480045e-09,
+          "rotation_residual_rad": 2.6315416478252042e-08
+        }
+      ]
+    },
+    {
+      "action_index": 597,
+      "fraction": 0.92936328125,
+      "offset_world_m": [
+        0.020445992187499998,
+        -0.0018587265625000001,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.8648203264536423e-09,
+          "rotation_residual_rad": 2.2961455886365427e-08
+        },
+        {
+          "position_residual_m": 2.250240203215819e-09,
+          "rotation_residual_rad": 1.2958189019167439e-08
+        }
+      ]
+    },
+    {
+      "action_index": 598,
+      "fraction": 0.9392499999999999,
+      "offset_world_m": [
+        0.020663499999999998,
+        -0.0018785,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.679469051584996e-09,
+          "rotation_residual_rad": 2.1497992349754736e-08
+        },
+        {
+          "position_residual_m": 1.075569097896092e-09,
+          "rotation_residual_rad": 3.5082906692447704e-09
+        }
+      ]
+    },
+    {
+      "action_index": 599,
+      "fraction": 0.94848046875,
+      "offset_world_m": [
+        0.0208665703125,
+        -0.0018969609375,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.4576035693337216e-09,
+          "rotation_residual_rad": 1.9736813418738625e-08
+        },
+        {
+          "position_residual_m": 1.0639318217002345e-09,
+          "rotation_residual_rad": 6.911396707016366e-09
+        }
+      ]
+    },
+    {
+      "action_index": 600,
+      "fraction": 0.95703125,
+      "offset_world_m": [
+        0.0210546875,
+        -0.0019140625,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.1980265070509556e-09,
+          "rotation_residual_rad": 1.766848267630458e-08
+        },
+        {
+          "position_residual_m": 2.0952593649399645e-09,
+          "rotation_residual_rad": 1.3586177852102359e-08
+        }
+      ]
+    },
+    {
+      "action_index": 601,
+      "fraction": 0.9648789062500001,
+      "offset_world_m": [
+        0.0212273359375,
+        -0.0019297578125,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.940789624685363e-09,
+          "rotation_residual_rad": 1.561435150918053e-08
+        },
+        {
+          "position_residual_m": 1.2528340702158574e-09,
+          "rotation_residual_rad": 8.148891502241718e-09
+        }
+      ]
+    },
+    {
+      "action_index": 602,
+      "fraction": 0.972,
+      "offset_world_m": [
+        0.021383999999999997,
+        -0.001944,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.7025590720323972e-09,
+          "rotation_residual_rad": 1.3708701729865915e-08
+        },
+        {
+          "position_residual_m": 1.0828692470017492e-09,
+          "rotation_residual_rad": 7.06230961693698e-09
+        }
+      ]
+    },
+    {
+      "action_index": 603,
+      "fraction": 0.97837109375,
+      "offset_world_m": [
+        0.021524164062499997,
+        -0.0019567421875,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.5001690676208478e-09,
+          "rotation_residual_rad": 1.208774177598631e-08
+        },
+        {
+          "position_residual_m": 7.000875598879256e-10,
+          "rotation_residual_rad": 4.575180640184865e-09
+        }
+      ]
+    },
+    {
+      "action_index": 604,
+      "fraction": 0.9839687500000001,
+      "offset_world_m": [
+        0.0216473125,
+        -0.0019679375,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.3300076199924962e-09,
+          "rotation_residual_rad": 1.0723312392278014e-08
+        },
+        {
+          "position_residual_m": 3.610442499735533e-10,
+          "rotation_residual_rad": 2.3733360227600763e-09
+        }
+      ]
+    },
+    {
+      "action_index": 605,
+      "fraction": 0.98876953125,
+      "offset_world_m": [
+        0.0217529296875,
+        -0.0019775390625,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.1813763635578012e-09,
+          "rotation_residual_rad": 9.529997763815205e-09
+        },
+        {
+          "position_residual_m": 3.0290938751869506e-09,
+          "rotation_residual_rad": 2.0630397553542375e-08
+        }
+      ]
+    },
+    {
+      "action_index": 606,
+      "fraction": 0.99275,
+      "offset_world_m": [
+        0.0218405,
+        -0.0019855000000000003,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.0385645430326074e-09,
+          "rotation_residual_rad": 8.381677459974643e-09
+        },
+        {
+          "position_residual_m": 3.8162662937743225e-09,
+          "rotation_residual_rad": 2.5823016544143753e-08
+        }
+      ]
+    },
+    {
+      "action_index": 607,
+      "fraction": 0.99588671875,
+      "offset_world_m": [
+        0.0219095078125,
+        -0.0019917734375000003,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 8.972380476480099e-10,
+          "rotation_residual_rad": 7.243759378485991e-09
+        },
+        {
+          "position_residual_m": 4.043896100978948e-10,
+          "rotation_residual_rad": 2.6499746622343296e-09
+        }
+      ]
+    },
+    {
+      "action_index": 608,
+      "fraction": 0.99815625,
+      "offset_world_m": [
+        0.021959437499999998,
+        -0.0019963125,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 7.536831774043784e-10,
+          "rotation_residual_rad": 6.086555668572733e-09
+        },
+        {
+          "position_residual_m": 6.281577153421906e-10,
+          "rotation_residual_rad": 4.100956678602799e-09
+        }
+      ]
+    },
+    {
+      "action_index": 609,
+      "fraction": 0.99953515625,
+      "offset_world_m": [
+        0.0219897734375,
+        -0.0019990703125,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 6.095147451611594e-10,
+          "rotation_residual_rad": 4.9233138928243724e-09
+        },
+        {
+          "position_residual_m": 1.5146970667783252e-09,
+          "rotation_residual_rad": 9.879105146008344e-09
+        }
+      ]
+    },
+    {
+      "action_index": 610,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.196363963810527e-09,
+          "rotation_residual_rad": 2.5830476404736605e-08
+        },
+        {
+          "position_residual_m": 1.0038999851851646e-09,
+          "rotation_residual_rad": 6.5401414488236646e-09
+        }
+      ]
+    },
+    {
+      "action_index": 611,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.592876173265018e-09,
+          "rotation_residual_rad": 2.095712130767989e-08
+        },
+        {
+          "position_residual_m": 8.491665187393198e-10,
+          "rotation_residual_rad": 5.529987044163965e-09
+        }
+      ]
+    },
+    {
+      "action_index": 612,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.424295819945853e-09,
+          "rotation_residual_rad": 1.9596828546508303e-08
+        },
+        {
+          "position_residual_m": 7.499060213437082e-10,
+          "rotation_residual_rad": 4.887793279513854e-09
+        }
+      ]
+    },
+    {
+      "action_index": 613,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.3779281681977938e-09,
+          "rotation_residual_rad": 1.1134876017260576e-08
+        },
+        {
+          "position_residual_m": 2.124121663100704e-09,
+          "rotation_residual_rad": 1.385756859274107e-08
+        }
+      ]
+    },
+    {
+      "action_index": 614,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.9875538256551205e-09,
+          "rotation_residual_rad": 2.415026014099777e-08
+        },
+        {
+          "position_residual_m": 1.3909319708981765e-09,
+          "rotation_residual_rad": 9.074468155715266e-09
+        }
+      ]
+    },
+    {
+      "action_index": 615,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.592415000911729e-09,
+          "rotation_residual_rad": 2.904276496042372e-08
+        },
+        {
+          "position_residual_m": 1.5545882687600032e-09,
+          "rotation_residual_rad": 1.0139659527929413e-08
+        }
+      ]
+    },
+    {
+      "action_index": 616,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.592415000911729e-09,
+          "rotation_residual_rad": 2.904276496042372e-08
+        },
+        {
+          "position_residual_m": 9.56162136919124e-10,
+          "rotation_residual_rad": 6.216599528360751e-09
+        }
+      ]
+    },
+    {
+      "action_index": 617,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.4411456945371932e-09,
+          "rotation_residual_rad": 1.1644622187579079e-08
+        },
+        {
+          "position_residual_m": 3.0782327536112527e-09,
+          "rotation_residual_rad": 1.9972831333953654e-08
+        }
+      ]
+    },
+    {
+      "action_index": 618,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.4212291745266964e-09,
+          "rotation_residual_rad": 1.1477138759378553e-08
+        },
+        {
+          "position_residual_m": 1.5093477774258187e-09,
+          "rotation_residual_rad": 9.774910079960732e-09
+        }
+      ]
+    },
+    {
+      "action_index": 619,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.193266352606345e-09,
+          "rotation_residual_rad": 2.5772652027365415e-08
+        },
+        {
+          "position_residual_m": 5.176946544266244e-10,
+          "rotation_residual_rad": 3.3502854481142088e-09
+        }
+      ]
+    },
+    {
+      "action_index": 620,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 6.425292700815157e-10,
+          "rotation_residual_rad": 5.182677715802008e-09
+        },
+        {
+          "position_residual_m": 1.984710208818227e-09,
+          "rotation_residual_rad": 1.2358444254973987e-08
+        }
+      ]
+    },
+    {
+      "action_index": 621,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 7.874545616943894e-10,
+          "rotation_residual_rad": 6.347885531210579e-09
+        },
+        {
+          "position_residual_m": 2.9277620677204364e-10,
+          "rotation_residual_rad": 1.880238668055936e-09
+        }
+      ]
+    },
+    {
+      "action_index": 622,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 9.088445298687155e-10,
+          "rotation_residual_rad": 7.322081523831201e-09
+        },
+        {
+          "position_residual_m": 3.605145224997492e-10,
+          "rotation_residual_rad": 2.3113622659368017e-09
+        }
+      ]
+    },
+    {
+      "action_index": 623,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.0118763634084088e-09,
+          "rotation_residual_rad": 8.147235177794067e-09
+        },
+        {
+          "position_residual_m": 3.6420494965774205e-10,
+          "rotation_residual_rad": 2.3295405340382774e-09
+        }
+      ]
+    },
+    {
+      "action_index": 624,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.1021771264714403e-09,
+          "rotation_residual_rad": 8.868840489012155e-09
+        },
+        {
+          "position_residual_m": 4.3035101554449416e-10,
+          "rotation_residual_rad": 2.749443072545994e-09
+        }
+      ]
+    },
+    {
+      "action_index": 625,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.1764542170762277e-09,
+          "rotation_residual_rad": 9.46059598896255e-09
+        },
+        {
+          "position_residual_m": 4.949910631532186e-10,
+          "rotation_residual_rad": 3.1589618597136897e-09
+        }
+      ]
+    },
+    {
+      "action_index": 626,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.1624817524838923e-09,
+          "rotation_residual_rad": 9.342847447614459e-09
+        },
+        {
+          "position_residual_m": 2.4891421186652033e-09,
+          "rotation_residual_rad": 1.596691891964622e-08
+        }
+      ]
+    },
+    {
+      "action_index": 627,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.016557667274592e-09,
+          "rotation_residual_rad": 8.166286035745813e-09
+        },
+        {
+          "position_residual_m": 2.957596007256469e-10,
+          "rotation_residual_rad": 1.8972648741947434e-09
+        }
+      ]
+    },
+    {
+      "action_index": 628,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 7.113878307688331e-10,
+          "rotation_residual_rad": 5.7134024650566026e-09
+        },
+        {
+          "position_residual_m": 4.087733480002974e-10,
+          "rotation_residual_rad": 2.6282020167078977e-09
+        }
+      ]
+    },
+    {
+      "action_index": 629,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 7.381939948127434e-10,
+          "rotation_residual_rad": 5.93472311434676e-09
+        },
+        {
+          "position_residual_m": 5.530845385554355e-10,
+          "rotation_residual_rad": 3.56806417960446e-09
+        }
+      ]
+    },
+    {
+      "action_index": 630,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.6043440900330395e-09,
+          "rotation_residual_rad": 2.895787441735041e-08
+        },
+        {
+          "position_residual_m": 4.121055608425193e-10,
+          "rotation_residual_rad": 2.6660236287392544e-09
+        }
+      ]
+    },
+    {
+      "action_index": 631,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 8.305431572373278e-10,
+          "rotation_residual_rad": 6.675480616617972e-09
+        },
+        {
+          "position_residual_m": 3.8515217171765e-09,
+          "rotation_residual_rad": 2.500312031573989e-08
+        }
+      ]
+    },
+    {
+      "action_index": 632,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 9.824571932277661e-10,
+          "rotation_residual_rad": 7.897670583014491e-09
+        },
+        {
+          "position_residual_m": 1.059237016435133e-09,
+          "rotation_residual_rad": 6.8748735520344984e-09
+        }
+      ]
+    },
+    {
+      "action_index": 633,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.0551148920746382e-09,
+          "rotation_residual_rad": 8.482535783246325e-09
+        },
+        {
+          "position_residual_m": 6.884692967247009e-10,
+          "rotation_residual_rad": 4.465999781704944e-09
+        }
+      ]
+    },
+    {
+      "action_index": 634,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.079532932552016e-09,
+          "rotation_residual_rad": 8.679369164938297e-09
+        },
+        {
+          "position_residual_m": 5.971493520316652e-10,
+          "rotation_residual_rad": 3.873833744277522e-09
+        }
+      ]
+    },
+    {
+      "action_index": 635,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 9.219041929601856e-10,
+          "rotation_residual_rad": 7.411538164581502e-09
+        },
+        {
+          "position_residual_m": 6.6043455120698e-10,
+          "rotation_residual_rad": 4.321014289657397e-09
+        }
+      ]
+    },
+    {
+      "action_index": 636,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.531538958131329e-09,
+          "rotation_residual_rad": 2.8375167679258598e-08
+        },
+        {
+          "position_residual_m": 2.3341339426799037e-09,
+          "rotation_residual_rad": 1.5112241750498634e-08
+        }
+      ]
+    },
+    {
+      "action_index": 637,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.637382672249014e-10,
+          "rotation_residual_rad": 2.4377751027686367e-09
+        },
+        {
+          "position_residual_m": 3.372740335556971e-09,
+          "rotation_residual_rad": 2.1814920817889285e-08
+        }
+      ]
+    },
+    {
+      "action_index": 638,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.9000937678390263e-09,
+          "rotation_residual_rad": 2.3281731276502603e-08
+        },
+        {
+          "position_residual_m": 1.4795044983359871e-09,
+          "rotation_residual_rad": 9.550576751267575e-09
+        }
+      ]
+    },
+    {
+      "action_index": 639,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 6.838908479257356e-10,
+          "rotation_residual_rad": 5.485432493617988e-09
+        },
+        {
+          "position_residual_m": 4.377162392161217e-09,
+          "rotation_residual_rad": 2.8362558659794453e-08
+        }
+      ]
+    },
+    {
+      "action_index": 640,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 8.726228275184142e-10,
+          "rotation_residual_rad": 6.994962851376215e-09
+        },
+        {
+          "position_residual_m": 4.527370628676755e-09,
+          "rotation_residual_rad": 2.914894933063099e-08
+        }
+      ]
+    },
+    {
+      "action_index": 641,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.0176901397578479e-09,
+          "rotation_residual_rad": 8.15302015475411e-09
+        },
+        {
+          "position_residual_m": 5.088931630840058e-10,
+          "rotation_residual_rad": 3.2755649269359068e-09
+        }
+      ]
+    },
+    {
+      "action_index": 642,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.0185875768321035e-09,
+          "rotation_residual_rad": 8.156141981532769e-09
+        },
+        {
+          "position_residual_m": 2.6781347505918366e-09,
+          "rotation_residual_rad": 1.724705281639565e-08
+        }
+      ]
+    },
+    {
+      "action_index": 643,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 7.933569606871153e-10,
+          "rotation_residual_rad": 6.350576759877499e-09
+        },
+        {
+          "position_residual_m": 3.3875899249064933e-10,
+          "rotation_residual_rad": 2.1801037953353564e-09
+        }
+      ]
+    },
+    {
+      "action_index": 644,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 5.651907016855976e-10,
+          "rotation_residual_rad": 4.522771023053146e-09
+        },
+        {
+          "position_residual_m": 4.084320840821972e-09,
+          "rotation_residual_rad": 2.637310638168597e-08
+        }
+      ]
+    },
+    {
+      "action_index": 645,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.675849153885171e-09,
+          "rotation_residual_rad": 2.9404586749974983e-08
+        },
+        {
+          "position_residual_m": 7.580787494898544e-10,
+          "rotation_residual_rad": 4.871046175324867e-09
+        }
+      ]
+    },
+    {
+      "action_index": 646,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 5.733023001894483e-10,
+          "rotation_residual_rad": 4.583900567529226e-09
+        },
+        {
+          "position_residual_m": 6.004324871234843e-10,
+          "rotation_residual_rad": 3.849622266207382e-09
+        }
+      ]
+    },
+    {
+      "action_index": 647,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 6.426036477088853e-10,
+          "rotation_residual_rad": 5.135675193663115e-09
+        },
+        {
+          "position_residual_m": 4.4184884748229514e-10,
+          "rotation_residual_rad": 2.8303692808367868e-09
+        }
+      ]
+    },
+    {
+      "action_index": 648,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 7.097585471255143e-10,
+          "rotation_residual_rad": 5.669757402799944e-09
+        },
+        {
+          "position_residual_m": 3.7364713825570757e-10,
+          "rotation_residual_rad": 2.3955382330376793e-09
+        }
+      ]
+    },
+    {
+      "action_index": 649,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 7.555520419155891e-10,
+          "rotation_residual_rad": 6.032763109929392e-09
+        },
+        {
+          "position_residual_m": 5.776101740808017e-10,
+          "rotation_residual_rad": 3.7065103437479054e-09
+        }
+      ]
+    },
+    {
+      "action_index": 650,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 7.933621807624958e-10,
+          "rotation_residual_rad": 6.331664825452507e-09
+        },
+        {
+          "position_residual_m": 6.189312951562273e-10,
+          "rotation_residual_rad": 3.967168886125918e-09
+        }
+      ]
+    },
+    {
+      "action_index": 651,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 8.21101455141618e-10,
+          "rotation_residual_rad": 6.549864347328151e-09
+        },
+        {
+          "position_residual_m": 8.945978474206499e-10,
+          "rotation_residual_rad": 5.737757024580752e-09
+        }
+      ]
+    },
+    {
+      "action_index": 652,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 8.44055283321927e-10,
+          "rotation_residual_rad": 6.729569338111615e-09
+        },
+        {
+          "position_residual_m": 9.934892883960587e-10,
+          "rotation_residual_rad": 6.3662719436385075e-09
+        }
+      ]
+    },
+    {
+      "action_index": 653,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 8.648903501341076e-10,
+          "rotation_residual_rad": 6.8920297787873355e-09
+        },
+        {
+          "position_residual_m": 1.1914077332171585e-09,
+          "rotation_residual_rad": 7.633607058307288e-09
+        }
+      ]
+    },
+    {
+      "action_index": 654,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 8.867370229099331e-10,
+          "rotation_residual_rad": 7.062168559673679e-09
+        },
+        {
+          "position_residual_m": 1.2263247099447136e-09,
+          "rotation_residual_rad": 7.854172389959737e-09
+        }
+      ]
+    },
+    {
+      "action_index": 655,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 9.128616600930972e-10,
+          "rotation_residual_rad": 7.265946316832575e-09
+        },
+        {
+          "position_residual_m": 1.2064094123636724e-09,
+          "rotation_residual_rad": 7.723356815790273e-09
+        }
+      ]
+    },
+    {
+      "action_index": 656,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 9.091669258452005e-10,
+          "rotation_residual_rad": 7.231975360706073e-09
+        },
+        {
+          "position_residual_m": 7.235609188566513e-10,
+          "rotation_residual_rad": 4.624950072632592e-09
+        }
+      ]
+    },
+    {
+      "action_index": 657,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 9.237135068448306e-10,
+          "rotation_residual_rad": 7.342595745164072e-09
+        },
+        {
+          "position_residual_m": 1.0434573627843597e-09,
+          "rotation_residual_rad": 6.6781601859245426e-09
+        }
+      ]
+    },
+    {
+      "action_index": 658,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 9.398528060510748e-10,
+          "rotation_residual_rad": 7.465326193508228e-09
+        },
+        {
+          "position_residual_m": 1.540844776812337e-09,
+          "rotation_residual_rad": 9.861767261974409e-09
+        }
+      ]
+    },
+    {
+      "action_index": 659,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 9.558843115899917e-10,
+          "rotation_residual_rad": 7.586803097285725e-09
+        },
+        {
+          "position_residual_m": 9.541469592382061e-10,
+          "rotation_residual_rad": 6.100174030463853e-09
+        }
+      ]
+    },
+    {
+      "action_index": 660,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 9.77175816649995e-10,
+          "rotation_residual_rad": 7.749355092204496e-09
+        },
+        {
+          "position_residual_m": 1.2327689968175247e-09,
+          "rotation_residual_rad": 7.884211472005282e-09
+        }
+      ]
+    },
+    {
+      "action_index": 661,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.0038863760016469e-09,
+          "rotation_residual_rad": 7.954143148338234e-09
+        },
+        {
+          "position_residual_m": 1.6128104868582304e-09,
+          "rotation_residual_rad": 1.0309564704713493e-08
+        }
+      ]
+    },
+    {
+      "action_index": 662,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 9.579629646210747e-10,
+          "rotation_residual_rad": 7.583316470049616e-09
+        },
+        {
+          "position_residual_m": 7.5009361937943e-10,
+          "rotation_residual_rad": 4.838951566134722e-09
+        }
+      ]
+    },
+    {
+      "action_index": 663,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 8.568226875483406e-10,
+          "rotation_residual_rad": 6.776131514899113e-09
+        },
+        {
+          "position_residual_m": 3.695170587067341e-09,
+          "rotation_residual_rad": 2.3401786807598043e-08
+        }
+      ]
+    },
+    {
+      "action_index": 664,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 6.692106484835449e-10,
+          "rotation_residual_rad": 5.287178606660443e-09
+        },
+        {
+          "position_residual_m": 1.4297269903856947e-09,
+          "rotation_residual_rad": 9.056854922252826e-09
+        }
+      ]
+    },
+    {
+      "action_index": 665,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.8207278719077703e-09,
+          "rotation_residual_rad": 2.2287996982883486e-08
+        },
+        {
+          "position_residual_m": 2.9222694327485957e-09,
+          "rotation_residual_rad": 1.8518328272332874e-08
+        }
+      ]
+    },
+    {
+      "action_index": 666,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.947600219760197e-09,
+          "rotation_residual_rad": 2.382370590702589e-08
+        },
+        {
+          "position_residual_m": 2.418540518561635e-09,
+          "rotation_residual_rad": 1.52923098340074e-08
+        }
+      ]
+    },
+    {
+      "action_index": 667,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.7335567543667218e-09,
+          "rotation_residual_rad": 1.3616750555787038e-08
+        },
+        {
+          "position_residual_m": 8.21303442319366e-10,
+          "rotation_residual_rad": 5.1333857550613594e-09
+        }
+      ]
+    },
+    {
+      "action_index": 668,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 5.613349397036431e-10,
+          "rotation_residual_rad": 4.411967841882273e-09
+        },
+        {
+          "position_residual_m": 9.505874554844094e-10,
+          "rotation_residual_rad": 5.954061029543687e-09
+        }
+      ]
+    },
+    {
+      "action_index": 669,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.908695212502836e-09,
+          "rotation_residual_rad": 2.278454526185813e-08
+        },
+        {
+          "position_residual_m": 1.1502128697891892e-09,
+          "rotation_residual_rad": 7.230777785791029e-09
+        }
+      ]
+    },
+    {
+      "action_index": 670,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 5.793113353390936e-10,
+          "rotation_residual_rad": 4.536345787875876e-09
+        },
+        {
+          "position_residual_m": 2.2444973512880607e-09,
+          "rotation_residual_rad": 1.4198151370054773e-08
+        }
+      ]
+    },
+    {
+      "action_index": 671,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 9.02238251074126e-10,
+          "rotation_residual_rad": 7.051639629247177e-09
+        },
+        {
+          "position_residual_m": 2.462569345172687e-09,
+          "rotation_residual_rad": 1.5596434712037222e-08
+        }
+      ]
+    },
+    {
+      "action_index": 672,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.343890259739238e-09,
+          "rotation_residual_rad": 1.0482047482996786e-08
+        },
+        {
+          "position_residual_m": 3.502165602134648e-09,
+          "rotation_residual_rad": 2.2252948379903995e-08
+        }
+      ]
+    },
+    {
+      "action_index": 673,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.935868474118408e-09,
+          "rotation_residual_rad": 2.2838729749125732e-08
+        },
+        {
+          "position_residual_m": 3.776772949761791e-09,
+          "rotation_residual_rad": 2.403589842989078e-08
+        }
+      ]
+    },
+    {
+      "action_index": 674,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.119882661587895e-09,
+          "rotation_residual_rad": 2.4204852994297182e-08
+        },
+        {
+          "position_residual_m": 4.371551642648285e-09,
+          "rotation_residual_rad": 2.7875507346411024e-08
+        }
+      ]
+    },
+    {
+      "action_index": 675,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.5227367834373506e-09,
+          "rotation_residual_rad": 2.7254086077504016e-08
+        },
+        {
+          "position_residual_m": 4.137210080359183e-09,
+          "rotation_residual_rad": 2.639615632935699e-08
+        }
+      ]
+    },
+    {
+      "action_index": 676,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.9010453524888815e-09,
+          "rotation_residual_rad": 3.009307327880651e-08
+        },
+        {
+          "position_residual_m": 4.236414209219641e-09,
+          "rotation_residual_rad": 2.705250737420246e-08
+        }
+      ]
+    },
+    {
+      "action_index": 677,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 5.862765037800914e-10,
+          "rotation_residual_rad": 4.509097143141424e-09
+        },
+        {
+          "position_residual_m": 3.485019786435561e-09,
+          "rotation_residual_rad": 2.2247676683606153e-08
+        }
+      ]
+    },
+    {
+      "action_index": 678,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 7.445831058405684e-10,
+          "rotation_residual_rad": 5.7068427942229505e-09
+        },
+        {
+          "position_residual_m": 2.0373798618945758e-09,
+          "rotation_residual_rad": 1.2982871440419894e-08
+        }
+      ]
+    },
+    {
+      "action_index": 679,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.990538149062693e-09,
+          "rotation_residual_rad": 3.050154231734916e-08
+        },
+        {
+          "position_residual_m": 1.9017709040766567e-09,
+          "rotation_residual_rad": 1.211227451952923e-08
+        }
+      ]
+    },
+    {
+      "action_index": 680,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 7.461181712892323e-10,
+          "rotation_residual_rad": 5.684030887998326e-09
+        },
+        {
+          "position_residual_m": 1.2953839842259475e-09,
+          "rotation_residual_rad": 8.232923642641116e-09
+        }
+      ]
+    },
+    {
+      "action_index": 681,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 5.611658258770887e-10,
+          "rotation_residual_rad": 4.263840263468416e-09
+        },
+        {
+          "position_residual_m": 1.2068850010392437e-09,
+          "rotation_residual_rad": 7.66880065701678e-09
+        }
+      ]
+    },
+    {
+      "action_index": 682,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 6.207613237933001e-10,
+          "rotation_residual_rad": 4.703630655726103e-09
+        },
+        {
+          "position_residual_m": 7.77172146593737e-10,
+          "rotation_residual_rad": 4.9140629172754665e-09
+        }
+      ]
+    },
+    {
+      "action_index": 683,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 7.587284092239109e-10,
+          "rotation_residual_rad": 5.730774072392172e-09
+        },
+        {
+          "position_residual_m": 1.744658071783597e-09,
+          "rotation_residual_rad": 5.783093254536581e-09
+        }
+      ]
+    },
+    {
+      "action_index": 684,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 4.03552687771957e-09,
+          "rotation_residual_rad": 3.040732856097423e-08
+        },
+        {
+          "position_residual_m": 4.312211300566611e-10,
+          "rotation_residual_rad": 2.8343292488134287e-09
+        }
+      ]
+    },
+    {
+      "action_index": 685,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 6.032770225686931e-10,
+          "rotation_residual_rad": 4.534180794084641e-09
+        },
+        {
+          "position_residual_m": 6.395881842638467e-10,
+          "rotation_residual_rad": 4.173912983589593e-09
+        }
+      ]
+    },
+    {
+      "action_index": 686,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 6.127869307830556e-10,
+          "rotation_residual_rad": 4.594154989991338e-09
+        },
+        {
+          "position_residual_m": 9.503166207473543e-10,
+          "rotation_residual_rad": 6.174756676229917e-09
+        }
+      ]
+    },
+    {
+      "action_index": 687,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 6.092135337598591e-10,
+          "rotation_residual_rad": 4.556280815239462e-09
+        },
+        {
+          "position_residual_m": 1.444273997913533e-09,
+          "rotation_residual_rad": 9.358581095174273e-09
+        }
+      ]
+    },
+    {
+      "action_index": 688,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 5.981451763449329e-10,
+          "rotation_residual_rad": 4.463013907471397e-09
+        },
+        {
+          "position_residual_m": 1.3825638433773207e-09,
+          "rotation_residual_rad": 8.960792419963579e-09
+        }
+      ]
+    },
+    {
+      "action_index": 689,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 5.864445390508832e-10,
+          "rotation_residual_rad": 4.365866048057484e-09
+        },
+        {
+          "position_residual_m": 1.687929958889077e-09,
+          "rotation_residual_rad": 1.0938629962332591e-08
+        }
+      ]
+    },
+    {
+      "action_index": 690,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 5.706456965399455e-10,
+          "rotation_residual_rad": 4.239126608082479e-09
+        },
+        {
+          "position_residual_m": 1.7233042268620857e-09,
+          "rotation_residual_rad": 1.1162078183559252e-08
+        }
+      ]
+    },
+    {
+      "action_index": 691,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 5.503131982815016e-10,
+          "rotation_residual_rad": 4.0797515316960574e-09
+        },
+        {
+          "position_residual_m": 1.6779166313318383e-09,
+          "rotation_residual_rad": 1.0861323949429628e-08
+        }
+      ]
+    },
+    {
+      "action_index": 692,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.9266719872861065e-09,
+          "rotation_residual_rad": 2.9054454988124717e-08
+        },
+        {
+          "position_residual_m": 6.97519014157193e-10,
+          "rotation_residual_rad": 4.522329799246876e-09
+        }
+      ]
+    },
+    {
+      "action_index": 693,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.787480584925703e-09,
+          "rotation_residual_rad": 2.7974123376557042e-08
+        },
+        {
+          "position_residual_m": 2.1461910695311292e-09,
+          "rotation_residual_rad": 1.3871791448512205e-08
+        }
+      ]
+    },
+    {
+      "action_index": 694,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.6661083328544312e-09,
+          "rotation_residual_rad": 2.7032214174383082e-08
+        },
+        {
+          "position_residual_m": 2.6708301825933456e-09,
+          "rotation_residual_rad": 1.7259910063004665e-08
+        }
+      ]
+    },
+    {
+      "action_index": 695,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.5446871209340466e-09,
+          "rotation_residual_rad": 2.6096073056784666e-08
+        },
+        {
+          "position_residual_m": 4.024143131199588e-09,
+          "rotation_residual_rad": 2.60070491052506e-08
+        }
+      ]
+    },
+    {
+      "action_index": 696,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.4031356674516466e-09,
+          "rotation_residual_rad": 2.5017930668446903e-08
+        },
+        {
+          "position_residual_m": 4.1542696683870686e-10,
+          "rotation_residual_rad": 2.683866070824884e-09
+        }
+      ]
+    },
+    {
+      "action_index": 697,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.2204551236475113e-09,
+          "rotation_residual_rad": 2.364402907378863e-08
+        },
+        {
+          "position_residual_m": 5.425622307983689e-10,
+          "rotation_residual_rad": 3.5110868654769053e-09
+        }
+      ]
+    },
+    {
+      "action_index": 698,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.0185849632618816e-09,
+          "rotation_residual_rad": 2.2136140673974053e-08
+        },
+        {
+          "position_residual_m": 6.50841090301829e-10,
+          "rotation_residual_rad": 4.2206467605452e-09
+        }
+      ]
+    },
+    {
+      "action_index": 699,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.8169726726819625e-09,
+          "rotation_residual_rad": 2.0636586593883312e-08
+        },
+        {
+          "position_residual_m": 7.418139072259783e-10,
+          "rotation_residual_rad": 4.822041638246675e-09
+        }
+      ]
+    },
+    {
+      "action_index": 700,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.584655310097935e-09,
+          "rotation_residual_rad": 1.8917870971746415e-08
+        },
+        {
+          "position_residual_m": 7.583059021317536e-10,
+          "rotation_residual_rad": 4.9411923981264395e-09
+        }
+      ]
+    },
+    {
+      "action_index": 701,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.7607498836431508e-09,
+          "rotation_residual_rad": 1.2881855292918533e-08
+        },
+        {
+          "position_residual_m": 8.645914926694463e-10,
+          "rotation_residual_rad": 5.649648421823561e-09
+        }
+      ]
+    },
+    {
+      "action_index": 702,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.4803233092314723e-09,
+          "rotation_residual_rad": 1.813070547218687e-08
+        },
+        {
+          "position_residual_m": 8.70272159740262e-10,
+          "rotation_residual_rad": 5.702074373409231e-09
+        }
+      ]
+    },
+    {
+      "action_index": 703,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.4925259734422936e-09,
+          "rotation_residual_rad": 1.0906460623546354e-08
+        },
+        {
+          "position_residual_m": 1.0128752407025737e-09,
+          "rotation_residual_rad": 6.658455102377259e-09
+        }
+      ]
+    },
+    {
+      "action_index": 704,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.484888486907115e-09,
+          "rotation_residual_rad": 1.084686056846726e-08
+        },
+        {
+          "position_residual_m": 1.037119963453588e-09,
+          "rotation_residual_rad": 6.841818691770631e-09
+        }
+      ]
+    },
+    {
+      "action_index": 705,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.3610451958914875e-09,
+          "rotation_residual_rad": 9.939047485291007e-09
+        },
+        {
+          "position_residual_m": 1.0500594792418885e-09,
+          "rotation_residual_rad": 6.95257384475919e-09
+        }
+      ]
+    },
+    {
+      "action_index": 706,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.1915385300202129e-09,
+          "rotation_residual_rad": 8.69880933203054e-09
+        },
+        {
+          "position_residual_m": 5.958092272189524e-10,
+          "rotation_residual_rad": 3.953641756336596e-09
+        }
+      ]
+    },
+    {
+      "action_index": 707,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 9.63433269504121e-10,
+          "rotation_residual_rad": 7.031560805759582e-09
+        },
+        {
+          "position_residual_m": 7.034157451744214e-10,
+          "rotation_residual_rad": 4.677798077193196e-09
+        }
+      ]
+    },
+    {
+      "action_index": 708,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 7.237687801971231e-10,
+          "rotation_residual_rad": 5.28089613730555e-09
+        },
+        {
+          "position_residual_m": 5.695453726632673e-10,
+          "rotation_residual_rad": 3.796982340944233e-09
+        }
+      ]
+    },
+    {
+      "action_index": 709,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 4.114323626844033e-09,
+          "rotation_residual_rad": 3.0015612813740527e-08
+        },
+        {
+          "position_residual_m": 7.495495740774176e-10,
+          "rotation_residual_rad": 5.012275049681081e-09
+        }
+      ]
+    },
+    {
+      "action_index": 710,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.428867639538641e-09,
+          "rotation_residual_rad": 1.7719046791684452e-08
+        },
+        {
+          "position_residual_m": 1.1121968380205733e-09,
+          "rotation_residual_rad": 7.466234315184542e-09
+        }
+      ]
+    },
+    {
+      "action_index": 711,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 8.234817518914523e-10,
+          "rotation_residual_rad": 6.013060302869332e-09
+        },
+        {
+          "position_residual_m": 9.854513188068687e-10,
+          "rotation_residual_rad": 6.6342519477956275e-09
+        }
+      ]
+    },
+    {
+      "action_index": 712,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 6.893901503433379e-10,
+          "rotation_residual_rad": 5.012543248419685e-09
+        },
+        {
+          "position_residual_m": 9.683611033777876e-10,
+          "rotation_residual_rad": 6.536476443902456e-09
+        }
+      ]
+    },
+    {
+      "action_index": 713,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.104224112437868e-09,
+          "rotation_residual_rad": 1.5318123504656762e-08
+        },
+        {
+          "position_residual_m": 1.0208009616919491e-09,
+          "rotation_residual_rad": 6.9090103010842195e-09
+        }
+      ]
+    },
+    {
+      "action_index": 714,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.443571802196549e-09,
+          "rotation_residual_rad": 2.5068732544913724e-08
+        },
+        {
+          "position_residual_m": 8.8671055026675e-10,
+          "rotation_residual_rad": 6.011138392391457e-09
+        }
+      ]
+    },
+    {
+      "action_index": 715,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 9.718890527277413e-10,
+          "rotation_residual_rad": 7.079688683650377e-09
+        },
+        {
+          "position_residual_m": 9.18095200772226e-10,
+          "rotation_residual_rad": 6.2307727664343285e-09
+        }
+      ]
+    },
+    {
+      "action_index": 716,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 8.465188824040345e-10,
+          "rotation_residual_rad": 6.165504381499183e-09
+        },
+        {
+          "position_residual_m": 8.069863458274493e-10,
+          "rotation_residual_rad": 5.48392179691589e-09
+        }
+      ]
+    },
+    {
+      "action_index": 717,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 8.890164140142547e-10,
+          "rotation_residual_rad": 6.473519740464452e-09
+        },
+        {
+          "position_residual_m": 8.963493207958932e-10,
+          "rotation_residual_rad": 6.100325650686682e-09
+        }
+      ]
+    },
+    {
+      "action_index": 718,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 9.649334641312787e-10,
+          "rotation_residual_rad": 7.024481396999428e-09
+        },
+        {
+          "position_residual_m": 7.276352580185483e-10,
+          "rotation_residual_rad": 4.952949478133542e-09
+        }
+      ]
+    },
+    {
+      "action_index": 719,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.0424178162472973e-09,
+          "rotation_residual_rad": 7.586350727246977e-09
+        },
+        {
+          "position_residual_m": 5.779442341496529e-10,
+          "rotation_residual_rad": 3.931713560141535e-09
+        }
+      ]
+    },
+    {
+      "action_index": 720,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 7.646013743785308e-10,
+          "rotation_residual_rad": 5.563910647809017e-09
+        },
+        {
+          "position_residual_m": 5.779442341496529e-10,
+          "rotation_residual_rad": 3.931713560141535e-09
+        }
+      ]
+    },
+    {
+      "action_index": 721,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.6300019239351744e-09,
+          "rotation_residual_rad": 2.638737405489778e-08
+        },
+        {
+          "position_residual_m": 6.88837483670169e-10,
+          "rotation_residual_rad": 4.656464283354673e-09
+        }
+      ]
+    },
+    {
+      "action_index": 722,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 8.54753796637644e-10,
+          "rotation_residual_rad": 6.21747654134764e-09
+        },
+        {
+          "position_residual_m": 4.741155211773439e-10,
+          "rotation_residual_rad": 3.1907249729898802e-09
+        }
+      ]
+    },
+    {
+      "action_index": 723,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.6040974002347224e-09,
+          "rotation_residual_rad": 2.6189615443264373e-08
+        },
+        {
+          "position_residual_m": 1.1183192888644112e-09,
+          "rotation_residual_rad": 7.590288657376463e-09
+        }
+      ]
+    },
+    {
+      "action_index": 724,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 8.017628879946083e-10,
+          "rotation_residual_rad": 5.8296786667533464e-09
+        },
+        {
+          "position_residual_m": 2.308409173828632e-09,
+          "rotation_residual_rad": 1.5742209023640762e-08
+        }
+      ]
+    },
+    {
+      "action_index": 725,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.4456133727883845e-09,
+          "rotation_residual_rad": 2.5026594429599506e-08
+        },
+        {
+          "position_residual_m": 3.189848147411254e-09,
+          "rotation_residual_rad": 2.1810831975734182e-08
+        }
+      ]
+    },
+    {
+      "action_index": 726,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 7.498662894178202e-10,
+          "rotation_residual_rad": 5.449823489729973e-09
+        },
+        {
+          "position_residual_m": 2.0213062845926626e-09,
+          "rotation_residual_rad": 1.3812566664060136e-08
+        }
+      ]
+    },
+    {
+      "action_index": 727,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.2304937250974957e-09,
+          "rotation_residual_rad": 2.3452522465314358e-08
+        },
+        {
+          "position_residual_m": 7.998607738331898e-10,
+          "rotation_residual_rad": 5.434042478977874e-09
+        }
+      ]
+    },
+    {
+      "action_index": 728,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 6.783093060771747e-10,
+          "rotation_residual_rad": 4.927300117528828e-09
+        },
+        {
+          "position_residual_m": 9.98460328822982e-10,
+          "rotation_residual_rad": 6.897069725104714e-09
+        }
+      ]
+    },
+    {
+      "action_index": 729,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.914479470373757e-09,
+          "rotation_residual_rad": 2.114675136900045e-08
+        },
+        {
+          "position_residual_m": 2.063787791751271e-09,
+          "rotation_residual_rad": 1.4207450719262703e-08
+        }
+      ]
+    },
+    {
+      "action_index": 730,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 5.963354641880123e-10,
+          "rotation_residual_rad": 4.329377184009167e-09
+        },
+        {
+          "position_residual_m": 4.257428762898921e-10,
+          "rotation_residual_rad": 2.9184051208728553e-09
+        }
+      ]
+    },
+    {
+      "action_index": 731,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.5391354538229564e-09,
+          "rotation_residual_rad": 1.8411298618276256e-08
+        },
+        {
+          "position_residual_m": 2.9336086679156966e-09,
+          "rotation_residual_rad": 2.0146527106261203e-08
+        }
+      ]
+    },
+    {
+      "action_index": 732,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.1085285991305254e-09,
+          "rotation_residual_rad": 2.2533293140811225e-08
+        },
+        {
+          "position_residual_m": 4.730304815991678e-10,
+          "rotation_residual_rad": 3.2386380745786496e-09
+        }
+      ]
+    },
+    {
+      "action_index": 733,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.243223590029339e-09,
+          "rotation_residual_rad": 2.3501420322268225e-08
+        },
+        {
+          "position_residual_m": 4.5622035505817864e-10,
+          "rotation_residual_rad": 3.1208370255369767e-09
+        }
+      ]
+    },
+    {
+      "action_index": 734,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.1537142482152552e-09,
+          "rotation_residual_rad": 2.284401711576908e-08
+        },
+        {
+          "position_residual_m": 4.1488348773092494e-10,
+          "rotation_residual_rad": 2.835980789464235e-09
+        }
+      ]
+    },
+    {
+      "action_index": 735,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.965763079170326e-09,
+          "rotation_residual_rad": 2.147406422198357e-08
+        },
+        {
+          "position_residual_m": 3.3740343717614013e-09,
+          "rotation_residual_rad": 2.310040268965485e-08
+        }
+      ]
+    },
+    {
+      "action_index": 736,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.7115938779627216e-09,
+          "rotation_residual_rad": 1.962524250616421e-08
+        },
+        {
+          "position_residual_m": 4.740904909961865e-10,
+          "rotation_residual_rad": 3.2357027339137247e-09
+        }
+      ]
+    },
+    {
+      "action_index": 737,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.398323684112761e-09,
+          "rotation_residual_rad": 1.7349194727911532e-08
+        },
+        {
+          "position_residual_m": 4.611409958671579e-10,
+          "rotation_residual_rad": 3.1458969240683514e-09
+        }
+      ]
+    },
+    {
+      "action_index": 738,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.048078179951241e-09,
+          "rotation_residual_rad": 1.4807030564654243e-08
+        },
+        {
+          "position_residual_m": 5.346455961263782e-10,
+          "rotation_residual_rad": 3.6441335170112425e-09
+        }
+      ]
+    },
+    {
+      "action_index": 739,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.6523684835866824e-09,
+          "rotation_residual_rad": 1.1938054618494096e-08
+        },
+        {
+          "position_residual_m": 6.405963237724005e-10,
+          "rotation_residual_rad": 4.358966379799159e-09
+        }
+      ]
+    },
+    {
+      "action_index": 740,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.2041645514467646e-09,
+          "rotation_residual_rad": 8.692288588113511e-09
+        },
+        {
+          "position_residual_m": 7.307680464386494e-10,
+          "rotation_residual_rad": 4.960871858534381e-09
+        }
+      ]
+    },
+    {
+      "action_index": 741,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 7.271604997811655e-10,
+          "rotation_residual_rad": 5.241579349437199e-09
+        },
+        {
+          "position_residual_m": 7.222585186213593e-10,
+          "rotation_residual_rad": 4.891658432270196e-09
+        }
+      ]
+    },
+    {
+      "action_index": 742,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.757566931104987e-09,
+          "rotation_residual_rad": 1.8966279117145043e-08
+        },
+        {
+          "position_residual_m": 6.666889509164457e-10,
+          "rotation_residual_rad": 4.505774408761111e-09
+        }
+      ]
+    },
+    {
+      "action_index": 743,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.4976250292728335e-09,
+          "rotation_residual_rad": 1.1508086986188318e-08
+        },
+        {
+          "position_residual_m": 6.654432697492027e-10,
+          "rotation_residual_rad": 4.486895846767302e-09
+        }
+      ]
+    },
+    {
+      "action_index": 744,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 4.0216562588511485e-09,
+          "rotation_residual_rad": 2.983309001384308e-08
+        },
+        {
+          "position_residual_m": 8.845271354068345e-10,
+          "rotation_residual_rad": 5.936105701472664e-09
+        }
+      ]
+    },
+    {
+      "action_index": 745,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 5.494255425375675e-10,
+          "rotation_residual_rad": 3.974211100689217e-09
+        },
+        {
+          "position_residual_m": 9.294495023506675e-10,
+          "rotation_residual_rad": 6.2038085233824965e-09
+        }
+      ]
+    },
+    {
+      "action_index": 746,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 5.903186111778054e-10,
+          "rotation_residual_rad": 4.26764991549949e-09
+        },
+        {
+          "position_residual_m": 8.989360454402168e-10,
+          "rotation_residual_rad": 5.965596772318318e-09
+        }
+      ]
+    },
+    {
+      "action_index": 747,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 4.725115697196399e-10,
+          "rotation_residual_rad": 3.419082754408356e-09
+        },
+        {
+          "position_residual_m": 1.0845991505424376e-09,
+          "rotation_residual_rad": 7.141481521232546e-09
+        }
+      ]
+    },
+    {
+      "action_index": 748,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 3.0209730167872156e-09,
+          "rotation_residual_rad": 2.2661933542405862e-08
+        },
+        {
+          "position_residual_m": 7.199420640148468e-10,
+          "rotation_residual_rad": 4.714237341504082e-09
+        }
+      ]
+    },
+    {
+      "action_index": 749,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.9592520527375688e-09,
+          "rotation_residual_rad": 1.4742606516746321e-08
+        },
+        {
+          "position_residual_m": 6.511471286201159e-10,
+          "rotation_residual_rad": 4.243780538442911e-09
+        }
+      ]
+    },
+    {
+      "action_index": 750,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.5551810699638779e-09,
+          "rotation_residual_rad": 1.1629731663170562e-08
+        },
+        {
+          "position_residual_m": 5.803838343939334e-10,
+          "rotation_residual_rad": 3.766574786906905e-09
+        }
+      ]
+    },
+    {
+      "action_index": 751,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.1124784975263464e-09,
+          "rotation_residual_rad": 8.062778855042704e-09
+        },
+        {
+          "position_residual_m": 4.947517382315593e-10,
+          "rotation_residual_rad": 3.1993407752081944e-09
+        }
+      ]
+    },
+    {
+      "action_index": 752,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 8.38612633286358e-10,
+          "rotation_residual_rad": 3.177872042007874e-09
+        },
+        {
+          "position_residual_m": 5.291926873661606e-10,
+          "rotation_residual_rad": 3.4068883262903057e-09
+        }
+      ]
+    },
+    {
+      "action_index": 753,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.890965041470519e-09,
+          "rotation_residual_rad": 1.896883095415383e-08
+        },
+        {
+          "position_residual_m": 4.802538154961893e-10,
+          "rotation_residual_rad": 3.0786838336871347e-09
+        }
+      ]
+    },
+    {
+      "action_index": 754,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 5.091685473830432e-10,
+          "rotation_residual_rad": 3.6208686634745647e-09
+        },
+        {
+          "position_residual_m": 4.1306640837497255e-10,
+          "rotation_residual_rad": 2.6377363169329923e-09
+        }
+      ]
+    },
+    {
+      "action_index": 755,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 8.112009818145906e-10,
+          "rotation_residual_rad": 5.777067847764941e-09
+        },
+        {
+          "position_residual_m": 3.5243314657058426e-10,
+          "rotation_residual_rad": 2.242719932135651e-09
+        }
+      ]
+    },
+    {
+      "action_index": 756,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.1188470589133883e-09,
+          "rotation_residual_rad": 7.971007808235594e-09
+        },
+        {
+          "position_residual_m": 2.685651392835867e-09,
+          "rotation_residual_rad": 1.713839095290729e-08
+        }
+      ]
+    },
+    {
+      "action_index": 757,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.422957354015345e-09,
+          "rotation_residual_rad": 1.0136956985029455e-08
+        },
+        {
+          "position_residual_m": 1.493828729284508e-09,
+          "rotation_residual_rad": 9.558084779563756e-09
+        }
+      ]
+    },
+    {
+      "action_index": 758,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.7002999686122952e-09,
+          "rotation_residual_rad": 1.2110320607641409e-08
+        },
+        {
+          "position_residual_m": 7.878328168686621e-10,
+          "rotation_residual_rad": 5.069078514068673e-09
+        }
+      ]
+    },
+    {
+      "action_index": 759,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.9515791346517317e-09,
+          "rotation_residual_rad": 1.3896041602828815e-08
+        },
+        {
+          "position_residual_m": 1.2938143360297285e-09,
+          "rotation_residual_rad": 8.281201268314962e-09
+        }
+      ]
+    },
+    {
+      "action_index": 760,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.144021784114998e-09,
+          "rotation_residual_rad": 1.5260806010138493e-08
+        },
+        {
+          "position_residual_m": 3.2168188262947996e-09,
+          "rotation_residual_rad": 2.041091203707114e-08
+        }
+      ]
+    },
+    {
+      "action_index": 761,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.2451681451243793e-09,
+          "rotation_residual_rad": 1.5974735103226334e-08
+        },
+        {
+          "position_residual_m": 3.4822033681372163e-09,
+          "rotation_residual_rad": 2.200684899444774e-08
+        }
+      ]
+    },
+    {
+      "action_index": 762,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.283817083358893e-09,
+          "rotation_residual_rad": 1.6243788868818908e-08
+        },
+        {
+          "position_residual_m": 2.715188480375878e-09,
+          "rotation_residual_rad": 1.714341567055624e-08
+        }
+      ]
+    },
+    {
+      "action_index": 763,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.3027113972868793e-09,
+          "rotation_residual_rad": 1.637244055150583e-08
+        },
+        {
+          "position_residual_m": 1.7850274708847399e-09,
+          "rotation_residual_rad": 1.1276170437678629e-08
+        }
+      ]
+    },
+    {
+      "action_index": 764,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.3149105715626952e-09,
+          "rotation_residual_rad": 1.6453692660098626e-08
+        },
+        {
+          "position_residual_m": 1.875772672579877e-09,
+          "rotation_residual_rad": 1.1832640653103727e-08
+        }
+      ]
+    },
+    {
+      "action_index": 765,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.3138278349647965e-09,
+          "rotation_residual_rad": 1.644083474961099e-08
+        },
+        {
+          "position_residual_m": 2.731932987407984e-09,
+          "rotation_residual_rad": 1.7171895187437872e-08
+        }
+      ]
+    },
+    {
+      "action_index": 766,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.2885021528299937e-09,
+          "rotation_residual_rad": 1.625609540001907e-08
+        },
+        {
+          "position_residual_m": 1.944012759035035e-09,
+          "rotation_residual_rad": 1.2211757097697891e-08
+        }
+      ]
+    },
+    {
+      "action_index": 767,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.2391692029115876e-09,
+          "rotation_residual_rad": 1.5901312651254432e-08
+        },
+        {
+          "position_residual_m": 2.8291240089760775e-09,
+          "rotation_residual_rad": 1.7721363010483135e-08
+        }
+      ]
+    },
+    {
+      "action_index": 768,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.19430282591412e-09,
+          "rotation_residual_rad": 1.557845775735169e-08
+        },
+        {
+          "position_residual_m": 1.7811020359921296e-09,
+          "rotation_residual_rad": 1.1161618258460307e-08
+        }
+      ]
+    },
+    {
+      "action_index": 769,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.1459202226832756e-09,
+          "rotation_residual_rad": 1.52310190030337e-08
+        },
+        {
+          "position_residual_m": 2.6472906939352462e-09,
+          "rotation_residual_rad": 1.654661499250177e-08
+        }
+      ]
+    },
+    {
+      "action_index": 770,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.099562029278864e-09,
+          "rotation_residual_rad": 1.4898058133332837e-08
+        },
+        {
+          "position_residual_m": 1.7528720825814766e-09,
+          "rotation_residual_rad": 1.0961334946615809e-08
+        }
+      ]
+    },
+    {
+      "action_index": 771,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 2.0400046036997847e-09,
+          "rotation_residual_rad": 1.4471956165052494e-08
+        },
+        {
+          "position_residual_m": 1.5750002072447664e-09,
+          "rotation_residual_rad": 9.846592962342971e-09
+        }
+      ]
+    },
+    {
+      "action_index": 772,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.9818272248410394e-09,
+          "rotation_residual_rad": 1.4055998346091342e-08
+        },
+        {
+          "position_residual_m": 1.4200028356323374e-09,
+          "rotation_residual_rad": 8.877972053781187e-09
+        }
+      ]
+    },
+    {
+      "action_index": 773,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.9263338408739453e-09,
+          "rotation_residual_rad": 1.365940868694172e-08
+        },
+        {
+          "position_residual_m": 1.2224168002933683e-09,
+          "rotation_residual_rad": 7.642842685636418e-09
+        }
+      ]
+    },
+    {
+      "action_index": 774,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.926819004056857e-09,
+          "rotation_residual_rad": 1.3659515606122558e-08
+        },
+        {
+          "position_residual_m": 5.817361167208892e-10,
+          "rotation_residual_rad": 3.6473768534733596e-09
+        }
+      ]
+    },
+    {
+      "action_index": 775,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.8673332145613705e-09,
+          "rotation_residual_rad": 1.323510451305286e-08
+        },
+        {
+          "position_residual_m": 1.2688070484748148e-09,
+          "rotation_residual_rad": 7.937152002413158e-09
+        }
+      ]
+    },
+    {
+      "action_index": 776,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.7970609932212215e-09,
+          "rotation_residual_rad": 1.2734794095149406e-08
+        },
+        {
+          "position_residual_m": 1.3580914197677026e-09,
+          "rotation_residual_rad": 8.489873434511543e-09
+        }
+      ]
+    },
+    {
+      "action_index": 777,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.7379755402885934e-09,
+          "rotation_residual_rad": 1.2313880218065772e-08
+        },
+        {
+          "position_residual_m": 1.4747890677527449e-09,
+          "rotation_residual_rad": 9.207313627404838e-09
+        }
+      ]
+    },
+    {
+      "action_index": 778,
+      "fraction": 1.0,
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "arms": [
+        {
+          "position_residual_m": 1.7523861825539168e-09,
+          "rotation_residual_rad": 1.2412996831609187e-08
+        },
+        {
+          "position_residual_m": 3.540532544927253e-09,
+          "rotation_residual_rad": 2.1987061504746616e-08
+        }
+      ]
+    }
+  ]
+}

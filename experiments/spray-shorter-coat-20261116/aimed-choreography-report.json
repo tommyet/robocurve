@@ -1,0 +1,17 @@
+{
+  "scope": "Source030 OBSERVED ramp support/button measurements plus predicted commanded-FK paired-geometry preservation; not new native proof.",
+  "ramp_source_rows": [
+    530,
+    610
+  ],
+  "minimum_source_can_body_riser_top_clearance_m": 0.003055955148509537,
+  "source_ramp_left_two_contact_rows": 81,
+  "source_ramp_rows": 81,
+  "max_source_right_all_contact_force_N": 0.0,
+  "maximum_source_valve_travel_m": 1.4227612601530604e-05,
+  "maximum_source_cap_speed_m_s": 5.041155659551106e-05,
+  "maximum_relative_tcp_translation_change_m": 7.790432607207363e-09,
+  "maximum_relative_tcp_rotation_matrix_change": 5.8617686292287315e-08,
+  "ramp_added_speed_max_m_s": 0.008284020762890445,
+  "native_prediction": "Translation of observed held body is only a proxy; actual grasp/valve response requires new native run."
+}

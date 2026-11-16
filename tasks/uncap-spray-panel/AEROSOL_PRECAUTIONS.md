@@ -1,0 +1,5 @@
+# Real aerosol trial precautions
+
+The simulator models mechanics and visible coating, not inhalation exposure, solvent chemistry or fire risk. Before a real trial, use the selected paint's current label and safety data sheet. Use suitable outdoor or extracted spray space; keep people clear of the plume and provide ventilation appropriate to the product. Keep ignition sources and hot equipment away. Wear product-appropriate gloves and eye protection; assess respiratory protection from the actual exposure and SDS. Protect surrounding surfaces, keep the can intact, and follow its storage and disposal instructions. Robot tooling must not puncture, heat or crush the pressurized can.
+
+These precautions follow the manufacturer's handling/exposure guidance, illustrated by [Rust-Oleum aerosol SDS, sections2,7,8](https://www.rustoleum.com/MSDS/ENGLISH/245198.PDF). This reference is an example, not approval of that formulation for this rig. Choose and assess the actual trial product before use. No aerosol safety validation is claimed for the simulation.

@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "trace_sha256": "5e471c1f9f3d183865c19e04f4f2dd39375f101185b18abc6279627f78f2353c",
+  "samples": 780,
+  "control_steps": 779,
+  "duration": 38.949999999999925,
+  "score": 1.0,
+  "cap_detached": true,
+  "depressed_control_samples": 19,
+  "max_planned_ik_error_m": 0.0,
+  "max_planned_ik_rotation_rad": 0.0,
+  "metrics": {
+    "score": 1.0,
+    "invalid": null,
+    "cap_removed": true,
+    "coverage": 1.0,
+    "overspray": 0.052415203514241185,
+    "spray_seconds": 0.949999999999946,
+    "finish_hold": 1.0499999999999403,
+    "opposing_left_can_contacts": true,
+    "right_tcp_clear": true
+  },
+  "scope": "source integrity, all-sample scorer replay and measured stage evidence; not contact-force calibration"
+}

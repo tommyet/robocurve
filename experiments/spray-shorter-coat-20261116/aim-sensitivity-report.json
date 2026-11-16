@@ -1,0 +1,101 @@
+{
+  "scope": "COUNTERFACTUAL area-only screen: translated historical observed states, not new native proof; can/grasp dynamics unknown",
+  "trace_sha256": "5e471c1f9f3d183865c19e04f4f2dd39375f101185b18abc6279627f78f2353c",
+  "scorer_sha256": "bcabd2a13061e3aa799b6b2679111ea0c009cca74021e4dfbb7cd73bb4e765be",
+  "config_sha256": "ba7cb707502cc36c90a92fae4d2a9d8af31ff994760ace39aa44af8addf9a7ca",
+  "results": [
+    {
+      "offset_world_m": [
+        0.022,
+        -0.004,
+        -0.002
+      ],
+      "coverage": 0.9393817517707251,
+      "outside_cm2": 5.781523035532472,
+      "invalid": null
+    },
+    {
+      "offset_world_m": [
+        0.022,
+        -0.004,
+        0.0
+      ],
+      "coverage": 0.9425719170321861,
+      "outside_cm2": 6.621167839546182,
+      "invalid": null
+    },
+    {
+      "offset_world_m": [
+        0.022,
+        -0.004,
+        0.002
+      ],
+      "coverage": 0.9393817517707249,
+      "outside_cm2": 4.781523035532477,
+      "invalid": null
+    },
+    {
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        -0.002
+      ],
+      "coverage": 0.9468271734679727,
+      "outside_cm2": 2.407275321821252,
+      "invalid": null
+    },
+    {
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.0
+      ],
+      "coverage": 0.9808590084312343,
+      "outside_cm2": 4.696648718481051,
+      "invalid": null
+    },
+    {
+      "offset_world_m": [
+        0.022,
+        -0.002,
+        0.002
+      ],
+      "coverage": 0.9393817517707249,
+      "outside_cm2": 3.7815230355324805,
+      "invalid": null
+    },
+    {
+      "offset_world_m": [
+        0.022,
+        0.0,
+        -0.002
+      ],
+      "coverage": 0.9744786779083122,
+      "outside_cm2": 3.017359110453635,
+      "invalid": null
+    },
+    {
+      "offset_world_m": [
+        0.022,
+        0.0,
+        0.0
+      ],
+      "coverage": 0.9744786779083122,
+      "outside_cm2": 3.017359110453635,
+      "invalid": null
+    },
+    {
+      "offset_world_m": [
+        0.022,
+        0.0,
+        0.002
+      ],
+      "coverage": 0.9532075039908947,
+      "outside_cm2": 4.086564929848672,
+      "invalid": null
+    }
+  ],
+  "min_coverage": 0.9393817517707249,
+  "max_outside_cm2": 6.621167839546182,
+  "all_area_pass": true
+}
