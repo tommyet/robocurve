@@ -142,22 +142,33 @@ class NativeDetentBinding:
             start=time.perf_counter()
             try:return native_array(getattr(view,method)())
             finally:
+                elapsed=time.perf_counter()-start
+                prefix='callback_' if self._in_physics_callback else 'outside_'
                 self._host_timing['native_api_copy_calls']+=1
-                self._host_timing['native_api_and_copy_wall_s']+=time.perf_counter()-start
+                self._host_timing['native_api_and_copy_wall_s']+=elapsed
+                self._host_timing[prefix+'native_api_copy_calls']+=1
+                self._host_timing[prefix+'native_api_and_copy_wall_s']+=elapsed
         def sample_native():
             return {'dryer_pose':read_native(views[0],'get_transforms').reshape(-1,7)[0].tolist(),
                     'switch_pose':read_native(views[1],'get_transforms').reshape(-1,7)[0].tolist(),
                     'dryer_velocity_com_w':read_native(views[0],'get_velocities').reshape(-1,6)[0].tolist(),
                     'switch_velocity_com_w':read_native(views[1],'get_velocities').reshape(-1,6)[0].tolist()}
-        self._host_timing={'native_sample_calls':0,'native_api_copy_calls':0,'native_api_and_copy_wall_s':0.,'callback_calls':0,'callback_wall_s':0.,'scope':'Host elapsed API/readback/synchronization and callback time, not GPU kernel profiling'}
+        self._in_physics_callback=False
+        self._host_timing={'native_sample_calls':0,'native_sample_wall_s':0.,'native_api_copy_calls':0,'native_api_and_copy_wall_s':0.,'callback_calls':0,'callback_wall_s':0.,'scope':'Host elapsed API/readback/synchronization and callback time, not GPU kernel profiling'}
+        for prefix in ('callback_','outside_'):
+            self._host_timing.update({prefix+'native_sample_calls':0,prefix+'native_sample_wall_s':0.,prefix+'native_api_copy_calls':0,prefix+'native_api_and_copy_wall_s':0.})
         raw_sample_native=sample_native
         def timed_sample_native():
             import time
             start=time.perf_counter()
             try:return raw_sample_native()
             finally:
+                elapsed=time.perf_counter()-start
+                prefix='callback_' if self._in_physics_callback else 'outside_'
                 self._host_timing['native_sample_calls']+=1
-                self._host_timing['native_sample_wall_s']=self._host_timing.get('native_sample_wall_s',0.)+time.perf_counter()-start
+                self._host_timing['native_sample_wall_s']+=elapsed
+                self._host_timing[prefix+'native_sample_calls']+=1
+                self._host_timing[prefix+'native_sample_wall_s']+=elapsed
         sample_native=timed_sample_native
         self.sample_native=sample_native;latest={};self.latest_native_sample=latest
         def read_q():
@@ -167,17 +178,19 @@ class NativeDetentBinding:
                                  read_sample=lambda:dict(latest),read_target=self.target_attr.Get)
         def timed_callback(dt):
             import time
+            previous_context=self._in_physics_callback;self._in_physics_callback=True
             start=time.perf_counter()
             try:return self.detent.on_physics_step(dt)
             finally:
                 self._host_timing['callback_calls']+=1
                 self._host_timing['callback_wall_s']+=time.perf_counter()-start
+                self._in_physics_callback=previous_context
         self.handle=self.manager.register_callback(timed_callback,IsaacEvents.PRE_PHYSICS_STEP,
                                                    name='passive_dryer_slider_detent',wrap_weak_ref=False)
 
     def host_timing(self):
         result=dict(self._host_timing)
-        result['callback_other_host_wall_s']=max(0.,result['callback_wall_s']-result['native_api_and_copy_wall_s'])
+        result['callback_other_host_wall_s']=result['callback_wall_s']-result['callback_native_api_and_copy_wall_s']
         result['other_scope']='Host callback remainder includes coordinate math, USD attribute get/set, trace bookkeeping and dispatch; not isolated arithmetic/GPU kernel time'
         return result
 

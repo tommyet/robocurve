@@ -92,11 +92,21 @@ class DetentHostTimingTests(unittest.TestCase):
   module=types.ModuleType('isaaclab_physx.physics.physx_manager');module.IsaacEvents=SimpleNamespace(PRE_PHYSICS_STEP='pre')
   with patch.dict(sys.modules,{'isaaclab_physx.physics.physx_manager':module}):
    binding=NativeDetentBinding(base)
+   outside=binding.sample_native();self.assertEqual(len(outside['dryer_pose']),7)
+   self.assertFalse(binding._in_physics_callback)
    for q in [0.]*8+[.003]*8+[.001]*8:
     sample['q']=q;manager.callback(1/480)
     self.assertAlmostEqual(drive.GetTargetPositionAttr().Get(),0. if q<.002 else .004,places=8)
-   timing=binding.host_timing();self.assertEqual(timing['callback_calls'],24);self.assertEqual(timing['native_sample_calls'],24);self.assertEqual(timing['native_api_copy_calls'],96)
-   self.assertEqual(calls,{'get_transforms':48,'get_velocities':48})
-   self.assertGreaterEqual(timing['callback_wall_s'],timing['native_api_and_copy_wall_s']);binding.close()
+   timing=binding.host_timing();self.assertEqual(timing['callback_calls'],24);self.assertEqual(timing['native_sample_calls'],25);self.assertEqual(timing['native_api_copy_calls'],100)
+   self.assertEqual(timing['callback_native_sample_calls'],24);self.assertEqual(timing['outside_native_sample_calls'],1)
+   self.assertEqual(timing['callback_native_api_copy_calls'],96);self.assertEqual(timing['outside_native_api_copy_calls'],4)
+   self.assertEqual(calls,{'get_transforms':50,'get_velocities':50})
+   self.assertAlmostEqual(timing['native_api_and_copy_wall_s'],timing['callback_native_api_and_copy_wall_s']+timing['outside_native_api_and_copy_wall_s'])
+   self.assertEqual(timing['callback_other_host_wall_s'],timing['callback_wall_s']-timing['callback_native_api_and_copy_wall_s'])
+   self.assertGreaterEqual(timing['callback_other_host_wall_s'],0.)
+   self.assertFalse(binding._in_physics_callback)
+   # A failing callback must also restore outside-sample accounting scope.
+   with self.assertRaisesRegex(RuntimeError,'physics timestep'):manager.callback(.05)
+   self.assertFalse(binding._in_physics_callback);binding.close()
 
 if __name__=='__main__':unittest.main()

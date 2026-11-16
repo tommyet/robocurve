@@ -277,6 +277,7 @@ fresh native integration check; no native speedup is claimed from CPU replay.
 geometry, thermal and output time, including partial-run finalization. The480Hz
 detent separately reports actual API/copy call counts and host duration; its
 cadence, four existing native reads, constitutive law and crossing trace are
-unchanged. Host API/step times include synchronization and scheduling and are
+unchanged. Callback and outside-callback samples have separate timing/count
+buckets, so slider-coupon reads cannot contaminate the callback remainder. Host API/step times include synchronization and scheduling and are
 not GPU kernel profiling. The initial120-second granular run timed out at86
 controls without this timing split, so its solver-versus-callback cost is unknown.
