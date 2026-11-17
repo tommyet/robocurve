@@ -104,7 +104,7 @@ def main():
      stage=plan['frames'][k-1]['stage']
      if stage=='support the muffin':
       if grip_command is None:grip_command=float(obs[6])
-      if obs[6]-grip_command>=.004:grip_hold=True
+      if obs[6]-grip_command>=.008:grip_hold=True
       if not grip_hold:grip_command=max(.68,grip_command-.002)
      if grip_command is not None and stage not in ['release muffin','withdraw','released outcome']:wanted[6]=grip_command
      for tracker in trackers:
