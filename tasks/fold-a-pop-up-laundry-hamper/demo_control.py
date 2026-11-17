@@ -25,4 +25,5 @@ class DemoControl:
    def residual(q):
     pp,rr=ik.tcp_pose(q,station.BASES[side]);return np.r_[pp-p,.15*ik._rot_error(R,rr),.001*(q-seed)]
    out[o:o+6]=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=30).x
+   if k>100:out[o+6]=max(0.,observed[o+6]-.012)
   return out
