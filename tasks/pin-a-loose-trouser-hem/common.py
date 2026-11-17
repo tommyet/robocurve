@@ -26,4 +26,3 @@ class Drawing:
   c=np.asarray(center);p=np.array([[x,y,z] for x in [-1,1] for y in [-1,1] for z in [-1,1]])*np.asarray(size)/2
   if R is not None:p=p@np.asarray(R).T
   faces=[(0,1,3,2),(4,6,7,5),(0,4,5,1),(2,3,7,6),(0,2,6,4),(1,5,7,3)];self.mesh(name,p+c,faces,color)
-
