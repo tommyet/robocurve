@@ -1,7 +1,7 @@
 # Follow-up: wrapping, rocking, untangling and five new ideas
 
-Latest research: the [16 November creative shortlist](#16-november-broad-creative-shortlist)
-below supersedes the earlier research priorities. It proposes seven new scopes;
+Latest research: the [17 November shortlist](#17-november-shortlist-against-live-review-prompt-v24)
+below supersedes the earlier research priorities. It proposes three new scopes;
 none has been built or selected for development. Earlier implementation status
 is historical; use the linked batch record and current PR decisions for status.
 
@@ -505,3 +505,74 @@ establish that a particular robot delivery protocol is clinically safe.
 None is an obvious next inexpensive submission. Plate, pancake and nail have
 strong overlap. Paper folding and spoon delivery retain interesting skills but
 need material/interface work and a stronger novelty case before paid testing.
+
+
+## 17 November: shortlist against live review prompt v24
+
+Research only; no GPU, Dream, new task build or submission. Checked the live
+622-record board, targeted all-state PR title/body searches, the saved
+1,016-entry BEHAVIOR name index, current RoboDojo catalogues and primary
+research sources. Evidence is ignored under
+`artifacts/medicine-revision-2026-11-17/`. These are candidates, not novelty
+clearance or demonstrated feasibility. Recheck ownership immediately before a build.
+
+The current [review prompt](https://tasks.robocurve.org/review-prompt) permits
+explained material-response rules if the robot still performs the physical
+work. A successful-looking animation, proximity trigger or helper that does
+that work is insufficient. Prioritize a recognizable physical outcome and
+simple judging, with one clear difficulty per task.
+
+### Recommended candidates, in order for small feasibility trials
+
+| Activity | Minimal useful task and judging | Distinction and main risk |
+| --- | --- | --- |
+| Curl gift ribbon | Hold ordinary curling ribbon under tension and draw it across a real curling edge, then release an intact, visibly curled length. Score retained coils/curled length with a photo and ruler; no reward for a prescribed number of strokes. | Permanent bending under controlled tension and edge contact, distinct from our gift's paper enclosure/tape closure. No direct board/PR match found. The response rule must depend on actual loaded sliding contact; curling cannot be an animation triggered by a waypoint. Familiar result, compact setup; promising first trial. |
+| Mount fabric taut in an embroidery hoop | Start with loose woven fabric and both rings of an ordinary screw hoop. Seat the fabric, distribute tension and secure it. Score intact, retained fabric and deflection under a small specified weight, using a ruler/photo. | Distributed tension and frictional retention, different from the shirt's discrete spring pegs or folding. No direct board/PR match found. The fabric must wrinkle and slip under poor handling. Main review risk is whether hoop preparation is familiar enough under Societal relatability; do not invent a large jobs-impact claim. |
+| Peel a garlic clove with a silicone rolling peeler | Load a normal unpeeled clove, compress and roll the flexible tube, then recover the intact peeled clove. Score visible skin removal and retained flesh; use a photo and scale where needed. | Friction inside a deformable tool removes papery skin, unlike accepted cucumber blade-peeling #1899. No direct board/PR match found. Skin detachment must result from contact/shear, with incomplete peeling and crushing able to fail. Specify a consistent garlic size/type/condition and protect the rig. No cutting knife or invented peeling gadget needed. |
+
+These are relative priorities, not probabilities or a guaranteed $3 budget.
+Material/contact feasibility remains untested. All fit Societal relatability
+more naturally than a broad employment-number justification.
+
+Primary references:
+
+- [PNAS ribbon-curling experiments and model](https://pmc.ncbi.nlm.nih.gov/articles/PMC4763768/)
+  establish the real edge/tension mechanism and show that the response is not
+  simply proportional to pulling harder. They do not validate our simulator.
+- [Prym's ordinary beechwood hoop](https://de.handicraft.com/en/products/stickrahmen-buchenholz)
+  uses an adjustment screw to retain fabric tension. A robotics product demo of
+  hooping exists; no matching open evaluation task was found in this search, so
+  do not claim hooping has never been demonstrated by a robot.
+- [OXO's silicone garlic peeler](https://www.oxo.com/garlic-peeler.html)
+  specifies downward pressure and rolling on the counter, with detached skin
+  retained in the tool. This is a real existing method, not a simulation aid.
+- BEHAVIOR's [garlic mushrooms](https://behavior.stanford.edu/knowledgebase/tasks/make_garlic_mushrooms-0.html)
+  and [garlic prawns](https://behavior.stanford.edu/knowledgebase/tasks/make_king_prawns_with_garlic-0.html)
+  definitions were read in full: their garlic goals concern dicing/cooking,
+  with no papery-skin removal condition. This supports a distinction from those
+  two recipes; it is not an exhaustive novelty guarantee.
+- [RoboDojo task catalogue](https://robodojo-benchmark.com/doc/sim-tasks/)
+  contains adjacent folding and pouring, not a direct match for these scopes.
+
+### Screened out or deferred
+
+- **Split key ring:** now occupied by [#2426](https://github.com/robocurve/benchmark-tasks/pull/2426),
+  board TK-L3WWW2 pending. This supersedes our earlier recommendation.
+- **Pencil sharpening:** [#1845](https://github.com/robocurve/benchmark-tasks/pull/1845)
+  already exists; not a fresh candidate.
+- **Towel wringing:** explicitly present in the [T-DOM dataset](https://sites.google.com/view/t-dom).
+- **Turn clothing right-side out:** [Right-Side-Out](https://right-side-out.github.io/)
+  already evaluates garment reversal. A sleeve-only variant still has substantial
+  overlap and difficult self-contact; do not recommend it as a low-risk novelty.
+- **Thread a needle:** directly covered by the
+  [IROS forceps challenge](https://medcvr.github.io/Forceps-Manipulation-Challenge/)
+  and multiple published robotic needle-threading evaluations.
+- **Plunge a sink:** [#2092](https://github.com/robocurve/benchmark-tasks/pull/2092)
+  and [#1251](https://github.com/robocurve/benchmark-tasks/pull/1251) already exist.
+- **Roll sushi:** [#1331](https://github.com/robocurve/benchmark-tasks/pull/1331)
+  already covers bamboo-mat maki rolling.
+- **Separate a yolk / peel a boiled egg / sew on a button:** no direct competition
+  match found in targeted searches, but these need substantially more material,
+  membrane or fine-thread work. Keep as research reserves; they are not the
+  economical next recommendations. A text-to-video yolk-separation benchmark is
+  not itself evidence of an equivalent robot manipulation benchmark.

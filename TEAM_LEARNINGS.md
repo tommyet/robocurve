@@ -1,8 +1,45 @@
 # Shared working notes
 
-Last updated: 2026-11-16 UTC. Read this before starting work; update it when an
+Last updated: 2026-11-17 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
+
+## 2026-11-17 — medicine-spoon fixture revision received; three new candidates screened
+
+- Revised [medicine spoon #2380](https://github.com/robocurve/benchmark-tasks/pull/2380)
+  against the exact feedback: original printable PETG face, nose, rear cover
+  and oral/drain parts; dimensioned assembly drawing; affordable BOM, mounting,
+  sealed collector, repeatable drainage/recovery checks; specified spill tray,
+  exterior-liquid measurement and dry pad protection. Removed the earlier-PR
+  link from README. `FIXTURE.md` explicitly says the physical build is untested.
+- All 15 existing task Python files are byte-identical to the submitted version;
+  task motion, controller and scorer are unchanged. Nine CPU tests pass.
+  Independent native-trace replay still gives demo **1.0 / 744 actions** and
+  Dream **0.0 / 1000 actions**. Four closed print meshes pass winding/volume
+  checks. Those checks do not establish real drainage or seal performance.
+- Submitted only the task folder on the existing submission branch, commit
+  **1d2d6d8**; retained media **M-3FF6YM**. Receipt
+  [**TK-XDXWJJ**](https://github.com/robocurve/benchmark-tasks/pull/2380#issuecomment-6943255388)
+  at **08:49 UTC**, waiting for review. Do not push again before review.
+  The shared implementation commit is **f5b84d9**. No GPU or Dream compute used.
+- GitHub connector could read the PR but could not apply its description edit;
+  authenticated `gh pr edit --body-file` succeeded. Generated Matplotlib SVG
+  had trailing whitespace; normalized it before the submission commit.
+- Live review prompt remains **v24**. Research screened a fresh 622-record board,
+  targeted all-state PR searches, BEHAVIOR names/garlic recipe definitions,
+  current RoboDojo and primary research. New shortlist: curl ordinary gift
+  ribbon; tension loose fabric in an embroidery hoop; peel a garlic clove using
+  a real silicone rolling peeler. Each needs a physical-contact feasibility
+  trial before a submission claim. Hoop familiarity remains an importance risk.
+  Scope, physical judging, limitations and links are in the dated section of
+  `docs/task-ideas-followup-2026-11-15.md`.
+- Our former split-ring idea is now occupied by pending **#2426 / TK-L3WWW2**.
+  Towel wringing is in T-DOM; garment inversion is evaluated in Right-Side-Out;
+  needle threading appears in the IROS forceps challenge. These are not safe
+  novelty recommendations. Pencil sharpening #1845, plunging #2092/#1251 and
+  maki rolling #1331 also already exist. No new task implementation was started.
+
+
 
 
 ## 2026-11-16 — cake revision and medicine spoon submitted; uncreased paper in development
