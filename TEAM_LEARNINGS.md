@@ -5349,3 +5349,12 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Fresh authenticated board fetch contained 669 tasks; no matching avocado/kale/hem/tattoo/hamper/muffin/mash/cigar title was found. This does not resolve the documented SPARTA mashing overlap.
 
 - Kale submitted as PR #2508, media M-S9DCLW, isolated commit 5259c6a. Complete Dream baseline: 800 actions, 16 requests, 0.0; both baseline and demo independently audited. Upstream does not ignore Python bytecode: use a task-local `.gitignore` before running compile checks in a clean submission worktree.
+
+### 2026-11-17 — Two native submissions; remaining six are unfinished
+
+- Kale PR #2508 was received as TK-G6SE25; avocado PR #2510 as TK-Y3PDXP. Both are waiting for review. Each has an independently audited 1.0 native demo and complete 0.0 Dream baseline, uploaded media and an isolated upstream branch containing only its task folder.
+- Silicone-cup reset became stable with small compliant seams and a higher torsional adhesion limit; its first full demo then broke muffin crumb bonds during grip. This is a failed demo, not submission evidence. Native damage guards remain active.
+- The tabletop cigar candidate physically severed the cap with loaded blade travel, then failed the wrapper guard during a discontinuous return from feedback control. Blend feedback into the return trajectory; never infer full success from the cut event alone.
+- Fine closed cloth grids and adjacent compressible foam blocks can produce numerical forces. Avoid overlap, model local compliance, and inspect native contacts. A stable unscored reset alone does not prove stability under manipulation.
+- Potato trials with hard particle bonds launched fragments at implausible speeds. The next candidate separates starting pieces, uses compliant cohesive bonds and a disclosed 2 m/s particle speed limit; no successful mashing demo yet, and SPARTA novelty remains unresolved.
+- The single Secure Pod is reused for this batch. Its independent local shutdown deadline was deliberately extended to four hours total ($10.76 maximum compute at $2.69/h), within the approximate $24 eight-task budget. Evidence must be copied locally and the Pod stopped/deleted when finished; the Mac must remain awake/online for the watchdog.

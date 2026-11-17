@@ -4,9 +4,10 @@ import numpy as np,json
 from scipy.spatial.transform import Rotation
 from planner import Plan
 from common import down,TABLE
-p=Plan();RL=Rotation.from_euler('x',-45,degrees=True).as_matrix()@down(-90);RR=Rotation.from_euler('x',45,degrees=True).as_matrix()@down(-90)
-L=np.array([.34,.264,TABLE+.025])-.008*RL[:,2];R=np.array([.34,-.264,TABLE+.025])-.008*RR[:,2]
-p.add(3,'approach opposite frame ends',{'left':(L+[0,0,.13],RL,.6),'right':(R+[0,0,.13],RR,.6)},'joint')
+p=Plan();base=np.array([[0,-1,0],[0,0,-1],[1,0,0.]])
+RL=Rotation.from_euler('x',25,degrees=True).as_matrix()@base;RR=Rotation.from_euler('x',155,degrees=True).as_matrix()@base
+L=np.array([.324,.264,TABLE+.026])-.008*RL[:,2];R=np.array([.320,-.264,TABLE+.026])-.008*RR[:,2]
+p.add(3,'approach opposite frame ends',{'left':(L+[0,0,.05],RL,.6),'right':(R+[0,0,.05],RR,.6)},'joint')
 p.add(2,'enclose the four flattened frames',{'left':(L,RL,.6),'right':(R,RR,.6)})
 p.add(1,'grip both ends',{'left':(L,RL,0.),'right':(R,RR,0.)})
 p.add(3,'lift clear of the table',{'left':(L+[-.04,0,.12],RL,0.),'right':(R+[-.04,0,.12],RR,0.)})
