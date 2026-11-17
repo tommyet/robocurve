@@ -19,7 +19,7 @@ class DemoControl:
   if k>700:return self.close(k,wanted,m,hands,current)
   h=hands['right'];tip=m.p('needle_point',[.001,0,0]);axis=m.orientation('pin_arm')[:,0]
   if self.start is None:
-   self.start=tip.copy();self.initial_axis=axis.copy();choices=[];direction=np.array([-1.,0,0])
+   self.start=tip.copy();self.initial_axis=axis.copy();choices=[];direction=np.array([1.,0,0])
    names=[n for n in m.names if n.startswith(('front_','hem_','back_'))]
    apex=max(m.p(n)[2] for n in names if n.startswith('hem_'))
    for y in np.linspace(.095,.125,21):
@@ -36,18 +36,18 @@ class DemoControl:
       xs=[v[1][0] for v in hits];span=max(xs)-min(xs)
       if .008<span<.034:choices.append((span,y,z,min(xs),max(xs),[n for n,_ in hits]))
    if not choices:raise RuntimeError('The held hem does not present a clear four-layer needle path; stop this development trial.')
-   span,y,z,lo,hi,names=max(choices,key=lambda c:c[0]);self.entry=np.array([hi+.025,y,z]);self.end=np.array([lo-.003,y,z])
+   span,y,z,lo,hi,names=max(choices,key=lambda c:c[0]);self.entry=np.array([lo-.025,y,z]);self.end=np.array([hi+.003,y,z])
    m.events.append(dict(event='demo_selected_straight_pin_path',start=self.entry.tolist(),end=self.end.tolist(),patches=names,time=m.time))
   def blend(a,b,start,end):
    u=np.clip((k-start)/(end-start),0,1);u=u*u*(3-2*u);return a*(1-u)+b*u
-  if k<=340:goal=blend(self.start,self.entry+[0,0,.04],220,340);goalaxis=blend(self.initial_axis,np.array([-1.,0,0]),220,340)
-  elif k<=400:goal=blend(self.entry+[0,0,.04],self.entry,340,400);goalaxis=np.array([-1.,0,0])
-  elif k<=640:goal=blend(self.entry,self.end,400,640);goalaxis=np.array([-1.,0,0])
-  else:goal=self.end;goalaxis=np.array([-1.,0,0])
+  if k<=340:goal=blend(self.start,self.entry+[0,0,.04],220,340);goalaxis=blend(self.initial_axis,np.array([1.,0,0]),220,340)
+  elif k<=400:goal=blend(self.entry+[0,0,.04],self.entry,340,400);goalaxis=np.array([1.,0,0])
+  elif k<=640:goal=blend(self.entry,self.end,400,640);goalaxis=np.array([1.,0,0])
+  else:goal=self.end;goalaxis=np.array([1.,0,0])
   goalaxis/=np.linalg.norm(goalaxis);relative_tip=h['rotation'].T@(tip-h['tcp']);relative_axis=h['rotation'].T@axis
   seed=np.clip(current[7:13],ik.LOWER+1e-6,ik.UPPER-1e-6)
   def residual(q):
-   pp,R=ik.tcp_pose(q,station.BASES['right']);return np.r_[pp+R@relative_tip-goal,.04*(R@relative_axis-goalaxis),.001*(q-seed)]
+   pp,R=ik.tcp_pose(q,station.BASES['right']);return np.r_[pp+R@relative_tip-goal,.1*(R@relative_axis-goalaxis),.001*(q-seed)]
   sol=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=30)
   out=wanted.copy();out[7:13]=sol.x;self.last_q=sol.x.copy();return out
 
