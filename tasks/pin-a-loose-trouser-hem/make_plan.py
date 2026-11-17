@@ -6,7 +6,7 @@ from planner import Plan
 from common import down,TABLE
 from geometry import PIN
 p=Plan();RL=Rotation.from_euler('x',10,degrees=True).as_matrix()@np.array([[0,-1,0],[0,0,-1],[1,0,0.]]);RR=Rotation.from_euler('x',45,degrees=True).as_matrix()@down(0)
-L=np.array([.34,.115,TABLE+.027])-.008*RL[:,2];R=PIN-.008*RR[:,2]
+L=np.array([.34,.115,TABLE+.047])+.002*RL[:,2];R=PIN-.008*RR[:,2]
 p.add(3,'approach the loose hem and pin coil',{'left':(L+[0,.03,.03],RL,.25),'right':(R+[0,0,.10],RR,.4)},'joint')
 p.add(2,'enclose the turned hem and coil',{'left':(L,RL,.25),'right':(R,RR,.4)})
 p.add(1,'grip the two fabric layers and pin',{'left':(L,RL,.012),'right':(R,RR,.04)})

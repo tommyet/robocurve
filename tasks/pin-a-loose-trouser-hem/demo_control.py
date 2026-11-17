@@ -2,18 +2,28 @@
 import numpy as np
 from scipy.optimize import least_squares
 class DemoControl:
- def __init__(self):self.start=None;self.closure=None;self.last_q=None;self.released_at=None
+ def __init__(self):self.start=None;self.closure=None;self.last_q=None;self.released_at=None;self.left_offset=None
  def action(self,k,wanted,m,hands,current):
-  if k<=220:return wanted
   from yam_arena import ik,station
+  from geometry import BODIES
+  if self.left_offset is None:
+   names=['hem_8_0','hem_9_0'];nominal=np.mean([b['pos'] for b in BODIES if b['name'] in names],axis=0)
+   self.left_offset=np.mean([m.p(n) for n in names],axis=0)-nominal
+  if k<=700:
+   pp,RR=ik.tcp_pose(wanted[:6],station.BASES['left']);target=pp+self.left_offset*min(1.,k/60)
+   seed=np.clip(current[:6],ik.LOWER+1e-6,ik.UPPER-1e-6)
+   def correct(q):
+    p,R=ik.tcp_pose(q,station.BASES['left']);return np.r_[p-target,.12*ik._rot_error(RR,R),.001*(q-seed)]
+   wanted=wanted.copy();wanted[:6]=least_squares(correct,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=30).x
+  if k<=220:return wanted
   if k>700:return self.close(k,wanted,m,hands,current)
   h=hands['right'];tip=m.p('needle_point',[.001,0,0]);axis=m.orientation('pin_arm')[:,0]
   if self.start is None:
    self.start=tip.copy();self.initial_axis=axis.copy();choices=[];direction=np.array([-1.,0,0])
    names=[n for n in m.names if n.startswith(('front_','hem_','back_'))]
    apex=max(m.p(n)[2] for n in names if n.startswith('hem_'))
-   for y in np.linspace(.109,.119,11):
-    for z in np.arange(.776,min(.805,apex-.003),.001):
+   for y in np.linspace(.095,.125,21):
+    for z in np.arange(.786,min(.855,apex-.003),.0015):
      hits=[]
      for n in names:
       R=m.orientation(n);normal=R[:,2]

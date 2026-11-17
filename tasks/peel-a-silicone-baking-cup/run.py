@@ -102,10 +102,11 @@ def main():
       observed.extend(q[arm_ids]);observed.append(float(np.clip(q[finger_ids].mean()/FINGER_OPEN,0,1)))
      obs=np.asarray(observed)
      stage=plan['frames'][k-1]['stage']
-     if stage=='support the muffin':
+     if stage=='support the muffin' or (grip_command is not None and stage not in ['release muffin','withdraw','released outcome']):
       if grip_command is None:grip_command=float(obs[6])
-      if obs[6]-grip_command>=.020:grip_hold=True
-      if not grip_hold:grip_command=max(.60,grip_command-.002)
+      # Maintain gentle native motor preload as the soft crumb moves in the pads.
+      if obs[6]-grip_command<.018:grip_command=max(.52,grip_command-.002)
+      elif obs[6]-grip_command>.024:grip_command=min(.8,grip_command+.001)
      if grip_command is not None and stage not in ['release muffin','withdraw','released outcome']:wanted[6]=grip_command
      for tracker in trackers:
       wanted=tracker.action(wanted,obs,enabled=True)
