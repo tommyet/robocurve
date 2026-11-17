@@ -10,7 +10,7 @@ for layer in ['front','back']:
    BODIES.append(body(name,pos,[box((DX*.99,DY*.99,.001))],mass=.0005,color=(.13,.19,.26),friction=.8))
    for di,dj in [(-1,0),(0,-1)]:
     if i+di>=0 and j+dj>=0:
-     a=np.array([-di*DX/2,-dj*DY/2,0]);JOINTS.append(joint(f'cloth_{layer}_{i}_{j}_{di}_{dj}',f'{layer}_{i+di}_{j+dj}',name,a,-a,axes=bend_axes(.000002,.000001),break_force=10.,break_torque=.04))
+     a=np.array([-di*DX/2,-dj*DY/2,0]);JOINTS.append(joint(f'cloth_{layer}_{i}_{j}_{di}_{dj}',f'{layer}_{i+di}_{j+dj}',name,a,-a,axes=bend_axes(.000002,.000001),break_force=35.,break_torque=.12))
 for j in range(NY):
  for i in [0,NX-1]:JOINTS.append(joint(f'side_seam_{i}_{j}',f'front_{i}_{j}',f'back_{i}_{j}',[0,0,-.0015],[0,0,.0015],axes=bend_axes(.000004,.000002),break_force=20.))
 for i in range(NX):

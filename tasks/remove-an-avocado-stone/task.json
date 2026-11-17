@@ -9,5 +9,6 @@
   "run_limit": "800 control steps (40 seconds at 20 Hz).",
   "scores": "Dream-1: 0.0 (800 actions); scripted demo: 1.0 (420 actions).",
   "context": "Removing a stubborn avocado stone calls for a firm grip on the stone while protecting the soft flesh.",
-  "reset_notes": "Use a fresh firm-ripe Hass half at 18–22 °C, cut immediately before a trial. Reject visibly overripe, split or already loose-stoned halves. Use a single grocery batch and record size/ripeness. Clean the board, dish and removable covers between trials."
+  "reset_notes": "Use a fresh firm-ripe Hass half at 18–22 °C, cut immediately before a trial. Reject visibly overripe, split or already loose-stoned halves. Use a single grocery batch and record size/ripeness. Clean the board, dish and removable covers between trials.",
+  "media": "M-F8ZCBR"
 }

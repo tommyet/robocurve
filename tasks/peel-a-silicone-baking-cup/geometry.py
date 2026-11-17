@@ -23,7 +23,7 @@ for i,t in enumerate(np.arange(N)*2*np.pi/N):
    JOINTS.append(joint(f'ring_{row}_{i}',prev,name,Rprev.T@(pt-pprev),Ri.T@(pt-(C+radial*r+[0,0,z])),axes=bend_axes(.000004,.000003,179),break_force=20.))
   if row==0:
    local=radial*.024+[0,0,-.020]
-   JOINTS.append(joint('adhesion_'+str(i),'muffin',name,local,[0,-.002,0],axes=bend_axes(.000001,.000001),break_force=.45,break_torque=.002,collision=True))
+   JOINTS.append(joint('adhesion_'+str(i),'muffin',name,local,[0,-.002,0],axes=bend_axes(.000001,.000001),break_force=1.5,break_torque=.02,collision=True))
 JOINTS.append(joint('bottom_adhesion','muffin','cup_bottom',[0,0,-.030],[0,0,0],axes=bend_axes(.000001,.000001),break_force=1.5,break_torque=.01,collision=True))
 
 for i,t in enumerate(np.arange(4)*np.pi/2):
@@ -40,5 +40,8 @@ for row in range(2):
 for j in JOINTS:
  for axis,cfg in j['axes'].items():
   if axis.startswith('rot') and 'stiffness' in cfg:cfg.update(stiffness=0.,damping=0.)
+for j in JOINTS:
+ if j['name'].startswith(('ring_','wall_','base_')):
+  for axis in ['transX','transY','transZ']:j['axes'][axis]=dict(limits=(-.003,.003),stiffness=50.,damping=.05)
 for b in BODIES:b.update(linear_damping=.5,angular_damping=2.)
 finalize(BODIES,JOINTS)
