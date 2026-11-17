@@ -29,7 +29,8 @@ JOINTS.append(joint('bottom_adhesion','muffin','cup_bottom',[0,0,-.030],[0,0,0],
 for i,t in enumerate(np.arange(4)*np.pi/2):
  rel=np.array([.016*np.sin(t),.016*np.cos(t),.022]);name='crumb_'+str(i)
  BODIES.append(body(name,C+[0,0,.030]+rel,[sphere((.020,.020,.014))],mass=.005,color=(.70,.43,.16),exclude=['crumb_'+str(j) for j in range(4) if j!=i]))
- JOINTS.append(joint('crumb_bond_'+str(i),'muffin',name,rel,[0,0,0],axes=fixed_axes(),break_force=6.,break_torque=.04))
+ axes={**{a:dict(limits=(-.004,.004),stiffness=1000.,damping=.05,max_force=6.) for a in ['transX','transY','transZ']},**{a:dict(limits=(-20,20),stiffness=.01,damping=.0005,max_force=.12) for a in ['rotX','rotY','rotZ']}}
+ JOINTS.append(joint('crumb_bond_'+str(i),'muffin',name,rel,[0,0,0],axes=axes,break_force=6.,break_torque=.12))
 for row in range(2):
  a=next(b for b in BODIES if b['name']==f'cup_{row}_{N-1:02d}');b=next(b for b in BODIES if b['name']==f'cup_{row}_00')
  centre=(np.array(a['pos'])+b['pos'])/2
