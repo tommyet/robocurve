@@ -38,6 +38,21 @@ class DemoControl:
    if not choices:raise RuntimeError('The held hem does not present a clear four-layer needle path; stop this development trial.')
    span,y,z,lo,hi,names=max(choices,key=lambda c:c[0]);self.entry=np.array([lo-.025,y,z]);self.end=np.array([hi+.003,y,z])
    m.events.append(dict(event='demo_selected_straight_pin_path',start=self.entry.tolist(),end=self.end.tolist(),patches=names,time=m.time))
+   # Select a reachable wrist branch before descending to the cloth. A local
+   # incremental solve can otherwise stop at the wrist's negative limit.
+   from yam_arena.constants import READY
+   self.approach_start=np.asarray(current[7:13]).copy()
+   relative_tip=h['rotation'].T@(tip-h['tcp']);relative_axis=h['rotation'].T@axis
+   target=self.entry+[0,0,.04]
+   def approach_error(q):
+    pp,RR=ik.tcp_pose(q,station.BASES['right']);return np.r_[pp+RR@relative_tip-target,.1*(RR@relative_axis-np.array([1.,0,0]))]
+   solutions=[least_squares(approach_error,seed,bounds=(ik.LOWER,ik.UPPER),max_nfev=180) for seed in [np.asarray(READY),(ik.LOWER+ik.UPPER)/2]]
+   solution=min(solutions,key=lambda x:np.linalg.norm(x.fun))
+   if np.linalg.norm(solution.fun)>.005:raise RuntimeError('No reachable needle approach for the observed grasp.')
+   self.approach_q=solution.x
+   m.events.append(dict(event='demo_reachable_needle_approach',residual=float(np.linalg.norm(solution.fun)),time=m.time))
+  if k<=340:
+   u=np.clip((k-220)/120,0,1);u=u*u*(3-2*u);out=wanted.copy();out[7:13]=(1-u)*self.approach_start+u*self.approach_q;self.last_q=out[7:13].copy();return out
   def blend(a,b,start,end):
    u=np.clip((k-start)/(end-start),0,1);u=u*u*(3-2*u);return a*(1-u)+b*u
   if k<=340:goal=blend(self.start,self.entry+[0,0,.04],220,340);goalaxis=blend(self.initial_axis,np.array([1.,0,0]),220,340)

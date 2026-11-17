@@ -64,7 +64,7 @@
     },
     {
       "slug": "fold-a-pop-up-laundry-hamper",
-      "scene": "Trial067 still missed the settled frame edge. Trial068 tracks the native seam positions during closure. Full twist/nest and elastic retainer placement remain unfinished.",
+      "scene": "Trial069 provided greater edge clearance but tore frame/mesh joints during closing. Trial070 limits ordinary finger preload. Folding and retainer placement remain unfinished.",
       "score": "0.0 development trials",
       "media": null,
       "pr": null,
@@ -74,19 +74,19 @@
     },
     {
       "slug": "peel-a-silicone-baking-cup",
-      "scene": "Trial066 peeled 87.5% of side adhesions but broke a muffin crumb bond. Trial068 uses lower motor preload with unchanged damage limits.",
-      "score": "Demo not yet successful",
+      "scene": "Trial068 released all adhesion bonds without damage but lost the muffin during opposing-arm contact; cup remained under the muffin, score0.5. Trial070 separates the orientation and approach motions and restricts the grasp to a horizontal approach.",
+      "score": "Best complete native trial0.5; no full demo",
       "media": null,
       "pr": null,
-      "candidate_plan_actions": 680,
+      "candidate_plan_actions": 740,
       "maximum_command_velocity_ratio": 0.2882187140625003,
       "maximum_ik_position_error_m": 9.695714973016204e-05,
       "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload."
     },
     {
       "slug": "mash-cooked-potato",
-      "scene": "Trial061 briefly met both fineness and retention thresholds, then further presses spilled food. Trial065 bowl grasp worsened spillage and was cancelled. Trial068 returns to the earlier layout and stops pressing on the measured outcome; release still requires validation. SPARTA novelty risk remains.",
-      "score": "No successful full demo",
+      "scene": "Trial068 reached the mashing thresholds but lost retained food while returning the tool. Failed run explicitly terminated and preserved. Trial070 leaves the released masher in the bowl after the measured outcome; SPARTA novelty risk remains.",
+      "score": "No full successful released outcome",
       "media": null,
       "pr": null,
       "candidate_plan_actions": 2260,
