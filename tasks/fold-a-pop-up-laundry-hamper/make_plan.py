@@ -5,7 +5,7 @@ from scipy.spatial.transform import Rotation
 from planner import Plan
 from common import down,TABLE
 p=Plan();RL=Rotation.from_euler('x',-45,degrees=True).as_matrix()@down(-90);RR=Rotation.from_euler('x',45,degrees=True).as_matrix()@down(-90)
-L=np.array([.34,.264,TABLE+.007])-.008*RL[:,2];R=np.array([.34,-.264,TABLE+.007])-.008*RR[:,2]
+L=np.array([.34,.264,TABLE+.025])-.008*RL[:,2];R=np.array([.34,-.264,TABLE+.025])-.008*RR[:,2]
 p.add(3,'approach opposite frame ends',{'left':(L+[0,0,.13],RL,.6),'right':(R+[0,0,.13],RR,.6)},'joint')
 p.add(2,'enclose the four flattened frames',{'left':(L,RL,.6),'right':(R,RR,.6)})
 p.add(1,'grip both ends',{'left':(L,RL,0.),'right':(R,RR,0.)})
