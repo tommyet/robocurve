@@ -35,10 +35,10 @@ for row in range(2):
  centre=(np.array(a['pos'])+b['pos'])/2
  JOINTS.append(joint(f'ring_{row}_0',a['name'],b['name'],Rotation.from_quat(a['quat']).inv().apply(centre-a['pos']),Rotation.from_quat(b['quat']).inv().apply(centre-b['pos']),axes=bend_axes(.000004,.000003,179),break_force=20.))
 
-# Silicone seams stretch as well as bend; rigid translations overconstrain
-# the closed cup and produce impulsive tearing at reset.
+# Flexible cup seams use passive angular hinges; closed loops preserve continuity.
+# Adhesion supplies the resistance to peeling, without unstable tiny-body drives.
 for j in JOINTS:
- if j['name'].startswith(('base_','wall_','ring_')):
-  for axis in ['transX','transY','transZ']:
-   j['axes'][axis]=dict(limits=(-.004,.004),stiffness=1500.,damping=.08)
+ for axis,cfg in j['axes'].items():
+  if axis.startswith('rot') and 'stiffness' in cfg:cfg.update(stiffness=0.,damping=0.)
+for b in BODIES:b.update(linear_damping=.5,angular_damping=2.)
 finalize(BODIES,JOINTS)

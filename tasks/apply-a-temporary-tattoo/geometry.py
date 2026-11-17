@@ -17,21 +17,22 @@ for side in [-1,1]:
 
 NX,NY=10,8;DX=DY=.005;PAPER=np.array([.34,.13,TABLE+.0303])
 BODIES.append(body('paper_rest',[.34,.13,TABLE+.015],[box((.030,.020,.030))],mass=.02,fixed=True,color=(.55,.63,.69)))
-PATTERN=['0110110','1111111','1111111','0111110','0011100','0001000'];INK=[]
-for i in range(NX):
- for j in range(NY):
-  name=f'paper_{i}_{j}';x=(i-(NX-1)/2)*DX;y=(j-(NY-1)/2)*DY
-  ink=1<=i<=7 and 1<=j<=6 and PATTERN[j-1][i-1]=='1'
-  if ink:INK.append(name)
-  shapes=[box((DX*.98,DY*.98,.00030))]
+PATTERN=['0110110','1111111','1111111','0111110','0011100','0001000'];INK=[];INK_BODY={};INK_ORIGINAL={}
+# Eight full-width paper bands retain the bending needed around the forearm.
+# The printed coating is finer than the collision discretization.
+for j in range(NY):
+ name=f'paper_band_{j}';y=(j-(NY-1)/2)*DY;shapes=[box((NX*DX,DY*.98,.00030))]
+ for i in range(NX):
+  x=(i-(NX-1)/2)*DX;ink=1<=i<=7 and 1<=j<=6 and PATTERN[j-1][i-1]=='1'
   if ink:
-   shape=box((DX*.95,DY*.95,.00004),(0,0,-.00017),(.8,.03,.05));shape['collision']=False;shapes.append(shape)
-  BODIES.append(body(name,PAPER+[x,y,0],shapes,mass=.000006,color=(.95,.93,.85),friction=.6,contact_offset=.00005))
-  for di,dj in [(-1,0),(0,-1)]:
-   if i+di>=0 and j+dj>=0:
-    prev=f'paper_{i+di}_{j+dj}';a=np.array([-di*DX/2,-dj*DY/2,0])
-    JOINTS.append(joint(f'sheet_{i}_{j}_{di}_{dj}',prev,name,a,-a,axes=bend_axes(.0000005,.0000001),break_force=1.5,break_torque=.006))
-  JOINTS.append(joint('tack_'+name,'forearm',name,[0,0,ARM_RADIUS],[0,0,0],axes=bend_axes(.0000001,.0000001),break_force=.20,enabled=False,collision=True))
+   patch=f'paper_{i}_{j}';INK.append(patch);INK_BODY[patch]=(name,[x,0,0],len(shapes));INK_ORIGINAL[patch]=[x,y]
+   shape=box((DX*.95,DY*.95,.00004),(x,0,-.00017),(.8,.03,.05));shape['collision']=False;shapes.append(shape)
+ BODIES.append(body(name,PAPER+[0,y,0],shapes,mass=.000060,color=(.95,.93,.85),friction=.6,contact_offset=.00003,linear_damping=.5,angular_damping=2.))
+ if j:
+  axes=fixed_axes();axes['rotX']=dict(limits=(-120,120),stiffness=.00002,damping=.000000001)
+  JOINTS.append(joint('sheet_'+str(j),f'paper_band_{j-1}',name,[0,DY/2,0],[0,-DY/2,0],axes=axes,break_force=3.,break_torque=.02))
+for patch,(name,offset,index) in INK_BODY.items():
+ JOINTS.append(joint('tack_'+patch,'forearm',name,[0,0,ARM_RADIUS],offset,axes=bend_axes(0.,0.),break_force=.20,enabled=False,collision=True))
 SPONGE=np.array([.34,-.16,TABLE+.019])
 BODIES.append(body('sponge',SPONGE,[box((.040,.040,.015))],mass=.012,color=(.85,.67,.16),friction=.9))
 PADCOUNT=16

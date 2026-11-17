@@ -5,10 +5,19 @@ contact bodies. The law never places paper or moves either robot.
 """
 import numpy as np
 from native_model import NativeModel
-from geometry import INK,ARM_RADIUS,DX,DY,PADCOUNT
+from geometry import INK,INK_BODY,INK_ORIGINAL,ARM_RADIUS,DX,DY,PADCOUNT
 class Model(NativeModel):
  def __init__(self):
   super().__init__();self.wet={n:0. for n in INK};self.contact_uv={};self.transferred={};self.lost=set();self.max_load=0.
+ def p(self,name,local=(0,0,0)):
+  if name in INK_BODY:
+   body,offset,index=INK_BODY[name];return super().p(body,np.asarray(offset)+local)
+  return super().p(name,local)
+ def orientation(self,name):return super().orientation(INK_BODY[name][0] if name in INK_BODY else name)
+ def validate_reset(self):
+  from geometry import PAPER
+  centre=(self.p('paper_band_3')+self.p('paper_band_4'))/2
+  if np.linalg.norm(centre-PAPER)>.010:raise RuntimeError('Backing moved off its specified starting rest during settling.')
  def material(self,hands,dt):
   from pxr import Gf,UsdPhysics
   # Compression is measured from passive native spring motion, not a requested pose.
@@ -26,7 +35,7 @@ class Model(NativeModel):
    tack='tack_'+name
    if on_arm and pressure>.35 and name not in self.lost:
     if tack not in self.enabled:
-     j=self.joints[tack];j.GetLocalPos0Attr().Set(Gf.Vec3f(*local));j.GetLocalPos1Attr().Set(Gf.Vec3f(0,0,0));self.contact_uv[name]=local.copy();self.enable(tack,'pressed_adhesive_contact')
+     j=self.joints[tack];j.GetLocalPos0Attr().Set(Gf.Vec3f(*local));j.GetLocalPos1Attr().Set(Gf.Vec3f(*INK_BODY[name][1]));self.contact_uv[name]=local.copy();self.enable(tack,'pressed_adhesive_contact')
     if tack not in self.broken:self.wet[name]+=dt
    if self.wet[name]>=30. and tack not in self.broken:self.joints[tack].GetBreakForceAttr().Set(.015)
    if tack in self.broken and name not in self.transferred and name not in self.lost:
@@ -40,7 +49,7 @@ class Model(NativeModel):
   uv=np.array([[p[0],np.arctan2(p[1],p[2])*ARM_RADIUS] for p in positions]).reshape(-1,2)
   coherent=np.ones(len(names),dtype=bool)
   if len(names)>1:
-   original={b['name']:np.asarray(b['pos'])[:2]-PAPER[:2] for b in BODIES if b['name'] in names}
+   original=INK_ORIGINAL
    src=np.array([original[n] for n in names]);a=src-src.mean(axis=0);b=uv-uv.mean(axis=0)
    U,_,V=np.linalg.svd(a.T@b);Q=U@V
    if np.linalg.det(Q)<0:U[:,-1]*=-1;Q=U@V
@@ -64,7 +73,8 @@ class Model(NativeModel):
   from pxr import UsdGeom
   for name,p in self.transferred.items():
    # Only the image coating changes substrate. Native paper motion is untouched.
-   prims=[x for x in self.stage.Traverse() if str(x.GetPath()).endswith('/'+name+'/shape_1')]
+   body,offset,index=INK_BODY[name]
+   prims=[x for x in self.stage.Traverse() if str(x.GetPath()).endswith('/'+body+'/shape_'+str(index))]
    for prim in prims:UsdGeom.Imageable(prim).MakeInvisible()
    angle=np.arctan2(p[1],p[2]);pts=[]
    for x,y in [(-DX/2,-DY/2),(DX/2,-DY/2),(DX/2,DY/2),(-DX/2,DY/2)]:
