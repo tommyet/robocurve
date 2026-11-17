@@ -28,7 +28,10 @@ class Model(NativeModel):
   self.failed |= any(n.startswith(('cloth_','side_seam_','fold_','hem_','hole_','existing_stitch_')) for n in self.broken) or bool({'pin_catch','point_compression','pin_spring'} & self.broken)
  def measure(self):
   front=[n for n in self.holes if n.startswith('front_')];hem=[n for n in self.holes if n.startswith('hem_')];back=[n for n in self.holes if n.startswith('back_')]
-  same_region=bool(len(front)>=2 and len(hem)>=2 and min(np.linalg.norm(self.p(a)-self.p(b)) for a in front for b in hem)<.025)
+  def on_shaft(n):
+   local=self.orientation('pin_arm').T@(self.p(n,self.holes[n])-self.p('pin_arm'))
+   return -.001<=local[0]<=.046 and np.linalg.norm(local[1:])<.002
+  same_region=bool(sum(on_shaft(n) for n in front)>=2 and sum(on_shaft(n) for n in hem)>=2 and min(np.linalg.norm(self.p(a)-self.p(b)) for a in front for b in hem)<.025)
   return dict(front_layer_pierced=bool(front),hem_layer_pierced=bool(hem),back_of_leg_pierced=bool(back),both_layers_held=same_region,point_enclosed=self.latched,punctures=len(self.holes),fabric_intact=not self.failed,released_seconds=self.release,max_puncture_load_N=self.max_puncture_load,failed=self.failed)
  def integrity_failed(self):return super().integrity_failed() or (any(n.startswith(('cloth_','side_seam_','fold_','hem_','hole_','existing_stitch_')) for n in self.broken) or bool({'pin_catch','point_compression','pin_spring'} & self.broken))
  def score(self):

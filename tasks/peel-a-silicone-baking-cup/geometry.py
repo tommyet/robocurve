@@ -38,14 +38,16 @@ for row in range(2):
 # Ordinary moulded pull tabs give fingers clearance from the fragile muffin.
 for i in [0,8]:
  t=i*2*np.pi/N;radial=np.array([np.sin(t),np.cos(t),0]);q=Rotation.from_euler('z',-t).as_quat();name='cup_tab_'+str(i)
- BODIES.append(body(name,C+radial*.036+[0,0,.038],[box((.016,.012,.0015))],mass=.00035,color=(.18,.46,.74),quat=list(q),friction=1.))
- JOINTS.append(joint('tab_seam_'+str(i),f'cup_1_{i:02d}',name,[0,0,.010],[0,-.006,0],axes=bend_axes(.00002,.000008,179),break_force=20.))
+ BODIES.append(body(name,C+radial*.042+[0,0,.032],[box((.016,.024,.0015))],mass=.00035,color=(.18,.46,.74),quat=list(q),friction=1.))
+ JOINTS.append(joint('tab_seam_'+str(i),f'cup_1_{i:02d}',name,[0,0,.004],[0,-.012,0],axes=bend_axes(.00002,.000008,179),break_force=20.))
 
 # Flexible cup seams use passive angular hinges; closed loops preserve continuity.
 # Adhesion supplies the resistance to peeling, without unstable tiny-body drives.
 for j in JOINTS:
  for axis,cfg in j['axes'].items():
-  if axis.startswith('rot') and 'stiffness' in cfg:cfg.update(stiffness=0.,damping=0.)
+  if axis.startswith('rot') and 'stiffness' in cfg:
+   if j['name'].startswith('tab_seam_'):cfg.update(stiffness=.00002,damping=.000001,max_force=.00001)
+   else:cfg.update(stiffness=0.,damping=0.)
 for j in JOINTS:
  if j['name'].startswith(('ring_','wall_','base_')):
   for axis in ['transX','transY','transZ']:j['axes'][axis]=dict(limits=(-.003,.003),stiffness=50.,damping=.05)

@@ -38,7 +38,7 @@ JOINTS.append(joint('point_compression','pin_arm','needle_point',[.044,0,0],[0,0
 JOINTS.append(joint('pin_catch','pin_frame','pin_arm',[.043,0,.001],[.043,0,0],axes=fixed_axes(),enabled=False,break_force=15.,break_torque=.10))
 for b in list(BODIES):
  if b['name'].startswith(('front_','back_','hem_')):
-  axes=bend_axes(0.,.000001,179);axes['transY']=dict(limits=(1,-1));axes['transZ']=dict(limits=(1,-1));axes['transX']=dict(limits=(-.043,.001),stiffness=0.,damping=.05,max_force=.5)
+  axes=bend_axes(0.,.000001,179);axes['transY']=dict(limits=(-.0005,.0005),stiffness=500.,damping=.1);axes['transZ']=dict(limits=(-.0005,.0005),stiffness=500.,damping=.1);axes['transX']=dict(limits=(-.043,.001),stiffness=0.,damping=.05,max_force=.5)
   JOINTS.append(joint('hole_'+b['name'],'pin_arm',b['name'],[.045,0,0],[0,0,0],axes=axes,enabled=False,break_force=3.,break_torque=.02))
 # An ordinary wooden sewing support sits inside the cuff, separating its faces.
 # The turned front edge overhangs it by 26 mm so a fingertip can get underneath.
