@@ -2,42 +2,38 @@
 
 Peel the silicone baking cup off the muffin without breaking it. Leave the muffin and cup separate on the tray.
 
-**Development draft. No native success, Dream score, media upload or submission readiness is claimed.**
-
-Removing a reusable baking cup requires peeling the flexible cup while supporting a fragile muffin.
+The earlier native demo reached 1.0 in 640 actions, but visual review found insufficient elastic recovery. The current material candidate requires fresh validation and a complete Dream baseline before submission.
 
 ## Setup and reset
 
-One cooled 72 mm wide, 60 mm high muffin in a flexible fluted silicone baking cup, 60 mm rim diameter, 52 mm base diameter and 38 mm high, with two 16 × 24 × 1.5 mm moulded pull tabs. It rests at the centre of a 320 × 280 mm tray between the arms. Both hands start open. Use removable food-safe pad covers. The native dimensions and fixed coordinates are in geometry.py.
+One cooled plain muffin, 72 mm across and 64 mm high, inside a flexible silicone baking cup (60 mm rim, 52 mm base, 38 mm wall height) with two 16 × 24 × 1.5 mm moulded pull tabs. It rests at the centre of a 320 × 280 × 4 mm food-safe tray between the arms. Both hands start open. The cup has not been loosened. The fixed dimensions and coordinates are in geometry.py.
+
+The muffin is 45 g and the cup is approximately27 g in the native scene. The tray centre is340 mm forward of the station origin. `geometry.py` fixes every part and coordinate. This is a generic dimensioned tabbed cup, not a scan of a specific product. [OXO's reusable cups](https://www.oxo.com/silicone-baking-cups-12-pack.html) provide an example of the ordinary pull-tab design.
 
 Use plain muffins from one batch, cooled to 18–22 °C in the same washed and dried cup model. Use a fresh muffin each trial and do not pre-peel or oil the cup. Inspect the cup for tears and wash the tray and removable covers between trials.
 
-`geometry.py` records every simulated part, dimension, mass, fixed coordinate and passive joint. The starting photograph must be captured from the final native reset before submission.
+## Scoring
 
-## Judging
+1.0 if the cup is fully off and the intact muffin and cup rest on the tray with their centres at least 75 mm apart for 3 seconds after both hands release. 0.5 if adhesion has released around at least three quarters of the cup wall; 0.25 for at least half; otherwise 0. A torn cup, split muffin or detached piece larger than 5 mm scores 0. Judge the released circumference from close views and gentle inspection; use a ruler for separation.
 
-1.0 if the cup is completely off and the intact muffin and cup rest separately on the tray after three seconds with both hands clear. 0.5 if at least three quarters of the cup wall is peeled away; 0.25 for at least half. Otherwise 0. A torn cup, split muffin or detached muffin piece larger than 5 mm scores 0. Judge from close views and a ruler.
+The native cup has sixteen lower-wall adhesion regions. Partial credit counts regions that physically detached under load. The full score additionally checks that the cup bottom detached, the muffin is clear of the cup, both objects are on the tray and the hands released. Adhesion release alone cannot earn full score. A broken cup seam or muffin-cap bond overrides all progress with zero.
 
-## Simulation and limits
+## Material approximation
 
-Native muffin, flexible jointed cup walls and robot contacts. Adhesion joints resist removal and break through physical peeling loads. The muffin has damageable crust pieces; the cup can tear. There are no pose-following objects or proximity grasps. Silicone, crumb strength and adhesion are coarse uncalibrated approximations. Native feasibility has not yet been validated.
+The cup has 32 wall panels joined by passive compliant seams, two moulded tabs and a bottom. Sixteen force-limited wall bonds and one bottom bond resist removal. Four damageable cap sections form a continuous muffin top around its core. Native contacts and friction handle gripping and peeling; no object is attached to either hand.
 
-Ordinary reusable silicone baking cups provide the physical target, for example https://www.oxo.com/oxo-gg-silicone-baking-cups-blister.html . The simulation resolves passive folding and peeling resistance rather than releasing the muffin when a hand reaches a particular angle. Native grading and all final dimensions must be checked against the demonstrated trial.
+Material coefficients are illustrative, not calibrated to a particular muffin recipe or retail cup. Angular drive values use USD's per-degree convention. The approximation retains flexible-wall peeling, tool-free bimanual support, loss of grip and damage. The scripted demonstration uses observed settling to correct ordinary joint targets, grips the pull tab while it rests on the tray, and peels while lifting the supported muffin. Dream uses the same physics and its standard cameras/joint observations.
 
-No manipulated object is attached to a hand. Native contact, friction and ordinary joint actions handle grasping. A scripted controller may use privileged state for a feasibility demo; Dream must use only the standard three cameras and joint observations. The geometry and material laws must be identical in both runs.
+## Run and rescore
 
-## Run
-
-Use the Python 3.12 / Isaac 6.1 / YAM environment targeted in `ENVIRONMENT.json`. New-task verification is still pending. From the repository root:
+Use the pinned Python 3.12 / Isaac 6.1 / YAM environment in `ENVIRONMENT.json`, with the adapter installed. From the repository root:
 
 ```sh
 python tasks/peel-a-silicone-baking-cup/make_plan.py
-OMNI_KIT_ACCEPT_EULA=YES python tasks/peel-a-silicone-baking-cup/run.py --mode demo --out /tmp/peel-a-silicone-baking-cup-demo
-OMNI_KIT_ACCEPT_EULA=YES python tasks/peel-a-silicone-baking-cup/run.py --mode dream --out /tmp/peel-a-silicone-baking-cup-dream
+OMNI_KIT_ACCEPT_EULA=YES python tasks/peel-a-silicone-baking-cup/run.py --mode demo --out /tmp/cup-demo
+OMNI_KIT_ACCEPT_EULA=YES python tasks/peel-a-silicone-baking-cup/run.py --mode dream --out /tmp/cup-dream
+python tasks/peel-a-silicone-baking-cup/rescore.py /tmp/cup-demo
+python tasks/peel-a-silicone-baking-cup/rescore.py /tmp/cup-dream
 ```
 
-Rescore recorded native body poses with `python tasks/peel-a-silicone-baking-cup/rescore.py /tmp/peel-a-silicone-baking-cup-demo`. The scorer checks frozen source hashes, trace continuity, bounded joint actions, native break events, and the outcome. This supports, and does not replace, visual inspection of the contact and material behaviour.
-
-Fixed layout; no random seed. Limit: 1,000 control steps (50 seconds at 20 Hz). Actual runtime per trial, complete native evidence and independent scoring will be recorded after successful validation. Do not upload a CPU plot or a kinematic reach check as a successful demo.
-
-The current native candidate uses a conventional cup with moulded pull tabs so the peel grip clears the muffin. [OXO describes this tabbed silicone-cup design](https://www.oxo.com/silicone-baking-cups-12-pack.html). The supplied geometry is a generic dimensioned approximation, not an exact OXO scan; its 60 mm rim and 16 × 24 × 1.5 mm tabs are stated explicitly.
+The limit is 1,000 actions (50 seconds at 20 Hz). Fixed layout; no random seed. The CPU rescorer checks frozen source hashes, native break history, contiguous frames, bounded joint commands and the outcome. It is an evidence audit, not a physics replay. Native video inspection is also required. Runtime measurements and final audit results will be added to `VALIDATION.json` after the baseline.

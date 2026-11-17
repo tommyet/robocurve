@@ -2,40 +2,42 @@
 
 Mash the cooked potato in the bowl until no large lumps remain. Keep the potato in the bowl.
 
-**Development draft. No native success, Dream score, media upload or submission readiness is claimed.**
-
-Mashing cooked potato requires loaded pressing across the bowl, breaking down the pieces while keeping the food contained.
+The native demo reaches 1.0 in 723 actions (36.15 seconds). Independent audit, video review and the complete Dream baseline are still being finalized; this folder is not yet submitted.
 
 ## Setup and reset
 
-About 60 g of peeled cooked potato in twelve 21–22 mm pieces; a 200 mm inside-diameter, 75 mm deep bowl; and an ordinary wire masher with a 75 x 60 mm head and a 180 mm handle. The bowl is centred between the arms; the masher stands on its head 170 mm toward the right arm. Both hands start open. Use removable food-safe pad covers and a washable tray beneath the bowl.
+About 60 g of peeled, cooked potato in twelve 21–22 mm pieces, arranged in a 4 × 3 grid in a stainless-steel bowl (200 mm inside diameter, 75 mm deep). A 140 g wire masher has a 75 × 60 mm head and a 180 mm handle. The bowl is centred between the arms; the masher stands on its head 170 mm toward the right arm. Both hands start open.
 
-Use peeled floury potato from one batch, cut into 21–22 mm pieces, boiled until a fork passes through easily, then drained and cooled to 18–22 °C. Weigh 60 ± 5 g per trial. Add no milk, butter or oil. Use fresh cooked pieces and clean the tool, bowl, tray and covers between trials.
+The native bowl is 300 g. Its centre is 340 mm forward of the station origin; the food grid has 24 mm spacing. The fixed layout, part geometry and masses are in `geometry.py`. The simulated portion is 58.32 g. The tool may be released in the bowl; returning it to the bench is not required.
 
-`geometry.py` records every simulated part, dimension, mass, fixed coordinate and passive joint. The starting photograph must be captured from the final native reset before submission.
+Use peeled floury potato from one batch, cut into 21–22 mm pieces, boiled until a fork passes through easily, drained and cooled to 18–22 °C. Weigh 60 ± 5 g per trial; add no milk, butter or oil. Use fresh pieces and clean the bowl, masher, work surface and food-safe gripper covers between trials. Place the twelve pieces as photographed.
 
-## Judging
+## Scoring
 
-1.0 if at least 95% of the retained potato has no lumps larger than 9 mm, at least 95% of the starting mass stays in the bowl, and both hands have released for three seconds. 0.5 for at least 75% reduced to that size; 0.25 for at least 50%. Otherwise 0. Losing over 5% of the potato scores 0. Weigh the retained food and inspect it spread on a 9 mm reference grid.
+First weigh the retained potato and the lumps whose largest dimension exceeds 9 mm. Losing over 5% of the starting mass scores 0. Otherwise: 1.0 if at least 95% of retained mass is in lumps no larger than 9 mm and both hands have released for 3 seconds; 0.5 for at least 75%; 0.25 for at least 50%; otherwise 0. A qualifying result still held scores 0.5. Use a 0.1 g kitchen scale and a 9 mm reference grid.
 
-## Simulation and limits
+For physical judging, collect and weigh the retained food without further mashing. Gently separate the pieces larger than the grid threshold and weigh them. The fine fraction is `(retained mass − oversized-lump mass) / retained mass`. Judge the largest dimension of each lump, not its orientation on the grid. The native equivalent measures connected components and their largest particle-to-particle extent plus particle diameter. All particles have equal mass.
 
-Native wire masher, bowl, robot contacts and cohesive potato clusters. Force-limited internal bonds break under real tool loading; released particles remain physical objects. The score measures remaining connected lump size and retained mass, not press count or tool travel. This approximates breakup rather than smooth potato rheology. Native feasibility has not yet been validated.
+## Material approximation
 
-The primary novelty risk is SPARTA food mashing (https://arxiv.org/html/2509.24129v2). This proposal includes native tool pickup, loaded three-dimensional pressing and retained-lump judging, but that does not guarantee an originality pass. No novelty or acceptance claim is made from a changed food name alone. Physical preparation and the proposed 9 mm texture criterion need to agree with the native demonstration.
+Each of twelve chunks contains 27 cohesive 7 mm particles. Native compression during masher contact reduces cohesion. Eight overlapping local cells per chunk measure compressive strain; full local failure removes that chunk's remaining cohesion, and otherwise the bond breaking force decreases. The rule never writes particle poses. Native contacts, gravity and friction handle the fragments after separation.
 
-No manipulated object is attached to a hand. Native contact, friction and ordinary joint actions handle grasping. A scripted controller may use privileged state for a feasibility demo; Dream must use only the standard three cameras and joint observations. The geometry and material laws must be identical in both runs.
+The parameters are an uncalibrated cooked-tissue approximation, not a measurement of potato rheology. Released particles represent small soft lumps, not a smooth paste. Contact-gated damage, damping, finite cohesion and the 2 m/s particle speed cap are identical for the scripted and Dream runs. The demo uses observed food and tool poses to aim ordinary bounded joint actions and stops pressing when the outcome is reached; no hand attachment or success-triggered object motion is used.
 
-## Run
+SPARTA evaluates food mashing: https://arxiv.org/html/2509.24129v2 . Its overlap is an unresolved novelty risk. Tool pickup, retention scoring or changing the food name do not by themselves establish novelty, and this submission makes no contrary claim.
 
-Use the Python 3.12 / Isaac 6.1 / YAM environment targeted in `ENVIRONMENT.json`. New-task verification is still pending. From the repository root:
+## Run and rescore
+
+Use the pinned Python 3.12 / Isaac 6.1 / YAM installation in `ENVIRONMENT.json`, with the adapter installed. From the repository root:
 
 ```sh
 python tasks/mash-cooked-potato/make_plan.py
-OMNI_KIT_ACCEPT_EULA=YES python tasks/mash-cooked-potato/run.py --mode demo --out /tmp/mash-cooked-potato-demo
-OMNI_KIT_ACCEPT_EULA=YES python tasks/mash-cooked-potato/run.py --mode dream --out /tmp/mash-cooked-potato-dream
+OMNI_KIT_ACCEPT_EULA=YES python tasks/mash-cooked-potato/run.py --mode demo --out /tmp/potato-demo
+OMNI_KIT_ACCEPT_EULA=YES python tasks/mash-cooked-potato/run.py --mode dream --out /tmp/potato-dream
+python tasks/mash-cooked-potato/rescore.py /tmp/potato-demo
+python tasks/mash-cooked-potato/rescore.py /tmp/potato-dream
 ```
 
-Rescore recorded native body poses with `python tasks/mash-cooked-potato/rescore.py /tmp/mash-cooked-potato-demo`. The scorer checks frozen source hashes, trace continuity, bounded joint actions, native break events, and the outcome. This supports, and does not replace, visual inspection of the contact and material behaviour.
+The control limit is 2,400 actions (120 seconds at 20 Hz). The layout is fixed and uses no random seed. The scripted plan has a 2,260-action upper bound and can finish earlier once the measured outcome is released. Dream receives the full limit and standard three camera views plus joint observations.
 
-Fixed layout; no random seed. Limit: 2,400 control steps (120 seconds at 20 Hz). Actual runtime per trial, complete native evidence and independent scoring will be recorded after successful validation. Do not upload a CPU plot or a kinematic reach check as a successful demo.
+The CPU rescorer verifies frozen source hashes, trace continuity, joint/rate bounds, damage progression, native break events and the outcome. It is an evidence audit, not a physics replay. Native camera videos must also be reviewed. Runtime measurements and final audit results will be recorded in `VALIDATION.json` once the baseline completes.
