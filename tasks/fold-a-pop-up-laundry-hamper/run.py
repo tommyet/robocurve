@@ -109,7 +109,8 @@ def main():
    if not a.cpu_preview:m.draw(drawing)  # Native environment step already renders and updates camera buffers.
    capture(k);report.update(steps=k,measurements=m.measure(),score=m.score())
    if k%20==0:save();trace.flush()
-   if a.mode=='demo' and k==200 and any(m.p('wire_%d_%02d'%(face,end))[2]<.8075 for face in range(4) for end in [12,36]):raise RuntimeError('A frame end slipped from the pickup; stop this development demo before folding.')
+   if a.mode=='demo' and k==140 and any(h['opening']<.03 for h in hands().values()):raise RuntimeError('Empty grip after closing; stop this development trial before lift.')
+   if a.mode=='demo' and k==200 and any(m.p('wire_%d_%02d'%(face,end))[2]<.8075 for face in range(4) for end in [5,29]):raise RuntimeError('A frame end slipped from the pickup; stop this development demo before folding.')
    if a.mode=='demo' and m.failed:raise RuntimeError('Native task integrity failed; development demo stopped early.')
   report.update(status='complete',events=m.events,score=m.score(),requires_visual_review=True)
  except BaseException as error:

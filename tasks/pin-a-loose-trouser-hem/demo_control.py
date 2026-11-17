@@ -10,9 +10,9 @@ class DemoControl:
   h=hands['right'];tip=m.p('needle_point',[.001,0,0]);axis=m.orientation('pin_arm')[:,0]
   if self.start is None:
    self.start=tip.copy();self.initial_axis=axis.copy()
-   self.entry=(m.p('hem_8_1',[0,0,0])+m.p('front_8_0',[0,-.003,0]))/2
-   self.end=(m.p('hem_9_1',[0,0,0])+m.p('front_9_0',[0,-.003,0]))/2
-   self.normal=m.orientation('hem_8_1')[:,2]+m.orientation('front_8_0')[:,2];self.normal/=np.linalg.norm(self.normal)
+   self.entry=(m.p('hem_9_0',[0,0,0])+m.p('front_9_0',[0,.007,0]))/2
+   self.end=(m.p('hem_8_0',[0,0,0])+m.p('front_8_0',[0,.007,0]))/2
+   self.normal=m.orientation('hem_9_0')[:,2]+m.orientation('front_9_0')[:,2];self.normal/=np.linalg.norm(self.normal)
    self.tangent=self.end-self.entry;self.tangent-=self.normal*np.dot(self.tangent,self.normal);self.tangent/=np.linalg.norm(self.tangent)
   def blend(a,b,start,end):
    u=np.clip((k-start)/(end-start),0,1);u=u*u*(3-2*u);return a*(1-u)+b*u

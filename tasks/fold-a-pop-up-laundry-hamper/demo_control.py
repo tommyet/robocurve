@@ -9,7 +9,7 @@ class DemoControl:
   from yam_arena import ik,station
   if self.offset is None:
    self.offset={}
-   for side,i in [('left',12),('right',36)]:
+   for side,i in [('left',5),('right',29)]:
     names=[f'wire_{f}_{i:02d}' for f in range(4)]
     expected=np.mean([b['pos'] for b in BODIES if b['name'] in names],axis=0)
     self.offset[side]=np.mean([m.p(n) for n in names],axis=0)-expected
