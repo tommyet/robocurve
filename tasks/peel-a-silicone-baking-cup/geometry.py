@@ -53,7 +53,7 @@ for i in [0,8]:
 for j in JOINTS:
  for axis,cfg in j['axes'].items():
   if axis.startswith('rot') and 'stiffness' in cfg:
-   if j['name'].startswith('tab_seam_'):cfg.update(stiffness=.00002,damping=.000001,max_force=.00001)
+   if j['name'].startswith('tab_seam_'):cfg.update(stiffness=.0002,damping=.00001,max_force=.0004)
    elif not j['name'].startswith('crumb_bond_'):cfg.update(stiffness=0.,damping=0.)
 for j in JOINTS:
  if j['name'].startswith(('ring_','wall_','base_')):
