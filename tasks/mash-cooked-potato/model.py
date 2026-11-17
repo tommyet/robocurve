@@ -1,6 +1,7 @@
 import numpy as np
 from native_model import NativeModel
-from geometry import JOINTS,BODIES
+from geometry import JOINTS,BODIES,GRID
+CELLS=[np.where(np.all((GRID>=np.array(c)-1)&(GRID<=np.array(c)),axis=1))[0] for c in np.ndindex(2,2,2)]
 class Model(NativeModel):
  def __init__(self):super().__init__();self.damage={str(k):0. for k in range(12)}
  def strain_candidates(self):
@@ -8,14 +9,19 @@ class Model(NativeModel):
   bars=next(b for b in BODIES if b['name']=='masher')['shapes'][:7]
   for k in range(12):
    pts=np.array([self.p('food_%02d_%d'%(k,n)) for n in range(27)]);local=(pts-origin)@R
-   contact=False
+   contact=np.zeros(27,dtype=bool)
    for bar in bars:
     gap=np.maximum(np.abs(local-np.asarray(bar['pos']))-np.asarray(bar['size'])/2,0.)
-    if np.min(np.linalg.norm(gap,axis=1))<.004:contact=True
-   centred=pts-pts.mean(axis=0);_,_,axes=np.linalg.svd(centred,full_matrices=False)
-   thickness=float(np.min(np.ptp(centred@axes.T,axis=0))+.007)
-   strain=max(0.,1.-thickness/.0214)
-   result[str(k)]=float(np.clip((strain-.35)/.20,0,1)) if contact else 0.
+    contact|=np.linalg.norm(gap,axis=1)<.004
+   # Local loaded compression can fracture a cooked chunk after other parts
+   # have separated; scattered fragments must not define its current thickness.
+   strain=0.
+   for indices in CELLS:
+    if not contact[indices].any():continue
+    centred=pts[indices]-pts[indices].mean(axis=0);_,_,axes=np.linalg.svd(centred,full_matrices=False)
+    thickness=float(np.min(np.ptp(centred@axes.T,axis=0))+.007)
+    strain=max(strain,1.-thickness/.0142)
+   result[str(k)]=float(np.clip((strain-.15)/.30,0,1))
   return result
  def material(self,hands,dt):
   # Cooked tissue loses cohesion under actual tool-loaded compression. The

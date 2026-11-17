@@ -28,8 +28,11 @@ class DemoControl:
    pts=np.array([m.p(n) for n in ns]);centre=pts.mean(axis=0);r=np.linalg.norm(centre[:2]-m.p('bowl')[:2])
    size=np.max(np.linalg.norm(pts[:,None]-pts[None,:],axis=-1))+.007
    if size>.009 and r<.09:choices.append((len(ns),size,centre))
-  target=max(choices,key=lambda x:(x[0],x[1]))[2] if choices else m.p('bowl')
-  delta=target[:2]-m.p('bowl')[:2];delta*=min(1.,.05/max(np.linalg.norm(delta),1e-6));return m.p('bowl')[:2]+delta
+  remaining=[n for ns in groups.values() if len(ns)>1 for n in ns if np.linalg.norm(m.p(n)[:2]-m.p('bowl')[:2])<.09]
+  if remaining:
+   pts=np.array([m.p(n) for n in remaining]);density=(np.linalg.norm(pts[:,None,:2]-pts[None,:,:2],axis=-1)<.027).sum(axis=1);target=pts[int(np.argmax(density))]
+  else:target=m.p('bowl')
+  delta=target[:2]-m.p('bowl')[:2];delta*=min(1.,.055/max(np.linalg.norm(delta),1e-6));return m.p('bowl')[:2]+delta
  def action(self,k,wanted,stage,m,hands,observed):
   if k<=200:return wanted
   # Compensate tool slip through ordinary hand motion; never reposition the tool.
