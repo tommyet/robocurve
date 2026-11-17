@@ -39,3 +39,5 @@ OMNI_KIT_ACCEPT_EULA=YES python tasks/peel-a-silicone-baking-cup/run.py --mode d
 Rescore recorded native body poses with `python tasks/peel-a-silicone-baking-cup/rescore.py /tmp/peel-a-silicone-baking-cup-demo`. The scorer checks frozen source hashes, trace continuity, bounded joint actions, native break events, and the outcome. This supports, and does not replace, visual inspection of the contact and material behaviour.
 
 Fixed layout; no random seed. Limit: 1,000 control steps (50 seconds at 20 Hz). Actual runtime per trial, complete native evidence and independent scoring will be recorded after successful validation. Do not upload a CPU plot or a kinematic reach check as a successful demo.
+
+The current native candidate uses a conventional cup with moulded pull tabs so the peel grip clears the muffin. [OXO describes this tabbed silicone-cup design](https://www.oxo.com/silicone-baking-cups-12-pack.html). The supplied geometry is a generic dimensioned approximation, not an exact OXO scan; its 60 mm rim and 16 × 12 mm tabs are stated explicitly.

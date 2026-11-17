@@ -35,6 +35,12 @@ for row in range(2):
  centre=(np.array(a['pos'])+b['pos'])/2
  JOINTS.append(joint(f'ring_{row}_0',a['name'],b['name'],Rotation.from_quat(a['quat']).inv().apply(centre-a['pos']),Rotation.from_quat(b['quat']).inv().apply(centre-b['pos']),axes=bend_axes(.000004,.000003,179),break_force=20.))
 
+# Ordinary moulded pull tabs give fingers clearance from the fragile muffin.
+for i in [0,8]:
+ t=i*2*np.pi/N;radial=np.array([np.sin(t),np.cos(t),0]);q=Rotation.from_euler('z',-t).as_quat();name='cup_tab_'+str(i)
+ BODIES.append(body(name,C+radial*.036+[0,0,.038],[box((.016,.012,.0015))],mass=.00035,color=(.18,.46,.74),quat=list(q),friction=1.))
+ JOINTS.append(joint('tab_seam_'+str(i),f'cup_1_{i:02d}',name,[0,0,.010],[0,-.006,0],axes=bend_axes(.00002,.000008,179),break_force=20.))
+
 # Flexible cup seams use passive angular hinges; closed loops preserve continuity.
 # Adhesion supplies the resistance to peeling, without unstable tiny-body drives.
 for j in JOINTS:
