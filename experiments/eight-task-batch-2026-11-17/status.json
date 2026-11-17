@@ -1,9 +1,9 @@
 {
   "date": "2026-11-17",
   "submission_ready": false,
-  "new_task_prs_opened": 2,
+  "new_task_prs_opened": 3,
   "native_runs": "Multiple native resets and demos recorded; see task entries",
-  "dream_runs": "Kale and avocado complete, both 0.0; remaining baselines await successful demos",
+  "dream_runs": "Kale, avocado and cigar complete; remaining baselines await successful demos.",
   "bracelet": {
     "pr": 2187,
     "revision": "f5c49c2",
@@ -42,65 +42,68 @@
     },
     {
       "slug": "pin-a-loose-trouser-hem",
-      "scene": "Pickup begins correctly but cloth failed during large lift; compliant-seam/small-lift candidate running",
+      "scene": "Stable cloth and pin pickup, measured needle approach; nearby support trial032 running. No successful threading or closure yet.",
       "score": "No successful full demo",
       "media": null,
       "pr": null,
-      "remaining_local_work": "Validate stable hold, then implement puncture/return/closure through both layers.",
-      "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload."
+      "remaining_local_work": "Validate puncture/return and the contact-driven closure controller.",
+      "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload.",
+      "candidate_plan_actions": 1260
     },
     {
       "slug": "apply-a-temporary-tattoo",
-      "scene": "Stable flexible backing pickup; corrected foam columns being tested for wet transfer",
+      "scene": "Wider unprinted margin and short-range water wicking; all image cells wet in native trial030. Full transfer/peel/release still pending.",
       "score": "No successful full demo",
       "media": null,
       "pr": null,
-      "candidate_plan_actions": 1200,
+      "candidate_plan_actions": 1340,
       "maximum_command_velocity_ratio": 0.381793760538531,
       "maximum_ik_position_error_m": 0.011067952095175429,
       "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload."
     },
     {
       "slug": "fold-a-pop-up-laundry-hamper",
-      "scene": "Stable intact reset; one-sided lift briefly held; both grips and fold/retainer still unfinished",
+      "scene": "Intact reset; frame layers slip from pickup. Deeper grip/clearance trial033 running; retainer placement unfinished.",
       "score": "0.0 development trials",
       "media": null,
       "pr": null,
-      "remaining_local_work": "Complete robot controller; native contact and manipulation have not been demonstrated.",
-      "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload."
+      "remaining_local_work": "Complete both-end retention, twist/nest fold and elastic retainer placement.",
+      "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload.",
+      "candidate_plan_actions": 440
     },
     {
       "slug": "peel-a-silicone-baking-cup",
-      "scene": "Native reset stable with compliant seams; first grip damaged muffin, gentler candidate in development",
+      "scene": "Stable reset; fixed opening either misses or damages muffin. Gentle finger-feedback pickup trial035 queued.",
       "score": "Demo not yet successful",
       "media": null,
       "pr": null,
-      "candidate_plan_actions": 560,
+      "candidate_plan_actions": 600,
       "maximum_command_velocity_ratio": 0.2882187140625003,
       "maximum_ik_position_error_m": 9.695714973016204e-05,
       "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload."
     },
     {
       "slug": "mash-cooked-potato",
-      "scene": "Soft cohesive particles now retain all food through early presses; full outcome still pending",
+      "scene": "Native food retained but connected lumps remain. Explicit compressive rupture and fuller coverage trial034 queued; SPARTA novelty risk remains.",
       "score": "No successful full demo",
       "media": null,
       "pr": null,
-      "candidate_plan_actions": 820,
+      "candidate_plan_actions": 1420,
       "maximum_command_velocity_ratio": 0.22096768078125031,
       "maximum_ik_position_error_m": 7.59056560541279e-05,
       "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload."
     },
     {
       "slug": "cut-a-cigar-cap",
-      "scene": "Native tabletop demo cut the cap under blade resistance; withdrawal damaged wrapper, controller transition corrected",
-      "score": "Failed demo 0.0; next candidate running",
-      "media": null,
-      "pr": null,
-      "candidate_plan_actions": 780,
+      "scene": "Complete native demo and Dream baseline; independently audited and visually inspected",
+      "score": "Demo 1.0; Dream 0.0",
+      "media": "M-ESSN8M",
+      "pr": "https://github.com/robocurve/benchmark-tasks/pull/2528",
+      "candidate_plan_actions": 760,
       "maximum_command_velocity_ratio": 0.29542418191406294,
       "maximum_ik_position_error_m": 8.480361567948025e-05,
-      "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload."
+      "remaining_validation": "Submitted; waiting for review.",
+      "receipt": "TK-4KFRF3"
     }
   ],
   "compute": {
