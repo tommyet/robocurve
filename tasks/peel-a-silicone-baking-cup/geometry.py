@@ -26,9 +26,15 @@ for i,t in enumerate(np.arange(N)*2*np.pi/N):
    JOINTS.append(joint('adhesion_'+str(i),'muffin',name,local,[0,-.002,0],axes=bend_axes(.000001,.000001),break_force=.60,break_torque=.02,collision=True))
 JOINTS.append(joint('bottom_adhesion','muffin','cup_bottom',[0,0,-.030],[0,0,0],axes=bend_axes(.000001,.000001),break_force=1.5,break_torque=.01,collision=True))
 
-for i,t in enumerate(np.arange(4)*np.pi/2):
- rel=np.array([.016*np.sin(t),.016*np.cos(t),.022]);name='crumb_'+str(i)
- BODIES.append(body(name,C+[0,0,.030]+rel,[sphere((.020,.020,.014))],mass=.005,color=(.70,.43,.16),exclude=['crumb_'+str(j) for j in range(4) if j!=i]))
+# Four damageable quarter-cap solids form one continuous ordinary muffin top.
+# Convex baked meshes keep native contacts aligned with the visual surface.
+from scipy.spatial import ConvexHull
+for i in range(4):
+ rel=np.array([0.,0.,.022]);name='crumb_'+str(i)
+ points=np.array([[.036*np.sin(p)*np.cos(t),.036*np.sin(p)*np.sin(t),.014*np.cos(p)] for p in np.linspace(0,np.pi,9) for t in np.linspace(i*np.pi/2,(i+1)*np.pi/2,9)])
+ points=np.unique(np.round(points,10),axis=0);hull=ConvexHull(points)
+ shape=dict(kind='mesh',points=points.tolist(),faces=hull.simplices.tolist(),pos=[0.,0.,0.])
+ BODIES.append(body(name,C+[0,0,.030]+rel,[shape],mass=.005,color=(.70,.43,.16),exclude=['crumb_'+str(j) for j in range(4) if j!=i],friction=.8))
  axes={**{a:dict(limits=(-.004,.004),stiffness=1000.,damping=.05,max_force=6.) for a in ['transX','transY','transZ']},**{a:dict(limits=(-20,20),stiffness=.01,damping=.0005,max_force=.12) for a in ['rotX','rotY','rotZ']}}
  JOINTS.append(joint('crumb_bond_'+str(i),'muffin',name,rel,[0,0,0],axes=axes,break_force=6.,break_torque=.12))
 for row in range(2):
@@ -48,7 +54,7 @@ for j in JOINTS:
  for axis,cfg in j['axes'].items():
   if axis.startswith('rot') and 'stiffness' in cfg:
    if j['name'].startswith('tab_seam_'):cfg.update(stiffness=.00002,damping=.000001,max_force=.00001)
-   else:cfg.update(stiffness=0.,damping=0.)
+   elif not j['name'].startswith('crumb_bond_'):cfg.update(stiffness=0.,damping=0.)
 for j in JOINTS:
  if j['name'].startswith(('ring_','wall_','base_')):
   for axis in ['transX','transY','transZ']:j['axes'][axis]=dict(limits=(-.003,.003),stiffness=50.,damping=.05)
