@@ -1,4 +1,4 @@
-"""Explicit construction helpers; metres, kg, newtons and newton metres."""
+"""Explicit construction helpers; metres, kg, newtons, newton metres and radians for drive gains."""
 import numpy as np
 from scipy.spatial.transform import Rotation
 TABLE=.7475

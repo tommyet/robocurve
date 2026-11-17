@@ -18,6 +18,7 @@ class DemoControl:
   if k<=220:return wanted
   if k>700:return self.close(k,wanted,m,hands,current)
   h=hands['right'];tip=m.p('needle_point',[.001,0,0]);axis=m.orientation('pin_arm')[:,0]
+  if np.linalg.norm(m.p('pin_frame')-h['tcp'])>.055:raise RuntimeError('The pin slipped from the native grip; stop this failed development trial.')
   if self.start is None:
    self.start=tip.copy();self.initial_axis=axis.copy();choices=[];direction=np.array([1.,0,0])
    names=[n for n in m.names if n.startswith(('front_','hem_','back_'))]
@@ -82,7 +83,7 @@ class DemoControl:
    def residual(q):
     pp,rr=ik.tcp_pose(q,station.BASES[side]);return np.r_[pp-p,.12*ik._rot_error(targetR,rr),.001*(q-seed)]
    return least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=40).x
-  out=wanted.copy();out[7:13]=self.last_q;out[13]=.04
+  out=wanted.copy();out[7:13]=self.last_q;out[13]=0.
   if k<=740:p=c['left'];targetR=c['leftR'];grip=.7
   elif k<=800:p=mix(c['left'],c['left']+[0,0,.08],740,800);targetR=c['leftR'];grip=.7
   elif k<=880:

@@ -73,7 +73,10 @@ def spawn(prim_path,cfg,translation=None,orientation=None,**kwargs):
     lo,hi=cfgj.get('limits',(1,-1) if axis.startswith('trans') else (-180,180))
     lim=UsdPhysics.LimitAPI.Apply(j.GetPrim(),axis);lim.CreateLowAttr(lo);lim.CreateHighAttr(hi)
     if 'stiffness' in cfgj:
-     d=UsdPhysics.DriveAPI.Apply(j.GetPrim(),axis);d.CreateTypeAttr('force');d.CreateStiffnessAttr(cfgj['stiffness']);d.CreateDampingAttr(cfgj.get('damping',.001));d.CreateTargetPositionAttr(cfgj.get('target',0.));d.CreateMaxForceAttr(cfgj.get('max_force',1e6))
+     # Geometry coefficients are SI torque/radian (and torque*s/radian).
+     # USD angular drives instead use torque/degree; limits/targets stay degrees.
+     units=np.pi/180 if axis.startswith('rot') else 1.
+     d=UsdPhysics.DriveAPI.Apply(j.GetPrim(),axis);d.CreateTypeAttr('force');d.CreateStiffnessAttr(cfgj['stiffness']*units);d.CreateDampingAttr(cfgj.get('damping',.001)*units);d.CreateTargetPositionAttr(cfgj.get('target',0.));d.CreateMaxForceAttr(cfgj.get('max_force',1e6))
   for scene in [p for p in stage.Traverse() if p.IsA(UsdPhysics.Scene)]:PhysxSchema.PhysxSceneAPI.Apply(scene).CreateEnableCCDAttr(True)
  return prim
 
