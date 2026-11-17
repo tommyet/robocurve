@@ -16,7 +16,7 @@ for i,t in enumerate(np.arange(4)*np.pi/2):
 CAP=CIGAR+CQ.apply([0,0,.068])
 BODIES.append(body('cap',CAP,[cylinder(RADIUS,.002)],mass=.0002,color=(.43,.24,.13),quat=list(CQ.as_quat()),friction=.6))
 JOINTS.append(joint('cap_bond','cigar','cap',[0,0,.068],[0,0,0],axes=fixed_axes(),break_force=60.,break_torque=.4))
-CUTTER=np.array([.34,-.12,TABLE+.0245])
+CUTTER=np.array([.34,-.04,TABLE+.0245])
 # A 24 mm opening with a protective housing; handles extend to 82 mm when open.
 BODIES.append(body('cutter',CUTTER,ring(.018,.008,.008,n=24),mass=.018,color=(.12,.15,.18),friction=.8))
 for side in [-1,1]:
