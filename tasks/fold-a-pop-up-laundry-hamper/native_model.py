@@ -8,20 +8,22 @@ class NativeModel:
   self.base=None;self.events=[];self.broken=set();self.disabled=set();self.enabled=set();self.failed=False;self.time=0.;self.release=0.
   self.names=[b['name'] for b in BODIES];self.index={n:i for i,n in enumerate(self.names)}
   self.poses=np.array([b['pos']+b.get('quat',[0,0,0,1]) for b in BODIES]);self.velocities=np.zeros((len(BODIES),6));self.R=np.array([rotation(p[3:]) for p in self.poses])
- def bind_native(self,base):
-  self.base=base
-  import omni.usd
-  from pxr import UsdPhysics,PhysicsSchemaTools
+ def subscribe_events(self):
+  from pxr import PhysicsSchemaTools
   from omni.physx import get_physx_interface
   from omni.physx.bindings._physx import SimulationEvent
-  self.stage=omni.usd.get_context().get_stage()
-  self.joints={p.GetName()[6:]:UsdPhysics.Joint.Get(self.stage,str(p.GetPath())) for p in self.stage.Traverse() if p.GetName().startswith('joint_') and '/materials/' in str(p.GetPath())}
   def native_event(event):
    if event.type==int(SimulationEvent.JOINT_BREAK):
     path=str(PhysicsSchemaTools.decodeSdfPath(*event.payload['jointPath']));name=path.rsplit('/',1)[-1]
     if name.startswith('joint_') and '/materials/' in path:
      name=name[6:];self.broken.add(name);self.events.append(dict(event='native_joint_break',joint=name,time=self.time))
   self.subscription=get_physx_interface().get_simulation_event_stream_v2().create_subscription_to_pop(native_event)
+ def bind_native(self,base):
+  self.base=base
+  import omni.usd
+  from pxr import UsdPhysics
+  self.stage=omni.usd.get_context().get_stage()
+  self.joints={p.GetName()[6:]:UsdPhysics.Joint.Get(self.stage,str(p.GetPath())) for p in self.stage.Traverse() if p.GetName().startswith('joint_') and '/materials/' in str(p.GetPath())}
   self.read()
  def read(self):
   if self.base is None:raise RuntimeError('Native contact simulation required; a CPU plan is not task evidence.')
