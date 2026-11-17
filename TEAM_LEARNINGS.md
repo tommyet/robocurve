@@ -5199,3 +5199,30 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Catching was not developed. Generic airborne catches already appear in [Bi-DexHands](https://github.com/PKU-MARL/DexterousHands#tasks) and [RoboDyna](https://robodyna.github.io/robodyna/); changing the ball size or using arms alone did not clear the user's 30% acceptance threshold. No catching compute was used.
 - One L40S at $1.09/hour handled the batch serially, with immutable run-source snapshots and an independent shutdown watchdog. Setup, debugging, discarded attempts and idle time are included in the conservative **87.8587-minute / $1.5961 GPU estimate**, measured from create request to confirmed stop. This excludes Dream, disk storage and tax and is not an invoice. The 75-minute watchdog was extended during the ribbon correction; actual use ended before the revised deadline. The earlier A40 create attempt failed for lack of capacity and created no Pod.
 - All six final runs, sources, videos and private development records were backed up locally and checked before shutdown. Pod `og8dlvmlej1uh0` was stopped and then **terminated at 11:00:25 UTC**, with a 404 readback and **zero active Pods** in the complete account listing. It had no persistent mounts. The Dream key stayed on the Mac through the official loopback SSH bridge; bridge and tunnel are now closed. There is no remaining GPU job or restart scheduled. Detailed private evidence, lifecycle and cost records are in ignored `artifacts/craft-batch-2026-11-17/`.
+
+### 2026-11-17 — pages, pre-folded plane, wire, eyelets and fresh ideation
+
+- Research only: 639 fresh board records, 2,463 all-state PR titles, current
+  review prompt v24 and relevant public review histories. No GPU, Dream,
+  simulation, task edits or submission. Evidence is ignored under
+  `artifacts/ideation-2026-11-17-pages-plane-wire-eyelet/`; full reasoning and
+  primary links are appended to `docs/task-ideas-followup-2026-11-15.md`.
+- Book-page PR #2222 was finally rejected for dexhand Book Page Turn overlap
+  and a rigid tabbed page. T-Rex also evaluates actual page flipping; flexible
+  paper alone does not establish novelty. Our plane draft has never been
+  submitted. The user now permits considering pre-folds, but the existing
+  IROS 2026 six-fold paper-plane challenge remains a novelty concern. Do not
+  mistake easier simulation for a better acceptance case.
+- No direct paperclip or curtain-eyelet PR found. Paperclip manufacture has
+  a weak relatability case plus existing bending overlap (#991, #994); a real
+  clip must retain paper, not just follow a shape. Distinguish snap-in curtain
+  eyelets (covered snap-fit risk) from metal eyelet setting (tool/force and
+  specialist-importance risks). Hand riveting #1468 was finally rejected partly
+  for failing to establish the specific operation's employment scale.
+- New candidates: strip kale from its stalk; secure a loose trouser hem with
+  a safety pin; apply a water-transfer temporary tattoo; twist-fold a spring
+  mesh hamper; peel a silicone cup off an intact muffin. No direct match found
+  in this search; none is validated. Prioritize kale and safety-pin feasibility,
+  check transfer/practice-skin compatibility before tattoo work, and gate hamper
+  physics early. Muffin release must actually need peeling rather than tipping.
+  BEHAVIOR cook_kale and make_muffins do not require these separation operations.

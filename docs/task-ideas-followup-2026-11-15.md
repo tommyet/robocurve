@@ -1,9 +1,9 @@
 # Follow-up: wrapping, rocking, untangling and five new ideas
 
-Latest research: the [17 November shortlist](#17-november-shortlist-against-live-review-prompt-v24)
-below supersedes the earlier research priorities. It proposes three new scopes;
-none has been built or selected for development. Earlier implementation status
-is historical; use the linked batch record and current PR decisions for status.
+Latest research: [pages, paper planes, wire, eyelets and new opportunities](#17-november-pages-paper-planes-wire-eyelets-and-new-opportunities).
+The earlier ribbon, hoop and garlic shortlist has since been submitted as
+PRs #2459, #2456 and #2455; those receipts are not acceptances. Earlier
+implementation status is historical; use current PR decisions for status.
 
 Implementation update, 16 November: the user selected bracelet fastening,
 present wrapping, pram rocking, knot removal and wax-strip technique for
@@ -596,3 +596,117 @@ is interesting robotics, but that is separate from competition novelty. Keep
 all three out of the paid build queue unless a substantially different ability
 and credible real setup are identified. A task's absence from exact-title
 searches is not clearance, and pilot board ideas are leads, not accepted tasks.
+
+## 17 November: pages, paper planes, wire, eyelets and new opportunities
+
+Research only: refreshed 639 task-board records, all 2,463 upstream PR titles
+and states, relevant public review comments, and the live review prompt (v24).
+Checked the saved 1,016-entry BEHAVIOR catalogue, relevant live definitions,
+primary robotics research and product instructions. No simulation, paid GPU,
+Dream call, task implementation or upstream change. Private evidence is under
+`artifacts/ideation-2026-11-17-pages-plane-wire-eyelet/`.
+
+These ratings are comparative judgments, not calibrated probabilities. They
+assume a reproducible setup, honest contact-driven model, full-score demo and
+practical scoring. No match found is a limited search result, not clearance.
+
+### Four proposed ideas
+
+| Idea | Evidence and viability | Acceptance outlook |
+| --- | --- | --- |
+| Turn pages in a book | [#2222](https://github.com/robocurve/benchmark-tasks/pull/2222#issuecomment-6930309035) was finally rejected: overlap with dexhand Book Page Turn, rigid 1.8 mm leaf, reinforced grasp tab, and mismatched scoring. [T-Rex](https://tactile-reactive-dexterous.github.io/) also evaluates actual page flipping. Thin-page separation from a stack is more faithful but difficult with YAM fingers; no tabs, rigid leaves or automatic page selection. | **Low.** Turning several pages or requesting a page number alone does not resolve the underlying overlap. A real single-sheet separation task would still face established evaluation work. Park. |
+| Paper aeroplane with pre-folds | Our uncreased draft was never submitted: the centre fold failed locally, with excessive stretch. Pre-creases may reduce that difficulty but have not been tested. No direct competition PR found; the [IROS 2026 Origami Challenge](https://robotic-origami-challenge.github.io/) already benchmarks a six-fold paper plane. | **Low.** Ordinary pre-creases are not categorically forbidden, but a fully prepared hinge network removes crease creation and weakens the novelty claim. A single centre crease preserves more work than pre-folding all wings/nose, yet remains close to an existing task. Do not resume solely because implementation would become easier. The user's current permission to consider pre-folds supersedes the earlier strict-uncreased preference for this research. |
+| Bend wire into a paperclip | No direct paperclip-manufacturing PR found. Accepted [tube bending #991](https://github.com/robocurve/benchmark-tasks/pull/991) already tests permanent bending and springback. [Cotter-pin #994](https://github.com/robocurve/benchmark-tasks/pull/994#issuecomment-6819957596) was returned for physically implausible steel bending resistance. Ordinary wire, real pliers and repeated supported bends are plausible in principle; soft craft wire need not make a useful spring clip. | **Low.** Familiar paperclips do not make hand-manufacturing them an everyday activity. A shape trace alone is insufficient: the result must grip and retain paper after release. Tool leverage, yielding and springback need credible forces. Weak importance case, plus overlap with existing bending and our ribbon task. |
+| Put an eyelet in a curtain | No direct curtain-eyelet PR found. [Prym's click eyelets](https://www.prym.com/it/occhielli-per-tende-click-in-diversi-colori) are two plastic parts fitted around a cut hole; [metal eyelets](https://www.prym.com/en/happiness-is-handmade/non-sew-range) use a setting tool. These are materially different tasks. | **Low for a pre-cut snap-in eyelet; conditional for setting a metal eyelet.** The former risks being another covered snap-fit. The latter preserves loose-fabric alignment and permanent crimping, but tool force/access and specialist-work importance are unresolved. [Hand rivet #1468](https://github.com/robocurve/benchmark-tasks/pull/1468#issuecomment-6929581215) was finally rejected partly because its specific work did not establish the jobs threshold. Do not claim all sewing/maintenance workers do curtain eyelets. |
+
+The current [review prompt](https://tasks.robocurve.org/review-prompt) allows
+material-response rules when actual grasp, contact, motion and approximate
+force do the work. It rejects preparations that remove the defining difficulty.
+Judging an accepted simplification from an older task does not establish a
+blanket exemption under the current prompt.
+
+### New shortlist, ranked for further investigation
+
+No direct title/instruction match was found for these five scopes in the fresh
+board/PR search. Their distinctions below must survive implementation; several
+have neighbouring abilities already covered. These are proposals, not validated
+tasks or guaranteed low-cost builds.
+
+1. **Strip the leafy part from a kale stalk and collect it for cooking.**
+   Hold the stalk and strip the leaf using an opposing pinch/pull, leaving the
+   tough stalk out of the bowl. Selective separation along a flexible stem is
+   different from blade peeling or cutting off a branch. Score recovered edible
+   leaf and residual leaf on the stalk, with stem contamination reducing credit;
+   use photos and a kitchen scale, not prescribed stroke counts. A coarse leaf
+   with contact/load-driven tearing could suffice, but leaves must not disappear
+   on proximity. Specify cultivar, size, freshness and reset. **Promising,
+   moderate modelling risk.** [OXO's recipe](https://www.oxo.com/blog/cooking-and-baking/back-pocket-recipe-chicken-caesar-salad-from-oxo-engineer-mack)
+   documents the actual preparation. BEHAVIOR's [cook_kale](https://behavior.stanford.edu/knowledgebase/tasks/cook_kale-0.html)
+   definition does not require removing a stalk; the distinction is the physical
+   separation, not the ingredient. Use societal relatability unless a specific
+   jobs claim can be supported.
+
+2. **Secure a loose trouser hem with a safety pin.**
+   Fold the loose section to the existing hemline, pass an ordinary safety pin
+   through the intended fabric layers and close it with its point protected.
+   The distinct work is controlling two limp layers while puncturing and
+   capturing the sprung point, rather than clipping a rigid part. Score hem
+   retention and alignment, captured layers and the safely enclosed point;
+   reject tearing beyond intended punctures. A photo and gentle specified pull
+   test suffice in principle. **Promising, moderate-to-high implementation risk:**
+   fine tool access and two-arm grasp changes must be checked. No pre-punched
+   holes or enlarged artificial handles. The failure of our seam-unpicking task
+   is a reminder to demonstrate the actual everyday clothing repair and real
+   puncture resistance, not label an abstract swatch a garment.
+
+3. **Apply a water-transfer temporary tattoo to a practice forearm.**
+   Position a normal transfer, hold it still while wetting its backing with a
+   cloth, then remove the backing leaving the picture intact. The proposed skill
+   is transferring a fragile image between carriers while maintaining contact
+   on a curved surface. Score final registration, missing image and distortion
+   with a reference photo. This must differ physically from merely sticking on
+   a label: insufficient wetting, sliding and early removal must lose parts of
+   the image. **Conditional, potentially economical.** First establish that the
+   selected transfer actually adheres to the chosen practice-skin material;
+   silicone compatibility is not proven. [Manufacturer instructions](https://www.ohmytat.com/products/fake-wall-e-temporary-tattoo-sticker)
+   specify wetting and peeling after 30 seconds. Do not infer substrate
+   compatibility or clinical use from those instructions.
+
+4. **Twist-fold a pop-up mesh laundry hamper and secure its folded loops.**
+   Start with a normal open spring-frame hamper; flatten, twist and nest its
+   loops, then secure its own retaining strap. This is elastic buckling and
+   control of stored spring energy, unlike rotating rigid crate panels. Score
+   compact retained size, release stability and whether the frame reopens
+   without damage. **Strong novelty candidate, high modelling/controller risk.**
+   A preprogrammed collapse or rigid hinge surrogate would remove the central
+   work. [Smart Design's ordinary hamper](https://www.shopsmartdesign.com/products/pop-up-laundry-hamper-square-13inch)
+   is 13 by 13 by 21 inches, so workspace clearance needs checking before a
+   build; do not miniaturize it to fit. Product-label folding instructions are
+   transcribed [here](https://www.directionsforme.org/product/140668).
+
+5. **Peel a silicone baking cup away from a muffin without breaking it.**
+   Work the flexible cup down and away while supporting the baked muffin, then
+   leave it intact on a plate. Score full release and retained intact food;
+   partial credit can reflect released area with damage penalties. **Conditional,
+   moderate-to-high modelling risk.** Distinguish progressive cup inversion from
+   accepted ice-tray twisting and build-plate flexing: it cannot be one angle
+   threshold releasing a rigid block. [Ordinary OXO cups](https://www.oxo.com/oxo-gg-silicone-baking-cups-blister.html)
+   are flexible and can be inverted. BEHAVIOR's [make_muffins](https://behavior.stanford.edu/knowledgebase/tasks/make_muffins-0.html)
+   goal creates cooked muffins on a cookie sheet, with no silicone-cup removal.
+   Real cup/muffin adhesion must require manipulation: if tipping alone releases
+   the product, do not artificially forbid that solution or invent stickiness.
+
+**Priority:** investigate kale stripping and safety-pin hem repair first.
+Temporary transfer is a useful lower-mechanics backup after substrate checking.
+Hamper folding has a clearer distinctive capability but should receive a strict
+early feasibility gate rather than an open-ended physics project. Muffin
+demoulding is a reserve because easy release can erase the proposed challenge.
+
+Other screened directions: ponytail fastening with an elastic has no direct
+match found but hair/finger access and entanglement make it a costly reserve;
+flossing [#1341](https://github.com/robocurve/benchmark-tasks/pull/1341) and sterile
+pouch opening [#1278](https://github.com/robocurve/benchmark-tasks/pull/1278) already
+exist and were finally rejected for unrealistic simplifications. They are
+rebuild opportunities, not fresh discoveries. Dumpling folding/pinching is
+already evaluated in [DP3](https://www.roboticsproceedings.org/rss20/p067.pdf) and
+[RoboCook](https://hshi74.github.io/robocook/), so exclude it from this shortlist.
