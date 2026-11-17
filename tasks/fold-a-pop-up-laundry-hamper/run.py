@@ -82,6 +82,8 @@ def main():
    policy=make_policy(requests,sessions);policy.bind(emb.info);policy.reset(Scene(id=HERE.name,instruction=instruction))
   from joint_tracking import JointTracking
   from yam_arena.constants import SHOULDER,WRIST,GRIPPER,FINGER_OPEN
+  from demo_control import DemoControl
+  controller=DemoControl()
   trackers=[JointTracking(side=s) for s in ['left','right']];limit_vector=np.tile([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/20],2)
   report.update(status='running',initial_measurements=m.measure());save()
   for k in range(1,steps+1):
@@ -94,7 +96,8 @@ def main():
       observed.extend(q[arm_ids]);observed.append(float(np.clip(q[finger_ids].mean()/FINGER_OPEN,0,1)))
      obs=np.asarray(observed)
      for tracker in trackers:
-      wanted=tracker.action(wanted,obs,enabled=True)
+      wanted=tracker.action(wanted,obs,enabled=False)
+     wanted=controller.action(k,wanted,m,obs)
    elif policy is not None:
     chunk=policy.act(emb._observation());assert len(chunk.actions)==1;wanted=np.asarray(chunk.actions[0].data,float)
    else:wanted=current.copy()
@@ -106,7 +109,7 @@ def main():
    if not a.cpu_preview:m.draw(drawing)  # Native environment step already renders and updates camera buffers.
    capture(k);report.update(steps=k,measurements=m.measure(),score=m.score())
    if k%20==0:save();trace.flush()
-   if a.mode=='demo' and k==200 and any(m.p('wire_%d_%02d'%(face,end))[2]<.8075 for face in range(4) for end in [5,29]):raise RuntimeError('A frame end slipped from the pickup; stop this development demo before folding.')
+   if a.mode=='demo' and k==200 and any(m.p('wire_%d_%02d'%(face,end))[2]<.8075 for face in range(4) for end in [12,36]):raise RuntimeError('A frame end slipped from the pickup; stop this development demo before folding.')
    if a.mode=='demo' and m.failed:raise RuntimeError('Native task integrity failed; development demo stopped early.')
   report.update(status='complete',events=m.events,score=m.score(),requires_visual_review=True)
  except BaseException as error:
