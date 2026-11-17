@@ -91,6 +91,7 @@ def main():
   from yam_arena.constants import SHOULDER,WRIST,GRIPPER,FINGER_OPEN
   trackers=[JointTracking(side=s) for s in ['left','right']];limit_vector=np.tile([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/20],2)
   report.update(status='running',initial_measurements=m.measure());save()
+  grip_command=None;grip_hold=False
   for k in range(1,steps+1):
    if a.mode=='demo':
     wanted=np.asarray(plan['frames'][k-1]['action14'])
@@ -100,6 +101,12 @@ def main():
       arm_ids,finger_ids=emb._ids[robot_name];q=array(base.scene[robot_name].data.joint_pos)[0]
       observed.extend(q[arm_ids]);observed.append(float(np.clip(q[finger_ids].mean()/FINGER_OPEN,0,1)))
      obs=np.asarray(observed)
+     stage=plan['frames'][k-1]['stage']
+     if stage=='support the muffin':
+      if grip_command is None:grip_command=float(obs[6])
+      if obs[6]-grip_command>=.004:grip_hold=True
+      if not grip_hold:grip_command=max(.68,grip_command-.002)
+     if grip_command is not None and stage not in ['release muffin','withdraw','released outcome']:wanted[6]=grip_command
      for tracker in trackers:
       wanted=tracker.action(wanted,obs,enabled=True)
    elif policy is not None:
@@ -113,6 +120,7 @@ def main():
    if not a.cpu_preview:m.draw(drawing)  # Native environment step already renders and updates camera buffers.
    capture(k);report.update(steps=k,measurements=m.measure(),score=m.score())
    if k%20==0:save();trace.flush()
+   if a.mode=='demo' and k==200 and m.p('muffin')[2]<.832:raise RuntimeError('Muffin was not retained during pickup; stop this development demo before peeling.')
    if a.mode=='demo' and m.failed:raise RuntimeError('Native task integrity failed; development demo stopped early.')
   report.update(status='complete',events=m.events,score=m.score(),requires_visual_review=True)
  except BaseException as error:
