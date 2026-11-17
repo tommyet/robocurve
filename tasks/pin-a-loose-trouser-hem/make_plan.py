@@ -13,4 +13,5 @@ p.add(1,'grip the two fabric layers and pin',{'left':(L,RL,.012),'right':(R,RR,.
 p.add(3,'lift the hem clear of the back of the leg',{'left':(L+[0,0,.008],RL,.012),'right':(R+[0,0,.12],RR,.04)})
 p.add(2,'hold for contact inspection',{})
 p.add(24,'threading path candidate',{})
+p.add(28,'close and release the threaded pin',{})
 print(json.dumps(p.save(Path(__file__).with_name('demo-plan.json'))))

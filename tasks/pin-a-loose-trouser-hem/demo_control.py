@@ -2,10 +2,11 @@
 import numpy as np
 from scipy.optimize import least_squares
 class DemoControl:
- def __init__(self):self.start=None
+ def __init__(self):self.start=None;self.closure=None;self.last_q=None;self.released_at=None
  def action(self,k,wanted,m,hands,current):
   if k<=220:return wanted
   from yam_arena import ik,station
+  if k>700:return self.close(k,wanted,m,hands,current)
   h=hands['right'];tip=m.p('needle_point',[.001,0,0]);axis=m.orientation('pin_arm')[:,0]
   if self.start is None:
    self.start=tip.copy();self.initial_axis=axis.copy()
@@ -32,4 +33,32 @@ class DemoControl:
   def residual(q):
    p,R=ik.tcp_pose(q,station.BASES['right']);return np.r_[p+R@relative_tip-target,.04*(R@relative_axis-desired),.001*(q-seed)]
   sol=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=25)
-  out=wanted.copy();out[7:13]=sol.x;return out
+  out=wanted.copy();out[7:13]=sol.x;self.last_q=sol.x.copy();return out
+
+ def close(self,k,wanted,m,hands,current):
+  from yam_arena import ik,station
+  from scipy.spatial.transform import Rotation
+  if self.closure is None:
+   if not m.measure()['both_layers_held']:raise RuntimeError('Threading incomplete; stop the development demo before attempting closure.')
+   tip=m.p('needle_point',[.001,0,0]);shield=m.p('pin_frame',[.045,0,.002]);z=shield-tip;z/=np.linalg.norm(z)
+   x=np.cross(m.orientation('pin_arm')[:,0],z);x/=np.linalg.norm(x);R=np.column_stack([x,np.cross(z,x),z])
+   self.closure=dict(tip=tip,shield=shield,R=R,left=hands['left']['tcp'].copy(),leftR=hands['left']['rotation'].copy(),right=hands['right']['tcp'].copy(),rightR=hands['right']['rotation'].copy())
+  c=self.closure;R=c['R'];z=R[:,2];near=c['tip']-.030*z+.006*R[:,0];pressed=c['shield']-.006*z+.006*R[:,0]
+  def mix(a,b,start,end):
+   u=np.clip((k-start)/(end-start),0,1);u=u*u*(3-2*u);return a*(1-u)+b*u
+  def solve(side,p,targetR):
+   o=0 if side=='left' else 7;seed=current[o:o+6]
+   def residual(q):
+    pp,rr=ik.tcp_pose(q,station.BASES[side]);return np.r_[pp-p,.12*ik._rot_error(targetR,rr),.001*(q-seed)]
+   return least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=40).x
+  out=wanted.copy();out[7:13]=self.last_q;out[13]=.04
+  if k<=740:p=c['left'];targetR=c['leftR'];grip=.7
+  elif k<=800:p=mix(c['left'],c['left']+[0,0,.08],740,800);targetR=c['leftR'];grip=.7
+  elif k<=880:
+   p=mix(c['left']+[0,0,.08],near,800,880);targetR=ik.slerp_matrix(c['leftR'],R,np.clip((k-800)/80,0,1));grip=0.
+  else:p=mix(near,pressed,880,1000);targetR=R;grip=0.
+  if m.latched and self.released_at is None:self.released_at=k
+  if self.released_at is not None or k>1080:
+   start=self.released_at or 1080;u=np.clip((k-start)/60,0,1);p=pressed-u*.09*z;targetR=R;grip=.7
+   out[7:13]=solve('right',c['right']+[0,-.06*u,.09*u],c['rightR']);out[13]=.7
+  out[:6]=solve('left',p,targetR);out[6]=grip;return out
