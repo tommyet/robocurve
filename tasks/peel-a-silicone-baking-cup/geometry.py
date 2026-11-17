@@ -33,7 +33,11 @@ for i in range(4):
  rel=np.array([0.,0.,.022]);name='crumb_'+str(i)
  points=np.array([[.036*np.sin(p)*np.cos(t),.036*np.sin(p)*np.sin(t),.014*np.cos(p)] for p in np.linspace(0,np.pi,9) for t in np.linspace(i*np.pi/2,(i+1)*np.pi/2,9)])
  points=np.unique(np.round(points,10),axis=0);hull=ConvexHull(points)
- shape=dict(kind='mesh',points=points.tolist(),faces=hull.simplices.tolist(),pos=[0.,0.,0.])
+ faces=[]
+ for face,equation in zip(hull.simplices,hull.equations):
+  a,b,c=points[face]
+  faces.append(face.tolist() if np.dot(np.cross(b-a,c-a),equation[:3])>0 else face[::-1].tolist())
+ shape=dict(kind='mesh',points=points.tolist(),faces=faces,pos=[0.,0.,0.])
  BODIES.append(body(name,C+[0,0,.030]+rel,[shape],mass=.005,color=(.70,.43,.16),exclude=['crumb_'+str(j) for j in range(4) if j!=i],friction=.8))
  axes={**{a:dict(limits=(-.004,.004),stiffness=1000.,damping=.05,max_force=6.) for a in ['transX','transY','transZ']},**{a:dict(limits=(-20,20),stiffness=.01,damping=.0005,max_force=.12) for a in ['rotX','rotY','rotZ']}}
  JOINTS.append(joint('crumb_bond_'+str(i),'muffin',name,rel,[0,0,0],axes=axes,break_force=6.,break_torque=.12))
@@ -54,6 +58,9 @@ for j in JOINTS:
  for axis,cfg in j['axes'].items():
   if axis.startswith('rot') and 'stiffness' in cfg:
    if j['name'].startswith('tab_seam_'):cfg.update(stiffness=.0002,damping=.00001,max_force=.0004)
+   elif j['name'].startswith(('ring_','wall_','base_')):
+    # USD gains are per degree: about 0.00029 N m/rad of passive recovery.
+    cfg.update(stiffness=.000005,damping=.00000002,max_force=.0005)
    elif not j['name'].startswith('crumb_bond_'):cfg.update(stiffness=0.,damping=0.)
 for j in JOINTS:
  if j['name'].startswith(('ring_','wall_','base_')):
