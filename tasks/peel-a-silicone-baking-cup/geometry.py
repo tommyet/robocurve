@@ -1,7 +1,7 @@
 """Jointed silicone walls around a cohesive muffin with peelable adhesion."""
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
-C=np.array([.34,0,TABLE+.008]);N=16
+C=np.array([.34,0,TABLE+.00475]);N=16
 BODIES.append(body('tray',[.34,0,TABLE+.002],[box((.32,.28,.004))],mass=.2,fixed=True,color=(.65,.69,.72)))
 BODIES.append(body('cup_bottom',C,[cylinder(.026,.0015)],mass=.004,color=(.18,.46,.74),friction=.9))
 BODIES.append(body('muffin',C+[0,0,.030],[cylinder(.024,.042,(0,0,-.007))],mass=.025,color=(.63,.38,.14),friction=.65))

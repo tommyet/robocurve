@@ -88,7 +88,11 @@ def main():
    if a.mode=='demo':
     wanted=np.asarray(plan['frames'][k-1]['action14'])
     if not a.cpu_preview:
-     obs=np.asarray(emb._observation().state['joint_pos'])
+     observed=[]
+     for robot_name in ['left_robot','right_robot']:
+      arm_ids,finger_ids=emb._ids[robot_name];q=array(base.scene[robot_name].data.joint_pos)[0]
+      observed.extend(q[arm_ids]);observed.append(float(np.clip(q[finger_ids].mean()/FINGER_OPEN,0,1)))
+     obs=np.asarray(observed)
      for tracker in trackers:
       wanted=tracker.action(wanted,obs,enabled=True)
    elif policy is not None:
@@ -99,7 +103,7 @@ def main():
    current=current+np.clip(wanted-current,-limit_vector,limit_vector)
    if not a.cpu_preview:emb._env.step(torch.as_tensor(current[None,:],device=base.device,dtype=torch.float32));emb._t=k/20
    m.update(hands())
-   if not a.cpu_preview:m.draw(drawing);refresh()
+   if not a.cpu_preview:m.draw(drawing)  # Native environment step already renders and updates camera buffers.
    capture(k);report.update(steps=k,measurements=m.measure(),score=m.score())
    if k%20==0:save();trace.flush()
    if a.mode=='demo' and m.failed:raise RuntimeError('Native task integrity failed; development demo stopped early.')

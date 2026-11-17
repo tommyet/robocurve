@@ -15,8 +15,8 @@ for side in [-1,1]:
   pts=[[side*.020,(ARM_RADIUS+.0002)*np.sin(t),(ARM_RADIUS+.0002)*np.cos(t)] for t in [a,b]]
   line=rod_between(*pts,.00025);line.update(collision=False,color=(.12,.12,.12));forearm['shapes'].append(line)
 
-NX,NY=10,8;DX=DY=.005;PAPER=np.array([.34,.13,TABLE+.0103])
-BODIES.append(body('paper_rest',[.34,.13,TABLE+.005],[box((.030,.020,.010))],mass=.02,fixed=True,color=(.55,.63,.69)))
+NX,NY=10,8;DX=DY=.005;PAPER=np.array([.34,.13,TABLE+.0303])
+BODIES.append(body('paper_rest',[.34,.13,TABLE+.015],[box((.030,.020,.030))],mass=.02,fixed=True,color=(.55,.63,.69)))
 PATTERN=['0110110','1111111','1111111','0111110','0011100','0001000'];INK=[]
 for i in range(NX):
  for j in range(NY):
