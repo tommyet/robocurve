@@ -51,7 +51,7 @@ def spawn(prim_path,cfg,translation=None,orientation=None,**kwargs):
    if kind=='mesh':UsdPhysics.MeshCollisionAPI.Apply(g.GetPrim()).CreateApproximationAttr('convexHull')
    collision=PhysxSchema.PhysxCollisionAPI.Apply(g.GetPrim());collision.CreateContactOffsetAttr(spec.get('contact_offset',.00025));collision.CreateRestOffsetAttr(0.)
    bind_physics_material(label,mat,stage=stage)
-  visual=label+'/material';v=sim.PreviewSurfaceCfg(diffuse_color=shape.get('color',spec.get('color',(.5,.5,.5))),roughness=.6);v.func(visual,v);bind_visual_material(label,visual,stage=stage)
+  visual=label+'/material';v=sim.PreviewSurfaceCfg(diffuse_color=tuple(map(float,shape.get('color',spec.get('color',(.5,.5,.5))))),roughness=.6);v.func(visual,v);bind_visual_material(label,visual,stage=stage)
  adjacent=[Sdf.Path(root+'/'+j['b']) if j['a']==spec['name'] else Sdf.Path(root+'/'+j['a']) for j in JOINTS if spec['name'] in (j['a'],j['b']) and j.get('enabled',True) and not j.get('collision',False)]
  adjacent.extend(Sdf.Path(root+'/'+name) for name in spec.get('exclude',[]))
  if adjacent:UsdPhysics.FilteredPairsAPI.Apply(prim).CreateFilteredPairsRel().SetTargets(adjacent)
