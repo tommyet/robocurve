@@ -5266,3 +5266,14 @@ editing, merge both agents' findings, and commit/push the update with the work.
   fragile removal must preserve the cooking skill. PR447's rigid-bead egg
   rejection is direct evidence against cosmetic food proxies. No full chemistry
   model is required, but a timer-triggered rigid egg would erase the task.
+
+### 2026-11-17 — clarify external benchmark novelty
+
+- Current review prompt expressly compares external suites, including ones not
+  named in the checklist. A matching manipulation and equivalent success
+  condition matter; a similar verb or prior paper alone is not an automatic ban.
+- SPARTA is evidence of mashing overlap, not a confirmed organizer rejection or
+  confirmed entry in the indexed comparison corpus. Reclassify the idea as a
+  conditional candidate with unresolved novelty risk. Its built-in pressing
+  primitive is relevant when comparing task scope, but routine added steps or
+  swapping potato for avocado do not establish novelty by themselves.

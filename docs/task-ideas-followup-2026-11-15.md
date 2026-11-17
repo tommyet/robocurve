@@ -795,8 +795,8 @@ Research only: fresh 642-record board, all-state PR search, related reviews and
 primary research. No direct mashing/guacamole/poaching submission found; absence
 from search is not a novelty guarantee. No GPU, Dream, simulation or task build.
 
-**Mashing potato or avocado: technically plausible, low acceptance prospects
-because of prior robotics evaluation.** [SPARTA, ICRA 2026](https://arxiv.org/html/2509.24129v2#S5)
+**Mashing potato or avocado: technically plausible, with substantial but
+unresolved external-benchmark novelty risk.** [SPARTA, ICRA 2026](https://arxiv.org/html/2509.24129v2#S5)
 evaluates mashing food into a puree-like consistency and explicitly uses avocado
 and banana as examples; potato mashing is discussed in its introduction. It
 uses tool presses and visual progress toward transformed food. Clay proxies are
@@ -815,8 +815,19 @@ peppercorns remained whole. Score remaining lumps and retained food, using a
 reproducible photo/sample procedure, not hidden cumulative stroke distance.
 [PR2046](https://github.com/robocurve/benchmark-tasks/pull/2046#issuecomment-6927012837)
 was finally rejected for insufficient relatability, so kitchen relevance alone
-does not guarantee acceptance. Park simple mashing; retain avocado pitting as
-the more distinct candidate from the preceding section.
+does not guarantee acceptance. Keep mashing as a conditional candidate rather
+than excluding it solely because of a paper; avocado pitting currently has a
+clearer distinction.
+
+Clarification after checking the current review prompt: external benchmarks do
+count, including suites outside the named examples, but a matching verb or an
+existing research paper is not an automatic exclusion. The rule requires the
+same ability and equivalent success condition. SPARTA is meaningful overlap
+evidence, but we have not established that it is indexed in the review corpus
+or found an organizer decision excluding our proposed mashing task. Its
+position-selection policy uses a built-in pressing primitive, so a fair
+comparison must distinguish that setup from a proposed full manipulation task;
+the extra work must itself be meaningful, not just additional routine steps.
 
 **Poaching an egg: potentially distinct, but high implementation risk and low
 confidence as a quick submission.** The meaningful activity is gently releasing
