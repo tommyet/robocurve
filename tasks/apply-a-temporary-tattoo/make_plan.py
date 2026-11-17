@@ -13,7 +13,7 @@ p.add(2,'lift the paper',{'left':(L+[0,0,.10],RL,0.),'right':(Q+[0,0,.10],RR,.35
 T=ARM+[0,.0175,.028]-.008*RL[:,2];S=ARM+[0,0,ARM_RADIUS+.018]-.008*RR[:,2]
 p.add(3,'place image against the curved form',{'left':(T,RL,0.),'right':(S+[0,0,.05],RR,.35)})
 p.add(2,'press the wet sponge onto the backing',{'right':(S+[0,0,-.008],RR,.35)})
-p.add(31,'hold even wet contact',{})
+p.add(38,'hold even wet contact',{})
 p.add(2,'lift sponge after wetting',{'right':(S+[0,0,.07],RR,.35)})
 p.add(4,'peel the backing steadily',{'left':(T+[0,.07,.06],RL,0.)})
 p.add(3,'return sponge and removed backing',{'left':(L+[0,0,.04],RL,0.),'right':(Q,RR,.35)})

@@ -20,11 +20,13 @@ for face in range(4):
  points=np.c_[P,np.full(N,face*.004)]+CENTER;FRAMES.append(points)
  for i in range(N):
   a,b=points[i],points[(i+1)%N];v=b-a;length=np.linalg.norm(v);x=v/length;z=np.array([0,0,1]);y=np.cross(z,x);R=np.column_stack([x,y,z]);name=f'wire_{face}_{i:02d}'
-  BODIES.append(body(name,(a+b)/2,[box((length,.004,.00045))],mass=8000*length*.004*.00045,color=(.13,.29,.44),quat=list(Rotation.from_matrix(R).as_quat()),friction=.8,contact_offset=.0001))
+  BODIES.append(body(name,(a+b)/2,[box((length,.008,.003))],mass=8000*length*.004*.00045+300*length*.008*.003,color=(.13,.29,.44),quat=list(Rotation.from_matrix(R).as_quat()),friction=1.,contact_offset=.0001))
  for i in range(N):
   a=f'wire_{face}_{i:02d}';b=f'wire_{face}_{(i+1)%N:02d}';aa=next(q for q in BODIES if q['name']==a);bb=next(q for q in BODIES if q['name']==b)
   axes={k:dict(limits=(-179,179),stiffness=s,damping=.0005) for k,s in [('rotX',.006),('rotY',.008),('rotZ',.30)]}
   JOINTS.append(joint(f'wire_joint_{face}_{i}',a,b,[aa['shapes'][0]['size'][0]/2,0,0],[-bb['shapes'][0]['size'][0]/2,0,0],axes=axes,break_force=100.,break_torque=1.5))
+# Each steel frame has a sewn 8 mm wide, 3 mm thick polyester binding.
+# The binding supplies its native collision/grip surface; spring mechanics remain steel.
 # Coarse flexible fabric panels span the frames. Native panels collide and fold.
 NX,NY=6,10;DX=.31/NX;DY=.51/NY
 for face in range(4):

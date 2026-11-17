@@ -34,14 +34,16 @@ class Model(NativeModel):
     if abs(q[0])<.006 and abs(q[1])<.006 and abs(q[2]+.005)<.0007:pressure+=load[i]
    tack='tack_'+name
    if on_arm and pressure>.03 and name not in self.lost:
-    if tack not in self.enabled:
-     j=self.joints[tack];j.GetLocalPos0Attr().Set(Gf.Vec3f(*local));j.GetLocalPos1Attr().Set(Gf.Vec3f(*INK_BODY[name][1]));self.contact_uv[name]=local.copy();self.enable(tack,'pressed_adhesive_contact')
-    if tack not in self.broken:self.wet[name]+=dt
-   if self.wet[name]>=30. and tack not in self.broken:self.joints[tack].GetBreakForceAttr().Set(.015)
-   if tack in self.broken and name not in self.transferred and name not in self.lost:
-    if self.wet[name]>=30.:
-     self.transferred[name]=self.contact_uv[name].copy();self.events.append(dict(event='wet_image_transferred',patch=name,time=self.time))
-    else:self.lost.add(name);self.events.append(dict(event='backing_lifted_before_transfer',patch=name,time=self.time))
+    self.wet[name]+=dt
+    # The coating becomes adhesive after actual wet contact. Before wetting,
+    # paper is supported by sponge contact, not glued rigidly onto the form.
+    if self.wet[name]>=30. and tack not in self.enabled:
+     j=self.joints[tack];j.GetLocalPos0Attr().Set(Gf.Vec3f(*local));j.GetLocalPos1Attr().Set(Gf.Vec3f(*INK_BODY[name][1]));j.GetBreakForceAttr().Set(.015)
+     self.contact_uv[name]=local.copy();self.enable(tack,'wetted_coating_adhesive_contact')
+   if 0.<self.wet[name]<30. and abs(radius-ARM_RADIUS)>.003 and name not in self.lost:
+    self.lost.add(name);self.events.append(dict(event='backing_lifted_before_transfer',patch=name,time=self.time))
+   if tack in self.broken and name not in self.transferred:
+    self.transferred[name]=self.contact_uv[name].copy();self.events.append(dict(event='wet_image_transferred',patch=name,time=self.time))
   self.failed |= any(n.startswith(('sheet_','compression_')) for n in self.broken)
  def measure(self):
   from geometry import BODIES,PAPER
