@@ -28,7 +28,9 @@ class Plan:
      q,pe,re=ik.solve(p0+u*(p-p0),ik.matrix_to_quat_xyzw(ik.slerp_matrix(R0,R,u)),self.a[o:o+6],base_pos=station.BASES[side],iters=80);self.a[o:o+6]=q;errors=[max(errors[0],float(pe)),max(errors[1],float(re))]
     self.a[o+6]=b[o+6]+u*(g-b[o+6])
    self.frames.append(dict(action14=self.a.tolist(),stage=label))
-  self.audit.append(dict(stage=label,position_error_m=errors[0],rotation_error_rad=errors[1]));return self
+  self.audit.append(dict(stage=label,position_error_m=errors[0],rotation_error_rad=errors[1]))
+  if errors[0]>.015:raise ValueError((label,'path unreachable',errors))
+  return self
  def save(self,path):
   import json
   from yam_arena.constants import READY,SHOULDER,WRIST,GRIPPER,FINGER_OPEN
