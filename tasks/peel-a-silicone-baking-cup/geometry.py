@@ -10,7 +10,7 @@ for i,t in enumerate(np.arange(N)*2*np.pi/N):
  radial=np.array([np.sin(t),np.cos(t),0]);q=Rotation.from_euler('z',-t).as_quat()
  for row in range(2):
   r=.026+row*.004;z=.010+row*.018;name=f'cup_{row}_{i:02d}'
-  BODIES.append(body(name,C+radial*r+[0,0,z],[box((2*r*np.tan(np.pi/N),.0015,.020))],mass=.0007,color=(.18,.46,.74),quat=list(q),friction=.9))
+  BODIES.append(body(name,C+radial*r+[0,0,z],[box((2*r*np.tan(np.pi/N),.0015,.020))],mass=.0007,color=(.18,.46,.74),quat=list(q),friction=.9,exclude=[f'cup_{rr}_{jj:02d}' for rr in range(2) for jj in [(i-1)%N,i,(i+1)%N] if (rr,jj)!=(row,i)]))
   if row==0:
    JOINTS.append(joint('base_'+str(i),'cup_bottom',name,radial*.026,[0,0,-.010],q0=list(q),axes=bend_axes(.00002,.000008,179),break_force=20.))
   else:
@@ -28,7 +28,7 @@ JOINTS.append(joint('bottom_adhesion','muffin','cup_bottom',[0,0,-.030],[0,0,0],
 
 for i,t in enumerate(np.arange(4)*np.pi/2):
  rel=np.array([.016*np.sin(t),.016*np.cos(t),.017]);name='crumb_'+str(i)
- BODIES.append(body(name,C+[0,0,.030]+rel,[sphere((.020,.020,.017))],mass=.005,color=(.70,.43,.16)))
+ BODIES.append(body(name,C+[0,0,.030]+rel,[sphere((.020,.020,.017))],mass=.005,color=(.70,.43,.16),exclude=['crumb_'+str(j) for j in range(4) if j!=i]))
  JOINTS.append(joint('crumb_bond_'+str(i),'muffin',name,rel,[0,0,0],axes=fixed_axes(),break_force=6.,break_torque=.04))
 for row in range(2):
  a=next(b for b in BODIES if b['name']==f'cup_{row}_{N-1:02d}');b=next(b for b in BODIES if b['name']==f'cup_{row}_00')

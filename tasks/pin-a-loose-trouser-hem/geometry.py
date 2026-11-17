@@ -1,12 +1,12 @@
 """Flexible trouser cuff with a loose turned hem and an open sprung safety pin."""
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
-NX,NY=9,10;DX,DY=.020,.024;C=np.array([.34,0,TABLE+.006]);HEM=[]
+NX,NY=18,10;DX,DY=.010,.024;C=np.array([.34,.12,TABLE+.006]);HEM=[]
 # Both faces of a real flattened tubular leg, with a previously turned 20 mm hem.
 for layer in ['front','back']:
  for i in range(NX):
   for j in range(NY):
-   name=f'{layer}_{i}_{j}';pos=C+[(i-4)*DX,(j-4.5)*DY,0 if layer=='front' else -.003]
+   name=f'{layer}_{i}_{j}';pos=C+[(i-(NX-1)/2)*DX,(j-4.5)*DY,0 if layer=='front' else -.003]
    BODIES.append(body(name,pos,[box((DX*.99,DY*.99,.001))],mass=.0005,color=(.13,.19,.26),friction=.8))
    for di,dj in [(-1,0),(0,-1)]:
     if i+di>=0 and j+dj>=0:
@@ -15,11 +15,15 @@ for j in range(NY):
  for i in [0,NX-1]:JOINTS.append(joint(f'side_seam_{i}_{j}',f'front_{i}_{j}',f'back_{i}_{j}',[0,0,-.0015],[0,0,.0015],axes=bend_axes(.000004,.000002),break_force=20.))
 for i in range(NX):
  for j in range(2):
-  name=f'hem_{i}_{j}';pos=C+[(i-4)*DX,-.115+j*.010,-.0015];HEM.append(name)
+  name=f'hem_{i}_{j}';pos=C+[(i-(NX-1)/2)*DX,-.115+j*.010,.0015];HEM.append(name)
   BODIES.append(body(name,pos,[box((DX*.99,.0099,.001))],mass=.00025,color=(.16,.22,.30),friction=.8))
-  if j==0:JOINTS.append(joint('fold_'+str(i),f'front_{i}_0',name,[0,-.012,-.00075],[0,-.005,.00075],axes=bend_axes(.000003,.000001),break_force=10.))
+  if j==0:JOINTS.append(joint('fold_'+str(i),f'front_{i}_0',name,[0,-.012,.00075],[0,-.005,-.00075],axes=bend_axes(.000003,.000001),break_force=10.))
   else:JOINTS.append(joint('hem_across_'+str(i),f'hem_{i}_0',name,[0,.005,0],[0,-.005,0],axes=bend_axes(.000002,.000001),break_force=10.))
   if i:JOINTS.append(joint(f'hem_along_{i}_{j}',f'hem_{i-1}_{j}',name,[DX/2,0,0],[-DX/2,0,0],axes=bend_axes(.000002,.000001),break_force=10.))
+# Only the central 60 mm is loose; original stitching supports the rest of the hem.
+for i in range(NX):
+ if not 6<=i<12:
+  JOINTS.append(joint('existing_stitch_'+str(i),f'front_{i}_0',f'hem_{i}_1',[0,.003,.0015],[0,0,0],axes=bend_axes(.000002,.000001),break_force=12.))
 # Commercial-size 50 mm steel safety pin. Spring hinge is open at rest.
 PIN=np.array([.46,-.11,TABLE+.004]);Q=Rotation.from_euler('z',90,degrees=True)
 BODIES.append(body('pin_frame',PIN,[rod_between([0,0,0],[.045,0,0],.00065),cylinder(.003,.0015,quat=Rotation.from_euler('y',90,degrees=True).as_quat()),box((.007,.005,.002),(.045,0,.002))],mass=.0018,color=(.7,.72,.74),quat=list(Q.as_quat()),friction=.8,contact_offset=.00005))
@@ -34,6 +38,6 @@ JOINTS.append(joint('point_compression','pin_arm','needle_point',[.044,0,0],[0,0
 JOINTS.append(joint('pin_catch','pin_frame','pin_arm',[.043,0,.001],[.043,0,0],axes=fixed_axes(),enabled=False,break_force=15.,break_torque=.10))
 for b in list(BODIES):
  if b['name'].startswith(('front_','back_','hem_')):
-  axes=fixed_axes();axes['transX']=dict(limits=(-.043,.001),stiffness=0.,damping=.05,max_force=.5)
+  axes=bend_axes(0.,.000001,179);axes['transY']=dict(limits=(1,-1));axes['transZ']=dict(limits=(1,-1));axes['transX']=dict(limits=(-.043,.001),stiffness=0.,damping=.05,max_force=.5)
   JOINTS.append(joint('hole_'+b['name'],'pin_arm',b['name'],[.045,0,0],[0,0,0],axes=axes,enabled=False,break_force=3.,break_torque=.02))
 finalize(BODIES,JOINTS)
