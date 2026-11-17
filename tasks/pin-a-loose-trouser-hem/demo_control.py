@@ -30,6 +30,6 @@ class DemoControl:
   desired=axis+.10*(goalaxis-axis);desired/=np.linalg.norm(desired)
   seed=current[7:13]
   def residual(q):
-   p,R=ik.tcp_pose(q,station.BASES['right']);return np.r_[p+R@relative_tip-target,.06*(R@relative_axis-desired),.0002*(q-seed)]
-  sol=least_squares(residual,seed,bounds=(ik.LOWER,ik.UPPER),max_nfev=25)
+   p,R=ik.tcp_pose(q,station.BASES['right']);return np.r_[p+R@relative_tip-target,.04*(R@relative_axis-desired),.004*(q-seed)]
+  sol=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.035),np.minimum(ik.UPPER,seed+.035)),max_nfev=25)
   out=wanted.copy();out[7:13]=sol.x;return out
