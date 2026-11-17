@@ -16,18 +16,18 @@ for side in [-1,1]:
   line=rod_between(*pts,.00025);line.update(collision=False,color=(.12,.12,.12));forearm['shapes'].append(line)
 
 NX,NY=10,12;DX=DY=.005;PAPER=np.array([.34,.13,TABLE+.0303])
-BODIES.append(body('paper_rest',[.34,.13,TABLE+.015],[box((.030,.036,.030))],mass=.02,fixed=True,color=(.55,.63,.69)))
+BODIES.append(body('paper_rest',[.34,.13,TABLE+.015],[box((.030,.040,.030))],mass=.02,fixed=True,color=(.55,.63,.69)))
 PATTERN=['0110110','1111111','1111111','0111110','0011100','0001000'];INK=[];INK_BODY={};INK_ORIGINAL={}
 # Twelve full-width paper bands retain the bending needed around the forearm.
 # The printed coating is finer than the collision discretization.
 for j in range(NY):
- name=f'paper_band_{j}';y=(j-(NY-1)/2)*DY;shapes=[box((NX*DX,DY*.98,.00060 if j==NY-1 else .00030))]
+ name=f'paper_band_{j}';y=(j-(NY-1)/2)*DY;shapes=[box((NX*DX,DY*.98,.00030))]
  for i in range(NX):
   x=(i-(NX-1)/2)*DX;ink=1<=i<=7 and 3<=j<=8 and PATTERN[j-3][i-1]=='1'
   if ink:
    patch=f'paper_{i}_{j}';INK.append(patch);INK_BODY[patch]=(name,[x,0,0],len(shapes));INK_ORIGINAL[patch]=[x,y]
    shape=box((DX*.95,DY*.95,.00004),(x,0,-.00017),(.8,.03,.05));shape['collision']=False;shapes.append(shape)
- BODIES.append(body(name,PAPER+[0,y,0],shapes,mass=(.000120 if j==NY-1 else .000060),color=(.95,.93,.85),friction=1.,contact_offset=.00003,linear_damping=.5,angular_damping=2.))
+ BODIES.append(body(name,PAPER+[0,y,0],shapes,mass=.000060,color=(.95,.93,.85),friction=.6,contact_offset=.00003,linear_damping=.5,angular_damping=2.))
  if j:
   axes=fixed_axes();axes['rotX']=dict(limits=(-120,120),stiffness=.00002,damping=.000000001)
   JOINTS.append(joint('sheet_'+str(j),f'paper_band_{j-1}',name,[0,DY/2,0],[0,-DY/2,0],axes=axes,break_force=3.,break_torque=.02))
