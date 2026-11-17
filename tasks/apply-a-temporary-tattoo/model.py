@@ -31,7 +31,7 @@ class Model(NativeModel):
    for i in range(PADCOUNT):
     q=self.orientation('sponge_pad_'+str(i)).T@(p-self.p('sponge_pad_'+str(i)))
     # Actual paper lies against the loaded underside of this sponge pad.
-    if abs(q[0])<.006 and abs(q[1])<.006 and abs(q[2]+.0015)<.0007:pressure+=load[i]
+    if abs(q[0])<.006 and abs(q[1])<.006 and abs(q[2]+.005)<.0007:pressure+=load[i]
    tack='tack_'+name
    if on_arm and pressure>.03 and name not in self.lost:
     if tack not in self.enabled:

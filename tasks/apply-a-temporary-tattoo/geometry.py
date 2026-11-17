@@ -33,14 +33,14 @@ for j in range(NY):
   JOINTS.append(joint('sheet_'+str(j),f'paper_band_{j-1}',name,[0,DY/2,0],[0,-DY/2,0],axes=axes,break_force=3.,break_torque=.02))
 for patch,(name,offset,index) in INK_BODY.items():
  JOINTS.append(joint('tack_'+patch,'forearm',name,[0,0,ARM_RADIUS],offset,axes=bend_axes(0.,0.),break_force=.20,enabled=False,collision=True))
-SPONGE=np.array([.34,-.16,TABLE+.019])
+SPONGE=np.array([.34,-.16,TABLE+.025])
 BODIES.append(body('sponge',SPONGE,[box((.040,.040,.015))],mass=.012,color=(.85,.67,.16),friction=.9))
 PADCOUNT=16
 for i,(x,y) in enumerate([(x,y) for x in [-.015,-.005,.005,.015] for y in [-.015,-.005,.005,.015]]):
- name='sponge_pad_'+str(i);rel=np.array([x,y,-.009])
- BODIES.append(body(name,SPONGE+rel,[box((.010,.010,.003))],mass=.00075,color=(.87,.71,.20),friction=.8))
- axes=fixed_axes();axes['transZ']=dict(limits=(-.001,.007),stiffness=100.,damping=.2)
- for axis in ['rotX','rotY']:axes[axis]=dict(limits=(-45,45),stiffness=.0001,damping=.0001)
+ name='sponge_pad_'+str(i);rel=np.array([x,y,-.0125])
+ BODIES.append(body(name,SPONGE+rel,[box((.010,.010,.010))],mass=.00075,color=(.87,.71,.20),friction=.8,exclude=['sponge_pad_'+str(j) for j in range(PADCOUNT) if j!=i]))
+ axes=fixed_axes();axes['transZ']=dict(limits=(-.001,.011),stiffness=100.,damping=.2)
+ for axis in ['rotX','rotY']:axes[axis]=dict(limits=(-45,45),stiffness=.000001,damping=.000005)
  JOINTS.append(joint('compression_'+str(i),'sponge',name,rel,[0,0,0],axes=axes,break_force=30.))
 BODIES.append(body('sponge_dish',[.34,-.16,TABLE+.003],[box((.070,.070,.006))]+[box((.070,.003,.015),(0,s*.034,.006)) for s in [-1,1]]+[box((.003,.070,.015),(s*.034,0,.006)) for s in [-1,1]],mass=.08,color=(.65,.73,.80)))
 finalize(BODIES,JOINTS)

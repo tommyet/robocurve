@@ -65,4 +65,10 @@ for j in JOINTS:
 BODIES.append(body('sewing_support',[.34,.144,TABLE+.014],[box((.140,.200,.020))],mass=.25,fixed=True,color=(.62,.43,.25)))
 for b in BODIES:
  if b['name'].startswith(('front_','back_','hem_')) or b['name']=='sewing_support':b['pos'][1]-=.15
+# Small passive seam compliance avoids impulse spikes in the closed cloth grid.
+for j in JOINTS:
+ if j['name'].startswith(('cloth_','side_seam_','fold_','hem_','existing_stitch_')):
+  for axis in ['transX','transY','transZ']:j['axes'][axis]=dict(limits=(-.0005,.0005),stiffness=100.,damping=.05)
+  for axis in ['rotX','rotY','rotZ']:
+   if 'stiffness' in j['axes'][axis]:j['axes'][axis].update(max_force=.00005)
 finalize(BODIES,JOINTS)

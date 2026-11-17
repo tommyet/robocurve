@@ -10,6 +10,6 @@ L=np.array([.315,.115,TABLE+.027])-.008*RL[:,2];R=PIN-.008*RR[:,2]
 p.add(3,'approach the loose hem and pin coil',{'left':(L+[0,.03,.03],RL,.25),'right':(R+[0,0,.10],RR,.4)},'joint')
 p.add(2,'enclose the turned hem and coil',{'left':(L,RL,.25),'right':(R,RR,.4)})
 p.add(1,'grip the two fabric layers and pin',{'left':(L,RL,.012),'right':(R,RR,.04)})
-p.add(3,'lift the hem clear of the back of the leg',{'left':(L+[0,0,.05],RL,.012),'right':(R+[0,0,.12],RR,.04)})
+p.add(3,'lift the hem clear of the back of the leg',{'left':(L+[0,0,.008],RL,.012),'right':(R+[0,0,.12],RR,.04)})
 p.add(2,'hold for contact inspection',{})
 print(json.dumps(p.save(Path(__file__).with_name('demo-plan.json'))))
