@@ -84,9 +84,12 @@ def main():
   from yam_arena.constants import SHOULDER,WRIST,GRIPPER,FINGER_OPEN
   trackers=[JointTracking(side=s) for s in ['left','right']];limit_vector=np.tile([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/20],2)
   report.update(status='running',initial_measurements=m.measure());save()
+  if a.mode=='demo':
+   from demo_control import DemoControl
+   controller=DemoControl()
   for k in range(1,steps+1):
    if a.mode=='demo':
-    wanted=np.asarray(plan['frames'][k-1]['action14'])
+    wanted=np.asarray(plan['frames'][k-1]['action14']);wanted=controller.action(k,wanted,m,hands(),current)
     if not a.cpu_preview:
      observed=[]
      for robot_name in ['left_robot','right_robot']:

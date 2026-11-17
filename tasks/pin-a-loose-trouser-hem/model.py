@@ -17,7 +17,7 @@ class Model(NativeModel):
      j=self.joints['hole_'+name];anchor=self.orientation('pin_arm').T@(tip-self.p('pin_arm'))
      j.GetLocalPos0Attr().Set(Gf.Vec3f(*anchor));j.GetLocalPos1Attr().Set(Gf.Vec3f(*local))
      q=Rotation.from_matrix(self.orientation(name).T@self.orientation('pin_arm')).as_quat();j.GetLocalRot1Attr().Set(Gf.Quatf(float(q[3]),Gf.Vec3f(*q[:3])))
-     self.exclude_collision('needle_point',name)
+     self.exclude_collision('needle_point',name);self.exclude_collision('pin_arm',name)
      self.enable('hole_'+name,'needle_punctured_under_load');self.holes[name]=local.copy()
   shield=self.p('pin_frame',[.045,0,.002]);gap=np.linalg.norm(tip-shield)
   relative=self.orientation('pin_frame').T@self.orientation('pin_arm');angle=np.arccos(np.clip((np.trace(relative)-1)/2,-1,1))
