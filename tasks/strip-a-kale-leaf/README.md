@@ -1,41 +1,39 @@
 # Strip a kale leaf from its stalk
 
-Strip the kale leaf from its tough stalk. Leave the usable leaf on the board and the stalk separate.
+Strip the edible leaf from a tough kale stalk, keeping the leaf on the board. One hand holds the bare stalk while the other strips the leaf. The score measures how much usable leaf is recovered, with zero credit for breaking the stalk.
 
-**Development draft. No native success, Dream score, media upload or submission readiness is claimed.**
+## Setup and judging
 
-Preparing kale means separating edible leaf tissue from its fibrous stalk without throwing the leaf away with it.
+Use one fresh Tuscan kale leaf, 250–290 mm long and about 80 mm wide, with a 5–6 mm stalk and 45 mm of bare stalk. Lay it flat on a 320 × 340 × 20 mm wooden board, bare stalk toward the left arm. Use washable food-safe gripper covers. The simulated board is centred at `(0.34, 0, 0.7575)` metres; its upper surface is 20 mm above the standard YAM table. `geometry.py` specifies the fixed layout.
 
-## Setup and reset
+Use a fresh leaf from the same batch each trial, washed and patted dry. Photograph it on a centimetre grid before restoring the starting layout. After a trial, spread the detached pieces on the grid and compare their area with the original leaf:
 
-One fresh kale leaf, about 270 mm long and 80 mm wide, with a 5–6 mm stalk and 45 mm of bare stalk at its base; a 320 x 340 x 20 mm wooden chopping board. The leaf lies flat, stalk base toward the left arm, tip toward the right. Both hands start open. Use washable food-safe pad covers.
+- **1.0:** at least 90% stripped and retained on the board, intact stalk at least 20 mm clear of the leaf, and both hands released for three seconds.
+- **0.5:** at least 75% stripped and retained.
+- **0.25:** at least 50% stripped and retained.
+- **0:** all other outcomes, including any broken stalk.
 
-Choose fresh mature curly kale from one batch, 250–290 mm long, with an intact stalk and no missing leaf patches. Trim the bare stalk to 45 mm; wash and pat dry. Photograph it on the grid, then restore the fixed layout. Use a fresh leaf each trial.
+Detached leaf outside the board earns no credit. Leaf fragments can count as recovered food; a torn stalk cannot. Photos and a ruler are sufficient for real judging.
 
-`geometry.py` records every simulated part, dimension, mass, fixed coordinate and passive joint. The starting photograph must be captured from the final native reset before submission.
+## Simulation
 
-## Judging
+The stalk and leaf are connected, colliding bodies with passive bending joints. Weaker leaf–stalk bonds break under load. Leaf fragments remain physical objects and can fall, slip or be discarded. The score weights patches by their original area. Material stiffness and tear loads are engineering approximations, not measurements of a particular leaf.
 
-1.0 if at least 90% of the leaf area has been stripped and retained on the board, the intact stalk is at least 2 cm clear of the leaf, and both hands have released for three seconds. 0.5 for at least 75% stripped and retained; 0.25 for at least 50% stripped and retained on the board. Otherwise 0. A broken stalk mixed into the leaf scores 0. Compare before/after photographs on a centimetre grid.
+Both arms use ordinary YAM joint commands and contact grasps. Nothing attaches a leaf or stalk to a hand, and the controller never moves objects directly. The scripted demo and Dream trial use the same geometry, material model and scorer. Dream receives only the standard overhead and wrist RGB views and joint observations; extra cameras record judging views.
 
-## Simulation and limits
+## Run and score
 
-Native contact grips a jointed stalk and flexible leaf panels. Weaker leaf-to-stalk bonds break under load; the leaf remains physical matter and falls or stays in the grippers. Stronger stalk and leaf seams can also fail. Geometry, stiffness and tear loads are coarse uncalibrated approximations. Native feasibility has not yet been validated.
-
-Partial credit measures the result rather than the distance a hand moved. The native draft weights patches by their original area. For real judging, spread detached pieces beside the starting photograph and count occupied grid squares. All leaf pieces, including scraps, remain in the scene.
-
-No manipulated object is attached to a hand. Native contact, friction and ordinary joint actions handle grasping. A scripted controller may use privileged state for a feasibility demo; Dream must use only the standard three cameras and joint observations. The geometry and material laws must be identical in both runs.
-
-## Run
-
-Use the Python 3.12 / Isaac 6.1 / YAM environment targeted in `ENVIRONMENT.json`. New-task verification is still pending. From the repository root:
+Use the pinned Python 3.12 / Isaac Sim 6.1 / YAM environment in `ENVIRONMENT.json`:
 
 ```sh
-python tasks/strip-a-kale-leaf/make_plan.py
-OMNI_KIT_ACCEPT_EULA=YES python tasks/strip-a-kale-leaf/run.py --mode demo --out /tmp/strip-a-kale-leaf-demo
-OMNI_KIT_ACCEPT_EULA=YES python tasks/strip-a-kale-leaf/run.py --mode dream --out /tmp/strip-a-kale-leaf-dream
+python tasks/strip-a-kale-leaf/run.py --mode demo --out /tmp/kale-demo
+python tasks/strip-a-kale-leaf/run.py --mode dream --out /tmp/kale-dream
+python tasks/strip-a-kale-leaf/rescore.py /tmp/kale-demo
+python tasks/strip-a-kale-leaf/rescore.py /tmp/kale-dream
 ```
 
-Rescore recorded native body poses with `python tasks/strip-a-kale-leaf/rescore.py /tmp/strip-a-kale-leaf-demo`. The scorer checks frozen source hashes, trace continuity, bounded joint actions, native break events, and the outcome. This supports, and does not replace, visual inspection of the contact and material behaviour.
+Configure Dream through its normal credential store or the documented loopback bridge in `dream_policy.py`. Do not put credentials in this folder.
 
-Fixed layout; no random seed. Limit: 800 control steps (40 seconds at 20 Hz). Actual runtime per trial, complete native evidence and independent scoring will be recorded after successful validation. Do not upload a CPU plot or a kinematic reach check as a successful demo.
+The fixed demo plan is included; `make_plan.py` regenerates it. The limit is 800 actions at 20 Hz (40 seconds); the demo uses 440 (22 seconds). There is no layout randomization. Each run saves native videos, initial/final images, body poses, break events and a frozen copy of its source. Rescoring verifies source hashes, continuous bounded joint actions, break history and the final result. Inspect the video as well as the numerical score.
+
+Validated on 17 November 2026: demo **1.0 / 440 actions**; Dream-1 **0.0 / 800 actions**, 16 requests. Native runtime was about 5.3 minutes for the demo and 13.1 minutes for Dream on a shared RTX PRO6000 validation batch. Both frozen traces independently rescore to the reported scores. `VALIDATION.json` records measurements and source hashes.

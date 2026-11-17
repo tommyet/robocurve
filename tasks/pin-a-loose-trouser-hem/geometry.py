@@ -40,4 +40,29 @@ for b in list(BODIES):
  if b['name'].startswith(('front_','back_','hem_')):
   axes=bend_axes(0.,.000001,179);axes['transY']=dict(limits=(1,-1));axes['transZ']=dict(limits=(1,-1));axes['transX']=dict(limits=(-.043,.001),stiffness=0.,damping=.05,max_force=.5)
   JOINTS.append(joint('hole_'+b['name'],'pin_arm',b['name'],[.045,0,0],[0,0,0],axes=axes,enabled=False,break_force=3.,break_torque=.02))
+# An ordinary wooden sewing support sits inside the cuff, separating its faces.
+# The turned front edge overhangs it by 26 mm so a fingertip can get underneath.
+cloth=[b for b in BODIES if b['name'].startswith(('front_','back_','hem_'))]
+old={b['name']:(np.array(b['pos']),Rotation.from_quat(b.get('quat',[0,0,0,1]))) for b in cloth}
+def height(x):return .026-min(1.,max(0.,(abs(x-.34)-.065)/.020))*.023
+for b in cloth:
+ x,y,z=b['pos'];back=b['name'].startswith('back_');hem=b['name'].startswith('hem_')
+ slope=(height(x+.0001)-height(x-.0001))/.0002 if not back else 0.
+ rot=Rotation.from_euler('y',-np.arctan(slope));b['quat']=rot.as_quat().tolist()
+ b['pos']=[x,.27-y,TABLE+(.003 if back else height(x)+(.0015 if hem else 0.))]
+ b['mass']=.00004 if hem else .00008;b['shapes'][0]['size'][0]*=np.sqrt(1+slope*slope)
+lookup={b['name']:b for b in BODIES}
+for j in JOINTS:
+ if j['a'] in old and j['b'] in old:
+  a,ra=old[j['a']];b,rb=old[j['b']];point=(a+ra.apply(j['p0'])+b+rb.apply(j['p1']))/2
+  back=j['a'].startswith('back_') and j['b'].startswith('back_')
+  extra=.0015*sum(n.startswith('hem_') for n in [j['a'],j['b']])/2
+  point=np.array([point[0],.27-point[1],TABLE+(.003 if back else height(point[0])+extra)])
+  for side,name in enumerate([j['a'],j['b']]):
+   spec=lookup[name];j['p'+str(side)]=Rotation.from_quat(spec['quat']).inv().apply(point-spec['pos']).tolist()
+  for axis in ['rotX','rotY','rotZ']:
+   if 'stiffness' in j['axes'][axis]:j['axes'][axis]['stiffness']=.0001 if j['name'].startswith(('fold_','hem_')) else .00002
+BODIES.append(body('sewing_support',[.34,.144,TABLE+.014],[box((.140,.200,.020))],mass=.25,fixed=True,color=(.62,.43,.25)))
+for b in BODIES:
+ if b['name'].startswith(('front_','back_','hem_')) or b['name']=='sewing_support':b['pos'][1]-=.15
 finalize(BODIES,JOINTS)

@@ -16,7 +16,7 @@ for i,t in enumerate(np.arange(4)*np.pi/2):
 CAP=CIGAR+CQ.apply([0,0,.068])
 BODIES.append(body('cap',CAP,[cylinder(RADIUS,.002)],mass=.0002,color=(.43,.24,.13),quat=list(CQ.as_quat()),friction=.6))
 JOINTS.append(joint('cap_bond','cigar','cap',[0,0,.068],[0,0,0],axes=fixed_axes(),break_force=60.,break_torque=.4))
-CUTTER=np.array([.34,-.12,TABLE+.026])
+CUTTER=np.array([.34,-.12,TABLE+.0245])
 # A 24 mm opening with a protective housing; handles extend to 82 mm when open.
 BODIES.append(body('cutter',CUTTER,ring(.018,.008,.008,n=24),mass=.018,color=(.12,.15,.18),friction=.8))
 for side in [-1,1]:
@@ -29,7 +29,7 @@ for side in [-1,1]:
   points=np.array([[x-origin[0],y,z] for z in [side*.00015-.0001,side*.00015+.0001] for x,y in xy]);faces=[(0,3,2,1),(4,5,6,7),(0,1,5,4),(1,2,6,5),(2,3,7,6),(3,0,4,7)]
   shapes.append(dict(kind='mesh',points=points.tolist(),faces=faces,color=(.65,.68,.70)))
  BODIES.append(body('blade_'+tag,CUTTER+origin,shapes,mass=.012,color=(.6,.63,.66),friction=.9,exclude=['cap','blade_'+('right' if side<0 else 'left')],contact_offset=.0001))
- axes=fixed_axes();axes['transX']=dict(limits=((0,.022) if side<0 else (-.022,0)),stiffness=150.,damping=.3)
+ axes=fixed_axes();axes['transX']=dict(limits=((0,.022) if side<0 else (-.022,0)),stiffness=350.,damping=.3)
  JOINTS.append(joint('slider_'+tag,'cutter','blade_'+tag,origin,[0,0,0],axes=axes,break_force=100.))
 BODIES.append(body('waste_dish',[.48,-.05,TABLE+.003],[cylinder(.042,.006)]+ring(.042,.018,.004,z=.009),mass=.06,color=(.65,.73,.80)))
 for b in BODIES:

@@ -12,7 +12,7 @@ C=GRIP+[0,.17,0]
 p.add(2,'move above potato',{'right':(C+[0,0,.13],R,.14)})
 for i,(x,y) in enumerate([(0,0),(.025,0),(-.025,0),(0,.025),(0,-.025)]):
  p.add(1,'position over potato '+str(i),{'right':(C+[x,y,.075],R,.14)})
- p.add(2,'press potato '+str(i),{'right':(C+[x,y,-.003],R,.14)})
+ p.add(2,'press potato '+str(i),{'right':(C+[x,y,.004],R,.14)})
  p.add(1,'lift for next press '+str(i),{'right':(C+[x,y,.075],R,.14)})
 p.add(2,'return masher',{'right':(GRIP+[0,0,.12],R,.14)})
 p.add(2,'lower masher to bench',{'right':(GRIP,R,.14)})

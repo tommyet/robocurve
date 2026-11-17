@@ -5338,3 +5338,14 @@ editing, merge both agents' findings, and commit/push the update with the work.
   deleted and confirmed absent, with zero active Pods. Estimated compute cost
   was $0.0077, not an invoice. Keep the Dream bridge/API key local if this host
   type is authorized. Do not resume uploads without that authorization.
+
+### 2026-11-17 — Native eight-task validation in progress
+
+- Secure Cloud RTX PRO6000 became available at $2.69/hour. The exact pinned YAM/Isaac installation passed the 100-action platform test: gravity, table support, robot response, three native RGB views and policy resize agreement. No Dream key was transferred; the bridge remains on the Mac. The earlier source-upload block was resolved by verifying every uploaded file against the public fork commit. No approval is currently pending for that upload.
+- Native kale demos reached 1.0 in 440 actions twice. The second preserves stalk/leaf collisions after bond break and rescored at 1.0: all leaf retained, intact stalk 114.6 mm clear, hands released 6.55 s. Avocado reached and independently rescored 1.0 in 420 actions: stone in dish, flesh intact, released 5.45 s. Dream baselines and submission packaging are still pending; no new PRs have been opened at this checkpoint.
+- PhysX does not preserve unequal radii on a scaled `UsdGeom.Sphere`. Bake ellipsoids into convex mesh vertices; otherwise visual clearance can conceal large collision overlap and launch parts at reset. USD material colors also require float tuples, not lists.
+- Subscribe to joint-break events before `_ensure_sim`, not merely before settling: environment construction/reset can already break a material. The reset must remain unscored and intact. Apply `PhysxForceAPI` before simulation starts; applying it to a live rigid body can rebuild colliders and invalidate tensor views.
+- Remaining failures are recorded honestly: first tattoo demo lost its backing at pickup; first potato demo retained food but only reduced 1.9% below the size threshold; the cigar demo lifted the cigar but failed to retain the cutter; the silicone cup still needs a stable reset. Safety-pin threading/closure and hamper retaining-loop placement are unfinished. Native reset checks for the original cuff, hamper, potato and tattoo were stable.
+- Fresh authenticated board fetch contained 669 tasks; no matching avocado/kale/hem/tattoo/hamper/muffin/mash/cigar title was found. This does not resolve the documented SPARTA mashing overlap.
+
+- Kale submitted as PR #2508, media M-S9DCLW, isolated commit 5259c6a. Complete Dream baseline: 800 actions, 16 requests, 0.0; both baseline and demo independently audited. Upstream does not ignore Python bytecode: use a task-local `.gitignore` before running compile checks in a clean submission worktree.

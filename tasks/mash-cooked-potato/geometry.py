@@ -2,7 +2,7 @@
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
 BOWL=np.array([.34,0,TABLE+.003])
-BODIES.append(body('bowl',BOWL,[cylinder(.079,.006)]+ring(.08,.055,.005,z=.027),mass=.22,color=(.62,.70,.76),friction=.6))
+BODIES.append(body('bowl',BOWL,[cylinder(.099,.006)]+ring(.10,.075,.005,z=.037),mass=.30,color=(.62,.70,.76),friction=.6))
 # 12 cooked pieces, each 19 mm across: 27 cohesive 7 mm particles, 58 g total.
 GRID=np.array(list(np.ndindex(3,3,3)))-1
 for k in range(12):

@@ -1,9 +1,9 @@
 {
   "date": "2026-11-17",
   "submission_ready": false,
-  "new_task_prs_opened": 0,
-  "native_runs": 0,
-  "dream_runs": 0,
+  "new_task_prs_opened": 1,
+  "native_runs": "Multiple native resets and demos recorded; see task entries",
+  "dream_runs": "Kale complete (0.0); avocado running",
   "bracelet": {
     "pr": 2187,
     "revision": "f5c49c2",
@@ -18,29 +18,29 @@
   "tasks": [
     {
       "slug": "remove-an-avocado-stone",
-      "scene": "unverified native model draft",
-      "score": "not run",
+      "scene": "Native demo complete, independent rescore passed",
+      "score": "demo 1.0",
       "media": null,
       "pr": null,
       "candidate_plan_actions": 420,
       "maximum_command_velocity_ratio": 0.2882187140625003,
       "maximum_ik_position_error_m": 0.00010989935621381453,
-      "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload."
+      "remaining_validation": "Complete Dream baseline, rescore and inspect it, media upload and clean single-task PR."
     },
     {
       "slug": "strip-a-kale-leaf",
-      "scene": "unverified native model draft",
-      "score": "not run",
-      "media": null,
-      "pr": null,
+      "scene": "Native demo complete, independent rescore passed",
+      "score": "Demo 1.0; Dream 0.0",
+      "media": "M-S9DCLW",
+      "pr": "https://github.com/robocurve/benchmark-tasks/pull/2508",
       "candidate_plan_actions": 440,
       "maximum_command_velocity_ratio": 0.3963007318359381,
       "maximum_ik_position_error_m": 9.587669171277361e-05,
-      "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload."
+      "remaining_validation": "Submitted; awaiting board receipt/review."
     },
     {
       "slug": "pin-a-loose-trouser-hem",
-      "scene": "unverified native model draft",
+      "scene": "Native reset tested; successful full demo still required",
       "score": "not run",
       "media": null,
       "pr": null,
@@ -49,7 +49,7 @@
     },
     {
       "slug": "apply-a-temporary-tattoo",
-      "scene": "unverified native model draft",
+      "scene": "Native reset tested; successful full demo still required",
       "score": "not run",
       "media": null,
       "pr": null,
@@ -60,7 +60,7 @@
     },
     {
       "slug": "fold-a-pop-up-laundry-hamper",
-      "scene": "unverified native model draft",
+      "scene": "Native reset tested; successful full demo still required",
       "score": "not run",
       "media": null,
       "pr": null,
@@ -69,7 +69,7 @@
     },
     {
       "slug": "peel-a-silicone-baking-cup",
-      "scene": "unverified native model draft",
+      "scene": "Native reset tears cup seams; further fix required",
       "score": "not run",
       "media": null,
       "pr": null,
@@ -80,7 +80,7 @@
     },
     {
       "slug": "mash-cooked-potato",
-      "scene": "unverified native model draft",
+      "scene": "Native reset tested; successful full demo still required",
       "score": "not run",
       "media": null,
       "pr": null,
@@ -91,7 +91,7 @@
     },
     {
       "slug": "cut-a-cigar-cap",
-      "scene": "unverified native model draft",
+      "scene": "Native reset tested; successful full demo still required",
       "score": "not run",
       "media": null,
       "pr": null,
@@ -102,10 +102,12 @@
     }
   ],
   "compute": {
-    "status": "No active Pods; unused Community Pod deleted",
-    "conservative_estimate_usd": 0.0077,
-    "estimate_not_invoice": true,
-    "blocker": "Secure Cloud returned no stock; Community allocation worked at $0.22/hour, but automatic approval review blocked uploading unpublished task source. Explicit user approval is pending. No task source or API credentials were sent."
+    "status": "Active Secure Cloud GPU; independent two-hour shutdown watchdog armed",
+    "hourly_usd": 2.69,
+    "started_utc": "2026-11-17T18:09:52Z",
+    "scheduled_shutdown_utc": "2026-11-17T20:09:52Z",
+    "credentials": "Dream key remains on Mac loopback bridge",
+    "estimate_not_invoice": true
   },
   "risks": [
     "Potato mashing overlaps SPARTA; novelty remains unresolved, not guaranteed.",
@@ -113,5 +115,6 @@
     "Hamper draft starts flattened but uncoiled; this narrower setup is explicit.",
     "Safety-pin puncture, cuff drape and retention still need native evidence.",
     "Tattoo/PVC substrate compatibility is a qualification requirement, not a measured result."
-  ]
+  ],
+  "checkpoint_utc": "2026-11-17T18:55Z"
 }

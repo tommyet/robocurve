@@ -39,3 +39,5 @@ A complete robot demonstration is not authored yet. This hold command inspects t
 Rescore recorded native body poses with `python tasks/fold-a-pop-up-laundry-hamper/rescore.py /tmp/fold-a-pop-up-laundry-hamper-demo`. The scorer checks frozen source hashes, trace continuity, bounded joint actions, native break events, and the outcome. This supports, and does not replace, visual inspection of the contact and material behaviour.
 
 Fixed layout; no random seed. Limit: 1,600 control steps (80 seconds at 20 Hz). Actual runtime per trial, complete native evidence and independent scoring will be recorded after successful validation. Do not upload a CPU plot or a kinematic reach check as a successful demo.
+
+The current candidate plan only tests the twist/nest motion. Securing the retaining loop is not implemented; this is not full-score evidence.

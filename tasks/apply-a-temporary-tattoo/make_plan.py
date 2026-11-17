@@ -4,7 +4,7 @@ from scipy.spatial.transform import Rotation
 from planner import Plan
 from common import down,TABLE
 from geometry import PAPER,SPONGE,ARM,ARM_RADIUS
-p=Plan();RL=np.array([[0,-1,0],[0,0,-1],[1,0,0.]]);RR=Rotation.from_euler('x',45,degrees=True).as_matrix()@down(0)
+p=Plan();RL=Rotation.from_euler('x',10,degrees=True).as_matrix()@np.array([[0,-1,0],[0,0,-1],[1,0,0.]]);RR=Rotation.from_euler('x',45,degrees=True).as_matrix()@down(0)
 L=PAPER+[0,.0175,0]-.008*RL[:,2];Q=SPONGE-.008*RR[:,2]
 p.add(3,'approach transfer paper and wet sponge',{'left':(L+[0,0,.04],RL,.3),'right':(Q+[0,0,.10],RR,.7)},'joint')
 p.add(2,'enclose the overhanging paper edge and sponge',{'left':(L,RL,.3),'right':(Q,RR,.7)})

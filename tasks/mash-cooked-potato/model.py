@@ -15,7 +15,7 @@ class Model(NativeModel):
   sizes={}
   for key,ns in groups.items():
    p=np.array([self.p(n) for n in ns]);sizes[key]=float(np.max(np.linalg.norm(p[:,None]-p[None,:],axis=-1))+.007)
-  local=np.array([self.orientation('bowl').T@(self.p(n)-self.p('bowl')) for n in names]);inside=(np.linalg.norm(local[:,:2],axis=1)<.075)&(local[:,2]>.003)&(local[:,2]<.060)
+  local=np.array([self.orientation('bowl').T@(self.p(n)-self.p('bowl')) for n in names]);inside=(np.linalg.norm(local[:,:2],axis=1)<.095)&(local[:,2]>.003)&(local[:,2]<.080)
   small=np.array([sizes[root(n)]<=.009 for n in names])
   return dict(small_lump_mass_fraction=float((small&inside).sum()/max(1,inside.sum())),retained_mass_fraction=float(inside.mean()),largest_lump_mm=max(sizes.values())*1000,released_seconds=self.release,failed=self.failed)
  def integrity_failed(self):return super().integrity_failed() or (False)
