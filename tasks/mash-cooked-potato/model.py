@@ -1,8 +1,34 @@
 import numpy as np
 from native_model import NativeModel
-from geometry import JOINTS
+from geometry import JOINTS,BODIES
 class Model(NativeModel):
- def material(self,hands,dt):pass
+ def __init__(self):super().__init__();self.damage={str(k):0. for k in range(12)}
+ def strain_candidates(self):
+  result={};R=self.orientation('masher');origin=self.p('masher')
+  bars=next(b for b in BODIES if b['name']=='masher')['shapes'][:7]
+  for k in range(12):
+   pts=np.array([self.p('food_%02d_%d'%(k,n)) for n in range(27)]);local=(pts-origin)@R
+   contact=False
+   for bar in bars:
+    gap=np.maximum(np.abs(local-np.asarray(bar['pos']))-np.asarray(bar['size'])/2,0.)
+    if np.min(np.linalg.norm(gap,axis=1))<.004:contact=True
+   centred=pts-pts.mean(axis=0);_,_,axes=np.linalg.svd(centred,full_matrices=False)
+   thickness=float(np.min(np.ptp(centred@axes.T,axis=0))+.007)
+   strain=max(0.,1.-thickness/.0194)
+   result[str(k)]=float(np.clip((strain-.35)/.20,0,1)) if contact else 0.
+  return result
+ def material(self,hands,dt):
+  # Cooked tissue loses cohesion under actual tool-loaded compression. The
+  # solver must still break each weakened bond; no particle pose is changed.
+  for key,candidate in self.strain_candidates().items():
+   if candidate<=self.damage[key]+1e-5:continue
+   first=self.damage[key]==0.;self.damage[key]=candidate
+   strength=.18*(1-candidate)+.001*candidate
+   for j in JOINTS:
+    if j['name'].startswith('cohesion_'+key+'_') and j['name'] not in self.broken:self.joints[j['name']].GetBreakForceAttr().Set(strength)
+   if first:self.events.append(dict(event='food_softened_under_loaded_compression',piece=int(key),time=self.time))
+ def state(self):return dict(**super().state(),damage=self.damage)
+
  def measure(self):
   names=[n for n in self.names if n.startswith('food_')];parent={n:n for n in names}
   def root(n):

@@ -21,14 +21,18 @@ def compare(a,b,label):
  else:assert a==b,label
 
 def audit(rows,report):
- m=Model();previous=None;broken=set();release=0.;count=0
+ m=Model();previous=None;broken=set();release=0.;count=0;prior_damage=m.damage.copy()
  joints={j['name'] for j in JOINTS};dynamic=[i for i,b in enumerate(BODIES) if not b.get('fixed')]
  for row in rows:
   assert row['step']==count,'Trace skipped/duplicated a control step'
   a=np.asarray(row['action14']);assert a.shape==(14,) and np.isfinite(a).all()
   assert np.all(a>=LOW-1e-5) and np.all(a<=HIGH+1e-5),'Joint limit'
   assert np.allclose(a,READY,atol=1e-5) if previous is None else np.all(abs(a-previous)<=DELTA+1e-5),'Action-rate limit'
-  m.restore(row['state']);assert set(m.broken)<=joints and broken<=m.broken,'Unknown or healed joint'
+  m.restore(row['state'])
+  candidates=m.strain_candidates()
+  for key,value in m.damage.items():assert prior_damage[key]-1e-7<=value<=max(prior_damage[key],candidates[key])+1e-5,'Softening without recorded loaded compression'
+  prior_damage=m.damage.copy()
+  assert set(m.broken)<=joints and broken<=m.broken,'Unknown or healed joint'
   if count:
    clear=all(h['opening']>.4 and np.min(np.linalg.norm(m.poses[dynamic,:3]-np.asarray(h['tcp']),axis=1))>.05 for h in row['hands'].values())
    release=release+.05 if clear else 0.
