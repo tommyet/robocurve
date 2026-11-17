@@ -95,9 +95,9 @@ def main():
       arm_ids,finger_ids=emb._ids[robot_name];q=array(base.scene[robot_name].data.joint_pos)[0]
       observed.extend(q[arm_ids]);observed.append(float(np.clip(q[finger_ids].mean()/FINGER_OPEN,0,1)))
      obs=np.asarray(observed)
-     for tracker in trackers:
-      wanted=tracker.action(wanted,obs,enabled=False)
      wanted=controller.action(k,wanted,m,obs)
+     for tracker in trackers:
+      wanted=tracker.action(wanted,obs,enabled=True)
    elif policy is not None:
     chunk=policy.act(emb._observation());assert len(chunk.actions)==1;wanted=np.asarray(chunk.actions[0].data,float)
    else:wanted=current.copy()
