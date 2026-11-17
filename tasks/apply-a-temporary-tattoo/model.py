@@ -16,7 +16,7 @@ class Model(NativeModel):
  def orientation(self,name):return super().orientation(INK_BODY[name][0] if name in INK_BODY else name)
  def validate_reset(self):
   from geometry import PAPER
-  centre=(self.p('paper_band_3')+self.p('paper_band_4'))/2
+  centre=(self.p('paper_band_5')+self.p('paper_band_6'))/2
   if np.linalg.norm(centre-PAPER)>.010:raise RuntimeError('Backing moved off its specified starting rest during settling.')
  def material(self,hands,dt):
   from pxr import Gf,UsdPhysics
