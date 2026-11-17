@@ -4,7 +4,7 @@ from scipy.spatial.transform import Rotation
 from planner import Plan
 from common import down,TABLE
 from geometry import C
-p=Plan();RL=Rotation.from_euler('z',-20,degrees=True).as_matrix()@down(0);RR=Rotation.from_euler('x',45,degrees=True).as_matrix()@down(-90)
+p=Plan();RL=Rotation.from_euler('z',-20,degrees=True).as_matrix()@Rotation.from_euler('x',-15,degrees=True).as_matrix()@down(0);RR=Rotation.from_euler('x',45,degrees=True).as_matrix()@down(-90)
 L=C+[0,0,.052]-.008*RL[:,2];Q=C+[0,-.030,.026]-.008*RR[:,2]
 p.add(3,'approach the muffin',{'left':(L+[0,0,.10],RL,.9),'right':(Q+[0,-.06,.10],RR,.12)},'joint')
 p.add(2,'enclose the muffin gently',{'left':(L,RL,.9)})
