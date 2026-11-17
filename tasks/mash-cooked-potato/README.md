@@ -8,9 +8,9 @@ Mashing cooked potato requires loaded pressing across the bowl, breaking down th
 
 ## Setup and reset
 
-About 60 g of peeled cooked potato in twelve 18–20 mm pieces; a 160 mm inside-diameter, 55 mm deep bowl; and an ordinary wire masher with a 75 x 60 mm head and a 180 mm handle. The bowl is centred between the arms; the masher stands on its head 170 mm toward the right arm. Both hands start open. Use removable food-safe pad covers and a washable tray beneath the bowl.
+About 60 g of peeled cooked potato in twelve 21–22 mm pieces; a 200 mm inside-diameter, 75 mm deep bowl; and an ordinary wire masher with a 75 x 60 mm head and a 180 mm handle. The bowl is centred between the arms; the masher stands on its head 170 mm toward the right arm. Both hands start open. Use removable food-safe pad covers and a washable tray beneath the bowl.
 
-Use peeled floury potato from one batch, cut into 18–20 mm pieces, boiled until a fork passes through easily, then drained and cooled to 18–22 °C. Weigh 60 ± 5 g per trial. Add no milk, butter or oil. Use fresh cooked pieces and clean the tool, bowl, tray and covers between trials.
+Use peeled floury potato from one batch, cut into 21–22 mm pieces, boiled until a fork passes through easily, then drained and cooled to 18–22 °C. Weigh 60 ± 5 g per trial. Add no milk, butter or oil. Use fresh cooked pieces and clean the tool, bowl, tray and covers between trials.
 
 `geometry.py` records every simulated part, dimension, mass, fixed coordinate and passive joint. The starting photograph must be captured from the final native reset before submission.
 
@@ -38,4 +38,4 @@ OMNI_KIT_ACCEPT_EULA=YES python tasks/mash-cooked-potato/run.py --mode dream --o
 
 Rescore recorded native body poses with `python tasks/mash-cooked-potato/rescore.py /tmp/mash-cooked-potato-demo`. The scorer checks frozen source hashes, trace continuity, bounded joint actions, native break events, and the outcome. This supports, and does not replace, visual inspection of the contact and material behaviour.
 
-Fixed layout; no random seed. Limit: 1,000 control steps (50 seconds at 20 Hz). Actual runtime per trial, complete native evidence and independent scoring will be recorded after successful validation. Do not upload a CPU plot or a kinematic reach check as a successful demo.
+Fixed layout; no random seed. Limit: 2,400 control steps (120 seconds at 20 Hz). Actual runtime per trial, complete native evidence and independent scoring will be recorded after successful validation. Do not upload a CPU plot or a kinematic reach check as a successful demo.

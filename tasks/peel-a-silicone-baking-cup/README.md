@@ -8,7 +8,7 @@ Removing a reusable baking cup requires peeling the flexible cup while supportin
 
 ## Setup and reset
 
-One cooled plain muffin, about 65 mm across and 60 mm high, still inside a 52 mm base-diameter, 40 mm high silicone baking cup; a 320 x 280 mm tray. The cup is fully seated and has not been loosened. Both hands start open. Use clean removable food-safe pad covers.
+One cooled 72 mm wide, 60 mm high muffin in a flexible fluted silicone baking cup, 60 mm rim diameter, 52 mm base diameter and 38 mm high, with two 16 × 24 × 1.5 mm moulded pull tabs. It rests at the centre of a 320 × 280 mm tray between the arms. Both hands start open. Use removable food-safe pad covers. The native dimensions and fixed coordinates are in geometry.py.
 
 Use plain muffins from one batch, cooled to 18–22 °C in the same washed and dried cup model. Use a fresh muffin each trial and do not pre-peel or oil the cup. Inspect the cup for tears and wash the tray and removable covers between trials.
 
@@ -40,4 +40,4 @@ Rescore recorded native body poses with `python tasks/peel-a-silicone-baking-cup
 
 Fixed layout; no random seed. Limit: 1,000 control steps (50 seconds at 20 Hz). Actual runtime per trial, complete native evidence and independent scoring will be recorded after successful validation. Do not upload a CPU plot or a kinematic reach check as a successful demo.
 
-The current native candidate uses a conventional cup with moulded pull tabs so the peel grip clears the muffin. [OXO describes this tabbed silicone-cup design](https://www.oxo.com/silicone-baking-cups-12-pack.html). The supplied geometry is a generic dimensioned approximation, not an exact OXO scan; its 60 mm rim and 16 × 12 mm tabs are stated explicitly.
+The current native candidate uses a conventional cup with moulded pull tabs so the peel grip clears the muffin. [OXO describes this tabbed silicone-cup design](https://www.oxo.com/silicone-baking-cups-12-pack.html). The supplied geometry is a generic dimensioned approximation, not an exact OXO scan; its 60 mm rim and 16 × 24 × 1.5 mm tabs are stated explicitly.

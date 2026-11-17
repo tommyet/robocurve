@@ -42,7 +42,7 @@
     },
     {
       "slug": "pin-a-loose-trouser-hem",
-      "scene": "Trial056 missed its settled cloth grasp. Trial058 provides 26 mm support-edge clearance, a taller support and an observed-pose grasp correction.",
+      "scene": "Trial064 reached loaded puncture of the front and hem; a native instability then broke constraints. Trial068 regularizes the tiny contact tip inertia and bounds numerical velocities. No full threading/closure success.",
       "score": "No successful full demo",
       "media": null,
       "pr": null,
@@ -64,7 +64,7 @@
     },
     {
       "slug": "fold-a-pop-up-laundry-hamper",
-      "scene": "Trial055 bent the frame without coiling. Trial058 uses a reachable long-axis twist; elastic retainer placement remains unfinished.",
+      "scene": "Trial067 still missed the settled frame edge. Trial068 tracks the native seam positions during closure. Full twist/nest and elastic retainer placement remain unfinished.",
       "score": "0.0 development trials",
       "media": null,
       "pr": null,
@@ -74,7 +74,7 @@
     },
     {
       "slug": "peel-a-silicone-baking-cup",
-      "scene": "Trial057 still slipped during pickup. Trial058 maintains measured native finger preload during lift and peel.",
+      "scene": "Trial066 peeled 87.5% of side adhesions but broke a muffin crumb bond. Trial068 uses lower motor preload with unchanged damage limits.",
       "score": "Demo not yet successful",
       "media": null,
       "pr": null,
@@ -85,11 +85,11 @@
     },
     {
       "slug": "mash-cooked-potato",
-      "scene": "Trial054 retained 99.38% of food but only 39.44% of retained mass reached the size threshold. Trial057 adds bounded arm tracking; SPARTA overlap remains a serious rejection risk.",
+      "scene": "Trial061 briefly met both fineness and retention thresholds, then further presses spilled food. Trial065 bowl grasp worsened spillage and was cancelled. Trial068 returns to the earlier layout and stops pressing on the measured outcome; release still requires validation. SPARTA novelty risk remains.",
       "score": "No successful full demo",
       "media": null,
       "pr": null,
-      "candidate_plan_actions": 1660,
+      "candidate_plan_actions": 2260,
       "maximum_command_velocity_ratio": 0.22096768078125031,
       "maximum_ik_position_error_m": 7.59056560541279e-05,
       "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload."
@@ -108,10 +108,10 @@
     }
   ],
   "compute": {
-    "status": "Active single Secure Cloud GPU; independent six-hour shutdown cap $16.14",
+    "status": "Active single Secure Cloud GPU; independent seven-hour shutdown cap $18.83",
     "hourly_usd": 2.69,
     "started_utc": "2026-11-17T18:09:52Z",
-    "scheduled_shutdown_utc": "2026-11-18T00:09:52Z",
+    "scheduled_shutdown_utc": "2026-11-18T01:09:52Z",
     "credentials": "Dream key remains on Mac loopback bridge",
     "estimate_not_invoice": true
   },
@@ -122,5 +122,5 @@
     "Safety-pin puncture, cuff drape and retention still need native evidence.",
     "Tattoo/PVC substrate compatibility is a qualification requirement, not a measured result."
   ],
-  "checkpoint_utc": "2026-11-17T22:28:43.016260+00:00"
+  "checkpoint_utc": "2026-11-17T23:17:53.675468+00:00"
 }
