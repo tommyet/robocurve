@@ -2,7 +2,7 @@
 
 Apply the tattoo inside the marked area on a curved practice forearm, then remove the backing without losing the picture.
 
-**Development draft: the latest native demo and complete Dream baseline are still being validated.**
+The native demo scores **1.0** in 1,560 actions (78 seconds); Dream-1 scores **0.0** over its full 1,800-action limit. Both runs pass independent rescoring.
 
 ## Setup and reset
 
@@ -48,4 +48,4 @@ python tasks/apply-a-temporary-tattoo/rescore.py /tmp/tattoo-dream
 
 Configure Dream through its normal credential store or the local bridge in `dream_policy.py`. Keep credentials outside this folder. `make_plan.py` regenerates the joint trajectory; `demo_control.py` handles the regrasp.
 
-The limit is 1,800 controls at 20 Hz (90 seconds), with a fixed layout and no random seed. Runs save native videos, start/final images, continuous body-state traces and frozen source. Independent rescoring checks source hashes, action bounds, native break history and the outcome. Judging cameras are not policy inputs. Final scores and wall times remain pending.
+The limit is 1,800 controls at 20 Hz (90 seconds), with a fixed layout and no random seed. Runs save native videos, start/final images, continuous body-state traces and frozen source. Independent rescoring checks source hashes, action bounds, native break history and the outcome. Judging cameras are not policy inputs. Measured wall times on an RTX PRO 6000 Blackwell were 1008 seconds for the demo and 1720 seconds for Dream (37 requests). These include simulation and inference and depend on hardware load. `VALIDATION.json` records the frozen source hashes and audit results. Uploaded videos place the native front and close side views next to each other, retaining every frame at 20 Hz. The final image contains all 27 transferred tiles; a separate polygon-area check places 98.72% of the ink inside the outline.

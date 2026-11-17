@@ -84,7 +84,7 @@ def main():
   from yam_arena.constants import SHOULDER,WRIST,GRIPPER,FINGER_OPEN
   from demo_control import DemoControl
   controller=DemoControl()
-  trackers=[JointTracking(side=s) for s in ['left','right']];limit_vector=np.tile([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/20],2)
+  trackers=[JointTracking(side='left'),JointTracking(side='right',proportional=.8,integral=1.,bias_limit=.04,slew_limit=.003)];limit_vector=np.tile([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/20],2)
   report.update(status='running',initial_measurements=m.measure());save()
   for k in range(1,steps+1):
    if a.mode=='demo':
@@ -96,7 +96,7 @@ def main():
       observed.extend(q[arm_ids]);observed.append(float(np.clip(q[finger_ids].mean()/FINGER_OPEN,0,1)))
      obs=np.asarray(observed)
      for tracker in trackers:
-      wanted=tracker.action(wanted,obs,enabled=(k<=200 or tracker.indices.start==0))
+      wanted=tracker.action(wanted,obs,enabled=True)
      wanted=controller.action(k,wanted,plan['frames'][k-1]['stage'],m,hands(),obs)
    elif policy is not None:
     chunk=policy.act(emb._observation());assert len(chunk.actions)==1;wanted=np.asarray(chunk.actions[0].data,float)
