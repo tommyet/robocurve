@@ -5299,3 +5299,42 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - PR #2187's latest review confirmed that the native gripping, demo and earlier clasp dimensions were addressed, but requested a sourced clasp or complete spring-detent fabrication details: https://github.com/robocurve/benchmark-tasks/pull/2187#issuecomment-6949567383.
 - Revision f5c49c2 adds editable OpenSCAD parts, a dimensioned drawing, sourced full-hard spring foil, blank/forming dimensions, fasteners, assembly, manual reset and five 100 g retention checks. It explicitly distinguishes the fabrication specification from physically built/calibrated hardware. Runtime source and media are unchanged; CPU evidence audits still give demo 1.0 (900 actions), Dream 0.0 (1000).
 - The board received it as TK-L2PUFT, pending. A fabrication file is not evidence of actual hardware performance; retain that qualification in future descriptions.
+
+### 2026-11-17 — Eight-task batch: development checkpoint, no new submissions
+
+- The avocado, kale, safety-pin hem, temporary tattoo, hamper, silicone cup,
+  potato mash and cigar-cap folders are **unverified development drafts** on
+  `codex/eight-new-tasks-2026-11-17`. No new-task native demos, Dream trials,
+  media uploads or upstream PRs exist. See
+  `experiments/eight-task-batch-2026-11-17/status.json` for exact remaining work.
+- All eight native scene definitions pass initial joint-anchor checks. Twenty-eight
+  synthetic scorer cases pass, including initial zero scores, damage and loss.
+  Six candidate trajectories pass the local YAM reach/rate check. These checks
+  are not contact simulation or feasibility evidence. The safety-pin and hamper
+  controllers still need authoring; the tattoo plan also needs contact precision
+  checked in the native scene.
+- Subscribe to PhysX joint-break events **before** reset settling, otherwise a
+  broken starting material can be omitted from the recorded damage history.
+  Reject a reset that already earns credit. Frozen-source rescoring now checks
+  hashes, contiguous steps, joint/rate bounds, native break history and outcomes.
+- Current review-prompt guidance allows reduced material laws when the actual
+  grasp, placement, motion and approximate forces are preserved:
+  https://tasks.robocurve.org/review-prompt. TK-V4PZ2T's label feedback specifically
+  rejected adhesion initiated above the surface. The tattoo draft therefore
+  requires native paper/sponge contact and spring compression before wetting.
+- Hamper scope is explicitly flattened but uncoiled, preserving twist/nest/secure.
+  Native spring buckling has not been validated. The safety pin must enter and
+  return through both fabric layers, not merely pierce once and snap shut.
+  Potato mashing still has unresolved SPARTA novelty risk; cigar relatability
+  remains a substantive acceptance risk.
+- Runpod unfiltered creates for L40S, A40, RTX6000 Ada, A6000, RTX4090 and RTX3090
+  returned no capacity; three old Secure hosts also could not resume. An explicit
+  `cloud: COMMUNITY` RTX3090 request succeeded at $0.22/hour. Do not infer from
+  omitted cloud / SDK `ALL` that all available Community stock was searched.
+  The key lacks `catalog:read`; do not work around the permission denial.
+- Automatic approval review blocked uploading unpublished task sources to that
+  Community host. Explicit destination approval was requested and remains pending.
+  No task source or API credentials were sent. The unused Pod was stopped,
+  deleted and confirmed absent, with zero active Pods. Estimated compute cost
+  was $0.0077, not an invoice. Keep the Dream bridge/API key local if this host
+  type is authorized. Do not resume uploads without that authorization.

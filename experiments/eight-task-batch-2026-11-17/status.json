@@ -1,0 +1,117 @@
+{
+  "date": "2026-11-17",
+  "submission_ready": false,
+  "new_task_prs_opened": 0,
+  "native_runs": 0,
+  "dream_runs": 0,
+  "bracelet": {
+    "pr": 2187,
+    "revision": "f5c49c2",
+    "receipt": "TK-L2PUFT",
+    "status": "pending"
+  },
+  "validation": {
+    "geometry_anchor_checks": "8 passed",
+    "synthetic_outcome_checks": 28,
+    "synthetic_checks_are_not_physics_evidence": true
+  },
+  "tasks": [
+    {
+      "slug": "remove-an-avocado-stone",
+      "scene": "unverified native model draft",
+      "score": "not run",
+      "media": null,
+      "pr": null,
+      "candidate_plan_actions": 420,
+      "maximum_command_velocity_ratio": 0.2882187140625003,
+      "maximum_ik_position_error_m": 0.00010989935621381453,
+      "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload."
+    },
+    {
+      "slug": "strip-a-kale-leaf",
+      "scene": "unverified native model draft",
+      "score": "not run",
+      "media": null,
+      "pr": null,
+      "candidate_plan_actions": 440,
+      "maximum_command_velocity_ratio": 0.3963007318359381,
+      "maximum_ik_position_error_m": 9.587669171277361e-05,
+      "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload."
+    },
+    {
+      "slug": "pin-a-loose-trouser-hem",
+      "scene": "unverified native model draft",
+      "score": "not run",
+      "media": null,
+      "pr": null,
+      "remaining_local_work": "Complete robot controller; native contact and manipulation have not been demonstrated.",
+      "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload."
+    },
+    {
+      "slug": "apply-a-temporary-tattoo",
+      "scene": "unverified native model draft",
+      "score": "not run",
+      "media": null,
+      "pr": null,
+      "candidate_plan_actions": 1200,
+      "maximum_command_velocity_ratio": 0.381793760538531,
+      "maximum_ik_position_error_m": 0.011067952095175429,
+      "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload."
+    },
+    {
+      "slug": "fold-a-pop-up-laundry-hamper",
+      "scene": "unverified native model draft",
+      "score": "not run",
+      "media": null,
+      "pr": null,
+      "remaining_local_work": "Complete robot controller; native contact and manipulation have not been demonstrated.",
+      "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload."
+    },
+    {
+      "slug": "peel-a-silicone-baking-cup",
+      "scene": "unverified native model draft",
+      "score": "not run",
+      "media": null,
+      "pr": null,
+      "candidate_plan_actions": 560,
+      "maximum_command_velocity_ratio": 0.2882187140625003,
+      "maximum_ik_position_error_m": 9.695714973016204e-05,
+      "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload."
+    },
+    {
+      "slug": "mash-cooked-potato",
+      "scene": "unverified native model draft",
+      "score": "not run",
+      "media": null,
+      "pr": null,
+      "candidate_plan_actions": 820,
+      "maximum_command_velocity_ratio": 0.22096768078125031,
+      "maximum_ik_position_error_m": 7.59056560541279e-05,
+      "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload."
+    },
+    {
+      "slug": "cut-a-cigar-cap",
+      "scene": "unverified native model draft",
+      "score": "not run",
+      "media": null,
+      "pr": null,
+      "candidate_plan_actions": 780,
+      "maximum_command_velocity_ratio": 0.29542418191406294,
+      "maximum_ik_position_error_m": 8.480361567948025e-05,
+      "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload."
+    }
+  ],
+  "compute": {
+    "status": "No active Pods; unused Community Pod deleted",
+    "conservative_estimate_usd": 0.0077,
+    "estimate_not_invoice": true,
+    "blocker": "Secure Cloud returned no stock; Community allocation worked at $0.22/hour, but automatic approval review blocked uploading unpublished task source. Explicit user approval is pending. No task source or API credentials were sent."
+  },
+  "risks": [
+    "Potato mashing overlaps SPARTA; novelty remains unresolved, not guaranteed.",
+    "Cigar cutting has specialist-relatability risk.",
+    "Hamper draft starts flattened but uncoiled; this narrower setup is explicit.",
+    "Safety-pin puncture, cuff drape and retention still need native evidence.",
+    "Tattoo/PVC substrate compatibility is a qualification requirement, not a measured result."
+  ]
+}

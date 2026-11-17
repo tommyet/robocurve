@@ -1,0 +1,13 @@
+{
+  "title": "Mash cooked potato",
+  "category": "Societal relevance",
+  "instruction": "Mash the cooked potato in the bowl until no large lumps remain. Keep the potato in the bowl.",
+  "action_limit": 1000,
+  "setup": "About 60 g of peeled cooked potato in twelve 18\u201320 mm pieces; a 160 mm inside-diameter, 55 mm deep bowl; and an ordinary wire masher with a 75 x 60 mm head and a 180 mm handle. The bowl is centred between the arms; the masher stands on its head 170 mm toward the right arm. Both hands start open. Use removable food-safe pad covers and a washable tray beneath the bowl.",
+  "scoring": "1.0 if at least 95% of the retained potato has no lumps larger than 9 mm, at least 95% of the starting mass stays in the bowl, and both hands have released for three seconds. 0.5 for at least 75% reduced to that size; 0.25 for at least 50%. Otherwise 0. Losing over 5% of the potato scores 0. Weigh the retained food and inspect it spread on a 9 mm reference grid.",
+  "fidelity": "Native wire masher, bowl, robot contacts and cohesive potato clusters. Force-limited internal bonds break under real tool loading; released particles remain physical objects. The score measures remaining connected lump size and retained mass, not press count or tool travel. This approximates breakup rather than smooth potato rheology. Native feasibility has not yet been validated.",
+  "run_limit": "1,000 control steps (50 seconds at 20 Hz).",
+  "scores": "Not yet run.",
+  "context": "Mashing cooked potato requires loaded pressing across the bowl, breaking down the pieces while keeping the food contained.",
+  "reset_notes": "Use peeled floury potato from one batch, cut into 18\u201320 mm pieces, boiled until a fork passes through easily, then drained and cooled to 18\u201322 \u00b0C. Weigh 60 \u00b1 5 g per trial. Add no milk, butter or oil. Use fresh cooked pieces and clean the tool, bowl, tray and covers between trials."
+}

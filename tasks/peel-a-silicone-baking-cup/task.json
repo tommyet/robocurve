@@ -1,0 +1,13 @@
+{
+  "title": "Peel a baking cup off a muffin",
+  "category": "Societal relevance",
+  "instruction": "Peel the silicone baking cup off the muffin without breaking it. Leave the muffin and cup separate on the tray.",
+  "action_limit": 1000,
+  "setup": "One cooled plain muffin, about 65 mm across and 60 mm high, still inside a 52 mm base-diameter, 40 mm high silicone baking cup; a 320 x 280 mm tray. The cup is fully seated and has not been loosened. Both hands start open. Use clean removable food-safe pad covers.",
+  "scoring": "1.0 if the cup is completely off and the intact muffin and cup rest separately on the tray after three seconds with both hands clear. 0.5 if at least three quarters of the cup wall is peeled away; 0.25 for at least half. Otherwise 0. A torn cup, split muffin or detached muffin piece larger than 5 mm scores 0. Judge from close views and a ruler.",
+  "fidelity": "Native muffin, flexible jointed cup walls and robot contacts. Adhesion joints resist removal and break through physical peeling loads. The muffin has damageable crust pieces; the cup can tear. There are no pose-following objects or proximity grasps. Silicone, crumb strength and adhesion are coarse uncalibrated approximations. Native feasibility has not yet been validated.",
+  "run_limit": "1,000 control steps (50 seconds at 20 Hz).",
+  "scores": "Not yet run.",
+  "context": "Removing a reusable baking cup requires peeling the flexible cup while supporting a fragile muffin.",
+  "reset_notes": "Use plain muffins from one batch, cooled to 18\u201322 \u00b0C in the same washed and dried cup model. Use a fresh muffin each trial and do not pre-peel or oil the cup. Inspect the cup for tears and wash the tray and removable covers between trials."
+}
