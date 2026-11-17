@@ -4,6 +4,28 @@ Last updated: 2026-11-17 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-17 — flour, screen protector and catching novelty screen
+
+- Research only: refreshed 626 board records and live review prompt v24; no
+  paid compute, task changes or submission. Evidence is ignored under
+  `artifacts/flour-screen-catch-2026-11-17/`; details in the dated section of
+  `docs/task-ideas-followup-2026-11-15.md`.
+- Flour measuring overlaps accepted powder scooping/leveling **#1668** and
+  loose-material dosing on a balance **#621**. Both are merged. A new ingredient
+  or kitchen container alone is not a strong novelty distinction.
+- iPhone screen-protector **#2162 / TK-68HCRS** is pending after a timely
+  revision received 16 November 22:43 UTC. Original feedback required practical
+  adhesion judging instead of a 0.3 mm real corner-lift check, and kit-step
+  clarification. Treat tray installation as occupied; freehand application
+  would need a substantive skill distinction, not just removal of an aid.
+- Catch-ball **#1213** was finally rejected for prepositioning a basket before
+  a predictable release. Tunnel-part **#1033** stopped before unloading and
+  allowed credit before emergence. Genuine catching also overlaps external
+  **Bi-DexHands** airborne catch tasks and **RoboDyna** interception tasks.
+  Do not recommend generic catching as novel merely because rejected Robocurve
+  versions had weak demos. No one of these three is a strong next build.
+
+
 ## 2026-11-17 — medicine-spoon fixture revision received; three new candidates screened
 
 - Revised [medicine spoon #2380](https://github.com/robocurve/benchmark-tasks/pull/2380)

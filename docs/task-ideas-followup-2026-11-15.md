@@ -576,3 +576,23 @@ Primary references:
   membrane or fine-thread work. Keep as research reserves; they are not the
   economical next recommendations. A text-to-video yolk-separation benchmark is
   not itself evidence of an equivalent robot manipulation benchmark.
+
+## 17 November: flour, screen protector and catching
+
+Research only; no paid compute, implementation or submission. Refreshed the
+626-record board and live review prompt (still v24), searched PRs in all states,
+read relevant decisions/revision receipts and checked primary benchmark sources.
+Evidence: `artifacts/flour-screen-catch-2026-11-17/` (ignored).
+Ratings are judgments about the proposed scopes, not acceptance probabilities.
+
+| Idea | Current overlap | Viability and recommendation |
+| --- | --- | --- |
+| Measure out flour | Accepted [powdered-formula #1668](https://github.com/robocurve/benchmark-tasks/pull/1668) already requires scooping, leveling and transferring powder. Accepted [analytical-balance #621](https://github.com/robocurve/benchmark-tasks/pull/621) doses loose material to a scale reading. Both are confirmed merged and accepted on the board. | Plausible with a disclosed bulk-powder model preserving scoop loading, leveling, tilt-dependent flow, spills and retained mass. A kitchen scale makes judging straightforward. Weighing flour or leveling a flour cup mainly changes the ingredient/container; neither establishes a new ability. **Low acceptance prospect; do not prioritize.** No need for individual flour-grain simulation, but proximity-triggered filling would remove the skill. |
+| Apply an iPhone screen protector | [#2162](https://github.com/robocurve/benchmark-tasks/pull/2162) already uses an iPhone 16 and a Spigen glass protector/alignment tray. Revision **TK-68HCRS** received 16 November 22:43 UTC is pending; its original review only requested practical adhesion judging and clarification of kit steps. | Tray installation is plausible and directly occupied. Freehand installation of flexible film would add handling and progressive adhesion, but removing a tray does not by itself establish novelty. A credible version needs misalignment, poor adhesion/bubbles and premature sticking to remain possible, judged with an ordinary photo/inspection. **Very low as stated; park.** Do not copy the superseded 0.3 mm real-world corner-lift criterion: reviewers explicitly rejected it as impractical. |
+| Catch an object | [Ramp-ball #1213](https://github.com/robocurve/benchmark-tasks/pull/1213#issuecomment-6819080096) was finally rejected because the demo prepositioned a basket before a predictable release. [Tunnel-part #1033](https://github.com/robocurve/benchmark-tasks/pull/1033#issuecomment-6817312640) merely unloaded a stopped carrier and did not enforce the claimed emergence condition. [Bi-DexHands](https://github.com/PKU-MARL/DexterousHands#tasks) already includes underarm/abreast airborne throwing-and-catching tasks; [RoboDyna](https://robodyna.github.io/robodyna/) includes Catch Ramp Ball, Catch Valley Ball and further interception scenes. | Rigid-body flight/contact is tractable in principle; achieving a real moving catch and reliable retention is the harder controller problem. A proper scope would require interception after release, retained possession, and no table/ground rescue or magnetic attachment. Use video and retained catches to judge it; check robot reach/speed and real control timing before claiming feasibility. **Low for a generic catch, uncertain for a materially different practical skill.** Changing the object, throw speed, or number of catches alone does not establish novelty. |
+
+**Decision:** none is currently a strong low-cost submission candidate. Catching
+is interesting robotics, but that is separate from competition novelty. Keep
+all three out of the paid build queue unless a substantially different ability
+and credible real setup are identified. A task's absence from exact-title
+searches is not clearance, and pilot board ideas are leads, not accepted tasks.
