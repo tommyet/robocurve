@@ -5277,3 +5277,19 @@ editing, merge both agents' findings, and commit/push the update with the work.
   conditional candidate with unresolved novelty risk. Its built-in pressing
   primitive is relevant when comparing task scope, but routine added steps or
   swapping potato for avocado do not establish novelty by themselves.
+
+### 2026-11-17 — cigar cutting research
+
+- No direct cigar-cutting task found in live PR search, recent board/PR index,
+  BEHAVIOR names or external research searches. Conditional reserve, not a
+  confirmed novel/accepted task. No compute or implementation.
+- The proposed skill is selecting cap depth and operating an ordinary cutter
+  without crushing/unwrapping the cigar. XIKAR's guide documents the natural
+  cap boundary. A closed-back depth stop removes much of that distinction.
+- Accepted cut-tie PR1441 supports disclosed cut/damage proxies and physical
+  outcome judging; nail PR2346 and claw PR2378 require real cutting resistance
+  and grip/force compatibility. No need for individual tobacco-leaf physics,
+  but blade contact, severing and damaging failure modes must be preserved.
+- Societal relatability is the main uncertainty because this is a specialist
+  activity; do not invent a jobs-scale justification. Full sources and scope
+  are in `docs/task-ideas-followup-2026-11-15.md`.

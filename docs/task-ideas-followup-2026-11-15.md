@@ -854,3 +854,58 @@ A cut/photo and scale are plausible simple checks; exact thresholds and repeatab
 freshness/temperature/reset conditions would still need development. Do not
 claim food safety or success merely from elapsed simulated time. Keep as a
 future reserve; do not start a substantial thermal/fluid project for this batch.
+
+## 17 November: cut the cap from a cigar
+
+**Conditional reserve: plausible mechanics; no exact duplicate found; low-to-
+moderate overall acceptance confidence because of relatability and related
+cutting skills.** Research only. Checked live all-state PR search, the recent
+642-record board snapshot, the PR title index, BEHAVIOR names and external
+research searches. No direct cigar-cutting robotics task found. This is not an
+exhaustive novelty guarantee. Human image/activity datasets are not evidence
+that a robot manipulation task has already been evaluated. No paid compute.
+
+Proposed instruction: **Cut the cap cleanly from the cigar without splitting or
+unwrapping it.** Start with an ordinary unlit cigar and a normal handheld
+open-backed double-blade cutter lying separately. The work is locating the
+natural cap boundary, controlling insertion depth and alignment, and operating
+the cutter while supporting a crushable object. A closed-back depth-stop cutter
+would remove much of the proposed depth-selection skill; do not claim that
+skill if using one. [XIKAR's physical guide](https://xikar.com/blogs/news/the-art-and-science-of-cigar-cutting)
+explains why cutting beyond the cap can unravel the wrapper, and its
+[tool instructions](https://xikar.com/pages/xikar-how-to) describe independently
+moving blades and squeeze operation. These support task design, not a measured
+force model or proof of robot feasibility.
+
+Related tasks include accepted
+[cable-tie cutting #1441](https://github.com/robocurve/benchmark-tasks/pull/1441),
+plus [fingernail #2346](https://github.com/robocurve/benchmark-tasks/pull/2346)
+and [dog-claw #2378](https://github.com/robocurve/benchmark-tasks/pull/2378), both
+currently requiring revision. Cigar cutting is not automatically a duplicate
+of these different settings, but it needs more than a new object/tool name.
+Its strongest distinction is cap-depth control while preserving the wrapper.
+
+Mechanically this seems more tractable than thermal/fluid cooking, but no demo
+has been attempted. Use actual blade/cigar contact, enough travel to sever the
+cap and approximately real cutting resistance. A disclosed reduced cut rule is
+reasonable in principle; there is no need to simulate every tobacco leaf.
+Grip/crush and cut-too-deep failures must remain possible. PR2346 specifically
+requires cutting resistance in addition to the clipper's spring; PR2378 asks
+for verified grip span and force compatibility. Check those on the chosen
+ordinary cutter before investing in a demo. Avoid invented force values or
+claiming compatibility from shape alone.
+
+Score the resulting open head, full cap separation and retained wrapper/body,
+using close photos and a ruler/calipers. Define partial opening and damage
+thresholds after selecting a real cigar; do not reward mere approach or impose
+a universal millimetre cut depth across cigar shapes. Specify size, cap shape,
+conditioning and replacement between trials. No lighting or smoking is part of
+the task. Scoring must inspect actual damage, not require one prescribed path.
+
+The principal acceptance concern is category fit. Societal relatability is the
+plausible category, but the current prompt explicitly disfavors a familiar
+object in a hobbyist/specialist setting. Cigar preparation may fall on that side
+of the line; recognizability in films alone does not establish its stated
+up-close familiarity criterion. Do not invent a 500k-worker job claim. Keep as
+a reserve, behind clearer everyday candidates; this is our judgment, not an
+organizer rejection or a ban on the topic.
