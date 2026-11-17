@@ -788,3 +788,58 @@ receiver response matter because uncontrolled broadcasts and surroundings make
 reset inconsistent. This is mechanically plausible but the reception model and
 physical reproducibility may cost more effort than the manipulation. Shortlist
 avocado first; keep reception adjustment as a reserve until that evidence exists.
+
+## 17 November: mashing food and poaching an egg
+
+Research only: fresh 642-record board, all-state PR search, related reviews and
+primary research. No direct mashing/guacamole/poaching submission found; absence
+from search is not a novelty guarantee. No GPU, Dream, simulation or task build.
+
+**Mashing potato or avocado: technically plausible, low acceptance prospects
+because of prior robotics evaluation.** [SPARTA, ICRA 2026](https://arxiv.org/html/2509.24129v2#S5)
+evaluates mashing food into a puree-like consistency and explicitly uses avocado
+and banana as examples; potato mashing is discussed in its introduction. It
+uses tool presses and visual progress toward transformed food. Clay proxies are
+used during training for easier resets; this does not erase the underlying
+skill overlap. Merely changing the ingredient, adding a bowl-steadying second
+arm or calling the result guacamole is unlikely to establish a new capability.
+This judgment is an inference under the review prompt, not an organizer ruling
+on our unbuilt proposal. Potato and avocado should not be separate submissions.
+
+If pursued despite novelty risk, start with cooked peeled potato or prepared
+avocado and an ordinary masher/fork. Food must actually yield and break down
+under effective contact; hovering, press counts or tool travel cannot count as
+mashing. [Mortar PR1591](https://github.com/robocurve/benchmark-tasks/pull/1591#issuecomment-6822406353)
+was sent for revision because travel above the floor could score while
+peppercorns remained whole. Score remaining lumps and retained food, using a
+reproducible photo/sample procedure, not hidden cumulative stroke distance.
+[PR2046](https://github.com/robocurve/benchmark-tasks/pull/2046#issuecomment-6927012837)
+was finally rejected for insufficient relatability, so kitchen relevance alone
+does not guarantee acceptance. Park simple mashing; retain avocado pitting as
+the more distinct candidate from the preceding section.
+
+**Poaching an egg: potentially distinct, but high implementation risk and low
+confidence as a quick submission.** The meaningful activity is gently releasing
+a raw egg into hot water, allowing the white to set around the yolk, then
+lifting and draining the fragile result. [BDA instructions](https://www.bda.uk.com/resource/perfect-poached-eggs.html)
+and [Good Food's method](https://www.bbcgoodfood.com/recipes/poached-eggs)
+provide real preparation references. A whirlpool is one technique, not a
+mandatory scoring condition. A pre-cracked egg in a cup and already heated water
+would isolate the poaching skill honestly; egg cracking itself is already in
+[PR1269](https://github.com/robocurve/benchmark-tasks/pull/1269).
+
+The simulator would need useful approximations of white spreading/cohesion,
+yolk integrity, temperature/time-dependent setting and delicate spoon contact.
+A full biochemical model is unnecessary, but those effects must respond to the
+robot and allow meaningful failure. A rigid egg becoming cooked on a timer
+would remove the reason this is an interesting task. Reviewers finally rejected
+[egg-beating PR447](https://github.com/robocurve/benchmark-tasks/pull/447#issuecomment-6816395810)
+for both existing whisking overlap and bead physics omitting rupture and mixing;
+that is relevant fidelity evidence, not proof poaching itself is duplicated.
+
+Judge the served egg: retained cohesive white, intact yolk before a standardized
+cut, and the specified doneness, with partial credit for usable retained food.
+A cut/photo and scale are plausible simple checks; exact thresholds and repeatable
+freshness/temperature/reset conditions would still need development. Do not
+claim food safety or success merely from elapsed simulated time. Keep as a
+future reserve; do not start a substantial thermal/fluid project for this batch.

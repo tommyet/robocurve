@@ -5247,3 +5247,22 @@ editing, merge both agents' findings, and commit/push the update with the work.
   response, visible feedback, physical reset and stable reception after release.
 - Priority: avocado before antenna. Neither is validated or guaranteed accepted;
   no numeric acceptance probability or GPU-cost claim is supported by this audit.
+
+### 2026-11-17 — mashing and poaching research
+
+- Fresh board: 642 records; no direct mashing/guacamole/poaching submission found
+  in the search. No paid compute or implementation. Details in the shared
+  `docs/task-ideas-followup-2026-11-15.md`; snapshot under ignored
+  `artifacts/mashing-poaching-2026-11-17/`.
+- Simple mashing has a strong novelty risk: SPARTA (ICRA2026) evaluates mashing
+  and explicitly discusses avocado/banana, with potato as an introductory
+  example: https://arxiv.org/html/2509.24129v2#S5. Do not treat changing food or
+  adding bowl stabilization as sufficient novelty. This does not invalidate
+  the distinct avocado-pitting candidate.
+- PR1591 revision feedback requires actual ground material/fineness rather than
+  pestle travel; PR2046 was finally rejected for relatability. Outcome scoring
+  must verify material transformation, not count repetitive tool motions.
+- Poaching remains a high-risk reserve: simplified flow, cohesion, setting and
+  fragile removal must preserve the cooking skill. PR447's rigid-bead egg
+  rejection is direct evidence against cosmetic food proxies. No full chemistry
+  model is required, but a timer-triggered rigid egg would erase the task.
