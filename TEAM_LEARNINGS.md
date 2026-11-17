@@ -5293,3 +5293,9 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Societal relatability is the main uncertainty because this is a specialist
   activity; do not invent a jobs-scale justification. Full sources and scope
   are in `docs/task-ideas-followup-2026-11-15.md`.
+
+### 2026-11-17 — Bracelet fabrication follow-up
+
+- PR #2187's latest review confirmed that the native gripping, demo and earlier clasp dimensions were addressed, but requested a sourced clasp or complete spring-detent fabrication details: https://github.com/robocurve/benchmark-tasks/pull/2187#issuecomment-6949567383.
+- Revision f5c49c2 adds editable OpenSCAD parts, a dimensioned drawing, sourced full-hard spring foil, blank/forming dimensions, fasteners, assembly, manual reset and five 100 g retention checks. It explicitly distinguishes the fabrication specification from physically built/calibrated hardware. Runtime source and media are unchanged; CPU evidence audits still give demo 1.0 (900 actions), Dream 0.0 (1000).
+- The board received it as TK-L2PUFT, pending. A fabrication file is not evidence of actual hardware performance; retain that qualification in future descriptions.
