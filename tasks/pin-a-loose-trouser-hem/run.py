@@ -98,7 +98,7 @@ def main():
      obs=np.asarray(observed)
      wanted=controller.action(k,wanted,m,hands(),obs)
      for index,tracker in enumerate(trackers):
-      wanted=tracker.action(wanted,obs,enabled=(index==0 or k<=220))
+      wanted=tracker.action(wanted,obs,enabled=True)
    elif policy is not None:
     chunk=policy.act(emb._observation());assert len(chunk.actions)==1;wanted=np.asarray(chunk.actions[0].data,float)
    else:wanted=current.copy()
