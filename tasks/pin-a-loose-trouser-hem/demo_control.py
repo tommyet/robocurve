@@ -1,4 +1,4 @@
-"""Contact-driven needle-path candidate; privileged poses guide ordinary joints."""
+"""Pinch a fold and guide the straight needle through both sides using robot joints."""
 import numpy as np
 from scipy.optimize import least_squares
 class DemoControl:
@@ -9,30 +9,36 @@ class DemoControl:
   if k>700:return self.close(k,wanted,m,hands,current)
   h=hands['right'];tip=m.p('needle_point',[.001,0,0]);axis=m.orientation('pin_arm')[:,0]
   if self.start is None:
-   self.start=tip.copy();self.initial_axis=axis.copy()
-   self.entry=(m.p('hem_9_0',[0,0,0])+m.p('front_9_0',[0,.007,0]))/2
-   self.end=(m.p('hem_8_0',[0,0,0])+m.p('front_8_0',[0,.007,0]))/2
-   self.normal=m.orientation('hem_9_0')[:,2]+m.orientation('front_9_0')[:,2];self.normal/=np.linalg.norm(self.normal)
-   self.tangent=self.end-self.entry;self.tangent-=self.normal*np.dot(self.tangent,self.normal);self.tangent/=np.linalg.norm(self.tangent)
+   self.start=tip.copy();self.initial_axis=axis.copy();choices=[];direction=np.array([-1.,0,0])
+   names=[n for n in m.names if n.startswith(('front_','hem_','back_'))]
+   apex=max(m.p(n)[2] for n in names if n.startswith('hem_'))
+   for y in np.linspace(.109,.119,11):
+    for z in np.arange(.776,min(.805,apex-.003),.001):
+     hits=[]
+     for n in names:
+      R=m.orientation(n);normal=R[:,2]
+      if abs(normal@direction)<.25:continue
+      origin=np.array([.4,y,z]);distance=float(normal@(m.p(n)-origin)/(normal@direction));point=origin+distance*direction;local=R.T@(point-m.p(n))
+      half_y=.005 if n.startswith('hem_') else .012
+      if abs(local[0])<.004 and abs(local[1])<half_y-.001:hits.append((n,point))
+     front=[h for h in hits if h[0].startswith('front_')];hem=[h for h in hits if h[0].startswith('hem_')]
+     if len(front)==2 and len(hem)==2 and len(hits)==4:
+      xs=[v[1][0] for v in hits];span=max(xs)-min(xs)
+      if .008<span<.034:choices.append((span,y,z,min(xs),max(xs),[n for n,_ in hits]))
+   if not choices:raise RuntimeError('The held hem does not present a clear four-layer needle path; stop this development trial.')
+   span,y,z,lo,hi,names=max(choices,key=lambda c:c[0]);self.entry=np.array([hi+.025,y,z]);self.end=np.array([lo-.003,y,z])
+   m.events.append(dict(event='demo_selected_straight_pin_path',start=self.entry.tolist(),end=self.end.tolist(),patches=names,time=m.time))
   def blend(a,b,start,end):
    u=np.clip((k-start)/(end-start),0,1);u=u*u*(3-2*u);return a*(1-u)+b*u
-  n,t=self.normal,self.tangent
-  down=np.cos(np.radians(45))*t-np.sin(np.radians(45))*n;up=np.cos(np.radians(45))*t+np.sin(np.radians(45))*n
-  if k<=340:goal=blend(self.start,self.entry+.030*n,220,340);goalaxis=blend(self.initial_axis,down,220,340)
-  elif k<=400:goal=blend(self.entry+.030*n,self.entry+.002*n,340,400);goalaxis=down
-  elif k<=480:goal=blend(self.entry+.002*n,self.entry+.002*t-.010*n,400,480);goalaxis=down
-  elif k<=540:goal=blend(self.entry+.002*t-.010*n,(self.entry+self.end)/2-.003*n,480,540);goalaxis=blend(down,t,480,540)
-  elif k<=620:goal=blend((self.entry+self.end)/2-.003*n,self.end+.003*n,540,620);goalaxis=blend(t,up,540,620)
-  else:goal=self.end+.003*n;goalaxis=up
-  goalaxis/=np.linalg.norm(goalaxis)
-  relative_tip=h['rotation'].T@(tip-h['tcp']);relative_axis=h['rotation'].T@axis
-  # Free rotation around the needle avoids imposing an unnecessary wrist angle.
-  target=goal
-  desired=goalaxis
+  if k<=340:goal=blend(self.start,self.entry+[0,0,.04],220,340);goalaxis=blend(self.initial_axis,np.array([-1.,0,0]),220,340)
+  elif k<=400:goal=blend(self.entry+[0,0,.04],self.entry,340,400);goalaxis=np.array([-1.,0,0])
+  elif k<=640:goal=blend(self.entry,self.end,400,640);goalaxis=np.array([-1.,0,0])
+  else:goal=self.end;goalaxis=np.array([-1.,0,0])
+  goalaxis/=np.linalg.norm(goalaxis);relative_tip=h['rotation'].T@(tip-h['tcp']);relative_axis=h['rotation'].T@axis
   seed=np.clip(current[7:13],ik.LOWER+1e-6,ik.UPPER-1e-6)
   def residual(q):
-   p,R=ik.tcp_pose(q,station.BASES['right']);return np.r_[p+R@relative_tip-target,.04*(R@relative_axis-desired),.001*(q-seed)]
-  sol=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=25)
+   pp,R=ik.tcp_pose(q,station.BASES['right']);return np.r_[pp+R@relative_tip-goal,.04*(R@relative_axis-goalaxis),.001*(q-seed)]
+  sol=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=30)
   out=wanted.copy();out[7:13]=sol.x;self.last_q=sol.x.copy();return out
 
  def close(self,k,wanted,m,hands,current):
