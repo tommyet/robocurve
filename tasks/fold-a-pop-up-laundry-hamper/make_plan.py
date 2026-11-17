@@ -8,7 +8,7 @@ from geometry import BODIES
 p=Plan();base=np.array([[0,-1,0],[0,0,-1],[1,0,0.]])
 RL=Rotation.from_euler('x',35,degrees=True).as_matrix()@base;RR=Rotation.from_euler('x',145,degrees=True).as_matrix()@base
 points=[np.mean([b['pos'] for b in BODIES if b['name'] in [f'wire_{f}_{i:02d}' for f in range(4)]],axis=0) for i in [5,29]]
-L=points[0]+.002*RL[:,2];R=points[1]+.002*RR[:,2]
+L=points[0]-.006*RL[:,2];R=points[1]-.006*RR[:,2]
 p.add(3,'approach opposite bound frame ends',{'left':(L-.065*RL[:,2],RL,.3),'right':(R-.065*RR[:,2],RR,.3)},'joint')
 p.add(2,'enclose the four stacked frame edges',{'left':(L,RL,.3),'right':(R,RR,.3)})
 p.add(2,'grip both seams',{'left':(L,RL,0.),'right':(R,RR,0.)})

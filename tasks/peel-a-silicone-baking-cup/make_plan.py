@@ -5,7 +5,7 @@ from planner import Plan
 from common import down,TABLE
 from geometry import C
 p=Plan();RL=Rotation.from_euler('z',-20,degrees=True).as_matrix()@Rotation.from_euler('x',-15,degrees=True).as_matrix()@down(0);RR=Rotation.from_euler('x',160,degrees=True).as_matrix()@np.array([[0,-1,0],[0,0,-1],[1,0,0.]])
-L=C+[0,0,.052]+.002*RL[:,2];Q=C+[0,-.049,.032]-.012*RR[:,2]
+L=C+[0,0,.052]-.006*RL[:,2];Q=C+[0,-.049,.032]-.012*RR[:,2]
 p.add(3,'approach the muffin',{'left':(L+[0,0,.10],RL,.9),'right':(Q+[0,-.06,.10],RR,.12)},'joint')
 p.add(2,'enclose the muffin gently',{'left':(L,RL,.8)})
 p.add(5,'support the muffin',{'left':(L,RL,.716)})
