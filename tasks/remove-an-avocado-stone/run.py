@@ -105,7 +105,8 @@ def main():
    if a.mode=='demo' and m.failed:raise RuntimeError('Native task integrity failed; development demo stopped early.')
   report.update(status='complete',events=m.events,score=m.score(),requires_visual_review=True)
  except BaseException as error:
-  report.update(status='failed',error_type=type(error).__name__,error_message=str(error));raise
+  import traceback
+  report.update(status='failed',error_type=type(error).__name__,error_message=str(error),traceback=traceback.format_exc());raise
  finally:
   if trace is not None:trace.close()
   for writer in writers.values():writer.close()

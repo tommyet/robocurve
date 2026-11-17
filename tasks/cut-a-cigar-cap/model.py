@@ -16,7 +16,7 @@ class Model(NativeModel):
   from pxr import PhysxSchema,Gf
   for name in ['cap','blade_left','blade_right']:
    paths=[p for p in self.stage.Traverse() if p.GetName()==name and '/materials/' in str(p.GetPath())];assert len(paths)==1
-   api=PhysxSchema.PhysxForceAPI.Apply(paths[0]);api.CreateForceEnabledAttr(True);api.CreateWorldFrameEnabledAttr(True);api.CreateModeAttr('force');api.CreateForceAttr(Gf.Vec3f(0,0,0));api.CreateTorqueAttr(Gf.Vec3f(0,0,0));self.force_apis[name]=api
+   self.force_apis[name]=PhysxSchema.PhysxForceAPI(paths[0])
  def material(self,hands,dt):
   from pxr import Gf
   cutterR=self.orientation('cutter');local=cutterR.T@(self.p('cap')-self.p('cutter'));capaxis=self.orientation('cap')[:,2]

@@ -10,7 +10,21 @@ def box(size,pos=(0,0,0),color=None,quat=None):
  return d
 
 def sphere(radii,pos=(0,0,0),color=None):
- d=dict(kind='sphere',radii=list(radii),pos=list(pos))
+ # PhysX spheres cannot retain unequal radii. Bake an ellipsoid into a convex
+ # mesh so the collision surface matches what the cameras show.
+ if np.ptp(radii)>1e-9:
+  n,m=16,8;points=[[0,0,radii[2]]]
+  for j in range(1,m):
+   a=np.pi*j/m
+   for i in range(n):
+    t=2*np.pi*i/n;points.append([radii[0]*np.sin(a)*np.cos(t),radii[1]*np.sin(a)*np.sin(t),radii[2]*np.cos(a)])
+  points.append([0,0,-radii[2]]);faces=[(0,1+i,1+(i+1)%n) for i in range(n)]
+  for j in range(m-2):
+   for i in range(n):
+    a=1+j*n+i;b=1+j*n+(i+1)%n;faces.append((a,a+n,b+n,b))
+  faces += [(len(points)-1,1+(m-2)*n+(i+1)%n,1+(m-2)*n+i) for i in range(n)]
+  d=dict(kind='mesh',points=points,faces=faces,pos=list(pos))
+ else:d=dict(kind='sphere',radii=list(radii),pos=list(pos))
  if color is not None:d['color']=list(color)
  return d
 

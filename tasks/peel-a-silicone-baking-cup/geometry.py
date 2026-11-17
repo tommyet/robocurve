@@ -23,12 +23,12 @@ for i,t in enumerate(np.arange(N)*2*np.pi/N):
    JOINTS.append(joint(f'ring_{row}_{i}',prev,name,Rprev.T@(pt-pprev),Ri.T@(pt-(C+radial*r+[0,0,z])),axes=bend_axes(.000004,.000003,179),break_force=20.))
   if row==0:
    local=radial*.024+[0,0,-.020]
-   JOINTS.append(joint('adhesion_'+str(i),'muffin',name,local,[0,-.002,0],axes=bend_axes(.000001,.000001),break_force=.45,break_torque=.002))
-JOINTS.append(joint('bottom_adhesion','muffin','cup_bottom',[0,0,-.030],[0,0,0],axes=bend_axes(.000001,.000001),break_force=1.5,break_torque=.01))
+   JOINTS.append(joint('adhesion_'+str(i),'muffin',name,local,[0,-.002,0],axes=bend_axes(.000001,.000001),break_force=.45,break_torque=.002,collision=True))
+JOINTS.append(joint('bottom_adhesion','muffin','cup_bottom',[0,0,-.030],[0,0,0],axes=bend_axes(.000001,.000001),break_force=1.5,break_torque=.01,collision=True))
 
 for i,t in enumerate(np.arange(4)*np.pi/2):
- rel=np.array([.016*np.sin(t),.016*np.cos(t),.017]);name='crumb_'+str(i)
- BODIES.append(body(name,C+[0,0,.030]+rel,[sphere((.020,.020,.017))],mass=.005,color=(.70,.43,.16),exclude=['crumb_'+str(j) for j in range(4) if j!=i]))
+ rel=np.array([.016*np.sin(t),.016*np.cos(t),.022]);name='crumb_'+str(i)
+ BODIES.append(body(name,C+[0,0,.030]+rel,[sphere((.020,.020,.014))],mass=.005,color=(.70,.43,.16),exclude=['crumb_'+str(j) for j in range(4) if j!=i]))
  JOINTS.append(joint('crumb_bond_'+str(i),'muffin',name,rel,[0,0,0],axes=fixed_axes(),break_force=6.,break_torque=.04))
 for row in range(2):
  a=next(b for b in BODIES if b['name']==f'cup_{row}_{N-1:02d}');b=next(b for b in BODIES if b['name']==f'cup_{row}_00')

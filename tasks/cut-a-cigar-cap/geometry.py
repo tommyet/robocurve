@@ -32,4 +32,6 @@ for side in [-1,1]:
  axes=fixed_axes();axes['transX']=dict(limits=((0,.022) if side<0 else (-.022,0)),stiffness=150.,damping=.3)
  JOINTS.append(joint('slider_'+tag,'cutter','blade_'+tag,origin,[0,0,0],axes=axes,break_force=100.))
 BODIES.append(body('waste_dish',[.48,-.05,TABLE+.003],[cylinder(.042,.006)]+ring(.042,.018,.004,z=.009),mass=.06,color=(.65,.73,.80)))
+for b in BODIES:
+ if b['name'] in ['cap','blade_left','blade_right']:b['external_force']=True
 finalize(BODIES,JOINTS)
