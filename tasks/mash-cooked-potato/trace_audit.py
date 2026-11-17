@@ -32,6 +32,7 @@ def audit(rows,report):
   candidates=m.strain_candidates()
   for key,value in m.damage.items():assert prior_damage[key]-1e-7<=value<=max(prior_damage[key],candidates[key])+1e-5,'Softening without recorded loaded compression'
   prior_damage=m.damage.copy()
+  for name in m.disabled:assert name.startswith('cohesion_') and m.damage[name.split('_')[1]]>=1.-1e-6,'Cohesion removed without complete loaded failure'
   assert set(m.broken)<=joints and broken<=m.broken,'Unknown or healed joint'
   if count:
    clear=all(h['opening']>.4 and np.min(np.linalg.norm(m.poses[dynamic,:3]-np.asarray(h['tcp']),axis=1))>.05 for h in row['hands'].values())

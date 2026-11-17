@@ -19,13 +19,16 @@ class Model(NativeModel):
   return result
  def material(self,hands,dt):
   # Cooked tissue loses cohesion under actual tool-loaded compression. The
-  # solver must still break each weakened bond; no particle pose is changed.
+  # native solver handles forces; complete compressive failure removes cohesion.
+  # No particle pose is changed.
   for key,candidate in self.strain_candidates().items():
    if candidate<=self.damage[key]+1e-5:continue
    first=self.damage[key]==0.;self.damage[key]=candidate
-   strength=.18*(1-candidate)+.001*candidate
+   strength=.04*(1-candidate)+.001*candidate
    for j in JOINTS:
-    if j['name'].startswith('cohesion_'+key+'_') and j['name'] not in self.broken:self.joints[j['name']].GetBreakForceAttr().Set(strength)
+    if j['name'].startswith('cohesion_'+key+'_') and j['name'] not in self.broken:
+     if candidate>=1.-1e-6:self.disable(j['name'],'cooked_tissue_ruptured_under_loaded_compression')
+     else:self.joints[j['name']].GetBreakForceAttr().Set(strength)
    if first:self.events.append(dict(event='food_softened_under_loaded_compression',piece=int(key),time=self.time))
  def state(self):return dict(**super().state(),damage=self.damage)
 
@@ -35,7 +38,7 @@ class Model(NativeModel):
    while parent[n]!=n:n=parent[n]
    return n
   for j in JOINTS:
-   if j['name'] not in self.broken:parent[root(j['a'])]=root(j['b'])
+   if j['name'] not in self.broken and j['name'] not in self.disabled:parent[root(j['a'])]=root(j['b'])
   groups={}
   for n in names:groups.setdefault(root(n),[]).append(n)
   sizes={}

@@ -10,11 +10,11 @@ p.add(1,'grip handle',{'right':(GRIP,R,.14)})
 p.add(2,'lift masher',{'right':(GRIP+[0,0,.09],R,.14)})
 C=GRIP+[0,.17,0]
 p.add(2,'move above potato',{'right':(C+[0,0,.13],R,.14)})
-for i,(x,y) in enumerate([(0,0),(.04,0),(-.04,0),(0,.04),(0,-.04),(.025,.025),(.025,-.025),(-.025,.025),(-.025,-.025)]):
+for i,(x,y) in enumerate([(0,0),(.04,0),(-.04,0),(0,.04),(0,-.04),(.025,.025),(.025,-.025),(-.025,.025),(-.025,-.025),(.04,-.04),(-.04,.04),(-.04,0)]):
  p.add(1,'position over potato '+str(i),{'right':(C+[x,y,.075],R,.14)})
- p.add(2,'press potato '+str(i),{'right':(C+[x,y,.004],R,.14)})
- p.add(1,'twist under load '+str(i),{'right':(C+[x,y,.004],Rotation.from_euler('z',15 if i%2==0 else -15,degrees=True).as_matrix()@R,.14)})
- p.add(1,'lift for next press '+str(i),{'right':(C+[x,y,.075],R,.14)})
+ p.add(1.5,'press potato '+str(i),{'right':(C+[x,y,.004],R,.14)})
+ p.add(.75,'twist under load '+str(i),{'right':(C+[x,y,.004],Rotation.from_euler('z',15 if i%2==0 else -15,degrees=True).as_matrix()@R,.14)})
+ p.add(.75,'lift for next press '+str(i),{'right':(C+[x,y,.075],R,.14)})
 p.add(2,'let loose potato fall back into the bowl',{})
 p.add(2,'return masher',{'right':(GRIP+[0,0,.12],R,.14)})
 p.add(2,'lower masher to bench',{'right':(GRIP,R,.14)})

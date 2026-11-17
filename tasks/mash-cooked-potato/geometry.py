@@ -14,7 +14,7 @@ for k in range(12):
   for b in range(a+1,len(GRID)):
    if np.sum(abs(GRID[a]-GRID[b]))!=1:continue
    delta=(GRID[b]-GRID[a])*.0062
-   JOINTS.append(joint(f'cohesion_{k}_{a}_{b}',f'food_{k:02d}_{a}',f'food_{k:02d}_{b}',delta/2,-delta/2,axes={**{a:dict(limits=(-.002,.002),stiffness=80.,damping=.10) for a in ['transX','transY','transZ']},**bend_axes(.000001,.000001,179)},break_force=.18,break_torque=.001))
+   JOINTS.append(joint(f'cohesion_{k}_{a}_{b}',f'food_{k:02d}_{a}',f'food_{k:02d}_{b}',delta/2,-delta/2,axes={**{a:dict(limits=(-.002,.002),stiffness=80.,damping=.10) for a in ['transX','transY','transZ']},**bend_axes(.000001,.000001,179)},break_force=.04,break_torque=.001))
 # An ordinary broad wire masher, standing on its head. Gaps let fragments through.
 shapes=[box((.075,.004,.004),(0,y,0)) for y in np.linspace(-.027,.027,5)]
 shapes += [box((.004,.060,.004),(x,0,0)) for x in [-.036,.036]]
