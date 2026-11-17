@@ -33,7 +33,7 @@ class Model(NativeModel):
     # Actual paper lies against the loaded underside of this sponge pad.
     if abs(q[0])<.006 and abs(q[1])<.006 and abs(q[2]+.0015)<.0007:pressure+=load[i]
    tack='tack_'+name
-   if on_arm and pressure>.35 and name not in self.lost:
+   if on_arm and pressure>.03 and name not in self.lost:
     if tack not in self.enabled:
      j=self.joints[tack];j.GetLocalPos0Attr().Set(Gf.Vec3f(*local));j.GetLocalPos1Attr().Set(Gf.Vec3f(*INK_BODY[name][1]));self.contact_uv[name]=local.copy();self.enable(tack,'pressed_adhesive_contact')
     if tack not in self.broken:self.wet[name]+=dt
