@@ -5226,3 +5226,24 @@ editing, merge both agents' findings, and commit/push the update with the work.
   check transfer/practice-skin compatibility before tattoo work, and gate hamper
   physics early. Muffin release must actually need peeling rather than tipping.
   BEHAVIOR cook_kale and make_muffins do not require these separation operations.
+
+### 2026-11-17 — avocado pitting and antenna reception research
+
+- Research only: fresh 641-record board, all-state targeted PR searches and
+  primary references; no paid compute or implementation. Details and sources in
+  `docs/task-ideas-followup-2026-11-15.md`; private snapshot in
+  `artifacts/avocado-antenna-2026-11-17/`.
+- Avocado pitting is a conditional shortlist candidate. No direct match found.
+  PSAG's published avocado criterion is cutting around the core, not extracting
+  it: https://arxiv.org/html/2408.12674v1#S4.SS1. Preserve tool purchase, resisted
+  detachment and soft-fruit damage; a loose ball or angle-triggered release
+  collapses into already-covered manipulation. Pre-halved is an explicit setup,
+  but the stone must still be attached and the tool initially separate.
+- Basic aerial extension is held by pending PR2419/TK-Z3KXZH, received
+  2026-11-17 04:33 UTC. Reception-guided adjustment is a possible distinct task,
+  but PR301's final rejection is directly relevant: its programmed meter and
+  claimed calibration context were judged artificial. A made-up pose-to-green
+  signal function is not sufficient. Require a defensible device/environment
+  response, visible feedback, physical reset and stable reception after release.
+- Priority: avocado before antenna. Neither is validated or guaranteed accepted;
+  no numeric acceptance probability or GPU-cost claim is supported by this audit.

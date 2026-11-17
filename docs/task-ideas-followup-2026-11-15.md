@@ -710,3 +710,81 @@ exist and were finally rejected for unrealistic simplifications. They are
 rebuild opportunities, not fresh discoveries. Dumpling folding/pinching is
 already evaluated in [DP3](https://www.roboticsproceedings.org/rss20/p067.pdf) and
 [RoboCook](https://hshi74.github.io/robocook/), so exclude it from this shortlist.
+
+## 17 November: avocado stones and reception adjustment
+
+Research only, using a fresh 641-record task board, targeted all-state PR
+searches, review prompt v24 and primary physical/benchmark references. No GPU,
+Dream calls, simulation, task implementation or submission. These are qualitative
+acceptance judgments, not measured probabilities or claims of hardware success.
+
+### Remove the stone from an avocado half — shortlist, moderate prospects
+
+Proposed instruction: **Remove the stone from this avocado half without crushing
+the flesh, and leave the stone in the waste dish.** Start with a freshly halved
+ordinary avocado, its stone still firmly attached and the tool lying separately.
+Use an ordinary hand pitter; engage the stone, support the fruit, twist and lift,
+then release the stone. The [OXO hand tool](https://www.oxo.com/3-in-1-avocado-slicer-901.html)
+provides a real twist-removal reference. No knife strike or powered pitting rig
+is needed for this proposed scope.
+
+No direct pitting task was found in the current board/PR searches. The nearby
+[PSAG avocado task](https://arxiv.org/html/2408.12674v1#S4.SS1) evaluates cutting
+around the core without cutting into it; its published success criterion does
+not include extracting the stone. BEHAVIOR's
+[buy_a_good_avocado](https://behavior.stanford.edu/knowledgebase/tasks/buy_a_good_avocado-0.html)
+requires checkout placement, not pitting. This supports a plausible distinction,
+not an exhaustive novelty guarantee.
+
+The new capability must be gaining purchase on an embedded irregular object
+while preserving soft surrounding food. Generic hold-and-turn is already covered
+by the review prompt. A loose sphere in a rigid cup, a proximity-triggered tool
+attachment or a turn-angle unlock would erase the case for this task. A reduced
+contact/detachment model may be adequate if it preserves slipping, resistance,
+fruit damage and genuine tool engagement; that has not been tested. Physical
+reset must control cultivar, size, ripeness and cut preparation. Judge actual
+stone removal and intact usable flesh with photos and, if needed, a kitchen
+scale. No mandatory trajectory or hidden simulated force threshold in scoring.
+
+Avocado is the preferred fruit for this idea because the target is larger and
+the activity recognizable. No direct cherry/olive pitting match was found, but
+a lever pitter risks reducing the skill to generic fixture loading and pressing.
+Do not turn fruit substitutions into multiple near-duplicate submissions.
+
+### Adjust a TV aerial for stable reception — reserve, conditional prospects
+
+Basic preparation is occupied: pending
+[PR #2419](https://github.com/robocurve/benchmark-tasks/pull/2419), TK-Z3KXZH,
+asks for extending a pocket radio aerial and standing it upright without moving
+or tipping its 190 g radio. Received 17 November at 04:33 UTC; not accepted as of
+this check. Do not duplicate it with another radio or TV aerial.
+
+A potentially distinct instruction is: **Adjust the indoor TV aerial until the
+selected channel has stable reception, then let go.** Begin with a connected,
+powered receiver already on a weak channel and its signal-quality display open.
+The work is observing reception while changing aerial orientation/position,
+then leaving a useful setting. Prefer visible receiver feedback for an RGB
+policy. [Philips support](https://www.usa.philips.com/c-t/XC000011301/my-philips-tv-is-not-adding-some-local-channels-after-some-automatic-installation)
+documents antenna adjustment to optimize reception of a weak channel.
+BEHAVIOR's [turning_on_radio](https://behavior.stanford.edu/knowledgebase/tasks/turning_on_radio-0.html)
+only requires the radio's on state. No direct reception-optimization match was
+found in the searched submissions; generic feedback tuning remains an overlap
+risk even if the exact household device is new.
+
+A particularly relevant warning is finally rejected
+[PR #301](https://github.com/robocurve/benchmark-tasks/pull/301#issuecomment-6814707528):
+its two-knob programmed meter stood in for claimed antenna/mirror calibration.
+Reviewers rejected the abstract mathematical response and the mismatch between
+visible meter and scorer. Therefore do not make reception a synthetic green bar
+that rises near a chosen target pose. Any proposed reduced RF model needs a
+physical basis and evidence for the chosen device/environment, or measured
+reception data. A full electromagnetic solver is not inherently required, but
+acceptance of a reduced approach is unproven.
+
+Score useful receiver output and sustained reception after both hands withdraw,
+with partial credit from observable reception quality; do not score angular
+error to a privileged optimum. A repeatable source/environment and realistic
+receiver response matter because uncontrolled broadcasts and surroundings make
+reset inconsistent. This is mechanically plausible but the reception model and
+physical reproducibility may cost more effort than the manipulation. Shortlist
+avocado first; keep reception adjustment as a reserve until that evidence exists.
