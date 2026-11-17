@@ -80,6 +80,8 @@ def main():
    from inspect_robots import Scene
    from dream_policy import make_policy
    policy=make_policy(requests,sessions);policy.bind(emb.info);policy.reset(Scene(id=HERE.name,instruction=instruction))
+  from demo_control import DemoControl
+  controller=DemoControl() if a.mode=='demo' else None
   from joint_tracking import JointTracking
   from yam_arena.constants import SHOULDER,WRIST,GRIPPER,FINGER_OPEN
   trackers=[JointTracking(side=s) for s in ['left','right']];limit_vector=np.tile([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/20],2)
@@ -87,6 +89,7 @@ def main():
   for k in range(1,steps+1):
    if a.mode=='demo':
     wanted=np.asarray(plan['frames'][k-1]['action14'])
+    if controller is not None:wanted=controller.action(k,wanted,m,hands(),current)
     if not a.cpu_preview:
      observed=[]
      for robot_name in ['left_robot','right_robot']:

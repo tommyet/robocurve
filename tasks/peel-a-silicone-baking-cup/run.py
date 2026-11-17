@@ -46,6 +46,13 @@ def main():
    m.subscribe_events()
    emb._ensure_sim(None);base=emb._base;emb._env.reset();instruction=json.loads((HERE/'task.json').read_text())['instruction'];emb._instruction=instruction
    m.bind_native(base)
+   from geometry import JOINTS
+   gaps=[]
+   for joint in JOINTS:
+    if not joint.get('enabled',True):continue
+    ra=m.orientation(joint['a'])@rotation(joint.get('q0',[0,0,0,1]));rb=m.orientation(joint['b'])@rotation(joint.get('q1',[0,0,0,1]))
+    gaps.append(dict(joint=joint['name'],gap=float(np.linalg.norm(m.joint_gap(joint['name']))),angle=float(np.arccos(np.clip((np.trace(ra.T@rb)-1)/2,-1,1)))))
+   report['native_reset_joint_errors']=gaps;report['native_reset_poses']=m.poses;save()
    drawing=Drawing(omni.usd.get_context().get_stage());m.draw(drawing)
    def refresh():
     base.sim.render()
