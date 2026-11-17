@@ -23,6 +23,7 @@ class Model(NativeModel):
   # Compression is measured from passive native spring motion, not a requested pose.
   compression=np.array([max(0.,float((self.orientation('sponge').T@self.joint_gap('compression_'+str(i)))[2])) for i in range(PADCOUNT)])
   load=100*compression;self.max_load=max(self.max_load,float(load.sum()))
+  previous_wet=self.wet.copy()
   for name in INK:
    p=self.p(name);local=self.orientation('forearm').T@(p-self.p('forearm'));radius=np.linalg.norm(local[1:]);normal=np.r_[0.,local[1:]/max(radius,1e-9)]
    paper_normal=self.orientation('forearm').T@self.orientation(name)[:,2]
@@ -33,7 +34,11 @@ class Model(NativeModel):
     # Actual paper lies against the loaded underside of this sponge pad.
     if abs(q[0])<.006 and abs(q[1])<.006 and abs(q[2]+.005)<.0007:pressure+=load[i]
    tack='tack_'+name
-   if on_arm and pressure>.03 and name not in self.lost:
+   # Water spreads through the continuous backing from a genuinely wetted
+   # neighbour. This keeps the printed face in actual skin contact; it does
+   # not treat a sponge hovering over dry paper as a wetting source.
+   wicked=any(other!=name and previous_wet[other]>=1. and np.linalg.norm(np.asarray(INK_ORIGINAL[other])-INK_ORIGINAL[name])<=.0071 and np.linalg.norm(self.p(other)-p)<=.008 for other in INK)
+   if on_arm and (pressure>.03 or wicked) and name not in self.lost:
     self.wet[name]+=dt
     # The coating becomes adhesive after actual wet contact. Before wetting,
     # paper is supported by sponge contact, not glued rigidly onto the form.
