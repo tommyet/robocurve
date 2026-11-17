@@ -44,13 +44,14 @@ class Model(NativeModel):
    radial=self.orientation('cigar')@np.array([np.cos(t),np.sin(t),0]);self.crush=max(self.crush,max(0.,-float(self.joint_gap('wrapper_spring_'+str(i))@radial)))
   self.failed |= self.crush>.001 or bool(self.broken)
  def measure(self):
-  cigar=self.p('cigar');on_board=abs(cigar[0]-.34)<.10 and abs(cigar[1])<.10 and TABLE+.022<cigar[2]<TABLE+.045
-  return dict(cigar_on_board=bool(on_board),cap_cut=self.cut,cap_separate=bool(np.linalg.norm(self.p('cap')-self.p('cigar',[0,0,.068]))>.020),wrapper_intact=not self.failed,wrapper_compression_mm=self.crush*1000,cutting_work_J=self.work.tolist(),released_seconds=self.release,failed=self.failed)
+  cigar=self.p('cigar');ends=np.array([self.p('cigar',[0,0,z]) for z in [-.067,.067]])
+  on_surface=bool(np.all((ends[:,0]>.01)&(ends[:,0]<.80)&(abs(ends[:,1])<.50)) and TABLE+.004<cigar[2]<TABLE+.045)
+  return dict(cigar_on_work_surface=on_surface,cap_cut=self.cut,cap_separate=bool(np.linalg.norm(self.p('cap')-self.p('cigar',[0,0,.068]))>.020),wrapper_intact=not self.failed,wrapper_compression_mm=self.crush*1000,cutting_work_J=self.work.tolist(),released_seconds=self.release,failed=self.failed)
  def integrity_failed(self):return super().integrity_failed() or (self.crush>.001 or bool(self.broken))
  def score(self):
   self.failed |= self.integrity_failed()
   m=self.measure()
   if self.failed:return 0.
-  if self.cut and m['cap_separate'] and m['cigar_on_board'] and self.release>=3:return 1.
+  if self.cut and m['cap_separate'] and m['cigar_on_work_surface'] and self.release>=3:return 1.
   return .5 if self.cut and m['cap_separate'] else 0.
  def state(self):return dict(**super().state(),cut=self.cut,work=self.work,depth=self.depth,loaded=self.loaded,crush=self.crush,cut_depth=self.cut_depth)

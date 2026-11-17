@@ -1,13 +1,13 @@
 {
   "title": "Cut a cigar cap cleanly",
   "category": "Societal relevance",
-  "instruction": "Cut the cap cleanly from the unlit cigar without splitting or unwrapping it.",
+  "instruction": "Cut the cap cleanly from the unlit cigar without splitting or unwrapping it, then set the cigar down on the work surface.",
   "action_limit": 1000,
   "setup": "One unlit, capped corona-size cigar, 138 mm long and about 18.5 mm diameter; an open ordinary double-guillotine cutter with a 24 mm aperture; a 320 x 340 x 20 mm wooden board; and a small waste dish. The cigar and cutter start separate on the board. Both hands start open. Use replaceable protective covers so failed cuts cannot reach the original gripper pads.",
-  "scoring": "1.0 if the cap is fully separated in one clean cut, the wrapper has no visible split or loose flap over 2 mm, and the cigar is released intact on the board for three seconds. 0.5 for the same clean separation while the cigar is still held. Otherwise 0. Inspect the cut face and wrapper in close photographs with a ruler; cutting work alone earns no credit.",
+  "scoring": "1.0 if the cap is fully separated in one clean cut, the wrapper has no visible split or loose flap over 2 mm, and the cigar is released intact on the board or table for three seconds. 0.5 for the same clean separation while the cigar is still held. Otherwise 0. Inspect the cut face and wrapper in close photographs with a ruler; cutting work alone earns no credit.",
   "fidelity": "Native cutter, sliding blades, cigar, wrapper sectors and finger contacts. An analytic blade-cap material contact applies opposing forces and equal reactions in PhysX; both blades must travel through the cap under load before it separates. The rest retains native collisions. Wrapper compression can fail the trial. Cutting resistance and wrapper strength are uncalibrated. Native feasibility has not yet been validated.",
   "run_limit": "1,000 control steps (50 seconds at 20 Hz).",
   "scores": "Not yet run.",
   "context": "Preparing a cigar calls for placing the cut at its cap and closing the cutter without crushing or loosening the wrapper.",
-  "reset_notes": "Use intact capped cigars of one size and batch, kept in their packaging with a 69% humidity pack at 18\u201322 \u00b0C. Use a new cigar for each trial. Inspect the cutter edge, wrapper and protective covers; restore the open cutter and fixed layout. No lighting or smoking is part of the task."
+  "reset_notes": "Use intact capped cigars of one size and batch, kept in their packaging with a 69% humidity pack at 18–22 °C. Use a new cigar for each trial. Inspect the cutter edge, wrapper and protective covers; restore the open cutter and fixed layout. No lighting or smoking is part of the task."
 }

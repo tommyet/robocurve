@@ -34,6 +34,4 @@ for side in [-1,1]:
 BODIES.append(body('waste_dish',[.48,-.05,TABLE+.003],[cylinder(.042,.006)]+ring(.042,.018,.004,z=.009),mass=.06,color=(.65,.73,.80)))
 for b in BODIES:
  if b['name'] in ['cap','blade_left','blade_right']:b['external_force']=True
- # Dissipative paper/tobacco rolling resistance, a coarse material approximation.
- if b['name']=='cigar' or b['name'].startswith('wrapper_'):b.update(angular_damping=10.,linear_damping=.5)
 finalize(BODIES,JOINTS)
