@@ -14,7 +14,7 @@ class Model(NativeModel):
     if np.min(np.linalg.norm(gap,axis=1))<.004:contact=True
    centred=pts-pts.mean(axis=0);_,_,axes=np.linalg.svd(centred,full_matrices=False)
    thickness=float(np.min(np.ptp(centred@axes.T,axis=0))+.007)
-   strain=max(0.,1.-thickness/.0194)
+   strain=max(0.,1.-thickness/.0214)
    result[str(k)]=float(np.clip((strain-.35)/.20,0,1)) if contact else 0.
   return result
  def material(self,hands,dt):
