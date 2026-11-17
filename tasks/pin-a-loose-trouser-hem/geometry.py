@@ -62,7 +62,7 @@ for j in JOINTS:
    spec=lookup[name];j['p'+str(side)]=Rotation.from_quat(spec['quat']).inv().apply(point-spec['pos']).tolist()
   for axis in ['rotX','rotY','rotZ']:
    if 'stiffness' in j['axes'][axis]:j['axes'][axis]['stiffness']=.0001 if j['name'].startswith(('fold_','hem_')) else .00002
-BODIES.append(body('sewing_support',[.34,.144,TABLE+.014],[box((.140,.200,.020))],mass=.25,fixed=True,color=(.62,.43,.25)))
+BODIES.append(body('sewing_support',[.34,.144,TABLE+.014],[box((.140,.230,.020))],mass=.25,fixed=True,color=(.62,.43,.25)))
 for b in BODIES:
  if b['name'].startswith(('front_','back_','hem_')) or b['name']=='sewing_support':b['pos'][1]-=.15
 # Small passive seam compliance avoids impulse spikes in the closed cloth grid.
