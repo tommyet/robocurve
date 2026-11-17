@@ -86,7 +86,7 @@ def main():
   controller=DemoControl()
   trackers=[JointTracking(side=s) for s in ['left','right']];limit_vector=np.tile([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/20],2)
   report.update(status='running',initial_measurements=m.measure());save()
-  return_start=next(i for i,f in enumerate(plan['frames']) if f['stage']=='let loose potato fall back into the bowl') if a.mode=='demo' else None
+  return_start=next(i for i,f in enumerate(plan['frames']) if f['stage']=='release masher') if a.mode=='demo' else None
   finishing_at=None
   for k in range(1,steps+1):
    if a.mode=='demo':
@@ -118,6 +118,7 @@ def main():
     report['stop_reason']='full_score_reached'
     for label in ['front','rear','side']:Image.fromarray(images(base)['judging_'+label]).save(a.out/(label+'-final.png'))
     break
+   if a.mode=='demo' and finishing_at is not None and frame_index==len(plan['frames'])-1 and m.score()!=1.:raise RuntimeError('The measured outcome was lost during release; stop this failed development trial.')
    if a.mode=='demo' and m.failed:raise RuntimeError('Native task integrity failed; development demo stopped early.')
   report.update(status='complete',events=m.events,score=m.score(),requires_visual_review=True)
  except BaseException as error:
