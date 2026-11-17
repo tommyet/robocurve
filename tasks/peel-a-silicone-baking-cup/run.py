@@ -92,6 +92,9 @@ def main():
   trackers=[JointTracking(side=s) for s in ['left','right']];limit_vector=np.tile([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/20],2)
   report.update(status='running',initial_measurements=m.measure());save()
   grip_command=None;grip_hold=False
+  if a.mode=='demo':
+   from demo_control import DemoControl
+   controller=DemoControl()
   for k in range(1,steps+1):
    if a.mode=='demo':
     wanted=np.asarray(plan['frames'][k-1]['action14'])
@@ -108,8 +111,9 @@ def main():
       if obs[6]-grip_command<.018:grip_command=max(.52,grip_command-.002)
       elif obs[6]-grip_command>.024:grip_command=min(.8,grip_command+.001)
      if grip_command is not None and stage not in ['release muffin','withdraw','released outcome']:wanted[6]=grip_command
+     wanted=controller.action(k,wanted,stage,m,obs)
      for tracker in trackers:
-      wanted=tracker.action(wanted,obs,enabled=True)
+      wanted=tracker.action(wanted,obs,enabled=(k<=240 or tracker.indices.start==0))
    elif policy is not None:
     chunk=policy.act(emb._observation());assert len(chunk.actions)==1;wanted=np.asarray(chunk.actions[0].data,float)
    else:wanted=current.copy()
