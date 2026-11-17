@@ -39,7 +39,7 @@ class DemoControl:
    if self.free is None:self.free=(h['tcp'].copy(),h['rotation'].copy(),k)
    pp,RR,start=self.free;target=pp.copy()
    if stage!='release masher':target[2]+=.09*np.clip((k-start-20)/40,0,1)
-   seed=observed[7:13]
+   seed=np.clip(observed[7:13],ik.LOWER+1e-6,ik.UPPER-1e-6)
    def residual(q):
     p,R=ik.tcp_pose(q,station.BASES['right']);return np.r_[p-target,.12*ik._rot_error(RR,R),.001*(q-seed)]
    out=wanted.copy();out[7:13]=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=30).x;return out
@@ -55,7 +55,7 @@ class DemoControl:
   else:offset=self.offset
   target=head+offset;desired=R@self.R0.T
   relative_head=h['rotation'].T@(m.p('masher')-h['tcp']);relative_R=h['rotation'].T@m.orientation('masher')
-  seed=observed[7:13]
+  seed=np.clip(observed[7:13],ik.LOWER+1e-6,ik.UPPER-1e-6)
   def residual(q):
    pp,rr=ik.tcp_pose(q,station.BASES['right']);return np.r_[pp+rr@relative_head-target,.12*ik._rot_error(desired,rr@relative_R),.001*(q-seed)]
   out=wanted.copy();out[7:13]=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=30).x;return out
