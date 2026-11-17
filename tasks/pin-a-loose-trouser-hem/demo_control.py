@@ -26,10 +26,10 @@ class DemoControl:
   goalaxis/=np.linalg.norm(goalaxis)
   relative_tip=h['rotation'].T@(tip-h['tcp']);relative_axis=h['rotation'].T@axis
   # Free rotation around the needle avoids imposing an unnecessary wrist angle.
-  delta=goal-tip;delta*=min(1.,.002/max(np.linalg.norm(delta),1e-12));target=tip+delta
-  desired=axis+.10*(goalaxis-axis);desired/=np.linalg.norm(desired)
+  target=goal
+  desired=goalaxis
   seed=current[7:13]
   def residual(q):
-   p,R=ik.tcp_pose(q,station.BASES['right']);return np.r_[p+R@relative_tip-target,.04*(R@relative_axis-desired),.004*(q-seed)]
-  sol=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.035),np.minimum(ik.UPPER,seed+.035)),max_nfev=25)
+   p,R=ik.tcp_pose(q,station.BASES['right']);return np.r_[p+R@relative_tip-target,.04*(R@relative_axis-desired),.001*(q-seed)]
+  sol=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=25)
   out=wanted.copy();out[7:13]=sol.x;return out
