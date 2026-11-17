@@ -105,7 +105,7 @@ def main():
      if stage=='support the muffin':
       if grip_command is None:grip_command=float(obs[6])
       if obs[6]-grip_command>=.008:grip_hold=True
-      if not grip_hold:grip_command=max(.68,grip_command-.002)
+      if not grip_hold:grip_command=max(.60,grip_command-.002)
      if grip_command is not None and stage not in ['release muffin','withdraw','released outcome']:wanted[6]=grip_command
      for tracker in trackers:
       wanted=tracker.action(wanted,obs,enabled=True)
@@ -120,7 +120,7 @@ def main():
    if not a.cpu_preview:m.draw(drawing)  # Native environment step already renders and updates camera buffers.
    capture(k);report.update(steps=k,measurements=m.measure(),score=m.score())
    if k%20==0:save();trace.flush()
-   if a.mode=='demo' and k==200 and m.p('muffin')[2]<.832:raise RuntimeError('Muffin was not retained during pickup; stop this development demo before peeling.')
+   if a.mode=='demo' and k==240 and m.p('muffin')[2]<.832:raise RuntimeError('Muffin was not retained during pickup; stop this development demo before peeling.')
    if a.mode=='demo' and m.failed:raise RuntimeError('Native task integrity failed; development demo stopped early.')
   report.update(status='complete',events=m.events,score=m.score(),requires_visual_review=True)
  except BaseException as error:

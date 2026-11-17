@@ -29,7 +29,7 @@ class DemoControl:
   # Free rotation around the needle avoids imposing an unnecessary wrist angle.
   target=goal
   desired=goalaxis
-  seed=current[7:13]
+  seed=np.clip(current[7:13],ik.LOWER+1e-6,ik.UPPER-1e-6)
   def residual(q):
    p,R=ik.tcp_pose(q,station.BASES['right']);return np.r_[p+R@relative_tip-target,.04*(R@relative_axis-desired),.001*(q-seed)]
   sol=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=25)
@@ -47,7 +47,7 @@ class DemoControl:
   def mix(a,b,start,end):
    u=np.clip((k-start)/(end-start),0,1);u=u*u*(3-2*u);return a*(1-u)+b*u
   def solve(side,p,targetR):
-   o=0 if side=='left' else 7;seed=current[o:o+6]
+   o=0 if side=='left' else 7;seed=np.clip(current[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    def residual(q):
     pp,rr=ik.tcp_pose(q,station.BASES[side]);return np.r_[pp-p,.12*ik._rot_error(targetR,rr),.001*(q-seed)]
    return least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=40).x
