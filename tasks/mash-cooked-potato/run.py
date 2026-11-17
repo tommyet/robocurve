@@ -86,9 +86,14 @@ def main():
   controller=DemoControl()
   trackers=[JointTracking(side=s) for s in ['left','right']];limit_vector=np.tile([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/20],2)
   report.update(status='running',initial_measurements=m.measure());save()
+  return_start=next(i for i,f in enumerate(plan['frames']) if f['stage']=='let loose potato fall back into the bowl') if a.mode=='demo' else None
+  finishing_at=None
   for k in range(1,steps+1):
    if a.mode=='demo':
-    wanted=np.asarray(plan['frames'][k-1]['action14'])
+    measured=m.measure()
+    if finishing_at is None and k>300 and measured['small_lump_mass_fraction']>=.95 and measured['retained_mass_fraction']>=.95:finishing_at=k
+    frame_index=k-1 if finishing_at is None else min(len(plan['frames'])-1,return_start+k-finishing_at)
+    frame=plan['frames'][frame_index];wanted=np.asarray(frame['action14'])
     if not a.cpu_preview:
      observed=[]
      for robot_name in ['left_robot','right_robot']:
@@ -97,7 +102,7 @@ def main():
      obs=np.asarray(observed)
      for tracker in trackers:
       wanted=tracker.action(wanted,obs,enabled=(k<=200 or tracker.indices.start==0))
-     wanted=controller.action(k,wanted,plan['frames'][k-1]['stage'],m,hands(),obs)
+     wanted=controller.action(k,wanted,frame['stage'],m,hands(),obs)
    elif policy is not None:
     chunk=policy.act(emb._observation());assert len(chunk.actions)==1;wanted=np.asarray(chunk.actions[0].data,float)
    else:wanted=current.copy()
@@ -109,6 +114,10 @@ def main():
    if not a.cpu_preview:m.draw(drawing)  # Native environment step already renders and updates camera buffers.
    capture(k);report.update(steps=k,measurements=m.measure(),score=m.score())
    if k%20==0:save();trace.flush()
+   if a.mode=='demo' and m.score()==1.:
+    report['stop_reason']='full_score_reached'
+    for label in ['front','rear','side']:Image.fromarray(images(base)['judging_'+label]).save(a.out/(label+'-final.png'))
+    break
    if a.mode=='demo' and m.failed:raise RuntimeError('Native task integrity failed; development demo stopped early.')
   report.update(status='complete',events=m.events,score=m.score(),requires_visual_review=True)
  except BaseException as error:

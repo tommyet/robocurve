@@ -46,5 +46,5 @@ def audit(rows,report):
  events={e['joint'] for e in report.get('events',[]) if e['event']=='native_joint_break'}
  assert events==broken,'Native break-event history differs from final state'
  score=m.score();assert abs(score-report['score'])<1e-9,'Reported score differs'
- complete=report['status']=='complete' and report['steps']==report['requested_steps']
+ complete=report['status']=='complete' and (report['steps']==report['requested_steps'] or (report['mode']=='demo' and report.get('stop_reason')=='full_score_reached' and score==1.))
  return dict(score=score,steps=count-1,complete=complete,measurements=m.measure(),native_break_events=len(events),visual_review_still_required=True,submission_evidence=complete and not report.get('cpu_preview',True))
