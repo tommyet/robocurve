@@ -1,9 +1,9 @@
 {
   "date": "2026-11-17",
   "submission_ready": false,
-  "new_task_prs_opened": 3,
+  "new_task_prs_opened": 4,
   "native_runs": "Multiple native resets and demos recorded; see task entries",
-  "dream_runs": "Kale, avocado and cigar complete; remaining baselines await successful demos.",
+  "dream_runs": "Kale, avocado, cigar and tattoo complete; remaining baselines await full-score demos.",
   "bracelet": {
     "pr": 2187,
     "revision": "f5c49c2",
@@ -42,28 +42,29 @@
     },
     {
       "slug": "pin-a-loose-trouser-hem",
-      "scene": "A supported puncture occurred but tore; current path works over the support edge. Shaft-retention scoring fixed; trial052 queued.",
+      "scene": "Trial056 missed its settled cloth grasp. Trial058 provides 26 mm support-edge clearance, a taller support and an observed-pose grasp correction.",
       "score": "No successful full demo",
       "media": null,
       "pr": null,
-      "remaining_local_work": "Validate puncture/return and the contact-driven closure controller.",
+      "remaining_local_work": "Demonstrate actual cloth pickup, four-hole straight threading and closure.",
       "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload.",
       "candidate_plan_actions": 1260
     },
     {
       "slug": "apply-a-temporary-tattoo",
-      "scene": "Native demo039 complete and independently audited at 1.0; full Dream baseline running.",
-      "score": "Demo 1.0 / 1560 actions; Dream pending",
-      "media": null,
-      "pr": null,
+      "scene": "Native demo039 and Dream039 complete, independently rescored and visually inspected.",
+      "score": "Demo 1.0 / 1560 actions; Dream 0.0 / 1800 actions, 37 requests",
+      "media": "M-L685M3",
+      "pr": "https://github.com/robocurve/benchmark-tasks/pull/2541",
       "candidate_plan_actions": 1560,
       "maximum_command_velocity_ratio": 0.381793760538531,
       "maximum_ik_position_error_m": 0.011067952095175429,
-      "remaining_validation": "Complete Dream, independent audit, media upload and isolated PR."
+      "remaining_validation": "Submitted; waiting for review.",
+      "receipt": "TK-UQGNPG"
     },
     {
       "slug": "fold-a-pop-up-laundry-hamper",
-      "scene": "Outside approach retains most frame layers; trial052 tests whether the coupled lower frame follows during the twist. Securing loop still unfinished.",
+      "scene": "Trial055 bent the frame without coiling. Trial058 uses a reachable long-axis twist; elastic retainer placement remains unfinished.",
       "score": "0.0 development trials",
       "media": null,
       "pr": null,
@@ -73,22 +74,22 @@
     },
     {
       "slug": "peel-a-silicone-baking-cup",
-      "scene": "Conventional pull tabs and compliant, damageable muffin crumb. Grip closure needs more time; trial052 running.",
+      "scene": "Trial057 still slipped during pickup. Trial058 maintains measured native finger preload during lift and peel.",
       "score": "Demo not yet successful",
       "media": null,
       "pr": null,
-      "candidate_plan_actions": 600,
+      "candidate_plan_actions": 680,
       "maximum_command_velocity_ratio": 0.2882187140625003,
       "maximum_ik_position_error_m": 9.695714973016204e-05,
       "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload."
     },
     {
       "slug": "mash-cooked-potato",
-      "scene": "Non-overlapping food particles fix one impulse source; fixed-path trials still lose food. Trial049 follows actual tool pose and remaining lumps. SPARTA novelty risk unresolved.",
+      "scene": "Trial054 retained 99.38% of food but only 39.44% of retained mass reached the size threshold. Trial057 adds bounded arm tracking; SPARTA overlap remains a serious rejection risk.",
       "score": "No successful full demo",
       "media": null,
       "pr": null,
-      "candidate_plan_actions": 1420,
+      "candidate_plan_actions": 1660,
       "maximum_command_velocity_ratio": 0.22096768078125031,
       "maximum_ik_position_error_m": 7.59056560541279e-05,
       "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload."
@@ -121,5 +122,5 @@
     "Safety-pin puncture, cuff drape and retention still need native evidence.",
     "Tattoo/PVC substrate compatibility is a qualification requirement, not a measured result."
   ],
-  "checkpoint_utc": "2026-11-17T21:55:40.462302+00:00"
+  "checkpoint_utc": "2026-11-17T22:28:43.016260+00:00"
 }
