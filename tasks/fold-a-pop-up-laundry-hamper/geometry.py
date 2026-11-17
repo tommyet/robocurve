@@ -5,8 +5,8 @@ its final shape and no stage variable changes the frame rest angles.
 """
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
-N=48;A=.165;B=.265;CENTER=np.array([.34,0,TABLE+.032])
-BODIES.append(body("folding_board",[.34,0,TABLE+.010],[box((.320,.480,.020))],mass=1.,fixed=True,color=(.58,.40,.25)))
+N=48;A=.165;B=.265;CENTER=np.array([.34,0,TABLE+.052])
+BODIES.append(body("folding_board",[.34,0,TABLE+.020],[box((.320,.480,.040))],mass=1.,fixed=True,color=(.58,.40,.25)))
 # A rounded rectangle sampled at equal arclength, 33 x 53 cm overall.
 def rounded_rect(a,b,r=.025):
  points=[]
