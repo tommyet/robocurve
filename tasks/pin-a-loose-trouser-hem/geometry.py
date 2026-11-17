@@ -68,7 +68,7 @@ for b in BODIES:
 # Small passive seam compliance avoids impulse spikes in the closed cloth grid.
 for j in JOINTS:
  if j['name'].startswith(('cloth_','side_seam_','fold_','hem_','existing_stitch_')):
-  for axis in ['transX','transY','transZ']:j['axes'][axis]=dict(limits=(-.0005,.0005),stiffness=100.,damping=.05)
+  for axis in ['transX','transY','transZ']:j['axes'][axis]=dict(limits=(-.0005,.0005),stiffness=500.,damping=.10)
   for axis in ['rotX','rotY','rotZ']:
    if 'stiffness' in j['axes'][axis]:j['axes'][axis].update(max_force=.00005)
 finalize(BODIES,JOINTS)
