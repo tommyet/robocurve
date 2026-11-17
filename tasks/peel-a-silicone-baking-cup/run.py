@@ -108,8 +108,8 @@ def main():
      if stage=='support the muffin' or (grip_command is not None and stage not in ['release muffin','withdraw','released outcome']):
       if grip_command is None:grip_command=float(obs[6])
       # Maintain gentle native motor preload as the soft crumb moves in the pads.
-      if obs[6]-grip_command<.018:grip_command=max(.52,grip_command-.002)
-      elif obs[6]-grip_command>.024:grip_command=min(.8,grip_command+.001)
+      if obs[6]-grip_command<.008:grip_command=max(.52,grip_command-.002)
+      elif obs[6]-grip_command>.012:grip_command=min(.8,grip_command+.001)
      if grip_command is not None and stage not in ['release muffin','withdraw','released outcome']:wanted[6]=grip_command
      wanted=controller.action(k,wanted,stage,m,obs)
      for tracker in trackers:

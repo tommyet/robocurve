@@ -24,13 +24,14 @@ def spawn(prim_path,cfg,translation=None,orientation=None,**kwargs):
  x,y,z,w=orientation;body.AddOrientOp(precision=UsdGeom.XformOp.PrecisionDouble).Set(Gf.Quatd(w,x,y,z))
  prim=body.GetPrim();rigid=UsdPhysics.RigidBodyAPI.Apply(prim)
  if spec.get('fixed'):rigid.CreateKinematicEnabledAttr(True)
- UsdPhysics.MassAPI.Apply(prim).CreateMassAttr(spec['mass'])
+ mass=UsdPhysics.MassAPI.Apply(prim);mass.CreateMassAttr(spec['mass'])
+ if spec.get('inertia'):mass.CreateDiagonalInertiaAttr(Gf.Vec3f(*spec['inertia']))
  rb=PhysxSchema.PhysxRigidBodyAPI.Apply(prim);rb.CreateEnableCCDAttr(not spec.get('fixed',False))
  if spec.get('external_force'):
   force=PhysxSchema.PhysxForceAPI.Apply(prim);force.CreateForceEnabledAttr(True);force.CreateWorldFrameEnabledAttr(True);force.CreateModeAttr('force');force.CreateForceAttr(Gf.Vec3f(0,0,0));force.CreateTorqueAttr(Gf.Vec3f(0,0,0))
  rb.CreateSolverPositionIterationCountAttr(64);rb.CreateSolverVelocityIterationCountAttr(16)
  rb.CreateLinearDampingAttr(spec.get('linear_damping',.25));rb.CreateAngularDampingAttr(spec.get('angular_damping',.5))
- rb.CreateMaxDepenetrationVelocityAttr(.5);rb.CreateSleepThresholdAttr(0.)
+ rb.CreateMaxLinearVelocityAttr(spec.get('max_linear_velocity',1.));rb.CreateMaxAngularVelocityAttr(spec.get('max_angular_velocity',30.));rb.CreateMaxDepenetrationVelocityAttr(.2);rb.CreateSleepThresholdAttr(0.)
  # Material reaction comes from the PhysX solver; no kinematic grasp constraint.
  mat=path+'/physics'
  c=sim.RigidBodyMaterialCfg(static_friction=spec.get('friction',.7),dynamic_friction=spec.get('friction',.7)*.8,restitution=0.);c.func(mat,c)

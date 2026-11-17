@@ -16,6 +16,10 @@ class DemoControl:
   out=wanted.copy()
   for side,o in [('left',0),('right',7)]:
    p,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side]);p+=min(1.,k/60)*self.offset[side]
+   if 60<k<=140:
+    index=0 if side=='left' else 24
+    point=np.mean([m.p(f'wire_{f}_{index:02d}') for f in range(4)],axis=0)
+    target=point-.006*R[:,2];u=np.clip((k-60)/40,0,1);p=(1-u)*p+u*target
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    def residual(q):
     pp,rr=ik.tcp_pose(q,station.BASES[side]);return np.r_[pp-p,.15*ik._rot_error(R,rr),.001*(q-seed)]

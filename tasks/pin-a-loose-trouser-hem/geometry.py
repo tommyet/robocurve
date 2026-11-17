@@ -71,4 +71,8 @@ for j in JOINTS:
   for axis in ['transX','transY','transZ']:j['axes'][axis]=dict(limits=(-.0005,.0005),stiffness=500.,damping=.10)
   for axis in ['rotX','rotY','rotZ']:
    if 'stiffness' in j['axes'][axis]:j['axes'][axis].update(max_force=.00005)
+# The separate 2 mm contact tip is a spring force probe, not a loose grain.
+# Share a small shaft-scale rotational inertia to regularize its stiff contact.
+for b in BODIES:
+ if b['name']=='needle_point':b['inertia']=[1e-8,1e-8,1e-8]
 finalize(BODIES,JOINTS)
