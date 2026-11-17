@@ -1,41 +1,51 @@
 # Apply a water-transfer temporary tattoo
 
-Apply the water-transfer tattoo inside the marked area on the practice forearm. Remove the backing and leave the image intact.
+Apply the tattoo inside the marked area on a curved practice forearm, then remove the backing without losing the picture.
 
-**Development draft. No native success, Dream score, media upload or submission readiness is claimed.**
-
-A water-transfer tattoo needs even wetting and careful backing removal to leave the picture intact on a curved surface.
+**Development draft: the latest native demo and complete Dream baseline are still being validated.**
 
 ## Setup and reset
 
-A fixed 200 mm long, 64 mm diameter practice forearm with a smooth PVC surface; one 50 x 40 mm water-transfer paper carrying a red heart; a pre-wetted 40 x 40 x 20 mm cellulose sponge in a shallow dish. A 30 x 20 x 10 mm rest supports the paper with its edges overhanging. The tattoo is separate, image-side down, with only its protective film removed. A 40 x 35 mm target is marked on the form. Both hands start open; removable waterproof pad covers protect the rig.
+Use a 200 mm long, 64 mm diameter practice form covered in smooth PVC vinyl, supported horizontally on two 25 × 70 × 26 mm grooved rests. Its centre is 45 mm above the table. Mark a 40 × 35 mm rectangle on top, measuring the short dimension around the curve. Fit removable waterproof gripper-pad covers.
 
-Clean and dry the PVC. Use a fresh water-transfer tattoo and a sponge wetted with 5 ml clean water, squeezed until it no longer drips. Qualify the chosen tattoo/PVC pair by one hand application before trials; replace the PVC cover if removal leaves residue. Do not use semi-permanent or dry-rub transfers.
+The transfer backing is 50 × 60 mm, with the supplied 35 × 30 mm pixel-heart artwork and an unprinted margin. It starts image-side down on a 30 × 40 × 30 mm rest, separate from the form, with its protective film removed. A pre-wetted 40 × 40 × 25 mm cellulose sponge sits in a 70 mm square shallow plastic dish.
 
-`geometry.py` records every simulated part, dimension, mass, fixed coordinate and passive joint. The starting photograph must be captured from the final native reset before submission.
+The fixed world centres are: form `(0.34, 0.025, 0.7925)` m; paper `(0.34, 0.13, 0.7778)`; sponge `(0.34, -0.16, 0.7725)`. The tabletop is at Z = 0.7475 m. Both hands start open. `geometry.py` gives the remaining parts and the setup image shows the settled layout.
+
+Use classic water-transfer tattoos made from [heart-artwork.svg](heart-artwork.svg), at 100% size without fitting to page. The file contains only the tattoo artwork; its canvas is the required backing size. Order a batch from a temporary-tattoo printer or use compatible printable transfer stock. Use the same stock for every trial. [TemporaryTattoos.com documents](https://www.temporarytattoos.com/blogs/news/how-to-apply-a-temporary-tattoo) wet application and use on smooth plastic; this does not establish compatibility with every PVC cover.
+
+Before a batch, qualify one hand-applied sample on the chosen cover using 30 seconds of wet contact. For each trial, clean and dry the form, replace the tattoo, add 5 ml clean water to the sponge and squeeze out drips. Remove old ink and replace a cover that retains residue. Use no semi-permanent ink or dry-rub transfer. Preparation is outside the robot trial.
 
 ## Judging
 
-1.0 if at least 95% of the image transfers inside the target, the backing is fully removed, and both hands have released for three seconds. 0.5 for at least 75% transferred inside the target with the backing removed; 0.25 for at least 50%. Otherwise 0. A torn backing scores 0. Compare a close photograph with the supplied full image and centimetre scale.
+Use a close photograph, the reference artwork and a ruler:
 
-## Simulation and limits
+- **1.0:** at least 95% of the image is intact inside the outline, the backing is completely removed, and both hands are released for three seconds.
+- **0.5:** at least 75% is intact inside the outline and the backing is removed.
+- **0.25:** at least 50% is intact inside the outline.
+- **0:** all other outcomes, including a torn backing.
 
-Native flexible paper, sponge parts and robot contacts. Sponge compression supplies reaction force; local wetting requires loaded contact against paper on the curved form. After 30 seconds of wetting, native peeling releases the backing and a reduced transfer rule leaves ink on the form. Dry or early peeling loses that image region. Adhesion and water transport are approximated. Native feasibility has not yet been validated.
+The 27 equal-area red tiles make missing regions easy to count. The simulation counts transferred tile centres inside the target and rejects merged or displaced image tiles. Inspect the end of the video as well as the score.
 
-The manufacturer describes application to non-skin objects as well as skin: https://www.temporarytattoos.com/blogs/news/how-to-apply-a-temporary-tattoo . That supports a practice surface, but it is not a test of this particular PVC/tattoo combination. A physical qualification is specified, not claimed as completed. Target markings, the drawing and the native full-score peel still need validation.
+## Simulation
 
-No manipulated object is attached to a hand. Native contact, friction and ordinary joint actions handle grasping. A scripted controller may use privileged state for a feasibility demo; Dream must use only the standard three cameras and joint observations. The geometry and material laws must be identical in both runs.
+The paper consists of twelve hinged bands. The sponge has sixteen passive compression elements. Native collisions and ordinary robot joints perform pickup, placement, pressing and peeling; there are no hand attachments or object-pose edits. The demo regrips the blank margin after wetting using measured object poses. Dream receives only its normal cameras and joint observations.
 
-## Run
+A reduced material law requires the printed face to contact the form and a loaded wet sponge to contact the backing. Water can wick a short distance through contacting neighbouring paper. After 30 seconds of local wet contact, a weak coating bond becomes available; its physical separation leaves that image tile on the form. Early removal loses that region. This approximates water transport and adhesive release, not individual ink chemistry. The paper's transverse bending, coarse tear limits, sponge stiffness and coating adhesion are uncalibrated. The same material law applies to both runs.
 
-Use the Python 3.12 / Isaac 6.1 / YAM environment targeted in `ENVIRONMENT.json`. New-task verification is still pending. From the repository root:
+Geometry and artwork are original, under the included MIT license; there are no imported third-party assets.
+
+## Run and score
+
+Use the pinned Python 3.12 / Isaac Sim 6.1 / YAM environment in `ENVIRONMENT.json`:
 
 ```sh
-python tasks/apply-a-temporary-tattoo/make_plan.py
-OMNI_KIT_ACCEPT_EULA=YES python tasks/apply-a-temporary-tattoo/run.py --mode demo --out /tmp/apply-a-temporary-tattoo-demo
-OMNI_KIT_ACCEPT_EULA=YES python tasks/apply-a-temporary-tattoo/run.py --mode dream --out /tmp/apply-a-temporary-tattoo-dream
+python tasks/apply-a-temporary-tattoo/run.py --mode demo --out /tmp/tattoo-demo
+python tasks/apply-a-temporary-tattoo/run.py --mode dream --out /tmp/tattoo-dream
+python tasks/apply-a-temporary-tattoo/rescore.py /tmp/tattoo-demo
+python tasks/apply-a-temporary-tattoo/rescore.py /tmp/tattoo-dream
 ```
 
-Rescore recorded native body poses with `python tasks/apply-a-temporary-tattoo/rescore.py /tmp/apply-a-temporary-tattoo-demo`. The scorer checks frozen source hashes, trace continuity, bounded joint actions, native break events, and the outcome. This supports, and does not replace, visual inspection of the contact and material behaviour.
+Configure Dream through its normal credential store or the local bridge in `dream_policy.py`. Keep credentials outside this folder. `make_plan.py` regenerates the joint trajectory; `demo_control.py` handles the regrasp.
 
-Fixed layout; no random seed. Limit: 1,400 control steps (70 seconds at 20 Hz). Actual runtime per trial, complete native evidence and independent scoring will be recorded after successful validation. Do not upload a CPU plot or a kinematic reach check as a successful demo.
+The limit is 1,800 controls at 20 Hz (90 seconds), with a fixed layout and no random seed. Runs save native videos, start/final images, continuous body-state traces and frozen source. Independent rescoring checks source hashes, action bounds, native break history and the outcome. Judging cameras are not policy inputs. Final scores and wall times remain pending.

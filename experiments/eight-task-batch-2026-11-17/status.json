@@ -42,7 +42,7 @@
     },
     {
       "slug": "pin-a-loose-trouser-hem",
-      "scene": "Stable cloth and pin pickup, measured needle approach; nearby support trial032 running. No successful threading or closure yet.",
+      "scene": "A supported puncture occurred but tore; current path works over the support edge. Shaft-retention scoring fixed; trial052 queued.",
       "score": "No successful full demo",
       "media": null,
       "pr": null,
@@ -52,18 +52,18 @@
     },
     {
       "slug": "apply-a-temporary-tattoo",
-      "scene": "Wider unprinted margin and short-range water wicking; all image cells wet in native trial030. Full transfer/peel/release still pending.",
-      "score": "No successful full demo",
+      "scene": "Native demo039 complete and independently audited at 1.0; full Dream baseline running.",
+      "score": "Demo 1.0 / 1560 actions; Dream pending",
       "media": null,
       "pr": null,
-      "candidate_plan_actions": 1340,
+      "candidate_plan_actions": 1560,
       "maximum_command_velocity_ratio": 0.381793760538531,
       "maximum_ik_position_error_m": 0.011067952095175429,
-      "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload."
+      "remaining_validation": "Complete Dream, independent audit, media upload and isolated PR."
     },
     {
       "slug": "fold-a-pop-up-laundry-hamper",
-      "scene": "Intact reset; frame layers slip from pickup. Deeper grip/clearance trial033 running; retainer placement unfinished.",
+      "scene": "Outside approach retains most frame layers; trial052 tests whether the coupled lower frame follows during the twist. Securing loop still unfinished.",
       "score": "0.0 development trials",
       "media": null,
       "pr": null,
@@ -73,7 +73,7 @@
     },
     {
       "slug": "peel-a-silicone-baking-cup",
-      "scene": "Stable reset; fixed opening either misses or damages muffin. Gentle finger-feedback pickup trial035 queued.",
+      "scene": "Conventional pull tabs and compliant, damageable muffin crumb. Grip closure needs more time; trial052 running.",
       "score": "Demo not yet successful",
       "media": null,
       "pr": null,
@@ -84,7 +84,7 @@
     },
     {
       "slug": "mash-cooked-potato",
-      "scene": "Native food retained but connected lumps remain. Explicit compressive rupture and fuller coverage trial034 queued; SPARTA novelty risk remains.",
+      "scene": "Non-overlapping food particles fix one impulse source; fixed-path trials still lose food. Trial049 follows actual tool pose and remaining lumps. SPARTA novelty risk unresolved.",
       "score": "No successful full demo",
       "media": null,
       "pr": null,
@@ -107,10 +107,10 @@
     }
   ],
   "compute": {
-    "status": "Active single Secure Cloud GPU; live independent watchdog, four-hour total cap $10.76",
+    "status": "Active single Secure Cloud GPU; independent six-hour shutdown cap $16.14",
     "hourly_usd": 2.69,
     "started_utc": "2026-11-17T18:09:52Z",
-    "scheduled_shutdown_utc": "2026-11-17T22:09:52Z",
+    "scheduled_shutdown_utc": "2026-11-18T00:09:52Z",
     "credentials": "Dream key remains on Mac loopback bridge",
     "estimate_not_invoice": true
   },
@@ -121,5 +121,5 @@
     "Safety-pin puncture, cuff drape and retention still need native evidence.",
     "Tattoo/PVC substrate compatibility is a qualification requirement, not a measured result."
   ],
-  "checkpoint_utc": "2026-11-17T19:40Z"
+  "checkpoint_utc": "2026-11-17T21:55:40.462302+00:00"
 }
