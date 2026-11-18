@@ -35,6 +35,9 @@ class Model(NativeModel):
   # last 60 mm of hair. Passing the loop over only the tips does not finish.
   usable=bool(HEAD[2]-.16<centre[2]<HEAD[2]-.025 and centre[0]<HEAD[0]-.055)
   return dict(secured_locks=held,total_locks=STRANDS,elastic_at_ponytail_base=usable,elastic_diameter_mm=float(np.ptp((ring-centre)@axes[:2].T,axis=0).max()*1000),intact=not self.failed,released_seconds=self.release,failed=self.failed)
+ def reset_valid(self):
+  from common import TABLE
+  return self.nodes[:,2].min()>TABLE+.035 and self.measure()['secured_locks']==0
  def score(self):
   if self.failed:return 0.
   m=self.measure()

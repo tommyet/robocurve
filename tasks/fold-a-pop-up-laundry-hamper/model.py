@@ -1,6 +1,6 @@
 import numpy as np
 from native_model import NativeModel
-from geometry import SURFACES,N
+from geometry import SURFACES,N,HEM_ATTACHMENTS,FRAME_POINTS
 class Model(NativeModel):
  def __init__(self):
   super().__init__();self.retained_seconds=0.;self.nodes={s['name']:s['points'].copy() for s in SURFACES};self.node_velocities={n:np.zeros_like(p) for n,p in self.nodes.items()};self.peak_stretch={n:1. for n in self.nodes}
@@ -31,8 +31,14 @@ class Model(NativeModel):
   self.failed |= self.integrity_failed()
   q=self.measure();stable=not self.failed and q['bundle_long_mm']<=220 and q['bundle_short_mm']<=220 and q['thickness_mm']<=60 and q['retainer_encloses_packet'] and clear
   self.retained_seconds=self.retained_seconds+dt if stable else 0.
+ def binding_gap(self):
+  return max(float(np.linalg.norm(self.nodes['frame'][ids]-(local@self.orientation(name).T+self.p(name)),axis=1).max()) for name,ids,local in HEM_ATTACHMENTS)
+ def frame_perimeter_ratio(self):
+  p=(self.nodes['frame'][:N]+self.nodes['frame'][N:])/2
+  rest=(FRAME_POINTS[:N]+FRAME_POINTS[N:])/2
+  return float(np.linalg.norm(np.roll(p,-1,axis=0)-p,axis=1).sum()/np.linalg.norm(np.roll(rest,-1,axis=0)-rest,axis=1).sum())
  def integrity_failed(self):
-  return super().integrity_failed() or any(not np.isfinite(v).all() for v in self.nodes.values()) or self.peak_stretch['frame']>1.02 or self.peak_stretch['cloth']>1.35 or self.peak_stretch['band']>3.5 or self.peak_stretch['tab']>1.35
+  return self.binding_gap()>.010 or super().integrity_failed() or any(not np.isfinite(v).all() for v in self.nodes.values()) or (self.peak_stretch['frame']>1.10 or abs(self.frame_perimeter_ratio()-1.)>.03) or self.peak_stretch['cloth']>1.35 or self.peak_stretch['band']>3.5 or self.peak_stretch['tab']>1.35
  def measure(self):
   wire=self.nodes['frame'];packet=np.vstack([wire,self.nodes['cloth']]);band=self.nodes['band'];centre=wire.mean(axis=0);_,_,axes=np.linalg.svd(wire-centre,full_matrices=False);local=(packet-centre)@axes.T;extent=np.ptp(local,axis=0)+.007
   _,_,ba=np.linalg.svd(band-band.mean(axis=0),full_matrices=False);across=ba[0]-axes[2]*float(ba[0]@axes[2]);across/=max(np.linalg.norm(across),1e-12)
@@ -42,7 +48,7 @@ class Model(NativeModel):
   along=np.cross(axes[2],across);packet_along=(packet-centre)@along;band_along=(mid-centre)@along
   crosses_packet=bool(packet_along.min()+.01<float(np.median(band_along))<packet_along.max()-.01)
   enclosed=bool(crosses_packet and w>.8 and bl[:,0].min()<pl[:,0].min()+.02 and bl[:,0].max()>pl[:,0].max()-.02 and bl[:,1].min()<pl[:,1].min()+.005 and bl[:,1].max()>pl[:,1].max()-.005)
-  return dict(bundle_long_mm=float(max(extent[:2])*1000),bundle_short_mm=float(min(extent[:2])*1000),thickness_mm=float(extent[2]*1000),retainer_encloses_packet=enclosed,intact=not self.failed,released_seconds=self.release,retained_seconds=self.retained_seconds,failed=self.failed)
+  return dict(frame_perimeter_ratio=self.frame_perimeter_ratio(),binding_gap_mm=self.binding_gap()*1000,bundle_long_mm=float(max(extent[:2])*1000),bundle_short_mm=float(min(extent[:2])*1000),thickness_mm=float(extent[2]*1000),retainer_encloses_packet=enclosed,intact=not self.failed,released_seconds=self.release,retained_seconds=self.retained_seconds,failed=self.failed)
  def score(self):
   self.failed |= self.integrity_failed();m=self.measure()
   if self.failed:return 0.

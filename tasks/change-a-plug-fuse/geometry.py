@@ -1,14 +1,15 @@
 """A full-size moulded UK plug, removable fuse carrier and passive retaining clips."""
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
-PLUG=np.array([.20,.025,TABLE+.014]);FC=np.array([.009,.012,.009]);FUSE_LENGTH=.0254;FUSE_RADIUS=.00315
+PLUG=np.array([.28,.08,TABLE+.014]);FC=np.array([.009,.012,.009]);FUSE_LENGTH=.0254;FUSE_RADIUS=.00315
 # Rectangular pin face with rounded outer corners, three actual-sized pins,
 # a moulded cord exit and the open internal space below the fuse carrier.
-outer=[box((.054,.045,.008),(0,0,-.008)),box((.054,.009,.014),(0,-.018,.003)),box((.054,.005,.014),(0,.020,.003)),box((.008,.031,.014),(-.024,-.002,.003)),box((.006,.031,.014),(.026,-.002,.003)),box((.027,.019,.014),(.001,-.006,.003))]
+outer=[box((.054,.045,.008),(0,0,-.008)),box((.054,.009,.014),(0,-.018,.003)),box((.054,.005,.014),(0,.020,.003)),box((.008,.031,.014),(-.024,-.002,.003)),box((.006,.024,.014),(.026,-.0055,.003)),box((.006,.007,.012),(.026,.010,.002)),box((.027,.019,.014),(.001,-.006,.003))]
 for x,y,size,height in [(-.010,-.0111,(.00635,.004),.0177),(-.010,.0111,(.00635,.004),.0177),(.0122,0,(.004,.008),.0227)]:
  outer.append(box((size[0],size[1],height),(x,y,.010+height/2),(.69,.59,.28)))
 outer += [cylinder(.004,.09,(0,-.067,-.005),Rotation.from_euler('x',90,degrees=True).as_quat(),(.16,.16,.17))]
 BODIES.append(body('plug',PLUG,outer,mass=.065,color=(.90,.89,.84),friction=.9,torsional_patch_radius=.008,min_torsional_patch_radius=.004))
+# The lowered right-wall section is the ordinary screwdriver access notch.
 # A fuse carrier's face is the ordinary pry point. Its four sprung fingers
 # retain the cartridge beneath it; no artificial robot handle is added.
 CARRIER=PLUG+FC+[0,0,.005]
@@ -43,11 +44,19 @@ for sign in [-1,1]:
  name='cover_detent_'+('p' if sign>0 else 'n')
  BODIES.append(body(name,pos,[box((.001,.005,.004)),box((.0014,.005,.0008),(-sign*.0005,0,.0018))],mass=.0002,color=(.89,.88,.83)))
  JOINTS.append(joint(name+'_spring','plug',name,pos-PLUG+[0,0,-.002],[0,0,-.002],axes={**fixed_axes(),'rotY':dict(limits=(-35,35),stiffness=.055,damping=.0001)},break_force=25.,break_torque=.1))
-TOOL=np.array([.36,-.14,TABLE+.028])
+TOOL=np.array([.28,-.14,TABLE+.028])
 # 169 mm ordinary flat screwdriver, 3 mm blade. Its shaft gives the two
 # grippers room while the tip levers the carrier notch.
 BODIES.append(body('screwdriver',TOOL,[cylinder(.009,.070,(0,-.015,0),Rotation.from_euler('x',90,degrees=True).as_quat(),(.20,.45,.72)),cylinder(.002,.088,(0,.061,0),Rotation.from_euler('x',90,degrees=True).as_quat(),(.68,.70,.72)),box((.003,.014,.0008),(0,.112,0),(.68,.70,.72))],mass=.040,color=(.2,.45,.72),friction=.8,torsional_patch_radius=.005,min_torsional_patch_radius=.003))
 BODIES.append(body('tool_rest',[TOOL[0],TOOL[1]-.025,TABLE+.0095],[box((.030,.020,.019))],fixed=True,mass=.05,color=(.58,.43,.27)))
 BODIES.append(body('shaft_rest',[TOOL[0],TOOL[1]+.080,TABLE+.013],[box((.020,.020,.026))],fixed=True,mass=.02,color=(.58,.43,.27)))
 BODIES.append(body('parts_dish',[.29,-.16,TABLE+.010],[box((.085,.070,.003)),box((.003,.070,.016),(-.043,0,.006)),box((.003,.070,.016),(.043,0,.006)),box((.085,.003,.016),(0,-.035,.006)),box((.085,.003,.016),(0,.035,.006))],fixed=False,mass=.1,color=(.60,.73,.63)))
+# Turn the plug's access notch toward the right arm. Joint anchors are local
+# and retain their original coordinates when the entire plug assembly turns.
+PLUG_ROT=Rotation.from_euler('z',-90,degrees=True)
+for part in BODIES:
+ if part['name'] in ['plug','carrier','old_fuse'] or part['name'].startswith(('terminal_','carrier_grip_','cover_detent_')):
+  part['pos']=(PLUG+PLUG_ROT.apply(np.asarray(part['pos'])-PLUG)).tolist()
+  part['quat']=(PLUG_ROT*Rotation.from_quat(part.get('quat',[0,0,0,1]))).as_quat().tolist()
+CARRIER=PLUG+PLUG_ROT.apply(FC+[0,0,.005])
 finalize(BODIES,JOINTS)

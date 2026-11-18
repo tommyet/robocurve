@@ -5779,3 +5779,32 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Fuse reset004 passes with both old fuse and carrier retained after the cover
   detents were moved outside the32 mm carrier edge. Its opening probe is still
   running. Final replacement and functional retention have not been shown.
+
+- At20:07 UTC, bound-edge native contact sleeves kept both hamper grips within
+  2 mm through the first67 degrees of counter-twist. The trial stopped at309
+  because one coarse strip edge reached2.04% strain, although centreline
+  perimeter changed by only-0.14%. The next diagnostic checks centreline
+  length within3%, vertex attachment gaps within10 mm and local triangle
+  stretch below10%; the tighter2% local cutoff confused coarse bending/shear
+  with global steel extension. This change is not evidence of successful
+  folding. Cloth/band damage checks, packet dimensions and release remain.
+- The larger ponytail band fell between its two wooden supports. Source037
+  uses four8x8x50 mm ordinary support blocks at diagonal points, leaving the
+  two pickup arcs accessible. No band is fixed or pre-stretched. Reset and
+  successful tying are still unvalidated.
+- Cap008 still missed its left rim. Source036 adds40 open-jaw alignment steps
+  before closing, using observed rim positions only to command robot joints.
+- Brush010 broke a pin while levering; source037 uses an ordinary55-pin brush
+  with10 mm column spacing and a5 mm inter-column path. It keeps passive
+  contact snags, flexible locks and the same damage/clearance requirements.
+- Fuse006 reached the notch but its wrists crowded during levering. Source035
+  turns the plug90 degrees toward the right arm; reset006 retains the original
+  fuse and cover. Opening and actual replacement remain unproven.
+- Chain reset006 passes with two separate two-link crossings at the plate
+  edge,8 rear links and no front wrap. Reset rejects any three-link front arc;
+  final score still requires14 front links and measured crank AND chain
+  advance. This corrects an over-strict link-count reset rule, not success.
+- GPU watchdog remains alive with21:07:47 UTC deadline. At20:07 compute for
+  this batch was about$3.56; no Dream calls. Three simulator processes share
+  the same4090 (~19 GB); no additional Pod rented. Completed evidence through
+  probes010 is backed up locally. No full-score demo or upstream PR yet.

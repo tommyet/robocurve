@@ -1,7 +1,7 @@
 """Loose synthetic hair and a small, plain elastic; no hair is pre-tied."""
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
-HEAD=np.array([.39,0,TABLE+.305]);ELASTIC=np.array([.27,0,TABLE+.060])
+HEAD=np.array([.39,0,TABLE+.305]);ELASTIC=np.array([.27,0,TABLE+.051])
 head=[sphere((.090,.078,.115)),sphere((.015,.012,.023),(.091,0,-.015)),cylinder(.038,.19,(0,0,-.205)),box((.15,.15,.015),(0,0,-.2975))]
 head += [sphere((.004,.008,.005),(.084,y,.020),(.12,.12,.13)) for y in [-.030,.030]]
 BODIES.append(body('styling_head',HEAD,head,fixed=True,mass=1.5,color=(.75,.62,.50),friction=.5))
@@ -9,7 +9,7 @@ STRANDS=12;SEGMENTS=18
 # Each flexible lock groups fine fibres into a 10 mm contact envelope.
 # The 36 g total mass includes voids between fibres; no locks are joined together.
 for s in range(STRANDS):
- y=(s-5.5)*.004;root=HEAD+[-.073,y,.035+.015*np.cos(s)]
+ y=(s-5.5)*.0065;root=HEAD+[-.073,y,.035+.015*np.cos(s)]
  pts=[]
  for j in range(SEGMENTS+1):
   u=j/SEGMENTS;pts.append(root+[-.035*u+.004*np.sin(2*np.pi*u+s*.25),.002*np.sin(3*np.pi*u+s),-.245*u])
@@ -22,10 +22,11 @@ for s in range(STRANDS):
    axes={axis:dict(limits=(-180,180),stiffness=.000015,damping=.000002) for axis in ('rotX','rotY','rotZ')}
    JOINTS.append(joint(f'hair_join_{s}_{i}',prev['name'],name,[0,0,prev['shapes'][0]['length']/2],[0,0,-length/2],axes=axes,break_force=15.))
   else:JOINTS.append(joint(f'root_{s}','styling_head',name,a-HEAD,[0,0,-length/2],axes=bend_axes(.0002,.00002),break_force=20.))
-# Two plain 8 mm wooden blocks support the loose band without filling its
-# opening or obstructing the underside of either pickup point.
-for side in [-1,1]:
- BODIES.append(body('elastic_rest_'+('left' if side<0 else 'right'),[ELASTIC[0]+side*.0225,0,TABLE+.025],[box((.008,.008,.050))],mass=.005,fixed=True,color=(.59,.44,.28)))
+# Four ordinary 8 mm wooden blocks support the loose band at diagonal points.
+# The front/back pickup arcs remain free above and below for the jaws.
+for sx in [-1,1]:
+ for sy in [-1,1]:
+  BODIES.append(body(f'elastic_rest_{sx+1}_{sy+1}',[ELASTIC[0]+sx*.016,sy*.016,TABLE+.025],[box((.008,.008,.050))],mass=.005,fixed=True,color=(.59,.44,.28)))
 # A standard small seamless elastic: 40 mm inside diameter, 5 mm flat width.
 M=64;POINTS=[]
 for radius in [.020,.0225,.025]:

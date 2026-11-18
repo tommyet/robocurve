@@ -20,7 +20,7 @@ class DemoControl:
    else:
     if k<=140:target+=u*self.pick_offset
     else:
-     frame=FRONT+self.offset;start=self.pick_world+np.array([0,0,.002]);clear=np.array([frame[0],frame[1]-RING_RADIUS-.022,start[2]]);above=clear.copy();above[2]=frame[2]+.018;seat=frame+np.array([0,-RING_RADIUS,.010])
+     frame=FRONT+self.offset;start=self.pick_world+np.array([0,0,.010]);clear=start+np.array([0,0,.040]);above=frame+np.array([0,-RING_RADIUS,.060]);seat=frame+np.array([0,-RING_RADIUS,.013])
      if k<=200:target=start+ik.smoothstep((k-140)/60)*(clear-start)
      elif k<=260:target=clear+ik.smoothstep((k-200)/60)*(above-clear)
      elif k<=320:target=above+ik.smoothstep((k-260)/60)*(seat-above)

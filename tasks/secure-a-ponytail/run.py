@@ -79,7 +79,7 @@ def main():
    row=dict(step=step,action14=current,measurements=m.measure(),hands=hands(),state=m.state())
    trace.write(json.dumps(row,default=serial,separators=(',',':'))+'\n')
   capture(0)
-  if m.integrity_failed() or m.score()!=0.:raise RuntimeError("Reset changed task integrity or already earned credit; fix the native reset before a trial.")
+  if m.integrity_failed() or m.score()!=0. or not m.reset_valid():raise RuntimeError("Reset changed task integrity or already earned credit; fix the native reset before a trial.")
   if a.mode=='dream':
    from inspect_robots import Scene
    from dream_policy import make_policy
@@ -117,6 +117,7 @@ def main():
    if not a.cpu_preview and (k%a.capture_every==0 or k==steps):m.draw(drawing);refresh()
    capture(k);report.update(steps=k,measurements=m.measure(),score=m.score())
    if k%20==0:save();trace.flush()
+   if (a.out/'stop-requested').exists():raise RuntimeError('Diagnostic stopped at a control-step boundary by operator request.')
    if a.mode=='demo' and m.failed:raise RuntimeError('Native task integrity failed; development demo stopped early.')
   report.update(status='complete',events=m.events,score=m.score(),requires_visual_review=True)
  except BaseException as error:

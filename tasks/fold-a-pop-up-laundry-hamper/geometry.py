@@ -37,11 +37,21 @@ for row in range(2):
  for i in range(M):
   a=row*M+i;b=row*M+(i+1)%M;c=a+M;d=b+M;BAND_TRIS += [[a,b,c],[b,d,c]]
 SURFACES=[dict(name='tab',points=TAB_POINTS,tris=TAB_TRIS,mass=.0002,youngs=2e7,poisson=.3,thickness=.0005,friction=.5,rest_offset=.00025,contact_offset=.0006,color=(.13,.29,.44)),
- dict(name='frame',points=FRAME_POINTS,tris=FRAME_TRIS,mass=.100,youngs=8e11,poisson=.3,thickness=.00030,friction=1.2,rest_offset=.0035,contact_offset=.0045,color=(.13,.29,.44)),
+ dict(name='frame',points=FRAME_POINTS,tris=FRAME_TRIS,mass=.062,youngs=8e11,poisson=.3,thickness=.00030,friction=1.2,rest_offset=.0035,contact_offset=.0045,color=(.13,.29,.44)),
  dict(name='cloth',points=CLOTH_POINTS,tris=CLOTH_TRIS,mass=.060,youngs=2e6,poisson=.3,thickness=.0003,friction=.4,rest_offset=.00015,contact_offset=.0007,color=(.28,.47,.62)),
  dict(name='band',points=BAND_POINTS,tris=BAND_TRIS,mass=.004,youngs=4e5,poisson=.45,thickness=.001,friction=1.,rest_offset=.0005,contact_offset=.001,color=(.10,.11,.13))]
 for s in SURFACES:
  s['points']=np.asarray(s['points']);s['tris']=np.asarray(s['tris']);s['edges']=np.unique(np.sort(np.concatenate([s['tris'][:,[0,1]],s['tris'][:,[1,2]],s['tris'][:,[2,0]]]),axis=1),axis=0);s['rest_lengths']=np.linalg.norm(s['points'][s['edges'][:,0]]-s['points'][s['edges'][:,1]],axis=1)
+# Short rigid contact sleeves approximate the continuous fabric binding.
+# They are passive task material, attached to the elastic frame, never to a hand.
+HEM_ATTACHMENTS=[]
+for i in range(N):
+ j=(i+1)%N;a=(FRAME_POINTS[i]+FRAME_POINTS[N+i])/2;b=(FRAME_POINTS[j]+FRAME_POINTS[N+j])/2
+ tangent=(b-a)/np.linalg.norm(b-a);orientation=Rotation.align_vectors([tangent],[[0,0,1]])[0];centre=(a+b)/2;name=f'bound_edge_{i:03d}'
+ spec=body(name,centre,[dict(kind='capsule',radius=.0035,length=max(.001,float(np.linalg.norm(b-a))-.007),pos=[0,0,0],quat=[0,0,0,1])],mass=.038/N,quat=orientation.as_quat().tolist(),color=(.13,.29,.44),friction=1.2,contact_offset=.0004,torsional_patch_radius=.004,min_torsional_patch_radius=.002)
+ spec['exclude']=['frame','cloth','tab',f'bound_edge_{(i-1)%N:03d}',f'bound_edge_{j:03d}'];BODIES.append(spec)
+ ids=[i,j,N+i];local=orientation.inv().apply(FRAME_POINTS[ids]-centre)
+ HEM_ATTACHMENTS.append((name,ids,local))
 GRIP_INDICES=(12,60);GRIP_POINTS=FRAME_POINTS[list(GRIP_INDICES)]
 finalize(BODIES,JOINTS)
 
@@ -70,3 +80,11 @@ def spawn_surface(stage,root):
   UsdPhysics.FilteredPairsAPI.Apply(stage.GetPrimAtPath(root+'/'+a)).CreateFilteredPairsRel().AddTarget(Sdf.Path(root+'/'+b))
  attach('tab_seam','frame','tab',[N],[0])
  attach('band_seam','tab','band',[2],[M+M//2])
+
+ # Native two-way coupling transfers sleeve contact forces to the spring strip.
+ for name,ids,local in HEM_ATTACHMENTS:
+  p=stage.DefinePrim(root+'/sewn_'+name,'OmniPhysicsVtxXformAttachment')
+  p.GetRelationship('omniphysics:src0').SetTargets([Sdf.Path(root+'/frame')])
+  p.GetRelationship('omniphysics:src1').SetTargets([Sdf.Path(root+'/'+name)])
+  p.GetAttribute('omniphysics:vtxIndicesSrc0').Set(ids)
+  p.GetAttribute('omniphysics:localPositionsSrc1').Set(Vt.Vec3fArray(local.astype(np.float32).tolist()))

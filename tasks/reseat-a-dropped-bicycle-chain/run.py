@@ -117,6 +117,7 @@ def main():
    if not a.cpu_preview and (k%a.capture_every==0 or k==steps):m.draw(drawing);refresh()
    capture(k);report.update(steps=k,measurements=m.measure(),score=m.score())
    if k%20==0:save();trace.flush()
+   if (a.out/'stop-requested').exists():raise RuntimeError('Diagnostic stopped at a control-step boundary by operator request.')
    if a.mode=='demo' and m.failed:raise RuntimeError('Native task integrity failed; development demo stopped early.')
   report.update(status='complete',events=m.events,score=m.score(),requires_visual_review=True)
  except BaseException as error:

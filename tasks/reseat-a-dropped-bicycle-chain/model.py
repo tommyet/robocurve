@@ -34,7 +34,11 @@ class Model(NativeModel):
  def measure(self):
   f,r=self.engagement();return dict(engaged_front_links=f,engaged_rear_links=r,continuous_crank_and_chain_revolutions=self.clean_turns,intact=not self.failed,released_seconds=self.release,failed=self.failed)
  def reset_valid(self):
-  f,r=self.engagement();return f<=2 and r>=5 and not self.failed
+  front,rear=self.masks(self.chain_coordinates())
+  # Two short crossings at the plate edge are not a wrapped/engaged chain.
+  # Reject any initial arc of three consecutive rollers on the teeth.
+  wrapped=any(front[i] and front[(i+1)%LINKS] and front[(i+2)%LINKS] for i in range(LINKS))
+  return front.sum()<=6 and not wrapped and rear.sum()>=5 and not self.failed
  def score(self):
   if self.failed or self.broken:return 0.
   if self.clean_turns>=1 and self.release>=3:return 1.

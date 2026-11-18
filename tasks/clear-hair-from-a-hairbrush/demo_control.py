@@ -28,6 +28,6 @@ class DemoControl:
     pp,rr=ik.tcp_pose(q,station.BASES[side]);actual_R=rbias@rr
     position=pp+bias-target if tool_tip_local is None else pp+bias+actual_R@tool_tip_local-tip_target
     orientation=ik._rot_error(R,actual_R) if tool_axis_local is None else axis_target-actual_R@tool_axis_local
-    return np.r_[position,.08*orientation,.001*(q-seed)]
+    return np.r_[position,(.04 if tool_axis_local is not None else .08)*orientation,.001*(q-seed)]
    out[o:o+6]=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=25).x
   return out

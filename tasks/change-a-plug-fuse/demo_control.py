@@ -14,13 +14,13 @@ class DemoControl:
    target,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side]);tool_tip_local=None;tip_target=None
    if side=='right' and self.grasp is not None:
     t_rel,r_rel,start_tip,start_R=self.grasp;H=hands['right'];t_rel=H['rotation'].T@(m.p('screwdriver')-H['tcp']);r_rel=H['rotation'].T@m.orientation('screwdriver');P=m.orientation('plug');base=m.p('plug');Rtool=P@Rot.from_euler('z',90,degrees=True).as_matrix()
-    insert=base+P@(FC+np.array([.0135,0,.005-.002]));outside=insert+P@np.array([.009,0,0]);fulcrum=base+P@(FC+np.array([.020,0,.0014]))
+    insert=base+P@(FC+np.array([.0135,0,-.0005]));outside=insert+P@np.array([.009,0,0]);fulcrum=base+P@(FC+np.array([.023,0,-.0006]))
     if k<=260:
      u=ik.smoothstep((k-200)/60);tip=start_tip+u*(outside-start_tip);Rtool=ik.slerp_matrix(start_R,Rtool,u)
     elif k<=300:
      u=ik.smoothstep((k-260)/40);tip=outside+u*(insert-outside)
     else:
-     u=ik.smoothstep(min(1.,(k-300)/80));turn=Rot.from_euler('y',15*u,degrees=True).as_matrix();tip=fulcrum+P@turn@P.T@(insert-fulcrum);Rtool=P@turn@P.T@Rtool
+     u=ik.smoothstep(min(1.,(k-300)/80));turn=Rot.from_euler('y',18*u,degrees=True).as_matrix();tip=fulcrum+P@turn@P.T@(insert-fulcrum);Rtool=P@turn@P.T@Rtool
     if k>380:tip+=P@np.array([0,0,.008*ik.smoothstep(min(1.,(k-380)/60))])
     tool_tip_local=t_rel+r_rel@np.array([0,.119,0]);tip_target=tip.copy()
     R=Rtool@r_rel.T;target=tip-R@tool_tip_local

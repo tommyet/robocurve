@@ -42,7 +42,9 @@ def path():
  # A closed belt route around two unequal sprockets, including slack.
  for c,r,angles in [(FRONT,R,np.linspace(np.pi/2,3*np.pi/2,100)),(IDLER,IR,np.linspace(np.radians(-85)-np.arctan2(e[1],e[0]),np.radians(-22)-np.arctan2(e[1],e[0]),45)),(REAR,RR,np.linspace(np.radians(-42),np.pi/2,70))]:
   for a in angles:
-   xy=c[1:]+r*(e*np.cos(a)+n*np.sin(a));off=.015 if np.allclose(c,FRONT) else 0.
+   xy=c[1:]+r*(e*np.cos(a)+n*np.sin(a))
+   if np.allclose(c,FRONT):xy+=np.array([0.,-.030])
+   off=-.025 if np.allclose(c,FRONT) else 0.
    points.append([c[0]+off,*xy])
  points=np.asarray(points);points=np.vstack([points,points[0]])
  lengths=np.linalg.norm(np.diff(points,axis=0),axis=1);arc=np.r_[0,np.cumsum(lengths)];count=round(arc[-1]/PITCH);u=np.linspace(0,arc[-1],count,endpoint=False)
