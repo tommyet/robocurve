@@ -9,7 +9,9 @@ class Model(NativeModel):
   from scipy.spatial.transform import Rotation
   axis=self.orientation('pin_arm')[:,0];compression=max(0.,-float(self.joint_gap('point_compression')@axis));load=5000*compression;self.max_puncture_load=max(self.max_puncture_load,load)
   tip=self.p('needle_point',[.001,0,0])
-  if load>=.2:
+  # Contact gate for the coarse cloth law, not calibrated puncture strength.
+  # Unloaded probe noise is about 0.0006 N in the native reset.
+  if load>=.02:
    for name in self.names:
     if not name.startswith(('front_','back_','hem_')) or name in self.holes:continue
     local=self.orientation(name).T@(tip-self.p(name));half_y=.005 if name.startswith('hem_') else DY/2

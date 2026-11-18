@@ -45,3 +45,5 @@ Native gripping contact uses a small torsional friction patch to approximate sof
 The larger 75 mm pin is an ordinary available size: [Spentex blanket/kilt steel safety pin M0710](https://www.spentex.co.uk/wp-content/uploads/2023/06/30191-SPEN-Product-Catalogue-2023-ART-SCREEN-DPS.pdf). Its simulated mechanism is an uncalibrated approximation. The 100 mm loose hem section gives the robot fingers clearance; it remains fully unpinned at reset.
 
 The slender pin bodies use explicit regularized diagonal inertias (frame: 1e-7, 2e-6, 2e-6 kg m²; arm: 1e-8, 5e-7, 5e-7 kg m²). This suppresses tiny-axis numerical spin; it is not calibrated hardware inertia and does not attach the pin to a hand.
+
+Puncture uses a 0.02 N loaded-contact gate at the needle point inside a cloth panel, with the point crossing the panel plane at an oblique angle. This is a coarse contact/penetration approximation, not a calibrated cotton puncture force. It preserves needle placement, shaft threading, tearing and spring closure; real-world judging uses the visible fastening outcome. Unloaded native probe noise was approximately 0.0006 N.
