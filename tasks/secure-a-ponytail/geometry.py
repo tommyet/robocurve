@@ -1,7 +1,7 @@
 """Loose synthetic hair and a small, plain elastic; no hair is pre-tied."""
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
-HEAD=np.array([.39,0,TABLE+.305]);ELASTIC=np.array([.27,0,TABLE+.061])
+HEAD=np.array([.39,0,TABLE+.305]);ELASTIC=np.array([.27,0,TABLE+.063])
 head=[sphere((.090,.078,.115)),sphere((.015,.012,.023),(.091,0,-.015)),cylinder(.038,.19,(0,0,-.205)),box((.15,.15,.015),(0,0,-.2975))]
 head += [sphere((.004,.008,.005),(.084,y,.020),(.12,.12,.13)) for y in [-.030,.030]]
 BODIES.append(body('styling_head',HEAD,head,fixed=True,mass=1.5,color=(.75,.62,.50),friction=.5))
@@ -27,10 +27,9 @@ for s in range(STRANDS):
    axes={axis:dict(limits=(-180,180),stiffness=.000015,damping=.000002) for axis in ('rotX','rotY','rotZ')}
    JOINTS.append(joint(f'hair_join_{s}_{i}',prev['name'],name,[0,0,prev['shapes'][0]['length']/2],[0,0,-length/2],axes=axes,break_force=15.))
   else:JOINTS.append(joint(f'root_{s}','styling_head',name,a-HEAD,[0,0,-length/2],axes=bend_axes(.0002,.00002),break_force=20.))
-# Four narrow wooden rests support arcs away from the pickup jaws.
+# Two wooden rails support four arcs while leaving the central pickup lane clear.
 for sx in [-1,1]:
- for sy in [-1,1]:
-  BODIES.append(body(f'elastic_rest_{sx+1}_{sy+1}',[ELASTIC[0]+sx*.0125,sy*.0125,TABLE+.030],[box((.004,.004,.060))],mass=.003,fixed=True,color=(.59,.44,.28)))
+ BODIES.append(body(f'elastic_rest_{sx+1}',[ELASTIC[0]+sx*.010,0,TABLE+.030],[box((.006,.050,.060))],mass=.010,fixed=True,color=(.59,.44,.28)))
 # A plain 3 mm cord elastic, 30 mm inside diameter. Native passive
 # stretch joints connect contact-bearing segments into a closed loop.
 M=64;radius=.0165;theta=np.arange(M)*2*np.pi/M

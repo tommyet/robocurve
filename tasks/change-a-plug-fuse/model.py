@@ -9,7 +9,8 @@ class Model(NativeModel):
  def material(self,hands,dt):self.failed |= bool(self.broken)
  def measure(self):
   R=self.orientation('plug');new=(self.p('spare_fuse')-self.p('plug'))@R;old=(self.p('old_fuse')-self.p('plug'))@R;carrier=(self.p('carrier')-self.p('plug'))@R
-  gap=float(np.linalg.norm(new-FC));axis=abs(float((R.T@self.orientation('spare_fuse'))[0,2]))
+  # Cylinder child geometry maps its Z axis onto the fuse body's local X.
+  gap=float(np.linalg.norm(new-FC));axis=abs(float((R.T@self.orientation('spare_fuse'))[0,0]))
   seated=bool(gap<.003 and axis>.95)
   closed=bool(np.linalg.norm(carrier-CARRIER_OFFSET)<.0025 and float(np.trace(R.T@self.orientation('carrier'))) > 2.9)
   # Real scoring: visible metal caps correctly in both spring clips, face

@@ -5881,3 +5881,38 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - The completed-placement fuse scorer fixture now passes after refreshing
   its rotation cache. That is a CPU scoring check only; no replacement has
   been demonstrated in native physics.
+
+### 2026-11-18, 22:08 UTC — separate access failures from material failures
+
+- All six tasks remain development drafts, with no full-score native demo or
+  upstream PR. Completed diagnostics through `probes013.tar.gz` are backed up
+  locally (281,609,530 bytes). One4090 remains active; no Dream calls.
+- Fuse012's side/45-degree support grip holds the plug while exposing its top;
+  the earlier vertical support wrist obstructed carrier pickup. A complete
+  2,380-step replacement sequence now passes the offline reach audit, but has
+  not run. Its native extraction/refitting remains unproved.
+- Correction to the21:24 fuse-axis note: the cylinder is rotated inside a fuse
+  body whose physical long axis is localX. The prior localZ scorer change was
+  wrong. The scorer again uses localX; an independent body/child-geometry
+  fixture accepts an aligned cartridge and rejects a perpendicular one at the
+  same centre. CPU fixtures remain distinct from native success evidence.
+- Chain009 reached the loose link within3.5 mm at closing start, then chasing
+  that moving link through closing destabilized pickup. The next robot-only
+  controller freezes the grip target when closing begins. The nearer left arm
+  handles the chain; the crank hand stays clear until seating is attempted.
+- The passive elastic reset passes on two6x50x60 mm wooden rails, but016 lost
+  one grip. Next fingers approach with a smaller opening and a working point
+  near their ends. Do not describe a one-sided lift as successful stretching.
+- Horizontal cap jaws push the rim away with the lower finger against the
+  bowl. The next approach angles downward and inward, placing the inner finger
+  above the bowl and the outer finger outside it. Contact evidence, not an
+  arbitrary higher success tolerance, must establish pickup.
+- Hamper005's four0.20 mm equivalent strips are easier to bend, but their end
+  pickup locations sagged close to the table on the original corner rests.
+  The next ordinary wooden rests support the two short edges away from the
+  grip points. Neither compact nesting nor band application has been shown.
+- Brush015 hit the inner bristle column and deflected sideways. The next
+  44-pin brush has16 mm column spacing; its horizontal steel tail slides below
+  the hair before lifting. A filtered native tensor contact-force matrix now
+  records actual comb/hair contact, following the existing seam implementation.
+  The earlier legacy contact callback produced no reports; removal also failed.

@@ -7,7 +7,7 @@ class DemoControl:
  def action(self,k,wanted,m,observed,hands):
   from yam_arena import ik,station
   from geometry import FRONT,POINTS,LINKS,R as RING_RADIUS
-  if k<=140:
+  if k<=100:
    links=np.array([m.p(f'link_{i:03d}') for i in range(LINKS)])
    if self.pick_index is None:self.pick_index=int(np.argmin(links[:,2]))
    self.pick=links[self.pick_index].copy()+[-.005,0,0]
@@ -15,7 +15,7 @@ class DemoControl:
   out=wanted.copy()
   for side,o in [('left',0),('right',7)]:
    target,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side])
-   if side=='left':
+   if side=='right':
     turn=Rot.from_euler('x',self.angle*min(1.,k/60)).as_matrix();target=FRONT+turn@(target-FRONT);R=turn@R
    else:
     i=int(np.argmin(POINTS[:,2]));nominal=(POINTS[i]+POINTS[(i+1)%LINKS])/2+[-.005,0,0]

@@ -8,7 +8,7 @@ shapes=[box((.052,.095,.010)),sphere((.026,.0475,.005)),box((.021,.095,.009),(0,
 BODIES.append(body('brush',BRUSH,shapes,mass=.08,color=(.75,.24,.33),friction=.9,torsional_patch_radius=.006,min_torsional_patch_radius=.003))
 for i in range(4):
  for j in range(11):
-  pos=np.array([(i-1.5)*.0125,(j-5)*.006,.013]);name=f'pin_{i}_{j}'
+  pos=np.array([(i-1.5)*.016,(j-5)*.006,.013]);name=f'pin_{i}_{j}'
   BODIES.append(body(name,BRUSH+pos,[cylinder(.00085,.016),sphere((.0013,)*3,(0,0,.008))],mass=.00012,color=(.90,.88,.77),contact_offset=.0001))
   JOINTS.append(joint(name+'_root','brush',name,pos,[0,0,0],axes={**fixed_axes(),'rotX':dict(limits=(-65,65),stiffness=.05,damping=.001),'rotY':dict(limits=(-65,65),stiffness=.05,damping=.001)},break_force=18.,break_torque=.12))
 # Ten loose locks represent 1 g of shed hair. Each lock is a 0.8 mm contact
@@ -56,7 +56,7 @@ f=[[i,(i+1)%12,12+(i+1)%12,12+i] for i in range(12)]+[list(range(11,-1,-1)),list
 comb.append(dict(kind='mesh',points=v,faces=f,pos=[0,0,0],quat=[0,0,0,1],color=[.67,.69,.72]))
 comb += [box((.017,.0012,.004),(.009,-.060+i*.003,0)) for i in range(26)]
 BODIES.append(body('comb',TOOL,comb,contact_report=True,mass=.016,color=(.15,.44,.61),friction=.9,torsional_patch_radius=.005,min_torsional_patch_radius=.002))
-BODIES.append(body('comb_rest',[.43,-.145,TABLE+.0125],[box((.030,.020,.025))],fixed=True,mass=.03,color=(.58,.43,.27)))
+BODIES.append(body('comb_rest',[.43,-.145,TABLE+.016],[box((.030,.020,.025))],fixed=True,mass=.03,color=(.58,.43,.27)))
 BODIES.append(body('comb_tail_rest',[.43,-.045,TABLE+.013],[box((.020,.020,.026))],fixed=True,mass=.02,color=(.58,.43,.27)))
 BODIES.append(body('waste_dish',[.18,-.26,TABLE+.012],[box((.12,.11,.003)),box((.004,.11,.020),(-.06,0,.008)),box((.004,.11,.020),(.06,0,.008)),box((.12,.004,.020),(0,-.055,.008)),box((.12,.004,.020),(0,.055,.008))],fixed=False,mass=.12,color=(.77,.84,.75),friction=.7))
 finalize(BODIES,JOINTS)

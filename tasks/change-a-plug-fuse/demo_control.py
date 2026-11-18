@@ -40,6 +40,7 @@ class DemoControl:
       H=hands[side]
       if obj not in self.grasps:self.grasps[obj]=(H['rotation'].T@(pos-H['tcp']),H['rotation'].T@OR)
       tr,rr=self.grasps[obj];goalObj=pos+phase['delta'] if kind=='lift' else phase['position'];objR=phase['rotation'] if phase['rotation'] is not None else OR
+      if phase.get('relative')=='plug':goalObj=m.p('plug')+m.orientation('plug')@goalObj;objR=m.orientation('plug')@objR
       goalR=objR@rr.T;goal=goalObj-goalR@tr
      elif kind=='withdraw':goal=self.phase_start[0]+phase['delta'];goalR=self.phase_start[1]
      else:goal,goalR=self.last_goal
