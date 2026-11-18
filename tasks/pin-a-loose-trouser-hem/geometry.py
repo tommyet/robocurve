@@ -38,7 +38,9 @@ cone=dict(kind='mesh',points=[[-.001,0,.0006],[-.001,.0006,0],[-.001,0,-.0006],[
 BODIES.append(body('needle_point',PIN+openR.apply([.0675,0,0]),[cone],mass=.0001,color=(.7,.72,.74),quat=list(openR.as_quat()),contact_offset=.00003))
 axes=fixed_axes();axes['transX']=dict(limits=(-.001,.0001),stiffness=5000.,damping=.5)
 JOINTS.append(joint('point_compression','pin_arm','needle_point',[.0675,0,0],[0,0,0],axes=axes,break_force=50.))
-JOINTS.append(joint('pin_catch','pin_frame','pin_arm',[.0665,0,.001],[.0665,0,0],axes=fixed_axes(),enabled=False,break_force=15.,break_torque=.10))
+# The shield retains the point. A ball-style contact avoids redundantly
+# locking all rotations in the already hinged spring-and-catch loop.
+JOINTS.append(joint('pin_catch','pin_frame','pin_arm',[.0665,0,.001],[.0665,0,0],axes=bend_axes(0.,0.,179),enabled=False,break_force=15.,break_torque=.10))
 for b in list(BODIES):
  if b['name'].startswith(('front_','back_','hem_')):
   axes=bend_axes(0.,.000001,179);axes['transY']=dict(limits=(-.0005,.0005),stiffness=500.,damping=.1);axes['transZ']=dict(limits=(-.0005,.0005),stiffness=500.,damping=.1);axes['transX']=dict(limits=(-.0665,.001),stiffness=0.,damping=.05,max_force=.5)

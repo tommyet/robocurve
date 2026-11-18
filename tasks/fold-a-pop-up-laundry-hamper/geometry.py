@@ -1,4 +1,4 @@
-"""Four elastic spring-steel frames and sewn mesh, initially flattened but uncoiled.
+"""A coupled approximation of the flattened spring frames and flexible sewn mesh.
 
 The remaining task is the characteristic twist-and-nest fold. No hinges select
 its final shape and no stage variable changes the frame rest angles.
@@ -15,15 +15,19 @@ def rounded_rect(a,b,r=.025):
    t=np.radians(angle);points.append([cx+r*np.cos(t),cy+r*np.sin(t)])
  p=np.array(points);p=np.vstack([p,p[0]]);length=np.linalg.norm(np.diff(p,axis=0),axis=1);arc=np.r_[0,np.cumsum(length)];u=(np.linspace(0,arc[-1],N,endpoint=False)-.0304)%arc[-1]
  return np.c_[np.interp(u,arc,p[:,0]),np.interp(u,arc,p[:,1])]
-P=rounded_rect(A,B);FRAMES=[]
-for face in range(4):
- points=np.c_[P,np.full(N,face*.004)]+CENTER;FRAMES.append(points)
+P=rounded_rect(A,B)
+FRAMES=[np.c_[P,np.full(N,face*.004)]+CENTER for face in range(4)]
+# Aggregate the four flattened frame layers into one elastic strip. Its mass
+# and rotational stiffness are the sums of the four parallel frames. Relative
+# inter-layer slip is omitted; twisting, bending, collisions and spring-back remain.
+for face in range(1):
+ points=np.c_[P,np.full(N,.006)]+CENTER
  for i in range(N):
   a,b=points[i],points[(i+1)%N];v=b-a;length=np.linalg.norm(v);x=v/length;z=np.array([0,0,1]);y=np.cross(z,x);R=np.column_stack([x,y,z]);name=f'wire_{face}_{i:02d}'
-  BODIES.append(body(name,(a+b)/2,[box((length,.008,.003))],mass=8000*length*.004*.00045+300*length*.008*.003,color=(.13,.29,.44),quat=list(Rotation.from_matrix(R).as_quat()),friction=1.,contact_offset=.0001))
+  BODIES.append(body(name,(a+b)/2,[box((length,.008,.015))],mass=4*(8000*length*.004*.00045+300*length*.008*.003),color=(.13,.29,.44),quat=list(Rotation.from_matrix(R).as_quat()),friction=1.,contact_offset=.0001))
  for i in range(N):
   a=f'wire_{face}_{i:02d}';b=f'wire_{face}_{(i+1)%N:02d}';aa=next(q for q in BODIES if q['name']==a);bb=next(q for q in BODIES if q['name']==b)
-  axes={k:dict(limits=(-179,179),stiffness=s,damping=.000125) for k,s in [('rotX',.015),('rotY',.020),('rotZ',.75)]}
+  axes={k:dict(limits=(-179,179),stiffness=4*s,damping=.0005) for k,s in [('rotX',.015),('rotY',.020),('rotZ',.75)]}
   JOINTS.append(joint(f'wire_joint_{face}_{i}',a,b,[aa['shapes'][0]['size'][0]/2,0,0],[-bb['shapes'][0]['size'][0]/2,0,0],axes=axes,break_force=100.,break_torque=1.5))
 # Each steel frame has a sewn 8 mm wide, 3 mm thick polyester binding.
 # The binding supplies its native collision/grip surface; spring mechanics remain steel.
@@ -38,7 +42,7 @@ for face in range(4):
     if i+di>=0 and j+dj>=0:
      a=np.array([-di*DX/2,-dj*DY/2,0]);JOINTS.append(joint(f'fabric_{face}_{i}_{j}_{di}_{dj}',f'mesh_{face}_{i+di}_{j+dj}',name,a,-a,axes=bend_axes(.000001,.000001),break_force=20.))
    if i in [0,NX-1] or j in [0,NY-1]:
-    distances=[np.linalg.norm(pos-(FRAMES[face][k]+FRAMES[face][(k+1)%N])/2) for k in range(N)];k=int(np.argmin(distances));wire=next(b for b in BODIES if b['name']==f'wire_{face}_{k:02d}')
+    distances=[np.linalg.norm(pos-(FRAMES[face][k]+FRAMES[face][(k+1)%N])/2) for k in range(N)];k=int(np.argmin(distances));wire=next(b for b in BODIES if b['name']==f'wire_0_{k:02d}')
     # Sewing anchor is at the fabric edge; its local point can be along a frame.
     target=pos.copy()
     if i==0:target[0]-=DX/2
@@ -46,11 +50,6 @@ for face in range(4):
     if j==0:target[1]-=DY/2
     if j==NY-1:target[1]+=DY/2
     JOINTS.append(joint(f'edge_{face}_{i}_{j}',wire['name'],name,Rotation.from_quat(wire['quat']).inv().apply(target-wire['pos']),target-pos,axes=bend_axes(.000001,.000001),break_force=25.))
-# Sewn common corners couple the four flattened sides without fixing their poses.
-for face in range(1,4):
- for k in [0,N//4,N//2,3*N//4]:
-  a=f'wire_{face-1}_{k:02d}';b=f'wire_{face}_{k:02d}'
-  JOINTS.append(joint(f'corner_{face}_{k}',a,b,[0,0,.002],[0,0,-.002],axes=bend_axes(.000002,.000002),break_force=30.))
 # Attached elastic retaining loop; it must be stretched over the folded packet.
 EN=32;ER=.300/(2*np.pi)
 anchor=next(b for b in BODIES if b['name']=='wire_0_00')
@@ -71,7 +70,17 @@ for part in BODIES:
  part['pos']=(CENTER+layout.apply(np.asarray(part['pos'])-CENTER)).tolist()
  part['quat']=(layout*Rotation.from_quat(part.get('quat',[0,0,0,1]))).as_quat().tolist()
 GRIP_ENDS=(1,7)
+FRAME_LAYERS=(0,)
 # Finite rubber-pad contact area supplies native spin friction at a grip.
 for part in BODIES:
  if part['name'].startswith('wire_'):part.update(torsional_patch_radius=.004,min_torsional_patch_radius=.0015,contact_offset=.0005,max_angular_velocity=10.,speculative_ccd=True)
+# Polyester mesh can extend slightly under load. Finite seam compliance also
+# avoids an overconstrained rigid-panel lattice. These uncalibrated 3 mm
+# stretches are about 3% of a coarse panel edge; no rest shape is commanded.
+for seam in JOINTS:
+ if seam['name'].startswith(('fabric_','edge_')):
+  for axis in ['transX','transY','transZ']:
+   seam['axes'][axis]=dict(limits=(-.003,.003),stiffness=2000.,damping=.2)
+  # Coarse edges are twice the original length, so carry twice its tear load.
+  seam['break_force']*=2.
 finalize(BODIES,JOINTS)

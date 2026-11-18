@@ -1,7 +1,7 @@
 """Correct the planned seam approach for passive settling, using robot joints."""
 import numpy as np
 from scipy.optimize import least_squares
-from geometry import BODIES,GRIP_ENDS
+from geometry import BODIES,GRIP_ENDS,FRAME_LAYERS
 
 class DemoControl:
  def __init__(self):self.offset=None
@@ -10,7 +10,7 @@ class DemoControl:
   if self.offset is None:
    self.offset={}
    for side,i in [('left',GRIP_ENDS[0]),('right',GRIP_ENDS[1])]:
-    names=[f'wire_{f}_{i:02d}' for f in range(4)]
+    names=[f'wire_{f}_{i:02d}' for f in FRAME_LAYERS]
     expected=np.mean([b['pos'] for b in BODIES if b['name'] in names],axis=0)
     self.offset[side]=np.mean([m.p(n) for n in names],axis=0)-expected
   out=wanted.copy()
@@ -20,7 +20,7 @@ class DemoControl:
    p+=offset_weight*self.offset[side]
    if 60<k<=100:
     index=GRIP_ENDS[0] if side=='left' else GRIP_ENDS[1]
-    point=np.mean([m.p(f'wire_{f}_{index:02d}') for f in range(4)],axis=0)
+    point=np.mean([m.p(f'wire_{f}_{index:02d}') for f in FRAME_LAYERS],axis=0)
     target=point-.010*R[:,2];u=np.clip((k-60)/40,0,1);p=(1-u)*p+u*target
     if k==100:self.offset[side]=target-planned
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)

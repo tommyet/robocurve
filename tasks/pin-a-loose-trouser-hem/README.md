@@ -23,7 +23,7 @@ Judge the threading, shield and released hold from close video and a ruler. The 
 
 ## Simulation
 
-Flexible cloth panels, a sprung pin, a compressible needle tip and native finger contacts. A 1.0 N tip load plus geometric intersection creates an object-to-object sliding hole. The spring must be compressed and the point aligned with its shield to close. This puncture law is approximate; it is not calibrated to a particular cuff and pin. [Published needle analysis](https://www.mdpi.com/2073-8994/18/4/635) provides a newton-scale comparison, not product calibration.
+Flexible cloth panels, a sprung pin, a compressible needle tip and native finger contacts. A 1.0 N tip load plus geometric intersection creates an object-to-object sliding hole. The spring must be compressed and the point aligned with its shield to close. The catch retains the point with a15 N break-force limit; it does not redundantly weld the already hinged arm orientation. This puncture law is approximate; it is not calibrated to a particular cuff and pin. [Published needle analysis](https://www.mdpi.com/2073-8994/18/4/635) provides a newton-scale comparison, not product calibration.
 
 The 6 mm coil has a 2.6 mm thickness and its plane matches the pin. Regularized slender-body inertias and a finite friction patch suppress numerical spin. Both demo and Dream use a 20,000 N/m gripper gain with a 40 N/finger force ceiling. No task object is attached to a hand or moved by a commanded pose. The cloth, puncture, spring and contact parameters remain approximations.
 
