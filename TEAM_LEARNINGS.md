@@ -5946,3 +5946,30 @@ editing, merge both agents' findings, and commit/push the update with the work.
   spring clips; DIN-fuse PR2271 failed its job-impact claim and unreadable
   rating selection. Our household-plug task should preserve real clips and
   cartridge dimensions, and avoid inventing a rating-selection decision.
+
+### 2026-11-18, 23:19 UTC — continued native validation
+
+- Moving the brush brace from the handle root to105 mm along the handle,
+  with the whole handle supported on the rubber mat, fixes019 tool tracking:
+  the native tip reaches the intended50 mm insert depth and60 mm lift with
+  submillimetre lateral error. All10 locks are touched but none clears. The
+  next geometry rounds segment joins and moves the tail off their exact seam;
+  passive25 mN snags are unchanged. This is a hypothesis, not a success.
+- Pony021 now picks up and stretches both sides initially; its left grip
+  slips by220. Narrow4 mm fingers clear the stable two-rail rest. The next
+  band uses overlapping capsules instead of nearly spherical contact samples
+  to preserve continuous cord contact as it stretches. Native proof pending.
+- Cap020 still pushes the rim away. Collision-vertex inspection shows the
+  original broad fingers extend to146.8 mm from the gripper, almost the old
+ 147 mm working point.021 places the working point at164 mm, with40x6x3 mm
+  extensions, leaving the original bodies17 mm behind it. The cap again
+  starts opening-up, with no glass support; only contact can turn it over the
+  head. This pickup is not yet validated.
+- Fuse014 breaks terminal_n_p_spring during carrier pinching at719. Stronger
+  force alone is not a fix. The next grasp is3 mm higher and1.5 mm farther
+  toward the free end, with4 mm wide fingers, to clear that terminal clip.
+  It still uses the same damage limits and has no successful extraction yet.
+- Hamper009 tests26 mm wide silicone pads and a gentler nominal jaw gap.
+  Earlier left grips were at a pad edge; no full fold has been shown.
+- Still no full-score demo for these five, and no Dream calls. Eito chain
+  PR2739 remains the team submission; do not duplicate it.

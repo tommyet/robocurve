@@ -29,7 +29,7 @@ for s in range(STRANDS):
   else:JOINTS.append(joint(f'root_{s}','styling_head',name,a-HEAD,[0,0,-length/2],axes=bend_axes(.0002,.00002),break_force=20.))
 # Two wooden rails support four arcs while leaving the central pickup lane clear.
 for sx in [-1,1]:
- BODIES.append(body(f'elastic_rest_{sx+1}',[ELASTIC[0]+sx*.014,0,TABLE+.030],[box((.006,.020,.060))],mass=.010,fixed=True,color=(.59,.44,.28)))
+ BODIES.append(body(f'elastic_rest_{sx+1}',[ELASTIC[0]+sx*.010,0,TABLE+.030],[box((.006,.032,.060))],mass=.010,fixed=True,color=(.59,.44,.28)))
 # A plain 3 mm cord elastic, 30 mm inside diameter. Native passive
 # stretch joints connect contact-bearing segments into a closed loop.
 M=64;radius=.0165;theta=np.arange(M)*2*np.pi/M
@@ -38,8 +38,8 @@ centres=(vertices+np.roll(vertices,-1,axis=0))/2
 lengths=np.linalg.norm(np.roll(vertices,-1,axis=0)-vertices,axis=1)
 for i in range(M):
  tangent=(vertices[(i+1)%M]-vertices[i])/lengths[i];radial=centres[i]-ELASTIC;radial/=np.linalg.norm(radial);rot=Rotation.from_matrix(np.column_stack([radial,np.cross(tangent,radial),tangent]))
- shape=dict(kind='capsule',radius=.0015,length=.0001,pos=[0,0,0],quat=[0,0,0,1])
- BODIES.append(body(f'band_segment_{i:03d}',centres[i],[shape],mass=.001/M,quat=rot.as_quat().tolist(),color=(.64,.12,.27),friction=1.2,contact_offset=.0002,exclude=[f'band_segment_{(i+d)%M:03d}' for d in [-2,-1,1,2]],visible=False))
+ shape=dict(kind='capsule',radius=.0015,length=float(lengths[i]),pos=[0,0,0],quat=[0,0,0,1])
+ BODIES.append(body(f'band_segment_{i:03d}',centres[i],[shape],mass=.001/M,quat=rot.as_quat().tolist(),color=(.64,.12,.27),friction=1.2,contact_offset=.0002,torsional_patch_radius=.0015,min_torsional_patch_radius=.001,exclude=[f'band_segment_{(i+d)%M:03d}' for d in [-2,-1,1,2]],visible=False))
 for i in range(M):
  axes={**fixed_axes(),**bend_axes(.000005,.0000001,180),'transZ':dict(limits=(-lengths[i]*.2,lengths[i]*4),stiffness=1.4/lengths[i],damping=.02)}
  JOINTS.append(joint(f'band_stretch_{i:03d}',f'band_segment_{i:03d}',f'band_segment_{(i+1)%M:03d}',[0,0,lengths[i]/2],[0,0,-lengths[(i+1)%M]/2],axes=axes,break_force=8.))

@@ -45,7 +45,7 @@
   },
   "platform": {
     "gpu": "NVIDIA GeForce RTX 4090 24GB",
-    "physics": "Native PhysX rigid bodies and joints; native elastic surfaces for the cap, elastic and hamper."
+    "physics": "Native PhysX bodies and passive joints; native elastic surfaces for the cap and hamper. The ponytail elastic uses passive stretch joints."
   },
   "reference_checked_utc_date": "2026-11-18"
 }

@@ -2,8 +2,8 @@
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
 BRUSH=np.array([.30,.015,TABLE+.025])
-# A 190 mm brush: 95 mm head and 95 mm handle. Head rests on a 20 mm rubber block, with the handle overhanging.
-BODIES.append(body('mat',[.30,.015,TABLE+.010],[box((.12,.10,.020))],fixed=True,mass=.08,color=(.23,.31,.35),friction=1.))
+# A 190 mm brush: 95 mm head and 95 mm handle. It rests on a 20 mm rubber mat that also supports the handle.
+BODIES.append(body('mat',[.30,.075,TABLE+.010],[box((.12,.22,.020))],fixed=True,mass=.08,color=(.23,.31,.35),friction=1.))
 shapes=[box((.052,.095,.010)),sphere((.026,.0475,.005)),box((.021,.095,.009),(0,.09,0))]
 BODIES.append(body('brush',BRUSH,shapes,mass=.08,color=(.75,.24,.33),friction=.9,torsional_patch_radius=.006,min_torsional_patch_radius=.003))
 for i in range(4):
@@ -20,7 +20,7 @@ for strand in range(HAIRS):
  points=np.c_[.037*u,y+.00155*np.sin(np.pi*(.037*u)/.016),.012+.001*np.cos(3*np.pi*u+strand*.6)]+BRUSH
  for i,(a,b) in enumerate(zip(points[:-1],points[1:])):
   v=b-a;length=np.linalg.norm(v);R=Rotation.align_vectors([v/length],[[1,0,0]])[0]
-  part=body(f'hair_{strand}_{i}',(a+b)/2,[box((length,.0008,.0008))],mass=.0001/SEGMENTS,color=(.12+.018*(strand%3),.065,.025),quat=R.as_quat().tolist(),friction=.5,contact_offset=.0001,linear_damping=.15,angular_damping=.1)
+  part=body(f'hair_{strand}_{i}',(a+b)/2,[box((length,.0008,.0008)),sphere((.0004,)*3,(-length/2,0,0)),sphere((.0004,)*3,(length/2,0,0))],mass=.0001/SEGMENTS,color=(.12+.018*(strand%3),.065,.025),quat=R.as_quat().tolist(),friction=.5,contact_offset=.0001,linear_damping=.15,angular_damping=.1)
   I=part['mass']*length*length/12;part['inertia']=[max(I/15,1e-12),max(I,1e-12),max(I,1e-12)];BODIES.append(part)
   if i:
    previous=BODIES[-2];axes={axis:dict(limits=(-180,180),stiffness=2e-7,damping=1e-8) for axis in ('rotX','rotY','rotZ')}

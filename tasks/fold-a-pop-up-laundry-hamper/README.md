@@ -13,3 +13,17 @@ python tasks/fold-a-pop-up-laundry-hamper/run.py --mode hold --steps 40 --out /t
 ```
 
 Original procedural geometry, MIT license. The original failed model is recoverable from shared main commit9bc7f6e. Final documentation, native demo, Dream baseline, rescoring and media remain outstanding.
+
+## Development commands
+
+From the repository root in the pinned environment, use a new output folder:
+
+```sh
+python tasks/fold-a-pop-up-laundry-hamper/run.py --mode demo --out /tmp/fold-a-pop-up-laundry-hamper-demo
+python tasks/fold-a-pop-up-laundry-hamper/rescore.py /tmp/fold-a-pop-up-laundry-hamper-demo
+```
+
+The deterministic layout has no jitter or random seed. Source files and native
+state are saved with each run. Rescoring verifies their hashes and re-evaluates
+the recorded states on CPU. Diagnostics with `--capture-every` greater than1
+are not submission recordings. Dream must use the same final scene and hardware.
