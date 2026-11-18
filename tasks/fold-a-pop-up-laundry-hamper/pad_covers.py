@@ -66,8 +66,8 @@ def install():
                 collision = PhysxSchema.PhysxCollisionAPI.Apply(shape.GetPrim())
                 collision.CreateContactOffsetAttr(.002)
                 collision.CreateRestOffsetAttr(0.)
-                collision.CreateTorsionalPatchRadiusAttr(.004)
-                collision.CreateMinTorsionalPatchRadiusAttr(.002)
+                collision.CreateTorsionalPatchRadiusAttr(.006)
+                collision.CreateMinTorsionalPatchRadiusAttr(.004)
                 bind_physics_material(str(shape.GetPath()), physics_path, stage=stage)
                 bind_visual_material(str(shape.GetPath()), visual_path, stage=stage)
             return prim

@@ -31,7 +31,7 @@ class DemoControl:
    out[o:o+6]=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=30).x
    if k in [100,140,200]:m.events.append(dict(event='demo_frame_grip_check',step=k,side=side,fk_bias_mm=(1000*bias).tolist()))
    if k>100:
-    # About 9.4 N per pad with stock gains. The physical finger stops
+    # About 20 N per pad with stock gains. The physical finger stops
     # prevent the two covers from overlapping under a closed command.
-    out[o+6]=max(0.,observed[o+6]-.040)
+    out[o+6]=max(0.,observed[o+6]-.085)
   return out

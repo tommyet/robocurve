@@ -2,7 +2,7 @@
 
 Secure the loose trouser hem with the safety pin, with its point safely enclosed.
 
-**Development draft: complete fastening, a full-score demo and the Dream baseline are still pending.**
+**The native scripted demo independently scores 1.0. The complete Dream baseline is still running; submission is pending its audit and media review.**
 
 ## Setup and reset
 
@@ -23,7 +23,7 @@ Judge the threading, shield and released hold from close video and a ruler. The 
 
 ## Simulation
 
-Flexible cloth panels, a sprung pin, a compressible needle tip and native finger contacts. A 1.0 N tip load plus geometric intersection creates an object-to-object sliding hole. The spring must be compressed and the point aligned with its shield to close. The catch retains the point with a15 N break-force limit; it does not redundantly weld the already hinged arm orientation. This puncture law is approximate; it is not calibrated to a particular cuff and pin. [Published needle analysis](https://www.mdpi.com/2073-8994/18/4/635) provides a newton-scale comparison, not product calibration.
+Flexible cloth panels, a sprung pin, a compressible needle tip and native finger contacts. A 1.0 N tip load plus geometric intersection creates an object-to-object sliding hole. The spring must be compressed and the point aligned with its shield to close. The catch retains the point with a 15 N break-force limit; it does not redundantly weld the already hinged arm orientation. This puncture law is approximate; it is not calibrated to a particular cuff and pin. [Published needle analysis](https://www.mdpi.com/2073-8994/18/4/635) provides a newton-scale comparison, not product calibration.
 
 The 6 mm coil has a 2.6 mm thickness and its plane matches the pin. Regularized slender-body inertias and a finite friction patch suppress numerical spin. Both demo and Dream use a 20,000 N/m gripper gain with a 40 N/finger force ceiling. No task object is attached to a hand or moved by a commanded pose. The cloth, puncture, spring and contact parameters remain approximations.
 
@@ -42,4 +42,17 @@ python tasks/pin-a-loose-trouser-hem/rescore.py /tmp/hem-dream
 
 The fixed layout has no random seed. Limit: 1,800 actions, 90 seconds at 20 Hz. Each run records native camera videos, physical states and immutable source files. Rescoring checks source hashes, trace continuity, action bounds, break events and final outcome. Inspect the native videos as well. `--capture-every 4` is for faster development diagnostics only and marks the run as unsuitable submission evidence.
 
-Full-score evidence, actual wall times and the Dream result will be added after validation. Earlier 0.02 N puncture diagnostics are excluded.
+The scripted demo completes 1,560 actions in 78 simulated seconds and 16.5 minutes on a Secure A40. It retains both correct layers, closes the shield, and remains secured for 40.75 seconds after release, with no broken material joints. The peak puncture load is 1.14 N. The full trace independently scores 1.0. Dream runtime and result will be added when the baseline completes.
+
+The public evidence bundles contain every commanded action, the final four seconds of native body/hand states, the full-trace audit result and the complete trace hash. Check them without Isaac:
+
+```sh
+python tasks/pin-a-loose-trouser-hem/check_evidence.py tasks/pin-a-loose-trouser-hem/evidence/demo-outcome.json.gz
+python tasks/pin-a-loose-trouser-hem/check_evidence.py tasks/pin-a-loose-trouser-hem/evidence/dream-outcome.json.gz
+```
+
+These compact records verify the final outcome and action bounds; they are not a physics replay or the earlier body-state history. The run commands above generate complete traces for independent rescoring.
+
+## Assets
+
+The cuff, pin and supports are procedural geometry created for this task and released under the included MIT license. No third-party object meshes or scans are bundled. The external YAM and Isaac environment is pinned in `ENVIRONMENT.json`; that file is the pre-trial environment snapshot. `VALIDATION.json` records the completed task validation.

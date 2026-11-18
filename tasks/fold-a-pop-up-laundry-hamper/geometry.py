@@ -28,28 +28,45 @@ for face in range(1):
  for i in range(N):
   a=f'wire_{face}_{i:02d}';b=f'wire_{face}_{(i+1)%N:02d}';aa=next(q for q in BODIES if q['name']==a);bb=next(q for q in BODIES if q['name']==b)
   axes={k:dict(limits=(-179,179),stiffness=4*s,damping=.0005) for k,s in [('rotX',.015),('rotY',.020),('rotZ',.75)]}
-  JOINTS.append(joint(f'wire_joint_{face}_{i}',a,b,[aa['shapes'][0]['size'][0]/2,0,0],[-bb['shapes'][0]['size'][0]/2,0,0],axes=axes,break_force=100.,break_torque=1.5))
-# Each steel frame has a sewn 8 mm wide, 3 mm thick polyester binding.
-# The binding supplies its native collision/grip surface; spring mechanics remain steel.
-# Coarse flexible fabric panels span the frames. Native panels collide and fold.
+  JOINTS.append(joint(f'wire_joint_{face}_{i}',a,b,[aa['shapes'][0]['size'][0]/2,0,0],[-bb['shapes'][0]['size'][0]/2,0,0],axes=axes,break_force=400.,break_torque=6.))
+# Flattened mesh layers share a flexible bar-and-node net. Its 60 g mass
+# equals the four earlier cloth layers. Links preserve thread lengths while
+# freely rotating nodes permit folding and shear. Inter-layer slip and mesh
+# shear resistance are omitted; the frame still supplies bending resistance.
 NX,NY=3,5;DX=.31/NX;DY=.51/NY
-for face in range(4):
- for i in range(NX):
-  for j in range(NY):
-   name=f'mesh_{face}_{i}_{j}';pos=CENTER+[(i-(NX-1)/2)*DX,(j-(NY-1)/2)*DY,face*.004]
-   BODIES.append(body(name,pos,[box((DX*.98,DY*.98,.0006))],mass=.001,color=(.26,.46,.61),friction=.6,contact_offset=.0001))
-   for di,dj in [(-1,0),(0,-1)]:
-    if i+di>=0 and j+dj>=0:
-     a=np.array([-di*DX/2,-dj*DY/2,0]);JOINTS.append(joint(f'fabric_{face}_{i}_{j}_{di}_{dj}',f'mesh_{face}_{i+di}_{j+dj}',name,a,-a,axes=bend_axes(.000001,.000001),break_force=20.))
-   if i in [0,NX-1] or j in [0,NY-1]:
-    distances=[np.linalg.norm(pos-(FRAMES[face][k]+FRAMES[face][(k+1)%N])/2) for k in range(N)];k=int(np.argmin(distances));wire=next(b for b in BODIES if b['name']==f'wire_0_{k:02d}')
-    # Sewing anchor is at the fabric edge; its local point can be along a frame.
-    target=pos.copy()
-    if i==0:target[0]-=DX/2
-    if i==NX-1:target[0]+=DX/2
-    if j==0:target[1]-=DY/2
-    if j==NY-1:target[1]+=DY/2
-    JOINTS.append(joint(f'edge_{face}_{i}_{j}',wire['name'],name,Rotation.from_quat(wire['quat']).inv().apply(target-wire['pos']),target-pos,axes=bend_axes(.000001,.000001),break_force=25.))
+for i in range(NX+1):
+ for j in range(NY+1):
+  name=f'mesh_0_{i}_{j}';pos=CENTER+[(i-NX/2)*DX,(j-NY/2)*DY,.006]
+  BODIES.append(body(name,pos,[box((.004,.004,.004))],mass=.0006,color=(.26,.46,.61),friction=.6,contact_offset=.00025))
+for i in range(NX+1):
+ for j in range(NY+1):
+  name=f'mesh_0_{i}_{j}';node=next(b for b in BODIES if b['name']==name)
+  for di,dj in [(1,0),(0,1)]:
+   if i+di>NX or j+dj>NY:continue
+   other=f'mesh_0_{i+di}_{j+dj}';end=next(b for b in BODIES if b['name']==other)
+   a,b=np.array(node['pos']),np.array(end['pos']);v=b-a;length=np.linalg.norm(v)
+   rot=Rotation.align_vectors([v/length],[[1,0,0]])[0];link=f'cloth_link_{i}_{j}_{di}_{dj}'
+   BODIES.append(body(link,(a+b)/2,[box((length,.0024,.0024))],mass=.0012,color=(.26,.46,.61),quat=rot.as_quat().tolist(),friction=.6))
+   for side,target,x in [(0,name,-length/2),(1,other,length/2)]:
+    JOINTS.append(joint(f'fabric_{i}_{j}_{di}_{dj}_{side}',link,target,[x,0,0],[0,0,0],axes=bend_axes(0.,.000001,179),break_force=40.))
+  if i in [0,NX] or j in [0,NY]:
+   pos=np.array(node['pos']);wires=[b for b in BODIES if b['name'].startswith('wire_')]
+   wire=min(wires,key=lambda b:np.linalg.norm(pos-np.asarray(b['pos'])))
+   JOINTS.append(joint(f'edge_0_{i}_{j}',wire['name'],name,Rotation.from_quat(wire['quat']).inv().apply(pos-wire['pos']),[0,0,0],axes=bend_axes(0.,.000001,179),break_force=50.))
+# Links incident on the same sewn node overlap at that shared endpoint.
+# Ignore only those local neighbour contacts; non-neighbour fabric and frame
+# pieces still collide when folded.
+from collections import defaultdict
+incident=defaultdict(set)
+for j in JOINTS:
+ if j['name'].startswith(('fabric_','edge_')):
+  a,b=j['a'],j['b']
+  if a.startswith('mesh_'):incident[a].add(b)
+  if b.startswith('mesh_'):incident[b].add(a)
+for neighbours in incident.values():
+ for name in neighbours:
+  part=next(b for b in BODIES if b['name']==name)
+  part.setdefault('exclude',[]).extend(sorted(neighbours-{name}))
 # Attached elastic retaining loop; it must be stretched over the folded packet.
 EN=32;ER=.300/(2*np.pi)
 anchor=next(b for b in BODIES if b['name']=='wire_0_00')
@@ -74,13 +91,4 @@ FRAME_LAYERS=(0,)
 # Finite rubber-pad contact area supplies native spin friction at a grip.
 for part in BODIES:
  if part['name'].startswith('wire_'):part.update(torsional_patch_radius=.004,min_torsional_patch_radius=.0015,contact_offset=.0005,max_angular_velocity=10.,speculative_ccd=True)
-# Polyester mesh can extend slightly under load. Finite seam compliance also
-# avoids an overconstrained rigid-panel lattice. These uncalibrated 3 mm
-# stretches are about 3% of a coarse panel edge; no rest shape is commanded.
-for seam in JOINTS:
- if seam['name'].startswith(('fabric_','edge_')):
-  for axis in ['transX','transY','transZ']:
-   seam['axes'][axis]=dict(limits=(-.003,.003),stiffness=2000.,damping=.2)
-  # Coarse edges are twice the original length, so carry twice its tear load.
-  seam['break_force']*=2.
 finalize(BODIES,JOINTS)
