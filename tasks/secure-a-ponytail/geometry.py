@@ -29,7 +29,7 @@ for s in range(STRANDS):
   else:JOINTS.append(joint(f'root_{s}','styling_head',name,a-HEAD,[0,0,-length/2],axes=bend_axes(.0002,.00002),break_force=20.))
 # Two wooden rails support four arcs while leaving the central pickup lane clear.
 for sx in [-1,1]:
- BODIES.append(body(f'elastic_rest_{sx+1}',[ELASTIC[0]+sx*.010,0,TABLE+.030],[box((.006,.032,.060))],mass=.010,fixed=True,color=(.59,.44,.28)))
+ BODIES.append(body(f'elastic_rest_{sx+1}',[ELASTIC[0]+sx*.012,0,TABLE+.030],[box((.004,.032,.060))],mass=.010,fixed=True,color=(.59,.44,.28)))
 # A plain 3 mm cord elastic, 30 mm inside diameter. Native passive
 # stretch joints connect contact-bearing segments into a closed loop.
 M=64;radius=.0165;theta=np.arange(M)*2*np.pi/M

@@ -51,6 +51,7 @@ def spawn(prim_path,cfg,translation=None,orientation=None,**kwargs):
   g.AddTranslateOp().Set(Gf.Vec3d(*shape.get('pos',(0,0,0))))
   q=shape.get('quat',(0,0,0,1));g.AddOrientOp().Set(Gf.Quatf(q[3],Gf.Vec3f(*q[:3])))
   g.AddScaleOp().Set(Gf.Vec3f(*scale))
+  if not spec.get('visible',True):g.CreateVisibilityAttr(UsdGeom.Tokens.invisible)
   if shape.get('collision',True):
    UsdPhysics.CollisionAPI.Apply(g.GetPrim())
    if kind=='mesh':UsdPhysics.MeshCollisionAPI.Apply(g.GetPrim()).CreateApproximationAttr('convexHull')

@@ -52,6 +52,9 @@ class Model(NativeModel):
   return .5 if x>=.5 else (.25 if x>=.25 else 0.)
  def integrity_failed(self):return super().integrity_failed() or any(n.startswith('pin_') for n in self.broken)
 
+ def draw(self,d):
+  from hair_visual import draw
+  draw(self,d)
  def state(self):return dict(super().state(),comb_touched_locks=sorted(self.comb_touched_locks))
  def restore(self,state):
   s=dict(state);self.comb_touched_locks=set(s.pop('comb_touched_locks'));super().restore(s)

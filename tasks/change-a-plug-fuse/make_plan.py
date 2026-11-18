@@ -1,4 +1,4 @@
-"""Initial lever-and-extract probe, not yet a complete fuse-change demo."""
+"""Complete robot-only replacement sequence; native validation is pending."""
 from pathlib import Path
 import json,numpy as np
 from scipy.spatial.transform import Rotation as Rot

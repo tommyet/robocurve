@@ -21,6 +21,10 @@ for i in range(1,9):
  lp=L+[.015*u,-.175-.055*u,.12-.08*u];rp=R+[-.015*u,.175+.055*u,.12-.08*u]
  p.add(1.5,'finish the counter-twist and nest the loops',{'left':(lp,a,.11),'right':(rp,b,.11)})
 from common import down,TABLE
+# Keep both native edge grips while the table nests the twisted loops.
+lp=lp.copy();rp=rp.copy();lp[2]=TABLE+.028;rp[2]=TABLE+.028
+p.add(6,'lower the nested loops against the table',{'left':(lp,a,.11),'right':(rp,b,.11)})
+p.add(3,'hold the loops compact for inspection',{})
 centre=np.array([.29,0,TABLE])
 left_hold=centre+[-.025,.035,.060];right_hold=centre+[.040,-.035,.060]
 p.add(1,'release the left edge',{'left':(lp,a,.55)})

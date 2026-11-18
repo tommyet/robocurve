@@ -35,7 +35,8 @@ class DemoControl:
      self.phase_id=index;self.phase_start=(hands[side]['tcp'].copy(),hands[side]['rotation'].copy())
      obj=phase['obj'];pos=m.p(obj);OR=m.orientation(obj);kind=phase['kind']
      if kind=='pick':
-      goalR=phase['rotation'];goal=pos+OR@phase['point']+phase['delta'];self.grasps.pop(obj,None)
+      from common import down
+      goalR=OR@down(-90) if obj=='carrier' else phase['rotation'];goal=pos+OR@phase['point']+phase['delta'];self.grasps.pop(obj,None)
      elif kind in ['move','lift']:
       H=hands[side]
       if obj not in self.grasps:self.grasps[obj]=(H['rotation'].T@(pos-H['tcp']),H['rotation'].T@OR)

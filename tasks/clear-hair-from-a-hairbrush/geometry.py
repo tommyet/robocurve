@@ -11,20 +11,20 @@ for i in range(4):
   pos=np.array([(i-1.5)*.016,(j-5)*.006,.013]);name=f'pin_{i}_{j}'
   BODIES.append(body(name,BRUSH+pos,[cylinder(.00085,.016),sphere((.0013,)*3,(0,0,.008))],mass=.00012,color=(.90,.88,.77),contact_offset=.0001))
   JOINTS.append(joint(name+'_root','brush',name,pos,[0,0,0],axes={**fixed_axes(),'rotX':dict(limits=(-65,65),stiffness=.05,damping=.001),'rotY':dict(limits=(-65,65),stiffness=.05,damping=.001)},break_force=18.,break_torque=.12))
-# Ten loose locks represent 1 g of shed hair. Each lock is a 0.8 mm contact
+# Ten loose locks represent 2 g of shed hair. Each lock is a 1.4 mm contact
 # proxy for many finer hairs; it is neither rigid nor glued to the brush.
-HAIRS=10;SEGMENTS=28
+HAIRS=10;SEGMENTS=14
 for strand in range(HAIRS):
  y=-.030+strand*.006;u=np.linspace(-1,1,SEGMENTS+1)
  # Each strand snakes between neighbouring pins, with two loose ends.
  points=np.c_[.037*u,y+.00155*np.sin(np.pi*(.037*u)/.016),.012+.001*np.cos(3*np.pi*u+strand*.6)]+BRUSH
  for i,(a,b) in enumerate(zip(points[:-1],points[1:])):
   v=b-a;length=np.linalg.norm(v);R=Rotation.align_vectors([v/length],[[1,0,0]])[0]
-  part=body(f'hair_{strand}_{i}',(a+b)/2,[box((length,.0008,.0008)),sphere((.0004,)*3,(-length/2,0,0)),sphere((.0004,)*3,(length/2,0,0))],mass=.0001/SEGMENTS,color=(.12+.018*(strand%3),.065,.025),quat=R.as_quat().tolist(),friction=.5,contact_offset=.0001,linear_damping=.15,angular_damping=.1)
+  part=body(f'hair_{strand}_{i}',(a+b)/2,[dict(kind='capsule',radius=.0007,length=float(length),pos=[0,0,0],quat=Rotation.from_euler('y',90,degrees=True).as_quat().tolist())],mass=.0002/SEGMENTS,color=(.12+.018*(strand%3),.065,.025),quat=R.as_quat().tolist(),friction=.5,contact_offset=.0001,linear_damping=.15,angular_damping=.1,visible=False)
   I=part['mass']*length*length/12;part['inertia']=[max(I/15,1e-12),max(I,1e-12),max(I,1e-12)];BODIES.append(part)
   if i:
    previous=BODIES[-2];axes={axis:dict(limits=(-180,180),stiffness=2e-7,damping=1e-8) for axis in ('rotX','rotY','rotZ')}
-   JOINTS.append(joint(f'hair_join_{strand}_{i}',previous['name'],part['name'],[previous['shapes'][0]['size'][0]/2,0,0],[-length/2,0,0],axes=axes))
+   JOINTS.append(joint(f'hair_join_{strand}_{i}',previous['name'],part['name'],[previous['shapes'][0]['length']/2,0,0],[-length/2,0,0],axes=axes))
 # Fine fibres caught around bristle tips resist a light shake. A small passive
 # breakaway constraint approximates this unresolved snag at two actual pin
 # contacts per lock. It supplies resistance only: the comb must contact and
@@ -34,7 +34,7 @@ for strand in range(HAIRS):
  candidates=[]
  for part in [b for b in BODIES if b['name'].startswith(f'hair_{strand}_')]:
   index=int(part['name'].rsplit('_',1)[1])
-  if not 4<=index<=SEGMENTS-5:continue
+  if not 2<=index<=SEGMENTS-3:continue
   for pin in [b for b in BODIES if b['name'].startswith('pin_')]:
    distance=float(np.linalg.norm((np.asarray(part['pos'])-pin['pos'])[:2]))
    if distance<.002:candidates.append((distance,index,part,pin))

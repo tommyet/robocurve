@@ -5973,3 +5973,33 @@ editing, merge both agents' findings, and commit/push the update with the work.
   Earlier left grips were at a pad edge; no full fold has been shown.
 - Still no full-score demo for these five, and no Dream calls. Eito chain
   PR2739 remains the team submission; do not duplicate it.
+
+### 2026-11-18, 23:50 UTC — grasp corrections remain development probes
+
+- Cap022 lifts and carries the cap, then loses both grips during lowering.
+  Recorded fingers reach their empty closing stop while 3 mm rim samples
+  appear between the faces: aggressive closure is not reliable retention.
+  The next probe uses a larger adult 168 x 160 mm opening and gentler jaws;
+  this is a disclosed geometry choice, not a scoring tolerance change.
+- Brush021 with coarser hair and 5 mN snags releases all snags during the
+  supporting-hand closure, before comb contact, then breaks a pin at354.
+  This is not a valid removal demonstration. Restore25 mN resistance. The
+  supporting controller chased the moving brush until140; freeze its target
+  at100 before closing, and lower the handle grip5.5 mm for deeper purchase.
+- Hamper009 forms twisted loops but remains369 x367 x190 mm at700. Releasing
+  one edge then lets it reopen.010 adds table compression while both grips
+  remain closed; compact nesting and retaining-band placement are unproved.
+- Pony022 again loses one side during stretching.023 widens the ordinary
+  finger faces from4 to10 mm within the14 mm clear lane between its rests.
+- No new task PR, full-score demo, or Dream call yet. Chain remains Eito's
+  PR2739. Completed probes through017 are backed up locally (168204404 bytes).
+
+- Fuse015 again damages a terminal during the carrier pinch (722). The
+  old target was the low end near a terminal. Next grasp the raised +17.5 mm
+  end, whose overhang clears the terminal, and align fingers with the actual
+  carrier tilt. Full2380-step CPU reach audit passes at3.132 mm maximum error.
+- Pony023 never reaches the elastic: at100 its nearest arc is13.6 mm ahead
+  of the TCP, beyond the12 mm finger end. Wider fingers conflict with the
+  narrow support lane.079 uses two4 x32 x60 mm rails24 mm apart, a20 mm gap,
+  while preserving four supporting arcs; do not repeat the earlier short
+  rests that let the band fall. No new native result yet.
