@@ -2,15 +2,15 @@
 
 Mash the cooked potato in the bowl until no large lumps remain. Keep the potato in the bowl.
 
-The native demo reaches 1.0 in 723 actions (36.15 seconds). Independent audit, video review and the complete Dream baseline are still being finalized; this folder is not yet submitted.
+The native demo scores 1.0 in 723 actions (36.15 seconds). Dream-1 scores 0.0 after the full 2,400-action limit. Both runs pass independent frozen-source audits and their native camera videos were inspected.
 
 ## Setup and reset
 
-About 60 g of peeled, cooked potato in twelve 21–22 mm pieces, arranged in a 4 × 3 grid in a stainless-steel bowl (200 mm inside diameter, 75 mm deep). A 140 g wire masher has a 75 × 60 mm head and a 180 mm handle. The bowl is centred between the arms; the masher stands on its head 170 mm toward the right arm. Both hands start open.
+About 60 g of peeled, cooked potato in twelve roughly 22 mm cubes, arranged in a 4 × 3 grid in a stainless-steel bowl (200 mm inside diameter, 75 mm deep). A 140 g wire masher has a 75 × 60 mm head and a 180 mm handle. The bowl is centred between the arms; the masher stands on its head 170 mm toward the right arm. Both hands start open.
 
 The native bowl is 300 g. Its centre is 340 mm forward of the station origin; the food grid has 24 mm spacing. The fixed layout, part geometry and masses are in `geometry.py`. The simulated portion is 58.32 g. The tool may be released in the bowl; returning it to the bench is not required.
 
-Use peeled floury potato from one batch, cut into 21–22 mm pieces, boiled until a fork passes through easily, drained and cooled to 18–22 °C. Weigh 60 ± 5 g per trial; add no milk, butter or oil. Use fresh pieces and clean the bowl, masher, work surface and food-safe gripper covers between trials. Place the twelve pieces as photographed.
+Use peeled floury potato from one batch, cut into roughly 22 mm cubes, boiled until a fork passes through easily, drained and cooled to 18–22 °C. Weigh 60 ± 5 g per trial; add no milk, butter or oil. Use fresh pieces and clean the bowl, masher, work surface and food-safe gripper covers between trials. Place the twelve pieces as photographed.
 
 ## Scoring
 
@@ -40,4 +40,4 @@ python tasks/mash-cooked-potato/rescore.py /tmp/potato-dream
 
 The control limit is 2,400 actions (120 seconds at 20 Hz). The layout is fixed and uses no random seed. The scripted plan has a 2,260-action upper bound and can finish earlier once the measured outcome is released. Dream receives the full limit and standard three camera views plus joint observations.
 
-The CPU rescorer verifies frozen source hashes, trace continuity, joint/rate bounds, damage progression, native break events and the outcome. It is an evidence audit, not a physics replay. Native camera videos must also be reviewed. Runtime measurements and final audit results will be recorded in `VALIDATION.json` once the baseline completes.
+The CPU rescorer verifies frozen source hashes, trace continuity, joint/rate bounds, damage progression, native break events and the outcome. It is an evidence audit, not a physics replay. Native camera videos must also be reviewed. `VALIDATION.json` records the audit and measurements. On an RTX PRO 6000 Blackwell, the demo took 390 seconds and Dream took 1627 seconds including 50 policy requests. Runtime varies with API latency.

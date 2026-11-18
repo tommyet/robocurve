@@ -11,6 +11,12 @@ class DemoControl:
    self.left_offset=np.mean([m.p(n) for n in names],axis=0)-nominal
   if k<=700:
    pp,RR=ik.tcp_pose(wanted[:6],station.BASES['left']);target=pp+self.left_offset*min(1.,k/60)
+   if 60<k<=120:
+    names=['front_8_0','front_9_0','hem_8_0','hem_9_0']
+    centre=np.mean([m.p(n) for n in names],axis=0)
+    grasp=centre-.006*RR[:,2];u=np.clip((k-60)/40,0,1)
+    target=(1-u)*target+u*grasp
+    if k==120:self.left_offset=grasp-pp
    seed=np.clip(current[:6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    def correct(q):
     p,R=ik.tcp_pose(q,station.BASES['left']);return np.r_[p-target,.12*ik._rot_error(RR,R),.001*(q-seed)]

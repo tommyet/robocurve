@@ -7,7 +7,7 @@ from common import down,TABLE
 from geometry import BODIES
 p=Plan();base=np.array([[0,-1,0],[0,0,-1],[1,0,0.]])
 turn=Rotation.from_euler('z',30,degrees=True).as_matrix()
-RL=turn@base;RR=Rotation.from_euler('x',180,degrees=True).as_matrix()@base
+RL=turn@Rotation.from_euler('x',20,degrees=True).as_matrix()@base;RR=Rotation.from_euler('z',-30,degrees=True).as_matrix()@Rotation.from_euler('x',160,degrees=True).as_matrix()@base
 points=[np.mean([b['pos'] for b in BODIES if b['name'] in [f'wire_{f}_{i:02d}' for f in range(4)]],axis=0) for i in [0,24]]
 L=points[0]-.006*RL[:,2];R=points[1]-.006*RR[:,2]
 p.add(3,'approach opposite bound frame ends',{'left':(L-.035*RL[:,2],RL,.3),'right':(R-.035*RR[:,2],RR,.3)},'joint')
