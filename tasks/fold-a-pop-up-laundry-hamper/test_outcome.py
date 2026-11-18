@@ -16,5 +16,10 @@ class OutcomeTests(unittest.TestCase):
  def test_protruding_fabric_is_included(self):
   m=Model();before=m.measure();m.poses[m.index['mesh_0_0_0'],2]+=.2
   after=m.measure();self.assertGreater(after['thickness_mm'],before['thickness_mm']+150)
+ def test_buckled_thread_is_included(self):
+  m=Model();before=m.measure()
+  name=next(n for n in m.names if n.startswith('cloth_link_'))
+  m.poses[m.index[name],2]+=.2
+  self.assertGreater(m.measure()['thickness_mm'],before['thickness_mm']+150)
 
 if __name__=='__main__':unittest.main()

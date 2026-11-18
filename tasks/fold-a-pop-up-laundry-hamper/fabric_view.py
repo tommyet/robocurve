@@ -1,6 +1,6 @@
 """Cloth skin from measured flexible-net nodes; never sets a physical pose."""
 import numpy as np
-from geometry import NX,NY
+from geometry import NX,NY,BODIES
 class FabricView:
  def __init__(self,drawing):
   from pxr import UsdGeom
@@ -15,9 +15,18 @@ class FabricView:
    for geom in self.native:geom.GetVisibilityAttr().Set('inherited')
    if 'cloth_skin' in self.drawing.meshes:UsdGeom.Imageable(self.drawing.meshes['cloth_skin'].GetPrim()).GetVisibilityAttr().Set('invisible')
    return
-  points=np.array([model.p(f'mesh_0_{i}_{j}') for i in range(NX+1) for j in range(NY+1)])
-  faces=[]
+  points=[];faces=[]
+  def middle(i,j,di,dj):
+   name=f'cloth_link_{i}_{j}_{di}_{dj}_0'
+   if name in model.index:
+    part=BODIES[model.index[name]]
+    return model.p(name,[part['shapes'][0]['size'][0]/2,0,0])
+   return (model.p(f'mesh_0_{i}_{j}')+model.p(f'mesh_0_{i+di}_{j+dj}'))/2
   for i in range(NX):
    for j in range(NY):
-    a=i*(NY+1)+j;b=(i+1)*(NY+1)+j;faces.extend([(a,b,a+1),(a+1,b,b+1)])
-  self.drawing.mesh('cloth_skin',points,faces,(.26,.46,.61))
+    # Follow actual bent thread midpoints; the panel centre is only a visual
+    # interpolation. No rendered vertex commands a material body's position.
+    ring=[model.p(f'mesh_0_{i}_{j}'),middle(i,j,1,0),model.p(f'mesh_0_{i+1}_{j}'),middle(i+1,j,0,1),model.p(f'mesh_0_{i+1}_{j+1}'),middle(i,j+1,1,0),model.p(f'mesh_0_{i}_{j+1}'),middle(i,j,0,1)]
+    start=len(points);points.extend(ring);points.append(np.mean(ring,axis=0))
+    faces.extend((start+k,start+(k+1)%8,start+8) for k in range(8))
+  self.drawing.mesh('cloth_skin',np.array(points),faces,(.26,.46,.61))

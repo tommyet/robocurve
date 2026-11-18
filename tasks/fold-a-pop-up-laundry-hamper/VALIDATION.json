@@ -3,5 +3,5 @@
   "submission_ready": false,
   "full_score_demo": null,
   "dream_baseline": null,
-  "blocking_issue": "No stable native coil. Grips were lost during twist trials; retaining-loop placement is not implemented."
+  "blocking_issue": "No compact native coil or retaining-loop demonstration. Earlier grip losses were improved; current tests diagnose fabric constraints and support interference. Full successful demo and Dream baseline remain required."
 }

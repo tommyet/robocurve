@@ -6,7 +6,9 @@ its final shape and no stage variable changes the frame rest angles.
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
 N=12;A=.165;B=.265;CENTER=np.array([.29,0,TABLE+.112])
-BODIES.append(body("folding_board",[.29,0,TABLE+.050],[box((.220,.380,.100))],mass=1.,fixed=True,color=(.58,.40,.25)))
+# An open rest keeps the pickup height without obstructing the downward
+# part of the twist. The real fixture is a wooden base with two narrow rails.
+BODIES.append(body("folding_stand",[.29,0,TABLE+.005],[box((.350,.380,.010)),box((.020,.380,.090),(-.165,0,.050)),box((.020,.380,.090),(.165,0,.050))],mass=1.6,fixed=True,color=(.58,.40,.25)))
 # A rounded rectangle sampled at equal arclength, 33 x 53 cm overall.
 def rounded_rect(a,b,r=.025):
  points=[]
@@ -27,13 +29,24 @@ for face in range(1):
   BODIES.append(body(name,(a+b)/2,[box((length,.008,.015))],mass=4*(8000*length*.004*.00045+300*length*.008*.003),color=(.13,.29,.44),quat=list(Rotation.from_matrix(R).as_quat()),friction=1.,contact_offset=.0001))
  for i in range(N):
   a=f'wire_{face}_{i:02d}';b=f'wire_{face}_{(i+1)%N:02d}';aa=next(q for q in BODIES if q['name']==a);bb=next(q for q in BODIES if q['name']==b)
-  axes={k:dict(limits=(-179,179),stiffness=4*s,damping=.0005) for k,s in [('rotX',.015),('rotY',.020),('rotZ',.75)]}
+  # Discrete beam stiffness for the same four 4 x 0.45 mm steel strips
+  # used in the mass estimate. E and nu are generic steel assumptions,
+  # not measurements of a particular retail hamper.
+  width,thick,E,nu=.004,.00045,200e9,.3
+  length=(aa['shapes'][0]['size'][0]+bb['shapes'][0]['size'][0])/2
+  J=width*thick**3/3*(1-.63*thick/width*(1-thick**4/(12*width**4)))
+  stiffness={'rotX':4*E/(2*(1+nu))*J/length,'rotY':4*E*width*thick**3/(12*length),'rotZ':4*E*thick*width**3/(12*length)}
+  axes={k:dict(limits=(-179,179),stiffness=s,damping=.0005) for k,s in stiffness.items()}
   JOINTS.append(joint(f'wire_joint_{face}_{i}',a,b,[aa['shapes'][0]['size'][0]/2,0,0],[-bb['shapes'][0]['size'][0]/2,0,0],axes=axes,break_force=400.,break_torque=6.))
 # Flattened mesh layers share a flexible bar-and-node net. Its 60 g mass
 # equals the four earlier cloth layers. Links preserve thread lengths while
 # freely rotating nodes permit folding and shear. Inter-layer slip and mesh
 # shear resistance are omitted; the frame still supplies bending resistance.
 NX,NY=3,5;DX=.31/NX;DY=.51/NY
+def cloth_ball_axes():
+ # These thread/node connections have no bending stiffness. In particular,
+ # an arbitrary spin of a tiny cloth node must not meet a 179-degree stop.
+ return {axis:dict(limits=(-180,180)) for axis in ('rotX','rotY','rotZ')}
 for i in range(NX+1):
  for j in range(NY+1):
   name=f'mesh_0_{i}_{j}';pos=CENTER+[(i-NX/2)*DX,(j-NY/2)*DY,.006]
@@ -49,17 +62,21 @@ for i in range(NX+1):
    other=f'mesh_0_{i+di}_{j+dj}';end=next(b for b in BODIES if b['name']==other)
    a,b=np.array(node['pos']),np.array(end['pos']);v=b-a;length=np.linalg.norm(v)
    rot=Rotation.align_vectors([v/length],[[1,0,0]])[0];link=f'cloth_link_{i}_{j}_{di}_{dj}'
-   BODIES.append(body(link,(a+b)/2,[box((length,.0024,.0024))],mass=.0012,color=(.26,.46,.61),quat=rot.as_quat().tolist(),friction=.6))
-   for side,target,x in [(0,name,-length/2),(1,other,length/2)]:
-    axes=bend_axes(0.,.000001,179)
+   # Cloth carries tension but folds under compression. Two freely hinged
+   # half-links allow each coarse thread span to buckle independently.
+   for half,u in enumerate((.25,.75)):
+    BODIES.append(body(link+'_'+str(half),a+u*v,[box((length/2,.0024,.0024))],mass=.0006,color=(.26,.46,.61),quat=rot.as_quat().tolist(),friction=.6))
+   JOINTS.append(joint(link+'_bend',link+'_0',link+'_1',[length/4,0,0],[-length/4,0,0],axes=cloth_ball_axes(),break_force=40.))
+   for side,target,x in [(0,name,-length/4),(1,other,length/4)]:
+    axes=cloth_ball_axes()
     # Finite axial compliance lets a coarse straight cloth edge accommodate
     # wire curvature: at most 6 mm total extension per approximately 10 cm link.
     axes['transX']=dict(limits=(-.003,.003),stiffness=2000.,damping=.03)
-    JOINTS.append(joint(f'fabric_{i}_{j}_{di}_{dj}_{side}',link,target,[x,0,0],[0,0,0],axes=axes,break_force=40.))
+    JOINTS.append(joint(f'fabric_{i}_{j}_{di}_{dj}_{side}',link+'_'+str(side),target,[x,0,0],[0,0,0],axes=axes,break_force=40.))
   if i in [0,NX] or j in [0,NY]:
    pos=np.array(node['pos']);wires=[b for b in BODIES if b['name'].startswith('wire_')]
    wire=min(wires,key=lambda b:np.linalg.norm(pos-np.asarray(b['pos'])))
-   JOINTS.append(joint(f'edge_0_{i}_{j}',wire['name'],name,Rotation.from_quat(wire['quat']).inv().apply(pos-wire['pos']),[0,0,0],axes=bend_axes(0.,.000001,179),break_force=50.))
+   JOINTS.append(joint(f'edge_0_{i}_{j}',wire['name'],name,Rotation.from_quat(wire['quat']).inv().apply(pos-wire['pos']),[0,0,0],axes=cloth_ball_axes(),break_force=50.))
 # Links incident on the same sewn node overlap at that shared endpoint.
 # Ignore only those local neighbour contacts; non-neighbour fabric and frame
 # pieces still collide when folded.
@@ -101,4 +118,10 @@ FRAME_LAYERS=(0,)
 # Finite rubber-pad contact area supplies native spin friction at a grip.
 for part in BODIES:
  if part['name'].startswith('wire_'):part.update(torsional_patch_radius=.004,min_torsional_patch_radius=.0015,contact_offset=.0005,max_angular_velocity=10.,speculative_ccd=True)
+ # Regularize the very small axial inertia of slender collision proxies.
+ # Mass, length, spring stiffness and break loads remain unchanged. This is
+ # an explicit numerical approximation, not calibrated steel/cloth inertia.
+ if part['name'].startswith(('wire_','cloth_link_')):
+  x,y,z=part['shapes'][0]['size'];I=part['mass']/12*np.array([y*y+z*z,x*x+z*z,x*x+y*y])
+  part['inertia']=np.maximum(I,I.max()/20).tolist()
 finalize(BODIES,JOINTS)

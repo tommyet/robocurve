@@ -9,7 +9,7 @@ class Model(NativeModel):
  def packet_points(self):
   # Measure the outside of the rods and cloth, not only rod centres.
   if not hasattr(self,'packet_ids'):
-   self.packet_ids=[i for i,b in enumerate(BODIES) if b['name'].startswith(('wire_','mesh_'))]
+   self.packet_ids=[i for i,b in enumerate(BODIES) if b['name'].startswith(('wire_','mesh_','cloth_link_'))]
    signs=np.array([[x,y,z] for x in [-1,1] for y in [-1,1] for z in [-1,1]])
    self.packet_corners=np.array([signs*np.asarray(BODIES[i]['shapes'][0]['size'])/2 for i in self.packet_ids])
   return (np.einsum('nij,nkj->nki',self.R[self.packet_ids],self.packet_corners)+self.poses[self.packet_ids,None,:3]).reshape(-1,3)
