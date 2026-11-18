@@ -27,17 +27,17 @@ class Model(NativeModel):
    self.enable('pin_catch','sprung_point_entered_shield');self.latched=True
   self.failed |= any(n.startswith(('cloth_','side_seam_','fold_','hem_','hole_','existing_stitch_')) for n in self.broken) or bool({'pin_catch','point_compression','pin_spring'} & self.broken)
  def measure(self):
-  front=[n for n in self.holes if n.startswith('front_')];hem=[n for n in self.holes if n.startswith('hem_')];back=[n for n in self.holes if n.startswith('back_')]
+  front=[n for n in self.holes if n.startswith('front_') and 6<=int(n.split('_')[1])<12];hem=[n for n in self.holes if n.startswith('hem_') and 6<=int(n.split('_')[1])<12];back=[n for n in self.holes if n.startswith('back_')]
   def on_shaft(n):
    local=self.orientation('pin_arm').T@(self.p(n,self.holes[n])-self.p('pin_arm'))
    return -.001<=local[0]<=.046 and np.linalg.norm(local[1:])<.002
   same_region=bool(sum(on_shaft(n) for n in front)>=2 and sum(on_shaft(n) for n in hem)>=2 and min(np.linalg.norm(self.p(a)-self.p(b)) for a in front for b in hem)<.025)
-  return dict(front_layer_pierced=bool(front),hem_layer_pierced=bool(hem),back_of_leg_pierced=bool(back),both_layers_held=same_region,point_enclosed=self.latched,punctures=len(self.holes),fabric_intact=not self.failed,released_seconds=self.release,max_puncture_load_N=self.max_puncture_load,failed=self.failed)
+  return dict(front_layer_pierced=any(on_shaft(n) for n in front),hem_layer_pierced=any(on_shaft(n) for n in hem),back_of_leg_pierced=bool(back),both_layers_held=same_region,point_enclosed=self.latched,punctures=len(self.holes),fabric_intact=not self.failed,released_seconds=self.release,max_puncture_load_N=self.max_puncture_load,failed=self.failed)
  def integrity_failed(self):return super().integrity_failed() or (any(n.startswith(('cloth_','side_seam_','fold_','hem_','hole_','existing_stitch_')) for n in self.broken) or bool({'pin_catch','point_compression','pin_spring'} & self.broken))
  def score(self):
   self.failed |= self.integrity_failed()
   m=self.measure()
-  if self.failed or m['back_of_leg_pierced'] or m['punctures']>4:return 0.
+  if self.failed or m['back_of_leg_pierced'] or m['punctures']>4 or any(not 6<=int(n.split('_')[1])<12 for n in self.holes):return 0.
   if m['both_layers_held'] and self.latched and self.release>=3:return 1.
   if m['both_layers_held']:return .5
   return .25 if m['front_layer_pierced'] or m['hem_layer_pierced'] else 0.

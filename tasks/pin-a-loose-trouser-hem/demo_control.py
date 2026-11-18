@@ -26,24 +26,9 @@ class DemoControl:
   h=hands['right'];tip=m.p('needle_point',[.001,0,0]);axis=m.orientation('pin_arm')[:,0]
   if np.linalg.norm(m.p('pin_frame')-h['tcp'])>.055:raise RuntimeError('The pin slipped from the native grip; stop this failed development trial.')
   if self.start is None:
-   self.start=tip.copy();self.initial_axis=axis.copy();choices=[];direction=np.array([1.,0,0])
-   names=[n for n in m.names if n.startswith(('front_','hem_','back_'))]
-   apex=max(m.p(n)[2] for n in names if n.startswith('hem_'))
-   for y in np.linspace(.075,.135,41):
-    for z in np.arange(.786,min(.885,apex-.003),.0015):
-     hits=[]
-     for n in names:
-      R=m.orientation(n);normal=R[:,2]
-      if abs(normal@direction)<.25:continue
-      origin=np.array([.4,y,z]);distance=float(normal@(m.p(n)-origin)/(normal@direction));point=origin+distance*direction;local=R.T@(point-m.p(n))
-      half_y=.005 if n.startswith('hem_') else .012
-      if abs(local[0])<.004 and abs(local[1])<half_y-.001:hits.append((n,point))
-     front=[h for h in hits if h[0].startswith('front_')];hem=[h for h in hits if h[0].startswith('hem_')]
-     if len(front)==2 and len(hem)==2 and len(hits)==4:
-      xs=[v[1][0] for v in hits];span=max(xs)-min(xs)
-      if .008<span<.034:choices.append((span,y,z,min(xs),max(xs),[n for n,_ in hits]))
-   if not choices:raise RuntimeError('The held hem does not present a clear four-layer needle path; stop this development trial.')
-   span,y,z,lo,hi,names=max(choices,key=lambda c:c[0]);self.entry=np.array([lo-.025,y,z]);self.end=np.array([hi+.003,y,z])
+   from path_search import select_path
+   self.start=tip.copy();self.initial_axis=axis.copy()
+   self.entry,self.end,self.direction,names=select_path(m)
    m.events.append(dict(event='demo_selected_straight_pin_path',start=self.entry.tolist(),end=self.end.tolist(),patches=names,time=m.time))
    # Select a reachable wrist branch before descending to the cloth. A local
    # incremental solve can otherwise stop at the wrist's negative limit.
@@ -52,7 +37,7 @@ class DemoControl:
    relative_tip=h['rotation'].T@(tip-h['tcp']);relative_axis=h['rotation'].T@axis
    target=self.entry+[0,0,.04]
    def approach_error(q):
-    pp,RR=ik.tcp_pose(q,station.BASES['right']);return np.r_[pp+RR@relative_tip-target,.1*(RR@relative_axis-np.array([1.,0,0]))]
+    pp,RR=ik.tcp_pose(q,station.BASES['right']);return np.r_[pp+RR@relative_tip-target,.1*(RR@relative_axis-self.direction)]
    solutions=[least_squares(approach_error,seed,bounds=(ik.LOWER,ik.UPPER),max_nfev=180) for seed in [np.asarray(READY),(ik.LOWER+ik.UPPER)/2]]
    solution=min(solutions,key=lambda x:np.linalg.norm(x.fun))
    if np.linalg.norm(solution.fun)>.005:raise RuntimeError('No reachable needle approach for the observed grasp.')
@@ -62,10 +47,10 @@ class DemoControl:
    u=np.clip((k-220)/120,0,1);u=u*u*(3-2*u);out=wanted.copy();out[7:13]=(1-u)*self.approach_start+u*self.approach_q;self.last_q=out[7:13].copy();return out
   def blend(a,b,start,end):
    u=np.clip((k-start)/(end-start),0,1);u=u*u*(3-2*u);return a*(1-u)+b*u
-  if k<=340:goal=blend(self.start,self.entry+[0,0,.04],220,340);goalaxis=blend(self.initial_axis,np.array([1.,0,0]),220,340)
-  elif k<=400:goal=blend(self.entry+[0,0,.04],self.entry,340,400);goalaxis=np.array([1.,0,0])
-  elif k<=640:goal=blend(self.entry,self.end,400,640);goalaxis=np.array([1.,0,0])
-  else:goal=self.end;goalaxis=np.array([1.,0,0])
+  if k<=340:goal=blend(self.start,self.entry+[0,0,.04],220,340);goalaxis=blend(self.initial_axis,self.direction,220,340)
+  elif k<=400:goal=blend(self.entry+[0,0,.04],self.entry,340,400);goalaxis=self.direction.copy()
+  elif k<=640:goal=blend(self.entry,self.end,400,640);goalaxis=self.direction.copy()
+  else:goal=self.end;goalaxis=self.direction.copy()
   goalaxis/=np.linalg.norm(goalaxis);relative_tip=h['rotation'].T@(tip-h['tcp']);relative_axis=h['rotation'].T@axis
   seed=np.clip(current[7:13],ik.LOWER+1e-6,ik.UPPER-1e-6)
   def residual(q):

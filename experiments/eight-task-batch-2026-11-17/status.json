@@ -1,9 +1,9 @@
 {
   "date": "2026-11-17",
   "submission_ready": false,
-  "new_task_prs_opened": 5,
+  "new_task_prs_opened": 6,
   "native_runs": "Multiple native resets and demos recorded; see task entries",
-  "dream_runs": "Kale, avocado, cigar, tattoo and potato complete. Cup baseline running. Pin and hamper still need full demos.",
+  "dream_runs": "Six submitted tasks have complete native demos and Dream baselines. Pin and hamper remain development work.",
   "bracelet": {
     "pr": 2187,
     "revision": "f5c49c2",
@@ -74,14 +74,15 @@
     },
     {
       "slug": "peel-a-silicone-baking-cup",
-      "scene": "Demo074 full score with passive elastic recovery and intact muffin; independent audit and native video review passed. Dream074 running.",
-      "score": "Demo 1.0 / 640 actions",
-      "media": null,
-      "pr": null,
+      "scene": "Native demo074 and Dream074 independently audited and native videos inspected.",
+      "score": "Demo 1.0 / 640 actions; Dream 0.0 / 1000 actions, 21 requests",
+      "media": "M-PULZDJ",
+      "pr": "https://github.com/robocurve/benchmark-tasks/pull/2561",
       "candidate_plan_actions": 640,
       "maximum_command_velocity_ratio": 0.2882187140625003,
       "maximum_ik_position_error_m": 9.695714973016204e-05,
-      "remaining_validation": "Complete Dream baseline, independent audit, final media and PR."
+      "remaining_validation": "Received; waiting for review.",
+      "receipt": "TK-GWDNKB"
     },
     {
       "slug": "mash-cooked-potato",
@@ -123,5 +124,5 @@
     "Safety-pin puncture, cuff drape and retention still need native evidence.",
     "Tattoo/PVC substrate compatibility is a qualification requirement, not a measured result."
   ],
-  "checkpoint_utc": "2026-11-18T00:12:26.755071+00:00"
+  "checkpoint_utc": "2026-11-18T00:28:29.349196+00:00"
 }

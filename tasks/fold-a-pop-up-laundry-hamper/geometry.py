@@ -65,4 +65,10 @@ for i in range(EN):
 # A single sewn attachment to the frame. Layout is folded back through this point.
 a=next(b for b in BODIES if b['name']=='wire_0_00');b=next(b for b in BODIES if b['name']=='elastic_16');point=(np.array(a['pos'])+b['pos'])/2
 JOINTS.append(joint('retainer_attachment',a['name'],b['name'],Rotation.from_quat(a['quat']).inv().apply(point-a['pos']),Rotation.from_quat(b['quat']).inv().apply(point-b['pos']),axes=bend_axes(.000001,.000001),break_force=25.))
+# Face the narrow dimension toward the arms for ordinary edge-on pickup.
+layout=Rotation.from_euler('z',90,degrees=True)
+for part in BODIES:
+ part['pos']=(CENTER+layout.apply(np.asarray(part['pos'])-CENTER)).tolist()
+ part['quat']=(layout*Rotation.from_quat(part.get('quat',[0,0,0,1]))).as_quat().tolist()
+GRIP_ENDS=(41,17)
 finalize(BODIES,JOINTS)

@@ -16,7 +16,7 @@ Use a cotton-twill trouser cuff with a 20 mm factory crease; unpick the securing
 
 ## Judging
 
-1.0 if the pin passes through both front and hem layers, returns through them to the surface, and closes with its point inside the shield; the hem remains secured after a three-second release. 0.5 if both layers are threaded but the pin is still open or held; 0.25 for a partial threading through a correct layer. Otherwise 0. Pinning the back of the leg, more than four punctures, or a tear over 5 mm scores 0.
+1.0 if the pin passes through both front and hem layers within the loose central 60 mm, returns through them to the surface, and closes with its point inside the shield; the hem remains secured after a three-second release. 0.5 if both layers are threaded but the pin is still open or held; 0.25 if a correct layer remains partly threaded on the shaft. Otherwise 0. Pinning outside that loose section or through the back of the leg, more than four punctures, or a tear over 5 mm scores 0.
 
 ## Simulation and limits
 

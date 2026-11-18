@@ -4,6 +4,7 @@ from pathlib import Path
 import numpy as np
 from common import rotation,Drawing
 from model import Model
+from geometry import GRIP_ENDS
 HERE=Path(__file__).resolve().parent
 
 def serial(x):
@@ -110,7 +111,7 @@ def main():
    capture(k);report.update(steps=k,measurements=m.measure(),score=m.score())
    if k%20==0:save();trace.flush()
    if a.mode=='demo' and k==140 and any(h['opening']<.03 for h in hands().values()):raise RuntimeError('Empty grip after closing; stop this development trial before lift.')
-   if a.mode=='demo' and k==200 and (any(h['opening']<.03 for h in hands().values()) or any(sum(m.p('wire_%d_%02d'%(face,end))[2]>.88 for face in range(4))<2 for end in [0,24])):raise RuntimeError('The frame stack slipped before folding; stop this development trial.')
+   if a.mode=='demo' and k==200 and (any(h['opening']<.03 for h in hands().values()) or any(sum(m.p('wire_%d_%02d'%(face,end))[2]>.88 for face in range(4))<2 for end in GRIP_ENDS)):raise RuntimeError('The frame stack slipped before folding; stop this development trial.')
    if a.mode=='demo' and m.failed:raise RuntimeError('Native task integrity failed; development demo stopped early.')
   report.update(status='complete',events=m.events,score=m.score(),requires_visual_review=True)
  except BaseException as error:

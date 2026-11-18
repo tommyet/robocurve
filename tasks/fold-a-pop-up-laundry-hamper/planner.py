@@ -17,7 +17,8 @@ class Plan:
      pp,rr=ik.tcp_pose(q,station.BASES[side]);return np.r_[pp-p,.3*ik._rot_error(R,rr)]
     solutions=[least_squares(f,seed,bounds=(ik.LOWER,ik.UPPER),max_nfev=200) for seed in [b[o:o+6],(ik.LOWER+ik.UPPER)/2]]
     sol=min(solutions,key=lambda x:np.linalg.norm(x.fun))
-    if np.linalg.norm(sol.fun)>.012:raise ValueError((label,side,'unreachable',sol.fun))
+    errors=[max(errors[0],float(np.linalg.norm(sol.fun[:3]))),max(errors[1],float(np.linalg.norm(sol.fun[3:])/.3))]
+    if errors[0]>.015 or errors[1]>.10:raise ValueError((label,side,'unreachable',sol.fun))
     goals[side]=sol.x
   for k in range(1,round(seconds*20)+1):
    u=ik.smoothstep(k/(seconds*20))
