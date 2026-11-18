@@ -63,7 +63,7 @@ class DemoControl:
   from scipy.spatial.transform import Rotation
   if self.closure is None:
    if not m.measure()['both_layers_held']:raise RuntimeError('Threading incomplete; stop the development demo before attempting closure.')
-   tip=m.p('needle_point',[.001,0,0]);shield=m.p('pin_frame',[.045,0,.002]);z=shield-tip;z/=np.linalg.norm(z)
+   tip=m.p('needle_point',[.001,0,0]);shield=m.p('pin_frame',[.0685,0,.002]);z=shield-tip;z/=np.linalg.norm(z)
    x=np.cross(m.orientation('pin_arm')[:,0],z);x/=np.linalg.norm(x);R=np.column_stack([x,np.cross(z,x),z])
    self.closure=dict(tip=tip,shield=shield,R=R,left=hands['left']['tcp'].copy(),leftR=hands['left']['rotation'].copy(),right=hands['right']['tcp'].copy(),rightR=hands['right']['rotation'].copy())
   c=self.closure;R=c['R'];z=R[:,2];near=c['tip']-.030*z+.006*R[:,0];pressed=c['shield']-.006*z+.006*R[:,0]

@@ -12,7 +12,7 @@ assert Model().score()==0.
 m=threaded();assert m.score()==.5
 m.latched=True;m.release=3.;assert m.score()==1.
 m.broken.add('hole_front_6_0');assert m.score()==0.
-m=threaded(('front_4_0','hem_4_0','front_5_0','hem_5_1'));m.latched=True;m.release=3.;assert m.score()==0.
+m=threaded(('front_2_0','hem_2_0','front_3_0','hem_3_1'));m.latched=True;m.release=3.;assert m.score()==0.
 m=threaded()
 for n in m.holes:m.poses[m.index[n],:3]+=[0,0,.10]
 assert m.score()==0.,'A withdrawn pin must not earn puncture-history credit.'

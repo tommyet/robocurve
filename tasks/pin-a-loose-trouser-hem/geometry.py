@@ -20,26 +20,26 @@ for i in range(NX):
   if j==0:JOINTS.append(joint('fold_'+str(i),f'front_{i}_0',name,[0,-.012,.00075],[0,-.005,-.00075],axes=bend_axes(.000003,.000001),break_force=10.))
   else:JOINTS.append(joint('hem_across_'+str(i),f'hem_{i}_0',name,[0,.005,0],[0,-.005,0],axes=bend_axes(.000002,.000001),break_force=10.))
   if i:JOINTS.append(joint(f'hem_along_{i}_{j}',f'hem_{i-1}_{j}',name,[DX/2,0,0],[-DX/2,0,0],axes=bend_axes(.000002,.000001),break_force=10.))
-# Only the central 60 mm is loose; original stitching supports the rest of the hem.
+# Only the central 100 mm is loose; original stitching supports the rest of the hem.
 for i in range(NX):
- if not 6<=i<12:
+ if not 4<=i<14:
   JOINTS.append(joint('existing_stitch_'+str(i),f'front_{i}_0',f'hem_{i}_1',[0,.003,.0015],[0,0,0],axes=bend_axes(.000002,.000001),break_force=12.))
-# Commercial-size 50 mm steel safety pin. Spring hinge is open at rest.
+# Commercial-size 75 mm steel safety pin. Spring hinge is open at rest.
 PIN=np.array([.46,-.11,TABLE+.004]);Q=Rotation.from_euler('z',90,degrees=True)
-BODIES.append(body('pin_frame',PIN,[rod_between([0,0,0],[.045,0,0],.00065),cylinder(.003,.0015,quat=Rotation.from_euler('y',90,degrees=True).as_quat()),box((.007,.005,.002),(.045,0,.002))],mass=.0018,color=(.7,.72,.74),quat=list(Q.as_quat()),friction=.8,contact_offset=.00005))
+BODIES.append(body('pin_frame',PIN,[rod_between([0,0,0],[.0685,0,0],.00065),cylinder(.003,.0015,quat=Rotation.from_euler('y',90,degrees=True).as_quat()),box((.007,.005,.002),(.0685,0,.002))],mass=.0028,color=(.7,.72,.74),quat=list(Q.as_quat()),friction=.8,contact_offset=.00005))
 openR=Q*Rotation.from_euler('y',-25,degrees=True)
-BODIES.append(body('pin_arm',PIN,[rod_between([0,0,0],[.043,0,0],.00065)],mass=.0007,color=(.7,.72,.74),quat=list(openR.as_quat()),contact_offset=.00005))
+BODIES.append(body('pin_arm',PIN,[rod_between([0,0,0],[.0665,0,0],.00065)],mass=.0011,color=(.7,.72,.74),quat=list(openR.as_quat()),contact_offset=.00005))
 axes=fixed_axes();axes['rotY']=dict(limits=(-5,35),stiffness=.20,damping=.002)
 JOINTS.append(joint('pin_spring','pin_frame','pin_arm',[0,0,0],[0,0,0],axes=axes,break_force=50.,break_torque=.35))
 cone=dict(kind='mesh',points=[[-.001,0,.0006],[-.001,.0006,0],[-.001,0,-.0006],[-.001,-.0006,0],[.001,0,0]],faces=[(0,1,4),(1,2,4),(2,3,4),(3,0,4),(0,3,2,1)])
-BODIES.append(body('needle_point',PIN+openR.apply([.044,0,0]),[cone],mass=.0001,color=(.7,.72,.74),quat=list(openR.as_quat()),contact_offset=.00003))
+BODIES.append(body('needle_point',PIN+openR.apply([.0675,0,0]),[cone],mass=.0001,color=(.7,.72,.74),quat=list(openR.as_quat()),contact_offset=.00003))
 axes=fixed_axes();axes['transX']=dict(limits=(-.001,.0001),stiffness=5000.,damping=.5)
-JOINTS.append(joint('point_compression','pin_arm','needle_point',[.044,0,0],[0,0,0],axes=axes,break_force=50.))
-JOINTS.append(joint('pin_catch','pin_frame','pin_arm',[.043,0,.001],[.043,0,0],axes=fixed_axes(),enabled=False,break_force=15.,break_torque=.10))
+JOINTS.append(joint('point_compression','pin_arm','needle_point',[.0675,0,0],[0,0,0],axes=axes,break_force=50.))
+JOINTS.append(joint('pin_catch','pin_frame','pin_arm',[.0665,0,.001],[.0665,0,0],axes=fixed_axes(),enabled=False,break_force=15.,break_torque=.10))
 for b in list(BODIES):
  if b['name'].startswith(('front_','back_','hem_')):
-  axes=bend_axes(0.,.000001,179);axes['transY']=dict(limits=(-.0005,.0005),stiffness=500.,damping=.1);axes['transZ']=dict(limits=(-.0005,.0005),stiffness=500.,damping=.1);axes['transX']=dict(limits=(-.043,.001),stiffness=0.,damping=.05,max_force=.5)
-  JOINTS.append(joint('hole_'+b['name'],'pin_arm',b['name'],[.045,0,0],[0,0,0],axes=axes,enabled=False,break_force=3.,break_torque=.02))
+  axes=bend_axes(0.,.000001,179);axes['transY']=dict(limits=(-.0005,.0005),stiffness=500.,damping=.1);axes['transZ']=dict(limits=(-.0005,.0005),stiffness=500.,damping=.1);axes['transX']=dict(limits=(-.0665,.001),stiffness=0.,damping=.05,max_force=.5)
+  JOINTS.append(joint('hole_'+b['name'],'pin_arm',b['name'],[.0685,0,0],[0,0,0],axes=axes,enabled=False,break_force=3.,break_torque=.02))
 # An ordinary wooden sewing support sits inside the cuff, separating its faces.
 # The turned front edge overhangs it by 46 mm so a fingertip can get underneath.
 cloth=[b for b in BODIES if b['name'].startswith(('front_','back_','hem_'))]

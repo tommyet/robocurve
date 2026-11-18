@@ -8,15 +8,15 @@ A safety pin can hold a loose turned trouser hem until it can be sewn properly.
 
 ## Setup and reset
 
-An inside-out cotton trouser cuff, 180 mm across and 240 mm long, rests over a 140 x 190 x 60 mm wooden sewing support inserted between its faces. The 20 mm turned front hem overhangs the support by 46 mm toward the left arm; its middle 60 mm of stitching is loose. The back stays below the support. An ordinary 50 mm steel safety pin lies open toward the right arm. Both hands start open.
+An inside-out cotton trouser cuff, 180 mm across and 240 mm long, rests over a 140 x 190 x 100 mm wooden sewing support inserted between its faces. The 20 mm turned front hem overhangs the support by 46 mm toward the left arm; its middle 100 mm of stitching is loose. The back stays below the support. An ordinary 75 mm steel safety pin lies open toward the right arm. Both hands start open.
 
-Use a cotton-twill trouser cuff with a 20 mm factory crease; unpick the securing thread from a 60 mm front section and remove loose thread. Replace punctured fabric after each trial. Restore the photographed fold, inspect the pin and protective pad covers, and leave the pin open.
+Use a cotton-twill trouser cuff with a 20 mm factory crease; unpick the securing thread from a 100 mm front section and remove loose thread. Replace punctured fabric after each trial. Restore the photographed fold, inspect the pin and protective pad covers, and leave the pin open.
 
 `geometry.py` records every simulated part, dimension, mass, fixed coordinate and passive joint. The starting photograph must be captured from the final native reset before submission.
 
 ## Judging
 
-1.0 if the pin passes through both front and hem layers within the loose central 60 mm, returns through them to the surface, and closes with its point inside the shield; the hem remains secured after a three-second release. 0.5 if both layers are threaded but the pin is still open or held; 0.25 if a correct layer remains partly threaded on the shaft. Otherwise 0. Pinning outside that loose section or through the back of the leg, more than four punctures, or a tear over 5 mm scores 0.
+1.0 if the pin passes through both front and hem layers within the loose central 100 mm, returns through them to the surface, and closes with its point inside the shield; the hem remains secured after a three-second release. 0.5 if both layers are threaded but the pin is still open or held; 0.25 if a correct layer remains partly threaded on the shaft. Otherwise 0. Pinning outside that loose section or through the back of the leg, more than four punctures, or a tear over 5 mm scores 0.
 
 ## Simulation and limits
 
@@ -41,3 +41,5 @@ Rescore recorded native body poses with `python tasks/pin-a-loose-trouser-hem/re
 Fixed layout; no random seed. Limit: 1,400 control steps (70 seconds at 20 Hz). Actual runtime per trial, complete native evidence and independent scoring will be recorded after successful validation. Do not upload a CPU plot or a kinematic reach check as a successful demo.
 
 Native gripping contact uses a small torsional friction patch to approximate soft protective pad covers (1.5 mm minimum radius). This supplies frictional grip torque under contact load; it is not a hand attachment. The parameters are uncalibrated. [PhysX contact-patch documentation](https://nvidia-omniverse.github.io/PhysX/physx/5.8.0/_api_build/classPxShape.html) describes this mechanism.
+
+The larger 75 mm pin is an ordinary available size: [Spentex blanket/kilt steel safety pin M0710](https://www.spentex.co.uk/wp-content/uploads/2023/06/30191-SPEN-Product-Catalogue-2023-ART-SCREEN-DPS.pdf). Its simulated mechanism is an uncalibrated approximation. The 100 mm loose hem section gives the robot fingers clearance; it remains fully unpinned at reset.
