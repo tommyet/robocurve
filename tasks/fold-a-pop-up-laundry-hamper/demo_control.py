@@ -15,7 +15,9 @@ class DemoControl:
     self.offset[side]=np.mean([m.p(n) for n in names],axis=0)-expected
   out=wanted.copy()
   for side,o in [('left',0),('right',7)]:
-   p,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side]);planned=p.copy();p+=min(1.,k/60)*self.offset[side]
+   p,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side]);planned=p.copy()
+   offset_weight=min(1.,k/60)*np.clip((200-k)/60,0,1) if k>140 else min(1.,k/60)
+   p+=offset_weight*self.offset[side]
    if 60<k<=140:
     index=0 if side=='left' else 24
     point=np.mean([m.p(f'wire_{f}_{index:02d}') for f in range(4)],axis=0)
@@ -23,7 +25,7 @@ class DemoControl:
     if k==140:self.offset[side]=target-planned
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    def residual(q):
-    pp,rr=ik.tcp_pose(q,station.BASES[side]);return np.r_[pp-p,.15*ik._rot_error(R,rr),.001*(q-seed)]
+    pp,rr=ik.tcp_pose(q,station.BASES[side]);return np.r_[pp-p,(.05 if k<=140 else .15)*ik._rot_error(R,rr),.001*(q-seed)]
    out[o:o+6]=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=30).x
-   if k>100:out[o+6]=max(0.,observed[o+6]-.012)
+   if k>100:out[o+6]=max(0.,observed[o+6]-.025)
   return out

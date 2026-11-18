@@ -17,9 +17,9 @@ RL=Rotation.from_euler('x',35,degrees=True).as_matrix()@base;RR=Rotation.from_eu
 p.add(3,'lift clear of the table',{'left':(L+[-.08,-.05,.11],RL,0.),'right':(R+[.08,.05,.11],RR,0.)})
 axis=np.array([0.,1.,0.])
 for step in range(1,5):
- u=step/4;left=Rotation.from_rotvec(axis*np.radians(-95*u)).as_matrix()@RL;right=Rotation.from_rotvec(axis*np.radians(0*u)).as_matrix()@RR
+ u=step/4;left=Rotation.from_rotvec(axis*np.radians(-135*u)).as_matrix()@RL;right=Rotation.from_rotvec(np.array([.5,.8660254,0])*np.radians(45*u)).as_matrix()@RR
  p.add(1.5,'twist the ends inward',{'left':(L+[-.08-.04*u,-.05-.15*u,.11+.10*u],left,0.),'right':(R+[.08+.04*u,.05+.15*u,.11+.10*u],right,0.)})
-right=Rotation.from_rotvec(axis*np.radians(0)).as_matrix()@RR
+right=Rotation.from_rotvec(np.array([.5,.8660254,0])*np.radians(45)).as_matrix()@RR
 p.add(3,'bring the crossing loops together',{'left':(L+[-.12,-.21,.21],left,0.),'right':(R+[.12,.21,.21],right,0.)})
 p.add(3,'hold the nested frame for inspection',{})
 print(json.dumps(p.save(Path(__file__).with_name('demo-plan.json'))))
