@@ -9,12 +9,12 @@ p.add(3,'approach brush handle and comb',{'left':(L+[0,0,.06],RL,.4),'right':(TO
 p.add(2,'lower to ordinary handles',{'left':(L,RL,.35),'right':(TOOL,R,.35)})
 p.add(2,'close the comb grip and prepare to brace the brush',{'left':(L,RL,0.),'right':(TOOL,R,0.)})
 p.add(2,'brace the brush and lift the comb',{'left':(L+[0,0,lift],RL,0.),'right':(TOOL+[0,0,.09],R,0.)})
-insert_R=Rot.from_euler('x',0,degrees=True).as_matrix()@R
-insert_z=.0072
+insert_R=Rot.from_euler('x',-2,degrees=True).as_matrix()@R
+insert_z=.0056+.130*np.sin(np.radians(2))
 p.add(3,'place pin tail in a lane between bristles',{'right':([.300,-.17,BRUSH[2]+lift+insert_z],insert_R,0.)})
-p.add(6,'slide the tail beneath the trapped hair',{'right':([.300,-.080,BRUSH[2]+lift+insert_z],insert_R,0.)})
-tilt=Rot.from_euler('x',30,degrees=True).as_matrix()@R
-p.add(3,'tilt the tail up to lift the trapped hair',{'right':([.300,-.080,BRUSH[2]+lift+insert_z],tilt,0.)})
+p.add(6,'slide the tail beneath the trapped hair',{'right':([.300,-.065,BRUSH[2]+lift+insert_z],insert_R,0.)})
+tilt=insert_R
+p.add(3,'lift the tail and trapped hair clear of the pins',{'right':([.300,-.065,BRUSH[2]+lift+insert_z+.060],tilt,0.)})
 p.add(3,'move the lifted hair above the dish',{'right':([.18,-.33,BRUSH[2]+lift+.080],R,0.)})
 p.add(3,'draw the comb out over the dish',{'right':([.24,-.40,BRUSH[2]+lift+.10],R,0.)})
 p.add(3,'return the comb to its rest',{'right':(TOOL+[0,0,.025],R,0.)})

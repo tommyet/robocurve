@@ -6,22 +6,24 @@ class DemoControl:
  def __init__(self):self.pick_index=None;self.pick=None;self.angle=0.
  def action(self,k,wanted,m,observed,hands):
   from yam_arena import ik,station
-  from geometry import FRONT,POINTS,LINKS,R as RING_RADIUS
+  from geometry import FRONT,POINTS,LINKS,pickup_index,R as RING_RADIUS
   if k<=100:
    links=np.array([m.p(f'link_{i:03d}') for i in range(LINKS)])
-   if self.pick_index is None:self.pick_index=int(np.argmin(links[:,2]))
+   if self.pick_index is None:self.pick_index=pickup_index(links)
    self.pick=links[self.pick_index].copy()+[-.005,0,0]
+   v=m.orientation('chainring')[:,1];self.angle=float(np.arctan2(v[2],v[1]))
+  if k==401:
    v=m.orientation('chainring')[:,1];self.angle=float(np.arctan2(v[2],v[1]))
   out=wanted.copy()
   for side,o in [('left',0),('right',7)]:
    target,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side])
-   if side=='right':
-    turn=Rot.from_euler('x',self.angle*min(1.,k/60)).as_matrix();target=FRONT+turn@(target-FRONT);R=turn@R
+   if side=='left':
+    turn=Rot.from_euler('x',self.angle*max(0.,min(1.,(k-400)/60))).as_matrix();target=FRONT+turn@(target-FRONT)
    else:
-    i=int(np.argmin(POINTS[:,2]));nominal=(POINTS[i]+POINTS[(i+1)%LINKS])/2+[-.005,0,0]
+    centres=(POINTS+np.roll(POINTS,-1,axis=0))/2;i=pickup_index(centres);nominal=centres[i]+[-.005,0,0]
     if k<=140:target+=min(1.,k/60)*(self.pick-nominal)
     else:
-     lift=self.pick+[-.04,0,.03];above=FRONT+[-.06,-RING_RADIUS,0];seat=FRONT+[-.010,-RING_RADIUS,0]
+     lift=self.pick+[-.04,0,.01];above=FRONT+[-.04,-RING_RADIUS,0];seat=FRONT+[.002,-RING_RADIUS,0]
      if k<=200:target=self.pick+ik.smoothstep((k-140)/60)*(lift-self.pick)
      elif k<=280:target=lift+ik.smoothstep((k-200)/80)*(above-lift)
      elif k<=340:target=above+ik.smoothstep((k-280)/60)*(seat-above)

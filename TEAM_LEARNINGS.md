@@ -5916,3 +5916,33 @@ editing, merge both agents' findings, and commit/push the update with the work.
   the hair before lifting. A filtered native tensor contact-force matrix now
   records actual comb/hair contact, following the existing seam implementation.
   The earlier legacy contact callback produced no reports; removal also failed.
+
+### 2026-11-18, 22:53 UTC — avoid duplicate team work; measure failed contacts
+
+- Eito submitted dropped-chain task PR2739 at20:56 UTC (TK-CUQHML), with
+  reported demo/replay1.0, idle0, incomplete0.5 and Dream0. Its disclosed model
+  uses an upper-run contact proxy and compliant drivetrain coupling. It is
+  pending, not accepted. Our independent tooth/contact draft is now paused;
+  queued chain trials were cancelled. Do not open a second team PR for it.
+  Source: https://github.com/robocurve/benchmark-tasks/pull/2739
+- The other five drafts still have no full-score native demo or upstream PR.
+  No Dream calls have been made. GPU i9ko77hxqsovzw remains the only rented
+  instance for this batch; its shutdown watchdog is alive, deadline00:07 UTC.
+- Pony018 held only the left band arc. Increasing finger length alone in019
+  blocked both approaches: measured TCPs stopped~13.5 mm behind the elastic,
+  while its pose barely changed. The next rests have a wider central lane
+  (22 mm) and shorter ends, clearing the actual finger geometry. Do not confuse
+  a commanded grasp with native retention, or blocked entry with low friction.
+- Hamper007's right binding grip retained but the left point lay11 mm across
+  the pad (outside its9 mm half-width).008 re-observes the actual binding at
+  closing start. No compact retained bundle has yet been demonstrated.
+- Cap018 remains on its support after the hands lift. The next approach
+  opens wider and re-observes the rim before closing. The dome-up loose cap
+  on an ordinary upturned glass is explicit setup, not pre-fitted to the head.
+- Fuse013 lifted the carrier but its pickup slipped. The full replacement
+  trial was stopped after that confirmed failure. A firmer, ordinary grip is
+  the next probe; no cartridge replacement result has been established.
+- UK-plug PR763 was rejected for blocks/rails omitting cartridge handling and
+  spring clips; DIN-fuse PR2271 failed its job-impact claim and unreadable
+  rating selection. Our household-plug task should preserve real clips and
+  cartridge dimensions, and avoid inventing a rating-selection decision.

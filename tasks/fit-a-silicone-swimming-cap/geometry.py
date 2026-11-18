@@ -3,18 +3,19 @@ from geometry_helpers import *
 BODIES=[];JOINTS=[]
 for side,y in [("left",.305),("right",-.305)]:
  BODIES.append(body(side+"_arm_riser",[0,y,TABLE+.050],[box((.12,.12,.100))],fixed=True,mass=5.,color=(.25,.27,.29)))
-HEAD=np.array([.40,0,TABLE+.125]);HEADROT=np.eye(3);RADII=np.array([.095,.080,.120]);CAP=np.array([.23,0,TABLE+.095])
+HEAD=np.array([.36,0,TABLE+.125]);HEADROT=np.eye(3);RADII=np.array([.095,.080,.120]);CAP=np.array([.19,0,TABLE+.061])
 shapes=[sphere(RADII),sphere((.018,.012,.026),(-.095,0,-.015)),sphere((.012,.012,.026),(0,-.080,-.025)),sphere((.012,.012,.026),(0,.080,-.025)),box((.14,.13,.010),(0,0,-.120))]
 shapes += [sphere((.003,.009,.005),(-.089,y,.017),(.13,.15,.18)) for y in [-.030,.030]]
 shapes += [box((.001,.038,.004),(-.090,0,-.051),(.47,.17,.17))]
 BODIES.append(body('headform',HEAD,shapes,fixed=True,mass=1.5,color=(.76,.63,.51),friction=.65,quat=Rotation.from_matrix(HEADROT).as_quat().tolist()))
-# The loose cap starts with its opening upward on the table.
+# The cap rests dome-up, loose over an ordinary inverted highball glass.
+BODIES.append(body('upturned_glass',[CAP[0],0,TABLE+.075],ring(.030,.150,.002)+[cylinder(.030,.003,(0,0,.0735))],mass=.25,color=(.64,.76,.80),friction=.65))
 M=40;N=12
-POINTS=[CAP+[0,0,-.090]]
+POINTS=[CAP+[0,0,.090]]
 for j in range(1,N+1):
  a=j*np.pi/(2*N)
  for i in range(M):
-  t=i*2*np.pi/M;POINTS.append(CAP+[.064*np.sin(a)*np.cos(t),.060*np.sin(a)*np.sin(t),-.090*np.cos(a)])
+  t=i*2*np.pi/M;POINTS.append(CAP+[.064*np.sin(a)*np.cos(t),.060*np.sin(a)*np.sin(t),.090*np.cos(a)])
 POINTS=np.asarray(POINTS);TRIS=[]
 for i in range(M):TRIS.append([0,1+i,1+(i+1)%M])
 for j in range(N-1):

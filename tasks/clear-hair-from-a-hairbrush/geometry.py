@@ -17,7 +17,7 @@ HAIRS=10;SEGMENTS=28
 for strand in range(HAIRS):
  y=-.030+strand*.006;u=np.linspace(-1,1,SEGMENTS+1)
  # Each strand snakes between neighbouring pins, with two loose ends.
- points=np.c_[.037*u,y+.0012*np.sin(4*np.pi*u+strand*.55),.012+.001*np.cos(3*np.pi*u+strand*.6)]+BRUSH
+ points=np.c_[.037*u,y+.00155*np.sin(np.pi*(.037*u)/.016),.012+.001*np.cos(3*np.pi*u+strand*.6)]+BRUSH
  for i,(a,b) in enumerate(zip(points[:-1],points[1:])):
   v=b-a;length=np.linalg.norm(v);R=Rotation.align_vectors([v/length],[[1,0,0]])[0]
   part=body(f'hair_{strand}_{i}',(a+b)/2,[box((length,.0008,.0008))],mass=.0001/SEGMENTS,color=(.12+.018*(strand%3),.065,.025),quat=R.as_quat().tolist(),friction=.5,contact_offset=.0001,linear_damping=.15,angular_damping=.1)

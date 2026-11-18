@@ -1,6 +1,6 @@
 """Narrow steel finger extensions with silicone contact faces.
 
-Each extension is 30 x 8 x 3 mm and leaves the original finger bodies 7 mm
+Each extension is 40 x 8 x 3 mm and leaves the original finger bodies 7 mm
 behind the working point, giving access to the thin elastic without the finger bodies pushing it away.
 They are rigid robot hardware in both demo and Dream runs, never grasp joints.
 """
@@ -64,13 +64,13 @@ def install():
                 # toward positive X. joint8 is the mirror image.
                 # Nominal closed-link origins from the pinned YAM URDF.
                 origin = np.array([sign*.0445119, -sign*.0239931, .0566829])
-                centre = rotation.inv().apply(np.array([sign*.0015, 0., .147])-origin)
+                centre = rotation.inv().apply(np.array([sign*.0015, 0., .152])-origin)
                 PhysxSchema.PhysxRigidBodyAPI.Apply(stage.GetPrimAtPath(path+paths[name])).CreateEnableSpeculativeCCDAttr(True)
                 shape = UsdGeom.Cube.Define(stage, path+paths[name]+'/precision_finger_extension')
                 shape.CreateSizeAttr(1.)
                 shape.AddTranslateOp().Set(Gf.Vec3d(*centre))
                 shape.AddOrientOp().Set(Gf.Quatf(float(q[3]), Gf.Vec3f(*q[:3])))
-                shape.AddScaleOp().Set(Gf.Vec3f(.003, .008, .030))
+                shape.AddScaleOp().Set(Gf.Vec3f(.003, .008, .040))
                 UsdPhysics.CollisionAPI.Apply(shape.GetPrim())
                 collision = PhysxSchema.PhysxCollisionAPI.Apply(shape.GetPrim())
                 collision.CreateContactOffsetAttr(.002)

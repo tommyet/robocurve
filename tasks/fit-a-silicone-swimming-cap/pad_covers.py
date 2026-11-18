@@ -11,7 +11,7 @@ from scipy.spatial.transform import Rotation
 def configure_kinematics():
     from yam_arena import constants, ik, station
     station.BASES.update({side:(0.,y,.85) for side,y in [("left",.305),("right",-.305)]})
-    constants.TCP_OFFSET=(0.,0.,.160)
+    constants.TCP_OFFSET=(0.,0.,.147)
     ik.TCP_OFFSET=constants.TCP_OFFSET
     import sys
     if 'yam_arena.runtime' in sys.modules:sys.modules['yam_arena.runtime'].TCP_OFFSET=constants.TCP_OFFSET

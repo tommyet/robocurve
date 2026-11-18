@@ -47,17 +47,19 @@ SURFACES=[dict(name='tab',points=TAB_POINTS,tris=TAB_TRIS,mass=.0002,youngs=2e7,
  dict(name='band',points=BAND_POINTS,tris=BAND_TRIS,mass=.004,youngs=4e5,poisson=.45,thickness=.001,friction=1.,rest_offset=.0005,contact_offset=.001,color=(.10,.11,.13))]
 for s in SURFACES:
  s['points']=np.asarray(s['points']);s['tris']=np.asarray(s['tris']);s['edges']=np.unique(np.sort(np.concatenate([s['tris'][:,[0,1]],s['tris'][:,[1,2]],s['tris'][:,[2,0]]]),axis=1),axis=0);s['rest_lengths']=np.linalg.norm(s['points'][s['edges'][:,0]]-s['points'][s['edges'][:,1]],axis=1)
-# Short rigid contact sleeves approximate the continuous fabric binding.
+# Overlapping capsule ends keep the 7 mm binding continuous at segment joins.
+# USD capsule height is its cylinder length, excluding its hemispherical ends.
 # They are passive task material, attached to the elastic frame, never to a hand.
 HEM_ATTACHMENTS=[]
 for i in range(N):
  j=(i+1)%N;a=(FRAME_POINTS[i]+FRAME_POINTS[N+i])/2;b=(FRAME_POINTS[j]+FRAME_POINTS[N+j])/2
  tangent=(b-a)/np.linalg.norm(b-a);orientation=Rotation.align_vectors([tangent],[[0,0,1]])[0];centre=(a+b)/2;name=f'bound_edge_{i:03d}'
- spec=body(name,centre,[dict(kind='capsule',radius=.0035,length=max(.001,float(np.linalg.norm(b-a))-.007),pos=[0,0,0],quat=[0,0,0,1])],mass=.038/N,quat=orientation.as_quat().tolist(),color=(.13,.29,.44),friction=1.2,contact_offset=.0004,torsional_patch_radius=.004,min_torsional_patch_radius=.002)
+ spec=body(name,centre,[dict(kind='capsule',radius=.0035,length=float(np.linalg.norm(b-a)),pos=[0,0,0],quat=[0,0,0,1])],mass=.038/N,quat=orientation.as_quat().tolist(),color=(.13,.29,.44),friction=1.2,contact_offset=.0004,torsional_patch_radius=.004,min_torsional_patch_radius=.002)
  spec['exclude']=['frame','cloth','tab',f'bound_edge_{(i-1)%N:03d}',f'bound_edge_{j:03d}'];BODIES.append(spec)
  ids=[i,j,N+i];local=orientation.inv().apply(FRAME_POINTS[ids]-centre)
  HEM_ATTACHMENTS.append((name,ids,local))
-GRIP_INDICES=(12,60);GRIP_POINTS=FRAME_POINTS[list(GRIP_INDICES)]
+GRIP_INDICES=(12,60);GRIP_BODIES=tuple(f'bound_edge_{i:03d}' for i in GRIP_INDICES)
+GRIP_POINTS=np.asarray([next(b['pos'] for b in BODIES if b['name']==name) for name in GRIP_BODIES])
 finalize(BODIES,JOINTS)
 
 def spawn_surface(stage,root):

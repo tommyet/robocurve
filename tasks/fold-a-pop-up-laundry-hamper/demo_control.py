@@ -5,7 +5,7 @@ class DemoControl:
  def __init__(self):
   import json
   from pathlib import Path
-  self.offset=None;self.waypoints={};frames=json.loads(Path(__file__).with_name('demo-plan.json').read_text())['frames'];self.stages={};self.labels=[]
+  self.offset=None;self.grip_offset=None;self.waypoints={};frames=json.loads(Path(__file__).with_name('demo-plan.json').read_text())['frames'];self.stages={};self.labels=[]
   for index,f in enumerate(frames,1):
    label=f['stage'];self.labels.append(label)
    if label not in self.stages:self.stages[label]=[index,index]
@@ -13,12 +13,21 @@ class DemoControl:
  def action(self,k,wanted,m,observed,hands):
   from yam_arena import ik,station
   if self.offset is None:
-    from geometry import FRAME_POINTS,GRIP_INDICES
-    self.offset={s:m.nodes['frame'][i]-FRAME_POINTS[i] for s,i in zip(['left','right'],GRIP_INDICES)}
+    from geometry import GRIP_POINTS,GRIP_BODIES
+    self.offset={side:m.p(name)-point for side,name,point in zip(['left','right'],GRIP_BODIES,GRIP_POINTS)}
+  if k==100:
+    from geometry import GRIP_POINTS,GRIP_BODIES
+    self.grip_offset={}
+    for side,o,name,point in zip(['left','right'],[0,7],GRIP_BODIES,GRIP_POINTS):
+     expected,_=ik.tcp_pose(wanted[o:o+6],station.BASES[side])
+     self.grip_offset[side]=m.p(name)-expected
   out=wanted.copy()
   for side,o in [('left',0),('right',7)]:
    target,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side])
-   target+=min(1.,k/60)*max(0.,min(1.,(740-k)/40))*self.offset[side]
+   offset=self.offset[side]
+   if self.grip_offset is not None:
+    weight=float(np.clip((k-100)/20,0,1));offset=(1-weight)*offset+weight*self.grip_offset[side]
+   target+=min(1.,k/60)*max(0.,min(1.,(740-k)/40))*offset
    label=self.labels[k-1]
    specs=[('left','approach the far loop','fold the far loop onto the centre',0,np.array([.33,.185,.83])),('right','approach the right outer loop','stack the right loop',(60,90),np.array([.40,0,.96])),('left','approach the left outer loop','stack the left loop',(12,40),np.array([.20,0,.96]))]
    for arm,approach,press,indices,nominal in specs:

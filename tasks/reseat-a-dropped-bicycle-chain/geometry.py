@@ -3,8 +3,7 @@ from geometry_helpers import *
 BODIES=[];JOINTS=[]
 FRONT=np.array([.40,-.03,TABLE+.40]);REAR=FRONT+[0,.43,.09]
 PITCH=.0127;TEETH=40;R=PITCH/(2*np.sin(np.pi/TEETH));RR=PITCH/(2*np.sin(np.pi/16))
-# Frame, wheels and crank retain adult bicycle dimensions; the final
-# layout below rests the bicycle on its non-drive side on foam supports.
+# Frame, wheels and crank retain adult bicycle dimensions on a repair stand.
 front_hub=REAR+[0,-1.08,0];saddle=FRONT+[.025,.12,.48];head=FRONT+[.025,-.44,.41]
 frame=[]
 for a,b in [(FRONT+[.025,0,0],saddle),(saddle,head),(head,FRONT+[.025,0,0]),(saddle,REAR+[.025,0,0]),(FRONT+[.025,0,0],REAR+[.025,0,0]),(head,front_hub+[.025,0,0])]:frame.append(rod_between(a-FRONT,b-FRONT,.015))
@@ -22,10 +21,17 @@ def sprocket(name,center,n,r,crank=False):
   t=i*2*np.pi/n;rot=Rotation.from_euler('x',t).as_quat()
   sh.append(box((.0024,.0075,.0032),(0,r*np.cos(t),r*np.sin(t)),quat=rot))
  if crank:
-  sh += [box((.012,.170,.018),(-.025,.085,0)),box((.060,.055,.016),(-.055,.170,0),(.17,.18,.19))]
+  sh += [box((.012,.170,.018),(-.025,.085,0))]
  BODIES.append(body(name,center,sh,mass=.75 if crank else .18,color=(.63,.65,.67),friction=.35,contact_offset=.00015,max_angular_velocity=8.))
- JOINTS.append(joint(name+'_bearing','bicycle_frame',name,center-FRONT,[0,0,0],axes={**fixed_axes(),'rotX':dict(limits=(-180,180),stiffness=0.,damping=.015)}))
+ JOINTS.append(joint(name+'_bearing','bicycle_frame',name,center-FRONT,[0,0,0],axes={**fixed_axes(),'rotX':dict(limits=None,stiffness=0.,damping=.015)}))
 sprocket('chainring',FRONT,TEETH,R,True);sprocket('rear_sprocket',REAR,16,RR)
+# An ordinary pedal rotates freely about its spindle, so it can remain level
+# while the robot turns the crank. This is a passive bearing, not a drive.
+PEDAL=FRONT+[-.055,.170,0]
+BODIES.append(body('pedal',PEDAL,[box((.060,.055,.016))],mass=.25,color=(.17,.18,.19),friction=.8))
+JOINTS.append(joint('pedal_bearing','chainring','pedal',[-.055,.170,0],[0,0,0],axes={**fixed_axes(),'rotX':dict(limits=None,stiffness=0.,damping=.0001)}))
+for side,y in [('left',.305),('right',-.305)]:
+ BODIES.append(body(side+'_arm_riser',[0,y,TABLE+.05],[box((.12,.12,.10))],fixed=True,mass=5.,color=(.25,.27,.29)))
 # Ordinary single-pulley spring tensioner: permits chain recovery while
 # maintaining tension afterwards, without stretching the steel links.
 PIVOT=REAR+[0,-.015,-.060];IDLER=REAR+[0,-.050,-.110];IR=PITCH/(2*np.sin(np.pi/12))
@@ -65,3 +71,10 @@ finalize(BODIES,JOINTS)
 BIKE_ROT=np.eye(3)
 frame_body=next(b for b in BODIES if b['name']=='bicycle_frame');frame_body['fixed']=True
 BODIES.append(body('bench_repair_stand',[.58,.12,TABLE+.21],[box((.18,.20,.02),(0,0,-.20)),cylinder(.022,.62,(0,0,.11)),rod_between([0,0,.42],[-.155,0,.42],.018),box((.06,.05,.04),(-.155,0,.42))],fixed=True,mass=4.,color=(.20,.22,.24)))
+
+
+def pickup_index(points):
+ """Frontmost hanging section at least 8 cm below the crank axle."""
+ candidates=np.flatnonzero(np.asarray(points)[:,2]<FRONT[2]-.080)
+ if not len(candidates):raise ValueError('No unobstructed dropped chain section')
+ return int(candidates[np.argmin(np.asarray(points)[candidates,1])])

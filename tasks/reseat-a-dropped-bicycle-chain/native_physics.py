@@ -73,8 +73,9 @@ def spawn(prim_path,cfg,translation=None,orientation=None,**kwargs):
    if 'break_torque' in specj:j.CreateBreakTorqueAttr(specj['break_torque'])
    for axis in ('transX','transY','transZ','rotX','rotY','rotZ'):
     cfgj=specj.get('axes',{}).get(axis,{})
-    lo,hi=cfgj.get('limits',(1,-1) if axis.startswith('trans') else (-180,180))
-    lim=UsdPhysics.LimitAPI.Apply(j.GetPrim(),axis);lim.CreateLowAttr(lo);lim.CreateHighAttr(hi)
+    limits=cfgj.get('limits',(1,-1) if axis.startswith('trans') else (-180,180))
+    if limits is not None:
+     lo,hi=limits;lim=UsdPhysics.LimitAPI.Apply(j.GetPrim(),axis);lim.CreateLowAttr(lo);lim.CreateHighAttr(hi)
     if 'stiffness' in cfgj:
      # Geometry coefficients are SI torque/radian (and torque*s/radian).
      # USD angular drives instead use torque/degree; limits/targets stay degrees.
