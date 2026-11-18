@@ -43,12 +43,19 @@ for i in range(NX+1):
   name=f'mesh_0_{i}_{j}';node=next(b for b in BODIES if b['name']==name)
   for di,dj in [(1,0),(0,1)]:
    if i+di>NX or j+dj>NY:continue
+   # Boundary cloth follows its sewn wire. A second rigid edge bar spanning
+   # a wire bend would spuriously lock that bend and tear during folding.
+   if (di==0 and i in (0,NX)) or (dj==0 and j in (0,NY)):continue
    other=f'mesh_0_{i+di}_{j+dj}';end=next(b for b in BODIES if b['name']==other)
    a,b=np.array(node['pos']),np.array(end['pos']);v=b-a;length=np.linalg.norm(v)
    rot=Rotation.align_vectors([v/length],[[1,0,0]])[0];link=f'cloth_link_{i}_{j}_{di}_{dj}'
    BODIES.append(body(link,(a+b)/2,[box((length,.0024,.0024))],mass=.0012,color=(.26,.46,.61),quat=rot.as_quat().tolist(),friction=.6))
    for side,target,x in [(0,name,-length/2),(1,other,length/2)]:
-    JOINTS.append(joint(f'fabric_{i}_{j}_{di}_{dj}_{side}',link,target,[x,0,0],[0,0,0],axes=bend_axes(0.,.000001,179),break_force=40.))
+    axes=bend_axes(0.,.000001,179)
+    # Finite axial compliance lets a coarse straight cloth edge accommodate
+    # wire curvature: at most 6 mm total extension per approximately 10 cm link.
+    axes['transX']=dict(limits=(-.003,.003),stiffness=2000.,damping=.03)
+    JOINTS.append(joint(f'fabric_{i}_{j}_{di}_{dj}_{side}',link,target,[x,0,0],[0,0,0],axes=axes,break_force=40.))
   if i in [0,NX] or j in [0,NY]:
    pos=np.array(node['pos']);wires=[b for b in BODIES if b['name'].startswith('wire_')]
    wire=min(wires,key=lambda b:np.linalg.norm(pos-np.asarray(b['pos'])))
@@ -67,6 +74,9 @@ for neighbours in incident.values():
  for name in neighbours:
   part=next(b for b in BODIES if b['name']==name)
   part.setdefault('exclude',[]).extend(sorted(neighbours-{name}))
+# The 16 omitted boundary-bar masses belong to the sewn frame binding.
+for part in BODIES:
+ if part['name'].startswith('wire_'):part['mass']+=16*.0012/N
 # Attached elastic retaining loop; it must be stretched over the folded packet.
 EN=32;ER=.300/(2*np.pi)
 anchor=next(b for b in BODIES if b['name']=='wire_0_00')

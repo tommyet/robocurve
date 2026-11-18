@@ -1,8 +1,8 @@
-# Secure a loose trouser hem
+# Secure a loose trouser hem with a safety pin
 
 Secure the loose trouser hem with the safety pin, with its point safely enclosed.
 
-**The native scripted demo independently scores 1.0. The complete Dream baseline is still running; submission is pending its audit and media review.**
+**Scripted demo: 1.0. Dream-1: 0.0 after all 1,800 actions. Both native runs were independently rescored.**
 
 ## Setup and reset
 
@@ -42,7 +42,7 @@ python tasks/pin-a-loose-trouser-hem/rescore.py /tmp/hem-dream
 
 The fixed layout has no random seed. Limit: 1,800 actions, 90 seconds at 20 Hz. Each run records native camera videos, physical states and immutable source files. Rescoring checks source hashes, trace continuity, action bounds, break events and final outcome. Inspect the native videos as well. `--capture-every 4` is for faster development diagnostics only and marks the run as unsuitable submission evidence.
 
-The scripted demo completes 1,560 actions in 78 simulated seconds and 16.5 minutes on a Secure A40. It retains both correct layers, closes the shield, and remains secured for 40.75 seconds after release, with no broken material joints. The peak puncture load is 1.14 N. The full trace independently scores 1.0. Dream runtime and result will be added when the baseline completes.
+The scripted demo completes 1,560 actions in 78 simulated seconds and 16.5 minutes on a Secure A40. It retains both correct layers, closes the shield, and remains secured for 40.75 seconds after release, with no broken material joints. The peak puncture load is 1.14 N. The full trace independently scores 1.0. Dream completes all 1,800 actions in 21.0 minutes on the same A40 and scores 0.0. Its physical episode is continuous; the SDK recovered 36 expired sessions across 73 requests and 37 server sessions. A separate earlier run interrupted by a laptop connection failure is excluded from the submission.
 
 The public evidence bundles contain every commanded action, the final four seconds of native body/hand states, the full-trace audit result and the complete trace hash. Check them without Isaac:
 
