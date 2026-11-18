@@ -25,12 +25,12 @@ def spawn(prim_path,cfg,translation=None,orientation=None,**kwargs):
  prim=body.GetPrim();rigid=UsdPhysics.RigidBodyAPI.Apply(prim)
  if spec.get('fixed'):rigid.CreateKinematicEnabledAttr(True)
  UsdPhysics.MassAPI.Apply(prim).CreateMassAttr(spec['mass'])
- rb=PhysxSchema.PhysxRigidBodyAPI.Apply(prim);rb.CreateEnableCCDAttr(not spec.get('fixed',False))
+ rb=PhysxSchema.PhysxRigidBodyAPI.Apply(prim);rb.CreateEnableCCDAttr(not spec.get('fixed',False));rb.CreateEnableSpeculativeCCDAttr(spec.get('speculative_ccd',False))
  if spec.get('external_force'):
   force=PhysxSchema.PhysxForceAPI.Apply(prim);force.CreateForceEnabledAttr(True);force.CreateWorldFrameEnabledAttr(True);force.CreateModeAttr('force');force.CreateForceAttr(Gf.Vec3f(0,0,0));force.CreateTorqueAttr(Gf.Vec3f(0,0,0))
  rb.CreateSolverPositionIterationCountAttr(64);rb.CreateSolverVelocityIterationCountAttr(16)
  rb.CreateLinearDampingAttr(spec.get('linear_damping',.25));rb.CreateAngularDampingAttr(spec.get('angular_damping',.5))
- rb.CreateMaxLinearVelocityAttr(1.);rb.CreateMaxAngularVelocityAttr(30.);rb.CreateMaxDepenetrationVelocityAttr(.1);rb.CreateSleepThresholdAttr(0.)
+ rb.CreateMaxLinearVelocityAttr(1.);rb.CreateMaxAngularVelocityAttr(spec.get('max_angular_velocity',30.));rb.CreateMaxDepenetrationVelocityAttr(.1);rb.CreateSleepThresholdAttr(0.)
  # Material reaction comes from the PhysX solver; no kinematic grasp constraint.
  mat=path+'/physics'
  c=sim.RigidBodyMaterialCfg(static_friction=spec.get('friction',.7),dynamic_friction=spec.get('friction',.7)*.8,restitution=0.);c.func(mat,c)

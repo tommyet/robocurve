@@ -73,5 +73,5 @@ for part in BODIES:
 GRIP_ENDS=(5,29)
 # Finite rubber-pad contact area supplies native spin friction at a grip.
 for part in BODIES:
- if part['name'].startswith('wire_'):part.update(torsional_patch_radius=.004,min_torsional_patch_radius=.0015)
+ if part['name'].startswith('wire_'):part.update(torsional_patch_radius=.004,min_torsional_patch_radius=.0015,contact_offset=.0005,max_angular_velocity=10.,speculative_ccd=True)
 finalize(BODIES,JOINTS)

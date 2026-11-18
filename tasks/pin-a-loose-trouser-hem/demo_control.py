@@ -2,7 +2,7 @@
 import numpy as np
 from scipy.optimize import least_squares
 class DemoControl:
- def __init__(self):self.start=None;self.closure=None;self.last_q=None;self.released_at=None;self.left_offset=None;self.right_offset=None;self.feedback_goal=None
+ def __init__(self):self.start=None;self.closure=None;self.last_q=None;self.released_at=None;self.left_offset=None;self.right_offset=None;self.feedback_goal=None;self.threaded_at=None;self.exit_names=None;self.exit_axis=None;self.exit_depth=None;self.exit_anchor=None
  def action(self,k,wanted,m,hands,current):
   from yam_arena import ik,station
   from geometry import BODIES
@@ -37,6 +37,8 @@ class DemoControl:
    wanted=wanted.copy();wanted[7:13]=least_squares(grip_error,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=30).x
    if k in [100,120,220]:m.events.append(dict(event='demo_coil_grip_check',step=k,coil_local_mm=(1000*hands['right']['rotation'].T@(m.p('pin_frame')-hands['right']['tcp'])).tolist(),fk_bias_mm=(1000*bias).tolist()))
    return wanted
+  if self.threaded_at is None and m.measure()["both_layers_held"]:self.threaded_at=k
+  if self.threaded_at is not None:return self.close(700+k-self.threaded_at,wanted,m,hands,current)
   if k>1000:return self.close(k-300,wanted,m,hands,current)
   h=hands['right'];tip=m.p('needle_point',[.001,0,0]);axis=m.orientation('pin_arm')[:,0]
   if np.linalg.norm(m.p('pin_frame')-h['tcp'])>.055:raise RuntimeError('The pin slipped from the native grip; stop this failed development trial.')
@@ -51,10 +53,10 @@ class DemoControl:
     point=self.entry+distance*self.direction
     self.fabric_targets.append((name,m.orientation(name).T@(point-m.p(name))))
    self.splay_direction=np.array([0.,0.,-1.]);self.splay_direction-=self.direction*(self.splay_direction@self.direction);self.splay_direction/=np.linalg.norm(self.splay_direction)
-   # Cant the open pin 75 degrees around its needle axis to keep the wrist
+   # Cant the open pin 60 degrees around its needle axis to keep the wrist
    # inside its ordinary joint limits while the frame remains below the point.
    from scipy.spatial.transform import Rotation
-   self.splay_direction=Rotation.from_rotvec(-np.radians(75)*self.direction).apply(self.splay_direction)
+   self.splay_direction=Rotation.from_rotvec(np.radians(60)*self.direction).apply(self.splay_direction)
    m.events.append(dict(event='demo_selected_straight_pin_path',start=self.entry.tolist(),end=self.end.tolist(),patches=names,time=m.time))
    # Select a reachable wrist branch before descending to the cloth. A local
    # incremental solve can otherwise stop at the wrist's negative limit.
@@ -92,11 +94,36 @@ class DemoControl:
     goal=self.feedback_goal.copy()
    else:goal=self.end
    goalaxis=self.direction.copy()
-  goalaxis/=np.linalg.norm(goalaxis);relative_tip=h['rotation'].T@(tip-h['tcp']);relative_axis=h['rotation'].T@axis
+   if remaining and len(m.holes)>=2:
+    # Pivot smoothly around the entry holes, then advance toward the exit.
+    # Rotating and translating abruptly together can tear the pierced cloth.
+    if self.exit_names is None:
+     self.exit_names=list(m.holes)[:2]
+     self.exit_axis=axis.copy()
+    if self.exit_anchor is None:self.exit_anchor=np.mean([m.p(name,m.holes[name]) for name in self.exit_names],axis=0)
+    anchor=self.exit_anchor
+    exit_point=m.p(remaining[0][0],remaining[0][1])
+    toward=exit_point-anchor;distance=np.linalg.norm(toward)
+    if distance>.003:
+     desired=toward/distance
+     angle=np.arccos(np.clip(self.exit_axis@desired,-1,1))
+     u=min(1.,.006/max(angle,1e-9))
+     self.exit_axis=(1-u)*self.exit_axis+u*desired
+     self.exit_axis/=np.linalg.norm(self.exit_axis)
+     if self.exit_depth is None:self.exit_depth=max(.002,float((tip-anchor)@self.exit_axis))
+     aligned=np.arccos(np.clip(axis@desired,-1,1))<np.radians(6)
+     if aligned:self.exit_depth=min(distance+.004,self.exit_depth+.0005)
+     goal=anchor+self.exit_axis*self.exit_depth
+     goalaxis=self.exit_axis.copy()
+  goalaxis/=np.linalg.norm(goalaxis)
+  from scipy.spatial.transform import Rotation
+  down=np.array([0.,0.,-1.]);down-=goalaxis*(down@goalaxis);down/=max(np.linalg.norm(down),1e-9)
+  splay_goal=Rotation.from_rotvec(np.radians(60)*goalaxis).apply(down)
+  relative_tip=h['rotation'].T@(tip-h['tcp']);relative_axis=h['rotation'].T@axis
   cap=m.p('pin_frame',[.0685,0,.002]);splay=cap-tip;splay-=axis*(splay@axis);splay/=np.linalg.norm(splay);relative_splay=h['rotation'].T@splay
   seed=np.clip(current[7:13],ik.LOWER+1e-6,ik.UPPER-1e-6)
   def residual(q):
-   pp,R=ik.tcp_pose(q,station.BASES['right']);return np.r_[pp+R@relative_tip-goal,.1*(R@relative_axis-goalaxis),.05*(R@relative_splay-self.splay_direction),.001*(q-seed)]
+   pp,R=ik.tcp_pose(q,station.BASES['right']);return np.r_[pp+R@relative_tip-goal,.1*(R@relative_axis-goalaxis),.05*(R@relative_splay-splay_goal),.001*(q-seed)]
   sol=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=30)
   out=wanted.copy();out[7:13]=sol.x;self.last_q=sol.x.copy();return out
 

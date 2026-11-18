@@ -12,7 +12,8 @@ def serial(x):
  raise TypeError(type(x).__name__)
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--mode',choices=['demo','dream','hold'],default='demo');p.add_argument('--steps',type=int);p.add_argument('--out',type=Path,required=True);p.add_argument('--cpu-preview',action='store_true');a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--mode',choices=['demo','dream','hold'],default='demo');p.add_argument('--steps',type=int);p.add_argument('--out',type=Path,required=True);p.add_argument('--cpu-preview',action='store_true');p.add_argument('--capture-every',type=int,default=1,help='Diagnostic camera stride; submission evidence requires 1.');a=p.parse_args()
+ if not 1<=a.capture_every<=20:p.error('Capture stride must be 1 to 20')
  plan=json.loads((HERE/'demo-plan.json').read_text()) if (HERE/'demo-plan.json').exists() else None
  if a.mode=='demo' and plan is None:p.error('No demo plan has been authored yet; use hold only for native reset inspection.')
  limit=json.loads((HERE/'task.json').read_text())['action_limit'];steps=a.steps or (len(plan['frames']) if a.mode=='demo' else limit)
@@ -21,7 +22,7 @@ def main():
  a.out.mkdir(parents=True,exist_ok=False);source=a.out/'source';source.mkdir();hashes={}
  for f in HERE.iterdir():
   if f.is_file():shutil.copyfile(f,source/f.name);hashes[f.name]=hashlib.sha256(f.read_bytes()).hexdigest()
- report=dict(status='initializing',mode=a.mode,steps=0,requested_steps=steps,source_sha256=hashes,control_hz=20,score=None,cpu_preview=a.cpu_preview,submission_evidence=not a.cpu_preview)
+ report=dict(status='initializing',mode=a.mode,steps=0,requested_steps=steps,source_sha256=hashes,control_hz=20,score=None,cpu_preview=a.cpu_preview,submission_evidence=not a.cpu_preview and a.capture_every==1,capture_every=a.capture_every)
  start=time.monotonic()
  def save():
   report['wall_seconds']=time.monotonic()-start;(a.out/'run.json').write_text(json.dumps(report,indent=2,default=serial)+'\n')
@@ -62,11 +63,11 @@ def main():
    for _ in range(20):
     emb._env.step(emb._ready);m.update(hands())
    m.time=0.;m.release=0.;refresh()
-   for name in ['front','rear','side','policy']:writers[name]=imageio.get_writer(a.out/(name+'.mp4'),fps=20,codec='libx264',pixelformat='yuv420p',ffmpeg_params=['-movflags','+faststart'],macro_block_size=1)
+   for name in ['front','rear','side','policy']:writers[name]=imageio.get_writer(a.out/(name+'.mp4'),fps=20/a.capture_every,codec='libx264',pixelformat='yuv420p',ffmpeg_params=['-movflags','+faststart'],macro_block_size=1)
    current=emb._ready.detach().cpu().numpy()[0].copy()
   trace=(a.out/'trace.jsonl').open('w')
   def capture(step):
-   if not a.cpu_preview:
+   if not a.cpu_preview and (step%a.capture_every==0 or step==steps):
     obs=emb._observation();views=images(base)
     for label in ['front','rear','side']:
      rgb=views['judging_'+label];writers[label].append_data(rgb)
@@ -99,6 +100,10 @@ def main():
      obs=np.asarray(observed)
      wanted=controller.action(k,wanted,m,hands(),obs)
      for index,tracker in enumerate(trackers):
+      if index==1 and k>=340:
+       # Slow integral gravity/load compensation during needle contact.
+       # Fast proportional correction caused millimetre-scale oscillation.
+       tracker.kp=0.;tracker.ki=.3;tracker.slew=.001
       wanted=tracker.action(wanted,obs,enabled=True)
    elif policy is not None:
     chunk=policy.act(emb._observation());assert len(chunk.actions)==1;wanted=np.asarray(chunk.actions[0].data,float)
@@ -108,7 +113,7 @@ def main():
    current=current+np.clip(wanted-current,-limit_vector,limit_vector)
    if not a.cpu_preview:emb._env.step(torch.as_tensor(current[None,:],device=base.device,dtype=torch.float32));emb._t=k/20
    m.update(hands())
-   if not a.cpu_preview:m.draw(drawing);refresh()
+   if not a.cpu_preview and (k%a.capture_every==0 or k==steps):m.draw(drawing);refresh()
    capture(k);report.update(steps=k,measurements=m.measure(),score=m.score())
    if k%20==0:save();trace.flush()
    if a.mode=='demo' and m.failed:raise RuntimeError('Native task integrity failed; development demo stopped early.')

@@ -19,6 +19,8 @@ def install():
 
     def covered_config(*args, **kwargs):
         config = original(*args, **kwargs)
+        config.spawn.articulation_props.solver_position_iteration_count=64
+        config.spawn.articulation_props.solver_velocity_iteration_count=16
         original_spawn = config.spawn.func
 
         @clone
@@ -30,6 +32,16 @@ def install():
             from isaaclab.sim.utils.stage import get_current_stage
             stage = get_current_stage()
             paths = robot.asset_link_paths()
+            # Rigid 2 mm covers touch at a 4 mm nominal jaw gap. The pinned
+            # model lacks a cover-to-cover closing stop, so represent that ordinary
+            # physical stop with the two prismatic joint limits.
+            stops=[]
+            for joint_prim in stage.Traverse():
+                if str(joint_prim.GetPath()).startswith(path+'/') and joint_prim.GetName() in ('joint7','joint8') and joint_prim.IsA(UsdPhysics.PrismaticJoint):
+                    UsdPhysics.PrismaticJoint(joint_prim).CreateUpperLimitAttr(-.002)
+                    stops.append(joint_prim.GetName())
+            if sorted(stops)!=['joint7','joint8']:
+                raise RuntimeError('Could not apply the two physical pad-cover closing stops.')
             physics_path = path + '/SiliconeCoverPhysics'
             material = sim.RigidBodyMaterialCfg(static_friction=1.2, dynamic_friction=1.0, restitution=0.)
             material.func(physics_path, material)
@@ -39,9 +51,12 @@ def install():
             rotation = Rotation.from_euler('xyz', [-np.pi, 0., np.pi/2])
             q = rotation.inv().as_quat()
             for name, sign in [('tip_left', 1.), ('tip_right', -1.)]:
+                # joint7 opens toward negative gripper X; its cover protrudes
+                # toward positive X. joint8 is the mirror image.
                 # Nominal closed-link origins from the pinned YAM URDF.
                 origin = np.array([sign*.0445119, -sign*.0239931, .0566829])
-                centre = rotation.inv().apply(np.array([-sign*.001, 0., .135])-origin)
+                centre = rotation.inv().apply(np.array([sign*.001, 0., .135])-origin)
+                PhysxSchema.PhysxRigidBodyAPI.Apply(stage.GetPrimAtPath(path+paths[name])).CreateEnableSpeculativeCCDAttr(True)
                 shape = UsdGeom.Cube.Define(stage, path+paths[name]+'/silicone_pad_cover')
                 shape.CreateSizeAttr(1.)
                 shape.AddTranslateOp().Set(Gf.Vec3d(*centre))
@@ -49,7 +64,7 @@ def install():
                 shape.AddScaleOp().Set(Gf.Vec3f(.002, .018, .024))
                 UsdPhysics.CollisionAPI.Apply(shape.GetPrim())
                 collision = PhysxSchema.PhysxCollisionAPI.Apply(shape.GetPrim())
-                collision.CreateContactOffsetAttr(.0001)
+                collision.CreateContactOffsetAttr(.002)
                 collision.CreateRestOffsetAttr(0.)
                 collision.CreateTorsionalPatchRadiusAttr(.004)
                 collision.CreateMinTorsionalPatchRadiusAttr(.002)

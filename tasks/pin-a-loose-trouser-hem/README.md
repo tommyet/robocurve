@@ -2,61 +2,44 @@
 
 Secure the loose trouser hem with the safety pin, with its point safely enclosed.
 
-**Development draft. No native success, Dream score, media upload or submission readiness is claimed.**
-
-A safety pin can hold a loose turned trouser hem until it can be sewn properly.
+**Development draft: complete fastening, a full-score demo and the Dream baseline are still pending.**
 
 ## Setup and reset
 
-An inside-out cotton trouser cuff, about 440 mm in circumference and 240 mm long, with a visible width of 180 mm when draped, rests over a 140 x 190 x 60 mm wooden sewing support inserted between its faces. The 20 mm turned front hem overhangs the support by 46 mm toward the left arm; its middle 100 mm of stitching is loose. The back stays below the support. An ordinary 75 mm steel safety pin lies open on a 20 x 40 x 15 mm wooden tool rest toward the right arm, with its coil overhanging the rest by 25 mm. Both hands start open.
+Use an inside-out cotton-twill trouser cuff, approximately 440 mm in circumference and 240 mm long, with a 20 mm turned hem. Unpick the middle 100 mm of its front stitching and remove loose thread. A 140 x 190 x 60 mm wooden sewing support separates the front from the back of the leg. The loose hem overhangs it by 46 mm toward the left arm. Its visible draped width is 180 mm; approximately 261 mm of front fabric and 180 mm of back fabric form the circumference.
 
-Use a cotton-twill trouser cuff of approximately 440 mm circumference with a 20 mm factory crease; unpick the securing thread from a 100 mm front section and remove loose thread. Replace punctured fabric after each trial. Restore the photographed fold, inspect the pin and protective pad covers, and leave the pin open.
+An ordinary 75 mm steel safety pin starts open on a 20 x 40 x 15 mm wooden rest toward the right arm, with its coil overhanging by 25 mm. Both hands start open. The [Spentex M0710 blanket/kilt pin](https://www.spentex.co.uk/wp-content/uploads/2023/06/30191-SPEN-Product-Catalogue-2023-ART-SCREEN-DPS.pdf) is a commercial size reference. The simulated pin approximates this size rather than reproducing that product exactly.
 
-`geometry.py` records every simulated part, dimension, mass, fixed coordinate and passive joint. The draped front uses about 261 mm of fabric across the support; the back uses 180 mm. The stated 180 mm is the visible span after draping, not the flattened cuff width. The starting photograph must be captured from the final native reset before submission.
+Restore the photographed layout, replace punctured fabric, inspect the pin and protective finger pads, and leave the pin open. No needle is already threaded. `geometry.py` specifies all parts and fixed starting coordinates.
 
-## Judging
+## Scoring
 
-1.0 if the pin passes through both front and hem layers within the loose central 100 mm, returns through them to the surface, and closes with its point inside the shield; the hem remains secured after a three-second release. 0.5 if both layers are threaded but the pin is still open or held; 0.25 if a correct layer remains partly threaded on the shaft. Otherwise 0. Pinning outside that loose section or through the back of the leg, more than four punctures, or a tear over 5 mm scores 0.
+- **1.0:** The pin enters both front and turned-hem layers within the loose 100 mm section, returns through them to the surface, and closes with its point inside the shield. The hem stays secured for three seconds after release.
+- **0.5:** Both layers are threaded in and out, but the pin is open or still held.
+- **0.25:** At least one correct layer remains partly threaded on the shaft.
+- **0:** Otherwise, including any back-layer puncture, a puncture outside the loose section, more than four holes, or a tear over 5 mm.
 
-## Simulation and limits
+Judge the threading, shield and released hold from close video and a ruler. The native scorer requires two retained holes in each front layer; passing through a layer and withdrawing the pin does not retain credit.
 
-Native cloth panels, sprung pin arm, shield and finger contacts. A reduced puncture rule requires measured compression of a force-resisting needle point before creating a sliding hole constraint. Closing must overcome the native spring and align the point with its shield. No hand attachment is used. Cloth, puncture and spring properties are uncalibrated. Native feasibility has not yet been validated.
+## Simulation
 
-The starting hem is turned but unsecured. The task retains the actual in-and-out threading and sprung closure, not just pressing an already threaded pin shut. The native score checks two punctures in each layer and verifies that those holes still surround the shaft. A full native threading/closure demo is still required.
+Flexible cloth panels, a sprung pin, a compressible needle tip and native finger contacts. A 1.0 N tip load plus geometric intersection creates an object-to-object sliding hole. The spring must be compressed and the point aligned with its shield to close. This puncture law is approximate; it is not calibrated to a particular cuff and pin. [Published needle analysis](https://www.mdpi.com/2073-8994/18/4/635) provides a newton-scale comparison, not product calibration.
 
-No manipulated object is attached to a hand. Native contact, friction and ordinary joint actions handle grasping. A scripted controller may use privileged state for a feasibility demo; Dream must use only the standard three cameras and joint observations. The geometry and material laws must be identical in both runs.
+The 6 mm coil has a 2.6 mm thickness and its plane matches the pin. Regularized slender-body inertias and a finite friction patch suppress numerical spin. Both demo and Dream use a 20,000 N/m gripper gain with a 40 N/finger force ceiling. No task object is attached to a hand or moved by a commanded pose. The cloth, puncture, spring and contact parameters remain approximations.
 
-## Run
+The scripted demo may read physical state. Dream uses only the standard cameras and joint observations. Both runs use identical object physics and robot settings.
 
-Use the Python 3.12 / Isaac 6.1 / YAM environment targeted in `ENVIRONMENT.json`. New-task verification is still pending. From the repository root:
+## Run and inspect
+
+Use the Isaac 6.1 / Python 3.12 / YAM environment in `ENVIRONMENT.json`. From the repository root:
 
 ```sh
-OMNI_KIT_ACCEPT_EULA=YES python tasks/pin-a-loose-trouser-hem/run.py --mode hold --steps 60 --out /tmp/pin-a-loose-trouser-hem-hold
+python tasks/pin-a-loose-trouser-hem/run.py --mode demo --out /tmp/hem-demo
+python tasks/pin-a-loose-trouser-hem/run.py --mode dream --out /tmp/hem-dream
+python tasks/pin-a-loose-trouser-hem/rescore.py /tmp/hem-demo
+python tasks/pin-a-loose-trouser-hem/rescore.py /tmp/hem-dream
 ```
 
-The candidate controller in `make_plan.py` and `demo_control.py` is still being validated. The hold command checks reset only. Use `--mode demo` for the candidate trajectory; it is not yet full-score evidence.
+The fixed layout has no random seed. Limit: 1,800 actions, 90 seconds at 20 Hz. Each run records native camera videos, physical states and immutable source files. Rescoring checks source hashes, trace continuity, action bounds, break events and final outcome. Inspect the native videos as well. `--capture-every 4` is for faster development diagnostics only and marks the run as unsuitable submission evidence.
 
-Rescore recorded native body poses with `python tasks/pin-a-loose-trouser-hem/rescore.py /tmp/pin-a-loose-trouser-hem-demo`. The scorer checks frozen source hashes, trace continuity, bounded joint actions, native break events, and the outcome. This supports, and does not replace, visual inspection of the contact and material behaviour.
-
-Fixed layout; no random seed. Limit: 1,800 control steps (90 seconds at 20 Hz). Actual runtime per trial, complete native evidence and independent scoring will be recorded after successful validation. Do not upload a CPU plot or a kinematic reach check as a successful demo.
-
-Native gripping contact uses a small torsional friction patch to approximate soft protective pad covers (1.5 mm minimum radius). This supplies frictional grip torque under contact load; it is not a hand attachment. The parameters are uncalibrated. [PhysX contact-patch documentation](https://nvidia-omniverse.github.io/PhysX/physx/5.8.0/_api_build/classPxShape.html) describes this mechanism.
-
-The larger 75 mm pin is an ordinary available size: [Spentex blanket/kilt steel safety pin M0710](https://www.spentex.co.uk/wp-content/uploads/2023/06/30191-SPEN-Product-Catalogue-2023-ART-SCREEN-DPS.pdf). Its simulated mechanism is an uncalibrated approximation. The 100 mm loose hem section gives the robot fingers clearance; it remains fully unpinned at reset.
-
-The slender pin bodies use explicit regularized diagonal inertias (frame: 1e-7, 2e-6, 2e-6 kg m²; arm: 1e-8, 5e-7, 5e-7 kg m²). This suppresses tiny-axis numerical spin; it is not calibrated hardware inertia and does not attach the pin to a hand.
-
-
-The 0.02 N contact-gate experiments are excluded from submission evidence.
-The review prompt requires roughly realistic force as well as the correct
-motion; disclosure alone does not make a light-touch substitute valid.
-Published sewing-needle analysis reports puncture peaks on a newton scale,
-not evidence for this task's 0.02 N gate:
-[needle-penetration study](https://www.mdpi.com/2073-8994/18/4/635).
-That study is not a calibration of this safety pin and cotton cuff. The current
-1.0 N threshold is provisional and has no successful native demonstration.
-Validate a defensible material/force match, gripping, return threading and
-closure before collecting submission evidence. Do not re-score the older
-low-force trials as evidence for this version.
-
-The current diagnostic uses a 20,000 N/m gripper position gain and a reduced 40 N per-finger effort ceiling in both demo and Dream. The standard 5,000 N/m gain supplies only about 6–8 N per finger at this thin coil's closed gap, so the pin rotated out under a 0.67 N needle load. The higher gain is an uncalibrated controller setting within the hardware force bound, not a stronger robot. Native validation is pending.
+Full-score evidence, actual wall times and the Dream result will be added after validation. Earlier 0.02 N puncture diagnostics are excluded.
