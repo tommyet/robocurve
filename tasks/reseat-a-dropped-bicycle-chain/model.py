@@ -33,6 +33,8 @@ class Model(NativeModel):
   self.previous_link_angles=angles;self.previous_engaged=front
  def measure(self):
   f,r=self.engagement();return dict(engaged_front_links=f,engaged_rear_links=r,continuous_crank_and_chain_revolutions=self.clean_turns,intact=not self.failed,released_seconds=self.release,failed=self.failed)
+ def reset_valid(self):
+  f,r=self.engagement();return f<=2 and r>=5 and not self.failed
  def score(self):
   if self.failed or self.broken:return 0.
   if self.clean_turns>=1 and self.release>=3:return 1.

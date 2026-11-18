@@ -3,7 +3,7 @@ import hashlib,json
 from pathlib import Path
 import numpy as np
 from model import Model
-from geometry import BODIES,JOINTS
+from geometry import BODIES,JOINTS,EDGES,REST_LENGTHS
 
 LOW=np.tile([-2.61799,0.,0.,-1.69297,-1.5708,-2.0944,0.],2)
 HIGH=np.tile([3.14159,3.66519,3.14159,1.5708,1.5708,2.0944,1.],2)
@@ -21,7 +21,7 @@ def compare(a,b,label):
  else:assert a==b,label
 
 def audit(rows,report):
- m=Model();previous=None;broken=set();release=0.;count=0
+ m=Model();previous=None;broken=set();release=0.;count=0;peaks=None
  joints={j['name'] for j in JOINTS};dynamic=[i for i,b in enumerate(BODIES) if not b.get('fixed')]
  for row in rows:
   assert row['step']==count,'Trace skipped/duplicated a control step'
@@ -33,6 +33,10 @@ def audit(rows,report):
    clear=all(h['opening']>.4 and np.min(np.linalg.norm(m.release_points()-np.asarray(h['tcp']),axis=1))>.05 for h in row['hands'].values())
    release=release+.05 if clear else 0.
   assert abs(release-m.release)<1e-6,'Release duration disagrees with native hand/body poses'
+  observed=float(np.max(np.linalg.norm(m.nodes[EDGES[:,1]]-m.nodes[EDGES[:,0]],axis=1)/REST_LENGTHS))
+  if peaks is None:assert m.peak_stretch+1e-5>=observed,'Initial surface strain'
+  else:assert abs(m.peak_stretch-max(peaks,observed))<1e-5,'Surface strain history'
+  peaks=m.peak_stretch
   compare(m.measure(),row['measurements'],'measurements')
   if not count:assert m.score()==0. and not m.failed,'Invalid initial state'
   previous=a;broken=m.broken.copy();count+=1
@@ -42,4 +46,4 @@ def audit(rows,report):
  assert events==broken,'Native break-event history differs from final state'
  score=m.score();assert abs(score-report['score'])<1e-9,'Reported score differs'
  complete=report['status']=='complete' and report['steps']==report['requested_steps']
- return dict(score=score,steps=count-1,complete=complete,measurements=m.measure(),native_break_events=len(events),visual_review_still_required=True,submission_evidence=complete and not report.get('cpu_preview',True))
+ return dict(score=score,steps=count-1,complete=complete,measurements=m.measure(),native_break_events=len(events),visual_review_still_required=True,submission_evidence=complete and not report.get('cpu_preview',True) and report.get('capture_every')==1 and report.get('submission_evidence',False))

@@ -11,7 +11,10 @@ class DemoControl:
   out=wanted.copy()
   for side,o in [('left',0),('right',7)]:
    target,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side])
-   target+=min(1.,k/60)*self.offset[side]
+   # The pickup follows the settled band. Fade that correction before
+   # reaching the hair so its world height is not lowered by band sag.
+   weight=min(1.,k/60)*max(0.,min(1.,(300-k)/80))
+   target+=weight*self.offset[side]
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=hands[side]['tcp']-p0;rbias=hands[side]['rotation']@R0.T
    def residual(q):

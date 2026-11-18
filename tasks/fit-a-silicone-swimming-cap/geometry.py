@@ -1,18 +1,20 @@
 """Adult practice head and a separate thin elastic cap; SI units."""
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
-HEAD=np.array([.39,0,TABLE+.095]);HEADROT=Rotation.from_euler('y',-90,degrees=True).as_matrix();RADII=np.array([.095,.080,.120]);CAP=np.array([.19,0,TABLE+.100])
+HEAD=np.array([.39,0,TABLE+.095]);HEADROT=Rotation.from_euler('y',-90,degrees=True).as_matrix();RADII=np.array([.095,.080,.120]);CAP=np.array([.19,0,TABLE+.050])
 shapes=[sphere(RADII),sphere((.018,.012,.026),(-.095,0,-.015)),sphere((.012,.012,.026),(0,-.080,-.025)),sphere((.012,.012,.026),(0,.080,-.025)),cylinder(.039,.040,(.012,0,-.1375)),box((.15,.14,.015),(.012,0,-.1575))]
 shapes += [sphere((.003,.009,.005),(-.089,y,.017),(.13,.15,.18)) for y in [-.030,.030]]
 shapes += [box((.001,.038,.004),(-.090,0,-.051),(.47,.17,.17))]
 BODIES.append(body('headform',HEAD,shapes,fixed=True,mass=1.5,color=(.76,.63,.51),friction=.65,quat=Rotation.from_matrix(HEADROT).as_quat().tolist()))
-# The normal desktop stand supports the head; no cap guides or robot grip tabs.
+# A normal inverted drinking glass supports the loose cap, with its rim
+# hanging free. It does not stretch the opening or attach to the cap.
+BODIES.append(body('inverted_glass',[CAP[0],0,TABLE+.060],ring(.034,.120,.002,32)+[cylinder(.035,.002,(0,0,.059))],mass=.18,color=(.68,.81,.85),friction=.25))
 M=40;N=12
-POINTS=[CAP+[0,0,-.090]]
+POINTS=[CAP+[0,0,.090]]
 for j in range(1,N+1):
  a=j*np.pi/(2*N)
  for i in range(M):
-  t=i*2*np.pi/M;POINTS.append(CAP+[.064*np.sin(a)*np.cos(t),.060*np.sin(a)*np.sin(t),-.090*np.cos(a)])
+  t=i*2*np.pi/M;POINTS.append(CAP+[.064*np.sin(a)*np.cos(t),.060*np.sin(a)*np.sin(t),.090*np.cos(a)])
 POINTS=np.asarray(POINTS);TRIS=[]
 for i in range(M):TRIS.append([0,1+i,1+(i+1)%M])
 for j in range(N-1):

@@ -3,8 +3,8 @@ from geometry_helpers import *
 BODIES=[];JOINTS=[]
 FRONT=np.array([.40,-.03,TABLE+.28]);REAR=FRONT+[0,.43,.09]
 PITCH=.0127;TEETH=40;R=PITCH/(2*np.sin(np.pi/TEETH));RR=PITCH/(2*np.sin(np.pi/16))
-# The bicycle is supported by an ordinary repair stand, with its drivetrain
-# facing the arms. Frame, wheels and crank retain adult bicycle dimensions.
+# Frame, wheels and crank retain adult bicycle dimensions; the final
+# layout below rests the bicycle on its non-drive side on foam supports.
 front_hub=REAR+[0,-1.08,0];saddle=FRONT+[.025,.12,.48];head=FRONT+[.025,-.44,.41]
 frame=[]
 for a,b in [(FRONT+[.025,0,0],saddle),(saddle,head),(head,FRONT+[.025,0,0]),(saddle,REAR+[.025,0,0]),(FRONT+[.025,0,0],REAR+[.025,0,0]),(head,front_hub+[.025,0,0])]:frame.append(rod_between(a-FRONT,b-FRONT,.015))
@@ -60,10 +60,10 @@ finalize(BODIES,JOINTS)
 
 # The full bicycle lies on its non-drive side on two low foam pads. This is
 # ordinary access to a dropped chain, within the table-height arm workspace.
-OLD_FRONT=FRONT.copy();BIKE_ROT=Rotation.from_euler('y',90,degrees=True).as_matrix();WORLD_FRONT=np.array([.33,.08,TABLE+.095])
+OLD_FRONT=FRONT.copy();BIKE_ROT=Rotation.from_euler('y',90,degrees=True).as_matrix();WORLD_FRONT=np.array([.33,.08,TABLE+.150])
 def layout(p):return WORLD_FRONT+BIKE_ROT@(np.asarray(p)-OLD_FRONT)
 for part in BODIES:
  part['pos']=layout(part['pos']).tolist();part['quat']=(Rotation.from_matrix(BIKE_ROT)*Rotation.from_quat(part['quat'])).as_quat().tolist()
 FRONT=layout(FRONT);REAR=layout(REAR);POINTS=np.array([layout(p) for p in POINTS])
 for name,where in [('front',layout(front_hub)),('rear',REAR)]:
- BODIES.append(body(name+'_foam_pad',[where[0],where[1],TABLE+.0275],[box((.16,.12,.055))],fixed=True,mass=.05,color=(.24,.28,.31),friction=1.))
+ BODIES.append(body(name+'_foam_pad',[where[0],where[1],TABLE+.055],[box((.16,.12,.110))],fixed=True,mass=.05,color=(.24,.28,.31),friction=1.))

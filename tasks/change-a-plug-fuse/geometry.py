@@ -27,8 +27,8 @@ BODIES.append(body('spare_rest',[SPARE[0],SPARE[1],TABLE+.006],[box((.018,.018,.
 # Their approximate spring response gives newton-scale extraction resistance.
 def clip_pair(prefix,parent,parent_pos,centre,x,width,stiffness,color,from_top=False):
  for sign in [-1,1]:
-  z=centre[2]+(.001 if from_top else -.003)
-  origin=np.array([centre[0]+x,centre[1]+sign*.0042,z]);dz=-.003 if from_top else .003
+  z=centre[2]+(.005 if from_top else -.003)
+  origin=np.array([centre[0]+x,centre[1]+sign*.0031,z]);dz=-.003 if from_top else .003
   sh=[box((width,.00065,.006),(0,0,dz)),box((width,.0017,.0013),(0,-sign*.0006,2*dz))]
   name=prefix+('_p' if sign>0 else '_n')
   BODIES.append(body(name,origin,sh,mass=.00015,color=color,friction=.4,contact_offset=.00008))

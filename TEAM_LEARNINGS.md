@@ -5677,8 +5677,10 @@ editing, merge both agents' findings, and commit/push the update with the work.
   explains elastic triangle surfaces and their limitations. The proposed bicycle
   tensioner uses the ordinary [single-pulley mechanism](https://surlybikes.com/products/singleator),
   rather than allowing steel links to stretch. Both remain development models.
-- Native reset gates now pass for the cap, ponytail band, plug and full-size
-  bicycle. The new hamper initially failed because its attached band collided
+- Initial integrity checks passed for the cap, ponytail band, plug and full-size
+  bicycle. Later plug traces showed that this check was insufficient: its old
+  fuse could fall below the clips without breaking anything. See the correction
+  below; this was not a valid retained-fuse reset. The new hamper initially failed because its attached band collided
   with the frame at the seam (5.28x local stretch). A 12 mm sewn textile tab
   separates those contact regions while keeping band/packet contact active;
   reset002 is intact, with frame stretch about1.0012x and band1.53x. This is a
@@ -5700,3 +5702,27 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - No full-score demonstration or upstream PR exists for any of this batch yet.
   The single RTX4090 remains active; do not mistake diagnostic source archives
   or offline reach audits for completed submissions.
+
+- Later diagnostics (still capture stride4, not submission evidence): ponytail003
+  retained the stretched band in both hands but missed most of the hair. The
+  measured band centre was X0.284 m, while hair at the intended height averaged
+  X0.300 m. Next probe corrects this alignment and fades pickup-settling offsets.
+- Chain002 failed because the dropped lower run settled beneath the chainring
+  and the approach crossed the plate. Next probe raises ordinary foam supports
+  from55 to110 mm and approaches horizontally from outside the plate. The crank
+  itself was grasped and turned; no chain-engagement success is claimed.
+- Cap003's downward pickup contacted its supporting glass before capturing the
+  rim. A side approach is being tested. Brush006 braces the handle on the table
+  instead of adding an unnecessary pickup; tool alignment follows the actual
+  brush/tool poses using robot joint commands only.
+- Plug002 exposed undersized clip contact: leaves at4.2 mm from the fuse axis
+  did not retain its3.15 mm radius. Corrected leaves have3.1 mm centres and the
+  carrier fingers originate at its face. A new reset gate requires the old fuse
+  to remain seated; extraction and replacement remain unproven.
+- Independent surface audits now recompute observed peak edge strain from
+  every trace frame. Diagnostic camera stride4 can no longer be labelled as
+  submission evidence by the auxiliary auditor. Hamper full credit now requires
+  three continuous seconds compact, band-retained and released.
+- The GPU stop deadline was extended to19:07:47 UTC during active experiments,
+  with the local watchdog still running. At18:10 UTC compute was about$1.82;
+  no Dream credentials or requests had been sent. No full-score demo or PR yet.

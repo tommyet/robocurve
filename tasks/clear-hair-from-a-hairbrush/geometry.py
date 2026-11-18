@@ -1,9 +1,9 @@
 """Ordinary pin brush, steel pin-tail comb, and freely bending hair bundles."""
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
-BRUSH=np.array([.30,.015,TABLE+.017])
-# A 190 mm brush: 95 mm head and 95 mm handle. Head contacts a rubber mat.
-BODIES.append(body('mat',[.30,.015,TABLE+.002],[box((.12,.16,.004))],fixed=True,mass=.08,color=(.23,.31,.35),friction=1.))
+BRUSH=np.array([.30,.015,TABLE+.025])
+# A 190 mm brush: 95 mm head and 95 mm handle. Head rests on a 20 mm rubber block, with the handle overhanging.
+BODIES.append(body('mat',[.30,.015,TABLE+.010],[box((.12,.10,.020))],fixed=True,mass=.08,color=(.23,.31,.35),friction=1.))
 shapes=[box((.052,.095,.010)),sphere((.026,.0475,.005)),box((.021,.095,.009),(0,.09,0))]
 BODIES.append(body('brush',BRUSH,shapes,mass=.08,color=(.75,.24,.33),friction=.9,torsional_patch_radius=.006,min_torsional_patch_radius=.003))
 for i in range(7):

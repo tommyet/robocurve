@@ -13,7 +13,9 @@ class Model(NativeModel):
   closed=bool(np.linalg.norm(carrier-(FC+[0,0,.005]))<.0025 and float(np.trace(R.T@self.orientation('carrier'))) > 2.9)
   # Real scoring: visible metal caps correctly in both spring clips, face
   # carrier flush and retained, and old fuse outside the plug.
-  return dict(old_fuse_removed=bool(np.linalg.norm(old-FC)>.04),replacement_seated=seated,cover_closed=closed,intact=not self.failed,released_seconds=self.release,failed=self.failed)
+  return dict(old_fuse_seated=bool(np.linalg.norm(old-FC)<.003),old_fuse_removed=bool(np.linalg.norm(old-FC)>.04),replacement_seated=seated,cover_closed=closed,intact=not self.failed,released_seconds=self.release,failed=self.failed)
+ def reset_valid(self):
+  m=self.measure();return m['old_fuse_seated'] and m['cover_closed']
  def score(self):
   if self.failed or self.broken:return 0.
   m=self.measure()

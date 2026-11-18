@@ -12,7 +12,7 @@ def install():
     from yam_arena import embodiment, robot
     from yam_arena.constants import GRIPPER
     from isaaclab.sim.utils import clone
-    GRIPPER.update(stiffness=5000., effort=40.)
+    GRIPPER.update(stiffness=20000., effort=40.)
     original = embodiment.yam_arm_cfg
     if getattr(original, '_task_pad_covers', False):
         return

@@ -11,7 +11,7 @@ class DemoControl:
   out=wanted.copy()
   for side,o in [('left',0),('right',7)]:
    target,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side])
-   target+=min(1.,k/60)*self.offset[side]
+   target+=min(1.,k/60)*(1.-float(np.clip((k-220)/80,0,1)))*self.offset[side]
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=hands[side]['tcp']-p0;rbias=hands[side]['rotation']@R0.T
    def residual(q):

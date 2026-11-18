@@ -5,10 +5,10 @@ from scipy.spatial.transform import Rotation as Rot
 from common import down
 from geometry import FRONT,POINTS,R
 from planner import Plan
-p=Plan();RL=down(180);RR=down(-90)
-i=int(np.argmin(POINTS[:,1]));pick=(POINTS[i]+POINTS[(i+1)%len(POINTS)])/2;pick[2]+=.010
-L=FRONT+[0,.095,.032]
-p.add(3,'approach the crank and dropped chain',{'left':(L+[0,0,.08],RL,.5),'right':(pick+[0,0,.08],RR,.35)},'joint')
+p=Plan();RL=down(180);RR=np.array([[0,-1,0],[0,0,1],[-1,0,0.]])
+i=int(np.argmin(POINTS[:,1]));pick=(POINTS[i]+POINTS[(i+1)%len(POINTS)])/2;pick[2]+=.002
+L=FRONT+[0,.095,.027]
+p.add(3,'approach the crank and dropped chain',{'left':(L+[0,0,.035],RL,.5),'right':(pick+[0,-.14,.004],RR,.35)},'joint')
 p.add(2,'place fingers around crank and chain',{'left':(L,RL,.5),'right':(pick,RR,.25)})
 p.add(2,'hold the crank and pinch the chain',{'left':(L,RL,0.),'right':(pick,RR,0.)})
 outside=pick+[0,-.022,0]

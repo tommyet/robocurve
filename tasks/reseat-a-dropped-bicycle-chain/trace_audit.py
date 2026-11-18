@@ -21,7 +21,7 @@ def compare(a,b,label):
  else:assert a==b,label
 
 def audit(rows,report):
- m=Model();previous=None;broken=set();release=0.;count=0
+ m=Model();motion=Model();previous=None;broken=set();release=0.;count=0
  joints={j['name'] for j in JOINTS};dynamic=[i for i,b in enumerate(BODIES) if not b.get('fixed')]
  for row in rows:
   assert row['step']==count,'Trace skipped/duplicated a control step'
@@ -29,6 +29,13 @@ def audit(rows,report):
   assert np.all(a>=LOW-1e-5) and np.all(a<=HIGH+1e-5),'Joint limit'
   assert np.allclose(a,READY,atol=1e-5) if previous is None else np.all(abs(a-previous)<=DELTA+1e-5),'Action-rate limit'
   m.restore(row['state']);assert set(m.broken)<=joints and broken<=m.broken,'Unknown or healed joint'
+  motion.poses=m.poses.copy();motion.R=m.R.copy();motion.velocities=m.velocities.copy();motion.broken=m.broken.copy()
+  if not count:
+   rr=motion.orientation('bicycle_frame').T@motion.orientation('chainring');motion.previous_angle=float(np.arctan2(rr[2,1],rr[1,1]));links=motion.chain_coordinates();motion.previous_link_angles=np.arctan2(links[:,2],links[:,1]);motion.previous_engaged=motion.masks(links)[0]
+   assert motion.reset_valid(),'Chain must initially be dropped from the front ring'
+  else:motion.material(row['hands'],.05)
+  for key in ['previous_angle','turn','lo','hi','clean_turns','chain_turn','chain_lo','chain_hi','previous_link_angles','previous_engaged']:
+   compare(getattr(motion,key),getattr(m,key),'independent chain motion.'+key)
   if count:
    clear=all(h['opening']>.4 and np.min(np.linalg.norm(m.poses[dynamic,:3]-np.asarray(h['tcp']),axis=1))>.05 for h in row['hands'].values())
    release=release+.05 if clear else 0.
@@ -42,4 +49,4 @@ def audit(rows,report):
  assert events==broken,'Native break-event history differs from final state'
  score=m.score();assert abs(score-report['score'])<1e-9,'Reported score differs'
  complete=report['status']=='complete' and report['steps']==report['requested_steps']
- return dict(score=score,steps=count-1,complete=complete,measurements=m.measure(),native_break_events=len(events),visual_review_still_required=True,submission_evidence=complete and not report.get('cpu_preview',True))
+ return dict(score=score,steps=count-1,complete=complete,measurements=m.measure(),native_break_events=len(events),visual_review_still_required=True,submission_evidence=complete and not report.get('cpu_preview',True) and report.get('capture_every')==1 and report.get('submission_evidence',False))
