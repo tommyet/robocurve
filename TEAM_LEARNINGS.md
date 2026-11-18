@@ -5607,3 +5607,32 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Final A backup audit:53 run folders and1,933 individual non-bytecode files, zero missing. B's earlier audit covers25 folders and964 files; the previously disclosed failed061 full-trace loss remains an exception outside that inventory. Its source and two screenshots were retained. Never claim that every B diagnostic was fully recovered.
 - Estimated compute for this four-task session: A about$4.57 plus B about$2.48, total **$7.05**, excluding storage and Dream charges. This is elapsed time times the$0.59/hour rate, not an invoice or lifetime account spend. Both local watchdog processes have exited.
 - The current REST v2 schema calls `disk` the ephemeral container disk, wiped on restart; it is not a persistent volume. The13 older EXITED records must not be described as active GPU usage merely because they still appear in listings. Back up our container-only Pods before stopping; restarting is not a dependable evidence recovery method.
+
+### 2026-11-18 — Maintenance novelty audit and fresh shortlist
+
+- Research only: no GPU, Dream, simulation or submission. Current board at14:49 UTC:
+  792 visible records; all-state PR index at14:51 UTC:2,666. Checked live review
+  prompt v24, selected public review histories, the1,016-name BEHAVIOR catalogue
+  and primary sources. Full reasoning and links:
+  [maintenance idea audit](docs/task-ideas-maintenance-2026-11-18.md).
+- Direct exclusions: rotary can opening is accepted in#1851/TK-XJDMXF; saddle
+  height adjustment is pending in#2502/TK-VCAYTT. Breaker-reset tasks#2336 and#2436
+  were finally rejected for insufficient physical difficulty. Adding recognition
+  or ordinary action sequencing does not rescue this idea.
+- Real flexible-thread needle insertion differs from MimicGen's rigid-needle
+  insertion, but [T-NT](https://arxiv.org/abs/2311.02396) already evaluates the
+  flexible-thread problem. No direct current board match is not proof of novelty.
+- Single-speed chain tension is the strongest of the seven requested ideas,
+  conditional on full-size access, axle torque, wheel alignment and actual chain
+  behaviour. UK plug-fuse handling has some room after#763's abstract-fixture
+  rejection, but pending realistic fuse-puller#1628 is an important neighbour.
+  Domestic hinge oiling has a weaker physical-difficulty case and related
+  lubrication tasks; do not claim success through a proximity-only state change.
+- New candidates, all unvalidated: reseat a dropped bicycle chain; fit a flexible
+  silicone swim cap; lift trapped hair from a hairbrush with a pin-tail comb;
+  compress/fit a foam earplug on a trainer; secure a ponytail with a free elastic.
+  The ponytail is an ambitious reserve. Preserve deformability, contact and
+  meaningful failure; the latter four are not promised to fit a$3 development
+  budget. Check nearby earmuff fitting, ear thermometry, rope plaiting and our
+  own hoop/knot tasks before choosing a build. No direct match was found in this
+  audit; no acceptance or simulator feasibility is claimed.
