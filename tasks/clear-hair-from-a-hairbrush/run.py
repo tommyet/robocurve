@@ -79,7 +79,7 @@ def main():
    row=dict(step=step,action14=current,measurements=m.measure(),hands=hands(),state=m.state())
    trace.write(json.dumps(row,default=serial,separators=(',',':'))+'\n')
   capture(0)
-  if m.integrity_failed() or m.score()!=0.:raise RuntimeError("Reset changed task integrity or already earned credit; fix the native reset before a trial.")
+  if m.integrity_failed() or m.score()!=0. or not m.reset_valid():raise RuntimeError("Reset changed task integrity or already earned credit; fix the native reset before a trial.")
   if a.mode=='dream':
    from inspect_robots import Scene
    from dream_policy import make_policy
@@ -108,7 +108,11 @@ def main():
    if wanted.shape!=(14,) or not np.isfinite(wanted).all():raise ValueError('Invalid ordinary robot action')
    if not a.cpu_preview:wanted=np.clip(wanted,emb._low,emb._high)
    current=current+np.clip(wanted-current,-limit_vector,limit_vector)
-   if not a.cpu_preview:emb._env.step(torch.as_tensor(current[None,:],device=base.device,dtype=torch.float32));emb._t=k/20
+   if not a.cpu_preview:
+    # State-only diagnostics need fresh pixels only on recorded frames. Final
+    # videos and every Dream observation retain the ordinary render schedule.
+    if a.mode!='dream' and a.capture_every>1:base.render_enabled=(k%a.capture_every==0 or k==steps)
+    emb._env.step(torch.as_tensor(current[None,:],device=base.device,dtype=torch.float32));emb._t=k/20
    m.update(hands())
    if not a.cpu_preview and (k%a.capture_every==0 or k==steps):m.draw(drawing);refresh()
    capture(k);report.update(steps=k,measurements=m.measure(),score=m.score())

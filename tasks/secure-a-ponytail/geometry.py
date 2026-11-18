@@ -16,7 +16,7 @@ for s in range(STRANDS):
  for i,(a,b) in enumerate(zip(pts[:-1],pts[1:])):
   a,b=np.array(a),np.array(b);v=b-a;length=np.linalg.norm(v);rot=Rotation.align_vectors([v/length],[[0,0,1]])[0];name=f'hair_{s}_{i}'
   part=body(name,(a+b)/2,[cylinder(.0045,length)],mass=.003/SEGMENTS,quat=rot.as_quat().tolist(),color=(.20+.015*(s%3),.095,.040),friction=.5,contact_offset=.0001,linear_damping=.2,angular_damping=.3)
-  I=part['mass']*length*length/12;part['inertia']=[max(I,1e-10),max(I,1e-10),max(I/10,1e-10)];BODIES.append(part)
+  I=part['mass']*length*length/12;part['inertia']=[max(I,1e-10),max(I,1e-10),max(I/10,1e-10)];part['visible']=False;BODIES.append(part)
   if i:
    prev=next(b for b in BODIES if b['name']==f'hair_{s}_{i-1}')
    axes={axis:dict(limits=(-180,180),stiffness=.000015,damping=.000002) for axis in ('rotX','rotY','rotZ')}

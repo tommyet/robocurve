@@ -9,7 +9,7 @@ class DemoControl:
   from common import down
   if self.offset is None:self.offset={'left':np.zeros(3),'right':m.p('comb')-TOOL}
   if k<=140:
-   self.offset['left']=m.p('brush',[0,.095,0])-(BRUSH+[0,.095,0]);self.brush_R=m.orientation('brush').copy()
+   self.offset['left']=m.p('brush',[0,.047,0])-(BRUSH+[0,.047,0]);self.brush_R=m.orientation('brush').copy()
   out=wanted.copy();u=min(1.,k/60)
   for side,o in [('left',0),('right',7)]:
    target,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side])

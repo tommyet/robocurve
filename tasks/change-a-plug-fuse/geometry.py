@@ -44,9 +44,10 @@ for sign in [-1,1]:
  BODIES.append(body(name,pos,[box((.001,.005,.004)),box((.0014,.005,.0008),(-sign*.0005,0,.0018))],mass=.0002,color=(.89,.88,.83)))
  JOINTS.append(joint(name+'_spring','plug',name,pos-PLUG+[0,0,-.002],[0,0,-.002],axes={**fixed_axes(),'rotY':dict(limits=(-35,35),stiffness=.055,damping=.0001)},break_force=25.,break_torque=.1))
 TOOL=np.array([.36,-.14,TABLE+.028])
-# 107 mm stubby flat screwdriver, 3 mm blade; the shaft may enter the carrier notch.
-BODIES.append(body('screwdriver',TOOL,[cylinder(.009,.055,(0,-.010,0),Rotation.from_euler('x',90,degrees=True).as_quat(),(.20,.45,.72)),cylinder(.002,.040,(0,.0375,0),Rotation.from_euler('x',90,degrees=True).as_quat(),(.68,.70,.72)),box((.003,.012,.0008),(0,.063,0),(.68,.70,.72))],mass=.040,color=(.2,.45,.72),friction=.8,torsional_patch_radius=.005,min_torsional_patch_radius=.003))
+# 169 mm ordinary flat screwdriver, 3 mm blade. Its shaft gives the two
+# grippers room while the tip levers the carrier notch.
+BODIES.append(body('screwdriver',TOOL,[cylinder(.009,.070,(0,-.015,0),Rotation.from_euler('x',90,degrees=True).as_quat(),(.20,.45,.72)),cylinder(.002,.088,(0,.061,0),Rotation.from_euler('x',90,degrees=True).as_quat(),(.68,.70,.72)),box((.003,.014,.0008),(0,.112,0),(.68,.70,.72))],mass=.040,color=(.2,.45,.72),friction=.8,torsional_patch_radius=.005,min_torsional_patch_radius=.003))
 BODIES.append(body('tool_rest',[TOOL[0],TOOL[1]-.025,TABLE+.0095],[box((.030,.020,.019))],fixed=True,mass=.05,color=(.58,.43,.27)))
-BODIES.append(body('shaft_rest',[TOOL[0],TOOL[1]+.042,TABLE+.013],[box((.020,.020,.026))],fixed=True,mass=.02,color=(.58,.43,.27)))
+BODIES.append(body('shaft_rest',[TOOL[0],TOOL[1]+.080,TABLE+.013],[box((.020,.020,.026))],fixed=True,mass=.02,color=(.58,.43,.27)))
 BODIES.append(body('parts_dish',[.29,-.16,TABLE+.010],[box((.085,.070,.003)),box((.003,.070,.016),(-.043,0,.006)),box((.003,.070,.016),(.043,0,.006)),box((.085,.003,.016),(0,-.035,.006)),box((.085,.003,.016),(0,.035,.006))],fixed=False,mass=.1,color=(.60,.73,.63)))
 finalize(BODIES,JOINTS)

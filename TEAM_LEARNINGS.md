@@ -5726,3 +5726,31 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - The GPU stop deadline was extended to19:07:47 UTC during active experiments,
   with the local watchdog still running. At18:10 UTC compute was about$1.82;
   no Dream credentials or requests had been sent. No full-score demo or PR yet.
+
+- At18:35 UTC a second diagnostic process was started on the same RTX4090
+  (no second Pod). Two scenes use about12 GB of24 GB. This is still an
+  efficiency experiment; monitor stability. The active stop deadline is now
+ 20:07:47 UTC, with watchdog PID37694 verified alive. At18:38 compute was
+  about$2.23. Final cleanup must still back up results and delete this Pod.
+- Hamper002 held both edges but stopped at a broad three-dimensional fold.
+  Flipping the left starting grip makes the full180-degree counter-twist
+  reachable (source019,760-step probe). Native folding remains unproven.
+- Fuse003's two grippers collided during the short-driver approach, moving
+  the plug far from the intended hold. Source019 uses an ordinary169 mm
+  screwdriver with119 mm tip offset; it retains the corrected spring clips.
+- Brush006's dish obstructed insertion and its overhanging brace point tilted
+  the brush. The next local draft moves the dish aside and braces the supported
+  root of the handle. Tip height is above the5 mm solid backing. Source019
+  additionally tests passive25 mN contact-snags for unresolved hair entanglement;
+  this is an unvalidated material approximation, not native fine-hair topology.
+  Inversion controls compare it with the unrestrained model. Do not claim this
+  model is validated until those controls and an actual removal demo pass.
+- Pony004 lost the left side while approaching with narrow jaws. The wider
+  approach in source019 and unchanged40 N finger ceiling are being tested.
+  Fine visual fibres now follow the native flexible-lock poses; they do not
+  drive the simulated hair. Final fidelity must distinguish these two models.
+- The official review prompt was refreshed at18:32 UTC. It is stillv24 with
+  unchanged instructions; only the activation timestamp changed. Exact-title
+  GitHub checks found no new direct ponytail, swimming-cap, dropped-chain,
+  hairbrush or hamper submission. Existing UK-fuse#763 remains a rejected
+  neighbour; earlier industrial fuse-puller#1628 also needs novelty consideration.

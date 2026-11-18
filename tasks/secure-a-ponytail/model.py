@@ -41,6 +41,9 @@ class Model(NativeModel):
   if m['secured_locks']>=11 and m['elastic_at_ponytail_base'] and m['elastic_diameter_mm']<=50 and self.release>=3:return 1.
   if m['elastic_at_ponytail_base'] and m['secured_locks']>=9:return .5
   return .25 if m['elastic_at_ponytail_base'] and m['secured_locks']>=6 else 0.
+ def draw(self,d):
+  from hair_visual import draw
+  draw(self,d)
  def state(self):return dict(super().state(),nodes=self.nodes,node_velocities=self.node_velocities,peak_stretch=self.peak_stretch)
  def restore(self,state):
   s=dict(state);self.nodes=np.asarray(s.pop('nodes'));self.node_velocities=np.asarray(s.pop('node_velocities'));self.peak_stretch=s.pop('peak_stretch');super().restore(s)

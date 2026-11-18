@@ -8,7 +8,7 @@ class DemoControl:
   from geometry import FC
   from scipy.spatial.transform import Rotation as Rot
   if k>=200 and self.grasp is None:
-   H=hands['right'];self.grasp=(H['rotation'].T@(m.p('screwdriver')-H['tcp']),H['rotation'].T@m.orientation('screwdriver'),m.p('screwdriver',[0,.069,0]),m.orientation('screwdriver').copy())
+   H=hands['right'];self.grasp=(H['rotation'].T@(m.p('screwdriver')-H['tcp']),H['rotation'].T@m.orientation('screwdriver'),m.p('screwdriver',[0,.119,0]),m.orientation('screwdriver').copy())
   out=wanted.copy()
   for side,o in [('left',0),('right',7)]:
    target,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side])
@@ -22,7 +22,7 @@ class DemoControl:
     else:
      u=ik.smoothstep(min(1.,(k-300)/80));turn=Rot.from_euler('y',15*u,degrees=True).as_matrix();tip=fulcrum+P@turn@P.T@(insert-fulcrum);Rtool=P@turn@P.T@Rtool
     if k>380:tip+=P@np.array([0,0,.008*ik.smoothstep(min(1.,(k-380)/60))])
-    R=Rtool@r_rel.T;target=tip-R@(t_rel+r_rel@np.array([0,.069,0]))
+    R=Rtool@r_rel.T;target=tip-R@(t_rel+r_rel@np.array([0,.119,0]))
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=hands[side]['tcp']-p0;rbias=hands[side]['rotation']@R0.T
    def residual(q):

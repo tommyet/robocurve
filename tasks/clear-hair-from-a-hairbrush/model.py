@@ -13,7 +13,9 @@ class Model(NativeModel):
   # Count a strand as cleared only when its entire centreline leaves the
   # expanded bristle envelope. This corresponds to weighing removed locks.
   clear=~trapped.reshape(HAIRS,SEGMENTS).any(axis=1)
-  return dict(removed_fraction=float(clear.mean()),intact=not self.failed,released_seconds=self.release,failed=self.failed)
+  return dict(removed_fraction=float(clear.mean()),remaining_contact_snags=20-sum(n.startswith('hair_snag_') for n in self.broken),intact=not self.failed,released_seconds=self.release,failed=self.failed)
+ def reset_valid(self):
+  q=self.measure();return q['removed_fraction']==0. and q['remaining_contact_snags']>=18 and not self.failed
  def score(self):
   self.failed |= self.integrity_failed()
   if self.failed:return 0.
