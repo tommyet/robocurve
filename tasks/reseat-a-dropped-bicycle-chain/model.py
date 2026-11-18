@@ -28,7 +28,7 @@ class Model(NativeModel):
    self.turn+=delta;self.chain_turn+=float(np.median(motion[valid]))
    self.lo=min(self.lo,self.turn);self.hi=max(self.hi,self.turn);self.chain_lo=min(self.chain_lo,self.chain_turn);self.chain_hi=max(self.chain_hi,self.chain_turn)
    # The crank alone cannot earn credit: the engaged chain must also advance.
-   self.clean_turns=min(self.hi-self.lo,self.chain_hi-self.chain_lo)/(2*np.pi)
+   self.clean_turns=min(max(0.,-self.turn),max(0.,-self.chain_turn))/(2*np.pi)
   else:self.turn=self.lo=self.hi=self.chain_turn=self.chain_lo=self.chain_hi=self.clean_turns=0.
   self.previous_link_angles=angles;self.previous_engaged=front
  def measure(self):

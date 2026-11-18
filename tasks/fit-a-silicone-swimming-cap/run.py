@@ -39,6 +39,7 @@ def main():
    from yam_arena.constants import TCP_OFFSET,FINGER_JOINTS
    from review_views import configure,images
    if hasattr(m,'configure_station'):m.configure_station()
+   from yam_arena.constants import TCP_OFFSET
    scene.PHYSICS_DT=1./480
    original=scene.make_env
    def with_cameras(embodiment,**kwargs):configure(embodiment);return original(embodiment,**kwargs)

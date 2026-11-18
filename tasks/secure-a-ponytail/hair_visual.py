@@ -7,9 +7,9 @@ import numpy as np
 from geometry import BODIES,STRANDS,SEGMENTS,HEAD
 
 LENGTHS={b['name']:b['shapes'][0]['length'] for b in BODIES if b['name'].startswith('hair_')}
-FIBRES=48;SIDES=4
+FIBRES=72;SIDES=4
 angles=np.arange(FIBRES)*np.pi*(3-np.sqrt(5))
-radii=.0041*np.sqrt((np.arange(FIBRES)+.5)/FIBRES)
+radii=.0023*np.sqrt((np.arange(FIBRES)+.5)/FIBRES)
 offsets=np.c_[radii*np.cos(angles),radii*np.sin(angles)]
 ring=np.arange(SIDES)*2*np.pi/SIDES
 
@@ -25,7 +25,7 @@ def draw(model,drawing):
    u=np.cross(tangent,ref);u/=np.maximum(np.linalg.norm(u,axis=1)[:,None],1e-12);v=np.cross(tangent,u)
    for a,b in offsets:
     centre=p+a*u+b*v
-    verts=(centre[:,None,:]+.00025*(u[:,None,:]*np.cos(ring)[None,:,None]+v[:,None,:]*np.sin(ring)[None,:,None])).reshape(-1,3)
+    verts=(centre[:,None,:]+.00016*(u[:,None,:]*np.cos(ring)[None,:,None]+v[:,None,:]*np.sin(ring)[None,:,None])).reshape(-1,3)
     start=len(points);points.extend(verts)
     faces.extend((start+i*SIDES+j,start+i*SIDES+(j+1)%SIDES,start+(i+1)*SIDES+(j+1)%SIDES,start+(i+1)*SIDES+j) for i in range(len(p)-1) for j in range(SIDES))
  drawing.mesh('hair_fibres',points,faces,(.16,.071,.028))

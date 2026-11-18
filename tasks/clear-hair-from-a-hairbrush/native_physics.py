@@ -23,6 +23,7 @@ def spawn(prim_path,cfg,translation=None,orientation=None,**kwargs):
  body.AddTranslateOp(precision=UsdGeom.XformOp.PrecisionDouble).Set(Gf.Vec3d(*translation))
  x,y,z,w=orientation;body.AddOrientOp(precision=UsdGeom.XformOp.PrecisionDouble).Set(Gf.Quatd(w,x,y,z))
  prim=body.GetPrim();rigid=UsdPhysics.RigidBodyAPI.Apply(prim)
+ if spec.get('contact_report'):PhysxSchema.PhysxContactReportAPI.Apply(prim).CreateThresholdAttr(0.)
  if spec.get('fixed'):rigid.CreateKinematicEnabledAttr(True)
  mass=UsdPhysics.MassAPI.Apply(prim);mass.CreateMassAttr(spec['mass'])
  if spec.get('inertia'):

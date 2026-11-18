@@ -1,18 +1,27 @@
-"""Ordinary 2 mm silicone pad covers, present in both demo and model runs.
+"""Narrow steel finger extensions with silicone contact faces.
 
-The fixed covers are robot accessories, not constraints on task objects. They
-supply native frictional contact through a rigid collision approximation.
-The force ceiling remains40 N/finger.
+Each extension is 30 x 6 x 3 mm and leaves the original finger bodies 7 mm
+behind the working point, giving access to the thin elastic without the finger bodies pushing it away.
+They are rigid robot hardware in both demo and Dream runs, never grasp joints.
 """
 import numpy as np
 from scipy.spatial.transform import Rotation
 
 
+def configure_kinematics():
+    from yam_arena import constants, ik
+    constants.TCP_OFFSET=(0.,0.,.154)
+    ik.TCP_OFFSET=constants.TCP_OFFSET
+    import sys
+    if 'yam_arena.runtime' in sys.modules:sys.modules['yam_arena.runtime'].TCP_OFFSET=constants.TCP_OFFSET
+
+
 def install():
+    configure_kinematics()
     from yam_arena import embodiment, robot
     from yam_arena.constants import GRIPPER
     from isaaclab.sim.utils import clone
-    GRIPPER.update(stiffness=20000., effort=40.)
+    GRIPPER.update(stiffness=5000., effort=40.)
     original = embodiment.yam_arm_cfg
     if getattr(original, '_task_pad_covers', False):
         return
@@ -32,13 +41,13 @@ def install():
             from isaaclab.sim.utils.stage import get_current_stage
             stage = get_current_stage()
             paths = robot.asset_link_paths()
-            # Rigid 2 mm covers touch at a 4 mm nominal jaw gap. The pinned
+            # The 3 mm contact faces touch at a 6 mm nominal jaw gap. The pinned
             # model lacks a cover-to-cover closing stop, so represent that ordinary
             # physical stop with the two prismatic joint limits.
             stops=[]
             for joint_prim in stage.Traverse():
                 if str(joint_prim.GetPath()).startswith(path+'/') and joint_prim.GetName() in ('joint7','joint8') and joint_prim.IsA(UsdPhysics.PrismaticJoint):
-                    UsdPhysics.PrismaticJoint(joint_prim).CreateUpperLimitAttr(-.002)
+                    UsdPhysics.PrismaticJoint(joint_prim).CreateUpperLimitAttr(-.003)
                     stops.append(joint_prim.GetName())
             if sorted(stops)!=['joint7','joint8']:
                 raise RuntimeError('Could not apply the two physical pad-cover closing stops.')
@@ -55,13 +64,13 @@ def install():
                 # toward positive X. joint8 is the mirror image.
                 # Nominal closed-link origins from the pinned YAM URDF.
                 origin = np.array([sign*.0445119, -sign*.0239931, .0566829])
-                centre = rotation.inv().apply(np.array([sign*.001, 0., .135])-origin)
+                centre = rotation.inv().apply(np.array([sign*.0015, 0., .147])-origin)
                 PhysxSchema.PhysxRigidBodyAPI.Apply(stage.GetPrimAtPath(path+paths[name])).CreateEnableSpeculativeCCDAttr(True)
-                shape = UsdGeom.Cube.Define(stage, path+paths[name]+'/silicone_pad_cover')
+                shape = UsdGeom.Cube.Define(stage, path+paths[name]+'/precision_finger_extension')
                 shape.CreateSizeAttr(1.)
                 shape.AddTranslateOp().Set(Gf.Vec3d(*centre))
                 shape.AddOrientOp().Set(Gf.Quatf(float(q[3]), Gf.Vec3f(*q[:3])))
-                shape.AddScaleOp().Set(Gf.Vec3f(.002, .018, .024))
+                shape.AddScaleOp().Set(Gf.Vec3f(.003, .006, .030))
                 UsdPhysics.CollisionAPI.Apply(shape.GetPrim())
                 collision = PhysxSchema.PhysxCollisionAPI.Apply(shape.GetPrim())
                 collision.CreateContactOffsetAttr(.002)

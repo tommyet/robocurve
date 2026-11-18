@@ -5,8 +5,13 @@ mass add. Inter-layer slip is omitted. No rest shape changes during the trial.
 """
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
+for side,y in [("left",.305),("right",-.305)]:
+ BODIES.append(body(side+"_arm_riser",[0,y,TABLE+.050],[box((.12,.12,.100))],fixed=True,mass=5.,color=(.25,.27,.29)))
 CENTER=np.array([.29,0,TABLE+.112]);N=96
-BODIES.append(body('folding_stand',[.29,0,TABLE+.005],[box((.350,.380,.010)),box((.020,.380,.090),(-.165,0,.050)),box((.020,.380,.090),(.165,0,.050))],mass=1.6,fixed=True,color=(.58,.40,.25)))
+# Four corner rests leave the middle clear for the final tabletop fold.
+for sx in [-1,1]:
+ for sy in [-1,1]:
+  BODIES.append(body(f'folding_rest_{sx+1}_{sy+1}',[.29+sx*.165,sy*.200,TABLE+.050],[box((.020,.020,.100))],mass=.08,fixed=True,color=(.58,.40,.25)))
 def rounded_rect(a,b,r=.025):
  pts=[]
  for cx,cy,start in [(a-r,b-r,0),(-a+r,b-r,90),(-a+r,-b+r,180),(a-r,-b+r,270)]:

@@ -1,32 +1,33 @@
-"""Read-only object feedback for robot joint commands; no object actuation."""
+"""Native pose feedback used only to command the two robot arms."""
 import numpy as np
 from scipy.optimize import least_squares
-from scipy.spatial.transform import Rotation
+from scipy.spatial.transform import Rotation as Rot
 class DemoControl:
- def __init__(self):self.offset=None;self.pick_offset=None;self.crank_angle=0.;self.pick_world=None
+ def __init__(self):self.pick_index=None;self.pick=None;self.angle=0.
  def action(self,k,wanted,m,observed,hands):
   from yam_arena import ik,station
   from geometry import FRONT,POINTS,LINKS,R as RING_RADIUS
-  if self.offset is None:self.offset=m.p('bicycle_frame')-FRONT
   if k<=140:
-   v=m.orientation('chainring')[:,1];self.crank_angle=float(np.arctan2(-v[0],v[1]))
-   i=int(np.argmin(POINTS[:,1]));nominal=(POINTS[i]+POINTS[(i+1)%len(POINTS)])/2
-   links=np.array([m.p(f'link_{i:03d}') for i in range(LINKS)]);self.pick_world=links[int(np.argmin(links[:,1]))].copy();self.pick_offset=self.pick_world-nominal
-  out=wanted.copy();u=min(1.,k/60)
+   links=np.array([m.p(f'link_{i:03d}') for i in range(LINKS)])
+   if self.pick_index is None:self.pick_index=int(np.argmin(links[:,2]))
+   self.pick=links[self.pick_index].copy()+[-.005,0,0]
+   v=m.orientation('chainring')[:,1];self.angle=float(np.arctan2(v[2],v[1]))
+  out=wanted.copy()
   for side,o in [('left',0),('right',7)]:
    target,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side])
    if side=='left':
-    turn=Rotation.from_euler('z',self.crank_angle*u).as_matrix();target=FRONT+turn@(target-FRONT)+u*self.offset;R=turn@R
+    turn=Rot.from_euler('x',self.angle*min(1.,k/60)).as_matrix();target=FRONT+turn@(target-FRONT);R=turn@R
    else:
-    if k<=140:target+=u*self.pick_offset
+    i=int(np.argmin(POINTS[:,2]));nominal=(POINTS[i]+POINTS[(i+1)%LINKS])/2+[-.005,0,0]
+    if k<=140:target+=min(1.,k/60)*(self.pick-nominal)
     else:
-     frame=FRONT+self.offset;start=self.pick_world+np.array([0,0,.010]);clear=start+np.array([0,0,.040]);above=frame+np.array([0,-RING_RADIUS,.060]);seat=frame+np.array([0,-RING_RADIUS,.013])
-     if k<=200:target=start+ik.smoothstep((k-140)/60)*(clear-start)
-     elif k<=260:target=clear+ik.smoothstep((k-200)/60)*(above-clear)
-     elif k<=320:target=above+ik.smoothstep((k-260)/60)*(seat-above)
-     elif k<=340:target=seat
-     elif k<=380:target=seat+ik.smoothstep((k-340)/40)*np.array([0,-.08,.08])
-     else:target=seat+np.array([0,-.08,.08])
+     lift=self.pick+[-.04,0,.03];above=FRONT+[-.06,-RING_RADIUS,0];seat=FRONT+[-.010,-RING_RADIUS,0]
+     if k<=200:target=self.pick+ik.smoothstep((k-140)/60)*(lift-self.pick)
+     elif k<=280:target=lift+ik.smoothstep((k-200)/80)*(above-lift)
+     elif k<=340:target=above+ik.smoothstep((k-280)/60)*(seat-above)
+     elif k<=360:target=seat
+     elif k<=400:target=seat+ik.smoothstep((k-360)/40)*np.array([-.09,-.03,0])
+     else:target=seat+[-.09,-.03,0]
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=hands[side]['tcp']-p0;rbias=hands[side]['rotation']@R0.T
    def residual(q):

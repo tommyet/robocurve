@@ -5808,3 +5808,76 @@ editing, merge both agents' findings, and commit/push the update with the work.
   this batch was about$3.56; no Dream calls. Three simulator processes share
   the same4090 (~19 GB); no additional Pod rented. Completed evidence through
   probes010 is backed up locally. No full-score demo or upstream PR yet.
+
+### 2026-11-18, 21:24 UTC — native access failures and corrections
+
+- None of this six-task batch is submission-ready yet. Hamper binding003 ended
+  at0 (370x268x188 mm); its three lobes still need physical nesting and band
+  application. Do not describe the folding probe as a successful demonstration.
+- Pony009 reached9/12 locks during the motion but lost the band after release;
+  final0. Pony010/011 also ended or were stopped at0. The 9 mm hair contact
+  envelopes originally overlapped6.5 mm root spacing, and some roots began
+  inside the scalp. Current5 mm envelopes start outside the head and have fine
+  visual fibres. These corrections have not established successful tying.
+- Native collision bounds show the ordinary fingers extend well beyond the
+  added small pad covers. The tiny band's support blocks obstructed closing
+  (actual jaw gap remained about16 mm). Two rests were unstable; the current
+  four2x2x60 mm rests atX±17,Y±3 mm leave pickup arcs clear. Their reset still
+  needs a passing trial. Distributed native3 mm contact samples approximate
+  the plain band's thickness; all samples couple to elastic vertices, not hands.
+- Cap011 and012 failed pickup. Bowl-up reset012 was stable: rim height varied
+  under1 mm during the hold. The robot's bulky fingers, rather than gravity,
+  moved the rim during approach. A top-down pickup with narrow finger
+  extensions is being authored. The plain reversible cap must still stretch
+  over the head by contact; no scripted cap inversion or position writes.
+- The review prompt explicitly permits other specified hardware, with Inspect
+  Robots and a Dream run for two parallel-gripper arms. Fuse precision fingers
+  are45x6x3 mm, working point43 mm beyond the original TCP; cap/ponytail drafts
+  use30x6x3 mm extensions and20 mm extra reach. Kinematics, native geometry and
+  measured TCP must agree, and the same hardware must be used by Dream.
+- Fuse009 lifted the carrier approximately4.7 mm but left the old fuse seated.
+  Long-side cover catches now have bevels to permit spring deflection during
+  extraction/refitting. The replacement-axis score had used the cylinder's
+  localX axis; corrected to localZ, its actual longitudinal axis. A complete
+  fuse replacement has not yet been demonstrated.
+- Upright chain reset008 passed0 front/10 rear links. Its pickup failed because
+  the dropped loop settled within4 cm of the table, obstructing the fingers.
+  The next stand setting is12 cm higher. Reversing the initial wrist roll also
+  removes the roughly1 radian orientation error during seating/backpedalling.
+  The scorer now requires backward crank AND chain advance, rather than an
+  unsigned rotation range. Full reseating remains unproven.
+- Brush012/013 broke fixed bristles during lifting. A1.7 mm diameter,16 mm
+  nylon pin should bend; the next model uses two passive root bending springs
+  (0.05 Nm/rad) while retaining18 N/.12 Nm break limits. This approximates
+  cantilever bending and must be disclosed. Its44-pin layout has a12.5 mm
+  inter-column spacing. Contact reporting also needs
+  `/physics/disableContactProcessing=False`, as the existing seam task shows.
+  Without that setting, absence of reports is not proof of no tool contact.
+- Evidence archive `probes012.tar.gz` (290,064,979 bytes) is backed up locally.
+  One4090 remains active; watchdog deadline22:07:47 UTC. No Dream calls have
+  been made for this batch. No upstream PR has been opened.
+
+- At21:44 UTC, all six still lack full-score evidence. Latest finite queues
+  run the old-fuse removal sequence, hamper stacking and revised elastic/cap
+  contacts. The watchdog is verified alive and its active deadline is now
+ 23:07:47 UTC. Approximate compute cost is$5 total; no Dream calls.
+- Cap/hamper100 mm arm risers are explicit scene hardware with matching
+  station-base kinematics. They make overhead poses reachable. Cap013 still
+  missed pickup; a horizontal, outward wrist arrangement is next to avoid
+  crowding both wrists above the small opening.
+- Pony014's narrower tips reached the band, but the deformable-surface contact
+  still slipped. The next draft replaces that band with a closed64-segment
+  passive elastic chain (3 mm contact cord,30 mm inside diameter,1 g total,
+  roughly1.4 N axial rigidity,8 N joint break force). No hand attachment,
+  commanded object pose or runtime material changes. Visual cord geometry
+  follows the same native segment poses; offline audit checks that agreement.
+  This remains an unvalidated approximation, not evidence of a successful tie.
+- Brush014 retained all hair despite bending bristles. Hair between snag points
+  sags onto the backing, below the earlier horizontal pin-tail path. The next
+  trajectory angles the tapered tail down5 degrees, aiming its tip5.3 mm above
+  the brush centre while keeping the thicker shaft above the5 mm backing.
+  Actual native contact and removal must be verified. Use IsaacLab's settings
+  manager, after scene construction, to enable contact processing.
+- The completed-placement fuse scorer fixture now passes after refreshing
+  its rotation cache. That is a CPU scoring check only; no replacement has
+  been demonstrated in native physics.

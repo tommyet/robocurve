@@ -8,7 +8,13 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 
 
+def configure_kinematics():
+    from yam_arena import station
+    station.BASES.update({side:(0.,y,.85) for side,y in [('left',.305),('right',-.305)]})
+
+
 def install():
+    configure_kinematics()
     from yam_arena import embodiment, robot
     from yam_arena.constants import GRIPPER
     from isaaclab.sim.utils import clone

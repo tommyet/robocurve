@@ -40,6 +40,8 @@ def audit(rows,report):
  assert report['steps']<=report['requested_steps'],'Run overran action request'
  events={e['joint'] for e in report.get('events',[]) if e['event']=='native_joint_break'}
  assert events==broken,'Native break-event history differs from final state'
+ contacts={int(e['lock']) for e in report.get('events',[]) if e['event']=='comb_hair_contact' and e.get('impulse_ns',0)>1e-12}
+ assert contacts==m.comb_touched_locks,'Native comb-contact history differs from state'
  score=m.score();assert abs(score-report['score'])<1e-9,'Reported score differs'
  complete=report['status']=='complete' and report['steps']==report['requested_steps']
  return dict(score=score,steps=count-1,complete=complete,measurements=m.measure(),native_break_events=len(events),visual_review_still_required=True,submission_evidence=complete and not report.get('cpu_preview',True) and report.get('capture_every')==1 and report.get('submission_evidence',False))

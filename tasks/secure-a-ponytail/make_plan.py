@@ -5,7 +5,7 @@ from geometry import ELASTIC,HEAD
 p=Plan()
 RL=np.array([[0,-1,0],[0,0,-1],[1,0,0.]])
 RR=np.array([[0,-1,0],[0,0,1],[-1,0,0.]])
-L=ELASTIC+[0,.0225,0];R=ELASTIC+[0,-.0225,0]
+L=ELASTIC+[0,.0165,0];R=ELASTIC+[0,-.0165,0]
 p.add(3,'approach the plain elastic from its two sides',{'left':(L+[0,.045,.025],RL,.45),'right':(R+[0,-.045,.025],RR,.45)},'joint')
 p.add(2,'place the pads around opposite parts of the elastic',{'left':(L,RL,.35),'right':(R,RR,.35)})
 p.add(2,'grip the elastic',{'left':(L,RL,0.),'right':(R,RR,0.)})
@@ -14,6 +14,6 @@ p.add(4,'place the opening beneath the loose hair ends',{'left':([.300,.045,HEAD
 p.add(7,'bring the loose hair through the elastic',{'left':([.300,.045,HEAD[2]-.100],RL,0.),'right':([.300,-.045,HEAD[2]-.100],RR,0.)})
 p.add(3,'let the elastic gather the ponytail',{'left':([.300,.026,HEAD[2]-.100],RL,0.),'right':([.300,-.026,HEAD[2]-.100],RR,0.)})
 p.add(2,'release the elastic',{'left':([.300,.026,HEAD[2]-.100],RL,.6),'right':([.300,-.026,HEAD[2]-.100],RR,.6)})
-p.add(3,'withdraw from the ponytail',{'left':([.27,.14,HEAD[2]-.10],RL,.6),'right':([.27,-.14,HEAD[2]-.10],RR,.6)})
+p.add(3,'withdraw from the ponytail',{'left':([.30,.11,HEAD[2]-.08],RL,.6),'right':([.30,-.11,HEAD[2]-.08],RR,.6)})
 p.add(4,'released inspection',{})
 print(json.dumps(p.save(Path(__file__).with_name('demo-plan.json'))))

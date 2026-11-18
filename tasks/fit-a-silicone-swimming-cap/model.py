@@ -24,7 +24,8 @@ class Model(NativeModel):
   self.release=self.release+dt if clear else 0.
   self.peak_stretch=max(self.peak_stretch,float(np.max(np.linalg.norm(self.nodes[EDGES[:,1]]-self.nodes[EDGES[:,0]],axis=1)/REST_LENGTHS)))
   self.failed |= self.integrity_failed()
- def integrity_failed(self):return super().integrity_failed() or not np.isfinite(self.nodes).all() or self.peak_stretch>3.
+ def rim_gap(self):return max(float(np.linalg.norm(self.nodes[node]-self.p(f'rim_contact_{i:03d}'))) for i,node in enumerate(RIM))
+ def integrity_failed(self):return self.rim_gap()>.005 or super().integrity_failed() or not np.isfinite(self.nodes).all() or self.peak_stretch>3.
  def measure(self):
   rim=self.nodes[RIM];local=(rim-HEAD)@HEADROT
   # The rim must encircle the head below the crown, while its front arc
@@ -35,7 +36,7 @@ class Model(NativeModel):
   crown=float(np.linalg.norm(self.nodes[0]-(HEAD+HEADROT@np.array([0,0,RADII[2]]))))
   fitted=bool(winding>.9 and radial.min()>.55 and radial.max()<1.35 and local[:,2].max()<.075 and local[:,2].min()>-.055)
   clear=bool(front.any() and local[front,2].min()>=.030)
-  return dict(crown_gap_mm=crown*1000,rim_encircles_head=fitted,face_clear=clear,intact=not self.failed,released_seconds=self.release,failed=self.failed)
+  return dict(rim_attachment_gap_mm=self.rim_gap()*1000,crown_gap_mm=crown*1000,rim_encircles_head=fitted,face_clear=clear,intact=not self.failed,released_seconds=self.release,failed=self.failed)
  def score(self):
   self.failed |= self.integrity_failed();m=self.measure()
   if self.failed:return 0.

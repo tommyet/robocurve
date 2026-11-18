@@ -4,6 +4,8 @@ from common import down
 
 class Plan:
  def __init__(self):
+  from pad_covers import configure_kinematics
+  configure_kinematics()
   from yam_arena.constants import READY
   self.a=np.r_[READY,1.,READY,1.];self.frames=[];self.audit=[]
  def add(self,seconds,label,targets,mode='cartesian'):

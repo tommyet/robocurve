@@ -6,18 +6,18 @@ BRUSH=np.array([.30,.015,TABLE+.025])
 BODIES.append(body('mat',[.30,.015,TABLE+.010],[box((.12,.10,.020))],fixed=True,mass=.08,color=(.23,.31,.35),friction=1.))
 shapes=[box((.052,.095,.010)),sphere((.026,.0475,.005)),box((.021,.095,.009),(0,.09,0))]
 BODIES.append(body('brush',BRUSH,shapes,mass=.08,color=(.75,.24,.33),friction=.9,torsional_patch_radius=.006,min_torsional_patch_radius=.003))
-for i in range(5):
+for i in range(4):
  for j in range(11):
-  pos=np.array([(i-2)*.010,(j-5)*.007,.013]);name=f'pin_{i}_{j}'
+  pos=np.array([(i-1.5)*.0125,(j-5)*.006,.013]);name=f'pin_{i}_{j}'
   BODIES.append(body(name,BRUSH+pos,[cylinder(.00085,.016),sphere((.0013,)*3,(0,0,.008))],mass=.00012,color=(.90,.88,.77),contact_offset=.0001))
-  JOINTS.append(joint(name+'_root','brush',name,pos,[0,0,0],axes=fixed_axes(),break_force=18.,break_torque=.12))
+  JOINTS.append(joint(name+'_root','brush',name,pos,[0,0,0],axes={**fixed_axes(),'rotX':dict(limits=(-65,65),stiffness=.05,damping=.001),'rotY':dict(limits=(-65,65),stiffness=.05,damping=.001)},break_force=18.,break_torque=.12))
 # Ten loose locks represent 1 g of shed hair. Each lock is a 0.8 mm contact
 # proxy for many finer hairs; it is neither rigid nor glued to the brush.
 HAIRS=10;SEGMENTS=28
 for strand in range(HAIRS):
  y=-.030+strand*.006;u=np.linspace(-1,1,SEGMENTS+1)
  # Each strand snakes between neighbouring pins, with two loose ends.
- points=np.c_[.037*u,y+.0028*np.sin(4*np.pi*u+strand*.55),.008+.002*np.cos(3*np.pi*u+strand*.6)]+BRUSH
+ points=np.c_[.037*u,y+.0012*np.sin(4*np.pi*u+strand*.55),.012+.001*np.cos(3*np.pi*u+strand*.6)]+BRUSH
  for i,(a,b) in enumerate(zip(points[:-1],points[1:])):
   v=b-a;length=np.linalg.norm(v);R=Rotation.align_vectors([v/length],[[1,0,0]])[0]
   part=body(f'hair_{strand}_{i}',(a+b)/2,[box((length,.0008,.0008))],mass=.0001/SEGMENTS,color=(.12+.018*(strand%3),.065,.025),quat=R.as_quat().tolist(),friction=.5,contact_offset=.0001,linear_damping=.15,angular_damping=.1)
@@ -55,7 +55,7 @@ v=[[r*np.cos(a),y,r*np.sin(a)] for y,r in [(.120,.0009),(.130,.00015)] for a in 
 f=[[i,(i+1)%12,12+(i+1)%12,12+i] for i in range(12)]+[list(range(11,-1,-1)),list(range(12,24))]
 comb.append(dict(kind='mesh',points=v,faces=f,pos=[0,0,0],quat=[0,0,0,1],color=[.67,.69,.72]))
 comb += [box((.017,.0012,.004),(.009,-.060+i*.003,0)) for i in range(26)]
-BODIES.append(body('comb',TOOL,comb,mass=.016,color=(.15,.44,.61),friction=.9,torsional_patch_radius=.005,min_torsional_patch_radius=.002))
+BODIES.append(body('comb',TOOL,comb,contact_report=True,mass=.016,color=(.15,.44,.61),friction=.9,torsional_patch_radius=.005,min_torsional_patch_radius=.002))
 BODIES.append(body('comb_rest',[.43,-.145,TABLE+.0125],[box((.030,.020,.025))],fixed=True,mass=.03,color=(.58,.43,.27)))
 BODIES.append(body('comb_tail_rest',[.43,-.045,TABLE+.013],[box((.020,.020,.026))],fixed=True,mass=.02,color=(.58,.43,.27)))
 BODIES.append(body('waste_dish',[.18,-.26,TABLE+.012],[box((.12,.11,.003)),box((.004,.11,.020),(-.06,0,.008)),box((.004,.11,.020),(.06,0,.008)),box((.12,.004,.020),(0,-.055,.008)),box((.12,.004,.020),(0,.055,.008))],fixed=False,mass=.12,color=(.77,.84,.75),friction=.7))

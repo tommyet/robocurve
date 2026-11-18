@@ -2,7 +2,7 @@
 import numpy as np
 from scipy.optimize import least_squares
 class DemoControl:
- def __init__(self):self.offset=None
+ def __init__(self):self.offset=None;self.hair_x=None
  def action(self,k,wanted,m,observed,hands):
   from yam_arena import ik,station
   if self.offset is None:
@@ -15,6 +15,15 @@ class DemoControl:
    # reaching the hair so its world height is not lowered by band sag.
    weight=min(1.,k/60)*max(0.,min(1.,(300-k)/80))
    target+=weight*self.offset[side]
+   if k>=220:
+    from geometry import STRANDS,SEGMENTS
+    if k<=440 or self.hair_x is None:
+     centres=[]
+     for strand in range(STRANDS):
+      p=np.array([m.p(f'hair_{strand}_{i}') for i in range(SEGMENTS)])
+      centres.append(p[np.argmin(abs(p[:,2]-target[2])),0])
+     self.hair_x=float(np.clip(np.median(centres),.27,.33))
+    target[0]+=min(1.,(k-220)/80)*(self.hair_x-.300)
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=hands[side]['tcp']-p0;rbias=hands[side]['rotation']@R0.T
    def residual(q):
