@@ -29,8 +29,8 @@ class DemoControl:
    self.start=tip.copy();self.initial_axis=axis.copy();choices=[];direction=np.array([1.,0,0])
    names=[n for n in m.names if n.startswith(('front_','hem_','back_'))]
    apex=max(m.p(n)[2] for n in names if n.startswith('hem_'))
-   for y in np.linspace(.095,.125,21):
-    for z in np.arange(.786,min(.855,apex-.003),.0015):
+   for y in np.linspace(.075,.135,41):
+    for z in np.arange(.786,min(.885,apex-.003),.0015):
      hits=[]
      for n in names:
       R=m.orientation(n);normal=R[:,2]

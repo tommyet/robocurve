@@ -41,10 +41,10 @@ for b in list(BODIES):
   axes=bend_axes(0.,.000001,179);axes['transY']=dict(limits=(-.0005,.0005),stiffness=500.,damping=.1);axes['transZ']=dict(limits=(-.0005,.0005),stiffness=500.,damping=.1);axes['transX']=dict(limits=(-.043,.001),stiffness=0.,damping=.05,max_force=.5)
   JOINTS.append(joint('hole_'+b['name'],'pin_arm',b['name'],[.045,0,0],[0,0,0],axes=axes,enabled=False,break_force=3.,break_torque=.02))
 # An ordinary wooden sewing support sits inside the cuff, separating its faces.
-# The turned front edge overhangs it by 26 mm so a fingertip can get underneath.
+# The turned front edge overhangs it by 46 mm so a fingertip can get underneath.
 cloth=[b for b in BODIES if b['name'].startswith(('front_','back_','hem_'))]
 old={b['name']:(np.array(b['pos']),Rotation.from_quat(b.get('quat',[0,0,0,1]))) for b in cloth}
-def height(x):return .046-min(1.,max(0.,(abs(x-.34)-.065)/.020))*.043
+def height(x):return .066-min(1.,max(0.,(abs(x-.34)-.065)/.020))*.063
 for b in cloth:
  x,y,z=b['pos'];back=b['name'].startswith('back_');hem=b['name'].startswith('hem_')
  slope=(height(x+.0001)-height(x-.0001))/.0002 if not back else 0.
@@ -62,7 +62,7 @@ for j in JOINTS:
    spec=lookup[name];j['p'+str(side)]=Rotation.from_quat(spec['quat']).inv().apply(point-spec['pos']).tolist()
   for axis in ['rotX','rotY','rotZ']:
    if 'stiffness' in j['axes'][axis]:j['axes'][axis]['stiffness']=.0001 if j['name'].startswith(('fold_','hem_')) else .00002
-BODIES.append(body('sewing_support',[.34,.144,TABLE+.024],[box((.140,.190,.040))],mass=.25,fixed=True,color=(.62,.43,.25)))
+BODIES.append(body('sewing_support',[.34,.124,TABLE+.034],[box((.140,.190,.060))],mass=.25,fixed=True,color=(.62,.43,.25)))
 for b in BODIES:
  if b['name'].startswith(('front_','back_','hem_')) or b['name']=='sewing_support':b['pos'][1]-=.15
 # Small passive seam compliance avoids impulse spikes in the closed cloth grid.

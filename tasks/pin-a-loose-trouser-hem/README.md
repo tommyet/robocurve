@@ -8,7 +8,7 @@ A safety pin can hold a loose turned trouser hem until it can be sewn properly.
 
 ## Setup and reset
 
-An inside-out cotton trouser cuff, 180 mm across and 240 mm long, rests over a 140 x 190 x 40 mm wooden sewing support inserted between its faces. The 20 mm turned front hem overhangs the support by 26 mm toward the left arm; its middle 60 mm of stitching is loose. The back stays below the support. An ordinary 50 mm steel safety pin lies open toward the right arm. Both hands start open.
+An inside-out cotton trouser cuff, 180 mm across and 240 mm long, rests over a 140 x 190 x 60 mm wooden sewing support inserted between its faces. The 20 mm turned front hem overhangs the support by 46 mm toward the left arm; its middle 60 mm of stitching is loose. The back stays below the support. An ordinary 50 mm steel safety pin lies open toward the right arm. Both hands start open.
 
 Use a cotton-twill trouser cuff with a 20 mm factory crease; unpick the securing thread from a 60 mm front section and remove loose thread. Replace punctured fabric after each trial. Restore the photographed fold, inspect the pin and protective pad covers, and leave the pin open.
 
