@@ -7,18 +7,18 @@ from common import down,TABLE
 from geometry import BODIES,GRIP_ENDS
 p=Plan();base=np.array([[0,-1,0],[0,0,-1],[1,0,0.]])
 turn=np.eye(3)
-RL=Rotation.from_euler('x',15,degrees=True).as_matrix()@base;RR=Rotation.from_euler('x',165,degrees=True).as_matrix()@base
+RL=Rotation.from_euler('x',45,degrees=True).as_matrix()@base;RR=Rotation.from_euler('x',135,degrees=True).as_matrix()@base
 points=[np.mean([b['pos'] for b in BODIES if b['name'] in [f'wire_{f}_{i:02d}' for f in range(4)]],axis=0) for i in GRIP_ENDS]
 L=points[0]-.006*RL[:,2];R=points[1]-.006*RR[:,2]
 p.add(3,'approach opposite bound frame ends',{'left':(L-.035*RL[:,2],RL,.3),'right':(R-.035*RR[:,2],RR,.3)},'joint')
 p.add(2,'enclose the four stacked frame edges',{'left':(L,RL,.3),'right':(R,RR,.3)})
 p.add(2,'grip both seams',{'left':(L,RL,0.),'right':(R,RR,0.)})
-RL=Rotation.from_euler('x',35,degrees=True).as_matrix()@base;RR=Rotation.from_euler('x',145,degrees=True).as_matrix()@base
-p.add(3,'lift clear of the table',{'left':(L+[0,-.015,.18],RL,0.),'right':(R+[0,.015,.18],RR,0.)},'joint')
+RL=Rotation.from_euler('x',60,degrees=True).as_matrix()@base;RR=Rotation.from_euler('x',120,degrees=True).as_matrix()@base
+p.add(3,'lift clear of the table',{'left':(L+[0,-.050,.12],RL,0.),'right':(R+[0,.050,.12],RR,0.)},'joint')
 axis=np.array([0.,1.,0.])
 for step in range(1,5):
  u=step/4;left=Rotation.from_rotvec(axis*np.radians(0*u)).as_matrix()@RL;right=Rotation.from_rotvec(axis*np.radians(-90*u)).as_matrix()@RR
- p.add(1.5,'twist the ends inward',{'left':(L+[0,-.015-.10*u,.18],left,0.),'right':(R+[0,.015+.10*u,.18],right,0.)},'joint')
+ p.add(1.5,'twist the ends inward',{'left':(L+[0,-.050-.16*u,.12],left,0.),'right':(R+[0,.050+.16*u,.12],right,0.)},'joint')
 right=Rotation.from_rotvec(axis*np.radians(-90)).as_matrix()@RR
 p.add(3,'hold the crossing loops',{})
 p.add(3,'hold the nested frame for inspection',{})

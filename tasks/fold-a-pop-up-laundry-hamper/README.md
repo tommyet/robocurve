@@ -8,7 +8,7 @@ A pop-up hamper must be twisted into nested loops and restrained before its spri
 
 ## Setup and reset
 
-An empty, ordinary 33 x 33 x 53 cm spring-steel and polyester-mesh laundry hamper, flattened into its full 33 x 53 cm rectangle but not twisted or coiled. Its attached elastic retaining loop lies loose beside it. The flat hamper lies on a 220 x 380 x 100 mm raised wooden board on the table with the 33 cm width between the arms and the 53 cm length running forward. Both hands start open. No latch or fixture holds a folded shape.
+An empty, ordinary 33 x 33 x 53 cm spring-steel and polyester-mesh laundry hamper, flattened into its full 33 x 53 cm rectangle but not twisted or coiled. Its attached elastic retaining loop lies loose beside it. The flat hamper lies on a 220 x 380 x 100 mm raised wooden board on the table with the 53 cm length between the arms and the 33 cm width running forward. Both hands start open. No latch or fixture holds a folded shape.
 
 Use a full-size pop-up mesh hamper with an attached elastic retaining loop, such as the 13 x 13 x 21 inch Smart Design type. Open it, inspect the wire and seams, flatten the sides without twisting the frame, then restore the photographed rectangle and loose loop. Do not start from an already coiled frame.
 
