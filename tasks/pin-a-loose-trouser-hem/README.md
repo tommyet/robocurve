@@ -43,3 +43,5 @@ Fixed layout; no random seed. Limit: 1,400 control steps (70 seconds at 20 Hz). 
 Native gripping contact uses a small torsional friction patch to approximate soft protective pad covers (1.5 mm minimum radius). This supplies frictional grip torque under contact load; it is not a hand attachment. The parameters are uncalibrated. [PhysX contact-patch documentation](https://nvidia-omniverse.github.io/PhysX/physx/5.8.0/_api_build/classPxShape.html) describes this mechanism.
 
 The larger 75 mm pin is an ordinary available size: [Spentex blanket/kilt steel safety pin M0710](https://www.spentex.co.uk/wp-content/uploads/2023/06/30191-SPEN-Product-Catalogue-2023-ART-SCREEN-DPS.pdf). Its simulated mechanism is an uncalibrated approximation. The 100 mm loose hem section gives the robot fingers clearance; it remains fully unpinned at reset.
+
+The slender pin bodies use explicit regularized diagonal inertias (frame: 1e-7, 2e-6, 2e-6 kg m²; arm: 1e-8, 5e-7, 5e-7 kg m²). This suppresses tiny-axis numerical spin; it is not calibrated hardware inertia and does not attach the pin to a hand.

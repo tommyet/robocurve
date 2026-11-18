@@ -25,7 +25,8 @@ def spawn(prim_path,cfg,translation=None,orientation=None,**kwargs):
  prim=body.GetPrim();rigid=UsdPhysics.RigidBodyAPI.Apply(prim)
  if spec.get('fixed'):rigid.CreateKinematicEnabledAttr(True)
  mass=UsdPhysics.MassAPI.Apply(prim);mass.CreateMassAttr(spec['mass'])
- if spec.get('inertia'):mass.CreateDiagonalInertiaAttr(Gf.Vec3f(*spec['inertia']))
+ if spec.get('inertia'):
+  mass.CreateDiagonalInertiaAttr(Gf.Vec3f(*spec['inertia']));mass.CreatePrincipalAxesAttr(Gf.Quatf(1.,Gf.Vec3f(0.,0.,0.)))
  rb=PhysxSchema.PhysxRigidBodyAPI.Apply(prim);rb.CreateEnableCCDAttr(not spec.get('fixed',False))
  if spec.get('external_force'):
   force=PhysxSchema.PhysxForceAPI.Apply(prim);force.CreateForceEnabledAttr(True);force.CreateWorldFrameEnabledAttr(True);force.CreateModeAttr('force');force.CreateForceAttr(Gf.Vec3f(0,0,0));force.CreateTorqueAttr(Gf.Vec3f(0,0,0))

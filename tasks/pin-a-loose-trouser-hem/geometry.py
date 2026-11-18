@@ -75,6 +75,8 @@ for j in JOINTS:
 # Share a small shaft-scale rotational inertia to regularize its stiff contact.
 for b in BODIES:
  if b['name']=='needle_point':b['inertia']=[1e-8,1e-8,1e-8]
+ if b['name']=='pin_frame':b['inertia']=[1e-7,2e-6,2e-6]
+ if b['name']=='pin_arm':b['inertia']=[1e-8,5e-7,5e-7]
 # Finite rubber-pad contact area supplies native spin friction at a grip.
 for part in BODIES:
  if part['name']=='pin_frame':part.update(torsional_patch_radius=.003,min_torsional_patch_radius=.0015)
