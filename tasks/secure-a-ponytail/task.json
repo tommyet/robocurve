@@ -1,0 +1,12 @@
+{
+  "title": "Secure a ponytail with a plain hair elastic",
+  "category": "Societal relatability",
+  "instruction": "Gather the loose hair into a ponytail and secure it with the plain elastic. Leave it held after both hands let go.",
+  "action_limit": 1800,
+  "run_limit": "1,800 control steps (90 seconds at 20 Hz)",
+  "setup": "Development draft; not validated.",
+  "scoring": "Development draft; not validated.",
+  "fidelity": "Development draft; not validated.",
+  "scores": "Not run.",
+  "media": ""
+}

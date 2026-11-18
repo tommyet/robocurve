@@ -5636,3 +5636,44 @@ editing, merge both agents' findings, and commit/push the update with the work.
   budget. Check nearby earmuff fitting, ear thermometry, rope plaiting and our
   own hoop/knot tasks before choosing a build. No direct match was found in this
   audit; no acceptance or simulator feasibility is claimed.
+
+### 2026-11-18 — Personal-care/chain/fuse batch, active development
+
+- User explicitly authorized five new PRs (dropped chain, ponytail elastic,
+  swimming cap, brush hair removal, UK plug fuse) and finishing the hamper.
+  Work is isolated on `codex/personal-care-chain-fuse-20261118`. **None is ready
+  or submitted yet.** Fresh board check found 808 records and no direct matches
+  for the first four; pending industrial fuse-puller TK-9363AK remains a novelty
+  neighbour. Review prompt v24 is the working standard.
+- One Secure RTX 4090 was provisioned at16:07:47 UTC for$0.89/hour after A40,
+  RTX6000 Ada and L40S capacity requests failed without creating Pods. This is
+  an active rental, initially capped by a local18:07 UTC stop watchdog. Session
+  records and immutable diagnostic archives are under the private, ignored
+  `artifacts/personal-care-chain-fuse-2026-11-18/` folder in the desktop checkout.
+- First brush diagnostic completed500 actions, score0.0; it is not submission
+  evidence (camera stride4). Measured hands showed a large approach error; the
+  left-hand handle location crossed the right arm's tool path. The tool rest
+  also blocked full finger access. The next version reverses the handle and
+  leaves the comb grip clear between two ordinary rests. Do not claim success.
+- Local planning uses the adapter in `artifacts/rope-knot-development/adapter`.
+  Its `ik.py`, `station.py` and `constants.py` hashes exactly match the pinned GPU
+  adapter; the first brush failure was not a kinematic-version mismatch.
+- Native surface deformables are being tested for the cap, elastic and hamper.
+  In the pinned Isaac Lab backend, obtain the physics view from
+  `isaaclab_physx.physics.PhysxManager`; the older
+  `isaacsim.core.simulation_manager` import is absent. A short cap trial reached
+  this binding stage but failed on the old import, so surface grasping remains
+  unproven. Use native read-only nodal views; do not move a task surface by code.
+- The original hamper077 failure remains the last completed folding result.
+  A new unvalidated surface model replaces coarse jointed bars, preserving the
+  summed stiffness/mass of four flattened spring frames, a sewn flexible sheet,
+  and an attached elastic band. Scoring still requires a220x220x60 mm packet,
+  band retention and3 seconds released. The old failed source is archived
+  privately and remains recoverable from main9bc7f6e.
+- Check `run.json` status and step count, not shell exit status alone: Isaac's
+  application shutdown returned process exit0 for two failed startup trials.
+  Every final run still needs native visual review and independent rescoring.
+- [Official PhysX surface documentation](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/latest/dev_guide/deformables/deformable_bodies.html)
+  explains elastic triangle surfaces and their limitations. The proposed bicycle
+  tensioner uses the ordinary [single-pulley mechanism](https://surlybikes.com/products/singleator),
+  rather than allowing steel links to stretch. Both remain development models.

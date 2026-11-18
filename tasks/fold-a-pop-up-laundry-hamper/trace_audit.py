@@ -30,7 +30,7 @@ def audit(rows,report):
   assert np.allclose(a,READY,atol=1e-5) if previous is None else np.all(abs(a-previous)<=DELTA+1e-5),'Action-rate limit'
   m.restore(row['state']);assert set(m.broken)<=joints and broken<=m.broken,'Unknown or healed joint'
   if count:
-   clear=all(h['opening']>.4 and np.min(np.linalg.norm(m.poses[dynamic,:3]-np.asarray(h['tcp']),axis=1))>.05 for h in row['hands'].values())
+   clear=all(h['opening']>.4 and np.min(np.linalg.norm(m.release_points()-np.asarray(h['tcp']),axis=1))>.05 for h in row['hands'].values())
    release=release+.05 if clear else 0.
   assert abs(release-m.release)<1e-6,'Release duration disagrees with native hand/body poses'
   compare(m.measure(),row['measurements'],'measurements')

@@ -1,0 +1,47 @@
+"""Adult practice head and a separate thin elastic cap; SI units."""
+from geometry_helpers import *
+BODIES=[];JOINTS=[]
+HEAD=np.array([.39,0,TABLE+.095]);HEADROT=Rotation.from_euler('y',-90,degrees=True).as_matrix();RADII=np.array([.095,.080,.120]);CAP=np.array([.19,0,TABLE+.014])
+shapes=[sphere(RADII),sphere((.018,.012,.026),(-.095,0,-.015)),sphere((.012,.012,.026),(0,-.080,-.025)),sphere((.012,.012,.026),(0,.080,-.025)),cylinder(.039,.040,(.012,0,-.1375)),box((.15,.14,.015),(.012,0,-.1575))]
+shapes += [sphere((.003,.009,.005),(-.089,y,.017),(.13,.15,.18)) for y in [-.030,.030]]
+shapes += [box((.001,.038,.004),(-.090,0,-.051),(.47,.17,.17))]
+BODIES.append(body('headform',HEAD,shapes,fixed=True,mass=1.5,color=(.76,.63,.51),friction=.65,quat=Rotation.from_matrix(HEADROT).as_quat().tolist()))
+# The normal desktop stand supports the head; no cap guides or robot grip tabs.
+M=40;N=12
+POINTS=[CAP+[0,0,.090]]
+for j in range(1,N+1):
+ a=j*np.pi/(2*N)
+ for i in range(M):
+  t=i*2*np.pi/M;POINTS.append(CAP+[.064*np.sin(a)*np.cos(t),.060*np.sin(a)*np.sin(t),.090*np.cos(a)])
+POINTS=np.asarray(POINTS);TRIS=[]
+for i in range(M):TRIS.append([0,1+i,1+(i+1)%M])
+for j in range(N-1):
+ for i in range(M):
+  a=1+j*M+i;b=1+j*M+(i+1)%M;c=a+M;d=b+M;TRIS.extend([[a,c,d],[a,d,b]])
+TRIS=np.asarray(TRIS);RIM=np.arange(1+(N-1)*M,1+N*M)
+EDGES=np.unique(np.sort(np.concatenate([TRIS[:,[0,1]],TRIS[:,[1,2]],TRIS[:,[2,0]]]),axis=1),axis=0)
+REST_LENGTHS=np.linalg.norm(POINTS[EDGES[:,1]]-POINTS[EDGES[:,0]],axis=1)
+finalize(BODIES,JOINTS)
+
+def spawn_surface(stage,root):
+ from pxr import UsdGeom,UsdPhysics,PhysxSchema,UsdShade,Gf,Vt,Sdf
+ mesh=UsdGeom.Mesh.Define(stage,root+'/cap');mesh.CreatePointsAttr(Vt.Vec3fArray(POINTS.astype(np.float32).tolist()));mesh.CreateFaceVertexCountsAttr([3]*len(TRIS));mesh.CreateFaceVertexIndicesAttr(TRIS.ravel().tolist());mesh.CreateSubdivisionSchemeAttr('none');mesh.CreateDoubleSidedAttr(True)
+ p=mesh.GetPrim()
+ for api in ['OmniPhysicsDeformableBodyAPI','OmniPhysicsSurfaceDeformableSimAPI','PhysxSurfaceDeformableBodyAPI']:
+  if not p.ApplyAPI(api):raise RuntimeError('Required native surface API unavailable: '+api)
+ p.GetAttribute('omniphysics:mass').Set(.030)
+ p.GetAttribute('omniphysics:restShapePoints').Set(Vt.Vec3fArray(POINTS.astype(np.float32).tolist()))
+ p.GetAttribute('omniphysics:restTriVtxIndices').Set(Vt.Vec3iArray(TRIS.tolist()))
+ p.GetAttribute('physxDeformableBody:selfCollision').Set(True)
+ p.GetAttribute('physxDeformableBody:solverPositionIterationCount').Set(32)
+ p.GetAttribute('physxDeformableBody:enableSpeculativeCCD').Set(True)
+ p.GetAttribute('physxDeformableBody:linearDamping').Set(.1)
+ UsdPhysics.CollisionAPI.Apply(p);col=PhysxSchema.PhysxCollisionAPI.Apply(p);col.CreateContactOffsetAttr(.001);col.CreateRestOffsetAttr(.0004)
+ mat=UsdShade.Material.Define(stage,root+'/capMaterial');q=mat.GetPrim()
+ for api in ['OmniPhysicsBaseMaterialAPI','OmniPhysicsDeformableMaterialAPI','OmniPhysicsSurfaceDeformableMaterialAPI','PhysxSurfaceDeformableMaterialAPI']:q.ApplyAPI(api)
+ for key,value in {'omniphysics:dynamicFriction':.9,'omniphysics:density':1100.,'omniphysics:youngsModulus':1e6,'omniphysics:poissonsRatio':.45,'omniphysics:surfaceThickness':.0008,'omniphysics:surfaceBendStiffness':1e6/(12*(1-.45**2)),'physxDeformableMaterial:elasticityDamping':.02,'physxDeformableMaterial:bendDamping':.01}.items():
+  attr=q.GetAttribute(key)
+  if not attr:raise RuntimeError('Required cap material attribute unavailable: '+key)
+  attr.Set(value)
+ shader=UsdShade.Shader.Define(stage,root+'/capMaterial/Surface');shader.CreateIdAttr('UsdPreviewSurface');shader.CreateInput('diffuseColor',Sdf.ValueTypeNames.Color3f).Set(Gf.Vec3f(.10,.44,.77));shader.CreateInput('roughness',Sdf.ValueTypeNames.Float).Set(.5);mat.CreateSurfaceOutput().ConnectToSource(shader.ConnectableAPI(),'surface')
+ bind=UsdShade.MaterialBindingAPI.Apply(p);bind.Bind(mat);bind.Bind(mat,UsdShade.Tokens.weakerThanDescendants,'physics')

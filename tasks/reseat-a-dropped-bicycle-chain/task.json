@@ -1,0 +1,12 @@
+{
+  "title": "Put a dropped bicycle chain back on its chainring",
+  "category": "Societal relatability",
+  "instruction": "Put the dropped chain back on the chainring, then turn the crank backwards through one full revolution without the chain dropping or jamming.",
+  "action_limit": 1800,
+  "run_limit": "1,800 control steps (90 seconds at 20 Hz)",
+  "setup": "Development draft; not validated.",
+  "scoring": "Development draft; not validated.",
+  "fidelity": "Development draft; not validated.",
+  "scores": "Not run.",
+  "media": ""
+}

@@ -1,0 +1,12 @@
+{
+  "title": "Remove trapped hair from a hairbrush",
+  "category": "Societal relatability",
+  "instruction": "Use the pin-tail comb to lift the trapped hair out of the brush. Leave the brush clear and its pins intact.",
+  "action_limit": 1800,
+  "run_limit": "1,800 control steps (90 seconds at 20 Hz)",
+  "setup": "Development draft; not validated.",
+  "scoring": "Development draft; not validated.",
+  "fidelity": "Development draft; not validated.",
+  "scores": "Not run.",
+  "media": ""
+}

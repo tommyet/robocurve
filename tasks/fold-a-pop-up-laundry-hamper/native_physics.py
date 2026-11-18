@@ -62,6 +62,8 @@ def spawn(prim_path,cfg,translation=None,orientation=None,**kwargs):
  adjacent.extend(Sdf.Path(root+'/'+name) for name in spec.get('exclude',[]))
  if adjacent:UsdPhysics.FilteredPairsAPI.Apply(prim).CreateFilteredPairsRel().SetTargets(adjacent)
  if index==len(BODIES)-1:
+  from geometry import spawn_surface
+  spawn_surface(stage,root)
   for specj in JOINTS:
    j=UsdPhysics.Joint.Define(stage,root+'/joint_'+specj['name'])
    j.CreateBody0Rel().SetTargets([Sdf.Path(root+'/'+specj['a'])]);j.CreateBody1Rel().SetTargets([Sdf.Path(root+'/'+specj['b'])])

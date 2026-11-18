@@ -1,0 +1,12 @@
+{
+  "title": "Change the fuse in an unplugged UK plug",
+  "category": "Societal relatability",
+  "instruction": "Replace the fuse in the unplugged plug with the spare of the same rating, and refit its fuse carrier securely.",
+  "action_limit": 1800,
+  "run_limit": "1,800 control steps (90 seconds at 20 Hz)",
+  "setup": "Development draft; not validated.",
+  "scoring": "Development draft; not validated.",
+  "fidelity": "Development draft; not validated.",
+  "scores": "Not run.",
+  "media": ""
+}

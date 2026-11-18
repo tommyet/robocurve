@@ -4,7 +4,6 @@ from pathlib import Path
 import numpy as np
 from common import rotation,Drawing
 from model import Model
-from geometry import GRIP_ENDS
 HERE=Path(__file__).resolve().parent
 
 def serial(x):
@@ -102,7 +101,6 @@ def main():
      obs=np.asarray(observed)
      wanted=controller.action(k,wanted,m,obs,hands())
      for tracker in trackers:
-      if k>140:tracker.kp=0.;tracker.ki=.3;tracker.slew=.001
       wanted=tracker.action(wanted,obs,enabled=True)
    elif policy is not None:
     chunk=policy.act(emb._observation());assert len(chunk.actions)==1;wanted=np.asarray(chunk.actions[0].data,float)
