@@ -8,11 +8,11 @@ A safety pin can hold a loose turned trouser hem until it can be sewn properly.
 
 ## Setup and reset
 
-An inside-out cotton trouser cuff, 180 mm across and 240 mm long, rests over a 140 x 190 x 60 mm wooden sewing support inserted between its faces. The 20 mm turned front hem overhangs the support by 46 mm toward the left arm; its middle 100 mm of stitching is loose. The back stays below the support. An ordinary 75 mm steel safety pin lies open toward the right arm. Both hands start open.
+An inside-out cotton trouser cuff, about 440 mm in circumference and 240 mm long, with a visible width of 180 mm when draped, rests over a 140 x 190 x 60 mm wooden sewing support inserted between its faces. The 20 mm turned front hem overhangs the support by 46 mm toward the left arm; its middle 100 mm of stitching is loose. The back stays below the support. An ordinary 75 mm steel safety pin lies open on a 20 x 40 x 15 mm wooden tool rest toward the right arm, with its coil overhanging the rest by 25 mm. Both hands start open.
 
-Use a cotton-twill trouser cuff with a 20 mm factory crease; unpick the securing thread from a 100 mm front section and remove loose thread. Replace punctured fabric after each trial. Restore the photographed fold, inspect the pin and protective pad covers, and leave the pin open.
+Use a cotton-twill trouser cuff of approximately 440 mm circumference with a 20 mm factory crease; unpick the securing thread from a 100 mm front section and remove loose thread. Replace punctured fabric after each trial. Restore the photographed fold, inspect the pin and protective pad covers, and leave the pin open.
 
-`geometry.py` records every simulated part, dimension, mass, fixed coordinate and passive joint. The starting photograph must be captured from the final native reset before submission.
+`geometry.py` records every simulated part, dimension, mass, fixed coordinate and passive joint. The draped front uses about 261 mm of fabric across the support; the back uses 180 mm. The stated 180 mm is the visible span after draping, not the flattened cuff width. The starting photograph must be captured from the final native reset before submission.
 
 ## Judging
 
@@ -38,7 +38,7 @@ The candidate controller in `make_plan.py` and `demo_control.py` is still being 
 
 Rescore recorded native body poses with `python tasks/pin-a-loose-trouser-hem/rescore.py /tmp/pin-a-loose-trouser-hem-demo`. The scorer checks frozen source hashes, trace continuity, bounded joint actions, native break events, and the outcome. This supports, and does not replace, visual inspection of the contact and material behaviour.
 
-Fixed layout; no random seed. Limit: 1,400 control steps (70 seconds at 20 Hz). Actual runtime per trial, complete native evidence and independent scoring will be recorded after successful validation. Do not upload a CPU plot or a kinematic reach check as a successful demo.
+Fixed layout; no random seed. Limit: 1,800 control steps (90 seconds at 20 Hz). Actual runtime per trial, complete native evidence and independent scoring will be recorded after successful validation. Do not upload a CPU plot or a kinematic reach check as a successful demo.
 
 Native gripping contact uses a small torsional friction patch to approximate soft protective pad covers (1.5 mm minimum radius). This supplies frictional grip torque under contact load; it is not a hand attachment. The parameters are uncalibrated. [PhysX contact-patch documentation](https://nvidia-omniverse.github.io/PhysX/physx/5.8.0/_api_build/classPxShape.html) describes this mechanism.
 
@@ -58,3 +58,5 @@ That study is not a calibration of this safety pin and cotton cuff. The current
 Validate a defensible material/force match, gripping, return threading and
 closure before collecting submission evidence. Do not re-score the older
 low-force trials as evidence for this version.
+
+The current diagnostic uses a 20,000 N/m gripper position gain and a reduced 40 N per-finger effort ceiling in both demo and Dream. The standard 5,000 N/m gain supplies only about 6–8 N per finger at this thin coil's closed gap, so the pin rotated out under a 0.67 N needle load. The higher gain is an uncalibrated controller setting within the hardware force bound, not a stronger robot. Native validation is pending.

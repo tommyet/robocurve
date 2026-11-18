@@ -2,14 +2,14 @@
 import numpy as np
 from scipy.optimize import least_squares
 class DemoControl:
- def __init__(self):self.start=None;self.closure=None;self.last_q=None;self.released_at=None;self.left_offset=None;self.right_offset=None
+ def __init__(self):self.start=None;self.closure=None;self.last_q=None;self.released_at=None;self.left_offset=None;self.right_offset=None;self.feedback_goal=None
  def action(self,k,wanted,m,hands,current):
   from yam_arena import ik,station
   from geometry import BODIES
   if self.left_offset is None:
    names=['hem_8_0','hem_9_0'];nominal=np.mean([b['pos'] for b in BODIES if b['name'] in names],axis=0)
    self.left_offset=np.mean([m.p(n) for n in names],axis=0)-nominal
-  if k<=700:
+  if k<=1000:
    pp,RR=ik.tcp_pose(wanted[:6],station.BASES['left']);target=pp+self.left_offset*min(1.,k/60)
    if 60<k<=120:
     names=['front_8_0','front_9_0','hem_8_0','hem_9_0']
@@ -26,22 +26,35 @@ class DemoControl:
    pp,RR=ik.tcp_pose(wanted[7:13],station.BASES['right'])
    if self.right_offset is None:self.right_offset=m.p('pin_frame')-PIN
    target=pp+self.right_offset*min(1.,k/60)
-   if 60<k<=100:
-    grasp=m.p('pin_frame')-.006*RR[:,2];u=np.clip((k-60)/40,0,1);target=(1-u)*target+u*grasp
-    if k==100:self.right_offset=grasp-pp
+   if 60<k<=120:
+    grasp=m.p('pin_frame')-.004*RR[:,2];u=np.clip((k-60)/40,0,1);target=(1-u)*target+u*grasp
+    if k==120:self.right_offset=grasp-pp
    seed=np.clip(current[7:13],ik.LOWER+1e-6,ik.UPPER-1e-6)
+   predicted,rotation=ik.tcp_pose(seed,station.BASES['right'])
+   bias=hands['right']['tcp']-predicted;rotation_bias=hands['right']['rotation']@rotation.T
    def grip_error(q):
-    pos,rot=ik.tcp_pose(q,station.BASES['right']);return np.r_[pos-target,.12*ik._rot_error(RR,rot),.001*(q-seed)]
+    pos,rot=ik.tcp_pose(q,station.BASES['right']);return np.r_[pos+bias-target,.12*ik._rot_error(RR,rotation_bias@rot),.001*(q-seed)]
    wanted=wanted.copy();wanted[7:13]=least_squares(grip_error,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=30).x
+   if k in [100,120,220]:m.events.append(dict(event='demo_coil_grip_check',step=k,coil_local_mm=(1000*hands['right']['rotation'].T@(m.p('pin_frame')-hands['right']['tcp'])).tolist(),fk_bias_mm=(1000*bias).tolist()))
    return wanted
-  if k>700:return self.close(k,wanted,m,hands,current)
+  if k>1000:return self.close(k-300,wanted,m,hands,current)
   h=hands['right'];tip=m.p('needle_point',[.001,0,0]);axis=m.orientation('pin_arm')[:,0]
   if np.linalg.norm(m.p('pin_frame')-h['tcp'])>.055:raise RuntimeError('The pin slipped from the native grip; stop this failed development trial.')
   if self.start is None:
    from path_search import select_path
    self.start=tip.copy();self.initial_axis=axis.copy()
    self.entry,self.end,self.direction,names=select_path(m)
-   self.splay_direction=np.array([0.,1.,0.]);self.splay_direction-=self.direction*(self.splay_direction@self.direction);self.splay_direction/=np.linalg.norm(self.splay_direction)
+   self.fabric_targets=[]
+   for name in names:
+    normal=m.orientation(name)[:,2]
+    distance=float(normal@(m.p(name)-self.entry)/(normal@self.direction))
+    point=self.entry+distance*self.direction
+    self.fabric_targets.append((name,m.orientation(name).T@(point-m.p(name))))
+   self.splay_direction=np.array([0.,0.,-1.]);self.splay_direction-=self.direction*(self.splay_direction@self.direction);self.splay_direction/=np.linalg.norm(self.splay_direction)
+   # Cant the open pin 75 degrees around its needle axis to keep the wrist
+   # inside its ordinary joint limits while the frame remains below the point.
+   from scipy.spatial.transform import Rotation
+   self.splay_direction=Rotation.from_rotvec(-np.radians(75)*self.direction).apply(self.splay_direction)
    m.events.append(dict(event='demo_selected_straight_pin_path',start=self.entry.tolist(),end=self.end.tolist(),patches=names,time=m.time))
    # Select a reachable wrist branch before descending to the cloth. A local
    # incremental solve can otherwise stop at the wrist's negative limit.
@@ -49,10 +62,10 @@ class DemoControl:
    self.approach_start=np.asarray(current[7:13]).copy()
    relative_tip=h['rotation'].T@(tip-h['tcp']);relative_axis=h['rotation'].T@axis
    cap=m.p('pin_frame',[.0685,0,.002]);splay=cap-tip;splay-=axis*(splay@axis);splay/=np.linalg.norm(splay);relative_splay=h['rotation'].T@splay
-   target=self.entry+[0,0,.12]
+   target=self.entry+[0,0,.05]
    def approach_error(q):
     pp,RR=ik.tcp_pose(q,station.BASES['right']);return np.r_[pp+RR@relative_tip-target,.1*(RR@relative_axis-self.direction),.05*(RR@relative_splay-self.splay_direction)]
-   solutions=[least_squares(approach_error,seed,bounds=(ik.LOWER,ik.UPPER),max_nfev=180) for seed in [np.asarray(READY),(ik.LOWER+ik.UPPER)/2]]
+   solutions=[least_squares(approach_error,seed,bounds=(ik.LOWER,ik.UPPER),max_nfev=180) for seed in [np.clip(current[7:13],ik.LOWER+1e-6,ik.UPPER-1e-6),np.asarray(READY),(ik.LOWER+ik.UPPER)/2]]
    solution=min(solutions,key=lambda x:np.linalg.norm(x.fun))
    if np.linalg.norm(solution.fun)>.005:raise RuntimeError('No reachable needle approach for the observed grasp.')
    self.approach_q=solution.x
@@ -61,10 +74,24 @@ class DemoControl:
    u=np.clip((k-220)/120,0,1);u=u*u*(3-2*u);out=wanted.copy();out[7:13]=(1-u)*self.approach_start+u*self.approach_q;self.last_q=out[7:13].copy();return out
   def blend(a,b,start,end):
    u=np.clip((k-start)/(end-start),0,1);u=u*u*(3-2*u);return a*(1-u)+b*u
-  if k<=340:goal=blend(self.start,self.entry+[0,0,.12],220,340);goalaxis=blend(self.initial_axis,self.direction,220,340)
-  elif k<=400:goal=blend(self.entry+[0,0,.12],self.entry,340,400);goalaxis=self.direction.copy()
+  if k<=340:goal=blend(self.start,self.entry+[0,0,.05],220,340);goalaxis=blend(self.initial_axis,self.direction,220,340)
+  elif k<=400:goal=blend(self.entry+[0,0,.05],self.entry,340,400);goalaxis=self.direction.copy()
   elif k<=640:goal=blend(self.entry,self.end,400,640);goalaxis=self.direction.copy()
   else:goal=self.end;goalaxis=self.direction.copy()
+  if k>400:
+   remaining=[(name,local) for name,local in self.fabric_targets if name not in m.holes]
+   if remaining:
+    name,local=remaining[0]
+    # Follow the observed material as it deflects; apply force through the
+    # needle, with at most 20 mm/s advancement, instead of chasing a stale
+    # world-space line through a now-displaced fold.
+    target=m.p(name,local)+.004*self.direction
+    if self.feedback_goal is None:self.feedback_goal=self.entry.copy()
+    delta=target-self.feedback_goal
+    self.feedback_goal+=delta*min(1.,.001/max(np.linalg.norm(delta),1e-9))
+    goal=self.feedback_goal.copy()
+   else:goal=self.end
+   goalaxis=self.direction.copy()
   goalaxis/=np.linalg.norm(goalaxis);relative_tip=h['rotation'].T@(tip-h['tcp']);relative_axis=h['rotation'].T@axis
   cap=m.p('pin_frame',[.0685,0,.002]);splay=cap-tip;splay-=axis*(splay@axis);splay/=np.linalg.norm(splay);relative_splay=h['rotation'].T@splay
   seed=np.clip(current[7:13],ik.LOWER+1e-6,ik.UPPER-1e-6)
@@ -78,7 +105,8 @@ class DemoControl:
   from scipy.spatial.transform import Rotation
   if self.closure is None:
    if not m.measure()['both_layers_held']:raise RuntimeError('Threading incomplete; stop the development demo before attempting closure.')
-   tip=m.p('needle_point',[.001,0,0]);shield=m.p('pin_frame',[.0685,0,.002]);z=shield-tip;z/=np.linalg.norm(z)
+   # Press the blunt shank 13 mm behind the point, not the sharp tip.
+   tip=m.p('pin_arm',[.055,0,0]);shield=m.p('pin_frame',[.055,0,0]);z=shield-tip;z/=np.linalg.norm(z)
    x=np.cross(m.orientation('pin_arm')[:,0],z);x/=np.linalg.norm(x);R=np.column_stack([x,np.cross(z,x),z])
    self.closure=dict(tip=tip,shield=shield,R=R,left=hands['left']['tcp'].copy(),leftR=hands['left']['rotation'].copy(),right=hands['right']['tcp'].copy(),rightR=hands['right']['rotation'].copy())
   c=self.closure;R=c['R'];z=R[:,2];near=c['tip']-.030*z+.006*R[:,0];pressed=c['shield']-.006*z+.006*R[:,0]

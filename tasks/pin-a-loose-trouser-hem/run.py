@@ -56,7 +56,7 @@ def main():
     out={}
     for side in ['left','right']:
      robot=base.scene[side+'_robot'];idx=list(robot.body_names).index('gripper');pose=array(robot.data.body_link_pose_w)[0,idx];R=rotation(pose[3:]);ids=robot.find_joints(list(FINGER_JOINTS),preserve_order=True)[0];opening=float(np.abs(array(robot.data.joint_pos)[0,ids]).sum()/.094)
-     out[side]=dict(tcp=pose[:3]+R@np.asarray(TCP_OFFSET),rotation=R,opening=opening)
+     out[side]=dict(tcp=pose[:3]+R@np.asarray(TCP_OFFSET),rotation=R,opening=opening,joint_positions=array(robot.data.joint_pos)[0,emb._ids[side+'_robot'][0]])
     return out
    m.time=-1.
    for _ in range(20):
@@ -71,6 +71,7 @@ def main():
     for label in ['front','rear','side']:
      rgb=views['judging_'+label];writers[label].append_data(rgb)
      if step in [0,steps]:Image.fromarray(rgb).save(a.out/(label+('-start.png' if step==0 else '-final.png')))
+     if step and step%100==0:Image.fromarray(rgb).save(a.out/(label+'-progress.png'))
     writers['policy'].append_data(np.asarray(obs.images['top_cam']))
    row=dict(step=step,action14=current,measurements=m.measure(),hands=hands(),state=m.state())
    trace.write(json.dumps(row,default=serial,separators=(',',':'))+'\n')
@@ -107,7 +108,7 @@ def main():
    current=current+np.clip(wanted-current,-limit_vector,limit_vector)
    if not a.cpu_preview:emb._env.step(torch.as_tensor(current[None,:],device=base.device,dtype=torch.float32));emb._t=k/20
    m.update(hands())
-   if not a.cpu_preview:m.draw(drawing)  # Native environment step already renders and updates camera buffers.
+   if not a.cpu_preview:m.draw(drawing);refresh()
    capture(k);report.update(steps=k,measurements=m.measure(),score=m.score())
    if k%20==0:save();trace.flush()
    if a.mode=='demo' and m.failed:raise RuntimeError('Native task integrity failed; development demo stopped early.')

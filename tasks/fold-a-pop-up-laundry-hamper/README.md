@@ -43,3 +43,7 @@ Fixed layout; no random seed. Limit: 1,600 control steps (80 seconds at 20 Hz). 
 The current candidate plan only tests the twist/nest motion. Securing the retaining loop is not implemented; this is not full-score evidence.
 
 Native gripping contact uses a small torsional friction patch to approximate soft protective pad covers (1.5 mm minimum radius). This supplies frictional grip torque under contact load; it is not a hand attachment. The parameters are uncalibrated. [PhysX contact-patch documentation](https://nvidia-omniverse.github.io/PhysX/physx/5.8.0/_api_build/classPxShape.html) describes this mechanism.
+
+Diagnostic031 used a 20,000 N/m gripper position gain and a reduced 40 N per-finger effort ceiling, for both demo and Dream. This permits normal gripping force on thin binding before the closed-position limit; the original 5,000 N/m gain supplies only about 4 N per finger at a 1.5 mm jaw gap. The gain is an uncalibrated controller setting, not extra robot strength. Native validation is pending.
+
+Current pad-cover diagnostic: each finger has a 2 x 18 x 24 mm silicone cover over its inner pad, centred 1 mm ahead of the TCP. The covers supply ordinary frictional contact; no task object is attached to them. The servo uses its original 5,000 N/m gain with a 40 N/finger force ceiling. Soft covers are represented by rigid collision surfaces with finite friction; their compliance is not simulated. These covers and controller settings apply to both demo and Dream. Native validation is pending.

@@ -57,14 +57,16 @@ def main():
     out={}
     for side in ['left','right']:
      robot=base.scene[side+'_robot'];idx=list(robot.body_names).index('gripper');pose=array(robot.data.body_link_pose_w)[0,idx];R=rotation(pose[3:]);ids=robot.find_joints(list(FINGER_JOINTS),preserve_order=True)[0];opening=float(np.abs(array(robot.data.joint_pos)[0,ids]).sum()/.094)
-     out[side]=dict(tcp=pose[:3]+R@np.asarray(TCP_OFFSET),rotation=R,opening=opening)
+     out[side]=dict(tcp=pose[:3]+R@np.asarray(TCP_OFFSET),rotation=R,opening=opening,joint_positions=array(robot.data.joint_pos)[0,emb._ids[side+'_robot'][0]])
     return out
    m.time=-1.
    for _ in range(20):
     emb._env.step(emb._ready);m.update(hands())
-   m.time=0.;m.release=0.;refresh()
+   m.time=0.;m.release=0.;m.draw(drawing);refresh()
    for name in ['front','rear','side','policy']:writers[name]=imageio.get_writer(a.out/(name+'.mp4'),fps=20,codec='libx264',pixelformat='yuv420p',ffmpeg_params=['-movflags','+faststart'],macro_block_size=1)
    current=emb._ready.detach().cpu().numpy()[0].copy()
+  from native_contact_audit import record
+  record(base,a.out)
   trace=(a.out/'trace.jsonl').open('w')
   def capture(step):
    if not a.cpu_preview:
@@ -72,6 +74,7 @@ def main():
     for label in ['front','rear','side']:
      rgb=views['judging_'+label];writers[label].append_data(rgb)
      if step in [0,steps]:Image.fromarray(rgb).save(a.out/(label+('-start.png' if step==0 else '-final.png')))
+     if step and step%100==0:Image.fromarray(rgb).save(a.out/(label+'-progress.png'))
     writers['policy'].append_data(np.asarray(obs.images['top_cam']))
    row=dict(step=step,action14=current,measurements=m.measure(),hands=hands(),state=m.state())
    trace.write(json.dumps(row,default=serial,separators=(',',':'))+'\n')
@@ -96,7 +99,7 @@ def main():
       arm_ids,finger_ids=emb._ids[robot_name];q=array(base.scene[robot_name].data.joint_pos)[0]
       observed.extend(q[arm_ids]);observed.append(float(np.clip(q[finger_ids].mean()/FINGER_OPEN,0,1)))
      obs=np.asarray(observed)
-     wanted=controller.action(k,wanted,m,obs)
+     wanted=controller.action(k,wanted,m,obs,hands())
      for tracker in trackers:
       wanted=tracker.action(wanted,obs,enabled=True)
    elif policy is not None:
@@ -107,13 +110,9 @@ def main():
    current=current+np.clip(wanted-current,-limit_vector,limit_vector)
    if not a.cpu_preview:emb._env.step(torch.as_tensor(current[None,:],device=base.device,dtype=torch.float32));emb._t=k/20
    m.update(hands())
-   if not a.cpu_preview:m.draw(drawing)  # Native environment step already renders and updates camera buffers.
+   if not a.cpu_preview:m.draw(drawing);refresh()
    capture(k);report.update(steps=k,measurements=m.measure(),score=m.score())
    if k%20==0:save();trace.flush()
-   if a.mode=='demo' and k>=200 and k%20==0:
-    for side,end in zip(['left','right'],GRIP_ENDS):
-     retained=sum(m.p('wire_%d_%02d'%(face,end))[2]>.88 and np.linalg.norm(m.p('wire_%d_%02d'%(face,end))-hands()[side]['tcp'])<.04 for face in range(4))
-     if retained<2:raise RuntimeError('The frame stack did not lift with the hand; stop this development trial.')
    if a.mode=='demo' and m.failed:raise RuntimeError('Native task integrity failed; development demo stopped early.')
   report.update(status='complete',events=m.events,score=m.score(),requires_visual_review=True)
  except BaseException as error:

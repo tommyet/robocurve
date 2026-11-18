@@ -25,7 +25,10 @@ for i in range(NX):
  if not 4<=i<14:
   JOINTS.append(joint('existing_stitch_'+str(i),f'front_{i}_0',f'hem_{i}_1',[0,.003,.0015],[0,0,0],axes=bend_axes(.000002,.000001),break_force=12.))
 # Commercial-size 75 mm steel safety pin. Spring hinge is open at rest.
-PIN=np.array([.46,-.11,TABLE+.004]);Q=Rotation.from_euler('z',90,degrees=True)
+PIN=np.array([.46,-.11,TABLE+.016]);Q=Rotation.from_euler('z',90,degrees=True)
+# A small ordinary tool rest supports the shaft, leaving the coil overhanging
+# by 25 mm so the fingers can surround it without colliding with the table.
+BODIES.append(body('pin_rest',[.46,-.065,TABLE+.0075],[box((.020,.040,.015))],mass=.03,fixed=True,color=(.62,.43,.25)))
 BODIES.append(body('pin_frame',PIN,[rod_between([0,0,0],[.0685,0,0],.00065),cylinder(.003,.0015,quat=Rotation.from_euler('y',90,degrees=True).as_quat()),box((.007,.005,.002),(.0685,0,.002))],mass=.0028,color=(.7,.72,.74),quat=list(Q.as_quat()),friction=.8,contact_offset=.00005))
 openR=Q*Rotation.from_euler('y',-25,degrees=True)
 BODIES.append(body('pin_arm',PIN,[rod_between([0,0,0],[.0665,0,0],.00065)],mass=.0011,color=(.7,.72,.74),quat=list(openR.as_quat()),contact_offset=.00005))

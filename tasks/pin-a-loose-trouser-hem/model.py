@@ -3,6 +3,12 @@ import numpy as np
 from native_model import NativeModel
 from geometry import DX,DY
 class Model(NativeModel):
+ def configure_station(self):
+  # Thin-object grip needs adequate servo force before the closed-position
+  # limit. Use the same gain in demo and Dream, below the real 40 N/finger
+  # capability; no hand attachment or increased force ceiling is involved.
+  from yam_arena.constants import GRIPPER
+  GRIPPER.update(stiffness=20000.,effort=40.)
  def __init__(self):super().__init__();self.holes={};self.latched=False;self.max_puncture_load=0.
  def material(self,hands,dt):
   from pxr import Gf
@@ -45,3 +51,8 @@ class Model(NativeModel):
   if m['both_layers_held']:return .5
   return .25 if m['front_layer_pierced'] or m['hem_layer_pierced'] else 0.
  def state(self):return dict(**super().state(),holes=self.holes,latched=self.latched,max_puncture_load=self.max_puncture_load)
+ def draw(self,d):
+  if not hasattr(self,'fabric_view'):
+   from fabric_view import FabricView
+   self.fabric_view=FabricView(d)
+  self.fabric_view.update(self)

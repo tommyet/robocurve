@@ -16,7 +16,8 @@ class Drawing:
   if name not in self.meshes:
    path='/World/TaskMaterial/'+name;m=UsdGeom.Mesh.Define(self.stage,path);m.CreateSubdivisionSchemeAttr('none');m.CreateDoubleSidedAttr(True)
    mat=UsdShade.Material.Define(self.stage,path+'/Material');shader=UsdShade.Shader.Define(self.stage,path+'/Material/Surface');shader.CreateIdAttr('UsdPreviewSurface');shader.CreateInput('diffuseColor',Sdf.ValueTypeNames.Color3f).Set(Gf.Vec3f(*color));shader.CreateInput('roughness',Sdf.ValueTypeNames.Float).Set(.65);mat.CreateSurfaceOutput().ConnectToSource(shader.ConnectableAPI(),'surface');UsdShade.MaterialBindingAPI.Apply(m.GetPrim()).Bind(mat);self.meshes[name]=m
-  m=self.meshes[name];m.GetPointsAttr().Set(Vt.Vec3fArray(np.asarray(points,dtype=np.float32).tolist()));m.GetFaceVertexCountsAttr().Set([len(f) for f in faces]);m.GetFaceVertexIndicesAttr().Set([int(v) for f in faces for v in f])
+   m.GetFaceVertexCountsAttr().Set([len(f) for f in faces]);m.GetFaceVertexIndicesAttr().Set([int(v) for f in faces for v in f])
+  m=self.meshes[name];m.GetPointsAttr().Set(Vt.Vec3fArray(np.asarray(points,dtype=np.float32).tolist()))
  def tube(self,name,points,radius,color,sides=8):
   p=np.asarray(points);t=np.gradient(p,axis=0);t/=np.maximum(np.linalg.norm(t,axis=1)[:,None],1e-12)
   axis=np.tile([0.,0.,1.],(len(p),1));axis[abs(t[:,2])>.9]=[0,1,0];u=np.cross(t,axis);u/=np.maximum(np.linalg.norm(u,axis=1)[:,None],1e-12);v=np.cross(t,u)
