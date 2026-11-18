@@ -2,7 +2,7 @@
 import numpy as np
 from scipy.optimize import least_squares
 class DemoControl:
- def __init__(self):self.start=None;self.closure=None;self.last_q=None;self.released_at=None;self.left_offset=None
+ def __init__(self):self.start=None;self.closure=None;self.last_q=None;self.released_at=None;self.left_offset=None;self.right_offset=None
  def action(self,k,wanted,m,hands,current):
   from yam_arena import ik,station
   from geometry import BODIES
@@ -21,7 +21,19 @@ class DemoControl:
    def correct(q):
     p,R=ik.tcp_pose(q,station.BASES['left']);return np.r_[p-target,.12*ik._rot_error(RR,R),.001*(q-seed)]
    wanted=wanted.copy();wanted[:6]=least_squares(correct,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=30).x
-  if k<=220:return wanted
+  if k<=220:
+   from geometry import PIN
+   pp,RR=ik.tcp_pose(wanted[7:13],station.BASES['right'])
+   if self.right_offset is None:self.right_offset=m.p('pin_frame')-PIN
+   target=pp+self.right_offset*min(1.,k/60)
+   if 60<k<=100:
+    grasp=m.p('pin_frame')-.006*RR[:,2];u=np.clip((k-60)/40,0,1);target=(1-u)*target+u*grasp
+    if k==100:self.right_offset=grasp-pp
+   seed=np.clip(current[7:13],ik.LOWER+1e-6,ik.UPPER-1e-6)
+   def grip_error(q):
+    pos,rot=ik.tcp_pose(q,station.BASES['right']);return np.r_[pos-target,.12*ik._rot_error(RR,rot),.001*(q-seed)]
+   wanted=wanted.copy();wanted[7:13]=least_squares(grip_error,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=30).x
+   return wanted
   if k>700:return self.close(k,wanted,m,hands,current)
   h=hands['right'];tip=m.p('needle_point',[.001,0,0]);axis=m.orientation('pin_arm')[:,0]
   if np.linalg.norm(m.p('pin_frame')-h['tcp'])>.055:raise RuntimeError('The pin slipped from the native grip; stop this failed development trial.')
@@ -29,15 +41,17 @@ class DemoControl:
    from path_search import select_path
    self.start=tip.copy();self.initial_axis=axis.copy()
    self.entry,self.end,self.direction,names=select_path(m)
+   self.splay_direction=np.array([0.,1.,0.]);self.splay_direction-=self.direction*(self.splay_direction@self.direction);self.splay_direction/=np.linalg.norm(self.splay_direction)
    m.events.append(dict(event='demo_selected_straight_pin_path',start=self.entry.tolist(),end=self.end.tolist(),patches=names,time=m.time))
    # Select a reachable wrist branch before descending to the cloth. A local
    # incremental solve can otherwise stop at the wrist's negative limit.
    from yam_arena.constants import READY
    self.approach_start=np.asarray(current[7:13]).copy()
    relative_tip=h['rotation'].T@(tip-h['tcp']);relative_axis=h['rotation'].T@axis
+   cap=m.p('pin_frame',[.0685,0,.002]);splay=cap-tip;splay-=axis*(splay@axis);splay/=np.linalg.norm(splay);relative_splay=h['rotation'].T@splay
    target=self.entry+[0,0,.12]
    def approach_error(q):
-    pp,RR=ik.tcp_pose(q,station.BASES['right']);return np.r_[pp+RR@relative_tip-target,.1*(RR@relative_axis-self.direction)]
+    pp,RR=ik.tcp_pose(q,station.BASES['right']);return np.r_[pp+RR@relative_tip-target,.1*(RR@relative_axis-self.direction),.05*(RR@relative_splay-self.splay_direction)]
    solutions=[least_squares(approach_error,seed,bounds=(ik.LOWER,ik.UPPER),max_nfev=180) for seed in [np.asarray(READY),(ik.LOWER+ik.UPPER)/2]]
    solution=min(solutions,key=lambda x:np.linalg.norm(x.fun))
    if np.linalg.norm(solution.fun)>.005:raise RuntimeError('No reachable needle approach for the observed grasp.')
@@ -52,9 +66,10 @@ class DemoControl:
   elif k<=640:goal=blend(self.entry,self.end,400,640);goalaxis=self.direction.copy()
   else:goal=self.end;goalaxis=self.direction.copy()
   goalaxis/=np.linalg.norm(goalaxis);relative_tip=h['rotation'].T@(tip-h['tcp']);relative_axis=h['rotation'].T@axis
+  cap=m.p('pin_frame',[.0685,0,.002]);splay=cap-tip;splay-=axis*(splay@axis);splay/=np.linalg.norm(splay);relative_splay=h['rotation'].T@splay
   seed=np.clip(current[7:13],ik.LOWER+1e-6,ik.UPPER-1e-6)
   def residual(q):
-   pp,R=ik.tcp_pose(q,station.BASES['right']);return np.r_[pp+R@relative_tip-goal,.1*(R@relative_axis-goalaxis),.001*(q-seed)]
+   pp,R=ik.tcp_pose(q,station.BASES['right']);return np.r_[pp+R@relative_tip-goal,.1*(R@relative_axis-goalaxis),.05*(R@relative_splay-self.splay_direction),.001*(q-seed)]
   sol=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=30)
   out=wanted.copy();out[7:13]=sol.x;self.last_q=sol.x.copy();return out
 
