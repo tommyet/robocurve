@@ -5407,3 +5407,11 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Hamper trial070 recorded angular velocities over5,000 rad/s before joint breakage. Trial072's speed caps did not solve the underlying instability. Do not diagnose that trace as ordinary physical tearing or weaken the success rubric.
 - Pin trial071 reached the cloth after the wrist-branch correction, then lost the coil grip. Its next candidate closes the ordinary fingers further and detects grip loss early. No successful threading/closure evidence exists yet.
 - Potato demo070 reached and independently rescored1.0 in723 actions:100% of retained mass within9 mm,95.679% retained, released3.05 s. Native front/side frames were inspected. The complete Dream baseline is running. Its success uses ordinary release of the masher inside the bowl. No potato PR yet.
+
+### 2026-11-18 — Fifth submission and cup recovery
+
+- Potato PR #2558 was received as TK-VLQ7ZQ, media M-VF64XE, isolated commit594534b. Native demo070 scores1.0/723 actions; Dream070 scores0.0/2,400 actions with50 requests. Independent frozen-source audits and native video review passed. The submission explicitly acknowledges SPARTA food-mashing overlap; acceptance is uncertain.
+- Cup074 restored passive elastic recovery (USD angular gain5e-6 N m/degree) and corrected outward muffin mesh faces. It reached1.0/640 actions with no crumb or cup damage, and independent audit/video review passed. Dream074 is running. Cup072's numerical success was held back after visual review; do not use it as the final submission evidence.
+- The hamper's edge sag put its material35–60 mm below the actual closed TCP. This was an empty grasp, not spring failure. Trial076 raises the ordinary wooden board from40 to100 mm for hand clearance. Its full fold and retainer are still unverified.
+- Thin hem patches moved beyond the13 mm pad tip during closing. Trial076 follows the observed front/hem centres while closing, then freezes the offset for the lift. No successful pinning evidence yet.
+- Completed trials068–073 are backed up locally (195,686,391 bytes,420 archive members), excluding the older interrupted068 potato trace until its cancellation state is separately preserved.

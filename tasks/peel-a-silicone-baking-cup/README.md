@@ -2,13 +2,13 @@
 
 Peel the silicone baking cup off the muffin without breaking it. Leave the muffin and cup separate on the tray.
 
-The earlier native demo reached 1.0 in 640 actions, but visual review found insufficient elastic recovery. The current material candidate requires fresh validation and a complete Dream baseline before submission.
+The native demo scores 1.0 in 640 actions (32 seconds). Its frozen-source audit passes, and native front and side views show peeling, elastic cup recovery and intact release. The complete Dream baseline is running.
 
 ## Setup and reset
 
-One cooled plain muffin, 72 mm across and 64 mm high, inside a flexible silicone baking cup (60 mm rim, 52 mm base, 38 mm wall height) with two 16 × 24 × 1.5 mm moulded pull tabs. It rests at the centre of a 320 × 280 × 4 mm food-safe tray between the arms. Both hands start open. The cup has not been loosened. The fixed dimensions and coordinates are in geometry.py.
+One cooled plain muffin, 72 mm across and 64 mm high, inside a flexible silicone baking cup (60 mm rim, 52 mm base, 38 mm wall height) with two 16 × 24 × 1.5 mm moulded pull tabs. It rests at the centre of a 320 × 280 × 4 mm stainless-steel tray fixed to the tabletop between the arms. Both hands start open. The cup has not been loosened. The fixed dimensions and coordinates are in geometry.py.
 
-The muffin is 45 g and the cup is approximately27 g in the native scene. The tray centre is340 mm forward of the station origin. `geometry.py` fixes every part and coordinate. This is a generic dimensioned tabbed cup, not a scan of a specific product. [OXO's reusable cups](https://www.oxo.com/silicone-baking-cups-12-pack.html) provide an example of the ordinary pull-tab design.
+The muffin is 45 g and the cup is approximately 27 g in the native scene. The tray centre is 340 mm forward of the station origin. `geometry.py` fixes every part and coordinate. This is a generic dimensioned tabbed cup, not a scan of a specific product. [OXO's reusable cups](https://www.oxo.com/silicone-baking-cups-12-pack.html) provide an example of the ordinary pull-tab design.
 
 Use plain muffins from one batch, cooled to 18–22 °C in the same washed and dried cup model. Use a fresh muffin each trial and do not pre-peel or oil the cup. Inspect the cup for tears and wash the tray and removable covers between trials.
 
