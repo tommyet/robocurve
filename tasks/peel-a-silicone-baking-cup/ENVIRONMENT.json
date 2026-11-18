@@ -1,8 +1,8 @@
 {
   "schema": "runtime-evidence-v1",
-  "status": "development_unverified",
-  "scope": "Target pinned environment; this new task has not yet completed native validation.",
-  "current_task_runtime_verified": false,
+  "status": "native_verified",
+  "scope": "Complete native demo and Dream baseline, independently rescored on 2026-11-18.",
+  "current_task_runtime_verified": true,
   "python": "3.12.16",
   "packages": {
     "numpy": "2.5.4",
@@ -15,10 +15,6 @@
     "isaacsim": "6.1.0.0"
   },
   "repositories": {
-    "launchable": {
-      "url": "https://github.com/ttpierson/YAM-inspect-Isaac",
-      "revision": "25a2963d10451265dd2a6cbddea69d6a3b3b9b0d"
-    },
     "adapter": {
       "url": "https://github.com/kairosiann/yam-isaac-lab-arena",
       "revision": "0059d02a1a91bc6834c1d0846022891df0c78730"
@@ -44,8 +40,8 @@
     "sha256": "991c3d0dcfc331bc4177379b538646407f78b7dbb6e21b7f6e310518c13aa33d"
   },
   "platform": {
-    "gpu": "NVIDIA A40 48GB",
-    "physics": "CPU PhysX, GPU rendering"
+    "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "physics": "Native PhysX contact dynamics and RTX rendering"
   },
-  "reference_checked_utc_date": "2026-11-15"
+  "reference_checked_utc_date": "2026-11-18"
 }

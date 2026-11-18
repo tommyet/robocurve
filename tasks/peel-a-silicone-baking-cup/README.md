@@ -2,7 +2,7 @@
 
 Peel the silicone baking cup off the muffin without breaking it. Leave the muffin and cup separate on the tray.
 
-The native demo scores 1.0 in 640 actions (32 seconds). Its frozen-source audit passes, and native front and side views show peeling, elastic cup recovery and intact release. The complete Dream baseline is running.
+The native demo scores 1.0 in 640 actions (32 seconds). Its frozen-source audit passes, and native front and side views show peeling, elastic cup recovery and intact release. Dream-1 scores 0.0 after the complete 1,000-action limit; its frozen-source audit and native video review also pass.
 
 ## Setup and reset
 
@@ -36,4 +36,4 @@ python tasks/peel-a-silicone-baking-cup/rescore.py /tmp/cup-demo
 python tasks/peel-a-silicone-baking-cup/rescore.py /tmp/cup-dream
 ```
 
-The limit is 1,000 actions (50 seconds at 20 Hz). Fixed layout; no random seed. The CPU rescorer checks frozen source hashes, native break history, contiguous frames, bounded joint commands and the outcome. It is an evidence audit, not a physics replay. Native video inspection is also required. Runtime measurements and final audit results will be added to `VALIDATION.json` after the baseline.
+The limit is 1,000 actions (50 seconds at 20 Hz). Fixed layout; no random seed. The CPU rescorer checks frozen source hashes, native break history, contiguous frames, bounded joint commands and the outcome. It is an evidence audit, not a physics replay. Native video inspection is also required. `VALIDATION.json` records the audits and measurements. On an RTX PRO 6000 Blackwell the demo took 366 seconds and Dream took 604 seconds including 21 policy requests. Runtime varies with API latency.

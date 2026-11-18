@@ -7,7 +7,8 @@
   "scoring": "1.0 if the cup is fully off and the intact muffin and cup rest on the tray with their centres at least 75 mm apart for 3 seconds after both hands release. 0.5 if adhesion has released around at least three quarters of the cup wall; 0.25 for at least half; otherwise 0. A torn cup, split muffin or detached piece larger than 5 mm scores 0. Judge the released circumference from close views and gentle inspection; use a ruler for separation.",
   "fidelity": "Native robot contacts manipulate a cohesive muffin and a flexible cup made of passive jointed panels. Force-limited adhesion resists peeling; cup seams and muffin-cap bonds can break. The demo grips the tab on the tray before peeling while supporting the muffin. Silicone bending, crumb strength and adhesion are coarse uncalibrated approximations. There are no hand attachments, commanded prop poses or success-triggered releases.",
   "run_limit": "1,000 control steps (50 seconds at 20 Hz).",
-  "scores": "Not yet run.",
+  "scores": "Dream-1 run: 0.0; demo: 1.0",
   "context": "Removing a reusable baking cup requires peeling the flexible cup while supporting a fragile muffin.",
-  "reset_notes": "Use plain muffins from one batch, cooled to 18–22 °C in the same washed and dried cup model. Use a fresh muffin each trial and do not pre-peel or oil the cup. Inspect the cup for tears and wash the tray and removable covers between trials."
+  "reset_notes": "Use plain muffins from one batch, cooled to 18–22 °C in the same washed and dried cup model. Use a fresh muffin each trial and do not pre-peel or oil the cup. Inspect the cup for tears and wash the tray and removable covers between trials.",
+  "media": "M-PULZDJ"
 }
