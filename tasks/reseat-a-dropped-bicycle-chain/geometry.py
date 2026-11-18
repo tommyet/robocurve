@@ -42,7 +42,7 @@ def path():
  # A closed belt route around two unequal sprockets, including slack.
  for c,r,angles in [(FRONT,R,np.linspace(np.pi/2,3*np.pi/2,100)),(IDLER,IR,np.linspace(np.radians(-85)-np.arctan2(e[1],e[0]),np.radians(-22)-np.arctan2(e[1],e[0]),45)),(REAR,RR,np.linspace(np.radians(-42),np.pi/2,70))]:
   for a in angles:
-   xy=c[1:]+r*(e*np.cos(a)+n*np.sin(a));off=.045 if np.allclose(c,FRONT) else 0.
+   xy=c[1:]+r*(e*np.cos(a)+n*np.sin(a));off=.015 if np.allclose(c,FRONT) else 0.
    points.append([c[0]+off,*xy])
  points=np.asarray(points);points=np.vstack([points,points[0]])
  lengths=np.linalg.norm(np.diff(points,axis=0),axis=1);arc=np.r_[0,np.cumsum(lengths)];count=round(arc[-1]/PITCH);u=np.linspace(0,arc[-1],count,endpoint=False)
@@ -60,10 +60,10 @@ finalize(BODIES,JOINTS)
 
 # The full bicycle lies on its non-drive side on two low foam pads. This is
 # ordinary access to a dropped chain, within the table-height arm workspace.
-OLD_FRONT=FRONT.copy();BIKE_ROT=Rotation.from_euler('y',90,degrees=True).as_matrix();WORLD_FRONT=np.array([.33,.08,TABLE+.150])
+OLD_FRONT=FRONT.copy();BIKE_ROT=Rotation.from_euler('y',90,degrees=True).as_matrix();WORLD_FRONT=np.array([.33,.08,TABLE+.095])
 def layout(p):return WORLD_FRONT+BIKE_ROT@(np.asarray(p)-OLD_FRONT)
 for part in BODIES:
  part['pos']=layout(part['pos']).tolist();part['quat']=(Rotation.from_matrix(BIKE_ROT)*Rotation.from_quat(part['quat'])).as_quat().tolist()
 FRONT=layout(FRONT);REAR=layout(REAR);POINTS=np.array([layout(p) for p in POINTS])
 for name,where in [('front',layout(front_hub)),('rear',REAR)]:
- BODIES.append(body(name+'_foam_pad',[where[0],where[1],TABLE+.055],[box((.16,.12,.110))],fixed=True,mass=.05,color=(.24,.28,.31),friction=1.))
+ BODIES.append(body(name+'_foam_pad',[where[0],where[1],TABLE+.0275],[box((.16,.12,.055))],fixed=True,mass=.05,color=(.24,.28,.31),friction=1.))

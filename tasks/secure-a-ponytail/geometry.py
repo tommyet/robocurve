@@ -9,7 +9,7 @@ STRANDS=12;SEGMENTS=18
 # Each flexible lock groups fine fibres into a 10 mm contact envelope.
 # The 36 g total mass includes voids between fibres; no locks are joined together.
 for s in range(STRANDS):
- y=(s-5.5)*.0065;root=HEAD+[-.073,y,.035+.015*np.cos(s)]
+ y=(s-5.5)*.004;root=HEAD+[-.073,y,.035+.015*np.cos(s)]
  pts=[]
  for j in range(SEGMENTS+1):
   u=j/SEGMENTS;pts.append(root+[-.035*u+.004*np.sin(2*np.pi*u+s*.25),.002*np.sin(3*np.pi*u+s),-.245*u])
@@ -25,10 +25,10 @@ for s in range(STRANDS):
 # Two plain 8 mm wooden blocks support the loose band without filling its
 # opening or obstructing the underside of either pickup point.
 for side in [-1,1]:
- BODIES.append(body('elastic_rest_'+('left' if side<0 else 'right'),[ELASTIC[0]+side*.0175,0,TABLE+.025],[box((.008,.008,.050))],mass=.005,fixed=True,color=(.59,.44,.28)))
-# A standard small seamless elastic: 30 mm inside diameter, 5 mm flat width.
+ BODIES.append(body('elastic_rest_'+('left' if side<0 else 'right'),[ELASTIC[0]+side*.0225,0,TABLE+.025],[box((.008,.008,.050))],mass=.005,fixed=True,color=(.59,.44,.28)))
+# A standard small seamless elastic: 40 mm inside diameter, 5 mm flat width.
 M=64;POINTS=[]
-for radius in [.015,.0175,.020]:
+for radius in [.020,.0225,.025]:
  for i in range(M):
   t=2*np.pi*i/M;POINTS.append(ELASTIC+[radius*np.cos(t),radius*np.sin(t),0])
 POINTS=np.asarray(POINTS);TRIS=[]

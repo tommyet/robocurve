@@ -5754,3 +5754,28 @@ editing, merge both agents' findings, and commit/push the update with the work.
   GitHub checks found no new direct ponytail, swimming-cap, dropped-chain,
   hairbrush or hamper submission. Existing UK-fuse#763 remains a rejected
   neighbour; earlier industrial fuse-puller#1628 also needs novelty consideration.
+
+- At19:30 UTC, pony005 completed with0.25: the elastic remained after release
+  but enclosed6/12 native locks. Source023 tests a40 mm inside-diameter plain
+  band and a44 mm-wide loose root patch; no hair is pre-tied. Its full outcome
+  remains unvalidated. Cap005 missed its pickup because the initial joint
+  approach knocked the cap off the glass. Source023 first moves outside it.
+- Brush inversion controls: the unrestrained source016 earned credit during
+  reset and was rejected by the reset gate; source019 retained18/20 passive
+  snags and removed0/10 locks over3 seconds inverted. This supports resistance
+  to simple dumping, but does not calibrate the material model. Brush008 then
+  failed when full tool-orientation tracking tried to undo a90-degree roll
+  acquired during pickup. The round pin tail only needs position and axis
+  direction; source025 leaves that roll free. Actual removal remains unproven.
+- Chain source021 reset004 is intact,0 front/8 rear links engaged. Moving the
+  initial drop15 mm inward rather than45 mm leaves the chain against the frame
+  instead of beyond it on the table. Source023 pulls the selected chain point
+  fully outside the chainring before lifting; no success is claimed yet.
+- Hamper004 completed0:344x262x256 mm. The left frame slipped about43 mm in
+  the final twist. Source024 tests0.30 mm rather than0.45 mm spring strip,
+  with100 g aggregate frame/binding mass and an added table-compression stage.
+  This is an uncalibrated material approximation; it must be disclosed. The
+  frame and band still move by native contact, with unchanged success criteria.
+- Fuse reset004 passes with both old fuse and carrier retained after the cover
+  detents were moved outside the32 mm carrier edge. Its opening probe is still
+  running. Final replacement and functional retention have not been shown.

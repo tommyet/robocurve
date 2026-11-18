@@ -20,5 +20,6 @@ for i in range(1,9):
  u=i/8;a=Rot.from_euler('y',90+90*u,degrees=True).as_matrix()@grip(-80,-1);b=Rot.from_euler('y',-90-90*u,degrees=True).as_matrix()@grip(80,-1)
  lp=L+[.015*u,-.175-.055*u,.12-.08*u];rp=R+[-.015*u,.175+.055*u,.12-.08*u]
  p.add(1.5,'finish the counter-twist and nest the loops',{'left':(lp,a,0.),'right':(rp,b,0.)})
+p.add(5,'lower the nested loops onto the table',{'left':(L+[.015,-.230,-.085],a,0.),'right':(R+[-.015,.230,-.085],b,0.)})
 p.add(3,'inspect the nested loops while held',{})
 print(json.dumps(p.save(Path(__file__).with_name('demo-plan.json'))))

@@ -39,7 +39,7 @@ for sign in [-1,1]:
  clip_pair('carrier_grip_'+('p' if sign>0 else 'n'),'carrier',CARRIER,PLUG+FC,sign*.004,.0025,.025,(.19,.20,.22),True)
 # Shallow face detents create passive retention of the carrier in the plug.
 for sign in [-1,1]:
- pos=CARRIER+[sign*.014,0,-.001]
+ pos=CARRIER+[sign*.0165,0,-.001]
  name='cover_detent_'+('p' if sign>0 else 'n')
  BODIES.append(body(name,pos,[box((.001,.005,.004)),box((.0014,.005,.0008),(-sign*.0005,0,.0018))],mass=.0002,color=(.89,.88,.83)))
  JOINTS.append(joint(name+'_spring','plug',name,pos-PLUG+[0,0,-.002],[0,0,-.002],axes={**fixed_axes(),'rotY':dict(limits=(-35,35),stiffness=.055,damping=.0001)},break_force=25.,break_torque=.1))

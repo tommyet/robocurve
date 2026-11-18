@@ -37,7 +37,7 @@ for row in range(2):
  for i in range(M):
   a=row*M+i;b=row*M+(i+1)%M;c=a+M;d=b+M;BAND_TRIS += [[a,b,c],[b,d,c]]
 SURFACES=[dict(name='tab',points=TAB_POINTS,tris=TAB_TRIS,mass=.0002,youngs=2e7,poisson=.3,thickness=.0005,friction=.5,rest_offset=.00025,contact_offset=.0006,color=(.13,.29,.44)),
- dict(name='frame',points=FRAME_POINTS,tris=FRAME_TRIS,mass=.150,youngs=8e11,poisson=.3,thickness=.00045,friction=.8,rest_offset=.0035,contact_offset=.0045,color=(.13,.29,.44)),
+ dict(name='frame',points=FRAME_POINTS,tris=FRAME_TRIS,mass=.100,youngs=8e11,poisson=.3,thickness=.00030,friction=1.2,rest_offset=.0035,contact_offset=.0045,color=(.13,.29,.44)),
  dict(name='cloth',points=CLOTH_POINTS,tris=CLOTH_TRIS,mass=.060,youngs=2e6,poisson=.3,thickness=.0003,friction=.4,rest_offset=.00015,contact_offset=.0007,color=(.28,.47,.62)),
  dict(name='band',points=BAND_POINTS,tris=BAND_TRIS,mass=.004,youngs=4e5,poisson=.45,thickness=.001,friction=1.,rest_offset=.0005,contact_offset=.001,color=(.10,.11,.13))]
 for s in SURFACES:
