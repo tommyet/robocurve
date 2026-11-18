@@ -23,7 +23,7 @@ for face in range(4):
   BODIES.append(body(name,(a+b)/2,[box((length,.008,.003))],mass=8000*length*.004*.00045+300*length*.008*.003,color=(.13,.29,.44),quat=list(Rotation.from_matrix(R).as_quat()),friction=1.,contact_offset=.0001))
  for i in range(N):
   a=f'wire_{face}_{i:02d}';b=f'wire_{face}_{(i+1)%N:02d}';aa=next(q for q in BODIES if q['name']==a);bb=next(q for q in BODIES if q['name']==b)
-  axes={k:dict(limits=(-179,179),stiffness=s,damping=.0005) for k,s in [('rotX',.006),('rotY',.008),('rotZ',.30)]}
+  axes={k:dict(limits=(-179,179),stiffness=s,damping=.0005) for k,s in [('rotX',.06),('rotY',.08),('rotZ',3.0)]}
   JOINTS.append(joint(f'wire_joint_{face}_{i}',a,b,[aa['shapes'][0]['size'][0]/2,0,0],[-bb['shapes'][0]['size'][0]/2,0,0],axes=axes,break_force=100.,break_torque=1.5))
 # Each steel frame has a sewn 8 mm wide, 3 mm thick polyester binding.
 # The binding supplies its native collision/grip surface; spring mechanics remain steel.

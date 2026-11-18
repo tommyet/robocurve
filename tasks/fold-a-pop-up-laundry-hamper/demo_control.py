@@ -18,11 +18,11 @@ class DemoControl:
    p,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side]);planned=p.copy()
    offset_weight=min(1.,k/60)*np.clip((200-k)/60,0,1) if k>140 else min(1.,k/60)
    p+=offset_weight*self.offset[side]
-   if 60<k<=140:
+   if 60<k<=100:
     index=GRIP_ENDS[0] if side=='left' else GRIP_ENDS[1]
     point=np.mean([m.p(f'wire_{f}_{index:02d}') for f in range(4)],axis=0)
     target=point-.006*R[:,2];u=np.clip((k-60)/40,0,1);p=(1-u)*p+u*target
-    if k==140:self.offset[side]=target-planned
+    if k==100:self.offset[side]=target-planned
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    def residual(q):
     pp,rr=ik.tcp_pose(q,station.BASES[side]);return np.r_[pp-p,(.05 if k<=140 else .15)*ik._rot_error(R,rr),.001*(q-seed)]
