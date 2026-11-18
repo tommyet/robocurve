@@ -5418,3 +5418,31 @@ editing, merge both agents' findings, and commit/push the update with the work.
 
 - Cup PR #2561 was received as TK-GWDNKB, media M-PULZDJ, isolated commit e925351. Demo074 scores 1.0 in 640 actions; Dream074 scores 0.0 in 1,000 actions with 21 requests. Both frozen-source audits and native video reviews passed. The tray is explicitly described as fixed stainless steel; the final cup remains connected and recovers under passive elasticity.
 - At 00:24 UTC the board listed 19 team submissions created in the preceding 24 hours. The earliest expires from that window at 01:19:15 UTC. This is a visible-row count, not a guaranteed server quota. Check before the last submissions and avoid keeping a GPU rented merely while waiting for quota.
+
+### 2026-11-18 — Final two drafts: grip diagnosis and budget cap
+
+- Six batch PRs are received: kale #2508, avocado #2510, cigar #2528,
+  tattoo #2541, potato #2558 and silicone cup #2561. At 00:24 UTC all
+  remained pending. The shared main was fast-forwarded to 8ab40ae so Eito
+  can reuse the submitted implementations and current drafts.
+- Pin079 established a real cloth pickup with a horizontal outside approach.
+  Pin080's peak needle force (0.162 N) occurred against front_4_0, outside
+  the loose central 60 mm. Lowering the puncture threshold would reward the
+  wrong contact. The threshold remains 0.2 N, and scoring now rejects all
+  holes outside the loose section and credit for a withdrawn pin. Seven
+  targeted scorer checks and 28 shared synthetic cases pass; these are not
+  native feasibility evidence.
+- Thin material can remain gripped even with a nearly closed jaw. Hamper081
+  was stopped by an overly strict jaw-opening check. Trial082 instead tests
+  actual retained frame centres lifting with the hands. Final packet size,
+  intactness, elastic enclosure and release requirements are unchanged.
+- PhysX point contacts can allow a small tool to spin in an otherwise loaded
+  grip. Trial082 adds a disclosed finite native torsional contact patch for
+  the pin coil and hamper binding. This models soft-pad contact torque, not a
+  hand attachment. Primary API reference:
+  https://nvidia-omniverse.github.io/PhysX/physx/5.8.0/_api_build/classPxShape.html.
+  These contact values are uncalibrated and require native validation.
+- The independent shutdown deadline is 02:09:52 UTC on 18 November: eight
+  hours total, at most $21.52 compute at $2.69/hour, below the approximate
+  $24 batch preference. Stop/delete earlier if finished. Backups through
+  trial079 are local and verified; later trials still need final backup.

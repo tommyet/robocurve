@@ -42,7 +42,7 @@
     },
     {
       "slug": "pin-a-loose-trouser-hem",
-      "scene": "Trial075 missed the moved hem. Trial076 tracks both actual layers during finger closure.",
+      "scene": "Trial079 lifted the cloth. Trial080 rotated the pin in the grip and missed the correct loose section. Trial082 tests native finite-contact-patch friction; no full-score demo yet.",
       "score": "No successful full demo",
       "media": null,
       "pr": null,
@@ -64,7 +64,7 @@
     },
     {
       "slug": "fold-a-pop-up-laundry-hamper",
-      "scene": "Trial075 missed the sagging frame edges. Trial076 uses a raised board to give the ordinary grippers clearance.",
+      "scene": "Trial081 stopped on an overly strict jaw-opening check. Trial082 tests observed frame lift and native finite-contact-patch friction. Full fold and retainer sequence remain unfinished.",
       "score": "0.0 development trials",
       "media": null,
       "pr": null,
@@ -110,10 +110,10 @@
     }
   ],
   "compute": {
-    "status": "Active single Secure Cloud GPU; independent seven-hour shutdown cap $18.83",
+    "status": "Active single Secure Cloud GPU; independent eight-hour shutdown cap $21.52",
     "hourly_usd": 2.69,
     "started_utc": "2026-11-17T18:09:52Z",
-    "scheduled_shutdown_utc": "2026-11-18T01:09:52Z",
+    "scheduled_shutdown_utc": "2026-11-18T02:09:52Z",
     "credentials": "Dream key remains on Mac loopback bridge",
     "estimate_not_invoice": true
   },
@@ -124,5 +124,5 @@
     "Safety-pin puncture, cuff drape and retention still need native evidence.",
     "Tattoo/PVC substrate compatibility is a qualification requirement, not a measured result."
   ],
-  "checkpoint_utc": "2026-11-18T00:28:29.349196+00:00"
+  "checkpoint_utc": "2026-11-18T00:56:40.944539+00:00"
 }
