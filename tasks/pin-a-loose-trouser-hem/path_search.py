@@ -7,7 +7,7 @@ def select_path(m):
  half=np.array([.004 if n.startswith('hem_') else .011 for n in names])
  front=np.array([n.startswith('front_') for n in names]);hem=np.array([n.startswith('hem_') for n in names])
  loose=np.array([6<=int(n.split('_')[1])<12 for n in names]);apex=max(m.p(n)[2] for n in names if n.startswith('hem_'))
- origins=np.array([[.34,y,z] for y in np.arange(.075,.135,.0015) for z in np.arange(.79,min(.885,apex-.003),.0015)])
+ origins=np.array([[.34,y,z] for y in np.arange(.075,.135,.0015) for z in np.arange(.79,min(.885,apex-.020),.0015)])
  if not len(origins):raise RuntimeError('The hem was not lifted clear for threading.')
  choices=[]
  for az in range(-40,41,10):
@@ -20,7 +20,7 @@ def select_path(m):
     ids=np.where(mask[row])[0];ids=ids[np.argsort(distance[row,ids])]
     for start in range(len(ids)-3):
      ix=ids[start:start+4];ds=distance[row,ix];span=ds[-1]-ds[0]
-     if front[ix].sum()!=2 or hem[ix].sum()!=2 or not loose[ix].all() or not .008<span<.034:continue
+     if front[ix].sum()!=2 or hem[ix].sum()!=2 or not loose[ix].all() or not .008<span<.040:continue
      if start and distance[row,ids[start-1]]>ds[0]-.025:continue
      if start+4<len(ids) and distance[row,ids[start+4]]<ds[-1]+.003:continue
      entry=origins[row]+(ds[0]-.025)*direction;end=origins[row]+(ds[-1]+.003)*direction
