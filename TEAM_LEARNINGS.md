@@ -5446,3 +5446,26 @@ editing, merge both agents' findings, and commit/push the update with the work.
   hours total, at most $21.52 compute at $2.69/hour, below the approximate
   $24 batch preference. Stop/delete earlier if finished. Backups through
   trial079 are local and verified; later trials still need final backup.
+
+### 2026-11-18 — Remaining task contact limits, no extra PRs
+
+- Fresh GitHub checks confirm all six new PRs are still received and pending.
+  Do not treat those receipts as acceptance or push while they await review.
+- Hamper082 lifted intact but bent into a long U; 083 and 086 lost their
+  grips during wrist twisting. Short-end layout088 compressed the long
+  dimension but again lost the grip at action300 (score0.0). It has no
+  demonstrated compact coil and no implemented retaining-loop sequence.
+  Do not submit it or weaken the final compactness/retention checks.
+- Pin085 uses a commercially available75mm safety-pin size and100mm loose
+  hem section; the former50mm/60mm setup left inadequate hand clearance.
+  Trial087's higher transfer and regularized slender-body inertias retained
+  the grip but did not puncture. The correctly contacted front/hem patches
+  deflected at approximately0.035N. Fresh trial089 explicitly tests a0.02N
+  contact gate, not a claim of calibrated cotton puncture strength. Exact
+  point-to-panel contact, shaft retention, four correct holes, tearing,
+  spring closure and release checks remain. This does not re-score older
+  failed trials or make a claim of native success.
+- Backups080–084 are local and verified:167,091,517bytes,244archive members.
+  Separate complete085,086 and087 archives are also local. The active089
+  trial and completed088 still need final backup before the Pod is stopped
+  and deleted. Keep the02:09:52UTC shutdown cap.

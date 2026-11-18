@@ -42,11 +42,11 @@
     },
     {
       "slug": "pin-a-loose-trouser-hem",
-      "scene": "Trial079 lifted the cloth. Trial080 rotated the pin in the grip and missed the correct loose section. Trial082 tests native finite-contact-patch friction; no full-score demo yet.",
+      "scene": "Current draft uses a75mm pin and100mm loose section for hand clearance. Trial087 retained the grip but cloth deflected before the0.2N threshold. Fresh trial089 tests an explicitly disclosed0.02N contact gate; no full-score demo yet.",
       "score": "No successful full demo",
       "media": null,
       "pr": null,
-      "remaining_local_work": "Demonstrate loaded four-hole threading and safe closure.",
+      "remaining_local_work": "Validate four loaded holes, spring closure and released retention, then run Dream and package audited evidence.",
       "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload.",
       "candidate_plan_actions": 1260
     },
@@ -64,11 +64,11 @@
     },
     {
       "slug": "fold-a-pop-up-laundry-hamper",
-      "scene": "Trial081 stopped on an overly strict jaw-opening check. Trial082 tests observed frame lift and native finite-contact-patch friction. Full fold and retainer sequence remain unfinished.",
-      "score": "0.0 development trials",
+      "scene": "Native short-end trial088 lost its grasp during twisting at action300. Earlier width-grip and higher-lift trials also failed to form a compact coil.",
+      "score": "No full-score native demo; latest score0.0",
       "media": null,
       "pr": null,
-      "remaining_local_work": "Demonstrate twist/nest folding and retaining-loop placement.",
+      "remaining_local_work": "Resolve native torque transfer and stable coiling, then implement retaining-loop placement. No further GPU trial is currently queued for this draft.",
       "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload.",
       "candidate_plan_actions": 440
     },
@@ -124,5 +124,5 @@
     "Safety-pin puncture, cuff drape and retention still need native evidence.",
     "Tattoo/PVC substrate compatibility is a qualification requirement, not a measured result."
   ],
-  "checkpoint_utc": "2026-11-18T00:56:40.944539+00:00"
+  "checkpoint_utc": "2026-11-18T01:26:57.515324+00:00"
 }
