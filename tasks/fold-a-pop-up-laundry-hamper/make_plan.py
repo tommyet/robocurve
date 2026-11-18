@@ -14,11 +14,11 @@ p.add(3,'approach opposite bound frame ends',{'left':(L-.035*RL[:,2],RL,.3),'rig
 p.add(2,'enclose the four stacked frame edges',{'left':(L,RL,.3),'right':(R,RR,.3)})
 p.add(2,'grip both seams',{'left':(L,RL,0.),'right':(R,RR,0.)})
 RL=Rotation.from_euler('x',35,degrees=True).as_matrix()@base;RR=Rotation.from_euler('x',145,degrees=True).as_matrix()@base
-p.add(3,'lift clear of the table',{'left':(L+[0,-.015,.10],RL,0.),'right':(R+[0,.015,.10],RR,0.)})
+p.add(3,'lift clear of the table',{'left':(L+[0,-.015,.18],RL,0.),'right':(R+[0,.015,.18],RR,0.)},'joint')
 axis=np.array([0.,1.,0.])
 for step in range(1,5):
- u=step/4;left=Rotation.from_rotvec(axis*np.radians(45*u)).as_matrix()@RL;right=Rotation.from_rotvec(axis*np.radians(-90*u)).as_matrix()@RR
- p.add(1.5,'twist the ends inward',{'left':(L+[0,-.015-.10*u,.10],left,0.),'right':(R+[0,.015+.10*u,.10],right,0.)},'joint')
+ u=step/4;left=Rotation.from_rotvec(axis*np.radians(0*u)).as_matrix()@RL;right=Rotation.from_rotvec(axis*np.radians(-90*u)).as_matrix()@RR
+ p.add(1.5,'twist the ends inward',{'left':(L+[0,-.015-.10*u,.18],left,0.),'right':(R+[0,.015+.10*u,.18],right,0.)},'joint')
 right=Rotation.from_rotvec(axis*np.radians(-90)).as_matrix()@RR
 p.add(3,'hold the crossing loops',{})
 p.add(3,'hold the nested frame for inspection',{})

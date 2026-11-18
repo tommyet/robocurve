@@ -110,7 +110,7 @@ def main():
    if not a.cpu_preview:m.draw(drawing)  # Native environment step already renders and updates camera buffers.
    capture(k);report.update(steps=k,measurements=m.measure(),score=m.score())
    if k%20==0:save();trace.flush()
-   if a.mode=='demo' and k==200:
+   if a.mode=='demo' and k>=200 and k%20==0:
     for side,end in zip(['left','right'],GRIP_ENDS):
      retained=sum(m.p('wire_%d_%02d'%(face,end))[2]>.88 and np.linalg.norm(m.p('wire_%d_%02d'%(face,end))-hands()[side]['tcp'])<.04 for face in range(4))
      if retained<2:raise RuntimeError('The frame stack did not lift with the hand; stop this development trial.')
