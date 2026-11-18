@@ -3,5 +3,14 @@
   "submission_ready": false,
   "full_score_demo": null,
   "dream_baseline": null,
-  "blocking_issue": "No compact native coil or retaining-loop demonstration. Earlier grip losses were improved; current tests diagnose fabric constraints and support interference. Full successful demo and Dream baseline remain required."
+  "blocking_issue": "Final native diagnostic077 retained its two grips through action435 but broke frame joint wire_joint_0_7 at445/500 actions and scored0. No compact coil or retaining-loop demonstration; no complete Dream baseline or media upload.",
+  "latest_native_diagnostic": {
+    "run": "hamper-probe-077",
+    "status": "failed",
+    "steps": 445,
+    "requested_steps": 500,
+    "score": 0.0,
+    "failure": "wire_joint_0_7",
+    "submission_evidence": false
+  }
 }
