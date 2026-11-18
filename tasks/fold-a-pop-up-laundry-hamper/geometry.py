@@ -71,4 +71,7 @@ for part in BODIES:
  part['pos']=(CENTER+layout.apply(np.asarray(part['pos'])-CENTER)).tolist()
  part['quat']=(layout*Rotation.from_quat(part.get('quat',[0,0,0,1]))).as_quat().tolist()
 GRIP_ENDS=(41,17)
+# Finite rubber-pad contact area supplies native spin friction at a grip.
+for part in BODIES:
+ if part['name'].startswith('wire_'):part.update(torsional_patch_radius=.004,min_torsional_patch_radius=.0015)
 finalize(BODIES,JOINTS)

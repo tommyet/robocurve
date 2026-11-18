@@ -41,3 +41,5 @@ Rescore recorded native body poses with `python tasks/fold-a-pop-up-laundry-hamp
 Fixed layout; no random seed. Limit: 1,600 control steps (80 seconds at 20 Hz). Actual runtime per trial, complete native evidence and independent scoring will be recorded after successful validation. Do not upload a CPU plot or a kinematic reach check as a successful demo.
 
 The current candidate plan only tests the twist/nest motion. Securing the retaining loop is not implemented; this is not full-score evidence.
+
+Native gripping contact uses a small torsional friction patch to approximate soft protective pad covers (1.5 mm minimum radius). This supplies frictional grip torque under contact load; it is not a hand attachment. The parameters are uncalibrated. [PhysX contact-patch documentation](https://nvidia-omniverse.github.io/PhysX/physx/5.8.0/_api_build/classPxShape.html) describes this mechanism.

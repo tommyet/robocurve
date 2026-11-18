@@ -53,6 +53,8 @@ def spawn(prim_path,cfg,translation=None,orientation=None,**kwargs):
    UsdPhysics.CollisionAPI.Apply(g.GetPrim())
    if kind=='mesh':UsdPhysics.MeshCollisionAPI.Apply(g.GetPrim()).CreateApproximationAttr('convexHull')
    collision=PhysxSchema.PhysxCollisionAPI.Apply(g.GetPrim());collision.CreateContactOffsetAttr(spec.get('contact_offset',.00025));collision.CreateRestOffsetAttr(0.)
+   if spec.get('torsional_patch_radius'):
+    collision.CreateTorsionalPatchRadiusAttr(spec['torsional_patch_radius']);collision.CreateMinTorsionalPatchRadiusAttr(spec.get('min_torsional_patch_radius',0.))
    bind_physics_material(label,mat,stage=stage)
   visual=label+'/material';v=sim.PreviewSurfaceCfg(diffuse_color=tuple(map(float,shape.get('color',spec.get('color',(.5,.5,.5))))),roughness=.6);v.func(visual,v);bind_visual_material(label,visual,stage=stage)
  adjacent=[Sdf.Path(root+'/'+j['b']) if j['a']==spec['name'] else Sdf.Path(root+'/'+j['a']) for j in JOINTS if spec['name'] in (j['a'],j['b']) and j.get('enabled',True) and not j.get('collision',False)]
