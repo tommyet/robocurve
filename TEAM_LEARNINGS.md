@@ -5677,3 +5677,26 @@ editing, merge both agents' findings, and commit/push the update with the work.
   explains elastic triangle surfaces and their limitations. The proposed bicycle
   tensioner uses the ordinary [single-pulley mechanism](https://surlybikes.com/products/singleator),
   rather than allowing steel links to stretch. Both remain development models.
+- Native reset gates now pass for the cap, ponytail band, plug and full-size
+  bicycle. The new hamper initially failed because its attached band collided
+  with the frame at the seam (5.28x local stretch). A 12 mm sewn textile tab
+  separates those contact regions while keeping band/packet contact active;
+  reset002 is intact, with frame stretch about1.0012x and band1.53x. This is a
+  reset result, not a successful fold or validated final material model.
+- The first cap and ponytail motion probes missed their pickups and were stopped
+  early. The cap rim lay on the table; the ponytail's solid support obstructed
+  the lower fingers. Revised drafts use an open-up cap with side grips and two
+  narrow supports under the loose elastic. Nothing is pre-attached to the robot.
+- Brush003 reached the bristles but mostly passed above the hair; its waste dish
+  blocked the brush-hand grasp. Brush004 moves the dish and lifts the brush for
+  underside access. Plug001 lifted both objects but missed the carrier lip after
+  the plug shifted within the grasp. The next controller reads the actual plug
+  and screwdriver poses to align the blade; it only commands robot joints.
+- Chain hold003 passes with0 front/9 rear engaged links and no broken joints.
+  The bicycle rests on its non-drive side, with a passive single-pulley chain
+  tensioner. An initial quarter-turn manipulation probe is authored. Final
+  scoring now requires both crank rotation and observed chain advance, so
+  spinning an unengaged/slipping crank cannot satisfy the function check.
+- No full-score demonstration or upstream PR exists for any of this batch yet.
+  The single RTX4090 remains active; do not mistake diagnostic source archives
+  or offline reach audits for completed submissions.

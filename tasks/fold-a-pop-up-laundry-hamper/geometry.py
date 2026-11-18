@@ -26,7 +26,9 @@ for i in range(N):CLOTH_TRIS.append([0,1+i,1+(i+1)%N])
 for level in range(LEVELS-1):
  for i in range(N):
   a=1+level*N+i;b=1+level*N+(i+1)%N;c=a+N;d=b+N;CLOTH_TRIS += [[a,c,d],[a,d,b]]
-M=64;radius=.300/(2*np.pi);anchor=FRAME_POINTS[N];out=np.r_[-inside[0],0.];tangent=np.cross([0,0,1],out);centre=anchor+out*radius
+M=64;radius=.300/(2*np.pi);anchor=FRAME_POINTS[N];out=np.r_[-inside[0],0.];tangent=np.cross([0,0,1],out);centre=anchor+out*(radius+.012)
+TAB_POINTS=np.array([anchor,anchor+out*.006+tangent*.002,anchor+out*.012,anchor+out*.006-tangent*.002])
+TAB_TRIS=[[0,1,2],[0,2,3]]
 BAND_POINTS=[];BAND_TRIS=[]
 for r in [radius-.0025,radius,radius+.0025]:
  for i in range(M):
@@ -34,7 +36,8 @@ for r in [radius-.0025,radius,radius+.0025]:
 for row in range(2):
  for i in range(M):
   a=row*M+i;b=row*M+(i+1)%M;c=a+M;d=b+M;BAND_TRIS += [[a,b,c],[b,d,c]]
-SURFACES=[dict(name='frame',points=FRAME_POINTS,tris=FRAME_TRIS,mass=.150,youngs=8e11,poisson=.3,thickness=.00045,friction=.8,rest_offset=.0035,contact_offset=.0045,color=(.13,.29,.44)),
+SURFACES=[dict(name='tab',points=TAB_POINTS,tris=TAB_TRIS,mass=.0002,youngs=2e7,poisson=.3,thickness=.0005,friction=.5,rest_offset=.00025,contact_offset=.0006,color=(.13,.29,.44)),
+ dict(name='frame',points=FRAME_POINTS,tris=FRAME_TRIS,mass=.150,youngs=8e11,poisson=.3,thickness=.00045,friction=.8,rest_offset=.0035,contact_offset=.0045,color=(.13,.29,.44)),
  dict(name='cloth',points=CLOTH_POINTS,tris=CLOTH_TRIS,mass=.060,youngs=2e6,poisson=.3,thickness=.0003,friction=.4,rest_offset=.00015,contact_offset=.0007,color=(.28,.47,.62)),
  dict(name='band',points=BAND_POINTS,tris=BAND_TRIS,mass=.004,youngs=4e5,poisson=.45,thickness=.001,friction=1.,rest_offset=.0005,contact_offset=.001,color=(.10,.11,.13))]
 for s in SURFACES:
@@ -61,4 +64,9 @@ def spawn_surface(stage,root):
  def attach(name,a,b,ia,ib):
   p=stage.DefinePrim(root+'/'+name,'OmniPhysicsVtxVtxAttachment');p.GetRelationship('omniphysics:src0').SetTargets([Sdf.Path(root+'/'+a)]);p.GetRelationship('omniphysics:src1').SetTargets([Sdf.Path(root+'/'+b)]);p.GetAttribute('omniphysics:vtxIndicesSrc0').Set(ia);p.GetAttribute('omniphysics:vtxIndicesSrc1').Set(ib)
  attach('sewn_boundary','frame','cloth',list(range(N)),list(range(1+(LEVELS-1)*N,1+LEVELS*N)))
- attach('band_seam','frame','band',[N],[M+M//2])
+ # A 12 mm textile tab separates the sewn contact regions. The band still
+ # collides with the packet, which is essential to its retaining function.
+ for a,b in [('frame','tab'),('band','tab')]:
+  UsdPhysics.FilteredPairsAPI.Apply(stage.GetPrimAtPath(root+'/'+a)).CreateFilteredPairsRel().AddTarget(Sdf.Path(root+'/'+b))
+ attach('tab_seam','frame','tab',[N],[0])
+ attach('band_seam','tab','band',[2],[M+M//2])

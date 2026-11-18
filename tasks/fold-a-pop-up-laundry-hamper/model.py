@@ -30,7 +30,7 @@ class Model(NativeModel):
    p=self.nodes[s['name']];e=s['edges'];stretch=np.linalg.norm(p[e[:,1]]-p[e[:,0]],axis=1)/s['rest_lengths'];self.peak_stretch[s['name']]=max(self.peak_stretch[s['name']],float(stretch.max()))
   self.failed |= self.integrity_failed()
  def integrity_failed(self):
-  return super().integrity_failed() or any(not np.isfinite(v).all() for v in self.nodes.values()) or self.peak_stretch['frame']>1.02 or self.peak_stretch['cloth']>1.35 or self.peak_stretch['band']>3.5
+  return super().integrity_failed() or any(not np.isfinite(v).all() for v in self.nodes.values()) or self.peak_stretch['frame']>1.02 or self.peak_stretch['cloth']>1.35 or self.peak_stretch['band']>3.5 or self.peak_stretch['tab']>1.35
  def measure(self):
   wire=self.nodes['frame'];packet=np.vstack([wire,self.nodes['cloth']]);band=self.nodes['band'];centre=wire.mean(axis=0);_,_,axes=np.linalg.svd(wire-centre,full_matrices=False);local=(packet-centre)@axes.T;extent=np.ptp(local,axis=0)+.007
   _,_,ba=np.linalg.svd(band-band.mean(axis=0),full_matrices=False);across=ba[0]-axes[2]*float(ba[0]@axes[2]);across/=max(np.linalg.norm(across),1e-12)

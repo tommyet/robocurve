@@ -26,7 +26,7 @@ class Plan:
     p=np.asarray(p);o=0 if side=='left' else 7;p0,R0=poses[side]
     if side in goals:self.a[o:o+6]=b[o:o+6]+u*(goals[side]-b[o:o+6])
     else:
-     q,pe,re=ik.solve(p0+u*(p-p0),ik.matrix_to_quat_xyzw(ik.slerp_matrix(R0,R,u)),self.a[o:o+6],base_pos=station.BASES[side],iters=80);self.a[o:o+6]=q;errors=[max(errors[0],float(pe)),max(errors[1],float(re))]
+     q,pe,re=ik.solve(p0+u*(p-p0),ik.matrix_to_quat_xyzw(ik.slerp_matrix(R0,R,u)),self.a[o:o+6],base_pos=station.BASES[side],iters=80,rot_weight=.08);self.a[o:o+6]=q;errors=[max(errors[0],float(pe)),max(errors[1],float(re))]
     self.a[o+6]=b[o+6]+u*(g-b[o+6])
    self.frames.append(dict(action14=self.a.tolist(),stage=label))
   self.audit.append(dict(stage=label,position_error_m=errors[0],rotation_error_rad=errors[1]))

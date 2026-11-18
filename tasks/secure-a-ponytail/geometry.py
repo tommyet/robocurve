@@ -22,7 +22,10 @@ for s in range(STRANDS):
    axes={axis:dict(limits=(-180,180),stiffness=.000015,damping=.000002) for axis in ('rotX','rotY','rotZ')}
    JOINTS.append(joint(f'hair_join_{s}_{i}',prev['name'],name,[0,0,prev['shapes'][0]['length']/2],[0,0,-length/2],axes=axes,break_force=15.))
   else:JOINTS.append(joint(f'root_{s}','styling_head',name,a-HEAD,[0,0,-length/2],axes=bend_axes(.0002,.00002),break_force=20.))
-BODIES.append(body('elastic_rest',[ELASTIC[0],0,TABLE+.025],[box((.055,.055,.050))],mass=.02,fixed=True,color=(.59,.44,.28)))
+# Two plain 8 mm wooden blocks support the loose band without filling its
+# opening or obstructing the underside of either pickup point.
+for side in [-1,1]:
+ BODIES.append(body('elastic_rest_'+('left' if side<0 else 'right'),[ELASTIC[0]+side*.0165,0,TABLE+.025],[box((.008,.008,.050))],mass=.005,fixed=True,color=(.59,.44,.28)))
 # A standard small seamless elastic: 30 mm inside diameter, 3 mm flat width.
 M=64;POINTS=[]
 for radius in [.015,.0165,.018]:

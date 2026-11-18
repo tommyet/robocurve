@@ -13,8 +13,8 @@ p.add(2,'enclose the bound edges',{'left':(L,RL,.25),'right':(R,RR,.25)})
 p.add(2,'grip the spring frames',{'left':(L,RL,0.),'right':(R,RR,0.)})
 p.add(4,'lift the flattened hamper',{'left':(L+[0,-.015,.13],RL,0.),'right':(R+[0,.015,.13],RR,0.)})
 for i in range(1,9):
- u=i/8;a=Rot.from_euler('x',105*u,degrees=True).as_matrix()@RL;b=Rot.from_euler('x',-105*u,degrees=True).as_matrix()@RR
- lp=L+[.025*np.sin(np.pi*u),-.015-.205*u,.13+.045*u];rp=R+[-.025*np.sin(np.pi*u),.015+.205*u,.13+.045*u]
+ u=i/8;a=Rot.from_euler('x',90*u,degrees=True).as_matrix()@RL;b=Rot.from_euler('x',-90*u,degrees=True).as_matrix()@RR
+ lp=L+[.025*np.sin(np.pi*u),-.015-.160*u,.13+.045*u];rp=R+[-.025*np.sin(np.pi*u),.015+.160*u,.13+.045*u]
  p.add(1.5,'counter-twist and bring the loops together',{'left':(lp,a,0.),'right':(rp,b,0.)})
 p.add(3,'inspect the fold while held',{})
 print(json.dumps(p.save(Path(__file__).with_name('demo-plan.json'))))

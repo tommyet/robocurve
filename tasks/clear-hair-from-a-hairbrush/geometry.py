@@ -32,5 +32,5 @@ comb += [box((.017,.0012,.004),(.009,-.060+i*.003,0)) for i in range(26)]
 BODIES.append(body('comb',TOOL,comb,mass=.016,color=(.15,.44,.61),friction=.9,torsional_patch_radius=.005,min_torsional_patch_radius=.002))
 BODIES.append(body('comb_rest',[.43,-.145,TABLE+.0125],[box((.030,.020,.025))],fixed=True,mass=.03,color=(.58,.43,.27)))
 BODIES.append(body('comb_tail_rest',[.43,-.045,TABLE+.013],[box((.020,.020,.026))],fixed=True,mass=.02,color=(.58,.43,.27)))
-BODIES.append(body('waste_dish',[.30,.16,TABLE+.012],[box((.12,.11,.003)),box((.004,.11,.020),(-.06,0,.008)),box((.004,.11,.020),(.06,0,.008)),box((.12,.004,.020),(0,-.055,.008)),box((.12,.004,.020),(0,.055,.008))],fixed=False,mass=.12,color=(.77,.84,.75),friction=.7))
+BODIES.append(body('waste_dish',[.30,-.23,TABLE+.012],[box((.12,.11,.003)),box((.004,.11,.020),(-.06,0,.008)),box((.004,.11,.020),(.06,0,.008)),box((.12,.004,.020),(0,-.055,.008)),box((.12,.004,.020),(0,.055,.008))],fixed=False,mass=.12,color=(.77,.84,.75),friction=.7))
 finalize(BODIES,JOINTS)

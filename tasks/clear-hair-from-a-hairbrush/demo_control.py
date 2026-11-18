@@ -8,11 +8,16 @@ class DemoControl:
   if self.offset is None:
     from geometry import BRUSH,TOOL
     self.offset={'left':m.p('brush')-BRUSH,'right':m.p('comb')-TOOL}
+  if k<=140:
+   from geometry import BRUSH
+   self.offset['left']=m.p('brush')-BRUSH
   out=wanted.copy()
   for side,o in [('left',0),('right',7)]:
    target,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side])
    offset=self.offset[side]
-   if side=='right' and 180<k<=420:offset=self.offset['left']
+   if side=='right' and 180<k<=420:
+    from geometry import BRUSH
+    offset=m.p('brush')-(BRUSH+[0,0,.050])
    target+=min(1.,k/60)*offset
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=hands[side]['tcp']-p0;rbias=hands[side]['rotation']@R0.T
