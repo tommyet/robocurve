@@ -100,7 +100,7 @@ def main():
      obs=np.asarray(observed)
      wanted=controller.action(k,wanted,m,hands(),obs)
      for index,tracker in enumerate(trackers):
-      if index==1 and k>=340:
+      if index==1 and m.holes:
        # Slow integral gravity/load compensation during needle contact.
        # Fast proportional correction caused millimetre-scale oscillation.
        tracker.kp=0.;tracker.ki=.3;tracker.slew=.001

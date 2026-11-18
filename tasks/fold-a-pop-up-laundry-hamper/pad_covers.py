@@ -1,8 +1,8 @@
 """Ordinary 2 mm silicone pad covers, present in both demo and model runs.
 
 The fixed covers are robot accessories, not constraints on task objects. They
-supply native frictional contact only. Their soft material is approximated by
-rigid collision surfaces; force is still capped at 40 N per finger.
+supply native frictional contact through a rigid collision approximation.
+The force ceiling remains40 N/finger.
 """
 import numpy as np
 from scipy.spatial.transform import Rotation

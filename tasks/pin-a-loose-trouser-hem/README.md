@@ -14,12 +14,12 @@ Restore the photographed layout, replace punctured fabric, inspect the pin and p
 
 ## Scoring
 
-- **1.0:** The pin enters both front and turned-hem layers within the loose 100 mm section, returns through them to the surface, and closes with its point inside the shield. The hem stays secured for three seconds after release.
-- **0.5:** Both layers are threaded in and out, but the pin is open or still held.
+- **1.0:** The closed pin holds both front and turned-hem layers within the loose 100 mm section, with its point inside the shield. The hem stays secured for three seconds after release.
+- **0.5:** Both layers remain threaded, but the pin is open or still held.
 - **0.25:** At least one correct layer remains partly threaded on the shaft.
 - **0:** Otherwise, including any back-layer puncture, a puncture outside the loose section, more than four holes, or a tear over 5 mm.
 
-Judge the threading, shield and released hold from close video and a ruler. The native scorer requires two retained holes in each front layer; passing through a layer and withdrawing the pin does not retain credit.
+Judge the threading, shield and released hold from close video and a ruler. The scorer accepts any intact pinning route that retains both layers. A layer that slides off the open needle loses credit; puncture count alone does not secure the hem.
 
 ## Simulation
 

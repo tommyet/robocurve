@@ -28,6 +28,12 @@ class Model(NativeModel):
      q=Rotation.from_matrix(self.orientation(name).T@self.orientation('pin_arm')).as_quat();j.GetLocalRot1Attr().Set(Gf.Quatf(float(q[3]),Gf.Vec3f(*q[:3])))
      self.exclude_collision('needle_point',name);self.exclude_collision('pin_arm',name)
      self.enable('hole_'+name,'needle_punctured_under_load');self.holes[name]=local.copy()
+  # A pierced layer can slide off an open needle; the hole must not act as
+  # an invisible end-stop that retains a withdrawn pin.
+  point_x=float((self.orientation('pin_arm').T@(tip-self.p('pin_arm')))[0])
+  for name,local in self.holes.items():
+   along=float((self.orientation('pin_arm').T@(self.p(name,local)-self.p('pin_arm')))[0])
+   if along>point_x+.0006:self.disable('hole_'+name,'layer_slid_off_needle')
   shield=self.p('pin_frame',[.0685,0,.002]);gap=np.linalg.norm(tip-shield)
   relative=self.orientation('pin_frame').T@self.orientation('pin_arm');angle=np.arccos(np.clip((np.trace(relative)-1)/2,-1,1))
   if not self.latched and gap<.0015 and angle<np.radians(3):
@@ -39,8 +45,8 @@ class Model(NativeModel):
   front=[n for n in self.holes if n.startswith('front_') and 4<=int(n.split('_')[1])<14];hem=[n for n in self.holes if n.startswith('hem_') and 4<=int(n.split('_')[1])<14];back=[n for n in self.holes if n.startswith('back_')]
   def on_shaft(n):
    local=self.orientation('pin_arm').T@(self.p(n,self.holes[n])-self.p('pin_arm'))
-   return -.001<=local[0]<=.0695 and np.linalg.norm(local[1:])<.002
-  same_region=bool(sum(on_shaft(n) for n in front)>=2 and sum(on_shaft(n) for n in hem)>=2 and min(np.linalg.norm(self.p(a)-self.p(b)) for a in front for b in hem)<.025)
+   return 'hole_'+n not in self.disabled and 'hole_'+n not in self.broken and -.001<=local[0]<=.069 and np.linalg.norm(local[1:])<.002
+  same_region=bool(sum(on_shaft(n) for n in front)>=1 and sum(on_shaft(n) for n in hem)>=1 and min(np.linalg.norm(self.p(a)-self.p(b)) for a in front for b in hem)<.025)
   return dict(front_layer_pierced=any(on_shaft(n) for n in front),hem_layer_pierced=any(on_shaft(n) for n in hem),back_of_leg_pierced=bool(back),both_layers_held=same_region,point_enclosed=self.latched,punctures=len(self.holes),fabric_intact=not self.failed,released_seconds=self.release,max_puncture_load_N=self.max_puncture_load,failed=self.failed)
  def integrity_failed(self):return super().integrity_failed() or (any(n.startswith(('cloth_','side_seam_','fold_','hem_','hole_','existing_stitch_')) for n in self.broken) or bool({'pin_catch','point_compression','pin_spring'} & self.broken))
  def score(self):

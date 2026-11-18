@@ -9,8 +9,8 @@ flip=np.eye(3)
 points=[np.mean([b['pos'] for b in BODIES if b['name'] in [f'wire_{f}_{i:02d}' for f in range(4)]],axis=0) for i in GRIP_ENDS]
 def stack_grip(angle, polarity=1.):
  a=np.radians(angle);z=np.array([np.cos(a),np.sin(a),0.]);x=np.array([0.,0.,polarity]);return np.column_stack([x,np.cross(z,x),z])
-RL=stack_grip(-40)
-RR=stack_grip(40,-1)
+RL=stack_grip(-50)
+RR=stack_grip(50,-1)
 L=points[0]-.010*RL[:,2];R=points[1]-.010*RR[:,2]
 p.add(3,'approach opposite frame ends from outside',{'left':(L-.035*RL[:,2],RL,.3),'right':(R-.035*RR[:,2],RR,.3)},'joint')
 p.add(2,'enclose the four stacked frame edges',{'left':(L,RL,.3),'right':(R,RR,.3)})

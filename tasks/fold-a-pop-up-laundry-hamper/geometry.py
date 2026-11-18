@@ -5,7 +5,7 @@ its final shape and no stage variable changes the frame rest angles.
 """
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
-N=48;A=.165;B=.265;CENTER=np.array([.29,0,TABLE+.112])
+N=12;A=.165;B=.265;CENTER=np.array([.29,0,TABLE+.112])
 BODIES.append(body("folding_board",[.29,0,TABLE+.050],[box((.220,.380,.100))],mass=1.,fixed=True,color=(.58,.40,.25)))
 # A rounded rectangle sampled at equal arclength, 33 x 53 cm overall.
 def rounded_rect(a,b,r=.025):
@@ -13,7 +13,7 @@ def rounded_rect(a,b,r=.025):
  for cx,cy,start in [(a-r,b-r,0),(-a+r,b-r,90),(-a+r,-b+r,180),(a-r,-b+r,270)]:
   for angle in np.linspace(start,start+90,50,endpoint=False):
    t=np.radians(angle);points.append([cx+r*np.cos(t),cy+r*np.sin(t)])
- p=np.array(points);p=np.vstack([p,p[0]]);length=np.linalg.norm(np.diff(p,axis=0),axis=1);arc=np.r_[0,np.cumsum(length)];u=np.linspace(0,arc[-1],N,endpoint=False)
+ p=np.array(points);p=np.vstack([p,p[0]]);length=np.linalg.norm(np.diff(p,axis=0),axis=1);arc=np.r_[0,np.cumsum(length)];u=(np.linspace(0,arc[-1],N,endpoint=False)-.0304)%arc[-1]
  return np.c_[np.interp(u,arc,p[:,0]),np.interp(u,arc,p[:,1])]
 P=rounded_rect(A,B);FRAMES=[]
 for face in range(4):
@@ -23,17 +23,17 @@ for face in range(4):
   BODIES.append(body(name,(a+b)/2,[box((length,.008,.003))],mass=8000*length*.004*.00045+300*length*.008*.003,color=(.13,.29,.44),quat=list(Rotation.from_matrix(R).as_quat()),friction=1.,contact_offset=.0001))
  for i in range(N):
   a=f'wire_{face}_{i:02d}';b=f'wire_{face}_{(i+1)%N:02d}';aa=next(q for q in BODIES if q['name']==a);bb=next(q for q in BODIES if q['name']==b)
-  axes={k:dict(limits=(-179,179),stiffness=s,damping=.0005) for k,s in [('rotX',.06),('rotY',.08),('rotZ',3.0)]}
+  axes={k:dict(limits=(-179,179),stiffness=s,damping=.000125) for k,s in [('rotX',.015),('rotY',.020),('rotZ',.75)]}
   JOINTS.append(joint(f'wire_joint_{face}_{i}',a,b,[aa['shapes'][0]['size'][0]/2,0,0],[-bb['shapes'][0]['size'][0]/2,0,0],axes=axes,break_force=100.,break_torque=1.5))
 # Each steel frame has a sewn 8 mm wide, 3 mm thick polyester binding.
 # The binding supplies its native collision/grip surface; spring mechanics remain steel.
 # Coarse flexible fabric panels span the frames. Native panels collide and fold.
-NX,NY=6,10;DX=.31/NX;DY=.51/NY
+NX,NY=3,5;DX=.31/NX;DY=.51/NY
 for face in range(4):
  for i in range(NX):
   for j in range(NY):
    name=f'mesh_{face}_{i}_{j}';pos=CENTER+[(i-(NX-1)/2)*DX,(j-(NY-1)/2)*DY,face*.004]
-   BODIES.append(body(name,pos,[box((DX*.98,DY*.98,.0006))],mass=.00025,color=(.26,.46,.61),friction=.6,contact_offset=.0001))
+   BODIES.append(body(name,pos,[box((DX*.98,DY*.98,.0006))],mass=.001,color=(.26,.46,.61),friction=.6,contact_offset=.0001))
    for di,dj in [(-1,0),(0,-1)]:
     if i+di>=0 and j+dj>=0:
      a=np.array([-di*DX/2,-dj*DY/2,0]);JOINTS.append(joint(f'fabric_{face}_{i}_{j}_{di}_{dj}',f'mesh_{face}_{i+di}_{j+dj}',name,a,-a,axes=bend_axes(.000001,.000001),break_force=20.))
@@ -70,7 +70,7 @@ layout=Rotation.from_euler('z',0,degrees=True)
 for part in BODIES:
  part['pos']=(CENTER+layout.apply(np.asarray(part['pos'])-CENTER)).tolist()
  part['quat']=(layout*Rotation.from_quat(part.get('quat',[0,0,0,1]))).as_quat().tolist()
-GRIP_ENDS=(5,29)
+GRIP_ENDS=(1,7)
 # Finite rubber-pad contact area supplies native spin friction at a grip.
 for part in BODIES:
  if part['name'].startswith('wire_'):part.update(torsional_patch_radius=.004,min_torsional_patch_radius=.0015,contact_offset=.0005,max_angular_velocity=10.,speculative_ccd=True)

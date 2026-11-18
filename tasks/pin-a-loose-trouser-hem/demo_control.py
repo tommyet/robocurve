@@ -2,7 +2,7 @@
 import numpy as np
 from scipy.optimize import least_squares
 class DemoControl:
- def __init__(self):self.start=None;self.closure=None;self.last_q=None;self.released_at=None;self.left_offset=None;self.right_offset=None;self.feedback_goal=None;self.threaded_at=None;self.exit_names=None;self.exit_axis=None;self.exit_depth=None;self.exit_anchor=None
+ def __init__(self):self.start=None;self.closure=None;self.last_q=None;self.released_at=None;self.left_offset=None;self.right_offset=None;self.feedback_goal=None;self.threaded_at=None;self.exit_names=None;self.exit_axis=None;self.exit_depth=None;self.exit_anchor=None;self.seating_anchor=None
  def action(self,k,wanted,m,hands,current):
   from yam_arena import ik,station
   from geometry import BODIES
@@ -37,7 +37,10 @@ class DemoControl:
    wanted=wanted.copy();wanted[7:13]=least_squares(grip_error,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=30).x
    if k in [100,120,220]:m.events.append(dict(event='demo_coil_grip_check',step=k,coil_local_mm=(1000*hands['right']['rotation'].T@(m.p('pin_frame')-hands['right']['tcp'])).tolist(),fk_bias_mm=(1000*bias).tolist()))
    return wanted
-  if self.threaded_at is None and m.measure()["both_layers_held"]:self.threaded_at=k
+  if self.threaded_at is None and m.measure()["both_layers_held"]:
+   axis=m.orientation('pin_arm')[:,0];tip=m.p('needle_point',[.001,0,0])
+   depth=min(float((tip-m.p(name,local))@axis) for name,local in m.holes.items())
+   if depth>=.006:self.threaded_at=k
   if self.threaded_at is not None:return self.close(700+k-self.threaded_at,wanted,m,hands,current)
   if k>1000:return self.close(k-300,wanted,m,hands,current)
   h=hands['right'];tip=m.p('needle_point',[.001,0,0]);axis=m.orientation('pin_arm')[:,0]
@@ -94,27 +97,13 @@ class DemoControl:
     goal=self.feedback_goal.copy()
    else:goal=self.end
    goalaxis=self.direction.copy()
-   if remaining and len(m.holes)>=2:
-    # Pivot smoothly around the entry holes, then advance toward the exit.
-    # Rotating and translating abruptly together can tear the pierced cloth.
-    if self.exit_names is None:
-     self.exit_names=list(m.holes)[:2]
-     self.exit_axis=axis.copy()
-    if self.exit_anchor is None:self.exit_anchor=np.mean([m.p(name,m.holes[name]) for name in self.exit_names],axis=0)
-    anchor=self.exit_anchor
-    exit_point=m.p(remaining[0][0],remaining[0][1])
-    toward=exit_point-anchor;distance=np.linalg.norm(toward)
-    if distance>.003:
-     desired=toward/distance
-     angle=np.arccos(np.clip(self.exit_axis@desired,-1,1))
-     u=min(1.,.006/max(angle,1e-9))
-     self.exit_axis=(1-u)*self.exit_axis+u*desired
-     self.exit_axis/=np.linalg.norm(self.exit_axis)
-     if self.exit_depth is None:self.exit_depth=max(.002,float((tip-anchor)@self.exit_axis))
-     aligned=np.arccos(np.clip(axis@desired,-1,1))<np.radians(6)
-     if aligned:self.exit_depth=min(distance+.004,self.exit_depth+.0005)
-     goal=anchor+self.exit_axis*self.exit_depth
-     goalaxis=self.exit_axis.copy()
+   if m.measure()['both_layers_held']:
+    # Seat both layers a few millimetres along the shaft, then close around
+    # their free edge. Scoring allows any intact, retained pinning route.
+    if self.seating_anchor is None:
+     self.seating_anchor=np.mean([m.p(name,local) for name,local in m.holes.items()],axis=0)
+    goal=self.seating_anchor+.010*self.direction
+    goalaxis=self.direction.copy()
   goalaxis/=np.linalg.norm(goalaxis)
   from scipy.spatial.transform import Rotation
   down=np.array([0.,0.,-1.]);down-=goalaxis*(down@goalaxis);down/=max(np.linalg.norm(down),1e-9)
@@ -129,14 +118,20 @@ class DemoControl:
 
  def close(self,k,wanted,m,hands,current):
   from yam_arena import ik,station
-  from scipy.spatial.transform import Rotation
   if self.closure is None:
-   if not m.measure()['both_layers_held']:raise RuntimeError('Threading incomplete; stop the development demo before attempting closure.')
-   # Press the blunt shank 13 mm behind the point, not the sharp tip.
-   tip=m.p('pin_arm',[.055,0,0]);shield=m.p('pin_frame',[.055,0,0]);z=shield-tip;z/=np.linalg.norm(z)
-   x=np.cross(m.orientation('pin_arm')[:,0],z);x/=np.linalg.norm(x);R=np.column_stack([x,np.cross(z,x),z])
-   self.closure=dict(tip=tip,shield=shield,R=R,left=hands['left']['tcp'].copy(),leftR=hands['left']['rotation'].copy(),right=hands['right']['tcp'].copy(),rightR=hands['right']['rotation'].copy())
-  c=self.closure;R=c['R'];z=R[:,2];near=c['tip']-.030*z+.006*R[:,0];pressed=c['shield']-.006*z+.006*R[:,0]
+   if not m.measure()['both_layers_held']:raise RuntimeError('Threading incomplete before closure.')
+   self.closure=dict(left=hands['left']['tcp'].copy(),leftR=hands['left']['rotation'].copy(),right=hands['right']['tcp'].copy(),rightR=hands['right']['rotation'].copy())
+   m.events.append(dict(event='demo_begin_pin_closure',time=m.time))
+  c=self.closure
+  if k<=860 or 'grasp' not in c:
+   # Pinch both arms near the shield, with the closing axis across their gap.
+   # The ordinary fingertips provide the force; the catch still requires
+   # the measured point to enter its shield at the correct angle.
+   a=m.p('pin_arm',[.061,0,0]);b=m.p('pin_frame',[.061,0,0]);x=a-b;x/=np.linalg.norm(x)
+   z=np.cross(m.orientation('pin_arm')[:,0],x);z/=np.linalg.norm(z)
+   if z[2]>0:z=-z
+   R=np.column_stack([x,np.cross(z,x),z]);c['R']=R;c['grasp']=(a+b)/2-.006*z
+  R=c['R'];z=R[:,2];near=c['grasp']-.035*z
   def mix(a,b,start,end):
    u=np.clip((k-start)/(end-start),0,1);u=u*u*(3-2*u);return a*(1-u)+b*u
   def solve(side,p,targetR):
@@ -147,11 +142,13 @@ class DemoControl:
   out=wanted.copy();out[7:13]=self.last_q;out[13]=0.
   if k<=740:p=c['left'];targetR=c['leftR'];grip=.7
   elif k<=800:p=mix(c['left'],c['left']+[0,0,.08],740,800);targetR=c['leftR'];grip=.7
-  elif k<=880:
-   p=mix(c['left']+[0,0,.08],near,800,880);targetR=ik.slerp_matrix(c['leftR'],R,np.clip((k-800)/80,0,1));grip=0.
-  else:p=mix(near,pressed,880,1000);targetR=R;grip=0.
+  elif k<=860:
+   p=mix(c['left']+[0,0,.08],near,800,860);targetR=ik.slerp_matrix(c['leftR'],R,np.clip((k-800)/60,0,1));grip=.5
+  elif k<=920:p=mix(near,c['grasp'],860,920);targetR=R;grip=.5
+  else:p=c['grasp'];targetR=R;grip=.5*(1-np.clip((k-920)/80,0,1))
   if m.latched and self.released_at is None:self.released_at=k
-  if self.released_at is not None or k>1080:
-   start=self.released_at or 1080;u=np.clip((k-start)/60,0,1);p=pressed-u*.09*z;targetR=R;grip=.7
-   out[7:13]=solve('right',c['right']+[0,-.06*u,.09*u],c['rightR']);out[13]=.7
+  if self.released_at is not None:
+   u=np.clip((k-self.released_at)/80,0,1);p=c['grasp']-u*.10*z;targetR=R;grip=.7
+   out[7:13]=solve('right',c['right']+[0,-.07*u,.10*u],c['rightR']);out[13]=.7
+  elif k>1100:raise RuntimeError('The native pinch did not close the safety-pin catch.')
   out[:6]=solve('left',p,targetR);out[6]=grip;return out
