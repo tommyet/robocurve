@@ -26,11 +26,13 @@ for slug in SLUGS:
    if n.startswith('leaf_'):move(m,n,m.p(n)-[0,0,1.])
   check(m,0.,'discarded leaf earns no credit')
  elif slug=='pin-a-loose-trouser-hem':
-  m.holes={n:np.zeros(3) for n in ['front_4_0','front_5_0','hem_4_1','hem_5_1']};check(m,.5,'both layers threaded in and out')
+  m.holes={n:np.zeros(3) for n in ['front_6_0','hem_6_0','front_9_0','hem_9_1']}
+  for n,x in zip(m.holes,[.010,.013,.026,.029]):move(m,n,m.p('pin_arm',[x,0,0]))
+  check(m,.5,'both loose layers retained on the shaft')
   m.latched=True;m.release=3.;check(m,1.,'threaded pin closed and released')
   m.holes['back_4_0']=np.zeros(3);check(m,0.,'back of leg pinned shut')
  elif slug=='apply-a-temporary-tattoo':
-  original={b['name']:np.asarray(b['pos'])-g.PAPER for b in g.BODIES if b['name'] in g.INK}
+  original={n:np.asarray(p) for n,p in g.INK_ORIGINAL.items()}
   for n,p in original.items():m.transferred[n]=np.array([p[0],g.ARM_RADIUS*np.sin(p[1]/g.ARM_RADIUS),g.ARM_RADIUS*np.cos(p[1]/g.ARM_RADIUS)])
   for n in m.names:
    if n.startswith('paper_'):move(m,n,m.p(n)+[0,.2,0])
