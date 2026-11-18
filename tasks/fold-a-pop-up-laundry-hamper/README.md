@@ -34,7 +34,7 @@ Use the Python 3.12 / Isaac 6.1 / YAM environment targeted in `ENVIRONMENT.json`
 OMNI_KIT_ACCEPT_EULA=YES python tasks/fold-a-pop-up-laundry-hamper/run.py --mode hold --steps 60 --out /tmp/fold-a-pop-up-laundry-hamper-hold
 ```
 
-A complete robot demonstration is not authored yet. This hold command inspects the native reset only; it cannot establish task feasibility. Add and validate `make_plan.py` and `demo-plan.json` before collecting demonstration or Dream evidence.
+The existing candidate tests pickup and twisting. It has not produced a compact coil, and retaining-loop placement is not implemented. The hold command checks reset only; it cannot establish task feasibility.
 
 Rescore recorded native body poses with `python tasks/fold-a-pop-up-laundry-hamper/rescore.py /tmp/fold-a-pop-up-laundry-hamper-demo`. The scorer checks frozen source hashes, trace continuity, bounded joint actions, native break events, and the outcome. This supports, and does not replace, visual inspection of the contact and material behaviour.
 

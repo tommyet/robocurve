@@ -8,7 +8,7 @@ A safety pin can hold a loose turned trouser hem until it can be sewn properly.
 
 ## Setup and reset
 
-An inside-out cotton trouser cuff, 180 mm across and 240 mm long, rests over a 140 x 190 x 100 mm wooden sewing support inserted between its faces. The 20 mm turned front hem overhangs the support by 46 mm toward the left arm; its middle 100 mm of stitching is loose. The back stays below the support. An ordinary 75 mm steel safety pin lies open toward the right arm. Both hands start open.
+An inside-out cotton trouser cuff, 180 mm across and 240 mm long, rests over a 140 x 190 x 60 mm wooden sewing support inserted between its faces. The 20 mm turned front hem overhangs the support by 46 mm toward the left arm; its middle 100 mm of stitching is loose. The back stays below the support. An ordinary 75 mm steel safety pin lies open toward the right arm. Both hands start open.
 
 Use a cotton-twill trouser cuff with a 20 mm factory crease; unpick the securing thread from a 100 mm front section and remove loose thread. Replace punctured fabric after each trial. Restore the photographed fold, inspect the pin and protective pad covers, and leave the pin open.
 
@@ -46,4 +46,15 @@ The larger 75 mm pin is an ordinary available size: [Spentex blanket/kilt steel 
 
 The slender pin bodies use explicit regularized diagonal inertias (frame: 1e-7, 2e-6, 2e-6 kg m²; arm: 1e-8, 5e-7, 5e-7 kg m²). This suppresses tiny-axis numerical spin; it is not calibrated hardware inertia and does not attach the pin to a hand.
 
-Puncture uses a 0.02 N loaded-contact gate at the needle point inside a cloth panel, with the point meeting the panel plane at an oblique angle. This is a coarse contact/penetration approximation, not a calibrated cotton puncture force. It preserves needle placement, shaft threading, tearing and spring closure; real-world judging uses the visible fastening outcome. Unloaded native probe noise was approximately 0.0006 N.
+
+The 0.02 N contact-gate experiments are excluded from submission evidence.
+The review prompt requires roughly realistic force as well as the correct
+motion; disclosure alone does not make a light-touch substitute valid.
+Published sewing-needle analysis reports puncture peaks on a newton scale,
+not evidence for this task's 0.02 N gate:
+[needle-penetration study](https://www.mdpi.com/2073-8994/18/4/635).
+That study is not a calibration of this safety pin and cotton cuff. The current
+1.0 N threshold is provisional and has no successful native demonstration.
+Validate a defensible material/force match, gripping, return threading and
+closure before collecting submission evidence. Do not re-score the older
+low-force trials as evidence for this version.

@@ -1,0 +1,7 @@
+{
+  "status": "development_draft",
+  "submission_ready": false,
+  "full_score_demo": null,
+  "dream_baseline": null,
+  "blocking_issue": "No stable native coil. Grips were lost during twist trials; retaining-loop placement is not implemented."
+}

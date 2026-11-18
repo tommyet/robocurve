@@ -2,7 +2,7 @@
   "date": "2026-11-17",
   "submission_ready": false,
   "new_task_prs_opened": 6,
-  "native_runs": "Multiple native resets and demos recorded; see task entries",
+  "native_runs": "Six submitted tasks have full-score native demos. Pin and hamper are unfinished development drafts.",
   "dream_runs": "Six submitted tasks have complete native demos and Dream baselines. Pin and hamper remain development work.",
   "bracelet": {
     "pr": 2187,
@@ -42,12 +42,12 @@
     },
     {
       "slug": "pin-a-loose-trouser-hem",
-      "scene": "Current draft uses a75mm pin and100mm loose section for hand clearance. Trial087 retained the grip but cloth deflected before the0.2N threshold. Fresh trial089 tests an explicitly disclosed0.02N contact gate; no full-score demo yet.",
-      "score": "No successful full demo",
+      "scene": "Trial089 achieved two holes at0.02N then lost the pin. Trial090 failed integrity at action513. Both are excluded from submission evidence because their force gate is unsupported. Current provisional1.0N material law is unvalidated.",
+      "score": "No qualifying full-score demo",
       "media": null,
       "pr": null,
-      "remaining_local_work": "Validate four loaded holes, spring closure and released retention, then run Dream and package audited evidence.",
-      "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload.",
+      "remaining_local_work": "Establish realistic loaded puncture, reliable gripping, return threading and closure; then validate a full demo and Dream baseline.",
+      "remaining_validation": "Resolve the documented physical blockers, then obtain a full-score native demo, complete Dream baseline, independent audit, visual review and media upload.",
       "candidate_plan_actions": 1260
     },
     {
@@ -68,8 +68,8 @@
       "score": "No full-score native demo; latest score0.0",
       "media": null,
       "pr": null,
-      "remaining_local_work": "Resolve native torque transfer and stable coiling, then implement retaining-loop placement. No further GPU trial is currently queued for this draft.",
-      "remaining_validation": "Native reset, full-score demo, counterfactual failure inspection, complete Dream trial, frozen trace audit, visual review and media upload.",
+      "remaining_local_work": "Resolve native torque transfer and stable coiling, then implement retaining-loop placement. No further GPU trial queued.",
+      "remaining_validation": "Resolve the documented physical blockers, then obtain a full-score native demo, complete Dream baseline, independent audit, visual review and media upload.",
       "candidate_plan_actions": 440
     },
     {
@@ -110,12 +110,17 @@
     }
   ],
   "compute": {
-    "status": "Active single Secure Cloud GPU; independent eight-hour shutdown cap $21.52",
+    "status": "Stopped and deleted; complete account inventory confirms no active Runpod pods.",
     "hourly_usd": 2.69,
     "started_utc": "2026-11-17T18:09:52Z",
     "scheduled_shutdown_utc": "2026-11-18T02:09:52Z",
     "credentials": "Dream key remains on Mac loopback bridge",
-    "estimate_not_invoice": true
+    "estimate_not_invoice": true,
+    "stopped_utc": "2026-11-18T01:39:51.952806+00:00",
+    "deleted_utc": "2026-11-18T01:40:26.499304+00:00",
+    "estimated_compute_usd": 20.1747,
+    "elapsed_hours": 7.4999,
+    "storage_note": "No persistent mounts or volumes created for this Pod; compute estimate excludes storage and Dream usage."
   },
   "risks": [
     "Potato mashing overlaps SPARTA; novelty remains unresolved, not guaranteed.",
@@ -124,5 +129,12 @@
     "Safety-pin puncture, cuff drape and retention still need native evidence.",
     "Tattoo/PVC substrate compatibility is a qualification requirement, not a measured result."
   ],
-  "checkpoint_utc": "2026-11-18T01:26:57.515324+00:00"
+  "checkpoint_utc": "2026-11-18T01:41:41.081613+00:00",
+  "backups": {
+    "trial_folders": 151,
+    "files": 4664,
+    "missing_files": 0,
+    "location": "Local ignored artifacts; source and handoff notes are in Git."
+  },
+  "completion": "6 of 8 tasks submitted and received. Safety-pin hem and pop-up hamper are not ready and were not submitted."
 }

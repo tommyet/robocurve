@@ -1,6 +1,6 @@
 # Shared working notes
 
-Last updated: 2026-11-17 UTC. Read this before starting work; update it when an
+Last updated: 2026-11-18 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
@@ -1397,7 +1397,7 @@ is private and is not a submitted task.
   identity-world jaw anchor now stores the actual enclosed world positions;
   reopening disables it. Native cloth is never moved by the peg law. Final
   released-hold inspection and a second clip still remain before any demo claim.
-- The child-shirt draft now specifies two pegs at least100mm apart, replacing
+- The child-shirt draft now specifies two pegs at least100 mm apart, replacing
   the provisional180mm requirement before final evidence. This still requires
   two independent real captures,5s unsupported hold and20mm table clearance.
   It permits useful drying with this small garment instead of an arbitrary
@@ -1607,7 +1607,7 @@ is private and is not a submitted task.
 - Staple193 passes the corrected steel-volume continuity check, but the tool
   leaves the staple in the sheets after lifting. It was stopped early at405
   logged actions, before unused release motion. More seriously, before robot
-  contact the minimum wire-centre height changes from−0.360mm at reset to
+  contact the minimum wire-centre height changes from−0.360 mm at reset to
   −4.909mm after action1, and stays near−5.10mm. The passive clinch changes in
   the first50ms; investigate this before another extraction run. No initial
   nonadjacent steel-box overlap was found by the local SAT check, so do not
@@ -2261,7 +2261,7 @@ is private and is not a submitted task.
   with native rest-shape bending: eight sampled reset states have no transverse
   crossings, final fixtures are clear, maximum strain4.447%. Raised180mm support
   and lateral pickup125 completes320 actions with clean sampled self/fixture/robot
-  contact, but misses the grasp (hem lift0.73mm). The old100mm setup and invalid113
+  contact, but misses the grasp (hem lift0.73mm). The old100 mm setup and invalid113
   run must not be described as validated garment manipulation.
 - Tie119 achieves physical tip retention but its wide strip crosses itself
   after the original hand opens (up to1.95mm penetration). Corrected126 raises
@@ -2698,7 +2698,7 @@ is private and is not a submitted task.
   numerical comparison, with material and guards unchanged.
 - Seam045 finds both transient grazing and a later0.878mm penetration into
   intact fabric. The crossing guard must remain. Increasing contact generation
-  offset to0.75mm in047 is correctly authored but fails sooner; the untouched
+  offset to0.75 mm in047 is correctly authored but fails sooner; the untouched
   cloth reaches0.7m/s transverse speed. A bounded contact-correction-velocity
   comparison is next. Do not call these faults harmless or claim cutting.
 - Icing038/042 remains uneven (current scores0.25,0,0), despite conserved
@@ -2730,7 +2730,7 @@ is private and is not a submitted task.
   it was too short to establish stability. Two YAM actions take about5seconds each.
 - Shirt035 physically opens a passive peg from2.72mm to8.32mm, holds it open,
   closes it and leaves it on the line. The preceding carried-shirt approach
-  brushed the peg away. The next plan keeps the shirt260mm forward until the
+  brushed the peg away. The next plan keeps the shirt260 mm forward until the
   opening is established. No hanging-shirt success has yet been demonstrated.
 - Tie035 removes the shoulder collision but the shallow narrow-end grasp slips
   during the wrap. A deeper ordinary pinch is the next correction. A completed
@@ -5104,7 +5104,7 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Cost ledger/watchdog: tools/brev_gpu_budget.py arms before start, counts boot/setup/idle/jobs/shutdown, runs independently with laptop-awake guard and stops only the named existing VM. Window started02:24:44.754685UTC; stop request scheduled03:44:44 with10minbuffer; providerSTOPPED confirmed03:46:25.769939UTC. Conservative total81.6835876min (not invoice/credit-balance data), under90minwindow. All jobs serial/rootsoleGPUowner, no replacement/reset/driver loops. Ledger/events/status in ignored artifacts/native-four-task-20261114/revision-validation-20261116. No newGPUrestart is approved by this note. Do NOT reset the budget clock by opening another lease: at most38.3min of the user's original120minvalidation upper bound remains, subject to actual credits and user direction.
 - Hair frame repair: HEAD_QUAT=(0,0,1,0), noseworld+X; root/segment/scalp/fixed-joint/scorer frames agree. Initial orientation001 failed before stepping because NativeDetentBinding used nonexistent sim.backend_manager. Installed/pinned API is sim.physics_manager; verify from cached sources before boot, not by expensive guesses. Corrected orientation002 passed180rows/9s: headtranslation4.22e-7m, rotation3.41e-5deg, skin/root intact, no drying while off.82actual native actors captured. Trace24abfac4e55b8707b0f60adf96b443091a258c4a355f18e80d189040b91433a3.
 - Real hair-arm sweep001 latched sliderON and retained power~.93 after withdrawal, then failed straight lift at40.7s/814rows; no drying. Measured grasp shift4.2mm/2.64deg versus hand target miss74mm/20.9deg, nominal IK~.093mm. Standard YAM already compensates its own link gravity.3779c6b adds ONLY measured held dryer+switch payload gravity via normal qtargets(tau/K), unchanged physical gains/effort caps, ramped at lift, original pre-lift5mm/5deg grasp guard and no double-compensation at sweep handoff; peer reviewed,53checksPASS. Sweep002 still failed at40.65s/813rows, no drying. Massreadback~.483kg; no more native attempts. Trace13fa63aa7e0b893a45e043decf2ad84e1e66777bcd5b5f9838b5712c6418ddb9. Scene hash unchanged versus pre-FF, so do not attribute success to physics retuning.
-- Subsequent CPU audit uses actual POSTSTEP native body-link poses and corrected collision-origin RPY. First signed overlap34.00s: tip_left carrier piece57 versus positive-Y cradle_1; minimum-0.422mm. Actual STL vertices enter holder volume by34.70s (piece47,41um), terminal21um. Geometry is not contact-force telemetry. Proposed15UP/Y-90/UP85 route collides; Xwithdrawal clears holder but hits a joint limit. Evidence/helper snapshots in experiments/hair-holder-egress-20261116 (not competition task code). A further front-grasp candidate at handlelocalZ-65mm/toolZ+X/jawX-Y clears100mmhand sweep by.618mm and retains7.06deg margin after FF. UNACQUIRED/transition/fullarm/head/opposedcontacts unproved; no production edit/native run.
+- Subsequent CPU audit uses actual POSTSTEP native body-link poses and corrected collision-origin RPY. First signed overlap34.00s: tip_left carrier piece57 versus positive-Y cradle_1; minimum-0.422mm. Actual STL vertices enter holder volume by34.70s (piece47,41um), terminal21um. Geometry is not contact-force telemetry. Proposed15UP/Y-90/UP85 route collides; Xwithdrawal clears holder but hits a joint limit. Evidence/helper snapshots in experiments/hair-holder-egress-20261116 (not competition task code). A further front-grasp candidate at handlelocalZ-65mm/toolZ+X/jawX-Y clears100 mmhand sweep by.618mm and retains7.06deg margin after FF. UNACQUIRED/transition/fullarm/head/opposedcontacts unproved; no production edit/native run.
 - Packing now has two items preloaded and four flaps folded closed but untaped. Initial contents and closure earn ZERO. Quarter credit needs11/44 actualconnected pressure-bonded seam cells and>=55mmpayout; halfall44; .75onecutdetachedstrip+both35mmends;1releasedretention2s. Closedreset00140rows/2s passed score0/noinvalid, containeditems, maxflapangle.05234deg, innerflapsunderoutertrue, stablewoundfilm. Trace4e88f63f33d9fc809f2723ae42055a9ad700d32048d180ac7112f7fbfb903a19. The preceding open-flap closure001 failed12.1s/242rows before sealing; do not reuse it as closed-scene proof.
 - Packing ordinaryRollPickupProbe:36 nominal full315-piece samplesPASS beforeGPU. Nativecf2f46b rollpickup001 timedout at372rows/18.6s duringfingerclosure, one opposedcontactframe, no verifiedlift/peel/seal. Actual twofinger×73rollfamily normal-force sensor excludesunrelatedfloor/props; family-sum gate isorder-invariant, individualnativefiltercolumnorderunverified. Force snapshots are PREACTION while body poses are POSTSTEP; retain timestamps, do not compare them as coeval.051c035corrects futurelabels to diagnostic/task_scoreNULL withseparate scorer_readback; native timeout has error.json/KeyboardInterrupt/no completed result. Trace3d26804536c04c863083190b78e50695f14fedfd3dd76279c0f2fef680687c73.107actual actorposes verified. Thin-film end acquisition remains unproved; no invented handle/tab or fake deposition was added.
 - Carton bottomrange changedfrominward-84.9 to0..274.9deg(center137.45); continuous240Hz evidence remains. Scorer invalidatesinward<-3deg and revisedfulltaskrequiresmeasured upright→invertedhold beforecut. Native outward-stop001 UNSEALED/BOTTOMUP passivecheck passed180rows/9s, bottomangles-.00727..-.00119deg, crease2.98um; validatesstopatclosed, NOTturnover/opening/collapse. Trace31db9104c060a4649f8c071a97e287ac1573ea57225fc43c29ee453800787796. Turnoverprototypefails9/16CPUposes;150mmheightfails8/16; NOturnoverGPUattempt. Historical158cut/park.25 is oldsetup only, not revisedfullproof.
@@ -5133,7 +5133,7 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Astra diagnosis: PI integrated persistent≈1.2mm tracking error, marching issueddepth≈50µm/control while actualgap/boxangle barelychanged. LEFTactualcontact only settled≈13.85, after rollingstage13.15. force_N is EXTERNAL diagnostic force, not contactforce; neither geometrydepth bound is aNewtonlimit. Do not attribute failure to insufficient force without native contact/torque telemetry.
 - **CPU repair57fdc5b/docs186c7f4:** Sol implemented transactional PI/planner/cache changes, full14D guarded backtracking, freshprevious-command checks for boundedholds, five-frame geometric settling gate. All physical/gain/effort/clearance/slew/progress bounds unchanged.97 task tests +3 controller checks PASS, including5 focused regressions with actual13.9s fixture, safehalfstep−1.979mm, rejectedphase/cache rollback and exactslew. Astra approvedCPUonly after finalregressions. NO native rerun; successful force/turnover remains unproved. Snapshot in experiments/carton-turnover-native-001-20261116; portablegeometry368checks are planning components, not this dynamic controller proof.
 - **Hair001/source7cf9177:**86controls/4.3simseconds/262actors before120s wall cap interrupted planned9s passiveorientation check (errorKeyboardInterrupt/exit124). Observedheadtranslation<0.47µm, headrotation<1.64e-7deg, crease<0.26µm, skinattachment<0.76µm, nose+X. No airflow/heat/drying. Partialobservation only, not completed smoke or fullphysics calibration. TraceSHAe09f1457a3fcfe2aac0a8a01324fd10e5cf180f859ff6596dde4a0df1e15f783. Native-observation docs95e08a4; holder/regrasp remains unresolved.
-- **Packing/source0451bdf:** open160/preloaded/60mm ordinaryleader reset40controls/2s passed score0, filmwoundshift76nm, maxanchor0.682µm, no bonds/cuts. Robotclosure172controls/8.6s scored0; finalappliedactionwas EASTpinch, nextfoldcommand rejected by unrelated-object315guard BEFOREstep. Flapssettlednaturallynear175°, zero completedflaps. Do NOT say it physically folded the flap merely because rejectednextphase wasfold. TraceSHAs resetb5f1f1ac2a2c7dc54212b91bd503e30ec39cd5516ac0d0ede6be5ecfc7f4c41f / closuree26e15e884265c15abf951b8a255de9a807c31628099bd9f4d8644e53a96c9f2. Docs72a825c.
+- **Packing/source0451bdf:** open160/preloaded/60 mm ordinaryleader reset40controls/2s passed score0, filmwoundshift76nm, maxanchor0.682µm, no bonds/cuts. Robotclosure172controls/8.6s scored0; finalappliedactionwas EASTpinch, nextfoldcommand rejected by unrelated-object315guard BEFOREstep. Flapssettlednaturallynear175°, zero completedflaps. Do NOT say it physically folded the flap merely because rejectednextphase wasfold. TraceSHAs resetb5f1f1ac2a2c7dc54212b91bd503e30ec39cd5516ac0d0ede6be5ecfc7f4c41f / closuree26e15e884265c15abf951b8a255de9a807c31628099bd9f4d8644e53a96c9f2. Docs72a825c.
 - Allfour rawarchives are inignoredledger/captures; capture-audit.json records exactSHA/sourcecounts/scene/protocol. Three new compositepreviews renderverified ACTUAL native actorposes locally withStorm normalization, no FK/physics or nativeRGB claim. Currentfive-video folder now has newcartoncontact/noflip, newhair24×10partialpassive, newopenpacking/pinch/noseal; oldthree archived under task-preview-drafts/pre-restart-20261116-1302. Spray/Ethernetunchanged. Folder+packingvideo opened foruser.
 - Existingfeedbackdrafts updated: hair2207/9d100b6, packing2209/36e7c08, carton2208/c8216e0. StillOPEN DRAFT/task-folder-only/no task.json/media/full-demo/model claim. Spray2171 revisionrequest remains untouched; do not call it waiting/accepted. Developmentlatesthair95e08a4 andcarton/packing186c7f4. OriginaldirtyrootTEAM andhair-worktreeTEAMpreserved. No furtherGPUtrial scheduled; futurecandidate57fdc5b remains native-unvalidated.
 
@@ -5453,14 +5453,14 @@ editing, merge both agents' findings, and commit/push the update with the work.
   Do not treat those receipts as acceptance or push while they await review.
 - Hamper082 lifted intact but bent into a long U; 083 and 086 lost their
   grips during wrist twisting. Short-end layout088 compressed the long
-  dimension but again lost the grip at action300 (score0.0). It has no
+  dimension but again lost the grip at action 300 (score0.0). It has no
   demonstrated compact coil and no implemented retaining-loop sequence.
   Do not submit it or weaken the final compactness/retention checks.
-- Pin085 uses a commercially available75mm safety-pin size and100mm loose
-  hem section; the former50mm/60mm setup left inadequate hand clearance.
-  Trial087's higher transfer and regularized slender-body inertias retained
+- Pin085 uses a commercially available 75 mm safety-pin size and 100 mm loose
+  hem section; the former50mm/60 mm setup left inadequate hand clearance.
+  Trial 087's higher transfer and regularized slender-body inertias retained
   the grip but did not puncture. The correctly contacted front/hem patches
-  deflected at approximately0.035N. Fresh trial089 explicitly tests a0.02N
+  deflected at approximately0.035 N. Fresh trial 089 explicitly tests a0.02 N
   contact gate, not a claim of calibrated cotton puncture strength. Exact
   point-to-panel contact, shaft retention, four correct holes, tearing,
   spring closure and release checks remain. This does not re-score older
@@ -5468,4 +5468,47 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Backups080–084 are local and verified:167,091,517bytes,244archive members.
   Separate complete085,086 and087 archives are also local. The active089
   trial and completed088 still need final backup before the Pod is stopped
-  and deleted. Keep the02:09:52UTC shutdown cap.
+  and deleted. Keep the 02:09:52 UTC shutdown cap.
+
+### 2026-11-18 — Exclude the light-force pin shortcut
+
+- Re-reading review prompt v24's faithful-task section exposed a material
+  issue: disclosure alone does not justify triggering a material rule at a
+  small fraction of realistic force. The 0.02 N puncture gate in diagnostics 089
+  and 090 is not suitable submission evidence.089 reached two holes then lost
+  the pin;090 failed native integrity at action 513. Neither was uploaded or PRed.
+- Primary needle-penetration analysis gives a newton-scale comparison:
+  https://www.mdpi.com/2073-8994/18/4/635. It is not a calibration of our
+  safety pin and cotton cuff. The draft now uses a provisional1.0 N threshold,
+  explicitly unvalidated; a successful credible-force demo is still required.
+  Do not re-score old low-force traces as evidence for this changed model.
+- Both unfinished folders now contain explicit non-ready VALIDATION.json
+  records. Corrected the pin README/task setup to the actual60 mm support
+  height; only the loose stitching section was enlarged to100 mm.
+- No seventh or eighth PR was opened. All six submitted tasks retain their
+  separately audited native demos, complete Dream baselines and public receipts.
+
+### 2026-11-18 — Eight-task session closed; six PRs, two unfinished drafts
+
+- Submitted/received: kale #2508 (TK-G6SE25), avocado #2510 (TK-Y3PDXP),
+  cigar #2528 (TK-4KFRF3), tattoo #2541 (TK-UQGNPG), potato #2558
+  (TK-VLQ7ZQ), and silicone cup #2561 (TK-GWDNKB). All six have independent
+  native audits, visually inspected full-score demos, complete Dream runs,
+  uploaded media and task-only upstream branches. They await review; potato
+  still has the disclosed SPARTA novelty risk.
+- Safety-pin hem and pop-up hamper are explicitly non-ready drafts. No PR
+  or media upload was made for either. The pin needs credible-force
+  puncture and complete fastening; the hamper needs stable coiling and
+  retaining-loop placement. Do not submit their partial/failed diagnostics.
+- The Secure GPU stopped at 01:39:51 UTC and was deleted at 01:40:26 UTC.
+  Deletion returned 204 and a fresh GET returned 404. A complete account
+  inventory confirmed zero active Runpod Pods. Approximately 7.50 hours at
+  $2.69/hour is **$20.17 compute**, an estimate rather than an invoice;
+  this excludes storage and Dream charges. No persistent mounts were created.
+- Backup coverage was checked against the remote inventory: 151 trial
+  folders and 4,664 non-bytecode files, zero missing. This caught and recovered
+  tattoo019, cup019 and pin052, which earlier incremental archives omitted.
+  The local evidence remains under the ignored eight-task artifacts folder.
+- The current 1.0 N pin threshold is provisional and unvalidated. The 0.02 N
+  diagnostic shortcut is excluded; faithfulness includes roughly realistic
+  force, not only motion and an honest fidelity disclaimer.
