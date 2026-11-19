@@ -2,9 +2,9 @@
 import numpy as np
 from scipy.optimize import least_squares
 class DemoControl:
- def __init__(self):self.offset=None;self.grip_offset=None;self.closure_z={}
+ def __init__(self):self.offset=None;self.grip_offset=None
  def action(self,k,wanted,m,observed,hands):
-  if 230<=k<=520 and set(m.grasp_state)!={'left','right'}:raise RuntimeError('Scripted demonstration lost a required grip; stop this diagnostic before further motion.')
+  if 250<=k<=540 and set(m.grasp_state)!={'left','right'}:raise RuntimeError('Scripted demonstration lost a required grip; stop this diagnostic before further motion.')
   from yam_arena import ik,station
   from geometry import POINTS,RIM,M
   if self.offset is None:self.offset={s:m.nodes[i]-POINTS[i] for s,i in [('left',RIM[M//4]),('right',RIM[3*M//4])]}
@@ -19,14 +19,7 @@ class DemoControl:
    offset=self.offset[side]
    if self.grip_offset is not None:
     w=float(np.clip((k-160)/20,0,1));offset=(1-w)*offset+w*self.grip_offset[side]
-   target+=min(1.,k/60)*max(0.,min(1.,(300-k)/80))*offset
-   # Centre the rim vertically in the real pads while closing; retain the
-   # frozen horizontal approach instead of chasing lateral shell motion.
-   if 180<=k<=220 and side not in m.grasp_state:
-    node=RIM[M//4 if side=='left' else 3*M//4]
-    self.closure_z[side]=float(m.nodes[node,2]-target[2])
-   if side in self.closure_z:
-    target[2]+=max(0.,min(1.,(300-k)/80))*self.closure_z[side]
+   target+=min(1.,k/60)*max(0.,min(1.,(320-k)/80))*offset
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=hands[side]['tcp']-p0;rbias=hands[side]['rotation']@R0.T
    def residual(q):

@@ -34,7 +34,7 @@ rim centre is (260, 0, 838.5) mm. X points forward, Y left, and the table is
 747.5 mm high. Match the setup image and restore the cap without stretching
 or tearing it. The ordinary arm bases have no additional risers.
 
-Both grippers have 40 x 12 x 3 mm silicone-faced finger extensions, with
+Both grippers have 40 x 24 x 3 mm silicone-faced finger extensions, with
 40 N finger actuator limits. No fixture holds the cap on the head.
 
 ## Scoring and material model
