@@ -1,31 +1,63 @@
 # Put a silicone swimming cap onto a headform
 
-**Development draft. No full-score demo, Dream baseline or submission yet.**
-
 Stretch the swimming cap over the headform. Cover the crown, leave the face clear, and release it without tearing the cap.
 
-The procedural scene is in `geometry.py`; native contacts and passive material responses are used. `model.py` defines provisional outcome checks. These files are under active validation and must not be treated as accepted or submission-ready.
+## Run and score
 
-In the pinned Isaac/YAM environment, from the repository root:
-
-```sh
-python tasks/fit-a-silicone-swimming-cap/run.py --mode hold --steps 40 --out /tmp/fit-a-silicone-swimming-cap-reset
-```
-
-All geometry is original procedural work under the included MIT license. `ENVIRONMENT.json` pins the external runtime. Paid diagnostics and source snapshots are retained privately; `VALIDATION.json` must be completed before submission.
-
-## Development commands
-
-From the repository root in the pinned environment, use a new output folder:
+Use the Python 3.12 / Isaac Sim 6.1 / YAM runtime pinned in `ENVIRONMENT.json`.
+An NVIDIA GPU is needed for native rendering. From the repository root:
 
 ```sh
-python tasks/fit-a-silicone-swimming-cap/run.py --mode demo --out /tmp/fit-a-silicone-swimming-cap-demo
+OMNI_KIT_ACCEPT_EULA=YES python tasks/fit-a-silicone-swimming-cap/run.py --mode demo --out /tmp/fit-a-silicone-swimming-cap-demo
+OMNI_KIT_ACCEPT_EULA=YES python tasks/fit-a-silicone-swimming-cap/run.py --mode dream --out /tmp/fit-a-silicone-swimming-cap-dream
 python tasks/fit-a-silicone-swimming-cap/rescore.py /tmp/fit-a-silicone-swimming-cap-demo
 ```
 
-The deterministic layout has no jitter or random seed. Source files and native
-state are saved with each run. Rescoring verifies their hashes and re-evaluates
-the recorded states on CPU. Diagnostics with `--capture-every` greater than1
-are not submission recordings. Dream must use the same final scene and hardware.
+Dream receives the ordinary RGB cameras and joint state through Inspect Robots.
+The SDK resolves its credential privately. Use one episode per key at a time.
+The fixed layout has no random jitter or seed. The limit is 1,800
+controls at 20 Hz. Demo and Dream use identical physics and hardware; the demo
+commands only the robot joints and grippers.
 
-Pinches use a disclosed native no-slip approximation once material is between closing finger faces. Each constraint starts at the measured pose, releases on opening, and breaks at 18 N or 0.08 Nm. Material deformation and collisions remain native; no object is teleported. Native validation is pending.
+Each run saves its source, complete state trace, camera recordings and report.
+Rescoring checks source hashes and recomputes outcomes from the recorded native
+states on CPU; it is not a new physics simulation. Camera strides above 1 are
+for diagnostics and are excluded from submission evidence.
+
+## Setup and reset
+
+Use the adult headform, thin silicone cap and upturned polypropylene tumbler
+specified in `task.json`. Secure the headform base and tumbler to the table.
+The cap is separate from the head, resting opening-down on the tumbler.
+The head centre is (460, 0, 872.5) mm and faces the right arm; the cap's initial
+rim centre is (260, 0, 838.5) mm. X points forward, Y left, and the table is
+747.5 mm high. Match the setup image and restore the cap without stretching
+or tearing it. The ordinary arm bases have no additional risers.
+
+Both grippers have 40 x 12 x 3 mm silicone-faced finger extensions, with
+40 N finger actuator limits. No fixture holds the cap on the head.
+
+## Scoring and material model
+
+Use the video and a ruler to check the rim around the head, the clear face,
+the crown gap and three seconds of retention after release. The numerical
+bands and partial credit are in `task.json`. A cap resting beside the head,
+or crumpled on its crown without an encircling rim, cannot receive full credit.
+
+The cap is a 0.8 mm native elastic shell with self-contact and a 3 mm rolled
+rim. Young's modulus is 1 MPa; this uncalibrated value approximates silicone.
+The head is rigid. A compliant native pinch forms only when a rim element is
+between closing finger faces. It releases on opening or 8 mm slip, and breaks
+at 18 N or 0.08 Nm. Grip reaction loads on the robot are omitted. The robot
+must stretch, position and release the material; no fitted shape is assigned.
+
+## Assets
+
+All task geometry is original procedural work under the included MIT license.
+The robot, table and runtime come from the pinned YAM / Isaac environment.
+No third-party task meshes, scans or textures are used.
+
+## Validation status
+
+Development is ongoing. A validated full-score demonstration and completed
+Dream baseline are still required; no submission-readiness claim is made.

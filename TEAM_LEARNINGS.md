@@ -6556,3 +6556,5 @@ editing, merge both agents' findings, and commit/push the update with the work.
  for the under-rim approach; no GPU trial yet.
 
 - Pony049 source142 captures the opposed left arc8 but misses right24, whose measured pad-width offset is3.7 mm. Source145 permits the central8 mm of the24 mm face (previous4 mm), still excluding the same-side edge arcs captured in045/048. Same physical fingers, material and load/slip guards. Validation pending.
+
+- Cap045 at160 still has no grip: the desired rim points moved during insertion, leaving the left10–25 mm beyond the finger and the right28–34 mm across its closing axis. Source146 follows current native rim positions during insertion and closure, aiming10 mm inside the actual finger length, then freezes the measured held hand offset at180 before lifting. Only robot commands change; same cap/contact/grip limits.
