@@ -29,3 +29,10 @@ the recorded states on CPU. Diagnostics with `--capture-every` greater than1
 are not submission recordings. Dream must use the same final scene and hardware.
 
 Pinches use a disclosed native no-slip approximation once material is between closing finger faces. Each constraint starts at the measured pose, releases on opening, and breaks at 18 N or 0.36 Nm. Material deformation and collisions remain native; no object is teleported. Native validation is pending.
+
+The retaining ribbon has eight small native contact patches, each 10 x 5 x 1 mm,
+attached only to nearby elastic vertices. They represent finger contact with
+the thin ribbon. The ribbon plus patches still weighs 4 g; they do not attach
+to the packet or prescribe a wrapping motion. Attachment separation over 5 mm
+is an integrity failure. This extension has passed only a CPU geometry check
+and still requires native validation.

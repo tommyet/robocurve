@@ -39,7 +39,8 @@ Both arms use their ordinary mounting height and 40 N finger actuator limits.
 ## Scoring and material model
 
 Count the locks passing through the band, measure the band's maximum width
-and height, and check the released video. Full credit needs at least eleven
+and height, and check the released video. Its centre must be at least 55 mm
+behind the head centre and 25–160 mm below it. Full credit needs at least eleven
 locks, a band no wider than 50 mm at the specified ponytail height, and three
 seconds retained after release. Nine locks earn 0.5; six earn 0.25, at that
 height. Detached hair or a broken band scores zero. Passing the elastic only

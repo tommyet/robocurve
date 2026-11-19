@@ -27,6 +27,7 @@ class FinitePinch:
         from omni.physx import get_physx_interface
         from omni.physx.bindings._physx import SimulationEvent
         self.m=model;self.names=list(names);self.radius=radius;self.thickness=thickness
+        self.radii={name:(.0005 if name.startswith("band_contact_") else radius) for name in names}
         self.half_width=half_width;self.z_range=z_range;self.held={};self.history={s:[] for s in ['left','right']};self.blocked=set();self.serial=0
         self.grippers={};self.body_paths={}
         for p in model.stage.Traverse():
@@ -54,7 +55,8 @@ class FinitePinch:
             history=self.history[side];history.append(float(h['opening']));del history[:-8]
             q=np.asarray(h.get('finger_joint_positions',[-h['opening']*.04695]*2))
             aperture=-q.sum()-2*self.thickness
-            if aperture>2*self.radius+.002:
+            held_radius=self.radii[self.held[side]['body']] if side in self.held else max(self.radii.values())
+            if aperture>2*held_radius+.002:
                 if side in self.held:
                     g=self.held.pop(side);g['joint'].GetJointEnabledAttr().Set(False)
                     self.m.events.append(dict(event='pinch_released',side=side,body=g['body'],time=self.m.time))
@@ -75,7 +77,7 @@ class FinitePinch:
             used={g['body'] for g in self.held.values()};choices=[]
             for name in self.names:
                 if name in used:continue
-                distance=candidate(self.m.p(name),self.radius,h,self.thickness,self.half_width,self.z_range)
+                distance=candidate(self.m.p(name),self.radii[name],h,self.thickness,self.half_width,self.z_range)
                 if distance is not None:choices.append((distance,name))
             if not choices:continue
             _,name=min(choices);self.serial+=1;path=self.root+f'/pinch_constraint_{side}_{self.serial}'

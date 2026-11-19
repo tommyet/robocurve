@@ -60,6 +60,19 @@ for i in range(N):
  HEM_ATTACHMENTS.append((name,ids,local))
 GRIP_INDICES=(11,60);GRIP_BODIES=tuple(f'bound_edge_{i:03d}' for i in GRIP_INDICES)
 GRIP_POINTS=np.asarray([next(b['pos'] for b in BODIES if b['name']==name) for name in GRIP_BODIES])
+# Small material patches give the thin retaining ribbon finite native finger
+# contact. They are part of the elastic, never a hand or fixture.
+BAND_ATTACHMENTS=[]
+band=next(s for s in SURFACES if s['name']=='band');band['mass']=.003
+for i in range(0,M,8):
+ ids=[i,M+i,2*M+i,M+(i+1)%M];points=band['points'][ids]
+ tangent=band['points'][M+(i+1)%M]-band['points'][M+i]
+ tangent/=np.linalg.norm(tangent);radial=np.cross([0.,0.,1.],tangent)
+ orientation=Rotation.from_matrix(np.column_stack([tangent,radial,[0.,0.,1.]]))
+ centre=points.mean(axis=0);name=f'band_contact_{i:03d}'
+ spec=body(name,centre,[box((.010,.005,.001))],mass=.000125,quat=orientation.as_quat().tolist(),color=(.10,.11,.13),friction=1.,contact_offset=.0004)
+ spec['exclude']=['band','tab'];BODIES.append(spec)
+ BAND_ATTACHMENTS.append((name,ids,orientation.inv().apply(points-centre)))
 finalize(BODIES,JOINTS)
 
 def spawn_surface(stage,root):
@@ -92,6 +105,14 @@ def spawn_surface(stage,root):
  for name,ids,local in HEM_ATTACHMENTS:
   p=stage.DefinePrim(root+'/sewn_'+name,'OmniPhysicsVtxXformAttachment')
   p.GetRelationship('omniphysics:src0').SetTargets([Sdf.Path(root+'/frame')])
+  p.GetRelationship('omniphysics:src1').SetTargets([Sdf.Path(root+'/'+name)])
+  p.GetAttribute('omniphysics:vtxIndicesSrc0').Set(ids)
+  p.GetAttribute('omniphysics:localPositionsSrc1').Set(Vt.Vec3fArray(local.astype(np.float32).tolist()))
+
+ # The ribbon patches remain natively attached to their local material vertices.
+ for name,ids,local in BAND_ATTACHMENTS:
+  p=stage.DefinePrim(root+'/material_'+name,'OmniPhysicsVtxXformAttachment')
+  p.GetRelationship('omniphysics:src0').SetTargets([Sdf.Path(root+'/band')])
   p.GetRelationship('omniphysics:src1').SetTargets([Sdf.Path(root+'/'+name)])
   p.GetAttribute('omniphysics:vtxIndicesSrc0').Set(ids)
   p.GetAttribute('omniphysics:localPositionsSrc1').Set(Vt.Vec3fArray(local.astype(np.float32).tolist()))
