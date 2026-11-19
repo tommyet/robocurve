@@ -1,8 +1,34 @@
 # Shared working notes
 
-Last updated: 2026-11-18 UTC. Read this before starting work; update it when an
+Last updated: 2026-11-19 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
+
+## Current personal-care batch status — 2026-11-19 02:40 UTC
+
+- **No full-score demo, Dream run, media upload or PR yet** for our cap,
+  ponytail, brush, plug-fuse or hamper drafts. Development branch:
+  `codex/personal-care-chain-fuse-20261118`. Do not submit these current drafts.
+- **New:** Eito's chain PR2739 was finally rejected at01:59 UTC for its rigid
+  sliding-chain substitute and automatic drivetrain coupling. The independent
+  native-link/tooth draft is no longer redundant, but has no successful demo.
+  Any new submission must demonstrate actual link feeding and driven advance;
+  the rejected proxy must not be resubmitted unchanged. Review:
+  https://github.com/robocurve/benchmark-tasks/pull/2739#issuecomment-6997357913
+- Read the detailed18–19November sections near the end of this file before
+  repeating a probe. In particular, the legacy brush contact callback had
+  already failed before; the native filtered contact-force matrix is required.
+- Source108 pony034 completed680 controls with the continuous native elastic
+  loop intact. Only its left grasp captured, so it secured1/12 locks and scores0.
+  Cap030 completed660 controls but missed pickup. Neither is submission evidence.
+  Brush027 and hamper015 are currently testing the prepared compliant grips. Native world-anchor pinch is bounded18 N/.08 Nm
+  (.24 Nm for wider hamper pads), released on opening or8 mm material slip.
+- Source105/106 ponytail runs failed identically at204 controls, whether normal
+  rendering was enabled or diagnostics skipped some renders. Do not attribute
+  that elastic instability to rendering. Standard update scheduling is retained.
+- One RTX4090, i9ko77hxqsovzw, $0.89/hour; active finite workers and watchdog.
+  At02:40 elapsed compute is roughly$9.4; no Dream spending. All completed
+  evidence throughprobes020 is backed up locally. Delete our Pod when finished.
 
 ## 2026-11-17 — flour, screen protector and catching novelty screen
 
@@ -6087,3 +6113,37 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Fuse017 transported the spare successfully, but the plug moved during the
   frozen insertion target; the spare fell onto the table after release. Source102
   tracks the live plug pose throughout insertion. No full-score fuse run yet.
+
+
+### 2026-11-19 02:15 UTC — corrections to the diagnostics
+
+- The01:40 claim of an effective TCP-offset bug was wrong: cap, ponytail and
+  fuse runners already had a second `from yam_arena.constants import TCP_OFFSET`
+  after hardware configuration. Source101 only cleaned up a redundant import.
+  Native checkpoint hand positions confirm the same effective TCP. Do not
+  invalidate older evidence on that claimed basis or repeat this diagnosis.
+- The private checkpoint helper restored measured finger positions but used
+  those positions as the first motor target, losing the preload that held the
+  plug and fuse. At1490, the spare fell9 mm during the first warm step and the
+  left fingers moved7 mm. The helper now restores the recorded commanded
+  action for that first step. Earlier continuation failures are not evidence
+  against the insertion controller. Full normal-reset validation is still needed.
+
+### 2026-11-19 02:40 UTC — pickup evidence and current corrections
+
+- Pony034's continuous native surface survived the full motion; the right
+  elastic segment was about15 mm ahead of its TCP, beyond the12 mm fingertip.
+  Left pickup worked. Next track an observed band segment during closure;
+  do not relax the two-face contact gate or count a loop over one lock as success.
+- Cap030's downward approach diverged from the commanded pose by several cm
+  before touching the rim. A horizontal side approach, tilted20 degrees downward,
+  is being checked on CPU with cap/head shifted60 mm farther forward. The cap
+  starts open-side up on the table; no glass, pre-grasp or prescribed inversion.
+- Brush027 restores the proven native contact-force matrix alongside event
+  reports. A bounded comb pinch addresses the measured75-degree tool roll.
+  Its low tip path and retained-snags counterfactual still need native validation.
+- World-anchor grips approximate unresolved finger friction; they do not
+  impose equal/opposite loads on the arm. State that limitation honestly.
+  Material deformation, contacts, release and force/slip limits remain native.
+- Completed diagnostics throughprobes021 are archived for local backup. No
+  full-score task in this batch and no Dream call or media upload yet.

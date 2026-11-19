@@ -39,7 +39,6 @@ def main():
    from review_views import configure,images
    if hasattr(m,'configure_station'):m.configure_station()
    from yam_arena.constants import TCP_OFFSET,FINGER_JOINTS
-   from yam_arena.constants import TCP_OFFSET
    scene.PHYSICS_DT=1./480
    original=scene.make_env
    def with_cameras(embodiment,**kwargs):configure(embodiment);return original(embodiment,**kwargs)
@@ -110,9 +109,8 @@ def main():
    if not a.cpu_preview:wanted=np.clip(wanted,emb._low,emb._high)
    current=current+np.clip(wanted-current,-limit_vector,limit_vector)
    if not a.cpu_preview:
-    # State-only diagnostics need fresh pixels only on recorded frames. Final
-    # videos and every Dream observation retain the ordinary render schedule.
-    if a.mode!='dream' and a.capture_every>1:base.render_enabled=(k%a.capture_every==0 or k==steps)
+    # Recording stride must not change the simulator update schedule.
+    base.render_enabled=True  # Keep normal USD/PhysX synchronization even in diagnostic recordings.
     emb._env.step(torch.as_tensor(current[None,:],device=base.device,dtype=torch.float32));emb._t=k/20
    m.update(hands())
    if not a.cpu_preview and (k%a.capture_every==0 or k==steps):m.draw(drawing);refresh()

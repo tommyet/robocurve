@@ -31,7 +31,7 @@ for s in range(STRANDS):
 for sx in [-1,1]:
  BODIES.append(body(f'elastic_rest_{sx+1}',[ELASTIC[0]+sx*.010,0,TABLE+.030],[box((.006,.032,.060))],mass=.010,fixed=True,color=(.59,.44,.28)))
 # A plain 3 mm cord elastic, 30 mm inside diameter. Native passive
-# stretch joints connect contact-bearing segments into a closed loop.
+# a continuous elastic surface joins contact-bearing patches into a closed loop.
 M=64;radius=.0165;theta=np.arange(M)*2*np.pi/M
 vertices=ELASTIC+np.c_[radius*np.cos(theta),radius*np.sin(theta),np.zeros(M)]
 centres=(vertices+np.roll(vertices,-1,axis=0))/2
@@ -39,10 +39,7 @@ lengths=np.linalg.norm(np.roll(vertices,-1,axis=0)-vertices,axis=1)
 for i in range(M):
  tangent=(vertices[(i+1)%M]-vertices[i])/lengths[i];radial=centres[i]-ELASTIC;radial/=np.linalg.norm(radial);rot=Rotation.from_matrix(np.column_stack([radial,np.cross(tangent,radial),tangent]))
  shape=dict(kind='capsule',radius=.0015,length=float(lengths[i]),pos=[0,0,0],quat=[0,0,0,1])
- BODIES.append(body(f'band_segment_{i:03d}',centres[i],[shape],mass=.001/M,quat=rot.as_quat().tolist(),color=(.64,.12,.27),friction=1.2,contact_offset=.0002,torsional_patch_radius=.0015,min_torsional_patch_radius=.001,exclude=[f'band_segment_{(i+d)%M:03d}' for d in [-2,-1,1,2]],visible=False))
-for i in range(M):
- axes={**fixed_axes(),**bend_axes(.000005,.0000001,180),'transZ':dict(limits=(-lengths[i]*.2,lengths[i]*4),stiffness=1.4/lengths[i],damping=.02)}
- JOINTS.append(joint(f'band_stretch_{i:03d}',f'band_segment_{i:03d}',f'band_segment_{(i+1)%M:03d}',[0,0,lengths[i]/2],[0,0,-lengths[(i+1)%M]/2],axes=axes,break_force=8.))
+ BODIES.append(body(f'band_segment_{i:03d}',centres[i],[shape],mass=.0003/M,quat=rot.as_quat().tolist(),color=(.64,.12,.27),friction=1.2,contact_offset=.0002,torsional_patch_radius=.0015,min_torsional_patch_radius=.001,exclude=['elastic']+[f'band_segment_{(i+d)%M:03d}' for d in [-2,-1,1,2]],visible=False))
 radial=centres-ELASTIC;radial/=np.linalg.norm(radial,axis=1)[:,None]
 POINTS=np.vstack([centres+offset*radial for offset in [-.0015,0,.0015]])
 TRIS=[]
@@ -55,5 +52,31 @@ REST_LENGTHS=np.linalg.norm(POINTS[EDGES[:,1]]-POINTS[EDGES[:,0]],axis=1)
 finalize(BODIES,JOINTS)
 
 def spawn_surface(stage,root):
- # All band physics is native rigid contact and passive elastic joints.
- pass
+ from pxr import UsdGeom,UsdPhysics,PhysxSchema,UsdShade,Gf,Vt,Sdf
+ mesh=UsdGeom.Mesh.Define(stage,root+'/elastic');mesh.CreatePointsAttr(Vt.Vec3fArray(POINTS.astype(np.float32).tolist()));mesh.CreateFaceVertexCountsAttr([3]*len(TRIS));mesh.CreateFaceVertexIndicesAttr(TRIS.ravel().tolist());mesh.CreateSubdivisionSchemeAttr('none');mesh.CreateDoubleSidedAttr(True)
+ p=mesh.GetPrim()
+ for api in ['OmniPhysicsDeformableBodyAPI','OmniPhysicsSurfaceDeformableSimAPI','PhysxSurfaceDeformableBodyAPI']:
+  if not p.ApplyAPI(api):raise RuntimeError('Required native surface API unavailable: '+api)
+ p.GetAttribute('omniphysics:mass').Set(.0007)
+ p.GetAttribute('omniphysics:restShapePoints').Set(Vt.Vec3fArray(POINTS.astype(np.float32).tolist()))
+ p.GetAttribute('omniphysics:restTriVtxIndices').Set(Vt.Vec3iArray(TRIS.tolist()))
+ p.GetAttribute('physxDeformableBody:selfCollision').Set(True)
+ p.GetAttribute('physxDeformableBody:solverPositionIterationCount').Set(64)
+ p.GetAttribute('physxDeformableBody:enableSpeculativeCCD').Set(True)
+ p.GetAttribute('physxDeformableBody:linearDamping').Set(.1)
+ UsdPhysics.CollisionAPI.Apply(p);col=PhysxSchema.PhysxCollisionAPI.Apply(p);col.CreateContactOffsetAttr(.002);col.CreateRestOffsetAttr(.0015)
+ mat=UsdShade.Material.Define(stage,root+'/elasticMaterial');q=mat.GetPrim()
+ for api in ['OmniPhysicsBaseMaterialAPI','OmniPhysicsDeformableMaterialAPI','OmniPhysicsSurfaceDeformableMaterialAPI','PhysxSurfaceDeformableMaterialAPI']:q.ApplyAPI(api)
+ for key,value in {'omniphysics:dynamicFriction':.9,'omniphysics:density':1100.,'omniphysics:youngsModulus':3e5,'omniphysics:poissonsRatio':.45,'omniphysics:surfaceThickness':.003,'omniphysics:surfaceBendStiffness':3e5/(12*(1-.45**2)),'physxDeformableMaterial:elasticityDamping':.02,'physxDeformableMaterial:bendDamping':.01}.items():
+  attr=q.GetAttribute(key)
+  if not attr:raise RuntimeError('Required elastic material attribute unavailable: '+key)
+  attr.Set(value)
+ shader=UsdShade.Shader.Define(stage,root+'/elasticMaterial/Surface');shader.CreateIdAttr('UsdPreviewSurface');shader.CreateInput('diffuseColor',Sdf.ValueTypeNames.Color3f).Set(Gf.Vec3f(.64,.12,.27));shader.CreateInput('roughness',Sdf.ValueTypeNames.Float).Set(.5);mat.CreateSurfaceOutput().ConnectToSource(shader.ConnectableAPI(),'surface')
+ bind=UsdShade.MaterialBindingAPI.Apply(p);bind.Bind(mat);bind.Bind(mat,UsdShade.Tokens.weakerThanDescendants,'physics')
+
+ for i in range(M):
+  attachment=stage.DefinePrim(root+f'/elastic_contact_{i:03d}','OmniPhysicsVtxXformAttachment')
+  attachment.GetRelationship('omniphysics:src0').SetTargets([Sdf.Path(root+'/elastic')])
+  attachment.GetRelationship('omniphysics:src1').SetTargets([Sdf.Path(root+f'/band_segment_{i:03d}')])
+  attachment.GetAttribute('omniphysics:vtxIndicesSrc0').Set([M+i])
+  attachment.GetAttribute('omniphysics:localPositionsSrc1').Set(Vt.Vec3fArray([[0,0,0]]))

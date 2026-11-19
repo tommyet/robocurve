@@ -23,7 +23,11 @@ class Model(NativeModel):
   R0=self.orientation('bicycle_frame').T@self.orientation('chainring');angle=float(np.arctan2(R0[2,1],R0[1,1]));delta=(angle-self.previous_angle+np.pi)%(2*np.pi)-np.pi;self.previous_angle=angle
   links=self.chain_coordinates();front,rear=self.masks(links);angles=np.arctan2(links[:,2],links[:,1])
   valid=front & self.previous_engaged if self.previous_engaged is not None else np.zeros(LINKS,dtype=bool)
-  if front.sum()>=14 and rear.sum()>=5 and valid.sum()>=6:
+  # Guiding the chain through its first turn can seat it, but is not the
+  # independent drive check. Count only with the chain-feeding hand clear.
+  right=hands['right'];world_links=np.array([self.p(f'link_{i:03d}') for i in range(LINKS)])
+  guide_clear=right['opening']>.4 and np.min(np.linalg.norm(world_links-right['tcp'],axis=1))>.05
+  if guide_clear and front.sum()>=14 and rear.sum()>=5 and valid.sum()>=6:
    motion=(angles-self.previous_link_angles+np.pi)%(2*np.pi)-np.pi
    self.turn+=delta;self.chain_turn+=float(np.median(motion[valid]))
    self.lo=min(self.lo,self.turn);self.hi=max(self.hi,self.turn);self.chain_lo=min(self.chain_lo,self.chain_turn);self.chain_hi=max(self.chain_hi,self.chain_turn)

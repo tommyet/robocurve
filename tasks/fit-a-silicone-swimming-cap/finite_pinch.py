@@ -52,11 +52,13 @@ class FinitePinch:
         from yam_arena.constants import TCP_OFFSET
         for side,h in hands.items():
             history=self.history[side];history.append(float(h['opening']));del history[:-8]
-            if h['opening']>.30:
+            q=np.asarray(h.get('finger_joint_positions',[-h['opening']*.04695]*2))
+            aperture=-q.sum()-2*self.thickness
+            if aperture>2*self.radius+.002:
                 if side in self.held:
                     g=self.held.pop(side);g['joint'].GetJointEnabledAttr().Set(False)
                     self.m.events.append(dict(event='pinch_released',side=side,body=g['body'],time=self.m.time))
-                self.blocked.discard(side)
+                if h['opening']>.30:self.blocked.discard(side)
                 continue
             if side in self.held:
                 g=self.held[side];now=(self.m.p(g['body'])-h['tcp'])@h['rotation']

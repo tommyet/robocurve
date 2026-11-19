@@ -2,7 +2,7 @@
 import numpy as np
 from scipy.optimize import least_squares
 class DemoControl:
- def __init__(self):self.offset=None;self.hair_x=None
+ def __init__(self):self.offset=None;self.hair_x=None;self.grip_names={};self.grip_offset={}
  def action(self,k,wanted,m,observed,hands):
   from yam_arena import ik,station
   if self.offset is None:
@@ -14,7 +14,17 @@ class DemoControl:
    # The pickup follows the settled band. Fade that correction before
    # reaching the hair so its world height is not lowered by band sag.
    weight=min(1.,k/60)*max(0.,min(1.,(300-k)/80))
-   target+=weight*self.offset[side]
+   offset=self.offset[side]
+   if 100<=k<=140:
+    if side not in self.grip_names:
+     names=[n for n in m.names if n.startswith('band_segment_')]
+     self.grip_names[side]=min(names,key=lambda n:np.linalg.norm(m.p(n)-hands[side]['tcp']))
+    if side not in m.grasp_state:
+     centre=m.p(self.grip_names[side])
+     self.grip_offset[side]=centre-R@np.array([0.,0.,.002])-target
+   if side in self.grip_offset:
+    blend=float(np.clip((k-100)/20,0,1));offset=(1-blend)*offset+blend*self.grip_offset[side]
+   target+=weight*offset
    if k>=220:
     from geometry import STRANDS,SEGMENTS
     if k<=440 or self.hair_x is None:
