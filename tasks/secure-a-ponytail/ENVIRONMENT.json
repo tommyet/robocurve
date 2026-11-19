@@ -1,8 +1,8 @@
 {
   "schema": "runtime-evidence-v1",
-  "status": "development_native_probes",
-  "scope": "The pinned runtime has completed native reset/contact probes. A full-score final task demonstration is still required.",
-  "current_task_runtime_verified": false,
+  "status": "native_runtime_verified",
+  "scope": "Completed native demo and Dream run; evidence records source hashes and CPU rescoring.",
+  "current_task_runtime_verified": true,
   "python": "3.12.16",
   "packages": {
     "numpy": "2.5.4",
@@ -45,7 +45,8 @@
   },
   "platform": {
     "gpu": "NVIDIA GeForce RTX 4090 24GB",
-    "physics": "Native PhysX bodies and passive joints; native elastic surfaces for the cap and hamper. The ponytail elastic uses passive stretch joints."
+    "physics": "Native PhysX contacts, passive joints and the material approximations disclosed in task.json."
   },
-  "reference_checked_utc_date": "2026-11-18"
+  "reference_checked_utc_date": "2026-11-18",
+  "verified_utc_date": "2026-11-19"
 }

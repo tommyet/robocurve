@@ -94,7 +94,7 @@ class FinitePinch:
                     if linear:
                         limit=UsdPhysics.LimitAPI.Apply(joint.GetPrim(),axis);limit.CreateLowAttr(-.05);limit.CreateHighAttr(.05)
                     drive=UsdPhysics.DriveAPI.Apply(joint.GetPrim(),axis);drive.CreateTypeAttr('force')
-                    drive.CreateStiffnessAttr(1500. if linear else .25*np.pi/180.)
+                    drive.CreateStiffnessAttr(5000. if linear else .25*np.pi/180.)
                     drive.CreateDampingAttr(.5 if linear else .005*np.pi/180.)
                     drive.CreateMaxForceAttr((18. if linear else 0.08)/np.sqrt(3.))
                     drive.CreateTargetPositionAttr(0.)

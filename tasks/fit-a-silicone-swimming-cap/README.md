@@ -56,6 +56,10 @@ between closing finger faces. It releases on opening or 8 mm slip, and breaks
 at 18 N or 0.08 Nm. Grip reaction loads on the robot are omitted. The robot
 must stretch, position and release the material; no fitted shape is assigned.
 
+The cap uses an approximate 0.5 MPa silicone shell modulus. Pinch translational
+stiffness is 5,000 N/m, with the same 18 N / 0.08 Nm force and torque bounds
+and 8 mm slip release. These values are uncalibrated material approximations.
+
 ## Assets
 
 All task geometry is original procedural work under the included MIT license.

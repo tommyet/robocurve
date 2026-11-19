@@ -10,7 +10,7 @@ An NVIDIA GPU is needed for native rendering. From the repository root:
 ```sh
 OMNI_KIT_ACCEPT_EULA=YES python tasks/secure-a-ponytail/run.py --mode demo --out /tmp/secure-a-ponytail-demo
 OMNI_KIT_ACCEPT_EULA=YES python tasks/secure-a-ponytail/run.py --mode dream --out /tmp/secure-a-ponytail-dream
-python tasks/secure-a-ponytail/rescore.py /tmp/secure-a-ponytail-demo
+python tasks/secure-a-ponytail/rescore_native_precision.py /tmp/secure-a-ponytail-demo
 ```
 
 Dream receives the ordinary RGB cameras and joint state through Inspect Robots.
@@ -62,13 +62,36 @@ material outside the fingers. The estimated 6 N and 8 mm slip guards remain.
 The tension guard estimates load at the exposed ends of the held patch,
 using the current cord extension. It is checked at every control step.
 
+The CPU audit wrapper restores the native float32 surface coordinates after
+JSON loading, then runs the unchanged frozen scorer and tolerances. Without
+that dtype restoration, the nearly circular band produces up to 0.000043 mm
+of SVD measurement drift in the Dream trace. No score changes. The complete
+recorded traces and original sources are preserved.
+
 ## Assets
 
 All task geometry is original procedural work under the included MIT license.
 The robot, table and runtime come from the pinned YAM / Isaac environment.
 No third-party task meshes, scans or textures are used.
 
-## Validation status
+## Recorded trials
 
-Development is ongoing. A validated full-score demonstration and completed
-Dream baseline are still required; no submission-readiness claim is made.
+- Demo: **1**, 700 controls / 35 simulated seconds; 15.7 wall minutes including startup.
+- Dream: **0**, 1800 controls / 90 simulated seconds; 48.7 wall minutes including startup.
+
+Both completed recordings preserve every native frame at 20 fps. The uploaded
+videos show two simultaneous judging views. CPU rescoring agrees with both
+results, and the executed Python sources and demo plan match the submission.
+
+Dream made 37 requests across 37 server sessions. The official adapter recovered expired sessions; this
+is not an uninterrupted single-session run.
+
+The instruction was clarified after recording the demo to identify the existing practice head and synthetic hair. Physics, actions, scoring and limits are unchanged; the frozen original metadata and explanation are preserved.
+
+The model used the official loopback bridge over SSH; its credential remained
+on the client computer. Adapter versions and the public request transcript
+are in `evidence/`. No server session IDs or credentials are published.
+
+Complete traces were audited locally and retained with their SHA-256
+checksums in `evidence/trace-manifest.json`. They are omitted from the PR
+to meet the 25 MB archive limit. A fresh run saves a full trace for `rescore.py`.
