@@ -1,54 +1,39 @@
-# Twist-fold a pop-up laundry hamper and secure it
+# Fold a pop-up laundry hamper
 
-**Unsubmitted development draft. No full-score fold or retaining-band demonstration exists.**
+Development draft: the current native demo is still being validated. A full-score fold, matching Dream run and uploaded media are required before submission.
 
-The current prototype uses native elastic surfaces for the four aggregated spring frames, sewn flexible mesh and retaining band. This replaces the coarse joint model that failed in diagnostic077. Material parameters are approximate and have not been calibrated to a retail hamper. No rest shape changes during a trial.
+Twist the flattened spring-frame hamper into nested loops, flatten the packet and secure it with its attached elastic retaining loop. Leave it intact and restrained after both hands release.
 
-The intended outcome remains a packet no larger than220x220x60 mm, retained by its elastic band for3 seconds after release. `make_plan.py` currently authors a folding probe only; it does not yet place the retaining band.
+## Setup and reset
 
-Use the pinned Isaac/YAM environment:
+Use one ordinary 33 × 33 × 53 cm spring-steel and polyester-mesh hamper, such as the 13 × 13 × 21 inch Smart Design type. Use the same model for every trial. Flatten its sides into the full 33 × 53 cm rectangle, without twisting or coiling its frame. Its attached silicone retaining loop has a 300 mm circumference and a 5 × 1 mm section, sewn through a 12 mm textile tab. Leave the loop loose beside the frame.
+
+The table is 747.5 mm high. X points forward and Y toward the left arm. The flattened frame is centred at (390, 0, 865.5) mm, with its 530 mm length between the arms. Four 20 × 20 × 100 mm wooden rests support its short ends: their centres are X = 325 or 455 mm, Y = ±265 mm, Z = 797.5 mm. The table beneath the centre is clear for folding.
+
+Both arms stand on 120 × 120 × 50 mm risers. Each gripper has 100 × 26 mm steel extensions with silicone faces: a 60 mm, 4 mm-thick backing and a 40 mm, 2 mm-thick distal section. The working offset is 215 mm and the finger actuator limit is 40 N.
+
+The operator places the fingers around the two opposite bound ends and closes them before the timer starts. Native opposing-pad contact, an intact untwisted frame and zero score are checked at reset. No twist, coil or retaining-loop placement is supplied. The first 140 entries in the saved trajectory describe this robot reset and are excluded from the timed trial. Restore the setup photograph and replace any damaged frame, fabric, tab or loop between trials.
+
+## Run and score
+
+Use the pinned Python 3.12 / Isaac Sim 6.1 / YAM environment in `ENVIRONMENT.json`, an NVIDIA GPU and a new output folder:
 
 ```sh
-python tasks/fold-a-pop-up-laundry-hamper/run.py --mode hold --steps 40 --out /tmp/hamper-reset
+python tasks/fold-a-pop-up-laundry-hamper/run.py --mode demo --out /tmp/hamper-demo
+python tasks/fold-a-pop-up-laundry-hamper/run.py --mode dream --out /tmp/hamper-dream
+python tasks/fold-a-pop-up-laundry-hamper/rescore.py /tmp/hamper-demo
 ```
 
-Original procedural geometry, MIT license. The original failed model is recoverable from shared main commit9bc7f6e. Final documentation, native demo, Dream baseline, rescoring and media remain outstanding.
+The layout is fixed, without random jitter or a seed. The limit is 2,600 actions at 20 Hz. The current scripted trajectory uses 2,100 timed actions. Dream receives the standard camera and joint observations through Inspect Robots; use one episode per API key at a time. Both runs share the same reset, material model and hardware. The demo sends bounded robot joint commands and never sets a task object's pose.
 
-## Development commands
+Measure the packet with a ruler, allowing it to be turned for inspection. A packet within 350 × 250 mm earns 0.25. Within 220 × 220 × 60 mm earns 0.5. Full credit also requires the attached loop around the packet and those dimensions maintained for three seconds after both hands release. A broken frame, torn fabric or detached loop scores zero. The scorer includes the fabric and bound frame in the measured packet.
 
-From the repository root in the pinned environment, use a new output folder:
+Each run saves its exact source, native state trace, videos and report. Rescoring checks hashes, action limits and recorded outcomes; it does not rerun physics. `--capture-every` values above 1 are diagnostic only and cannot be submitted. No wall runtime or successful score is claimed until validation finishes.
 
-```sh
-python tasks/fold-a-pop-up-laundry-hamper/run.py --mode demo --out /tmp/fold-a-pop-up-laundry-hamper-demo
-python tasks/fold-a-pop-up-laundry-hamper/rescore.py /tmp/fold-a-pop-up-laundry-hamper-demo
-```
+## Material model
 
-The deterministic layout has no jitter or random seed. Source files and native
-state are saved with each run. Rescoring verifies their hashes and re-evaluates
-the recorded states on CPU. Diagnostics with `--capture-every` greater than1
-are not submission recordings. Dream must use the same final scene and hardware.
+Native elastic surfaces represent the spring frame, sewn mesh, textile tab and retaining loop. The four flattened frames share one strip with their combined mass and stiffness; inter-layer slip is omitted. The spring strip weighs 41 g, its binding 38 g, the mesh 60 g and the retaining loop 4 g. Rest shapes never change during a trial.
 
-Pinches use a disclosed native no-slip approximation once material is between closing finger faces. Each constraint starts at the measured pose, releases on opening, and breaks at 18 N or 0.36 Nm. Material deformation and collisions remain native; no object is teleported. Native validation is pending.
+A finite frame pinch starts only when a bound segment is between closing finger faces. It releases when the fingers open or physical pad contact is lost, and breaks at 30 N or 0.36 Nm. Its world-following anchor approximates unresolved friction; reaction loads on the robot are omitted. Initial capture allows a 1 mm contact margin; the 2 mm holding margin matches the native pad collision margin. The retainer uses a native vertex pinch that releases on opening, 8 mm slip or an estimated 6 N tension. Only incident contact triangles are filtered while held.
 
-The 300 mm retaining loop has a 5 x 1 mm elastic section and weighs 4 g.
-A native vertex pinch starts only when material is enclosed by the closing
-fingers. It releases on opening, 8 mm slip or estimated 6 N tension; that
-estimate is uncalibrated. Only incident contact triangles are filtered while
-held. The robot still has to stretch the loop around the packet.
-
-The reset requires the untwisted frame to span at least 30 x 48 cm, with less
-than 10 cm vertical sag. A collapsed or pre-folded reset cannot be a trial.
-## Validation status
-
-Not submission-ready. The latest native diagnostic (`hamper-full-030`) stopped
-at control 623 when the right frame grip slipped. The material remained intact
-and the partial score was 0.25. A compact packet secured by the retaining loop,
-a completed full-score demo and a Dream baseline remain unvalidated.
-
-Current grip diagnostic: loss is detected when the binding leaves the actual pad faces (including the native2mm contact margin), not merely after8mm motion from the capture point. The18N/0.36Nm force/torque limits remain. This permits bounded tangential slip while contact remains; it never extends the pad or changes frame/cloth poses. The change still needs a complete native demonstration.
-
-Clearance diagnostic041 uses80 ×26 ×2mm rigid finger extensions with silicone faces, ending207mm from the gripper origin and a195mm working point. Native geometry and planning use the same dimensions; the finite pinch still requires the central24mm contact region and retains18N/0.36Nm limits. This keeps the wrist clear of the folding loops; it does not prescribe a folded shape.
-
-Diagnostic042 retains the long fingers and tests a30N finite frame pinch (within the40N per-finger actuator limit), with0.36Nm torque and the same actual-contact release gate. The18N diagnostic slipped sideways at action697; no material or scoring threshold changes. The friction estimate is uncalibrated.
-
-Current draft reset: both hands already hold the opposite bound ends of the full 33 × 53 cm flattened, uncoiled hamper. Real opposing pad contact is checked before frame zero. The timer starts before lifting or twisting; no folded shape or loop placement is supplied. This removes pickup from the measured skill while retaining the complete twist-fold, loop stacking, securing and released retention test. Both arms use 50 mm risers and 100 mm steel finger extensions. The first 140 trajectory entries describe the pre-held reset and are excluded from timed execution.
+These are uncalibrated material and grip approximations. The frame and fabric still bend, slip and collide, and the band must be stretched around the packet. Nothing prescribes a folded or retained shape. All geometry is original procedural work under the included MIT license; YAM and Isaac retain their own licences.
