@@ -34,7 +34,7 @@ Place the roots on a 72 mm-wide rear scalp patch. In the head frame, root latera
 
 The head faces away from the robot. Its centre is (390, 0, 1052.5) mm; the elastic starts at (270, 0, 810.5) mm on two secured wooden rests. X points forward, Y left, and the table is 747.5 mm high. Restore the loose hair and separate band each trial. The synthetic locks and contact envelopes are a coarse grouped-fibre model, not individual hair strands.
 
-The finger extensions have 40 mm working length, 24 mm width and 3 mm thickness.
+The finger extensions have 40 mm working length, 10 mm width and 3 mm thickness.
 Both arms use their ordinary mounting height and 40 N finger actuator limits.
 
 ## Scoring and material model
@@ -46,20 +46,18 @@ All credit requires passing this retention test, intact roots/band, and the band
 The simulator applies the same downward load, divided over native band contact patches, after three seconds with clear hands and after the band leaves its starting rest. It ramps/holds/unloads without writing material positions. Touching again resets the test. The evaluator force stands in for the scale; the test is recorded in the ordinary native trial and CPU-audited from its state history.
 
 Articulated 5 mm contact envelopes group fine hair fibres into flexible locks.
-A native elastic surface models the band; its stiffness is approximate. A
-geometry-gated native contact patch represents a centred finger pinch and
-releases on opening, 8 mm slip or estimated 6 N local tension. This force
-estimate is uncalibrated, not a measured native force limit. Local contacts at
-a held patch are filtered to avoid conflicting constraints. No hair or band
-pose is assigned during a trial.
+A native elastic surface models a 16 mm inside-diameter, 3 mm cord silicone band;
+its stiffness is approximate. The starting rests are 19 mm apart. These dimensions
+are part of the trial setup, not a measured retail-product calibration.
 
-The auxiliary pinch is selected within the central 8 mm of the 24 mm face.
-It also holds adjacent elastic vertices already enclosed by that same real
-face, representing friction over a finite contact patch. It does not attach
-material outside the fingers. The estimated 6 N and 8 mm slip guards remain.
-
-The tension guard estimates load at the exposed ends of the held patch,
-using the current cord extension. It is checked at every control step.
+A geometry-gated native vertex attachment represents finger friction only after
+closing pad faces enclose a band patch. It holds only material already inside the
+10 mm-wide face, follows the real gripper link, and releases on opening, 8 mm slip
+or estimated local cord tension above 6 N. This tension estimate is uncalibrated;
+it is not a measured native force limit. Local held-patch contacts are filtered
+while the attachment acts, to avoid conflicting constraints. Native hair contacts,
+root failures and band over-stretch remain active. No hair or band pose is assigned
+during a trial; the approximation supplies no automatic gathering or fitting.
 
 The CPU audit wrapper restores the native float32 surface coordinates after
 JSON loading, then runs the unchanged frozen scorer and tolerances. Without

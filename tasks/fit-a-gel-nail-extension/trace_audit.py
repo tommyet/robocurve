@@ -40,7 +40,7 @@ def audit(rows,report):
    if pressed and not button:lamp=45.
    button=pressed;lit=lamp>0.;lamp=max(0.,lamp-.05);load=0.
    for i,p in enumerate(PATCHES):
-    compression=max(0.,-float(m.joint_gap('compression_'+p['name'])[2]));load+=200*compression
+    compression=max(0.,-float(m.joint_gap('compression_'+p['name'])[2]));load+=50*compression
     point=m.p(p['name'])+[0,0,.0001];q=m.orientation('extension').T@(point-m.p('extension'))
     gap=float(q[2]-(.003-arch(np.clip(q[1],-.013,.013))))
     contact=-.020<=q[0]<=.008 and abs(q[1])<=tip_width(q[0]) and -.0005<gap<.00025 and compression>.00001

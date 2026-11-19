@@ -17,7 +17,7 @@ class Model(NativeModel):
   if any(not a for a in self.proof_force_apis):raise RuntimeError('Retention force API missing')
   self.read()
   from finite_pinch import FinitePinch
-  self.pinch=FinitePinch(self,[n for n in self.names if n.startswith('band_segment_')],.0015,.003,.004,(-.025,.012))
+  self.pinch=FinitePinch(self,[n for n in self.names if n.startswith('band_segment_')],.0015,.003,.005,(-.025,.012))
  def read(self):
   super().read()
   if getattr(self,'surface',None) is not None:

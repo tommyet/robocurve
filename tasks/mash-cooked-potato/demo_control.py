@@ -61,7 +61,7 @@ class DemoControl:
   else:offset=self.offset
   target=head+offset;desired=R@self.R0.T
   # Limit commanded compression to 2 mm of the observed tool pose. With
-  # the disclosed 1500 N/m grip compliance this avoids driving into the bowl.
+  # the disclosed 6000 N/m grip compliance this avoids driving into the bowl.
   if stage.startswith(('press potato','hold compressive')):target[2]=max(target[2],m.p('masher')[2]-.002)
   relative_head=self.held_offset;relative_R=self.held_rotation
   seed=np.clip(observed[7:13],ik.LOWER+1e-6,ik.UPPER-1e-6)

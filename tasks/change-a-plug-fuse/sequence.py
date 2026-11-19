@@ -16,7 +16,7 @@ add(60,'approach old fuse','old_fuse','pick',.15,point=[0,0,.003],delta=[0,0,.04
 add(20,'settle above the cartridge','old_fuse','pick',.15,point=[0,0,.003],delta=[0,0,.04],rotation=Rfuse)
 add(80,'place tips around cartridge','old_fuse','pick',.15,point=[0,0,.003],rotation=Rfuse)
 add(30,'grip old fuse','old_fuse','pick',.10,point=[0,0,.003],rotation=Rfuse)
-add(60,'pull old fuse out of clips','old_fuse','lift',.10,delta=[0,0,.07])
+add(60,'pull old fuse out of clips','old_fuse','lift',.10,delta=[0,0,.04])
 add(60,'carry old fuse to dish','old_fuse','move',.10,position=DISH+[-.025,0,.06])
 add(40,'lower old fuse into dish','old_fuse','move',.10,position=DISH+[-.025,0,.015])
 add(20,'release old fuse','old_fuse','release',.55)
@@ -28,14 +28,14 @@ add(60,'lift the spare','spare_fuse','lift',.10,delta=[0,0,.07])
 add(80,'align the replacement over both clips','spare_fuse','move',.10,position=FC+[0,0,.035],rotation=Rot.from_euler('z',180,degrees=True).as_matrix(),relative='plug')
 add(80,'press the replacement into its clips','spare_fuse','move',.10,position=FC,rotation=Rot.from_euler('z',180,degrees=True).as_matrix(),relative='plug')
 add(20,'release the seated fuse','spare_fuse','release',.4)
-add(40,'withdraw above the replacement','spare_fuse','withdraw',.4,delta=[0,0,.06])
+add(40,'withdraw above the replacement','spare_fuse','withdraw',.4,delta=[0,0,.03])
 add(40,'align closed tips above seated cartridge','spare_fuse','push',.06,position=FC+[0,0,.035],rotation=down(90),relative='plug')
 add(60,'push cartridge fully into clips','spare_fuse','push',.06,position=FC+[0,0,.011],rotation=down(90),relative='plug')
-add(40,'lift clear of the seated cartridge','spare_fuse','push',.06,position=FC+[0,0,.050],rotation=down(90),relative='plug')
+add(40,'lift clear of the seated cartridge','spare_fuse','push',.06,position=FC+[0,0,.040],rotation=down(90),relative='plug')
 add(60,'approach the removed carrier','carrier','pick',.4,point=[.010,0,-.004],delta=[0,0,.04],rotation=Rcover)
 add(40,'grasp the carrier for refitting','carrier','pick',.25,point=[.010,0,-.004],rotation=Rcover)
 add(30,'close on the carrier','carrier','pick',.06,point=[.010,0,-.004],rotation=Rcover)
-add(40,'lift the carrier from the dish','carrier','lift',.06,delta=[0,0,.06])
+add(40,'lift the carrier from the dish','carrier','lift',.06,delta=[0,0,.035])
 add(70,'align the carrier above the plug','carrier','move',.06,position=CARRIER_OFFSET+[0,0,.035],rotation=np.eye(3),relative='plug')
 add(80,'press the carrier flush','carrier','move',.06,position=CARRIER_OFFSET,rotation=np.eye(3),relative='plug')
 add(20,'release the refitted carrier','carrier','release',.5)
@@ -44,18 +44,18 @@ add(40,'inspect the refitted plug','carrier','hold',.5)
 
 def append_plan(p,left_return=None):
  from geometry import Q
- objects={'screwdriver':(TOOL+[0,0,.08],np.eye(3)), 'carrier':(PLUG+[0,-.08,.04]+Rplug@(CARRIER_OFFSET+[0,0,.004]),Rplug), 'old_fuse':(PLUG+[0,-.08,.04]+Rplug@FC,Rplug), 'spare_fuse':(SPARE,np.eye(3))}
+ objects={'screwdriver':(TOOL+[0,0,.08],np.eye(3)), 'carrier':(PLUG+[0,-.08,.075]+Rplug@(CARRIER_OFFSET+[0,0,.004]),Rplug), 'old_fuse':(PLUG+[0,-.08,.075]+Rplug@FC,Rplug), 'spare_fuse':(SPARE,np.eye(3))}
  last=None;grasp={}
  for phase in PHASES:
   obj=phase['obj'];pos,Robj=objects[obj];kind=phase['kind']
   if kind=='pick':
    R=phase['rotation'];target=pos+Robj@phase['point']+phase['delta'];grasp[obj]=(R.T@(pos-target),R.T@Robj)
   elif kind=='push':
-   R=Rplug@phase['rotation'];target=PLUG+[0,-.08,.04]+Rplug@phase['position']
+   R=Rplug@phase['rotation'];target=PLUG+[0,-.08,.075]+Rplug@phase['position']
   elif kind in ['move','lift']:
    tr,rr=grasp.get(obj,(np.zeros(3),down(180).T))
    goal=pos+phase['delta'] if kind=='lift' else phase['position'];goalR=phase['rotation'] if phase['rotation'] is not None else Robj
-   if phase['relative']=='plug':goal=PLUG+[0,-.08,.04]+Rplug@goal;goalR=Rplug@goalR
+   if phase['relative']=='plug':goal=PLUG+[0,-.08,.075]+Rplug@goal;goalR=Rplug@goalR
    R=goalR@rr.T;target=goal-R@tr;objects[obj]=(goal,goalR)
   elif kind=='withdraw':target=last[0]+phase['delta'];R=last[1]
   else:target,R=last

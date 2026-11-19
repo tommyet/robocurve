@@ -7,11 +7,11 @@ from geometry_helpers import *
 BODIES=[];JOINTS=[]
 for side,y in [("left",.305),("right",-.305)]:
  BODIES.append(body(side+"_arm_riser",[0,y,TABLE+.050],[box((.12,.12,.100))],fixed=True,mass=5.,color=(.25,.27,.29)))
-CENTER=np.array([.29,0,TABLE+.112]);N=96
+CENTER=np.array([.39,0,TABLE+.112]);N=96
 # Four short-edge rests support the pickup areas and leave the centre clear.
 for sx in [-1,1]:
  for sy in [-1,1]:
-  BODIES.append(body(f'folding_rest_{sx+1}_{sy+1}',[.29+sx*.065,sy*.265,TABLE+.050],[box((.020,.020,.100))],mass=.08,fixed=True,color=(.58,.40,.25)))
+  BODIES.append(body(f'folding_rest_{sx+1}_{sy+1}',[.39+sx*.065,sy*.265,TABLE+.050],[box((.020,.020,.100))],mass=.08,fixed=True,color=(.58,.40,.25)))
 def rounded_rect(a,b,r=.025):
  pts=[]
  for cx,cy,start in [(a-r,b-r,0),(-a+r,b-r,90),(-a+r,-b+r,180),(a-r,-b+r,270)]:

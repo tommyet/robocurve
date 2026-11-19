@@ -11,8 +11,9 @@ class DemoControl:
    if label not in self.stages:self.stages[label]=[index,index]
    self.stages[label][1]=index
  def action(self,k,wanted,m,observed,hands):
-  if 160<=k<=840 and set(m.grasp_state)!={'left','right'}:
+  if 160<=k<=700 and set(m.grasp_state)!={'left','right'}:
    raise RuntimeError('Scripted demonstration lost a required grip; stop this diagnostic before further motion.')
+  if 700<k<=840 and 'left' not in m.grasp_state:raise RuntimeError('Left hand lost the central crossing before table support.')
   from yam_arena import ik,station
   label=self.labels[k-1]
   if label=='hold the packet beside the retaining path' and k==self.stages[label][0]:
@@ -36,7 +37,7 @@ class DemoControl:
     weight=float(np.clip((k-100)/20,0,1));offset=(1-weight)*offset+weight*self.grip_offset[side]
    target+=min(1.,k/60)*max(0.,min(1.,(820-k)/120))*offset
    label=self.labels[k-1]
-   specs=[('left','approach the far loop','fold the far loop onto the centre',0,np.array([.33,.185,.83])),('right','approach the right outer loop','stack the right loop',(60,90),np.array([.40,0,.96])),('left','approach the left outer loop','stack the left loop',(12,40),np.array([.20,0,.96]))]
+   specs=[('left','approach the far loop','fold the far loop onto the centre',0,np.array([.43,.185,.83])),('right','approach the right outer loop','stack the right loop',(60,90),np.array([.50,0,.96])),('left','approach the left outer loop','stack the left loop',(12,40),np.array([.30,0,.96]))]
    for arm,approach,press,indices,nominal in specs:
     if arm!=side or label not in (approach,press):continue
     if approach not in self.waypoints:
@@ -61,10 +62,10 @@ class DemoControl:
    if side=='left' and self.retainer is not None:
     point,chosen=self.retainer
     if label=='approach the loose retaining loop':
-     lo,hi=self.stages[label];u=ik.smoothstep((k-lo+1)/(hi-lo+1));target+=u*(point-np.array([.29,.11,.7475+.055]));R=ik.slerp_matrix(R,chosen,u)
+     lo,hi=self.stages[label];u=ik.smoothstep((k-lo+1)/(hi-lo+1));target+=u*(point-np.array([.39,.11,.7475+.055]));R=ik.slerp_matrix(R,chosen,u)
     elif label=='pinch the retaining loop':target=point.copy();R=chosen
     elif label=='lift the retaining loop over the packet':
-     lo,hi=self.stages[label];u=ik.smoothstep((k-lo+1)/(hi-lo+1));target+=(1-u)*(point-np.array([.29,.11,.7475+.055]));R=chosen
+     lo,hi=self.stages[label];u=ik.smoothstep((k-lo+1)/(hi-lo+1));target+=(1-u)*(point-np.array([.39,.11,.7475+.055]));R=chosen
     elif k>=self.stages['stretch the loop across the packet'][0]:R=chosen
     if self.stages['lift the retaining loop over the packet'][0]<=k<=self.stages['slip the loop below the far edge'][1]:
      if not m.grasp_state.get('left',{}).get('body','').startswith('band_contact_'):raise RuntimeError('The retaining loop is not held; stop the diagnostic.')

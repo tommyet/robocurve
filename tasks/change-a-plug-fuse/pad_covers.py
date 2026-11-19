@@ -1,6 +1,6 @@
 """Narrow steel finger extensions with silicone contact faces.
 
-Each extension is 45 x 4 mm, with a 3 mm backing and a 2 x 2 mm distal 27 mm and leaves the original finger bodies 30 mm
+Each extension is 55 x 4 mm, with a 3 mm backing and a 2 x 2 mm distal 22 mm and leaves the original finger bodies 30 mm
 behind the working point, permitting access between standard plug pins.
 They are rigid robot hardware in both demo and Dream runs, never grasp joints.
 """
@@ -10,7 +10,7 @@ from scipy.spatial.transform import Rotation
 
 def configure_kinematics():
     from yam_arena import constants, ik
-    constants.TCP_OFFSET=(0.,0.,.177)
+    constants.TCP_OFFSET=(0.,0.,.187)
     ik.TCP_OFFSET=constants.TCP_OFFSET
     import sys
     if 'yam_arena.runtime' in sys.modules:sys.modules['yam_arena.runtime'].TCP_OFFSET=constants.TCP_OFFSET
@@ -69,10 +69,10 @@ def install():
                 # the ordinary fuse recess. The backing remains 3 mm thick.
                 pieces = [
                     ('backing',[sign*.0015,0.,.1565],(.003,.004,.033)),
-                    ('tip',[sign*.002,0.,.179],(.002,.002,.012)),
+                    ('tip',[sign*.002,0.,.184],(.002,.002,.022)),
                 ]
                 if 'LeftArm' in path:
-                    pieces=[('support',[sign*.0015,0.,.1625],(.003,.020,.045))]
+                    pieces=[('support',[sign*.0015,0.,.1675],(.003,.020,.055))]
                 for label,centre_gripper,size in pieces:
                     centre=rotation.inv().apply(np.asarray(centre_gripper)-origin)
                     shape=UsdGeom.Cube.Define(stage,path+paths[name]+'/precision_'+label)

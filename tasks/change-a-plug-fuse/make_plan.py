@@ -17,7 +17,7 @@ p.add(4,'slide the blade beneath the carrier face',{'right':(tcp,RT,0.)})
 p.add(3,'lift the carrier lip with the level blade',{'right':(tcp+[0,0,.012],RT,0.)})
 p.add(2,'hold for inspection',{})
 from sequence import append_plan
-append_plan(p,left_return=(L+[0,-.08,.04],RL,0.))
+append_plan(p,left_return=(L+[0,-.08,.075],RL,0.))
 p.add(4,'return the plug to the table',{'left':(L,RL,0.)})
 p.add(1,'release the plug',{'left':(L,RL,.7)})
 p.add(3,'withdraw both hands',{'left':(L+[0,.08,.06],RL,.7)})

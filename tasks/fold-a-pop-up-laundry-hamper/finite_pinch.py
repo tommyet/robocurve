@@ -10,12 +10,16 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 
 
-def candidate(point, radius, hand, thickness, half_width, z_range, margin=.001):
+def candidate(point, radius, hand, thickness, half_width, z_range, margin=.001, holding=False):
     local=(np.asarray(point)-hand['tcp'])@hand['rotation']
     q=np.asarray(hand.get('finger_joint_positions',[-hand['opening']*.04695]*2))
     left=q[0]+thickness;right=-q[1]-thickness
     # Opposed contact, allowing 1 mm solver/contact margin on either face.
-    if abs((local[0]-radius)-left)>margin or abs((local[0]+radius)-right)>margin:
+    if holding:
+        # Native contact can leave a small penetration while loaded. A face
+        # overlapping the binding is still contact, not an air gap.
+        if local[0]-radius>left+margin or local[0]+radius<right-margin:return None
+    elif abs((local[0]-radius)-left)>margin or abs((local[0]+radius)-right)>margin:
         return None
     if abs(local[1])>half_width or not z_range[0]<=local[2]<=z_range[1]:return None
     return float(np.linalg.norm(local))
@@ -65,7 +69,7 @@ class FinitePinch:
                 continue
             if side in self.held:
                 g=self.held[side];now=(self.m.p(g['body'])-h['tcp'])@h['rotation']
-                if candidate(self.m.p(g['body']),self.radii[g['body']],h,self.thickness,self.half_width,self.z_range,margin=.002) is None:
+                if candidate(self.m.p(g['body']),self.radii[g['body']],h,self.thickness,self.half_width,self.z_range,margin=.002,holding=True) is None:
                     g['joint'].GetJointEnabledAttr().Set(False);self.held.pop(side);self.blocked.add(side)
                     self.m.events.append(dict(event='pinch_slipped',side=side,body=g['body'],time=self.m.time,reason='binding left the physical pad contact region'))
             if side in self.held:

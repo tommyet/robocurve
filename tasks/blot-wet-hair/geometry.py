@@ -37,11 +37,11 @@ for i in range(NX-1):
   a=i*NY+j;b=a+1;c=a+NY;d=c+1;TRIS.extend([[a,b,d],[a,d,c]])
 TRIS=np.asarray(TRIS);EDGES=np.unique(np.sort(np.concatenate([TRIS[:,[0,1]],TRIS[:,[1,2]],TRIS[:,[2,0]]]),axis=1),axis=0)
 REST_LENGTHS=np.linalg.norm(POINTS[EDGES[:,1]]-POINTS[EDGES[:,0]],axis=1)
-GRIP_IDS=[5*NY+NY-1,5*NY];PATCHES=[]
+GRIP_IDS=[NY-1,0];PATCHES=[]
 for i,node in enumerate(GRIP_IDS):
  name=f'cloth_contact_{i}';PATCHES.append((name,node));BODIES.append(body(name,POINTS[node],[sphere((.0015,)*3)],mass=.0001,color=(.22,.55,.66),friction=.9,contact_offset=.00025,exclude=['towel']))
-BODIES.append(body('towel_shelf',TOWEL+[0,0,-.006],[box((.18,.14,.006))],fixed=True,mass=.15,color=(.61,.44,.27),friction=.6))
-BODIES.append(body('shelf_post',TOWEL+[.07,0,-.096],[box((.025,.025,.174))],fixed=True,mass=.10,color=(.61,.44,.27),friction=.5))
+BODIES.append(body('towel_shelf',[TOWEL[0]+.040,0,TOWEL[2]-.006],[box((.120,.240,.006))],fixed=True,mass=.2,color=(.61,.44,.27),friction=1.2))
+BODIES.append(body('rack_post',[TOWEL[0]+.040,0,TOWEL[2]-.096],[box((.040,.080,.174))],fixed=True,mass=.2,color=(.61,.44,.27),friction=.5))
 finalize(BODIES,JOINTS)
 
 def spawn_surface(stage,root):

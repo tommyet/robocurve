@@ -19,7 +19,7 @@ for i,x in enumerate(np.linspace(-.019,-.007,7)):
   name=f'gel_pad_{i}_{j}';z=.003-arch(y);q=Rotation.from_euler('x',-np.arcsin(y/.014)).as_quat()
   p=BASE+[x,y,z+.0003];PATCHES.append(dict(name=name,x=float(x),y=float(y),z=float(z)))
   BODIES.append(body(name,p,[box((.00195,.00245,.0002),quat=q)],mass=.00002,color=(.87,.64,.60),friction=.7,contact_offset=.00002))
-  axes={**fixed_axes(),'transZ':dict(limits=(-.001,0),stiffness=200.,damping=.02)}
+  axes={**fixed_axes(),'transZ':dict(limits=(-.001,0),stiffness=50.,damping=.02)}
   JOINTS.append(joint('compression_'+name,'practice_finger',name,p-BASE,[0,0,0],axes=axes,break_force=3.))
 # A rigid approximation of a thin curved full-cover tip, assembled from small
 # convex sections. Concavity is preserved instead of filling the underside.

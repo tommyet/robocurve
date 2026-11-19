@@ -52,7 +52,7 @@ def spawn(prim_path,cfg,translation=None,orientation=None,**kwargs):
   g.AddScaleOp().Set(Gf.Vec3f(*scale))
   if shape.get('collision',True):
    UsdPhysics.CollisionAPI.Apply(g.GetPrim())
-   if kind=='mesh':UsdPhysics.MeshCollisionAPI.Apply(g.GetPrim()).CreateApproximationAttr('convexHull')
+   if kind=='mesh':UsdPhysics.MeshCollisionAPI.Apply(g.GetPrim()).CreateApproximationAttr('none' if spec.get('fixed') else 'convexHull')
    collision=PhysxSchema.PhysxCollisionAPI.Apply(g.GetPrim());collision.CreateContactOffsetAttr(spec.get('contact_offset',.00025));collision.CreateRestOffsetAttr(0.)
    if spec.get('torsional_patch_radius'):
     collision.CreateTorsionalPatchRadiusAttr(spec['torsional_patch_radius']);collision.CreateMinTorsionalPatchRadiusAttr(spec.get('min_torsional_patch_radius',0.))

@@ -27,7 +27,7 @@ class Model(NativeModel):
   self.button_down=pressed;lit=self.lamp_remaining>0;self.lamp_remaining=max(0.,self.lamp_remaining-dt)
   load=[]
   for i,p in enumerate(PATCHES):
-   compression=max(0.,-float(self.joint_gap('compression_'+p['name'])[2]));load.append(200*compression)
+   compression=max(0.,-float(self.joint_gap('compression_'+p['name'])[2]));load.append(50*compression)
    point=self.p(p['name'])+[0,0,.0001];q=self.orientation('extension').T@(point-self.p('extension'))
    within=-.020<=q[0]<=.008 and abs(q[1])<=tip_width(q[0])
    gap=float(q[2]-(.003-arch(np.clip(q[1],-.013,.013))))
