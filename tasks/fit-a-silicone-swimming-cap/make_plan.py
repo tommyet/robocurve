@@ -4,10 +4,10 @@ from planner import Plan
 from scipy.spatial.transform import Rotation as Rot
 from geometry import HEAD,CAP
 p=Plan()
-theta=np.radians(20);axis=np.array([np.cos(theta),np.sin(theta),0.]);normal=np.array([-np.sin(theta),np.cos(theta),0.]);RL=np.column_stack([normal,np.cross(axis,normal),axis])
-RR=np.array([[0,0,1],[-1,0,0],[0,-1,0.]])
+RL=np.array([[0,0,1],[-1,0,0],[0,-1,0.]])
+RR=RL.copy()
 L=CAP+[0,.080,0.];Q=CAP+[0,-.080,0.]
-p.add(3,'approach below the rim along its tangent',{'left':(L-.035*RL[:,2]+[0,0,-.012],RL,.35),'right':(Q-.035*RR[:,2]+[0,0,-.012],RR,.35)},'joint')
+p.add(3,'approach below the rim along its tangent',{'left':(L-.020*RL[:,2]+[0,0,-.012],RL,.35),'right':(Q-.020*RR[:,2]+[0,0,-.012],RR,.35)},'joint')
 p.add(3,'slide the open fingers beneath the rolled rim',{'left':(L+[0,0,-.010],RL,.35),'right':(Q+[0,0,-.010],RR,.35)})
 p.add(1,'raise the fingers around the rolled rim',{'left':(L,RL,.35),'right':(Q,RR,.35)})
 p.add(2,'pinch the free rim',{'left':(L,RL,.09),'right':(Q,RR,.09)})
