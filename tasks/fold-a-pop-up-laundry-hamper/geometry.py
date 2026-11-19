@@ -60,19 +60,16 @@ for i in range(N):
  HEM_ATTACHMENTS.append((name,ids,local))
 GRIP_INDICES=(11,60);GRIP_BODIES=tuple(f'bound_edge_{i:03d}' for i in GRIP_INDICES)
 GRIP_POINTS=np.asarray([next(b['pos'] for b in BODIES if b['name']==name) for name in GRIP_BODIES])
-# Small material patches give the thin retaining ribbon finite native finger
-# contact. They are part of the elastic, never a hand or fixture.
+# Small contact nodes provide native finger contact with the elastic loop.
+# Each attaches to one material vertex; it does not constrain ribbon bending.
 BAND_ATTACHMENTS=[]
-band=next(s for s in SURFACES if s['name']=='band');band['mass']=.003
+band=next(s for s in SURFACES if s['name']=='band')
+band.update(mass=.003,youngs=4e5/3,thickness=.003,rest_offset=.0015,contact_offset=.002)
 for i in range(0,M,8):
- ids=[i,M+i,2*M+i,M+(i+1)%M];points=band['points'][ids]
- tangent=band['points'][M+(i+1)%M]-band['points'][M+i]
- tangent/=np.linalg.norm(tangent);radial=np.cross([0.,0.,1.],tangent)
- orientation=Rotation.from_matrix(np.column_stack([tangent,radial,[0.,0.,1.]]))
- centre=points.mean(axis=0);name=f'band_contact_{i:03d}'
- spec=body(name,centre,[box((.010,.005,.001))],mass=.000125,quat=orientation.as_quat().tolist(),color=(.10,.11,.13),friction=1.,contact_offset=.0004)
+ ids=[M+i];centre=band['points'][M+i];name=f'band_contact_{i:03d}'
+ spec=body(name,centre,[sphere((.0015,)*3)],mass=.000125,color=(.10,.11,.13),friction=1.,contact_offset=.00025)
  spec['exclude']=['band','tab'];BODIES.append(spec)
- BAND_ATTACHMENTS.append((name,ids,orientation.inv().apply(points-centre)))
+ BAND_ATTACHMENTS.append((name,ids,np.zeros((1,3))))
 finalize(BODIES,JOINTS)
 
 def spawn_surface(stage,root):

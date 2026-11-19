@@ -47,7 +47,7 @@ class DemoControl:
      obj=phase['obj'];pos=m.p(obj);OR=m.orientation(obj);kind=phase['kind'];self.phase_object_start=pos.copy()
      if kind=='pick':
       from common import down
-      axis=OR[:,0];yaw=np.arctan2(axis[1],axis[0]);goalR=Rot.from_euler('z',yaw).as_matrix()@down(-90)
+      axis=OR[:,0];yaw=np.arctan2(axis[1],axis[0]);goalR=Rot.from_euler('z',yaw).as_matrix()@(down(-90) if obj=='spare_fuse' else down(90))
       point=phase['point'].copy();height=point[2];point[2]=0.
       goal=pos+OR@point+phase['delta']+np.array([0.,0.,height]);self.grasps.pop(obj,None)
      elif kind in ['move','lift']:
@@ -68,11 +68,11 @@ class DemoControl:
      # part throughout pickup rather than an obsolete phase-start pose.
      obj=phase['obj'];pos=m.p(obj);OR=m.orientation(obj)
      from common import down
-     yaw=np.arctan2(OR[1,0],OR[0,0]);goalR=Rot.from_euler('z',yaw).as_matrix()@down(-90)
+     yaw=np.arctan2(OR[1,0],OR[0,0]);goalR=Rot.from_euler('z',yaw).as_matrix()@(down(-90) if obj=='spare_fuse' else down(90))
      point=phase['point'].copy();height=point[2];point[2]=0.
      goal=pos+OR@point+phase['delta']+np.array([0.,0.,height])
      if obj=='old_fuse':
-      P=m.orientation('plug');goalR=P@down(-90)
+      P=m.orientation('plug');goalR=P@down(90)
       goal=pos+OR@point+P@(phase['delta']+np.array([0.,0.,height]))
      self.phase_goal=(goal,goalR);self.last_goal=self.phase_goal
     if phase['kind']=='lift' and phase['obj']=='old_fuse':
@@ -90,6 +90,6 @@ class DemoControl:
    def residual(q):
     pp,rr=ik.tcp_pose(q,station.BASES[side]);actual_R=rbias@rr
     position=pp+bias-target if tool_tip_local is None else pp+bias+actual_R@tool_tip_local-tip_target
-    return np.r_[position*(3. if tool_tip_local is not None else 1.),.05*ik._rot_error(R,actual_R),.001*(q-seed)]
+    return np.r_[position*(3. if tool_tip_local is not None else 1.),(.12 if side=='right' and k>520 else .05)*ik._rot_error(R,actual_R),.001*(q-seed)]
    out[o:o+6]=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=25).x
   return out

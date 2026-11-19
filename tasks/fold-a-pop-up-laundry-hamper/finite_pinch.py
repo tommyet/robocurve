@@ -27,7 +27,7 @@ class FinitePinch:
         from omni.physx import get_physx_interface
         from omni.physx.bindings._physx import SimulationEvent
         self.m=model;self.names=list(names);self.radius=radius;self.thickness=thickness
-        self.radii={name:(.0005 if name.startswith("band_contact_") else radius) for name in names}
+        self.radii={name:(.0015 if name.startswith("band_contact_") else radius) for name in names}
         self.half_width=half_width;self.z_range=z_range;self.held={};self.history={s:[] for s in ['left','right']};self.blocked=set();self.serial=0
         self.grippers={};self.body_paths={}
         for p in model.stage.Traverse():
@@ -96,7 +96,7 @@ class FinitePinch:
                     if linear:
                         limit=UsdPhysics.LimitAPI.Apply(joint.GetPrim(),axis);limit.CreateLowAttr(-.05);limit.CreateHighAttr(.05)
                     drive=UsdPhysics.DriveAPI.Apply(joint.GetPrim(),axis);drive.CreateTypeAttr('force')
-                    drive.CreateStiffnessAttr(1500. if linear else 2.0*np.pi/180.)
+                    drive.CreateStiffnessAttr(5000. if linear else 2.0*np.pi/180.)
                     drive.CreateDampingAttr(.5 if linear else .02*np.pi/180.)
                     drive.CreateMaxForceAttr((18. if linear else 0.36)/np.sqrt(3.))
                     drive.CreateTargetPositionAttr(0.)
