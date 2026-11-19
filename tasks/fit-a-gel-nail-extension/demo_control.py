@@ -4,7 +4,7 @@ from scipy.optimize import least_squares
 class DemoControl:
  def __init__(self):self.grasp=None;self.grasp_rotation=None;self.correction=np.zeros(3);self.seating_z=None;self.rotation_correction=np.zeros(3);self.flash_hand=None
  def action(self,k,wanted,m,hands,observed):
-  if self.flash_hand is None and any(n.startswith('bond_') and n not in m.broken for n in m.enabled):
+  if self.flash_hand is None and np.count_nonzero(m.dose>=10.)>=int(np.ceil(.9*len(m.dose))):
    self.flash_hand=(k,hands['right']['tcp'].copy(),hands['right']['rotation'].copy())
   if self.flash_hand is not None:
    # The real procedure releases the holding hand after flash cure, then
@@ -44,10 +44,11 @@ class DemoControl:
   if 340<=k<=1720:
    from geometry import PATCHES,BASE,arch,tip_width
    from scipy.spatial.transform import Rotation
-   contact_count=0
+   contact_count=0;gaps=[]
    for patch in PATCHES:
     q=m.orientation('extension').T@(m.p(patch['name'])+[0,0,.00012]-m.p('extension'))
     gap=float(q[2]-(.003-arch(np.clip(q[1],-.013,.013))))
+    gaps.append(gap)
     contact_count+=bool(-.020<=q[0]<=.008 and abs(q[1])<=tip_width(q[0]) and -.00008<gap<.00020)
    contact_fraction=contact_count/len(PATCHES)
    rotation_error=Rotation.from_matrix(desired_R@m.orientation('extension').T).as_rotvec()
@@ -62,7 +63,10 @@ class DemoControl:
    # motor tracking error before contact. This bounded contact controller
    # changes only robot commands; the gel and tip remain native bodies.
    if self.seating_z is None:self.seating_z=float(m.p('extension')[2])
-   if contact_fraction<.9:self.seating_z-=.00005
+   # Bidirectional geometric feedback avoids driving past the contact band.
+   median_gap=float(np.median(gaps))
+   if contact_fraction<.9:
+    self.seating_z-=float(np.clip(.12*(.00002-median_gap),-.00002,.00002))
    self.seating_z=float(np.clip(self.seating_z,BASE[2]-.002,BASE[2]+.025))
    goal[2]=self.seating_z
   # Use the compliant grip's captured rest transform. Chasing its transient

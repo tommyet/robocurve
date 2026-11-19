@@ -31,9 +31,9 @@ Path(__file__).with_name('initial-action.json').write_text(json.dumps({'action14
 p=Plan(a)
 p.add(2,'hold the separate cap by its rim',{'left':(ik.tcp_pose(a[:6],station.BASES['left'])[0],RL,.075),'right':(ik.tcp_pose(a[7:13],station.BASES['right'])[0],RR,.075)})
 def point(dx,z,y=0.):return HEAD+HEADROT@np.array([dx,y,z])+.012*(RL if dx<0 else RR)[:,2]
-p.add(2,'lift and stretch the cap opening',{'left':(point(-.10,.145),RL,.075),'right':(point(.10,.145),RR,.075)})
-p.add(4,'bring the stretched cap over the crown',{'left':(point(-.10,.140),RL,.075),'right':(point(.10,.140),RR,.075)})
-p.add(4,'seat the front rim above the eyes',{'left':(point(-.10,.040),RL,.075),'right':(point(.10,.140),RR,.075)})
+p.add(2,'lift and stretch the cap opening',{'left':(point(-.10,.210,-.12),RL,.075),'right':(point(.10,.210,-.12),RR,.075)})
+p.add(4,'bring the stretched cap over the crown',{'left':(point(-.10,.210),RL,.075),'right':(point(.10,.210),RR,.075)})
+p.add(4,'seat the front rim above the eyes',{'left':(point(-.10,.040),RL,.075),'right':(point(.10,.210),RR,.075)})
 p.add(4,'draw the back rim down',{'left':(point(-.10,.040),RL,.075),'right':(point(.10,.030),RR,.075)})
 p.add(2,'open both grips in place',{'left':(point(-.10,.040),RL,.18),'right':(point(.10,.030),RR,.18)})
 p.add(3,'slide both hands laterally clear',{'left':(point(-.16,.070),RL,.18),'right':(point(.16,.070),RR,.18)})

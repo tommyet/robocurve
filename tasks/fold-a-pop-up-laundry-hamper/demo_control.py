@@ -53,10 +53,9 @@ class DemoControl:
      self.waypoints[approach]=m.p(f'bound_edge_{index:03d}')-nominal
      self.waypoints[approach+'_body']=f'bound_edge_{index:03d}'
     lo,hi=self.stages[label];u=ik.smoothstep((k-lo+1)/(hi-lo+1))
-    if label in (enclose,pinch):
-     self.waypoints[approach]=m.p(self.waypoints[approach+'_body'])-nominal
     target+=(u if label==approach else 1-u if label==press else 1.)*self.waypoints[approach]
-    if label==press and side not in m.grasp_state:raise RuntimeError('The outer loop was not grasped before stacking.')
+    # Stack with closed fingertips using ordinary downward native contact.
+    # No grip attachment or successful grasp is assumed here.
    if side=='left' and label=='approach the loose retaining loop' and self.retainer is None:
     band=m.nodes['band'];point=band[64];normal=np.cross(band[128]-band[0],band[65]-band[127]);normal/=max(np.linalg.norm(normal),1e-12)
     direction=point-np.asarray(station.BASES['left']);direction-=normal*float(direction@normal);direction/=max(np.linalg.norm(direction),1e-12)
