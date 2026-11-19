@@ -46,14 +46,19 @@ class FinitePinch:
   for f in g['filters']:f.GetAttribute('omniphysics:filterEnabled').Set(False)
   self.m.events.append(dict(event='pinch_released' if reason=='opened' else 'pinch_slipped',side=side,body=g['body'],time=self.m.time,reason=reason))
   if reason!='opened':self.blocked.add(side)
- def tension(self,index):
+ def tension(self,indices):
   from geometry import M,POINTS
-  p=self.m.nodes[M+index];force=np.zeros(3)
-  # Two adjacent cord segments supply the local tensile load estimate.
-  for j in [(index-1)%M,(index+1)%M]:
-   v=self.m.nodes[M+j]-p;length=np.linalg.norm(v);rest=np.linalg.norm(POINTS[M+j]-POINTS[M+index])
-   strain=max(0.,length/rest-1.);force+=3e5*np.pi*.0015**2*strain*v/max(length,1e-12)
-  return float(np.linalg.norm(force))
+  # Load enters the held patch at its exposed cord segments. Checking only
+  # the central vertex would miss the load once its neighbours are held too.
+  held=set(indices);loads=[]
+  for index in held:
+   p=self.m.nodes[M+index]
+   for j in [(index-1)%M,(index+1)%M]:
+    if j in held:continue
+    length=np.linalg.norm(self.m.nodes[M+j]-p)
+    rest=np.linalg.norm(POINTS[M+j]-POINTS[M+index])
+    loads.append(3e5*np.pi*.0015**2*max(0.,length/rest-1.))
+  return max(loads,default=0.)
  def update(self,hands):
   from pxr import Sdf,Vt,UsdPhysics
   from geometry import M,TRIS
@@ -66,7 +71,7 @@ class FinitePinch:
     if h['opening']>.30:self.blocked.discard(side)
     continue
    if side in self.held:
-    g=self.held[side];point=self.m.nodes[M+g['index']];local=(point-h['tcp'])@h['rotation'];g['estimated_load_n']=self.tension(g['index'])
+    g=self.held[side];point=self.m.nodes[M+g['index']];local=(point-h['tcp'])@h['rotation'];g['estimated_load_n']=self.tension(g['indices'])
     if g['estimated_load_n']>6.:self.release(side,'estimated local cord tension exceeded 6 N')
     elif np.linalg.norm(local-g['local_point'])>.008:self.release(side,'material moved 8 mm through the grip')
    if side in self.held or side in self.blocked or max(history)-h['opening']<.008:continue
@@ -112,6 +117,6 @@ class FinitePinch:
      f.GetAttribute('omniphysics:groupElemIndices1').Set([])
      f.GetAttribute('omniphysics:filterEnabled').Set(True)
     filters.append(f)
-   self.held[side]=dict(body=name,index=index,attachment=a,local_point=local.copy(),estimated_load_n=0.,filters=filters)
+   self.held[side]=dict(body=name,index=index,indices=[j-M for j in ids if M<=j<2*M],attachment=a,local_point=local.copy(),estimated_load_n=0.,filters=filters)
    self.m.events.append(dict(event='pinch_captured',side=side,body=name,time=self.m.time,slip_estimate_limit_n=6.,source='native contact patch attachment to actual gripper link',contact_vertices=ids))
   self.m.grasp_state={side:dict(body=g['body'],estimated_load_n=g['estimated_load_n'],slip_estimate_limit_n=6.) for side,g in self.held.items()}

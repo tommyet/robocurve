@@ -6585,3 +6585,5 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - PR2847 ingestion succeeded after the archive-size correction: received asTK-8AW9EM, waiting for review. Full native traces and videos remain backed up locally. Submission commit3bcf197 contains only the hairbrush folder.
 
 - Cap050/source153 captures the right rim at215 but slips at216; the left captures at225. A controller discontinuity caused by the height-follow condition switched the right wrist back to its old height immediately after capture. Source155 preserves the last measured closure-height correction after capture, fading it smoothly during lift. Same physics/score. This fixes a motion bug rather than increasing grip strength.
+
+- Before accepting154 evidence, its finite-area pinch requires the load guard at exposed patch edges. The old centre-vertex estimate would be near zero when neighbouring vertices are held. Source156 takes the maximum E*A*strain across each exposed centreline segment, conservatively releasing at6 N. Stop052 as a diagnostic; no Dream or submission from154.
