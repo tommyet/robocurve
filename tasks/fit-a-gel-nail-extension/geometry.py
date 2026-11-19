@@ -48,6 +48,15 @@ for b in BODIES:
  b['pos']=(BASE+FRAME@(np.asarray(b['pos'])-BASE)).tolist()
  b['quat']=(Rotation.from_matrix(FRAME)*Rotation.from_quat(b.get('quat',[0,0,0,1]))).as_quat().tolist()
 REST=BASE+FRAME@(REST-BASE);BUTTON=BASE+FRAME@(BUTTON-BASE);LAMP=BASE+FRAME@(LAMP-BASE)
+# An ordinary 20 mm spacer raises the open curing lamp clear of the robot wrist.
+# It changes neither the nail nor the contact-loaded cure/proof requirements.
+LAMP_SPACER=.020
+for b in BODIES:
+ if b['name'] in ('lamp','lamp_button'):b['pos'][2]+=LAMP_SPACER
+ if b['name']=='lamp_riser':
+  b['pos'][2]+=LAMP_SPACER/2
+  b['shapes'][0]['size'][2]+=LAMP_SPACER
+LAMP[2]+=LAMP_SPACER;BUTTON[2]+=LAMP_SPACER
 RAISE=.065
 for b in BODIES:b['pos'][2]+=RAISE
 for p in [BASE,REST,BUTTON,LAMP]:p[2]+=RAISE

@@ -88,6 +88,7 @@ def main():
   trackers=[JointTracking(side=s) for s in ['left','right']];limit_vector=np.tile([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/20],2)
   report.update(status='running',initial_measurements=m.measure());save()
   for k in range(1,steps+1):
+   if (a.out/'stop-requested').exists():raise RuntimeError('Diagnostic stop requested; preserve evidence.')
    if a.mode=='demo':
     wanted=np.asarray(plan['frames'][k-1]['action14'])
     if not a.cpu_preview:
@@ -110,6 +111,7 @@ def main():
    if not a.cpu_preview:m.draw(drawing)
    capture(k);report.update(steps=k,measurements=m.measure(),score=m.score())
    if k%20==0:save();trace.flush()
+   if a.mode=='demo' and m.spill:raise RuntimeError('Gel left the insert; stop irrecoverably failed diagnostic.')
    if a.mode=='demo' and m.failed:raise RuntimeError('Native task integrity failed; development demo stopped early.')
   report.update(status='complete',events=m.events,score=m.score(),requires_visual_review=True)
  except BaseException as error:

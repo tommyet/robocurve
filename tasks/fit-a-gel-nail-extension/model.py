@@ -18,7 +18,7 @@ class Model(NativeModel):
   from pxr import PhysxSchema
   self.tip_force=PhysxSchema.PhysxForceAPI.Get(self.stage,'/World/envs/env_0/materials/extension')
   from finite_pinch import FinitePinch
-  self.pinch=FinitePinch(self,['extension'],.0058,.003,.0015,(-.009,.003))
+  self.pinch=FinitePinch(self,['extension'],.0058,.003,.002,(-.009,.003))
  def material(self,hands,dt):
   from pxr import Gf
   self.pinch.update(hands)

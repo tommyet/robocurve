@@ -28,7 +28,7 @@ class Model(NativeModel):
   view=SimulationManager.get_physics_sim_view();self.surface=view.create_surface_deformable_body_view('/World/envs/env_*/materials/cap')
   if self.surface.count!=1:raise RuntimeError('Expected one native cap surface')
   from finite_pinch import FinitePinch
-  self.pinch=FinitePinch(self,[n for n in self.names if n.startswith('rim_contact_')],0.0015,0.003,0.012,(-0.025, 0.008))
+  self.pinch=FinitePinch(self,[n for n in self.names if n.startswith('rim_contact_')],0.0015,0.003,0.012,(-0.038, 0.002))
   self.read()
  def read(self):
   super().read()

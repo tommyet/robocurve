@@ -40,8 +40,8 @@ on an 18 x 18 x 12 mm wooden rest. The screwdriver pickup centre is
 is 747.5 mm. Match the setup image. The plug, carrier, fuses, driver and dish
 are free to move. Restore intact clips and the original seated fuse each time.
 
-The left fingers have 45 x 20 x 3 mm padded extensions. The right extensions
-are 45 x 4 mm steel, with 3 mm backing and 2 x 2 mm distal 27 mm sections.
+The left fingers have 55 x 20 x 3 mm padded extensions. The right extensions
+are 55 x 4 mm steel, with 3 mm backing and 2 x 2 mm distal 22 mm sections.
 The finger actuator limits are 40 N.
 
 ## Scoring and material model
@@ -73,3 +73,5 @@ Not submission-ready. The latest native diagnostic (`fuse-full-039`) stopped
 at control 825 after a terminal was damaged during cartridge pickup. The
 previous shallower pickup stayed intact but lost the cartridge after 6.4 mm
 of lift. A full replacement demo and completed Dream baseline remain required.
+
+An ordinary90×70mm parts tray on a50mm riser sits atx330mm,y−16mm and catches the freed carrier. Its8mm rim keeps the thin carrier within reach; the robot must still pinch, lift and refit it through native contact. The tray does not attach or reposition the carrier.

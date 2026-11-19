@@ -24,6 +24,6 @@ def shadowed(point,hands,roof_z):
   q=np.asarray(h.get('finger_joint_positions',[-h['opening']*.04695]*2))
   boxes=[([0,0,-.084],(.070,.065,.040))]
   for opening,sign in [(q[0],1),(-q[1],-1)]:
-   boxes.extend([([opening+sign*.002,0,-.003],(.002,.002,.012)),([opening+sign*.0015,0,-.0255],(.003,.004,.033))])
+   boxes.extend([([opening+sign*.002,0,-.003],(.002,.004,.012)),([opening+sign*.0015,0,-.0255],(.003,.004,.033))])
   if any(intersects_segment(a,b,np.asarray(c),s) for c,s in boxes):return True
  return False

@@ -44,8 +44,11 @@ class DemoControl:
     if approach not in self.waypoints:
      points=m.nodes['frame']
      index=indices if isinstance(indices,int) else indices[0]+int(np.argmax(points[indices[0]:indices[1],2]))
-     self.waypoints[approach]=points[index]-nominal
+     self.waypoints[approach]=m.p(f'bound_edge_{index:03d}')-nominal
+     self.waypoints[approach+'_body']=f'bound_edge_{index:03d}'
     lo,hi=self.stages[label];u=ik.smoothstep((k-lo+1)/(hi-lo+1))
+    if label in (enclose,pinch):
+     self.waypoints[approach]=m.p(self.waypoints[approach+'_body'])-nominal
     target+=(u if label==approach else 1-u if label==press else 1.)*self.waypoints[approach]
     if label==press and side not in m.grasp_state:raise RuntimeError('The outer loop was not grasped before stacking.')
    if side=='left' and label=='approach the loose retaining loop' and self.retainer is None:

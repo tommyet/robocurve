@@ -13,7 +13,7 @@ The prototype uses a full-size 28 mm extension, 10–14 mm wide, on a 14 mm curv
 
 This is a reduced material model. It does not simulate chemical conversion, fluid flow or individual air bubbles; unseated regions remain unbonded. The 1 N post-release proof load tests the native bonds. Contact stiffness, bond strength and transfer rates are engineering approximations, not measured product data. The practice insert and gel-loading protocol below make the physical reset repeatable; they are proposed test conditions, not a measured calibration of this gel.
 
-The 65 mm work riser raises ordinary tools into the robot's workspace; the nail, finger and lamp retain full scale. Both arms use narrow steel finger extensions with silicone faces. The scripted controller reads native object poses and sends ordinary bounded robot joint actions. Dream will receive the same scene, hardware, material model and standard camera/joint observations.
+A20mm spacer beneath the lamp provides wrist clearance; the simulated exposure law is not a radiometric calibration at that distance. Physical trials must follow the matched product cure guidance and pass the same1N bond test. The 65 mm work riser raises ordinary tools into the robot's workspace; the nail, finger and lamp retain full scale. Both arms use narrow steel finger extensions with silicone faces. The scripted controller reads native object poses and sends ordinary bounded robot joint actions. Dream will receive the same scene, hardware, material model and standard camera/joint observations.
 
 All task shapes are original procedural geometry under the included MIT license. YAM/Isaac dependencies retain their upstream licenses; no third-party meshes are copied.
 
@@ -29,4 +29,6 @@ After both hands have been clear for3s, apply1N perpendicular to the nail with a
 
 ## Run
 
-Use the pinned Isaac/YAM environment in ENVIRONMENT.json; its current task validation is still pending. Run `python tasks/fit-a-gel-nail-extension/run.py --mode demo --out /path/to/new-demo`, or replace `demo` with `dream` for the2400-action model trial. Rescore with `python tasks/fit-a-gel-nail-extension/rescore.py /path/to/new-demo`. The fixed layout has no random seed. The scripted plan uses1780 actions (89s simulated); measured wall runtime will be recorded after native validation.
+Use the pinned Isaac/YAM environment in ENVIRONMENT.json; its current task validation is still pending. Run `python tasks/fit-a-gel-nail-extension/run.py --mode demo --out /path/to/new-demo`, or replace `demo` with `dream` for the2400-action model trial. Rescore with `python tasks/fit-a-gel-nail-extension/rescore.py /path/to/new-demo`. The fixed layout has no random seed. The scripted plan uses1980 actions (99s simulated); measured wall runtime will be recorded after native validation.
+
+The distal contact faces are2 ×4 ×12mm. Their4mm vertical span encloses both curved side edges of the tip; a2mm-tall face could touch only an edge and let the extension roll during seating. Both demo and Dream use the same native geometry and light-shadow boxes.

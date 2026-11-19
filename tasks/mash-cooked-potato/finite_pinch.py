@@ -21,6 +21,25 @@ def candidate(point, radius, hand, thickness, half_width, z_range):
     return float(np.linalg.norm(local))
 
 
+def handle_contact(a,b,hand,radius,half_width,z_range):
+    """Does any of the real90mm handle remain between both finite pad faces?"""
+    a=(np.asarray(a)-hand['tcp'])@hand['rotation'];b=(np.asarray(b)-hand['tcp'])@hand['rotation']
+    q=np.asarray(hand['finger_joint_positions']);left=q[0];right=-q[1]
+    if right-left>2*radius+.002:return False
+    lo=np.array([left+radius-.001,-half_width,z_range[0]])
+    hi=np.array([right-radius+.001,half_width,z_range[1]])
+    if np.any(lo>hi):return False
+    u0,u1=0.,1.;d=b-a
+    for axis in range(3):
+        if abs(d[axis])<1e-12:
+            if not lo[axis]<=a[axis]<=hi[axis]:return False
+        else:
+            u,v=sorted([(lo[axis]-a[axis])/d[axis],(hi[axis]-a[axis])/d[axis]])
+            u0=max(u0,u);u1=min(u1,v)
+            if u0>u1:return False
+    return True
+
+
 class FinitePinch:
     def __init__(self,model,names,radius,thickness,half_width,z_range):
         from pxr import UsdPhysics,PhysicsSchemaTools
@@ -62,9 +81,9 @@ class FinitePinch:
                 continue
             if side in self.held:
                 g=self.held[side];now=(self.m.p(g['body'],[0,0,.135])-h['tcp'])@h['rotation']
-                if np.linalg.norm(now-g['local_point'])>.008:
+                if not handle_contact(self.m.p(g['body'],[0,0,.090]),self.m.p(g['body'],[0,0,.180]),h,self.radius,self.half_width,self.z_range):
                     g['joint'].GetJointEnabledAttr().Set(False);self.held.pop(side);self.blocked.add(side)
-                    self.m.events.append(dict(event='pinch_slipped',side=side,body=g['body'],time=self.m.time,reason='material moved 8 mm through the grip'))
+                    self.m.events.append(dict(event='pinch_slipped',side=side,body=g['body'],time=self.m.time,reason='the90mm handle left the finite opposing pad region'))
             if side in self.held:
                 g=self.held[side];target=np.asarray(h['tcp'])+h['rotation']@g['local_point']
                 q=Rotation.from_matrix(h['rotation']@g['local_rotation']).as_quat()

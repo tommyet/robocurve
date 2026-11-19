@@ -23,9 +23,9 @@ for side,o,i,R in [('left',0,GRIP_IDS[0],RL),('right',7,GRIP_IDS[1],RR)]:
 Path(__file__).with_name('initial-action.json').write_text(json.dumps({'action14':a.tolist()},indent=2)+'\n')
 p=Plan(a)
 p.add(2,'hold the open towel',{'left':(ik.tcp_pose(a[:6],station.BASES['left'])[0],RL,.065),'right':(ik.tcp_pose(a[7:13],station.BASES['right'])[0],RR,.065)})
-for z in [TABLE+.41,TABLE+.33,TABLE+.25]:
- p.add(4,'bring the towel around the next section',{'left':([.39,.09,z],RL,.065),'right':([.39,-.09,z],RR,.065)})
- p.add(4,'fold and gently squeeze the section',{'left':([.39,.024,z],RL,.065),'right':([.39,-.024,z],RR,.065)})
+for z in [TABLE+.43,TABLE+.35,TABLE+.27]:
+ p.add(4,'bring the towel around the next section',{'left':([.36,.105,z],RL,.065),'right':([.36,-.105,z],RR,.065)})
+ p.add(4,'wrap the towel against the section',{'left':([.44,.095,z],RL,.065),'right':([.44,-.095,z],RR,.065)})
  p.add(8,'blot without rubbing',{})
  p.add(3,'open the towel clear of the section',{'left':([.32,.11,z],RL,.065),'right':([.32,-.11,z],RR,.065)})
 p.add(4,'lower the towel away from the hair',{'left':([.27,.11,TABLE+.19],RL,.065),'right':([.27,-.11,TABLE+.19],RR,.065)})

@@ -50,7 +50,7 @@ bands and partial credit are in `task.json`. A cap resting beside the head,
 or crumpled on its crown without an encircling rim, cannot receive full credit.
 
 The cap is a 0.8 mm native elastic shell with self-contact and a 3 mm rolled
-rim. Young's modulus is 0.5 MPa; this uncalibrated value approximates silicone.
+rim. Young's modulus is 1 MPa; this uncalibrated value approximates silicone.
 The head is rigid. A compliant native pinch forms only when a rim element is
 between closing finger faces. It releases on opening or 8 mm slip, and breaks
 at 18 N or 0.08 Nm. Grip reaction loads on the robot are omitted. The robot
@@ -68,3 +68,5 @@ Not submission-ready. The latest native diagnostic (`cap-full-061`) completed
 640 controls with score 0.0. Sequential hand withdrawal still pulled the cap
 off the head. A released full-score fitting and completed Dream baseline
 remain required.
+
+The0.8mm shell uses a0.4mm rest-contact offset and3mm speculative contact margin, with exact fixed-head triangle collisions. The earlier2mm rest offset was wider than half the rolled-rim grip gap and could create conflicting constraints at pickup. Native penetration and finite-pinch checks remain required.

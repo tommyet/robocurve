@@ -1,6 +1,6 @@
 """Narrow steel finger extensions with silicone contact faces.
 
-Each extension is 45 x 4 mm, with a 3 mm backing and a 2 x 2 mm distal 12 mm and leaves the original finger bodies behind the working point so a distal pinch can hold a full-size nail extension.
+Each extension is 45 x 4 mm, with a 3 mm backing and a 2 x 4 mm distal 12 mm and leaves the original finger bodies behind the working point so a distal pinch can hold a full-size nail extension.
 They are rigid robot hardware in both demo and Dream runs, never grasp joints.
 """
 import numpy as np
@@ -68,7 +68,7 @@ def install():
                 # the ordinary fuse recess. The backing remains 3 mm thick.
                 pieces = [
                     ('backing',[sign*.0015,0.,.1565],(.003,.004,.033)),
-                    ('tip',[sign*.002,0.,.179],(.002,.002,.012)),
+                    ('tip',[sign*.002,0.,.179],(.002,.004,.012)),
                 ]
                 for label,centre_gripper,size in pieces:
                     centre=rotation.inv().apply(np.asarray(centre_gripper)-origin)
