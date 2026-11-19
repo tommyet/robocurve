@@ -56,10 +56,6 @@ between closing finger faces. It releases on opening or 8 mm slip, and breaks
 at 18 N or 0.08 Nm. Grip reaction loads on the robot are omitted. The robot
 must stretch, position and release the material; no fitted shape is assigned.
 
-The cap uses an approximate 0.5 MPa silicone shell modulus. Pinch translational
-stiffness is 5,000 N/m, with the same 18 N / 0.08 Nm force and torque bounds
-and 8 mm slip release. These values are uncalibrated material approximations.
-
 ## Assets
 
 All task geometry is original procedural work under the included MIT license.
@@ -71,7 +67,6 @@ No third-party task meshes, scans or textures are used.
 Development is ongoing. A validated full-score demonstration and completed
 Dream baseline are still required; no submission-readiness claim is made.
 
-The demo seats the front edge on the forehead before pulling the rear edge
-down, following the ordinary fitting sequence described by
-[Speedo](https://speedo.com.au/catalog/accessories/caps/). This is a robot-motion
-choice; it adds no head-to-cap attachment or change in material behaviour.
+The current demo fits the stretched opening evenly, then clears one hand at
+a time while the other retains the opposite rim. It commands only robot
+joints and grippers. Native validation is still pending.
