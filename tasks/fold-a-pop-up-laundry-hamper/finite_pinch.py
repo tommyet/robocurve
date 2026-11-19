@@ -1,8 +1,9 @@
-"""Disclosed no-slip pinch approximation, implemented as a breakable native joint.
+"""Disclosed no-slip pinch approximation, implemented as a compliant, force-limited native joint.
 
 A material element must be between closing finger faces and inside their real
 working area. The joint starts at the measured pose, without moving either body.
-It releases on opening and breaks at 18 N or 0.08 Nm. This approximates unresolved
+Its world anchor follows the observed hand, without changing task body poses.
+It releases on opening and breaks at 18 N or 0.24 Nm. This approximates unresolved
 finger friction; it does not move, fold, fit or score task material for the robot.
 """
 import numpy as np
@@ -42,7 +43,7 @@ class FinitePinch:
             path=str(PhysicsSchemaTools.decodeSdfPath(*e.payload['jointPath']))
             for side,g in list(self.held.items()):
                 if path==g['path']:
-                    self.m.events.append(dict(event='pinch_slipped',side=side,body=g['body'],time=self.m.time,force_limit_n=18.,torque_limit_nm=.08))
+                    self.m.events.append(dict(event='pinch_slipped',side=side,body=g['body'],time=self.m.time,force_limit_n=18.,torque_limit_nm=.24))
                     g['joint'].GetJointEnabledAttr().Set(False);self.held.pop(side);self.blocked.add(side)
         self.subscription=get_physx_interface().get_simulation_event_stream_v2().create_subscription_to_pop(event)
 
@@ -57,6 +58,17 @@ class FinitePinch:
                     self.m.events.append(dict(event='pinch_released',side=side,body=g['body'],time=self.m.time))
                 self.blocked.discard(side)
                 continue
+            if side in self.held:
+                g=self.held[side];now=(self.m.p(g['body'])-h['tcp'])@h['rotation']
+                if np.linalg.norm(now-g['local_point'])>.008:
+                    g['joint'].GetJointEnabledAttr().Set(False);self.held.pop(side);self.blocked.add(side)
+                    self.m.events.append(dict(event='pinch_slipped',side=side,body=g['body'],time=self.m.time,reason='material moved 8 mm through the grip'))
+            if side in self.held:
+                g=self.held[side];target=np.asarray(h['tcp'])+h['rotation']@g['local_point']
+                q=Rotation.from_matrix(h['rotation']@g['local_rotation']).as_quat()
+                with Sdf.ChangeBlock():
+                    g['joint'].GetLocalPos0Attr().Set(Gf.Vec3f(*target))
+                    g['joint'].GetLocalRot0Attr().Set(Gf.Quatf(float(q[3]),Gf.Vec3f(*q[:3])))
             if side in self.held or side in self.blocked or max(history)-h['opening']<.008:continue
             used={g['body'] for g in self.held.values()};choices=[]
             for name in self.names:
@@ -65,17 +77,25 @@ class FinitePinch:
                 if distance is not None:choices.append((distance,name))
             if not choices:continue
             _,name=min(choices);self.serial+=1;path=self.root+f'/pinch_constraint_{side}_{self.serial}'
-            joint=UsdPhysics.FixedJoint.Define(self.m.stage,path)
+            joint=UsdPhysics.Joint.Define(self.m.stage,path)
             joint.CreateJointEnabledAttr(False)
             with Sdf.ChangeBlock():
                 joint.CreateExcludeFromArticulationAttr(True)
-                joint.CreateBody0Rel().SetTargets([Sdf.Path(self.grippers[side])]);joint.CreateBody1Rel().SetTargets([Sdf.Path(self.body_paths[name])])
-                origin=np.asarray(h['tcp'])-h['rotation']@np.asarray(TCP_OFFSET)
-                p=h['rotation'].T@(self.m.p(name)-origin);q=Rotation.from_matrix(h['rotation'].T@self.m.orientation(name)).as_quat()
+                joint.CreateBody1Rel().SetTargets([Sdf.Path(self.body_paths[name])])
+                p=self.m.p(name);q=Rotation.from_matrix(self.m.orientation(name)).as_quat()
                 joint.CreateLocalPos0Attr(Gf.Vec3f(*p));joint.CreateLocalPos1Attr(Gf.Vec3f(0,0,0))
                 joint.CreateLocalRot0Attr(Gf.Quatf(float(q[3]),Gf.Vec3f(*q[:3])));joint.CreateLocalRot1Attr(Gf.Quatf(1.,Gf.Vec3f(0,0,0)))
-                joint.CreateBreakForceAttr(18.);joint.CreateBreakTorqueAttr(.08);joint.CreateCollisionEnabledAttr(True)
+                joint.CreateBreakForceAttr(18.);joint.CreateBreakTorqueAttr(.24);joint.CreateCollisionEnabledAttr(True)
+                # A force-limited friction approximation, not an infinitely stiff weld.
+                for axis in ('transX','transY','transZ','rotX','rotY','rotZ'):
+                    linear=axis.startswith('trans');limit=UsdPhysics.LimitAPI.Apply(joint.GetPrim(),axis)
+                    limit.CreateLowAttr(-.05 if linear else -180.);limit.CreateHighAttr(.05 if linear else 180.)
+                    drive=UsdPhysics.DriveAPI.Apply(joint.GetPrim(),axis);drive.CreateTypeAttr('force')
+                    drive.CreateStiffnessAttr(1500. if linear else .25*np.pi/180.)
+                    drive.CreateDampingAttr(.5 if linear else .005*np.pi/180.)
+                    drive.CreateMaxForceAttr((18. if linear else 0.24)/np.sqrt(3.))
+                    drive.CreateTargetPositionAttr(0.)
                 joint.GetJointEnabledAttr().Set(True)
-            self.held[side]=dict(body=name,path=path,joint=joint)
-            self.m.events.append(dict(event='pinch_captured',side=side,body=name,time=self.m.time,force_limit_n=18.,torque_limit_nm=.08,local_point=((self.m.p(name)-h['tcp'])@h['rotation']).tolist(),opening=float(h['opening'])))
-        self.m.grasp_state={side:dict(body=g['body'],force_limit_n=18.,torque_limit_nm=.08) for side,g in self.held.items()}
+            self.held[side]=dict(body=name,path=path,joint=joint,local_point=((self.m.p(name)-h['tcp'])@h['rotation']).copy(),local_rotation=h['rotation'].T@self.m.orientation(name))
+            self.m.events.append(dict(event='pinch_captured',side=side,body=name,time=self.m.time,force_limit_n=18.,torque_limit_nm=.24,local_point=((self.m.p(name)-h['tcp'])@h['rotation']).tolist(),opening=float(h['opening'])))
+        self.m.grasp_state={side:dict(body=g['body'],force_limit_n=18.,torque_limit_nm=.24) for side,g in self.held.items()}

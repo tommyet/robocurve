@@ -46,6 +46,11 @@ class DemoControl:
      elif kind=='withdraw':goal=self.phase_start[0]+phase['delta'];goalR=self.phase_start[1]
      else:goal,goalR=self.last_goal
      self.phase_goal=(goal,goalR);self.last_goal=self.phase_goal
+    if phase.get('relative')=='plug' and phase['kind']=='move':
+     tr,rr=self.grasps[phase['obj']];plugR=m.orientation('plug')
+     goalR=plugR@phase['rotation']@rr.T
+     goal=m.p('plug')+plugR@phase['position']-goalR@tr
+     self.phase_goal=(goal,goalR);self.last_goal=self.phase_goal
     u=ik.smoothstep((k-start)/phase['n']);target=self.phase_start[0]+u*(self.phase_goal[0]-self.phase_start[0]);R=ik.slerp_matrix(self.phase_start[1],self.phase_goal[1],u)
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=hands[side]['tcp']-p0;rbias=hands[side]['rotation']@R0.T

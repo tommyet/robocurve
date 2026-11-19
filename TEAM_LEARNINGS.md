@@ -6073,3 +6073,17 @@ editing, merge both agents' findings, and commit/push the update with the work.
   substep. Source101 uses PhysX per-substep contact reports with measured
   impulse, following the official contact-report API. No contact is inferred
   from proximity. Five tasks still lack full demonstrations and remain drafts.
+
+- Follow-up: batching joint properties did not fix the coupled grip. Pony031
+  became numerically unstable at210 controls; the integrity guard stopped it.
+  Native fixed and compliant joints between the robot articulation and small
+  material bodies are therefore not validated. Source105 tests a capped
+  compliant world anchor following measured hand motion, with8 mm slip release;
+  task body poses are never assigned. This remains diagnostic, not evidence.
+- Cap028 reached the material by ordinary contact but did not acquire both rim
+  grips. A12 mm vertical working width and observed-rim tracking during closure
+  are prepared in source105. Do not claim that merely lacking a grasp-constraint
+  flag proves failure: ordinary contact can still move the material.
+- Fuse017 transported the spare successfully, but the plug moved during the
+  frozen insertion target; the spare fell onto the table after release. Source102
+  tracks the live plug pose throughout insertion. No full-score fuse run yet.

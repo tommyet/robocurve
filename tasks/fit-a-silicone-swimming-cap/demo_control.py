@@ -7,10 +7,10 @@ class DemoControl:
   from yam_arena import ik,station
   from geometry import POINTS,RIM,M
   if self.offset is None:self.offset={s:m.nodes[i]-POINTS[i] for s,i in [('left',RIM[M//4]),('right',RIM[3*M//4])]}
-  if k==160:
+  if 160<=k<=200:
    self.grip_offset={}
    for side,o,i in [('left',0,RIM[M//4]),('right',7,RIM[3*M//4])]:
-    target,_=ik.tcp_pose(wanted[o:o+6],station.BASES[side]);self.grip_offset[side]=m.nodes[i]+[0,0,-.001]-target
+    target,_=ik.tcp_pose(wanted[o:o+6],station.BASES[side]);self.grip_offset[side]=m.nodes[i]+[0,0,.003]-target
   out=wanted.copy()
   for side,o in [('left',0),('right',7)]:
    target,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side])
