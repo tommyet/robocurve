@@ -1,4 +1,4 @@
-"""Native contact bodies and passive material joints; never attaches a hand.
+"""Native contact bodies and passive material joints; with force-limited pinch constraints.
 
 Scene construction is declarative in geometry.py. Every manipulated object has
 collision geometry, mass and force-limited joints. Only reset writes body poses.

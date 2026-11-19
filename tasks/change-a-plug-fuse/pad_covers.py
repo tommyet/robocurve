@@ -71,7 +71,7 @@ def install():
                     ('backing',[sign*.0015,0.,.1565],(.003,.004,.033)),
                     ('tip',[sign*.0025,0.,.179],(.001,.004,.012)),
                 ]
-                if 'left_robot' in path:
+                if 'LeftArm' in path:
                     pieces=[('support',[sign*.0015,0.,.1625],(.003,.004,.045))]
                 for label,centre_gripper,size in pieces:
                     centre=rotation.inv().apply(np.asarray(centre_gripper)-origin)
@@ -82,10 +82,10 @@ def install():
                     shape.AddScaleOp().Set(Gf.Vec3f(*size))
                     UsdPhysics.CollisionAPI.Apply(shape.GetPrim())
                     collision=PhysxSchema.PhysxCollisionAPI.Apply(shape.GetPrim())
-                    collision.CreateContactOffsetAttr(.002 if 'left_robot' in path else .0005)
+                    collision.CreateContactOffsetAttr(.002 if 'LeftArm' in path else .0005)
                     collision.CreateRestOffsetAttr(0.)
-                    collision.CreateTorsionalPatchRadiusAttr(.006 if 'left_robot' in path else .003)
-                    collision.CreateMinTorsionalPatchRadiusAttr(.004 if 'left_robot' in path else .001)
+                    collision.CreateTorsionalPatchRadiusAttr(.006 if 'LeftArm' in path else .003)
+                    collision.CreateMinTorsionalPatchRadiusAttr(.004 if 'LeftArm' in path else .001)
                     bind_physics_material(str(shape.GetPath()),physics_path,stage=stage)
                     bind_visual_material(str(shape.GetPath()),visual_path,stage=stage)
             return prim

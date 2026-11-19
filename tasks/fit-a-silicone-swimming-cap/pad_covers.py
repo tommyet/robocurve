@@ -1,6 +1,6 @@
 """Narrow steel finger extensions with silicone contact faces.
 
-Each extension is 40 x 24 x 3 mm and leaves the original finger bodies 23 mm
+Each extension is 40 x 4 x 3 mm and leaves the original finger bodies 23 mm
 behind the working point, giving access to the thin elastic without the finger bodies pushing it away.
 They are rigid robot hardware in both demo and Dream runs, never grasp joints.
 """
@@ -71,7 +71,7 @@ def install():
                 shape.CreateSizeAttr(1.)
                 shape.AddTranslateOp().Set(Gf.Vec3d(*centre))
                 shape.AddOrientOp().Set(Gf.Quatf(float(q[3]), Gf.Vec3f(*q[:3])))
-                shape.AddScaleOp().Set(Gf.Vec3f(.003, .024, .040))
+                shape.AddScaleOp().Set(Gf.Vec3f(.003, .004, .040))
                 UsdPhysics.CollisionAPI.Apply(shape.GetPrim())
                 collision = PhysxSchema.PhysxCollisionAPI.Apply(shape.GetPrim())
                 collision.CreateContactOffsetAttr(.002)

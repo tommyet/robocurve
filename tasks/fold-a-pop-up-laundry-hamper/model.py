@@ -3,7 +3,7 @@ from native_model import NativeModel
 from geometry import SURFACES,N,HEM_ATTACHMENTS,FRAME_POINTS
 class Model(NativeModel):
  def __init__(self):
-  super().__init__();self.retained_seconds=0.;self.nodes={s['name']:s['points'].copy() for s in SURFACES};self.node_velocities={n:np.zeros_like(p) for n,p in self.nodes.items()};self.peak_stretch={n:1. for n in self.nodes}
+  super().__init__();self.grasp_state={};self.retained_seconds=0.;self.nodes={s['name']:s['points'].copy() for s in SURFACES};self.node_velocities={n:np.zeros_like(p) for n,p in self.nodes.items()};self.peak_stretch={n:1. for n in self.nodes}
  def configure_station(self):
   from pad_covers import install
   install()
@@ -15,6 +15,8 @@ class Model(NativeModel):
    v=view.create_surface_deformable_body_view('/World/envs/env_*/materials/'+s['name'])
    if v.count!=1:raise RuntimeError('Expected one native '+s['name']+' surface')
    self.surfaces[s['name']]=v
+  from finite_pinch import FinitePinch
+  self.pinch=FinitePinch(self,[n for n in self.names if n.startswith('bound_edge_')],0.0035,0.002,0.012,(-0.01, 0.012))
   self.read()
  def read(self):
   super().read()
@@ -24,7 +26,7 @@ class Model(NativeModel):
     self.nodes[s['name']]=v.get_simulation_nodal_positions().numpy()[0,:len(s['points'])].copy();self.node_velocities[s['name']]=v.get_simulation_nodal_velocities().numpy()[0,:len(s['points'])].copy()
  def release_points(self):return np.vstack(list(self.nodes.values()))
  def update(self,hands,dt=.05):
-  self.read();self.time+=dt;points=self.release_points()
+  self.read();self.time+=dt;self.pinch.update(hands);points=self.release_points()
   clear=all(h['opening']>.4 and np.min(np.linalg.norm(points-h['tcp'],axis=1))>.05 for h in hands.values());self.release=self.release+dt if clear else 0.
   for s in SURFACES:
    p=self.nodes[s['name']];e=s['edges'];stretch=np.linalg.norm(p[e[:,1]]-p[e[:,0]],axis=1)/s['rest_lengths'];self.peak_stretch[s['name']]=max(self.peak_stretch[s['name']],float(stretch.max()))
@@ -56,6 +58,6 @@ class Model(NativeModel):
   if compact and m['retainer_encloses_packet'] and self.retained_seconds>=3:return 1.
   if compact:return .5
   return .25 if m['bundle_long_mm']<=350 and m['bundle_short_mm']<=250 else 0.
- def state(self):return dict(super().state(),nodes=self.nodes,node_velocities=self.node_velocities,peak_stretch=self.peak_stretch,retained_seconds=self.retained_seconds)
+ def state(self):return dict(super().state(),grasp_state=self.grasp_state,nodes=self.nodes,node_velocities=self.node_velocities,peak_stretch=self.peak_stretch,retained_seconds=self.retained_seconds)
  def restore(self,state):
   s=dict(state);self.retained_seconds=s.pop('retained_seconds',0.);self.nodes={k:np.asarray(v) for k,v in s.pop('nodes').items()};self.node_velocities={k:np.asarray(v) for k,v in s.pop('node_velocities').items()};self.peak_stretch=s.pop('peak_stretch');super().restore(s)

@@ -2,10 +2,14 @@ import numpy as np
 from native_model import NativeModel
 from geometry import HEAD,POINTS,EDGES,REST_LENGTHS,STRANDS,SEGMENTS,M
 class Model(NativeModel):
- def __init__(self):super().__init__();self.nodes=POINTS.copy();self.node_velocities=np.zeros_like(self.nodes);self.peak_stretch=1.
+ def __init__(self):super().__init__();self.grasp_state={};self.nodes=POINTS.copy();self.node_velocities=np.zeros_like(self.nodes);self.peak_stretch=1.
  def configure_station(self):
   from pad_covers import install
   install()
+ def bind_native(self,base):
+  super().bind_native(base)
+  from finite_pinch import FinitePinch
+  self.pinch=FinitePinch(self,[n for n in self.names if n.startswith('band_segment_')],.0015,.003,.002,(-.025,.012))
  def band_nodes(self):
   centres=np.array([self.p(f'band_segment_{i:03d}') for i in range(M)])
   radial=np.array([self.orientation(f'band_segment_{i:03d}')[:,0] for i in range(M)])
@@ -14,7 +18,7 @@ class Model(NativeModel):
   super().read();self.nodes=self.band_nodes();self.node_velocities=np.zeros_like(self.nodes)
  def release_points(self):return np.vstack([self.nodes,self.poses[[i for i,n in enumerate(self.names) if n.startswith('hair_')],:3]])
  def update(self,hands,dt=.05):
-  self.read();self.time+=dt;p=self.release_points();clear=all(h['opening']>.4 and np.min(np.linalg.norm(p-h['tcp'],axis=1))>.05 for h in hands.values());self.release=self.release+dt if clear else 0.
+  self.read();self.time+=dt;self.pinch.update(hands);p=self.release_points();clear=all(h['opening']>.4 and np.min(np.linalg.norm(p-h['tcp'],axis=1))>.05 for h in hands.values());self.release=self.release+dt if clear else 0.
   self.peak_stretch=max(self.peak_stretch,float(np.max(np.linalg.norm(self.nodes[EDGES[:,1]]-self.nodes[EDGES[:,0]],axis=1)/REST_LENGTHS)));self.failed |= self.integrity_failed()
  def integrity_failed(self):return super().integrity_failed() or not np.isfinite(self.nodes).all() or self.peak_stretch>5. or bool(self.broken)
  def measure(self):
@@ -44,7 +48,7 @@ class Model(NativeModel):
   from hair_visual import draw
   draw(self,d)
   ring=self.nodes[M:2*M];d.tube("plain_elastic",np.vstack([ring,ring[0]]),.0015,(.64,.12,.27),sides=10)
- def state(self):return dict(super().state(),nodes=self.nodes,node_velocities=self.node_velocities,peak_stretch=self.peak_stretch)
+ def state(self):return dict(super().state(),grasp_state=self.grasp_state,nodes=self.nodes,node_velocities=self.node_velocities,peak_stretch=self.peak_stretch)
  def restore(self,state):
   s=dict(state);self.nodes=np.asarray(s.pop('nodes'));self.node_velocities=np.asarray(s.pop('node_velocities'));self.peak_stretch=s.pop('peak_stretch');super().restore(s)
   if not np.allclose(self.nodes,self.band_nodes(),atol=1e-6):raise ValueError('Band nodes disagree with native segment poses')

@@ -1,7 +1,7 @@
 """Narrow steel finger extensions with silicone contact faces.
 
 Each extension is 40 x 4 x 3 mm and leaves the original finger bodies 13 mm
-behind the working point, giving access to the thin elastic. A shallow transverse V groove centres the cord.
+behind the working point, giving access to the thin elastic.
 They are rigid robot hardware in both demo and Dream runs, never grasp joints.
 """
 import numpy as np
@@ -66,28 +66,17 @@ def install():
                 origin = np.array([sign*.0445119, -sign*.0239931, .0566829])
                 centre = rotation.inv().apply(np.array([sign*.0015, 0., .152])-origin)
                 PhysxSchema.PhysxRigidBodyAPI.Apply(stage.GetPrimAtPath(path+paths[name])).CreateEnableSpeculativeCCDAttr(True)
-                # Four convex pieces form a continuous steel fingertip with a
-                # 0.6 mm-deep, 4 mm-wide transverse V groove at the working point.
-                # This is fixed hardware: the cord still enters, is pinched and
-                # can slip out. No joint ever attaches it to the gripper.
-                for j,(z0,z1,h0,h1) in enumerate([
-                    (.132,.158,.003,.003),(.158,.160,.003,.0024),
-                    (.160,.162,.0024,.003),(.162,.172,.003,.003)]):
-                    points=[]
-                    for z,h in [(z0,h0),(z1,h1)]:
-                        for x,y in [(0,-.002),(sign*h,-.002),(sign*h,.002),(0,.002)]:
-                            points.append(rotation.inv().apply(np.array([x,y,z])-origin))
-                    shape=UsdGeom.Mesh.Define(stage,path+paths[name]+f'/grooved_finger_{j}')
-                    shape.CreatePointsAttr(Vt.Vec3fArray(np.asarray(points,dtype=np.float32).tolist()))
-                    shape.CreateFaceVertexCountsAttr([4]*6)
-                    shape.CreateFaceVertexIndicesAttr([0,3,2,1,4,5,6,7,0,1,5,4,1,2,6,5,2,3,7,6,3,0,4,7])
-                    UsdPhysics.CollisionAPI.Apply(shape.GetPrim())
-                    UsdPhysics.MeshCollisionAPI.Apply(shape.GetPrim()).CreateApproximationAttr('convexHull')
-                    collision=PhysxSchema.PhysxCollisionAPI.Apply(shape.GetPrim())
-                    collision.CreateContactOffsetAttr(.0003);collision.CreateRestOffsetAttr(0.)
-                    collision.CreateTorsionalPatchRadiusAttr(.003);collision.CreateMinTorsionalPatchRadiusAttr(.001)
-                    bind_physics_material(str(shape.GetPath()),physics_path,stage=stage)
-                    bind_visual_material(str(shape.GetPath()),visual_path,stage=stage)
+                centre=rotation.inv().apply(np.array([sign*.0015,0.,.152])-origin)
+                shape=UsdGeom.Cube.Define(stage,path+paths[name]+'/precision_finger_extension')
+                shape.CreateSizeAttr(1.);shape.AddTranslateOp().Set(Gf.Vec3d(*centre))
+                shape.AddOrientOp().Set(Gf.Quatf(float(q[3]),Gf.Vec3f(*q[:3])))
+                shape.AddScaleOp().Set(Gf.Vec3f(.003,.004,.040))
+                UsdPhysics.CollisionAPI.Apply(shape.GetPrim())
+                collision=PhysxSchema.PhysxCollisionAPI.Apply(shape.GetPrim())
+                collision.CreateContactOffsetAttr(.0005);collision.CreateRestOffsetAttr(0.)
+                collision.CreateTorsionalPatchRadiusAttr(.003);collision.CreateMinTorsionalPatchRadiusAttr(.001)
+                bind_physics_material(str(shape.GetPath()),physics_path,stage=stage)
+                bind_visual_material(str(shape.GetPath()),visual_path,stage=stage)
             return prim
 
         config.spawn.make_uninstanceable = True

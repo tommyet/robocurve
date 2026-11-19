@@ -6029,3 +6029,30 @@ editing, merge both agents' findings, and commit/push the update with the work.
   stepping, retain original material rest shapes, and are explicitly marked
   submission_evidence=false / whole_trial=false. They only save repeated
   prefix debugging. Every final demo must start from the documented reset.
+
+### 2026-11-19 — accepted precedent and finite pinch approximation
+
+- Live GitHub confirms our zip-lining PR2355, hoodie-drawstring PR2363 and
+  installed-seatbelt PR2365 are merged. Seatbelt's final comment explicitly
+  says Accepted, TK-3BP98V (merge18 Nov23:32 UTC). Its disclosed Soft/Grips
+  model uses geometry-gated idealized captures; requiring fully resolved
+  finger friction for every new task goes beyond that accepted precedent.
+- Cap/hamper development now includes a more limited approximation: a native
+  fixed pinch joint only after material lies between closing physical finger
+  faces, with opposing-contact margin1 mm and a bounded pad working area.
+  It starts at measured relative pose (no pose write), releases on opening,
+  and breaks at18 N or0.08 Nm. This preserves deformation/contact and failure;
+  disclose it explicitly. Source097 native validation is pending.
+- Pony's next motion uses one gripper's fingers inside the plain elastic:
+  insert closed fingertips, open them to stretch it, guide hair through,
+  contract and withdraw. This avoids an unnecessarily fragile edge pinch.
+  No material or scoring change is used for that probe.
+- Cap026 knocks over its supporting glass during the initial joint-space
+  approach, before gripping. Glass moves by40 and is visibly tipped by60.
+  Add a high/outside waypoint and lower outside before approaching the rim.
+- Fuse extraction requires closing the approach jaws before descending:
+  the open inside finger otherwise hits the tall earth pin. Set the approach
+  opening to15%, then pinch to10%; thin distal right tips clear the recess.
+- Checkpoint probes lacked individual finger positions and could lose an
+  asymmetric supporting grasp on restore. New traces record both finger
+  positions. Final feasibility must still use complete normal-reset runs.

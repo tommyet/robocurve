@@ -27,3 +27,5 @@ The deterministic layout has no jitter or random seed. Source files and native
 state are saved with each run. Rescoring verifies their hashes and re-evaluates
 the recorded states on CPU. Diagnostics with `--capture-every` greater than1
 are not submission recordings. Dream must use the same final scene and hardware.
+
+Pinches use a disclosed native no-slip approximation once material is between closing finger faces. Each constraint starts at the measured pose, releases on opening, and breaks at 18 N or 0.08 Nm. Material deformation and collisions remain native; no object is teleported. Native validation is pending.
