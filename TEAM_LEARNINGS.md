@@ -6633,3 +6633,27 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Fuse038/source173 removes the oscillation and stays intact through909, but loses the cartridge after6.4 mm lift. Recorded fuse centre is9.0 mm beyond TCP while the physical finger ends at8 mm, so contact is only on the cap rim. Source176 lowers cartridge pickup targets4 mm (TCP offset1 mm above centre, previously5); same narrow tips, clip physics, controller and score. CPU reach check and one final native test pending before pause.
 
 - Cap059/source174 still slips376; trace winding remains0 throughout320–376, with part of the rim109 mm above head centre. Front-first asymmetry folded the opening across the crown, so softening was not a sufficient fix. Source177 restores exact geometry and finite-pinch physics from163 (which encircled the head in054), restores its equal-height fitting path, then releases/withdraws rear and front hands sequentially. This final trial isolates withdrawal. Do not present059 as a fitted cap.
+
+- Hamper030/source175 fails623 when the right binding moves8 mm through its grip. Material remains intact, packet300 x233 x240 mm, partial0.25; the earlier twist endpoint did not fix retention. No further hamper trial before the user pause. The retainer phase remains unvalidated. Preserve full030 alongside029 for comparison; do not claim acceptance readiness.
+
+- Fuse039/source176 fails825 on native integrity during deeper pickup, before extraction. No new fuse trial this session. Preserve038 (intact shallow pickup, slips after6.4 mm lift) and039 (deeper contact damages a terminal) for a geometry/contact review before another paid run. Do not weaken the damage threshold or submit a partial demo.
+
+## 2026-11-19 pause checkpoint
+
+The user requested a pause by 09:36 UTC, with unfinished PRs resumed later.
+Do not restart compute automatically. The final trials have ended.
+
+- Hairbrush cleaning: PR2847, TK-8AW9EM, media M-9SJ394. Received and awaiting review. Demo1.0; Dream0.0.
+- Ponytail: PR2860, TK-VJ4WRE, media M-EAQFJ2. Received and awaiting review. Demo1.0; Dream0.0.
+- Swimming cap: source177 restores the163 material and fits evenly, then withdraws one hand at a time. Run061 completes640 controls at0.0; the cap comes off. Full released retention and Dream baseline remain missing.
+- Plug fuse: source176/run039 damages one negative-end terminal clip at control 825 during deeper pickup. Source173/run038 stays intact but loses the fuse after6.4 mm lift. Compare these contact traces before another paid run; full replacement and Dream baseline remain missing.
+- Hamper: source175/run030 slips the right binding at623 during the counter-twist; material stays intact and scores0.25. The compact packet and retaining-loop phase remain unvalidated.
+- Bicycle chain: Eito's PR2739 was finally rejected. The new native-link draft has no successful demo. A reconsideration comment is drafted privately and awaiting the user's permission; do not submit a duplicate or post the comment without it.
+
+Development is on `codex/personal-care-chain-fuse-20261118`, in
+`/private/tmp/robocurve-personal-care-chain-fuse-20261118`. Published PRs contain
+only their own task folder on isolated branches from upstream main.
+All simulation archives, frozen sources and the pause handoff are local under
+`artifacts/personal-care-chain-fuse-2026-11-18` in the main workspace.
+Keep the main checkout's existing dirty TEAM_LEARNINGS.md and
+docs/task-ideas-followup-2026-11-15.md changes untouched.

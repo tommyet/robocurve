@@ -69,5 +69,7 @@ No third-party task meshes, scans or textures are used.
 
 ## Validation status
 
-Development is ongoing. A validated full-score demonstration and completed
-Dream baseline are still required; no submission-readiness claim is made.
+Not submission-ready. The latest native diagnostic (`fuse-full-039`) stopped
+at control 825 after a terminal was damaged during cartridge pickup. The
+previous shallower pickup stayed intact but lost the cartridge after 6.4 mm
+of lift. A full replacement demo and completed Dream baseline remain required.

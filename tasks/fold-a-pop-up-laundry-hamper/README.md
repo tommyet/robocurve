@@ -38,3 +38,9 @@ held. The robot still has to stretch the loop around the packet.
 
 The reset requires the untwisted frame to span at least 30 x 48 cm, with less
 than 10 cm vertical sag. A collapsed or pre-folded reset cannot be a trial.
+## Validation status
+
+Not submission-ready. The latest native diagnostic (`hamper-full-030`) stopped
+at control 623 when the right frame grip slipped. The material remained intact
+and the partial score was 0.25. A compact packet secured by the retaining loop,
+a completed full-score demo and a Dream baseline remain unvalidated.

@@ -1,8 +1,15 @@
 {
-  "status": "unvalidated_native_surface_prototype",
+  "status": "development_paused_pending_full_demo",
   "submission_ready": false,
   "prior_last_fold": "077: score 0, wire joint failure; archived",
   "full_score_demo": null,
   "dream": null,
-  "retaining_band_demo": false
+  "retaining_band_demo": false,
+  "latest_native_trial": "hamper-full-030",
+  "latest_source": "native-batch-175",
+  "latest_trial_status": "failed",
+  "latest_steps": 623,
+  "latest_score": 0.25,
+  "blocker": "Right frame grip slips during the final twist; no compact retained packet or completed Dream baseline has been demonstrated.",
+  "checked_utc": "2026-11-19T08:54:40.531860+00:00"
 }

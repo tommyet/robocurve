@@ -64,9 +64,7 @@ No third-party task meshes, scans or textures are used.
 
 ## Validation status
 
-Development is ongoing. A validated full-score demonstration and completed
-Dream baseline are still required; no submission-readiness claim is made.
-
-The current demo fits the stretched opening evenly, then clears one hand at
-a time while the other retains the opposite rim. It commands only robot
-joints and grippers. Native validation is still pending.
+Not submission-ready. The latest native diagnostic (`cap-full-061`) completed
+640 controls with score 0.0. Sequential hand withdrawal still pulled the cap
+off the head. A released full-score fitting and completed Dream baseline
+remain required.
