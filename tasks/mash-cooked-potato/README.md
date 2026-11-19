@@ -2,7 +2,7 @@
 
 Mash the cooked potato in the bowl until no large lumps remain. Keep the potato in the bowl.
 
-The corrected cube size requires new native demo and Dream-1 evidence. Earlier runs are retained as development history and do not validate this 17 mm setup.
+The corrected 17 mm setup reaches 1.0 in the scripted demo (519 actions). Dream-1 scores 0.0 over 2,400 actions. Both native traces passed independent frozen-source rescoring and three-view visual review.
 
 ## Setup and reset
 
@@ -40,7 +40,7 @@ python tasks/mash-cooked-potato/rescore.py /tmp/potato-dream
 
 The control limit is 2,400 actions (120 seconds at 20 Hz). The layout is fixed and uses no random seed. The scripted plan has a 2,360-action upper bound and can finish earlier once the measured outcome is released. Dream receives the full limit and standard three camera views plus joint observations.
 
-The CPU rescorer verifies frozen source hashes, trace continuity, joint/rate bounds, damage progression, native break events and the outcome. It is an evidence audit, not a physics replay. Native camera videos must also be reviewed. `VALIDATION.json` records the audit and measurements. The superseded lighter-portion demo took390s and its Dream run1627s on an RTX PRO6000 Blackwell; these are historical timing references, not validation of the revised mass. Revised runtimes remain pending.
+The CPU rescorer verifies frozen source hashes, trace continuity, joint/rate bounds, damage progression, native break events and the outcome. It is an evidence audit, not a physics replay. Native camera videos must also be reviewed. `VALIDATION.json` records the audit and measurements. On the RTX PRO6000 Blackwell Server GPU, the revised demo took 301 seconds and Dream took 1,169 seconds. Dream used 99 API attempts across 50 SDK sessions, including 49 reported session-expiry recoveries. These recoveries continue the same physical episode; no scene reset or successful-action selection occurred.
 
 The coarse cooked-tissue law accumulates irreversible damage only while a masher bar contacts a locally compressed cell. Normalized excess compression contributes damage per second, in addition to immediate peak-strain damage; unloaded waiting cannot soften food. This is an uncalibrated approximation of repeated crushing, independently reconstructed from every recorded pose. No food position is assigned by this law.
 

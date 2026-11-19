@@ -69,7 +69,7 @@ def install():
                 # the ordinary fuse recess. The backing remains 3 mm thick.
                 pieces = [
                     ('backing',[sign*.0015,0.,.1565],(.003,.004,.033)),
-                    ('tip',[sign*.002,0.,.184],(.002,.002,.022)),
+                    ('tip',[sign*.0026,0.,.184],(.0008,.002,.022)),
                 ]
                 if 'LeftArm' in path:
                     pieces=[('support',[sign*.0015,0.,.1675],(.003,.020,.055))]
@@ -82,7 +82,7 @@ def install():
                     shape.AddScaleOp().Set(Gf.Vec3f(*size))
                     UsdPhysics.CollisionAPI.Apply(shape.GetPrim())
                     collision=PhysxSchema.PhysxCollisionAPI.Apply(shape.GetPrim())
-                    collision.CreateContactOffsetAttr(.002 if 'LeftArm' in path else .0005)
+                    collision.CreateContactOffsetAttr(.002 if 'LeftArm' in path else .00008)
                     collision.CreateRestOffsetAttr(0.)
                     collision.CreateTorsionalPatchRadiusAttr(.006 if 'LeftArm' in path else .003)
                     collision.CreateMinTorsionalPatchRadiusAttr(.004 if 'LeftArm' in path else .001)

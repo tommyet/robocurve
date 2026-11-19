@@ -8,6 +8,11 @@ outer=[box((.064,.045,.008),(0,0,-.008)),box((.064,.009,.014),(0,-.018,.003)),bo
 for x,y,size,height in [(-.010,-.0111,(.00635,.004),.0177),(-.010,.0111,(.00635,.004),.0177),(.0122,0,(.004,.008),.0227)]:
  outer.append(box((size[0],size[1],height),(x,y,.010+height/2),(.69,.59,.28)))
 outer += [cylinder(.004,.09,(0,-.067,-.005),Rotation.from_euler('x',90,degrees=True).as_quat(),(.16,.16,.17))]
+# Each ordinary U-shaped terminal has a bottom saddle joining its two spring
+# leaves. Without this base, pickup pressure could push the cartridge below
+# the clips into the housing, which is not the intended real mechanism.
+for sign in [-1,1]:
+ outer.append(box((.004,.0062,.0008),FC+[sign*.010,0,-.0037],(.70,.56,.25)))
 BODIES.append(body('plug',PLUG,outer,mass=.065,color=(.90,.89,.84),friction=.9,contact_offset=.0001,torsional_patch_radius=.008,min_torsional_patch_radius=.004))
 # The lowered right-wall section is the ordinary screwdriver access notch.
 # A fuse carrier's face is the ordinary pry point. Its four sprung fingers
@@ -49,7 +54,7 @@ for sign in [-1,1]:
  # spring deflection during removal and refitting, as in a moulded snap tab.
  vertices=[[x,y,z] for x in [-.0025,.0025] for y,z in [(-sign*.0012,.0015),(sign*.0006,.0005),(sign*.0006,.0025)]]
  catch=dict(kind='mesh',points=vertices,faces=[[0,2,1],[3,4,5],[0,1,4,3],[1,2,5,4],[2,0,3,5]],pos=[0,0,0],quat=[0,0,0,1])
- BODIES.append(body(name,pos,[box((.005,.001,.004)),catch],mass=.0002,color=(.89,.88,.83)))
+ BODIES.append(body(name,pos,[box((.005,.001,.004)),catch],mass=.0002,color=(.89,.88,.83),contact_offset=.00008))
  JOINTS.append(joint(name+'_spring','plug',name,pos-PLUG+[0,0,-.002],[0,0,-.002],axes={**fixed_axes(),'rotX':dict(limits=(-35,35),stiffness=.055*np.pi/180.,damping=.0001*np.pi/180.)},break_force=25.,break_torque=.1))
 TOOL=np.array([.28,-.14,TABLE+.028])
 # 169 mm ordinary flat screwdriver, 3 mm blade. Its shaft gives the two

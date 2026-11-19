@@ -30,7 +30,14 @@ class Plan:
     p=np.asarray(p);o=0 if side=='left' else 7;p0,R0=poses[side]
     if side in goals:self.a[o:o+6]=b[o:o+6]+u*(goals[side]-b[o:o+6])
     else:
-     q,pe,re=ik.solve(p0+u*(p-p0),ik.matrix_to_quat_xyzw(ik.slerp_matrix(R0,R,u)),self.a[o:o+6],base_pos=station.BASES[side],iters=80,rot_weight=.08);self.a[o:o+6]=q;errors=[max(errors[0],float(pe)),max(errors[1],float(re))]
+     pp=p0+u*(p-p0);rr=ik.slerp_matrix(R0,R,u)
+     q,pe,re=ik.solve(pp,ik.matrix_to_quat_xyzw(rr),self.a[o:o+6],base_pos=station.BASES[side],iters=80,rot_weight=.08)
+     if pe>.015:
+      def loss(qq):
+       pos,ori=ik.tcp_pose(qq,station.BASES[side]);return np.r_[pos-pp,.08*ik._rot_error(rr,ori)]
+      sol=least_squares(loss,np.clip(q,ik.LOWER+1e-7,ik.UPPER-1e-7),bounds=(ik.LOWER,ik.UPPER),max_nfev=250)
+      if np.linalg.norm(sol.fun[:3])<pe:q=sol.x;pe=np.linalg.norm(sol.fun[:3]);re=np.linalg.norm(sol.fun[3:])/.08
+     self.a[o:o+6]=q;errors=[max(errors[0],float(pe)),max(errors[1],float(re))]
     self.a[o+6]=b[o+6]+u*(g-b[o+6])
    self.frames.append(dict(action14=self.a.tolist(),stage=label))
   self.audit.append(dict(stage=label,position_error_m=errors[0],rotation_error_rad=errors[1]))

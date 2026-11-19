@@ -65,12 +65,12 @@ class DemoControl:
   target=head+offset
   if self.press_bowl is not None and stage.startswith(('position over potato','press potato','hold compressive','lift for next press')):target[:2]+=m.p('bowl')[:2]-self.press_bowl[:2]
   desired=R@self.R0.T
-  # Limit commanded compression to 1 mm of the observed tool pose. With
-  # the disclosed 6000 N/m grip compliance this avoids driving into the bowl.
+  # Bound the absolute target by the bowl floor. A target just below each
+  # measured pose could not overcome motor tracking error and drifted upward.
   if stage.startswith(('press potato','hold compressive')):
    # The bowl floor is 3 mm above its origin; the bars extend 2 mm below
    # the tool origin. Stop 1 mm clear rather than commanding penetration.
-   target[2]=max(target[2],m.p('masher')[2]-.001,m.p('bowl')[2]+.006)
+   target[2]=max(target[2],m.p('bowl')[2]+.006)
   # Command the finite grip's measured rest transform. Updating this from
   # each loaded deflection fought the compliant joint's restoring torque
   # and eventually drove the masher away from the food.

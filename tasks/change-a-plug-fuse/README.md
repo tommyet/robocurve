@@ -41,7 +41,7 @@ is 747.5 mm. Match the setup image. The plug, carrier, fuses, driver and dish
 are free to move. Restore intact clips and the original seated fuse each time.
 
 The left fingers have 55 x 20 x 3 mm padded extensions. The right extensions
-are 55 x 4 mm steel, with 3 mm backing and 2 x 2 mm distal 22 mm sections.
+are 55 x 4 mm steel, with 3 mm backing and 0.8 x 2 mm distal 22 mm sections.
 The finger actuator limits are 40 N.
 
 ## Scoring and material model
@@ -75,3 +75,5 @@ previous shallower pickup stayed intact but lost the cartridge after 6.4 mm
 of lift. A full replacement demo and completed Dream baseline remain required.
 
 An ordinary 90 × 70 mm parts tray on a 25 mm riser sits at x330 mm, y−16 mm and catches the freed carrier. Its 4 mm rim keeps the thin carrier within reach; the robot must still pinch, lift and refit it through native contact. The tray does not attach or reposition the carrier.
+
+The terminal clips include their ordinary 0.8 mm bottom saddles. Angular spring constants are converted from Nm/radian to USD torque/degree. The 0.8 mm steel fingertip necks and 0.08 mm contact offsets provide clearance between the full-size cartridge and carrier detents; their inner gripping faces stay in the same positions. Current validation remains pending.

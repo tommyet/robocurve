@@ -1,7 +1,7 @@
 {
   "schema": "runtime-evidence-v1",
-  "status": "development_native_probes",
-  "scope": "The pinned runtime has completed native reset/contact probes. A full-score final task demonstration is still required.",
+  "status": "native_development_in_progress",
+  "scope": "Runtime installation works; current task still needs a full-score demo and paired audited baseline.",
   "current_task_runtime_verified": false,
   "python": "3.12.16",
   "packages": {

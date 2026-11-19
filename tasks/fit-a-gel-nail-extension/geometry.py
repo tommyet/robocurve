@@ -10,17 +10,19 @@ finger=[sphere((.032,.011,.010),(-.027,0,-.009)),sphere((.014,.010,.010),(-.050,
 # floating collection of contact patches.
 for x in np.linspace(-.019,-.007,7):
  for y in np.linspace(-.005,.005,5):
-  top=.0026-arch(y);finger.append(box((.002,.0025,.003),(x,y,top-.0015),(.88,.65,.61)))
+  top=.0026-arch(y);tilt=Rotation.from_euler('x',-np.arcsin(y/.014))
+  centre=np.array([x,y,top])-tilt.apply([0,0,.0015])
+  finger.append(box((.002,.0025,.003),centre,(.88,.65,.61),tilt.as_quat()))
 BODIES.append(body('practice_finger',BASE,finger,fixed=True,mass=.050,color=(.77,.60,.48),contact_offset=.00002))
 BODIES.append(body('finger_clamp',BASE+[-.050,0,-.044],[box((.050,.055,.012))],fixed=True,mass=.15,color=(.32,.34,.36)))
 PATCHES=[]
 for i,x in enumerate(np.linspace(-.019,-.007,7)):
  for j,y in enumerate(np.linspace(-.005,.005,5)):
-  name=f'gel_pad_{i}_{j}';z=.003-arch(y);q=Rotation.from_euler('x',-np.arcsin(y/.014)).as_quat()
-  p=BASE+[x,y,z+.0003];PATCHES.append(dict(name=name,x=float(x),y=float(y),z=float(z)))
-  BODIES.append(body(name,p,[box((.00195,.00245,.0002),quat=q)],mass=.00002,color=(.87,.64,.60),friction=.7,contact_offset=.00002))
-  axes={**fixed_axes(),'transZ':dict(limits=(-.001,0),stiffness=50.,damping=.02)}
-  JOINTS.append(joint('compression_'+name,'practice_finger',name,p-BASE,[0,0,0],axes=axes))
+  name=f'gel_pad_{i}_{j}';z=.00272-arch(y);q=Rotation.from_euler('x',-np.arcsin(y/.014)).as_quat()
+  p=BASE+[x,y,z];PATCHES.append(dict(name=name,x=float(x),y=float(y),z=float(z)))
+  BODIES.append(body(name,p,[box((.00195,.00245,.00024),quat=q)],fixed=True,mass=.00002,color=(.87,.64,.60),friction=.7,contact_offset=.00002))
+  # Fixed-thickness gel contact layer; no independent tiny moving tiles.
+  # The native rigid contact supports the tip; wetting and cure are reduced laws.
 # A rigid approximation of a thin curved full-cover tip, assembled from small
 # convex sections. Concavity is preserved instead of filling the underside.
 sh=[]

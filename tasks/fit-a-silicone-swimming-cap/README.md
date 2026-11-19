@@ -26,22 +26,11 @@ for diagnostics and are excluded from submission evidence.
 
 ## Setup and reset
 
-Use the adult headform, thin silicone cap and upturned polypropylene tumbler
-specified in `task.json`. Secure the headform base and tumbler to the table.
-The cap is separate from the head, resting opening-down on the tumbler.
-The head centre is (460, 0, 872.5) mm and faces towards the robot (negative X); the cap's initial
-rim centre is (260, 0, 888.5) mm. X points forward, Y left, and the table is
-747.5 mm high. Match the setup image and restore the cap without stretching
-or tearing it. The ordinary arm bases have no additional risers.
+Use a rigid adult headform, 190 × 160 × 240 mm, fixed to its 140 × 130 mm base. The separate silicone cap has a 150 × 140 mm unstretched opening, a 90 mm dome, a 0.8 mm wall and a 3 mm rolled rim. Match one cap model and size across trials.
 
-Both grippers start holding opposite rim arcs of the separate cap, supported
-by a fixed 60 mm-diameter, 230 mm-high upturned tumbler. The initial pad gap is
-3 mm. Reset verifies both physical contacts before frame zero; the same reset
-applies to demo and Dream. The robot must stretch, fit and release the cap.
-No material pose is assigned during a trial.
+The head centre is (360, 0, 872.5) mm, with its nose facing positive Y. X points forward, Y left, and the table is 747.5 mm high. Each arm stands on a fixed 160 × 160 × 100 mm steel riser. Both grippers have 40 × 24 × 3 mm silicone-faced extensions and 40 N finger actuator limits.
 
-Both grippers have 40 x 24 x 3 mm silicone-faced finger extensions, with
-40 N finger actuator limits. No fixture holds the cap on the head.
+Both hands initially hold the cap's front and back rim above the head. The initial rim centre is (360, 0, 1017.5) mm, 55 mm above the crown and 120 mm toward the robot from the head, with a 3 mm pad gap. Reset verifies actual contact before frame zero and lets the material settle under gravity; demo and Dream share this reset. The robot must stretch, draw down and release the cap. No fixture holds it on the head and no material pose is assigned during a trial. Restore the photographed layout without pre-fitting or damaging the cap.
 
 ## Scoring and material model
 
@@ -54,7 +43,7 @@ The cap is a 0.8 mm native elastic shell with self-contact and a 3 mm rolled
 rim. Young's modulus is 1 MPa; this uncalibrated value approximates silicone.
 The head is rigid. A compliant native pinch forms only when a rim element is
 between closing finger faces. It releases on opening or 8 mm slip, and breaks
-at 18 N or 0.08 Nm. Its uncalibrated translational compliance is 6,000 N/m;
+at 30 N or 0.08 Nm. Its uncalibrated translational compliance is 10,000 N/m;
 the force cap and 8 mm slip limit remain active. Grip reaction loads on the robot are omitted. The robot
 must stretch, position and release the material; no fitted shape is assigned.
 
@@ -66,9 +55,6 @@ No third-party task meshes, scans or textures are used.
 
 ## Validation status
 
-Not submission-ready. The latest native diagnostic (`cap-full-061`) completed
-640 controls with score 0.0. Sequential hand withdrawal still pulled the cap
-off the head. A released full-score fitting and completed Dream baseline
-remain required.
+Not submission-ready. The rotated headform layout is being tested with a firmer commanded pinch. A full-score released fitting, native penetration check and paired Dream baseline remain required.
 
-The0.8mm shell uses a0.4mm rest-contact offset and3mm speculative contact margin, with exact fixed-head triangle collisions. The earlier2mm rest offset was wider than half the rolled-rim grip gap and could create conflicting constraints at pickup. Native penetration and finite-pinch checks remain required.
+The 0.8 mm shell uses a 0.4 mm rest-contact offset and 3 mm speculative contact margin, with exact fixed-head triangle collisions. Grip friction is an uncalibrated approximation; the force, pad-contact, slip and material-integrity checks remain active.

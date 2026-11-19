@@ -1,7 +1,7 @@
 {
   "schema": "runtime-evidence-v1",
-  "status": "development_not_validated",
-  "scope": "Native contact nail-fitting prototype; no qualifying demo or model run yet.",
+  "status": "native_development_in_progress",
+  "scope": "Runtime installation works; current task still needs a full-score demo and paired audited baseline.",
   "current_task_runtime_verified": false,
   "python": "3.12.16",
   "packages": {

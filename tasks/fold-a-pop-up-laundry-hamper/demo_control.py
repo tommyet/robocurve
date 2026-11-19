@@ -36,6 +36,12 @@ class DemoControl:
    if self.grip_offset is not None:
     weight=float(np.clip((k-100)/20,0,1));offset=(1-weight)*offset+weight*self.grip_offset[side]
    target+=min(1.,k/60)*max(0.,min(1.,(820-k)/120))*offset
+   if 100<=k<=140:
+    from geometry import GRIP_BODIES
+    # Track the actual bound edge while the jaws close; long fingers can
+    # displace it during approach. This changes only robot joint targets.
+    target=m.p(GRIP_BODIES[0 if side=='left' else 1]).copy()
+    if k==140:self.grip_offset[side]=target-ik.tcp_pose(wanted[o:o+6],station.BASES[side])[0]
    label=self.labels[k-1]
    specs=[('left','approach the far loop','fold the far loop onto the centre',0,np.array([.43,.185,.83])),('right','approach the right outer loop','stack the right loop',(12,40),np.array([.50,0,.96])),('left','approach the left outer loop','stack the left loop',(75,96),np.array([.30,0,.96]))]
    for arm,approach,press,indices,nominal in specs:
