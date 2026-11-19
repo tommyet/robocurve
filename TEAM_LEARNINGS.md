@@ -6657,3 +6657,11 @@ All simulation archives, frozen sources and the pause handoff are local under
 `artifacts/personal-care-chain-fuse-2026-11-18` in the main workspace.
 Keep the main checkout's existing dirty TEAM_LEARNINGS.md and
 docs/task-ideas-followup-2026-11-15.md changes untouched.
+
+Shutdown verified at 09:05:35 UTC: Pod `i9ko77hxqsovzw` deleted (GET404);
+full inventory has zero active pods. All265 native run records have local
+backup coverage (`backup-verification-final.json`). This Pod's estimated
+compute cost is $15.10, excluding Dream and storage. Local bridge and tunnel
+are closed. Do not restart until the user returns.
+The main checkout also contains untracked duplicate ` 2.*` files observed at
+shutdown; they were left untouched and are not part of these submissions.
