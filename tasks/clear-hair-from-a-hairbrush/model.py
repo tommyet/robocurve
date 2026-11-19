@@ -7,32 +7,25 @@ class Model(NativeModel):
   super().bind_native(base)
   from isaaclab.app.settings_manager import get_settings_manager
   get_settings_manager().set_bool('/physics/disableContactProcessing',False)
-  from pxr import UsdUtils
-  import omni.physics.tensors as tensors
-  cache=UsdUtils.StageCache.Get();stage_id=cache.GetId(self.stage).ToLongInt()
-  if stage_id<0:cache.Insert(self.stage);stage_id=cache.GetId(self.stage).ToLongInt()
-  self.contact_sim=tensors.create_simulation_view('torch',stage_id);self.contact_sim.set_subspace_roots('/')
-  roots={p.GetName():str(p.GetPath()) for p in self.stage.Traverse() if '/materials/' in str(p.GetPath()) and p.GetName() in self.index}
-  hair_paths=[roots[f'hair_{s}_{i}'] for s in range(HAIRS) for i in range(SEGMENTS)]
-  self.contact_view=self.contact_sim.create_rigid_contact_view([roots['comb']],filter_patterns=[hair_paths],max_contact_data_count=4096)
-  if self.contact_view.sensor_count!=1 or self.contact_view.filter_count!=len(hair_paths):raise RuntimeError('Incomplete native comb contact matrix')
-  paths=list(self.contact_view.filter_paths)
-  if paths and isinstance(paths[0],(list,tuple)):paths=paths[0]
-  self.contact_order=np.asarray([paths.index(p) for p in hair_paths]);self.contact_dt=float(base.physics_dt)
- def record_tool_contacts(self):
-  value=self.contact_view.get_contact_force_matrix(dt=self.contact_dt)
-  forces=getattr(value,'torch',value).detach().cpu().numpy()[0,self.contact_order]
-  magnitudes=np.linalg.norm(forces,axis=1).reshape(HAIRS,SEGMENTS)
-  for strand in range(HAIRS):
-   if strand in self.comb_touched_locks:continue
-   index=int(np.argmax(magnitudes[strand]));force=float(magnitudes[strand,index])
-   if force>1e-6:
-    self.comb_touched_locks.add(strand);self.events.append(dict(event='comb_hair_contact',lock=strand,body=f'hair_{strand}_{index}',impulse_ns=force*self.contact_dt,force_n=force,time=self.time,source='native filtered contact-force matrix'))
+  from pxr import PhysicsSchemaTools
+  from omni.physx import get_physx_simulation_interface
+  def contact(headers,data):
+   for h in headers:
+    names=[str(PhysicsSchemaTools.intToSdfPath(v)).rsplit('/',1)[-1] for v in [h.actor0,h.actor1]]
+    if 'comb' not in names or not h.num_contact_data:continue
+    other=names[1-names.index('comb')]
+    if not other.startswith('hair_'):continue
+    strand=int(other.split('_')[1])
+    if strand in self.comb_touched_locks:continue
+    impulse=sum(float(np.linalg.norm(data[i].impulse)) for i in range(h.contact_data_offset,h.contact_data_offset+h.num_contact_data))
+    if impulse<=0.:continue
+    self.comb_touched_locks.add(strand);self.events.append(dict(event='comb_hair_contact',lock=strand,body=other,impulse_ns=impulse,time=self.time,source='native per-substep contact report'))
+  self.contact_subscription=get_physx_simulation_interface().subscribe_contact_report_events(contact)
  def configure_station(self):
   from pad_covers import install
   install()
  def material(self,hands,dt):
-  self.record_tool_contacts();self.failed |= any(n.startswith('pin_') for n in self.broken)
+  self.failed |= any(n.startswith('pin_') for n in self.broken)
  def measure(self):
   hair=np.array([self.p(f'hair_{s}_{i}') for s in range(HAIRS) for i in range(SEGMENTS)])
   local=(hair-self.p('brush'))@self.orientation('brush')

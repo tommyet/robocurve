@@ -6056,3 +6056,20 @@ editing, merge both agents' findings, and commit/push the update with the work.
 - Checkpoint probes lacked individual finger positions and could lose an
   asymmetric supporting grasp on restore. New traces record both finger
   positions. Final feasibility must still use complete normal-reset runs.
+
+
+## 2026-11-19 — native finger reference and atomic pinch construction
+
+- In the personal-care batch runner, importing `TCP_OFFSET` before the task
+  installed its finger extensions froze the default 134 mm reference while IK
+  used the modified length. Import the constant after `configure_station()`.
+  This affects cap, ponytail, fuse and brush; older diagnostics are not final
+  evidence. Hamper keeps the default TCP and was unaffected by this error.
+- Hamper012 captured both grips for one control step each, then immediately
+  broke them. The native log reported disjoint body transforms while the live
+  joint was being authored. Source101 creates disabled joints and batches all
+  properties in `Sdf.ChangeBlock` before enabling; native validation pending.
+- Brush contact matrices sampled once per control only see the final physics
+  substep. Source101 uses PhysX per-substep contact reports with measured
+  impulse, following the official contact-report API. No contact is inferred
+  from proximity. Five tasks still lack full demonstrations and remain drafts.

@@ -66,13 +66,16 @@ class FinitePinch:
             if not choices:continue
             _,name=min(choices);self.serial+=1;path=self.root+f'/pinch_constraint_{side}_{self.serial}'
             joint=UsdPhysics.FixedJoint.Define(self.m.stage,path)
-            joint.CreateExcludeFromArticulationAttr(True)
-            joint.CreateBody0Rel().SetTargets([Sdf.Path(self.grippers[side])]);joint.CreateBody1Rel().SetTargets([Sdf.Path(self.body_paths[name])])
-            origin=np.asarray(h['tcp'])-h['rotation']@np.asarray(TCP_OFFSET)
-            p=h['rotation'].T@(self.m.p(name)-origin);q=Rotation.from_matrix(h['rotation'].T@self.m.orientation(name)).as_quat()
-            joint.CreateLocalPos0Attr(Gf.Vec3f(*p));joint.CreateLocalPos1Attr(Gf.Vec3f(0,0,0))
-            joint.CreateLocalRot0Attr(Gf.Quatf(float(q[3]),Gf.Vec3f(*q[:3])));joint.CreateLocalRot1Attr(Gf.Quatf(1.,Gf.Vec3f(0,0,0)))
-            joint.CreateBreakForceAttr(18.);joint.CreateBreakTorqueAttr(.08);joint.CreateCollisionEnabledAttr(True)
+            joint.CreateJointEnabledAttr(False)
+            with Sdf.ChangeBlock():
+                joint.CreateExcludeFromArticulationAttr(True)
+                joint.CreateBody0Rel().SetTargets([Sdf.Path(self.grippers[side])]);joint.CreateBody1Rel().SetTargets([Sdf.Path(self.body_paths[name])])
+                origin=np.asarray(h['tcp'])-h['rotation']@np.asarray(TCP_OFFSET)
+                p=h['rotation'].T@(self.m.p(name)-origin);q=Rotation.from_matrix(h['rotation'].T@self.m.orientation(name)).as_quat()
+                joint.CreateLocalPos0Attr(Gf.Vec3f(*p));joint.CreateLocalPos1Attr(Gf.Vec3f(0,0,0))
+                joint.CreateLocalRot0Attr(Gf.Quatf(float(q[3]),Gf.Vec3f(*q[:3])));joint.CreateLocalRot1Attr(Gf.Quatf(1.,Gf.Vec3f(0,0,0)))
+                joint.CreateBreakForceAttr(18.);joint.CreateBreakTorqueAttr(.08);joint.CreateCollisionEnabledAttr(True)
+                joint.GetJointEnabledAttr().Set(True)
             self.held[side]=dict(body=name,path=path,joint=joint)
             self.m.events.append(dict(event='pinch_captured',side=side,body=name,time=self.m.time,force_limit_n=18.,torque_limit_nm=.08,local_point=((self.m.p(name)-h['tcp'])@h['rotation']).tolist(),opening=float(h['opening'])))
         self.m.grasp_state={side:dict(body=g['body'],force_limit_n=18.,torque_limit_nm=.08) for side,g in self.held.items()}
