@@ -25,17 +25,9 @@ from common import down,TABLE
 lp=lp.copy();rp=rp.copy();lp[2]=TABLE+.028;rp[2]=TABLE+.028
 p.add(6,'lower the nested loops against the table',{'left':(lp,a,.11),'right':(rp,b,.11)})
 p.add(3,'hold the loops compact for inspection',{})
-centre=np.array([.29,0,TABLE])
-left_hold=centre+[-.025,.035,.060];right_hold=centre+[.040,-.035,.060]
-p.add(1,'release the left edge',{'left':(lp,a,.55)})
-p.add(2,'withdraw the left hand',{'left':(lp+[-.06,.08,.12],down(180),.55)},'joint')
-p.add(3,'approach the far loop',{'left':([.33,.185,.91],down(180),0.),'right':(rp+[0,0,-.05],b,.11)})
-p.add(5,'fold the far loop onto the centre',{'left':(left_hold,down(180),0.)})
-p.add(1,'release the right edge',{'right':(rp+[0,0,-.05],b,.55)})
-p.add(2,'withdraw the right hand',{'right':(rp+[0,-.10,.15],down(),.55)},'joint')
-p.add(3,'approach the right outer loop',{'right':([.40,0,1.01],down(),0.)})
-p.add(5,'stack the right loop',{'right':(right_hold,down(),0.)})
-p.add(3,'approach the left outer loop',{'left':([.20,0,1.01],down(180),0.)})
-p.add(5,'stack the left loop',{'left':(left_hold,down(180),0.)})
-p.add(3,'inspect the stacked loops while held',{})
+# Keep both edge grips while turning the tools upright, then use the tabletop
+# to nest the spring loops. This adds no object control or material change.
+p.add(6,'turn the held packet down toward the table',{'left':(lp+[0,0,.015],down(180),.11),'right':(rp+[0,0,.015],down(),.11)})
+p.add(6,'press the held loops flat',{'left':(lp+[0,0,-.005],down(180),.11),'right':(rp+[0,0,-.005],down(),.11)})
+p.add(3,'inspect the packet while both edges stay held',{})
 print(json.dumps(p.save(Path(__file__).with_name('demo-plan.json'))))

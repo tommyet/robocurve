@@ -1,6 +1,6 @@
 import numpy as np
 from native_model import NativeModel
-from geometry import HAIRS,SEGMENTS
+from geometry import HAIRS,SEGMENTS,SNAGS_PER_LOCK
 class Model(NativeModel):
  def __init__(self):super().__init__();self.comb_touched_locks=set()
  def bind_native(self,base):
@@ -41,9 +41,9 @@ class Model(NativeModel):
   # expanded bristle envelope. This corresponds to weighing removed locks.
   clear=~trapped.reshape(HAIRS,SEGMENTS).any(axis=1)
   qualified=clear & np.array([s in self.comb_touched_locks for s in range(HAIRS)])
-  return dict(removed_fraction=float(clear.mean()),comb_cleared_fraction=float(qualified.mean()),comb_touched_locks=len(self.comb_touched_locks),remaining_contact_snags=20-sum(n.startswith('hair_snag_') for n in self.broken),intact=not self.failed,released_seconds=self.release,failed=self.failed)
+  return dict(removed_fraction=float(clear.mean()),comb_cleared_fraction=float(qualified.mean()),comb_touched_locks=len(self.comb_touched_locks),remaining_contact_snags=HAIRS*SNAGS_PER_LOCK-sum(n.startswith('hair_snag_') for n in self.broken),intact=not self.failed,released_seconds=self.release,failed=self.failed)
  def reset_valid(self):
-  q=self.measure();return q['removed_fraction']==0. and q['remaining_contact_snags']>=18 and not self.failed
+  q=self.measure();return q['removed_fraction']==0. and q['remaining_contact_snags']==HAIRS*SNAGS_PER_LOCK and not self.failed
  def score(self):
   self.failed |= self.integrity_failed()
   if self.failed:return 0.

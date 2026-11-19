@@ -4,18 +4,15 @@ from planner import Plan
 from geometry import HEAD,CAP
 from common import down
 p=Plan()
-c=np.cos(np.radians(15));s=np.sin(np.radians(15))
-RL=np.array([[0,-1,0],[-c,0,-s],[s,0,-c]])
-RR=np.array([[0,-1,0],[-c,0,s],[-s,0,-c]])
-L=CAP+[0,.080,.002];R=CAP+[0,-.080,.002]
-p.add(3,'approach the loose cap',{'left':(L+[0,.05,.03],RL,.35),'right':(R+[0,-.05,.03],RR,.35)},'joint')
-p.add(3,'lower the open pads around the rim',{'left':(L,RL,.35),'right':(R,RR,.35)})
+c=np.cos(np.radians(0));s=np.sin(np.radians(0))
+RL=np.array([[0,-1,0],[s,0,-c],[c,0,s]])
+RR=np.array([[0,-1,0],[s,0,c],[-c,0,s]])
+L=CAP+[0,.080,0];R=CAP+[0,-.080,0]
+p.add(3,'approach the loose cap from the sides',{'left':(L+[0,.02,.03],RL,.60),'right':(R+[0,-.02,.03],RR,.60)},'joint')
+p.add(3,'place the pads around the free rim',{'left':(L,RL,.60),'right':(R,RR,.60)})
 p.add(2,'pinch opposite sides of the rim',{'left':(L,RL,.09),'right':(R,RR,.09)})
-c=np.cos(np.radians(30));s=np.sin(np.radians(30))
-RL=np.array([[0,-1,0],[-c,0,-s],[s,0,-c]])
-RR=np.array([[0,-1,0],[-c,0,s],[-s,0,-c]])
-p.add(4,'lift and stretch the opening',{'left':(CAP+[0,.095,.10],RL,.09),'right':(CAP+[0,-.095,.10],RR,.09)})
-p.add(4,'place the stretched cap above the head',{'left':([HEAD[0],.095,HEAD[2]+.23],RL,.09),'right':([HEAD[0],-.095,HEAD[2]+.23],RR,.09)})
+p.add(4,'lift and stretch the opening',{'left':(CAP+[0,.095,.15],RL,.09),'right':(CAP+[0,-.095,.15],RR,.09)})
+p.add(4,'place the stretched cap above the head',{'left':([HEAD[0],.095,HEAD[2]+.145],RL,.09),'right':([HEAD[0],-.095,HEAD[2]+.145],RR,.09)})
 p.add(7,'pull the cap over the crown',{'left':(HEAD+[0,.095,.045],RL,.09),'right':(HEAD+[0,-.095,.045],RR,.09)})
 p.add(2,'release the rim',{'left':(HEAD+[0,.095,.045],RL,.7),'right':(HEAD+[0,-.095,.045],RR,.7)})
 p.add(3,'withdraw from the fitted cap',{'left':(HEAD+[-.08,.13,.075],RL,.7),'right':(HEAD+[-.08,-.13,.075],RR,.7)})

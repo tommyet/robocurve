@@ -15,10 +15,10 @@ class DemoControl:
    target,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side]);tool_tip_local=None;tip_target=None;tool_axis_local=None;axis_target=None
    if side=='left':
     target+=u*self.offset['left'];R=ik.slerp_matrix(np.eye(3),self.brush_R,u)@R
-   elif 180<k<=420:
+   elif 180<k<=940:
     target=m.p('brush')+m.orientation('brush')@(target-BRUSH);R=m.orientation('brush')@R
    else:target+=u*self.offset['right']
-   if side=='right' and 180<=k<=640:
+   if side=='right' and 180<=k<=1000:
     H=hands['right'];t_rel=H['rotation'].T@(m.p('comb')-H['tcp']);r_rel=H['rotation'].T@m.orientation('comb');Rtool=R@down().T
     tool_tip_local=t_rel+r_rel@np.array([0,.13,0]);tip_target=target+Rtool@np.array([0,.13,0]);tool_axis_local=r_rel[:,1];axis_target=Rtool[:,1]
     R=Rtool@r_rel.T;target=target-R@t_rel

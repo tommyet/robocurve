@@ -1,6 +1,6 @@
 """Narrow steel finger extensions with silicone contact faces.
 
-Each extension is 45 x 4 x 3 mm and leaves the original finger bodies 30 mm
+Each extension is 45 x 4 mm, with a 3 mm backing and a 1 mm thick distal 12 mm and leaves the original finger bodies 30 mm
 behind the working point, permitting access between standard plug pins.
 They are rigid robot hardware in both demo and Dream runs, never grasp joints.
 """
@@ -64,21 +64,30 @@ def install():
                 # toward positive X. joint8 is the mirror image.
                 # Nominal closed-link origins from the pinned YAM URDF.
                 origin = np.array([sign*.0445119, -sign*.0239931, .0566829])
-                centre = rotation.inv().apply(np.array([sign*.0015, 0., .1625])-origin)
                 PhysxSchema.PhysxRigidBodyAPI.Apply(stage.GetPrimAtPath(path+paths[name])).CreateEnableSpeculativeCCDAttr(True)
-                shape = UsdGeom.Cube.Define(stage, path+paths[name]+'/precision_finger_extension')
-                shape.CreateSizeAttr(1.)
-                shape.AddTranslateOp().Set(Gf.Vec3d(*centre))
-                shape.AddOrientOp().Set(Gf.Quatf(float(q[3]), Gf.Vec3f(*q[:3])))
-                shape.AddScaleOp().Set(Gf.Vec3f(.003, .004, .045))
-                UsdPhysics.CollisionAPI.Apply(shape.GetPrim())
-                collision = PhysxSchema.PhysxCollisionAPI.Apply(shape.GetPrim())
-                collision.CreateContactOffsetAttr(.002)
-                collision.CreateRestOffsetAttr(0.)
-                collision.CreateTorsionalPatchRadiusAttr(.006)
-                collision.CreateMinTorsionalPatchRadiusAttr(.004)
-                bind_physics_material(str(shape.GetPath()), physics_path, stage=stage)
-                bind_visual_material(str(shape.GetPath()), visual_path, stage=stage)
+                # Coplanar gripping faces, with a thin distal neck that clears
+                # the ordinary fuse recess. The backing remains 3 mm thick.
+                pieces = [
+                    ('backing',[sign*.0015,0.,.1565],(.003,.004,.033)),
+                    ('tip',[sign*.0025,0.,.179],(.001,.004,.012)),
+                ]
+                if 'left_robot' in path:
+                    pieces=[('support',[sign*.0015,0.,.1625],(.003,.004,.045))]
+                for label,centre_gripper,size in pieces:
+                    centre=rotation.inv().apply(np.asarray(centre_gripper)-origin)
+                    shape=UsdGeom.Cube.Define(stage,path+paths[name]+'/precision_'+label)
+                    shape.CreateSizeAttr(1.)
+                    shape.AddTranslateOp().Set(Gf.Vec3d(*centre))
+                    shape.AddOrientOp().Set(Gf.Quatf(float(q[3]),Gf.Vec3f(*q[:3])))
+                    shape.AddScaleOp().Set(Gf.Vec3f(*size))
+                    UsdPhysics.CollisionAPI.Apply(shape.GetPrim())
+                    collision=PhysxSchema.PhysxCollisionAPI.Apply(shape.GetPrim())
+                    collision.CreateContactOffsetAttr(.002 if 'left_robot' in path else .0005)
+                    collision.CreateRestOffsetAttr(0.)
+                    collision.CreateTorsionalPatchRadiusAttr(.006 if 'left_robot' in path else .003)
+                    collision.CreateMinTorsionalPatchRadiusAttr(.004 if 'left_robot' in path else .001)
+                    bind_physics_material(str(shape.GetPath()),physics_path,stage=stage)
+                    bind_visual_material(str(shape.GetPath()),visual_path,stage=stage)
             return prim
 
         config.spawn.make_uninstanceable = True

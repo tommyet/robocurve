@@ -6003,3 +6003,29 @@ editing, merge both agents' findings, and commit/push the update with the work.
   narrow support lane.079 uses two4 x32 x60 mm rails24 mm apart, a20 mm gap,
   while preserving four supporting arcs; do not repeat the earlier short
   rests that let the band fall. No new native result yet.
+
+### 2026-11-19 — current native-grasp findings, not submitted evidence
+
+- Eito already submitted dropped-chain PR2739. Do not duplicate it. The other
+  five tasks in this batch still have no full-score demonstration or Dream run.
+- Fuse016 removes the carrier intact using its raised end. The ordinary
+  3 mm-thick right fingertips then collide with the recess during cartridge
+  pickup. A 1 mm distal tip gives clearance; keep the left supporting fingers
+  thick. Changing both hands made the held plug slip during a private probe.
+- Brush022/023 preserve the brace and genuinely lift hair with the pin tail,
+  but loosened locks fall back among the pins. One passive25 mN contact snag
+  per lock is sufficient reset resistance. Next use multiple lanes, then tip
+  loosened hair into the dish. Do not count tool travel as successful clearing.
+- Pony025 misses pickup with8 mm-wide fingers; the elastic remains13.5 mm
+  ahead of the TCP. Narrow4 mm fixed fingers with a shallow transverse groove
+  are being tested. Grooves are physical hardware, never grasp attachments.
+- Cap024 starts dome-up on an ordinary inverted glass. The rim slips3.5 mm
+  ahead of a finger whose tip is only2 mm ahead of its working point.025
+  restores8 mm of fingertip margin. No fitting success has been established.
+- Hamper010 forms three upright loops, about306 x285 x176 mm at880. The old
+  follow-on press targeted below the table and the one-hand release reopened
+  the packet. A both-grips-held upright press is now being tested.
+- Private checkpoint diagnostics restore recorded native state once before
+  stepping, retain original material rest shapes, and are explicitly marked
+  submission_evidence=false / whole_trial=false. They only save repeated
+  prefix debugging. Every final demo must start from the documented reset.

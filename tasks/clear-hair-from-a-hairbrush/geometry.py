@@ -13,7 +13,7 @@ for i in range(4):
   JOINTS.append(joint(name+'_root','brush',name,pos,[0,0,0],axes={**fixed_axes(),'rotX':dict(limits=(-65,65),stiffness=.05,damping=.001),'rotY':dict(limits=(-65,65),stiffness=.05,damping=.001)},break_force=18.,break_torque=.12))
 # Ten loose locks represent 2 g of shed hair. Each lock is a 1.4 mm contact
 # proxy for many finer hairs; it is neither rigid nor glued to the brush.
-HAIRS=10;SEGMENTS=14
+HAIRS=10;SEGMENTS=14;SNAGS_PER_LOCK=1
 for strand in range(HAIRS):
  y=-.030+strand*.006;u=np.linspace(-1,1,SEGMENTS+1)
  # Each strand snakes between neighbouring pins, with two loose ends.
@@ -26,8 +26,8 @@ for strand in range(HAIRS):
    previous=BODIES[-2];axes={axis:dict(limits=(-180,180),stiffness=2e-7,damping=1e-8) for axis in ('rotX','rotY','rotZ')}
    JOINTS.append(joint(f'hair_join_{strand}_{i}',previous['name'],part['name'],[previous['shapes'][0]['length']/2,0,0],[-length/2,0,0],axes=axes))
 # Fine fibres caught around bristle tips resist a light shake. A small passive
-# breakaway constraint approximates this unresolved snag at two actual pin
-# contacts per lock. It supplies resistance only: the comb must contact and
+# breakaway constraint approximates this unresolved snag at one actual pin
+# contact per lock. It supplies resistance only: the comb must contact and
 # lift the flexible hair, and released locks remain ordinary dynamic bodies.
 # This is an explicit material approximation, not a proximity release rule.
 for strand in range(HAIRS):
@@ -44,8 +44,8 @@ for strand in range(HAIRS):
   selected.append(index)
   axes={axis:dict(limits=(-180,180),stiffness=0.,damping=0.) for axis in ('rotX','rotY','rotZ')}
   JOINTS.append(joint(f'hair_snag_{strand}_{len(selected)}',pin['name'],part['name'],np.asarray(part['pos'])-pin['pos'],[0,0,0],axes=axes,break_force=.025))
-  if len(selected)==2:break
- assert len(selected)==2,'Each lock needs two specified contact snags'
+  if len(selected)==SNAGS_PER_LOCK:break
+ assert len(selected)==SNAGS_PER_LOCK,'Each lock needs its specified contact snag'
 TOOL=np.array([.43,-.10,TABLE+.027])
 # 200 mm comb: 100 mm plastic toothed section and 100 mm steel pin-tail.
 comb=[box((.012,.090,.004),(0,-.020,0)),cylinder(.0009,.095,(0,.0725,0),Rotation.from_euler('x',90,degrees=True).as_quat(),(.67,.69,.72))]
@@ -58,5 +58,5 @@ comb += [box((.017,.0012,.004),(.009,-.060+i*.003,0)) for i in range(26)]
 BODIES.append(body('comb',TOOL,comb,contact_report=True,mass=.016,color=(.15,.44,.61),friction=.9,torsional_patch_radius=.005,min_torsional_patch_radius=.002))
 BODIES.append(body('comb_rest',[.43,-.145,TABLE+.016],[box((.030,.020,.025))],fixed=True,mass=.03,color=(.58,.43,.27)))
 BODIES.append(body('comb_tail_rest',[.43,-.045,TABLE+.013],[box((.020,.020,.026))],fixed=True,mass=.02,color=(.58,.43,.27)))
-BODIES.append(body('waste_dish',[.18,-.26,TABLE+.012],[box((.12,.11,.003)),box((.004,.11,.020),(-.06,0,.008)),box((.004,.11,.020),(.06,0,.008)),box((.12,.004,.020),(0,-.055,.008)),box((.12,.004,.020),(0,.055,.008))],fixed=False,mass=.12,color=(.77,.84,.75),friction=.7))
+BODIES.append(body('waste_dish',[.36,.15,TABLE+.012],[box((.12,.11,.003)),box((.004,.11,.020),(-.06,0,.008)),box((.004,.11,.020),(.06,0,.008)),box((.12,.004,.020),(0,-.055,.008)),box((.12,.004,.020),(0,.055,.008))],fixed=False,mass=.12,color=(.77,.84,.75),friction=.7))
 finalize(BODIES,JOINTS)
