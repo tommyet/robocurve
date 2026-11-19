@@ -51,6 +51,15 @@ class DemoControl:
      self.phase_goal=(goal,goalR);self.last_goal=self.phase_goal
     if phase['kind']=='lift' and k==end and np.linalg.norm(m.p(phase['obj'])-self.phase_object_start)<.025:
      raise RuntimeError('The scripted pickup did not lift the part; stop this diagnostic.')
+    if phase['kind']=='pick':
+     # The hand-held plug settles during insertion. Follow the measured
+     # part throughout pickup rather than an obsolete phase-start pose.
+     obj=phase['obj'];pos=m.p(obj);OR=m.orientation(obj)
+     from common import down
+     yaw=np.arctan2(OR[1,0],OR[0,0]);goalR=Rot.from_euler('z',yaw).as_matrix()@down(-90)
+     point=phase['point'].copy();height=point[2];point[2]=0.
+     goal=pos+OR@point+phase['delta']+np.array([0.,0.,height])
+     self.phase_goal=(goal,goalR);self.last_goal=self.phase_goal
     if phase.get('relative')=='plug' and phase['kind']=='move':
      tr,rr=self.grasps[phase['obj']];plugR=m.orientation('plug')
      goalR=plugR@phase['rotation']@rr.T

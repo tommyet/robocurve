@@ -80,7 +80,21 @@ All task geometry is original procedural work under the included MIT
 license. The robot, table, runtime and cameras come from the pinned YAM /
 Isaac environment; no third-party task meshes, scans or textures are used.
 
-## Validation status
+## Recorded trials
 
-Full-score native demo and Dream baseline are being validated. No
-submission claim is made until `VALIDATION.json` records both results.
+- Demo: **1**, 1960 controls / 98 simulated seconds; 37.4 wall minutes including startup.
+- Dream: **0**, 3000 controls / 150 simulated seconds; 68.8 wall minutes including startup.
+
+Both completed recordings preserve every native frame at 20 fps. The uploaded
+videos show two simultaneous judging views. CPU rescoring agrees with both
+results, and the executed Python sources and demo plan match the submission.
+
+Dream made 62 requests across 62 server session(s). The official adapter recovered expired sessions; this is not an uninterrupted single-session run.
+The model used the official loopback bridge over SSH; its credential remained
+on the client computer. Adapter versions and the public request transcript
+are in `evidence/`. No server session IDs or credentials are published.
+
+The complete traces were audited locally and are retained with their SHA-256
+checksums in `evidence/trace-manifest.json`. They are omitted from this PR to
+meet the 25 MB task archive limit. The audit reports and request transcript
+are included. A fresh run saves a full trace for `rescore.py`.
