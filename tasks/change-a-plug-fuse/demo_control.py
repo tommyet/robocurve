@@ -14,7 +14,7 @@ class DemoControl:
    target,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side]);tool_tip_local=None;tip_target=None
    if side=='right' and self.grasp is not None and k<=480:
     t_rel,r_rel,start_tip,start_R=self.grasp;H=hands['right'];t_rel=H['rotation'].T@(m.p('screwdriver')-H['tcp']);r_rel=H['rotation'].T@m.orientation('screwdriver');P=m.orientation('plug');base=m.p('plug');Rtool=P@Rot.from_euler('z',90,degrees=True).as_matrix()
-    insert=base+P@(FC+np.array([.0155,0,-.0005]));outside=insert+P@np.array([.009,0,0]);fulcrum=base+P@(FC+np.array([.023,0,-.0006]))
+    insert=base+P@(FC+np.array([.0155,0,0.]));outside=insert+P@np.array([.009,0,0]);fulcrum=base+P@(FC+np.array([.023,0,-.0006]))
     if k<=260:
      u=ik.smoothstep((k-200)/60);tip=start_tip+u*(outside-start_tip);Rtool=ik.slerp_matrix(start_R,Rtool,u)
     elif k<=300:

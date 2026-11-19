@@ -6296,3 +6296,86 @@ editing, merge both agents' findings, and commit/push the update with the work.
   lock from tool-assisted credit; collecting already-loosened hair is allowed.
   Native sensor validation and an explicit direct-hand control are pending.
   This is scoring-only; material, motion, thresholds and damage guards remain.
+
+### 2026-11-19 — cap opening orientation and outcome scoring
+
+- Cap032 achieves both rim grasps and reaches the crown, but the open-side-up
+  cap collapses into a narrow folded bowl rather than everting onto the head.
+  At440 its front rim does not extend45 mm forward of head centre; crown
+  proximity alone is not a fitted cap.
+- Source123 starts the separate cap dome-up on a fixed100 mm diameter wooden
+  cap rest (110 mm cylinder plus15 mm base), leaving its rim free. Pickup,
+  stretch, placement and release remain robot actions. Reduce held opening
+  from210 to190 mm; no material/force change or pre-grasp.
+- Crown coverage should measure the closest sheet surface, not require the
+  cap's arbitrary material apex to align with the head apex. Source123 uses
+  point-to-triangle distance, preserving the20 mm coverage limit and all rim,
+  face-clearance, integrity and released-hold requirements. Native validation
+  is still required; this is not a rescore of032.
+
+- Source122 additionally requires a snag to release within0.25 s of native
+  comb contact before that lock can earn credit. Earlier contact followed by
+  later shaking is insufficient. This is distinct from counting first tool
+  contact, which could credit irrelevant touching.
+- Brush029's stable bracing prevents the earlier incidental shaking; at700
+  six snags remain despite the nearby lifts. Source122 uses10 mN passive
+  snag resistance (about five times a0.2 g lock's weight), rather than25 mN.
+  This remains an explicitly uncalibrated fine-fibre approximation. It must
+  pass gravity-only inversion again before a positive run, retaining all10
+  snags. No success or realistic calibration is claimed in advance.
+
+- Pony039 still fails the5 mm contact-body attachment guard at196, around
+ 64 mm elastic diameter. Coarsening alone does not resolve it. Source124
+ uses the documented native vertex-to-real-gripper attachment directly at
+ the measured, geometry-gated pinch point, eliminating the driven small
+ intermediate body. No point or object pose is assigned. The cord remains
+ deformable and can be released or dropped.
+- Source124's6 N slip guard is an **estimated** local tension (E*A*strain
+ from adjacent cord segments), not a measured/capped native force. This is
+ explicitly disclosed. It releases on jaw opening or8 mm slip too. Native
+ articulation/deformable coupling must still be validated. No successful
+ ponytail demo exists yet.
+
+### 2026-11-19 — cap034 misses pickup; fuse023 blade clearance
+
+- Cap034 never leaves its dome-up rest: both grips remain empty after240.
+  At160 the rim is9–10 mm beyond TCP and3.5–5 mm off the closure centre;
+  the real finger ends are8 mm beyond TCP. Stop the failed pickup at309.
+  Source125 narrows the open approach from0.60 to0.25, keeps it level and
+  centres only the closure axis during pinching, avoiding inward rim chasing.
+- Fuse023 retains the driver but its tip stalls outside/below the carrier.
+  The wall-to-carrier gap is2 mm for a0.8 mm blade. Source125 uses0.1 mm
+  contact offsets on the plug, carrier and driver (rather than0.25 mm) and
+  raises blade entry0.5 mm to the centre of that physical gap. No clip,
+  grasp, damage or score threshold changes. Both corrections need native tests.
+
+### 2026-11-19 — repair invalid native free-joint declarations
+
+- Pony041 logs408 identical `PxD6Joint::setPyramidSwingLimit: limit invalid`
+  errors from the hair joints' nominal +/-180-degree free swing limits.
+  The same builder is shared by these six drafts; compliant pinch joints
+  also incorrectly declared +/-180 rather than free rotational axes.
+- OpenUSD defines an omitted limit as free. Source126 omits LimitAPI only
+  for axes explicitly covering a full turn, retaining all locked/limited axes
+  and all spring drives, force caps, geometry and score conditions.
+  https://openusd.org/release/api/usd_physics_page_front.html
+- Earlier trials remain diagnostic only. Native revalidation must show no
+  invalid-limit errors before final demo/Dream evidence. Do not assume the
+  errors made the old joints either fully locked or fully free; that was not
+  measured.
+- Pony041's direct vertex pinch stretches intact to69.5 mm at200, then the
+  right point moves8 mm through the grip at205 and releases. It does not
+  pass the two-grip stretch gate. No042 full run was started.
+- Brush inversion002 passed: all10 of the10 mN snags retained,0 removed,
+  no hand/comb contacts,60 controls. The new native hand contact matrix
+  initializes. A repeat after the joint declaration correction is required.
+
+- Pony041 drift is along finger depth, rising from~0 mm at180 to8.8 mm
+  at205; jaws remain2.8 mm apart and estimated load is~1 N. NVIDIA requires
+  local collision filtering around deformable attachment sites to avoid
+  conflicting constraints. Source127 filters only triangles incident to the
+  pinched vertex and that one contact patch against the holding hand while
+  attached; release restores all collisions. Other elastic/hair/head contact,
+ 6 N estimated slip and8 mm displacement guard remain unchanged. Native
+ validation pending. This is not whole-object collision removal.
+ https://docs.omniverse.nvidia.com/kit/docs/omni_physics/latest/dev_guide/deformables/omniphysics_deformable_schema.html#element-collision-filtering

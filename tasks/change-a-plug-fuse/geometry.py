@@ -8,13 +8,13 @@ outer=[box((.064,.045,.008),(0,0,-.008)),box((.064,.009,.014),(0,-.018,.003)),bo
 for x,y,size,height in [(-.010,-.0111,(.00635,.004),.0177),(-.010,.0111,(.00635,.004),.0177),(.0122,0,(.004,.008),.0227)]:
  outer.append(box((size[0],size[1],height),(x,y,.010+height/2),(.69,.59,.28)))
 outer += [cylinder(.004,.09,(0,-.067,-.005),Rotation.from_euler('x',90,degrees=True).as_quat(),(.16,.16,.17))]
-BODIES.append(body('plug',PLUG,outer,mass=.065,color=(.90,.89,.84),friction=.9,torsional_patch_radius=.008,min_torsional_patch_radius=.004))
+BODIES.append(body('plug',PLUG,outer,mass=.065,color=(.90,.89,.84),friction=.9,contact_offset=.0001,torsional_patch_radius=.008,min_torsional_patch_radius=.004))
 # The lowered right-wall section is the ordinary screwdriver access notch.
 # A fuse carrier's face is the ordinary pry point. Its four sprung fingers
 # retain the cartridge beneath it; no artificial robot handle is added.
 CARRIER_OFFSET=FC+[.003,0,.005]
 CARRIER=PLUG+CARRIER_OFFSET
-BODIES.append(body('carrier',CARRIER,[box((.037,.009,.0015)),box((.002,.009,.004),(.0175,0,-.002)),box((.002,.009,.002),(-.0175,0,-.001))],mass=.0035,color=(.19,.20,.22),friction=.8))
+BODIES.append(body('carrier',CARRIER,[box((.037,.009,.0015)),box((.002,.009,.004),(.0175,0,-.002)),box((.002,.009,.002),(-.0175,0,-.001))],mass=.0035,color=(.19,.20,.22),friction=.8,contact_offset=.0001))
 Q=Rotation.from_euler('y',90,degrees=True).as_quat()
 def fuse(name,pos,marked=False):
  sh=[cylinder(FUSE_RADIUS,FUSE_LENGTH,quat=Q,color=(.90,.88,.79))]
@@ -52,7 +52,7 @@ for sign in [-1,1]:
 TOOL=np.array([.28,-.14,TABLE+.028])
 # 169 mm ordinary flat screwdriver, 3 mm blade. Its shaft gives the two
 # grippers room while the tip levers the carrier notch.
-BODIES.append(body('screwdriver',TOOL,[cylinder(.009,.070,(0,-.015,0),Rotation.from_euler('x',90,degrees=True).as_quat(),(.20,.45,.72)),cylinder(.002,.088,(0,.061,0),Rotation.from_euler('x',90,degrees=True).as_quat(),(.68,.70,.72)),box((.003,.014,.0008),(0,.112,0),(.68,.70,.72))],mass=.040,color=(.2,.45,.72),friction=.8,torsional_patch_radius=.005,min_torsional_patch_radius=.003))
+BODIES.append(body('screwdriver',TOOL,[cylinder(.009,.070,(0,-.015,0),Rotation.from_euler('x',90,degrees=True).as_quat(),(.20,.45,.72)),cylinder(.002,.088,(0,.061,0),Rotation.from_euler('x',90,degrees=True).as_quat(),(.68,.70,.72)),box((.003,.014,.0008),(0,.112,0),(.68,.70,.72))],mass=.040,color=(.2,.45,.72),friction=.8,contact_offset=.0001,torsional_patch_radius=.005,min_torsional_patch_radius=.003))
 BODIES.append(body('tool_rest',[TOOL[0],TOOL[1]-.025,TABLE+.0095],[box((.030,.020,.019))],fixed=True,mass=.05,color=(.58,.43,.27)))
 BODIES.append(body('shaft_rest',[TOOL[0],TOOL[1]+.080,TABLE+.013],[box((.020,.020,.026))],fixed=True,mass=.02,color=(.58,.43,.27)))
 BODIES.append(body('parts_dish',[.29,-.16,TABLE+.010],[box((.085,.070,.003)),box((.003,.070,.016),(-.043,0,.006)),box((.003,.070,.016),(.043,0,.006)),box((.085,.003,.016),(0,-.035,.006)),box((.085,.003,.016),(0,.035,.006))],fixed=False,mass=.1,color=(.60,.73,.63)))

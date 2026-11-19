@@ -2,7 +2,7 @@ import numpy as np
 from native_model import NativeModel
 from geometry import HAIRS,SEGMENTS,SNAGS_PER_LOCK
 class Model(NativeModel):
- def __init__(self):super().__init__();self.comb_touched_locks=set();self.hand_contacted_trapped_locks=set();self.previous_broken=set();self.grasp_state={}
+ def __init__(self):super().__init__();self.comb_touched_locks=set();self.comb_loosened_locks=set();self.last_comb_contact={};self.hand_contacted_trapped_locks=set();self.previous_broken=set();self.grasp_state={}
  def bind_native(self,base):
   super().bind_native(base)
   from isaaclab.app.settings_manager import get_settings_manager
@@ -40,9 +40,10 @@ class Model(NativeModel):
     other=names[1-names.index('comb')]
     if not other.startswith('hair_'):continue
     strand=int(other.split('_')[1])
-    if strand in self.comb_touched_locks:continue
     impulse=sum(float(np.linalg.norm(data[i].impulse)) for i in range(h.contact_data_offset,h.contact_data_offset+h.num_contact_data))
     if impulse<=0.:continue
+    self.last_comb_contact[strand]=self.time
+    if strand in self.comb_touched_locks:continue
     self.comb_touched_locks.add(strand);self.events.append(dict(event='comb_hair_contact',lock=strand,body=other,impulse_ns=impulse,time=self.time,source='native per-substep contact report'))
   self.contact_subscription=get_physx_simulation_interface().subscribe_contact_report_events(contact)
   from finite_pinch import FinitePinch
@@ -52,9 +53,10 @@ class Model(NativeModel):
   forces=getattr(value,'torch',value).detach().cpu().numpy()[0,self.contact_order]
   magnitudes=np.linalg.norm(forces,axis=1).reshape(HAIRS,SEGMENTS)
   for strand in range(HAIRS):
-   if strand in self.comb_touched_locks:continue
    index=int(np.argmax(magnitudes[strand]));force=float(magnitudes[strand,index])
    if force>1e-6:
+    self.last_comb_contact[strand]=self.time
+    if strand in self.comb_touched_locks:continue
     self.comb_touched_locks.add(strand);self.events.append(dict(event='comb_hair_contact',lock=strand,body=f'hair_{strand}_{index}',impulse_ns=force*self.contact_dt,force_n=force,time=self.time,source='native filtered contact-force matrix'))
  def record_direct_hand_contacts(self):
   value=self.hand_contact_view.get_contact_force_matrix(dt=self.contact_dt)
@@ -66,12 +68,17 @@ class Model(NativeModel):
    if trapped and force>1e-6 and strand not in self.hand_contacted_trapped_locks:
     self.hand_contacted_trapped_locks.add(strand)
     self.events.append(dict(event='hand_contacted_trapped_hair',lock=strand,force_n=float(force),time=self.time,source='native filtered hand/hair contact-force matrix'))
-  self.previous_broken=set(self.broken)
  def configure_station(self):
   from pad_covers import install
   install()
  def material(self,hands,dt):
-  self.record_tool_contacts();self.record_direct_hand_contacts();self.pinch.update(hands);self.failed |= any(n.startswith('pin_') for n in self.broken)
+  self.record_tool_contacts();self.record_direct_hand_contacts()
+  for name in self.broken-self.previous_broken:
+   if not name.startswith('hair_snag_'):continue
+   strand=int(name.split('_')[2]);last=self.last_comb_contact.get(strand,-1e9)
+   if self.time-last<=.25 and strand not in self.hand_contacted_trapped_locks:
+    self.comb_loosened_locks.add(strand);self.events.append(dict(event='comb_loosened_snag',lock=strand,joint=name,time=self.time,last_comb_contact=last))
+  self.previous_broken=set(self.broken);self.pinch.update(hands);self.failed |= any(n.startswith('pin_') for n in self.broken)
  def measure(self):
   hair=np.array([self.p(f'hair_{s}_{i}') for s in range(HAIRS) for i in range(SEGMENTS)])
   local=(hair-self.p('brush'))@self.orientation('brush')
@@ -79,8 +86,8 @@ class Model(NativeModel):
   # Count a strand as cleared only when its entire centreline leaves the
   # expanded bristle envelope. This corresponds to weighing removed locks.
   clear=~trapped.reshape(HAIRS,SEGMENTS).any(axis=1)
-  qualified=clear & np.array([s in self.comb_touched_locks and s not in self.hand_contacted_trapped_locks for s in range(HAIRS)])
-  return dict(removed_fraction=float(clear.mean()),comb_cleared_fraction=float(qualified.mean()),comb_touched_locks=len(self.comb_touched_locks),directly_handled_trapped_locks=len(self.hand_contacted_trapped_locks),remaining_contact_snags=HAIRS*SNAGS_PER_LOCK-sum(n.startswith('hair_snag_') for n in self.broken),intact=not self.failed,released_seconds=self.release,failed=self.failed)
+  qualified=clear & np.array([s in self.comb_loosened_locks and s not in self.hand_contacted_trapped_locks for s in range(HAIRS)])
+  return dict(removed_fraction=float(clear.mean()),comb_cleared_fraction=float(qualified.mean()),comb_touched_locks=len(self.comb_touched_locks),comb_loosened_locks=len(self.comb_loosened_locks),directly_handled_trapped_locks=len(self.hand_contacted_trapped_locks),remaining_contact_snags=HAIRS*SNAGS_PER_LOCK-sum(n.startswith('hair_snag_') for n in self.broken),intact=not self.failed,released_seconds=self.release,failed=self.failed)
  def reset_valid(self):
   q=self.measure();return q['removed_fraction']==0. and q['remaining_contact_snags']==HAIRS*SNAGS_PER_LOCK and not self.failed
  def score(self):
@@ -94,6 +101,6 @@ class Model(NativeModel):
  def draw(self,d):
   from hair_visual import draw
   draw(self,d)
- def state(self):return dict(super().state(),comb_touched_locks=sorted(self.comb_touched_locks),hand_contacted_trapped_locks=sorted(self.hand_contacted_trapped_locks),previous_broken=sorted(self.previous_broken),grasp_state=self.grasp_state)
+ def state(self):return dict(super().state(),comb_touched_locks=sorted(self.comb_touched_locks),comb_loosened_locks=sorted(self.comb_loosened_locks),last_comb_contact=self.last_comb_contact,hand_contacted_trapped_locks=sorted(self.hand_contacted_trapped_locks),previous_broken=sorted(self.previous_broken),grasp_state=self.grasp_state)
  def restore(self,state):
-  s=dict(state);self.comb_touched_locks=set(s.pop('comb_touched_locks'));self.hand_contacted_trapped_locks=set(s.pop('hand_contacted_trapped_locks'));self.previous_broken=set(s.pop('previous_broken'));super().restore(s)
+  s=dict(state);self.comb_touched_locks=set(s.pop('comb_touched_locks'));self.comb_loosened_locks=set(s.pop('comb_loosened_locks'));self.last_comb_contact={int(k):v for k,v in s.pop('last_comb_contact').items()};self.hand_contacted_trapped_locks=set(s.pop('hand_contacted_trapped_locks'));self.previous_broken=set(s.pop('previous_broken'));super().restore(s)

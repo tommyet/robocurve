@@ -18,6 +18,10 @@ class DemoControl:
    if self.grip_offset is not None:
     w=float(np.clip((k-120)/20,0,1));offset=(1-w)*offset+w*self.grip_offset[side]
    target+=min(1.,k/60)*max(0.,min(1.,(240-k)/80))*offset
+   if 120<=k<=160:
+    # Centre only along jaw closure; do not chase the rim into the cap.
+    index=RIM[M//4] if side=='left' else RIM[3*M//4]
+    target+=R[:,0]*np.dot(m.nodes[index]-target,R[:,0])
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=hands[side]['tcp']-p0;rbias=hands[side]['rotation']@R0.T
    def residual(q):

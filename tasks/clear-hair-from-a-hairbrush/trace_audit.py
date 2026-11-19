@@ -44,6 +44,8 @@ def audit(rows,report):
  assert contacts==m.comb_touched_locks,'Native comb-contact history differs from state'
  hands={int(e['lock']) for e in report.get('events',[]) if e['event']=='hand_contacted_trapped_hair' and e.get('force_n',0)>1e-6}
  assert hands==m.hand_contacted_trapped_locks,'Native direct-hand contact history differs from state'
+ loosened={int(e['lock']) for e in report.get('events',[]) if e['event']=='comb_loosened_snag' and e['joint'] in events and 0<=e['time']-e['last_comb_contact']<=.25}
+ assert loosened==m.comb_loosened_locks,'Native comb/snag release history differs from state'
  score=m.score();assert abs(score-report['score'])<1e-9,'Reported score differs'
  complete=report['status']=='complete' and report['steps']==report['requested_steps']
  return dict(score=score,steps=count-1,complete=complete,measurements=m.measure(),native_break_events=len(events),visual_review_still_required=True,submission_evidence=complete and not report.get('cpu_preview',True) and report.get('capture_every')==1 and report.get('submission_evidence',False))

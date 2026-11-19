@@ -77,7 +77,9 @@ def spawn(prim_path,cfg,translation=None,orientation=None,**kwargs):
    for axis in ('transX','transY','transZ','rotX','rotY','rotZ'):
     cfgj=specj.get('axes',{}).get(axis,{})
     lo,hi=cfgj.get('limits',(1,-1) if axis.startswith('trans') else (-180,180))
-    lim=UsdPhysics.LimitAPI.Apply(j.GetPrim(),axis);lim.CreateLowAttr(lo);lim.CreateHighAttr(hi)
+    # A full-turn axis is free; +/-180 is an invalid PhysX swing limit.
+    if not (axis.startswith('rot') and lo<=-180 and hi>=180):
+     lim=UsdPhysics.LimitAPI.Apply(j.GetPrim(),axis);lim.CreateLowAttr(lo);lim.CreateHighAttr(hi)
     if 'stiffness' in cfgj:
      # Geometry coefficients are SI torque/radian (and torque*s/radian).
      # USD angular drives instead use torque/degree; limits/targets stay degrees.

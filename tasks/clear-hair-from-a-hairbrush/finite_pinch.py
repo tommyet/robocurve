@@ -99,8 +99,9 @@ class FinitePinch:
                 joint.CreateBreakForceAttr(18.);joint.CreateBreakTorqueAttr(.24);joint.CreateCollisionEnabledAttr(True)
                 # A force-limited friction approximation, not an infinitely stiff weld.
                 for axis in ('transX','transY','transZ','rotX','rotY','rotZ'):
-                    linear=axis.startswith('trans');limit=UsdPhysics.LimitAPI.Apply(joint.GetPrim(),axis)
-                    limit.CreateLowAttr(-.05 if linear else -180.);limit.CreateHighAttr(.05 if linear else 180.)
+                    linear=axis.startswith('trans')
+                    if linear:
+                        limit=UsdPhysics.LimitAPI.Apply(joint.GetPrim(),axis);limit.CreateLowAttr(-.05);limit.CreateHighAttr(.05)
                     drive=UsdPhysics.DriveAPI.Apply(joint.GetPrim(),axis);drive.CreateTypeAttr('force')
                     drive.CreateStiffnessAttr(1500. if linear else 2.0*np.pi/180.)
                     drive.CreateDampingAttr(.5 if linear else .02*np.pi/180.)

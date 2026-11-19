@@ -74,7 +74,7 @@ def spawn(prim_path,cfg,translation=None,orientation=None,**kwargs):
    for axis in ('transX','transY','transZ','rotX','rotY','rotZ'):
     cfgj=specj.get('axes',{}).get(axis,{})
     limits=cfgj.get('limits',(1,-1) if axis.startswith('trans') else (-180,180))
-    if limits is not None:
+    if limits is not None and not (axis.startswith('rot') and limits[0]<=-180 and limits[1]>=180):
      lo,hi=limits;lim=UsdPhysics.LimitAPI.Apply(j.GetPrim(),axis);lim.CreateLowAttr(lo);lim.CreateHighAttr(hi)
     if 'stiffness' in cfgj:
      # Geometry coefficients are SI torque/radian (and torque*s/radian).

@@ -43,7 +43,7 @@ for strand in range(HAIRS):
   if any(abs(index-old)<4 for old in selected):continue
   selected.append(index)
   axes={axis:dict(limits=(-180,180),stiffness=0.,damping=0.) for axis in ('rotX','rotY','rotZ')}
-  JOINTS.append(joint(f'hair_snag_{strand}_{len(selected)}',pin['name'],part['name'],np.asarray(part['pos'])-pin['pos'],[0,0,0],axes=axes,break_force=.025))
+  JOINTS.append(joint(f'hair_snag_{strand}_{len(selected)}',pin['name'],part['name'],np.asarray(part['pos'])-pin['pos'],[0,0,0],axes=axes,break_force=.010))
   if len(selected)==SNAGS_PER_LOCK:break
  assert len(selected)==SNAGS_PER_LOCK,'Each lock needs its specified contact snag'
 TOOL=np.array([.43,-.10,TABLE+.027])
