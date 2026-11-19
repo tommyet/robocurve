@@ -28,9 +28,9 @@ for s in range(STRANDS):
    JOINTS.append(joint(f'hair_join_{s}_{i}',prev['name'],name,[0,0,prev['shapes'][0]['length']/2],[0,0,-length/2],axes=axes,break_force=15.))
   else:JOINTS.append(joint(f'root_{s}','styling_head',name,a-HEAD,[0,0,-length/2],axes=bend_axes(.0002,.00002),break_force=20.))
 
-# 180 x 240 mm microfiber cloth, on an open wooden drying rack below the hair.
-TOWEL=np.array([.25,0,TABLE+.183]);NX=10;NY=13
-POINTS=np.array([TOWEL+[x,y,0] for x in np.linspace(-.09,.09,NX) for y in np.linspace(-.12,.12,NY)])
+# 180 x 240 mm microfiber cloth starts held open by its two upper corners.
+TOWEL=np.array([.32,0,TABLE+.305]);NX=10;NY=13
+POINTS=np.array([TOWEL+[0,y,-x] for x in np.linspace(0,.18,NX) for y in np.linspace(-.12,.12,NY)])
 TRIS=[]
 for i in range(NX-1):
  for j in range(NY-1):
@@ -40,8 +40,6 @@ REST_LENGTHS=np.linalg.norm(POINTS[EDGES[:,1]]-POINTS[EDGES[:,0]],axis=1)
 GRIP_IDS=[NY-1,0];PATCHES=[]
 for i,node in enumerate(GRIP_IDS):
  name=f'cloth_contact_{i}';PATCHES.append((name,node));BODIES.append(body(name,POINTS[node],[sphere((.0015,)*3)],mass=.0001,color=(.22,.55,.66),friction=.9,contact_offset=.00025,exclude=['towel']))
-BODIES.append(body('towel_shelf',[TOWEL[0]+.040,0,TOWEL[2]-.006],[box((.120,.240,.006))],fixed=True,mass=.2,color=(.61,.44,.27),friction=1.2))
-BODIES.append(body('rack_post',[TOWEL[0]+.040,0,TOWEL[2]-.096],[box((.040,.080,.174))],fixed=True,mass=.2,color=(.61,.44,.27),friction=.5))
 finalize(BODIES,JOINTS)
 
 def spawn_surface(stage,root):

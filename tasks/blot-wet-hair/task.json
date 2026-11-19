@@ -4,7 +4,7 @@
   "instruction": "Use the microfiber towel to blot excess water from the hair on the salon training head. Leave the hair intact and let go when finished.",
   "action_limit": 2400,
   "run_limit": "2,400 control steps (120 seconds at 20 Hz).",
-  "setup": "Development draft: full-size clamped salon training head, wet flexible hair and a separate 180 \u00d7 240 mm microfiber towel on a wooden rack.",
+  "setup": "Development draft: full-size clamped salon training head with twelve wet flexible locks. A separate 180 \u00d7 240 mm microfiber towel starts held open by its two upper corners, 170 mm behind the head centre and 305 mm above the table. The towel initially clears the hair; both demo and Dream use this same pre-held setup.",
   "scoring": "Not validated; do not submit.",
   "fidelity": "Flexible native hair and towel; contact-gated capillary transfer conserves water. Material parameters are approximate.",
   "scores": "No validated demo or Dream run."

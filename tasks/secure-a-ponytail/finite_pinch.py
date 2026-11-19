@@ -2,7 +2,7 @@
 
 The central 10 mm of the closing finger faces must enclose the 3 mm cord. A native attachment then
 binds the measured contact patch to the real gripper link. Opening, estimated load
-above 6 N, or 8 mm slip releases it. No task-body or material pose is assigned.
+above 18 N, or 8 mm slip releases it. No task-body or material pose is assigned.
 The tension estimate is uncalibrated; it is not a measured native force limit.
 """
 import numpy as np
@@ -57,7 +57,7 @@ class FinitePinch:
     if j in held:continue
     length=np.linalg.norm(self.m.nodes[M+j]-p)
     rest=np.linalg.norm(POINTS[M+j]-POINTS[M+index])
-    loads.append(3e5*np.pi*.0015**2*max(0.,length/rest-1.))
+    loads.append(9e5*np.pi*.0015**2*max(0.,length/rest-1.))
   return max(loads,default=0.)
  def update(self,hands):
   from pxr import Sdf,Vt,UsdPhysics
@@ -72,7 +72,7 @@ class FinitePinch:
     continue
    if side in self.held:
     g=self.held[side];point=self.m.nodes[M+g['index']];local=(point-h['tcp'])@h['rotation'];g['estimated_load_n']=self.tension(g['indices'])
-    if g['estimated_load_n']>6.:self.release(side,'estimated local cord tension exceeded 6 N')
+    if g['estimated_load_n']>18.:self.release(side,'estimated local cord tension exceeded 18 N')
     elif np.linalg.norm(local-g['local_point'])>.008:self.release(side,'material moved 8 mm through the grip')
    if side in self.held or side in self.blocked or max(history)-h['opening']<.008:continue
    used={g['body'] for g in self.held.values()};choices=[]
@@ -118,5 +118,5 @@ class FinitePinch:
      f.GetAttribute('omniphysics:filterEnabled').Set(True)
     filters.append(f)
    self.held[side]=dict(body=name,index=index,indices=[j-M for j in ids if M<=j<2*M],attachment=a,local_point=local.copy(),estimated_load_n=0.,filters=filters)
-   self.m.events.append(dict(event='pinch_captured',side=side,body=name,time=self.m.time,slip_estimate_limit_n=6.,source='native contact patch attachment to actual gripper link',contact_vertices=ids))
-  self.m.grasp_state={side:dict(body=g['body'],estimated_load_n=g['estimated_load_n'],slip_estimate_limit_n=6.) for side,g in self.held.items()}
+   self.m.events.append(dict(event='pinch_captured',side=side,body=name,time=self.m.time,slip_estimate_limit_n=18.,source='native contact patch attachment to actual gripper link',contact_vertices=ids))
+  self.m.grasp_state={side:dict(body=g['body'],estimated_load_n=g['estimated_load_n'],slip_estimate_limit_n=18.) for side,g in self.held.items()}

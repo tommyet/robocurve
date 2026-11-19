@@ -29,10 +29,10 @@ for s in range(STRANDS):
   else:JOINTS.append(joint(f'root_{s}','styling_head',name,a-HEAD,[0,0,-length/2],axes=bend_axes(.0002,.00002),break_force=20.))
 # Two wooden rails support four arcs while leaving the central pickup lane clear.
 for sx in [-1,1]:
- BODIES.append(body(f'elastic_rest_{sx+1}',[ELASTIC[0]+sx*.0095,0,TABLE+.030],[box((.006,.016,.060))],mass=.010,fixed=True,color=(.59,.44,.28)))
-# A plain 3 mm cord elastic, 16 mm inside diameter. Native passive
+ BODIES.append(body(f'elastic_rest_{sx+1}',[ELASTIC[0]+sx*.0155,0,TABLE+.030],[box((.006,.016,.060))],mass=.010,fixed=True,color=(.59,.44,.28)))
+# A plain 3 mm cord elastic, 28 mm inside diameter. Native passive
 # a continuous elastic surface joins contact-bearing patches into a closed loop.
-M=32;radius=.0095;theta=np.arange(M)*2*np.pi/M
+M=32;radius=.0155;theta=np.arange(M)*2*np.pi/M
 vertices=ELASTIC+np.c_[radius*np.cos(theta),radius*np.sin(theta),np.zeros(M)]
 centres=(vertices+np.roll(vertices,-1,axis=0))/2
 lengths=np.linalg.norm(np.roll(vertices,-1,axis=0)-vertices,axis=1)
@@ -74,7 +74,7 @@ def spawn_surface(stage,root):
  UsdPhysics.CollisionAPI.Apply(p);col=PhysxSchema.PhysxCollisionAPI.Apply(p);col.CreateContactOffsetAttr(.002);col.CreateRestOffsetAttr(.0015)
  mat=UsdShade.Material.Define(stage,root+'/elasticMaterial');q=mat.GetPrim()
  for api in ['OmniPhysicsBaseMaterialAPI','OmniPhysicsDeformableMaterialAPI','OmniPhysicsSurfaceDeformableMaterialAPI','PhysxSurfaceDeformableMaterialAPI']:q.ApplyAPI(api)
- for key,value in {'omniphysics:dynamicFriction':.9,'omniphysics:density':1100.,'omniphysics:youngsModulus':3e5,'omniphysics:poissonsRatio':.45,'omniphysics:surfaceThickness':.003,'omniphysics:surfaceBendStiffness':3e5/(12*(1-.45**2)),'physxDeformableMaterial:elasticityDamping':.02,'physxDeformableMaterial:bendDamping':.01}.items():
+ for key,value in {'omniphysics:dynamicFriction':.9,'omniphysics:density':1100.,'omniphysics:youngsModulus':5e5,'omniphysics:poissonsRatio':.45,'omniphysics:surfaceThickness':.003,'omniphysics:surfaceBendStiffness':5e5/(12*(1-.45**2)),'physxDeformableMaterial:elasticityDamping':.02,'physxDeformableMaterial:bendDamping':.01}.items():
   attr=q.GetAttribute(key)
   if not attr:raise RuntimeError('Required elastic material attribute unavailable: '+key)
   attr.Set(value)

@@ -7,7 +7,7 @@ class DemoControl:
   if k==220:
    from geometry import REST
    if m.p('extension')[2]<REST[2]+.02:raise RuntimeError('The extension was not lifted; stop this diagnostic.')
-  if 220<=k<=1520:
+  if 220<=k<=1720:
    h=hands['right'];rel=h['rotation'].T@(m.p('extension')-h['tcp'])
    if self.grasp is None:self.grasp=rel.copy();self.grasp_rotation=h['rotation'].T@m.orientation('extension')
    elif np.linalg.norm(rel-self.grasp)>.008:raise RuntimeError('Extension slipped from the physical grip; stop diagnostic.')
@@ -19,7 +19,7 @@ class DemoControl:
   # The plan's TCP is 3 mm above the tip origin. Preserve that tool relation,
   # correcting only for observed slip, not moving the object itself.
   desired_R=R@R0.T;goal=p-desired_R@np.array([0,0,.003])
-  if 480<=k<=1520:
+  if 480<=k<=1720:
    self.correction=np.clip(self.correction+np.clip(.15*(goal-m.p('extension')),-.0002,.0002),-.006,.006)
    goal=goal+self.correction
   relative=self.grasp if self.grasp is not None else h['rotation'].T@(m.p('extension')-h['tcp'])

@@ -25,9 +25,13 @@ class DemoControl:
    if side=='right' and self.grasp is not None and k<=520:
     t_rel,r_rel,start_tip,start_R=self.grasp;H=hands['right'];t_rel=H['rotation'].T@(m.p('screwdriver')-H['tcp']);r_rel=H['rotation'].T@m.orientation('screwdriver');P=m.orientation('plug');base=m.p('plug');Rtool=P@Rot.from_euler('z',90,degrees=True).as_matrix()
     insert=base+P@(FC+np.array([.0155,0,0.]));outside=insert+P@np.array([.009,0,0]);fulcrum=base+P@(FC+np.array([.023,0,-.0006]))
-    if k<=300:
-     u=ik.smoothstep((k-200)/100);tip=start_tip+u*(outside-start_tip);Rtool=ik.slerp_matrix(start_R,Rtool,u)
-    elif k<=340:tip=outside
+    far=outside+P@np.array([.045,0,0]);far_low=far.copy();far_low[2]=start_tip[2]
+    if k<=240:
+     u=ik.smoothstep((k-200)/40);tip=start_tip+u*(far_low-start_tip);Rtool=ik.slerp_matrix(start_R,Rtool,u)
+    elif k<=280:
+     u=ik.smoothstep((k-240)/40);tip=far_low+u*(far-far_low)
+    elif k<=340:
+     u=ik.smoothstep((k-280)/60);tip=far+u*(outside-far)
     elif k<=420:
      u=ik.smoothstep((k-340)/80);tip=outside+u*(insert-outside)
     else:

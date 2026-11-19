@@ -34,12 +34,13 @@ class DemoControl:
     self.band_offset_x=float(m.nodes[M:2*M,0].mean()-np.mean([h['tcp'][0] for h in hands.values()]))
    if k>=220:
     from geometry import STRANDS,SEGMENTS
-    if k<=300 or self.hair_x is None:
+    if k<=440 or self.hair_x is None:
      centres=[]
      for strand in range(STRANDS):
       p=np.array([m.p(f'hair_{strand}_{i}') for i in range(SEGMENTS)])
       centres.append(p[np.argmin(abs(p[:,2]-target[2])),0])
-     self.hair_x=float(np.clip(np.median(centres),.27,.33))
+     goal=float(np.clip((min(centres)+max(centres))/2,.27,.33))
+     self.hair_x=goal if self.hair_x is None else self.hair_x+float(np.clip(.2*(goal-self.hair_x),-.0005,.0005))
     target[0]+=min(1.,(k-220)/80)*(self.hair_x-.300-self.band_offset_x)
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=hands[side]['tcp']-p0;rbias=hands[side]['rotation']@R0.T

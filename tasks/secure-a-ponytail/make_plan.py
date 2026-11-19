@@ -5,7 +5,7 @@ from geometry import ELASTIC,HEAD
 p=Plan()
 RL=np.array([[0,-1,0],[0,0,-1],[1,0,0.]])
 RR=np.array([[0,-1,0],[0,0,1],[-1,0,0.]])
-L=ELASTIC+[0,.0105,.002];R=ELASTIC+[0,-.0105,.002]
+L=ELASTIC+[0,.0165,.002];R=ELASTIC+[0,-.0165,.002]
 p.add(3,'approach the plain elastic from its two sides',{'left':(L+[0,.045,0.],RL,.18),'right':(R+[0,-.045,0.],RR,.18)},'joint')
 p.add(2,'place the pads around opposite parts of the elastic',{'left':(L,RL,.18),'right':(R,RR,.18)})
 p.add(2,'grip the elastic',{'left':(L,RL,.065),'right':(R,RR,.065)})

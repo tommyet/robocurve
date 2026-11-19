@@ -25,6 +25,26 @@ def candidate(point, radius, hand, thickness, half_width, z_range, margin=.001, 
     return float(np.linalg.norm(local))
 
 
+def segment_contact(a,b,radius,hand,thickness,half_width,z_range,margin=.002):
+    """Does any part of the actual bound segment remain between both faces?"""
+    a=(np.asarray(a)-hand['tcp'])@hand['rotation']
+    b=(np.asarray(b)-hand['tcp'])@hand['rotation']
+    q=np.asarray(hand.get('finger_joint_positions',[-hand['opening']*.04695]*2))
+    lo=np.array([-q[1]-thickness-radius-margin,-half_width,z_range[0]])
+    hi=np.array([q[0]+thickness+radius+margin,half_width,z_range[1]])
+    if np.any(lo>hi):return False
+    u0,u1=0.,1.
+    for i in range(3):
+        d=b[i]-a[i]
+        if abs(d)<1e-12:
+            if not lo[i]<=a[i]<=hi[i]:return False
+        else:
+            p0,p1=sorted([(lo[i]-a[i])/d,(hi[i]-a[i])/d])
+            u0=max(u0,p0);u1=min(u1,p1)
+            if u0>u1:return False
+    return True
+
+
 class FinitePinch:
     def __init__(self,model,names,radius,thickness,half_width,z_range):
         from pxr import UsdPhysics,PhysicsSchemaTools
@@ -32,6 +52,8 @@ class FinitePinch:
         from omni.physx.bindings._physx import SimulationEvent
         self.m=model;self.names=list(names);self.radius=radius;self.thickness=thickness
         self.radii={name:(.0015 if name.startswith("band_contact_") else radius) for name in names}
+        from geometry import BODIES
+        self.lengths={b['name']:b['shapes'][0].get('length',0.) for b in BODIES if b['name'] in self.names}
         self.half_width=half_width;self.z_range=z_range;self.held={};self.history={s:[] for s in ['left','right']};self.blocked=set();self.serial=0
         self.grippers={};self.body_paths={}
         for p in model.stage.Traverse():
@@ -69,7 +91,8 @@ class FinitePinch:
                 continue
             if side in self.held:
                 g=self.held[side];now=(self.m.p(g['body'])-h['tcp'])@h['rotation']
-                if candidate(self.m.p(g['body']),self.radii[g['body']],h,self.thickness,self.half_width,self.z_range,margin=.002,holding=True) is None:
+                length=self.lengths[g['body']]
+                if not segment_contact(self.m.p(g['body'],[0,0,-length/2]),self.m.p(g['body'],[0,0,length/2]),self.radii[g['body']],h,self.thickness,self.half_width,self.z_range):
                     g['joint'].GetJointEnabledAttr().Set(False);self.held.pop(side);self.blocked.add(side)
                     self.m.events.append(dict(event='pinch_slipped',side=side,body=g['body'],time=self.m.time,reason='binding left the physical pad contact region'))
             if side in self.held:

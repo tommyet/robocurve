@@ -10,7 +10,7 @@ Contact-driven water transfer is a disclosed approximation; it does not simulate
 
 ## Physical preparation and judging
 
-Use the specified180 ×156 ×230mm headform with twelve separately rooted245 ±5mm locks,3.0 ±0.1g dry mass each, on the same72mm rear patch as the photographed layout. Clamp the190mm stand and150mm-square base. A180 ×240mm microfiber cloth has about300g/m² areal mass (13 ±1g dry). A120 ×240 ×6mm wooden shelf,183mm above the table on a40 ×80mm post, supports the towel with70mm overhanging its front edge; it does not attach to the cloth. Both grippers have40 ×24 ×3mm silicone-faced extensions.
+Use the specified180 ×156 ×230mm headform with twelve separately rooted245 ±5mm locks,3.0 ±0.1g dry mass each, on the same72mm rear patch as the photographed layout. Clamp the190mm stand and150mm-square base. A180 ×240mm microfiber cloth has about300g/m² areal mass (13 ±1g dry). Start with the dry towel hanging vertically, its two upper corners held by the robot at x320mm, y±120mm and305mm above the table. Its180mm length hangs down. The hands start touching these corners; finite pad-contact pinches support the towel during reset. This pre-held setup is shared by demo and Dream and is part of the physical preparation; picking the towel up is not evaluated. The towel starts clear of the wet hair. Both grippers have40 ×24 ×3mm silicone-faced extensions.
 
 Record the dry head-plus-hair tare and the dry towel mass using a0.1g scale of sufficient capacity. Soak the hair in room-temperature water for60s, let it drip for30s, then weigh it. Adjust and repeat until the retained water is18 ±1g, with no free puddle on the head, stand or table. Start within30s. Initial excess water is the wet-minus-dry head mass, W0; the scorer uses the measured value rather than assuming exactly18g. Use a dry clean cloth for each trial, restore the photographed loose hair arrangement, and replace damaged locks.
 
@@ -20,4 +20,4 @@ The simulator groups fibres into twelve18-segment flexible locks and a130-node n
 
 ## Running the draft
 
-Use the pinned runtime from the team's validated tasks. `python tasks/blot-wet-hair/run.py --mode demo --out /path/to/new-demo` records the1920-action scripted plan; use `--mode dream` for the2400-action model trial. `python tasks/blot-wet-hair/rescore.py /path/to/new-demo` audits every action, contact, water transfer, damage event and released outcome. Wall runtime and complete paired evidence remain pending.
+Use the pinned runtime from the team's validated tasks. `python tasks/blot-wet-hair/run.py --mode demo --out /path/to/new-demo` records the1460-action scripted plan; use `--mode dream` for the2400-action model trial. `python tasks/blot-wet-hair/rescore.py /path/to/new-demo` audits every action, contact, water transfer, damage event and released outcome. Wall runtime and complete paired evidence remain pending.

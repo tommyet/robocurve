@@ -38,9 +38,13 @@ class DemoControl:
   # Compensate tool slip through ordinary hand motion; never reposition the tool.
   from yam_arena import ik,station
   h=hands['right']
-  if self.held_offset is None:self.held_offset=h['rotation'].T@(m.p('masher')-h['tcp']);self.held_rotation=h['rotation'].T@m.orientation('masher')
-  if stage not in ['release masher','withdraw','released outcome'] and np.linalg.norm(h['rotation'].T@(m.p('masher')-h['tcp'])-self.held_offset)>.025:
-   raise RuntimeError('Masher slipped out of the grasp; stop the diagnostic.')
+  if self.held_offset is None:
+   g=m.pinch.held.get('right')
+   if g is None:raise RuntimeError('Masher handle was not captured by the physical pinch.')
+   self.held_rotation=g['local_rotation'].copy()
+   self.held_offset=g['local_point']-self.held_rotation@np.array([0.,0.,.135])
+  if stage not in ['release masher','withdraw','released outcome'] and m.grasp_state.get('right',{}).get('body')!='masher':
+   raise RuntimeError('Masher slipped out of the finite handle grip; stop the diagnostic.')
   if stage in ['release masher','withdraw','released outcome']:
    if self.free is None:self.free=(h['tcp'].copy(),h['rotation'].copy(),k)
    pp,RR,start=self.free;target=pp.copy()

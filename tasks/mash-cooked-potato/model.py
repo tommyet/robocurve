@@ -32,7 +32,10 @@ class Model(NativeModel):
   # Cooked tissue loses cohesion under actual tool-loaded compression. The
   # native solver handles forces; complete compressive failure removes cohesion.
   # No particle pose is changed.
-  for key,candidate in self.strain_candidates().items():
+  for key,loaded_strain in self.strain_candidates().items():
+   # Irreversible cooked-tissue damage accumulates while a cell is actually
+   # compressed by a masher bar; unloaded time produces no softening.
+   candidate=min(1.,max(loaded_strain,self.damage[key]+dt*loaded_strain))
    if candidate<=self.damage[key]+1e-5:continue
    first=self.damage[key]==0.;self.damage[key]=candidate
    strength=.04*(1-candidate)+.001*candidate

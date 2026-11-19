@@ -50,7 +50,7 @@ bands and partial credit are in `task.json`. A cap resting beside the head,
 or crumpled on its crown without an encircling rim, cannot receive full credit.
 
 The cap is a 0.8 mm native elastic shell with self-contact and a 3 mm rolled
-rim. Young's modulus is 1 MPa; this uncalibrated value approximates silicone.
+rim. Young's modulus is 0.5 MPa; this uncalibrated value approximates silicone.
 The head is rigid. A compliant native pinch forms only when a rim element is
 between closing finger faces. It releases on opening or 8 mm slip, and breaks
 at 18 N or 0.08 Nm. Grip reaction loads on the robot are omitted. The robot

@@ -45,7 +45,7 @@ def spawn_surface(stage,root):
  UsdPhysics.CollisionAPI.Apply(p);col=PhysxSchema.PhysxCollisionAPI.Apply(p);col.CreateContactOffsetAttr(.010);col.CreateRestOffsetAttr(.002)
  mat=UsdShade.Material.Define(stage,root+'/capMaterial');q=mat.GetPrim()
  for api in ['OmniPhysicsBaseMaterialAPI','OmniPhysicsDeformableMaterialAPI','OmniPhysicsSurfaceDeformableMaterialAPI','PhysxSurfaceDeformableMaterialAPI']:q.ApplyAPI(api)
- for key,value in {'omniphysics:dynamicFriction':.9,'omniphysics:density':1100.,'omniphysics:youngsModulus':1e6,'omniphysics:poissonsRatio':.45,'omniphysics:surfaceThickness':.0008,'omniphysics:surfaceBendStiffness':1e6/(12*(1-.45**2)),'physxDeformableMaterial:elasticityDamping':.02,'physxDeformableMaterial:bendDamping':.01}.items():
+ for key,value in {'omniphysics:dynamicFriction':.9,'omniphysics:density':1100.,'omniphysics:youngsModulus':5e5,'omniphysics:poissonsRatio':.45,'omniphysics:surfaceThickness':.0008,'omniphysics:surfaceBendStiffness':5e5/(12*(1-.45**2)),'physxDeformableMaterial:elasticityDamping':.02,'physxDeformableMaterial:bendDamping':.01}.items():
   attr=q.GetAttribute(key)
   if not attr:raise RuntimeError('Required cap material attribute unavailable: '+key)
   attr.Set(value)

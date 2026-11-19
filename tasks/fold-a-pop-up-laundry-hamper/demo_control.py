@@ -13,7 +13,7 @@ class DemoControl:
  def action(self,k,wanted,m,observed,hands):
   if 160<=k<=700 and set(m.grasp_state)!={'left','right'}:
    raise RuntimeError('Scripted demonstration lost a required grip; stop this diagnostic before further motion.')
-  if 700<k<=840 and 'left' not in m.grasp_state:raise RuntimeError('Left hand lost the central crossing before table support.')
+  if 700<k<self.stages['release the right edge'][0] and 'right' not in m.grasp_state:raise RuntimeError('Right hand lost the central crossing before the first loop was stacked.')
   from yam_arena import ik,station
   label=self.labels[k-1]
   if label=='hold the packet beside the retaining path' and k==self.stages[label][0]:
@@ -39,12 +39,15 @@ class DemoControl:
    label=self.labels[k-1]
    specs=[('left','approach the far loop','fold the far loop onto the centre',0,np.array([.43,.185,.83])),('right','approach the right outer loop','stack the right loop',(60,90),np.array([.50,0,.96])),('left','approach the left outer loop','stack the left loop',(12,40),np.array([.30,0,.96]))]
    for arm,approach,press,indices,nominal in specs:
-    if arm!=side or label not in (approach,press):continue
+    enclose=approach.replace('approach','enclose');pinch=approach.replace('approach','pinch')
+    if arm!=side or label not in (approach,enclose,pinch,press):continue
     if approach not in self.waypoints:
      points=m.nodes['frame']
      index=indices if isinstance(indices,int) else indices[0]+int(np.argmax(points[indices[0]:indices[1],2]))
      self.waypoints[approach]=points[index]-nominal
-    lo,hi=self.stages[label];u=ik.smoothstep((k-lo+1)/(hi-lo+1));target+=(u if label==approach else 1-u)*self.waypoints[approach]
+    lo,hi=self.stages[label];u=ik.smoothstep((k-lo+1)/(hi-lo+1))
+    target+=(u if label==approach else 1-u if label==press else 1.)*self.waypoints[approach]
+    if label==press and side not in m.grasp_state:raise RuntimeError('The outer loop was not grasped before stacking.')
    if side=='left' and label=='approach the loose retaining loop' and self.retainer is None:
     band=m.nodes['band'];point=band[64];normal=np.cross(band[128]-band[0],band[65]-band[127]);normal/=max(np.linalg.norm(normal),1e-12)
     direction=point-np.asarray(station.BASES['left']);direction-=normal*float(direction@normal);direction/=max(np.linalg.norm(direction),1e-12)

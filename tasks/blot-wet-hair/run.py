@@ -46,6 +46,8 @@ def main():
    emb=wrapper.YamArenaEmbodiment(task=str(HERE/'task.py'),object_jitter=0.,control_hz=20,cam_width=320,cam_height=176)
    m.subscribe_events()
    emb._ensure_sim(None);base=emb._base;emb._env.reset();instruction=json.loads((HERE/'task.json').read_text())['instruction'];emb._instruction=instruction
+   from start_pose import initialize_robot
+   initialize_robot(emb,base)
    m.bind_native(base)
    drawing=Drawing(omni.usd.get_context().get_stage());m.draw(drawing)
    def refresh():
@@ -60,6 +62,11 @@ def main():
      out[side]=dict(tcp=pose[:3]+R@np.asarray(TCP_OFFSET),rotation=R,opening=opening,joint_positions=array(robot.data.joint_pos)[0,emb._ids[side+'_robot'][0]],finger_joint_positions=array(robot.data.joint_pos)[0,ids])
     return out
    m.time=-1.
+   # A disclosed pre-held towel reset: contact-gated finite pinches are created
+   # at the initial touching poses, before gravity settling and frame zero.
+   for side in ['left','right']:m.pinch.history[side]=[.20]
+   m.pinch.update(hands())
+   if set(m.grasp_state)!={'left','right'}:raise RuntimeError('Pre-held towel reset lacks both real pad contacts')
    for _ in range(20):
     emb._env.step(emb._ready);m.update(hands())
    m.time=0.;m.release=0.;m.draw(drawing);refresh()

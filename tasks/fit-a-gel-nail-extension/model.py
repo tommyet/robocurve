@@ -59,7 +59,7 @@ class Model(NativeModel):
   else:self.proof_elapsed=0.;self.proof_origin=None;self.proof_slip=0.
   self.proof_force=force;self.tip_force.GetForceAttr().Set(Gf.Vec3f(0,0,force))
  def measure(self):
-  delta=FRAME.T@(self.p('extension')-BASE);R=FRAME.T@self.orientation('extension');tilt=float(np.degrees(np.arccos(np.clip(R[2,2],-1,1))))
+  reference=np.array([-.020,0,.003]);delta=FRAME.T@(self.p('extension',reference)-(BASE+FRAME@reference));R=FRAME.T@self.orientation('extension');tilt=float(np.degrees(np.arccos(np.clip((np.trace(R)-1)/2,-1,1))))
   bonded=[i for i,p in enumerate(PATCHES) if self.dose[i]>=40. and 'bond_'+p['name'] in self.enabled and 'bond_'+p['name'] not in self.broken]
   return dict(bonded_fraction=len(bonded)/len(PATCHES),alignment_mm=float(np.linalg.norm(delta[:2])*1000),tilt_deg=tilt,proof_complete=self.proof_elapsed>=4.-1e-8,proof_slip_mm=self.proof_slip*1000,released_seconds=self.release,maximum_load_n=self.max_load,gel_on_skin=self.spill,failed=self.failed)
  def integrity_failed(self):return super().integrity_failed() or any(n.startswith('compression_') for n in self.broken) or self.max_load>5.

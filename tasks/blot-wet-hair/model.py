@@ -15,7 +15,7 @@ class Model(NativeModel):
   if self.surface.count!=1:raise RuntimeError('Expected one native towel')
   self.read()
   from finite_pinch import FinitePinch
-  self.pinch=FinitePinch(self,[n for n,i in PATCHES],.0015,.003,.012,(-.025,.012))
+  self.pinch=FinitePinch(self,[n for n,i in PATCHES],.0015,.003,.012,(-.025,.002))
  def read(self):
   super().read()
   if getattr(self,'surface',None) is not None:
