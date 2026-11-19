@@ -38,6 +38,6 @@ python tasks/mash-cooked-potato/rescore.py /tmp/potato-demo
 python tasks/mash-cooked-potato/rescore.py /tmp/potato-dream
 ```
 
-The control limit is 2,400 actions (120 seconds at 20 Hz). The layout is fixed and uses no random seed. The scripted plan has a 1,900-action upper bound and can finish earlier once the measured outcome is released. Dream receives the full limit and standard three camera views plus joint observations.
+The control limit is 2,400 actions (120 seconds at 20 Hz). The layout is fixed and uses no random seed. The scripted plan has a 2,380-action upper bound and can finish earlier once the measured outcome is released. Dream receives the full limit and standard three camera views plus joint observations.
 
 The CPU rescorer verifies frozen source hashes, trace continuity, joint/rate bounds, damage progression, native break events and the outcome. It is an evidence audit, not a physics replay. Native camera videos must also be reviewed. `VALIDATION.json` records the audit and measurements. On an RTX PRO 6000 Blackwell, the demo took 390 seconds and Dream took 1627 seconds including 50 policy requests. Runtime varies with API latency.

@@ -49,4 +49,4 @@ def audit(rows,report):
  assert events==broken,'Native break-event history differs from final state'
  score=m.score();assert abs(score-report['score'])<1e-9,'Reported score differs'
  complete=report['status']=='complete' and report['steps']==report['requested_steps']
- return dict(score=score,steps=count-1,complete=complete,measurements=m.measure(),native_break_events=len(events),visual_review_still_required=True,submission_evidence=complete and not report.get('cpu_preview',True))
+ return dict(score=score,steps=count-1,complete=complete,measurements=m.measure(),native_break_events=len(events),visual_review_still_required=True,submission_evidence=complete and report.get('submission_evidence',False))

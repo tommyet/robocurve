@@ -6,6 +6,11 @@ def arch(y):return .014-np.sqrt(.014**2-np.asarray(y)**2)
 def tip_width(x):return np.interp(x,[-.020,-.014,-.006,.008],[.005,.007,.006,.0048])
 # Replaceable curved ABS practice nail sits in an anatomically shaped finger.
 finger=[sphere((.032,.011,.010),(-.027,0,-.009)),sphere((.014,.010,.010),(-.050,0,-.009)),box((.025,.024,.035),(-.050,0,-.0275),(.61,.62,.63))]
+# Curved replaceable ABS insert supports the thin gel layer; it is not a
+# floating collection of contact patches.
+for x in np.linspace(-.019,-.007,7):
+ for y in np.linspace(-.005,.005,5):
+  top=.0026-arch(y);finger.append(box((.002,.0025,.003),(x,y,top-.0015),(.88,.65,.61)))
 BODIES.append(body('practice_finger',BASE,finger,fixed=True,mass=.050,color=(.77,.60,.48),contact_offset=.00002))
 BODIES.append(body('finger_clamp',BASE+[-.050,0,-.044],[box((.050,.055,.012))],fixed=True,mass=.15,color=(.32,.34,.36)))
 PATCHES=[]

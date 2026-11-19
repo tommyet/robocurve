@@ -41,7 +41,7 @@ is 747.5 mm. Match the setup image. The plug, carrier, fuses, driver and dish
 are free to move. Restore intact clips and the original seated fuse each time.
 
 The left fingers have 45 x 20 x 3 mm padded extensions. The right extensions
-are 45 x 4 mm steel, with 3 mm backing and 2 x 2 mm distal 12 mm sections.
+are 45 x 4 mm steel, with 3 mm backing and 2 x 2 mm distal 27 mm sections.
 The finger actuator limits are 40 N.
 
 ## Scoring and material model

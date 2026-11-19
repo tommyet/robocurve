@@ -1,8 +1,8 @@
 """Fixed native judging cameras; their images never enter a policy input."""
 import numpy as np
 
-CONFIGS=[('judging_front',(.95,-.55,1.40),(.35,0.,.82),(0.,0.,1.),26.,(640,480)),
-         ('judging_rear',(.85,.40,1.25),(.35,0.,.82),(0.,0.,1.),25.,(640,480)),
+CONFIGS=[('judging_front',(.95,-.55,1.40),(.35,0.,1.02),(0.,0.,1.),26.,(640,480)),
+         ('judging_rear',(.04,0.,1.30),(.30,0.,.97),(0.,0.,1.),24.,(640,480)),
          ('judging_side',(.29,0.,1.8),(.29,0.,.86),(0.,1.,0.),22.,(640,480))]
 
 

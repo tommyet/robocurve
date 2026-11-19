@@ -3,19 +3,19 @@
 A material element must be between closing finger faces and inside their real
 working area. The joint starts at the measured pose, without moving either body.
 Its world anchor follows the observed hand, without changing task body poses.
-It releases on opening and breaks at 18 N or 0.36 Nm. This approximates unresolved
+It releases on opening or leaving the physical pad faces, and breaks at 18 N or 0.36 Nm. The 2 mm holding margin matches the native pad contact offset; capture still requires the stricter 1 mm margin. This approximates unresolved
 finger friction; it does not move, fold, fit or score task material for the robot.
 """
 import numpy as np
 from scipy.spatial.transform import Rotation
 
 
-def candidate(point, radius, hand, thickness, half_width, z_range):
+def candidate(point, radius, hand, thickness, half_width, z_range, margin=.001):
     local=(np.asarray(point)-hand['tcp'])@hand['rotation']
     q=np.asarray(hand.get('finger_joint_positions',[-hand['opening']*.04695]*2))
     left=q[0]+thickness;right=-q[1]-thickness
     # Opposed contact, allowing 1 mm solver/contact margin on either face.
-    if abs((local[0]-radius)-left)>.001 or abs((local[0]+radius)-right)>.001:
+    if abs((local[0]-radius)-left)>margin or abs((local[0]+radius)-right)>margin:
         return None
     if abs(local[1])>half_width or not z_range[0]<=local[2]<=z_range[1]:return None
     return float(np.linalg.norm(local))
@@ -65,9 +65,9 @@ class FinitePinch:
                 continue
             if side in self.held:
                 g=self.held[side];now=(self.m.p(g['body'])-h['tcp'])@h['rotation']
-                if np.linalg.norm(now-g['local_point'])>.008:
+                if candidate(self.m.p(g['body']),self.radii[g['body']],h,self.thickness,self.half_width,self.z_range,margin=.002) is None:
                     g['joint'].GetJointEnabledAttr().Set(False);self.held.pop(side);self.blocked.add(side)
-                    self.m.events.append(dict(event='pinch_slipped',side=side,body=g['body'],time=self.m.time,reason='material moved 8 mm through the grip'))
+                    self.m.events.append(dict(event='pinch_slipped',side=side,body=g['body'],time=self.m.time,reason='binding left the physical pad contact region'))
             if side in self.held:
                 g=self.held[side];target=np.asarray(h['tcp'])+h['rotation']@g['local_point']
                 q=Rotation.from_matrix(h['rotation']@g['local_rotation']).as_quat()

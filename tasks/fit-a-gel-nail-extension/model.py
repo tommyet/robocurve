@@ -8,7 +8,7 @@ from native_model import NativeModel
 from geometry import BASE,LAMP,BUTTON,PATCHES,arch,tip_width,FRAME
 class Model(NativeModel):
  def __init__(self):
-  super().__init__();self.wet=np.zeros(len(PATCHES));self.dose=np.zeros(len(PATCHES));self.lamp_remaining=0.;self.button_down=False;self.spill=False;self.proof_elapsed=0.;self.proof_origin=None;self.proof_slip=0.;self.proof_force=0.;self.max_load=0.
+  super().__init__();self.grasp_state={};self.wet=np.zeros(len(PATCHES));self.dose=np.zeros(len(PATCHES));self.lamp_remaining=0.;self.button_down=False;self.spill=False;self.proof_elapsed=0.;self.proof_origin=None;self.proof_slip=0.;self.proof_force=0.;self.max_load=0.
  def configure_station(self):
   from pad_covers import install
   install()
@@ -16,8 +16,11 @@ class Model(NativeModel):
   super().bind_native(base)
   from pxr import PhysxSchema
   self.tip_force=PhysxSchema.PhysxForceAPI.Get(self.stage,'/World/envs/env_0/materials/extension')
+  from finite_pinch import FinitePinch
+  self.pinch=FinitePinch(self,['extension'],.0058,.003,.0015,(-.009,.003))
  def material(self,hands,dt):
   from pxr import Gf
+  self.pinch.update(hands)
   depth=float(-self.joint_gap('button_spring')[2]);pressed=depth>.0008
   if pressed and not self.button_down:self.lamp_remaining=45.;self.events.append(dict(event='lamp_45_second_cycle',time=self.time))
   self.button_down=pressed;lit=self.lamp_remaining>0;self.lamp_remaining=max(0.,self.lamp_remaining-dt)
@@ -63,7 +66,7 @@ class Model(NativeModel):
   m=self.measure()
   if self.failed or self.spill or not m['proof_complete'] or m['proof_slip_mm']>1. or m['alignment_mm']>1.5 or m['tilt_deg']>8:return 0.
   f=m['bonded_fraction'];return 1. if f>=.9 else .5 if f>=.75 else .25 if f>=.5 else 0.
- def state(self):return dict(**super().state(),wet=self.wet,dose=self.dose,lamp_remaining=self.lamp_remaining,button_down=self.button_down,spill=self.spill,proof_elapsed=self.proof_elapsed,proof_origin=self.proof_origin,proof_slip=self.proof_slip,proof_force=self.proof_force,max_load=self.max_load)
+ def state(self):return dict(**super().state(),grasp_state=self.grasp_state,wet=self.wet,dose=self.dose,lamp_remaining=self.lamp_remaining,button_down=self.button_down,spill=self.spill,proof_elapsed=self.proof_elapsed,proof_origin=self.proof_origin,proof_slip=self.proof_slip,proof_force=self.proof_force,max_load=self.max_load)
  def restore(self,state):
   s=dict(state)
   for key in ['wet','dose','proof_origin']:

@@ -2,7 +2,7 @@
 
 Pass the free wide blade through the front loop of a pre-wrapped Simple knot, snug it, then use the narrow blade to slide the knot to the collar. Leave both blades neat and both hands clear. This revision adds the substantive threading step requested in the latest review; it is not a full sequence from an unwrapped tie.
 
-**Development revision: native demo and Dream baseline are pending.** The earlier finishing-only videos do not validate this reset or scorer.
+The native demo scores **1.0 in 1,150 actions (57.5 seconds)**. Dream-1 completes its **1,800-action limit at 0.0**. Both traces independently replay exactly in the pinned Linux runtime. The videos show the same reset and model, including the unfinished threading step.
 
 ## Setup and reset
 
@@ -31,7 +31,7 @@ python /tmp/tie-demo/source/rescore.py /tmp/tie-demo
 python /tmp/tie-dream/source/rescore.py /tmp/tie-dream
 ```
 
-Both policies have the same scene, material and 1,800-control limit (90 seconds at 20 Hz). The scripted plan sends bounded robot joint targets. All camera frames, measured hand poses, material measurements, reaction loads, events and source hashes are recorded. CPU rescoring reconstructs the reduced material model from the measured hands; it is not a new native physics run.
+Both policies have the same scene, material and 1,800-control limit (90 seconds at 20 Hz). On an L40S, the recorded demo took 14.1 minutes and Dream took 20.5 minutes of wall time, including startup and concurrent validation work. Dream used 221 requests in one session. The scripted plan sends bounded robot joint targets. All camera frames, measured hand poses, material measurements, reaction loads, events and source hashes are recorded. CPU rescoring reconstructs the reduced material model from the measured hands; it is not a new native physics run.
 
 Judge after both hands release for 5 seconds. Award 0.5 if the intact threaded knot is at most 70 mm wide and high, with its top within 60 mm below the collar edge. Full credit also requires its top within 20 mm, its centre within 20 mm of the collar mark, the wide blade flat within 30 degrees of untwisted, its tip 350–440 mm below the collar edge, and the narrow blade behind it, within 15 mm laterally and with its tip at least 10 mm higher. Otherwise 0. Pulled-out ends, damaged fabric or added support score 0. Use front/rear photos, video and a ruler.
 

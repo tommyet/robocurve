@@ -7,7 +7,7 @@ from common import down,TABLE
 
 class DemoControl:
  def __init__(self):
-  self.free=None;self.stage=None;self.offset=np.zeros(3);self.previous_offset=np.zeros(3);self.stage_start=0
+  self.free=None;self.stage=None;self.offset=np.zeros(3);self.previous_offset=np.zeros(3);self.stage_start=0;self.held_offset=None
   self.R0=Rotation.from_euler('x',45,degrees=True).as_matrix()@down(0)
   grip=np.array([.34,-.17,TABLE+.140])-.008*self.R0[:,2]
   self.local_head=self.R0.T@(np.array([.34,-.17,TABLE+.003])-grip)
@@ -38,6 +38,9 @@ class DemoControl:
   # Compensate tool slip through ordinary hand motion; never reposition the tool.
   from yam_arena import ik,station
   h=hands['right']
+  if self.held_offset is None:self.held_offset=h['rotation'].T@(m.p('masher')-h['tcp'])
+  if stage not in ['release masher','withdraw','released outcome'] and np.linalg.norm(h['rotation'].T@(m.p('masher')-h['tcp'])-self.held_offset)>.025:
+   raise RuntimeError('Masher slipped out of the grasp; stop the diagnostic.')
   if stage in ['release masher','withdraw','released outcome']:
    if self.free is None:self.free=(h['tcp'].copy(),h['rotation'].copy(),k)
    pp,RR,start=self.free;target=pp.copy()

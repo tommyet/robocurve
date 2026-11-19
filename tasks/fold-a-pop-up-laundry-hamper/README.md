@@ -44,3 +44,5 @@ Not submission-ready. The latest native diagnostic (`hamper-full-030`) stopped
 at control 623 when the right frame grip slipped. The material remained intact
 and the partial score was 0.25. A compact packet secured by the retaining loop,
 a completed full-score demo and a Dream baseline remain unvalidated.
+
+Current grip diagnostic: loss is detected when the binding leaves the actual pad faces (including the native2mm contact margin), not merely after8mm motion from the capture point. The18N/0.36Nm force/torque limits remain. This permits bounded tangential slip while contact remains; it never extends the pad or changes frame/cloth poses. The change still needs a complete native demonstration.

@@ -1,6 +1,6 @@
 """Narrow steel finger extensions with silicone contact faces.
 
-Each extension is 45 x 4 mm, with a 3 mm backing and a 2 x 2 mm distal 12 mm and leaves the original finger bodies 30 mm
+Each extension is 45 x 4 mm, with a 3 mm backing and a 2 x 2 mm distal 27 mm and leaves the original finger bodies 30 mm
 behind the working point, permitting access between standard plug pins.
 They are rigid robot hardware in both demo and Dream runs, never grasp joints.
 """
@@ -68,8 +68,8 @@ def install():
                 # Coplanar gripping faces, with a thin distal neck that clears
                 # the ordinary fuse recess. The backing remains 3 mm thick.
                 pieces = [
-                    ('backing',[sign*.0015,0.,.1565],(.003,.004,.033)),
-                    ('tip',[sign*.002,0.,.179],(.002,.002,.012)),
+                    ('backing',[sign*.0015,0.,.149],(.003,.004,.018)),
+                    ('tip',[sign*.002,0.,.1715],(.002,.002,.027)),
                 ]
                 if 'LeftArm' in path:
                     pieces=[('support',[sign*.0015,0.,.1625],(.003,.020,.045))]
