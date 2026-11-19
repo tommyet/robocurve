@@ -1,6 +1,6 @@
 # Blot excess water from wet hair
 
-Development draft: no validated native demo or Dream baseline; do not submit.
+Blot the wet hair with the flexible towel, then release it. Towel pickup is outside the task: both hands start holding its corners, clear of the hair.
 
 A full-size salon training head has twelve independently moving locks, each 245 mm long. The separate microfiber cloth bends and folds. The robot must bring cloth into actual contact with the hair to absorb water; proximity without surface contact does not remove water. No cloth, hair or object is teleported.
 
@@ -20,6 +20,6 @@ Weigh the towel after the trial. Towel mass gain divided by W0 earns0.25 at25%,0
 
 The simulator groups fibres into twelve18-segment flexible locks and a130-node native surface towel. Surface contact can transfer at most0.05g/s per grouped segment into the towel, with a60g total capacity; this uncalibrated capillary law conserves all18g. There is no background evaporation, automatic drying or transfer at a distance. Mechanical masses stay at their initial values during uptake. Native hair joints can break, the towel can stretch beyond its failure bound, and finite pad-contact pinches can slip. Individual fibres, frizz and microscopic absorbency are omitted.
 
-## Running the draft
+## Run and score
 
-Use the Python 3.12 / Isaac Sim 6.1 / YAM runtime pinned in `ENVIRONMENT.json`. An NVIDIA GPU is needed for native rendering. The fixed setup has no random jitter or seed. `python tasks/blot-wet-hair/run.py --mode demo --out /path/to/new-demo` records the1460-action scripted plan; use `--mode dream` for the2400-action model trial. `python tasks/blot-wet-hair/rescore.py /path/to/new-demo` audits every action, contact, water transfer, damage event and released outcome. Wall runtime and complete paired evidence remain pending.
+Use the Python 3.12 / Isaac Sim 6.1 / YAM runtime pinned in `ENVIRONMENT.json`. An NVIDIA GPU is needed for native rendering. The fixed setup has no random jitter or seed. `python tasks/blot-wet-hair/run.py --mode demo --out /path/to/new-demo` records the1460-action scripted plan; use `--mode dream` for the2400-action model trial. `python tasks/blot-wet-hair/rescore.py /path/to/new-demo` audits every action, contact, water transfer, damage event and released outcome. The native demo completes 1,460 actions in 33.1 minutes on a shared RTX PRO 6000 Blackwell GPU. It scores 1.0: 13.108 g transferred (72.824%), intact material and 8.85 seconds with clear hands. Its frozen-source audit passes and three camera views have been reviewed. The paired Dream baseline is running; submission remains pending.

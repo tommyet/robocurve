@@ -11,12 +11,12 @@ p.add(3,'approach the free end of the extension',{'right':(G+FRAME@np.array([.07
 p.add(3,'enclose the distal end',{'right':(G,R,.35)})
 p.add(2,'grip the extension',{'right':(G,R,.18)})
 p.add(3,'lift the prepared extension',{'right':(G+[0,0,.035],R,.18)})
-# Roll the proximal edge down first, then seat towards the free edge.
-A=FRAME@Rotation.from_euler('y',-15,degrees=True).as_matrix()@FRAME.T;D=BASE+[0,0,.0032]
+# Align the matched curved surfaces, then lower under gentle compression.
+A=FRAME@Rotation.from_euler('y',-10,degrees=True).as_matrix()@FRAME.T;D=BASE+[0,0,.0032]
 p.add(3,'align in front of the lamp opening',{'right':(D+FRAME@np.array([.050,0,.010]),R,.18)})
 p.add(3,'enter level above the nail',{'right':(D+[0,0,.010],R,.18)})
-p.add(3,'seat the proximal edge',{'right':(D+FRAME@np.array([.0007,0,.0052]),A@R,.18)})
-p.add(4,'roll the tip towards the free edge',{'right':(D,R,.18)})
+p.add(3,'lower level over the prepared nail',{'right':(D+[0,0,.001],R,.18)})
+p.add(4,'seat the matched curved tip gently',{'right':(D,R,.18)})
 p.add(10,'hold the tip seated before curing',{})
 p.add(4,'approach the lamp switch from above',{'left':(BUTTON+[0,0,.08],RL,.03)},'joint')
 p.add(2,'press the lamp switch',{'left':(BUTTON+[0,0,.012],RL,.03)})

@@ -46,3 +46,5 @@ and the partial score was 0.25. A compact packet secured by the retaining loop,
 a completed full-score demo and a Dream baseline remain unvalidated.
 
 Current grip diagnostic: loss is detected when the binding leaves the actual pad faces (including the native2mm contact margin), not merely after8mm motion from the capture point. The18N/0.36Nm force/torque limits remain. This permits bounded tangential slip while contact remains; it never extends the pad or changes frame/cloth poses. The change still needs a complete native demonstration.
+
+Clearance diagnostic041 uses80 ×26 ×2mm rigid finger extensions with silicone faces, ending207mm from the gripper origin and a195mm working point. Native geometry and planning use the same dimensions; the finite pinch still requires the central24mm contact region and retains18N/0.36Nm limits. This keeps the wrist clear of the folding loops; it does not prescribe a folded shape.

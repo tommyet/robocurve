@@ -7,7 +7,7 @@ from common import down,TABLE
 
 class DemoControl:
  def __init__(self):
-  self.free=None;self.stage=None;self.offset=np.zeros(3);self.previous_offset=np.zeros(3);self.stage_start=0;self.held_offset=None;self.held_rotation=None
+  self.free=None;self.stage=None;self.offset=np.zeros(3);self.previous_offset=np.zeros(3);self.stage_start=0;self.held_offset=None;self.held_rotation=None;self.press_bowl=None
   self.R0=Rotation.from_euler('x',45,degrees=True).as_matrix()@down(0)
   grip=np.array([.34,-.17,TABLE+.140])-.008*self.R0[:,2]
   self.local_head=self.R0.T@(np.array([.34,-.17,TABLE+.003])-grip)
@@ -31,7 +31,7 @@ class DemoControl:
   # Target the largest remaining connected lump, rather than repeatedly
   # pressing the densest heap of already separated fragments.
   target=max(choices,key=lambda item:(item[0],item[1]))[2] if choices else m.p('bowl')
-  delta=target[:2]-m.p('bowl')[:2];delta*=min(1.,.060/max(np.linalg.norm(delta),1e-6));return m.p('bowl')[:2]+delta
+  delta=target[:2]-m.p('bowl')[:2];delta*=min(1.,.044/max(np.linalg.norm(delta),1e-6));return m.p('bowl')[:2]+delta
  def action(self,k,wanted,stage,m,hands,observed):
   if k<=200:return wanted
   # Compensate tool slip through ordinary hand motion; never reposition the tool.
@@ -57,12 +57,14 @@ class DemoControl:
    self.stage=stage;self.stage_start=k;self.previous_offset=self.offset.copy()
    if stage.startswith('position over potato'):
     ep,eR=ik.tcp_pose(np.asarray(self.ends[stage])[7:13],station.BASES['right']);end_head=ep+eR@self.local_head
-    self.offset=np.r_[self.next_press(m)-end_head[:2],0.]
+    self.offset=np.r_[self.next_press(m)-end_head[:2],0.];self.press_bowl=m.p('bowl').copy()
    elif stage=='return masher':self.offset=np.zeros(3)
   if stage.startswith('position over potato') or stage=='return masher':
    u=np.clip((k-self.stage_start+1)/20,0,1);u=u*u*(3-2*u);offset=(1-u)*self.previous_offset+u*self.offset
   else:offset=self.offset
-  target=head+offset;desired=R@self.R0.T
+  target=head+offset
+  if self.press_bowl is not None and stage.startswith(('position over potato','press potato','hold compressive','lift for next press')):target[:2]+=m.p('bowl')[:2]-self.press_bowl[:2]
+  desired=R@self.R0.T
   # Limit commanded compression to 2 mm of the observed tool pose. With
   # the disclosed 6000 N/m grip compliance this avoids driving into the bowl.
   if stage.startswith(('press potato','hold compressive')):target[2]=max(target[2],m.p('masher')[2]-.002)

@@ -1,4 +1,4 @@
-"""Ordinary 2 mm silicone pad covers, present in both demo and model runs.
+"""Ordinary 80 × 26 × 2 mm rigid finger extensions with silicone faces, present in both demo and model runs.
 
 The fixed covers are robot accessories, not constraints on task objects. They
 supply native frictional contact through a rigid collision approximation.
@@ -9,7 +9,11 @@ from scipy.spatial.transform import Rotation
 
 
 def configure_kinematics():
-    from yam_arena import station
+    from yam_arena import constants,ik,station
+    constants.TCP_OFFSET=(0.,0.,.195)
+    ik.TCP_OFFSET=constants.TCP_OFFSET
+    import sys
+    if 'yam_arena.runtime' in sys.modules:sys.modules['yam_arena.runtime'].TCP_OFFSET=constants.TCP_OFFSET
     station.BASES.update({side:(0.,y,.85) for side,y in [('left',.305),('right',-.305)]})
 
 
@@ -61,13 +65,13 @@ def install():
                 # toward positive X. joint8 is the mirror image.
                 # Nominal closed-link origins from the pinned YAM URDF.
                 origin = np.array([sign*.0445119, -sign*.0239931, .0566829])
-                centre = rotation.inv().apply(np.array([sign*.001, 0., .135])-origin)
+                centre = rotation.inv().apply(np.array([sign*.001, 0., .167])-origin)
                 PhysxSchema.PhysxRigidBodyAPI.Apply(stage.GetPrimAtPath(path+paths[name])).CreateEnableSpeculativeCCDAttr(True)
-                shape = UsdGeom.Cube.Define(stage, path+paths[name]+'/silicone_pad_cover')
+                shape = UsdGeom.Cube.Define(stage, path+paths[name]+'/steel_finger_extension')
                 shape.CreateSizeAttr(1.)
                 shape.AddTranslateOp().Set(Gf.Vec3d(*centre))
                 shape.AddOrientOp().Set(Gf.Quatf(float(q[3]), Gf.Vec3f(*q[:3])))
-                shape.AddScaleOp().Set(Gf.Vec3f(.002, .026, .024))
+                shape.AddScaleOp().Set(Gf.Vec3f(.002, .026, .080))
                 UsdPhysics.CollisionAPI.Apply(shape.GetPrim())
                 collision = PhysxSchema.PhysxCollisionAPI.Apply(shape.GetPrim())
                 collision.CreateContactOffsetAttr(.002)

@@ -29,7 +29,7 @@ for diagnostics and are excluded from submission evidence.
 Use the adult headform, thin silicone cap and upturned polypropylene tumbler
 specified in `task.json`. Secure the headform base and tumbler to the table.
 The cap is separate from the head, resting opening-down on the tumbler.
-The head centre is (460, 0, 872.5) mm and faces the right arm; the cap's initial
+The head centre is (460, 0, 872.5) mm and faces towards the robot (negative X); the cap's initial
 rim centre is (260, 0, 888.5) mm. X points forward, Y left, and the table is
 747.5 mm high. Match the setup image and restore the cap without stretching
 or tearing it. The ordinary arm bases have no additional risers.
