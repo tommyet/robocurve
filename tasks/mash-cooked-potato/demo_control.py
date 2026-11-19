@@ -2,7 +2,7 @@
 import numpy as np
 from scipy.optimize import least_squares
 from scipy.spatial.transform import Rotation
-from geometry import BODIES,JOINTS,BOWL
+from geometry import BODIES,JOINTS,BOWL,PARTICLE_DIAMETER
 from common import down,TABLE
 
 class DemoControl:
@@ -26,7 +26,7 @@ class DemoControl:
   choices=[]
   for ns in groups.values():
    pts=np.array([m.p(n) for n in ns]);centre=pts.mean(axis=0);r=np.linalg.norm(centre[:2]-m.p('bowl')[:2])
-   size=np.max(np.linalg.norm(pts[:,None]-pts[None,:],axis=-1))+.007
+   size=np.max(np.linalg.norm(pts[:,None]-pts[None,:],axis=-1))+PARTICLE_DIAMETER
    if size>.009 and r<.09:choices.append((len(ns),size,centre))
   # Target the largest remaining connected lump, rather than repeatedly
   # pressing the densest heap of already separated fragments.
@@ -65,14 +65,17 @@ class DemoControl:
   target=head+offset
   if self.press_bowl is not None and stage.startswith(('position over potato','press potato','hold compressive','lift for next press')):target[:2]+=m.p('bowl')[:2]-self.press_bowl[:2]
   desired=R@self.R0.T
-  # Limit commanded compression to 0.5 mm of the observed tool pose. With
+  # Limit commanded compression to 1 mm of the observed tool pose. With
   # the disclosed 6000 N/m grip compliance this avoids driving into the bowl.
-  if stage.startswith(('press potato','hold compressive')):target[2]=max(target[2],m.p('masher')[2]-.0005)
-  # Follow the measured rigid tool through ordinary hand commands. A finite
-  # friction grip can rotate/slide; treating its initial transform as permanent
-  # made the old controller drive away after a loaded press.
-  relative_head=h['rotation'].T@(m.p('masher')-h['tcp'])
-  relative_R=h['rotation'].T@m.orientation('masher')
+  if stage.startswith(('press potato','hold compressive')):
+   # The bowl floor is 3 mm above its origin; the bars extend 2 mm below
+   # the tool origin. Stop 1 mm clear rather than commanding penetration.
+   target[2]=max(target[2],m.p('masher')[2]-.001,m.p('bowl')[2]+.006)
+  # Command the finite grip's measured rest transform. Updating this from
+  # each loaded deflection fought the compliant joint's restoring torque
+  # and eventually drove the masher away from the food.
+  relative_head=self.held_offset
+  relative_R=self.held_rotation
   seed=np.clip(observed[7:13],ik.LOWER+1e-6,ik.UPPER-1e-6)
   p0,r0=ik.tcp_pose(seed,station.BASES['right']);bias=h['tcp']-p0;rbias=h['rotation']@r0.T
   def residual(q):

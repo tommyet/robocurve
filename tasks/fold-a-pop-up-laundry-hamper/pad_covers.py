@@ -1,4 +1,4 @@
-"""Ordinary 80 × 26 × 2 mm rigid finger extensions with silicone faces, present in both demo and model runs.
+"""120 × 26 mm steel finger extensions with a 4 mm backing and 2 mm distal tip with silicone faces, present in both demo and model runs.
 
 The fixed covers are robot accessories, not constraints on task objects. They
 supply native frictional contact through a rigid collision approximation.
@@ -10,7 +10,7 @@ from scipy.spatial.transform import Rotation
 
 def configure_kinematics():
     from yam_arena import constants,ik,station
-    constants.TCP_OFFSET=(0.,0.,.195)
+    constants.TCP_OFFSET=(0.,0.,.235)
     ik.TCP_OFFSET=constants.TCP_OFFSET
     import sys
     if 'yam_arena.runtime' in sys.modules:sys.modules['yam_arena.runtime'].TCP_OFFSET=constants.TCP_OFFSET
@@ -65,13 +65,25 @@ def install():
                 # toward positive X. joint8 is the mirror image.
                 # Nominal closed-link origins from the pinned YAM URDF.
                 origin = np.array([sign*.0445119, -sign*.0239931, .0566829])
-                centre = rotation.inv().apply(np.array([sign*.001, 0., .167])-origin)
+                centre = rotation.inv().apply(np.array([sign*.001, 0., .187])-origin)
                 PhysxSchema.PhysxRigidBodyAPI.Apply(stage.GetPrimAtPath(path+paths[name])).CreateEnableSpeculativeCCDAttr(True)
                 shape = UsdGeom.Cube.Define(stage, path+paths[name]+'/steel_finger_extension')
                 shape.CreateSizeAttr(1.)
                 shape.AddTranslateOp().Set(Gf.Vec3d(*centre))
                 shape.AddOrientOp().Set(Gf.Quatf(float(q[3]), Gf.Vec3f(*q[:3])))
-                shape.AddScaleOp().Set(Gf.Vec3f(.002, .026, .080))
+                shape.AddScaleOp().Set(Gf.Vec3f(.002, .026, .120))
+                # A 80 mm steel backing stiffens the extension while keeping
+                # the same inner contact face and the distal 40 mm thin.
+                backing=UsdGeom.Cube.Define(stage,path+paths[name]+'/steel_finger_backing')
+                backing.CreateSizeAttr(1.)
+                bp=rotation.inv().apply(np.array([0.,0.,.167])-origin)
+                backing.AddTranslateOp().Set(Gf.Vec3d(*bp))
+                backing.AddOrientOp().Set(Gf.Quatf(float(q[3]),Gf.Vec3f(*q[:3])))
+                backing.AddScaleOp().Set(Gf.Vec3f(.004,.026,.080))
+                UsdPhysics.CollisionAPI.Apply(backing.GetPrim())
+                bc=PhysxSchema.PhysxCollisionAPI.Apply(backing.GetPrim());bc.CreateContactOffsetAttr(.002);bc.CreateRestOffsetAttr(0.)
+                bind_physics_material(str(backing.GetPath()),physics_path,stage=stage)
+                bind_visual_material(str(backing.GetPath()),visual_path,stage=stage)
                 UsdPhysics.CollisionAPI.Apply(shape.GetPrim())
                 collision = PhysxSchema.PhysxCollisionAPI.Apply(shape.GetPrim())
                 collision.CreateContactOffsetAttr(.002)

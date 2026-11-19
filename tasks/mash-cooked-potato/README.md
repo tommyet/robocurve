@@ -2,15 +2,15 @@
 
 Mash the cooked potato in the bowl until no large lumps remain. Keep the potato in the bowl.
 
-The revised portion requires new native demo and Dream-1 evidence. Earlier 58.32 g runs are retained as development history and do not validate this 129.6 g revision.
+The corrected cube size requires new native demo and Dream-1 evidence. Earlier runs are retained as development history and do not validate this 17 mm setup.
 
 ## Setup and reset
 
-About 130 g of peeled, cooked potato in twelve 21–23 mm cubes (120–140 g total), arranged in a 4 × 3 grid in a stainless-steel bowl (200 mm inside diameter, 75 mm deep). A 140 g wire masher has a 75 × 60 mm head and 180 mm overall height and a 90 mm long, 20 mm diameter handle. The bowl is centred between the arms; the masher stands on its head 170 mm toward the right arm. Both hands start open.
+About 60 g of peeled, cooked potato in twelve 16–18 mm cubes (55–65 g total), arranged in a 4 × 3 grid in a stainless-steel bowl (200 mm inside diameter, 75 mm deep). A 140 g wire masher has a 75 × 60 mm head and 180 mm overall height and a 90 mm long, 20 mm diameter handle. The bowl is centred between the arms; the masher stands on its head 170 mm toward the right arm. Both hands start open.
 
-The simulated portion is **129.6 g**: twelve clusters of 27 particles, each 0.4 g. Each cluster has a 21.4 mm axial envelope; the coarse spherical particles approximate a solid cooked cube, not hollow food. Twelve ideal 22 mm cubes occupy 127.776 mL; 129.6 g implies 1.014 g/mL, consistent in scale rather than the old 58.32 g mismatch. The bowl is 300 g, centred 340 mm forward; cube centres are 24 mm apart. The tool may be released in the bowl.
+The simulated portion is **58.32 g**: twelve clusters of 27 particles, each 0.18 g. Each cluster has a 17.0 mm axial envelope; the coarse particles approximate a solid cooked cube. Twelve ideal 17 mm cubes occupy 58.956 mL, giving a nominal density of 0.989 g/mL. The bowl is 300 g, centred 340 mm forward; cube centres are 20 mm apart. The tool may be released in the bowl.
 
-Use peeled floury potato from one batch. Cut 24 mm raw cubes, simmer for 12–15 minutes until a fork passes through, drain for 2 minutes and cool to 18–22 °C. Select twelve intact cooked cubes with each edge 21–23 mm and combined mass 120–140 g. Reject pieces or the batch if both limits cannot be met. Add no milk, butter or oil. Place them in the photographed 4 × 3 grid. Use fresh pieces and clean the equipment and food-safe gripper covers each trial.
+Use peeled floury potato from one batch. Cut 19 mm raw cubes, simmer for 10–12 minutes until a fork passes through, drain for 2 minutes and cool to 18–22 °C. Select twelve intact cooked cubes with each edge 16–18 mm and combined mass 55–65 g. Reject pieces or the batch if both limits cannot be met. Add no milk, butter or oil. Place them in the photographed 4 × 3 grid. Use fresh pieces and clean the equipment and food-safe gripper covers each trial.
 
 ## Scoring
 
@@ -20,7 +20,7 @@ For physical judging, collect and weigh the retained food without further mashin
 
 ## Material approximation
 
-Each of twelve chunks contains 27 cohesive 7 mm particles. Native compression during masher contact reduces cohesion. Eight overlapping local cells per chunk measure compressive strain; full local failure removes that chunk's remaining cohesion, and otherwise the bond breaking force decreases. The rule never writes particle poses. Native contacts, gravity and friction handle the fragments after separation.
+Each of twelve chunks contains 27 cohesive 5.56 mm particles. Native compression during masher contact reduces cohesion. Eight overlapping local cells per chunk measure compressive strain; full local failure removes that chunk's remaining cohesion, and otherwise the bond breaking force decreases. The rule never writes particle poses. Native contacts, gravity and friction handle the fragments after separation.
 
 The parameters are an uncalibrated cooked-tissue approximation, not a measurement of potato rheology. Released particles represent small soft lumps, not a smooth paste. Contact-gated damage, 20/s translational damping, finite cohesion and the 0.5 m/s particle speed cap are identical for the scripted and Dream runs. The demo uses observed food and tool poses to aim ordinary bounded joint actions and stops pressing when the outcome is reached. A contact-gated compliant native joint approximates unresolved handle friction: 30N, 0.60Nm, 6000N/m linear stiffness and a physical pad-contact check at the handle. Its anchor follows the actual hand; no task-body pose is assigned. The grip approximation does not apply reaction forces to the robot.
 
@@ -38,7 +38,7 @@ python tasks/mash-cooked-potato/rescore.py /tmp/potato-demo
 python tasks/mash-cooked-potato/rescore.py /tmp/potato-dream
 ```
 
-The control limit is 2,400 actions (120 seconds at 20 Hz). The layout is fixed and uses no random seed. The scripted plan has a 2,380-action upper bound and can finish earlier once the measured outcome is released. Dream receives the full limit and standard three camera views plus joint observations.
+The control limit is 2,400 actions (120 seconds at 20 Hz). The layout is fixed and uses no random seed. The scripted plan has a 2,360-action upper bound and can finish earlier once the measured outcome is released. Dream receives the full limit and standard three camera views plus joint observations.
 
 The CPU rescorer verifies frozen source hashes, trace continuity, joint/rate bounds, damage progression, native break events and the outcome. It is an evidence audit, not a physics replay. Native camera videos must also be reviewed. `VALIDATION.json` records the audit and measurements. The superseded lighter-portion demo took390s and its Dream run1627s on an RTX PRO6000 Blackwell; these are historical timing references, not validation of the revised mass. Revised runtimes remain pending.
 

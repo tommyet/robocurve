@@ -1,19 +1,19 @@
 """Adult practice head and a separate thin elastic cap; SI units."""
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
-HEAD=np.array([.46,0,TABLE+.125]);HEADROT=np.eye(3);RADII=np.array([.095,.080,.120]);CAP=np.array([.26,0,TABLE+.141])
+HEAD=np.array([.36,0,TABLE+.125]);HEADROT=Rotation.from_euler('z',-90,degrees=True).as_matrix();RADII=np.array([.095,.080,.120]);CAP=HEAD+np.array([0.,0.,.145])
 shapes=[sphere(RADII),sphere((.018,.012,.026),(-.095,0,-.015)),sphere((.012,.012,.026),(0,-.080,-.025)),sphere((.012,.012,.026),(0,.080,-.025)),box((.14,.13,.010),(0,0,-.120))]
 shapes += [sphere((.003,.009,.005),(-.089,y,.017),(.13,.15,.18)) for y in [-.030,.030]]
 shapes += [box((.001,.038,.004),(-.090,0,-.051),(.47,.17,.17))]
 BODIES.append(body('headform',HEAD,shapes,fixed=True,mass=1.5,color=(.76,.63,.51),friction=.65,quat=Rotation.from_matrix(HEADROT).as_quat().tolist()))
-# The cap rests opening-down on a narrow, ordinary upturned tumbler.
+# The separate cap starts held above the head, with 25 mm rim-to-crown clearance.
 M=40;N=12
 POINTS=[CAP+[0,0,.090]]
 for j in range(1,N+1):
  a=j*np.pi/(2*N)
  for i in range(M):
   t=i*2*np.pi/M;POINTS.append(CAP+[.075*np.sin(a)*np.cos(t),.070*np.sin(a)*np.sin(t),.090*np.cos(a)])
-POINTS=np.asarray(POINTS);TRIS=[]
+POINTS=HEAD+(np.asarray(POINTS)-HEAD)@HEADROT.T;TRIS=[]
 for i in range(M):TRIS.append([0,1+i,1+(i+1)%M])
 for j in range(N-1):
  for i in range(M):
@@ -25,7 +25,8 @@ REST_LENGTHS=np.linalg.norm(POINTS[EDGES[:,1]]-POINTS[EDGES[:,0]],axis=1)
 # Each point couples to one elastic vertex, so the opening can still stretch.
 for i,node in enumerate(RIM):
  BODIES.append(body(f'rim_contact_{i:03d}',POINTS[node],[sphere((.0015,)*3)],mass=.004/M,color=(.10,.44,.77),friction=.9,contact_offset=.00025,exclude=['cap']))
-BODIES.append(body('cap_rest',[CAP[0],CAP[1],TABLE+.115],[cylinder(.030,.230)],fixed=True,mass=.2,color=(.70,.73,.75),friction=.5))
+for side,y in [('left',.305),('right',-.305)]:
+ BODIES.append(body(side+'_arm_riser',[0,y,TABLE+.05],[box((.16,.16,.10))],fixed=True,mass=3.,color=(.32,.34,.36)))
 finalize(BODIES,JOINTS)
 
 def spawn_surface(stage,root):

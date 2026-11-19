@@ -8,7 +8,7 @@ class DemoControl:
   self.labels=[f['stage'] for f in json.loads(Path(__file__).with_name('demo-plan.json').read_text())['frames']]
  def action(self,k,wanted,m,observed,hands):
   label=self.labels[k-1]
-  if label in ('hold the separate cap by its rim','lift and stretch the cap opening','bring the stretched cap over the crown','draw the opening evenly below the crown') and set(m.grasp_state)!={'left','right'}:
+  if label in ('hold the separate cap by its rim','lift and stretch the cap opening','bring the stretched cap over the crown','draw the opening evenly below the crown','seat the front rim above the eyes','draw the back rim down') and set(m.grasp_state)!={'left','right'}:
    raise RuntimeError('Scripted demonstration lost a required grip; stop this diagnostic.')
   from yam_arena import ik,station
   out=wanted.copy()

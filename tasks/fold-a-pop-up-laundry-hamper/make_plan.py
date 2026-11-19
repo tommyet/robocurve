@@ -17,14 +17,14 @@ RL=grip(-50,-1);RR=grip(50,-1);L,R=GRIP_POINTS
 p.add(3,'approach opposite bound ends',{'left':(L-.04*RL[:,2],RL,.3),'right':(R-.04*RR[:,2],RR,.3)},'joint')
 p.add(2,'enclose the bound edges',{'left':(L,RL,.25),'right':(R,RR,.25)})
 p.add(2,'grip the spring frames',{'left':(L,RL,.10),'right':(R,RR,.10)})
-p.add(4,'lift the flattened hamper',{'left':(L+[0,-.015,.10],RL,.10),'right':(R+[0,.015,.10],RR,.10)})
+p.add(4,'lift the flattened hamper',{'left':(L+[0,-.015,.07],RL,.10),'right':(R+[0,.015,.07],RR,.10)})
 for i in range(1,9):
  u=i/8;a=twist(grip(-50-30*u,-1),90*u);b=twist(grip(50+30*u,-1),-90*u)
- lp=L+[.025*np.sin(np.pi*u),-.015-.160*u,.10+.020*u];rp=R+[-.025*np.sin(np.pi*u),.015+.160*u,.10+.020*u]
+ lp=L+[.025*np.sin(np.pi*u),-.015-.160*u,.07+.020*u];rp=R+[-.025*np.sin(np.pi*u),.015+.160*u,.07+.020*u]
  p.add(1.5,'counter-twist and bring the loops together',{'left':(lp,a,.10),'right':(rp,b,.10)})
 for i in range(1,9):
  u=i/8;a=twist(grip(-80,-1),90+75*u);b=twist(grip(80,-1),-90-75*u)
- lp=L+[.055*u,-.175-.105*u,.12-.08*u+.14*np.sin(np.pi*u)];rp=R+[-.055*u,.175+.105*u,.12-.10*u]
+ lp=L+[.055*u,-.175-.105*u,.09-.05*u+.14*np.sin(np.pi*u)];rp=R+[-.055*u,.175+.105*u,.09-.07*u]
  p.add(1.5,'finish the counter-twist and nest the loops',{'left':(lp,a,.10),'right':(rp,b,.10)})
 from common import down,TABLE
 # Lower the central crossing, then lay the two upright outer loops down.

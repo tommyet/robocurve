@@ -34,7 +34,9 @@ def clip_pair(prefix,parent,parent_pos,centre,x,width,stiffness,color,from_top=F
   sh=[box((width,.00065,.006),(0,0,dz)),box((width,.0017,.0013),(0,-sign*.0006,2*dz))]
   name=prefix+('_p' if sign>0 else '_n')
   BODIES.append(body(name,origin,sh,mass=.00015,color=color,friction=.4,contact_offset=.00008))
-  axes={**fixed_axes(),'rotX':dict(limits=(-35,35),stiffness=stiffness,damping=.0001)}
+  # USD angular drives use torque/degree. The spring constants here are
+  # Nm/radian, giving newton-scale forces at the 6 mm clip lip.
+  axes={**fixed_axes(),'rotX':dict(limits=(-35,35),stiffness=stiffness*np.pi/180.,damping=.0001*np.pi/180.)}
   JOINTS.append(joint(name+'_spring',parent,name,origin-parent_pos,[0,0,0],axes=axes,break_force=20.,break_torque=.08))
 for sign in [-1,1]:
  clip_pair('terminal_'+('p' if sign>0 else 'n'),'plug',PLUG,PLUG+FC,sign*.010,.004,.045,(.70,.56,.25))
@@ -48,7 +50,7 @@ for sign in [-1,1]:
  vertices=[[x,y,z] for x in [-.0025,.0025] for y,z in [(-sign*.0012,.0015),(sign*.0006,.0005),(sign*.0006,.0025)]]
  catch=dict(kind='mesh',points=vertices,faces=[[0,2,1],[3,4,5],[0,1,4,3],[1,2,5,4],[2,0,3,5]],pos=[0,0,0],quat=[0,0,0,1])
  BODIES.append(body(name,pos,[box((.005,.001,.004)),catch],mass=.0002,color=(.89,.88,.83)))
- JOINTS.append(joint(name+'_spring','plug',name,pos-PLUG+[0,0,-.002],[0,0,-.002],axes={**fixed_axes(),'rotX':dict(limits=(-35,35),stiffness=.055,damping=.0001)},break_force=25.,break_torque=.1))
+ JOINTS.append(joint(name+'_spring','plug',name,pos-PLUG+[0,0,-.002],[0,0,-.002],axes={**fixed_axes(),'rotX':dict(limits=(-35,35),stiffness=.055*np.pi/180.,damping=.0001*np.pi/180.)},break_force=25.,break_torque=.1))
 TOOL=np.array([.28,-.14,TABLE+.028])
 # 169 mm ordinary flat screwdriver, 3 mm blade. Its shaft gives the two
 # grippers room while the tip levers the carrier notch.

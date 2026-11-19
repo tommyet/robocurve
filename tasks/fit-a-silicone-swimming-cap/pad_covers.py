@@ -10,7 +10,7 @@ from scipy.spatial.transform import Rotation
 
 def configure_kinematics():
     from yam_arena import constants, ik, station
-    station.BASES.update({side:(0.,y,.75) for side,y in [("left",.305),("right",-.305)]})
+    station.BASES.update({side:(0.,y,.85) for side,y in [("left",.305),("right",-.305)]})
     constants.TCP_OFFSET=(0.,0.,.170)
     ik.TCP_OFFSET=constants.TCP_OFFSET
     import sys

@@ -1,5 +1,5 @@
 {
-  "status": "development_paused_pending_full_demo",
+  "status": "native_development_in_progress",
   "submission_ready": false,
   "demo": null,
   "dream": null,
@@ -9,5 +9,12 @@
   "latest_steps": 825,
   "latest_score": 0,
   "blocker": "Deeper cartridge pickup damages a terminal before extraction. The shallower038 remains intact but loses the cartridge after6.4 mm lift. Full replacement and Dream baseline remain unvalidated.",
-  "checked_utc": "2026-11-19T09:01:15.985539+00:00"
+  "checked_utc": "2026-11-19T21:20:51.354131+00:00",
+  "current_task_runtime_verified": false,
+  "remaining_gates": [
+    "Full-score native demo with current runtime",
+    "Paired Dream baseline",
+    "Frozen-source rescoring and visual review",
+    "Media upload and PR ingestion"
+  ]
 }

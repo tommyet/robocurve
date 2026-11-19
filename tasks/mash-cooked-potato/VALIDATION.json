@@ -114,5 +114,15 @@
         "visual_review": "Complete baseline sampled at start, quarter points and end; no successful mashing. Native hands and remaining lumps are visible."
       }
     }
-  }
+  },
+  "status": "native_development_in_progress",
+  "submission_ready": false,
+  "current_task_runtime_verified": false,
+  "checked_utc": "2026-11-19T21:20:51.354131+00:00",
+  "remaining_gates": [
+    "Full-score native demo with current runtime",
+    "Paired Dream baseline",
+    "Frozen-source rescoring and visual review",
+    "Media upload and PR ingestion"
+  ]
 }

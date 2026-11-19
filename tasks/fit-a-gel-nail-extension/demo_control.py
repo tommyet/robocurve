@@ -2,7 +2,7 @@
 import numpy as np
 from scipy.optimize import least_squares
 class DemoControl:
- def __init__(self):self.grasp=None;self.grasp_rotation=None;self.correction=np.zeros(3)
+ def __init__(self):self.grasp=None;self.grasp_rotation=None;self.correction=np.zeros(3);self.seating_z=None
  def action(self,k,wanted,m,hands,observed):
   if k==220:
    from geometry import REST
@@ -19,9 +19,23 @@ class DemoControl:
   # The plan's TCP is 3 mm above the tip origin. Preserve that tool relation,
   # correcting only for observed slip, not moving the object itself.
   desired_R=R@R0.T;goal=p-desired_R@np.array([0,0,.003])
-  # Gentle observed-tool descent avoids chasing a contact-induced deflection
-  # with a large wrist correction. This changes only the robot target.
-  if 340<=k<=1720:goal[2]=max(goal[2],m.p('extension')[2]-.0005)
+  # Correct steady motor tracking error through bounded hand targets.
+  # Use observed compression as an anti-windup guard while seating.
+  if 340<=k<=1720:
+   from geometry import PATCHES,BASE
+   load=sum(50*max(0.,-float(m.joint_gap('compression_'+p['name'])[2])) for p in PATCHES)
+   error=goal-m.p('extension')
+   error[2]=0.
+   self.correction=np.clip(self.correction+.08*error,-.003,.003)
+   goal+=self.correction
+   # Slowly advance a commanded seating height, then hold light contact.
+   # Referencing each target to the measured height alone stalled against
+   # motor tracking error before contact. This bounded force controller
+   # changes only robot commands; the gel and tip remain native bodies.
+   if self.seating_z is None:self.seating_z=float(m.p('extension')[2])
+   self.seating_z+=(-.00005 if load<.08 else .00005 if load>.18 else 0.)
+   self.seating_z=float(np.clip(self.seating_z,BASE[2]-.001,BASE[2]+.025))
+   goal[2]=self.seating_z
   # Visual servoing uses the current measured tool transform. The compliant
   # pinch may move under seating load; its initial transform is not a weld.
   relative=h['rotation'].T@(m.p('extension')-h['tcp'])

@@ -1,6 +1,6 @@
 import numpy as np
 from native_model import NativeModel
-from geometry import JOINTS,BODIES,GRID
+from geometry import JOINTS,BODIES,GRID,PARTICLE_DIAMETER,SPACING
 CELLS=[np.where(np.all((GRID>=np.array(c)-1)&(GRID<=np.array(c)),axis=1))[0] for c in np.ndindex(2,2,2)]
 class Model(NativeModel):
  def __init__(self):super().__init__();self.grasp_state={};self.damage={str(k):0. for k in range(12)}
@@ -16,15 +16,15 @@ class Model(NativeModel):
    contact=np.zeros(27,dtype=bool)
    for bar in bars:
     gap=np.maximum(np.abs(local-np.asarray(bar['pos']))-np.asarray(bar['size'])/2,0.)
-    contact|=np.linalg.norm(gap,axis=1)<.004
+    contact|=np.linalg.norm(gap,axis=1)<PARTICLE_DIAMETER/2+.0005
    # Local loaded compression can fracture a cooked chunk after other parts
    # have separated; scattered fragments must not define its current thickness.
    strain=0.
    for indices in CELLS:
     if not contact[indices].any():continue
     centred=pts[indices]-pts[indices].mean(axis=0);_,_,axes=np.linalg.svd(centred,full_matrices=False)
-    thickness=float(np.min(np.ptp(centred@axes.T,axis=0))+.007)
-    strain=max(strain,1.-thickness/.0142)
+    thickness=float(np.min(np.ptp(centred@axes.T,axis=0))+PARTICLE_DIAMETER)
+    strain=max(strain,1.-thickness/(SPACING+PARTICLE_DIAMETER))
    result[str(k)]=float(np.clip((strain-.15)/.30,0,1))
   return result
  def material(self,hands,dt):
@@ -57,7 +57,7 @@ class Model(NativeModel):
   for n in names:groups.setdefault(root(n),[]).append(n)
   sizes={}
   for key,ns in groups.items():
-   p=np.array([self.p(n) for n in ns]);sizes[key]=float(np.max(np.linalg.norm(p[:,None]-p[None,:],axis=-1))+.007)
+   p=np.array([self.p(n) for n in ns]);sizes[key]=float(np.max(np.linalg.norm(p[:,None]-p[None,:],axis=-1))+PARTICLE_DIAMETER)
   local=np.array([self.orientation('bowl').T@(self.p(n)-self.p('bowl')) for n in names]);inside=(np.linalg.norm(local[:,:2],axis=1)<.095)&(local[:,2]>.003)&(local[:,2]<.080)
   small=np.array([sizes[root(n)]<=.009 for n in names])
   return dict(small_lump_mass_fraction=float((small&inside).sum()/max(1,inside.sum())),retained_mass_fraction=float(inside.mean()),largest_lump_mm=max(sizes.values())*1000,released_seconds=self.release,failed=self.failed)

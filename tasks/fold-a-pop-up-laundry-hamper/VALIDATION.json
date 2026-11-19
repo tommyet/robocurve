@@ -1,5 +1,5 @@
 {
-  "status": "development_paused_pending_full_demo",
+  "status": "native_development_in_progress",
   "submission_ready": false,
   "prior_last_fold": "077: score 0, wire joint failure; archived",
   "full_score_demo": null,
@@ -11,5 +11,12 @@
   "latest_steps": 623,
   "latest_score": 0.25,
   "blocker": "Right frame grip slips during the final twist; no compact retained packet or completed Dream baseline has been demonstrated.",
-  "checked_utc": "2026-11-19T08:54:40.531860+00:00"
+  "checked_utc": "2026-11-19T21:20:51.354131+00:00",
+  "current_task_runtime_verified": false,
+  "remaining_gates": [
+    "Full-score native demo with current runtime",
+    "Paired Dream baseline",
+    "Frozen-source rescoring and visual review",
+    "Media upload and PR ingestion"
+  ]
 }
