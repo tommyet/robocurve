@@ -63,3 +63,8 @@ No third-party task meshes, scans or textures are used.
 
 Development is ongoing. A validated full-score demonstration and completed
 Dream baseline are still required; no submission-readiness claim is made.
+
+The auxiliary pinch is selected within the central 8 mm of the 24 mm face.
+It also holds adjacent elastic vertices already enclosed by that same real
+face, representing friction over a finite contact patch. It does not attach
+material outside the fingers. The estimated 6 N and 8 mm slip guards remain.

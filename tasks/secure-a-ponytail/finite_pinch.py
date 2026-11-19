@@ -1,7 +1,7 @@
 """Geometry-gated native vertex pinch, with an approximate elastic-tension slip guard.
 
 The central 8 mm of the closing finger faces must enclose the 3 mm cord. A native attachment then
-binds that measured cord point to the real gripper link. Opening, estimated load
+binds the measured contact patch to the real gripper link. Opening, estimated load
 above 6 N, or 8 mm slip releases it. No task-body or material pose is assigned.
 The tension estimate is uncalibrated; it is not a measured native force limit.
 """
@@ -78,18 +78,28 @@ class FinitePinch:
     if distance is not None:choices.append((distance,name,index,point.copy()))
    if not choices:continue
    _,name,index,point=min(choices,key=lambda x:x[0]);self.serial+=1
+   # The primary pinch must be centred, but a real flat face also holds
+   # adjacent cord already enclosed by that same face. Preserve that finite
+   # contact patch rather than treating a broad finger as a frictionless pin.
+   ids=[]
+   for row in range(3):
+    for offset in range(-4,5):
+     j=row*M+(index+offset)%M;v=self.m.nodes[j]
+     if candidate(v,self.radius,h,self.thickness,.012,self.z_range) is not None:ids.append(j)
+   if M+index not in ids:ids.append(M+index)
+   ids=sorted(set(ids));locals=(self.m.nodes[ids]-h['tcp'])@h['rotation']
    a=self.m.stage.DefinePrim(self.root+f'/finger_pinch_{side}_{self.serial}','OmniPhysicsVtxXformAttachment')
    a.GetAttribute('omniphysics:attachmentEnabled').Set(False)
    local=(point-h['tcp'])@h['rotation']
    with Sdf.ChangeBlock():
     a.GetRelationship('omniphysics:src0').SetTargets([Sdf.Path(self.root+'/elastic')])
     a.GetRelationship('omniphysics:src1').SetTargets([Sdf.Path(self.grippers[side])])
-    a.GetAttribute('omniphysics:vtxIndicesSrc0').Set([M+index])
-    a.GetAttribute('omniphysics:localPositionsSrc1').Set(Vt.Vec3fArray([(local+np.asarray(TCP_OFFSET)).astype(np.float32).tolist()]))
+    a.GetAttribute('omniphysics:vtxIndicesSrc0').Set(ids)
+    a.GetAttribute('omniphysics:localPositionsSrc1').Set(Vt.Vec3fArray((locals+np.asarray(TCP_OFFSET)).astype(np.float32).tolist()))
     a.GetAttribute('omniphysics:attachmentEnabled').Set(True)
    # The pinch attachment represents local friction. Avoid contradictory
    # collision constraints only at this held mesh patch, as PhysX recommends.
-   triangles=np.flatnonzero(np.any(TRIS==M+index,axis=1)).tolist();filters=[]
+   triangles=np.flatnonzero(np.any(np.isin(TRIS,ids),axis=1)).tolist();filters=[]
    for n,hand_path in enumerate(self.hand_bodies[side]):
     f=self.m.stage.DefinePrim(self.root+f'/pinch_filter_{side}_{self.serial}_{n}','OmniPhysicsElementCollisionFilter')
     f.GetAttribute('omniphysics:filterEnabled').Set(False)
@@ -103,5 +113,5 @@ class FinitePinch:
      f.GetAttribute('omniphysics:filterEnabled').Set(True)
     filters.append(f)
    self.held[side]=dict(body=name,index=index,attachment=a,local_point=local.copy(),estimated_load_n=0.,filters=filters)
-   self.m.events.append(dict(event='pinch_captured',side=side,body=name,time=self.m.time,slip_estimate_limit_n=6.,source='native vertex attachment to actual gripper link'))
+   self.m.events.append(dict(event='pinch_captured',side=side,body=name,time=self.m.time,slip_estimate_limit_n=6.,source='native contact patch attachment to actual gripper link',contact_vertices=ids))
   self.m.grasp_state={side:dict(body=g['body'],estimated_load_n=g['estimated_load_n'],slip_estimate_limit_n=6.) for side,g in self.held.items()}
