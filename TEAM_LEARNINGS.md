@@ -6458,3 +6458,101 @@ editing, merge both agents' findings, and commit/push the update with the work.
  leaving the openingcentre11 mm behind the hand-centre. Source136 measures
  this offset at220 and compensates when positioning the opening beneath
  the hair. This only corrects robot targets; no hair/band geometry changes.
+
+### 2026-11-19 — brush full-score native demonstration
+
+- Brush031, source126: completed1960 controls at20fps, score1.0. All10
+ locks physically clear;9 qualify as comb-loosened, no trapped hair touched
+ directly by a hand, all44 pins intact,7.55 s released at end. CPU rescore
+ verifies frozen source and recomputes the same score from recorded states
+ and native event histories. Visual review at10 stages agrees: real comb
+ lifts, tip-emptying, clear brush after return/release. The candidate composite
+ preserves all native frames. Dream remains pending; no PR yet.
+- The submission source restores126's demonstrated controller instead of
+ the later diagnostic-only failfast. All executed Python files and the demo
+ plan match the validated source. Descriptive setup/README corrected to list
+ both comb rests and actual2 x18 x24 mm finger covers.
+- Fuse029source132 passed540: carrier open,intact,oldfuse still seated;
+ full0302420 nowrunning. Cap041source133 passed240 intactbothgrips;
+ full042660 nowrunning. Neither is yet a demonstrated completedtask.
+
+- Pony045 completes500 at0.25 with7/12 locks genuinely enclosed and
+ 45.2 mm contracted diameter; all intact. Source136 recentering remains
+ necessary to capture the outer locks. Source137 also corrects judging
+ cameras: wide view includes the whole head, and the detail view looks
+ at the hair from behind, where the final elastic can actually be judged.
+ Policy RGB cameras, physics and action sequence are unchanged.
+
+- Hamper019 disproves135's filter fix: immediately after capture, frame
+ points jump by57–87 mm and the new right grip breaks; the left follows.
+ Creating those filters during this native simulation disturbs the surface.
+ Do not use this run or the135 implementation as task evidence. Source138
+ restores129's unfiltered grip and lowers only the ordinary pickup rests
+ from100 to20 mm, keeping the full33 x53 cm frame. This reduces the
+ initial65 mm sag/pickup offset and clears the lift from tall rest sides.
+ Use0.10 closure between129's excessive0.08 preload and original0.11.
+ Force/torque,8 mm slip, material and scoring stay unchanged. Validation pending.
+
+- CPU reach check rejected138's lower20 mm rests before any GPU launch:
+ the initial horizontal approach is not reachable with the raised arm bases.
+ Revise138 to100 mm height with60 mm length alongY (previous20 mm),
+ keeping the initial frame height. The old short-edge grip drifted from
+ Y265 to245 mm during settling, beyond the old rests'255 mm inner edge.
+ The broader rests support that displacement while preserving the open
+ central pickup gap. No native result exists for this change yet.
+
+- Cap042 completes660 intact at0.25, not fitted. At460 its rim has
+ collapsed across the head's width (only28 mm span), with side arcs still
+121 mm above centre. Starting opening-up crushes the bowl onto the crown.
+ Source139 starts the same reversible cap opening-down, resting on a
+60 mm-diameter180 mm upturned tumbler. Wide0.95 approach and a170 mm
+ TCP leave the finger ends2 mm past the rolled rim, clearing the dome.
+ Same material, grip limits and scorer; no cap pose changes during a trial.
+
+- Pony048 recentering still captures only6 locks. Both045/048 broad pads
+ latched onto arcs12/20 on the same side of the ring, not opposed8/24.
+ Source140 restricts the auxiliary pinch to the central4 mm of each
+24 mm face (the actual face and native contacts stay24 mm), requiring
+ a centred grip. This conservative approximation is disclosed. Stretch
+ targets increase fromY+/-45 to+/-50 mm; same30 mm elastic,6 N estimated
+ slip and material limits. Off-centre pickup remains ordinary contact.
+
+- Fuse030 failed1111 oncover_detent_p_spring, not a terminal spring.
+ The4 mm-wide fingers pinch at the cartridge midpoint, overlapping the
+ carrier detent's X span while lifting. Source141 moves both old/spare
+ cartridge grips4 mm along their axes toward the negative terminal, into
+ the clear span between that terminal and the carrier detents. This also
+ preserves clearance during insertion. No clip strength, material or
+ scoring change. The last outcome remains0 until a full native rerun.
+
+- Pony048 fails507 withfourhair joints broken immediately after release.
+ Band centre moves6.4 mm laterally/4.1 mm down; this does not prove a
+ whole-band reset. The release also changes rigid-patch collision pairs,
+ an operation that coincided with the disruptive hamper019 update. Source142
+ sets redundant patch-to-hand exclusions once before reset settling and
+ never changes them during a trial. The native soft surface still supplies
+ hand contacts; only held incident triangles are filtered during pinching.
+ It also opens just enough to release before withdrawing50 mm behind the
+ hair, then opens fully clear of the head. All damage/slip limits unchanged.
+ Source140 was synced but neverrun;142 supersedes it and needsvalidation.
+
+- Cap043 again misses the dome-up rim. Source144 approaches tangentially
+ beneath the rim, raises10 mm and closes radially across the cap wall.
+ This replaces the radial approach with vertical closure that collided
+ with the dome. Same cap, support, hardware and forces; motion count
+ comes from the CPU plan. Correct metadata: this cap source uses stock
+750 mm arm bases; only the hamper has100 mm risers. No cap risers are
+ present in geometry, so the earlier setup sentence was inaccurate.
+
+- Hamper020's wider rests block the left palm: its measuredTCP stays
+ atY306 mm while the frame is66–84 mm across the pad. No grip formed.
+ Source143 restores the original20 mm-long rests and moves only the
+ left nominal pinch one binding segment along the short edge (11, not12),
+ aiming to centre it in the pad instead of clamping its margin. Keep
+ the moderate0.10 closure; no force, material or score changes.
+- Cap144's exactly tangential left orientation is unreachable. A CPU
+ orientation search finds20 degrees forward/outward for the left arm and
+0 degrees for the right reachable atpickup. Use those actual robot poses
+ for the under-rim approach; no GPU trial yet.
+
+- Pony049 source142 captures the opposed left arc8 but misses right24, whose measured pad-width offset is3.7 mm. Source145 permits the central8 mm of the24 mm face (previous4 mm), still excluding the same-side edge arcs captured in045/048. Same physical fingers, material and load/slip guards. Validation pending.

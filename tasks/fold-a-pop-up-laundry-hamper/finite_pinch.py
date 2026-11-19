@@ -28,13 +28,10 @@ class FinitePinch:
         from omni.physx.bindings._physx import SimulationEvent
         self.m=model;self.names=list(names);self.radius=radius;self.thickness=thickness
         self.half_width=half_width;self.z_range=z_range;self.held={};self.history={s:[] for s in ['left','right']};self.blocked=set();self.serial=0
-        self.grippers={};self.body_paths={};self.hand_bodies={side:[] for side in ['left','right']}
+        self.grippers={};self.body_paths={}
         for p in model.stage.Traverse():
             if not p.HasAPI(UsdPhysics.RigidBodyAPI):continue
             path=str(p.GetPath())
-            if p.GetName() in ('gripper','tip_left','tip_right'):
-                for side,arm in [('left','LeftArm'),('right','RightArm')]:
-                    if arm in path:self.hand_bodies[side].append(path)
             if p.GetName()=='gripper':
                 for side,arm in [('left','LeftArm'),('right','RightArm')]:
                     if arm in path:self.grippers[side]=path
@@ -47,37 +44,8 @@ class FinitePinch:
             for side,g in list(self.held.items()):
                 if path==g['path']:
                     self.m.events.append(dict(event='pinch_slipped',side=side,body=g['body'],time=self.m.time,force_limit_n=18.,torque_limit_nm=.36))
-                    g['joint'].GetJointEnabledAttr().Set(False);self.restore_contacts(g);self.held.pop(side);self.blocked.add(side)
+                    g['joint'].GetJointEnabledAttr().Set(False);self.held.pop(side);self.blocked.add(side)
         self.subscription=get_physx_interface().get_simulation_event_stream_v2().create_subscription_to_pop(event)
-
-    def restore_contacts(self,g):
-        for f in g.get('filters',[]):f.GetAttribute('omniphysics:filterEnabled').Set(False)
-        if 'pairs' in g:g['pairs'].SetTargets(g['old_pairs'])
-
-    def local_contacts(self,side,name):
-        """Replace only redundant contact at the captured cloth/binding pinch."""
-        from pxr import UsdPhysics,Sdf
-        from geometry import N,LEVELS,SURFACES,HEM_ATTACHMENTS
-        body=self.m.stage.GetPrimAtPath(self.body_paths[name]);pairs=UsdPhysics.FilteredPairsAPI.Apply(body).CreateFilteredPairsRel();old=pairs.GetTargets()
-        pairs.SetTargets(old+[Sdf.Path(p) for p in self.hand_bodies[side]])
-        i=int(name.rsplit('_',1)[1]);j=(i+1)%N
-        ids={'frame':next(v for n,v,_ in HEM_ATTACHMENTS if n==name),'cloth':[1+(LEVELS-1)*N+i,1+(LEVELS-1)*N+j]}
-        filters=[]
-        for material,vertices in ids.items():
-            spec=next(s for s in SURFACES if s['name']==material);triangles=np.flatnonzero(np.isin(spec['tris'],vertices).any(axis=1)).tolist()
-            for number,hand in enumerate(self.hand_bodies[side]):
-                f=self.m.stage.DefinePrim(self.root+f'/pinch_filter_{side}_{self.serial}_{material}_{number}','OmniPhysicsElementCollisionFilter')
-                f.GetAttribute('omniphysics:filterEnabled').Set(False)
-                with Sdf.ChangeBlock():
-                    f.GetRelationship('omniphysics:src0').SetTargets([Sdf.Path(self.root+'/'+material)])
-                    f.GetRelationship('omniphysics:src1').SetTargets([Sdf.Path(hand)])
-                    f.GetAttribute('omniphysics:groupElemCounts0').Set([len(triangles)])
-                    f.GetAttribute('omniphysics:groupElemIndices0').Set(triangles)
-                    f.GetAttribute('omniphysics:groupElemCounts1').Set([0])
-                    f.GetAttribute('omniphysics:groupElemIndices1').Set([])
-                    f.GetAttribute('omniphysics:filterEnabled').Set(True)
-                filters.append(f)
-        return dict(pairs=pairs,old_pairs=old,filters=filters)
 
     def update(self,hands):
         from pxr import UsdPhysics,Sdf,Gf
@@ -88,14 +56,14 @@ class FinitePinch:
             aperture=-q.sum()-2*self.thickness
             if aperture>2*self.radius+.002:
                 if side in self.held:
-                    g=self.held.pop(side);g['joint'].GetJointEnabledAttr().Set(False);self.restore_contacts(g)
+                    g=self.held.pop(side);g['joint'].GetJointEnabledAttr().Set(False)
                     self.m.events.append(dict(event='pinch_released',side=side,body=g['body'],time=self.m.time))
                 if h['opening']>.30:self.blocked.discard(side)
                 continue
             if side in self.held:
                 g=self.held[side];now=(self.m.p(g['body'])-h['tcp'])@h['rotation']
                 if np.linalg.norm(now-g['local_point'])>.008:
-                    g['joint'].GetJointEnabledAttr().Set(False);self.restore_contacts(g);self.held.pop(side);self.blocked.add(side)
+                    g['joint'].GetJointEnabledAttr().Set(False);self.held.pop(side);self.blocked.add(side)
                     self.m.events.append(dict(event='pinch_slipped',side=side,body=g['body'],time=self.m.time,reason='material moved 8 mm through the grip'))
             if side in self.held:
                 g=self.held[side];target=np.asarray(h['tcp'])+h['rotation']@g['local_point']
@@ -132,6 +100,5 @@ class FinitePinch:
                     drive.CreateTargetPositionAttr(0.)
                 joint.GetJointEnabledAttr().Set(True)
             self.held[side]=dict(body=name,path=path,joint=joint,local_point=((self.m.p(name)-h['tcp'])@h['rotation']).copy(),local_rotation=h['rotation'].T@self.m.orientation(name))
-            self.held[side].update(self.local_contacts(side,name))
             self.m.events.append(dict(event='pinch_captured',side=side,body=name,time=self.m.time,force_limit_n=18.,torque_limit_nm=.36,local_point=((self.m.p(name)-h['tcp'])@h['rotation']).tolist(),opening=float(h['opening'])))
         self.m.grasp_state={side:dict(body=g['body'],force_limit_n=18.,torque_limit_nm=.36) for side,g in self.held.items()}

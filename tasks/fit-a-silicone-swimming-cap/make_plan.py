@@ -4,13 +4,12 @@ from planner import Plan
 from scipy.spatial.transform import Rotation as Rot
 from geometry import HEAD,CAP
 p=Plan()
-RL=np.array([[0,-1,0],[0,0,-1],[1,0,0.]])
-RR=np.array([[0,-1,0],[0,0,1],[-1,0,0.]])
-RL=Rot.from_euler('x',20,degrees=True).as_matrix()@RL
-RR=Rot.from_euler('x',-20,degrees=True).as_matrix()@RR
+theta=np.radians(20);axis=np.array([np.cos(theta),np.sin(theta),0.]);normal=np.array([-np.sin(theta),np.cos(theta),0.]);RL=np.column_stack([normal,np.cross(axis,normal),axis])
+RR=np.array([[0,0,1],[-1,0,0],[0,-1,0.]])
 L=CAP+[0,.080,0.];Q=CAP+[0,-.080,0.]
-p.add(3,'approach the open cap from its sides',{'left':(L+[0,.045,.025],RL,.60),'right':(Q+[0,-.045,.025],RR,.60)},'joint')
-p.add(3,'place the fingers around opposite rim edges',{'left':(L,RL,.60),'right':(Q,RR,.60)})
+p.add(3,'approach below the rim along its tangent',{'left':(L-.035*RL[:,2]+[0,0,-.012],RL,.35),'right':(Q-.035*RR[:,2]+[0,0,-.012],RR,.35)},'joint')
+p.add(3,'slide the open fingers beneath the rolled rim',{'left':(L+[0,0,-.010],RL,.35),'right':(Q+[0,0,-.010],RR,.35)})
+p.add(1,'raise the fingers around the rolled rim',{'left':(L,RL,.35),'right':(Q,RR,.35)})
 p.add(2,'pinch the free rim',{'left':(L,RL,.09),'right':(Q,RR,.09)})
 p.add(4,'lift and stretch the cap opening',{'left':(CAP+[0,.095,.20],RL,.09),'right':(CAP+[0,-.095,.20],RR,.09)})
 p.add(4,'bring the stretched cap over the crown',{'left':(HEAD+[0,.095,.215],RL,.09),'right':(HEAD+[0,-.095,.215],RR,.09)})

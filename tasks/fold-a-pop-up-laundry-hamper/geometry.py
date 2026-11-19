@@ -58,7 +58,7 @@ for i in range(N):
  spec['exclude']=['frame','cloth','tab',f'bound_edge_{(i-1)%N:03d}',f'bound_edge_{j:03d}'];BODIES.append(spec)
  ids=[i,j,N+i];local=orientation.inv().apply(FRAME_POINTS[ids]-centre)
  HEM_ATTACHMENTS.append((name,ids,local))
-GRIP_INDICES=(12,60);GRIP_BODIES=tuple(f'bound_edge_{i:03d}' for i in GRIP_INDICES)
+GRIP_INDICES=(11,60);GRIP_BODIES=tuple(f'bound_edge_{i:03d}' for i in GRIP_INDICES)
 GRIP_POINTS=np.asarray([next(b['pos'] for b in BODIES if b['name']==name) for name in GRIP_BODIES])
 finalize(BODIES,JOINTS)
 

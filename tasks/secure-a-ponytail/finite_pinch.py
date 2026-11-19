@@ -1,6 +1,6 @@
 """Geometry-gated native vertex pinch, with an approximate elastic-tension slip guard.
 
-The actual closing fingers must enclose the 3 mm cord. A native attachment then
+The central 8 mm of the closing finger faces must enclose the 3 mm cord. A native attachment then
 binds that measured cord point to the real gripper link. Opening, estimated load
 above 6 N, or 8 mm slip releases it. No task-body or material pose is assigned.
 The tension estimate is uncalibrated; it is not a measured native force limit.
@@ -34,10 +34,16 @@ class FinitePinch:
    if '/materials/' in path and p.GetName()=='elastic':root=path.rsplit('/',1)[0]
   assert set(self.grippers)=={'left','right'} and root is not None
   self.root=root
+  # Fixed from reset: the soft surface supplies finger contact. These small
+  # rigid patches provide hair/head contact without duplicate finger contact.
+  from pxr import Sdf
+  for name in self.names:
+   prim=model.stage.GetPrimAtPath(root+'/'+name)
+   pairs=UsdPhysics.FilteredPairsAPI.Apply(prim).CreateFilteredPairsRel()
+   pairs.SetTargets(pairs.GetTargets()+[Sdf.Path(path) for paths in self.hand_bodies.values() for path in paths])
  def release(self,side,reason):
   g=self.held.pop(side);g['attachment'].GetAttribute('omniphysics:attachmentEnabled').Set(False)
   for f in g['filters']:f.GetAttribute('omniphysics:filterEnabled').Set(False)
-  g['patch_pairs'].SetTargets(g['old_patch_pairs'])
   self.m.events.append(dict(event='pinch_released' if reason=='opened' else 'pinch_slipped',side=side,body=g['body'],time=self.m.time,reason=reason))
   if reason!='opened':self.blocked.add(side)
  def tension(self,index):
@@ -96,9 +102,6 @@ class FinitePinch:
      f.GetAttribute('omniphysics:groupElemIndices1').Set([])
      f.GetAttribute('omniphysics:filterEnabled').Set(True)
     filters.append(f)
-   patch=self.m.stage.GetPrimAtPath(self.root+'/'+name)
-   pairs=UsdPhysics.FilteredPairsAPI.Apply(patch).CreateFilteredPairsRel();old_pairs=pairs.GetTargets()
-   pairs.SetTargets(old_pairs+[Sdf.Path(p) for p in self.hand_bodies[side]])
-   self.held[side]=dict(body=name,index=index,attachment=a,local_point=local.copy(),estimated_load_n=0.,filters=filters,patch_pairs=pairs,old_patch_pairs=old_pairs)
+   self.held[side]=dict(body=name,index=index,attachment=a,local_point=local.copy(),estimated_load_n=0.,filters=filters)
    self.m.events.append(dict(event='pinch_captured',side=side,body=name,time=self.m.time,slip_estimate_limit_n=6.,source='native vertex attachment to actual gripper link'))
   self.m.grasp_state={side:dict(body=g['body'],estimated_load_n=g['estimated_load_n'],slip_estimate_limit_n=6.) for side,g in self.held.items()}

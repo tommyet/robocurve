@@ -6,13 +6,13 @@ shapes=[sphere(RADII),sphere((.018,.012,.026),(-.095,0,-.015)),sphere((.012,.012
 shapes += [sphere((.003,.009,.005),(-.089,y,.017),(.13,.15,.18)) for y in [-.030,.030]]
 shapes += [box((.001,.038,.004),(-.090,0,-.051),(.47,.17,.17))]
 BODIES.append(body('headform',HEAD,shapes,fixed=True,mass=1.5,color=(.76,.63,.51),friction=.65,quat=Rotation.from_matrix(HEADROT).as_quat().tolist()))
-# The separate reversible cap rests open-side up on the table.
+# The cap rests opening-down on a narrow, ordinary upturned tumbler.
 M=40;N=12
-POINTS=[CAP+[0,0,-.090]]
+POINTS=[CAP+[0,0,.090]]
 for j in range(1,N+1):
  a=j*np.pi/(2*N)
  for i in range(M):
-  t=i*2*np.pi/M;POINTS.append(CAP+[.084*np.sin(a)*np.cos(t),.080*np.sin(a)*np.sin(t),.090*-np.cos(a)])
+  t=i*2*np.pi/M;POINTS.append(CAP+[.084*np.sin(a)*np.cos(t),.080*np.sin(a)*np.sin(t),.090*np.cos(a)])
 POINTS=np.asarray(POINTS);TRIS=[]
 for i in range(M):TRIS.append([0,1+i,1+(i+1)%M])
 for j in range(N-1):
@@ -25,6 +25,7 @@ REST_LENGTHS=np.linalg.norm(POINTS[EDGES[:,1]]-POINTS[EDGES[:,0]],axis=1)
 # Each point couples to one elastic vertex, so the opening can still stretch.
 for i,node in enumerate(RIM):
  BODIES.append(body(f'rim_contact_{i:03d}',POINTS[node],[sphere((.0015,)*3)],mass=.004/M,color=(.10,.44,.77),friction=.9,contact_offset=.00025,exclude=['cap']))
+BODIES.append(body('cap_rest',[CAP[0],CAP[1],TABLE+.090],[cylinder(.030,.180)],fixed=True,mass=.2,color=(.70,.73,.75),friction=.5))
 finalize(BODIES,JOINTS)
 
 def spawn_surface(stage,root):
