@@ -1,8 +1,8 @@
 {
   "title": "Fit and cure a gel nail extension",
-  "category": "Impact on jobs",
+  "category": "Societal relevance",
   "instruction": "Seat the prepared clear extension on the practice nail, cure the gel, and leave the extension secure with both hands clear. Keep gel off the surrounding skin.",
-  "context": "Fitting gel extensions is salon work: the curved surfaces must mate without lifted areas, then remain aligned while the adhesive cures.",
+  "context": "Gel nail extensions are a familiar manicure procedure. The curved surfaces must mate without lifted areas, then remain aligned while the adhesive cures.",
   "action_limit": 2400,
   "run_limit": "2,400 control steps (120 seconds at 20 Hz).",
   "setup": "A clamped 70 × 22 × 20 mm silicone practice finger has a 14 × 12 mm ABS nail insert with 14 mm transverse curvature. A matching 28 × 10–14 mm clear extension holds 0.04 ± 0.01 mL of compatible gel, with its distal 8 mm dry. It starts separate on a wooden support beside a 66 × 58 × 47 mm Kiara Sky Flash Cure lamp. The lamp has a 20 mm spacer; all equipment stands on a 65 mm riser. Both grippers have 45 × 4 mm steel extensions with silicone faces. README specifies preparation and fixed coordinates.",

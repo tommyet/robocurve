@@ -53,14 +53,15 @@ class Model(NativeModel):
   radial=np.sqrt((local[:,0]/RADII[0])**2+(local[:,1]/RADII[1])**2)
   crown=surface_gap(self.nodes,TRIS,HEAD+HEADROT@np.array([0,0,RADII[2]]))
   fitted=bool(winding>.9 and radial.min()>.55 and radial.max()<1.35 and local[:,2].max()<.075 and local[:,2].min()>-.055)
+  progressing=bool(winding>.9 and radial.min()>.55 and radial.max()<1.35 and local[:,2].max()<.100 and local[:,2].min()>-.055)
   clear=bool(front.any() and local[front,2].min()>=.030)
-  return dict(rim_attachment_gap_mm=self.rim_gap()*1000,crown_gap_mm=crown*1000,rim_encircles_head=fitted,face_clear=clear,intact=not self.failed,released_seconds=self.release,failed=self.failed)
+  return dict(rim_attachment_gap_mm=self.rim_gap()*1000,crown_gap_mm=crown*1000,rim_encircles_head=fitted,rim_partly_lowered=progressing,face_clear=clear,intact=not self.failed,released_seconds=self.release,failed=self.failed)
  def score(self):
   self.failed |= self.integrity_failed();m=self.measure()
   if self.failed:return 0.
   if m['rim_encircles_head'] and m['face_clear'] and m['crown_gap_mm']<=20 and self.release>=3:return 1.
   if m['rim_encircles_head'] and m['face_clear']:return .5
-  return .25 if m['crown_gap_mm']<=25 and m['face_clear'] else 0.
+  return .25 if m['rim_partly_lowered'] and m['face_clear'] else 0.
  def state(self):return dict(super().state(),grasp_state=self.grasp_state,nodes=self.nodes,node_velocities=self.node_velocities,peak_stretch=self.peak_stretch)
  def restore(self,state):
   s=dict(state);self.nodes=np.asarray(s.pop('nodes'));self.node_velocities=np.asarray(s.pop('node_velocities'));self.peak_stretch=s.pop('peak_stretch');super().restore(s)

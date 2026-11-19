@@ -30,20 +30,20 @@ Use a rigid adult headform, 190 × 160 × 240 mm, fixed to its 140 × 130 mm bas
 
 The head centre is (360, 0, 872.5) mm, with its nose facing positive Y. X points forward, Y left, and the table is 747.5 mm high. Each arm stands on a fixed 160 × 160 × 100 mm steel riser. Both grippers have 40 × 24 × 3 mm silicone-faced extensions and 40 N finger actuator limits.
 
-Both hands initially hold the cap's front and back rim above the head. The initial rim centre is (360, 0, 1017.5) mm, 55 mm above the crown and 120 mm toward the robot from the head, with a 3 mm pad gap. Reset verifies actual contact before frame zero and lets the material settle under gravity; demo and Dream share this reset. The robot must stretch, draw down and release the cap. No fixture holds it on the head and no material pose is assigned during a trial. Restore the photographed layout without pre-fitting or damaging the cap.
+Both hands initially hold the cap's front and back rim above the head. The initial rim centre is (360, 0, 1047.5) mm, centred 55 mm above the crown, with a 3 mm pad gap. Reset verifies actual contact before frame zero and lets the material settle under gravity; demo and Dream share this reset. The robot must stretch, draw down and release the cap. No fixture holds it on the head and no material pose is assigned during a trial. Restore the photographed layout without pre-fitting or damaging the cap.
 
 ## Scoring and material model
 
 Use the video and a ruler to check the rim around the head, the clear face,
 the crown gap and three seconds of retention after release. The numerical
 bands and partial credit are in `task.json`. A cap resting beside the head,
-or crumpled on its crown without an encircling rim, cannot receive full credit.
+or crumpled on its crown without an encircling rim, earns no credit. Partial credit requires an encircling rim lowered below the 100 mm height band; the full-fit band remains 75 mm.
 
 The cap is a 0.8 mm native elastic shell with self-contact and a 3 mm rolled
 rim. Young's modulus is 1 MPa; this uncalibrated value approximates silicone.
 The head is rigid. A compliant native pinch forms only when a rim element is
 between closing finger faces. It releases on opening or 8 mm slip, and breaks
-at 40 N or 0.08 Nm. Its uncalibrated translational compliance is 10,000 N/m;
+at 40 N or 0.08 Nm. Its uncalibrated translational stiffness is 40,000 N/m;
 the force cap and 8 mm slip limit remain active. The finite grip connects to the native gripper and transmits reaction loads. The robot
 must stretch, position and release the material; no fitted shape is assigned.
 
