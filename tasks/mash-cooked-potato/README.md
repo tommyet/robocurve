@@ -2,19 +2,19 @@
 
 Mash the cooked potato in the bowl until no large lumps remain. Keep the potato in the bowl.
 
-The native demo scores 1.0 in 723 actions (36.15 seconds). Dream-1 scores 0.0 after the full 2,400-action limit. Both runs pass independent frozen-source audits and their native camera videos were inspected.
+The revised portion requires new native demo and Dream-1 evidence. Earlier 58.32 g runs are retained as development history and do not validate this 129.6 g revision.
 
 ## Setup and reset
 
-About 60 g of peeled, cooked potato in twelve roughly 22 mm cubes, arranged in a 4 × 3 grid in a stainless-steel bowl (200 mm inside diameter, 75 mm deep). A 140 g wire masher has a 75 × 60 mm head and a 180 mm handle. The bowl is centred between the arms; the masher stands on its head 170 mm toward the right arm. Both hands start open.
+About 130 g of peeled, cooked potato in twelve 21–23 mm cubes (120–140 g total), arranged in a 4 × 3 grid in a stainless-steel bowl (200 mm inside diameter, 75 mm deep). A 140 g wire masher has a 75 × 60 mm head and a 180 mm handle. The bowl is centred between the arms; the masher stands on its head 170 mm toward the right arm. Both hands start open.
 
-The native bowl is 300 g. Its centre is 340 mm forward of the station origin; the food grid has 24 mm spacing. The fixed layout, part geometry and masses are in `geometry.py`. The simulated portion is 58.32 g. The tool may be released in the bowl; returning it to the bench is not required.
+The simulated portion is **129.6 g**: twelve clusters of 27 particles, each 0.4 g. Each cluster has a 21.4 mm axial envelope; the coarse spherical particles approximate a solid cooked cube, not hollow food. Twelve ideal 22 mm cubes occupy 127.776 mL; 129.6 g implies 1.014 g/mL, consistent in scale rather than the old 58.32 g mismatch. The bowl is 300 g, centred 340 mm forward; cube centres are 24 mm apart. The tool may be released in the bowl.
 
-Use peeled floury potato from one batch, cut into roughly 22 mm cubes, boiled until a fork passes through easily, drained and cooled to 18–22 °C. Weigh 60 ± 5 g per trial; add no milk, butter or oil. Use fresh pieces and clean the bowl, masher, work surface and food-safe gripper covers between trials. Place the twelve pieces as photographed.
+Use peeled floury potato from one batch. Cut 24 mm raw cubes, simmer for 12–15 minutes until a fork passes through, drain for 2 minutes and cool to 18–22 °C. Select twelve intact cooked cubes with each edge 21–23 mm and combined mass 120–140 g. Reject pieces or the batch if both limits cannot be met. Add no milk, butter or oil. Place them in the photographed 4 × 3 grid. Use fresh pieces and clean the equipment and food-safe gripper covers each trial.
 
 ## Scoring
 
-First weigh the retained potato and the lumps whose largest dimension exceeds 9 mm. Losing over 5% of the starting mass scores 0. Otherwise: 1.0 if at least 95% of retained mass is in lumps no larger than 9 mm and both hands have released for 3 seconds; 0.5 for at least 75%; 0.25 for at least 50%; otherwise 0. A qualifying result still held scores 0.5. Use a 0.1 g kitchen scale and a 9 mm reference grid.
+Losing over 5% of the starting potato mass scores 0. Otherwise weigh retained potato and lumps larger than 9 mm. The fine-mass fraction earns 0.25 at 50%, 0.5 at 75%, and 1.0 at 95% with both hands released for 3 seconds. At 95% while still held, score 0.5; holding never increases a lower score. All other outcomes score 0. Use a 0.1 g kitchen scale and 9 mm reference grid; measure each lump’s largest dimension.
 
 For physical judging, collect and weigh the retained food without further mashing. Gently separate the pieces larger than the grid threshold and weigh them. The fine fraction is `(retained mass − oversized-lump mass) / retained mass`. Judge the largest dimension of each lump, not its orientation on the grid. The native equivalent measures connected components and their largest particle-to-particle extent plus particle diameter. All particles have equal mass.
 

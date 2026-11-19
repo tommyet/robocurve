@@ -4,7 +4,6 @@ from pathlib import Path
 import numpy as np
 from common import rotation,Drawing
 from model import Model
-from geometry import GRIP_ENDS
 HERE=Path(__file__).resolve().parent
 
 def serial(x):
@@ -37,9 +36,9 @@ def main():
    import torch,omni.usd,imageio.v2 as imageio
    from PIL import Image
    from yam_arena import inspect_embodiment as wrapper,scene
-   from yam_arena.constants import TCP_OFFSET,FINGER_JOINTS
    from review_views import configure,images
    if hasattr(m,'configure_station'):m.configure_station()
+   from yam_arena.constants import TCP_OFFSET,FINGER_JOINTS
    scene.PHYSICS_DT=1./480
    original=scene.make_env
    def with_cameras(embodiment,**kwargs):configure(embodiment);return original(embodiment,**kwargs)
@@ -58,7 +57,7 @@ def main():
     out={}
     for side in ['left','right']:
      robot=base.scene[side+'_robot'];idx=list(robot.body_names).index('gripper');pose=array(robot.data.body_link_pose_w)[0,idx];R=rotation(pose[3:]);ids=robot.find_joints(list(FINGER_JOINTS),preserve_order=True)[0];opening=float(np.abs(array(robot.data.joint_pos)[0,ids]).sum()/.094)
-     out[side]=dict(tcp=pose[:3]+R@np.asarray(TCP_OFFSET),rotation=R,opening=opening,joint_positions=array(robot.data.joint_pos)[0,emb._ids[side+'_robot'][0]])
+     out[side]=dict(tcp=pose[:3]+R@np.asarray(TCP_OFFSET),rotation=R,opening=opening,joint_positions=array(robot.data.joint_pos)[0,emb._ids[side+'_robot'][0]],finger_joint_positions=array(robot.data.joint_pos)[0,ids])
     return out
    m.time=-1.
    for _ in range(20):
@@ -80,7 +79,7 @@ def main():
    row=dict(step=step,action14=current,measurements=m.measure(),hands=hands(),state=m.state())
    trace.write(json.dumps(row,default=serial,separators=(',',':'))+'\n')
   capture(0)
-  if m.integrity_failed() or m.score()!=0.:raise RuntimeError("Reset changed task integrity or already earned credit; fix the native reset before a trial.")
+  if m.integrity_failed() or m.score()!=0. or not m.reset_valid():raise RuntimeError("Reset changed task integrity or already earned credit; fix the native reset before a trial.")
   if a.mode=='dream':
    from inspect_robots import Scene
    from dream_policy import make_policy
@@ -102,7 +101,6 @@ def main():
      obs=np.asarray(observed)
      wanted=controller.action(k,wanted,m,obs,hands())
      for tracker in trackers:
-      if k>140:tracker.kp=0.;tracker.ki=.3;tracker.slew=.001
       wanted=tracker.action(wanted,obs,enabled=True)
    elif policy is not None:
     chunk=policy.act(emb._observation());assert len(chunk.actions)==1;wanted=np.asarray(chunk.actions[0].data,float)
@@ -110,11 +108,15 @@ def main():
    if wanted.shape!=(14,) or not np.isfinite(wanted).all():raise ValueError('Invalid ordinary robot action')
    if not a.cpu_preview:wanted=np.clip(wanted,emb._low,emb._high)
    current=current+np.clip(wanted-current,-limit_vector,limit_vector)
-   if not a.cpu_preview:emb._env.step(torch.as_tensor(current[None,:],device=base.device,dtype=torch.float32));emb._t=k/20
+   if not a.cpu_preview:
+    # Recording stride must not change the simulator update schedule.
+    base.render_enabled=True  # Keep normal USD/PhysX synchronization even in diagnostic recordings.
+    emb._env.step(torch.as_tensor(current[None,:],device=base.device,dtype=torch.float32));emb._t=k/20
    m.update(hands())
    if not a.cpu_preview and (k%a.capture_every==0 or k==steps):m.draw(drawing);refresh()
    capture(k);report.update(steps=k,measurements=m.measure(),score=m.score())
    if k%20==0:save();trace.flush()
+   if (a.out/'stop-requested').exists():raise RuntimeError('Diagnostic stopped at a control-step boundary by operator request.')
    if a.mode=='demo' and m.failed:raise RuntimeError('Native task integrity failed; development demo stopped early.')
   report.update(status='complete',events=m.events,score=m.score(),requires_visual_review=True)
  except BaseException as error:

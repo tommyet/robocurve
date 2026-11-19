@@ -1,4 +1,4 @@
-"""Native contact bodies and passive material joints; never attaches a hand.
+"""Native contact bodies and passive material joints; with force-limited pinch constraints.
 
 Scene construction is declarative in geometry.py. Every manipulated object has
 collision geometry, mass and force-limited joints. Only reset writes body poses.
@@ -62,6 +62,8 @@ def spawn(prim_path,cfg,translation=None,orientation=None,**kwargs):
  adjacent.extend(Sdf.Path(root+'/'+name) for name in spec.get('exclude',[]))
  if adjacent:UsdPhysics.FilteredPairsAPI.Apply(prim).CreateFilteredPairsRel().SetTargets(adjacent)
  if index==len(BODIES)-1:
+  from geometry import spawn_surface
+  spawn_surface(stage,root)
   for specj in JOINTS:
    j=UsdPhysics.Joint.Define(stage,root+'/joint_'+specj['name'])
    j.CreateBody0Rel().SetTargets([Sdf.Path(root+'/'+specj['a'])]);j.CreateBody1Rel().SetTargets([Sdf.Path(root+'/'+specj['b'])])
@@ -74,7 +76,9 @@ def spawn(prim_path,cfg,translation=None,orientation=None,**kwargs):
    for axis in ('transX','transY','transZ','rotX','rotY','rotZ'):
     cfgj=specj.get('axes',{}).get(axis,{})
     lo,hi=cfgj.get('limits',(1,-1) if axis.startswith('trans') else (-180,180))
-    lim=UsdPhysics.LimitAPI.Apply(j.GetPrim(),axis);lim.CreateLowAttr(lo);lim.CreateHighAttr(hi)
+    # A full-turn axis is free; +/-180 is an invalid PhysX swing limit.
+    if not (axis.startswith('rot') and lo<=-180 and hi>=180):
+     lim=UsdPhysics.LimitAPI.Apply(j.GetPrim(),axis);lim.CreateLowAttr(lo);lim.CreateHighAttr(hi)
     if 'stiffness' in cfgj:
      # Geometry coefficients are SI torque/radian (and torque*s/radian).
      # USD angular drives instead use torque/degree; limits/targets stay degrees.

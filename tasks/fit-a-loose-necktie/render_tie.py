@@ -5,7 +5,7 @@ from material import RADIUS,KNOT_X
 class Drawing:
     def __init__(self,stage):
         from pxr import UsdGeom,UsdShade,Sdf,Gf
-        self.meshes={};self.topology_written=set();self.last_points={}
+        self.meshes={};self.topology_written=set();self.last_points={};self.last_faces={}
         for name,color in [('wide',(.50,.06,.13)),('narrow',(.38,.035,.08)),('band',(.50,.06,.13)),('knot',(.55,.07,.15)),('stripe',(.85,.63,.18))]:
             path='/World/PreparedTie/'+name;mesh=UsdGeom.Mesh.Define(stage,path);mesh.CreateSubdivisionSchemeAttr('none');mesh.CreateDoubleSidedAttr(True)
             mat=UsdShade.Material.Define(stage,path+'/Material');shader=UsdShade.Shader.Define(stage,path+'/Material/Surface');shader.CreateIdAttr('UsdPreviewSurface');shader.CreateInput('diffuseColor',Sdf.ValueTypeNames.Color3f).Set(Gf.Vec3f(*color));shader.CreateInput('roughness',Sdf.ValueTypeNames.Float).Set(.75);mat.CreateSurfaceOutput().ConnectToSource(shader.ConnectableAPI(),'surface');UsdShade.MaterialBindingAPI.Apply(mesh.GetPrim()).Bind(mat);self.meshes[name]=mesh
@@ -14,8 +14,8 @@ class Drawing:
         m=self.meshes[name];p=np.asarray(points,dtype=np.float32)
         if name not in self.last_points or not np.array_equal(p,self.last_points[name]):
             m.GetPointsAttr().Set(Vt.Vec3fArray(p.tolist()));self.last_points[name]=p.copy()
-        if name not in self.topology_written:
-            m.GetFaceVertexCountsAttr().Set([3]*len(faces));m.GetFaceVertexIndicesAttr().Set(np.asarray(faces,int).ravel().tolist());self.topology_written.add(name)
+        if name not in self.last_faces or not np.array_equal(self.last_faces[name],faces):
+            m.GetFaceVertexCountsAttr().Set([3]*len(faces));m.GetFaceVertexIndicesAttr().Set(np.asarray(faces,int).ravel().tolist());self.topology_written.add(name);self.last_faces[name]=np.asarray(faces).copy()
     def strip(self,name,centers,widths,directions):
         c=np.asarray(centers);w=np.broadcast_to(widths,(len(c),));d=np.broadcast_to(directions,c.shape);points=np.stack([c-d*w[:,None]/2,c+d*w[:,None]/2],axis=1).reshape(-1,3);f=[]
         for i in range(len(c)-1):a=2*i;f.extend([[a,a+1,a+2],[a+1,a+3,a+2]])
@@ -23,10 +23,12 @@ class Drawing:
     def update(self,tie):
         u=np.linspace(0,1,51);direction=tie.wide_direction
         width_dir=np.array([np.sin(tie.wide_twist),np.cos(tie.wide_twist),0.]);width_dir-=width_dir.dot(direction)*direction;width_dir/=max(np.linalg.norm(width_dir),1e-9)
-        wide=tie.wide_root+u[:,None]*tie.wide_length*direction
+        wide=tie.wide_root+u[:,None]*tie.wide_length*direction if tie.threaded else tie.loose.points
+        u=np.linspace(0,1,len(wide))
         widths=np.interp(u,[0.,.75,.90,1.],[.036,.066,.070,0.])
         self.strip('wide',wide,widths,width_dir)
         self.strip('stripe',wide+width_dir[None,:]*(widths[:,None]*.35)+[-.0005,0,0],.002,width_dir)
+        u=np.linspace(0,1,51)
         self.strip('narrow',tie.narrow_root+u[:,None]*tie.narrow_direction*tie.narrow_length,np.interp(u,[0,.88,1],[.035,.035,0]),[0,1,0])
         # Prepared neckband: gravity drape along the collar and two straight
         # front segments. No shoulder or invisible external support is added.

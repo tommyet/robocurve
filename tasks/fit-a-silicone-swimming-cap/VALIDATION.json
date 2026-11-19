@@ -1,0 +1,13 @@
+{
+  "status": "development_paused_pending_full_demo",
+  "submission_ready": false,
+  "demo": null,
+  "dream": null,
+  "latest_native_trial": "cap-full-061",
+  "latest_source": "native-batch-177",
+  "latest_trial_status": "complete",
+  "latest_steps": 640,
+  "latest_score": 0,
+  "blocker": "Cap comes off during withdrawal. No released full-score fitting or completed Dream baseline has been demonstrated.",
+  "checked_utc": "2026-11-19T09:04:16.303787+00:00"
+}

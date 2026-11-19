@@ -1,127 +1,97 @@
-"""A coupled approximation of the flattened spring frames and flexible sewn mesh.
+"""Native elastic frame, sewn flexible mesh and an attached retaining band.
 
-The remaining task is the characteristic twist-and-nest fold. No hinges select
-its final shape and no stage variable changes the frame rest angles.
+The four flattened spring frames are aggregated: their bending stiffness and
+mass add. Inter-layer slip is omitted. No rest shape changes during the trial.
 """
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
-N=12;A=.165;B=.265;CENTER=np.array([.29,0,TABLE+.112])
-# An open rest keeps the pickup height without obstructing the downward
-# part of the twist. The real fixture is a wooden base with two narrow rails.
-BODIES.append(body("folding_stand",[.29,0,TABLE+.005],[box((.350,.380,.010)),box((.020,.380,.090),(-.165,0,.050)),box((.020,.380,.090),(.165,0,.050))],mass=1.6,fixed=True,color=(.58,.40,.25)))
-# A rounded rectangle sampled at equal arclength, 33 x 53 cm overall.
+for side,y in [("left",.305),("right",-.305)]:
+ BODIES.append(body(side+"_arm_riser",[0,y,TABLE+.050],[box((.12,.12,.100))],fixed=True,mass=5.,color=(.25,.27,.29)))
+CENTER=np.array([.29,0,TABLE+.112]);N=96
+# Four short-edge rests support the pickup areas and leave the centre clear.
+for sx in [-1,1]:
+ for sy in [-1,1]:
+  BODIES.append(body(f'folding_rest_{sx+1}_{sy+1}',[.29+sx*.065,sy*.265,TABLE+.050],[box((.020,.020,.100))],mass=.08,fixed=True,color=(.58,.40,.25)))
 def rounded_rect(a,b,r=.025):
- points=[]
+ pts=[]
  for cx,cy,start in [(a-r,b-r,0),(-a+r,b-r,90),(-a+r,-b+r,180),(a-r,-b+r,270)]:
-  for angle in np.linspace(start,start+90,50,endpoint=False):
-   t=np.radians(angle);points.append([cx+r*np.cos(t),cy+r*np.sin(t)])
- p=np.array(points);p=np.vstack([p,p[0]]);length=np.linalg.norm(np.diff(p,axis=0),axis=1);arc=np.r_[0,np.cumsum(length)];u=(np.linspace(0,arc[-1],N,endpoint=False)-.0304)%arc[-1]
+  for angle in np.linspace(start,start+90,60,endpoint=False):
+   t=np.radians(angle);pts.append([cx+r*np.cos(t),cy+r*np.sin(t)])
+ p=np.array(pts);p=np.vstack([p,p[0]]);length=np.linalg.norm(np.diff(p,axis=0),axis=1);arc=np.r_[0,np.cumsum(length)];u=(np.linspace(0,arc[-1],N,endpoint=False)-.0304)%arc[-1]
  return np.c_[np.interp(u,arc,p[:,0]),np.interp(u,arc,p[:,1])]
-P=rounded_rect(A,B)
-FRAMES=[np.c_[P,np.full(N,face*.004)]+CENTER for face in range(4)]
-# Aggregate the four flattened frame layers into one elastic strip. Its mass
-# and rotational stiffness are the sums of the four parallel frames. Relative
-# inter-layer slip is omitted; twisting, bending, collisions and spring-back remain.
-for face in range(1):
- points=np.c_[P,np.full(N,.006)]+CENTER
+P=rounded_rect(.165,.265);t=np.roll(P,-1,axis=0)-np.roll(P,1,axis=0);t/=np.linalg.norm(t,axis=1)[:,None];inside=np.c_[-t[:,1],t[:,0]]
+FRAME_POINTS=np.vstack([np.c_[P+inside*.002,np.full(N,.006)],np.c_[P-inside*.002,np.full(N,.006)]])+CENTER
+FRAME_TRIS=[]
+for i in range(N):
+ j=(i+1)%N;FRAME_TRIS += [[i,j,N+i],[j,N+j,N+i]]
+LEVELS=6;CLOTH_POINTS=[CENTER+[0,0,.006]];CLOTH_TRIS=[]
+for level in range(1,LEVELS+1):
+ for xy in (P+inside*.002)*level/LEVELS:CLOTH_POINTS.append(CENTER+[*xy,.006])
+for i in range(N):CLOTH_TRIS.append([0,1+i,1+(i+1)%N])
+for level in range(LEVELS-1):
  for i in range(N):
-  a,b=points[i],points[(i+1)%N];v=b-a;length=np.linalg.norm(v);x=v/length;z=np.array([0,0,1]);y=np.cross(z,x);R=np.column_stack([x,y,z]);name=f'wire_{face}_{i:02d}'
-  BODIES.append(body(name,(a+b)/2,[box((length,.008,.015))],mass=4*(8000*length*.004*.00045+300*length*.008*.003),color=(.13,.29,.44),quat=list(Rotation.from_matrix(R).as_quat()),friction=1.,contact_offset=.0001))
- for i in range(N):
-  a=f'wire_{face}_{i:02d}';b=f'wire_{face}_{(i+1)%N:02d}';aa=next(q for q in BODIES if q['name']==a);bb=next(q for q in BODIES if q['name']==b)
-  # Discrete beam stiffness for the same four 4 x 0.45 mm steel strips
-  # used in the mass estimate. E and nu are generic steel assumptions,
-  # not measurements of a particular retail hamper.
-  width,thick,E,nu=.004,.00045,200e9,.3
-  length=(aa['shapes'][0]['size'][0]+bb['shapes'][0]['size'][0])/2
-  J=width*thick**3/3*(1-.63*thick/width*(1-thick**4/(12*width**4)))
-  stiffness={'rotX':4*E/(2*(1+nu))*J/length,'rotY':4*E*width*thick**3/(12*length),'rotZ':4*E*thick*width**3/(12*length)}
-  axes={k:dict(limits=(-179,179),stiffness=s,damping=.0005) for k,s in stiffness.items()}
-  JOINTS.append(joint(f'wire_joint_{face}_{i}',a,b,[aa['shapes'][0]['size'][0]/2,0,0],[-bb['shapes'][0]['size'][0]/2,0,0],axes=axes,break_force=400.,break_torque=6.))
-# Flattened mesh layers share a flexible bar-and-node net. Its 60 g mass
-# equals the four earlier cloth layers. Links preserve thread lengths while
-# freely rotating nodes permit folding and shear. Inter-layer slip and mesh
-# shear resistance are omitted; the frame still supplies bending resistance.
-NX,NY=3,5;DX=.31/NX;DY=.51/NY
-def cloth_ball_axes():
- # These thread/node connections have no bending stiffness. In particular,
- # an arbitrary spin of a tiny cloth node must not meet a 179-degree stop.
- return {axis:dict(limits=(-180,180)) for axis in ('rotX','rotY','rotZ')}
-for i in range(NX+1):
- for j in range(NY+1):
-  name=f'mesh_0_{i}_{j}';pos=CENTER+[(i-NX/2)*DX,(j-NY/2)*DY,.006]
-  BODIES.append(body(name,pos,[box((.004,.004,.004))],mass=.0006,color=(.26,.46,.61),friction=.6,contact_offset=.00025))
-for i in range(NX+1):
- for j in range(NY+1):
-  name=f'mesh_0_{i}_{j}';node=next(b for b in BODIES if b['name']==name)
-  for di,dj in [(1,0),(0,1)]:
-   if i+di>NX or j+dj>NY:continue
-   # Boundary cloth follows its sewn wire. A second rigid edge bar spanning
-   # a wire bend would spuriously lock that bend and tear during folding.
-   if (di==0 and i in (0,NX)) or (dj==0 and j in (0,NY)):continue
-   other=f'mesh_0_{i+di}_{j+dj}';end=next(b for b in BODIES if b['name']==other)
-   a,b=np.array(node['pos']),np.array(end['pos']);v=b-a;length=np.linalg.norm(v)
-   rot=Rotation.align_vectors([v/length],[[1,0,0]])[0];link=f'cloth_link_{i}_{j}_{di}_{dj}'
-   # Cloth carries tension but folds under compression. Two freely hinged
-   # half-links allow each coarse thread span to buckle independently.
-   for half,u in enumerate((.25,.75)):
-    BODIES.append(body(link+'_'+str(half),a+u*v,[box((length/2,.0024,.0024))],mass=.0006,color=(.26,.46,.61),quat=rot.as_quat().tolist(),friction=.6))
-   JOINTS.append(joint(link+'_bend',link+'_0',link+'_1',[length/4,0,0],[-length/4,0,0],axes=cloth_ball_axes(),break_force=40.))
-   for side,target,x in [(0,name,-length/4),(1,other,length/4)]:
-    axes=cloth_ball_axes()
-    # Finite axial compliance lets a coarse straight cloth edge accommodate
-    # wire curvature: at most 6 mm total extension per approximately 10 cm link.
-    axes['transX']=dict(limits=(-.003,.003),stiffness=2000.,damping=.03)
-    JOINTS.append(joint(f'fabric_{i}_{j}_{di}_{dj}_{side}',link+'_'+str(side),target,[x,0,0],[0,0,0],axes=axes,break_force=40.))
-  if i in [0,NX] or j in [0,NY]:
-   pos=np.array(node['pos']);wires=[b for b in BODIES if b['name'].startswith('wire_')]
-   wire=min(wires,key=lambda b:np.linalg.norm(pos-np.asarray(b['pos'])))
-   JOINTS.append(joint(f'edge_0_{i}_{j}',wire['name'],name,Rotation.from_quat(wire['quat']).inv().apply(pos-wire['pos']),[0,0,0],axes=cloth_ball_axes(),break_force=50.))
-# Links incident on the same sewn node overlap at that shared endpoint.
-# Ignore only those local neighbour contacts; non-neighbour fabric and frame
-# pieces still collide when folded.
-from collections import defaultdict
-incident=defaultdict(set)
-for j in JOINTS:
- if j['name'].startswith(('fabric_','edge_')):
-  a,b=j['a'],j['b']
-  if a.startswith('mesh_'):incident[a].add(b)
-  if b.startswith('mesh_'):incident[b].add(a)
-for neighbours in incident.values():
- for name in neighbours:
-  part=next(b for b in BODIES if b['name']==name)
-  part.setdefault('exclude',[]).extend(sorted(neighbours-{name}))
-# The 16 omitted boundary-bar masses belong to the sewn frame binding.
-for part in BODIES:
- if part['name'].startswith('wire_'):part['mass']+=16*.0012/N
-# Attached elastic retaining loop; it must be stretched over the folded packet.
-EN=32;ER=.300/(2*np.pi)
-anchor=next(b for b in BODIES if b['name']=='wire_0_00')
-t=np.pi;E=np.array(anchor['pos'])-np.array([ER*(np.cos(t)+np.cos(t+2*np.pi/EN))/2,ER*(np.sin(t)+np.sin(t+2*np.pi/EN))/2,0])
-for i,t in enumerate(np.arange(EN)*2*np.pi/EN):
- a=E+[ER*np.cos(t),ER*np.sin(t),0];b=E+[ER*np.cos(t+2*np.pi/EN),ER*np.sin(t+2*np.pi/EN),0];v=b-a;R=Rotation.align_vectors([v/np.linalg.norm(v)],[[1,0,0]])[0]
- BODIES.append(body(f'elastic_{i:02d}',(a+b)/2,[box((np.linalg.norm(v),.005,.001))],mass=.00015,color=(.08,.10,.14),quat=list(R.as_quat()),friction=1.,contact_offset=.0001))
-for i in range(EN):
- a=next(b for b in BODIES if b['name']==f'elastic_{i:02d}');b=next(b for b in BODIES if b['name']==f'elastic_{(i+1)%EN:02d}')
- axes=bend_axes(.0000005,.0000002);axes['transX']=dict(limits=(-.001,.010),stiffness=1280.,damping=.01)
- JOINTS.append(joint('elastic_joint_'+str(i),a['name'],b['name'],[a['shapes'][0]['size'][0]/2,0,0],[-b['shapes'][0]['size'][0]/2,0,0],axes=axes,break_force=25.))
-# A single sewn attachment to the frame. Layout is folded back through this point.
-a=next(b for b in BODIES if b['name']=='wire_0_00');b=next(b for b in BODIES if b['name']=='elastic_16');point=(np.array(a['pos'])+b['pos'])/2
-JOINTS.append(joint('retainer_attachment',a['name'],b['name'],Rotation.from_quat(a['quat']).inv().apply(point-a['pos']),Rotation.from_quat(b['quat']).inv().apply(point-b['pos']),axes=bend_axes(.000001,.000001),break_force=25.))
-# Face the long dimension toward the arms for short-edge pickup.
-layout=Rotation.from_euler('z',0,degrees=True)
-for part in BODIES:
- part['pos']=(CENTER+layout.apply(np.asarray(part['pos'])-CENTER)).tolist()
- part['quat']=(layout*Rotation.from_quat(part.get('quat',[0,0,0,1]))).as_quat().tolist()
-GRIP_ENDS=(1,7)
-FRAME_LAYERS=(0,)
-# Finite rubber-pad contact area supplies native spin friction at a grip.
-for part in BODIES:
- if part['name'].startswith('wire_'):part.update(torsional_patch_radius=.004,min_torsional_patch_radius=.0015,contact_offset=.0005,max_angular_velocity=10.,speculative_ccd=True)
- # Regularize the very small axial inertia of slender collision proxies.
- # Mass, length, spring stiffness and break loads remain unchanged. This is
- # an explicit numerical approximation, not calibrated steel/cloth inertia.
- if part['name'].startswith(('wire_','cloth_link_')):
-  x,y,z=part['shapes'][0]['size'];I=part['mass']/12*np.array([y*y+z*z,x*x+z*z,x*x+y*y])
-  part['inertia']=np.maximum(I,I.max()/20).tolist()
+  a=1+level*N+i;b=1+level*N+(i+1)%N;c=a+N;d=b+N;CLOTH_TRIS += [[a,c,d],[a,d,b]]
+M=64;radius=.300/(2*np.pi);anchor=FRAME_POINTS[N];out=np.r_[-inside[0],0.];tangent=np.cross([0,0,1],out);centre=anchor+out*(radius+.012)
+TAB_POINTS=np.array([anchor,anchor+out*.006+tangent*.002,anchor+out*.012,anchor+out*.006-tangent*.002])
+TAB_TRIS=[[0,1,2],[0,2,3]]
+BAND_POINTS=[];BAND_TRIS=[]
+for r in [radius-.0025,radius,radius+.0025]:
+ for i in range(M):
+  angle=i*2*np.pi/M;BAND_POINTS.append(centre+r*(out*np.cos(angle)+tangent*np.sin(angle)))
+for row in range(2):
+ for i in range(M):
+  a=row*M+i;b=row*M+(i+1)%M;c=a+M;d=b+M;BAND_TRIS += [[a,b,c],[b,d,c]]
+SURFACES=[dict(name='tab',points=TAB_POINTS,tris=TAB_TRIS,mass=.0002,youngs=2e7,poisson=.3,thickness=.0005,friction=.5,rest_offset=.00025,contact_offset=.0006,color=(.13,.29,.44)),
+ dict(name='frame',points=FRAME_POINTS,tris=FRAME_TRIS,mass=.041,youngs=8e11,poisson=.3,thickness=.00020,friction=1.2,rest_offset=.0035,contact_offset=.0045,color=(.13,.29,.44)),
+ dict(name='cloth',points=CLOTH_POINTS,tris=CLOTH_TRIS,mass=.060,youngs=8e6,poisson=.3,thickness=.0003,friction=.4,rest_offset=.00015,contact_offset=.0007,color=(.28,.47,.62)),
+ dict(name='band',points=BAND_POINTS,tris=BAND_TRIS,mass=.004,youngs=4e5,poisson=.45,thickness=.001,friction=1.,rest_offset=.0005,contact_offset=.001,color=(.10,.11,.13))]
+for s in SURFACES:
+ s['points']=np.asarray(s['points']);s['tris']=np.asarray(s['tris']);s['edges']=np.unique(np.sort(np.concatenate([s['tris'][:,[0,1]],s['tris'][:,[1,2]],s['tris'][:,[2,0]]]),axis=1),axis=0);s['rest_lengths']=np.linalg.norm(s['points'][s['edges'][:,0]]-s['points'][s['edges'][:,1]],axis=1)
+# Overlapping capsule ends keep the 7 mm binding continuous at segment joins.
+# USD capsule height is its cylinder length, excluding its hemispherical ends.
+# They are passive task material, attached to the elastic frame, never to a hand.
+HEM_ATTACHMENTS=[]
+for i in range(N):
+ j=(i+1)%N;a=(FRAME_POINTS[i]+FRAME_POINTS[N+i])/2;b=(FRAME_POINTS[j]+FRAME_POINTS[N+j])/2
+ tangent=(b-a)/np.linalg.norm(b-a);orientation=Rotation.align_vectors([tangent],[[0,0,1]])[0];centre=(a+b)/2;name=f'bound_edge_{i:03d}'
+ spec=body(name,centre,[dict(kind='capsule',radius=.0035,length=float(np.linalg.norm(b-a)),pos=[0,0,0],quat=[0,0,0,1])],mass=.038/N,quat=orientation.as_quat().tolist(),color=(.13,.29,.44),friction=1.2,contact_offset=.0004,torsional_patch_radius=.004,min_torsional_patch_radius=.002)
+ spec['exclude']=['frame','cloth','tab',f'bound_edge_{(i-1)%N:03d}',f'bound_edge_{j:03d}'];BODIES.append(spec)
+ ids=[i,j,N+i];local=orientation.inv().apply(FRAME_POINTS[ids]-centre)
+ HEM_ATTACHMENTS.append((name,ids,local))
+GRIP_INDICES=(11,60);GRIP_BODIES=tuple(f'bound_edge_{i:03d}' for i in GRIP_INDICES)
+GRIP_POINTS=np.asarray([next(b['pos'] for b in BODIES if b['name']==name) for name in GRIP_BODIES])
 finalize(BODIES,JOINTS)
+
+def spawn_surface(stage,root):
+ from pxr import UsdGeom,UsdPhysics,PhysxSchema,UsdShade,Gf,Vt,Sdf
+ for s in SURFACES:
+  path=root+'/'+s['name'];mesh=UsdGeom.Mesh.Define(stage,path);mesh.CreatePointsAttr(Vt.Vec3fArray(s['points'].astype(np.float32).tolist()));mesh.CreateFaceVertexCountsAttr([3]*len(s['tris']));mesh.CreateFaceVertexIndicesAttr(s['tris'].ravel().tolist());mesh.CreateSubdivisionSchemeAttr('none');mesh.CreateDoubleSidedAttr(True);p=mesh.GetPrim()
+  for api in ['OmniPhysicsDeformableBodyAPI','OmniPhysicsSurfaceDeformableSimAPI','PhysxSurfaceDeformableBodyAPI']:
+   if not p.ApplyAPI(api):raise RuntimeError('Required native surface API unavailable: '+api)
+  p.GetAttribute('omniphysics:mass').Set(s['mass']);p.GetAttribute('omniphysics:restShapePoints').Set(Vt.Vec3fArray(s['points'].astype(np.float32).tolist()));p.GetAttribute('omniphysics:restTriVtxIndices').Set(Vt.Vec3iArray(s['tris'].tolist()));p.GetAttribute('physxDeformableBody:selfCollision').Set(True);p.GetAttribute('physxDeformableBody:solverPositionIterationCount').Set(64);p.GetAttribute('physxDeformableBody:enableSpeculativeCCD').Set(True);p.GetAttribute('physxDeformableBody:linearDamping').Set(.2)
+  UsdPhysics.CollisionAPI.Apply(p);c=PhysxSchema.PhysxCollisionAPI.Apply(p);c.CreateContactOffsetAttr(s['contact_offset']);c.CreateRestOffsetAttr(s['rest_offset'])
+  mat=UsdShade.Material.Define(stage,path+'Material');q=mat.GetPrim()
+  for api in ['OmniPhysicsBaseMaterialAPI','OmniPhysicsDeformableMaterialAPI','OmniPhysicsSurfaceDeformableMaterialAPI','PhysxSurfaceDeformableMaterialAPI']:q.ApplyAPI(api)
+  values={'omniphysics:dynamicFriction':s['friction'],'omniphysics:density':1100.,'omniphysics:youngsModulus':s['youngs'],'omniphysics:poissonsRatio':s['poisson'],'omniphysics:surfaceThickness':s['thickness'],'omniphysics:surfaceBendStiffness':s['youngs']/(12*(1-s['poisson']**2)),'physxDeformableMaterial:elasticityDamping':.02,'physxDeformableMaterial:bendDamping':.01}
+  for key,value in values.items():q.GetAttribute(key).Set(value)
+  sh=UsdShade.Shader.Define(stage,path+'Material/Surface');sh.CreateIdAttr('UsdPreviewSurface');sh.CreateInput('diffuseColor',Sdf.ValueTypeNames.Color3f).Set(Gf.Vec3f(*s['color']));sh.CreateInput('roughness',Sdf.ValueTypeNames.Float).Set(.8);mat.CreateSurfaceOutput().ConnectToSource(sh.ConnectableAPI(),'surface');binding=UsdShade.MaterialBindingAPI.Apply(p);binding.Bind(mat);binding.Bind(mat,UsdShade.Tokens.weakerThanDescendants,'physics')
+ # Cloth is sewn to the inner edge. Exclude only this frame/cloth pair;
+ # each surface still self-collides and the retaining band collides with both.
+ UsdPhysics.FilteredPairsAPI.Apply(stage.GetPrimAtPath(root+'/frame')).CreateFilteredPairsRel().AddTarget(Sdf.Path(root+'/cloth'))
+ def attach(name,a,b,ia,ib):
+  p=stage.DefinePrim(root+'/'+name,'OmniPhysicsVtxVtxAttachment');p.GetRelationship('omniphysics:src0').SetTargets([Sdf.Path(root+'/'+a)]);p.GetRelationship('omniphysics:src1').SetTargets([Sdf.Path(root+'/'+b)]);p.GetAttribute('omniphysics:vtxIndicesSrc0').Set(ia);p.GetAttribute('omniphysics:vtxIndicesSrc1').Set(ib)
+ attach('sewn_boundary','frame','cloth',list(range(N)),list(range(1+(LEVELS-1)*N,1+LEVELS*N)))
+ # A 12 mm textile tab separates the sewn contact regions. The band still
+ # collides with the packet, which is essential to its retaining function.
+ for a,b in [('frame','tab'),('band','tab')]:
+  UsdPhysics.FilteredPairsAPI.Apply(stage.GetPrimAtPath(root+'/'+a)).CreateFilteredPairsRel().AddTarget(Sdf.Path(root+'/'+b))
+ attach('tab_seam','frame','tab',[N],[0])
+ attach('band_seam','tab','band',[2],[M+M//2])
+
+ # Native two-way coupling transfers sleeve contact forces to the spring strip.
+ for name,ids,local in HEM_ATTACHMENTS:
+  p=stage.DefinePrim(root+'/sewn_'+name,'OmniPhysicsVtxXformAttachment')
+  p.GetRelationship('omniphysics:src0').SetTargets([Sdf.Path(root+'/frame')])
+  p.GetRelationship('omniphysics:src1').SetTargets([Sdf.Path(root+'/'+name)])
+  p.GetAttribute('omniphysics:vtxIndicesSrc0').Set(ids)
+  p.GetAttribute('omniphysics:localPositionsSrc1').Set(Vt.Vec3fArray(local.astype(np.float32).tolist()))

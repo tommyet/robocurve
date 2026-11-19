@@ -5636,3 +5636,16 @@ editing, merge both agents' findings, and commit/push the update with the work.
   budget. Check nearby earmuff fitting, ear thermometry, rope plaiting and our
   own hoop/knot tasks before choosing a build. No direct match was found in this
   audit; no acceptance or simulator feasibility is claimed.
+
+
+## 2026-11-19 — revision priority and resumed compute
+
+The user resumed work and authorized concurrent RunPod GPUs and 2–3x spending when it saves time. First handle active reviewer requests; do not resubmit finally rejected ideas or change tasks already pending review. The organizer announced a move to human final decisions after revisions; address all explicit feedback together.
+
+- Fresh PR/board audit at13:25UTC identified five own revisions:2561 muffin preparation,2510 avocado mechanical screening,2558 potato mass/size mismatch,2860 ponytail secure retention,2168 necktie substantive threading. Cake1919 is already pending; bracelet2187 merged. Full exact comments and current v24 prompt are retained privately under artifacts/revisions-and-personal-care-2026-11-19.
+- Muffin2561: documentation-only revision44d66e8 receivedTK-8BPLSU. Fixed plain recipe,52g batter, oven/cooling protocol, physical size/mass gates, batch spare and clean food-safe covers. Sim source and media unchanged; no claim of physical recipe calibration.
+- Avocado2510: documentation-only revisionee025a0 receivedTK-JSQH6J. Destructive firmness testing is confined to the discarded companion half; extraction range is sampled on sacrificial batch fruit. A1N trial-stone proof load rejects loose stones. The individual release threshold cannot be known nondestructively; this limitation is explicit. Partial-credit wording agrees with scorer.
+- Potato: revised source uses129.6g for twelve nominal21.4mm clusters, replacing58.32g. New evidence is required; no revised submission yet. Held results never exceed the existing partial-credit tier.
+- Ponytail: a1N,3-second axial retention test is being added; a loose encircling band must not earn credit. New native evidence and repeatable head/lock preparation are required.
+- Necktie: unfinished wide-blade threading prototype is under CPU development. No new native evidence, no revised submission.
+- New RTX5090 pod kfhziipfw9gh22, $0.69/hour, started13:30:49UTC; finite watchdog deadline is in the new lifecycle file. Failed4090 request created no Pod. Keep all run/source backups and delete this owned Pod at completion. Previous Pod remains deleted.

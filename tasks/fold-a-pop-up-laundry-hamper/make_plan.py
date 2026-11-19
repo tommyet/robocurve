@@ -1,28 +1,52 @@
-"""Pinch opposite bound ends from outside, then counter-twist and nest."""
+"""Opposite short-edge grips, counter-twist and three-loop folding probe."""
 from pathlib import Path
-import numpy as np,json
+import json,numpy as np
 from scipy.spatial.transform import Rotation as Rot
+from geometry import GRIP_POINTS,CENTER
 from planner import Plan
-from geometry import BODIES,GRIP_ENDS,FRAME_LAYERS,CENTER
-p=Plan();base=np.array([[0,-1,0],[0,0,-1],[1,0,0.]])
-flip=np.eye(3)
-points=[np.mean([b['pos'] for b in BODIES if b['name'] in [f'wire_{f}_{i:02d}' for f in FRAME_LAYERS]],axis=0) for i in GRIP_ENDS]
-def stack_grip(angle, polarity=1.):
- a=np.radians(angle);z=np.array([np.cos(a),np.sin(a),0.]);x=np.array([0.,0.,polarity]);return np.column_stack([x,np.cross(z,x),z])
-RL=stack_grip(-50)
-RR=stack_grip(50,-1)
-L=points[0]-.001*RL[:,2];R=points[1]-.001*RR[:,2]
-p.add(3,'approach opposite frame ends from outside',{'left':(L-.035*RL[:,2],RL,.3),'right':(R-.035*RR[:,2],RR,.3)},'joint')
-p.add(2,'enclose the four stacked frame edges',{'left':(L,RL,.3),'right':(R,RR,.3)})
-p.add(2,'grip both seams',{'left':(L,RL,0.),'right':(R,RR,0.)})
-p.add(6,'lift the bound ends before turning the wrists',{'left':(points[0]+[0,-.025,.14]-.001*RL[:,2],RL,0.),'right':(points[1]+[0,.025,.14]-.001*RR[:,2],RR,0.)})
-for step in range(1,7):
- u=step/6
- twist=min(1.,2*u)
- left=Rot.from_euler('x',90*twist,degrees=True).as_matrix()@RL
- right=Rot.from_euler('x',-90*twist,degrees=True).as_matrix()@RR
- lp=points[0]+[0,-.025-.215*u*u,.14+.06*u]-.001*left[:,2]
- rp=points[1]+[0,.025+.215*u*u,.14+.06*u]-.001*right[:,2]
- p.add(1.5,'turn the ends before bringing the loops together',{'left':(lp,left,0.),'right':(rp,right,0.)})
-p.add(3,'hold the twisted frame for inspection',{})
+p=Plan()
+def grip(angle,sign):
+ a=np.radians(angle);z=np.array([np.cos(a),np.sin(a),0.]);x=np.array([0.,0.,sign]);return np.column_stack([x,np.cross(z,x),z])
+RL=grip(-50,-1);RR=grip(50,-1);L,R=GRIP_POINTS
+p.add(3,'approach opposite bound ends',{'left':(L-.04*RL[:,2],RL,.3),'right':(R-.04*RR[:,2],RR,.3)},'joint')
+p.add(2,'enclose the bound edges',{'left':(L,RL,.25),'right':(R,RR,.25)})
+p.add(2,'grip the spring frames',{'left':(L,RL,.10),'right':(R,RR,.10)})
+p.add(4,'lift the flattened hamper',{'left':(L+[0,-.015,.10],RL,.10),'right':(R+[0,.015,.10],RR,.10)})
+for i in range(1,9):
+ u=i/8;a=Rot.from_euler('y',90*u,degrees=True).as_matrix()@grip(-50-30*u,-1);b=Rot.from_euler('y',-90*u,degrees=True).as_matrix()@grip(50+30*u,-1)
+ lp=L+[.025*np.sin(np.pi*u),-.015-.160*u,.10+.020*u];rp=R+[-.025*np.sin(np.pi*u),.015+.160*u,.10+.020*u]
+ p.add(1.5,'counter-twist and bring the loops together',{'left':(lp,a,.10),'right':(rp,b,.10)})
+for i in range(1,9):
+ u=i/8;a=Rot.from_euler('y',90+75*u,degrees=True).as_matrix()@grip(-80,-1);b=Rot.from_euler('y',-90-75*u,degrees=True).as_matrix()@grip(80,-1)
+ lp=L+[.035*u,-.175-.105*u,.12-.08*u];rp=R+[-.035*u,.175+.105*u,.12-.10*u]
+ p.add(1.5,'finish the counter-twist and nest the loops',{'left':(lp,a,.10),'right':(rp,b,.10)})
+from common import down,TABLE
+# Lower the central crossing, then lay the two upright outer loops down.
+# These are ordinary hand motions; every frame/cloth point stays native.
+lp=lp.copy();rp=rp.copy();lp[2]=TABLE+.028;rp[2]=TABLE+.012
+p.add(6,'lower the nested loops against the table',{'left':(lp,a,.10),'right':(rp,b,.10)})
+p.add(1,'hold the central crossing',{})
+p.add(1,'release the right edge above the table',{'right':(rp,b,.20)})
+p.add(2,'clear the right fingers',{'right':(rp+[0,0,.085],b,.20)})
+p.add(3,'approach the right outer loop',{'right':([.40,0,1.00],grip(80,-1),.07)})
+p.add(6,'stack the right loop',{'right':([.32,-.045,TABLE+.045],grip(80,-1),.07)})
+p.add(1,'hold the first outer loop down',{})
+p.add(1,'release the left edge',{'left':(lp,a,.20)})
+p.add(2,'clear the left fingers',{'left':(lp+[0,0,.085],a,.20)})
+p.add(3,'approach the left outer loop',{'left':([.20,0,1.00],grip(-80,1),.07)})
+p.add(6,'stack the left loop',{'left':([.29,.045,TABLE+.045],grip(-80,1),.07)})
+p.add(4,'inspect the flat packet while both hands press',{})
+# Retain the compact coils with their ordinary attached elastic loop.
+p.add(2,'hold the packet beside the retaining path',{'right':([.385,-.025,TABLE+.045],grip(80,-1),.07)})
+p.add(2,'clear the left hand for the retainer',{'left':([.29,.14,TABLE+.16],grip(-80,1),.45)})
+p.add(3,'approach the loose retaining loop',{'left':([.29,.11,TABLE+.055],grip(-80,1),.35)})
+p.add(2,'pinch the retaining loop',{'left':([.29,.11,TABLE+.055],grip(-80,1),.05)})
+p.add(3,'lift the retaining loop over the packet',{'left':([.29,.11,1.02],grip(-80,1),.05)})
+p.add(5,'stretch the loop across the packet',{'left':([.29,-.15,1.00],grip(-80,1),.05)})
+p.add(4,'slip the loop below the far edge',{'left':([.29,-.15,TABLE+.018],grip(-80,1),.05)})
+p.add(1,'release the retaining loop',{'left':([.29,-.15,TABLE+.018],grip(-80,1),.25)})
+p.add(3,'clear the left fingers from the loop',{'left':([.18,-.15,.98],grip(-80,1),.25)})
+p.add(3,'remove the supporting hand',{'right':([.40,-.16,.94],grip(80,-1),.25)})
+p.add(1,'open both hands away from the packet',{'left':([.18,-.15,.98],grip(-80,1),.7),'right':([.40,-.16,.94],grip(80,-1),.7)})
+p.add(4,'inspect the secured released packet',{})
 print(json.dumps(p.save(Path(__file__).with_name('demo-plan.json'))))

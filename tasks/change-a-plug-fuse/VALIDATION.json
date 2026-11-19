@@ -1,0 +1,13 @@
+{
+  "status": "development_paused_pending_full_demo",
+  "submission_ready": false,
+  "demo": null,
+  "dream": null,
+  "latest_native_trial": "fuse-full-039",
+  "latest_source": "native-batch-176",
+  "latest_trial_status": "failed",
+  "latest_steps": 825,
+  "latest_score": 0,
+  "blocker": "Deeper cartridge pickup damages a terminal before extraction. The shallower038 remains intact but loses the cartridge after6.4 mm lift. Full replacement and Dream baseline remain unvalidated.",
+  "checked_utc": "2026-11-19T09:01:15.985539+00:00"
+}

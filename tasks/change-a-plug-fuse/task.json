@@ -1,0 +1,13 @@
+{
+  "title": "Change the fuse in an unplugged UK plug",
+  "category": "Societal relatability",
+  "instruction": "Replace the fuse in the unplugged plug with the spare of the same rating, and refit its fuse carrier securely.",
+  "action_limit": 3000,
+  "run_limit": "3,000 control steps (150 seconds at 20 Hz)",
+  "setup": "A disconnected moulded UK plug has standard-size pins, a 64 x 45 mm case, removable 37 x 9 mm fuse-carrier face and a retained 3 A, 25.4 x 6.3 mm cartridge fuse. A matching replacement fuse sits on an 18 x 18 x 12 mm wooden rest. A 169 mm flat screwdriver rests on 30 x 20 x 19 mm and 20 x 20 x 26 mm wooden blocks; an 85 x 70 x 16 mm plastic parts dish sits beside it. The left gripper has 45 x 20 x 3 mm padded supporting fingers. The right has 45 x 4 mm steel precision fingers with 3 mm backing and 2 x 2 mm distal 12 mm sections. No item is connected to mains power. Restore the photographed layout.",
+  "scoring": "1.0 if the old fuse is at least 4 cm outside its seat, the replacement has both metal ends in the terminal clips, the carrier is refitted flush and the parts stay retained for three seconds after release. 0.5 for removing the old fuse and seating the replacement without closing the carrier; 0.25 for removing the old fuse alone. Otherwise 0. Broken clips or housing, or parts dropped off the table, score 0. Inspect the clips and carrier in the video with a ruler; this is a mechanical replacement test, not an electrical test.",
+  "fidelity": "Rigid plug, fuses and driver use native contact. Passive spring leaves and detents approximate cartridge and carrier retention. A compliant driver grip forms only between closing fingers, capped at 18 N/0.18 Nm, and releases on opening or slip. Other parts remain contact-driven. Clip stiffness and failure loads are approximate. No electricity or continuity is simulated; this is a mechanical replacement test. Grip reaction loads on the robot are omitted.",
+  "scores": "Development diagnostics only; no validated full-score demonstration or Dream baseline yet.",
+  "media": "",
+  "context": "Replacing a plug fuse combines opening a small retained cover with extracting, aligning and reseating a cartridge."
+}

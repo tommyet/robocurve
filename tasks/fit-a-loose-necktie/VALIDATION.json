@@ -1,80 +1,84 @@
 {
-  "status": "validated_revision",
-  "submission_ready": true,
-  "date": "2026-11-18",
-  "review_addressed": "Snug with the wide blade, release and regrasp the narrow blade, then slide and centre the knot; both stages shown.",
-  "demo": {
-    "score": 1.0,
-    "steps": 810,
-    "wall_seconds": 342.1022324789956,
-    "measurements": {
-      "knot_width_mm": 52.13262121547495,
-      "knot_height_mm": 52.03014118533522,
-      "knot_top_below_collar_mm": 5.98707007231614,
-      "knot_offset_mm": 0.26652451108847597,
-      "wide_tip_below_collar_mm": 357.7157994042992,
-      "narrow_tip_above_wide_mm": 73.86599958907003,
-      "narrow_lateral_offset_mm": 5.421010862427522e-17,
-      "wide_twist_deg": 0.1974234302357195,
-      "released_s": 7.549999999999981,
-      "failed": false,
-      "sliding_work_j": 1.8960293137820112,
-      "drawn_mm": 49.69858814664785,
-      "neckband_length_mm": 464.1674114424221,
-      "material_length_m": 1.26
+  "revision_ready": false,
+  "reason": "New native demo and baseline required for reviewer-requested changes",
+  "superseded_validation": {
+    "status": "validated_revision",
+    "submission_ready": true,
+    "date": "2026-11-18",
+    "review_addressed": "Snug with the wide blade, release and regrasp the narrow blade, then slide and centre the knot; both stages shown.",
+    "demo": {
+      "score": 1.0,
+      "steps": 810,
+      "wall_seconds": 342.1022324789956,
+      "measurements": {
+        "knot_width_mm": 52.13262121547495,
+        "knot_height_mm": 52.03014118533522,
+        "knot_top_below_collar_mm": 5.98707007231614,
+        "knot_offset_mm": 0.26652451108847597,
+        "wide_tip_below_collar_mm": 357.7157994042992,
+        "narrow_tip_above_wide_mm": 73.86599958907003,
+        "narrow_lateral_offset_mm": 5.421010862427522e-17,
+        "wide_twist_deg": 0.1974234302357195,
+        "released_s": 7.549999999999981,
+        "failed": false,
+        "sliding_work_j": 1.8960293137820112,
+        "drawn_mm": 49.69858814664785,
+        "neckband_length_mm": 464.1674114424221,
+        "material_length_m": 1.26
+      },
+      "events": [
+        {
+          "event": "grasp",
+          "side": "left",
+          "part": "wide"
+        },
+        {
+          "event": "grasp",
+          "side": "right",
+          "part": "knot"
+        },
+        {
+          "event": "release",
+          "side": "left",
+          "part": "wide"
+        },
+        {
+          "event": "grasp",
+          "side": "left",
+          "part": "narrow"
+        },
+        {
+          "event": "release",
+          "side": "right",
+          "part": "knot"
+        },
+        {
+          "event": "release",
+          "side": "left",
+          "part": "narrow"
+        }
+      ]
     },
-    "events": [
-      {
-        "event": "grasp",
-        "side": "left",
-        "part": "wide"
-      },
-      {
-        "event": "grasp",
-        "side": "right",
-        "part": "knot"
-      },
-      {
-        "event": "release",
-        "side": "left",
-        "part": "wide"
-      },
-      {
-        "event": "grasp",
-        "side": "left",
-        "part": "narrow"
-      },
-      {
-        "event": "release",
-        "side": "right",
-        "part": "knot"
-      },
-      {
-        "event": "release",
-        "side": "left",
-        "part": "narrow"
+    "dream": {
+      "score": 0.0,
+      "steps": 1200,
+      "wall_seconds": 1318.9322649909955,
+      "dream_requests": 146,
+      "dream_sessions": {
+        "session_count": 29,
+        "transport": "loopback_ssh_bridge"
       }
-    ]
-  },
-  "dream": {
-    "score": 0.0,
-    "steps": 1200,
-    "wall_seconds": 1318.9322649909955,
-    "dream_requests": 146,
-    "dream_sessions": {
-      "session_count": 29,
-      "transport": "loopback_ssh_bridge"
-    }
-  },
-  "independent_replay": {
-    "demo": 1.1368683772161603e-13,
-    "dream": 0.0
-  },
-  "media_sha256": {
-    "tie-demo.mp4": "08ccacf0c8e23774dc73c79c10092094f1fc127eeae86cea208f45e62aa1e6d9",
-    "tie-dream.mp4": "485e348ded307853db8314ad326fda5d5627023bb3c5e98381880e1d9c2285c2",
-    "setup.png": "e781aff41d21355b9f69b31035b78c883cf50dfc226ad1b5e6f41eba01a7d9d4"
-  },
-  "limitations": "Prepared topology, finite-volume grasp and quasistatic drape; uncalibrated 3 N sliding resistance. Not full tying or a real-hardware validation.",
-  "visual_review": "Native start/end and intermediate front, side and rear views inspected; all frames retained in normal-speed media."
+    },
+    "independent_replay": {
+      "demo": 1.1368683772161603e-13,
+      "dream": 0.0
+    },
+    "media_sha256": {
+      "tie-demo.mp4": "08ccacf0c8e23774dc73c79c10092094f1fc127eeae86cea208f45e62aa1e6d9",
+      "tie-dream.mp4": "485e348ded307853db8314ad326fda5d5627023bb3c5e98381880e1d9c2285c2",
+      "setup.png": "e781aff41d21355b9f69b31035b78c883cf50dfc226ad1b5e6f41eba01a7d9d4"
+    },
+    "limitations": "Prepared topology, finite-volume grasp and quasistatic drape; uncalibrated 3 N sliding resistance. Not full tying or a real-hardware validation.",
+    "visual_review": "Native start/end and intermediate front, side and rear views inspected; all frames retained in normal-speed media."
+  }
 }
