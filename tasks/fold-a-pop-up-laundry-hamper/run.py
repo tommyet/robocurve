@@ -79,7 +79,7 @@ def main():
    row=dict(step=step,action14=current,measurements=m.measure(),hands=hands(),state=m.state())
    trace.write(json.dumps(row,default=serial,separators=(',',':'))+'\n')
   capture(0)
-  if m.integrity_failed() or m.score()!=0.:raise RuntimeError("Reset changed task integrity or already earned credit; fix the native reset before a trial.")
+  if m.integrity_failed() or m.score()!=0. or not m.reset_valid():raise RuntimeError("Reset changed task integrity or already earned credit; fix the native reset before a trial.")
   if a.mode=='dream':
    from inspect_robots import Scene
    from dream_policy import make_policy

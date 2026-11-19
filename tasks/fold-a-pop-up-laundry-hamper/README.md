@@ -30,8 +30,11 @@ are not submission recordings. Dream must use the same final scene and hardware.
 
 Pinches use a disclosed native no-slip approximation once material is between closing finger faces. Each constraint starts at the measured pose, releases on opening, and breaks at 18 N or 0.36 Nm. Material deformation and collisions remain native; no object is teleported. Native validation is pending.
 
-The 300 mm retaining loop has a 5 x 3 mm elastic section and eight native
-3 mm contact nodes, each attached only to its own elastic vertex. This
-approximates finger contact without making the loop rigid. The loop and nodes
-together weigh 4 g. Attachment separation over 5 mm is an integrity failure.
-The model is still under native validation.
+The 300 mm retaining loop has a 5 x 1 mm elastic section and weighs 4 g.
+A native vertex pinch starts only when material is enclosed by the closing
+fingers. It releases on opening, 8 mm slip or estimated 6 N tension; that
+estimate is uncalibrated. Only incident contact triangles are filtered while
+held. The robot still has to stretch the loop around the packet.
+
+The reset requires the untwisted frame to span at least 30 x 48 cm, with less
+than 10 cm vertical sag. A collapsed or pre-folded reset cannot be a trial.

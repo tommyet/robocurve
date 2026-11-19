@@ -66,3 +66,8 @@ No third-party task meshes, scans or textures are used.
 
 Development is ongoing. A validated full-score demonstration and completed
 Dream baseline are still required; no submission-readiness claim is made.
+
+The demo seats the front edge on the forehead before pulling the rear edge
+down, following the ordinary fitting sequence described by
+[Speedo](https://speedo.com.au/catalog/accessories/caps/). This is a robot-motion
+choice; it adds no head-to-cap attachment or change in material behaviour.

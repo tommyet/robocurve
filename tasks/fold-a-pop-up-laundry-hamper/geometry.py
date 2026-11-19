@@ -60,16 +60,6 @@ for i in range(N):
  HEM_ATTACHMENTS.append((name,ids,local))
 GRIP_INDICES=(11,60);GRIP_BODIES=tuple(f'bound_edge_{i:03d}' for i in GRIP_INDICES)
 GRIP_POINTS=np.asarray([next(b['pos'] for b in BODIES if b['name']==name) for name in GRIP_BODIES])
-# Small contact nodes provide native finger contact with the elastic loop.
-# Each attaches to one material vertex; it does not constrain ribbon bending.
-BAND_ATTACHMENTS=[]
-band=next(s for s in SURFACES if s['name']=='band')
-band.update(mass=.003,youngs=4e5/3,thickness=.003,rest_offset=.0015,contact_offset=.002)
-for i in range(0,M,8):
- ids=[M+i];centre=band['points'][M+i];name=f'band_contact_{i:03d}'
- spec=body(name,centre,[sphere((.0015,)*3)],mass=.000125,color=(.10,.11,.13),friction=1.,contact_offset=.00025)
- spec['exclude']=['band','tab'];BODIES.append(spec)
- BAND_ATTACHMENTS.append((name,ids,np.zeros((1,3))))
 finalize(BODIES,JOINTS)
 
 def spawn_surface(stage,root):
@@ -106,10 +96,3 @@ def spawn_surface(stage,root):
   p.GetAttribute('omniphysics:vtxIndicesSrc0').Set(ids)
   p.GetAttribute('omniphysics:localPositionsSrc1').Set(Vt.Vec3fArray(local.astype(np.float32).tolist()))
 
- # The ribbon patches remain natively attached to their local material vertices.
- for name,ids,local in BAND_ATTACHMENTS:
-  p=stage.DefinePrim(root+'/material_'+name,'OmniPhysicsVtxXformAttachment')
-  p.GetRelationship('omniphysics:src0').SetTargets([Sdf.Path(root+'/band')])
-  p.GetRelationship('omniphysics:src1').SetTargets([Sdf.Path(root+'/'+name)])
-  p.GetAttribute('omniphysics:vtxIndicesSrc0').Set(ids)
-  p.GetAttribute('omniphysics:localPositionsSrc1').Set(Vt.Vec3fArray(local.astype(np.float32).tolist()))

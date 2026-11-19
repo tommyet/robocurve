@@ -45,7 +45,7 @@ class DemoControl:
      self.waypoints[approach]=points[index]-nominal
     lo,hi=self.stages[label];u=ik.smoothstep((k-lo+1)/(hi-lo+1));target+=(u if label==approach else 1-u)*self.waypoints[approach]
    if side=='left' and label=='approach the loose retaining loop' and self.retainer is None:
-    point=m.p('band_contact_000');band=m.nodes['band'];normal=np.cross(band[128]-band[0],band[65]-band[127]);normal/=max(np.linalg.norm(normal),1e-12)
+    band=m.nodes['band'];point=band[64];normal=np.cross(band[128]-band[0],band[65]-band[127]);normal/=max(np.linalg.norm(normal),1e-12)
     direction=point-np.asarray(station.BASES['left']);direction-=normal*float(direction@normal);direction/=max(np.linalg.norm(direction),1e-12)
     seed0=np.clip(observed[:6],ik.LOWER+1e-6,ik.UPPER-1e-6);choices=[]
     for sx in [-1.,1.]:
@@ -67,7 +67,7 @@ class DemoControl:
      lo,hi=self.stages[label];u=ik.smoothstep((k-lo+1)/(hi-lo+1));target+=(1-u)*(point-np.array([.29,.11,.7475+.055]));R=chosen
     elif k>=self.stages['stretch the loop across the packet'][0]:R=chosen
     if self.stages['lift the retaining loop over the packet'][0]<=k<=self.stages['slip the loop below the far edge'][1]:
-     if m.grasp_state.get('left',{}).get('body')!='band_contact_000':raise RuntimeError('The retaining loop is not held; stop the diagnostic.')
+     if not m.grasp_state.get('left',{}).get('body','').startswith('band_contact_'):raise RuntimeError('The retaining loop is not held; stop the diagnostic.')
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=hands[side]['tcp']-p0;rbias=hands[side]['rotation']@R0.T
    def residual(q):

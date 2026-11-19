@@ -1,6 +1,6 @@
 import numpy as np
 from native_model import NativeModel
-from geometry import SURFACES,N,HEM_ATTACHMENTS,FRAME_POINTS,BAND_ATTACHMENTS
+from geometry import SURFACES,N,HEM_ATTACHMENTS,FRAME_POINTS
 class Model(NativeModel):
  def __init__(self):
   super().__init__();self.grasp_state={};self.retained_seconds=0.;self.nodes={s['name']:s['points'].copy() for s in SURFACES};self.node_velocities={n:np.zeros_like(p) for n,p in self.nodes.items()};self.peak_stretch={n:1. for n in self.nodes}
@@ -16,7 +16,9 @@ class Model(NativeModel):
    if v.count!=1:raise RuntimeError('Expected one native '+s['name']+' surface')
    self.surfaces[s['name']]=v
   from finite_pinch import FinitePinch
-  self.pinch=FinitePinch(self,[n for n in self.names if n.startswith(('bound_edge_','band_contact_'))],0.0035,0.002,0.012,(-0.01, 0.012))
+  self.pinch=FinitePinch(self,[n for n in self.names if n.startswith('bound_edge_')],0.0035,0.002,0.012,(-0.01, 0.012))
+  from band_pinch import FinitePinch as BandPinch
+  self.band_pinch=BandPinch(self,[f"band_contact_{i:03d}" for i in range(64)],.0005,.002,.012,(-.01,.012))
   self.read()
  def read(self):
   super().read()
@@ -26,7 +28,7 @@ class Model(NativeModel):
     self.nodes[s['name']]=v.get_simulation_nodal_positions().numpy()[0,:len(s['points'])].copy();self.node_velocities[s['name']]=v.get_simulation_nodal_velocities().numpy()[0,:len(s['points'])].copy()
  def release_points(self):return np.vstack(list(self.nodes.values()))
  def update(self,hands,dt=.05):
-  self.read();self.time+=dt;self.pinch.update(hands);points=self.release_points()
+  self.read();self.time+=dt;self.pinch.update(hands);self.band_pinch.update(hands);points=self.release_points()
   clear=all(h['opening']>.4 and np.min(np.linalg.norm(points-h['tcp'],axis=1))>.05 for h in hands.values());self.release=self.release+dt if clear else 0.
   for s in SURFACES:
    p=self.nodes[s['name']];e=s['edges'];stretch=np.linalg.norm(p[e[:,1]]-p[e[:,0]],axis=1)/s['rest_lengths'];self.peak_stretch[s['name']]=max(self.peak_stretch[s['name']],float(stretch.max()))
@@ -39,10 +41,8 @@ class Model(NativeModel):
   p=(self.nodes['frame'][:N]+self.nodes['frame'][N:])/2
   rest=(FRAME_POINTS[:N]+FRAME_POINTS[N:])/2
   return float(np.linalg.norm(np.roll(p,-1,axis=0)-p,axis=1).sum()/np.linalg.norm(np.roll(rest,-1,axis=0)-rest,axis=1).sum())
- def band_contact_gap(self):
-  return max(float(np.linalg.norm(self.nodes['band'][ids]-(local@self.orientation(name).T+self.p(name)),axis=1).max()) for name,ids,local in BAND_ATTACHMENTS)
  def integrity_failed(self):
-  return self.band_contact_gap()>.005 or self.binding_gap()>.010 or super().integrity_failed() or any(not np.isfinite(v).all() for v in self.nodes.values()) or (self.peak_stretch['frame']>1.10 or abs(self.frame_perimeter_ratio()-1.)>.03) or self.peak_stretch['cloth']>1.35 or self.peak_stretch['band']>3.5 or self.peak_stretch['tab']>1.35
+  return self.binding_gap()>.010 or super().integrity_failed() or any(not np.isfinite(v).all() for v in self.nodes.values()) or (self.peak_stretch['frame']>1.10 or abs(self.frame_perimeter_ratio()-1.)>.03) or self.peak_stretch['cloth']>1.35 or self.peak_stretch['band']>3.5 or self.peak_stretch['tab']>1.35
  def measure(self):
   wire=self.nodes['frame'];packet=np.vstack([wire,self.nodes['cloth']]);band=self.nodes['band'];centre=wire.mean(axis=0);_,_,axes=np.linalg.svd(wire-centre,full_matrices=False);local=(packet-centre)@axes.T;extent=np.ptp(local,axis=0)+.007
   _,_,ba=np.linalg.svd(band-band.mean(axis=0),full_matrices=False);across=ba[0]-axes[2]*float(ba[0]@axes[2]);across/=max(np.linalg.norm(across),1e-12)
@@ -52,7 +52,10 @@ class Model(NativeModel):
   along=np.cross(axes[2],across);packet_along=(packet-centre)@along;band_along=(mid-centre)@along
   crosses_packet=bool(packet_along.min()+.01<float(np.median(band_along))<packet_along.max()-.01)
   enclosed=bool(crosses_packet and w>.8 and bl[:,0].min()<pl[:,0].min()+.02 and bl[:,0].max()>pl[:,0].max()-.02 and bl[:,1].min()<pl[:,1].min()+.005 and bl[:,1].max()>pl[:,1].max()-.005)
-  return dict(frame_perimeter_ratio=self.frame_perimeter_ratio(),binding_gap_mm=self.binding_gap()*1000,band_contact_gap_mm=self.band_contact_gap()*1000,bundle_long_mm=float(max(extent[:2])*1000),bundle_short_mm=float(min(extent[:2])*1000),thickness_mm=float(extent[2]*1000),retainer_encloses_packet=enclosed,intact=not self.failed,released_seconds=self.release,retained_seconds=self.retained_seconds,failed=self.failed)
+  return dict(frame_perimeter_ratio=self.frame_perimeter_ratio(),binding_gap_mm=self.binding_gap()*1000,bundle_long_mm=float(max(extent[:2])*1000),bundle_short_mm=float(min(extent[:2])*1000),thickness_mm=float(extent[2]*1000),retainer_encloses_packet=enclosed,intact=not self.failed,released_seconds=self.release,retained_seconds=self.retained_seconds,failed=self.failed)
+ def reset_valid(self):
+  span=np.ptp(self.nodes["frame"],axis=0)
+  return span[0]>.30 and span[1]>.48 and span[2]<.10
  def score(self):
   self.failed |= self.integrity_failed();m=self.measure()
   if self.failed:return 0.

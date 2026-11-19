@@ -45,7 +45,7 @@ def audit(rows,report):
    retained=retained+.05 if stable else 0.
   assert abs(retained-m.retained_seconds)<1e-6,'Retained compact duration'
   compare(q,row['measurements'],'measurements')
-  if not count:assert m.score()==0. and not m.failed,'Invalid initial state'
+  if not count:assert m.score()==0. and not m.failed and m.reset_valid(),'Invalid initial state'
   previous=a;broken=m.broken.copy();count+=1
  assert count==report['steps']+1 and count>1,'Trace length'
  assert report['steps']<=report['requested_steps'],'Run overran action request'

@@ -52,6 +52,7 @@ class FinitePinch:
         from pxr import UsdPhysics,Sdf,Gf
         from yam_arena.constants import TCP_OFFSET
         for side,h in hands.items():
+            if hasattr(self.m,'band_pinch') and side in self.m.band_pinch.held:continue
             history=self.history[side];history.append(float(h['opening']));del history[:-8]
             q=np.asarray(h.get('finger_joint_positions',[-h['opening']*.04695]*2))
             aperture=-q.sum()-2*self.thickness
