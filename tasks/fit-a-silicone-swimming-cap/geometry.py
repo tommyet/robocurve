@@ -1,7 +1,7 @@
 """Adult practice head and a separate thin elastic cap; SI units."""
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
-HEAD=np.array([.46,0,TABLE+.125]);HEADROT=Rotation.from_euler('z',90,degrees=True).as_matrix();RADII=np.array([.095,.080,.120]);CAP=np.array([.26,0,TABLE+.091])
+HEAD=np.array([.46,0,TABLE+.125]);HEADROT=np.eye(3);RADII=np.array([.095,.080,.120]);CAP=np.array([.26,0,TABLE+.091])
 shapes=[sphere(RADII),sphere((.018,.012,.026),(-.095,0,-.015)),sphere((.012,.012,.026),(0,-.080,-.025)),sphere((.012,.012,.026),(0,.080,-.025)),box((.14,.13,.010),(0,0,-.120))]
 shapes += [sphere((.003,.009,.005),(-.089,y,.017),(.13,.15,.18)) for y in [-.030,.030]]
 shapes += [box((.001,.038,.004),(-.090,0,-.051),(.47,.17,.17))]
@@ -39,10 +39,10 @@ def spawn_surface(stage,root):
  p.GetAttribute('omniphysics:restTriVtxIndices').Set(Vt.Vec3iArray(TRIS.tolist()))
  p.GetAttribute('omniphysics:restBendAnglesDefault').Set('restShapeDefault')
  p.GetAttribute('physxDeformableBody:selfCollision').Set(True)
- p.GetAttribute('physxDeformableBody:solverPositionIterationCount').Set(32)
+ p.GetAttribute('physxDeformableBody:solverPositionIterationCount').Set(128)
  p.GetAttribute('physxDeformableBody:enableSpeculativeCCD').Set(True)
  p.GetAttribute('physxDeformableBody:linearDamping').Set(.1)
- UsdPhysics.CollisionAPI.Apply(p);col=PhysxSchema.PhysxCollisionAPI.Apply(p);col.CreateContactOffsetAttr(.001);col.CreateRestOffsetAttr(.0004)
+ UsdPhysics.CollisionAPI.Apply(p);col=PhysxSchema.PhysxCollisionAPI.Apply(p);col.CreateContactOffsetAttr(.010);col.CreateRestOffsetAttr(.002)
  mat=UsdShade.Material.Define(stage,root+'/capMaterial');q=mat.GetPrim()
  for api in ['OmniPhysicsBaseMaterialAPI','OmniPhysicsDeformableMaterialAPI','OmniPhysicsSurfaceDeformableMaterialAPI','PhysxSurfaceDeformableMaterialAPI']:q.ApplyAPI(api)
  for key,value in {'omniphysics:dynamicFriction':.9,'omniphysics:density':1100.,'omniphysics:youngsModulus':1e6,'omniphysics:poissonsRatio':.45,'omniphysics:surfaceThickness':.0008,'omniphysics:surfaceBendStiffness':1e6/(12*(1-.45**2)),'physxDeformableMaterial:elasticityDamping':.02,'physxDeformableMaterial:bendDamping':.01}.items():

@@ -1,0 +1,12 @@
+{
+  "title": "Fit and cure a gel nail extension",
+  "category": "Societal relevance",
+  "instruction": "Fit the prepared gel extension to the practice fingernail without trapping large air pockets or getting gel on the surrounding skin. Cure it and leave it secure with both hands clear.",
+  "context": "A nail extension must seat against a curved nail while its gel spreads; accurate placement alone does not create a secure bond.",
+  "action_limit": 2400,
+  "run_limit": "2,400 control steps (120 seconds at 20 Hz).",
+  "setup": "Development draft: one clamped practice finger with a replaceable curved nail insert, a matching prepared clear gel extension, its ordinary support and a compatible curing lamp. Dimensions and preparation are in README.",
+  "scoring": "Development draft; no submission score claimed.",
+  "fidelity": "Native contact and a disclosed contact-loaded, exposure-dependent bonding approximation. This is a practice finger, not a person. No validated run yet.",
+  "scores": "Not validated; do not submit."
+}

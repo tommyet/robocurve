@@ -1,0 +1,32 @@
+# Fit and cure a gel nail extension
+
+Development draft. No native task run, full-score demo or Dream baseline has been validated. Do not submit this folder yet.
+
+Fit a prepared clear full-cover extension to a curved practice nail. Seat the proximal edge, roll it down so the gel contacts the nail, cure it under its matching lamp, then release it. The practice insert replaces a natural nail; no person is involved.
+
+The intended physical kit uses Kiara Sky clear Gelly Tips, its Builder gel and Beyond Pro Flash Cure lamp. The manufacturer's guide specifies progressive seating, holding during an initial 10-second cure, then 30 seconds of further exposure. The compact lamp has a 45/60-second timer and a published 66 × 58 × 47 mm body. The simulation uses a 45-second button cycle and at least 40 seconds of exposed, loaded gel contact. These timings apply to this compatible system, not arbitrary gels or lamps.
+
+- [Application guide](https://kiarasky.com/blogs/learn/how-to-apply-new-kiara-sky-gelly-tips-gelly-tips-nail-extension-application-gel-manicure)
+- [Lamp dimensions and timers](https://kiarasky.com/en-au/collections/more-beyond-pro-electronics/products/beyond-pro-flash-cure-led-lamp)
+
+The prototype uses a full-size 28 mm extension, 10–14 mm wide, on a 14 mm curved practice insert. Thin convex sections retain the underside curvature. Thirty-five spring-backed contact patches approximate the compressible gel layer. Contact and compression wet patches; exposure creates finite native bonds after flash curing and strengthens them with further exposure. A timer alone cannot align or seat the extension. No object is teleported or attached to a robot hand.
+
+This is a reduced material model. It does not simulate chemical conversion, fluid flow or individual air bubbles; unseated regions remain unbonded. The 1 N post-release proof load tests the native bonds. Contact stiffness, bond strength and transfer rates are engineering approximations, not measured product data. The practice insert and gel-loading protocol below make the physical reset repeatable; they are proposed test conditions, not a measured calibration of this gel.
+
+The 65 mm work riser raises ordinary tools into the robot's workspace; the nail, finger and lamp retain full scale. Both arms use narrow steel finger extensions with silicone faces. The scripted controller reads native object poses and sends ordinary bounded robot joint actions. Dream will receive the same scene, hardware, material model and standard camera/joint observations.
+
+All task shapes are original procedural geometry under the included MIT license. YAM/Isaac dependencies retain their upstream licenses; no third-party meshes are copied.
+
+## Physical reset and judging
+
+Use an anatomically shaped silicone practice finger, about70 ×22 ×20mm, clamped at its proximal end. Seat a replaceable ABS nail insert14 ×12mm, curved transversely to a14mm radius, with its top flush with the surrounding silicone. A reusable salon practice hand with replaceable nails is also suitable when one finger is fixed in the photographed pose; [Essential Nails](https://academy.essentialnails.com/nail-trainer/) supplies this type of training hardware. Select and record one insert and extension size for all trials; do not change fit between attempts. The simulator models only the working finger.
+
+Use clear Kiara Sky Gelly Tips of one size, selecting28 ±2mm length and14 ±1mm maximum width. Lightly file the proximal outline to fit the insert before the trial, as ordinary preparation; do not alter its curvature. Remove dust, clean and dry the insert, lightly buff the bonding surfaces, then apply the compatible system's Prep/Primer and leave dry. Coat the tip's proximal14 ×12mm underside with0.04 ±0.01mL of the matching Builder gel using a1mL syringe and clean brush. Keep the distal8mm dry for gripping. Start within60s under ordinary room light, with the uncured side down on the support and no existing bond. Use a fresh insert and tip each trial. The robot performs seating, curing and release; preparation is outside the timed task.
+
+The compact matching lamp runs its45s cycle after a physical button press. Hold the tip seated during at least40s exposure; any extra curing follows the manufacturer's guidance. No live person is used. Put a removable white background behind the clear extension for a final close photograph with a millimetre scale. Outline the14 ×12mm bonding region; visible air pockets or lifted areas count as unbonded. Measure bonded area with a1mm grid. Alignment is the maximum lateral/longitudinal offset from the insert, with a1.5mm limit and8-degree axial tilt limit. Check for gel on the silicone around the insert; any spill or damaged insert/tip scores0.
+
+After both hands have been clear for3s, apply1N perpendicular to the nail with a spring scale attached to a light clip at the dry free edge: ramp over0.5s, hold3s, unload over0.5s. Compare start/end photographs; lifting or movement above1mm scores0. If intact, aligned and retained, bonded area of90% earns1.0,75% earns0.5,50% earns0.25; less earns0. A held tip, uncured gel or an incomplete proof test earns0. No hidden chemical sensor is needed. The35-patch simulation approximates these visible bonded/unbonded areas rather than resolving fluid bubbles.
+
+## Run
+
+Use the pinned Isaac/YAM environment in ENVIRONMENT.json; its current task validation is still pending. Run `python tasks/fit-a-gel-nail-extension/run.py --mode demo --out /path/to/new-demo`, or replace `demo` with `dream` for the2400-action model trial. Rescore with `python tasks/fit-a-gel-nail-extension/rescore.py /path/to/new-demo`. The fixed layout has no random seed. The scripted plan uses1640 actions (82s simulated); measured wall runtime will be recorded after native validation.

@@ -22,7 +22,7 @@ For physical judging, collect and weigh the retained food without further mashin
 
 Each of twelve chunks contains 27 cohesive 7 mm particles. Native compression during masher contact reduces cohesion. Eight overlapping local cells per chunk measure compressive strain; full local failure removes that chunk's remaining cohesion, and otherwise the bond breaking force decreases. The rule never writes particle poses. Native contacts, gravity and friction handle the fragments after separation.
 
-The parameters are an uncalibrated cooked-tissue approximation, not a measurement of potato rheology. Released particles represent small soft lumps, not a smooth paste. Contact-gated damage, damping, finite cohesion and the 2 m/s particle speed cap are identical for the scripted and Dream runs. The demo uses observed food and tool poses to aim ordinary bounded joint actions and stops pressing when the outcome is reached; no hand attachment or success-triggered object motion is used.
+The parameters are an uncalibrated cooked-tissue approximation, not a measurement of potato rheology. Released particles represent small soft lumps, not a smooth paste. Contact-gated damage, 20/s translational damping, finite cohesion and the 0.5 m/s particle speed cap are identical for the scripted and Dream runs. The demo uses observed food and tool poses to aim ordinary bounded joint actions and stops pressing when the outcome is reached; no hand attachment or success-triggered object motion is used.
 
 SPARTA evaluates food mashing: https://arxiv.org/html/2509.24129v2 . Its overlap is an unresolved novelty risk. Tool pickup, retention scoring or changing the food name do not by themselves establish novelty, and this submission makes no contrary claim.
 
@@ -38,6 +38,6 @@ python tasks/mash-cooked-potato/rescore.py /tmp/potato-demo
 python tasks/mash-cooked-potato/rescore.py /tmp/potato-dream
 ```
 
-The control limit is 2,400 actions (120 seconds at 20 Hz). The layout is fixed and uses no random seed. The scripted plan has a 2,260-action upper bound and can finish earlier once the measured outcome is released. Dream receives the full limit and standard three camera views plus joint observations.
+The control limit is 2,400 actions (120 seconds at 20 Hz). The layout is fixed and uses no random seed. The scripted plan has a 1,900-action upper bound and can finish earlier once the measured outcome is released. Dream receives the full limit and standard three camera views plus joint observations.
 
 The CPU rescorer verifies frozen source hashes, trace continuity, joint/rate bounds, damage progression, native break events and the outcome. It is an evidence audit, not a physics replay. Native camera videos must also be reviewed. `VALIDATION.json` records the audit and measurements. On an RTX PRO 6000 Blackwell, the demo took 390 seconds and Dream took 1627 seconds including 50 policy requests. Runtime varies with API latency.

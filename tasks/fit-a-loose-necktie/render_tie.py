@@ -40,6 +40,16 @@ class Drawing:
         self.strip('band',centers,.035,dirs)
         # A conical outer wrap represents the prepared knot. Its dimensions
         # follow material fed through it; internal folds are not resolved.
+        if not tie.threaded:
+            # Match the collision sleeve, including its open bore and rim.
+            angles=np.linspace(0,2*np.pi,65);n=len(angles);pts=[];faces=[]
+            for rx,ry,z in [(.023,.043,-.028),(.023,.043,.028),(.014,.034,-.028),(.014,.034,.028)]:
+                pts.extend(tie.center+np.c_[rx*np.cos(angles),ry*np.sin(angles),np.full(n,z)])
+            for a,b in [(0,1),(2,3),(0,2),(1,3)]:
+                for i in range(n-1):
+                    j=a*n+i;k=b*n+i;faces.extend([[j,j+1,k],[j+1,k+1,k]])
+            self.set('knot',pts,faces)
+            return
         angles=np.linspace(0,2*np.pi,65);rx=.018+.06*tie.slack;ry=.026+.22*tie.slack;pts=[]
         for h,scale in [(-tie.half_height,.65),(tie.half_height,1.)]:
             pts.extend(tie.center+np.c_[rx*scale*np.cos(angles),ry*scale*np.sin(angles),np.full_like(angles,h)+.004*np.sin(angles)])

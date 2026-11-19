@@ -24,7 +24,7 @@ apt-get -o DPkg::Lock::Timeout=30 install -y --no-install-recommends \
 timeout --signal=TERM --kill-after=5s 45s vulkaninfo --summary > "$PREFIX/vulkan-summary.txt" 2>&1
 grep -qi 'NVIDIA' "$PREFIX/vulkan-summary.txt" || { echo 'No NVIDIA Vulkan device visible'; exit 1; }
 export UV_CACHE_DIR="$PREFIX/uv-cache" UV_PYTHON_INSTALL_DIR="$PREFIX/python"
-export UV_LINK_MODE=copy UV_HTTP_TIMEOUT=90 UV_HTTP_RETRIES=2
+export UV_LINK_MODE=copy UV_HTTP_TIMEOUT=600 UV_HTTP_RETRIES=2
 export PATH="$PREFIX/bin:$PATH"
 mkdir -p "$PREFIX/bin"
 # Base images may ship an old uv whose Python-download catalogue predates our

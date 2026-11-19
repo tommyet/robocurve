@@ -909,3 +909,16 @@ of the line; recognizability in films alone does not establish its stated
 up-close familiarity criterion. Do not invent a 500k-worker job claim. Keep as
 a reserve, behind clearer everyday candidates; this is our judgment, not an
 organizer rejection or a ban on the topic.
+
+
+## 19 November — sun cream, twin pet bowl and tap washer
+
+Fresh screen:749 current board records plus all-state GitHub keyword searches. No paid simulation for these ideas. The new v24 review prompt compares underlying ability with public benchmarks and treats component swaps or chains of simple operations as insufficient novelty.
+
+| Idea | Viability and evidence | Decision |
+| --- | --- | --- |
+| Apply sun cream | Technically plausible with contact-driven spreading and measurable coverage on a practice arm. ARIO's [Agilex data-collection task9](https://imaei.github.io/project_pages/ario/static/agilex%20cobot-magic%20data%20collection%20tasks.pdf) already specifies spreading ointment evenly on skin. This is a documented task protocol, not proof that it is in the organisers' indexed comparison set. Changing ointment to sunscreen would nevertheless preserve essentially the same skill. | Low novelty confidence as stated; do not build or submit on the present evidence. A claim of UV protection would additionally require more than cosmetic colour coverage. |
+| Cat food and water in a twin bowl | [BEHAVIOR-1K](https://behavior.stanford.edu/knowledgebase/tasks/index.html) explicitly lists putting_out_cat_food and putting_out_dog_food. Adding ordinary water pouring or an adjacent bowl does not create a new hardest skill. Feasible, but not a good acceptance bet under the current rules. | Do not build or PR. |
+| Change a tap washer | A real compression-tap washer replacement is mechanically feasible, with unscrewing, removing the old washer, installing a replacement and reassembly. Current pending [PR2382](https://github.com/robocurve/benchmark-tasks/pull/2382), TK-AH9VBW, already replaces and verifies a faucet cartridge. The components and retention method differ, but another valve insert replacement has substantial variant risk. | Do not spend compute or PR without a materially distinct skill; a washer/cartridge rename is insufficient. |
+
+No direct gel-nail-extension or wet-hair-blotting title match was found in the fresh GitHub searches. That is a bounded screen, not proof of worldwide novelty. Their previously noted physical preparation, contact and measurable-outcome requirements still apply.

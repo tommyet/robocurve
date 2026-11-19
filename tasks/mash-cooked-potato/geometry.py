@@ -10,7 +10,7 @@ for k in range(12):
  center=BOWL+np.array([(k%4-1.5)*.024,(k//4-1)*.024,.018])
  for n,xyz in enumerate(GRID):
   pos=center+xyz*.0072;name=f'food_{k:02d}_{n}'
-  BODIES.append(body(name,pos,[sphere((.0035,.0035,.0035))],mass=.00040,color=(.91,.82,.56),friction=.5,contact_offset=.0001,linear_damping=2.,angular_damping=5.,max_linear_velocity=2.))
+  BODIES.append(body(name,pos,[sphere((.0035,.0035,.0035))],mass=.00040,color=(.91,.82,.56),friction=.5,contact_offset=.0001,linear_damping=20.,angular_damping=5.,max_linear_velocity=.5))
  for a in range(len(GRID)):
   for b in range(a+1,len(GRID)):
    if np.sum(abs(GRID[a]-GRID[b]))!=1:continue

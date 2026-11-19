@@ -18,7 +18,7 @@ for i in range(1,9):
  p.add(1.5,'counter-twist and bring the loops together',{'left':(lp,a,.10),'right':(rp,b,.10)})
 for i in range(1,9):
  u=i/8;a=Rot.from_euler('y',90+75*u,degrees=True).as_matrix()@grip(-80,-1);b=Rot.from_euler('y',-90-75*u,degrees=True).as_matrix()@grip(80,-1)
- lp=L+[.035*u,-.175-.105*u,.12-.08*u];rp=R+[-.035*u,.175+.105*u,.12-.10*u]
+ lp=L+[.055*u,-.175-.105*u,.12-.08*u+.14*np.sin(np.pi*u)];rp=R+[-.055*u,.175+.105*u,.12-.10*u]
  p.add(1.5,'finish the counter-twist and nest the loops',{'left':(lp,a,.10),'right':(rp,b,.10)})
 from common import down,TABLE
 # Lower the central crossing, then lay the two upright outer loops down.

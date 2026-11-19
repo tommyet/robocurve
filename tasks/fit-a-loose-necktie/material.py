@@ -1,7 +1,8 @@
-"""Reduced sliding-friction model of an ALREADY THREADED necktie.
+"""Reduced ribbon-threading and sliding-friction model of a pre-wrapped necktie.
 
-This is not a knot-tying or full cloth solver. The prepared knot keeps its
-topology. Closing fingers can capture visible material, and relative motion
+The loose wide blade must pass through the open front sleeve. This is not
+a full cloth solver. Only after that passage does the prepared wrap keep its
+threaded topology. Closing fingers can capture visible material, and relative motion
 between a held knot and wide blade snugs the wrap. Holding the narrow blade
 then allows the knot to slide up; pulling the wide blade cannot perform that step.
 The neckband, wrap and two tails share a fixed 1.26 m material budget. Pulling
@@ -48,7 +49,10 @@ class Tie:
     loose: object=None
 
     def __post_init__(self):
-        if self.loose is None:self.loose=LooseBlade(self.center)
+        if self.loose is None:
+            self.loose=LooseBlade(self.center)
+            if not self.threaded:
+                for _ in range(80):self.loose.advance()
 
 
     @property
@@ -114,6 +118,9 @@ class Tie:
             self.grips[side]=dict(part=part,local=local.copy(),last=point.copy(),distance=float(coordinates[i]) if part!='knot' else None,
                 offset=point-self.center if part=='knot' else point-(root+direction*(length-coordinates[i])),
                 last_angle=float(np.arctan2(h['rotation'][1,0],h['rotation'][0,0])))
+            if part=='wide' and not self.threaded:
+                node=int(np.clip(round((.33-self.grips[side]['distance'])/(.33/(N-1))),1,N-1))
+                self.grips[side]['offset']=point-self.loose.points[node]
             self.events.append(dict(event='grasp',side=side,part=part))
         motions={}
         for side,g in list(self.grips.items()):
@@ -143,15 +150,17 @@ class Tie:
             if wide_motion:
                 delta,target,g,h=wide_motion[0]
                 index=int(np.clip(round((.33-g['distance'])/(.33/(N-1))),1,N-1))
-                grip=(index,target)
+                grip=(index,target-g['offset'])
             complete=self.loose.advance(grip,dt)
+            if self.loose.max_stretch>1.15:
+                self.failed=True;self.grips.clear();self.events.append(dict(event="threading_constraint_overload"));return
             if complete and grip is not None:
                 exit_point=self.center+[-.006,0.,-self.half_height]
                 vector=grip[1]-exit_point
                 self.wide_base=float(np.linalg.norm(vector)+g['distance'])
                 self.wrap_base=.57-self.wide_base
                 self.wide_direction=vector/np.linalg.norm(vector)
-                self.threaded=True;g['offset']=np.zeros(3)
+                self.threaded=True
                 self.events.append(dict(event='wide_blade_passed_through_front_loop',free_length_m=self.wide_base))
             self.released_s=self.released_s+dt if not self.grips else 0.
             return
