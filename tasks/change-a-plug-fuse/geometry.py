@@ -58,8 +58,8 @@ BODIES.append(body('shaft_rest',[TOOL[0],TOOL[1]+.080,TABLE+.013],[box((.020,.02
 BODIES.append(body('parts_dish',[.29,-.16,TABLE+.010],[box((.085,.070,.003)),box((.003,.070,.016),(-.043,0,.006)),box((.003,.070,.016),(.043,0,.006)),box((.085,.003,.016),(0,-.035,.006)),box((.085,.003,.016),(0,.035,.006))],fixed=False,mass=.1,color=(.60,.73,.63)))
 # Ordinary raised parts tray catches the freed carrier and keeps the thin part
 # reachable by the long precision fingers. It supplies no attachment.
-CATCH_TRAY=np.array([.330,-.016,TABLE+.050])
-BODIES.append(body('carrier_catch_tray',CATCH_TRAY-[0,0,.025],[box((.090,.070,.050)),box((.003,.070,.008),(-.045,0,.029)),box((.003,.070,.008),(.045,0,.029)),box((.090,.003,.008),(0,-.035,.029)),box((.090,.003,.008),(0,.035,.029))],fixed=True,mass=.15,color=(.60,.73,.63)))
+CATCH_TRAY=np.array([.330,-.016,TABLE+.025])
+BODIES.append(body('carrier_catch_tray',CATCH_TRAY-[0,0,.0125],[box((.090,.070,.025)),box((.003,.070,.004),(-.045,0,.0145)),box((.003,.070,.004),(.045,0,.0145)),box((.090,.003,.004),(0,-.035,.0145)),box((.090,.003,.004),(0,.035,.0145))],fixed=True,mass=.15,color=(.60,.73,.63)))
 # Turn the plug's access notch toward the right arm. Joint anchors are local
 # and retain their original coordinates when the entire plug assembly turns.
 PLUG_ROT=Rotation.from_euler('z',-90,degrees=True)

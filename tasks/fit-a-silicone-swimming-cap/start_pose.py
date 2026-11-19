@@ -6,7 +6,7 @@ import numpy as np
 START_ACTION = np.asarray(json.loads(Path(__file__).with_name('initial-action.json').read_text())['action14'])
 
 def initialize_robot(emb, base):
-    """Place the open robot fingers beside the cap during reset, before frame 0."""
+    """Place the closed robot fingers at the cap rim during reset, before frame 0."""
     import torch
     from yam_arena.constants import FINGER_OPEN
     for side, offset in [('left', 0), ('right', 7)]:

@@ -1,7 +1,7 @@
 """Adult practice head and a separate thin elastic cap; SI units."""
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
-HEAD=np.array([.46,0,TABLE+.125]);HEADROT=np.eye(3);RADII=np.array([.095,.080,.120]);CAP=np.array([.26,0,TABLE+.091])
+HEAD=np.array([.46,0,TABLE+.125]);HEADROT=np.eye(3);RADII=np.array([.095,.080,.120]);CAP=np.array([.26,0,TABLE+.141])
 shapes=[sphere(RADII),sphere((.018,.012,.026),(-.095,0,-.015)),sphere((.012,.012,.026),(0,-.080,-.025)),sphere((.012,.012,.026),(0,.080,-.025)),box((.14,.13,.010),(0,0,-.120))]
 shapes += [sphere((.003,.009,.005),(-.089,y,.017),(.13,.15,.18)) for y in [-.030,.030]]
 shapes += [box((.001,.038,.004),(-.090,0,-.051),(.47,.17,.17))]
@@ -25,7 +25,7 @@ REST_LENGTHS=np.linalg.norm(POINTS[EDGES[:,1]]-POINTS[EDGES[:,0]],axis=1)
 # Each point couples to one elastic vertex, so the opening can still stretch.
 for i,node in enumerate(RIM):
  BODIES.append(body(f'rim_contact_{i:03d}',POINTS[node],[sphere((.0015,)*3)],mass=.004/M,color=(.10,.44,.77),friction=.9,contact_offset=.00025,exclude=['cap']))
-BODIES.append(body('cap_rest',[CAP[0],CAP[1],TABLE+.090],[cylinder(.030,.180)],fixed=True,mass=.2,color=(.70,.73,.75),friction=.5))
+BODIES.append(body('cap_rest',[CAP[0],CAP[1],TABLE+.115],[cylinder(.030,.230)],fixed=True,mass=.2,color=(.70,.73,.75),friction=.5))
 finalize(BODIES,JOINTS)
 
 def spawn_surface(stage,root):

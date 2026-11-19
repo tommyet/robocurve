@@ -60,5 +60,18 @@ LAMP[2]+=LAMP_SPACER;BUTTON[2]+=LAMP_SPACER
 RAISE=.065
 for b in BODIES:b['pos'][2]+=RAISE
 for p in [BASE,REST,BUTTON,LAMP]:p[2]+=RAISE
+# Mount the practice finger on the lamp's base, rather than intersecting it.
+# The 24 mm lift clears the 4 mm lamp floor; 20 mm towards the opening keeps
+# the proximal clamp clear of the lamp's rear wall. All pieces remain full size.
+FINGER_SHIFT=np.array([-.020,0,.024])
+for b in BODIES:
+ if b['name'] in ('practice_finger','finger_clamp') or b['name'].startswith('gel_pad_'):
+  b['pos']=(np.asarray(b['pos'])+FINGER_SHIFT).tolist()
+ if b['name']=='practice_finger':
+  b['shapes'][2]=box((.025,.024,.006),(-.050,0,-.017),(.61,.62,.63))
+ if b['name']=='finger_clamp':
+  b['pos']=(BASE+FINGER_SHIFT+FRAME@np.array([-.050,0,-.017])).tolist()
+  b['shapes']=[box((.025,.025,.006))]
+BASE+=FINGER_SHIFT
 BODIES.append(body('work_riser',[.35,-.04,TABLE+RAISE/2],[box((.24,.30,RAISE))],fixed=True,mass=.8,color=(.58,.43,.28)))
 finalize(BODIES,JOINTS)

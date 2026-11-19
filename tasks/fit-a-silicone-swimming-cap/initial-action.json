@@ -1,27 +1,19 @@
 {
   "action14": [
-    -1.2965888463911273,
-    1.993802226640788,
-    0.31879886574781136,
-    1.5707999999999984,
-    -1.3003411722332097,
-    -0.10036927726718535,
-    0.35,
-    1.2965655354424566,
-    1.9938043504645473,
-    0.31879848038153535,
-    1.570799999999997,
-    1.3003369977130383,
-    0.1003724215539768,
-    0.35
+    -1.2838418020144573,
+    1.7534402186669118,
+    0.318561094728671,
+    1.4348735034545013,
+    -1.283831846180215,
+    -4.77602109283316e-06,
+    0.096,
+    1.283817609672595,
+    1.753432982605549,
+    0.31856186584459406,
+    1.4348507807142354,
+    1.2838275654802385,
+    2.011908252018533e-05,
+    0.096
   ],
-  "opening_gap_mm": 26.865,
-  "description": "Fixed reset configuration only: open fingers beside opposite cap rim arcs. No cap vertex or rigid-body pose is changed during a trial.",
-  "kinematic_audit": [
-    {
-      "stage": "documented initial open-gripper pose",
-      "position_error_m": 0.0027790970004645974,
-      "rotation_error_rad": 0.02826577162618261
-    }
-  ]
+  "description": "Both hands hold the separate cap rim at real opposed contacts before frame zero; material is not repositioned."
 }

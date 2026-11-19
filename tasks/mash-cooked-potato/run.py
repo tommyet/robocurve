@@ -89,6 +89,7 @@ def main():
   return_start=next(i for i,f in enumerate(plan['frames']) if f['stage']=='release masher') if a.mode=='demo' else None
   finishing_at=None
   for k in range(1,steps+1):
+   if (a.out/'stop-requested').exists():raise RuntimeError('Diagnostic stopped by operator request; preserve evidence.')
    if a.mode=='demo':
     measured=m.measure()
     if finishing_at is None and k>300 and measured['small_lump_mass_fraction']>=.95 and measured['retained_mass_fraction']>=.95:finishing_at=k

@@ -29,8 +29,8 @@ for s in range(STRANDS):
   else:JOINTS.append(joint(f'root_{s}','styling_head',name,a-HEAD,[0,0,-length/2],axes=bend_axes(.0002,.00002),break_force=20.))
 
 # 180 x 240 mm microfiber cloth starts held open by its two upper corners.
-TOWEL=np.array([.32,0,TABLE+.305]);NX=10;NY=13
-POINTS=np.array([TOWEL+[0,y,-x] for x in np.linspace(0,.18,NX) for y in np.linspace(-.12,.12,NY)])
+TOWEL=np.array([.32,0,TABLE+.305]);NX=13;NY=10
+POINTS=np.array([TOWEL+[0,y,-x] for x in np.linspace(0,.24,NX) for y in np.linspace(-.09,.09,NY)])
 TRIS=[]
 for i in range(NX-1):
  for j in range(NY-1):

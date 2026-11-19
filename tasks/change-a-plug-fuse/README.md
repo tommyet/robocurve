@@ -74,4 +74,4 @@ at control 825 after a terminal was damaged during cartridge pickup. The
 previous shallower pickup stayed intact but lost the cartridge after 6.4 mm
 of lift. A full replacement demo and completed Dream baseline remain required.
 
-An ordinary90×70mm parts tray on a50mm riser sits atx330mm,y−16mm and catches the freed carrier. Its8mm rim keeps the thin carrier within reach; the robot must still pinch, lift and refit it through native contact. The tray does not attach or reposition the carrier.
+An ordinary 90 × 70 mm parts tray on a 25 mm riser sits at x330 mm, y−16 mm and catches the freed carrier. Its 4 mm rim keeps the thin carrier within reach; the robot must still pinch, lift and refit it through native contact. The tray does not attach or reposition the carrier.

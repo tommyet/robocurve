@@ -19,11 +19,10 @@ class DemoControl:
   # The plan's TCP is 3 mm above the tip origin. Preserve that tool relation,
   # correcting only for observed slip, not moving the object itself.
   desired_R=R@R0.T;goal=p-desired_R@np.array([0,0,.003])
-  if 480<=k<=1720:
-   self.correction=np.clip(self.correction+np.clip(.15*(goal-m.p('extension')),-.0002,.0002),-.006,.006)
-   goal=goal+self.correction
-  relative=self.grasp if self.grasp is not None else h['rotation'].T@(m.p('extension')-h['tcp'])
-  relative_R=self.grasp_rotation if self.grasp_rotation is not None else h['rotation'].T@m.orientation('extension')
+  # Visual servoing uses the current measured tool transform. The compliant
+  # pinch may move under seating load; its initial transform is not a weld.
+  relative=h['rotation'].T@(m.p('extension')-h['tcp'])
+  relative_R=h['rotation'].T@m.orientation('extension')
   seed=np.clip(observed[7:13],ik.LOWER+1e-6,ik.UPPER-1e-6)
   p0,r0=ik.tcp_pose(seed,station.BASES['right']);bias=h['tcp']-p0;rbias=h['rotation']@r0.T
   def f(q):

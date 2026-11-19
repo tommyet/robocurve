@@ -30,14 +30,15 @@ Use the adult headform, thin silicone cap and upturned polypropylene tumbler
 specified in `task.json`. Secure the headform base and tumbler to the table.
 The cap is separate from the head, resting opening-down on the tumbler.
 The head centre is (460, 0, 872.5) mm and faces the right arm; the cap's initial
-rim centre is (260, 0, 838.5) mm. X points forward, Y left, and the table is
+rim centre is (260, 0, 888.5) mm. X points forward, Y left, and the table is
 747.5 mm high. Match the setup image and restore the cap without stretching
 or tearing it. The ordinary arm bases have no additional risers.
 
-The open grippers start beside opposite rim arcs with a 27 mm face gap.
-`initial-action.json` records their fixed reset joint positions. This applies
-identically to demo and Dream. The robot still has to close on the rim,
-stretch the cap, fit it and release it; no material pose is set during a trial.
+Both grippers start holding opposite rim arcs of the separate cap, supported
+by a fixed 60 mm-diameter, 230 mm-high upturned tumbler. The initial pad gap is
+3 mm. Reset verifies both physical contacts before frame zero; the same reset
+applies to demo and Dream. The robot must stretch, fit and release the cap.
+No material pose is assigned during a trial.
 
 Both grippers have 40 x 24 x 3 mm silicone-faced finger extensions, with
 40 N finger actuator limits. No fixture holds the cap on the head.
@@ -53,7 +54,8 @@ The cap is a 0.8 mm native elastic shell with self-contact and a 3 mm rolled
 rim. Young's modulus is 1 MPa; this uncalibrated value approximates silicone.
 The head is rigid. A compliant native pinch forms only when a rim element is
 between closing finger faces. It releases on opening or 8 mm slip, and breaks
-at 18 N or 0.08 Nm. Grip reaction loads on the robot are omitted. The robot
+at 18 N or 0.08 Nm. Its uncalibrated translational compliance is 6,000 N/m;
+the force cap and 8 mm slip limit remain active. Grip reaction loads on the robot are omitted. The robot
 must stretch, position and release the material; no fitted shape is assigned.
 
 ## Assets

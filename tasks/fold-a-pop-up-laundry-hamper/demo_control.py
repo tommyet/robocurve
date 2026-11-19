@@ -37,7 +37,7 @@ class DemoControl:
     weight=float(np.clip((k-100)/20,0,1));offset=(1-weight)*offset+weight*self.grip_offset[side]
    target+=min(1.,k/60)*max(0.,min(1.,(820-k)/120))*offset
    label=self.labels[k-1]
-   specs=[('left','approach the far loop','fold the far loop onto the centre',0,np.array([.43,.185,.83])),('right','approach the right outer loop','stack the right loop',(60,90),np.array([.50,0,.96])),('left','approach the left outer loop','stack the left loop',(12,40),np.array([.30,0,.96]))]
+   specs=[('left','approach the far loop','fold the far loop onto the centre',0,np.array([.43,.185,.83])),('right','approach the right outer loop','stack the right loop',(12,40),np.array([.50,0,.96])),('left','approach the left outer loop','stack the left loop',(75,96),np.array([.30,0,.96]))]
    for arm,approach,press,indices,nominal in specs:
     enclose=approach.replace('approach','enclose');pinch=approach.replace('approach','pinch')
     if arm!=side or label not in (approach,enclose,pinch,press):continue

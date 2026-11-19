@@ -62,6 +62,10 @@ def main():
      out[side]=dict(tcp=pose[:3]+R@np.asarray(TCP_OFFSET),rotation=R,opening=opening,joint_positions=array(robot.data.joint_pos)[0,emb._ids[side+'_robot'][0]],finger_joint_positions=array(robot.data.joint_pos)[0,ids])
     return out
    m.time=-1.
+   # Disclosed pre-held reset: only actual opposing pad contacts can attach.
+   for side in ['left','right']:m.pinch.history[side]=[.20]
+   m.pinch.update(hands())
+   if set(m.grasp_state)!={'left','right'}:raise RuntimeError('Pre-held cap reset lacks both real pad contacts')
    for _ in range(20):
     emb._env.step(emb._ready);m.update(hands())
    m.time=0.;m.release=0.;m.draw(drawing);refresh()
