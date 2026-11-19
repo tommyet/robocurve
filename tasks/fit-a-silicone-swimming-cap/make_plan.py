@@ -11,7 +11,8 @@ RR=Rot.from_euler('x',-20,degrees=True).as_matrix()@RR
 L=CAP+[0,.080,0.];Q=CAP+[0,-.080,0.]
 p.add(3,'approach the open cap from its sides',{'left':(L+[0,.045,0.],RL,.25),'right':(Q+[0,-.045,0.],RR,.25)},'joint')
 p.add(3,'place the fingers around opposite rim edges',{'left':(L,RL,.25),'right':(Q,RR,.25)})
-p.add(2,'pinch the free rim',{'left':(L,RL,.09),'right':(Q,RR,.09)})
+p.add(1,'pinch the free rim',{'left':(L,RL,.09),'right':(Q,RR,.09)})
+p.add(1,'hold the rim before lifting',{})
 p.add(4,'lift and stretch the cap opening',{'left':(CAP+[0,.095,.20],RL,.09),'right':(CAP+[0,-.095,.20],RR,.09)})
 p.add(4,'bring the stretched cap over the crown',{'left':(HEAD+[0,.095,.215],RL,.09),'right':(HEAD+[0,-.095,.215],RR,.09)})
 p.add(7,'pull the cap over the head',{'left':(HEAD+[0,.095,.045],RL,.09),'right':(HEAD+[0,-.095,.045],RR,.09)})

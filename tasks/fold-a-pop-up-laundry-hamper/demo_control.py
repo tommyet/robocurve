@@ -11,6 +11,8 @@ class DemoControl:
    if label not in self.stages:self.stages[label]=[index,index]
    self.stages[label][1]=index
  def action(self,k,wanted,m,observed,hands):
+  if 160<=k<=840 and set(m.grasp_state)!={'left','right'}:
+   raise RuntimeError('Scripted demonstration lost a required grip; stop this diagnostic before further motion.')
   from yam_arena import ik,station
   if self.offset is None:
     from geometry import GRIP_POINTS,GRIP_BODIES

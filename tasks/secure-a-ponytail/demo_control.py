@@ -4,6 +4,8 @@ from scipy.optimize import least_squares
 class DemoControl:
  def __init__(self):self.offset=None;self.hair_x=None;self.grip_names={};self.grip_offset={}
  def action(self,k,wanted,m,observed,hands):
+  if 150<=k<=500 and set(m.grasp_state)!={'left','right'}:
+   raise RuntimeError('Scripted demonstration lost a required grip; stop this diagnostic before further motion.')
   from yam_arena import ik,station
   if self.offset is None:
     from geometry import POINTS,M

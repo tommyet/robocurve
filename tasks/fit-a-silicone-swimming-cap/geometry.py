@@ -1,7 +1,7 @@
 """Adult practice head and a separate thin elastic cap; SI units."""
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
-HEAD=np.array([.46,0,TABLE+.125]);HEADROT=np.eye(3);RADII=np.array([.095,.080,.120]);CAP=np.array([.26,0,TABLE+.065])
+HEAD=np.array([.46,0,TABLE+.125]);HEADROT=Rotation.from_euler('z',90,degrees=True).as_matrix();RADII=np.array([.095,.080,.120]);CAP=np.array([.26,0,TABLE+.065])
 shapes=[sphere(RADII),sphere((.018,.012,.026),(-.095,0,-.015)),sphere((.012,.012,.026),(0,-.080,-.025)),sphere((.012,.012,.026),(0,.080,-.025)),box((.14,.13,.010),(0,0,-.120))]
 shapes += [sphere((.003,.009,.005),(-.089,y,.017),(.13,.15,.18)) for y in [-.030,.030]]
 shapes += [box((.001,.038,.004),(-.090,0,-.051),(.47,.17,.17))]
@@ -38,6 +38,7 @@ def spawn_surface(stage,root):
  p.GetAttribute('omniphysics:mass').Set(.040)
  p.GetAttribute('omniphysics:restShapePoints').Set(Vt.Vec3fArray(POINTS.astype(np.float32).tolist()))
  p.GetAttribute('omniphysics:restTriVtxIndices').Set(Vt.Vec3iArray(TRIS.tolist()))
+ p.GetAttribute('omniphysics:restBendAnglesDefault').Set('restShapeDefault')
  p.GetAttribute('physxDeformableBody:selfCollision').Set(True)
  p.GetAttribute('physxDeformableBody:solverPositionIterationCount').Set(32)
  p.GetAttribute('physxDeformableBody:enableSpeculativeCCD').Set(True)

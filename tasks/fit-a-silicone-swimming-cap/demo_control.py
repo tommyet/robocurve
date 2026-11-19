@@ -4,6 +4,8 @@ from scipy.optimize import least_squares
 class DemoControl:
  def __init__(self):self.offset=None;self.grip_offset=None
  def action(self,k,wanted,m,observed,hands):
+  if 170<=k<=460 and set(m.grasp_state)!={'left','right'}:
+   raise RuntimeError('Scripted demonstration lost a required grip; stop this diagnostic before further motion.')
   from yam_arena import ik,station
   from geometry import POINTS,RIM,M
   if self.offset is None:self.offset={s:m.nodes[i]-POINTS[i] for s,i in [('left',RIM[M//4]),('right',RIM[3*M//4])]}
@@ -18,7 +20,7 @@ class DemoControl:
    if self.grip_offset is not None:
     w=float(np.clip((k-120)/20,0,1));offset=(1-w)*offset+w*self.grip_offset[side]
    target+=min(1.,k/60)*max(0.,min(1.,(240-k)/80))*offset
-   if 120<=k<=160:
+   if 120<=k<=140:
     # Centre only along jaw closure; do not chase the rim into the cap.
     index=RIM[M//4] if side=='left' else RIM[3*M//4]
     target+=R[:,0]*np.dot(m.nodes[index]-target,R[:,0])

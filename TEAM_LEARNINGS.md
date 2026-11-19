@@ -6379,3 +6379,35 @@ editing, merge both agents' findings, and commit/push the update with the work.
  6 N estimated slip and8 mm displacement guard remain unchanged. Native
  validation pending. This is not whole-object collision removal.
  https://docs.omniverse.nvidia.com/kit/docs/omni_physics/latest/dev_guide/deformables/omniphysics_deformable_schema.html#element-collision-filtering
+
+- Cap035 (125) still misses both grips. The rim is pushed12 mm inward
+  and then catches the50 mm-radius support. Source128 uses the same40 mm
+  fingers but positions TCP2 mm behind their ends (170 mm rather than164),
+  reducing the insertion depth. Close over1 s and hold1 s rather than
+  chasing the rim during a2 s closure. All material/grip/score thresholds stay.
+- Set cap rest bending to`restShapeDefault`: it is a moulded dome, whereas
+  the default`flatDefault` is appropriate to flat cloth. No runtime rest-shape
+  change; this corrects the declared native rest material. Validation pending.
+
+- Hamper017 actually loses its left bound-edge grip before220; later
+  motions are a one-handed deformation, not an executed counter-twist.
+  This invalidates the earlier diagnosis that only its final pressing needs
+  correction. Stop the probe and inspect the release event before retuning.
+- Add demo-only early exit when required grips are missing during active
+  handling phases in cap/pony/brush/hamper. This saves failed diagnostic time;
+  it does not change Dream actions, physical state or scoring.
+
+- Hamper017 left grip release was caused by actual jaw opening at8.9 s,
+  not8 mm body slip or damage. Before release it had7.3 mm aperture around
+  7 mm binding; a transient exceeded the9 mm release threshold. Source129
+  closes the hold target from0.11 to0.08 to provide preload, retaining the
+  same40 N actuator effort and18 N/0.36 Nm pinch limits. No threshold is
+  relaxed. Native validation must hold both sides through the twist.
+
+- Align the adult head's190 mm front-to-back axis with the cap's two-grip
+  stretch direction (worldY), by rotating the same fixed head90 degrees on
+  its stand. The previous layout stretched across the160 mm ear width while
+  leaving the190 mm length poorly opened. This is an ordinary starting
+  orientation; all head dimensions, cap material, actions and score limits
+  remain unchanged. Source130 includes128's fingertip/rest-shape correction
+  and the demo grip failfast. Native validation pending.
