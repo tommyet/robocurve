@@ -17,7 +17,8 @@ class DemoControl:
    offset=self.offset[side]
    if k==100:
     if side not in self.grip_names:
-     self.grip_names[side]='band_segment_016' if side=='left' else 'band_segment_048'
+     from geometry import M
+     self.grip_names[side]=f'band_segment_{M//4 if side=="left" else 3*M//4:03d}'
     if side not in m.grasp_state:
      centre=m.p(self.grip_names[side])
      self.grip_offset[side]=centre-R@np.array([0.,0.,.002])-target

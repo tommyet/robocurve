@@ -46,7 +46,7 @@ add(20,'release the refitted carrier','carrier','release',.5)
 add(50,'withdraw from the carrier','carrier','withdraw',.5,delta=[-.04,-.04,.05])
 add(40,'inspect the refitted plug','carrier','hold',.5)
 
-def append_plan(p):
+def append_plan(p,left_return=None):
  from geometry import Q
  objects={'screwdriver':(TOOL+[0,0,.08],np.eye(3)), 'carrier':(PLUG+[0,-.08,.04]+Rplug@(CARRIER_OFFSET+[0,0,.004]),Rplug), 'old_fuse':(PLUG+[0,-.08,.04]+Rplug@FC,Rplug), 'spare_fuse':(SPARE,np.eye(3))}
  last=None;grasp={}
@@ -61,4 +61,6 @@ def append_plan(p):
    R=goalR@rr.T;target=goal-R@tr;objects[obj]=(goal,goalR)
   elif kind=='withdraw':target=last[0]+phase['delta'];R=last[1]
   else:target,R=last
-  p.add(phase['n']/20,phase['label'],{'right':(target,R,phase['grip'])});last=(target,R)
+  targets={'right':(target,R,phase['grip'])}
+  if phase['label']=='park screwdriver' and left_return is not None:targets['left']=left_return
+  p.add(phase['n']/20,phase['label'],targets);last=(target,R)

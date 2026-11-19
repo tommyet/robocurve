@@ -6220,3 +6220,79 @@ editing, merge both agents' findings, and commit/push the update with the work.
   that actual handle axis (bounded by its two ends), and requires the axis
   nearly perpendicular to closure. It preserves two-face contact, force/slip
   limits and the measured initial relative transform. No radius/gate expansion.
+
+- Brush028's left ordinary contact grip rotates the brush in the wrong direction
+  while tipping: brush rotationX reaches+54 degrees although the hand commands
+  a negative turn. Source117 extends the same bounded18 N/0.24 Nm grip to the
+  actual21 mm-wide handle. Its contact point is bounded to the95 mm handle,
+  with the same real pad gate; neither brush pose nor hair position is assigned.
+  Queued029 must use117 rather than115. This also needs native validation.
+
+- Pony036's elastic stays undisturbed through80 (Y extent36 mm), then collapses
+  during the final diagonal approach before closure (Y extent17 mm at100).
+  The descending leading finger catches the loop. Source118 removes the25 mm
+  height offset at the outside approach, so insertion is level with the loop.
+  It retains the frozen target correction from114. Short037 will use118; the
+  unchanged reset is not pre-grasped and no material stiffness is changed.
+- Fuse021's corrected actual-handle gate captures the driver by180. Opening
+  the carrier and all later actions remain to be demonstrated.
+
+### 2026-11-19 — hamper016 forms upright loops, next press must be physical
+
+- At700,016 has intact three-dimensional loops: peaks21/69 atZ968/936 mm,
+  held edge bodies12/60 near the central crossing. Merely lowering both
+  crossing grips leaves the outer loops upright. Source119 adds right-loop
+  pressing while the left holds, then left-loop pressing while the right holds
+  the first loop on the table. The controller observes each actual loop peak.
+- The pickup correction previously remained applied while lowering to the
+  table, making the intended tabletop targets about65 mm too low. Fade it
+  during700–820 so the final tabletop positions are absolute. This does not
+  alter the successful twist prefix or move material directly.
+- The retaining-loop action is still outstanding;119 is a folding diagnostic,
+  not a full demonstration. No scoring or material threshold is relaxed.
+
+### 2026-11-19 — fuse lever needs table clearance
+
+- Fuse021 captures the driver and places its blade accurately at300, then
+  the tool deviates and the grip slips during the45-degree lever motion. The
+  commanded169 mm screwdriver puts its handle below the750 mm table when
+  the plug is lifted only40 mm. This is a trajectory clearance error, not
+  evidence that stronger finger constraints or weaker clips are needed.
+- Source120 raises the held plug120 mm instead of40 mm. The119 mm blade
+  lever then leaves the handle above the table throughout its turn. All later
+  insertion targets still track the actual plug; terminal and carrier springs,
+  grip limits and scoring are unchanged. A new500-step opening check is required.
+
+- CPU reach rejects carrier pickup with the plug held120 mm high (27.6 mm
+  pose error). Source120 therefore lowers the plug back to40 mm during
+  screwdriver parking, after the blade has withdrawn. The subsequent carrier
+  and fuse exchange use their previously reachable height. No extra objects.
+
+### 2026-11-19 — pony037 achieves both grips; fine-mesh attachment is the next failure
+
+- Level approach118 gives both opposed grips at126/129. The elastic stretches
+  intact from33 mm to64 mm, but native vertex/contact-body gap rises to5.06 mm
+  at191 and trips the unchanged5 mm integrity guard. Peak strain is only1.63;
+  no hair or native joint broke. Do not report this as a broken elastic or
+  solve it by weakening the scorer.
+- Source121 coarsens the continuous loop64→32 segments, keeps eight contact
+  patches, and binds one centre vertex per patch so a round cord can turn
+  freely. Redistribute the same1 g total mass:0.6 g surface,0.4 g patches.
+  This reduces patch/vertex mass imbalance from about56:1 to8:1. Dimensions,
+  material stiffness, real-contact gate and score remain unchanged. Native
+  validation pending; contact-body names now follow M/4 and3M/4.
+- NVIDIA documents vertex-Xform attachments as two-way hard constraints and
+  says attachment stiffness/damping are unsupported; do not try to fix this
+  by setting unsupported stiffness: https://nvidia-omniverse.github.io/PhysX/ovphysx/latest/simulation_setup/deformables.html
+- A conditional full-pony queue was attempted after037 finished; its preflight
+  found brush029 already started. No fourth simulator ran:037 failed, so the
+  full-pony condition skipped and duplicate029 exited before simulator startup.
+  Use fail-fast shell guards for future queue changes. No038 evidence exists.
+
+- Brush scoring needs to exclude the same shortcut flagged in fuse-puller
+  PR2269: direct removal followed by token tool contact. Source122 records
+  native contact from both grippers/four fingers to each hair lock. Contact
+  while its snag is still intact (including the break step) excludes that
+  lock from tool-assisted credit; collecting already-loosened hair is allowed.
+  Native sensor validation and an explicit direct-hand control are pending.
+  This is scoring-only; material, motion, thresholds and damage guards remain.

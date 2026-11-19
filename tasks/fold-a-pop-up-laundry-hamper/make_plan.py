@@ -21,13 +21,19 @@ for i in range(1,9):
  lp=L+[.015*u,-.175-.055*u,.12-.08*u];rp=R+[-.015*u,.175+.055*u,.12-.08*u]
  p.add(1.5,'finish the counter-twist and nest the loops',{'left':(lp,a,.11),'right':(rp,b,.11)})
 from common import down,TABLE
-# Keep both native edge grips while the table nests the twisted loops.
-lp=lp.copy();rp=rp.copy();lp[2]=TABLE+.028;rp[2]=TABLE+.028
+# Lower the central crossing, then lay the two upright outer loops down.
+# These are ordinary hand motions; every frame/cloth point stays native.
+lp=lp.copy();rp=rp.copy();lp[2]=TABLE+.018;rp[2]=TABLE+.018
 p.add(6,'lower the nested loops against the table',{'left':(lp,a,.11),'right':(rp,b,.11)})
-p.add(3,'hold the loops compact for inspection',{})
-# Keep both edge grips while turning the tools upright, then use the tabletop
-# to nest the spring loops. This adds no object control or material change.
-p.add(6,'turn the held packet down toward the table',{'left':(lp+[0,0,.015],down(180),.11),'right':(rp+[0,0,.015],down(),.11)})
-p.add(6,'press the held loops flat',{'left':(lp+[0,0,-.005],down(180),.11),'right':(rp+[0,0,-.005],down(),.11)})
-p.add(3,'inspect the packet while both edges stay held',{})
+p.add(1,'hold the central crossing',{})
+p.add(1,'release the right edge above the table',{'right':(rp,b,.20)})
+p.add(2,'clear the right fingers',{'right':(rp+[0,0,.085],b,.20)})
+p.add(3,'approach the right outer loop',{'right':([.40,0,1.00],down(),.55)})
+p.add(6,'stack the right loop',{'right':([.32,-.045,TABLE+.030],down(),.55)})
+p.add(1,'hold the first outer loop down',{})
+p.add(1,'release the left edge',{'left':(lp,a,.20)})
+p.add(2,'clear the left fingers',{'left':(lp+[0,0,.085],a,.20)})
+p.add(3,'approach the left outer loop',{'left':([.20,0,1.00],down(180),.55)})
+p.add(6,'stack the left loop',{'left':([.29,.045,TABLE+.030],down(180),.55)})
+p.add(4,'inspect the flat packet while both hands press',{})
 print(json.dumps(p.save(Path(__file__).with_name('demo-plan.json'))))

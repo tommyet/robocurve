@@ -32,15 +32,15 @@ for sx in [-1,1]:
  BODIES.append(body(f'elastic_rest_{sx+1}',[ELASTIC[0]+sx*.0165,0,TABLE+.030],[box((.006,.016,.060))],mass=.010,fixed=True,color=(.59,.44,.28)))
 # A plain 3 mm cord elastic, 30 mm inside diameter. Native passive
 # a continuous elastic surface joins contact-bearing patches into a closed loop.
-M=64;radius=.0165;theta=np.arange(M)*2*np.pi/M
+M=32;radius=.0165;theta=np.arange(M)*2*np.pi/M
 vertices=ELASTIC+np.c_[radius*np.cos(theta),radius*np.sin(theta),np.zeros(M)]
 centres=(vertices+np.roll(vertices,-1,axis=0))/2
 lengths=np.linalg.norm(np.roll(vertices,-1,axis=0)-vertices,axis=1)
-BAND_CONTACT_INDICES=list(range(0,M,8))
+BAND_CONTACT_INDICES=list(range(0,M,4))
 for i in BAND_CONTACT_INDICES:
  tangent=(vertices[(i+1)%M]-vertices[i])/lengths[i];radial=centres[i]-ELASTIC;radial/=np.linalg.norm(radial);rot=Rotation.from_matrix(np.column_stack([radial,np.cross(tangent,radial),tangent]))
  shape=dict(kind='capsule',radius=.0015,length=float(lengths[i]),pos=[0,0,0],quat=[0,0,0,1])
- BODIES.append(body(f'band_segment_{i:03d}',centres[i],[shape],mass=.0007/len(BAND_CONTACT_INDICES),quat=rot.as_quat().tolist(),color=(.64,.12,.27),friction=1.2,contact_offset=.0002,torsional_patch_radius=.0015,min_torsional_patch_radius=.001,exclude=['elastic'],visible=False))
+ BODIES.append(body(f'band_segment_{i:03d}',centres[i],[shape],mass=.0004/len(BAND_CONTACT_INDICES),quat=rot.as_quat().tolist(),color=(.64,.12,.27),friction=1.2,contact_offset=.0002,torsional_patch_radius=.0015,min_torsional_patch_radius=.001,exclude=['elastic'],visible=False))
 radial=centres-ELASTIC;radial/=np.linalg.norm(radial,axis=1)[:,None]
 POINTS=np.vstack([centres+offset*radial for offset in [-.0015,0,.0015]])
 TRIS=[]
@@ -53,7 +53,7 @@ REST_LENGTHS=np.linalg.norm(POINTS[EDGES[:,1]]-POINTS[EDGES[:,0]],axis=1)
 BAND_ATTACHMENTS=[]
 for i in BAND_CONTACT_INDICES:
  part=next(b for b in BODIES if b['name']==f'band_segment_{i:03d}')
- ids=[M+i,M+(i+1)%M,i]
+ ids=[M+i]
  local=Rotation.from_quat(part['quat']).inv().apply(POINTS[ids]-part['pos'])
  BAND_ATTACHMENTS.append((part['name'],ids,local))
 finalize(BODIES,JOINTS)
@@ -64,7 +64,7 @@ def spawn_surface(stage,root):
  p=mesh.GetPrim()
  for api in ['OmniPhysicsDeformableBodyAPI','OmniPhysicsSurfaceDeformableSimAPI','PhysxSurfaceDeformableBodyAPI']:
   if not p.ApplyAPI(api):raise RuntimeError('Required native surface API unavailable: '+api)
- p.GetAttribute('omniphysics:mass').Set(.0003)
+ p.GetAttribute('omniphysics:mass').Set(.0006)
  p.GetAttribute('omniphysics:restShapePoints').Set(Vt.Vec3fArray(POINTS.astype(np.float32).tolist()))
  p.GetAttribute('omniphysics:restTriVtxIndices').Set(Vt.Vec3iArray(TRIS.tolist()))
  p.GetAttribute('physxDeformableBody:selfCollision').Set(True)
