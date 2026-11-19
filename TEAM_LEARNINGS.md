@@ -6433,3 +6433,28 @@ editing, merge both agents' findings, and commit/push the update with the work.
   moulded rest bending and valid native joint declarations. The head must
   physically evert and fill the reversible cap during lowering; no material
   poses change. Source133 is a new test, not a claim that032 fitted the head.
+
+- Pony044 holds and raises the elastic intact, but its opening collapses to
+  only6–8 mm across the hair's front-to-back depth. At440 no locks are
+  enclosed. This is not a successful ponytail. Source134 uses ordinary
+ 24 mm-wide finger faces (previous4 mm) so native contact can keep the
+ loop open across that depth. The24 mm fingers fit between the27 mm gap
+ in the pickup rests. Freeze hair-centre tracking at300 before lifting,
+ preventing the controller chasing hair that it pushes. Material, contact
+ filters, slip limits and scoring unchanged; native validation pending.
+
+- Hamper018 now retains closure but loses the left grip at191 by8 mm
+ slip. The held7 mm binding is compressed by native fingers to2.2 mm
+ aperture while its local width coordinate slides from-10.5 to-18.4 mm.
+ Source135 removes redundant native contact only at the captured binding
+ body and incident frame/cloth triangles against that hand, restoring all
+ pairs on release. The same18 N/.36 Nm compliant joint and8 mm slip
+ guard remain. This follows the local attachment-collision correction
+ validated for the ponytail; it is explicitly disclosed and still needs
+ a native two-hand fold test. No whole-surface contacts are removed.
+
+- Pony045's wider fingers preserve a20.6 mm front-to-back opening at279
+ (old6–8 mm), bothpinches intact. They capture arcs12/20 rather than8/24,
+ leaving the openingcentre11 mm behind the hand-centre. Source136 measures
+ this offset at220 and compensates when positioning the opening beneath
+ the hair. This only corrects robot targets; no hair/band geometry changes.
