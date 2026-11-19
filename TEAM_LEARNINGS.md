@@ -6411,3 +6411,25 @@ editing, merge both agents' findings, and commit/push the update with the work.
   orientation; all head dimensions, cap material, actions and score limits
   remain unchanged. Source130 includes128's fingertip/rest-shape correction
   and the demo grip failfast. Native validation pending.
+
+- Chain011 misses pickup: at100 the selected link is28 mm ahead of TCP;
+  at340 the nearest link is57 mm away. No chain is seated. Stop rather
+  than execute the crank phase. Source131 selects an unobstructed front
+  hanging section at least150 mm below the axle (old80 mm) and aligns
+  the fingers along the observed link tangent so closure is across it.
+  No grasp constraint, chain/teeth change or scoring relaxation. A220-step
+  demo pickup guard will stop if every link is more than25 mm from the hand.
+
+- Fuse027 damages terminal_p_n_spring at341. At300 the blade is still
+  outside the lip and5.7 mm below its target; the subsequent45-degree
+  lever turn drives it into the terminal. Source132 adds2 s settling
+  outside the opening, doubles insertion time, then raises the level blade
+ 12 mm under the lip instead of rotating the long handle down. No native
+ geometry, clip/grip strength or score change. Full native validation pending.
+
+- Cap039 (130) still misses the rim pickup and correctly stops169. Return
+  to032's open-side-up cap layout and its demonstrated two-rim pickup,
+  retaining the corrected head90-degree orientation,190 mm held opening,
+  moulded rest bending and valid native joint declarations. The head must
+  physically evert and fill the reversible cap during lowering; no material
+  poses change. Source133 is a new test, not a claim that032 fitted the head.

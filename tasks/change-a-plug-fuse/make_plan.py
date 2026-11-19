@@ -11,11 +11,10 @@ p.add(2,'grip the moulded plug body and tool handle',{'left':(L,RL,.65),'right':
 p.add(2,'close the fingers',{'left':(L,RL,0.),'right':(TOOL,RR,0.)})
 p.add(3,'lift the unplugged plug for access',{'left':(L+[0,-.08,.12],RL,0.),'right':(TOOL+[0,0,.08],RR,0.)})
 edge=PLUG+PLUG_ROT.apply(FC+[.0155,0,0.])+[0,-.08,.12];outside=edge+PLUG_ROT.apply([.009,0,0]);fulcrum=PLUG+PLUG_ROT.apply(FC+[.023,0,-.0006])+[0,-.08,.12];tip_offset=np.array([0,.119,0]);tcp=edge-tip_offset
-p.add(3,'align the blade outside the carrier lip',{'right':(outside-tip_offset,RT,0.)})
-p.add(2,'slide the blade beneath the carrier face',{'right':(tcp,RT,0.)})
-rotation=PLUG_ROT.as_matrix()@Rot.from_euler('y',45,degrees=True).as_matrix()@PLUG_ROT.as_matrix().T;pry=fulcrum+rotation@(tcp-fulcrum)
-p.add(4,'lever the carrier against the plug rim',{'right':(pry,rotation@RT,0.)})
-p.add(3,'lift the levered carrier clear of its detents',{'right':(pry+[0,0,.008],rotation@RT,0.)})
+p.add(5,'align the blade outside the carrier lip',{'right':(outside-tip_offset,RT,0.)})
+p.add(2,'settle the blade before entry',{})
+p.add(4,'slide the blade beneath the carrier face',{'right':(tcp,RT,0.)})
+p.add(3,'lift the carrier lip with the level blade',{'right':(tcp+[0,0,.012],RT,0.)})
 p.add(2,'hold for inspection',{})
 from sequence import append_plan
 append_plan(p,left_return=(L+[0,-.08,.04],RL,0.))

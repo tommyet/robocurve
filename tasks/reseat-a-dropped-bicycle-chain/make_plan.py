@@ -7,7 +7,8 @@ from pad_covers import configure_kinematics
 configure_kinematics()
 from planner import Plan
 p=Plan();RL=np.array([[0,0,1],[0,1,0],[-1,0,0.]]);RR=np.array([[0,0,1],[-1,0,0],[0,-1,0.]])
-centres=(POINTS+np.roll(POINTS,-1,axis=0))/2;i=pickup_index(centres);pick=centres[i].copy();pick[0]-=.005
+from demo_targets import PICK,ROTATION
+pick=PICK.copy();RR=ROTATION.copy()
 L=PEDAL.copy()
 p.add(3,'approach the crank and loose chain',{'right':(pick+[-.05,0,0],RR,.35)},'joint')
 p.add(2,'place the fingers around crank and chain',{'right':(pick,RR,.25)})

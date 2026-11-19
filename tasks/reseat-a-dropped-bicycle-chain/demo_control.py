@@ -3,7 +3,7 @@ import numpy as np
 from scipy.optimize import least_squares
 from scipy.spatial.transform import Rotation as Rot
 class DemoControl:
- def __init__(self):self.pick_index=None;self.pick=None;self.angle=0.
+ def __init__(self):self.pick_index=None;self.pick=None;self.angle=0.;self.pick_R=None
  def action(self,k,wanted,m,observed,hands):
   from yam_arena import ik,station
   from geometry import FRONT,POINTS,LINKS,pickup_index,R as RING_RADIUS
@@ -11,6 +11,8 @@ class DemoControl:
    links=np.array([m.p(f'link_{i:03d}') for i in range(LINKS)])
    if self.pick_index is None:self.pick_index=pickup_index(links)
    self.pick=links[self.pick_index].copy()+[-.005,0,0]
+   tangent=m.orientation(f'link_{self.pick_index:03d}')[:,0].copy();tangent[0]=0.;tangent/=np.linalg.norm(tangent)
+   axis=np.array([1.,0,0]);self.pick_R=np.column_stack([np.cross(tangent,axis),tangent,axis])
    v=m.orientation('chainring')[:,1];self.angle=float(np.arctan2(v[2],v[1]))
   if k==341:
    v=m.orientation('chainring')[:,1];self.angle=float(np.arctan2(v[2],v[1]))
@@ -20,7 +22,12 @@ class DemoControl:
    if side=='left':
     turn=Rot.from_euler('x',self.angle*max(0.,min(1.,(k-340)/60))).as_matrix();target=FRONT+turn@(target-FRONT)
    else:
-    centres=(POINTS+np.roll(POINTS,-1,axis=0))/2;i=pickup_index(centres);nominal=centres[i]+[-.005,0,0]
+    from demo_targets import PICK,ROTATION
+    R=ik.slerp_matrix(R,self.pick_R,min(1.,k/60)) if k<=480 else R@ROTATION.T@self.pick_R
+    if k==220:
+     distance=min(np.linalg.norm(m.p(f'link_{i:03d}')-hands['right']['tcp']) for i in range(LINKS))
+     if distance>.025:raise RuntimeError('Scripted chain pickup missed; stop before tooth placement.')
+    nominal=PICK
     if k<=140:target+=min(1.,k/60)*(self.pick-nominal)
     else:
      lift=self.pick+[-.04,0,.01];above=FRONT+[-.04,-RING_RADIUS,0];seat=FRONT+[-.005,-RING_RADIUS,0]

@@ -74,7 +74,7 @@ BODIES.append(body('bench_repair_stand',[.58,.12,TABLE+.21],[box((.18,.20,.02),(
 
 
 def pickup_index(points):
- """Frontmost hanging section at least 8 cm below the crank axle."""
- candidates=np.flatnonzero(np.asarray(points)[:,2]<FRONT[2]-.080)
+ """Frontmost hanging section at least 15 cm below the crank axle."""
+ candidates=np.flatnonzero(np.asarray(points)[:,2]<FRONT[2]-.150)
  if not len(candidates):raise ValueError('No unobstructed dropped chain section')
  return int(candidates[np.argmin(np.asarray(points)[candidates,1])])
