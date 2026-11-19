@@ -50,6 +50,8 @@ class DemoControl:
       axis=OR[:,0];yaw=np.arctan2(axis[1],axis[0]);goalR=Rot.from_euler('z',yaw).as_matrix()@(down(-90) if obj=='spare_fuse' else down(90))
       point=phase['point'].copy();height=point[2];point[2]=0.
       goal=pos+OR@point+phase['delta']+np.array([0.,0.,height]);self.grasps.pop(obj,None)
+     elif kind=='push':
+      goalR=m.orientation('plug')@phase['rotation'];goal=m.p('plug')+m.orientation('plug')@phase['position']
      elif kind in ['move','lift']:
       H=hands[side]
       if obj not in self.grasps:self.grasps[obj]=(H['rotation'].T@(pos-H['tcp']),H['rotation'].T@OR)
@@ -79,6 +81,8 @@ class DemoControl:
      tr,rr=self.grasps['old_fuse'];P=m.orientation('plug')
      goalR=P@rr.T;goal=m.p('plug',FC)+P@phase['delta']-goalR@tr
      self.phase_goal=(goal,goalR);self.last_goal=self.phase_goal
+    if phase['kind']=='push':
+     self.phase_goal=(m.p('plug')+m.orientation('plug')@phase['position'],m.orientation('plug')@phase['rotation']);self.last_goal=self.phase_goal
     if phase.get('relative')=='plug' and phase['kind']=='move':
      tr,rr=self.grasps[phase['obj']];plugR=m.orientation('plug')
      goalR=plugR@phase['rotation']@rr.T

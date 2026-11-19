@@ -5,7 +5,7 @@ class DemoControl:
  def __init__(self):self.offset=None;self.grip_offset=None;self.radial={"left":0.,"right":0.}
  def action(self,k,wanted,m,observed,hands):
   if 90<=k<=380 and set(m.grasp_state)!={'left','right'}:raise RuntimeError('Scripted demonstration lost a required grip; stop this diagnostic before further motion.')
-  if 380<k<=460 and 'right' not in m.grasp_state:raise RuntimeError('Front grip lost before the back hand cleared.')
+  if 380<k<=440 and 'right' not in m.grasp_state:raise RuntimeError('Right grip lost before its release phase.')
   from yam_arena import ik,station
   from geometry import POINTS,RIM,M
   if self.offset is None:self.offset={s:m.nodes[i]-POINTS[i] for s,i in [('left',RIM[M//4]),('right',RIM[3*M//4])]}

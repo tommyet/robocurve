@@ -3,7 +3,11 @@ from native_model import NativeModel
 from geometry import JOINTS,BODIES,GRID
 CELLS=[np.where(np.all((GRID>=np.array(c)-1)&(GRID<=np.array(c)),axis=1))[0] for c in np.ndindex(2,2,2)]
 class Model(NativeModel):
- def __init__(self):super().__init__();self.damage={str(k):0. for k in range(12)}
+ def __init__(self):super().__init__();self.grasp_state={};self.damage={str(k):0. for k in range(12)}
+ def bind_native(self,base):
+  super().bind_native(base)
+  from finite_pinch import FinitePinch
+  self.pinch=FinitePinch(self,['masher'],.010,0.,.008,(-.020,.012))
  def strain_candidates(self):
   result={};R=self.orientation('masher');origin=self.p('masher')
   bars=next(b for b in BODIES if b['name']=='masher')['shapes'][:7]
@@ -24,6 +28,7 @@ class Model(NativeModel):
    result[str(k)]=float(np.clip((strain-.15)/.30,0,1))
   return result
  def material(self,hands,dt):
+  self.pinch.update(hands)
   # Cooked tissue loses cohesion under actual tool-loaded compression. The
   # native solver handles forces; complete compressive failure removes cohesion.
   # No particle pose is changed.
@@ -36,7 +41,7 @@ class Model(NativeModel):
      if candidate>=1.-1e-6:self.disable(j['name'],'cooked_tissue_ruptured_under_loaded_compression')
      else:self.joints[j['name']].GetBreakForceAttr().Set(strength)
    if first:self.events.append(dict(event='food_softened_under_loaded_compression',piece=int(key),time=self.time))
- def state(self):return dict(**super().state(),damage=self.damage)
+ def state(self):return dict(**super().state(),damage=self.damage,grasp_state=self.grasp_state)
 
  def measure(self):
   names=[n for n in self.names if n.startswith('food_')];parent={n:n for n in names}

@@ -7,7 +7,7 @@ from common import down,TABLE
 
 class DemoControl:
  def __init__(self):
-  self.free=None;self.stage=None;self.offset=np.zeros(3);self.previous_offset=np.zeros(3);self.stage_start=0;self.held_offset=None
+  self.free=None;self.stage=None;self.offset=np.zeros(3);self.previous_offset=np.zeros(3);self.stage_start=0;self.held_offset=None;self.held_rotation=None
   self.R0=Rotation.from_euler('x',45,degrees=True).as_matrix()@down(0)
   grip=np.array([.34,-.17,TABLE+.140])-.008*self.R0[:,2]
   self.local_head=self.R0.T@(np.array([.34,-.17,TABLE+.003])-grip)
@@ -38,7 +38,7 @@ class DemoControl:
   # Compensate tool slip through ordinary hand motion; never reposition the tool.
   from yam_arena import ik,station
   h=hands['right']
-  if self.held_offset is None:self.held_offset=h['rotation'].T@(m.p('masher')-h['tcp'])
+  if self.held_offset is None:self.held_offset=h['rotation'].T@(m.p('masher')-h['tcp']);self.held_rotation=h['rotation'].T@m.orientation('masher')
   if stage not in ['release masher','withdraw','released outcome'] and np.linalg.norm(h['rotation'].T@(m.p('masher')-h['tcp'])-self.held_offset)>.025:
    raise RuntimeError('Masher slipped out of the grasp; stop the diagnostic.')
   if stage in ['release masher','withdraw','released outcome']:
@@ -60,8 +60,13 @@ class DemoControl:
    u=np.clip((k-self.stage_start+1)/20,0,1);u=u*u*(3-2*u);offset=(1-u)*self.previous_offset+u*self.offset
   else:offset=self.offset
   target=head+offset;desired=R@self.R0.T
-  relative_head=h['rotation'].T@(m.p('masher')-h['tcp']);relative_R=h['rotation'].T@m.orientation('masher')
+  # Limit commanded compression to 2 mm of the observed tool pose. With
+  # the disclosed 1500 N/m grip compliance this avoids driving into the bowl.
+  if stage.startswith(('press potato','hold compressive')):target[2]=max(target[2],m.p('masher')[2]-.002)
+  relative_head=self.held_offset;relative_R=self.held_rotation
   seed=np.clip(observed[7:13],ik.LOWER+1e-6,ik.UPPER-1e-6)
+  p0,r0=ik.tcp_pose(seed,station.BASES['right']);bias=h['tcp']-p0;rbias=h['rotation']@r0.T
   def residual(q):
-   pp,rr=ik.tcp_pose(q,station.BASES['right']);return np.r_[pp+rr@relative_head-target,.12*ik._rot_error(desired,rr@relative_R),.001*(q-seed)]
+   pp,rr=ik.tcp_pose(q,station.BASES['right']);rr=rbias@rr
+   return np.r_[pp+bias+rr@relative_head-target,.12*ik._rot_error(desired,rr@relative_R),.001*(q-seed)]
   out=wanted.copy();out[7:13]=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=30).x;return out

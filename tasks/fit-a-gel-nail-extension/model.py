@@ -4,6 +4,7 @@ This is a reduced adhesive law, not a chemical cure model. Neither wetting nor
 lamp time moves the tip into alignment; native contact must seat it first.
 """
 import numpy as np
+from lamp_shadow import shadowed
 from native_model import NativeModel
 from geometry import BASE,LAMP,BUTTON,PATCHES,arch,tip_width,FRAME
 class Model(NativeModel):
@@ -35,7 +36,7 @@ class Model(NativeModel):
    elif abs(gap)>.001 and self.dose[i]<10:self.wet[i]=0.
    # A narrow distal pinch leaves the gel bed exposed; any hand over a patch
    # masks the lamp rather than allowing light through an opaque gripper.
-   shadow=any(abs(h['tcp'][0]-point[0])<.009 and abs(h['tcp'][1]-point[1])<.020 and h['tcp'][2]>point[2]+.004 for h in hands.values())
+   shadow=shadowed(point,hands,LAMP[2]+.041)
    if lit and contact and self.wet[i]>=1. and not shadow:self.dose[i]+=dt
    name='bond_'+p['name']
    if self.dose[i]>=10. and name not in self.enabled:

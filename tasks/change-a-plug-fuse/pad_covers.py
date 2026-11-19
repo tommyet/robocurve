@@ -68,8 +68,8 @@ def install():
                 # Coplanar gripping faces, with a thin distal neck that clears
                 # the ordinary fuse recess. The backing remains 3 mm thick.
                 pieces = [
-                    ('backing',[sign*.0015,0.,.149],(.003,.004,.018)),
-                    ('tip',[sign*.002,0.,.1715],(.002,.002,.027)),
+                    ('backing',[sign*.0015,0.,.1565],(.003,.004,.033)),
+                    ('tip',[sign*.002,0.,.179],(.002,.002,.012)),
                 ]
                 if 'LeftArm' in path:
                     pieces=[('support',[sign*.0015,0.,.1625],(.003,.020,.045))]

@@ -3,7 +3,8 @@ import hashlib,json
 from pathlib import Path
 import numpy as np
 from model import Model
-from geometry import BODIES,JOINTS
+from geometry import BODIES,JOINTS,PATCHES,tip_width,arch,LAMP
+from lamp_shadow import shadowed
 
 LOW=np.tile([-2.61799,0.,0.,-1.69297,-1.5708,-2.0944,0.],2)
 HIGH=np.tile([3.14159,3.66519,3.14159,1.5708,1.5708,2.0944,1.],2)
@@ -22,6 +23,7 @@ def compare(a,b,label):
 
 def audit(rows,report):
  m=Model();previous=None;broken=set();release=0.;count=0
+ old_wet=np.zeros(len(PATCHES));old_dose=old_wet.copy();lamp=0.;button=False;max_load=0.
  joints={j['name'] for j in JOINTS};dynamic=[i for i,b in enumerate(BODIES) if not b.get('fixed')]
  for row in rows:
   assert row['step']==count,'Trace skipped/duplicated a control step'
@@ -33,6 +35,24 @@ def audit(rows,report):
    clear=all(h['opening']>.4 and np.min(np.linalg.norm(m.poses[dynamic,:3]-np.asarray(h['tcp']),axis=1))>.05 for h in row['hands'].values())
    release=release+.05 if clear else 0.
   assert abs(release-m.release)<1e-6,'Release duration disagrees with native hand/body poses'
+  if count:
+   pressed=-m.joint_gap('button_spring')[2]>.0008
+   if pressed and not button:lamp=45.
+   button=pressed;lit=lamp>0.;lamp=max(0.,lamp-.05);load=0.
+   for i,p in enumerate(PATCHES):
+    compression=max(0.,-float(m.joint_gap('compression_'+p['name'])[2]));load+=200*compression
+    point=m.p(p['name'])+[0,0,.0001];q=m.orientation('extension').T@(point-m.p('extension'))
+    gap=float(q[2]-(.003-arch(np.clip(q[1],-.013,.013))))
+    contact=-.020<=q[0]<=.008 and abs(q[1])<=tip_width(q[0]) and -.0005<gap<.00025 and compression>.00001
+    if contact:old_wet[i]=min(1.,old_wet[i]+.05)
+    elif abs(gap)>.001 and old_dose[i]<10:old_wet[i]=0.
+    if lit and contact and old_wet[i]>=1. and not shadowed(point,row['hands'],LAMP[2]+.041):old_dose[i]+=.05
+   max_load=max(max_load,load)
+   compare(old_wet,m.wet,'contact wetting');compare(old_dose,m.dose,'contact and exposure dose')
+   compare(lamp,m.lamp_remaining,'physical switch cycle');compare(max_load,m.max_load,'peak contact load')
+   assert all(m.dose[i]>=10-1e-7 for i,p in enumerate(PATCHES) if 'bond_'+p['name'] in m.enabled),'Bond enabled before physical contact and curing'
+  else:
+   old_wet=m.wet.copy();old_dose=m.dose.copy();lamp=m.lamp_remaining;button=m.button_down;max_load=m.max_load
   compare(m.measure(),row['measurements'],'measurements')
   if not count:assert m.score()==0. and not m.failed,'Invalid initial state'
   previous=a;broken=m.broken.copy();count+=1

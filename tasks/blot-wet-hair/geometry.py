@@ -1,7 +1,7 @@
 """Wet, independently flexible hair locks and a separate microfiber towel."""
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
-HEAD=np.array([.39,0,TABLE+.305]);ELASTIC=np.array([.27,0,TABLE+.063])
+HEAD=np.array([.49,0,TABLE+.305]);ELASTIC=np.array([.27,0,TABLE+.063])
 head=[sphere((.090,.078,.115)),sphere((.015,.012,.023),(.091,0,-.015)),cylinder(.038,.19,(0,0,-.205)),box((.15,.15,.015),(0,0,-.2975))]
 head += [sphere((.004,.008,.005),(.084,y,.020),(.12,.12,.13)) for y in [-.030,.030]]
 BODIES.append(body('styling_head',HEAD,head,fixed=True,mass=1.5,color=(.75,.62,.50),friction=.5))
