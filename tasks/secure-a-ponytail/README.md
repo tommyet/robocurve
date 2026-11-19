@@ -47,11 +47,19 @@ over the hair tips does not complete the task.
 
 Articulated 5 mm contact envelopes group fine hair fibres into flexible locks.
 A native elastic surface models the band; its stiffness is approximate. A
-geometry-gated native point attachment represents a centred finger pinch and
+geometry-gated native contact patch represents a centred finger pinch and
 releases on opening, 8 mm slip or estimated 6 N local tension. This force
 estimate is uncalibrated, not a measured native force limit. Local contacts at
 a held patch are filtered to avoid conflicting constraints. No hair or band
 pose is assigned during a trial.
+
+The auxiliary pinch is selected within the central 8 mm of the 24 mm face.
+It also holds adjacent elastic vertices already enclosed by that same real
+face, representing friction over a finite contact patch. It does not attach
+material outside the fingers. The estimated 6 N and 8 mm slip guards remain.
+
+The tension guard estimates load at the exposed ends of the held patch,
+using the current cord extension. It is checked at every control step.
 
 ## Assets
 
@@ -63,8 +71,3 @@ No third-party task meshes, scans or textures are used.
 
 Development is ongoing. A validated full-score demonstration and completed
 Dream baseline are still required; no submission-readiness claim is made.
-
-The auxiliary pinch is selected within the central 8 mm of the 24 mm face.
-It also holds adjacent elastic vertices already enclosed by that same real
-face, representing friction over a finite contact patch. It does not attach
-material outside the fingers. The estimated 6 N and 8 mm slip guards remain.

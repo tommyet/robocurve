@@ -2,7 +2,7 @@
 import numpy as np
 from scipy.optimize import least_squares
 class DemoControl:
- def __init__(self):self.offset=None;self.grip_offset=None
+ def __init__(self):self.offset=None;self.grip_offset=None;self.radial={"left":0.,"right":0.}
  def action(self,k,wanted,m,observed,hands):
   if 250<=k<=540 and set(m.grasp_state)!={'left','right'}:raise RuntimeError('Scripted demonstration lost a required grip; stop this diagnostic before further motion.')
   from yam_arena import ik,station
@@ -20,6 +20,13 @@ class DemoControl:
    if self.grip_offset is not None:
     w=float(np.clip((k-160)/20,0,1));offset=(1-w)*offset+w*self.grip_offset[side]
    target+=min(1.,k/60)*max(0.,min(1.,(320-k)/80))*offset
+   # Bounded centring along the closing axis; never chase vertical rim
+   # motion. Keep this offset after capture and fade it during the lift.
+   if 180<=k<=240 and side not in m.grasp_state:
+    node=RIM[M//4 if side=='left' else 3*M//4]
+    error=float((m.nodes[node]-hands[side]['tcp'])@hands[side]['rotation'][:,0])
+    self.radial[side]=float(np.clip(self.radial[side]+np.clip(.4*error,-.0008,.0008),-.025,.025))
+   target+=R[:,0]*self.radial[side]*max(0.,min(1.,(320-k)/80))
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=hands[side]['tcp']-p0;rbias=hands[side]['rotation']@R0.T
    def residual(q):
