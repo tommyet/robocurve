@@ -16,7 +16,7 @@ p.add(6,'slide the tail beneath the trapped hair',{'right':([.3013,-.065,BRUSH[2
 tilt=insert_R
 p.add(3,'lift the tail and trapped hair clear of the pins',{'right':([.3013,-.065,BRUSH[2]+lift+insert_z+.060],tilt,0.)})
 # Loosen each pin lane; then empty the brush over the dish.
-for lane in [-.016,.016]:
+for lane in [-.0035,-.0125]:
  p.add(2,'withdraw the tail above the pins',{'right':([BRUSH[0]+lane,-.17,BRUSH[2]+insert_z+.075],insert_R,0.)})
  p.add(2,'lower the tail into the next lane',{'right':([BRUSH[0]+lane,-.17,BRUSH[2]+insert_z],insert_R,0.)})
  p.add(6,'slide beneath the next section of hair',{'right':([BRUSH[0]+lane,-.065,BRUSH[2]+insert_z],insert_R,0.)})
@@ -24,7 +24,7 @@ for lane in [-.016,.016]:
 p.add(3,'park the comb',{'right':(TOOL+[0,0,.025],R,0.)})
 p.add(1,'release the comb',{'right':(TOOL+[0,0,.025],R,.6)})
 p.add(2,'clear the comb',{'right':(TOOL+[0,0,.10],R,.7)})
-centre=np.array([.36,.15,TABLE+.16]);handle=L-BRUSH
+centre=np.array([.43,.15,TABLE+.16]);handle=L-BRUSH
 p.add(5,'lift the brush over the dish',{'left':(centre+handle,RL,.24)})
 for angle in np.linspace(0,-90,7)[1:]:
  turn=Rot.from_euler('x',angle,degrees=True).as_matrix()

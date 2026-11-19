@@ -72,7 +72,7 @@ def install():
                     ('tip',[sign*.0025,0.,.179],(.001,.004,.012)),
                 ]
                 if 'LeftArm' in path:
-                    pieces=[('support',[sign*.0015,0.,.1625],(.003,.004,.045))]
+                    pieces=[('support',[sign*.0015,0.,.1625],(.003,.020,.045))]
                 for label,centre_gripper,size in pieces:
                     centre=rotation.inv().apply(np.asarray(centre_gripper)-origin)
                     shape=UsdGeom.Cube.Define(stage,path+paths[name]+'/precision_'+label)

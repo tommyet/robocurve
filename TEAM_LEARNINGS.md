@@ -6147,3 +6147,76 @@ editing, merge both agents' findings, and commit/push the update with the work.
   Material deformation, contacts, release and force/slip limits remain native.
 - Completed diagnostics throughprobes021 are archived for local backup. No
   full-score task in this batch and no Dream call or media upload yet.
+
+### 2026-11-19 — brush027 tool-slip diagnosis
+
+- All ten locks had actual comb contact by400, and six passive snags released.
+  The comb rotated about40 degrees within its grasp, then left the hand around
+  530; its tip remains at the same brush-relative position from550 through680.
+  Four snags remain and subsequent comb passes are empty. Stop this diagnostic
+  at a control boundary, preserve it, and reuse the lane for queued pony035.
+- The comb grip's old0.25 Nm/rad rotational compliance and0.08 Nm ceiling
+  allow excessive rolling under a130 mm lever. Next use2 Nm/rad and0.24 Nm,
+  consistent with18 N friction over approximately13 mm of pad. The force
+  limit and8 mm slip release remain; this is still a disclosed approximation.
+- Before the next brush run, move the dish70 mm outward. Its old left rim
+  overlapped the rubber mat and brush handle. The updated tip-over reach passes.
+
+### 2026-11-19 03:03 UTC — retained hair and next bounded probes
+
+- Gravity-only brush inversion001 passed60 controls:0 removed, all10 snags
+  retained, pins intact. Positive028 uses the stiffer comb grip and a dish
+  clear of the mat; it is running, not validated.
+- Fuse018 failed insertion. At1570 the desired/actual hand orientations differ
+  by91 degrees; at1670 the spare lies on the table. The plug rotated in the
+  narrow supporting fingertips. Source111 widens only the left fingers from4
+  to20 mm; prefix019 checks grip and levering before another full attempt.
+- Hamper015 transfers position but loses up to64 degrees of twist in each
+  compliant grip. Source110 prepares2 Nm/rad angular stiffness and0.36 Nm
+  ceiling, below the approximate friction moment from40 N over a6 mm pad.
+  Current015 will finish so its table-press outcome is preserved.
+- Pony035 failed at128 after a micro-mass contact patch slipped and its native
+  surface attachment separated5.2 mm. Source112 coarsens64 tiny patches into8
+  finite patches with three vertex attachments, preserving1 g total mass and
+  the continuous elastic surface. It uses6 N/0.01 Nm grip limits,500 N/m
+  positional stiffness, and tracks the opposed free arcs16/48 during closure.
+  Supporting rests move to33 mm centres to clear the fingers. Native validation
+  is pending; no pre-grasped reset or prescribed ponytail shape is used.
+
+### 2026-11-19 03:15 UTC — stable support, driver roll, cap closure
+
+- Fuse019 broad left support keeps the plug normal within3 degrees of vertical,
+  but the driver rolls about40 degrees during levering. Its blade reaches the
+  notch accurately at300, then rises27–34 mm away from the requested contact.
+  Source113 adds a geometry-gated driver grip only,18 N/0.18 Nm and2 Nm/rad,
+  while leaving fuse/carrier contacts and passive clips unchanged. Not yet run.
+- Cap031 reaches both rim edges accurately at120. The live closure tracker
+  then chases the collapsing soft edge; it captures only a displaced right
+  rim point. Source113 freezes the observed rim target at120 and removes the
+  unnecessary3 mm upward bias. Current031 is allowed to finish.
+- All world-anchor grip fidelity notes explicitly disclose omitted reaction
+  loads on the robot. These constraints preserve contact, material response,
+  release and slip limits; they are not calibrated physical gripper models.
+- Hamper015 finished0:382 x337 x151 mm. Source110's firmer grip016 is queued
+  aftercap031. Band application remains unauthored; do not claim readiness.
+- No pre-grasped starts, smaller ponytail bands, modified hair stiffness, or
+  substitute hamper clips have been implemented. These were only considered.
+
+### 2026-11-19 03:32 UTC — freeze closure targets and lift near retained snags
+
+- Pony036's live closure tracker moved the left TCP from Y+17 mm to Y−22 mm
+  before closure, then much farther away; only the right grip formed. The later
+  empty-hand path broke hair root8 at238. Source114 freezes both observed
+  pickup offsets at100. Hair length, root strength and elastic size are unchanged.
+- Brush028 holds the comb throughout all three passes, but snags6–9 remain.
+  Their pin contacts all lie on X−8 mm. Source114 changes the two later comb
+  lanes to X−3.5 and−12.5 mm, lifting immediately beside that column while
+  preserving physical pin clearance. Snag forces and scoring are unchanged.
+  Current028 continues through its tipping phase to record its actual outcome.
+
+- Fuse020 does not acquire its bounded driver grip: the rigid-body origin is
+  2.5 mm off the pad centre, outside its2 mm half-width, although the70 mm
+  cylindrical handle crosses the pad. Source116 tests the closest point on
+  that actual handle axis (bounded by its two ends), and requires the axis
+  nearly perpendicular to closure. It preserves two-face contact, force/slip
+  limits and the measured initial relative transform. No radius/gate expansion.

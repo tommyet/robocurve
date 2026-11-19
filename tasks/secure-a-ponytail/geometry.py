@@ -29,17 +29,18 @@ for s in range(STRANDS):
   else:JOINTS.append(joint(f'root_{s}','styling_head',name,a-HEAD,[0,0,-length/2],axes=bend_axes(.0002,.00002),break_force=20.))
 # Two wooden rails support four arcs while leaving the central pickup lane clear.
 for sx in [-1,1]:
- BODIES.append(body(f'elastic_rest_{sx+1}',[ELASTIC[0]+sx*.010,0,TABLE+.030],[box((.006,.032,.060))],mass=.010,fixed=True,color=(.59,.44,.28)))
+ BODIES.append(body(f'elastic_rest_{sx+1}',[ELASTIC[0]+sx*.0165,0,TABLE+.030],[box((.006,.016,.060))],mass=.010,fixed=True,color=(.59,.44,.28)))
 # A plain 3 mm cord elastic, 30 mm inside diameter. Native passive
 # a continuous elastic surface joins contact-bearing patches into a closed loop.
 M=64;radius=.0165;theta=np.arange(M)*2*np.pi/M
 vertices=ELASTIC+np.c_[radius*np.cos(theta),radius*np.sin(theta),np.zeros(M)]
 centres=(vertices+np.roll(vertices,-1,axis=0))/2
 lengths=np.linalg.norm(np.roll(vertices,-1,axis=0)-vertices,axis=1)
-for i in range(M):
+BAND_CONTACT_INDICES=list(range(0,M,8))
+for i in BAND_CONTACT_INDICES:
  tangent=(vertices[(i+1)%M]-vertices[i])/lengths[i];radial=centres[i]-ELASTIC;radial/=np.linalg.norm(radial);rot=Rotation.from_matrix(np.column_stack([radial,np.cross(tangent,radial),tangent]))
  shape=dict(kind='capsule',radius=.0015,length=float(lengths[i]),pos=[0,0,0],quat=[0,0,0,1])
- BODIES.append(body(f'band_segment_{i:03d}',centres[i],[shape],mass=.0003/M,quat=rot.as_quat().tolist(),color=(.64,.12,.27),friction=1.2,contact_offset=.0002,torsional_patch_radius=.0015,min_torsional_patch_radius=.001,exclude=['elastic']+[f'band_segment_{(i+d)%M:03d}' for d in [-2,-1,1,2]],visible=False))
+ BODIES.append(body(f'band_segment_{i:03d}',centres[i],[shape],mass=.0007/len(BAND_CONTACT_INDICES),quat=rot.as_quat().tolist(),color=(.64,.12,.27),friction=1.2,contact_offset=.0002,torsional_patch_radius=.0015,min_torsional_patch_radius=.001,exclude=['elastic'],visible=False))
 radial=centres-ELASTIC;radial/=np.linalg.norm(radial,axis=1)[:,None]
 POINTS=np.vstack([centres+offset*radial for offset in [-.0015,0,.0015]])
 TRIS=[]
@@ -49,6 +50,12 @@ for row in range(2):
 TRIS=np.asarray(TRIS);RIM=np.arange(M)
 EDGES=np.unique(np.sort(np.concatenate([TRIS[:,[0,1]],TRIS[:,[1,2]],TRIS[:,[2,0]]]),axis=1),axis=0)
 REST_LENGTHS=np.linalg.norm(POINTS[EDGES[:,1]]-POINTS[EDGES[:,0]],axis=1)
+BAND_ATTACHMENTS=[]
+for i in BAND_CONTACT_INDICES:
+ part=next(b for b in BODIES if b['name']==f'band_segment_{i:03d}')
+ ids=[M+i,M+(i+1)%M,i]
+ local=Rotation.from_quat(part['quat']).inv().apply(POINTS[ids]-part['pos'])
+ BAND_ATTACHMENTS.append((part['name'],ids,local))
 finalize(BODIES,JOINTS)
 
 def spawn_surface(stage,root):
@@ -57,7 +64,7 @@ def spawn_surface(stage,root):
  p=mesh.GetPrim()
  for api in ['OmniPhysicsDeformableBodyAPI','OmniPhysicsSurfaceDeformableSimAPI','PhysxSurfaceDeformableBodyAPI']:
   if not p.ApplyAPI(api):raise RuntimeError('Required native surface API unavailable: '+api)
- p.GetAttribute('omniphysics:mass').Set(.0007)
+ p.GetAttribute('omniphysics:mass').Set(.0003)
  p.GetAttribute('omniphysics:restShapePoints').Set(Vt.Vec3fArray(POINTS.astype(np.float32).tolist()))
  p.GetAttribute('omniphysics:restTriVtxIndices').Set(Vt.Vec3iArray(TRIS.tolist()))
  p.GetAttribute('physxDeformableBody:selfCollision').Set(True)
@@ -74,9 +81,9 @@ def spawn_surface(stage,root):
  shader=UsdShade.Shader.Define(stage,root+'/elasticMaterial/Surface');shader.CreateIdAttr('UsdPreviewSurface');shader.CreateInput('diffuseColor',Sdf.ValueTypeNames.Color3f).Set(Gf.Vec3f(.64,.12,.27));shader.CreateInput('roughness',Sdf.ValueTypeNames.Float).Set(.5);mat.CreateSurfaceOutput().ConnectToSource(shader.ConnectableAPI(),'surface')
  bind=UsdShade.MaterialBindingAPI.Apply(p);bind.Bind(mat);bind.Bind(mat,UsdShade.Tokens.weakerThanDescendants,'physics')
 
- for i in range(M):
-  attachment=stage.DefinePrim(root+f'/elastic_contact_{i:03d}','OmniPhysicsVtxXformAttachment')
+ for name,ids,local in BAND_ATTACHMENTS:
+  attachment=stage.DefinePrim(root+'/elastic_contact_'+name,'OmniPhysicsVtxXformAttachment')
   attachment.GetRelationship('omniphysics:src0').SetTargets([Sdf.Path(root+'/elastic')])
-  attachment.GetRelationship('omniphysics:src1').SetTargets([Sdf.Path(root+f'/band_segment_{i:03d}')])
-  attachment.GetAttribute('omniphysics:vtxIndicesSrc0').Set([M+i])
-  attachment.GetAttribute('omniphysics:localPositionsSrc1').Set(Vt.Vec3fArray([[0,0,0]]))
+  attachment.GetRelationship('omniphysics:src1').SetTargets([Sdf.Path(root+'/'+name)])
+  attachment.GetAttribute('omniphysics:vtxIndicesSrc0').Set(ids)
+  attachment.GetAttribute('omniphysics:localPositionsSrc1').Set(Vt.Vec3fArray(local.astype(np.float32).tolist()))

@@ -3,10 +3,16 @@ from native_model import NativeModel
 from geometry import FC,CARRIER_OFFSET
 from common import TABLE
 class Model(NativeModel):
+ def __init__(self):super().__init__();self.grasp_state={}
+ def bind_native(self,base):
+  super().bind_native(base)
+  from finite_pinch import FinitePinch
+  self.pinch=FinitePinch(self,['screwdriver'],.009,.003,.002,(-.037,.008))
  def configure_station(self):
   from pad_covers import install
   install()
- def material(self,hands,dt):self.failed |= bool(self.broken)
+ def material(self,hands,dt):self.pinch.update(hands);self.failed |= bool(self.broken)
+ def state(self):return dict(super().state(),grasp_state=self.grasp_state)
  def measure(self):
   R=self.orientation('plug');new=(self.p('spare_fuse')-self.p('plug'))@R;old=(self.p('old_fuse')-self.p('plug'))@R;carrier=(self.p('carrier')-self.p('plug'))@R
   # Cylinder child geometry maps its Z axis onto the fuse body's local X.

@@ -15,10 +15,9 @@ class DemoControl:
    # reaching the hair so its world height is not lowered by band sag.
    weight=min(1.,k/60)*max(0.,min(1.,(300-k)/80))
    offset=self.offset[side]
-   if 100<=k<=140:
+   if k==100:
     if side not in self.grip_names:
-     names=[n for n in m.names if n.startswith('band_segment_')]
-     self.grip_names[side]=min(names,key=lambda n:np.linalg.norm(m.p(n)-hands[side]['tcp']))
+     self.grip_names[side]='band_segment_016' if side=='left' else 'band_segment_048'
     if side not in m.grasp_state:
      centre=m.p(self.grip_names[side])
      self.grip_offset[side]=centre-R@np.array([0.,0.,.002])-target

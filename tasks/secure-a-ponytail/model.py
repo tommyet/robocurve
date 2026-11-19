@@ -1,6 +1,6 @@
 import numpy as np
 from native_model import NativeModel
-from geometry import HEAD,POINTS,EDGES,REST_LENGTHS,STRANDS,SEGMENTS,M
+from geometry import HEAD,POINTS,EDGES,REST_LENGTHS,STRANDS,SEGMENTS,M,BAND_ATTACHMENTS
 class Model(NativeModel):
  def __init__(self):super().__init__();self.grasp_state={};self.nodes=POINTS.copy();self.node_velocities=np.zeros_like(self.nodes);self.peak_stretch=1.
  def configure_station(self):
@@ -19,7 +19,7 @@ class Model(NativeModel):
   if getattr(self,'surface',None) is not None:
    self.nodes=self.surface.get_simulation_nodal_positions().numpy()[0,:len(POINTS)].copy()
    self.node_velocities=self.surface.get_simulation_nodal_velocities().numpy()[0,:len(POINTS)].copy()
- def rim_gap(self):return max(float(np.linalg.norm(self.nodes[M+i]-self.p(f'band_segment_{i:03d}'))) for i in range(M))
+ def rim_gap(self):return max(float(np.linalg.norm(self.nodes[ids]-(local@self.orientation(name).T+self.p(name)),axis=1).max()) for name,ids,local in BAND_ATTACHMENTS)
  def release_points(self):return np.vstack([self.nodes,self.poses[[i for i,n in enumerate(self.names) if n.startswith('hair_')],:3]])
  def update(self,hands,dt=.05):
   self.read();self.time+=dt;self.pinch.update(hands);p=self.release_points();clear=all(h['opening']>.4 and np.min(np.linalg.norm(p-h['tcp'],axis=1))>.05 for h in hands.values());self.release=self.release+dt if clear else 0.
