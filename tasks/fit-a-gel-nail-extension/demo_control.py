@@ -19,6 +19,9 @@ class DemoControl:
   # The plan's TCP is 3 mm above the tip origin. Preserve that tool relation,
   # correcting only for observed slip, not moving the object itself.
   desired_R=R@R0.T;goal=p-desired_R@np.array([0,0,.003])
+  # Gentle observed-tool descent avoids chasing a contact-induced deflection
+  # with a large wrist correction. This changes only the robot target.
+  if 340<=k<=1720:goal[2]=max(goal[2],m.p('extension')[2]-.0005)
   # Visual servoing uses the current measured tool transform. The compliant
   # pinch may move under seating load; its initial transform is not a weld.
   relative=h['rotation'].T@(m.p('extension')-h['tcp'])

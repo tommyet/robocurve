@@ -1,7 +1,7 @@
 {
   "schema": "runtime-evidence-v1",
-  "status": "demo_verified_baseline_pending",
-  "scope": "Native full-score hair-blotting demo independently audited; paired Dream baseline pending.",
+  "status": "native_verified",
+  "scope": "Paired full-frame native demo and Dream trial, independently audited from frozen sources.",
   "current_task_runtime_verified": true,
   "python": "3.12.16",
   "packages": {

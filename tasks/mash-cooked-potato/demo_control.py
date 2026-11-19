@@ -65,9 +65,9 @@ class DemoControl:
   target=head+offset
   if self.press_bowl is not None and stage.startswith(('position over potato','press potato','hold compressive','lift for next press')):target[:2]+=m.p('bowl')[:2]-self.press_bowl[:2]
   desired=R@self.R0.T
-  # Limit commanded compression to 2 mm of the observed tool pose. With
+  # Limit commanded compression to 0.5 mm of the observed tool pose. With
   # the disclosed 6000 N/m grip compliance this avoids driving into the bowl.
-  if stage.startswith(('press potato','hold compressive')):target[2]=max(target[2],m.p('masher')[2]-.002)
+  if stage.startswith(('press potato','hold compressive')):target[2]=max(target[2],m.p('masher')[2]-.0005)
   # Follow the measured rigid tool through ordinary hand commands. A finite
   # friction grip can rotate/slide; treating its initial transform as permanent
   # made the old controller drive away after a loaded press.

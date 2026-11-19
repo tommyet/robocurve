@@ -16,7 +16,7 @@ for i in range(20):
  Ci=np.array([.34,0,TABLE+.003])-Ri@local_head
  p.add(.75,'position over potato '+str(i),{'right':(Ci+[0,0,.040],Ri,.05)})
  p.add(2.,'press potato '+str(i),{'right':(Ci+[0,0,-.004],Ri,.05)})
- p.add(.5,'hold compressive load '+str(i),{'right':(Ci+[0,0,-.004],Ri,.05)})
+ p.add(1.,'hold compressive load '+str(i),{'right':(Ci+[0,0,-.004],Ri,.05)})
  p.add(1.,'lift for next press '+str(i),{'right':(Ci+[0,0,.040],Ri,.05)})
 p.add(2,'let loose potato fall back into the bowl',{})
 p.add(2,'return masher',{'right':(GRIP+[0,0,.12],R,.05)})

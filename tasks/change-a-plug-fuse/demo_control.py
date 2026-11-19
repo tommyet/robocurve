@@ -86,9 +86,16 @@ class DemoControl:
      goalR=P@rr.T;goal=m.p('plug',FC)+P@phase['delta']-goalR@tr
      self.phase_goal=(goal,goalR);self.last_goal=self.phase_goal
     if phase['kind']=='push':
-     self.phase_goal=(m.p('plug')+m.orientation('plug')@phase['position'],m.orientation('plug')@phase['rotation']);self.last_goal=self.phase_goal
+     plugR=m.orientation('plug');position=phase['position'].copy()
+     if m.measure()['replacement_seated']:position=FC+np.array([0.,0.,.040])
+     elif abs(float((plugR.T@m.orientation('spare_fuse'))[0,0]))<.9:
+      raise RuntimeError('Replacement is misaligned; stop instead of pushing it into a terminal.')
+     self.phase_goal=(m.p('plug')+plugR@position,plugR@phase['rotation']);self.last_goal=self.phase_goal
     if phase.get('relative')=='plug' and phase['kind']=='move':
-     tr,rr=self.grasps[phase['obj']];plugR=m.orientation('plug')
+     obj=phase['obj'];H=hands[side];plugR=m.orientation('plug')
+     # A cartridge can move within real finger contacts. Track its current
+     # transform while placing it, instead of assuming a rigid welded grasp.
+     tr=H['rotation'].T@(m.p(obj)-H['tcp']);rr=H['rotation'].T@m.orientation(obj)
      goalR=plugR@phase['rotation']@rr.T
      goal=m.p('plug')+plugR@phase['position']-goalR@tr
      self.phase_goal=(goal,goalR);self.last_goal=self.phase_goal

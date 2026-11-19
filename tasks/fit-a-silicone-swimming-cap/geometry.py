@@ -12,7 +12,7 @@ POINTS=[CAP+[0,0,.090]]
 for j in range(1,N+1):
  a=j*np.pi/(2*N)
  for i in range(M):
-  t=i*2*np.pi/M;POINTS.append(CAP+[.084*np.sin(a)*np.cos(t),.080*np.sin(a)*np.sin(t),.090*np.cos(a)])
+  t=i*2*np.pi/M;POINTS.append(CAP+[.075*np.sin(a)*np.cos(t),.070*np.sin(a)*np.sin(t),.090*np.cos(a)])
 POINTS=np.asarray(POINTS);TRIS=[]
 for i in range(M):TRIS.append([0,1+i,1+(i+1)%M])
 for j in range(N-1):
