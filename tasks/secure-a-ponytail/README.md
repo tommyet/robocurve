@@ -1,6 +1,6 @@
 # Secure a ponytail with a plain hair elastic
 
-Gather the loose hair into a ponytail and secure it with the plain elastic. Leave it held after both hands let go.
+Gather the synthetic hair on the practice head into a ponytail and secure it with the plain elastic. Leave it held after both hands let go.
 
 ## Run and score
 

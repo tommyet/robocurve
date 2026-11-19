@@ -34,6 +34,11 @@ rim centre is (260, 0, 838.5) mm. X points forward, Y left, and the table is
 747.5 mm high. Match the setup image and restore the cap without stretching
 or tearing it. The ordinary arm bases have no additional risers.
 
+The open grippers start beside opposite rim arcs with a 27 mm face gap.
+`initial-action.json` records their fixed reset joint positions. This applies
+identically to demo and Dream. The robot still has to close on the rim,
+stretch the cap, fit it and release it; no material pose is set during a trial.
+
 Both grippers have 40 x 24 x 3 mm silicone-faced finger extensions, with
 40 N finger actuator limits. No fixture holds the cap on the head.
 

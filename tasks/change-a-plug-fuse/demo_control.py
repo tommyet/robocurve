@@ -2,16 +2,26 @@
 import numpy as np
 from scipy.optimize import least_squares
 class DemoControl:
- def __init__(self):self.grasp=None;self.phase_id=None;self.grasps={};self.last_goal=None
+ def __init__(self):self.grasp=None;self.phase_id=None;self.grasps={};self.last_goal=None;self.plug_hold=None
  def action(self,k,wanted,m,observed,hands):
   from yam_arena import ik,station
   from geometry import FC
   from scipy.spatial.transform import Rotation as Rot
   if k>=200 and self.grasp is None:
    H=hands['right'];self.grasp=(H['rotation'].T@(m.p('screwdriver')-H['tcp']),H['rotation'].T@m.orientation('screwdriver'),m.p('screwdriver',[0,.119,0]),m.orientation('screwdriver').copy())
+  if k>=200 and self.plug_hold is None:
+   H=hands['left'];nominal,_=ik.tcp_pose(wanted[:6],station.BASES['left'])
+   self.plug_hold=(m.p('plug').copy(),m.orientation('plug').copy(),nominal)
   out=wanted.copy()
   for side,o in [('left',0),('right',7)]:
    target,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side]);tool_tip_local=None;tip_target=None
+   if side=='left' and self.plug_hold is not None and wanted[o+6]<.2:
+    from geometry import PLUG_ROT
+    centre,start_R,nominal=self.plug_hold;H=hands['left'];P=m.orientation('plug')
+    desired_R=ik.slerp_matrix(start_R,PLUG_ROT.as_matrix(),ik.smoothstep(min(1.,(k-200)/60)))
+    desired_centre=centre+(target-nominal)
+    relative=H['rotation'].T@P;offset=H['rotation'].T@(m.p('plug')-H['tcp'])
+    R=desired_R@relative.T;target=desired_centre-R@offset
    if side=='right' and self.grasp is not None and k<=520:
     t_rel,r_rel,start_tip,start_R=self.grasp;H=hands['right'];t_rel=H['rotation'].T@(m.p('screwdriver')-H['tcp']);r_rel=H['rotation'].T@m.orientation('screwdriver');P=m.orientation('plug');base=m.p('plug');Rtool=P@Rot.from_euler('z',90,degrees=True).as_matrix()
     insert=base+P@(FC+np.array([.0155,0,0.]));outside=insert+P@np.array([.009,0,0]);fulcrum=base+P@(FC+np.array([.023,0,-.0006]))

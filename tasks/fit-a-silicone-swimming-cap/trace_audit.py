@@ -8,7 +8,8 @@ from geometry import BODIES,JOINTS,EDGES,REST_LENGTHS
 LOW=np.tile([-2.61799,0.,0.,-1.69297,-1.5708,-2.0944,0.],2)
 HIGH=np.tile([3.14159,3.66519,3.14159,1.5708,1.5708,2.0944,1.],2)
 DELTA=np.tile([.275,.275,.275,1.,1.,1.,.1556109919714454],2)
-READY=np.tile([0.,1.,1.,-.6,0.,0.,1.],2)
+from start_pose import START_ACTION
+READY=START_ACTION
 
 def compare(a,b,label):
  if isinstance(a,dict):

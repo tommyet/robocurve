@@ -46,6 +46,8 @@ def main():
    emb=wrapper.YamArenaEmbodiment(task=str(HERE/'task.py'),object_jitter=0.,control_hz=20,cam_width=320,cam_height=176)
    m.subscribe_events()
    emb._ensure_sim(None);base=emb._base;emb._env.reset();instruction=json.loads((HERE/'task.json').read_text())['instruction'];emb._instruction=instruction
+   from start_pose import initialize_robot
+   initialize_robot(emb,base)
    m.bind_native(base)
    drawing=Drawing(omni.usd.get_context().get_stage());m.draw(drawing)
    def refresh():
