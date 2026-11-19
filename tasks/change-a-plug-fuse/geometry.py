@@ -13,6 +13,8 @@ outer += [cylinder(.004,.09,(0,-.067,-.005),Rotation.from_euler('x',90,degrees=T
 # the clips into the housing, which is not the intended real mechanism.
 for sign in [-1,1]:
  outer.append(box((.004,.0062,.0008),FC+[sign*.010,0,-.0037],(.70,.56,.25)))
+# Ordinary moulded cavity ends prevent the cartridge sliding axially out of its clips.
+for sign in [-1,1]:outer.append(box((.0012,.008,.007),FC+[sign*.014,0,0],(.90,.89,.84)))
 BODIES.append(body('plug',PLUG,outer,mass=.065,color=(.90,.89,.84),friction=.9,contact_offset=.0001,torsional_patch_radius=.008,min_torsional_patch_radius=.004))
 # The lowered right-wall section is the ordinary screwdriver access notch.
 # A fuse carrier's face is the ordinary pry point. Its four sprung fingers
@@ -75,4 +77,12 @@ for part in BODIES:
   part['pos']=(PLUG+PLUG_ROT.apply(np.asarray(part['pos'])-PLUG)).tolist()
   part['quat']=(PLUG_ROT*Rotation.from_quat(part.get('quat',[0,0,0,1]))).as_quat().tolist()
 CARRIER=PLUG+PLUG_ROT.apply(CARRIER_OFFSET)
+# The timed replacement starts with the cover already removed, upright in
+# the ordinary tray. No cartridge has been removed or replaced during reset.
+CARRIER_RESET=CATCH_TRAY+[-.012,0,.00775]
+shift=CARRIER_RESET-CARRIER
+for part in BODIES:
+ if part['name']=='carrier' or part['name'].startswith('carrier_grip_'):
+  part['pos']=(np.asarray(part['pos'])+shift).tolist()
+BODIES[:]=[b for b in BODIES if b['name'] not in ('screwdriver','tool_rest','shaft_rest')]
 finalize(BODIES,JOINTS)

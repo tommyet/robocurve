@@ -37,7 +37,7 @@ def audit(rows,report):
   assert abs(release-m.release)<1e-6,'Release duration disagrees with native hand/body poses'
   if count:
    pressed=-m.joint_gap('button_spring')[2]>.0008
-   if pressed and not button:lamp=45.
+   if pressed and not button:lamp=60.
    button=pressed;lit=lamp>0.;lamp=max(0.,lamp-.05)
    for i,p in enumerate(PATCHES):
     point=m.p(p['name'])+[0,0,.00012];q=m.orientation('extension').T@(point-m.p('extension'))
@@ -45,7 +45,8 @@ def audit(rows,report):
     contact=-.020<=q[0]<=.008 and abs(q[1])<=tip_width(q[0]) and -.00008<gap<.00020
     if contact:old_wet[i]=min(1.,old_wet[i]+.05)
     elif abs(gap)>.001 and old_dose[i]<10:old_wet[i]=0.
-    if lit and contact and old_wet[i]>=1. and not shadowed(point,row['hands'],LAMP[2]+.041):old_dose[i]+=.05
+    name='bond_'+p['name'];attached=old_dose[i]>=10. and name in m.enabled and name not in m.broken
+    if lit and (contact or attached) and old_wet[i]>=1. and not shadowed(point,row['hands'],LAMP[2]+.041):old_dose[i]+=.05
    compare(old_wet,m.wet,'contact wetting');compare(old_dose,m.dose,'contact and exposure dose')
    compare(lamp,m.lamp_remaining,'physical switch cycle')
    assert all(m.dose[i]>=10-1e-7 for i,p in enumerate(PATCHES) if 'bond_'+p['name'] in m.enabled),'Bond enabled before physical contact and curing'

@@ -2,8 +2,25 @@
 import numpy as np
 from scipy.optimize import least_squares
 class DemoControl:
- def __init__(self):self.grasp=None;self.grasp_rotation=None;self.correction=np.zeros(3);self.seating_z=None;self.rotation_correction=np.zeros(3)
+ def __init__(self):self.grasp=None;self.grasp_rotation=None;self.correction=np.zeros(3);self.seating_z=None;self.rotation_correction=np.zeros(3);self.flash_hand=None
  def action(self,k,wanted,m,hands,observed):
+  if self.flash_hand is None and any(n.startswith('bond_') and n not in m.broken for n in m.enabled):
+   self.flash_hand=(k,hands['right']['tcp'].copy(),hands['right']['rotation'].copy())
+  if self.flash_hand is not None:
+   # The real procedure releases the holding hand after flash cure, then
+   # completes exposure hands-free. Keep the actual hand pose while opening,
+   # withdraw along the dry free edge, and remain clear for the proof load.
+   from yam_arena import ik,station
+   from geometry import FRAME
+   k0,p0,R=self.flash_hand;u=ik.smoothstep(float(np.clip((k-k0-20)/60,0,1)))
+   target=p0+FRAME@np.array([.09*u,0,0]);h=hands['right']
+   seed=np.clip(observed[7:13],ik.LOWER+1e-6,ik.UPPER-1e-6)
+   pp,rr=ik.tcp_pose(seed,station.BASES['right']);bias=h['tcp']-pp;rbias=h['rotation']@rr.T
+   def f(q):
+    pos,ori=ik.tcp_pose(q,station.BASES['right']);return np.r_[pos+bias-target,.10*ik._rot_error(R,rbias@ori),.001*(q-seed)]
+   out=wanted.copy();out[7:13]=least_squares(f,seed,bounds=(np.maximum(ik.LOWER,seed-.10),np.minimum(ik.UPPER,seed+.10)),max_nfev=25).x
+   out[13]=.16+(.7-.16)*ik.smoothstep(float(np.clip((k-k0)/20,0,1)))
+   return out
   if k==220:
    from geometry import REST
    if m.p('extension')[2]<REST[2]+.02:raise RuntimeError('The extension was not lifted; stop this diagnostic.')

@@ -5,11 +5,11 @@ from common import down
 # Coarse waypoints allow at most20mm offline error; the native controller
 # must still establish real contact and pass the unchanged outcome scorer.
 class Plan:
- def __init__(self):
+ def __init__(self,initial=None):
   from pad_covers import configure_kinematics
   configure_kinematics()
   from yam_arena.constants import READY
-  self.a=np.r_[READY,1.,READY,1.];self.frames=[];self.audit=[]
+  self.a=np.r_[READY,1.,READY,1.] if initial is None else np.asarray(initial).copy();self.initial=self.a.copy();self.frames=[];self.audit=[]
  def add(self,seconds,label,targets,mode='cartesian'):
   from yam_arena import ik,station
   from scipy.optimize import least_squares
@@ -47,7 +47,7 @@ class Plan:
   import json
   from yam_arena.constants import READY,SHOULDER,WRIST,GRIPPER,FINGER_OPEN
   limits=np.tile([SHOULDER['velocity']/20]*3+[WRIST['velocity']/20]*3+[GRIPPER['velocity']/abs(FINGER_OPEN)/20],2)
-  a=np.vstack([np.r_[READY,1.,READY,1.]]+[f['action14'] for f in self.frames]);ratio=float(np.max(abs(np.diff(a,axis=0))/limits))
+  a=np.vstack([self.initial]+[f['action14'] for f in self.frames]);ratio=float(np.max(abs(np.diff(a,axis=0))/limits))
   if max(r['position_error_m'] for r in self.audit)>.020:raise ValueError(self.audit)
   if ratio>1.01:raise ValueError(('too fast',ratio))
   path.write_text(json.dumps(dict(control_hz=20,frames=self.frames,kinematic_audit=self.audit,maximum_velocity_ratio=ratio),separators=(',',':'))+'\n');return dict(steps=len(self.frames),max_velocity_ratio=ratio,audit=self.audit)

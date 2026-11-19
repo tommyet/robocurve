@@ -14,7 +14,7 @@ def configure_kinematics():
     ik.TCP_OFFSET=constants.TCP_OFFSET
     import sys
     if 'yam_arena.runtime' in sys.modules:sys.modules['yam_arena.runtime'].TCP_OFFSET=constants.TCP_OFFSET
-    station.BASES.update({side:(0.,y,.85) for side,y in [('left',.305),('right',-.305)]})
+    station.BASES.update({side:(0.,y,.80) for side,y in [('left',.305),('right',-.305)]})
 
 
 def install():

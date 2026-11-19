@@ -16,8 +16,8 @@ def main():
  if not 1<=a.capture_every<=20:p.error('Capture stride must be 1 to 20')
  plan=json.loads((HERE/'demo-plan.json').read_text()) if (HERE/'demo-plan.json').exists() else None
  if a.mode=='demo' and plan is None:p.error('No demo plan has been authored yet; use hold only for native reset inspection.')
- limit=json.loads((HERE/'task.json').read_text())['action_limit'];steps=a.steps or (len(plan['frames']) if a.mode=='demo' else limit)
- if not 1<=steps<=limit or (a.mode=='demo' and steps>len(plan['frames'])):p.error('Invalid action count')
+ limit=json.loads((HERE/'task.json').read_text())['action_limit'];steps=a.steps or (len(plan['frames'])-140 if a.mode=='demo' else limit)
+ if not 1<=steps<=limit or (a.mode=='demo' and steps>len(plan['frames'])-140):p.error('Invalid action count')
  if a.cpu_preview and a.mode=='dream':p.error('Dream requires native robot cameras')
  a.out.mkdir(parents=True,exist_ok=False);source=a.out/'source';source.mkdir();hashes={}
  for f in HERE.iterdir():
@@ -46,6 +46,8 @@ def main():
    emb=wrapper.YamArenaEmbodiment(task=str(HERE/'task.py'),object_jitter=0.,control_hz=20,cam_width=320,cam_height=176)
    m.subscribe_events()
    emb._ensure_sim(None);base=emb._base;emb._env.reset();instruction=json.loads((HERE/'task.json').read_text())['instruction'];emb._instruction=instruction
+   from start_pose import initialize_robot
+   initialize_robot(emb,base)
    m.bind_native(base)
    drawing=Drawing(omni.usd.get_context().get_stage());m.draw(drawing)
    def refresh():
@@ -60,6 +62,9 @@ def main():
      out[side]=dict(tcp=pose[:3]+R@np.asarray(TCP_OFFSET),rotation=R,opening=opening,joint_positions=array(robot.data.joint_pos)[0,emb._ids[side+'_robot'][0]],finger_joint_positions=array(robot.data.joint_pos)[0,ids])
     return out
    m.time=-1.
+   for side in ['left','right']:m.pinch.history[side]=[.3]
+   m.pinch.update(hands())
+   if set(m.grasp_state)!={'left','right'}:raise RuntimeError('Pre-held reset lacks actual opposed binding contacts')
    for _ in range(20):
     emb._env.step(emb._ready);m.update(hands())
    m.time=0.;m.release=0.;m.draw(drawing);refresh()
@@ -92,14 +97,14 @@ def main():
   report.update(status='running',initial_measurements=m.measure());save()
   for k in range(1,steps+1):
    if a.mode=='demo':
-    wanted=np.asarray(plan['frames'][k-1]['action14'])
+    wanted=np.asarray(plan['frames'][k+139]['action14'])
     if not a.cpu_preview:
      observed=[]
      for robot_name in ['left_robot','right_robot']:
       arm_ids,finger_ids=emb._ids[robot_name];q=array(base.scene[robot_name].data.joint_pos)[0]
       observed.extend(q[arm_ids]);observed.append(float(np.clip(q[finger_ids].mean()/FINGER_OPEN,0,1)))
      obs=np.asarray(observed)
-     wanted=controller.action(k,wanted,m,obs,hands())
+     wanted=controller.action(k+140,wanted,m,obs,hands())
      for tracker in trackers:
       wanted=tracker.action(wanted,obs,enabled=True)
    elif policy is not None:

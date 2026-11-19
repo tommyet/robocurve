@@ -7,8 +7,6 @@ class DemoControl:
   from yam_arena import ik,station
   from geometry import FC
   from scipy.spatial.transform import Rotation as Rot
-  if k>=200 and self.grasp is None:
-   H=hands['right'];self.grasp=(H['rotation'].T@(m.p('screwdriver')-H['tcp']),H['rotation'].T@m.orientation('screwdriver'),m.p('screwdriver',[0,.119,0]),m.orientation('screwdriver').copy())
   if k>=200 and self.plug_hold is None:
    H=hands['left'];nominal,_=ik.tcp_pose(wanted[:6],station.BASES['left'])
    self.plug_hold=(m.p('plug').copy(),m.orientation('plug').copy(),nominal)
@@ -22,26 +20,9 @@ class DemoControl:
     desired_centre=centre+(target-nominal)
     relative=H['rotation'].T@P;offset=H['rotation'].T@(m.p('plug')-H['tcp'])
     R=desired_R@relative.T;target=desired_centre-R@offset
-   if side=='right' and self.grasp is not None and k<=520:
-    t_rel,r_rel,start_tip,start_R=self.grasp;H=hands['right'];t_rel=H['rotation'].T@(m.p('screwdriver')-H['tcp']);r_rel=H['rotation'].T@m.orientation('screwdriver');P=m.orientation('plug');base=m.p('plug');Rtool=P@Rot.from_euler('z',90,degrees=True).as_matrix()
-    insert=base+P@(FC+np.array([.0155,0,0.]));outside=insert+P@np.array([.009,0,0]);fulcrum=base+P@(FC+np.array([.023,0,-.0006]))
-    far=outside+P@np.array([.045,0,0]);far_low=far.copy();far_low[2]=start_tip[2]
-    if k<=240:
-     u=ik.smoothstep((k-200)/40);tip=start_tip+u*(far_low-start_tip);Rtool=ik.slerp_matrix(start_R,Rtool,u)
-    elif k<=280:
-     u=ik.smoothstep((k-240)/40);tip=far_low+u*(far-far_low)
-    elif k<=340:
-     u=ik.smoothstep((k-280)/60);tip=far+u*(outside-far)
-    elif k<=420:
-     u=ik.smoothstep((k-340)/80);tip=outside+u*(insert-outside)
-    else:
-     # Raise the blade under the carrier lip while keeping the handle level.
-     tip=insert+P@np.array([0,0,.012*ik.smoothstep(min(1.,(k-420)/60))])
-    tool_tip_local=t_rel+r_rel@np.array([0,.119,0]);tip_target=tip.copy()
-    R=Rtool@r_rel.T;target=tip-R@tool_tip_local
-   if side=='right' and k>520:
+   if side=='right' and k>200:
     from sequence import PHASES
-    start=520
+    start=200
     for index,phase in enumerate(PHASES):
      end=start+phase['n']
      if k<=end:break
@@ -105,6 +86,6 @@ class DemoControl:
    def residual(q):
     pp,rr=ik.tcp_pose(q,station.BASES[side]);actual_R=rbias@rr
     position=pp+bias-target if tool_tip_local is None else pp+bias+actual_R@tool_tip_local-tip_target
-    return np.r_[position*(3. if tool_tip_local is not None else 1.),(.12 if side=='right' and k>520 else .05)*ik._rot_error(R,actual_R),.001*(q-seed)]
+    return np.r_[position*(3. if tool_tip_local is not None else 1.),(.12 if side=='right' and k>200 else .05)*ik._rot_error(R,actual_R),.001*(q-seed)]
    out[o:o+6]=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=25).x
   return out

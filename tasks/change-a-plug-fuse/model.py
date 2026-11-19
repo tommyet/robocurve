@@ -4,14 +4,10 @@ from geometry import FC,CARRIER_OFFSET
 from common import TABLE
 class Model(NativeModel):
  def __init__(self):super().__init__();self.grasp_state={}
- def bind_native(self,base):
-  super().bind_native(base)
-  from finite_pinch import FinitePinch
-  self.pinch=FinitePinch(self,['screwdriver'],.009,.003,.002,(-.037,.008))
  def configure_station(self):
   from pad_covers import install
   install()
- def material(self,hands,dt):self.pinch.update(hands);self.failed |= bool(self.broken)
+ def material(self,hands,dt):self.failed |= bool(self.broken)
  def state(self):return dict(super().state(),grasp_state=self.grasp_state)
  def measure(self):
   R=self.orientation('plug');new=(self.p('spare_fuse')-self.p('plug'))@R;old=(self.p('old_fuse')-self.p('plug'))@R;carrier=(self.p('carrier')-self.p('plug'))@R
@@ -24,7 +20,7 @@ class Model(NativeModel):
   on_table=all(self.p(n)[2]>=TABLE-.015 for n in ['plug','old_fuse','spare_fuse','carrier'])
   return dict(parts_on_table=on_table,old_fuse_seated=bool(np.linalg.norm(old-FC)<.003),old_fuse_removed=bool(np.linalg.norm(old-FC)>.04),replacement_seated=seated,cover_closed=closed,intact=not self.failed,released_seconds=self.release,failed=self.failed)
  def reset_valid(self):
-  m=self.measure();return m['old_fuse_seated'] and m['cover_closed']
+  m=self.measure();return m['old_fuse_seated'] and not m['cover_closed']
  def score(self):
   if self.failed or self.broken:return 0.
   m=self.measure()

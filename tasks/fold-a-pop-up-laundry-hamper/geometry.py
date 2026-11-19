@@ -6,7 +6,7 @@ mass add. Inter-layer slip is omitted. No rest shape changes during the trial.
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
 for side,y in [("left",.305),("right",-.305)]:
- BODIES.append(body(side+"_arm_riser",[0,y,TABLE+.050],[box((.12,.12,.100))],fixed=True,mass=5.,color=(.25,.27,.29)))
+ BODIES.append(body(side+"_arm_riser",[0,y,TABLE+.025],[box((.12,.12,.050))],fixed=True,mass=5.,color=(.25,.27,.29)))
 CENTER=np.array([.39,0,TABLE+.112]);N=96
 # Four short-edge rests support the pickup areas and leave the centre clear.
 for sx in [-1,1]:

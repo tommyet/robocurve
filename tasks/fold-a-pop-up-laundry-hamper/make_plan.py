@@ -4,7 +4,6 @@ import json,numpy as np
 from scipy.spatial.transform import Rotation as Rot
 from geometry import GRIP_POINTS,CENTER
 from planner import Plan
-p=Plan()
 def grip(angle,sign):
  a=np.radians(angle);z=np.array([np.cos(a),np.sin(a),0.]);x=np.array([0.,0.,sign]);return np.column_stack([x,np.cross(z,x),z])
 def twist(base,angle):
@@ -14,9 +13,27 @@ def twist(base,angle):
  rolled=base@Rot.from_euler('z',angle,degrees=True).as_matrix()
  return old@Rot.from_rotvec(.4*Rot.from_matrix(old.T@rolled).as_rotvec()).as_matrix()
 RL=grip(-50,-1);RR=grip(50,-1);L,R=GRIP_POINTS
-p.add(3,'approach opposite bound ends',{'left':(L-.04*RL[:,2],RL,.3),'right':(R-.04*RR[:,2],RR,.3)},'joint')
-p.add(2,'enclose the bound edges',{'left':(L,RL,.25),'right':(R,RR,.25)})
-p.add(2,'grip the spring frames',{'left':(L,RL,.10),'right':(R,RR,.10)})
+from pad_covers import configure_kinematics
+configure_kinematics()
+from yam_arena import ik,station
+from yam_arena.constants import READY
+from scipy.optimize import least_squares
+initial=np.r_[READY,.1172,READY,.1172]
+for side,o,point,ori in [('left',0,L,RL),('right',7,R,RR)]:
+ def residual(q):
+  pp,rr=ik.tcp_pose(q,station.BASES[side]);return np.r_[3*(pp-point),.08*ik._rot_error(ori,rr)]
+ candidates=[least_squares(residual,seed,bounds=(ik.LOWER,ik.UPPER),max_nfev=500) for seed in [initial[o:o+6],(ik.LOWER+ik.UPPER)/2]]
+ sol=min(candidates,key=lambda x:np.linalg.norm(x.fun));pos,actual_R=ik.tcp_pose(sol.x,station.BASES[side])
+ assert np.linalg.norm(pos-point)<.0003 and np.linalg.norm(ik._rot_error(ori,actual_R))<.08,('pre-held reset unreachable',side,sol.fun)
+ initial[o:o+6]=sol.x
+ if side=='left':RL=actual_R
+ else:RR=actual_R
+Path(__file__).with_name('initial-action.json').write_text(json.dumps({'action14':initial.tolist(),'description':'Both hands already hold the full-size, uncoiled bound edges at real opposing-pad contacts.'},indent=2)+'\n')
+p=Plan(initial)
+# Preserve the original controller phase numbering; these reset-only entries
+# are excluded from timed execution and never move task material.
+for count,label in [(60,'approach opposite bound ends'),(40,'enclose the bound edges'),(40,'grip the spring frames')]:
+ p.frames.extend(dict(action14=initial.tolist(),stage=label) for _ in range(count))
 p.add(4,'lift the flattened hamper',{'left':(L+[0,-.015,.07],RL,.10),'right':(R+[0,.015,.07],RR,.10)})
 for i in range(1,9):
  u=i/8;a=twist(grip(-50-30*u,-1),90*u);b=twist(grip(50+30*u,-1),-90*u)

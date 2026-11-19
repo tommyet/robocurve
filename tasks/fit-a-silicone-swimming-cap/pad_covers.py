@@ -22,7 +22,7 @@ def install():
     from yam_arena import embodiment, robot
     from yam_arena.constants import GRIPPER
     from isaaclab.sim.utils import clone
-    GRIPPER.update(stiffness=5000., effort=40.)
+    GRIPPER.update(stiffness=20000., effort=40.)
     original = embodiment.yam_arm_cfg
     if getattr(original, '_task_pad_covers', False):
         return
@@ -74,7 +74,7 @@ def install():
                 shape.AddScaleOp().Set(Gf.Vec3f(.003, .024, .040))
                 UsdPhysics.CollisionAPI.Apply(shape.GetPrim())
                 collision = PhysxSchema.PhysxCollisionAPI.Apply(shape.GetPrim())
-                collision.CreateContactOffsetAttr(.002)
+                collision.CreateContactOffsetAttr(.0005)
                 collision.CreateRestOffsetAttr(0.)
                 collision.CreateTorsionalPatchRadiusAttr(.006)
                 collision.CreateMinTorsionalPatchRadiusAttr(.004)

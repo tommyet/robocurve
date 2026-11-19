@@ -43,8 +43,8 @@ The cap is a 0.8 mm native elastic shell with self-contact and a 3 mm rolled
 rim. Young's modulus is 1 MPa; this uncalibrated value approximates silicone.
 The head is rigid. A compliant native pinch forms only when a rim element is
 between closing finger faces. It releases on opening or 8 mm slip, and breaks
-at 30 N or 0.08 Nm. Its uncalibrated translational compliance is 10,000 N/m;
-the force cap and 8 mm slip limit remain active. Grip reaction loads on the robot are omitted. The robot
+at 40 N or 0.08 Nm. Its uncalibrated translational compliance is 10,000 N/m;
+the force cap and 8 mm slip limit remain active. The finite grip connects to the native gripper and transmits reaction loads. The robot
 must stretch, position and release the material; no fitted shape is assigned.
 
 ## Assets
@@ -58,3 +58,7 @@ No third-party task meshes, scans or textures are used.
 Not submission-ready. The rotated headform layout is being tested with a firmer commanded pinch. A full-score released fitting, native penetration check and paired Dream baseline remain required.
 
 The 0.8 mm shell uses a 0.4 mm rest-contact offset and 3 mm speculative contact margin, with exact fixed-head triangle collisions. Grip friction is an uncalibrated approximation; the force, pad-contact, slip and material-integrity checks remain active.
+
+The finite rim pinch uses 40,000 N/m translational stiffness and 4 N·s/m damping, with the same 40 N/0.08 Nm break limits and continuous opposed-pad contact check. The 0.5 mm finger contact offset is smaller than the 1 mm capture/holding margin. These parameters approximate an unresolved frictional grip and are not measured silicone properties.
+
+The rolled-rim proxy may overlap a pad under compression. Holding requires it to continue spanning both pad faces within the1mm air-gap margin; compression itself is not treated as lost contact. Initial capture still requires both surfaces within1mm. The native joint connects to the actual gripper body at every physics substep and transmits reaction forces.

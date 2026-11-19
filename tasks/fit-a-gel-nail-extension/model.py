@@ -23,7 +23,7 @@ class Model(NativeModel):
   from pxr import Gf
   self.pinch.update(hands)
   depth=float(-self.joint_gap('button_spring')[2]);pressed=depth>.0008
-  if pressed and not self.button_down:self.lamp_remaining=45.;self.events.append(dict(event='lamp_45_second_cycle',time=self.time))
+  if pressed and not self.button_down:self.lamp_remaining=60.;self.events.append(dict(event='lamp_60_second_cycle',time=self.time))
   self.button_down=pressed;lit=self.lamp_remaining>0;self.lamp_remaining=max(0.,self.lamp_remaining-dt)
   for i,p in enumerate(PATCHES):
    point=self.p(p['name'])+[0,0,.00012];q=self.orientation('extension').T@(point-self.p('extension'))
@@ -35,8 +35,12 @@ class Model(NativeModel):
    # A narrow distal pinch leaves the gel bed exposed; any hand over a patch
    # masks the lamp rather than allowing light through an opaque gripper.
    shadow=shadowed(point,hands,LAMP[2]+.041)
-   if lit and contact and self.wet[i]>=1. and not shadow:self.dose[i]+=dt
    name='bond_'+p['name']
+   attached=name in self.enabled and name not in self.broken
+   # A live flash-cured bond keeps the same wetted interface attached while
+   # its finite compliance permits small elastic displacement. Further light
+   # exposure cures that bond; a broken bond gains no such exemption.
+   if lit and (contact or attached) and self.wet[i]>=1. and not shadow:self.dose[i]+=dt
    if self.dose[i]>=10. and name not in self.enabled:
     j=self.joints[name];j.GetLocalPos0Attr().Set(Gf.Vec3f(*(FRAME.T@(point-BASE))));j.GetLocalPos1Attr().Set(Gf.Vec3f(*q));self.enable(name,'contact_gel_flash_cured')
    if name in self.enabled:self.joints[name].GetBreakForceAttr().Set(.08*min(1.,self.dose[i]/40.))

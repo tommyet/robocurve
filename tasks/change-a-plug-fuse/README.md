@@ -1,6 +1,6 @@
-# Change the fuse in an unplugged UK plug
+# Replace a fuse in an open, unplugged UK plug
 
-Replace the fuse in the unplugged plug with the spare of the same rating, and refit its fuse carrier securely.
+Replace the exposed cartridge with the matching spare, then refit the removed carrier securely. The carrier is already removed at the start; opening it is outside this task.
 
 ## Run and score
 
@@ -15,7 +15,7 @@ python tasks/change-a-plug-fuse/rescore.py /tmp/change-a-plug-fuse-demo
 
 Dream receives the ordinary RGB cameras and joint state through Inspect Robots.
 The SDK resolves its credential privately. Use one episode per key at a time.
-The fixed layout has no random jitter or seed. The limit is 3,000
+The fixed layout has no random jitter or seed. The limit is 2,400
 controls at 20 Hz. Demo and Dream use identical physics and hardware; the demo
 commands only the robot joints and grippers.
 
@@ -26,40 +26,17 @@ for diagnostics and are excluded from submission evidence.
 
 ## Setup and reset
 
-Use the disconnected moulded UK plug, two matching 3 A cartridge fuses,
-screwdriver and parts dish specified in `task.json`. This is a mechanical
-replacement task: the plug is never connected to electricity. The original
-fuse starts seated, with the carrier closed; the spare is separate.
+Use the disconnected full-size UK plug and two matching3A cartridges. The original fuse starts seated in its spring terminals. The removed carrier starts upright in the raised tray; the spare is separate. No part has been replaced during reset, and the plug is never connected to electricity.
 
-The plug centre is (280, 80, 761.5) mm, rotated 90 degrees clockwise so its
-access notch faces the right arm. The spare starts at (400, -105, 763.5) mm
-on an 18 x 18 x 12 mm wooden rest. The screwdriver pickup centre is
-(280, -140, 775.5) mm. Its handle and shaft rest on secured wooden blocks,
-30 x 20 x 19 mm and 20 x 20 x 26 mm. The plastic parts dish is centred at
-(290, -160) mm and has 16 mm sides. X points forward and Y left; table height
-is 747.5 mm. Match the setup image. The plug, carrier, fuses, driver and dish
-are free to move. Restore intact clips and the original seated fuse each time.
+The plug centre is(280,80,761.5)mm, rotated90degrees clockwise. The spare starts at(400,-105,763.5)mm on an18×18×12mm wooden rest. The carrier starts at(318,-16,780.25)mm in a90×70mm tray with a25mm base and4mm rim. The85×70mm parts dish is centred at(290,-160)mm and has16mm sides. X points forward,Y left; table height is747.5mm. The plug, carrier and cartridges are free to move. Match the setup photograph, restore intact clips and detents, and seat the original cartridge before each trial.
 
-The left fingers have 55 x 20 x 3 mm padded extensions. The right extensions
-are 55 x 4 mm steel, with 3 mm backing and 0.8 x 2 mm distal 22 mm sections.
-The finger actuator limits are 40 N.
+The left fingers use55×20×3mm padded extensions. The right fingers use55mm steel extensions, with3mm backing and0.8×2mm distal22mm sections. Both jaw actuators have40N limits. The thin tips fit between the cartridge and the ordinary cover detents.
 
 ## Scoring and material model
 
-Inspect the released result with a ruler and the video. Full credit requires
-the old fuse at least 40 mm outside its seat, both replacement ferrules inside
-the clips, the carrier flush, and three seconds of retention after release.
-Removing the old fuse and seating the replacement earns 0.5; removing only
-the old fuse earns 0.25. Broken clips or housing, or parts falling off the
-table, score zero. No electrical continuity or diagnostic claim is made.
+Full credit requires the old fuse at least40mm outside its seat, both replacement ferrules in the spring clips, the carrier flush, and3seconds retained after both hands release. Removing the old fuse and seating the replacement earns0.5; removing only the old fuse earns0.25. Broken clips/housing or parts falling off the table score0. Inspect the video and released result with a ruler. No electrical continuity claim is made.
 
-Rigid-body contacts and passive spring leaves supply extraction and insertion
-resistance. Clip stiffness and break loads approximate the small metal and
-plastic parts. Only the screwdriver has an auxiliary grip: a compliant native
-constraint forms between closing fingers, releases on opening or 8 mm slip,
-and breaks at 18 N or 0.18 Nm. All other parts are moved by ordinary contacts.
-Grip reaction loads on the robot are omitted. No part is positioned by task
-logic during a trial.
+All handling uses native rigid contact, including the spring-clipped cartridges and loose carrier. Spring response and break loads approximate small metal/plastic parts. Ordinary moulded cavity ends limit axial cartridge movement. The robot moves only through its joints; no auxiliary task-object grip or object positioning rule is used. The supporting hand moves the plug aside during carrier pickup, then brings it back for refitting.
 
 ## Assets
 
@@ -69,11 +46,4 @@ No third-party task meshes, scans or textures are used.
 
 ## Validation status
 
-Not submission-ready. The latest native diagnostic (`fuse-full-039`) stopped
-at control 825 after a terminal was damaged during cartridge pickup. The
-previous shallower pickup stayed intact but lost the cartridge after 6.4 mm
-of lift. A full replacement demo and completed Dream baseline remain required.
-
-An ordinary 90 × 70 mm parts tray on a 25 mm riser sits at x330 mm, y−16 mm and catches the freed carrier. Its 4 mm rim keeps the thin carrier within reach; the robot must still pinch, lift and refit it through native contact. The tray does not attach or reposition the carrier.
-
-The terminal clips include their ordinary 0.8 mm bottom saddles. Angular spring constants are converted from Nm/radian to USD torque/degree. The 0.8 mm steel fingertip necks and 0.08 mm contact offsets provide clearance between the full-size cartridge and carrier detents; their inner gripping faces stay in the same positions. Current validation remains pending.
+This revised open-plug setup is not submission-ready. The prior closed-plug diagnostic removed the old cartridge and seated the replacement, but failed to pick up the overturned carrier. A complete demo, paired Dream baseline, independent rescoring and media review remain required for the current setup.
