@@ -34,7 +34,7 @@ The left fingers use55×20×3mm padded extensions. The right fingers use55mm ste
 
 ## Scoring and material model
 
-Full credit requires the old fuse at least40mm outside its seat, both replacement ferrules in the spring clips, the carrier flush, and3seconds retained after both hands release. Removing the old fuse and seating the replacement earns0.5; removing only the old fuse earns0.25. Broken clips/housing or parts falling off the table score0. Inspect the video and released result with a ruler. No electrical continuity claim is made.
+Full credit requires the old fuse at least40mm outside its seat, the replacement within3mm of its seat and aligned within18degrees, and the carrier flush within2.5mm and aligned within18degrees, with3seconds retained after both hands release. Both replacement ferrules must be in their spring clips. Removing the old fuse and seating the replacement earns0.5; removing only the old fuse earns0.25. Broken parts or parts falling off the table score0. The rigid housing itself has no fracture model; clip and detent failure are simulated. Inspect the video and released result with a ruler. No electrical continuity claim is made.
 
 All handling uses native rigid contact, including the spring-clipped cartridges and loose carrier. Spring response and break loads approximate small metal/plastic parts. Ordinary moulded cavity ends limit axial cartridge movement. The robot moves only through its joints; no auxiliary task-object grip or object positioning rule is used. The supporting hand moves the plug aside during carrier pickup, then brings it back for refitting.
 

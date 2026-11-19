@@ -68,7 +68,10 @@ class DemoControl:
      self.phase_goal=(goal,goalR);self.last_goal=self.phase_goal
     if phase['kind']=='push':
      plugR=m.orientation('plug');position=phase['position'].copy()
-     if m.measure()['replacement_seated']:position=FC+np.array([0.,0.,.040])
+     if phase['obj']=='carrier':
+      from geometry import CARRIER_OFFSET
+      if m.measure()['cover_closed']:position=CARRIER_OFFSET+np.array([0.,0.,.035])
+     elif m.measure()['replacement_seated']:position=FC+np.array([0.,0.,.040])
      elif abs(float((plugR.T@m.orientation('spare_fuse'))[0,0]))<.9:
       raise RuntimeError('Replacement is misaligned; stop instead of pushing it into a terminal.')
      self.phase_goal=(m.p('plug')+plugR@position,plugR@phase['rotation']);self.last_goal=self.phase_goal

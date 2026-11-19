@@ -3,11 +3,16 @@
   "reason": "New task: no native demo or Dream trial yet.",
   "status": "native_development_in_progress",
   "current_task_runtime_verified": false,
-  "checked_utc": "2026-11-19T21:20:51.354131+00:00",
+  "checked_utc": "2026-11-19T23:45:48.352745+00:00",
   "remaining_gates": [
     "Full-score native demo with current runtime",
     "Paired Dream baseline",
     "Frozen-source rescoring and visual review",
     "Media upload and PR ingestion"
-  ]
+  ],
+  "latest_native_trial": "gel-still-hold-032",
+  "latest_trial_status": "running",
+  "latest_steps": null,
+  "latest_score": null,
+  "blocker": "Curved interface wetted and curing. Full40s exposure, hands-clear1Nproof and paired Dream remain unvalidated."
 }

@@ -29,7 +29,7 @@ class Model(NativeModel):
    point=self.p(p['name'])+[0,0,.00012];q=self.orientation('extension').T@(point-self.p('extension'))
    within=-.020<=q[0]<=.008 and abs(q[1])<=tip_width(q[0])
    gap=float(q[2]-(.003-arch(np.clip(q[1],-.013,.013))))
-   contact=within and -.00008<gap<.00020
+   contact=within and -.00015<gap<.00020
    if contact:self.wet[i]=min(1.,self.wet[i]+dt)
    elif abs(gap)>.001 and self.dose[i]<10:self.wet[i]=0.
    # A narrow distal pinch leaves the gel bed exposed; any hand over a patch
