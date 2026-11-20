@@ -35,12 +35,12 @@ class DemoControl:
      if self.tool_rotation is None:self.tool_rotation=m.orientation('roller_handle').copy()
      body_R=roll_body
      if stage in ['grip roller handle','lift roller','put roller on table']:body_R=self.tool_rotation
-     elif stage=='return roller above table':
-      from scipy.spatial.transform import Rotation,Slerp
-      u=np.clip((k-1-self.starts[stage])/max(1,self.counts[stage]-1),0,1);body_R=Slerp([0,1],Rotation.from_matrix([roll_body,self.tool_rotation]))(float(u)).as_matrix()
-     elif stage=='approach rolling lane 0':
-      from scipy.spatial.transform import Rotation,Slerp
-      u=np.clip((k-1-self.starts[stage])/max(1,self.counts[stage]-1),0,1);body_R=Slerp([0,1],Rotation.from_matrix([self.tool_rotation,roll_body]))(float(u)).as_matrix()
+     elif stage in ['return roller above table','approach rolling lane 0']:
+      # Preserve the reachable joint-path orientation while moving between poses.
+      # Independently interpolating tool rotation can demand an unreachable wrist pose.
+      from geometry import TOOL_REST_R
+      pickup=down(0)@Rotation.from_euler('x',50,degrees=True).as_matrix()
+      body_R=R@pickup.T@TOOL_REST_R.as_matrix()
      R=body_R@grip['local_rotation'].T;target-=R@grip['local_point']
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6);p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=hands[side]['tcp']-p0;rbias=hands[side]['rotation']@R0.T
    def residual(q):

@@ -9,7 +9,7 @@
   ],
   "instruction": "Cover the prepared sample plate with the loose adhesive film and press it with the roller so every well is sealed separately. Keep the plate upright throughout and release the tools.",
   "context": "Preparing samples for short-term storage requires a continuous seal around each well; a wrinkle can let samples leak or mix.",
-  "setup": "A free 96-well polypropylene plate, 127.76 x 85.48 x 34 mm, has 9 mm well pitch and alternating coloured and clear water. A loose 130 x 80 x 0.1 mm PET adhesive storage film rests on a clean non-stick liner over a 120 mm-high tray. A padded hand roller with a 50 mm-wide wheel lies freely on the bench beside the tray. Filling and backing removal are operator preparation. All starting positions are fixed.",
+  "setup": "A free 96-well polypropylene plate, 127.76 x 85.48 x 34 mm, has 9 mm well pitch and alternating coloured and clear water. It stands loose on a fixed 140 x 100 x 30 mm polymer block. A loose 130 x 80 x 0.1 mm PET adhesive storage film rests on a clean non-stick liner over a 120 mm-high tray. A padded hand roller with a 50 mm-wide wheel lies freely on the bench beside the tray. Filling and backing removal are operator preparation. All starting positions are fixed.",
   "scoring": "After both open hands are at least 50 mm clear for 3 seconds, score 1/96 per fully covered well with a continuous pressed adhesive-contact ring separating it from every other well and the outside. Torn film, a broken object, or plate tilt greater than 35 degrees at any time gives zero. Real assessment uses overhead and oblique photographs with a ruler; the simulation uses the disclosed interface-connectivity proxy.",
   "run_limit": "2,400 controls (120 seconds at 20 Hz).",
   "action_limit": 2400,

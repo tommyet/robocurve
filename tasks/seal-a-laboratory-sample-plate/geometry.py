@@ -1,7 +1,7 @@
 """Free 96-well plate, flexible adhesive film and hand-held padded sealing roller."""
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
-PLATE=np.array([.35,0,TABLE+.017]);TOP=PLATE[2]+.017
+PLATE=np.array([.35,0,TABLE+.047]);TOP=PLATE[2]+.017
 FILM=np.array([.20,0,TABLE+.120]);NX=18;NY=12;DX=.130/NX;DY=.080/NY;THICKNESS=.0001
 WELLS=np.array([[(i-5.5)*.009,(j-3.5)*.009,.017] for i in range(12) for j in range(8)])
 # A rectangular-well polypropylene 1 mL deepwell plate. Grid walls really collide.
@@ -13,6 +13,8 @@ shapes += [box((.002,.08148,.034),(sx*.06288,0,0)) for sx in [-1,1]]
 # Top lands are at 17 mm above plate centre.
 for shape in shapes[1:23]:shape['pos'][2]=.001
 BODIES.append(body('plate',PLATE,shapes,mass=.104,color=(.88,.90,.91),friction=.9,contact_offset=.0001))
+# A simple raised bench block gives horizontal film-gripping fingers clearance.
+BODIES.append(body('plate_support',[.35,0,TABLE+.015],[box((.140,.100,.030))],mass=.3,fixed=True,color=(.35,.43,.49),friction=.8))
 # The film rests adhesive-side down on its non-stick backing, over a clean tray.
 BODIES.append(body('release_tray',FILM+[0,0,-.0602],[box((.116,.062,.120))],mass=.2,fixed=True,color=(.60,.68,.72),friction=.05))
 BODIES.append(body('release_liner',FILM+[0,0,-.00015],[box((.130,.062,.0001))],mass=.001,fixed=True,color=(.94,.94,.90),friction=.03))

@@ -5,7 +5,7 @@ class DemoControl:
  def __init__(self):
   import json
   from pathlib import Path
-  self.plan=json.loads(Path(__file__).with_name('demo-plan.json').read_text())['frames'];self.offset={s:np.zeros(3) for s in ['left','right']};self.tail_rotation=None;self.tool_rotation=None;self.had_tool_grasp=False;self.starts={};self.counts={}
+  self.plan=json.loads(Path(__file__).with_name('demo-plan.json').read_text())['frames'];self.offset={s:np.zeros(3) for s in ['left','right']};self.tail_rotation=None;self.tool_rotation=None;self.had_tool_grasp=False;self.press_offset=0.;self.starts={};self.counts={}
   for i,f in enumerate(self.plan):self.starts.setdefault(f["stage"],i);self.counts[f["stage"]]=self.counts.get(f["stage"],0)+1
  def action(self,k,wanted,m,observed,hands):
   from yam_arena import ik,station
@@ -27,6 +27,14 @@ class DemoControl:
    elif side=='left' and 'release' not in stage and stage!='leave hands clear' and stage!='inspect remaining scales and intact skin':target+=self.offset[side]
    elif side=='right' and ('scraping lane' in stage or stage.startswith('scrape lane')):
     F=m.orientation('fish');target=m.p('fish')+F@(target-C);R=F@R
+    if stage.startswith('load scraping') or stage.startswith('scrape lane'):
+     from geometry import PATCHES
+     load=max(700*max(0.,-float(np.dot(m.joint_gap('skin_bond_'+str(i)),m.orientation('skin_'+str(i))[:,2]))) for i in PATCHES)
+     desired=float(np.clip(.002*(load-.25),-.0004,.002))
+     self.press_offset+=.2*(desired-self.press_offset)
+     target+=(R@GRIP_R.T)[:,2]*self.press_offset
+    else:self.press_offset=0.
+
    if side in pinch.held and stage not in ['release scaler and fish','leave hands clear','inspect remaining scales and intact skin']:
     grip=pinch.held[side]
     if side=='left':
@@ -38,7 +46,7 @@ class DemoControl:
      elif stage=='approach scraping lane 0':
       from scipy.spatial.transform import Slerp
       from geometry import surface
-      u=np.clip((k-1-self.starts[stage])/max(1,self.counts[stage]-1),0,1);goal=m.orientation('fish')@surface(-.022,.049)[1]
+      u=np.clip((k-1-self.starts[stage])/max(1,self.counts[stage]-1),0,1);goal=m.orientation('fish')@surface(-.022,.045)[1]
       body_R=Slerp([0,1],Rotation.from_matrix([self.tool_rotation,goal]))(float(u)).as_matrix()
      else:body_R=R@GRIP_R.T
     R=body_R@grip['local_rotation'].T;target-=R@grip['local_point']

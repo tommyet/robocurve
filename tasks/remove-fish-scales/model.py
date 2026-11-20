@@ -19,7 +19,7 @@ class Model(NativeModel):
   for i in PATCHES:
    normal=self.orientation('skin_'+str(i))[:,2];compression=max(0.,-np.dot(self.joint_gap('skin_bond_'+str(i)),normal));self.peak_compression=max(self.peak_compression,compression);load=700*compression;self.maximum_load=max(self.maximum_load,load)
    point=self.p('skin_'+str(i));q=(point-self.p('scaler'))@self.orientation('scaler')
-   contact=abs(q[0])<.029 and .035<q[1]<.085 and abs(q[2]-TOOTH_Z)<.0015
+   contact=abs(q[0])<.013 and .044<q[1]<.076 and abs(q[2]-TOOTH_Z)<.0015
    # Stroke must be tail-to-head, under load, across the actual teeth.
    if i not in self.removed and contact and load>=.07:
     self.work[i]+=load*max(0.,-velocity[1])*dt

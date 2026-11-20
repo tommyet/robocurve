@@ -4,7 +4,9 @@ Cover the prepared plate with the loose film, press around the wells using the r
 
 ## Setup and material model
 
-Use a 96-well polypropylene plate with a 127.76 × 85.48 mm footprint, 9 mm well pitch and 34 mm height; 130 × 80 × 0.1 mm adhesive PET storage film; a clean release liner and raised tray; and a padded hand roller with a 50 mm-wide wheel lying freely on the bench. The loose plate remains upright on the table. Operator preparation fills the wells and removes the backing before placing the film adhesive-side down on its non-stick liner. Peeling backing is not part of the task. Alternating coloured and clear water supports later leakage inspection.
+Use a 96-well polypropylene plate with a 127.76 × 85.48 mm footprint, 9 mm well pitch and 34 mm height; 130 × 80 × 0.1 mm adhesive PET storage film; a clean release liner and raised tray; and a padded hand roller with a 50 mm-wide wheel lying freely on the bench. The loose plate stands on a fixed 140 × 100 × 30 mm polymer bench block, giving the horizontal film grip clearance above the table. Operator preparation fills the wells and removes the backing before placing the film adhesive-side down on its non-stick liner. Peeling backing is not part of the task. Alternating coloured and clear water supports later leakage inspection.
+
+The fixed polymer tray is 116 × 62 × 120 mm; its 130 × 62 × 0.1 mm liner leaves both long film edges accessible. The film weighs 1.44 g. The free plate and prepared contents are represented by a 104 g body. The 40 g roller has a 10 × 16 × 65 mm polymer handle and a 24 mm-diameter rubber wheel. Coordinates are metres: table Z=0.7475, plate centre (0.350, 0, 0.7945), film centre (0.200, 0, 0.8675), roller handle initially (0.180, −0.170, 0.7595), lying along Y. Gravity settles the loose objects before recording. Both arms use 40 × 6 × 1 mm finger extensions and a 4 N jaw limit.
 
 The film uses 216 passive connected sectors, with bending and native collision. The roller wheel rotates freely and its native padding compression supplies the pressing load. Adhesion requires actual rim proximity, roller load and dwell. Bonds start at the measured position and can break. The model does not simulate liquid flow or adhesive chemistry. A connectivity calculation estimates whether each well has a path to another well or the outside; it does not certify molecular sealing or long-term storage.
 
@@ -30,7 +32,7 @@ python tasks/seal-a-laboratory-sample-plate/rescore.py /tmp/seal-a-laboratory-sa
 
 The runner saves every 20 Hz action, native object poses, measurements, camera frames, events and an immutable source snapshot. `rescore.py` verifies the recorded source hashes and recomputes scores from that snapshot. It is not a second physics run. `make_plan.py` authors ordinary robot actions; neither reach checks nor synthetic scoring controls demonstrate feasibility.
 
-No task object follows a scripted animation. Geometry is reset once. During execution the robot supplies ordinary joint commands; native bodies, contacts and passive joints determine the outcome. Any finite pinch approximation requires opposed finger contact, starts at the measured pose, transmits reaction force, and releases or slips. The same hardware and physics apply to Dream and the demo.
+No task object follows a scripted animation. Geometry is reset once. During execution the robot supplies ordinary joint commands; native bodies, contacts and passive joints determine the outcome. The film pinch limit is 0.4 N / 0.001 Nm; the roller pinch limit is 5 N / 0.02 Nm. Any finite pinch approximation requires opposed finger contact, starts at the measured pose, transmits reaction force, and releases or slips. The same hardware and physics apply to Dream and the demo.
 
 ## Validation status
 

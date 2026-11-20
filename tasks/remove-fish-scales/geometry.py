@@ -33,9 +33,9 @@ for x in [-.022,-.011,0,.011,.022]:
    for sy in [-.008,-.003,.002,.007]:shapes.append(sphere((.0025,.0036,.00012),(sx,sy,.00035),(.70+.03*(i%3),.74,.64)))
   BODIES.append(body(scale,C+q,shapes,quat=quat,mass=.00007,color=(.72,.75,.65),friction=.75,contact_offset=.00005,exclude=['fish']))
   JOINTS.append(joint('scale_retention_'+str(i),skin,scale,[0,0,0],[0,0,0],axes=fixed_axes(),break_force=10.))
-TOOL=np.array([.18,-.17,TABLE+.006]);HEAD_OFFSET=np.array([0,.060,0]);TOOTH_Z=-.005
-shapes=[box((.012,.160,.010),(0,-.042,0)),box((.056,.050,.006),(0,.060,0))]
-for x in np.linspace(-.024,.024,9):
- for y in [.044,.057,.070]:shapes.append(sphere((.0011,.0015,.001),(x,y,-.004)))
+TOOL=np.array([.18,-.17,TABLE+.035]);HEAD_OFFSET=np.array([0,.060,-.030]);TOOTH_Z=-.035
+shapes=[box((.012,.160,.010),(0,-.042,0)),box((.012,.010,.030),(0,.038,-.015)),box((.024,.028,.006),(0,.060,-.030))]
+for x in [-.008,0.,.008]:
+ for y in [.052,.060,.068]:shapes.append(sphere((.0011,.0015,.001),(x,y,-.034)))
 BODIES.append(body('scaler',TOOL,shapes,mass=.087,color=(.62,.66,.68),friction=.8,contact_offset=.0001))
 finalize(BODIES,JOINTS)
