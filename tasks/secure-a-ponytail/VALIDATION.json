@@ -13,13 +13,10 @@
   },
   "native_force_control": "Corrected permanent_wrench_composer control passed; corrected tasks require new complete evidence.",
   "latest_attempt": {
-    "run": "pony-dense-contact-029",
-    "steps": 499,
-    "status": "failed",
-    "score": 0,
-    "secured_locks": 3,
-    "total_locks": 12,
-    "error": "Elastic did not enclose the hair; stopped before release."
+    "run": "pony-demo-010",
+    "status": "running",
+    "score": null,
+    "scope": "Flat twelve-lock reset, corrected stretch controller and cord contact representation; full success not yet established."
   },
   "remaining_gates": [
     "Complete corrected full-score native demo",

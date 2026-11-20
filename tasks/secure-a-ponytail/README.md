@@ -4,7 +4,7 @@
 
 **Validation withdrawn:** the previous USD proof-force command failed a native control test. New force application and paired evidence are required; do not submit the old result.
 
-Gather the synthetic hair on the practice head into a ponytail and secure it with the plain elastic. Leave it held after both hands let go.
+Secure the prepared, untied hair section with the plain elastic. Leave it held after both hands let go. This task tests fastening; gathering a full head of hair is outside its scope.
 
 ## Run and score
 
@@ -34,33 +34,32 @@ Use a rigid adult practice head approximately 180 × 156 × 230 mm. An inexpensi
 
 Prepare the hair once from an ordinary pack of straight synthetic braiding hair. Weigh twelve **3.0 ± 0.1 g** bundles on a 0.1 g scale and trim their free length to **245 ± 5 mm**. Bind only the uppermost 10 mm of each bundle with thread and adhesive; do not join the free lengths. Fix these twelve roots individually to a thin flexible scalp backing, then bond that backing flush to the rear of the head. No backing, glue or thread may extend into the free hair. A root must withstand a 2 N pull before use; replace any loose root.
 
-Place the roots on a 60 mm-wide rear scalp patch. In the head frame, root lateral coordinates are `(s − 5.5) × 5 mm` for `s = 0..11`, all 35 mm above the head centre. Use a ruler-marked paper template within 2 mm. Root coordinates in millimetres (left/right offset, height above centre): (-27.5, 35), (-22.5, 35), (-17.5, 35), (-12.5, 35), (-7.5, 35), (-2.5, 35), (2.5, 35), (7.5, 35), (12.5, 35), (17.5, 35), (22.5, 35), (27.5, 35). The front-to-back coordinate follows the scalp surface. Brush the twelve locks straight and lay them separately in their photographed loose arrangement; **do not tie, braid or join them**. Weigh/prepare before fixing roots, so no trial requires extracting hair from a commercial rooted head.
+Mount a 18 × 70 × 14 mm firm-foam root backing at the rear of the head, centred 98 mm behind and 42 mm above the head centre. Fix the roots separately to its lower face in one straight row, 5.4 mm centre spacing. The row spans 59.4 mm sideways. The twelve root heights are 35 mm above head centre; the backing supports only the bound root ends. Comb the free lengths into a flat, straight downward section and remove the comb before reset. No clip, glue, thread or support holds the free hair together. The elastic starts separate, with zero locks enclosed.
 
 The head faces away from the robot. Its centre is (390, 0, 1052.5) mm; the elastic starts at (270, 0, 810.5) mm on two secured wooden rests. X points forward, Y left, and the table is 747.5 mm high. Restore the loose hair and separate band each trial. The synthetic locks and contact envelopes are a coarse grouped-fibre model, not individual hair strands.
 
-The finger extensions have 40 mm working length, 12 mm width and 3 mm thickness.
+The finger extensions have 40 mm working length, 24 mm width and 3 mm thickness.
 Both arms use their ordinary mounting height and 40 N finger actuator limits.
 
 ## Scoring and material model
 
-After the robot releases, wait three seconds, then pull the elastic gently towards the hair ends with a spring scale: ramp to **1 N over 0.5 seconds**, hold **3 seconds**, then unload over **0.5 seconds**. Hook the scale through the elastic without catching hair; the evaluator must not support the band. Film the scale and band beside a ruler. The band may move **at most 10 mm** from its starting position throughout this test. A loose ring that slips down the hair fails, even if it previously rested in place.
+After the robot releases, wait three seconds, then pull the elastic gently towards the hair ends with a spring scale: ramp to **1 N over 0.5 seconds**, hold **3 seconds**, then unload over **0.5 seconds**. Use a light two-point thread sling under opposite sides of the elastic, without catching hair, and pull the sling downward along the hair with the scale. The evaluator must not support the band. Film the scale and band beside a ruler. The band may move **at most 10 mm** from its starting position throughout this test. A loose ring that slips down the hair fails, even if it previously rested in place.
 
 All credit requires passing this retention test, intact roots/band, and the band centre at least 55 mm behind and 25–160 mm below the head centre. Count locks remaining through the band after unloading: eleven or twelve earn 1.0, nine or ten 0.5, six to eight 0.25, fewer zero. Full credit also limits the band's maximum width to 50 mm. Other outcomes score zero. The load check is a repeatable gentle-tug criterion, not a claim about every hairstyle or elastic product.
 
 The simulator applies the same downward load, divided over native band contact patches, after three seconds with clear hands and after the band leaves its starting rest. It ramps/holds/unloads without writing material positions. Touching again resets the test. The evaluator force stands in for the scale; the test is recorded in the ordinary native trial and CPU-audited from its state history.
 
 Articulated 5 mm contact envelopes group fine hair fibres into flexible locks.
-A native elastic surface models a 20 mm inside-diameter, 3 mm cord silicone band;
-its stiffness is approximate. The starting rests are 23 mm apart. These dimensions
+A native elastic surface models a 18 mm inside-diameter, 3 mm cord silicone band;
+its stiffness is approximate. The starting rests are 21 mm apart. These dimensions
 are part of the trial setup, not a measured retail-product calibration.
 
 A geometry-gated native vertex attachment represents finger friction only after
 closing pad faces enclose a band patch. It holds only material already inside the
-central 8 mm of the 12 mm-wide face, follows the real gripper link, and releases on opening, 8 mm slip
+24 mm-wide face, follows the real gripper link, and releases on opening, 8 mm slip
 or estimated local cord tension above 18 N. This tension estimate is uncalibrated;
 it is not a measured native force limit. Local held-patch contacts are filtered
-while the attachment acts, to avoid conflicting constraints. Native hair contacts,
-root failures and band over-stretch remain active. No hair or band pose is assigned
+while the attachment acts, to avoid conflicting constraints. Native cord capsules supply hair/head contact; the wider elastic ribbon is filtered from those pairs to avoid a second oversized contact profile. Root failures and band over-stretch remain active. No hair or band pose is assigned
 during a trial; the approximation supplies no automatic gathering or fitting.
 
 The CPU audit verifies source hashes and every action, then independently
@@ -79,14 +78,4 @@ No third-party task meshes, scans or textures are used.
 
 The old submitted demo and baseline are withdrawn because the USD proof force did not reach the native solver. Corrected control tests verify native force application; new successful task evidence is still required.
 
-The working point is168mm from the gripper origin,4mm behind the extension ends. This keeps the opposed fingers clear of one another when picking up the small elastic; capture is restricted to the actual−36…+4mm working span.
-
-The approximate local tension limit is18N, below the native40N jaw effort. It represents silicone-pad friction, not measured force feedback. The1N released retention test,8mm grip-slip limit and material integrity checks are unchanged.
-
-The silicone modulus is an uncalibrated0.6MPa. During threading, the demo follows the observed hair centre at the current height; it does not keep the lower hair ends' X coordinate while moving toward the curved scalp.
-
-The 12 mm-wide pads capture only vertices within their actual 6 mm half-width. The 18 N estimated slip guard is below the 40 N jaw effort; it is an explicitly uncalibrated friction approximation. The released 1 N proof is unchanged.
-
-Every cord segment has a native contact capsule, providing a discrete contact approximation of the cord. The demo withdraws along the finger axes after opening, without sweeping backwards through the gathered hair.
-
-The band has64 small native capsule contact patches, sharing the same0.4g contact mass. Only overlapping immediate neighbours are collision-filtered. Denser contact coverage reduces the gaps that appeared between stretched patches; it does not change cord diameter, material stiffness, force application or scoring.
+The working point is 168 mm from the gripper origin, 4 mm behind the extension ends. The narrow pads and 2 mm-wide wooden support posts leave access to the small band. The band has 32 native contact patches with a total contact mass of 0.4 g; adjacent overlapping patches are collision-filtered. A further 0.6 g is assigned to the elastic surface. This is a coarse contact model, not individual hairs or calibrated silicone.

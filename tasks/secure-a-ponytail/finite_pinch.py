@@ -89,9 +89,9 @@ class FinitePinch:
    # contact patch rather than treating a broad finger as a frictionless pin.
    ids=[]
    for row in range(3):
-    for offset in range(-4,5):
+    for offset in range(-8,9):
      j=row*M+(index+offset)%M;v=self.m.nodes[j]
-     if candidate(v,self.radius,h,self.thickness,.006,self.z_range) is not None:ids.append(j)
+     if candidate(v,self.radius,h,self.thickness,.012,self.z_range) is not None:ids.append(j)
    if M+index not in ids:ids.append(M+index)
    ids=sorted(set(ids));locals=(self.m.nodes[ids]-h['tcp'])@h['rotation']
    a=self.m.stage.DefinePrim(self.root+f'/finger_pinch_{side}_{self.serial}','OmniPhysicsVtxXformAttachment')

@@ -4,16 +4,24 @@ BODIES=[];JOINTS=[]
 ELASTIC_YOUNGS_MODULUS=6e5
 HEAD=np.array([.39,0,TABLE+.305]);ELASTIC=np.array([.27,0,TABLE+.063])
 head=[sphere((.090,.078,.115)),sphere((.015,.012,.023),(.091,0,-.015)),cylinder(.038,.19,(0,0,-.205)),box((.15,.15,.015),(0,0,-.2975))]
+# A small foam-backed root patch supports the separately rooted section.
+head += [box((.018,.070,.014),(-.098,0,.042),(.20,.095,.040))]
 head += [sphere((.004,.008,.005),(.084,y,.020),(.12,.12,.13)) for y in [-.030,.030]]
-BODIES.append(body('styling_head',HEAD,head,fixed=True,mass=1.5,color=(.75,.62,.50),friction=.5))
+BODIES.append(body('styling_head',HEAD,head,fixed=True,mass=1.5,color=(.75,.62,.50),friction=.5,exclude=['elastic']))
+# The capsule carriers supply the 3 mm cord contact with hair and head.
+# Exclude the wider elastic ribbon from those pairs to avoid a second,
+# oversized collision profile. Finger contact with the ribbon remains active.
 STRANDS=12;SEGMENTS=18
 # Each flexible lock groups fine fibres into a 5 mm contact envelope.
 # The 36 g total mass includes voids between fibres; no locks are joined together.
 for s in range(STRANDS):
- y=(s-5.5)*.005;z=.035;back=-.0915*np.sqrt(1-(y/.078)**2-(z/.115)**2);root=HEAD+[back,y,z]
+ # A compact, untied section: twelve separately rooted locks in one straight
+ # row. This narrows the task to fastening, not gathering a whole head.
+ y=(s-5.5)*.0054;back=-.101
+ root=HEAD+[back,y,.035]
  pts=[]
  for j in range(SEGMENTS+1):
-  u=j/SEGMENTS;p=root+[-.035*u,0.,-.245*u]
+  u=j/SEGMENTS;p=root+[0.,0.,-.245*u]
   local=p-HEAD
   if (local[1]/.078)**2+(local[2]/.115)**2<1:
    scalp=HEAD[0]-.090*np.sqrt(1-(local[1]/.078)**2-(local[2]/.115)**2)
@@ -21,7 +29,7 @@ for s in range(STRANDS):
   pts.append(p)
  for i,(a,b) in enumerate(zip(pts[:-1],pts[1:])):
   a,b=np.array(a),np.array(b);v=b-a;length=np.linalg.norm(v);rot=Rotation.align_vectors([v/length],[[0,0,1]])[0];name=f'hair_{s}_{i}'
-  part=body(name,(a+b)/2,[cylinder(.0025,length)],mass=.003/SEGMENTS,quat=rot.as_quat().tolist(),color=(.20+.015*(s%3),.095,.040),friction=.5,contact_offset=.0001,linear_damping=.2,angular_damping=.3)
+  part=body(name,(a+b)/2,[cylinder(.0025,length)],mass=.003/SEGMENTS,quat=rot.as_quat().tolist(),color=(.20+.015*(s%3),.095,.040),friction=.5,contact_offset=.0001,exclude=['elastic'],linear_damping=.2,angular_damping=.3)
   I=part['mass']*length*length/12;part['inertia']=[max(I,1e-10),max(I,1e-10),max(I/10,1e-10)];part['visible']=False;BODIES.append(part)
   if i:
    prev=next(b for b in BODIES if b['name']==f'hair_{s}_{i-1}')
@@ -30,10 +38,10 @@ for s in range(STRANDS):
   else:JOINTS.append(joint(f'root_{s}','styling_head',name,a-HEAD,[0,0,-length/2],axes=bend_axes(.0002,.00002),break_force=20.))
 # Two wooden rails support four arcs while leaving the central pickup lane clear.
 for sx in [-1,1]:
- BODIES.append(body(f'elastic_rest_{sx+1}',[ELASTIC[0]+sx*.0115,0,TABLE+.030],[box((.006,.016,.060))],mass=.010,fixed=True,color=(.59,.44,.28)))
-# A plain 3 mm cord elastic, 20 mm inside diameter. Native passive
+ BODIES.append(body(f'elastic_rest_{sx+1}',[ELASTIC[0]+sx*.0105,0,TABLE+.030],[box((.002,.002,.060))],mass=.010,fixed=True,color=(.59,.44,.28)))
+# A plain 3 mm cord elastic, 18 mm inside diameter. Native passive
 # a continuous elastic surface joins contact-bearing patches into a closed loop.
-M=64;radius=.0115;theta=np.arange(M)*2*np.pi/M
+M=32;radius=.0105;theta=np.arange(M)*2*np.pi/M
 vertices=ELASTIC+np.c_[radius*np.cos(theta),radius*np.sin(theta),np.zeros(M)]
 centres=(vertices+np.roll(vertices,-1,axis=0))/2
 lengths=np.linalg.norm(np.roll(vertices,-1,axis=0)-vertices,axis=1)
