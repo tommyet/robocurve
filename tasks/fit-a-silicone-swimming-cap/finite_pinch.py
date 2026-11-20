@@ -46,10 +46,14 @@ class FinitePinch:
             if e.type!=int(SimulationEvent.JOINT_BREAK):return
             path=str(PhysicsSchemaTools.decodeSdfPath(*e.payload['jointPath']))
             for side,g in list(self.held.items()):
-                if path==g['path']:
-                    self.m.events.append(dict(event='pinch_slipped',side=side,body=g['body'],time=self.m.time,force_limit_n=40.,torque_limit_nm=.08))
-                    g['joint'].GetJointEnabledAttr().Set(False);self.held.pop(side);self.blocked.add(side)
+                if any(path==item['path'] for item in g['items']):self.release(side,'native grip load limit')
         self.subscription=get_physx_interface().get_simulation_event_stream_v2().create_subscription_to_pop(event)
+
+    def release(self,side,reason):
+        g=self.held.pop(side)
+        for item in g['items']:item['joint'].GetJointEnabledAttr().Set(False)
+        if reason!='opened':self.blocked.add(side)
+        self.m.events.append(dict(event='pinch_released' if reason=='opened' else 'pinch_slipped',side=side,body=g['body'],bodies=[i['body'] for i in g['items']],time=self.m.time,reason=reason))
 
     def update(self,hands):
         from pxr import UsdPhysics,Sdf,Gf
@@ -59,46 +63,51 @@ class FinitePinch:
             q=np.asarray(h.get('finger_joint_positions',[-h['opening']*.04695]*2))
             aperture=-q.sum()-2*self.thickness
             if aperture>2*self.radius+.002:
-                if side in self.held:
-                    g=self.held.pop(side);g['joint'].GetJointEnabledAttr().Set(False)
-                    self.m.events.append(dict(event='pinch_released',side=side,body=g['body'],time=self.m.time))
+                if side in self.held:self.release(side,'opened')
                 if h['opening']>.30:self.blocked.discard(side)
                 continue
             if side in self.held:
-                g=self.held[side];now=(self.m.p(g['body'])-h['tcp'])@h['rotation']
-                contact=candidate(self.m.p(g['body']),self.radius,h,self.thickness,self.half_width,self.z_range,holding=True)
-                if np.linalg.norm(now-g['local_point'])>.008 or contact is None:
-                    g['joint'].GetJointEnabledAttr().Set(False);self.held.pop(side);self.blocked.add(side)
-                    self.m.events.append(dict(event='pinch_slipped',side=side,body=g['body'],time=self.m.time,reason='rim lost opposing pad contact or moved 8 mm through the grip'))
+                g=self.held[side]
+                for item in list(g['items']):
+                    now=(self.m.p(item['body'])-h['tcp'])@h['rotation']
+                    contact=candidate(self.m.p(item['body']),self.radius,h,self.thickness,self.half_width,self.z_range,holding=True)
+                    if np.linalg.norm(now-item['local_point'])>.008 or contact is None:
+                        item['joint'].GetJointEnabledAttr().Set(False);g['items'].remove(item)
+                        self.m.events.append(dict(event='pinch_patch_lost',side=side,body=item['body'],time=self.m.time))
+                # A pad can lose an edge contact while retaining the centre.
+                # Surviving joints keep their original divided load limits.
+                if not g['items']:self.release(side,'all rim contacts lost')
             if side in self.held or side in self.blocked or max(history)-h['opening']<.008:continue
-            used={g['body'] for g in self.held.values()};choices=[]
+            used={i['body'] for g in self.held.values() for i in g['items']};choices=[]
             for name in self.names:
                 if name in used:continue
                 distance=candidate(self.m.p(name),self.radius,h,self.thickness,self.half_width,self.z_range)
                 if distance is not None:choices.append((distance,name))
             if not choices:continue
-            _,name=min(choices);self.serial+=1;path=self.root+f'/pinch_constraint_{side}_{self.serial}'
-            joint=UsdPhysics.Joint.Define(self.m.stage,path)
-            joint.CreateJointEnabledAttr(False)
-            with Sdf.ChangeBlock():
-                joint.CreateExcludeFromArticulationAttr(True)
-                joint.CreateBody0Rel().SetTargets([Sdf.Path(self.grippers[side])])
-                joint.CreateBody1Rel().SetTargets([Sdf.Path(self.body_paths[name])])
-                p=np.asarray(TCP_OFFSET)+(self.m.p(name)-h['tcp'])@h['rotation'];q=Rotation.from_matrix(h['rotation'].T@self.m.orientation(name)).as_quat()
-                joint.CreateLocalPos0Attr(Gf.Vec3f(*p));joint.CreateLocalPos1Attr(Gf.Vec3f(0,0,0))
-                joint.CreateLocalRot0Attr(Gf.Quatf(float(q[3]),Gf.Vec3f(*q[:3])));joint.CreateLocalRot1Attr(Gf.Quatf(1.,Gf.Vec3f(0,0,0)))
-                joint.CreateBreakForceAttr(40.);joint.CreateBreakTorqueAttr(.08);joint.CreateCollisionEnabledAttr(True)
-                # A force-limited friction approximation, not an infinitely stiff weld.
-                for axis in ('transX','transY','transZ','rotX','rotY','rotZ'):
-                    linear=axis.startswith('trans')
-                    if linear:
-                        limit=UsdPhysics.LimitAPI.Apply(joint.GetPrim(),axis);limit.CreateLowAttr(-.05);limit.CreateHighAttr(.05)
-                    drive=UsdPhysics.DriveAPI.Apply(joint.GetPrim(),axis);drive.CreateTypeAttr('force')
-                    drive.CreateStiffnessAttr(40000. if linear else .25*np.pi/180.)
-                    drive.CreateDampingAttr(4. if linear else .005*np.pi/180.)
-                    drive.CreateMaxForceAttr((40. if linear else 0.08)/np.sqrt(3.))
-                    drive.CreateTargetPositionAttr(0.)
-                joint.GetJointEnabledAttr().Set(True)
-            self.held[side]=dict(body=name,path=path,joint=joint,local_point=((self.m.p(name)-h['tcp'])@h['rotation']).copy(),local_rotation=h['rotation'].T@self.m.orientation(name))
-            self.m.events.append(dict(event='pinch_captured',side=side,body=name,time=self.m.time,force_limit_n=40.,torque_limit_nm=.08,local_point=((self.m.p(name)-h['tcp'])@h['rotation']).tolist(),opening=float(h['opening'])))
-        self.m.grasp_state={side:dict(body=g['body'],force_limit_n=40.,torque_limit_nm=.08) for side,g in self.held.items()}
+            # A broad real pad holds every rim point already inside its faces.
+            # Split, rather than multiply, its finite force/torque and stiffness.
+            choices.sort();count=len(choices);items=[]
+            for _,name in choices:
+                self.serial+=1;path=self.root+f'/pinch_constraint_{side}_{self.serial}'
+                joint=UsdPhysics.Joint.Define(self.m.stage,path);joint.CreateJointEnabledAttr(False)
+                local=(self.m.p(name)-h['tcp'])@h['rotation']
+                with Sdf.ChangeBlock():
+                    joint.CreateExcludeFromArticulationAttr(True)
+                    joint.CreateBody0Rel().SetTargets([Sdf.Path(self.grippers[side])]);joint.CreateBody1Rel().SetTargets([Sdf.Path(self.body_paths[name])])
+                    p=np.asarray(TCP_OFFSET)+local;q=Rotation.from_matrix(h['rotation'].T@self.m.orientation(name)).as_quat()
+                    joint.CreateLocalPos0Attr(Gf.Vec3f(*p));joint.CreateLocalPos1Attr(Gf.Vec3f(0,0,0))
+                    joint.CreateLocalRot0Attr(Gf.Quatf(float(q[3]),Gf.Vec3f(*q[:3])));joint.CreateLocalRot1Attr(Gf.Quatf(1.,Gf.Vec3f(0,0,0)))
+                    joint.CreateBreakForceAttr(40./count);joint.CreateBreakTorqueAttr(.08/count);joint.CreateCollisionEnabledAttr(True)
+                    for axis in ('transX','transY','transZ','rotX','rotY','rotZ'):
+                        linear=axis.startswith('trans')
+                        if linear:
+                            limit=UsdPhysics.LimitAPI.Apply(joint.GetPrim(),axis);limit.CreateLowAttr(-.05);limit.CreateHighAttr(.05)
+                        drive=UsdPhysics.DriveAPI.Apply(joint.GetPrim(),axis);drive.CreateTypeAttr('force')
+                        drive.CreateStiffnessAttr((40000. if linear else .25*np.pi/180.)/count)
+                        drive.CreateDampingAttr((4. if linear else .005*np.pi/180.)/count)
+                        drive.CreateMaxForceAttr((40. if linear else .08)/(count*np.sqrt(3.)));drive.CreateTargetPositionAttr(0.)
+                    joint.GetJointEnabledAttr().Set(True)
+                items.append(dict(body=name,path=path,joint=joint,local_point=local.copy()))
+            self.held[side]=dict(body=items[0]['body'],items=items)
+            self.m.events.append(dict(event='pinch_captured',side=side,body=items[0]['body'],bodies=[i['body'] for i in items],time=self.m.time,total_force_limit_n=40.,total_torque_limit_nm=.08,opening=float(h['opening'])))
+        self.m.grasp_state={side:dict(body=g['body'],contact_bodies=[i['body'] for i in g['items']],force_limit_n=40.,torque_limit_nm=.08) for side,g in self.held.items()}

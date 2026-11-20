@@ -16,7 +16,7 @@ class Model(NativeModel):
   self.proof_wrench=NativeWrench(self,['band_segment_%03d'%i for i in BAND_CONTACT_INDICES])
   self.read()
   from finite_pinch import FinitePinch
-  self.pinch=FinitePinch(self,[n for n in self.names if n.startswith('band_segment_')],.0015,.003,.004,(-.025,.012))
+  self.pinch=FinitePinch(self,[n for n in self.names if n.startswith('band_segment_')],.0015,.003,.004,(-.036,.004))
  def read(self):
   super().read()
   if getattr(self,'surface',None) is not None:

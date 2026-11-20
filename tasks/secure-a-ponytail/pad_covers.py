@@ -1,6 +1,6 @@
 """Steel finger extensions with silicone contact faces.
 
-Each extension is 40 x 24 x 3 mm and leaves the original finger bodies 13 mm
+Each extension is 40 x 24 x 3 mm and leaves the original finger bodies 21 mm
 behind the working point, giving access to the thin elastic.
 They are rigid robot hardware in both demo and Dream runs, never grasp joints.
 """
@@ -10,7 +10,7 @@ from scipy.spatial.transform import Rotation
 
 def configure_kinematics():
     from yam_arena import constants, ik
-    constants.TCP_OFFSET=(0.,0.,.160)
+    constants.TCP_OFFSET=(0.,0.,.168)
     ik.TCP_OFFSET=constants.TCP_OFFSET
     import sys
     if 'yam_arena.runtime' in sys.modules:sys.modules['yam_arena.runtime'].TCP_OFFSET=constants.TCP_OFFSET

@@ -52,8 +52,21 @@ class DemoControl:
      points=m.nodes['frame']
      index=indices if isinstance(indices,int) else indices[0]+int(np.argmax(points[indices[0]:indices[1],2]))
      body=f'bound_edge_{index:03d}';pos=m.p(body);tangent=m.orientation(body)[:,2].copy()
-     tangent[2]=0.;tangent/=max(np.linalg.norm(tangent),1e-12)
-     z=np.array([0.,0.,-1.]);x=np.cross(tangent,z);chosen=np.column_stack([x,tangent,z])
+     tangent/=max(np.linalg.norm(tangent),1e-12)
+     # Choose a reachable roll around the measured binding, preserving a
+     # transverse pinch. A fixed downward wrist missed the loop by 38 mm.
+     seed0=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6);choices=[]
+     z0=np.array([0.,0.,-1.]);z0-=tangent*float(z0@tangent);z0/=max(np.linalg.norm(z0),1e-12)
+     for sign in [-1.,1.]:
+      y=sign*tangent
+      for angle in [-60.,-30.,0.,30.,60.]:
+       z=Rot.from_rotvec(tangent*np.deg2rad(angle)).apply(z0);candidate=np.column_stack([np.cross(y,z),y,z])
+       def loss(q):
+        pp,rr=ik.tcp_pose(q,station.BASES[side]);return np.r_[pp-pos,.10*ik._rot_error(candidate,rr)]
+       sol=least_squares(loss,seed0,bounds=(ik.LOWER,ik.UPPER),max_nfev=100)
+       choices.append((float(np.linalg.norm(sol.fun)),candidate))
+     error,chosen=min(choices,key=lambda a:a[0])
+     if error>.015:raise RuntimeError('Observed outer loop has no reachable transverse grasp.')
      self.waypoints[approach]=dict(body=body,point=pos.copy(),rotation=chosen,start_tcp=hands[side]['tcp'].copy(),start_rotation=hands[side]['rotation'].copy())
     entry=self.waypoints[approach];body=entry['body'];pos=m.p(body);chosen=entry['rotation']
     lo,hi=self.stages[label];u=ik.smoothstep((k-lo+1)/(hi-lo+1))

@@ -5,7 +5,7 @@ HEAD=np.array([.36,0,TABLE+.125]);HEADROT=np.eye(3);RADII=np.array([.095,.080,.1
 shapes=[sphere(RADII),sphere((.018,.012,.026),(-.095,0,-.015)),sphere((.012,.012,.026),(0,-.080,-.025)),sphere((.012,.012,.026),(0,.080,-.025)),box((.14,.13,.010),(0,0,-.120))]
 shapes += [sphere((.003,.009,.005),(-.089,y,.017),(.13,.15,.18)) for y in [-.030,.030]]
 shapes += [box((.001,.038,.004),(-.090,0,-.051),(.47,.17,.17))]
-BODIES.append(body('headform',HEAD,shapes,fixed=True,mass=1.5,color=(.76,.63,.51),friction=.65,quat=Rotation.from_matrix(HEADROT).as_quat().tolist()))
+BODIES.append(body('headform',HEAD,shapes,fixed=True,mass=1.5,color=(.76,.63,.51),friction=.3,quat=Rotation.from_matrix(HEADROT).as_quat().tolist()))
 # The loose cap straddles the crown, with its held rim15mm below the crown; it is not stretched into its final fit.
 M=40;N=12
 POINTS=[CAP+[0,0,.130]]
@@ -46,7 +46,7 @@ def spawn_surface(stage,root):
  UsdPhysics.CollisionAPI.Apply(p);col=PhysxSchema.PhysxCollisionAPI.Apply(p);col.CreateContactOffsetAttr(.003);col.CreateRestOffsetAttr(.0004)
  mat=UsdShade.Material.Define(stage,root+'/capMaterial');q=mat.GetPrim()
  for api in ['OmniPhysicsBaseMaterialAPI','OmniPhysicsDeformableMaterialAPI','OmniPhysicsSurfaceDeformableMaterialAPI','PhysxSurfaceDeformableMaterialAPI']:q.ApplyAPI(api)
- for key,value in {'omniphysics:dynamicFriction':.9,'omniphysics:density':1100.,'omniphysics:youngsModulus':1e6,'omniphysics:poissonsRatio':.45,'omniphysics:surfaceThickness':.0008,'omniphysics:surfaceBendStiffness':1e6/(12*(1-.45**2)),'physxDeformableMaterial:elasticityDamping':.02,'physxDeformableMaterial:bendDamping':.01}.items():
+ for key,value in {'omniphysics:dynamicFriction':.35,'omniphysics:density':1100.,'omniphysics:youngsModulus':1e6,'omniphysics:poissonsRatio':.45,'omniphysics:surfaceThickness':.0008,'omniphysics:surfaceBendStiffness':1e6/(12*(1-.45**2)),'physxDeformableMaterial:elasticityDamping':.02,'physxDeformableMaterial:bendDamping':.01}.items():
   attr=q.GetAttribute(key)
   if not attr:raise RuntimeError('Required cap material attribute unavailable: '+key)
   attr.Set(value)

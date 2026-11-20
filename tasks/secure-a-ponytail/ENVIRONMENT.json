@@ -1,8 +1,8 @@
 {
   "schema": "runtime-evidence-v1",
-  "status": "native_runtime_verified",
+  "status": "corrected_native_proof_pending",
   "scope": "Native revision demo and paired Dream run, with frozen-source CPU audits.",
-  "current_task_runtime_verified": true,
+  "current_task_runtime_verified": false,
   "python": "3.12.16",
   "packages": {
     "numpy": "2.5.4",
@@ -44,5 +44,6 @@
     "physics": "Native PhysX contacts, passive joints and the material approximations disclosed in task.json."
   },
   "reference_checked_utc_date": "2026-11-18",
-  "verified_utc_date": "2026-11-19"
+  "verified_utc_date": "2026-11-19",
+  "submission_ready": false
 }

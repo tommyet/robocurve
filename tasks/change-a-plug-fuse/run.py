@@ -53,11 +53,12 @@ def main():
     for name in ['top_cam','left_cam','right_cam','judging_front','judging_rear','judging_side']:base.scene[name].update(0.,force_recompute=True)
    for _ in range(6):refresh()
    def array(value):return getattr(value,'torch',value).detach().cpu().numpy()
+   current=emb._ready.detach().cpu().numpy()[0].copy()
    def hands():
     out={}
     for side in ['left','right']:
      robot=base.scene[side+'_robot'];idx=list(robot.body_names).index('gripper');pose=array(robot.data.body_link_pose_w)[0,idx];R=rotation(pose[3:]);ids=robot.find_joints(list(FINGER_JOINTS),preserve_order=True)[0];opening=float(np.abs(array(robot.data.joint_pos)[0,ids]).sum()/.094)
-     out[side]=dict(tcp=pose[:3]+R@np.asarray(TCP_OFFSET),rotation=R,opening=opening,joint_positions=array(robot.data.joint_pos)[0,emb._ids[side+'_robot'][0]],finger_joint_positions=array(robot.data.joint_pos)[0,ids])
+     out[side]=dict(tcp=pose[:3]+R@np.asarray(TCP_OFFSET),rotation=R,opening=opening,commanded_opening=float(current[6 if side=='left' else 13]),joint_positions=array(robot.data.joint_pos)[0,emb._ids[side+'_robot'][0]],finger_joint_positions=array(robot.data.joint_pos)[0,ids])
     return out
    m.time=-1.
    for _ in range(20):

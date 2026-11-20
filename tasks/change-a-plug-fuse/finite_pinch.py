@@ -66,13 +66,20 @@ class FinitePinch:
                 if np.linalg.norm(now-g['local_point'])>.008:
                     g['joint'].GetJointEnabledAttr().Set(False);self.held.pop(side);self.blocked.add(side)
                     self.m.events.append(dict(event='pinch_slipped',side=side,body=g['body'],time=self.m.time,reason='material moved 8 mm through the grip'))
-            if side in self.held or side in self.blocked or max(history)-h['opening']<.008:continue
+            closing=h.get('commanded_opening',h['opening']) < h['opening']-.005 or max(history)-h['opening']>=.008
+            if side in self.held or side in self.blocked or not closing:continue
             used={g['body'] for g in self.held.values()};choices=[]
             for name in self.names:
                 if name in used:continue
-                for x in (-.010,0.,.010):
-                    distance=candidate(self.m.p(name,[x,0,0]),self.radii[name],h,self.thickness,self.half_width,self.z_range)
-                    if distance is not None:choices.append((distance,name))
+                # The thin pad may touch anywhere along the continuous part,
+                # not only three sampled points on its long axis.
+                local=(self.m.p(name)-h['tcp'])@h['rotation']
+                axis=self.m.orientation(name)[:,0]@h['rotation']
+                if abs(axis[1])<.8:continue
+                half_length=.0185 if name=='carrier' else .0127
+                x=float(np.clip(-local[1]/axis[1],-half_length,half_length))
+                distance=candidate(self.m.p(name,[x,0,0]),self.radii[name],h,self.thickness,self.half_width,self.z_range)
+                if distance is not None:choices.append((distance,name))
             if not choices:continue
             _,name=min(choices);self.serial+=1;path=self.root+f'/pinch_constraint_{side}_{self.serial}'
             joint=UsdPhysics.Joint.Define(self.m.stage,path)

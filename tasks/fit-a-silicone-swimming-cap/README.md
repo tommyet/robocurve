@@ -26,7 +26,7 @@ for diagnostics and are excluded from submission evidence.
 
 ## Setup and reset
 
-Use a rigid adult headform, 190 × 160 × 240 mm, fixed to its 140 × 130 mm base. The silicone cap has a 150 × 140 mm unstretched opening, a 130 mm dome, a 0.8 mm wall and a 3 mm rolled rim. Match one cap model and size across trials.
+Use a smooth, rigid ABS adult headform, 190 × 160 × 240 mm, fixed to its 140 × 130 mm base. The silicone cap has a 150 × 140 mm unstretched opening, a 130 mm dome, a 0.8 mm wall and a 3 mm rolled rim. Match one cap model and size across trials.
 
 The head centre is (360, 0, 872.5) mm, with its nose facing positive Y. X points forward, Y left, and the table is 747.5 mm high. Each arm stands on a fixed 160 × 160 × 100 mm steel riser. Both grippers have 40 × 24 × 3 mm silicone-faced extensions and 40 N finger actuator limits.
 
@@ -64,3 +64,7 @@ The finite rim pinch uses 40,000 N/m translational stiffness and 4 N·s/m dampin
 The rolled-rim proxy may overlap a pad under compression. Holding requires it to continue spanning both pad faces within the1mm air-gap margin; compression itself is not treated as lost contact. Initial capture still requires both surfaces within1mm. The native joint connects to the actual gripper body at every physics substep and transmits reaction forces.
 
 The current cap has a130mm unstretched dome, representing a deeper adult cap. Its opening and0.8mm wall are unchanged. This supplies enough material to cover the crown without relying on a shallow shell stretched over only the upper skull; scoring is unchanged.
+
+The smooth ABS headform uses approximate friction0.30 and the silicone shell0.35. These are uncalibrated contact values, with no attachment to the head; fitting and released retention still arise from native contact and elasticity.
+
+The finite pinch distributes its total40N/0.08Nm capacity across all rim points already in opposed contact with the24mm-wide pad. It does not capture extra material outside the pad. This avoids concentrating the whole broad-finger load onto one mesh vertex. Any contact loss,8mm slip or native joint break releases that hand.

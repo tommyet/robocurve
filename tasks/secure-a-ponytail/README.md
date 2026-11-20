@@ -48,8 +48,8 @@ All credit requires passing this retention test, intact roots/band, and the band
 The simulator applies the same downward load, divided over native band contact patches, after three seconds with clear hands and after the band leaves its starting rest. It ramps/holds/unloads without writing material positions. Touching again resets the test. The evaluator force stands in for the scale; the test is recorded in the ordinary native trial and CPU-audited from its state history.
 
 Articulated 5 mm contact envelopes group fine hair fibres into flexible locks.
-A native elastic surface models a 16 mm inside-diameter, 3 mm cord silicone band;
-its stiffness is approximate. The starting rests are 19 mm apart. These dimensions
+A native elastic surface models a 24 mm inside-diameter, 3 mm cord silicone band;
+its stiffness is approximate. The starting rests are 27 mm apart. These dimensions
 are part of the trial setup, not a measured retail-product calibration.
 
 A geometry-gated native vertex attachment represents finger friction only after
@@ -75,8 +75,6 @@ No third-party task meshes, scans or textures are used.
 
 ## Validation
 
-The revised native demo scores **1.0 in 800 actions**: 11 of 12 locks retained, 33.59 mm maximum band width, 9.5 seconds with clear hands and **1.43 mm maximum slip** through the full 1 N retention test. The submitted video labels the evaluator pull so it is not mistaken for robot motion.
+The old submitted demo and baseline are withdrawn because the USD proof force did not reach the native solver. Corrected control tests verify native force application; new successful task evidence is still required.
 
-The paired Dream-1 run scores **0.0 in 1,800 actions**. It made 73 API attempts across 37 sessions, including 36 SDK-reported expiry recoveries; this is a recovered-session baseline, not an uninterrupted session. It did not pick up the elastic. The transcript records requests, limit clipping and tracking error.
-
-Wall runtimes were 20.8 minutes for the demo and 34.3 minutes for Dream on an RTX PRO 6000 Blackwell GPU sharing validation work. Both full-frame native runs pass frozen-source CPU audits. Seven score-boundary checks reject missing proof, excess slip and damage, and verify partial-credit lock counts. Front, rear and side views were reviewed. Reports, trace hashes, source hashes and session diagnostics are in `evidence/`; runtime versions are in `ENVIRONMENT.json`.
+The working point is168mm from the gripper origin,4mm behind the extension ends. This keeps the opposed fingers clear of one another when picking up the small elastic; capture is restricted to the actual−36…+4mm working span.
