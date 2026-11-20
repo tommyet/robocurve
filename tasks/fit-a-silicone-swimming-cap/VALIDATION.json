@@ -1,20 +1,19 @@
 {
-  "status": "native_development_in_progress",
+  "status": "demo_verified_baseline_running",
   "submission_ready": false,
   "demo": null,
   "dream": null,
-  "latest_native_trial": "cap-loose-crown-100",
-  "latest_source": "native-batch-177",
-  "latest_trial_status": "failed",
-  "latest_steps": 420,
-  "latest_score": 0.0,
-  "blocker": "Loose-crown reset earns0 initially and reaches0.25, but cap falls off during withdrawal. Current101 lowers the back rim further and fully opens fingers before withdrawal.",
-  "checked_utc": "2026-11-19T23:45:48.352745+00:00",
-  "current_task_runtime_verified": false,
+  "latest_native_trial": "cap-below-rim-release-114",
+  "latest_source": "native-batch-204",
+  "latest_trial_status": "complete",
+  "latest_steps": 600,
+  "latest_score": 1.0,
+  "blocker": "Complete the paired1800-action Dream baseline, final media and submission.",
+  "checked_utc": "2026-11-20T03:12:12.589195+00:00",
+  "current_task_runtime_verified": true,
   "remaining_gates": [
-    "Full-score native demo with current runtime",
-    "Paired Dream baseline",
-    "Frozen-source rescoring and visual review",
+    "Complete paired Dream baseline",
+    "Baseline frozen audit and visual review",
     "Media upload and PR ingestion"
   ]
 }

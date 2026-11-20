@@ -82,6 +82,12 @@ class DemoControl:
      self.waypoints[approach]=dict(body=body,point=pos.copy(),rotation=chosen,start_tcp=hands[side]['tcp'].copy(),start_rotation=hands[side]['rotation'].copy())
      m.events.append(dict(event='demo_outer_loop_target',side=side,body=body,time=m.time,point=pos.tolist()))
     entry=self.waypoints[approach];body=entry['body'];pos=m.p(body);chosen=entry['rotation']
+    if label in (approach,enclose,pinch) and side not in m.pinch.held:
+     tangent=m.orientation(body)[:,2].copy()
+     if tangent@chosen[:,1]<0:tangent=-tangent
+     tangent/=max(np.linalg.norm(tangent),1e-12);z=chosen[:,2]-tangent*float(chosen[:,2]@tangent)
+     if np.linalg.norm(z)>.2:
+      z/=np.linalg.norm(z);chosen=np.column_stack([np.cross(tangent,z),tangent,z]);entry['rotation']=chosen
     lo,hi=self.stages[label];u=ik.smoothstep((k-lo+1)/(hi-lo+1))
     if label==approach:
      target=(1-u)*entry['start_tcp']+u*(pos-.06*chosen[:,2]);R=ik.slerp_matrix(entry['start_rotation'],chosen,u)
@@ -118,7 +124,7 @@ class DemoControl:
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=hands[side]['tcp']-p0;rbias=hands[side]['rotation']@R0.T
    def residual(q):
-    pp,rr=ik.tcp_pose(q,station.BASES[side]);weight=3. if ('enclose' in label or 'pinch' in label) else 1.
-    return np.r_[weight*(pp+bias-target),.10*ik._rot_error(R,rbias@rr),.001*(q-seed)]
+    pp,rr=ik.tcp_pose(q,station.BASES[side]);grasping=('enclose' in label or 'pinch' in label);weight=20. if grasping else 3. if 'approach' in label else 1.
+    return np.r_[weight*(pp+bias-target),(.02 if grasping else .10)*ik._rot_error(R,rbias@rr),.001*(q-seed)]
    out[o:o+6]=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=25).x
   return out
