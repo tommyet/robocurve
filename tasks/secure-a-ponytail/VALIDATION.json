@@ -13,10 +13,10 @@
   },
   "native_force_control": "Corrected permanent_wrench_composer control passed; corrected tasks require new complete evidence.",
   "latest_attempt": {
-    "run": "pony-demo-014",
+    "run": "pony-demo-016",
     "status": "running",
     "score": null,
-    "scope": "Compact two-row reset; pickup alignment completes before jaw closure. No qualifying demo yet."
+    "scope": "14mm-ID plain elastic, compact untied section and42mm stretch for finger clearance; unchanged1N retention criterion."
   },
   "remaining_gates": [
     "Complete corrected full-score native demo",
@@ -24,11 +24,10 @@
     "Independent audits and visual review",
     "New media and submission after withdrawal"
   ],
-  "checked_utc": "2026-11-20T12:16:58.173069+00:00",
+  "checked_utc": "2026-11-20T12:42:07.711505+00:00",
   "last_failed_attempt": {
-    "run": "pony-demo-013",
-    "steps": 149,
+    "run": "pony-demo-014",
     "score": 0,
-    "reason": "Right pickup failed; alignment overlapped closing."
+    "reason": "Retained11locks after both releases, but slipped25.13mm at0.6N and203.44mm at1N."
   }
 }

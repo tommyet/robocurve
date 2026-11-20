@@ -38,7 +38,7 @@ class DemoControl:
       p=np.array([m.p(f'hair_{strand}_{i}') for i in range(SEGMENTS)])
       centres.append(p[np.argmin(abs(p[:,2]-target[2])),0])
      self.hair_x=float(np.clip((min(centres)+max(centres))/2,.27,.33))
-    if side=='left' and 290<=k<=330:
+    if side=='left' and 290<=k<=440:
      from geometry import M
      centre=(m.nodes[M:2*M,0].min()+m.nodes[M:2*M,0].max())/2
      self.loop_correction=float(np.clip(self.loop_correction+.15*(self.hair_x-centre),-.020,.020))
