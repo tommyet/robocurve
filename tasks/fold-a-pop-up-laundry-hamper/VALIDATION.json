@@ -1,5 +1,5 @@
 {
-  "status": "native_development_in_progress",
+  "status": "incomplete_native_demonstration",
   "submission_ready": false,
   "prior_last_fold": "077: score 0, wire joint failure; archived",
   "full_score_demo": null,
@@ -7,11 +7,11 @@
   "retaining_band_demo": false,
   "latest_native_trial": "hamper-firmer-jaws-071",
   "latest_source": "native-batch-217",
-  "latest_trial_status": "running",
-  "latest_steps": null,
-  "latest_score": null,
-  "blocker": "070 lost its left binding contact at496.071 requests firmer closure while an edge is held; all material, contact-loss and force limits remain. No complete retained fold yet.",
-  "checked_utc": "2026-11-20T04:07:22.498767+00:00",
+  "latest_trial_status": "failed",
+  "latest_steps": 333,
+  "latest_score": 0.0,
+  "blocker": "Lost a required grip during the initial twist despite firmer ordinary jaw closure. No complete compact, secured, released fold has been demonstrated.",
+  "checked_utc": "2026-11-20T04:13:26.849255+00:00",
   "current_task_runtime_verified": false,
   "remaining_gates": [
     "Full-score native demo with current runtime",

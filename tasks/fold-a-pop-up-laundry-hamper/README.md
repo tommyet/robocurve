@@ -1,3 +1,5 @@
+> **Development only.** No complete successful native demonstration exists. The latest attempt lost its grip during the twist. Do not upload or submit this draft; see `VALIDATION.json`.
+
 # Fold a pop-up laundry hamper
 
 Development draft: the current native demo is still being validated. A full-score fold, matching Dream run and uploaded media are required before submission.
