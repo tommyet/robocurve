@@ -23,13 +23,13 @@
     "session_count": 37,
     "expiry_count": 36
   },
-  "remaining_gates": [
-    "PR ingestion confirmation"
-  ],
+  "remaining_gates": [],
   "pull_request": {
     "number": 3224,
     "url": "https://github.com/robocurve/benchmark-tasks/pull/3224",
-    "submission_commit": "d75fb6c",
-    "status": "awaiting_ingestion"
+    "submission_commit": "77c5872",
+    "status": "received_waiting_for_review",
+    "task_id": "TK-REXTLY",
+    "received_utc": "2026-11-20T16:00:28Z"
   }
 }
