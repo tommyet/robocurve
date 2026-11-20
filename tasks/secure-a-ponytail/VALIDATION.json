@@ -13,10 +13,10 @@
   },
   "native_force_control": "Corrected permanent_wrench_composer control passed; corrected tasks require new complete evidence.",
   "latest_attempt": {
-    "run": "pony-demo-021",
+    "run": "pony-demo-022",
     "status": "running",
     "score": null,
-    "scope": "Continuous native contact; loose band on open-top saddles; unchanged retention and score."
+    "scope": "Robot pickup is 2 mm nearer tips to clear rest lip; no material or outcome changes."
   },
   "remaining_gates": [
     "Complete corrected full-score native demo",
@@ -24,10 +24,10 @@
     "Independent audits and visual review",
     "New media and submission after withdrawal"
   ],
-  "checked_utc": "2026-11-20T13:53:41.073575+00:00",
+  "checked_utc": "2026-11-20T14:00:33.239662+00:00",
   "last_failed_attempt": {
-    "run": "pony-demo-020",
-    "score": null,
-    "reason": "Reset band slipped sideways out of open-ended notches and landed on the table. No damage or credit."
+    "run": "pony-demo-021",
+    "score": 0,
+    "reason": "Stable reset; right jaw closure blocked at support lip and never captured band. Stopped149actions."
   }
 }
