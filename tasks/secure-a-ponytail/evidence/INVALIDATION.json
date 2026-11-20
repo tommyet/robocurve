@@ -1,0 +1,5 @@
+{
+  "valid_for_submission": false,
+  "reason": "Historical evidence from withdrawn PR2860; proof force was not applied by the native solver. Do not reuse as a validated result.",
+  "current_status": "../VALIDATION.json"
+}

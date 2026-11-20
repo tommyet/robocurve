@@ -1,3 +1,5 @@
+> **Development only.** PR #2860 was withdrawn after the original external-force API failed a native control. Earlier proof-test scores and media are invalid. The corrected controller applies a real native force, but no complete successful replacement demo exists. See `VALIDATION.json`.
+
 # Secure a ponytail with a plain hair elastic
 
 **Validation withdrawn:** the previous USD proof-force command failed a native control test. New force application and paired evidence are required; do not submit the old result.

@@ -1,7 +1,7 @@
 {
   "schema": "runtime-evidence-v1",
-  "status": "corrected_native_proof_pending",
-  "scope": "Native revision demo and paired Dream run, with frozen-source CPU audits.",
+  "status": "runtime_available_task_not_validated",
+  "scope": "Native runtime available and external-force control verified; a corrected complete task demonstration remains missing.",
   "current_task_runtime_verified": false,
   "python": "3.12.16",
   "packages": {
