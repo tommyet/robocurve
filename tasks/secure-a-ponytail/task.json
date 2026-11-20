@@ -1,7 +1,7 @@
 {
   "title": "Secure a ponytail with a plain hair elastic",
   "category": "Societal relevance",
-  "instruction": "Secure the prepared, untied hair section with the plain elastic. Leave it held after both hands let go.",
+  "instruction": "Secure the prepared, untied synthetic hair on the mannequin head with the plain elastic. Leave it held after both hands let go.",
   "action_limit": 1800,
   "run_limit": "1,800 control steps (90 seconds at 20 Hz)",
   "setup": "An adult practice head, nominally 180 × 156 × 230 mm, clamped on a 190 mm stand and 150 mm-square base. Twelve straight 245 ± 5 mm synthetic locks, 3.0 ± 0.1 g each, are rooted separately in two rows of six with 5.4 mm spacing in each direction at the rear scalp; README gives an inexpensive head, supplies and root template. A plain silicone elastic (14 mm inside diameter, 3 mm cord) rests on two 2 × 2 × 60 mm wooden posts, 17 mm apart. Both hands have 40 × 24 × 3 mm silicone-faced extensions. Hair starts loose. Roots are separately attached to a 24 × 40 × 14 mm foam backing; no support joins the free lengths.",

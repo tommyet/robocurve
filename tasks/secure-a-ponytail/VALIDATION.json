@@ -13,10 +13,10 @@
   },
   "native_force_control": "Corrected permanent_wrench_composer control passed; corrected tasks require new complete evidence.",
   "latest_attempt": {
-    "run": "pony-demo-016",
+    "run": "pony-demo-017",
     "status": "running",
     "score": null,
-    "scope": "14mm-ID plain elastic, compact untied section and42mm stretch for finger clearance; unchanged1N retention criterion."
+    "scope": "14mm-ID band,42mm stretch, lower approach below hair tips, active centring through threading; unchanged retention."
   },
   "remaining_gates": [
     "Complete corrected full-score native demo",
@@ -24,10 +24,10 @@
     "Independent audits and visual review",
     "New media and submission after withdrawal"
   ],
-  "checked_utc": "2026-11-20T12:42:07.711505+00:00",
+  "checked_utc": "2026-11-20T13:04:22.076603+00:00",
   "last_failed_attempt": {
-    "run": "pony-demo-014",
+    "run": "pony-demo-016",
     "score": 0,
-    "reason": "Retained11locks after both releases, but slipped25.13mm at0.6N and203.44mm at1N."
+    "reason": "Two rear locks missed; diagonal high approach deflected hair tips and left the loop4mm off centre."
   }
 }

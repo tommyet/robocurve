@@ -9,7 +9,7 @@ L=ELASTIC+[0,.006,.002];R=ELASTIC+[0,-.006,.002]
 p.add(3,'approach the plain elastic from its two sides',{'left':(L+[0,.045,0.],RL,.18),'right':(R+[0,-.045,0.],RR,.18)},'joint')
 p.add(2,'place the pads around opposite parts of the elastic',{'left':(L,RL,.18),'right':(R,RR,.18)})
 p.add(2,'grip the elastic',{'left':(L,RL,.065),'right':(R,RR,.065)})
-p.add(4,'lift and stretch the elastic',{'left':(ELASTIC+[0,.021,.065],RL,.065),'right':(ELASTIC+[0,-.021,.065],RR,.065)})
+p.add(4,'lift and stretch the elastic',{'left':(ELASTIC+[0,.021,.015],RL,.065),'right':(ELASTIC+[0,-.021,.015],RR,.065)})
 p.add(4,'place the opening beneath the prepared hair ends',{'left':([.289,.021,HEAD[2]-.235],RL,.065),'right':([.289,-.021,HEAD[2]-.235],RR,.065)})
 p.add(7,'bring the prepared hair through the elastic',{'left':([.289,.021,HEAD[2]-.100],RL,.065),'right':([.289,-.021,HEAD[2]-.100],RR,.065)})
 p.add(3,'let the elastic gather the ponytail',{'left':([.289,.012,HEAD[2]-.100],RL,.065),'right':([.289,-.012,HEAD[2]-.100],RR,.065)})

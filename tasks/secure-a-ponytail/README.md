@@ -4,7 +4,7 @@
 
 **Validation withdrawn:** the previous USD proof-force command failed a native control test. New force application and paired evidence are required; do not submit the old result.
 
-Secure the prepared, untied hair section with the plain elastic. Leave it held after both hands let go. This task tests fastening; gathering a full head of hair is outside its scope.
+Secure the prepared, untied synthetic hair on the mannequin head with the plain elastic. Leave it held after both hands let go. This task tests fastening; gathering a full head of hair is outside its scope.
 
 ## Run and score
 
