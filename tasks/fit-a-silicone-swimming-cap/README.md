@@ -53,14 +53,18 @@ All task geometry is original procedural work under the included MIT license.
 The robot, table and runtime come from the pinned YAM / Isaac environment.
 No third-party task meshes, scans or textures are used.
 
-## Validation status
+## Contact approximation
 
-The native demo completes 600 actions at 1.0, with 5.1 seconds clear of both hands. Frozen rescoring, the head-contact audit and all three camera reviews pass. The paired 1,800-action Dream baseline is running; submission still requires that complete baseline.
+The shell uses a 353-vertex geodesic mesh, 0.4 mm rest offset and 1 mm contact margin. The smooth ABS head and cap have approximate friction coefficients of 0.30 and 0.35. There is no attachment to the head. Grip capacity is shared between the rim points actually inside each pad; contacts that leave detach individually. Both policies use the same geometry, contact model and material parameters.
 
-The shell uses a 0.4 mm rest-contact offset and 1 mm speculative contact margin, with exact fixed-head triangle collisions. Its 353-vertex geodesic mesh avoids narrow pole triangles. A 0.5 m/s depenetration limit bounds numerical contact correction. These solver settings do not prescribe a fitted shape.
+## Recorded results
 
-The smooth ABS head and silicone shell use approximate friction coefficients of 0.30 and 0.35. There is no attachment to the head. Fitting and released retention arise from native contact and elasticity.
+The demo scores **1.0** in 600 actions, with an intact, fitted cap and 5.1 seconds clear of both hands. Dream-1 scores **0.0** over all 1,800 actions. Wall runtimes were 18.8 minutes for the demo on the shared L40S and 61.0 minutes for Dream on the shared RTX PRO 6000 Blackwell.
 
-The grip's total 40 N/0.08 Nm capacity, 40,000 N/m stiffness and 4 N·s/m damping are divided among the rim points actually inside each pad. Lost contacts detach individually; surviving contacts retain their original limits. Opening, loss of every contact or a native load-limit break releases the hand. Initial capture allows a 1 mm contact margin, smaller than the rolled rim; compression during holding still counts as contact.
+Both complete traces pass source-hash checks and independent rescoring. A separate check found at most 0.44 mm of cap-node penetration into the head mesh, within the 1 mm collision margin; all three camera views were also reviewed. Six score-boundary checks cover released retention and integrity failures. The CPU precision adapter preserves the recorded float32 coordinates; it does not loosen the frozen audit's tolerances or alter its scoring.
 
-The 80 mm finger extensions keep the gripper housings clear of the loose dome. Their working span is −78 to +2 mm from the TCP. Both policies use identical native geometry.
+Dream made 75 API attempts across 37 sessions, including 37 SDK-reported expiry recoveries. This is a recovered-session baseline; the full transcript retains those diagnostics.
+
+## Submission camera views
+
+Each submission video places the synchronized close view beside the robot camera, which shows the face and eye clearance. Both are complete native recordings at 20 fps, with no time cuts. The robot-camera image is enlarged for visibility. The setup image is the first frame of the same layout; media hashes and processing are in `evidence/media-composition.json`.

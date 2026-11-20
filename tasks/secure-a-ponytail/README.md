@@ -85,4 +85,6 @@ The silicone modulus is an uncalibrated0.6MPa. During threading, the demo follow
 
 The 12 mm-wide pads capture only vertices within their actual 6 mm half-width. The 18 N estimated slip guard is below the 40 N jaw effort; it is an explicitly uncalibrated friction approximation. The released 1 N proof is unchanged.
 
-Every cord segment has a native contact capsule, giving the elastic a continuous collision envelope. The demo withdraws along the finger axes after opening, without sweeping backwards through the gathered hair.
+Every cord segment has a native contact capsule, providing a discrete contact approximation of the cord. The demo withdraws along the finger axes after opening, without sweeping backwards through the gathered hair.
+
+The band has64 small native capsule contact patches, sharing the same0.4g contact mass. Only overlapping immediate neighbours are collision-filtered. Denser contact coverage reduces the gaps that appeared between stretched patches; it does not change cord diameter, material stiffness, force application or scoring.

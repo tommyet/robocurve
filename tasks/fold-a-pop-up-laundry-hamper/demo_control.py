@@ -5,6 +5,8 @@ class DemoControl:
  def __init__(self):
   import json
   from pathlib import Path
+  self.prefix=np.asarray(json.loads(Path(__file__).with_name('demo-prefix.json').read_text())['actions'],float)
+  assert self.prefix.shape==(761,14) and np.isfinite(self.prefix).all()
   self.offset=None;self.grip_offset=None;self.waypoints={};self.retainer=None;frames=json.loads(Path(__file__).with_name('demo-plan.json').read_text())['frames'];self.stages={};self.labels=[]
   for index,f in enumerate(frames,1):
    label=f['stage'];self.labels.append(label)
@@ -14,6 +16,10 @@ class DemoControl:
   if 160<=k<=700 and set(m.grasp_state)!={'left','right'}:
    raise RuntimeError('Scripted demonstration lost a required grip; stop this diagnostic before further motion.')
   if 700<k<self.stages['release the right edge'][0] and 'right' not in m.grasp_state:raise RuntimeError('Right hand lost the central crossing before the first loop was stacked.')
+  if 141<=k<=900:
+   # Replay only ordinary robot commands from the earlier intact initial twist.
+   # The scene, contacts and deformable objects continue evolving natively.
+   return self.prefix[k-140].copy()
   from yam_arena import ik,station
   label=self.labels[k-1]
   if label=='hold the packet beside the retaining path' and k==self.stages[label][0]:
@@ -97,6 +103,11 @@ class DemoControl:
     elif label==pinch:target=pos+.010*chosen[:,2];R=chosen
     elif label==press:
      if side not in m.pinch.held:raise RuntimeError('The outer loop was not grasped; stop before stacking.')
+     held=m.pinch.held[side]['body']
+     selected_index=int(body.rsplit('_',1)[1]);held_index=int(held.rsplit('_',1)[1])
+     from geometry import N
+     if not held.startswith('bound_edge_') or min((selected_index-held_index)%N,(held_index-selected_index)%N)>2:
+      raise RuntimeError('A different edge was captured; stop before stacking the wrong loop.')
      if 'stack_start' not in entry:entry['stack_start']=hands[side]['tcp'].copy();entry['stack_R']=hands[side]['rotation'].copy()
      target=(1-u)*entry['stack_start']+u*target;R=ik.slerp_matrix(entry['stack_R'],R,u)
    if side=='left' and label=='approach the loose retaining loop' and self.retainer is None:
