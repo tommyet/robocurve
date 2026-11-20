@@ -1,38 +1,35 @@
 {
-  "status": "full_demo_validated_baseline_running",
-  "submission_ready": false,
-  "revision_ready": false,
-  "current_task_runtime_verified": false,
-  "pull_request": 2860,
-  "pull_request_state": "withdrawn",
-  "withdrawal_comment": "https://github.com/robocurve/benchmark-tasks/pull/2860#issuecomment-7025834804",
-  "invalid_previous_evidence": {
-    "demo": "pony30-012",
-    "reason": "USD PhysxForceAPI commands did not apply the claimed native proof load. Previous full score is not qualifying.",
-    "original_receipt": "TK-VT4XA6"
+  "status": "validated_submission",
+  "submission_ready": true,
+  "current_task_runtime_verified": true,
+  "runtime_sources_match": true,
+  "visual_review_passed": true,
+  "independent_trace_audits_passed": true,
+  "media_uploaded": true,
+  "checked_utc": "2026-11-20T15:55:32.572822+00:00",
+  "scores": {
+    "demo": 1.0,
+    "dream": 0.0
   },
-  "native_force_control": "Corrected permanent_wrench_composer control passed; corrected tasks require new complete evidence.",
-  "latest_attempt": {
-    "run": "pony-demo-026",
-    "status": "complete",
-    "score": 1.0,
-    "steps": 1040,
-    "wall_seconds": 1607.7413443019905,
-    "retained_locks": 12,
-    "maximum_retention_slip_mm": 3.2622163200016123,
-    "frozen_score_and_contact_audits_passed": true,
-    "visual_review_passed": true
+  "steps": {
+    "demo": 1040,
+    "dream": 1800
+  },
+  "wall_seconds": {
+    "demo": 1607.7413443019905,
+    "dream": 2446.617452945997
+  },
+  "dream_sessions": {
+    "session_count": 37,
+    "expiry_count": 36
   },
   "remaining_gates": [
-    "Complete matching1800-action Dream baseline",
-    "Review baseline and finalize evidence",
-    "Upload media and submit replacement PR"
+    "PR ingestion confirmation"
   ],
-  "checked_utc": "2026-11-20T15:14:51.025662+00:00",
-  "last_failed_attempt": {
-    "run": "pony-demo-025",
-    "score": 0,
-    "steps": 485,
-    "reason": "Ten locks enclosed. Left captured only4centreline points at123actions; one frame later9were in real pad contact. Premature fixed patch caused a tapered aperture."
+  "pull_request": {
+    "number": 3224,
+    "url": "https://github.com/robocurve/benchmark-tasks/pull/3224",
+    "submission_commit": "d75fb6c",
+    "status": "awaiting_ingestion"
   }
 }

@@ -1,8 +1,4 @@
-> **Demo validated; baseline pending.** The corrected demo scores 1.0 with all twelve locks retained through the native pull test. The matching Dream run is still in progress. Earlier withdrawn evidence is not reused. See `VALIDATION.json`.
-
 # Secure a ponytail with a plain hair elastic
-
-**Validation withdrawn:** the previous USD proof-force command failed a native control test. New force application and paired evidence are required; do not submit the old result.
 
 Secure the prepared, untied synthetic hair on the mannequin head with the plain elastic. Leave it held after both hands let go. This task tests fastening; gathering a full head of hair is outside its scope.
 
@@ -76,4 +72,10 @@ No third-party task meshes, scans or textures are used.
 
 ## Validation
 
-The old submitted evidence remains withdrawn. The corrected full-score demo and independent audits now pass; the matching Dream baseline and final submission media are pending.
+The scripted demo completes 1,040 controls with score 1.0. After release and the actual 1 N pull, 12 locks remain secured; maximum band movement is 3.26 mm. The matching-source Dream-1 baseline completes 1,800 controls with score 0.00. Native wall times on an L40S are 26.8 minutes for the demo and 40.8 minutes for Dream.
+
+The frozen trace audits reconstruct the score and force schedule independently. The contact audit verifies captures against the actual pad faces and checks continuity of the cord contact envelopes. Both videos retain all frames at 20 Hz and show synchronized close and front views. The evaluator pull is labelled. Evidence JSON files record the source, trace and media hashes.
+
+The evaluator load uses the native permanent-wrench API. All evidence is from the current validated simulation.
+
+The Dream baseline made 73 API requests across 37 reported sessions, with 36 expiry recoveries. These continue one physical episode; see `evidence/dream-run.json` and `evidence/dream-transcript.json`.

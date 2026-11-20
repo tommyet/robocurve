@@ -1,8 +1,8 @@
 {
   "schema": "runtime-evidence-v1",
-  "status": "runtime_available_task_not_validated",
-  "scope": "Native runtime available and external-force control verified; a corrected complete task demonstration remains missing.",
-  "current_task_runtime_verified": false,
+  "status": "native_verified",
+  "scope": "Complete native demo and Dream baseline, with frozen trace and contact audits.",
+  "current_task_runtime_verified": true,
   "python": "3.12.16",
   "packages": {
     "numpy": "2.5.4",
@@ -40,10 +40,10 @@
     "sha256": "991c3d0dcfc331bc4177379b538646407f78b7dbb6e21b7f6e310518c13aa33d"
   },
   "platform": {
-    "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "gpu": "NVIDIA L40S",
     "physics": "Native PhysX contacts, passive joints and the material approximations disclosed in task.json."
   },
   "reference_checked_utc_date": "2026-11-18",
-  "verified_utc_date": "2026-11-19",
-  "submission_ready": false
+  "verified_utc_date": "2026-11-20",
+  "submission_ready": true
 }

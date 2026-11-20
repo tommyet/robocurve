@@ -1,17 +1,17 @@
 {
   "score": 1.0,
-  "steps": 800,
+  "steps": 1040,
   "complete": true,
   "measurements": {
-    "secured_locks": 11,
+    "secured_locks": 12,
     "total_locks": 12,
     "elastic_at_ponytail_base": true,
-    "elastic_diameter_mm": 33.58708190917969,
+    "elastic_diameter_mm": 22.621999740600586,
     "intact": true,
     "released_seconds": 9.5,
     "failed": false,
     "retention_completed": true,
-    "retention_slip_mm": 1.431830921249604,
+    "retention_slip_mm": 3.2622163200016123,
     "proof_force_n": 0.0
   },
   "native_break_events": 0,
