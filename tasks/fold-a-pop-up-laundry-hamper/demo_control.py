@@ -71,13 +71,13 @@ class DemoControl:
     entry=self.waypoints[approach];body=entry['body'];pos=m.p(body);chosen=entry['rotation']
     lo,hi=self.stages[label];u=ik.smoothstep((k-lo+1)/(hi-lo+1))
     if label==approach:
-     target=(1-u)*entry['start_tcp']+u*(pos+[0,0,.045]);R=ik.slerp_matrix(entry['start_rotation'],chosen,u)
-    elif label==enclose:target=pos+np.array([0,0,.045*(1-u)]);R=chosen
-    elif label==pinch:target=pos.copy();R=chosen
+     target=(1-u)*entry['start_tcp']+u*(pos-.06*chosen[:,2]);R=ik.slerp_matrix(entry['start_rotation'],chosen,u)
+    elif label==enclose:target=pos-.06*(1-u)*chosen[:,2]+.010*u*chosen[:,2];R=chosen
+    elif label==pinch:target=pos+.010*chosen[:,2];R=chosen
     elif label==press:
      if side not in m.pinch.held:raise RuntimeError('The outer loop was not grasped; stop before stacking.')
      if 'stack_start' not in entry:entry['stack_start']=hands[side]['tcp'].copy();entry['stack_R']=hands[side]['rotation'].copy()
-     target=(1-u)*entry['stack_start']+u*target;R=entry['stack_R']
+     target=(1-u)*entry['stack_start']+u*target;R=ik.slerp_matrix(entry['stack_R'],R,u)
    if side=='left' and label=='approach the loose retaining loop' and self.retainer is None:
     band=m.nodes['band'];point=band[64];normal=np.cross(band[128]-band[0],band[65]-band[127]);normal/=max(np.linalg.norm(normal),1e-12)
     direction=point-np.asarray(station.BASES['left']);direction-=normal*float(direction@normal);direction/=max(np.linalg.norm(direction),1e-12)

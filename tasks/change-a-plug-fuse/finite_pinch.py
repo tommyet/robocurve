@@ -76,7 +76,7 @@ class FinitePinch:
                 local=(self.m.p(name)-h['tcp'])@h['rotation']
                 axis=self.m.orientation(name)[:,0]@h['rotation']
                 if abs(axis[1])<.8:continue
-                half_length=.0185 if name=='carrier' else .0127
+                half_length=.017 if name=='carrier' else .0127
                 x=float(np.clip(-local[1]/axis[1],-half_length,half_length))
                 distance=candidate(self.m.p(name,[x,0,0]),self.radii[name],h,self.thickness,self.half_width,self.z_range)
                 if distance is not None:choices.append((distance,name))

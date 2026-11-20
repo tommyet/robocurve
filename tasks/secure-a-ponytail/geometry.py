@@ -1,6 +1,7 @@
 """Loose synthetic hair and a small, plain elastic; no hair is pre-tied."""
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
+ELASTIC_YOUNGS_MODULUS=6e5
 HEAD=np.array([.39,0,TABLE+.305]);ELASTIC=np.array([.27,0,TABLE+.063])
 head=[sphere((.090,.078,.115)),sphere((.015,.012,.023),(.091,0,-.015)),cylinder(.038,.19,(0,0,-.205)),box((.15,.15,.015),(0,0,-.2975))]
 head += [sphere((.004,.008,.005),(.084,y,.020),(.12,.12,.13)) for y in [-.030,.030]]
@@ -29,10 +30,10 @@ for s in range(STRANDS):
   else:JOINTS.append(joint(f'root_{s}','styling_head',name,a-HEAD,[0,0,-length/2],axes=bend_axes(.0002,.00002),break_force=20.))
 # Two wooden rails support four arcs while leaving the central pickup lane clear.
 for sx in [-1,1]:
- BODIES.append(body(f'elastic_rest_{sx+1}',[ELASTIC[0]+sx*.0095,0,TABLE+.030],[box((.006,.016,.060))],mass=.010,fixed=True,color=(.59,.44,.28)))
-# A plain 3 mm cord elastic, 16 mm inside diameter. Native passive
+ BODIES.append(body(f'elastic_rest_{sx+1}',[ELASTIC[0]+sx*.0115,0,TABLE+.030],[box((.006,.016,.060))],mass=.010,fixed=True,color=(.59,.44,.28)))
+# A plain 3 mm cord elastic, 20 mm inside diameter. Native passive
 # a continuous elastic surface joins contact-bearing patches into a closed loop.
-M=32;radius=.0095;theta=np.arange(M)*2*np.pi/M
+M=32;radius=.0115;theta=np.arange(M)*2*np.pi/M
 vertices=ELASTIC+np.c_[radius*np.cos(theta),radius*np.sin(theta),np.zeros(M)]
 centres=(vertices+np.roll(vertices,-1,axis=0))/2
 lengths=np.linalg.norm(np.roll(vertices,-1,axis=0)-vertices,axis=1)
@@ -74,7 +75,7 @@ def spawn_surface(stage,root):
  UsdPhysics.CollisionAPI.Apply(p);col=PhysxSchema.PhysxCollisionAPI.Apply(p);col.CreateContactOffsetAttr(.002);col.CreateRestOffsetAttr(.0015)
  mat=UsdShade.Material.Define(stage,root+'/elasticMaterial');q=mat.GetPrim()
  for api in ['OmniPhysicsBaseMaterialAPI','OmniPhysicsDeformableMaterialAPI','OmniPhysicsSurfaceDeformableMaterialAPI','PhysxSurfaceDeformableMaterialAPI']:q.ApplyAPI(api)
- for key,value in {'omniphysics:dynamicFriction':.9,'omniphysics:density':1100.,'omniphysics:youngsModulus':4e5,'omniphysics:poissonsRatio':.45,'omniphysics:surfaceThickness':.003,'omniphysics:surfaceBendStiffness':4e5/(12*(1-.45**2)),'physxDeformableMaterial:elasticityDamping':.02,'physxDeformableMaterial:bendDamping':.01}.items():
+ for key,value in {'omniphysics:dynamicFriction':.9,'omniphysics:density':1100.,'omniphysics:youngsModulus':ELASTIC_YOUNGS_MODULUS,'omniphysics:poissonsRatio':.45,'omniphysics:surfaceThickness':.003,'omniphysics:surfaceBendStiffness':ELASTIC_YOUNGS_MODULUS/(12*(1-.45**2)),'physxDeformableMaterial:elasticityDamping':.02,'physxDeformableMaterial:bendDamping':.01}.items():
   attr=q.GetAttribute(key)
   if not attr:raise RuntimeError('Required elastic material attribute unavailable: '+key)
   attr.Set(value)

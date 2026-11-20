@@ -20,7 +20,7 @@ class Model(NativeModel):
   gap=float(np.linalg.norm(new-FC));axis=abs(float((R.T@self.orientation('spare_fuse'))[0,0]))
   seated=bool(gap<.003 and axis>.95)
   relative=R.T@self.orientation('carrier')
-  corners=np.array([[x,y,.00075] for x in [-.0185,.0185] for y in [-.0045,.0045]])
+  corners=np.array([[x,y,.00075] for x in [-.017,.017] for y in [-.0045,.0045]])
   corner_heights=(corners@relative.T+carrier)[:,2]
   flush=bool(np.max(abs(corner_heights-(CARRIER_OFFSET[2]+.00075)))<=.0025)
   closed=bool(np.linalg.norm(carrier-CARRIER_OFFSET)<.0025 and float(np.trace(relative))>2.9 and flush)

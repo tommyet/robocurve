@@ -48,14 +48,14 @@ All credit requires passing this retention test, intact roots/band, and the band
 The simulator applies the same downward load, divided over native band contact patches, after three seconds with clear hands and after the band leaves its starting rest. It ramps/holds/unloads without writing material positions. Touching again resets the test. The evaluator force stands in for the scale; the test is recorded in the ordinary native trial and CPU-audited from its state history.
 
 Articulated 5 mm contact envelopes group fine hair fibres into flexible locks.
-A native elastic surface models a 16 mm inside-diameter, 3 mm cord silicone band;
-its stiffness is approximate. The starting rests are 19 mm apart. These dimensions
+A native elastic surface models a 20 mm inside-diameter, 3 mm cord silicone band;
+its stiffness is approximate. The starting rests are 23 mm apart. These dimensions
 are part of the trial setup, not a measured retail-product calibration.
 
 A geometry-gated native vertex attachment represents finger friction only after
 closing pad faces enclose a band patch. It holds only material already inside the
 central 8 mm of the 12 mm-wide face, follows the real gripper link, and releases on opening, 8 mm slip
-or estimated local cord tension above 12 N. This tension estimate is uncalibrated;
+or estimated local cord tension above 18 N. This tension estimate is uncalibrated;
 it is not a measured native force limit. Local held-patch contacts are filtered
 while the attachment acts, to avoid conflicting constraints. Native hair contacts,
 root failures and band over-stretch remain active. No hair or band pose is assigned
@@ -79,4 +79,8 @@ The old submitted demo and baseline are withdrawn because the USD proof force di
 
 The working point is168mm from the gripper origin,4mm behind the extension ends. This keeps the opposed fingers clear of one another when picking up the small elastic; capture is restricted to the actual−36…+4mm working span.
 
-The approximate local tension limit is12N, below the native40N jaw effort. It represents silicone-pad friction, not measured force feedback. The1N released retention test,8mm grip-slip limit and material integrity checks are unchanged.
+The approximate local tension limit is18N, below the native40N jaw effort. It represents silicone-pad friction, not measured force feedback. The1N released retention test,8mm grip-slip limit and material integrity checks are unchanged.
+
+The silicone modulus is an uncalibrated0.6MPa. During threading, the demo follows the observed hair centre at the current height; it does not keep the lower hair ends' X coordinate while moving toward the curved scalp.
+
+The 12 mm-wide pads capture only vertices within their actual 6 mm half-width. The 18 N estimated slip guard is below the 40 N jaw effort; it is an explicitly uncalibrated friction approximation. The released 1 N proof is unchanged.

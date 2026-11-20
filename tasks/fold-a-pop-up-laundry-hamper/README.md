@@ -43,3 +43,7 @@ Frame pinches connect directly to the robot gripper rather than a world anchor u
 Frame-grip capture is restricted to the central12mm of each26mm pad and at least10mm behind its tip. This conservative contact approximation leaves room for compliance during folding; it does not enlarge the physical pad or increase grip strength. Holding still checks the full real pad faces.
 
 The steel face extends from 88 mm behind the TCP to 12 mm ahead. Holding checks use that actual 100 mm contact span; capture remains central. The earlier 22 mm holding window incorrectly released contacts still on the physical finger.
+
+The demo uses measured-pose feedback without a second integral joint correction. A commanded squeeze can capture an already-contacting edge even after jaw motion stops; the physical contact and finite-load checks still apply.
+
+The demo approaches outer-loop grasps along the real finger shafts, then rotates each wrist as it lays that loop flat. It uses ordinary joint commands and observed edge locations, without moving material directly.

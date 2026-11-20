@@ -49,3 +49,5 @@ No third-party task meshes, scans or textures are used.
 This revised open-plug setup is not submission-ready. The prior closed-plug diagnostic removed the old cartridge and seated the replacement, but failed to pick up the overturned carrier. A complete demo, paired Dream baseline, independent rescoring and media review remain required for the current setup.
 
 Spring coefficients are authored in N·m/radian and converted once at the USD boundary. The terminal value is0.045 N·m/radian, carrier fingers0.025 and cover detents0.055.
+
+The ABS carrier has a34×9×1.5mm face with ordinary retaining legs. The shorter face leaves1.8mm nominal clearance from the adjacent plug pin. The robot applies bounded ordinary closed-finger presses to seat the cartridge and carrier, withdrawing when their seated conditions are met.

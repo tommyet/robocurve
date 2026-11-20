@@ -95,7 +95,8 @@ class FinitePinch:
                 if not segment_contact(self.m.p(g['body'],[0,0,-length/2]),self.m.p(g['body'],[0,0,length/2]),self.radii[g['body']],h,self.thickness,self.half_width,self.z_range):
                     g['joint'].GetJointEnabledAttr().Set(False);self.held.pop(side);self.blocked.add(side)
                     self.m.events.append(dict(event='pinch_slipped',side=side,body=g['body'],time=self.m.time,reason='binding left the physical pad contact region'))
-            if side in self.held or side in self.blocked or max(history)-h['opening']<.008:continue
+            closing=h.get('commanded_opening',h['opening'])<h['opening']-.005 or max(history)-h['opening']>=.008
+            if side in self.held or side in self.blocked or not closing:continue
             used={g['body'] for g in self.held.values()};choices=[]
             for name in self.names:
                 if name in used:continue

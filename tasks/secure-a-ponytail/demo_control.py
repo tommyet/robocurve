@@ -35,7 +35,7 @@ class DemoControl:
     self.band_offset_x=float(m.nodes[M:2*M,0].mean()-np.mean([h['tcp'][0] for h in hands.values()]))
    if k>=220:
     from geometry import STRANDS,SEGMENTS
-    if k<=300 or self.hair_x is None:
+    if k<=440 or self.hair_x is None:
      centres=[]
      for strand in range(STRANDS):
       p=np.array([m.p(f'hair_{strand}_{i}') for i in range(SEGMENTS)])

@@ -21,7 +21,7 @@ BODIES.append(body('plug',PLUG,outer,mass=.065,color=(.90,.89,.84),friction=.9,c
 # retain the cartridge beneath it; no artificial robot handle is added.
 CARRIER_OFFSET=FC+[.003,0,.005]
 CARRIER=PLUG+CARRIER_OFFSET
-BODIES.append(body('carrier',CARRIER,[box((.037,.009,.0015)),box((.002,.009,.004),(.0175,0,-.002)),box((.002,.009,.002),(-.0175,0,-.001))],mass=.0035,color=(.19,.20,.22),friction=.8,contact_offset=.0001))
+BODIES.append(body('carrier',CARRIER,[box((.034,.009,.0015)),box((.002,.009,.004),(.016,0,-.002)),box((.002,.009,.002),(-.016,0,-.001))],mass=.0035,color=(.19,.20,.22),friction=.8,contact_offset=.0001))
 Q=Rotation.from_euler('y',90,degrees=True).as_quat()
 def fuse(name,pos,marked=False):
  sh=[cylinder(FUSE_RADIUS,FUSE_LENGTH,quat=Q,color=(.90,.88,.79))]
