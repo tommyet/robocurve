@@ -26,7 +26,7 @@ for diagnostics and are excluded from submission evidence.
 
 ## Setup and reset
 
-Use a rigid adult headform, 190 × 160 × 240 mm, fixed to its 140 × 130 mm base. The silicone cap has a 150 × 140 mm unstretched opening, a 90 mm dome, a 0.8 mm wall and a 3 mm rolled rim. Match one cap model and size across trials.
+Use a rigid adult headform, 190 × 160 × 240 mm, fixed to its 140 × 130 mm base. The silicone cap has a 150 × 140 mm unstretched opening, a 130 mm dome, a 0.8 mm wall and a 3 mm rolled rim. Match one cap model and size across trials.
 
 The head centre is (360, 0, 872.5) mm, with its nose facing positive Y. X points forward, Y left, and the table is 747.5 mm high. Each arm stands on a fixed 160 × 160 × 100 mm steel riser. Both grippers have 40 × 24 × 3 mm silicone-faced extensions and 40 N finger actuator limits.
 
@@ -62,3 +62,5 @@ The 0.8 mm shell uses a 0.4 mm rest-contact offset and 3 mm speculative contact 
 The finite rim pinch uses 40,000 N/m translational stiffness and 4 N·s/m damping, with the same 40 N/0.08 Nm break limits and continuous opposed-pad contact check. The 0.5 mm finger contact offset is smaller than the 1 mm capture/holding margin. These parameters approximate an unresolved frictional grip and are not measured silicone properties.
 
 The rolled-rim proxy may overlap a pad under compression. Holding requires it to continue spanning both pad faces within the1mm air-gap margin; compression itself is not treated as lost contact. Initial capture still requires both surfaces within1mm. The native joint connects to the actual gripper body at every physics substep and transmits reaction forces.
+
+The current cap has a130mm unstretched dome, representing a deeper adult cap. Its opening and0.8mm wall are unchanged. This supplies enough material to cover the crown without relying on a shallow shell stretched over only the upper skull; scoring is unchanged.

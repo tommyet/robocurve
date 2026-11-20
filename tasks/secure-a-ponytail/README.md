@@ -1,5 +1,7 @@
 # Secure a ponytail with a plain hair elastic
 
+**Validation withdrawn:** the previous USD proof-force command failed a native control test. New force application and paired evidence are required; do not submit the old result.
+
 Gather the synthetic hair on the practice head into a ponytail and secure it with the plain elastic. Leave it held after both hands let go.
 
 ## Run and score

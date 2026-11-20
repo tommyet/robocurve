@@ -15,8 +15,8 @@ class Model(NativeModel):
   install()
  def bind_native(self,base):
   super().bind_native(base)
-  from pxr import PhysxSchema
-  self.tip_force=PhysxSchema.PhysxForceAPI.Get(self.stage,'/World/envs/env_0/materials/extension')
+  from native_wrench import NativeWrench
+  self.proof_wrench=NativeWrench(self,['extension'])
   from finite_pinch import FinitePinch
   self.pinch=FinitePinch(self,['extension'],.0058,.003,.002,(-.009,.003))
  def material(self,hands,dt):
@@ -58,7 +58,7 @@ class Model(NativeModel):
    self.proof_slip=max(self.proof_slip,float(np.linalg.norm(self.p('extension')-self.proof_origin)))
    self.proof_elapsed=min(4.,self.proof_elapsed+dt);t=self.proof_elapsed;force=min(1.,t/.5,max(0.,(4-t)/.5))
   else:self.proof_elapsed=0.;self.proof_origin=None;self.proof_slip=0.
-  self.proof_force=force;self.tip_force.GetForceAttr().Set(Gf.Vec3f(0,0,force))
+  self.proof_force=force;self.proof_wrench.set([[0.,0.,force]])
  def measure(self):
   reference=np.array([-.020,0,.003]);delta=FRAME.T@(self.p('extension',reference)-(BASE+FRAME@reference));R=FRAME.T@self.orientation('extension');tilt=float(np.degrees(np.arccos(np.clip((np.trace(R)-1)/2,-1,1))))
   bonded=[i for i,p in enumerate(PATCHES) if self.dose[i]>=40. and 'bond_'+p['name'] in self.enabled and 'bond_'+p['name'] not in self.broken]

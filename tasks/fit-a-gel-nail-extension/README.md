@@ -1,5 +1,7 @@
 # Fit and cure a gel nail extension
 
+**Validation withdrawn:** the previous USD proof-force command failed a native control test. New force application and paired evidence are required; do not submit the old result.
+
 Development draft. No native task run, full-score demo or Dream baseline has been validated. Do not submit this folder yet.
 
 Fit a prepared clear full-cover extension to a curved practice nail. Seat it against the curved nail, flash-cure it under its matching lamp, then release the hand and complete the cure. The practice insert replaces a natural nail; no person is involved.

@@ -1,7 +1,7 @@
 {
-  "status": "submitted_revision",
+  "status": "force_application_requires_revalidation",
   "revision_ready": true,
-  "submission_ready": true,
+  "submission_ready": false,
   "scores": {
     "demo": 1.0,
     "dream": 0.0
@@ -52,5 +52,7 @@
   "remaining_gates": [],
   "pull_request": 2860,
   "submission_commit": "4d75d1daa054098bf336255e8329d6f6bc6c9731",
-  "task_receipt": "TK-VT4XA6"
+  "task_receipt": "TK-VT4XA6",
+  "current_task_runtime_verified": false,
+  "blocker": "USD force commands failed an unbonded native control. Correct native wrench application and replace both demo and Dream evidence."
 }

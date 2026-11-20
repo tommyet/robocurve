@@ -2,7 +2,7 @@
 
 A material element must be between closing finger faces and inside their real
 working area. The joint starts at the measured pose, without moving either body.
-Its world anchor follows the observed hand, without changing task body poses.
+It connects to the native gripper at physics rate, without changing task body poses.
 It releases on opening or leaving the physical pad faces, and breaks at 30 N or 0.36 Nm. The 2 mm holding margin matches the native pad contact offset; capture still requires the stricter 1 mm margin. This approximates unresolved
 finger friction; it does not move, fold, fit or score task material for the robot.
 """
@@ -95,12 +95,6 @@ class FinitePinch:
                 if not segment_contact(self.m.p(g['body'],[0,0,-length/2]),self.m.p(g['body'],[0,0,length/2]),self.radii[g['body']],h,self.thickness,self.half_width,self.z_range):
                     g['joint'].GetJointEnabledAttr().Set(False);self.held.pop(side);self.blocked.add(side)
                     self.m.events.append(dict(event='pinch_slipped',side=side,body=g['body'],time=self.m.time,reason='binding left the physical pad contact region'))
-            if side in self.held:
-                g=self.held[side];target=np.asarray(h['tcp'])+h['rotation']@g['local_point']
-                q=Rotation.from_matrix(h['rotation']@g['local_rotation']).as_quat()
-                with Sdf.ChangeBlock():
-                    g['joint'].GetLocalPos0Attr().Set(Gf.Vec3f(*target))
-                    g['joint'].GetLocalRot0Attr().Set(Gf.Quatf(float(q[3]),Gf.Vec3f(*q[:3])))
             if side in self.held or side in self.blocked or max(history)-h['opening']<.008:continue
             used={g['body'] for g in self.held.values()};choices=[]
             for name in self.names:
@@ -113,8 +107,9 @@ class FinitePinch:
             joint.CreateJointEnabledAttr(False)
             with Sdf.ChangeBlock():
                 joint.CreateExcludeFromArticulationAttr(True)
+                joint.CreateBody0Rel().SetTargets([Sdf.Path(self.grippers[side])])
                 joint.CreateBody1Rel().SetTargets([Sdf.Path(self.body_paths[name])])
-                p=self.m.p(name);q=Rotation.from_matrix(self.m.orientation(name)).as_quat()
+                p=np.asarray(TCP_OFFSET)+(self.m.p(name)-h['tcp'])@h['rotation'];q=Rotation.from_matrix(h['rotation'].T@self.m.orientation(name)).as_quat()
                 joint.CreateLocalPos0Attr(Gf.Vec3f(*p));joint.CreateLocalPos1Attr(Gf.Vec3f(0,0,0))
                 joint.CreateLocalRot0Attr(Gf.Quatf(float(q[3]),Gf.Vec3f(*q[:3])));joint.CreateLocalRot1Attr(Gf.Quatf(1.,Gf.Vec3f(0,0,0)))
                 joint.CreateBreakForceAttr(30.);joint.CreateBreakTorqueAttr(.36);joint.CreateCollisionEnabledAttr(True)

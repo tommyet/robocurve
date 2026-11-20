@@ -8,11 +8,11 @@ shapes += [box((.001,.038,.004),(-.090,0,-.051),(.47,.17,.17))]
 BODIES.append(body('headform',HEAD,shapes,fixed=True,mass=1.5,color=(.76,.63,.51),friction=.65,quat=Rotation.from_matrix(HEADROT).as_quat().tolist()))
 # The loose cap straddles the crown, with its held rim15mm below the crown; it is not stretched into its final fit.
 M=40;N=12
-POINTS=[CAP+[0,0,.090]]
+POINTS=[CAP+[0,0,.130]]
 for j in range(1,N+1):
  a=j*np.pi/(2*N)
  for i in range(M):
-  t=i*2*np.pi/M;POINTS.append(CAP+[.075*np.sin(a)*np.cos(t),.070*np.sin(a)*np.sin(t),.090*np.cos(a)])
+  t=i*2*np.pi/M;POINTS.append(CAP+[.075*np.sin(a)*np.cos(t),.070*np.sin(a)*np.sin(t),.130*np.cos(a)])
 POINTS=HEAD+(np.asarray(POINTS)-HEAD)@HEADROT.T;TRIS=[]
 for i in range(M):TRIS.append([0,1+i,1+(i+1)%M])
 for j in range(N-1):

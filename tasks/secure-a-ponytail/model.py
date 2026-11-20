@@ -12,9 +12,8 @@ class Model(NativeModel):
   from isaaclab_physx.physics import PhysxManager
   self.surface=PhysxManager.get_physics_sim_view().create_surface_deformable_body_view('/World/envs/env_*/materials/elastic')
   if self.surface.count!=1:raise RuntimeError('Expected one native elastic surface')
-  from pxr import PhysxSchema
-  self.proof_force_apis=[PhysxSchema.PhysxForceAPI(self.stage.GetPrimAtPath('/World/envs/env_0/materials/band_segment_%03d'%i)) for i in BAND_CONTACT_INDICES]
-  if any(not a for a in self.proof_force_apis):raise RuntimeError('Retention force API missing')
+  from native_wrench import NativeWrench
+  self.proof_wrench=NativeWrench(self,['band_segment_%03d'%i for i in BAND_CONTACT_INDICES])
   self.read()
   from finite_pinch import FinitePinch
   self.pinch=FinitePinch(self,[n for n in self.names if n.startswith('band_segment_')],.0015,.003,.004,(-.025,.012))
@@ -29,8 +28,7 @@ class Model(NativeModel):
   self.read();self.time+=dt;self.pinch.update(hands);p=self.release_points();clear=all(h['opening']>.4 and np.min(np.linalg.norm(p-h['tcp'],axis=1))>.05 for h in hands.values());self.release=self.release+dt if clear else 0.
   centre=self.nodes[M:2*M].mean(axis=0)
   self.retention,self.proof_force_n=advance(self.retention,centre,self.release,np.linalg.norm(centre-ELASTIC)>.05,dt)
-  from pxr import Gf
-  for api in self.proof_force_apis:api.GetForceAttr().Set(Gf.Vec3f(0.,0.,-self.proof_force_n/len(self.proof_force_apis)))
+  self.proof_wrench.set([[0.,0.,-self.proof_force_n/len(BAND_CONTACT_INDICES)]]*len(BAND_CONTACT_INDICES))
   self.peak_stretch=max(self.peak_stretch,float(np.max(np.linalg.norm(self.nodes[EDGES[:,1]]-self.nodes[EDGES[:,0]],axis=1)/REST_LENGTHS)));self.failed |= self.integrity_failed()
  def integrity_failed(self):return self.rim_gap()>.005 or super().integrity_failed() or not np.isfinite(self.nodes).all() or self.peak_stretch>5. or bool(self.broken)
  def measure(self):
