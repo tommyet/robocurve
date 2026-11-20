@@ -50,8 +50,8 @@ All credit requires passing this retention test, intact roots/band, and the band
 The simulator applies the same downward load, divided over native band contact patches, after three seconds with clear hands and after the band leaves its starting rest. It ramps/holds/unloads without writing material positions. Touching again resets the test. The evaluator force stands in for the scale; the test is recorded in the ordinary native trial and CPU-audited from its state history.
 
 Articulated 5 mm capsules with overlapping rounded ends group fine hair fibres into flexible locks. The native solver uses 960 Hz physics under the same 20 Hz robot controls; this improves thin-body contact resolution.
-A native elastic surface models a 14 mm inside-diameter, 3 mm cord silicone band;
-its stiffness and internal damping are approximate. Internal elasticity damping is 0.15 to reduce high-frequency recoil; it does not apply drag to rigid translation of the band. The starting rests are 17 mm apart. These dimensions
+A native elastic surface models a 16 mm inside-diameter, 3 mm cord silicone band;
+its stiffness and internal damping are approximate. Internal elasticity damping is 0.15 to reduce high-frequency recoil; it does not apply drag to rigid translation of the band. The starting rests are 19 mm apart. These dimensions
 are part of the trial setup, not a measured retail-product calibration.
 
 A geometry-gated native vertex attachment represents finger friction only after

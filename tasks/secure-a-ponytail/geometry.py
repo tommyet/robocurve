@@ -40,10 +40,10 @@ for s in range(STRANDS):
   else:JOINTS.append(joint(f'root_{s}','styling_head',name,a-HEAD,[0,0,-length/2],axes=bend_axes(.0002,.00002),break_force=20.))
 # Two open-top saddles support the loose band without attaching it.
 for sx in [-1,1]:
- BODIES.append(body(f'elastic_rest_{sx+1}',[ELASTIC[0]+sx*.0085,0,TABLE+.030],[box((.007,.006,.058),(0,0,-.001)),box((.0015,.007,.004),(-.00275,0,.030)),box((.0015,.007,.004),(.00275,0,.030)),box((.004,.0015,.004),(0,-.00275,.030)),box((.004,.0015,.004),(0,.00275,.030))],mass=.010,fixed=True,color=(.59,.44,.28)))
-# A plain 3 mm cord elastic, 14 mm inside diameter. Native passive
+ BODIES.append(body(f'elastic_rest_{sx+1}',[ELASTIC[0]+sx*.0095,0,TABLE+.030],[box((.007,.006,.058),(0,0,-.001)),box((.0015,.007,.004),(-.00275,0,.030)),box((.0015,.007,.004),(.00275,0,.030)),box((.004,.0015,.004),(0,-.00275,.030)),box((.004,.0015,.004),(0,.00275,.030))],mass=.010,fixed=True,color=(.59,.44,.28)))
+# A plain 3 mm cord elastic, 16 mm inside diameter. Native passive
 # a continuous elastic surface joins contact-bearing patches into a closed loop.
-M=32;radius=.0085;theta=np.arange(M)*2*np.pi/M
+M=32;radius=.0095;theta=np.arange(M)*2*np.pi/M
 vertices=ELASTIC+np.c_[radius*np.cos(theta),radius*np.sin(theta),np.zeros(M)]
 centres=(vertices+np.roll(vertices,-1,axis=0))/2
 lengths=np.linalg.norm(np.roll(vertices,-1,axis=0)-vertices,axis=1)

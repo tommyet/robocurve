@@ -13,10 +13,10 @@
   },
   "native_force_control": "Corrected permanent_wrench_composer control passed; corrected tasks require new complete evidence.",
   "latest_attempt": {
-    "run": "pony-demo-023",
+    "run": "pony-demo-024",
     "status": "running",
     "score": null,
-    "scope": "Smaller saddle lips permit a broader grasp arc and wider physical opening; unchanged material and retention."
+    "scope": "16 mm ID elastic on19 mm-spaced rests, same controller and1Nretention rubric."
   },
   "remaining_gates": [
     "Complete corrected full-score native demo",
@@ -24,10 +24,11 @@
     "Independent audits and visual review",
     "New media and submission after withdrawal"
   ],
-  "checked_utc": "2026-11-20T14:11:41.561379+00:00",
+  "checked_utc": "2026-11-20T14:20:15.043102+00:00",
   "last_failed_attempt": {
-    "run": "pony-demo-022",
-    "score": 0,
-    "reason": "Both grips worked, but the shallow pinch left only about7mm clear front-to-back opening against a10.4mm section; hair was pushed aside."
+    "run": "pony-demo-023",
+    "score": 0.0,
+    "steps": 249,
+    "reason": "Stopped before threading: measured loop span11.74mm leaves8.74mm clear, below10.4mm prepared-section depth. This was a clearance diagnostic, not a completed retention trial."
   }
 }
