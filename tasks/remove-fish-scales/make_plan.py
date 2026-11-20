@@ -14,13 +14,13 @@ p.add(3,'place fingers around tail and handle',{'left':(tail,L,.25),'right':(too
 p.add(2,'grip tail and scaler handle',{'left':(tail,L,.18),'right':(tool,R,.09)})
 p.add(2,'lift the scaler',{'right':(tool+[0,0,.10],R,.09)})
 for lane,x in enumerate([-.022,-.011,0.,.011,.022]):
- start=.045 if abs(x)>.02 else .060;end=-.045 if abs(x)>.02 else -.070
+ start=.045 if abs(x)>.02 else .060;end=-.045 if abs(x)>.02 else -.078
  q,Q=tool_surface(x,start);target=C+q+Q[:,2]*.0045-Q@HEAD_OFFSET
  p.add(3,'approach scraping lane '+str(lane),{'right':(target+[0,0,.045],Q@GRIP_R,.09)},'joint')
- p.add(2,'load scraping lane '+str(lane),{'right':(target,Q@GRIP_R,.09)})
+ p.add(5,'load scraping lane '+str(lane),{'right':(target,Q@GRIP_R,.09)})
  for j,y in enumerate(np.linspace(start,end,13)[1:]):
   q,Q=tool_surface(x,float(y));target=C+q+Q[:,2]*.0045-Q@HEAD_OFFSET
-  p.add(.5,'scrape lane '+str(lane)+' point '+str(j),{'right':(target,Q@GRIP_R,.09)})
+  p.add(2/3,'scrape lane '+str(lane)+' point '+str(j),{'right':(target,Q@GRIP_R,.09)})
  p.add(2,'lift from scraping lane '+str(lane),{'right':(target+[0,0,.035],Q@GRIP_R,.09)})
 p.add(3,'return scaler above its starting place',{'right':(tool+[0,0,.065],R,.09)})
 p.add(2,'put scaler on the table',{'right':(tool+[0,0,.003],R,.09)})

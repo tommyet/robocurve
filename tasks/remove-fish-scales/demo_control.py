@@ -30,8 +30,8 @@ class DemoControl:
     if stage.startswith('load scraping') or stage.startswith('scrape lane'):
      from geometry import PATCHES
      load=max(700*max(0.,-float(np.dot(m.joint_gap('skin_bond_'+str(i)),m.orientation('skin_'+str(i))[:,2]))) for i in PATCHES)
-     desired=float(np.clip(.002*(load-.25),-.0004,.002))
-     self.press_offset+=.2*(desired-self.press_offset)
+     # Integrate measured pressure slowly rather than chase the nominal surface.
+     self.press_offset=float(np.clip(self.press_offset+.00015*(load-.25),-.0003,.0025))
      target+=(R@GRIP_R.T)[:,2]*self.press_offset
     else:self.press_offset=0.
 
