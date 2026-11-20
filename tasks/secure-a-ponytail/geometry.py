@@ -10,7 +10,7 @@ STRANDS=12;SEGMENTS=18
 # Each flexible lock groups fine fibres into a 5 mm contact envelope.
 # The 36 g total mass includes voids between fibres; no locks are joined together.
 for s in range(STRANDS):
- y=(s-5.5)*.0065;z=.035+.015*np.cos(s);back=-.0915*np.sqrt(1-(y/.078)**2-(z/.115)**2);root=HEAD+[back,y,z]
+ y=(s-5.5)*.0055;z=.035+.015*np.cos(s);back=-.0915*np.sqrt(1-(y/.078)**2-(z/.115)**2);root=HEAD+[back,y,z]
  pts=[]
  for j in range(SEGMENTS+1):
   u=j/SEGMENTS;p=root+[-.035*u+.004*np.sin(2*np.pi*u+s*.25),.002*np.sin(3*np.pi*u+s),-.245*u]
@@ -37,11 +37,11 @@ M=32;radius=.0115;theta=np.arange(M)*2*np.pi/M
 vertices=ELASTIC+np.c_[radius*np.cos(theta),radius*np.sin(theta),np.zeros(M)]
 centres=(vertices+np.roll(vertices,-1,axis=0))/2
 lengths=np.linalg.norm(np.roll(vertices,-1,axis=0)-vertices,axis=1)
-BAND_CONTACT_INDICES=list(range(0,M,4))
+BAND_CONTACT_INDICES=list(range(M))
 for i in BAND_CONTACT_INDICES:
  tangent=(vertices[(i+1)%M]-vertices[i])/lengths[i];radial=centres[i]-ELASTIC;radial/=np.linalg.norm(radial);rot=Rotation.from_matrix(np.column_stack([radial,np.cross(tangent,radial),tangent]))
  shape=dict(kind='capsule',radius=.0015,length=float(lengths[i]),pos=[0,0,0],quat=[0,0,0,1])
- BODIES.append(body(f'band_segment_{i:03d}',centres[i],[shape],mass=.0004/len(BAND_CONTACT_INDICES),quat=rot.as_quat().tolist(),color=(.64,.12,.27),friction=1.2,contact_offset=.0002,torsional_patch_radius=.0015,min_torsional_patch_radius=.001,exclude=['elastic'],visible=False,external_force=True))
+ BODIES.append(body(f'band_segment_{i:03d}',centres[i],[shape],mass=.0004/len(BAND_CONTACT_INDICES),quat=rot.as_quat().tolist(),color=(.64,.12,.27),friction=1.2,contact_offset=.0002,torsional_patch_radius=.0015,min_torsional_patch_radius=.001,exclude=['elastic']+[f'band_segment_{(i+d)%M:03d}' for d in [-2,-1,1,2]],visible=False,external_force=True))
 radial=centres-ELASTIC;radial/=np.linalg.norm(radial,axis=1)[:,None]
 POINTS=np.vstack([centres+offset*radial for offset in [-.0015,0,.0015]])
 TRIS=[]

@@ -49,25 +49,38 @@ class DemoControl:
     if arm!=side or label not in (approach,enclose,pinch,press):continue
     if approach not in self.waypoints:
      from scipy.spatial.transform import Rotation as Rot
-     points=m.nodes['frame']
-     index=indices if isinstance(indices,int) else indices[0]+int(np.argmax(points[indices[0]:indices[1],2]))
-     body=f'bound_edge_{index:03d}';pos=m.p(body);tangent=m.orientation(body)[:,2].copy()
-     tangent/=max(np.linalg.norm(tangent),1e-12)
-     # Choose a reachable roll around the measured binding, preserving a
-     # transverse pinch. A fixed downward wrist missed the loop by 38 mm.
-     seed0=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6);choices=[]
-     z0=np.array([0.,0.,-1.]);z0-=tangent*float(z0@tangent);z0/=max(np.linalg.norm(z0),1e-12)
-     for sign in [-1.,1.]:
-      y=sign*tangent
-      for angle in [-60.,-30.,0.,30.,60.]:
-       z=Rot.from_rotvec(tangent*np.deg2rad(angle)).apply(z0);candidate=np.column_stack([np.cross(y,z),y,z])
-       def loss(q):
-        pp,rr=ik.tcp_pose(q,station.BASES[side]);return np.r_[pp-pos,.10*ik._rot_error(candidate,rr)]
-       sol=least_squares(loss,seed0,bounds=(ik.LOWER,ik.UPPER),max_nfev=100)
-       choices.append((float(np.linalg.norm(sol.fun)),candidate))
-     error,chosen=min(choices,key=lambda a:a[0])
-     if error>.015:raise RuntimeError('Observed outer loop has no reachable transverse grasp.')
+     from geometry import N,GRIP_INDICES
+     # Choose a raised outer segment from current geometry. Fixed index ranges
+     # can select the central crossing after the strip twists.
+     avoid=list(GRIP_INDICES)+[int(g['body'].rsplit('_',1)[1]) for g in m.pinch.held.values() if g['body'].startswith('bound_edge_')]
+     candidates=[]
+     other='right' if side=='left' else 'left'
+     for index in range(N):
+      if any(min((index-i)%N,(i-index)%N)<=5 for i in avoid):continue
+      body=f'bound_edge_{index:03d}';pos=m.p(body)
+      if np.linalg.norm(pos-hands[other]['tcp'])<.06:continue
+      candidates.append((float(pos[2]),body,pos.copy()))
+     candidates.sort(reverse=True,key=lambda item:item[0])
+     seed0=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6);selection=None
+     for height,body,pos in candidates[:16]:
+      tangent=m.orientation(body)[:,2].copy();tangent/=max(np.linalg.norm(tangent),1e-12)
+      z0=np.array([0.,0.,-1.]);z0-=tangent*float(z0@tangent)
+      if np.linalg.norm(z0)<1e-5:continue
+      z0/=np.linalg.norm(z0);choices=[]
+      for sign in [-1.,1.]:
+       y=sign*tangent
+       for angle in [-60.,-30.,0.,30.,60.]:
+        z=Rot.from_rotvec(tangent*np.deg2rad(angle)).apply(z0);candidate=np.column_stack([np.cross(y,z),y,z]);goal=pos+.010*z
+        def loss(q):
+         pp,rr=ik.tcp_pose(q,station.BASES[side]);return np.r_[pp-goal,.10*ik._rot_error(candidate,rr)]
+        sol=least_squares(loss,seed0,bounds=(ik.LOWER,ik.UPPER),max_nfev=100)
+        choices.append((float(np.linalg.norm(sol.fun)),candidate))
+      error,chosen=min(choices,key=lambda a:a[0])
+      if error<.005:selection=(body,pos,chosen);break
+     if selection is None:raise RuntimeError('No raised outer-loop segment has a reachable transverse grasp.')
+     body,pos,chosen=selection
      self.waypoints[approach]=dict(body=body,point=pos.copy(),rotation=chosen,start_tcp=hands[side]['tcp'].copy(),start_rotation=hands[side]['rotation'].copy())
+     m.events.append(dict(event='demo_outer_loop_target',side=side,body=body,time=m.time,point=pos.tolist()))
     entry=self.waypoints[approach];body=entry['body'];pos=m.p(body);chosen=entry['rotation']
     lo,hi=self.stages[label];u=ik.smoothstep((k-lo+1)/(hi-lo+1))
     if label==approach:

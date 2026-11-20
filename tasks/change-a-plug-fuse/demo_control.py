@@ -73,7 +73,7 @@ class DemoControl:
      if phase['obj']=='carrier':
       from geometry import CARRIER_OFFSET
       if m.measure()['cover_closed']:position=CARRIER_OFFSET+np.array([0.,0.,.035])
-     elif m.measure()['replacement_seated']:position=FC+np.array([0.,0.,.040])
+     elif np.linalg.norm(m.p('spare_fuse')-m.p('plug',FC))<.001 and abs(float((plugR.T@m.orientation('spare_fuse'))[0,0]))>.98:position=FC+np.array([0.,0.,.040])
      elif abs(float((plugR.T@m.orientation('spare_fuse'))[0,0]))<.9:
       raise RuntimeError('Replacement is misaligned; stop instead of pushing it into a terminal.')
      self.phase_goal=(m.p('plug')+plugR@position,plugR@phase['rotation']);self.last_goal=self.phase_goal
@@ -87,7 +87,8 @@ class DemoControl:
      goalR=plugR@phase['rotation']@rr.T
      goal=m.p('plug')+plugR@phase['position']-goalR@tr
      self.phase_goal=(goal,goalR);self.last_goal=self.phase_goal
-    u=ik.smoothstep((k-start)/phase['n']);target=self.phase_start[0]+u*(self.phase_goal[0]-self.phase_start[0]);R=ik.slerp_matrix(self.phase_start[1],self.phase_goal[1],u)
+    duration=phase['n']*(.6 if phase['kind']=='push' else 1.)
+    u=ik.smoothstep(min(1.,(k-start)/duration));target=self.phase_start[0]+u*(self.phase_goal[0]-self.phase_start[0]);R=ik.slerp_matrix(self.phase_start[1],self.phase_goal[1],u)
     if phase['kind']=='lift' and phase['obj']=='old_fuse':
      # Extraction needs position control; forcing a fixed cartridge angle
      # saturated the wrist and left it only 8 mm above its clips.

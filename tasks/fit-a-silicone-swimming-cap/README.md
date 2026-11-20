@@ -10,7 +10,7 @@ An NVIDIA GPU is needed for native rendering. From the repository root:
 ```sh
 OMNI_KIT_ACCEPT_EULA=YES python tasks/fit-a-silicone-swimming-cap/run.py --mode demo --out /tmp/fit-a-silicone-swimming-cap-demo
 OMNI_KIT_ACCEPT_EULA=YES python tasks/fit-a-silicone-swimming-cap/run.py --mode dream --out /tmp/fit-a-silicone-swimming-cap-dream
-python tasks/fit-a-silicone-swimming-cap/rescore.py /tmp/fit-a-silicone-swimming-cap-demo
+python tasks/fit-a-silicone-swimming-cap/rescore_native_precision.py /tmp/fit-a-silicone-swimming-cap-demo
 ```
 
 Dream receives the ordinary RGB cameras and joint state through Inspect Robots.
@@ -55,7 +55,7 @@ No third-party task meshes, scans or textures are used.
 
 ## Validation status
 
-Not submission-ready. A full-score released fitting, native penetration check and paired Dream baseline are still required.
+The native demo completes 600 actions at 1.0, with 5.1 seconds clear of both hands. Frozen rescoring, the head-contact audit and all three camera reviews pass. The paired 1,800-action Dream baseline is running; submission still requires that complete baseline.
 
 The shell uses a 0.4 mm rest-contact offset and 1 mm speculative contact margin, with exact fixed-head triangle collisions. Its 353-vertex geodesic mesh avoids narrow pole triangles. A 0.5 m/s depenetration limit bounds numerical contact correction. These solver settings do not prescribe a fitted shape.
 

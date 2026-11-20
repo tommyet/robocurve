@@ -47,3 +47,5 @@ The steel face extends from 88 mm behind the TCP to 12 mm ahead. Holding checks 
 The demo uses measured-pose feedback without a second integral joint correction. A commanded squeeze can capture an already-contacting edge even after jaw motion stops; the physical contact and finite-load checks still apply.
 
 The demo approaches outer-loop grasps along the real finger shafts, then rotates each wrist as it lays that loop flat. It uses ordinary joint commands and observed edge locations, without moving material directly.
+
+The scripted demo selects a reachable raised edge from the current frame geometry, excluding the central grips. Fixed material-index ranges are unreliable after twisting. Selected target points are recorded in the run events.

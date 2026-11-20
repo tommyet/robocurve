@@ -30,7 +30,7 @@ add(80,'press the replacement into its clips','spare_fuse','move',.10,position=F
 add(20,'release the seated fuse','spare_fuse','release',.4)
 add(40,'withdraw above the replacement','spare_fuse','withdraw',.4,delta=[0,0,.03])
 add(40,'align closed tips above seated cartridge','spare_fuse','push',.06,position=FC+[0,0,.035],rotation=down(90),relative='plug')
-add(60,'push cartridge fully into clips','spare_fuse','push',.06,position=FC+[0,0,.007],rotation=down(90),relative='plug')
+add(100,'push cartridge fully into clips','spare_fuse','push',.06,position=FC+[0,0,.007],rotation=down(90),relative='plug')
 add(40,'lift clear of the seated cartridge','spare_fuse','push',.06,position=FC+[0,0,.040],rotation=down(90),relative='plug')
 add(60,'approach the removed carrier','carrier','pick',.4,point=[.010,0,.004],delta=[0,0,.04],rotation=Rcover)
 add(40,'grasp the carrier for refitting','carrier','pick',.25,point=[.010,0,.004],rotation=Rcover)
