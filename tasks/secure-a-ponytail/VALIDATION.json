@@ -1,5 +1,5 @@
 {
-  "status": "incomplete_corrected_native_demo",
+  "status": "full_demo_validated_baseline_running",
   "submission_ready": false,
   "revision_ready": false,
   "current_task_runtime_verified": false,
@@ -14,17 +14,21 @@
   "native_force_control": "Corrected permanent_wrench_composer control passed; corrected tasks require new complete evidence.",
   "latest_attempt": {
     "run": "pony-demo-026",
-    "status": "running",
-    "score": null,
-    "scope": "Finite pinch begins only when opposing pad gap is within0.75mm of cord diameter, preventing premature asymmetric patch capture."
+    "status": "complete",
+    "score": 1.0,
+    "steps": 1040,
+    "wall_seconds": 1607.7413443019905,
+    "retained_locks": 12,
+    "maximum_retention_slip_mm": 3.2622163200016123,
+    "frozen_score_and_contact_audits_passed": true,
+    "visual_review_passed": true
   },
   "remaining_gates": [
-    "Complete corrected full-score native demo",
-    "Complete same-source Dream baseline",
-    "Independent audits and visual review",
-    "New media and submission after withdrawal"
+    "Complete matching1800-action Dream baseline",
+    "Review baseline and finalize evidence",
+    "Upload media and submit replacement PR"
   ],
-  "checked_utc": "2026-11-20T14:47:49.700005+00:00",
+  "checked_utc": "2026-11-20T15:14:51.025662+00:00",
   "last_failed_attempt": {
     "run": "pony-demo-025",
     "score": 0,
