@@ -1,20 +1,24 @@
 {
+  "passed": true,
   "view": "rear",
-  "frames": 1801,
-  "fps": 20,
-  "codec": "h264",
-  "pixel_format": "yuv420p",
-  "resolution": [
-    640,
-    480
-  ],
-  "sampled_frames": [
+  "reviewed_controls": [
     0,
-    300,
-    600,
-    900,
-    1200,
+    164,
+    327,
+    491,
+    655,
+    818,
+    982,
+    1145,
+    1309,
+    1473,
+    1636,
     1800
   ],
-  "review": "The complete fixed rear view keeps both loose closure ends visible. Dream did not engage a hook. No team identifiers or text overlays. Native full episode, no edits."
+  "findings": [
+    "Same recessed-eye and overlapping-hook setup as the demonstration.",
+    "The model moves the native arms but leaves the closure unfastened.",
+    "All1801frames retained at20Hz; complete fixed rear view chosen.",
+    "No identifying overlays."
+  ]
 }

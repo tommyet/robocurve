@@ -9,8 +9,8 @@
     "retained_seconds": 0.0,
     "one_or_more_retained_seconds": 0.0,
     "band_untwisted": true,
-    "maximum_local_extension_mm": 0.0068712650729690905,
-    "maximum_band_length_ratio": 1.0000825460028717,
+    "maximum_local_extension_mm": 0.006891883663831533,
+    "maximum_band_length_ratio": 1.0000827936984913,
     "intact": true,
     "failed": false
   },

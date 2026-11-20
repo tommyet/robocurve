@@ -48,4 +48,8 @@ The previous version's outer eye bars projected beyond the tape and removed norm
 
 ## Validation
 
-New native demo and matching Dream evidence are pending for the revised closure.
+The revised native demo completes **580 controls, score 1.0**. Both hooks remain engaged for 5.45 seconds with clear hands, with **6.79 mm tape overlap** and no damage. The matching Dream baseline completes **1800 controls, score 0.00**. Frozen-source rescoring, contact-location checks and all-frame video checks pass. Native wall time on the shared L40S was 10.7 minutes for the demo and 29.0 minutes for Dream.
+
+The complete uncut rear view is the review video. See the metadata clarification record for wording updates made after recording.
+
+Dream ran through the official loopback SSH bridge, with its credential kept on the local computer. Its client made 73 API attempts across 37 sessions, including 36 expiry recoveries in one uninterrupted physical episode. These are recorded in `evidence/bridge-runtime.json`; earlier videos are superseded.

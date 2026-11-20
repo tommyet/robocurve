@@ -6074,3 +6074,11 @@ Bra revision demo001 completes580controls at1.0 with two hooks retained5.45secon
 Pony demo001 was stopped110controls after native collision rods obscured the intended fibre colours. Post-bind visibility hiding fixes this without disabling collision; demo002starts with actual coloured fibre meshes visible. No qualifying full revised ponytail yet.
 
 The blocked Dream-key transfer is unnecessary: the existing official loopback bridge works with a local pinnedSDK environment and authenticatedSSHreverseforward. Credential remains on the Mac; remote absence was verified before starting braDream001. No approval for a remote credential transfer is needed for this route. Preserve local API-request/session audits alongside the remote run transcript.
+
+
+Pony demo002 passes the completed native1Nproof atcontrol1000:12/12colouredlocks meet the>=90%sampled-fibre rule, maximumslip2.737mm, no damage. Final1040-control recording and independent audits remain pending. Rear and front cameras together expose both colour rows; the overhead view hides the hanging hair behind the root backing. Use synchronized rear/front native views with a trace-driven evaluator-pull caption, retaining all frames. BraDream001 is nearing its1800-control limit; ponyDream is queued serially through the same local bridge.
+
+
+Bra geometry revision submitted to the same PR [#3255](https://github.com/robocurve/benchmark-tasks/pull/3255), commit `65eb4c8`, media **M-7H4R67**, receipt **TK-2CBZPZ**. It is waiting for review; do not push again while pending. Revised demo001 scores1.0/580controls and matching Dream001 scores0.0/1800controls. The reference Simplicity8711 size32A is an underwire bralette, not wireless; the inactive front is simplified. Ordinary tape overlap, 3mm-recessed eyes and underside hook access are retained. Both runs pass frozen rescoring and video/contact checks.
+
+Pony demo002 completed1040controls at1.0, with all12captured fractions1.0, no damage, band width24.84mm and final maximum movement **3.6063mm** through the full release/hold. This supersedes the earlier control1000 interim2.737mm figure. Both complete native viewpoints are paired without cuts or retiming; the evaluator-pull label is shown only on controls910–989 where trace force is positive. Matching Dream001 is still running.
