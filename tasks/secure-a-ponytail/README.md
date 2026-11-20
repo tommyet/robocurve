@@ -1,4 +1,4 @@
-> **Development only.** PR #2860 was withdrawn after the original external-force API failed a native control. Earlier proof-test scores and media are invalid. The corrected controller applies a real native force, but no complete successful replacement demo exists. See `VALIDATION.json`.
+> **Demo validated; baseline pending.** The corrected demo scores 1.0 with all twelve locks retained through the native pull test. The matching Dream run is still in progress. Earlier withdrawn evidence is not reused. See `VALIDATION.json`.
 
 # Secure a ponytail with a plain hair elastic
 
@@ -30,7 +30,7 @@ for diagnostics and are excluded from submission evidence.
 
 ## Setup and reset
 
-Use a rigid adult practice head approximately 180 × 156 × 230 mm. An inexpensive [Marianna polystyrene head with a face](https://www.sallybeauty.com/salon-supplies/other-professional-supplies/beauty-student-supplies/styrofoam-head-with-face/SBS-200201.html) is a suitable starting form; measure it and pad the scalp with firm foam if needed to match each dimension within 10 mm. Clamp its mounting base firmly to the table. The simulator uses a rigid approximation of this supported head.
+Use a rigid adult practice head approximately 180 × 156 × 230 mm. An inexpensive [Marianna polystyrene head with a face](https://www.sallybeauty.com/salon-supplies/other-professional-supplies/beauty-student-supplies/styrofoam-head-with-face/SBS-200201.html) is a suitable starting form; measure it and pad the scalp with firm foam if needed to match each dimension within 10 mm. Use a rigid plastic stand 76 mm in diameter and 190 mm high on a 150 × 150 × 15 mm base; clamp the base firmly to the table. The simulator uses a rigid approximation of this supported head.
 
 Prepare the hair once from an ordinary pack of straight synthetic braiding hair. Weigh twelve **3.0 ± 0.1 g** bundles on a 0.1 g scale and trim their free length to **245 ± 5 mm**. Bind only the uppermost 10 mm of each bundle with thread and adhesive; do not join the free lengths. Fix these twelve roots individually to a thin flexible scalp backing, then bond that backing flush to the rear of the head. No backing, glue or thread may extend into the free hair. A root must withstand a 2 N pull before use; replace any loose root.
 
@@ -51,7 +51,7 @@ The simulator applies the same downward load, divided over native band contact p
 
 Articulated 5 mm capsules with overlapping rounded ends group fine hair fibres into flexible locks. The native solver uses 960 Hz physics under the same 20 Hz robot controls; this improves thin-body contact resolution.
 A native elastic surface models a 16 mm inside-diameter, 3 mm cord silicone band;
-its stiffness and internal damping are approximate. Internal elasticity damping is 0.15 to reduce high-frequency recoil; it does not apply drag to rigid translation of the band. The starting rests are 19 mm apart. These dimensions
+its stiffness, simplified 1 g mass and internal damping are approximate. Internal elasticity damping is 0.15 to reduce high-frequency recoil; it does not apply drag to rigid translation of the band. The starting rests are 19 mm apart. These dimensions
 are part of the trial setup, not a measured retail-product calibration.
 
 A geometry-gated native vertex attachment represents finger friction only after
@@ -76,6 +76,4 @@ No third-party task meshes, scans or textures are used.
 
 ## Validation
 
-The old submitted demo and baseline are withdrawn because the USD proof force did not reach the native solver. Corrected control tests verify native force application; new successful task evidence is still required.
-
-The working point is 168 mm from the gripper origin, 4 mm behind the extension ends. The narrow pads and 2 mm-wide wooden support posts leave access to the small band. The band has 32 native contact patches with a total contact mass of 0.4 g; adjacent overlapping patches are collision-filtered. A further 0.6 g is assigned to the elastic surface. This is a coarse contact model, not individual hairs or calibrated silicone.
+The old submitted evidence remains withdrawn. The corrected full-score demo and independent audits now pass; the matching Dream baseline and final submission media are pending.
