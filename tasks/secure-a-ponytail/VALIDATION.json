@@ -13,10 +13,10 @@
   },
   "native_force_control": "Corrected permanent_wrench_composer control passed; corrected tasks require new complete evidence.",
   "latest_attempt": {
-    "run": "pony-demo-017",
+    "run": "pony-demo-020",
     "status": "running",
     "score": null,
-    "scope": "14mm-ID band,42mm stretch, lower approach below hair tips, active centring through threading; unchanged retention."
+    "scope": "Continuous native contact, open notched rests and lift-before-stretch controller; unchanged retained-lock/pull-test scoring."
   },
   "remaining_gates": [
     "Complete corrected full-score native demo",
@@ -26,8 +26,8 @@
   ],
   "checked_utc": "2026-11-20T13:04:22.076603+00:00",
   "last_failed_attempt": {
-    "run": "pony-demo-016",
+    "run": "pony-demo-019",
     "score": 0,
-    "reason": "Two rear locks missed; diagonal high approach deflected hair tips and left the loop4mm off centre."
+    "reason": "Band remained stable at reset but drifted off flat rest tops bystep65, before hands reached it."
   }
 }

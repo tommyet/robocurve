@@ -36,7 +36,7 @@ Prepare the hair once from an ordinary pack of straight synthetic braiding hair.
 
 Mount a 24 × 40 × 14 mm firm-foam root backing at the rear of the head, centred 98 mm behind and 42 mm above the head centre. Fix the roots separately to its lower face in two rows of six, 5.4 mm centre spacing in both directions. The root centres span 27 mm sideways and 5.4 mm front to back. The twelve root heights are 35 mm above head centre; the backing supports only the bound root ends. Comb the free lengths into a compact, straight downward section and remove the comb before reset. No clip, glue, thread or support holds the free hair together. The elastic starts separate, with zero locks enclosed.
 
-The head faces away from the robot. Its centre is (390, 0, 1052.5) mm; the elastic starts at (270, 0, 810.5) mm on two secured wooden rests. X points forward, Y left, and the table is 747.5 mm high. Restore the loose hair and separate band each trial. The synthetic locks and contact envelopes are a coarse grouped-fibre model, not individual hair strands.
+The head faces away from the robot. Its centre is (390, 0, 1052.5) mm; the elastic starts at (270, 0, 810.5) mm on two secured 7 × 6 × 60 mm printed-polymer rests. Each top has a 4 mm-wide, 2 mm-deep open notch running along Y. The band rests freely in these grooves; there is no clip, adhesive or attachment. Lift it clear before stretching. X points forward, Y left, and the table is 747.5 mm high. Restore the loose hair and separate band each trial. The synthetic locks and contact envelopes are a coarse grouped-fibre model, not individual hair strands.
 
 The finger extensions have 40 mm working length, 24 mm width and 3 mm thickness.
 Both arms use their ordinary mounting height and 40 N finger actuator limits.
@@ -59,7 +59,7 @@ closing pad faces enclose a band patch. It holds only material already inside th
 24 mm-wide face, follows the real gripper link, and releases on opening, 8 mm slip
 or estimated local cord tension above 18 N. This tension estimate is uncalibrated;
 it is not a measured native force limit. Local held-patch contacts are filtered
-while the attachment acts, to avoid conflicting constraints. Native cord capsules supply hair/head contact; the wider elastic ribbon is filtered from those pairs to avoid a second oversized contact profile. Root failures and band over-stretch remain active. No hair or band pose is assigned
+while the attachment acts, to avoid conflicting constraints. A continuous native surface and 32 cord capsules supply hair/head contact. The simulation strip is 1.5 mm wide with a 0.75 mm contact rest offset on each side, staying inside the 3 mm radial cord envelope. Its modulus is doubled to 1.2 MPa to preserve the earlier axial stiffness with half the strip width; material thickness remains 3 mm. These are equivalent-strip parameters, not a calibrated silicone measurement. Root failures and band over-stretch remain active. No hair or band pose is assigned
 during a trial; the approximation supplies no automatic gathering or fitting.
 
 The CPU audit verifies source hashes and every action, then independently
