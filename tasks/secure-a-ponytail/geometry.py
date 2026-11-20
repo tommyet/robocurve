@@ -10,10 +10,10 @@ STRANDS=12;SEGMENTS=18
 # Each flexible lock groups fine fibres into a 5 mm contact envelope.
 # The 36 g total mass includes voids between fibres; no locks are joined together.
 for s in range(STRANDS):
- y=(s-5.5)*.0055;z=.035+.015*np.cos(s);back=-.0915*np.sqrt(1-(y/.078)**2-(z/.115)**2);root=HEAD+[back,y,z]
+ y=(s-5.5)*.005;z=.035;back=-.0915*np.sqrt(1-(y/.078)**2-(z/.115)**2);root=HEAD+[back,y,z]
  pts=[]
  for j in range(SEGMENTS+1):
-  u=j/SEGMENTS;p=root+[-.035*u+.004*np.sin(2*np.pi*u+s*.25),.002*np.sin(3*np.pi*u+s),-.245*u]
+  u=j/SEGMENTS;p=root+[-.035*u,0.,-.245*u]
   local=p-HEAD
   if (local[1]/.078)**2+(local[2]/.115)**2<1:
    scalp=HEAD[0]-.090*np.sqrt(1-(local[1]/.078)**2-(local[2]/.115)**2)

@@ -123,6 +123,14 @@ class DemoControl:
     elif k>=self.stages['stretch the loop across the packet'][0]:R=chosen
     if self.stages['lift the retaining loop over the packet'][0]<=k<=self.stages['slip the loop below the far edge'][1]:
      if not m.grasp_state.get('left',{}).get('body','').startswith('band_contact_'):raise RuntimeError('The retaining loop is not held; stop the diagnostic.')
+   if side in m.pinch.held:
+    # Re-centre the real closing faces around a rolling bound edge. This
+    # bounded robot-only correction preserves contact during compliant twist.
+    g=m.pinch.held[side];H=hands[side]
+    local=(m.p(g['body'])-H['tcp'])@H['rotation']
+    finger_q=np.asarray(H['finger_joint_positions']);face_centre=(finger_q[0]-finger_q[1])/2
+    shift=float(np.clip(.7*(local[0]-face_centre),-.004,.004))
+    target+=H['rotation'][:,0]*shift
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=hands[side]['tcp']-p0;rbias=hands[side]['rotation']@R0.T
    def residual(q):
