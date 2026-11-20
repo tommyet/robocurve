@@ -1,5 +1,5 @@
 {
-  "title": "Fasten a bra\u2019s back hooks on a torso form",
+  "title": "Fasten a bra’s back hooks on a torso form",
   "category": "Societal relevance",
   "keywords": [
     "dressing",
@@ -9,8 +9,8 @@
   ],
   "instruction": "Fasten both back hooks of the bra in the outermost eye row and leave the band untwisted and securely closed on the torso form.",
   "context": "Fastening a bra requires holding two elastic fabric ends under tension while engaging small ungated hooks. This task isolates that part of dressing assistance.",
-  "setup": "Development draft: an ordinary 32 mm two-hook, three-row back closure on flexible elastic wings, already draped on a fixed full-size torso form. Both closure ends are loose and separated. Same 4 N precision finger extensions on both YAM arms. Full real setup and dimensions will be documented before submission.",
-  "scoring": "Zero for damage, a twisted band or insufficient release. After both hands are clear for 3 seconds: 0.5 if at least one intended hook remains engaged throughout; 1.0 if both remain engaged in the outermost row throughout.",
+  "setup": "A fixed torso form wears a prepared bra with 32 mm-wide reinforced closure tapes, two ungated metal hooks and three eye rows. The non-working garment is supported on the form; two 83 mm elastic working wings end in loose tapes, initially 80 mm apart. Hook spacing is 16 mm and wire diameter 0.8 mm. Both arms use 40 x 6 x 1 mm finger extensions with a 4 N jaw limit. Fixed dimensions and layout are in the README and geometry.py.",
+  "scoring": "Damage or a twisted band gives 0. Otherwise, after both hands are at least 55 mm clear with open fingers for 3 seconds: 0.5 if at least one hook remains in its outer-row eye throughout; 1.0 if both do. No credit for a closure still held by the robot. Highest qualifying score applies.",
   "run_limit": "1,800 controls (90 seconds at 20 Hz).",
   "action_limit": 1800,
   "fidelity": "Native elastic end links represent the working wings; the non-working garment is supported on the form. Intermediate ribbons are visual: distributed cloth contact and wrinkles are omitted. Reinforced tapes, hooks and eyes have native collision, with no auto-latch. Contact-checked finite finger joints approximate pinch friction. Elastic overload, twist, slip and failed retention lose credit.",

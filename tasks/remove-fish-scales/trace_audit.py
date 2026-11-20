@@ -29,7 +29,7 @@ def audit(rows,report):
   assert np.allclose(a,READY,atol=1e-5) if previous is None else np.all(abs(a-previous)<=DELTA+1e-5),'Action-rate limit'
   m.restore(row['state']);assert not prior_failed or m.failed,'Damage was cleared'
   if count:
-   clear=all(h['opening']>.4 and min(np.linalg.norm(np.asarray(h['tcp'])-m.p(n)) for n in ['fish','tail_grip','scaler']) > .065 for h in row['hands'].values())
+   clear=all(h['opening']>.4 and min(np.linalg.norm(np.asarray(h['tcp'])-m.p(n)) for n in ['fish','scaler']) > .065 for h in row['hands'].values())
    release=release+.05 if clear else 0.
   assert abs(release-m.release)<1e-6,'Release duration'
   assert all(m.work[i]>=.0025-1e-9 for i in m.removed),'Scale group removed without scraping work'

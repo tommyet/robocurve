@@ -11,7 +11,7 @@ class Model(NativeModel):
  def bind_native(self,base):
   super().bind_native(base)
   from finite_pinch import FinitePinch
-  self.tail_pinch=FinitePinch(self,['tail_grip'],.008,.001,.003,(-.006,.004));self.tool_pinch=FinitePinch(self,['scaler'],.006,.002,.007,(-.012,.004))
+  self.tail_pinch=FinitePinch(self,['fish'],.008,.001,.003,(-.006,.004),points={'fish':[0,.103,0]});self.tool_pinch=FinitePinch(self,['scaler'],.006,.001,.003,(-.006,.004))
  def update(self,hands,dt=.05):
   self.read();self.time+=dt;self.tail_pinch.update(hands);self.tool_pinch.update(hands)
   self.grasp_state={**{s:dict(body=g['body']) for s,g in self.tail_pinch.held.items()},**{s:dict(body=g['body']) for s,g in self.tool_pinch.held.items()}}
@@ -26,7 +26,7 @@ class Model(NativeModel):
     if self.work[i]>=.0025:
      self.disable('scale_retention_'+str(i),'scales_scraped_free');self.removed.add(i);self.restore_scale_collision(i)
   self.failed |= self.integrity_failed()
-  clear=all(h['opening']>.4 and min(np.linalg.norm(h['tcp']-self.p(n)) for n in ['fish','tail_grip','scaler'])>.065 for h in hands.values())
+  clear=all(h['opening']>.4 and min(np.linalg.norm(h['tcp']-self.p(n)) for n in ['fish','scaler'])>.065 for h in hands.values())
   self.release=self.release+dt if clear else 0.
  def restore_scale_collision(self,i):
   from pxr import UsdPhysics
@@ -40,7 +40,7 @@ class Model(NativeModel):
  def integrity_failed(self):return super().integrity_failed() or bool(self.broken) or self.peak_compression>.002
  def reset_valid(self):return not self.removed and not self.failed
  def measure(self):
-  p=self.p('fish');upright=self.orientation('fish')[2,2]>.8;on_board=abs(p[0]-.32)<.06 and abs(p[1])<.05 and TABLE+.012<p[2]<TABLE+.045
+  p=self.p('fish');upright=self.orientation('fish')[2,2]>.8;on_board=abs(p[0]-.38)<.09 and abs(p[1])<.05 and TABLE+.012<p[2]<TABLE+.045
   return dict(descaled_area_fraction=len(self.removed)/len(PATCHES),scale_groups_removed=len(self.removed),scale_groups_total=len(PATCHES),skin_intact=not self.failed,maximum_skin_compression_mm=1000*self.peak_compression,maximum_patch_normal_load_N=self.maximum_load,fish_on_board=bool(on_board and upright),released_seconds=self.release,failed=self.failed)
  def score(self):return 0. if self.failed or self.release<3 or not self.measure()['fish_on_board'] else len(self.removed)/len(PATCHES)
  def draw(self,d):

@@ -25,7 +25,7 @@ for i in range(NX):
    if i+di<0 or j+dj<0:continue
    other=f'film_{i+di}_{j+dj}';delta=np.array([di*DX,dj*DY,0]);axes=bend_axes(.0002,.0000001,limit=170)
    JOINTS.append(joint(name+'_'+other,other,name,-delta/2,delta/2,axes=axes,break_force=12.,break_torque=.06))
-TOOL=np.array([.24,-.21,TABLE+.062]);ROLLER=TOOL+[0,0,-.048]
+TOOL=np.array([.49,-.22,TABLE+.062]);ROLLER=TOOL+[0,0,-.048]
 # A clean open bench rest keeps the roller upright; it is not attached.
 rest=[box((.076,.042,.002),(0,0,.001))]
 rest += [box((.006,.040,.040),(sx*.035,0,.022)) for sx in [-1,1]]

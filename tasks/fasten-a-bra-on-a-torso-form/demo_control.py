@@ -5,7 +5,7 @@ class DemoControl:
  def __init__(self):
   import json
   from pathlib import Path
-  self.plan=json.loads(Path(__file__).with_name('demo-plan.json').read_text())['frames'];self.offset={s:np.zeros(3) for s in ['left','right']};self.rot={s:np.eye(3) for s in ['left','right']}
+  self.plan=json.loads(Path(__file__).with_name('demo-plan.json').read_text())['frames'];self.offset={s:np.zeros(3) for s in ['left','right']};self.rot={s:np.eye(3) for s in ['left','right']};self.body_bias={s:np.zeros(3) for s in ['left','right']};self.release_pose={};self.release_reference={}
  def action(self,k,wanted,m,observed,hands):
   from yam_arena import ik,station
   out=wanted.copy()
@@ -18,8 +18,15 @@ class DemoControl:
     if stage!='pinch both tapes':
      sign=1 if side=='left' else -1;self.offset[side]=m.p(name,[0,sign*.010,0])-np.array([X,sign*(GAP+.010),Z]);self.rot[side]=m.orientation(name)
     target+=self.offset[side];R=self.rot[side]@R
-   elif side in m.pinch.held and stage not in ['release the two tapes','withdraw from the closure','check the released fastening']:
-    grip=m.pinch.held[side];R=grip['local_rotation'].T;target-=R@grip['local_point']
+   elif stage=='release the two tapes' and side in self.release_pose:
+    target,R=self.release_pose[side]
+   elif stage in ['withdraw from the closure','check the released fastening'] and side in self.release_pose:
+    target=target-self.release_reference[side]+self.release_pose[side][0];R=self.release_pose[side][1]
+   elif side in m.pinch.held:
+    nominal=target.copy()
+    if stage!='release the two tapes':self.body_bias[side]=np.clip(self.body_bias[side]+.10*(nominal-m.p(name)),-.008,.008)
+    target=nominal+self.body_bias[side];grip=m.pinch.held[side];R=grip['local_rotation'].T;target-=R@grip['local_point']
+    if stage=='release the two tapes':self.release_pose[side]=(target.copy(),R.copy());self.release_reference[side]=nominal.copy()
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=hands[side]['tcp']-p0;rbias=hands[side]['rotation']@R0.T
    def residual(q):

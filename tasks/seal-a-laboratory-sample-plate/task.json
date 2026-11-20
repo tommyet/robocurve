@@ -7,9 +7,9 @@
     "adhesive film",
     "leak prevention"
   ],
-  "instruction": "Cover the prepared sample plate with the loose adhesive film and press it with the roller so every well is sealed separately. Leave the plate upright and release the tools.",
+  "instruction": "Cover the prepared sample plate with the loose adhesive film and press it with the roller so every well is sealed separately. Keep the plate upright throughout and release the tools.",
   "context": "Preparing samples for short-term storage requires a continuous seal around each well; a wrinkle can let samples leak or mix.",
-  "setup": "Development draft: free 96-well polypropylene plate, checkerboard coloured water, loose 130 x 80 mm PET adhesive storage film on its release backing over a clean tray, and padded hand roller in an open bench rest. Backing removal and filling are operator preparation.",
+  "setup": "A free 96-well polypropylene plate, 127.76 x 85.48 x 34 mm, has 9 mm well pitch and alternating coloured and clear water. A loose 130 x 80 x 0.1 mm PET adhesive storage film rests on a clean non-stick liner over a 120 mm-high tray. A 50 mm-wide padded roller stands freely in an open 76 x 42 x 50 mm rest. Filling and backing removal are operator preparation. All starting positions are fixed.",
   "scoring": "After 3 seconds with hands clear, score the fraction of wells with an intact cover and no leak path to another well or the outside. Damage or spilling invalidates credit. Real assessment uses a specified coloured-water inversion test.",
   "run_limit": "2,400 controls (120 seconds at 20 Hz).",
   "action_limit": 2400,

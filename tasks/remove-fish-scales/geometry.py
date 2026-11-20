@@ -2,7 +2,7 @@
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
 C=np.array([.32,.015,TABLE+.027]);RX=.035;RY=.085;RZ=.018
-BODIES.append(body('board',[.32,0,TABLE+.004],[box((.25,.30,.008))],mass=.8,fixed=True,color=(.73,.62,.45),friction=.6))
+BODIES.append(body('board',[.38,0,TABLE+.004],[box((.25,.30,.008))],mass=.8,fixed=True,color=(.73,.62,.45),friction=.6))
 head=sphere((.026,.031,.017),(0,-.084,0),(.43,.48,.39));bodyshape=sphere((.034,.081,.016))
 fish=[bodyshape,head,cylinder(.008,.020,(0,.084,0),Rotation.from_euler('x',90,degrees=True).as_quat())]
 # Rounded head, visible eye on each side, mouth, gill covers and tail lobes.
@@ -11,10 +11,9 @@ for sign in [-1,1]:
  fish.append(sphere((.0015,.0015,.0006),(.014,-.092,sign*.0145),(.7,.75,.6)))
 fin=dict(kind='mesh',points=[[-.008,.106,0],[-.030,.145,0],[0,.137,0],[.030,.145,0],[.008,.106,0],[-.008,.106,.001],[-.030,.145,.001],[0,.137,.001],[.030,.145,.001],[.008,.106,.001]],faces=[(0,1,2,3,4),(5,9,8,7,6),(0,5,6,1),(1,6,7,2),(2,7,8,3),(3,8,9,4),(4,9,5,0)],pos=[0,0,0],color=[.31,.36,.29])
 fish.append(fin)
-BODIES.append(body('fish',C,fish,mass=.22,color=(.48,.53,.42),friction=.35,contact_offset=.0001))
+fish.append(sphere((.008,.014,.007),(0,.103,0)))
+BODIES.append(body('fish',C,fish,mass=.235,color=(.48,.53,.42),friction=.35,contact_offset=.0001))
 TAIL=C+[0,.103,0]
-BODIES.append(body('tail_grip',TAIL,[sphere((.008,.014,.007))],mass=.015,color=(.43,.48,.38),friction=.8))
-JOINTS.append(joint('tail_integrity','fish','tail_grip',[0,.103,0],[0,0,0],axes=fixed_axes(),break_force=25.,break_torque=.3))
 PATCHES=[];PATCH_POINTS=[];PATCH_ROTATIONS=[]
 def surface(x,y):
  z=RZ*np.sqrt(max(.01,1-(x/RX)**2-(y/RY)**2));normal=np.array([x/RX**2,y/RY**2,z/RZ**2]);normal/=np.linalg.norm(normal)

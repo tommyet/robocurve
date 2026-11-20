@@ -27,14 +27,14 @@ for side,sign in [('left',1),('right',-1)]:
  if side=='left':
   # Two ungated J hooks. Their pockets open along +Y, away from wing tension.
   for z in [-.008,.008]:
-   pts=np.array([[0,-.012,z],[0,-.021,z],[-.004,-.021,z],[-.004,-.015,z]])
-   shapes += [rod_between(a,b,.0006) for a,b in zip(pts[:-1],pts[1:])]
+   pts=np.array([[0,-.012,z],[0,-.018,z],[-.004,-.018,z],[-.004,-.015,z]])
+   shapes += [rod_between(a,b,.0004) for a,b in zip(pts[:-1],pts[1:])]
  else:
   # Three ordinary adjustment rows; the outermost is the target row.
-  for y in [.012,.003,-.006]:
+  for y in [.021,.012,.003]:
    for z in [-.008,.008]:
-    pts=np.array([[0,y,z-.003],[-.002,y,z-.003],[-.002,y,z+.003],[0,y,z+.003]])
-    shapes += [rod_between(a,b,.0006) for a,b in zip(pts[:-1],pts[1:])]
+    pts=np.array([[0,y-.006,z-.003],[-.002,y,z-.003],[-.002,y,z+.003],[0,y-.006,z+.003]])
+    shapes += [rod_between(a,b,.0004) for a,b in zip(pts[:-1],pts[1:])]
  for shape in shapes[1:]:shape['color']=[.68,.70,.73]
  BODIES.append(body(name,center,shapes,mass=.002,color=(.20,.28,.45),friction=.65,contact_offset=.00008))
  prev=next(b for b in BODIES if b['name']==previous);Rp=Rotation.from_quat(prev['quat']);anchor=np.array([X,sign*.055,Z])

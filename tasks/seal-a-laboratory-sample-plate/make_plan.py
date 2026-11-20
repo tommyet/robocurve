@@ -16,7 +16,7 @@ p.add(4,'carry film over the sample plate',{'left':(c+[0,0,.065],L,.021),'right'
 p.add(3,'place loose film on the well rims',{'left':(c,L,.021),'right':(d,R,.021)})
 p.add(2,'release film edges',{'left':(c,L,.15),'right':(d,R,.15)})
 p.add(3,'withdraw sideways from film',{'left':(c+[0,0,.065],L,.6),'right':(d+[0,0,.065],R,.6)})
-p.add(3,'approach roller handle',{'right':(TOOL+[0,0,.055],TOOL_R,.25)},'joint')
+p.add(3,'approach roller handle',{'right':(TOOL+[0,0,.055],TOOL_R,.25)})
 p.add(2,'put fingers around roller handle',{'right':(TOOL,TOOL_R,.20)})
 p.add(2,'grip roller handle',{'right':(TOOL,TOOL_R,.10)})
 p.add(2,'lift roller',{'right':(TOOL+[0,0,.055],TOOL_R,.10)})
