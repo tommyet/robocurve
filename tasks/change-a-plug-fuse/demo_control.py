@@ -86,11 +86,17 @@ class DemoControl:
      goal=m.p('plug')+plugR@phase['position']-goalR@tr
      self.phase_goal=(goal,goalR);self.last_goal=self.phase_goal
     u=ik.smoothstep((k-start)/phase['n']);target=self.phase_start[0]+u*(self.phase_goal[0]-self.phase_start[0]);R=ik.slerp_matrix(self.phase_start[1],self.phase_goal[1],u)
+    if phase['kind']=='lift' and phase['obj']=='old_fuse':
+     # Extraction needs position control; forcing a fixed cartridge angle
+     # saturated the wrist and left it only 8 mm above its clips.
+     tool_tip_local=self.grasps['old_fuse'][0]
+     tip_target=(1-u)*self.phase_object_start+u*(m.p('plug',FC)+m.orientation('plug')@phase['delta'])
+     R=self.phase_start[1]
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=hands[side]['tcp']-p0;rbias=hands[side]['rotation']@R0.T
    def residual(q):
     pp,rr=ik.tcp_pose(q,station.BASES[side]);actual_R=rbias@rr
     position=pp+bias-target if tool_tip_local is None else pp+bias+actual_R@tool_tip_local-tip_target
-    return np.r_[position*(3. if tool_tip_local is not None else 1.),(.12 if side=='right' and k>200 else .05)*ik._rot_error(R,actual_R),.001*(q-seed)]
+    return np.r_[position*(3. if tool_tip_local is not None else 1.),(.02 if tool_tip_local is not None else .12 if side=='right' and k>200 else .05)*ik._rot_error(R,actual_R),.001*(q-seed)]
    out[o:o+6]=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=25).x
   return out

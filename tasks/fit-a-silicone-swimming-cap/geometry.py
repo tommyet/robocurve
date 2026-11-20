@@ -7,18 +7,11 @@ shapes += [sphere((.003,.009,.005),(-.089,y,.017),(.13,.15,.18)) for y in [-.030
 shapes += [box((.001,.038,.004),(-.090,0,-.051),(.47,.17,.17))]
 BODIES.append(body('headform',HEAD,shapes,fixed=True,mass=1.5,color=(.76,.63,.51),friction=.3,quat=Rotation.from_matrix(HEADROT).as_quat().tolist()))
 # The loose cap straddles the crown, with its held rim15mm below the crown; it is not stretched into its final fit.
-M=40;N=12
-POINTS=[CAP+[0,0,.130]]
-for j in range(1,N+1):
- a=j*np.pi/(2*N)
- for i in range(M):
-  t=i*2*np.pi/M;POINTS.append(CAP+[.075*np.sin(a)*np.cos(t),.070*np.sin(a)*np.sin(t),.130*np.cos(a)])
-POINTS=HEAD+(np.asarray(POINTS)-HEAD)@HEADROT.T;TRIS=[]
-for i in range(M):TRIS.append([0,1+i,1+(i+1)%M])
-for j in range(N-1):
- for i in range(M):
-  a=1+j*M+i;b=1+j*M+(i+1)%M;c=a+M;d=b+M;TRIS.extend([[a,c,d],[a,d,b]])
-TRIS=np.asarray(TRIS);RIM=np.arange(1+(N-1)*M,1+N*M)
+from cap_mesh import hemisphere
+unit_points,TRIS,RIM=hemisphere()
+M=len(RIM)
+POINTS=CAP+unit_points*np.array([.075,.070,.130])
+POINTS=HEAD+(POINTS-HEAD)@HEADROT.T
 EDGES=np.unique(np.sort(np.concatenate([TRIS[:,[0,1]],TRIS[:,[1,2]],TRIS[:,[2,0]]]),axis=1),axis=0)
 REST_LENGTHS=np.linalg.norm(POINTS[EDGES[:,1]]-POINTS[EDGES[:,0]],axis=1)
 # Discrete native contact points represent the cap's 3 mm rolled rim.
@@ -40,10 +33,11 @@ def spawn_surface(stage,root):
  p.GetAttribute('omniphysics:restTriVtxIndices').Set(Vt.Vec3iArray(TRIS.tolist()))
  p.GetAttribute('omniphysics:restBendAnglesDefault').Set('restShapeDefault')
  p.GetAttribute('physxDeformableBody:selfCollision').Set(True)
+ p.GetAttribute('physxDeformableBody:maxDepenetrationVelocity').Set(.5)
  p.GetAttribute('physxDeformableBody:solverPositionIterationCount').Set(128)
  p.GetAttribute('physxDeformableBody:enableSpeculativeCCD').Set(True)
  p.GetAttribute('physxDeformableBody:linearDamping').Set(.1)
- UsdPhysics.CollisionAPI.Apply(p);col=PhysxSchema.PhysxCollisionAPI.Apply(p);col.CreateContactOffsetAttr(.003);col.CreateRestOffsetAttr(.0004)
+ UsdPhysics.CollisionAPI.Apply(p);col=PhysxSchema.PhysxCollisionAPI.Apply(p);col.CreateContactOffsetAttr(.001);col.CreateRestOffsetAttr(.0004)
  mat=UsdShade.Material.Define(stage,root+'/capMaterial');q=mat.GetPrim()
  for api in ['OmniPhysicsBaseMaterialAPI','OmniPhysicsDeformableMaterialAPI','OmniPhysicsSurfaceDeformableMaterialAPI','PhysxSurfaceDeformableMaterialAPI']:q.ApplyAPI(api)
  for key,value in {'omniphysics:dynamicFriction':.35,'omniphysics:density':1100.,'omniphysics:youngsModulus':1e6,'omniphysics:poissonsRatio':.45,'omniphysics:surfaceThickness':.0008,'omniphysics:surfaceBendStiffness':1e6/(12*(1-.45**2)),'physxDeformableMaterial:elasticityDamping':.02,'physxDeformableMaterial:bendDamping':.01}.items():

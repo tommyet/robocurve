@@ -55,7 +55,7 @@ are part of the trial setup, not a measured retail-product calibration.
 A geometry-gated native vertex attachment represents finger friction only after
 closing pad faces enclose a band patch. It holds only material already inside the
 central 8 mm of the 24 mm-wide face, follows the real gripper link, and releases on opening, 8 mm slip
-or estimated local cord tension above 6 N. This tension estimate is uncalibrated;
+or estimated local cord tension above 12 N. This tension estimate is uncalibrated;
 it is not a measured native force limit. Local held-patch contacts are filtered
 while the attachment acts, to avoid conflicting constraints. Native hair contacts,
 root failures and band over-stretch remain active. No hair or band pose is assigned
@@ -78,3 +78,5 @@ No third-party task meshes, scans or textures are used.
 The old submitted demo and baseline are withdrawn because the USD proof force did not reach the native solver. Corrected control tests verify native force application; new successful task evidence is still required.
 
 The working point is168mm from the gripper origin,4mm behind the extension ends. This keeps the opposed fingers clear of one another when picking up the small elastic; capture is restricted to the actual−36…+4mm working span.
+
+The approximate local tension limit is12N, below the native40N jaw effort. It represents silicone-pad friction, not measured force feedback. The1N released retention test,8mm grip-slip limit and material integrity checks are unchanged.

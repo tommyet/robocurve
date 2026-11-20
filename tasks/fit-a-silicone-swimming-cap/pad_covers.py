@@ -1,6 +1,6 @@
 """Narrow steel finger extensions with silicone contact faces.
 
-Each extension is 40 x 24 x 3 mm and leaves the original finger bodies 23 mm
+Each extension is 80 x 24 x 3 mm and leaves the original finger bodies 63 mm
 behind the working point, giving access to the thin elastic without the finger bodies pushing it away.
 They are rigid robot hardware in both demo and Dream runs, never grasp joints.
 """
@@ -11,7 +11,7 @@ from scipy.spatial.transform import Rotation
 def configure_kinematics():
     from yam_arena import constants, ik, station
     station.BASES.update({side:(0.,y,.85) for side,y in [("left",.305),("right",-.305)]})
-    constants.TCP_OFFSET=(0.,0.,.170)
+    constants.TCP_OFFSET=(0.,0.,.210)
     ik.TCP_OFFSET=constants.TCP_OFFSET
     import sys
     if 'yam_arena.runtime' in sys.modules:sys.modules['yam_arena.runtime'].TCP_OFFSET=constants.TCP_OFFSET
@@ -65,13 +65,13 @@ def install():
                 # toward positive X. joint8 is the mirror image.
                 # Nominal closed-link origins from the pinned YAM URDF.
                 origin = np.array([sign*.0445119, -sign*.0239931, .0566829])
-                centre = rotation.inv().apply(np.array([sign*.0015, 0., .152])-origin)
+                centre = rotation.inv().apply(np.array([sign*.0015, 0., .172])-origin)
                 PhysxSchema.PhysxRigidBodyAPI.Apply(stage.GetPrimAtPath(path+paths[name])).CreateEnableSpeculativeCCDAttr(True)
                 shape = UsdGeom.Cube.Define(stage, path+paths[name]+'/precision_finger_extension')
                 shape.CreateSizeAttr(1.)
                 shape.AddTranslateOp().Set(Gf.Vec3d(*centre))
                 shape.AddOrientOp().Set(Gf.Quatf(float(q[3]), Gf.Vec3f(*q[:3])))
-                shape.AddScaleOp().Set(Gf.Vec3f(.003, .024, .040))
+                shape.AddScaleOp().Set(Gf.Vec3f(.003, .024, .080))
                 UsdPhysics.CollisionAPI.Apply(shape.GetPrim())
                 collision = PhysxSchema.PhysxCollisionAPI.Apply(shape.GetPrim())
                 collision.CreateContactOffsetAttr(.0005)

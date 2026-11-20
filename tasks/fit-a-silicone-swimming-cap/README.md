@@ -28,7 +28,7 @@ for diagnostics and are excluded from submission evidence.
 
 Use a smooth, rigid ABS adult headform, 190 × 160 × 240 mm, fixed to its 140 × 130 mm base. The silicone cap has a 150 × 140 mm unstretched opening, a 130 mm dome, a 0.8 mm wall and a 3 mm rolled rim. Match one cap model and size across trials.
 
-The head centre is (360, 0, 872.5) mm, with its nose facing positive Y. X points forward, Y left, and the table is 747.5 mm high. Each arm stands on a fixed 160 × 160 × 100 mm steel riser. Both grippers have 40 × 24 × 3 mm silicone-faced extensions and 40 N finger actuator limits.
+The head centre is (360, 0, 872.5) mm, with its nose facing negative X, towards the robot. X points forward, Y left, and the table is 747.5 mm high. Each arm stands on a fixed 160 × 160 × 100 mm steel riser. Both grippers have 80 × 24 × 3 mm silicone-faced extensions and 40 N finger actuator limits.
 
 The cap starts loose across the crown, with both hands holding its two side rims. The initial held rim centre is (360, 0, 977.5) mm, 15 mm below the crown, with a 3 mm pad gap. It is still unstretched and above the scored fitting bands. Reset verifies actual contact before frame zero and lets the material settle under gravity; demo and Dream share this reset. The robot must stretch, draw down and release the cap. No fixture holds it on the head and no material pose is assigned during a trial. Restore the photographed layout with the cap loose, not stretched into its final fit or damaged.
 
@@ -55,16 +55,12 @@ No third-party task meshes, scans or textures are used.
 
 ## Validation status
 
-Not submission-ready. The rotated headform layout is being tested with a firmer commanded pinch. A full-score released fitting, native penetration check and paired Dream baseline remain required.
+Not submission-ready. A full-score released fitting, native penetration check and paired Dream baseline are still required.
 
-The 0.8 mm shell uses a 0.4 mm rest-contact offset and 3 mm speculative contact margin, with exact fixed-head triangle collisions. Grip friction is an uncalibrated approximation; the force, pad-contact, slip and material-integrity checks remain active.
+The shell uses a 0.4 mm rest-contact offset and 1 mm speculative contact margin, with exact fixed-head triangle collisions. Its 353-vertex geodesic mesh avoids narrow pole triangles. A 0.5 m/s depenetration limit bounds numerical contact correction. These solver settings do not prescribe a fitted shape.
 
-The finite rim pinch uses 40,000 N/m translational stiffness and 4 N·s/m damping, with the same 40 N/0.08 Nm break limits and continuous opposed-pad contact check. The 0.5 mm finger contact offset is smaller than the 1 mm capture/holding margin. These parameters approximate an unresolved frictional grip and are not measured silicone properties.
+The smooth ABS head and silicone shell use approximate friction coefficients of 0.30 and 0.35. There is no attachment to the head. Fitting and released retention arise from native contact and elasticity.
 
-The rolled-rim proxy may overlap a pad under compression. Holding requires it to continue spanning both pad faces within the1mm air-gap margin; compression itself is not treated as lost contact. Initial capture still requires both surfaces within1mm. The native joint connects to the actual gripper body at every physics substep and transmits reaction forces.
+The grip's total 40 N/0.08 Nm capacity, 40,000 N/m stiffness and 4 N·s/m damping are divided among the rim points actually inside each pad. Lost contacts detach individually; surviving contacts retain their original limits. Opening, loss of every contact or a native load-limit break releases the hand. Initial capture allows a 1 mm contact margin, smaller than the rolled rim; compression during holding still counts as contact.
 
-The current cap has a130mm unstretched dome, representing a deeper adult cap. Its opening and0.8mm wall are unchanged. This supplies enough material to cover the crown without relying on a shallow shell stretched over only the upper skull; scoring is unchanged.
-
-The smooth ABS headform uses approximate friction0.30 and the silicone shell0.35. These are uncalibrated contact values, with no attachment to the head; fitting and released retention still arise from native contact and elasticity.
-
-The finite pinch distributes its total40N/0.08Nm capacity across all rim points already in opposed contact with the24mm-wide pad. It does not capture extra material outside the pad. This avoids concentrating the whole broad-finger load onto one mesh vertex. Any contact loss,8mm slip or native joint break releases that hand.
+The 80 mm finger extensions keep the gripper housings clear of the loose dome. Their working span is −78 to +2 mm from the TCP. Both policies use identical native geometry.

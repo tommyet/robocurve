@@ -103,9 +103,9 @@ def main():
      wanted=controller.action(k,wanted,m,obs,hands())
      for tracker in trackers:
       # Pose feedback already uses actual wrist and object observations.
-      # After levering, disable the additional integral joint correction:
+      # After the initial plug pickup, disable integral joint correction:
       # its overshoot drove the held plug upward into the grasped fuse.
-      wanted=tracker.action(wanted,obs,enabled=k<=520)
+      wanted=tracker.action(wanted,obs,enabled=k<=200)
    elif policy is not None:
     chunk=policy.act(emb._observation());assert len(chunk.actions)==1;wanted=np.asarray(chunk.actions[0].data,float)
    else:wanted=current.copy()
