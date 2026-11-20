@@ -1,0 +1,19 @@
+{
+  "title": "Remove fish scales without cutting the skin",
+  "category": "Societal relevance",
+  "keywords": [
+    "food preparation",
+    "directional scraping",
+    "fish",
+    "bimanual"
+  ],
+  "instruction": "Remove the remaining scales from the exposed side of the fish with the scaler, without cutting its skin. Leave the fish on the board and release it.",
+  "context": "Descaling needs firm support and tail-to-head scraping against overlapping scales, with enough pressure to lift scales without damaging the skin.",
+  "setup": "Development draft: one prepared whole fish on a cutting board, its underside already descaled; loose hand scaler alongside. The exposed side retains scales. The robot must brace the loose fish and scrape the remaining side.",
+  "scoring": "After 3 seconds with hands clear and the fish on the board, score the fraction of the initially scaled area left free of scales. Skin tears, crushing or loss of the fish invalidate credit. Real assessment uses before/after photographs and a ruler.",
+  "run_limit": "2,400 controls (120 seconds at 20 Hz).",
+  "action_limit": 2400,
+  "fidelity": "A native fish body supports compliant skin sectors. Small groups of overlapping scales release only after loaded tail-to-head scraping. Work and damage thresholds approximate scale retention and skin response; tissue chemistry and individual microscopic scales are not modelled.",
+  "scores": "Not validated; development only.",
+  "media": ""
+}

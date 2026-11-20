@@ -1,0 +1,19 @@
+{
+  "title": "Fasten a bra\u2019s back hooks on a torso form",
+  "category": "Societal relevance",
+  "keywords": [
+    "dressing",
+    "elastic fabric",
+    "hook and eye",
+    "bimanual"
+  ],
+  "instruction": "Fasten both back hooks of the bra in the outermost eye row and leave the band untwisted and securely closed on the torso form.",
+  "context": "Fastening a bra requires holding two elastic fabric ends under tension while engaging small ungated hooks. This task isolates that part of dressing assistance.",
+  "setup": "Development draft: an ordinary 32 mm two-hook, three-row back closure on flexible elastic wings, already draped on a fixed full-size torso form. Both closure ends are loose and separated. Same 4 N precision finger extensions on both YAM arms. Full real setup and dimensions will be documented before submission.",
+  "scoring": "Zero for damage, a twisted band or insufficient release. After both hands are clear for 3 seconds: 0.5 if at least one intended hook remains engaged throughout; 1.0 if both remain engaged in the outermost row throughout.",
+  "run_limit": "1,800 controls (90 seconds at 20 Hz).",
+  "action_limit": 1800,
+  "fidelity": "Native elastic end links represent the working wings; the non-working garment is supported on the form. Intermediate ribbons are visual: distributed cloth contact and wrinkles are omitted. Reinforced tapes, hooks and eyes have native collision, with no auto-latch. Contact-checked finite finger joints approximate pinch friction. Elastic overload, twist, slip and failed retention lose credit.",
+  "scores": "Not validated; development only.",
+  "media": ""
+}

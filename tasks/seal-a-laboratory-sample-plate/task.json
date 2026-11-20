@@ -1,0 +1,19 @@
+{
+  "title": "Seal a laboratory sample plate with adhesive film",
+  "category": "Other",
+  "keywords": [
+    "wet lab",
+    "sample storage",
+    "adhesive film",
+    "leak prevention"
+  ],
+  "instruction": "Cover the prepared sample plate with the loose adhesive film and press it with the roller so every well is sealed separately. Leave the plate upright and release the tools.",
+  "context": "Preparing samples for short-term storage requires a continuous seal around each well; a wrinkle can let samples leak or mix.",
+  "setup": "Development draft: free 96-well polypropylene plate, checkerboard coloured water, loose 130 x 80 mm PET adhesive storage film on its release backing over a clean tray, and padded hand roller in an open bench rest. Backing removal and filling are operator preparation.",
+  "scoring": "After 3 seconds with hands clear, score the fraction of wells with an intact cover and no leak path to another well or the outside. Damage or spilling invalidates credit. Real assessment uses a specified coloured-water inversion test.",
+  "run_limit": "2,400 controls (120 seconds at 20 Hz).",
+  "action_limit": 2400,
+  "fidelity": "Passive hinged film sectors, native roller compression and pressure/dwell adhesion approximate PET and glue. An interface connectivity model predicts leaks; liquid flow, chemistry and long-term storage are not simulated. Native grasps and forces can fail.",
+  "scores": "Not validated; development only.",
+  "media": ""
+}
