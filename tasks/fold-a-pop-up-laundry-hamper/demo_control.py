@@ -32,6 +32,7 @@ class DemoControl:
   out=wanted.copy()
   for side,o in [('left',0),('right',7)]:
    target,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side])
+   contact_phase=False;approaching=False
    offset=self.offset[side]
    if self.grip_offset is not None:
     weight=float(np.clip((k-100)/20,0,1));offset=(1-weight)*offset+weight*self.grip_offset[side]
@@ -47,6 +48,7 @@ class DemoControl:
    for arm,approach,press,indices,nominal in specs:
     enclose=approach.replace('approach','enclose');pinch=approach.replace('approach','pinch')
     if arm!=side or label not in (approach,enclose,pinch,press):continue
+    contact_phase=label in (enclose,pinch);approaching=label==approach
     if approach not in self.waypoints:
      from scipy.spatial.transform import Rotation as Rot
      from geometry import N,GRIP_INDICES
@@ -124,7 +126,7 @@ class DemoControl:
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=hands[side]['tcp']-p0;rbias=hands[side]['rotation']@R0.T
    def residual(q):
-    pp,rr=ik.tcp_pose(q,station.BASES[side]);grasping=('enclose' in label or 'pinch' in label);weight=20. if grasping else 3. if 'approach' in label else 1.
+    pp,rr=ik.tcp_pose(q,station.BASES[side]);grasping=contact_phase;weight=20. if grasping else 3. if approaching else 1.
     return np.r_[weight*(pp+bias-target),(.02 if grasping else .10)*ik._rot_error(R,rbias@rr),.001*(q-seed)]
    out[o:o+6]=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=25).x
   return out
