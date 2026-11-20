@@ -1,18 +1,30 @@
 {
-  "submission_ready": false,
-  "reason": "New task: no native demo or Dream trial yet.",
-  "status": "force_application_requires_revalidation",
-  "current_task_runtime_verified": false,
-  "checked_utc": "2026-11-19T23:45:48.352745+00:00",
-  "remaining_gates": [
-    "Full-score native demo with current runtime",
-    "Paired Dream baseline",
-    "Frozen-source rescoring and visual review",
-    "Media upload and PR ingestion"
-  ],
-  "latest_native_trial": "gel-still-hold-032",
-  "latest_trial_status": "running",
-  "latest_steps": null,
-  "latest_score": null,
-  "blocker": "USD force commands failed an unbonded native control. Correct native wrench application and replace both demo and Dream evidence."
+  "status": "submitted_pending_review",
+  "submission_ready": true,
+  "current_task_runtime_verified": true,
+  "runtime_sources_match": true,
+  "visual_review_passed": true,
+  "independent_trace_audits_passed": true,
+  "media_uploaded": true,
+  "checked_utc": "2026-11-20T01:32:38.452590+00:00",
+  "scores": {
+    "demo": 1.0,
+    "dream": 0.0
+  },
+  "steps": {
+    "demo": 2180,
+    "dream": 2400
+  },
+  "wall_seconds": {
+    "demo": 2392.734420631983,
+    "dream": 2269.5832230059896
+  },
+  "dream_sessions": {
+    "session_count": 50,
+    "expiry_count": 49
+  },
+  "metadata_note": "Runtime and instruction match both frozen runs; descriptive metadata and evidence were finalized afterwards.",
+  "remaining_gates": [],
+  "pr": 3033,
+  "task_id": "TK-7FSANX"
 }

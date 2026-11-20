@@ -1,8 +1,8 @@
 {
   "schema": "runtime-evidence-v1",
-  "status": "native_development_in_progress",
-  "scope": "Runtime installation works; current task still needs a full-score demo and paired audited baseline.",
-  "current_task_runtime_verified": false,
+  "status": "native_verified",
+  "scope": "Complete native demo and Dream trial with frozen-source and independent proof audits.",
+  "current_task_runtime_verified": true,
   "python": "3.12.16",
   "packages": {
     "numpy": "2.5.4",

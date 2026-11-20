@@ -99,7 +99,9 @@ class FinitePinch:
             used={g['body'] for g in self.held.values()};choices=[]
             for name in self.names:
                 if name in used:continue
-                distance=candidate(self.m.p(name),self.radii[name],h,self.thickness,self.half_width,self.z_range)
+                # Capture centrally, leaving room for finite compliance during folding.
+                # Existing contacts still use the complete physical pad span.
+                distance=candidate(self.m.p(name),self.radii[name],h,self.thickness,min(self.half_width,.006),(self.z_range[0],min(self.z_range[1],.002)))
                 if distance is not None:choices.append((distance,name))
             if not choices:continue
             _,name=min(choices);self.serial+=1;path=self.root+f'/pinch_constraint_{side}_{self.serial}'

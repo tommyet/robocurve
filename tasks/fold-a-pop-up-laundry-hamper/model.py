@@ -16,7 +16,7 @@ class Model(NativeModel):
    if v.count!=1:raise RuntimeError('Expected one native '+s['name']+' surface')
    self.surfaces[s['name']]=v
   from finite_pinch import FinitePinch
-  self.pinch=FinitePinch(self,[n for n in self.names if n.startswith('bound_edge_')],0.0035,0.002,0.012,(-0.01, 0.012))
+  self.pinch=FinitePinch(self,[n for n in self.names if n.startswith('bound_edge_')],0.0035,0.002,0.012,(-0.088, 0.012))
   from band_pinch import FinitePinch as BandPinch
   self.band_pinch=BandPinch(self,[f"band_contact_{i:03d}" for i in range(64)],.0005,.002,.012,(-.01,.012))
   self.read()

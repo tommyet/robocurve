@@ -39,3 +39,7 @@ A finite frame pinch starts only when a bound segment is between closing finger 
 These are uncalibrated material and grip approximations. The frame and fabric still bend, slip and collide, and the band must be stretched around the packet. Nothing prescribes a folded or retained shape. All geometry is original procedural work under the included MIT license; YAM and Isaac retain their own licences.
 
 Frame pinches connect directly to the robot gripper rather than a world anchor updated at20Hz. This removes control-interval lag while retaining the same30N/0.36Nm limits and continuous pad-contact checks.
+
+Frame-grip capture is restricted to the central12mm of each26mm pad and at least10mm behind its tip. This conservative contact approximation leaves room for compliance during folding; it does not enlarge the physical pad or increase grip strength. Holding still checks the full real pad faces.
+
+The steel face extends from 88 mm behind the TCP to 12 mm ahead. Holding checks use that actual 100 mm contact span; capture remains central. The earlier 22 mm holding window incorrectly released contacts still on the physical finger.

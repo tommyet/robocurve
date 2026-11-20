@@ -1,6 +1,6 @@
 # Fit and cure a gel nail extension
 
-Development draft. No native task run, full-score demo or Dream baseline has been validated. Do not submit this folder yet.
+The native demonstration and Dream-1 trial are validated; scoring and proof-test reports are in `evidence/`.
 
 Seat a prepared clear extension on a curved practice nail, cure its gel and leave it securely bonded after release. The robot must align the mating surfaces, hold them through the initial cure, press the lamp button and withdraw without dislodging the tip. Preparation is outside the timed trial; no person is used.
 
@@ -45,7 +45,7 @@ The scripted controller reads native poses and sends bounded robot joint actions
 
 ## Run and rescore
 
-Use the pinned environment in `ENVIRONMENT.json`; its current task validation is still pending.
+Use the pinned environment in `ENVIRONMENT.json`; both full native runs are independently audited.
 
 ```bash
 python tasks/fit-a-gel-nail-extension/run.py --mode demo --out /path/to/new-demo
@@ -54,4 +54,10 @@ python tasks/fit-a-gel-nail-extension/rescore.py /path/to/new-demo
 python tasks/fit-a-gel-nail-extension/rescore.py /path/to/new-dream
 ```
 
-The layout is fixed, with no random seed. The demo uses 2,180 actions (109 simulated seconds); Dream gets 2,400 actions (120 seconds). The measured wall runtime will be recorded after native validation. Complete traces, original videos and frozen source are preserved separately; compact audit reports accompany this folder.
+The layout is fixed, with no random seed. The demo uses 2,180 actions (109 simulated seconds); Dream gets 2,400 actions (120 seconds). The demo took 39.9 minutes and Dream took 37.8 minutes on the shared RTX PRO 6000 Blackwell GPU. Complete traces, original videos and frozen source are preserved separately; compact audit reports accompany this folder.
+
+## Recorded results
+
+The native demo scores **1.0** in 2,180 actions. Its released extension passes the 1 N pull, with 0.415 mm maximum movement and 100.0% bonded area. Dream-1 scores **0.0** over all 2,400 actions. Both full traces pass frozen-source scoring and an additional audit reconstructing the proof-load trigger, ramp and displacement. Twelve score-boundary checks cover bonded area, spill, damage, incomplete proof and excessive slip.
+
+Dream made 99 API attempts across 50 sessions, including 49 SDK-reported expiry recoveries. This is a recovered-session baseline, not one uninterrupted episode; the transcript retains those diagnostics.
