@@ -1039,3 +1039,109 @@ transferable physical skill and meaningful failure, not adding randomisation,
 more objects or peripheral steps. Authorise further builds separately; a short
 core-interaction check should precede a full baseline and media work. No cost or
 completion-time guarantee is justified by these research findings.
+
+## 20 November, afternoon: next ideas after salmon and ponytail
+
+Research only; no GPU or Dream use. The fresh snapshot contains 883 visible board
+records (337 accepted, 402 pending, 54 rejected/revisable, 90 pilot) and an index
+of 3,226 all-state PRs. These are catalogue counts, not lifetime acceptance rates.
+The accepted count is unchanged from the morning snapshot. Review prompt v24 is
+dated 12:54:47 GMT. Private evidence is under
+`artifacts/low-effort-ideas-2026-11-20/` in the original workspace. Targeted live
+PR searches supplement title searches; absence is not proof against every public
+benchmark or a submission made after this check.
+
+### The best current leads
+
+**1. Seal a laboratory sample plate with adhesive storage film.** Start with a
+prepared plate, a loose matched film with its liner, and the manufacturer's
+applicator. Peel, align and press the flexible film to make separate seals around
+the wells. The tested outcome is preventing leaks and mixing between samples,
+not merely making a sheet look flat. Use coloured water, not biological samples.
+[Eppendorf Application Note 239](https://www.eppendorf.com/product-media/doc/en/159628_Application/Eppendorf_Consumables_Application-Note_239_Deepwell-Plates_Microplates_Eppendorf-Deepwell-Plates-Microplates-Investigations-sealing-methods.pdf)
+provides a practical check: checkerboard-filled wells, inversion and slight
+shaking, then inspection for cross-contamination. A task would specify a fixed
+repeatable version and score the fraction of intact, isolated wells, with damage
+or deliberate emptying invalidating credit. Use storage film; the note says PCR
+film develops optimal adhesion at PCR temperatures and is unsuitable for storage.
+This does not test long-term evaporation resistance or PCR performance.
+
+This is my strongest new direction, with **medium implementation effort**. The
+current review prompt explicitly includes common manual wet-lab procedures under
+Other, so it has a direct category case. Existing flexible-sheet and adhesion code
+may help, but loaded contact must actually establish the seals and wrinkles must
+allow failure. No direct board/PR match was found. Closest risks are
+[screen protector #2162](https://github.com/robocurve/benchmark-tasks/pull/2162)
+and our [inner-tube patch #2362](https://github.com/robocurve/benchmark-tasks/pull/2362):
+multiple separate fluid barriers are the proposed substantive difference, not the
+laboratory label. That novelty judgment remains conditional.
+
+**2. Fasten a bra's back hooks on a torso form.** Use an ordinary bra already
+draped on a mannequin, with both elastic ends loose and the closure open. Bring
+the ends together under tension, engage both hooks in the chosen eye row and let
+go. Score actual engagement of each hook, an untwisted band and retention after
+release; an ordinary gentle pull can confirm closure. Don't claim full dressing
+or fit assessment. [Triumph's instructions](https://my.triumph.com/blogs/community/how-to-wear-a-bra-correctly)
+document the normal back closure and secure, level band.
+
+**Low-to-medium effort relative to our hair tasks; medium acceptance case.**
+Flexible band ends and ungated hooks offer simultaneous tension, orientation and
+engagement, rather than pressing a rigid snap-fit. No direct board/PR match was
+found, including a live bra title/body search. However our
+[bracelet #2187](https://github.com/robocurve/benchmark-tasks/pull/2187) and accepted
+[bag strap #2629](https://github.com/robocurve/benchmark-tasks/pull/2629) are real
+neighbours. A different clasp alone is insufficient. Stop if the proposed model
+reduces this to the existing clipping ability or needs enlarged rigid handles.
+
+**3. Remove fish scales without cutting the skin — reserve.** A loose whole fish,
+ordinary scaler and tray; brace it, scrape against the overlapping scales, turn
+it over and finish the other side. Score remaining scaled area and visible skin
+damage, not the number of prescribed strokes. Native sliding contact and load
+must remove scales; simply touching a marked patch must not clean it. The
+[KAI scaler](https://www.kai-group.com/products/brand/select100/en/products/dh3016.html)
+is a real, specified tool. No direct board/PR match was found. BEHAVIOR's
+[clean_a_fish](https://behavior.stanford.edu/knowledgebase/tasks/clean_a_fish-0.html)
+definition concerns sand removal, not descaling. Our salmon extraction and
+accepted cucumber peeling remain comparisons to address.
+
+This has **medium effort and medium-to-low confidence until the importance case
+is stronger**. It needs credible directional scraping, skin damage and a repeatable
+real fish preparation. Do not count all restaurant cooks as regularly descaling
+fish. Familiar food alone is no longer a reliable relatability argument.
+
+### Cheap ideas that do not yet justify a build
+
+- Excise a visible protein-gel band and transfer it to a tube: no direct Robocurve
+  match found, and [EMBL's procedure](https://www.embl.org/groups/proteomics/wp-content/uploads/2025/10/Excision-of-gel-bands.pdf)
+  establishes a real wet-lab use. But small moist gel pieces need credible cutting,
+  tearing and transfer, while real visible bands require electrophoresis preparation.
+  Photos could score mechanical isolation, not molecular purity. Medium acceptance
+  case and medium-to-high effort: a reserve below plate sealing, not a cheap win.
+- Trimming a cold jar candle's wick and lifting out the clipping looks mechanically
+  cheap, but special-purpose-tool familiarity and overlap with scissors/candle
+  tasks make importance weak. Keep as a reserve, not an easy acceptance claim.
+- Recovering a snagged jumper loop without cutting the yarn has no direct match
+  found, but continuous yarn topology and the seam-unpicking rejection make it a
+  poor low-effort bet.
+- Sealing a dumpling is downgraded from the morning shortlist. Sushi rolling
+  [#1331](https://github.com/robocurve/benchmark-tasks/pull/1331#issuecomment-6872642264)
+  and olive pitting
+  [#3177](https://github.com/robocurve/benchmark-tasks/pull/3177#issuecomment-7040355704)
+  were finally rejected for specialist familiarity; familiar food is insufficient.
+  Additional dough-handling research also weakens a casual novelty claim.
+- Filter-paper preparation is excluded: the new
+  [NVIDIA GR00T 2 evaluation](https://research.nvidia.com/labs/gear/gr00t-2/)
+  explicitly tests filter paper in a funnel, opening/seating and wetting it.
+  It was absent from our board search, which illustrates why external checks matter.
+- Pasta rolling #3157, glass rimming #3043, flour sifting #3192, knife honing
+  #2657, agar spreading #2638 and blood-smear preparation #2533 already have
+  submissions. No new build proposed for these.
+
+The review prompt now explicitly treats ordinary snap-fits, holding while
+turning/tightening, and standing/stacking objects as covered abilities. Accepted
+cake, hem and brush tasks support a proportionate material model, not generic
+waypoints or automatic success. Prioritise a short core-interaction check for the
+plate and bra, and stop early if the only distinctiveness is the new object.
+No numerical acceptance probability, fixed dollar cost or delivery time is
+supported before those checks. Salmon #3170 and ponytail #3224 are now submitted;
+the earlier morning status above is historical.
