@@ -48,14 +48,23 @@ class DemoControl:
     enclose=approach.replace('approach','enclose');pinch=approach.replace('approach','pinch')
     if arm!=side or label not in (approach,enclose,pinch,press):continue
     if approach not in self.waypoints:
+     from scipy.spatial.transform import Rotation as Rot
      points=m.nodes['frame']
      index=indices if isinstance(indices,int) else indices[0]+int(np.argmax(points[indices[0]:indices[1],2]))
-     self.waypoints[approach]=m.p(f'bound_edge_{index:03d}')-nominal
-     self.waypoints[approach+'_body']=f'bound_edge_{index:03d}'
+     body=f'bound_edge_{index:03d}';pos=m.p(body);tangent=m.orientation(body)[:,2].copy()
+     tangent[2]=0.;tangent/=max(np.linalg.norm(tangent),1e-12)
+     z=np.array([0.,0.,-1.]);x=np.cross(tangent,z);chosen=np.column_stack([x,tangent,z])
+     self.waypoints[approach]=dict(body=body,point=pos.copy(),rotation=chosen,start_tcp=hands[side]['tcp'].copy(),start_rotation=hands[side]['rotation'].copy())
+    entry=self.waypoints[approach];body=entry['body'];pos=m.p(body);chosen=entry['rotation']
     lo,hi=self.stages[label];u=ik.smoothstep((k-lo+1)/(hi-lo+1))
-    target+=(u if label==approach else 1-u if label==press else 1.)*self.waypoints[approach]
-    # Stack with closed fingertips using ordinary downward native contact.
-    # No grip attachment or successful grasp is assumed here.
+    if label==approach:
+     target=(1-u)*entry['start_tcp']+u*(pos+[0,0,.045]);R=ik.slerp_matrix(entry['start_rotation'],chosen,u)
+    elif label==enclose:target=pos+np.array([0,0,.045*(1-u)]);R=chosen
+    elif label==pinch:target=pos.copy();R=chosen
+    elif label==press:
+     if side not in m.pinch.held:raise RuntimeError('The outer loop was not grasped; stop before stacking.')
+     if 'stack_start' not in entry:entry['stack_start']=hands[side]['tcp'].copy();entry['stack_R']=hands[side]['rotation'].copy()
+     target=(1-u)*entry['stack_start']+u*target;R=entry['stack_R']
    if side=='left' and label=='approach the loose retaining loop' and self.retainer is None:
     band=m.nodes['band'];point=band[64];normal=np.cross(band[128]-band[0],band[65]-band[127]);normal/=max(np.linalg.norm(normal),1e-12)
     direction=point-np.asarray(station.BASES['left']);direction-=normal*float(direction@normal);direction/=max(np.linalg.norm(direction),1e-12)

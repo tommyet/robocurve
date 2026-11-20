@@ -48,8 +48,8 @@ All credit requires passing this retention test, intact roots/band, and the band
 The simulator applies the same downward load, divided over native band contact patches, after three seconds with clear hands and after the band leaves its starting rest. It ramps/holds/unloads without writing material positions. Touching again resets the test. The evaluator force stands in for the scale; the test is recorded in the ordinary native trial and CPU-audited from its state history.
 
 Articulated 5 mm contact envelopes group fine hair fibres into flexible locks.
-A native elastic surface models a 30 mm inside-diameter, 3 mm cord silicone band;
-its stiffness is approximate. The starting rests are 33 mm apart. These dimensions
+A native elastic surface models a 16 mm inside-diameter, 3 mm cord silicone band;
+its stiffness is approximate. The starting rests are 19 mm apart. These dimensions
 are part of the trial setup, not a measured retail-product calibration.
 
 A geometry-gated native vertex attachment represents finger friction only after

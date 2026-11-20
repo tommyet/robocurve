@@ -1,6 +1,6 @@
 {
-  "status": "force_application_requires_revalidation",
-  "revision_ready": true,
+  "status": "development_force_corrected_demo_failed",
+  "revision_ready": false,
   "submission_ready": false,
   "scores": {
     "demo": 1.0,
@@ -39,8 +39,8 @@
     "review_views.py": "22fa01feda45347af01c0be648e07d61107791c5a687a9e3545c05cbc047c30a",
     "trace_audit.py": "3b30f4d696d754351921ecae5960a4685d5802626a76e36807721ecc0ad228d4"
   },
-  "runtime_sources_match": true,
-  "visual_review_passed": true,
+  "runtime_sources_match": false,
+  "visual_review_passed": false,
   "independent_trace_audits_passed": true,
   "media_uploaded": true,
   "checked_utc": "2026-11-19T19:39:43.732907+00:00",
@@ -54,5 +54,6 @@
   "submission_commit": "4d75d1daa054098bf336255e8329d6f6bc6c9731",
   "task_receipt": "TK-VT4XA6",
   "current_task_runtime_verified": false,
-  "blocker": "USD force commands failed an unbonded native control. Correct native wrench application and replace both demo and Dream evidence."
+  "blocker": "USD force commands failed an unbonded native control. Correct native wrench application and replace both demo and Dream evidence.",
+  "reason": "013 applied the real 1 N load; the loose 30 mm band slipped off. New 16 mm band demo and baseline required."
 }

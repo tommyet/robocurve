@@ -80,6 +80,8 @@ class DemoControl:
      # A cartridge can move within real finger contacts. Track its current
      # transform while placing it, instead of assuming a rigid welded grasp.
      tr=H['rotation'].T@(m.p(obj)-H['tcp']);rr=H['rotation'].T@m.orientation(obj)
+     if side in m.pinch.held and m.pinch.held[side]['body']==obj:
+      g=m.pinch.held[side];tr=g['local_point'];rr=g['local_rotation']
      goalR=plugR@phase['rotation']@rr.T
      goal=m.p('plug')+plugR@phase['position']-goalR@tr
      self.phase_goal=(goal,goalR);self.last_goal=self.phase_goal

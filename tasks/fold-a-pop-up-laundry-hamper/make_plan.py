@@ -46,27 +46,27 @@ for i in range(1,9):
 from common import down,TABLE
 RP=Rot.from_euler('y',-30,degrees=True).as_matrix()@down(0)
 # Lower the central crossing, then lay the two upright outer loops down.
-# Closed fingers press the raised loops down against the table; no regrasp is assumed.
+# Regrasp each actual raised bound edge, then bring it onto the crossing.
 # Every frame/cloth point stays native.
 lp=lp.copy();rp=rp.copy();lp[2]=TABLE+.028;rp[2]=TABLE+.012
 p.add(6,'lower the nested loops against the table',{'left':(lp,a,.10),'right':(rp,b,.10)})
 p.add(1,'hold the central crossing',{})
 p.add(1,'release the left edge above the table',{'left':(lp,a,.20)})
 p.add(2,'clear the left fingers',{'left':(lp+[0,0,.085],a,.20)})
-p.add(3,'approach the left outer loop',{'left':([.30,0,1.02],down(0),.03)})
-p.add(2,'enclose the left outer loop',{'left':([.30,0,.98],down(0),.03)})
-p.add(2,'pinch the left outer loop',{'left':([.30,0,.96],down(0),.03)})
-p.add(6,'stack the left loop',{'left':([.39,.045,TABLE+.010],down(0),.03)})
+p.add(3,'approach the left outer loop',{'left':([.30,0,1.02],down(0),.40)})
+p.add(2,'enclose the left outer loop',{'left':([.30,0,.98],down(0),.30)})
+p.add(2,'pinch the left outer loop',{'left':([.30,0,.96],down(0),.10)})
+p.add(6,'stack the left loop',{'left':([.39,.045,TABLE+.010],down(0),.10)})
 p.add(1,'hold the first outer loop down',{})
 p.add(1,'release the right edge',{'right':(rp,b,.20)})
 p.add(2,'clear the right fingers',{'right':(rp+[0,0,.085],b,.20)})
-p.add(3,'approach the right outer loop',{'right':([.50,0,1.02],RP,.03)},'joint')
-p.add(2,'enclose the right outer loop',{'right':([.50,0,.98],RP,.03)})
-p.add(2,'pinch the right outer loop',{'right':([.50,0,.96],RP,.03)})
-p.add(6,'stack the right loop',{'right':([.42,-.045,TABLE+.010],RP,.03)})
+p.add(3,'approach the right outer loop',{'right':([.50,0,1.02],RP,.40)},'joint')
+p.add(2,'enclose the right outer loop',{'right':([.50,0,.98],RP,.30)})
+p.add(2,'pinch the right outer loop',{'right':([.50,0,.96],RP,.10)})
+p.add(6,'stack the right loop',{'right':([.42,-.045,TABLE+.010],RP,.10)})
 p.add(4,'inspect the flat packet while both hands press',{})
 # Retain the compact coils with their ordinary attached elastic loop.
-p.add(2,'hold the packet beside the retaining path',{'right':([.43,-.025,TABLE+.010],RP,.03)})
+p.add(2,'hold the packet beside the retaining path',{'right':([.43,-.025,TABLE+.010],RP,.10)})
 p.add(2,'clear the left hand for the retainer',{'left':([.39,.14,TABLE+.16],grip(-80,1),.45)})
 p.add(3,'approach the loose retaining loop',{'left':([.39,.11,TABLE+.055],grip(-80,1),.35)})
 p.add(2,'pinch the retaining loop',{'left':([.39,.11,TABLE+.055],grip(-80,1),.05)})

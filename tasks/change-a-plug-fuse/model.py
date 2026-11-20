@@ -7,7 +7,12 @@ class Model(NativeModel):
  def configure_station(self):
   from pad_covers import install
   install()
- def material(self,hands,dt):self.failed |= bool(self.broken)
+ def bind_native(self,base):
+  super().bind_native(base)
+  from finite_pinch import FinitePinch
+  self.pinch=FinitePinch(self,['carrier','old_fuse','spare_fuse'],{'carrier':.0045,'old_fuse':.00315,'spare_fuse':.00315},.003,.001,(-.014,.008))
+ def material(self,hands,dt):
+  self.pinch.update(hands);self.failed |= bool(self.broken)
  def state(self):return dict(super().state(),grasp_state=self.grasp_state)
  def measure(self):
   R=self.orientation('plug');new=(self.p('spare_fuse')-self.p('plug'))@R;old=(self.p('old_fuse')-self.p('plug'))@R;carrier=(self.p('carrier')-self.p('plug'))@R

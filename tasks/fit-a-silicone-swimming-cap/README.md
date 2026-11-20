@@ -30,7 +30,7 @@ Use a rigid adult headform, 190 × 160 × 240 mm, fixed to its 140 × 130 mm bas
 
 The head centre is (360, 0, 872.5) mm, with its nose facing positive Y. X points forward, Y left, and the table is 747.5 mm high. Each arm stands on a fixed 160 × 160 × 100 mm steel riser. Both grippers have 40 × 24 × 3 mm silicone-faced extensions and 40 N finger actuator limits.
 
-The cap starts loose across the crown, with both hands holding its front and back rim. The initial held rim centre is (360, 0, 977.5) mm, 15 mm below the crown, with a 3 mm pad gap. It is still unstretched and above the scored fitting bands. Reset verifies actual contact before frame zero and lets the material settle under gravity; demo and Dream share this reset. The robot must stretch, draw down and release the cap. No fixture holds it on the head and no material pose is assigned during a trial. Restore the photographed layout with the cap loose, not stretched into its final fit or damaged.
+The cap starts loose across the crown, with both hands holding its two side rims. The initial held rim centre is (360, 0, 977.5) mm, 15 mm below the crown, with a 3 mm pad gap. It is still unstretched and above the scored fitting bands. Reset verifies actual contact before frame zero and lets the material settle under gravity; demo and Dream share this reset. The robot must stretch, draw down and release the cap. No fixture holds it on the head and no material pose is assigned during a trial. Restore the photographed layout with the cap loose, not stretched into its final fit or damaged.
 
 ## Scoring and material model
 

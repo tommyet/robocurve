@@ -10,14 +10,14 @@ configure_kinematics()
 from yam_arena import ik,station
 from yam_arena.constants import READY
 from common import down
+GRIPROT=Rot.from_euler('z',-90,degrees=True).as_matrix()
 RL=Rot.from_euler('y',-30,degrees=True).as_matrix()@down(0)
 RR=RL.copy()
 a=np.r_[READY,.096,READY,.096]
-for side,o,node in [('left',0,RIM[M//2]),('right',7,RIM[0])]:
+for side,o,node in [('left',0,RIM[M//4]),('right',7,RIM[3*M//4])]:
  choices=[]
- # These opposed 20-degree approaches passed the complete fitting path.
- # Keep them fixed while solving the offset starting pose.
- R=HEADROT@Rot.from_euler('y',-20 if side=='left' else 20,degrees=True).as_matrix()@down(0)
+ # Keep the two arms on their respective sides of the forward-facing head.
+ R=GRIPROT@Rot.from_euler('y',-20 if side=='left' else 20,degrees=True).as_matrix()@down(0)
  target=POINTS[node]+.012*R[:,2]
  def f(q):
   pos,r=ik.tcp_pose(q,station.BASES[side]);return np.r_[pos-target,.3*ik._rot_error(R,r)]
@@ -30,12 +30,12 @@ for side,o,node in [('left',0,RIM[M//2]),('right',7,RIM[0])]:
 Path(__file__).with_name('initial-action.json').write_text(json.dumps({'action14':a.tolist(),'description':'Both hands hold the separate cap rim at real opposed contacts before frame zero; material is not repositioned.'},indent=2)+'\n')
 p=Plan(a)
 p.add(2,'hold the loose cap by its rim',{'left':(ik.tcp_pose(a[:6],station.BASES['left'])[0],RL,.075),'right':(ik.tcp_pose(a[7:13],station.BASES['right'])[0],RR,.075)})
-def point(dx,z,y=0.):return HEAD+HEADROT@np.array([dx,y,z])+.012*(RL if dx<0 else RR)[:,2]
+def point(dx,z,y=0.):return HEAD+GRIPROT@np.array([dx,y,z])+.012*(RL if dx<0 else RR)[:,2]
 p.add(2,'stretch the loose cap opening',{'left':(point(-.10,.105),RL,.075),'right':(point(.10,.105),RR,.075)})
 p.add(4,'settle the stretched opening around the crown',{'left':(point(-.10,.105),RL,.075),'right':(point(.10,.105),RR,.075)})
-p.add(4,'seat the front rim above the eyes',{'left':(point(-.10,.040),RL,.075),'right':(point(.10,.105),RR,.075)})
-p.add(4,'draw the back rim down',{'left':(point(-.10,.040),RL,.075),'right':(point(.10,-.025),RR,.075)})
-p.add(2,'open both grips in place',{'left':(point(-.10,.040),RL,.7),'right':(point(.10,-.025),RR,.7)})
+p.add(4,'lower the left side rim',{'left':(point(-.085,.025),RL,.075),'right':(point(.10,.105),RR,.075)})
+p.add(4,'lower the right side rim',{'left':(point(-.085,.025),RL,.075),'right':(point(.085,.025),RR,.075)})
+p.add(2,'open both grips in place',{'left':(point(-.085,.025),RL,.7),'right':(point(.085,.025),RR,.7)})
 p.add(3,'slide both hands laterally clear',{'left':(point(-.16,.070),RL,.7),'right':(point(.16,.070),RR,.7)})
 p.add(2,'withdraw both open hands',{'left':(point(-.16,.15,.10),RL,.7),'right':(point(.16,.15,-.10),RR,.7)})
 p.add(4,'inspect after release',{})
