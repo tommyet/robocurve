@@ -5,7 +5,7 @@ class DemoControl:
  def __init__(self):
   import json
   from pathlib import Path
-  self.plan=json.loads(Path(__file__).with_name('demo-plan.json').read_text())['frames'];self.offset={s:np.zeros(3) for s in ['left','right']};self.tool_rotation=None;self.press_offset=0.;self.starts={};self.counts={}
+  self.plan=json.loads(Path(__file__).with_name('demo-plan.json').read_text())['frames'];self.offset={s:np.zeros(3) for s in ['left','right']};self.tool_rotation=None;self.starts={};self.counts={}
   for i,f in enumerate(self.plan):self.starts.setdefault(f['stage'],i);self.counts[f['stage']]=self.counts.get(f['stage'],0)+1
  def action(self,k,wanted,m,observed,hands):
   from yam_arena import ik,station
@@ -30,12 +30,6 @@ class DemoControl:
      target+=self.offset[side]
     if stage in ['return roller above table','put roller on table','release roller']:target+=self.offset[side]
     if 'roller lane' in stage or 'rolling lane' in stage or 'roller from lane' in stage:target+=m.p('plate')-PLATE
-    if stage.startswith(('load roller lane','press rolling lane')):
-     # Ordinary robot feedback limits pressure near the unsupported film edge.
-     # Material, adhesion and scoring are identical for demo and policy.
-     self.press_offset=float(np.clip(self.press_offset+.0002*(m.roller_load-.45),-.0003,.0012))
-     target+=m.orientation('plate')[:,2]*self.press_offset
-    elif stage.startswith('approach rolling lane'):self.press_offset=0.
     if side in m.tool_pinch.held and stage not in ['release roller','leave both hands clear','inspect the individual well seals']:
      grip=m.tool_pinch.held[side]
      if self.tool_rotation is None:self.tool_rotation=m.orientation('roller_handle').copy()

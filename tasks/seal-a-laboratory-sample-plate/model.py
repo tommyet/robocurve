@@ -11,6 +11,11 @@ class Model(NativeModel):
   install()
  def bind_native(self,base):
   super().bind_native(base)
+  # Environment reset restores body visibility; hide only the native collision
+  # shapes after reset. The translucent mesh below follows their measured poses.
+  from pxr import UsdGeom
+  root=str(self.joints['roller_compliance'].GetBody0Rel().GetTargets()[0]).rsplit('/',1)[0]
+  for name in CELLS:UsdGeom.Imageable(self.stage.GetPrimAtPath(root+'/'+name)).CreateVisibilityAttr().Set('invisible')
   from finite_pinch import FinitePinch
   self.film_pinch=FinitePinch(self,[f'film_{NX//2}_{j}' for j in [0,NY-1]],THICKNESS/2,.001,.003,(-.004,.004),force_limit=.4,torque_limit=.001)
   self.tool_pinch=FinitePinch(self,['roller_handle'],.005,.001,.003,(-.006,.004))
@@ -21,12 +26,15 @@ class Model(NativeModel):
   name=CELLS[index];root=str(self.joints['roller_compliance'].GetBody0Rel().GetTargets()[0]).rsplit('/',1)[0];path=root+'/joint_adhesive_'+name
   joint=UsdPhysics.Joint.Define(self.stage,path);joint.CreateJointEnabledAttr(False);joint.CreateExcludeFromArticulationAttr(True)
   joint.CreateBody0Rel().SetTargets([Sdf.Path(root+'/plate')]);joint.CreateBody1Rel().SetTargets([Sdf.Path(root+'/'+name)])
-  q=Rotation.from_matrix(self.orientation('plate').T@self.orientation(name)).as_quat();local=(self.p(name)-self.p('plate'))@self.orientation('plate')
-  joint.CreateLocalPos0Attr(Gf.Vec3f(*local));joint.CreateLocalPos1Attr(Gf.Vec3f(0,0,0));joint.CreateLocalRot0Attr(Gf.Quatf(float(q[3]),Gf.Vec3f(*q[:3])));joint.CreateLocalRot1Attr(Gf.Quatf(1,Gf.Vec3f(0,0,0)))
-  for axis in ['transX','transY','transZ','rotX','rotY','rotZ']:
+  # One finite point bond per film sector, anchored on an actually pressed rim.
+  # Free rotation preserves the sheet's bending instead of freezing a rigid tile.
+  sample=int(np.flatnonzero(self.bonded[index])[0]);anchor=SAMPLES[sample];world=self.p(name,anchor)
+  q=Rotation.from_matrix(self.orientation('plate').T@self.orientation(name)).as_quat();local=(world-self.p('plate'))@self.orientation('plate')
+  joint.CreateLocalPos0Attr(Gf.Vec3f(*local));joint.CreateLocalPos1Attr(Gf.Vec3f(*anchor));joint.CreateLocalRot0Attr(Gf.Quatf(float(q[3]),Gf.Vec3f(*q[:3])));joint.CreateLocalRot1Attr(Gf.Quatf(1,Gf.Vec3f(0,0,0)))
+  for axis in ['transX','transY','transZ']:
    lim=UsdPhysics.LimitAPI.Apply(joint.GetPrim(),axis);lim.CreateLowAttr(1.);lim.CreateHighAttr(-1.)
-  joint.CreateCollisionEnabledAttr(True);joint.CreateBreakForceAttr(1.);joint.CreateBreakTorqueAttr(.005);joint.GetJointEnabledAttr().Set(True)
-  self.bond_cells.add(index);self.events.append(dict(event='pressure_bond',cell=index,time=self.time))
+  joint.CreateCollisionEnabledAttr(True);joint.CreateBreakForceAttr(1.);joint.GetJointEnabledAttr().Set(True)
+  self.bond_cells.add(index);self.events.append(dict(event='pressure_bond',cell=index,sample=sample,point_world=world.tolist(),roller_load_N=self.roller_load,time=self.time))
  def update(self,hands,dt=.05):
   self.read();self.time+=dt;self.film_pinch.update(hands);self.tool_pinch.update(hands)
   self.grasp_state={**{s:dict(body=g['body']) for s,g in self.film_pinch.held.items()},**{s:dict(body=g['body']) for s,g in self.tool_pinch.held.items()}}

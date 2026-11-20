@@ -1,4 +1,4 @@
-"""Fixed native judging cameras; their images never enter a policy input."""
+"""Fixed native judging cameras; their images never enter a policy input. Material settings match all cameras."""
 import numpy as np
 
 CONFIGS=[('judging_front',(.65,-.62,1.28),(.29,-.04,.81),(0.,0.,1.),24.,(640,480)),
@@ -14,8 +14,13 @@ def configure(embodiment):
     from isaaclab_arena.utils.configclass import make_configclass
     from pxr import Gf
     from yam_arena.embodiment import RENDERER
+    RENDERER.global_settings.enable_translucency=True
+    RENDERER.global_settings.carb_settings={**(RENDERER.global_settings.carb_settings or {}),
+        "/rtx/raytracing/fractionalCutoutOpacity":True,
+        "/rtx/pathtracing/fractionalCutoutOpacity":True}
     fields=[(name,CameraCfg,value) for name,value in vars(embodiment.camera_config).items()
             if isinstance(value,CameraCfg)]
+    for _,_,camera in fields:camera.renderer_cfg=RENDERER
     for name,eye,target,up,focal,resolution in CONFIGS:
         q=Gf.Matrix4d().SetLookAt(Gf.Vec3d(*eye),Gf.Vec3d(*target),Gf.Vec3d(*up)).GetInverse().ExtractRotationQuat()
         config=CameraCfg(prim_path='{ENV_REGEX_NS}/'+name,height=resolution[1],width=resolution[0],

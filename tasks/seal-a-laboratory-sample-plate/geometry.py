@@ -1,4 +1,4 @@
-"""Free 96-well plate, flexible adhesive film and hand-held padded sealing roller."""
+"""Secured 96-well plate, flexible adhesive film and hand-held padded sealing roller."""
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
 PLATE=np.array([.35,0,TABLE+.047]);TOP=PLATE[2]+.017

@@ -26,6 +26,10 @@ for x in [-.022,-.011,0,.011,.022]:
   skin=f'skin_{i}';scale=f'scales_{i}';quat=Rotation.from_matrix(R).as_quat()
   BODIES.append(body(skin,C+q,[box((.0105,.023,.0004))],quat=quat,mass=.0005,color=(.50,.54,.44),friction=.4,contact_offset=.00005,exclude=['fish']))
   axes=fixed_axes();axes['transZ']=dict(limits=(-.003,.001),stiffness=700.,damping=.25)
+  # Soft tissue also yields in shear and bending; a rigidly oriented facet
+  # generates artificial edge impulses on the curved flank.
+  for axis in ['transX','transY']:axes[axis]=dict(limits=(-.002,.002),stiffness=1000.,damping=.5)
+  for axis in ['rotX','rotY','rotZ']:axes[axis]=dict(limits=(-15.,15.),stiffness=.02,damping=.001)
   JOINTS.append(joint('skin_bond_'+str(i),'fish',skin,q,[0,0,0],q0=quat,axes=axes,break_force=5.,break_torque=.04))
   # A small group represents overlapping real scales; no skinned patch is removed.
   shapes=[]
