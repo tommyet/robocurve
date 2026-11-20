@@ -19,7 +19,10 @@ class DemoControl:
   if 141<=k<=900:
    # Replay only ordinary robot commands from the earlier intact initial twist.
    # The scene, contacts and deformable objects continue evolving natively.
-   return self.prefix[k-140].copy()
+   replay=self.prefix[k-140].copy()
+   for side,i in [('left',6),('right',13)]:
+    if side in m.grasp_state and replay[i]<=.13:replay[i]=.06
+   return replay
   from yam_arena import ik,station
   label=self.labels[k-1]
   if label=='hold the packet beside the retaining path' and k==self.stages[label][0]:
@@ -148,4 +151,6 @@ class DemoControl:
     pp,rr=ik.tcp_pose(q,station.BASES[side]);grasping=contact_phase;weight=20. if grasping else 3. if approaching else 1.
     return np.r_[weight*(pp+bias-target),(.02 if grasping else .10)*ik._rot_error(R,rbias@rr),.001*(q-seed)]
    out[o:o+6]=least_squares(residual,seed,bounds=(np.maximum(ik.LOWER,seed-.12),np.minimum(ik.UPPER,seed+.12)),max_nfev=25).x
+  for side,i in [('left',6),('right',13)]:
+   if side in m.grasp_state and out[i]<=.13:out[i]=.06
   return out

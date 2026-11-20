@@ -51,3 +51,5 @@ The demo approaches outer-loop grasps along the real finger shafts, then rotates
 The scripted demo selects a reachable raised edge from the current frame geometry, excluding the central grips. Fixed material-index ranges are unreliable after twisting. Selected target points are recorded in the run events.
 
 The development controller replays 760 ordinary robot actions for the initial twist, then uses feedback for outer-loop grasps and the retaining loop. This records robot commands only; all task objects continue through native physics. `demo-prefix.json` records the source trace hash. A complete successful trial is still required.
+
+While holding a captured edge, the demo requests a smaller jaw opening (0.06) to maintain pressure. Actual jaw motion, the 40 N actuator ceiling, finite pinch limits and contact-loss checks remain native; this does not change material or scoring.
