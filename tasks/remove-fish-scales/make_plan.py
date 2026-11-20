@@ -25,6 +25,15 @@ for lane,x in enumerate([-.022,-.011,0.,.011,.022]):
  for j,y in enumerate(np.linspace(start,end,13)[1:]):
   q,Q=tool_surface(x,float(y));target=C+q+Q[:,2]*.0045-Q@HEAD_OFFSET
   p.add(2/3,'scrape lane '+str(lane)+' point '+str(j),{'right':(target,Q@GRIP_R,.09)})
+ if lane in (2,3):
+  # Short back-and-forward finishing scrape on the flat head-end facet.
+  # Reverse travel earns no removal credit; the second forward pass must load
+  # the same retained scales through ordinary tool contact.
+  end_q=q.copy();end_Q=Q.copy()
+  for seconds,dy,label in [(.6,.026,'reset'),(2.9,-.006,'finish')]:
+   q=end_q+np.array([0.,dy,-end_Q[1,2]/end_Q[2,2]*dy]);Q=end_Q
+   target=C+q+Q[:,2]*.0045-Q@HEAD_OFFSET
+   p.add(seconds,'scrape lane '+str(lane)+' '+label,{'right':(target,Q@GRIP_R,.09)})
  p.add(2,'lift from scraping lane '+str(lane),{'right':(target+[0,0,.035],Q@GRIP_R,.09)})
 p.add(3,'return scaler above its starting place',{'right':(tool+[0,0,.065],R,.09)})
 p.add(2,'put scaler on the table',{'right':(tool+[0,0,.003],R,.09)})

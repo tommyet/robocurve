@@ -6030,3 +6030,8 @@ Plate014 passes the first full lane:32/96sealed at1020controls, no adhesive/film
 
 
 Plate014 completed1860controls with1.0:96/96sealed,1792bonded interface samples,5.9seconds hands clear, peak film-joint gap0.254mm and no damage. Frozen-source rescoring/contact checks and all44archivedfiles SHA verification pass. Twelve native keyframes per camera support the front review view, showing film placement, upright rolling and release; side view is substantially occluded. Matching Dream002 remains running. Do not submit until its complete baseline and media checks pass.
+
+
+Plate submitted as [#3277](https://github.com/robocurve/benchmark-tasks/pull/3277), receiptTK-GERXPP, mediaM-GLCXFE, isolatedcommitfd79da9. Demo014=1.0/1860controls; identical-runtime Dream002=0.0/2400controls. All baseline45files areSHAverified; fixedfrontnativevideos pass framecount/format and sampledvisualreview. The modelbaseline used104requests,50sessions/49expiryrecoveries in one physicalepisode. No changes to the pending upstreambranch.
+
+Fish023 preserves skin through fourthlane but misses sectors10and16nearhead (work0.00105/0.00087J vs0.0025Jretention).024adds a shortreverse-and-forward finishing scrape on those two lanes, exactly2400controls, unchanged environment/scoring; nativevalidationpending. CPUworstreach0.600mm,peakvelocityratio0.1124. Both matching Dream002baselines arecomplete and /root/.dreamlabs/credentials wasremoved and absenceverified. OneGPUonly; finitewatchdog22:30UTC ($6.39projectedcompute atcutoff), deleteearlier afterverifiedbackups.

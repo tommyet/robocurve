@@ -14,7 +14,7 @@
   "run_limit": "2,400 controls (120 seconds at 20 Hz).",
   "action_limit": 2400,
   "fidelity": "216 passive hinged film sectors and a compliant roller approximate film bending and pressure adhesion. The plate is fixed in a bench holder. Force-limited point bonds form at pressed rim contacts and permit bending. A 0.75 mm interface grid estimates continuous seal rings. Fluid flow, adhesive chemistry, detailed peel mechanics and long-term leak-tightness are omitted. Contact-checked finite pinch joints approximate finger friction.",
-  "scores": "Not validated; development only.",
-  "media": "",
+  "scores": "Dream-1 run: 0.0; demo: 1.0.",
+  "media": "M-GLCXFE",
   "reset_notes": "Use fresh film for every attempt. Clean and refill the plate, restore the loose liner and roller, and clean the roller if contaminated. Filling and backing removal are operator preparation. Fixed layout; no object jitter."
 }
