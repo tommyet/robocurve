@@ -924,3 +924,118 @@ Fresh screen:749 current board records plus all-state GitHub keyword searches. N
 No direct gel-nail-extension or wet-hair-blotting title match was found in the fresh GitHub searches. That is a bounded screen, not proof of worldwide novelty. Their previously noted physical preparation, contact and measurable-outcome requirements still apply.
 
 20 November03:18UTC recheck: GitHub searches for sunscreen, sun cream, cat food, pet bowl, tap washer and faucet washer found no exact corresponding PR (the sunscreen hit was unrelated toiletries packing#1420). This does not remove the public-benchmark and accepted-cartridge overlap above. No build or paid trial started for these three ideas.
+
+## 20 November morning — new acceptances, shortlist and recovery choices
+
+Research only. The fresh board has 830 visible records (337 accepted), and the
+all-state PR index has 3,151 entries. Searches covered titles and relevant board
+instructions/keywords, with targeted external-benchmark checks. No direct match
+was found for the three proposals below. This is not an exhaustive audit of all
+roughly 35 comparison suites, nor proof of future acceptance. No GPU, Dream run,
+implementation or submission was started.
+
+### What the new acceptances actually support
+
+Our [cake border #1919](https://github.com/robocurve/benchmark-tasks/pull/1919)
+and [safety-pin hem #2651](https://github.com/robocurve/benchmark-tasks/pull/2651)
+were accepted at 07:14 and 08:02 UTC. The hem's flexible cloth and approximate
+puncture law preserve the actual threading and closure. Cake acceptance followed
+specific preparation, a corner and practical photo-based scoring.
+
+[Banknote #2699](https://github.com/robocurve/benchmark-tasks/pull/2699) uses eight
+hinged strips rather than full paper mechanics. [Watch band #2679](https://github.com/robocurve/benchmark-tasks/pull/2679)
+uses a rigid strap but retains the small held-release button and sliding catch.
+[Battery-post cleaning #2718](https://github.com/robocurve/benchmark-tasks/pull/2718)
+uses dry marker instead of corrosion but requires loaded bristle sweep; simply
+pressing the tool does not clean. These are useful examples of concentrating
+fidelity on the tested interaction. They are not blanket endorsements of every
+shortcut in those implementations.
+
+### Three candidates worth a bounded feasibility trial
+
+1. **Remove the pin bones from a salmon fillet with fish-bone tweezers.** Start
+   with a prepared fillet, not a whole fish requiring filleting. One hand braces
+   the flesh while the other grips and extracts the embedded bones without
+   breaking them or tearing a large channel. Score intact bones removed, residual
+   bones and visible flesh damage; use close photographs and a ruler, with simple
+   physical inspection for fragments. A small number of genuinely retained bones
+   and local compliant flesh is a more contained model than interacting hair
+   locks and an elastic ring. The number, positions and extraction resistance
+   must have a reproducible real preparation; do not make freely placed pegs in
+   a block. [ZWILLING's procedure](https://www.zwilling.com/uk/magazine/product-guide-knives/cutting-fish.html)
+   documents the tool and action. **Promising, medium risk**, conditional on the
+   reset and flesh-damage model. Compare carefully with accepted
+   [splinter extraction #2403](https://github.com/robocurve/benchmark-tasks/pull/2403)
+   and our avocado task: food context alone is not enough; meaningful extraction
+   resistance, support and fragment avoidance must remain. Of this shortlist,
+   this is my first small physical-model test, not a guaranteed quick PR.
+
+2. **Fold and seal one filled dumpling, leaving its filling enclosed.** Use a
+   named ready-made wrapper, a measured filling and a fork; omit dough mixing,
+   cooking and decorative pleats. Keep the wrapper flexible, align the edges and
+   press a continuous seal without puncturing the pouch. Score the actual closed
+   perimeter, intact wrapper and retention of filling during a defined lift and
+   transfer. Pressure-created bonds can approximate adhesion, but proximity must
+   not automatically seal an untouched edge. [King Arthur's pierogi method](https://www.kingarthurbaking.com/blog/2021/02/04/how-to-make-pierogi-polands-favorite-comfort-food)
+   uses pinching followed by fork crimping. **Promising, medium risk**; the seal's
+   failure behaviour is the first gate. Existing bag sealing, gift wrapping and
+   general dough manipulation are neighbours. The distinction is forming a
+   flexible food pouch and making its edges adhere, not merely folding paper
+   with a different texture. No claim that a lift test proves cooking performance.
+
+3. **Wind one section of hair onto a cold roller and fasten its clip.** Prepare
+   one ordinary loose section on a styling head. Capture the ends, roll toward
+   the root without bunching or snagging, close the roller's real retaining clip
+   and release. Score captured ends, wound length, closed clip and retention;
+   don't claim that a short simulation produces a permanent curl. We can reuse
+   the head, grouped-hair representation and contact infrastructure while reducing
+   the number of simultaneous loose sections. Winding and clipping differ from
+   gathering a ponytail through an elastic, but within-team family similarity
+   must still be explained. [Conair's instructions](https://www.conair.com/on/demandware.static/-/Library-Sites-usConairShared/default/dwb62a7325/Instructional%20Booklets/HS11RX.pdf)
+   document winding and fastening; select a real cold roller for the actual task,
+   rather than applying hot-roller timings to it. [MOE-Hair](https://moehair.github.io/)
+   tests patting, finger combing and grasping, which are neighbours rather than
+   this exact operation. **Medium acceptance case and medium-to-high build risk**;
+   one section is simpler than the ponytail but still involves slipping hair.
+
+Manual needle threading remains a reserve: the real [Clover embroidery threader](https://clover-mfg.com/en/product/n8611/)
+could simplify flexible-tail handling, but tiny access and existing robotic
+threading research prevent calling it a quick win. A hand-cranked pasta roller
+also remains a reserve: [Marcato](https://www.marcato.it/products/atlas) supplies
+a clear physical reference, but feeding, thinning and tearing introduce a fresh
+material problem, and [PASTA](https://sites.google.com/view/pasta-plan) already
+evaluates dough rolling. Neither belongs ahead of the three candidates above.
+
+### Ponytail, fuse and hamper
+
+- **Ponytail:** no valid complete replacement demo; latest029 retains only3/12
+  before release. Earlier attempts lose the band after release. A smaller task
+  can start with an already gathered but untied flexible section and require
+  fastening alone. Choose a real elastic and an ordinary securing method that
+  physically works; preserve release and a measurable retention test. The reviewer
+  requested a test, not specifically1N, but lowering it cannot fix a band that
+  falls off unloaded. No glued bundle, pre-wrapped elastic or guaranteed hold.
+- **Plug fuse:**067 seats the replacement and scores0.5; the carrier remains
+  roughly100degrees tilted. A naturally flat carrier in a parts tray and an
+  approach along its insertion axis could remove unnecessary reorientation.
+  Keep real spring clips, a fully restored carrier and a normal spare presentation.
+  Technically closest, but accepted [fuse-puller #1628](https://github.com/robocurve/benchmark-tasks/pull/1628)
+  now makes novelty weaker. [Holder swap #270](https://github.com/robocurve/benchmark-tasks/pull/270)
+  has no fresh revision since18November07:34; its elapsed hold does not remove
+  other accepted comparisons. Recommend parking rather than finishing at any cost.
+- **Hamper:**071 loses a grip at333actions. No complete nested, restrained packet.
+  It already starts flat/pre-gripped and uses an equivalent combined frame. Try
+  table-supported twisting/stacking only with a new diagnosis; don't repeat the
+  same free-space attempt. A real single-hoop car shade could replace the hamper
+  while preserving twist buckling, nesting and restrained release. A retail
+  [50cm steel-rim reflector](https://www.manfrotto.com/global-en/lighting/20-collapsible-reflector-silver-white-ll-lr2031/)
+  illustrates the simpler mechanism, but a photographic accessory has a weaker
+  recognisability case than a car shade. This is a replacement idea requiring its
+  own specification and test, not an extra variant or a ready fix. Simply folding
+  the hamper flat, or starting with nested coils, would remove its central skill.
+
+Fixed starting layouts are allowed. Generality here should come from retaining a
+transferable physical skill and meaningful failure, not adding randomisation,
+more objects or peripheral steps. Authorise further builds separately; a short
+core-interaction check should precede a full baseline and media work. No cost or
+completion-time guarantee is justified by these research findings.
