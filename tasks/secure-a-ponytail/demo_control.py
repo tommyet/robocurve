@@ -19,7 +19,7 @@ class DemoControl:
    # reaching the hair so its world height is not lowered by band sag.
    weight=min(1.,k/60)*max(0.,min(1.,(220-k)/80))
    offset=self.offset[side]
-   if 100<=k<=140:
+   if 80<=k<=100:
     if side not in self.grip_names:
      from geometry import M
      self.grip_names[side]=f'band_segment_{M//4 if side=="left" else 3*M//4:03d}'
@@ -28,7 +28,7 @@ class DemoControl:
      centre=m.nodes[M+(M//4 if side=='left' else 3*M//4)]
      self.grip_offset[side]=centre-R@np.array([0.,0.,0.])-target
    if side in self.grip_offset:
-    blend=float(np.clip((k-100)/20,0,1));offset=(1-blend)*offset+blend*self.grip_offset[side]
+    blend=float(np.clip((k-80)/20,0,1));offset=(1-blend)*offset+blend*self.grip_offset[side]
    target+=weight*offset
    if k>=220:
     from geometry import STRANDS,SEGMENTS
