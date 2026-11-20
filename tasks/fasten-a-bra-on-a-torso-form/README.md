@@ -6,7 +6,11 @@ Fasten both hooks in the outermost eye row and leave the band untwisted and clos
 
 The fixed polymer torso is about 383 mm high, on a 240 × 300 × 10 mm base. Its main body is 160 × 260 × 310 mm, with a smaller upper section, neck and two supported fabric cups. The non-working garment and 12 mm shoulder straps are supported on the form. The two working elastic wings are free at their closure ends.
 
-Each reinforced tape is 30 × 32 × 0.6 mm. Two 0.8 mm-wire hooks are spaced 16 mm vertically; the opposing tape has three eye rows, 9 mm apart. The outer eye bars project 6 mm beyond the fabric edge. This is simplified generic hook-and-eye geometry, not a dimensionally exact product. [BraBuilders](https://www.brabuilders.com/products/hook-and-eye-closures) and [Aimerfeel](https://aimerfeel.com/collections/best-sellers/products/a_139893) describe ordinary two-hook, three-row closures.
+Use an ordinary wireless stretch-polyamide bra with a 32 mm rear band, fitted with the **[BraBuilders Mini 2 Hook and Eye closure](https://www.brabuilders.com/products/hook-and-eye-closures)**. The supplier specifies 32 mm height, three adjustment positions and 55–56 mm closed width. Use the purchased closure unmodified: do not move eyes beyond the fabric edge, enlarge the hooks or add a latch. A sewn wireless bra from the [Simplicity 8711 pattern, size 32A](https://madalynne.com/wp-content/uploads/2018/08/MADALYNNE-SIMPLICITY-8711-SEW-ALONGGUIDE-AUG2018.pdf) is a reproducible garment option; replace its closure with that sourced unit. The front and side seams are pinned to the form, so variation in the cups does not change the working closure layout.
+
+The simulator approximates the mini closure with a 30 × 32 × 0.6 mm hook tape and 32 × 32 × 0.6 mm eye tape. Two 0.8 mm-wire hooks are 16 mm apart. Their tips face towards the eye tape from the underside of the overlapping hook tape. Three eye rows have 9 mm pitch; the outer crossbar is **3 mm inside** the eye-tape edge. The intended closed layout has about **7 mm tape overlap**, with the hook tape outside the eye tape. Sub-millimetre wire contours and stiffness are approximations, not measured supplier tolerances. The robot must overlap, insert, tension and release the ordinary closure; fabric collision remains active.
+
+For a real reset, pin the side seams so each free working wing has an 83 ± 2 mm anchor-to-tape span at rest. Use a removable ruler template to place the open tape centres 80 ± 2 mm apart at the stated height, then remove it before starting. Keep the unmodified closure faces parallel to the rear plane, with hooks on the underside and eyes facing outwards. Shoulder straps and the non-working cups remain supported; neither working tape is clipped or guided.
 
 Coordinates are metres, with +X forward from the station and +Y to its left. The table is at Z=0.7475. The torso body centre is (0.395, 0, 0.9025); the loose tape centres are (0.270, ±0.040, 0.9025), facing backward. Each working wing has an 83.24 mm rest anchor-to-tape span. `geometry.py` defines the complete fixed layout; there is no object jitter. Both YAM arms use 40 × 6 × 1 mm precision finger extensions with a 4 N jaw limit.
 
@@ -38,6 +42,10 @@ python tasks/fasten-a-bra-on-a-torso-form/rescore.py /tmp/bra-demo
 
 Limit: 1,800 controls, or 90 seconds at 20 Hz. The runner records every action, native pose, event and camera frame, plus a hashed source snapshot. `rescore.py` verifies and uses that snapshot; it does not rerun physics. Seed/layout: fixed, no randomisation.
 
+## Revision
+
+The previous version's outer eye bars projected beyond the tape and removed normal overlap. This revision replaces that arrangement with the sourced closure above: recessed eyes, underside hooks, active tape collision and an overlapping insertion path. No auto-latch or success-pose update is added.
+
 ## Validation
 
-The native demo completed 580 controls with score **1.0**, retaining both hooks for 5.4 seconds with the hands clear. Frozen rescoring and independent checks against the recorded finger collision geometry pass. The matching Dream baseline completed 1,800 controls with score **0.0**; its frozen rescore also passes. One uninterrupted physical episode used 73 API requests; 36 expired-session recoveries are recorded in the transcript. Rendering took about 21 minutes for Dream on an L40S while sharing the GPU with other trials. The rear camera is the unobstructed assessment view, used for the complete uncut episode.
+New native demo and matching Dream evidence are pending for the revised closure.

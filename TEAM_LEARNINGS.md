@@ -6054,3 +6054,16 @@ The owned Pod `xnezqeft4z9smp` was **deleted**, with a subsequent API **404** co
 
 
 **Status correction from the final live check:** Bra #3255 received a **Not accepted / revision requested** review at **2026-11-20 21:59:30 UTC**, while fish validation was still running. The reviewer says the 6 mm projecting outer eye bars eliminate ordinary tape overlap and access, so construct validity fails. Required revision: use a standard sourced bra hook-and-eye closure, specify the actual garment and repeatable setup, preserve normal overlap/engagement geometry, and record a new full-score demo and matching model run. Do not represent bra014 as acceptance-quality after this feedback. The same PR is the revision target; its 48-hour idea hold runs to November22 at21:59:30UTC. Plate #3277 and fish #3289 remain open without decision labels. All three requested PRs are submitted, but the bra geometry revision remains outstanding. The GPU remains deleted; no extra compute was started for this new review.
+
+
+### 2026-11-20 — Action current review queue
+
+Live audit at22:36UTC found13open authorPRs, with two outstanding reviews: ponytail#3224/TK-REXTLY (distinguishable loose bundles, numerical partial capture and earlier feedback history) and bra#3255/TK-95WJCR (standard sourced closure with normal overlap, new demo/model run). The other11were awaiting review; no pending branch was changed. Review prompt is stillv24, wrapper in-use21:50:42UTC.
+
+Development uses an isolated current-main worktree. This clone's origin fetch refspec tracks only an older development branch: `git fetch origin main` updatesFETCH_HEAD but notorigin/main. Verify live `git ls-remote origin refs/heads/main` and explicitly update the remote-tracking ref before assumingorigin/main is fresh. Shared main wasb0e62b0, not stale47b1d16.
+
+Ponytail revision adds12distinct loose-fibre colours and a>=90%captured-mass threshold;72equal-mass rendered fibre samples per native lock approximate partial enclosure, without changing hair physics. CPUfull/outside/partial/boundary/reset tests pass; the old qualifying trace remains12/12withallfractions1.0under this stricter scorer. Fresh native videos are still required because colours changed. Earlier#2860feedback and withdrawn ineffective-force revision are explicitly described.
+
+Bra revision uses BraBuildersMini2Hook closure reference (32mm,3adjustmentrows,55–56mmclosedwidth), with eyes3mminsidefabricedge and hooks under the overlapping tape. Its first revised path has580controls and passes offline reach/rate checks; native feasibility is pending.
+
+One owned L40SPod r75x56eb5o7u6m started22:38:55UTC at$1.09/h, with local non-iCloud control and a two-hour stop watchdog. Pinned bootstrap matched allversions; paired native demos are running. Automatic approval review rejected copying the Dream key to this newPod because earlier permission mentioned the teamVM; a specific user approval is pending. No Dream credential was copied.

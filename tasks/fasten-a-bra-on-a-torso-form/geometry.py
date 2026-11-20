@@ -23,15 +23,18 @@ for side,sign in [('left',1),('right',-1)]:
   axes=bend_axes(.005,.0001,limit=100);axes['rotX']=dict(limits=(-45,45),stiffness=.05,damping=.002);axes['rotY']=dict(limits=(-100,100),stiffness=.01,damping=.0002);axes['transY']=dict(limits=(-.016,.016),stiffness=300.,damping=.2)
   JOINTS.append(joint(name+'_seam',previous,name,Rp.inv().apply(points[i]-previous_center),R.inv().apply(points[i]-center),axes=axes,q0=(R.as_quat() if i==0 else [0,0,0,1]),break_force=18.,break_torque=.1))
   previous=name;previous_center=center
- name=side+'_tab';center=np.array([X,sign*GAP,Z]);shapes=[box((.0006,.030,WIDTH))]
+ name=side+'_tab';center=np.array([X,sign*GAP,Z]);shapes=[box((.0006,.030 if side=='left' else .032,WIDTH))]
  if side=='left':
-  # Two ungated J hooks. Their pockets open along +Y, away from wing tension.
+  # Two ungated J hooks on the UNDERSIDE of the overlapping hook tape.
+  # Tape stays outside the eye tape; hook tips face +X toward the torso.
+  # Pockets open along +Y, away from wing tension.
   for z in [-.008,.008]:
-   pts=np.array([[0,-.012,z],[0,-.018,z],[-.004,-.018,z],[-.004,-.015,z]])
+   pts=np.array([[0,-.006,z],[0,-.012,z],[.004,-.012,z],[.004,-.009,z]])
    shapes += [rod_between(a,b,.0004) for a,b in zip(pts[:-1],pts[1:])]
  else:
-  # Three ordinary adjustment rows; the outermost is the target row.
-  for y in [.021,.012,.003]:
+  # Three recessed adjustment rows on the outer face of the underlapping tape.
+  # Outer bar is 3 mm inside the fabric edge, never projecting past it.
+  for y in [.013,.004,-.005]:
    for z in [-.008,.008]:
     pts=np.array([[0,y-.006,z-.003],[-.002,y,z-.003],[-.002,y,z+.003],[0,y-.006,z+.003]])
     shapes += [rod_between(a,b,.0004) for a,b in zip(pts[:-1],pts[1:])]

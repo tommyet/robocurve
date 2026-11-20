@@ -33,18 +33,12 @@ class Model(NativeModel):
  def integrity_failed(self):return self.rim_gap()>.005 or super().integrity_failed() or not np.isfinite(self.nodes).all() or self.peak_stretch>5. or bool(self.broken)
  def measure(self):
   ring=self.nodes[M:2*M];centre=ring.mean(axis=0);_,_,axes=np.linalg.svd(ring-centre,full_matrices=False);normal=axes[2];crossings=[];held=0
-  for s in range(STRANDS):
-   points=np.array([self.p(f'hair_{s}_{i}') for i in range(SEGMENTS)]);signed=(points-centre)@normal
-   cross=np.flatnonzero(signed[:-1]*signed[1:]<=0)
-   inside=False
-   for i in cross:
-    u=signed[i]/(signed[i]-signed[i+1]+1e-12);c=points[i]+u*(points[i+1]-points[i]);local=(ring-c)@axes[:2].T;a=np.arctan2(local[:,1],local[:,0]);d=np.diff(np.r_[a,a[0]]);w=abs(np.sum((d+np.pi)%(2*np.pi)-np.pi))/(2*np.pi)
-    if w>.8:inside=True
-   held+=inside
+  from fibre_scoring import captured_fractions,retained_count
+  fractions=captured_fractions(self,ring,centre,axes);held=retained_count(fractions)
   # Retention around a common gathering point, below the scalp and above the
   # last 60 mm of hair. Passing the loop over only the tips does not finish.
   usable=bool(HEAD[2]-.16<centre[2]<HEAD[2]-.025 and centre[0]<HEAD[0]-.055)
-  return dict(secured_locks=held,total_locks=STRANDS,elastic_at_ponytail_base=usable,elastic_diameter_mm=float(np.ptp((ring-centre)@axes[:2].T,axis=0).max()*1000),intact=not self.failed,released_seconds=self.release,failed=self.failed,retention_completed=self.retention['completed'],retention_slip_mm=self.retention['maximum_slip_mm'],proof_force_n=self.proof_force_n)
+  return dict(captured_fractions=fractions,secured_locks=held,total_locks=STRANDS,elastic_at_ponytail_base=usable,elastic_diameter_mm=float(np.ptp((ring-centre)@axes[:2].T,axis=0).max()*1000),intact=not self.failed,released_seconds=self.release,failed=self.failed,retention_completed=self.retention['completed'],retention_slip_mm=self.retention['maximum_slip_mm'],proof_force_n=self.proof_force_n)
  def reset_valid(self):
   from common import TABLE
   return self.nodes[:,2].min()>TABLE+.035 and self.measure()['secured_locks']==0

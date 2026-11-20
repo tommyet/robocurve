@@ -9,11 +9,11 @@ a=np.array([X,GAP+.010,Z]);b=np.array([X,-GAP-.010,Z])
 p.add(4,'approach the open back closure',{'left':(a+[0,.045,.0164],L,.2),'right':(b+[0,-.045,.0164],R,.2)})
 p.add(3,'put fingers around the two closure tapes',{'left':(a,L,.12),'right':(b,R,.12)})
 p.add(2,'pinch both tapes',{'left':(a,L,.022),'right':(b,R,.022)})
-a=np.array([X+.007,.020,Z]);b=np.array([X,-.015,Z])
+a=np.array([X-.008,.010,Z]);b=np.array([X,-.010,Z])
 p.add(5,'stretch the wings and put the hooks past the eyes',{'left':(a,L,.022),'right':(b,R,.022)})
-a[0]=X+.00065
+a[0]=X-.0045
 p.add(3,'pass both eye bars into the hook openings',{'left':(a,L,.022)})
-a[1]=.023
+a[1]=.0142
 p.add(3,'let band tension seat both hooks',{'left':(a,L,.022)})
 p.add(2,'release the two tapes',{'left':(a,L,.20),'right':(b,R,.20)})
 p.add(3,'withdraw from the closure',{'left':(a+[0,.08,.03],L,.6),'right':(b+[0,-.08,.03],R,.6)})

@@ -16,8 +16,8 @@ class Model(NativeModel):
   left=self.orientation('left_tab');right=self.orientation('right_tab');count=0
   aligned=np.dot(left[:,2],right[:,2])>.94 and np.dot(left[:,0],right[:,0])>.94
   for z in [-.008,.008]:
-   eye=self.p('right_tab',[-.002,.021,z]);q=(eye-self.p('left_tab'))@left
-   count+=bool(aligned and -.0035<q[0]<-.0005 and -.0176<q[1]<-.0144 and abs(q[2]-z)<.0020)
+   eye=self.p('right_tab',[-.002,.013,z]);q=(eye-self.p('left_tab'))@left
+   count+=bool(aligned and .0005<q[0]<.0035 and -.0116<q[1]<-.0084 and abs(q[2]-z)<.0020)
   return count
  def untwisted(self):
   return all(self.orientation(n)[2,2]>0. for n in self.names if "_wing_" in n or n.endswith("_tab"))

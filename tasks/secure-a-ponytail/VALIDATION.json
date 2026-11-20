@@ -1,35 +1,9 @@
 {
-  "status": "validated_submission",
-  "submission_ready": true,
-  "current_task_runtime_verified": true,
-  "runtime_sources_match": true,
-  "visual_review_passed": true,
-  "independent_trace_audits_passed": true,
-  "media_uploaded": true,
-  "checked_utc": "2026-11-20T15:55:32.572822+00:00",
-  "scores": {
-    "demo": 1.0,
-    "dream": 0.0
-  },
-  "steps": {
-    "demo": 1040,
-    "dream": 1800
-  },
-  "wall_seconds": {
-    "demo": 1607.7413443019905,
-    "dream": 2446.617452945997
-  },
-  "dream_sessions": {
-    "session_count": 37,
-    "expiry_count": 36
-  },
-  "remaining_gates": [],
-  "pull_request": {
-    "number": 3224,
-    "url": "https://github.com/robocurve/benchmark-tasks/pull/3224",
-    "submission_commit": "77c5872",
-    "status": "received_waiting_for_review",
-    "task_id": "TK-REXTLY",
-    "received_utc": "2026-11-20T16:00:28Z"
-  }
+  "status": "revision_in_progress",
+  "submission_ready": false,
+  "required": [
+    "new colour-coded demo and Dream run",
+    "90% captured-fibre score",
+    "source and trace audits"
+  ]
 }
