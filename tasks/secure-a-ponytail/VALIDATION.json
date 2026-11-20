@@ -13,10 +13,10 @@
   },
   "native_force_control": "Corrected permanent_wrench_composer control passed; corrected tasks require new complete evidence.",
   "latest_attempt": {
-    "run": "pony-demo-010",
+    "run": "pony-demo-013",
     "status": "running",
     "score": null,
-    "scope": "Flat twelve-lock reset, corrected stretch controller and cord contact representation; full success not yet established."
+    "scope": "Compact two-row untied reset, 42 mm stretch and 24 mm gathering spacing; same material and retention limits."
   },
   "remaining_gates": [
     "Complete corrected full-score native demo",
@@ -24,5 +24,11 @@
     "Independent audits and visual review",
     "New media and submission after withdrawal"
   ],
-  "checked_utc": "2026-11-20T03:59:15.580089+00:00"
+  "checked_utc": "2026-11-20T12:07:05.990902+00:00",
+  "last_failed_attempt": {
+    "run": "pony-demo-012",
+    "steps": 734,
+    "score": 0,
+    "reason": "Three locks escaped on right-hand release; stopped diagnostic."
+  }
 }
