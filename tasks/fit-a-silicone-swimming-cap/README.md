@@ -26,7 +26,7 @@ for diagnostics and are excluded from submission evidence.
 
 ## Setup and reset
 
-Use a smooth, rigid ABS adult headform, 190 × 160 × 240 mm, fixed to its 140 × 130 mm base. The silicone cap has a 150 × 140 mm unstretched opening, a 130 mm dome, a 0.8 mm wall and a 3 mm rolled rim. Match one cap model and size across trials.
+Use a smooth, rigid ABS adult headform, 190 × 160 × 240 mm, fixed to its 140 × 130 mm base. The silicone cap has a 190 × 150 mm unstretched opening, a 90 mm dome, a 0.8 mm wall and a 3 mm rolled rim. Match one cap model and size across trials.
 
 The head centre is (360, 0, 872.5) mm, with its nose facing negative X, towards the robot. X points forward, Y left, and the table is 747.5 mm high. Each arm stands on a fixed 160 × 160 × 100 mm steel riser. Both grippers have 80 × 24 × 3 mm silicone-faced extensions and 40 N finger actuator limits.
 

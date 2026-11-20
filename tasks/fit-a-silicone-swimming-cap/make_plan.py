@@ -33,9 +33,8 @@ p.add(2,'hold the loose cap by its rim',{'left':(ik.tcp_pose(a[:6],station.BASES
 def point(dx,z,y=0.):return HEAD+GRIPROT@np.array([dx,y,z])+.012*(RL if dx<0 else RR)[:,2]
 p.add(2,'stretch the loose cap opening',{'left':(point(-.10,.105),RL,.075),'right':(point(.10,.105),RR,.075)})
 p.add(4,'settle the stretched opening around the crown',{'left':(point(-.10,.105),RL,.075),'right':(point(.10,.105),RR,.075)})
-p.add(4,'lower the left side rim',{'left':(point(-.085,.025),RL,.075),'right':(point(.10,.105),RR,.075)})
-p.add(4,'lower the right side rim',{'left':(point(-.085,.025),RL,.075),'right':(point(.085,.025),RR,.075)})
-p.add(2,'open both grips in place',{'left':(point(-.085,.025),RL,.7),'right':(point(.085,.025),RR,.7)})
+p.add(8,'lower both sides of the rim',{'left':(point(-.085,.050),RL,.075),'right':(point(.085,.050),RR,.075)})
+p.add(2,'open both grips in place',{'left':(point(-.085,.050),RL,.7),'right':(point(.085,.050),RR,.7)})
 p.add(3,'slide both hands laterally clear',{'left':(point(-.16,.070),RL,.7),'right':(point(.16,.070),RR,.7)})
 p.add(2,'withdraw both open hands',{'left':(point(-.16,.15,.10),RL,.7),'right':(point(.16,.15,-.10),RR,.7)})
 p.add(4,'inspect after release',{})

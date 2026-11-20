@@ -46,6 +46,8 @@ class DemoControl:
      elif kind=='withdraw':goal=self.phase_start[0]+phase['delta'];goalR=self.phase_start[1]
      else:goal,goalR=self.last_goal
      self.phase_goal=(goal,goalR);self.last_goal=self.phase_goal
+    if phase['kind']=='lift' and phase['obj']=='spare_fuse' and k==start+1 and not any(g['body']=='spare_fuse' for g in m.pinch.held.values()):
+     raise RuntimeError('Replacement fuse lacks opposed-pad capture; stop before transport.')
     if phase['kind']=='lift' and k==end:
      if phase['obj']=='old_fuse':lift=float((m.p('old_fuse')-m.p('plug',FC))@m.orientation('plug')[:,2])
      else:lift=float((m.p(phase['obj'])-self.phase_object_start)[2])

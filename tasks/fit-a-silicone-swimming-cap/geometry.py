@@ -10,7 +10,7 @@ BODIES.append(body('headform',HEAD,shapes,fixed=True,mass=1.5,color=(.76,.63,.51
 from cap_mesh import hemisphere
 unit_points,TRIS,RIM=hemisphere()
 M=len(RIM)
-POINTS=CAP+unit_points*np.array([.075,.070,.130])
+POINTS=CAP+unit_points*np.array([.095,.075,.090])
 POINTS=HEAD+(POINTS-HEAD)@HEADROT.T
 EDGES=np.unique(np.sort(np.concatenate([TRIS[:,[0,1]],TRIS[:,[1,2]],TRIS[:,[2,0]]]),axis=1),axis=0)
 REST_LENGTHS=np.linalg.norm(POINTS[EDGES[:,1]]-POINTS[EDGES[:,0]],axis=1)

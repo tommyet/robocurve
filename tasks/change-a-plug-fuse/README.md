@@ -34,7 +34,7 @@ The left fingers use55×20×3mm padded extensions. The right fingers use55mm ste
 
 ## Scoring and material model
 
-Full credit requires the old fuse at least40mm outside its seat, the replacement within3mm of its seat and aligned within18degrees, and the carrier flush within2.5mm and aligned within18degrees, with3seconds retained after both hands release. Both replacement ferrules must be in their spring clips. Removing the old fuse and seating the replacement earns0.5; removing only the old fuse earns0.25. Broken parts or parts falling off the table score0. The rigid housing itself has no fracture model; clip and detent failure are simulated. Inspect the video and released result with a ruler. No electrical continuity claim is made.
+Full credit requires the old fuse at least40mm outside its seat, the replacement within3mm of its seat and aligned within18degrees, and every carrier-face corner within2.5mm of its flush plane, its centre within2.5mm and alignment within18degrees, with3seconds retained after both hands release. Both replacement ferrules must be in their spring clips. Removing the old fuse and seating the replacement earns0.5; removing only the old fuse earns0.25. Broken parts or parts falling off the table score0. The rigid housing itself has no fracture model; clip and detent failure are simulated. Inspect the video and released result with a ruler. No electrical continuity claim is made.
 
 Cartridges and the carrier use native contacts and spring joints. A contact-gated native pinch approximates friction while a part is between closing finger faces. It starts at the measured pose, transmits reaction to the hand, releases on opening, and slips at 8 mm or breaks at 12 N / 0.060 Nm. These limits are approximate. Spring response and break loads approximate small metal/plastic parts. Ordinary moulded cavity ends limit axial cartridge movement. The robot moves only through its joints; no task-object pose is written. The supporting hand moves the plug aside during carrier pickup, then brings it back for refitting.
 
@@ -47,3 +47,5 @@ No third-party task meshes, scans or textures are used.
 ## Validation status
 
 This revised open-plug setup is not submission-ready. The prior closed-plug diagnostic removed the old cartridge and seated the replacement, but failed to pick up the overturned carrier. A complete demo, paired Dream baseline, independent rescoring and media review remain required for the current setup.
+
+Spring coefficients are authored in N·m/radian and converted once at the USD boundary. The terminal value is0.045 N·m/radian, carrier fingers0.025 and cover detents0.055.

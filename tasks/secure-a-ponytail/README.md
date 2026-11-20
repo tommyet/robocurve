@@ -36,7 +36,7 @@ Place the roots on a 72 mm-wide rear scalp patch. In the head frame, root latera
 
 The head faces away from the robot. Its centre is (390, 0, 1052.5) mm; the elastic starts at (270, 0, 810.5) mm on two secured wooden rests. X points forward, Y left, and the table is 747.5 mm high. Restore the loose hair and separate band each trial. The synthetic locks and contact envelopes are a coarse grouped-fibre model, not individual hair strands.
 
-The finger extensions have 40 mm working length, 24 mm width and 3 mm thickness.
+The finger extensions have 40 mm working length, 12 mm width and 3 mm thickness.
 Both arms use their ordinary mounting height and 40 N finger actuator limits.
 
 ## Scoring and material model
@@ -48,13 +48,13 @@ All credit requires passing this retention test, intact roots/band, and the band
 The simulator applies the same downward load, divided over native band contact patches, after three seconds with clear hands and after the band leaves its starting rest. It ramps/holds/unloads without writing material positions. Touching again resets the test. The evaluator force stands in for the scale; the test is recorded in the ordinary native trial and CPU-audited from its state history.
 
 Articulated 5 mm contact envelopes group fine hair fibres into flexible locks.
-A native elastic surface models a 24 mm inside-diameter, 3 mm cord silicone band;
-its stiffness is approximate. The starting rests are 27 mm apart. These dimensions
+A native elastic surface models a 16 mm inside-diameter, 3 mm cord silicone band;
+its stiffness is approximate. The starting rests are 19 mm apart. These dimensions
 are part of the trial setup, not a measured retail-product calibration.
 
 A geometry-gated native vertex attachment represents finger friction only after
 closing pad faces enclose a band patch. It holds only material already inside the
-central 8 mm of the 24 mm-wide face, follows the real gripper link, and releases on opening, 8 mm slip
+central 8 mm of the 12 mm-wide face, follows the real gripper link, and releases on opening, 8 mm slip
 or estimated local cord tension above 12 N. This tension estimate is uncalibrated;
 it is not a measured native force limit. Local held-patch contacts are filtered
 while the attachment acts, to avoid conflicting constraints. Native hair contacts,

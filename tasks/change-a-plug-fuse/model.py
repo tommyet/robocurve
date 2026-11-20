@@ -19,7 +19,11 @@ class Model(NativeModel):
   # Cylinder child geometry maps its Z axis onto the fuse body's local X.
   gap=float(np.linalg.norm(new-FC));axis=abs(float((R.T@self.orientation('spare_fuse'))[0,0]))
   seated=bool(gap<.003 and axis>.95)
-  closed=bool(np.linalg.norm(carrier-CARRIER_OFFSET)<.0025 and float(np.trace(R.T@self.orientation('carrier'))) > 2.9)
+  relative=R.T@self.orientation('carrier')
+  corners=np.array([[x,y,.00075] for x in [-.0185,.0185] for y in [-.0045,.0045]])
+  corner_heights=(corners@relative.T+carrier)[:,2]
+  flush=bool(np.max(abs(corner_heights-(CARRIER_OFFSET[2]+.00075)))<=.0025)
+  closed=bool(np.linalg.norm(carrier-CARRIER_OFFSET)<.0025 and float(np.trace(relative))>2.9 and flush)
   # Real scoring: visible metal caps correctly in both spring clips, face
   # carrier flush and retained, and old fuse outside the plug.
   on_table=all(self.p(n)[2]>=TABLE-.015 for n in ['plug','old_fuse','spare_fuse','carrier'])
