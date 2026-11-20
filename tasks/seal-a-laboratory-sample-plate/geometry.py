@@ -12,9 +12,9 @@ shapes += [box((.12776,.002,.034),(0,sy*.04174,0)) for sy in [-1,1]]
 shapes += [box((.002,.08148,.034),(sx*.06288,0,0)) for sx in [-1,1]]
 # Top lands are at 17 mm above plate centre.
 for shape in shapes[1:23]:shape['pos'][2]=.001
-BODIES.append(body('plate',PLATE,shapes,mass=.104,color=(.88,.90,.91),friction=.9,contact_offset=.0001))
-# A simple raised bench block gives horizontal film-gripping fingers clearance.
-BODIES.append(body('plate_support',[.35,0,TABLE+.015],[box((.140,.100,.030))],mass=.3,fixed=True,color=(.35,.43,.49),friction=.8))
+BODIES.append(body('plate',PLATE,shapes,mass=.104,fixed=True,color=(.88,.90,.91),friction=.9,contact_offset=.0001))
+# The plate is secured in a reusable bench holder; four low clips show the fixture.
+BODIES.append(body('plate_support',[.35,0,TABLE+.015],[box((.140,.100,.030))]+[box((.012,.004,.008),(x,y,.019)) for x in [-.055,.055] for y in [-.044,.044]],mass=.3,fixed=True,color=(.35,.43,.49),friction=.8))
 # The film rests adhesive-side down on its non-stick backing, over a clean tray.
 BODIES.append(body('release_tray',FILM+[0,0,-.0602],[box((.116,.062,.120))],mass=.2,fixed=True,color=(.60,.68,.72),friction=.05))
 BODIES.append(body('release_liner',FILM+[0,0,-.00015],[box((.130,.062,.0001))],mass=.001,fixed=True,color=(.94,.94,.90),friction=.03))
