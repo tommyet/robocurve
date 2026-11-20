@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "view": "rear",
+  "reviewed_controls": [
+    0,
+    80,
+    140,
+    172,
+    240,
+    280,
+    340,
+    380,
+    406,
+    460,
+    520,
+    580
+  ],
+  "findings": [
+    "Both loose tapes begin unfastened.",
+    "The two native arms approach, pinch, stretch, align and engage the hooks.",
+    "Both fingers open and withdraw; two hooks remain retained under passive band tension.",
+    "No task-object animation or engagement joint is used.",
+    "The fixed rear view is unobstructed and contains no identifying overlays."
+  ],
+  "other_cameras": "Front and side views are partly occluded by the robot; the complete fixed rear view is selected for submission, without cuts or viewpoint switching."
+}

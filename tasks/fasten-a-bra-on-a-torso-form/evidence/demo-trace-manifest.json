@@ -1,0 +1,14 @@
+{
+  "trace.jsonl": {
+    "sha256": "fa5efbdb2e649c2aa64b41c82ea368d31f03a028c35e7b0e5a62638ea2f58c18",
+    "bytes": 3215604
+  },
+  "rear.mp4": {
+    "sha256": "6f61ba16c93f344ec9398b8f1bd0d477fe59e7b0d6ffa7c839715179236c34a5",
+    "bytes": 553915
+  },
+  "rear-start.png": {
+    "sha256": "8861a2c889d35e177fac6d03098acb6266291e04b244fcfca87acc464714630f",
+    "bytes": 184670
+  }
+}

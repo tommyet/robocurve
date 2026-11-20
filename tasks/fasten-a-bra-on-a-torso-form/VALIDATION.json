@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-20",
+  "native_demo": {
+    "score": 1.0,
+    "steps": 580,
+    "retained_seconds": 5.4
+  },
+  "dream": {
+    "score": 0.0,
+    "steps": 1800,
+    "requests": 73,
+    "sessions": 37,
+    "expiry_recoveries": 36,
+    "physical_episodes": 1
+  },
+  "frozen_rescores_passed": true,
+  "native_finger_contact_audits_passed": true,
+  "videos": "Full uncut native rear-camera episodes, 20 fps, H.264 yuv420p. Setup screenshot is demo frame zero.",
+  "limits": "Elastic end-link approximation, visual intermediate ribbons, rigid closure tapes, finite contact pinch joints. No garment comfort assessment or distributed cloth model."
+}

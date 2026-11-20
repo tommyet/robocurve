@@ -97,5 +97,5 @@ class FinitePinch:
                     drive.CreateTargetPositionAttr(0.)
                 joint.GetJointEnabledAttr().Set(True)
             self.held[side]=dict(body=name,path=path,joint=joint,local_point=((self.m.p(name)-h['tcp'])@h['rotation']).copy(),local_rotation=h['rotation'].T@self.m.orientation(name))
-            self.m.events.append(dict(event='pinch_captured',side=side,body=name,time=self.m.time,force_limit_n=self.force_limit,torque_limit_nm=self.torque_limit,local_point=((self.m.p(name)-h['tcp'])@h['rotation']).tolist(),opening=float(h['opening'])))
+            self.m.events.append(dict(event='pinch_captured',side=side,body=name,contact_radius_m=self.radius,time=self.m.time,force_limit_n=self.force_limit,torque_limit_nm=self.torque_limit,local_point=((self.m.p(name)-h['tcp'])@h['rotation']).tolist(),opening=float(h['opening'])))
         self.m.grasp_state={side:dict(body=g['body'],force_limit_n=self.force_limit,torque_limit_nm=self.torque_limit) for side,g in self.held.items()}

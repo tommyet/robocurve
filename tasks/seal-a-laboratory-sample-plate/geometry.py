@@ -25,14 +25,10 @@ for i in range(NX):
    if i+di<0 or j+dj<0:continue
    other=f'film_{i+di}_{j+dj}';delta=np.array([di*DX,dj*DY,0]);axes=bend_axes(.0002,.0000001,limit=170)
    JOINTS.append(joint(name+'_'+other,other,name,-delta/2,delta/2,axes=axes,break_force=12.,break_torque=.06))
-TOOL=np.array([.49,-.22,TABLE+.062]);ROLLER=TOOL+[0,0,-.048]
-# A clean open bench rest keeps the roller upright; it is not attached.
-rest=[box((.076,.042,.002),(0,0,.001))]
-rest += [box((.006,.040,.040),(sx*.035,0,.022)) for sx in [-1,1]]
-rest += [box((.076,.002,.008),(0,sy*.011,.046)) for sy in [-1,1]]
-BODIES.append(body('roller_rest',[TOOL[0],TOOL[1],TABLE],rest,mass=.1,fixed=True,color=(.70,.75,.78),friction=.3))
-BODIES.append(body('roller_handle',TOOL,[box((.010,.016,.065)),box((.055,.012,.004),(0,0,-.0325))],mass=.025,color=(.70,.12,.10),friction=.8))
-BODIES.append(body('roller_head',ROLLER,[cylinder(.012,.050,quat=Rotation.from_euler('y',90,degrees=True).as_quat())],mass=.015,color=(.16,.17,.18),friction=.6,contact_offset=.0001))
+TOOL=np.array([.18,-.17,TABLE+.012]);TOOL_REST_R=Rotation.from_euler('x',90,degrees=True);ROLLER=TOOL+TOOL_REST_R.apply([0,0,-.048])
+# Loose roller lies on the bench; gravity settles its handle beside the wheel.
+BODIES.append(body('roller_handle',TOOL,[box((.010,.016,.065)),box((.055,.012,.004),(0,0,-.0325))],quat=TOOL_REST_R.as_quat(),mass=.025,color=(.70,.12,.10),friction=.8))
+BODIES.append(body('roller_head',ROLLER,[cylinder(.012,.050,quat=Rotation.from_euler('y',90,degrees=True).as_quat())],quat=TOOL_REST_R.as_quat(),mass=.015,color=(.16,.17,.18),friction=.6,contact_offset=.0001))
 axes=fixed_axes();axes['rotX']=dict(limits=(-180,180));axes['transZ']=dict(limits=(-.0003,.003),stiffness=800.,damping=1.5)
 JOINTS.append(joint('roller_compliance','roller_handle','roller_head',[0,0,-.048],[0,0,0],axes=axes,break_force=20.))
 finalize(BODIES,JOINTS)

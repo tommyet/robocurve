@@ -1,0 +1,20 @@
+{
+  "view": "rear",
+  "frames": 1801,
+  "fps": 20,
+  "codec": "h264",
+  "pixel_format": "yuv420p",
+  "resolution": [
+    640,
+    480
+  ],
+  "sampled_frames": [
+    0,
+    300,
+    600,
+    900,
+    1200,
+    1800
+  ],
+  "review": "The complete fixed rear view keeps both loose closure ends visible. Dream did not engage a hook. No team identifiers or text overlays. Native full episode, no edits."
+}

@@ -55,7 +55,13 @@ class FinitePinch:
             history=self.history[side];history.append(float(h['opening']));del history[:-8]
             q=np.asarray(h.get('finger_joint_positions',[-h['opening']*.04695]*2))
             aperture=-q.sum()-2*self.thickness
-            if aperture>2*self.radius+.0006:
+            contact_radius=self.radius
+            if side in self.held and self.held[side]['body']=='fish':
+                # The tail is an ellipsoid, not a constant-width cylinder.
+                # Rotation can widen its opposed contact without the robot opening.
+                axis=self.m.orientation('fish').T@h['rotation'][:,0]
+                contact_radius=float(np.linalg.norm(np.array([.008,.014,.007])*axis))
+            if aperture>2*contact_radius+.0006:
                 if side in self.held:
                     g=self.held.pop(side);g['joint'].GetJointEnabledAttr().Set(False)
                     self.m.events.append(dict(event='pinch_released',side=side,body=g['body'],time=self.m.time))

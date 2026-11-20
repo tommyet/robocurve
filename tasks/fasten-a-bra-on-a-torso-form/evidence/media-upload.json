@@ -1,0 +1,16 @@
+{
+  "media_id": "M-X95B3T",
+  "uploaded_utc": "2026-11-20T18:56:15.574640+00:00",
+  "view": "rear",
+  "uncut_native_video": true,
+  "files": {
+    "demo": {
+      "sha256": "6f61ba16c93f344ec9398b8f1bd0d477fe59e7b0d6ffa7c839715179236c34a5",
+      "bytes": 553915
+    },
+    "dream": {
+      "sha256": "bd490e6154a201d54dfcd0e48211520e0db5d4323f9f0d9d999a8e58d50f8b9c",
+      "bytes": 535786
+    }
+  }
+}

@@ -19,6 +19,8 @@ class DemoControl:
   if stage=='lift the scaler' and k==self.starts[stage]+self.counts[stage] and m.p('scaler')[2]<TOOL[2]+.05:raise RuntimeError('Demo failed to lift the scaler clear of the table.')
   for side,o in [('left',0),('right',7)]:
    target,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side]);name='fish' if side=='left' else 'scaler';rest=TAIL if side=='left' else TOOL;pinch=m.tail_pinch if side=='left' else m.tool_pinch
+   exact=self.plan[k-1].get('tcp_goals',{}).get(side)
+   if exact is not None:target=np.array(exact['position']);R=np.array(exact['rotation'])
    if stage in ['place fingers around tail and handle','grip tail and scaler handle']:
     if stage.startswith('place'):self.offset[side]=m.p(name,[0,.103,0] if side=='left' else [0,0,0])-rest
     target+=self.offset[side]
@@ -36,7 +38,7 @@ class DemoControl:
      elif stage=='approach scraping lane 0':
       from scipy.spatial.transform import Slerp
       from geometry import surface
-      u=np.clip((k-1-self.starts[stage])/max(1,self.counts[stage]-1),0,1);goal=m.orientation('fish')@surface(-.020,.045)[1]
+      u=np.clip((k-1-self.starts[stage])/max(1,self.counts[stage]-1),0,1);goal=m.orientation('fish')@surface(-.022,.049)[1]
       body_R=Slerp([0,1],Rotation.from_matrix([self.tool_rotation,goal]))(float(u)).as_matrix()
      else:body_R=R@GRIP_R.T
     R=body_R@grip['local_rotation'].T;target-=R@grip['local_point']
