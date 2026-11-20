@@ -2,7 +2,7 @@
 import numpy as np
 from scipy.optimize import least_squares
 class DemoControl:
- def __init__(self):self.offset=None;self.hair_x=None;self.grip_names={};self.grip_offset={};self.band_offset_x=0.;self.loop_correction=0.
+ def __init__(self):self.offset=None;self.hair_x=None;self.grip_names={};self.grip_offset={};self.band_offset_x=0.;self.loop_correction=0.;self.loop_correction_y=0.
  def action(self,k,wanted,m,observed,hands):
   if 150<=k<=500 and set(m.grasp_state)!={'left','right'}:
    raise RuntimeError('Scripted demonstration lost a required grip; stop this diagnostic before further motion.')
@@ -26,13 +26,13 @@ class DemoControl:
     if side not in m.grasp_state:
      from geometry import M
      centre=m.nodes[M+(M//4 if side=='left' else 3*M//4)]
-     self.grip_offset[side]=centre-R@np.array([0.,0.,0.])-target
+     self.grip_offset[side]=centre-R@np.array([0.,0.,-.001])-target
    if side in self.grip_offset:
     blend=float(np.clip((k-80)/20,0,1));offset=(1-blend)*offset+blend*self.grip_offset[side]
    target+=weight*offset
    if k>=220:
     from geometry import STRANDS,SEGMENTS
-    if k<=440 or self.hair_x is None:
+    if k<=300 or self.hair_x is None:
      centres=[]
      for strand in range(STRANDS):
       p=np.array([m.p(f'hair_{strand}_{i}') for i in range(SEGMENTS)])
@@ -41,8 +41,11 @@ class DemoControl:
     if side=='left' and 290<=k<=440:
      from geometry import M
      centre=(m.nodes[M:2*M,0].min()+m.nodes[M:2*M,0].max())/2
-     self.loop_correction=float(np.clip(self.loop_correction+.15*(self.hair_x-centre),-.020,.020))
+     self.loop_correction=float(np.clip(self.loop_correction+.05*(self.hair_x-centre),-.010,.010))
+     centre_y=(m.nodes[M:2*M,1].min()+m.nodes[M:2*M,1].max())/2
+     self.loop_correction_y=float(np.clip(self.loop_correction_y-.05*centre_y,-.010,.010))
     target[0]+=min(1.,(k-220)/80)*(self.hair_x-.289)+self.loop_correction
+    target[1]+=self.loop_correction_y
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6)
    p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=hands[side]['tcp']-p0;rbias=hands[side]['rotation']@R0.T
    def residual(q):
