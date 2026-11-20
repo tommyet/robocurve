@@ -6042,3 +6042,12 @@ Fish024 did not start physics because its new SSH command omitted the existing s
 
 
 Fish025 was stopped at control 1,631 because its long finishing stroke still left sector10 attached. Trace inspection shows the scaler climbing away from the skin near the raised head: patch10 changes from 0.211N contact at toolY=−48.64mm to almost no load and several millimetres clearance beyond −52mm. Fish026/batch053 uses eight short strokes between Y=−45and−51mm on lanes2and3, replacing the overextended segment; total2,390controls, same material/scoring/hardware and matching Dream002. Native validation pending. All archived files through040 are SHAverified locally.
+
+
+### 2026-11-20 — All three submissions complete; GPU deleted
+
+Fish026 is the qualifying full demonstration: **1.0 in 2,390 controls**, all 26 scale groups detached, intact skin, maximum compression **1.290 mm** against the 2 mm damage limit, and **5.75 seconds** with both hands clear. Short loaded strokes behind the raised head clear the two missed sectors; extending the tool onto the head had lifted it away. Frozen-source rescoring, actual finger-contact checks, 2,391-frame video checks and sampled review of all three views pass. Submit the full fixed front view. The matching Dream002 baseline is **0.0 / 2,400 controls**, with unchanged environment, scoring, cameras, hardware and policy; only unused demo-authoring files differ. Its 102 requests used 50 sessions (49 expiry recoveries) in one physical episode.
+
+Fish PR [#3289](https://github.com/robocurve/benchmark-tasks/pull/3289), receipt **TK-V5PR6Q**, media **M-WZKM4B**, isolated commit `9583fd2`. Bra [#3255](https://github.com/robocurve/benchmark-tasks/pull/3255) and plate [#3277](https://github.com/robocurve/benchmark-tasks/pull/3277) also have submission receipts. Each PR contains only its own task folder. Do not push changes while they await review.
+
+The owned Pod `xnezqeft4z9smp` was **deleted**, with a subsequent API **404** confirming absence. Estimated GPU compute for the whole three-task batch is **$6.41**, excluding storage, billing rounding and Dream API charges. All **2,536 files across 67 native runs**, plus 68 run logs, are backed up with SHA checks; unsuccessful diagnostics remain private. The remote Dream credential was removed before deletion. Final evidence and deletion proof are under `artifacts/bra-plate-fish-2026-11-20/`. Use the bundled modern Python for local verification; a legacy Python 3.7 read stalled on a workspace manifest, while the bundled runtime completed the check immediately.

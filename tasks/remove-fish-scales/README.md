@@ -28,6 +28,10 @@ The runner saves every 20 Hz action, native object poses, measurements, camera f
 
 No task object follows a scripted animation. Geometry is reset once. During execution the robot supplies ordinary joint commands; native bodies, contacts and passive joints determine the outcome. Any finite pinch approximation requires opposed finger contact, starts at the measured pose, transmits reaction force, and releases or slips. The same hardware and physics apply to Dream and the demo.
 
-## Validation status
+## Validation
 
-**Development draft. No qualifying full-score demonstration or matching Dream baseline yet. Do not submit this folder in its current state.** Runtime, evidence hashes, final scores and the media ID will be recorded after native validation.
+Native demo: **1.0**, 2,390 controls (119.5 simulated seconds). Dream-1: **0.0**, 2,400 controls (120 simulated seconds). The demo detaches all 26 scale groups, leaves the fish supported on the board and retains intact skin after release. Peak skin compression is 1.29 mm, below the disclosed 2 mm damage limit.
+
+Frozen-source rescoring and native finger-contact checks pass for both episodes. The uploaded videos are complete, uncut 20 Hz recordings from the fixed front camera; the setup image is the demo's initial frame. Visual review sampled 12 evenly spaced frames in all three recorded views. `VALIDATION.json` and `evidence/` record scores, source hashes, contact checks, trace/video hashes and the media receipt. The full traces are retained in the team's private evidence archive.
+
+Measured wall time on a shared L40S was 28.0 minutes for the demo and 60.4 minutes for Dream-1, including concurrent validation workloads and model calls. These are measured run times, not real-time performance claims. The layout is fixed and no random seed is used. Environment and policy sources match between the two runs; any unused demo-authoring differences are listed in `evidence/source-equivalence.json`.
