@@ -26,7 +26,7 @@ class DemoControl:
     if side not in m.grasp_state:
      from geometry import M
      centre=m.nodes[M+(M//4 if side=='left' else 3*M//4)]
-     self.grip_offset[side]=centre-R@np.array([0.,0.,.002])-target
+     self.grip_offset[side]=centre-R@np.array([0.,0.,0.])-target
    if side in self.grip_offset:
     blend=float(np.clip((k-80)/20,0,1));offset=(1-blend)*offset+blend*self.grip_offset[side]
    target+=weight*offset

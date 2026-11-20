@@ -13,10 +13,10 @@
   },
   "native_force_control": "Corrected permanent_wrench_composer control passed; corrected tasks require new complete evidence.",
   "latest_attempt": {
-    "run": "pony-demo-022",
+    "run": "pony-demo-023",
     "status": "running",
     "score": null,
-    "scope": "Robot pickup is 2 mm nearer tips to clear rest lip; no material or outcome changes."
+    "scope": "Smaller saddle lips permit a broader grasp arc and wider physical opening; unchanged material and retention."
   },
   "remaining_gates": [
     "Complete corrected full-score native demo",
@@ -24,10 +24,10 @@
     "Independent audits and visual review",
     "New media and submission after withdrawal"
   ],
-  "checked_utc": "2026-11-20T14:00:33.239662+00:00",
+  "checked_utc": "2026-11-20T14:11:41.561379+00:00",
   "last_failed_attempt": {
-    "run": "pony-demo-021",
+    "run": "pony-demo-022",
     "score": 0,
-    "reason": "Stable reset; right jaw closure blocked at support lip and never captured band. Stopped149actions."
+    "reason": "Both grips worked, but the shallow pinch left only about7mm clear front-to-back opening against a10.4mm section; hair was pushed aside."
   }
 }
