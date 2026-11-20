@@ -15,6 +15,13 @@ class Model(NativeModel):
   from native_wrench import NativeWrench
   self.proof_wrench=NativeWrench(self,['band_segment_%03d'%i for i in BAND_CONTACT_INDICES])
   self.read()
+  # The collection spawner restores body visibility during initialization.
+  # Hide only native collision visuals after binding; retain all collisions.
+  from pxr import UsdGeom
+  hidden={b['name'] for b in __import__('geometry').BODIES if not b.get('visible',True)}
+  for prim in self.stage.Traverse():
+   if '/materials/' in str(prim.GetPath()) and prim.GetName() in hidden:
+    UsdGeom.Imageable(prim).MakeInvisible()
   from finite_pinch import FinitePinch
   self.pinch=FinitePinch(self,[n for n in self.names if n.startswith('band_segment_')],.0015,.003,.004,(-.036,.004))
  def read(self):
