@@ -6027,3 +6027,6 @@ Live https://tasks.robocurve.org/review-prompt rechecked20:39UTC: Version24 nows
 
 
 Plate014 passes the first full lane:32/96sealed at1020controls, no adhesive/film breaks, peakgap0.254mm. The point-bond correction preserves the edge seals that failed with fixed rotations. Fish022 passes the former839-control attachment failure but leaves endsector4 attached (work0.000524J<0.0025J), then fails935during transfer to the third lane at2.178mmcompression.023 changes only demo path: continue the last inner-column stroke in the actual end skin facet's tangent plane rather than pitching down the underlying ellipsoid, and use Cartesian high-clearance transfers after the first lane. Material, scoring, hardware, instruction and policy remainbatch050; Dream002 can remain valid if source-equivalence explicitly documents only the unused demo-authoring differences.
+
+
+Plate014 completed1860controls with1.0:96/96sealed,1792bonded interface samples,5.9seconds hands clear, peak film-joint gap0.254mm and no damage. Frozen-source rescoring/contact checks and all44archivedfiles SHA verification pass. Twelve native keyframes per camera support the front review view, showing film placement, upright rolling and release; side view is substantially occluded. Matching Dream002 remains running. Do not submit until its complete baseline and media checks pass.
