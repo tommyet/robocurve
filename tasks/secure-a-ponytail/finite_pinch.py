@@ -75,7 +75,9 @@ class FinitePinch:
     g=self.held[side];point=self.m.nodes[M+g['index']];local=(point-h['tcp'])@h['rotation'];g['estimated_load_n']=self.tension(g['indices'])
     if g['estimated_load_n']>18.:self.release(side,'estimated local cord tension exceeded 18 N')
     elif np.linalg.norm(local-g['local_point'])>.008:self.release(side,'material moved 8 mm through the grip')
-   if side in self.held or side in self.blocked or max(history)-h['opening']<.008:continue
+   # Wait for close opposing-face contact before fixing the initial friction patch.
+   # Capturing the first edge while the jaws are still wider locks an asymmetric arc.
+   if side in self.held or side in self.blocked or max(history)-h['opening']<.008 or aperture>2*self.radius+.00075:continue
    used={g['body'] for g in self.held.values()};choices=[]
    for name in self.names:
     if name in used:continue

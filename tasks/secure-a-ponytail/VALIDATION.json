@@ -13,10 +13,10 @@
   },
   "native_force_control": "Corrected permanent_wrench_composer control passed; corrected tasks require new complete evidence.",
   "latest_attempt": {
-    "run": "pony-demo-025",
+    "run": "pony-demo-026",
     "status": "running",
     "score": null,
-    "scope": "Fix measured pre-entry hair centre; centre loop in X/Y at lower gain;46mm spread and1mm deeper grasp."
+    "scope": "Finite pinch begins only when opposing pad gap is within0.75mm of cord diameter, preventing premature asymmetric patch capture."
   },
   "remaining_gates": [
     "Complete corrected full-score native demo",
@@ -24,10 +24,11 @@
     "Independent audits and visual review",
     "New media and submission after withdrawal"
   ],
-  "checked_utc": "2026-11-20T14:31:04.147008+00:00",
+  "checked_utc": "2026-11-20T14:47:49.700005+00:00",
   "last_failed_attempt": {
-    "run": "pony-demo-024",
+    "run": "pony-demo-025",
     "score": 0,
-    "reason": "Six locks threaded; outer locks displaced and adaptive hair-centre tracking amplified displacement. Stopped before release."
+    "steps": 485,
+    "reason": "Ten locks enclosed. Left captured only4centreline points at123actions; one frame later9were in real pad contact. Premature fixed patch caused a tapered aperture."
   }
 }

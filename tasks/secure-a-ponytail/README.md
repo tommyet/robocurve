@@ -55,7 +55,7 @@ its stiffness and internal damping are approximate. Internal elasticity damping 
 are part of the trial setup, not a measured retail-product calibration.
 
 A geometry-gated native vertex attachment represents finger friction only after
-closing pad faces enclose a band patch. It holds only material already inside the
+closing pad faces enclose a band patch and the remaining jaw gap is no more than 0.75 mm wider than the cord. It holds only material already inside the
 24 mm-wide face, follows the real gripper link, and releases on opening, 8 mm slip
 or estimated local cord tension above 18 N. This tension estimate is uncalibrated;
 it is not a measured native force limit. Local held-patch contacts are filtered
