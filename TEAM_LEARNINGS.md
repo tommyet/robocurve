@@ -6104,6 +6104,24 @@ Live review-prompt v24 explicitly allows safe stand-ins OR protection for raw ma
 
 The original iCloud checkout emitted an unreadable Git pack during fetch. Development moved to a fresh temporary clone from live origin/main; no original uncommitted work or Git objects were removed or repaired.
 
-Fish revision receipt confirmed: **TK-YUW5X2**, revision of TK-V5PR6Q, Nov21 18:04UTC; pending human review. Do not push again while pending.
+Fish revision receipt confirmed: **TK-YUW5X2**, revision of TK-V5PR6Q, Nov21 18:01:44UTC; pending human review. Do not push again while pending.
 
 Plucking development is under `tasks/pluck-a-prepared-chicken`, explicitly marked unvalidated. It models a prepared carcass, yielding skin and twelve independently retained/bendable feathers in four small bunches. Local 1500-action reach/rate checks and CPU score edge cases pass; these do not establish native feasibility. A single L40S `si6b07qagufhvg` was rented at$1.09/h at18:09UTC with a two-hour watchdog. Automatic approval review rejected the specific source export/install action and required explicit destination/code-transfer approval. No code or Dream credential reached the Pod. The Pod was stopped and API-confirmedEXITED while approval is pending. Do not describe the prototype as a completed task or open a placeholder PR. The simulator, demo, Dream baseline, visual review and submission remain outstanding.
+
+
+### 2026-11-21 — Reopened hairbrush review and plucking validation
+
+Hairbrush #2847 was reopened at19:15:26UTC after our appeal. Its human reviewer explicitly requests a numbered-pin route/free-end diagram, close views, a specified synthetic-hair preparation/loading procedure, and an actual physical check of repeatability within a few minutes. Prepared diagrams and a three-reset report template are saved on development branch `codex/hairbrush-loading-review-20261121` at6390467. No physical check has been performed; do not push this incomplete revision to the submission branch or claim the diagrams are real trial photographs. The pending user question asks for a real check by Tom/Eito. The idea hold runs throughNov23 19:15:26UTC.
+
+At21:25UTC the other open submissions—fish3289, plate3277, bra3255, ponytail3224, salmon3170 and cap3059—were awaiting review. New final rejections were gel3033 (relatability), wet-hair2940 and potato2558 (real-trial reproducibility). Muffin2561 and tattoo2541 appeals had no new reply. Pending submissions were not changed.
+
+The old stopped Pod si6b07qagufhvg could not resume because its host had no free GPU; deleted it and confirmed404. One replacement L40S k5qzmhc6vgfnt2 at$1.09/hour started21:17:44UTC with a two-hour independent local stop watchdog. Pinned simulator installation and package/hash checks passed. No Dream key is copied to it; the local official SDK bridge is prepared.
+
+Plucking001 failed at185controls with4.329mm skin displacement, before any extraction. The first image also exposed floating flat skin patches.002 fits curved native skin meshes to the breast and improves the support path, but still fails185controls (4.497mm). Trace diagnosis shows the vertical approach strikes tilted shafts with the jaw edge.003 approaches along the quill axis instead; validation remains pending. These are failed diagnostics, not submission evidence. The 4mm damage limit and follicle resistance are unchanged. Whole-geometry containment replaces centre-only checks, with1mm rim tolerance; CPU score boundaries pass. Failed runs001–002 are locally archived and all74files SHA verified.
+
+
+Plucking003 reached6/12withintactskin; native contact audits passed for all six grasps. Its whole-geometry containment check falsely rejected a visual-only vane dipping0.2mmbelowthe floor tolerance while the colliding shaft was correctly supported.004 uses all geometry for horizontal containment and physical colliders for floor contact. Both final policies use that scorer. The stopped003andDream001 are diagnostics only; their archives are SHAverified.
+
+Plucking004 reached9/12, then failed1239controls at4.588mm skin displacement. All twelve attempted shaft captures pass independent native-finger contact checks. The carcass rolled about5degrees during the last pull; the support controller followed translation only and lost the working patch.005 follows the observed full carcass pose (rotation and translation). Only `demo_control.py` changes; the continuing Dream002 uses identical physics, scoring, hardware, cameras and instruction. Native feasibility of005remains pending. Archive004is SHAverified locally.
+
+When reusing the local Dream bridge across discarded/final episodes, its client's `_audit_seen_sessions` set spans the bridge lifetime, even though the logging lists are cleared at episode start. Use the remote per-episode `BridgeSession` unique-session count for the final episode, and retain the raw cumulative count under an explicitly labelled field. Do not report cumulative sessions as if they belong only to the final run. API attempts and expiry counters are cleared per episode. This affects bookkeeping, not model actions or physical continuity.

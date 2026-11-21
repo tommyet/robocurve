@@ -10,6 +10,11 @@ class DemoControl:
   out=wanted.copy()
   for side,o in [('left',0),('right',7)]:
    target,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side])
+   if side=='left':
+    from geometry import C
+    body_R=m.orientation('carcass')
+    target=m.p('carcass')+body_R@(target-C)
+    R=body_R@R
    if side=='right':
     from geometry import TIPS,AXIS
     stage=self.plan[k-1]['stage']

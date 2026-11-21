@@ -3,7 +3,7 @@
 A material element must be between closing finger faces and inside their real
 working area. The joint starts at the measured pose, without moving either body.
 The finite joint connects directly to the native gripper, following every physics substep and transmitting reaction forces.
-It releases on opening and breaks at 12 N or 0.006 Nm. This approximates unresolved
+It releases on opening and breaks at 0.65 N or 0.006 Nm. This approximates unresolved
 finger friction; it does not move, fold, fit or score task material for the robot.
 """
 import numpy as np

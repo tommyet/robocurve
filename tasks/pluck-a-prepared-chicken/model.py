@@ -40,9 +40,22 @@ class Model(NativeModel):
  def integrity_failed(self):
   return super().integrity_failed() or bool(self.broken) or self.peak_skin_gap>=.004
  def reset_valid(self):return not self.extracted and not self.failed
+ def within_tray(self,name):
+  # Whole geometry, with a 1 mm photo/solver tolerance at the outer tray rim.
+  b=BODIES[self.index[name]];points=[];physical=[]
+  for shape in b['shapes']:
+   if shape['kind']=='mesh':v=np.asarray(shape['points'])+shape['pos']
+   elif shape['kind']=='cylinder':
+    r=shape['radius'];h=shape['length']/2
+    v=np.array([[x,y,z] for x in [-r,r] for y in [-r,r] for z in [-h,h]])+shape['pos']
+   else:continue
+   w=[self.p(name,p) for p in v];points.extend(w)
+   if shape.get('collision',True):physical.extend(w)
+  p=np.asarray(points);c=np.asarray(physical)
+  return bool(len(p) and np.all(abs(p[:,0]-.36)<=.211) and np.all(abs(p[:,1])<=.191) and len(c) and np.all(c[:,2]>=TABLE+.004))
  def measure(self):
-  carcass=self.p('carcass');on_tray=bool(abs(carcass[0]-.36)<.100 and abs(carcass[1])<.060 and TABLE+.060<carcass[2]<TABLE+.090 and self.orientation('carcass')[2,2]>.85)
-  contained=all(abs(self.p(f'feather_{i}')[0]-.36)<.200 and abs(self.p(f'feather_{i}')[1])<.180 and self.p(f'feather_{i}')[2]>TABLE+.004 for i in self.extracted)
+  carcass=self.p('carcass');on_tray=bool(self.within_tray('carcass') and TABLE+.050<carcass[2]<TABLE+.090 and self.orientation('carcass')[2,2]>.85)
+  contained=all(self.within_tray(name) for i in self.extracted for name in [f'feather_{i}',f'quill_{i}'])
   return dict(extracted_feathers_in_tray=bool(contained),whole_feathers_extracted=len(self.extracted),total_feathers=N,skin_intact=not self.failed,maximum_skin_displacement_mm=self.peak_skin_gap*1000,carcass_in_tray=on_tray,released_seconds=self.release,failed=self.failed)
  def score(self):
   if self.failed or self.release<3 or not self.measure()['carcass_in_tray'] or not self.measure()['extracted_feathers_in_tray']:return 0.

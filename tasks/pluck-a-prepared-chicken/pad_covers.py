@@ -41,7 +41,7 @@ def install():
             from isaaclab.sim.utils.stage import get_current_stage
             stage = get_current_stage()
             paths = robot.asset_link_paths()
-            # The 3 mm contact faces touch at a 6 mm nominal jaw gap. The pinned
+            # The 2 mm contact faces touch at a 4 mm nominal jaw gap. The pinned
             # model lacks a cover-to-cover closing stop, so represent that ordinary
             # physical stop with the two prismatic joint limits.
             stops=[]
