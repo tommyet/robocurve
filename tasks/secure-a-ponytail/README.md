@@ -86,4 +86,8 @@ The latest review requested distinguishable bundles and a numerical definition o
 
 ## Validation
 
-New colour-coded native demo and Dream run are pending. Earlier videos are superseded for this revision.
+The revised native demo completes **1040 controls, score 1.0**. It retains 12/12 bundles under the 90% rule after the actual 1 N pull; maximum band movement is 3.61 mm. The matching Dream baseline completes **1800 controls, score 0.00**. Frozen-source rescoring, contact-location checks and all-frame video checks pass. Native wall time on the shared L40S was 31.4 minutes for the demo and 51.2 minutes for Dream.
+
+Review media pairs synchronized, uncut rear and front views; a trace-driven caption identifies the evaluator pull while force is applied. See the metadata clarification record for wording updates made after recording.
+
+Dream ran through the official loopback SSH bridge, with its credential kept on the local computer. Its client made 73 API attempts across 74 sessions, including 36 expiry recoveries in one uninterrupted physical episode. These are recorded in `evidence/bridge-runtime.json`; earlier videos are superseded.
