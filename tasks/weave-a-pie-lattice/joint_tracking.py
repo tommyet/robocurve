@@ -8,7 +8,7 @@ import numpy as np
 
 
 class JointTracking:
-    def __init__(self,proportional=1.5,integral=2.,bias_limit=.12,slew_limit=.006,side='right'):
+    def __init__(self,proportional=.3,integral=.25,bias_limit=.025,slew_limit=.001,side='right'):
         if side not in ('left','right'):raise ValueError('Unknown robot arm')
         self.indices=slice(0,6) if side=='left' else slice(7,13)
         self.kp=float(proportional);self.ki=float(integral);self.limit=float(bias_limit);self.slew=float(slew_limit)

@@ -13,6 +13,17 @@ def main():
  for f in HERE.iterdir():
   if f.suffix!='.py' or f.name in {'model.py','rescore_current.py'}:continue
   if report['mode']=='dream' and f.name in authoring:continue
+  if report['mode']=='dream' and f.name=='joint_tracking.py':
+   prior=(run/'source'/f.name).read_text();current=f.read_text()
+   before='proportional=1.5,integral=2.,bias_limit=.12,slew_limit=.006'
+   after='proportional=.3,integral=.25,bias_limit=.025,slew_limit=.001'
+   assert prior==current or (prior.count(before)==1 and prior.replace(before,after)==current)
+   # Same runner: tracker.action is exclusively inside the demo branch.
+   runner=(HERE/'run.py').read_text()
+   assert runner== (run/'source/run.py').read_text()
+   demo=runner.split("   if a.mode=='demo':",1)[1].split('   elif policy is not None:',1)[0]
+   assert 'tracker.action' in demo and runner.count('tracker.action')==1
+   continue
   assert hashlib.sha256(f.read_bytes()).hexdigest()==report['source_sha256'][f.name],f.name
  from model import Model
  m=Model();changed=0

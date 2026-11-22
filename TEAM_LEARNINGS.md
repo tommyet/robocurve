@@ -6342,3 +6342,24 @@ unbuilt reserves, not promised quick wins. Fresh GitHub title/body searches
 found no direct bandage/hair-roller/lattice match (only unrelated2054/3466);
 this is bounded public searching, not authenticated-board novelty clearance.
 No paid compute, code changes, comments or PR submissions in this status turn.
+
+### 2026-11-22 — Lattice completion retry and hairbrush evidence
+
+User requested completion of both. Hairbrush development branch now has explicit
+asset attribution and an honest pending-physical-check status. The minimum
+manual check is one timed loading/removal with close photos; three repeats were
+our earlier recommendation, not the reviewer's requirement. No physical check
+has been performed and no upstream revision has been sent.
+
+Lattice010 trace diagnosis: at the second pickup, a finger contacts the board,
+which moves about19mm; the observed TCP misses the intended strip by~30mm.
+The previous demo-only PI tracking correction can command much larger offsets
+than needed.011 reduces proportional/integral feedback from1.5/2.0 to0.3/0.25,
+maximum joint bias0.12 to0.025rad, slew0.006 to0.001rad/control. Task physics,
+hardware, setup, scoring and Dream policy are unchanged. The current rescorer
+proves the exact gain-only difference and that tracker calls occur only in the
+demo branch; the complete previous Dream baseline still audits at0.0.
+
+Owned L40S wxc0y58fntnojf rented07:55:29UTC at$1.09/h; independent stop deadline
+09:55UTC. Runtime install versions/pins match. A full demo is still required.
+Back up every run, delete this exact Pod and confirm404 before ending.
