@@ -6387,3 +6387,39 @@ not the reviewer requirement. Diagrams, prepared lock cards and approximate
 free-end checks reduce reset effort. Actual times, photos and observations
 remain absent; do not claim the review is addressed or push a completed
 revision without that evidence.
+
+### 2026-11-22 09:02 UTC — Hairbrush physical report and revision received
+
+User reports an actual loading check with synthetic hair from an old wig on a
+similar household brush. Followed the diagram; estimated a few minutes; fine
+hair visibility and release were awkward but improved with practice. User
+explicitly confirmed retention during a gentle move and comb removal without
+pin damage. No photos, exact dimensional/mass measurements, stopwatch timing
+or weighing check were supplied. These limits are explicit in the report.
+Do not upgrade this to an exact-specification or independently observed test.
+
+Added numbered pin routes, top/side close diagrams, preparation/loading checks,
+a contrasting-card loading recommendation, and the reported manual result.
+All21 executed source/plan hashes still match the prior audited demo1/Dream0.
+No new GPU or media was needed for hairbrush. Existing PR2847 revision commit
+87f83f5 was received09:02:46UTC as TK-DPW5PQ (revision ofTK-8AW9EM), pending
+review. Do not push more changes while pending. Submission contains only the
+hairbrush folder; team notes stay on the development branch.
+
+### 2026-11-22 — Lattice local-arch diagnostics
+
+A 250 × 25 × 2 mm strip (13.75 g) provides more ordinary overhang than the prior
+200 mm strip. The two longitudinal strips remain loose; lift locally rather
+than fold an entire end backward. Native demo016 captured both strips and
+passed the first under-crossing. It stopped at484 because the feeding tool
+displaced the second strip and lost opposed-face contact. A single successful
+pickup or under-crossing is not a full weave. Demo017 raises the feed6mm and
+flattens the tool from70° to75° to clear the second crossing. Material, damage
+and scoring checks are unchanged. The 250 mm setup needs a fresh Dream run;
+the complete old200 mm baseline cannot be reused as matching evidence.
+
+Current owned L40S pkbfvwkmhtog2o began08:56:59UTC at$1.09/h, local watchdog
+deadline10:56:59UTC. Archives013–016 are SHA256/size verified and copied to
+private artifacts/lattice-local-lift-2026-11-22. No new Dream or second GPU has
+been started. Finish or back up any new runs and delete the exact owned Pod
+before ending; do not interpret this interim entry as a shutdown confirmation.

@@ -2,7 +2,7 @@
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
 PIE=np.array([.35,.025,TABLE+.024]);Z=PIE[2]+.018
-N=24;LENGTH=.200;DX=LENGTH/N;WIDTH=.025;THICK=.002
+N=24;LENGTH=.250;DX=LENGTH/N;WIDTH=.025;THICK=.002
 LONG_X=[-.032,.032];CROSS_Y=[-.050,0.,.050]
 # Real-size 180 mm filled tart, 190 mm rim. Pan, crust and level filling move together.
 shapes=[cylinder(.090,.006,(0,0,-.018)),*ring(.092,.036,.004,n=32)]
@@ -19,7 +19,7 @@ for s,(origin,rot) in enumerate(zip(ORIGINS,ROTATIONS)):
  for i in range(N):
   name=f'strip_{s}_{i}';names.append(name);CELLS.append(name)
   p=origin+rot.apply([0,(i-(N-1)/2)*DX,0])
-  BODIES.append(body(name,p,[box((WIDTH,DX-.00002,THICK))],quat=rot.as_quat(),mass=.011/N,color=(.90,.76,.47),friction=.6,contact_offset=.00015,speculative_ccd=True))
+  BODIES.append(body(name,p,[box((WIDTH,DX-.00002,THICK))],quat=rot.as_quat(),mass=.01375/N,color=(.90,.76,.47),friction=.6,contact_offset=.00015,speculative_ccd=True))
   if i:
    axes={'rotX':dict(limits=(-110,110),stiffness=.001,damping=.000003),'rotY':dict(limits=(-90,90),stiffness=.0005,damping=.000003),'rotZ':dict(limits=(-30,30),stiffness=.002,damping=.00002)}
    JOINTS.append(joint(f'pastry_{s}_{i}',names[-2],name,[0,DX/2,0],[0,-DX/2,0],axes=axes,break_force=2.,break_torque=.025))

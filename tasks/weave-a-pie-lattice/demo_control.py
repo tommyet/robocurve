@@ -10,7 +10,7 @@ class DemoControl:
   from yam_arena import ik,station
   stage=self.frames[k-1]['stage'];out=wanted.copy()
   if ':' in stage:
-   j=int(stage.split(':')[0]);phase=stage.split(':')[1];targets={'left':(j%2,N-1),'right':(2+j,N-1)}
+   j=int(stage.split(':')[0]);phase=stage.split(':')[1];targets={'left':(j%2,[7,12,16][j]),'right':(2+j,N-1)}
    if phase in ['lift longitudinal','lift longitudinal high','lift cross strip','feed onto pie','draw across','lower cross strip'] and len(m.pinch.held)!=2:raise RuntimeError('Both strip ends must remain physically pinched through placement')
    if (phase in ['shift support','clear right hand','retreat right','park right','replace longitudinal']) and 'left' not in m.pinch.held:raise RuntimeError('Longitudinal strip slipped before replacement')
   else:phase=stage;targets={}

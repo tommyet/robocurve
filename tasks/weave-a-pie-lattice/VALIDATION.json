@@ -1,27 +1,28 @@
 {
-  "status": "not_submission_ready",
+  "status": "validating_250mm_setup",
   "submission_ready": false,
-  "dream": {
-    "status": "complete",
-    "steps": 3000,
-    "score": 0.0,
-    "frozen_and_current_rescore_agree": true
-  },
   "latest_diagnostic_demo": {
-    "run": "lattice-demo-012",
-    "status": "failed_operator_stopped",
-    "steps": 1016,
+    "run": "lattice-demo-016",
+    "status": "failed",
+    "steps": 484,
     "score": 0.0,
-    "reason": "The lengthwise strip folds back onto itself after replacement; no complete woven row."
+    "reason": "Passed the first crossing but displaced the second lengthwise strip and lost the right grip."
   },
   "full_score_demo": false,
   "physical_preparation_validated": false,
   "media_uploaded": false,
   "upstream_pr_created": false,
-  "gpu_deleted": true,
-  "gpu_deletion_http_status": 404,
+  "gpu_deleted": false,
   "estimated_gpu_compute_usd": 2.8682,
   "next_gate": "Complete full-score native demo without weakening contact, damage or weave criteria.",
   "latest_retry_gpu_compute_usd": 0.664,
-  "compute_estimate_scope": "Two recorded lattice Pod lifetimes; excludes storage, billing rounding and Dream API charges."
+  "compute_estimate_scope": "Two recorded lattice Pod lifetimes; excludes storage, billing rounding and Dream API charges.",
+  "prior_200mm_dream": {
+    "status": "complete",
+    "steps": 3000,
+    "score": 0.0,
+    "frozen_and_current_rescore_agree": true
+  },
+  "matching_current_dream_required": true,
+  "current_candidate": "lattice-demo-017: higher and flatter feed trajectory"
 }

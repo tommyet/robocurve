@@ -1,7 +1,7 @@
 # Weave a lattice top on a pie
 
-Development prototype, not submission-ready. The complete 3,000-control Dream
-baseline scores 0.0, but no full-score scripted demonstration has succeeded.
+Development prototype, not submission-ready. The earlier 200 mm-strip Dream baseline scores 0.0; it cannot validate the
+current 250 mm setup. A new full-score demo and matching Dream run are required.
 Do not submit this folder in its current state.
 
 Weave three loose pastry strips across two strips already laid on a small pie.
@@ -26,7 +26,7 @@ rigid body; there is no claim to simulate filling damage or baking.
 Use Pillsbury refrigerated pie-crust dough, from the same product and batch for
 all trials. Temper the sealed refrigerated dough for 15 minutes at room temperature, as
 [Pillsbury directs](https://www.pillsbury.com/products/pie-crust/refrigerated-pie-crust), then unroll on baking
-parchment, roll between 2 mm thickness guides, and cut five 200 × 25 mm strips
+parchment, roll between 2 mm thickness guides, and cut five 250 × 25 mm strips
 with a ruler and pastry wheel. Keep prepared strips covered in a refrigerator
 at 2–4 °C. Take one set out five minutes before the trial, at a room temperature
 of 20–22 °C. Do not flour, glue or pre-crease the strips. Reject visibly cracked,
@@ -37,7 +37,7 @@ validated.
 
 Lay two strips north–south on the pie, their centre lines 64 mm apart. Lay the
 other three east–west, 50 mm apart, on a 180 × 180 × 42 mm chopping board to the
-left, with 10 mm of natural strip overhang at each end for pickup. The board is level with the pie surface. None is attached, pre-threaded
+left, with 35 mm of natural strip overhang at each end for pickup. The board is level with the pie surface. None is attached, pre-threaded
 or already overlapping another strip. The fixed layout is in `geometry.py`;
 metres are relative to the robot station, with worktop height 747.5 mm. The pie
 centre is (350, 25) mm and the board centre is (130, 25) mm in plan view.
@@ -169,23 +169,16 @@ runtime source are not redistributed in this task folder. `inspect-robots-yam`
 
 ## Validation status — 22 November 2026
 
-The full native Dream baseline completed 3,000 controls and independently
-rescores 0.0. Its trace, measured contacts and complete native videos are
-archived. Twelve diagnostic demonstrations have not produced a full weave.
-Demo011 retained the support grip but missed the second cross-strip pickup
-at control1,140. Lower demo-only tracking gains did not fix that pickup.
+The earlier 200 mm-strip Dream baseline completed 3,000 controls at 0.0. It is
+archived as a prior setup, not evidence for the current 250 mm strips. The
+longer strips provide ordinary overhang for lifting a local arch without
+anchoring the ends. Their dimensions and mass change together; passive
+material properties and damage checks remain unchanged. A new matching Dream
+run is required.
 
-Demo012 completes and releases each row before starting the next. Its plan
-fits in2,920controls with maximum joint-speed ratio0.845. The first cross-strip
-spans the pie intact, but replacing the lifted lengthwise strip leaves it
-folded back on itself rather than spanning the crust. Both the native scorer
-and the inspected camera frame correctly show no completed woven row. The
-operator stopped at control1,016 because this sequence could not finish
-successfully. No score condition or material property was weakened.
-
-The unresolved action is unfolding and laying the lengthwise strip flat while
-preserving the crossing. The model/policy and physical setup remain unchanged;
-the current controller changes affect only the scripted demo. No full-score
-demo, physical dough calibration or physical preparation trial is claimed.
-All run archives are backed up and the rented GPU was deleted, confirmed404.
-Do not submit until a genuine full-score demonstration passes.
+The latest diagnostic, demo016, captured both strips and made the first
+under-passage, but its feeding tool displaced the second lengthwise strip and
+lost the right grip at control 484. It stopped with score 0.0. The next
+controller raises and flattens the feeding path to clear that crossing.
+No full-score demonstration or physical dough test is claimed. Do not submit
+until a complete native demo, matching baseline and their audits pass.
