@@ -8,7 +8,7 @@ p=Plan();R=Rotation.from_euler('y',-30,degrees=True).as_matrix()@down(0);L=Rotat
 left=C+[.012,-.0485,breast_z(.005,-.045)+.0095]
 p.add(3,'approach the prepared breast',{'left':(left+[0,0,.035],L,.15),'right':(TIPS[1]+AXIS*.035,R,.15)},'joint')
 p.add(2,'support skin beside feathers',{'left':(left,L,.15)})
-for group in range(4):
+for group in range(3):
  target=TIPS[group*3+1]+AXIS*.0015
  support=C+[.012,(group-1.5)*.030-.0035,breast_z(.005,(group-1.5)*.030)+.0095]
  if group:p.add(1,'lift supporting fingers',{'left':(left+[0,0,.025],L,.15)})

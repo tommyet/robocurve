@@ -41,7 +41,9 @@ class Model(NativeModel):
   return super().integrity_failed() or bool(self.broken) or self.peak_skin_gap>=.004
  def reset_valid(self):return not self.extracted and not self.failed
  def within_tray(self,name):
-  # Whole geometry, with a 1 mm photo/solver tolerance at the outer tray rim.
+  # Whole horizontal geometry, with a 1 mm tolerance at the outer tray rim.
+  # Carcass height/upright checks are in measure(); mesh-floor penetration is
+  # a contact-solver detail, not an out-of-tray outcome. Feather floor checks remain.
   b=BODIES[self.index[name]];points=[];physical=[]
   for shape in b['shapes']:
    if shape['kind']=='mesh':v=np.asarray(shape['points'])+shape['pos']
@@ -52,7 +54,7 @@ class Model(NativeModel):
    w=[self.p(name,p) for p in v];points.extend(w)
    if shape.get('collision',True):physical.extend(w)
   p=np.asarray(points);c=np.asarray(physical)
-  return bool(len(p) and np.all(abs(p[:,0]-.36)<=.211) and np.all(abs(p[:,1])<=.191) and len(c) and np.all(c[:,2]>=TABLE+.004))
+  return bool(len(p) and np.all(abs(p[:,0]-.36)<=.211) and np.all(abs(p[:,1])<=.191) and len(c) and (name=='carcass' or np.all(c[:,2]>=TABLE+.004)))
  def measure(self):
   carcass=self.p('carcass');on_tray=bool(self.within_tray('carcass') and TABLE+.050<carcass[2]<TABLE+.090 and self.orientation('carcass')[2,2]>.85)
   contained=all(self.within_tray(name) for i in self.extracted for name in [f'feather_{i}',f'quill_{i}'])

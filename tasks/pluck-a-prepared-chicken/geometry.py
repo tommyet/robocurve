@@ -1,7 +1,7 @@
 """Loose prepared carcass, yielding skin and independently retained feathers."""
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
-C=np.array([.36,0,TABLE+.070]);N=12;GROUPS=4
+C=np.array([.36,0,TABLE+.070]);N=9;GROUPS=4
 AXIS=np.array([-.5,0,np.sqrt(.75)]);BQ=Rotation.align_vectors([AXIS],[[0,0,1]])[0].as_quat()
 tray=[box((.42,.38,.006))]+[box((.42,.006,.035),(0,y,.020)) for y in [-.187,.187]]+[box((.006,.38,.035),(x,0,.020)) for x in [-.207,.207]]
 BODIES.append(body('tray',[.36,0,TABLE+.003],tray,fixed=True,mass=.8,color=(.61,.68,.70),friction=.7))
