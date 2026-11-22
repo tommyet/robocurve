@@ -6222,3 +6222,18 @@ Lint876/598 and window1978 explicitly cite external-suite duplicates. Wringing
 3159/2643 has reset failures, also relevant to our wet-hair2940. No GPU/Dream
 spending or new task/PR. Research uses public PRs and primary external sources,
 not exhaustive authenticated-board clearance.
+
+
+### 2026-11-22 — Ten domestic/outdoor ideas, no compute
+
+Ornament hanging1971 accepted; watch setting3086 reserved after Nov22 06:21UTC
+review (remove custom stand). Insole3055 finally rejected today for relatability,
+not missing compliance; roof1017 rejected for miniaturized reach/handling/fastening.
+BEHAVIOR directly covers table laying and filling a bird feeder. No exact public
+PR match for whittling, gutter clearing, helmet visor replacement or resoling,
+but none is high-confidence. Whittling is the most interesting conditional option;
+actual cutting force and recognisability need evidence (planing2702 failed domain).
+Gutter cleaning must preserve installed access; cowl leaf removal3623 is a nearby
+revising task. Visor replacement has real coupled hook/release manipulation per
+SHOEI, but niche maintenance and snap-fit overlap risks. Details/links appended
+to docs/task-ideas-maintenance-2026-11-18.md. No GPU/Dream/task build or PR.

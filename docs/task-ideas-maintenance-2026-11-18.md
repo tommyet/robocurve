@@ -249,3 +249,30 @@ Primary external references:
 PR numbers above refer to https://github.com/robocurve/benchmark-tasks/pull/NUMBER.
 Raw searches/comments are backed up under artifacts/household-ideas-2026-11-22
 in the main local workspace, outside the submission task folders.
+
+
+## 22 November: ten further domestic and outdoor ideas
+
+Research only: current public all-state PR searches, actual reviews, the official
+BEHAVIOR task definitions and a helmet maker's installation manual. No GPU or
+Dream calls. No exact search result is not exhaustive novelty clearance.
+
+| Idea | Evidence and recommendation |
+|---|---|
+| Decorate Christmas tree | [Ornament hanging #1971](https://github.com/robocurve/benchmark-tasks/pull/1971) is accepted: each bauble's own wire hook over a branch. Moving to a tree does not establish novelty. Lights/garlands would require separate assessment, not assumed clear. |
+| Lay table | [BEHAVIOR set_a_dinner_table](https://behavior.stanford.edu/knowledgebase/tasks/set_a_dinner_table-0.html) and several other table-setting tasks already cover this. Different place settings are not a new physical skill. Skip. |
+| Whittle stick | No exact PR match for whittling/carving/sharpen-stick/bark removal. A useful scope is shaping a short taper on a real wooden stick using repeated controlled knife cuts and regrasping/rotation, preserving the support hand and avoiding split/deep gouges. Material removal must depend on genuine blade contact, motion and roughly real cutting force; final dimensions, intact stick and visible shavings are more defensible than counting strokes. Select standard wood stock and physically validate achievable force. Related [hand planing #2702](https://github.com/robocurve/benchmark-tasks/pull/2702) failed domain importance as specialist work, so recognisability is a significant risk; not high-confidence merely because search is empty. Best candidate of this batch for further investigation, moderate at most. |
+| Set watch time | [#3086](https://github.com/robocurve/benchmark-tasks/pull/3086) revision requested Nov22 06:21:28 UTC: remove custom stand. Exact operation reserved for 48 hours. Skip. |
+| Clear gutter leaves | No exact gutter/eaves cleaning PR found. [Windshield-cowl leaves #3623](https://github.com/robocurve/benchmark-tasks/pull/3623) is under revision for repeatable leaves and affordable faithful setup. Ordinary leaf pickup could overlap; a scoop passed under actual gutter brackets may add manipulation but must be assessed on that skill. Keep full-size cross-section, fascia/eave/bracket access and reproducible debris; don't turn it into an open tray on a table. Lowering elevation is only defensible if the relevant access/approach remains, not if it removes the difficulty. Medium-low: sourcing/reset, fidelity and niche recognition all unresolved. |
+| Tile roof | [#1017](https://github.com/robocurve/benchmark-tasks/pull/1017) rejected for a 35cm roof/11cm slates that remove real handling, reach and fastening. A full-scale local roof section with genuine fasteners could address that criticism, but would be a substantial new validation effort. Low priority near deadline. |
+| Fill bird feeder | Exact external task: [BEHAVIOR filling_the_bird_feeder](https://behavior.stanford.edu/knowledgebase/tasks/filling_the_bird_feeder-0.html), feed bag into feeder. Reassembly #3495 is a different task and its rejection should not be misrepresented as a rejection of filling; external filling overlap is the decisive issue. Skip. |
+| Replace helmet visor | No exact helmet visor/face-shield/Pinlock PR found. [SHOEI instructions](https://www.shoei.com/user-manual/docs/367_cwr-f2r_asia_20230915.pdf) require full opening, holding release trigger while detaching hooks on each side, fitting hooks and checking opening/closing. Physically meaningful if both coupled sides and actual curved shield are preserved; replacing this with two free clips removes difficulty. However specialist maintenance and the already-covered snap-fit family make acceptance uncertain. Low-medium, less attractive than familiar tasks on earlier shortlist. |
+| Resole shoes | No exact resole/outsole/shoe-repair PR found. Full resoling entails material preparation, bond/stitch work and proving attachment, not merely placing a new sole. Specialist-job relevance and adhesive/cure/reset/strength validation are significant burdens. Don't infer >500k workers from unrelated broad occupations. Low for a quick submission. |
+| Change insoles | Exact [#3055](https://github.com/robocurve/benchmark-tasks/pull/3055) finally rejected Nov22 06:34:30UTC for insufficient societal relatability after revision. It already used a full-length flexible insole in a laced shoe, so adding compliance would not address its final reason. Skip. |
+
+Recommendation: retain whittling as a conditional research candidate, with real
+cutting-force and usefulness/recognisability questions explicit. Gutter cleaning
+and visor replacement are reserve ideas, not high-probability submissions.
+The previously shortlisted chest tape measurement and normal compact four-wheel
+padlock remain more attractive research priorities. Evidence snapshots are in
+private local artifacts/ten-more-ideas-2026-11-22.
