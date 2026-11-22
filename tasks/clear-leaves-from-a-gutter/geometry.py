@@ -15,7 +15,7 @@ BODIES.append(body('roof_edge',GUTTER,shapes,mass=6.,fixed=True,color=(.75,.77,.
 # Bench-safe timber legs, securing a local 1:1 roof section at reachable height.
 for y in [-.24,.24]:
  BODIES.append(body('support_'+str(y).replace('-','n').replace('.','p'),[.38,y,TABLE+.045],[box((.06,.06,.09))],mass=.4,fixed=True,color=(.55,.37,.22)))
-BUCKET=np.array([.36,-.40,TABLE+.075]);BUCKET_R=.085
+BUCKET=np.array([.15,.24,TABLE+.075]);BUCKET_R=.085
 BODIES.append(body('bucket',BUCKET,[cylinder(BUCKET_R,.004,(0,0,-.073)),*ring(BUCKET_R,.15,.003,n=32)],mass=.30,color=(.18,.37,.56),friction=.8))
 # Plastic gutter scoop with a thin bevelled mouth and open top, not a grasp tool.
 SCOOP=np.array([.18,.02,TABLE+.006]);HANDLE=np.array([0,-.12,.070])

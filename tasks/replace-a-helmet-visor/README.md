@@ -1,8 +1,8 @@
-# Replace a helmet visor
+# Fit a replacement helmet visor
 
 Development: native demo validation is still in progress. Do not submit yet.
 
-Release a curved visor from two spaced catches, install its replacement and check that it opens and closes while retained. The shell is fixed to an ordinary display base.
+Fit a curved replacement visor to two spaced catches and check that it opens and closes while retained. The old visor has already been removed. The shell is fixed to an ordinary display base.
 
 ## Run and score
 
@@ -14,13 +14,13 @@ python run.py --mode dream --out /absolute/path/to/dream
 python rescore.py /absolute/path/to/demo
 ```
 
-The limit is 2,400 controls at 20 Hz (120 simulated seconds). Runtime and final scores are pending native validation. There is one fixed layout and no random seed.
+The limit is 1,600 controls at 20 Hz (80 simulated seconds). Runtime and final scores are pending native validation. There is one fixed layout and no random seed.
 
-Broken parts invalidate the trial. Award the highest stage reached: 0.25 for releasing the original from both catches, 0.5 for retaining the replacement at one catch, and 0.75 for both catches. Full credit additionally requires closing to within 8 degrees, reopening at least 55 degrees, placing the original on the tray and releasing both hands for 2 seconds with the replacement still retained. Catch engagement is visible through retention during the movement; no hidden force threshold is needed for physical judging.
+Broken parts score zero. Otherwise award the highest applicable score: 0.25 for one engaged catch; 0.5 for both; 0.75 for closing the attached visor to within 8° of shut. Full score also requires reopening it by at least 55° and releasing both hands for two seconds with both catches still engaged. Other outcomes score zero. Check retention and travel in the video using a simple angle template.
 
 ## Setup and approximation
 
-`task.json` gives dimensions, materials and layout. `geometry.py` supplies the entire generic assembly. It is a task proxy for a two-catch quick-release visor, not a claim of exact compatibility with a retail helmet. The inert shell is a solid ellipsoid; the unused face opening and padding are omitted. The visor centre is rigid and its two end ears have passive compliance. The original begins at 70 degrees with both native hinges engaged. The spare is unattached.
+`task.json` gives dimensions, materials and layout. `geometry.py` supplies the entire generic assembly. It is a task proxy for a two-catch quick-release visor, not a claim of exact compatibility with a retail helmet. The inert shell is a solid ellipsoid; the unused face opening and padding are omitted. The visor centre is rigid and its two end ears have passive compliance. The helmet begins bare and the replacement is unattached. Both hinge constraints start disabled. Their assembled rest frames agree at the 70-degree open position, independently of the loose visor’s starting pose.
 
 Each release trigger has 4 mm travel and 650 N/m stiffness; pressing beyond 2.8 mm releases its catch. Local insertion is approximated by enabling a hinge only when its hook is within 2.5 mm and 6 degrees of the mating base, at less than 80 mm/s. No object position is written. The hinge has two passive detents; both energy wells are equal. Ear stiffness, detent stiffness and break thresholds are engineering estimates rather than calibrated commercial-part measurements. Both policies receive identical contacts, catches and fingers.
 

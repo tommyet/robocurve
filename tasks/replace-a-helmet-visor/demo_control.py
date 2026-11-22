@@ -5,17 +5,13 @@ from scipy.optimize import least_squares
 from geometry import Rotation,OPEN,STARTS,NEW
 from common import down
 class DemoControl:
- def __init__(self):self.frames=json.loads(Path(__file__).with_name('demo-plan.json').read_text())['frames']
+ def __init__(self):self.frames=json.loads(Path(__file__).with_name('demo-plan.json').read_text())['frames'];self.grip=None
  def action(self,k,wanted,m,observed,hands):
   from yam_arena import ik,station
   phase=self.frames[k-1]['stage'];out=wanted.copy()
-  if phase.startswith('hold trigger ') and k<len(self.frames) and self.frames[k]['stage']!=phase:
-   if 'old_hinge_'+phase.split()[-1] not in m.disabled:raise RuntimeError('Demo button did not release; stop before moving the visor')
   for side,o in [('left',0),('right',7)]:
    target,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side]);h=hands[side]
    tag=None
-   if side=='right' and phase in ['clear before old','approach old','align old','insert old','grip old']:tag='old';point=np.array([.1073134409,-.10,.030]);tilt=90
-   if side=='left' and phase in ['orient above wing','approach wing','align wing','insert wing','grip wing']:tag='old';point=np.array([.1073134409,.10,.030]);tilt=-90
    if side=='right' and phase in ['align spare','grip spare']:tag='new';point=np.array([.157,0,.030]);tilt=40
    if tag:
     Q=m.orientation(tag+'_visor');actual=m.p(tag+'_visor')+Q@point
@@ -25,11 +21,13 @@ class DemoControl:
     # Jumping straight to the final grasp at the first align step would strike it.
     target+=actual-(nominalP+nominalQ@point)
     R=Q@nominalQ.T@R
-   if phase in ['press trigger '+side,'hold trigger '+side] and 'old_hinge_'+side in m.disabled:
-    out[o:o+6]=observed[o:o+6];continue
-   button_side='left' if 'near trigger' in phase else 'right' if 'far trigger' in phase else None
-   if side=='left' and button_side and phase.startswith(('press ','hold ')) and 'old_hinge_'+button_side in m.disabled:
-    out[o:o+6]=observed[o:o+6];continue
+   if side=='right':
+    point=np.array([.157,0,.030]);gripR=down(0)@Rotation.from_euler('x',20,degrees=True).as_matrix()
+    if phase=='grip spare':
+     Q=m.orientation('new_visor');self.grip=(Q.T@(h['tcp']-m.p('new_visor')),Q.T@h['rotation'])
+    elif self.grip is not None and phase not in ['release spare','clear','open hands','settle']:
+     desiredQ=R@gripR.T;origin=target-desiredQ@point
+     target=origin+desiredQ@self.grip[0];R=desiredQ@self.grip[1]
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6);p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=h['tcp']-p0;rbias=h['rotation']@R0.T
    def f(q):
     p,r=ik.tcp_pose(q,station.BASES[side]);return np.r_[p+bias-target,.15*ik._rot_error(R,rbias@r),.001*(q-seed)]

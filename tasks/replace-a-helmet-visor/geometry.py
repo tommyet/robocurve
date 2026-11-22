@@ -8,7 +8,12 @@ BODIES.append(body('stand',[.22,0,TABLE+.007],[cylinder(.11,.014)],mass=.6,fixed
 PINS={s:np.array([0,sign*.132,.025]) for s,sign in [('left',1),('right',-1)]}
 for side,sign in [('left',1),('right',-1)]:
  pin=PINS[side]
- BODIES.append(body('base_'+side,HELMET+pin+np.array([0,-sign*.012,0]),[box((.045,.012,.050))],mass=.025,fixed=True,color=(.12,.14,.16)))
+ housing=[box((.045,.012,.050))]
+ # A fixed four-sided guide supports the visible spring plunger.
+ centre=np.array([.024,sign*.022,.037])
+ housing += [box((.0026,.020,.024),centre+[x,0,0]) for x in [-.0067,.0067]]
+ housing += [box((.0108,.0026,.024),centre+[0,y,0]) for y in [-.0087,.0087]]
+ BODIES.append(body('base_'+side,HELMET+pin+np.array([0,-sign*.012,0]),housing,mass=.025,fixed=True,color=(.12,.14,.16),contact_offset=.0001))
  button=pin+np.array([.024,sign*.010,.045])
  BODIES.append(body('trigger_'+side,HELMET+button,[box((.010,.014,.014))],mass=.005,color=(.75,.20,.10),friction=.7))
  axes=fixed_axes();axes['transZ']=dict(limits=(-.004,0),stiffness=650.,damping=.3)
@@ -17,7 +22,7 @@ for side,sign in [('left',1),('right',-1)]:
 # two compliant ears. The shell remains solid; the unused face opening isn't
 # removed because the task only contacts the outside visor and hinge bases.
 NEW=np.array([.17,-.30,TABLE+.048]);STARTS={'old':HELMET+PIVOT-OPEN@PIVOT,'new':NEW};ROTS={'old':OPEN,'new':np.eye(3)}
-for tag in ['old','new']:
+for tag in ['new']:
  origin=STARTS[tag];Q=ROTS[tag];shapes=[]
  for a in np.linspace(-np.pi/2,np.pi/2,25)[:-1]+np.pi/48:
   # Narrow native convex panels retain the curved hollow interior.
@@ -30,6 +35,5 @@ for tag in ['old','new']:
   axes=bend_axes(3.,.03,10)
   JOINTS.append(joint(tag+'_ear_flex_'+side,tag+'_visor',tag+'_ear_'+side,ear,[0,0,0],axes=axes,break_force=40.,break_torque=.6))
   axes=fixed_axes();axes['rotY']=dict(limits=(0,72),stiffness=.8,damping=.03,max_force=.7)
-  JOINTS.append(joint(tag+'_hinge_'+side,'helmet',tag+'_ear_'+side,pin,pin-ear,q0=Rotation.from_matrix(OPEN).as_quat(),axes=axes,enabled=(tag=='old'),collision=False,break_force=80.,break_torque=1.))
-TRAY=np.array([.18,.30,TABLE+.006]);BODIES.append(body('tray',TRAY,[box((.31,.28,.012))],mass=.5,fixed=True,color=(.45,.37,.26)))
+  JOINTS.append(joint(tag+'_hinge_'+side,'helmet',tag+'_ear_'+side,pin,pin-ear,q0=Rotation.from_matrix(OPEN).as_quat(),q1=[0,0,0,1],axes=axes,enabled=(tag=='old'),collision=False,break_force=80.,break_torque=1.))
 finalize(BODIES,JOINTS)

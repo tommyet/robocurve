@@ -19,11 +19,11 @@ p.add(6,'scoop',target(entry+[0,.075,0],Q))
 exitQ=Rotation.from_euler('y',25,degrees=True).as_matrix()@Rotation.from_euler('x',15,degrees=True).as_matrix()
 p.add(3,'lift leaves',target(entry+[0,.075,.060],exitQ))
 p.add(3,'withdraw from roof',target(entry+[-.15,.075,.09],exitQ))
-over=BUCKET+[0,0,.075]
-carryQ=Rotation.from_euler('z',270,degrees=True).as_matrix()
-p.add(5,'carry',target(over,carryQ),mode='joint')
-p.add(4,'empty',target(over,carryQ@Rotation.from_euler('y',-70,degrees=True).as_matrix()))
-p.add(2,'drain',target(over,carryQ@Rotation.from_euler('y',-70,degrees=True).as_matrix()))
+over=BUCKET+[0,0,.10]
+carryQ=exitQ
+p.add(3,'carry',target(over,carryQ))
+p.add(4,'empty',target(over,carryQ@Rotation.from_euler('y',70,degrees=True).as_matrix()))
+p.add(2,'drain',target(over,carryQ@Rotation.from_euler('y',70,degrees=True).as_matrix()))
 p.add(3,'return',target(SCOOP+[0,0,.10]),mode='joint')
 p.add(3,'set down',target(SCOOP))
 p.add(1,'release',target(SCOOP,g=.8))
