@@ -14,7 +14,7 @@ python run.py --mode dream --out /absolute/path/to/dream
 python rescore.py /absolute/path/to/demo
 ```
 
-The allowance is 1,600 controls at 20 Hz (80 simulated seconds). The scripted plan uses 960 controls. Wall time and actual scores must be recorded after validation. There is one fixed layout and no random seed.
+The allowance is 1,600 controls at 20 Hz (80 simulated seconds). The scripted plan uses 920 controls. Wall time and actual scores must be recorded after validation. There is one fixed layout and no random seed.
 
 Count whole leaves inside the bucket after both hands release for one second. Divide by three. Partial leaves and leaves outside the bucket earn nothing. The bucket must remain within 40 mm of its starting centre and 18.2 degrees of upright. A leaf falling off the table or broken equipment invalidates the trial. A photo, ruler and count suffice; no force measurement is needed.
 

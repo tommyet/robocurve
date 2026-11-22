@@ -26,6 +26,8 @@ Each release trigger has 4 mm travel and 650 N/m stiffness; pressing beyond 2.8 
 
 The replacement fingers have 40 × 10 × 1 mm steel contact faces on 100 × 10 × 2 mm stems, with silicone facing, 0.7 static/0.55 dynamic friction and 6 N jaw effort. They replace the factory finger meshes. The native link masses and inertia are retained as an approximation.
 
+The [Nolan N87 manufacturer instructions](https://cdn6.louis.de/manual/ANL_21656300-Nolan-N87-Bedienungsanleitung.pdf), page 14, describe fitting the two sides and checking retention by opening and closing. This task uses that maintenance activity, but its generic hardware is not an exact N87 model. Removal of the old visor is outside the episode.
+
 ## Assets
 
 Task geometry is generated here under the included MIT licence. The runtime supplies I2RT robot meshes under its [MIT asset licence](https://github.com/kairosiann/yam-isaac-lab-arena/blob/0059d02a1a91bc6834c1d0846022891df0c78730/yam_arena/assets/yam/LICENSE.i2rt). Table, floor and camera supports are runtime primitives. Robot assets are not redistributed here.
