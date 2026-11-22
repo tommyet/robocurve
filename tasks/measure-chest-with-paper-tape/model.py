@@ -33,10 +33,18 @@ class Model(NativeModel):
   sweep=abs(float(theta[i]-theta[0]));coverage=min(360.,sweep*180/np.pi)
   monotone=bool(np.sum(abs(np.diff(theta[:i+1])))-sweep<.20)
   height=float(np.max(abs(active[:,2]-CHEST)))
-  # Approximate outer distance from the known rigid ellipse; human rubric uses
-  # a 10mm gauge and recorded views. No hidden force/tension measurement.
-  rho=np.sqrt((rr[:,0]/RX)**2+(rr[:,1]/RY)**2);gap=float(np.max((rho-1)*max(RX,RY)))
-  inward=float(np.min((rho-1)*min(RX,RY)))
+  # Signed shortest distance to the actual 64-sided chest cross-section.
+  # This matches a ruler/gap gauge; normalized ellipse radius overestimates
+  # front/back gaps because the two radii differ.
+  t=np.arange(64)*2*np.pi/64
+  boundary=np.c_[RX*np.cos(t),RY*np.sin(t)]
+  edges=np.roll(boundary,-1,axis=0)-boundary
+  delta=rr[:,None,:2]-boundary[None,:,:]
+  projection=np.clip(np.sum(delta*edges,axis=2)/np.sum(edges*edges,axis=1),0.,1.)
+  distances=np.linalg.norm(delta-projection[:,:,None]*edges,axis=2).min(axis=1)
+  inside=np.all(edges[None,:,0]*delta[:,:,1]-edges[None,:,1]*delta[:,:,0]>=0.,axis=1)
+  signed=np.where(inside,-distances,distances)
+  gap=float(np.max(signed));inward=float(np.min(signed))
   upright=[abs(float(self.orientation(n)[2,0])) for n in CELLS[:i+1]]
   flat=bool(min(upright)>.90)
   reading=(i+u)*DX*100

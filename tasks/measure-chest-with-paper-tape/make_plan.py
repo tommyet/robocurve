@@ -10,6 +10,10 @@ def orient(normal,approach=None):
  z=z-x*np.dot(z,x);z/=np.linalg.norm(z);y=np.cross(z,x);return np.column_stack([x,y,z])
 p=Plan();rest={s:np.array(BODIES[2+i]['pos']) for s,i in GRIPS.items()}
 Rs={s:orient((1 if s=='left' else -1)*Rotation.from_quat(BODIES[2+i]['quat']).as_matrix()[:,2]) for s,i in GRIPS.items()}
+paper_left=Rotation.from_quat(BODIES[2+GRIPS['left']]['quat']).as_matrix()
+Rs['left']=orient(paper_left[:,2],-paper_left[:,1]*np.sqrt(.5)+np.array([0.,0.,-np.sqrt(.5)]))
+paper_right=Rotation.from_quat(BODIES[2+GRIPS['right']]['quat']).as_matrix()
+Rs['right']=orient(-paper_right[:,2],paper_right[:,1]*np.sqrt(.5)+np.array([0.,0.,-np.sqrt(.5)]))
 relative={s:Rotation.from_quat(BODIES[2+GRIPS[s]]['quat']).as_matrix().T@Rs[s] for s in GRIPS}
 def flat_grip(side,normal):
  normal=np.array(normal,dtype=float);normal/=np.linalg.norm(normal)
@@ -26,19 +30,28 @@ length=(GRIPS['right']-GRIPS['left'])*DX
 arc=lambda t:quad(lambda u:np.hypot(RX*np.sin(u),RY*np.cos(u)),0,t)[0]
 perimeter=4*arc(np.pi/2)
 def route(y):
- def shape(x):
+ # Move the thin ends past one another on separate radial paths, compensating
+ # the total route length so the manoeuvre does not stretch the paper.
+ w=np.clip(1-y/.06,0,1) if y>=0 else np.clip(1+y/.025,0,1)
+ offset=.003*w
+ def one(x):
   a=(x-CENTER[0])/RX;b=y/RY;r=np.hypot(a,b)
   theta=np.arctan2(b,a)+np.arccos(1/r)
-  T=np.array([CENTER[0]+RX*np.cos(theta),RY*np.sin(theta),CHEST])
-  P=np.array([x,y,CHEST]);L=perimeter-2*arc(theta)+2*np.linalg.norm(P-T)
-  return L,T,P
- lower=CENTER[0]+(RX+.000001 if abs(y)<RY else .001-RX)
+  T=np.array([CENTER[0]+RX*np.cos(theta),RY*np.sin(theta),CHEST]);P=np.array([x,y,CHEST])
+  return theta,T,P
+ def shape(x):
+  a=one(x+offset);b=one(x-offset)
+  L=perimeter-arc(a[0])-arc(b[0])+np.linalg.norm(a[2]-a[1])+np.linalg.norm(b[2]-b[1])
+  return L,a,b
+ lower=CENTER[0]+(RX+offset+.000001 if abs(y)<RY else .001-RX)
  x=brentq(lambda x:shape(x)[0]-length,lower,CENTER[0]+.5)
- return shape(x)[1:]
+ _,a,b=shape(x);mirror=np.array([1.,-1.,1.])
+ return {'left':(a[1],a[2]),'right':(b[1]*mirror,b[2]*mirror)}
 def targets(y,height=0.):
- T,P=route(y);out={}
- for side,sign in [('left',1),('right',-1)]:
-  target=P*np.array([1,sign,1]);target[2]+=height;tangent=(T-P)*np.array([1,sign,1])*(1 if side=='left' else -1);tangent/=np.linalg.norm(tangent)
+ out={}
+ for side,(T,P) in route(y).items():
+  target=P.copy();target[2]+=height
+  tangent=(T-P)*(1 if side=='left' else -1);tangent/=np.linalg.norm(tangent)
   width=np.array([0.,0.,1.]);paper=np.column_stack([width,tangent,np.cross(width,tangent)])
   out[side]=(target,paper@relative[side],.0215)
  return out
