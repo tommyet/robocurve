@@ -6188,3 +6188,19 @@ local bridge, tunnel and watchdogs stopped or exited after deletion.
 
 These two task folders are integrated into the shared fork's main for Eito's
 agent. Leave their upstream submission branches untouched while review is pending.
+
+
+### 2026-11-22 — Eleven further ideas, research only
+
+Live v24 and public PR reviews: pool racking #1992 is accepted; fresh bin liner
+#3631 is reserved after a partial-credit revision request at06:15:31UTC Nov22.
+Knife-edge maintenance is crowded (#1421/#3600); changing to a pull-through tool
+was explicitly rejected as duplicate #3715. Exact negative precedents include
+can crushing2705, walnut cracking1423/2247, razor replacement2057/1897 and radiator
+bleeding3231. Belt punching has no exact search match but accepted card punching
+2146 makes novelty uncertain. Drip chain wax overlaps pending lubrication3396;
+hot immersion has distinct process but weak recognisability. Generic bin retrieval
+and postcard writing are not strong new abilities; date-label writing2340 was
+finally rejected for overlap, without naming its exact comparator. See the dated
+appendix in docs/task-ideas-maintenance-2026-11-18.md. Searches were public-PR
+coverage, not fresh authenticated-board clearance. No GPU or Dream spending.

@@ -165,3 +165,33 @@ Recommendation: consider dropped-chain recovery first, then cap fitting or
 hairbrush clearing if the user prefers a deformable-material task. Keep chain
 tension as the best of the original seven, subject to a realistic torque/reach
 check. No $3 development-cost promise is justified without a mechanism test.
+
+
+## 22 November update: eleven further ideas
+
+Read-only research against live review prompt v24 (page timestamp 09:51:44 GMT),
+29 all-state public PR keyword searches, and individual review histories. This
+was not a fresh authenticated task-board or exhaustive external-suite audit.
+No GPU, Dream calls or task development. Ratings below are judgment, not measured
+acceptance probabilities. Rejected precedent is evidence of risk, not a permanent
+ownership claim; pending/revising submissions can still reserve their ideas.
+
+| Idea | Evidence | Recommendation and validity requirements |
+|---|---|---|
+| Crush recycling | [Can crusher #2705](https://github.com/robocurve/benchmark-tasks/pull/2705) finally rejected for insufficient relatability; [carton flattening #1858](https://github.com/robocurve/benchmark-tasks/pull/1858) rejected as oversimplified. | Low priority. Specify the actual material and method; preserve realistic irreversible deformation and force. A different recyclable alone does not establish a new skill. |
+| Punch a belt | No exact belt-punch hit; [card punching #2146](https://github.com/robocurve/benchmark-tasks/pull/2146) accepted. | Tentative only, with substantial overlap risk. Align a real flexible belt inside a handheld rotary punch and fully cut a functional hole without edge damage. Check achievable handle force; do not reduce material resistance merely to make it work. Hole position/completeness and prong passage can be checked simply. Different material/tool alone is insufficient. |
+| Crack walnuts | [Hand nutcracker #1423](https://github.com/robocurve/benchmark-tasks/pull/1423) finally rejected for hardware feasibility; [figure nutcracker #2247](https://github.com/robocurve/benchmark-tasks/pull/2247) for relatability. | Low. #1423 explicitly disclosed a much weaker simulated shell. A practical higher-leverage tool might address force, but still needs real-tool evidence and preserved cracking/control difficulty. |
+| Sharpen a knife | [Whetstone #1421](https://github.com/robocurve/benchmark-tasks/pull/1421) requires physical calibration; [honing #3600](https://github.com/robocurve/benchmark-tasks/pull/3600) revised and pending. [Pull-through #3715](https://github.com/robocurve/benchmark-tasks/pull/3715) finally rejected as a duplicate of the honing ability. | Do not pursue another tool variant. Valid scoring needs evidence of sharpening work, not just a visually plausible pass count. |
+| Rack pool balls | [#1992](https://github.com/robocurve/benchmark-tasks/pull/1992) accepted/merged. | Exact requested activity already accepted, including tightening the rack and removing the triangle without disturbance. Skip. |
+| Fit a bin bag | [Fresh liner #3631](https://github.com/robocurve/benchmark-tasks/pull/3631), revision requested 22 November 06:15:31 UTC, reserved for 48 hours. | Strong task in principle but currently unavailable. Reviewer asks only for measurable partial credit across the twelve retained rim sectors; full score includes clear opening and load test. Do not copy it. |
+| Replace a razor blade | [Cartridge #2057](https://github.com/robocurve/benchmark-tasks/pull/2057) rejected as toothbrush-head replacement overlap; [butterfly razor #1897](https://github.com/robocurve/benchmark-tasks/pull/1897) rejected for niche relevance and an invented spring-return knob. | Low. Both common interpretations have direct negative precedent. Safe blade handling alone does not make a Safety/alignment task. |
+| Bleed a radiator | [#3231](https://github.com/robocurve/benchmark-tasks/pull/3231) finally rejected: occasional maintenance most people have not done or watched. | Skip. Physically real and scoreable, but the exact idea has a domain/importance rejection. |
+| Wax a bicycle chain | No direct waxing hit; [chain lubrication #3396](https://github.com/robocurve/benchmark-tasks/pull/3396) pending. | Low. Drip wax overlaps lubricant application; hot immersion differs physically but adds niche relevance, hot-material handling and a long preparation/cooling cycle. [Manufacturer procedure](https://silca.cc/en-gb/pages/help-center2) requires threading onto a carrier, immersion/agitation, waiting and cooling. A quick dip with instant finished wax would omit the real process. |
+| Retrieve something from a bin | No exact matching task found in bounded searches. | Low as stated: ordinary object retrieval with a different container. Occlusion alone does not guarantee a distinct manipulation skill. Real entanglement/extraction could change the assessment, but would be a more specific task needing another novelty check. |
+| Write a postcard | No exact postcard hit. [Date-label handwriting #2340](https://github.com/robocurve/benchmark-tasks/pull/2340) finally rejected for meaningful overlap with existing tasks after several scoring revisions. The final reviewer did not identify the exact match. | Low. Changing message or writing surface is weak novelty. Actual loaded nib contact, visible deposited ink and scoring that accepts varied legible handwriting are essential; copying one ideal glyph trajectory is not enough. Do not claim an exact postcard duplicate has been proved. |
+
+Recommendation: no high-confidence build from this batch. Belt punching is at
+most worth a cheap physical tool/force check and a tighter comparison with #2146;
+that is not a recommendation to rent compute yet. Pool racking is already taken,
+and bin-liner fitting is strong but reserved. These findings should prevent
+repeating earlier rejected ideas near the deadline.
