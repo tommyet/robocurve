@@ -1,7 +1,7 @@
 {
   "schema": "runtime-evidence-v1",
-  "status": "native_feasibility_unproven",
-  "scope": "Pinned native runtime exercised; complete Dream baseline scores zero, but no full-score demo exists.",
+  "status": "native_verified",
+  "scope": "Complete lattice native demo and model baseline with frozen trace/contact/video audits.",
   "current_task_runtime_verified": true,
   "python": "3.12.16",
   "packages": {
@@ -44,5 +44,6 @@
     "physics": "Native PhysX contacts, passive joints and the material approximations disclosed in task.json."
   },
   "reference_checked_utc_date": "2026-11-22",
-  "submission_ready": false
+  "submission_ready": true,
+  "verified_utc_date": "2026-11-22"
 }

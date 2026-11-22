@@ -6446,3 +6446,39 @@ Primary pkbfvwkmhtog2o runs demo019. Second owned L40S bj9wizwe5w9kfp starts
 watchdog shortened to11:16:43UTC. The Dream key remains on the Mac behind the
 loopback SSH bridge. Back up and delete both exact owned Pods before ending.
 The clean upstream submission worktree is prepared but has no PR or task yet.
+
+### 2026-11-22 — Pastry weaving submitted; both GPUs deleted
+
+The minimal three-strip task now has a full native demonstration: demo021,
+1.0 in1020controls; matching Dream003,0.0 in1200controls. Both independently
+rescore against their frozen source. All1021/1201frames decode, measured native
+grip-capture audits pass, and front/overhead/side contact sheets were inspected.
+Extra release frames confirm passive settling. The final hands-clear hold is
+8.2seconds. No tearing or damage is hidden. MediaM-GDB6YY; upstreamPR3741
+contains only tasks/weave-a-pie-lattice, submitted from fresh upstream/main.
+Receipt/status should be recorded separately once received; do not push while
+pending review.
+
+Practical lessons: begin with one complete distinctive manipulation before
+adding repeated rows. A curved strip's actual ends, not a straight chord
+inferred from its middle, determine reach at a circular crust. Horizontal tool
+withdrawal avoids catching the raised strip. Lowering into the existing
+crossing broke a native joint; releasing about20mm higher lets gravity place
+the strip without changing material or tear limits. Demo authoring changed;
+physics/scorer and the matching Dream episode did not.
+
+The old local Dream venv executable failed to find its own SDK. Direct bundled
+Python plus its existing pinned site-packages worked. Check bridge /health
+through the SSH tunnel before starting the paid model run. Dream003 made25
+successful API requests and24 session-expiry retries within one uninterrupted
+physical episode; the key stayed on the Mac.
+
+Owned baselinePodbj9wizwe5w9kfp deleted10:51:35UTC, confirmed404; estimated GPU
+compute$0.6333. Owned demoPodpkbfvwkmhtog2o deleted10:54:31UTC, confirmed404;
+estimated$2.1352. This pair totals$2.7685; with the previously recorded$2.8682,
+recorded lattice rentals total$5.6367, excluding storage, billing rounding and
+Dream API charges. All355primary and80baseline original files verified by
+SHA256/size and backed up under private local artifacts/lattice-local-lift-
+2026-11-22 and artifacts/lattice-baseline-2026-11-22. Temporary Runpod/SSH key
+copies removed; local bridge/tunnel/watchdogs stopped or exited after deletion.
+Hairbrush2847 rechecked: TK-DPW5PQ remains pending; no new reviewer request.

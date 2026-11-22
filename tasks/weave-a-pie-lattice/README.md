@@ -1,8 +1,5 @@
 # Weave a pastry strip into a pie lattice
 
-Development prototype, not submission-ready. The three-strip setup still needs
-its own complete native demonstration and matching Dream run.
-
 Weave one loose strip over one strip and under the other on a pie, then leave
 all three intact, flat and spanning the crust. This tests the basic weaving
 operation; completing a whole lattice top, trimming and baking are outside the
@@ -114,7 +111,7 @@ Limit: 1,200 controls / 60 seconds at 20 Hz. Fixed layout, no reset jitter or
 random seed; offline IK search seeds are 17, 31 and 43. Runtime saves every
 native frame, actions, body traces and frozen source. Rescoring verifies that
 source before checking the outcome. CPU checks are not native evidence.
-Recorded wall times and video review will be added after validation.
+Recorded wall times and audit results are below.
 
 ## Asset attribution
 
@@ -138,3 +135,9 @@ and mast are primitive geometry in the external runtime. Robot meshes and
 runtime source are not redistributed in this task folder. `inspect-robots-yam`
 0.38.0 separately carries an MIT package licence and its MIT I2RT
 `assets/MENAGERIE_LICENSE`; all runtime versions are pinned in `ENVIRONMENT.json`.
+
+## Recorded validation
+
+The native demonstration rescores **1.0 in 1020 controls**, with the over–under pair complete, all three strips intact and both hands clear. The matching Dream baseline scores **0.00 in 1200 controls**. Frozen-source rescoring, measured finger-contact audits and every-frame video decoding pass. Recorded elapsed time on an L40S was 11.4 minutes for the demo and 20.8 minutes for Dream.
+
+The Dream key remained on the local computer through the official loopback SDK bridge. API session recoveries continued the same uninterrupted physical episode. Full uncut native videos and the archived traces support simulated feasibility; no physical dough calibration or kitchen trial is claimed.

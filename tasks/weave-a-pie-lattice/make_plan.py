@@ -28,8 +28,8 @@ for j in [0]:
  p.add(3,f'{j}:clear right hand',{'right':(entry+[-.040,0,0],R,.6)})
  p.add(2,f'{j}:retreat right',{'right':(np.array([entry[0]-.040,CROSS_Y[j]+PIE[1],PIE[2]+.09]),R,.6)})
  p.add(2,f'{j}:park right',{'right':(np.array([.20,-.18,PIE[2]+.09]),R,.6)})
- p.add(4,f'{j}:replace longitudinal',{'left':(long,L,CLOSE)})
- p.add(2,f'{j}:release longitudinal',{'left':(long,L,.45)})
+ p.add(4,f'{j}:replace longitudinal',{'left':(long+[0,0,.020],L,CLOSE)})
+ p.add(2,f'{j}:release longitudinal',{'left':(long+[0,0,.020],L,.45)})
  p.add(2,f'{j}:clear left hand',{'left':(long+[0,0,.08],L,.6)})
 from yam_arena import ik,station
 from yam_arena.constants import READY
