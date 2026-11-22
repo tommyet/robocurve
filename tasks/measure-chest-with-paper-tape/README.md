@@ -56,3 +56,7 @@ Check the final state, including the last three seconds of video. Use front, bac
 ## Related tasks
 
 The closest accepted measuring tasks are [measuring a wooden bar and entering its length (#810)](https://github.com/robocurve/benchmark-tasks/pull/810) and [marking 300 mm with a spring-return tape (#781)](https://github.com/robocurve/benchmark-tasks/pull/781). Those use a straight blade. Here the robot must form and maintain a flexible circumference loop around a full-size chest, with the tape level, flat and aligned at its overlap. The task does not require calculator entry or a spoken number.
+
+### Paper stiffness estimate
+
+The ribbon uses an assumed effective Young modulus of1.8 GPa and Poisson ratio0.3. Segment rotational stiffness follows EI/L for bending about each axis and GJ/L for torsion:0.0016,16.0 and0.00246 N m/rad respectively. This preserves paper’s much greater resistance to bending within its own plane. These are engineering estimates, not measurements of this160 gsm stock. Measured paper moduli of1.69–3.98 GPa are reported in [Ramasubramanian et al., 2007](https://msp.org/jomms/2007/2-2/jomms-v2-n2-p01-s.pdf); humidity and fibre direction matter.

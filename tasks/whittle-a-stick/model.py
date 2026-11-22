@@ -32,6 +32,11 @@ class Model(NativeModel):
    if aligned and 0<travel<.046 and p[2]<surface-.002:self.split=True
    if cutting and self.progress[i]>.040 and self.work[i]>.16 and travel>.042:
     self.disable('grain_'+str(i),'chip_severed_after_loaded_cut')
+    # Once severed, the real fragment must collide with the blade again.
+    from pxr import UsdPhysics,Sdf
+    edge=next(p for p in self.stage.Traverse() if p.GetName()=='edge' and '/materials/' in str(p.GetPath()))
+    chip_path=edge.GetPath().GetParentPath().AppendChild('chip_'+str(i))
+    UsdPhysics.FilteredPairsAPI(edge).GetFilteredPairsRel().RemoveTarget(chip_path)
    self.previous[i]=travel;self.loaded[i]=cutting
   for n,sgn in [('edge',1),('stick',-1)]:
    api=self.force_apis[n];api.GetForceAttr().Set(Gf.Vec3f(*(sgn*force)));api.GetTorqueAttr().Set(Gf.Vec3f(*np.cross(self.p('edge')-self.p(n),sgn*force)))

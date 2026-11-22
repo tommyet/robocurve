@@ -6253,3 +6253,13 @@ Chest015 retained both force-limited grips but failed because its loop slackened
 Online nail evidence now includes named, available material: Evergreen9015,0.015 inch/0.38 mm polystyrene sheet (manufacturer catalogue), and Green Bell G-1115,75 mm/35 g (manufacturer page). Neither provides the force for that exact combination. Scaling the thesis1 mm polystyrene data to0.38 mm is an explicit engineering estimate; it does not satisfy a claim of a real cutting-force test. No such test was performed by this agent or supplied by the user.
 
 Public PR searches repeated late today found no exact whittling, helmet replacement or gutter task. Sock-related PR3628 loads a dressing aid;3609 throws already rolled socks;1338 puts already rolled socks in a drawer. Wang et al., IROS2011, explicitly studies sock matching, configuration and robotic manipulation, so matching alone is not novel. Any sock proposal needs genuine cuff inversion/retention, not a rigid pre-balled prop. Search coverage still is not exhaustive authenticated-board clearance.
+
+### 2026-11-22 — native deadline batch, 19:40 UTC
+
+Whittle demo005 completed at1.0 in1,700 controls/85 simulated seconds (1,243 wall seconds on L40S). Frozen-source CPU replay verified all1,701 states and all five loaded cuts, each exceeding0.16 J and40 mm travel. Two native views were inspected; the finished2 mm tip and released tools are visible. Model baseline001 is still running; no PR yet. Severed chips now regain blade collision.
+
+Chest018 reached0.5: reading error5 mm, level error3 mm, but maximum slack10.59 mm just missed the10 mm criterion. Increasing hand separation made slack worse (019), as the tangent-route calculation predicts.020 uses7.6 mm half-separation and six seconds to read; scoring is unchanged. Paper bending uses E=1.8 GPa and section geometry, explicitly an estimate within published paper modulus values.
+
+Gutter007 never lifted the scoop: its solid handle shifted the rest balance, leaving the handle too low for stock fingers.008 uses a moulded hollow handle with the same outer dimensions; native step180 confirms the tool is now lifted. Do not diagnose collection from score alone. Visor004 still struck the raised shield before grasping; revised side-entry reach planning is in progress.
+
+Only two GPUs are running, each$1.09/h, with bounded watchdogs. GPU1 deadline20:18 UTC; GPU2 extended to20:45 UTC for the active Dream baseline. Completed runs through chest018/gutter006/whittle005/visor002 are archived and hash-verified locally. Shut down and delete owned pods after backing up subsequent runs. No API key was sent to the GPUs; the Dream credential bridge remains on Mac loopback.

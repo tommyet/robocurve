@@ -1,10 +1,10 @@
 """Curved helmet visor, paired spring release catches and replacement shield."""
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
-HELMET=np.array([.30,0,TABLE+.135]);PIVOT=np.array([0,0,.025]);OPEN=Rotation.from_euler('y',-70,degrees=True).as_matrix()
+HELMET=np.array([.22,0,TABLE+.135]);PIVOT=np.array([0,0,.025]);OPEN=Rotation.from_euler('y',-70,degrees=True).as_matrix()
 # Full-size inert helmet on a fixed wooden display stand, not on a person.
 shell=sphere((.145,.118,.125));BODIES.append(body('helmet',HELMET,[shell],mass=1.4,fixed=True,color=(.24,.29,.32),friction=.5))
-BODIES.append(body('stand',[.30,0,TABLE+.007],[cylinder(.11,.014)],mass=.6,fixed=True,color=(.4,.28,.15)))
+BODIES.append(body('stand',[.22,0,TABLE+.007],[cylinder(.11,.014)],mass=.6,fixed=True,color=(.4,.28,.15)))
 PINS={s:np.array([0,sign*.132,.025]) for s,sign in [('left',1),('right',-1)]}
 for side,sign in [('left',1),('right',-1)]:
  pin=PINS[side]
@@ -27,9 +27,9 @@ for tag in ['old','new']:
  for side,sign in [('left',1),('right',-1)]:
   pin=PINS[side];ear=pin+np.array([.012,0,.010])
   BODIES.append(body(tag+'_ear_'+side,origin+Q@ear,[box((.032,.005,.026))],quat=Rotation.from_matrix(Q).as_quat(),mass=.006,color=(.32,.40,.44),friction=.8))
-  axes=bend_axes(.35,.003,10)
+  axes=bend_axes(3.,.03,10)
   JOINTS.append(joint(tag+'_ear_flex_'+side,tag+'_visor',tag+'_ear_'+side,ear,[0,0,0],axes=axes,break_force=40.,break_torque=.6))
-  axes=fixed_axes();axes['rotY']=dict(limits=(0,72),stiffness=0.,damping=.001)
+  axes=fixed_axes();axes['rotY']=dict(limits=(0,72),stiffness=.8,damping=.03,max_force=.7)
   JOINTS.append(joint(tag+'_hinge_'+side,'helmet',tag+'_ear_'+side,pin,pin-ear,q0=Rotation.from_matrix(OPEN).as_quat(),axes=axes,enabled=(tag=='old'),collision=False,break_force=80.,break_torque=1.))
 TRAY=np.array([.18,.32,TABLE+.006]);BODIES.append(body('tray',TRAY,[box((.31,.28,.012))],mass=.5,fixed=True,color=(.45,.37,.26)))
 finalize(BODIES,JOINTS)

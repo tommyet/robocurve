@@ -3,6 +3,11 @@ from geometry_helpers import *
 BODIES=[];JOINTS=[]
 CENTER=np.array([.18,0.,TABLE+.145]);CHEST=CENTER[2]
 RX=.120;RY=.160;N=72;DX=.015;WIDTH=.020;THICK=.00020
+# Euler-Bernoulli ribbon estimate, E=1.8 GPa and nu=.3; not a stock-specific calibration.
+E=1.8e9;G=E/(2*1.3)
+BEND=E*WIDTH*THICK**3/(12*DX)
+IN_PLANE=E*THICK*WIDTH**3/(12*DX)
+TWIST=G*WIDTH*THICK**3/(3*DX)
 # Reusable adult torso form: waist, ribcage, shoulders and neck. A standard
 # dress-form stand supports it; no feature captures or guides the tape.
 levels=[(-.140,.100,.125),(-.090,.105,.133),(-.040,.119,.158),(0.,RX,RY),(.045,.118,.160),(.085,.099,.185),(.110,.075,.165),(.140,.050,.060),(.200,.048,.055)]
@@ -34,6 +39,6 @@ for i in range(N):
  name=f'tape_{i:03d}';CELLS.append(name);y=(VERTICES[i+1]-VERTICES[i])/DX;x=np.array([0.,0.,1.]);z=np.cross(x,y);R=np.column_stack([x,y,z])
  BODIES.append(body(name,(VERTICES[i]+VERTICES[i+1])/2,[box((WIDTH,DX-.00002,THICK))],quat=Rotation.from_matrix(R).as_quat(),mass=WIDTH*DX*.16,color=(.98,.95,.80),friction=.5,contact_offset=.00012,speculative_ccd=True,linear_damping=.15,angular_damping=.25))
  if i:
-  axes={'rotX':dict(limits=(-150,150),stiffness=.003,damping=.00002),'rotY':dict(limits=(-60,60),stiffness=.001,damping=.00002),'rotZ':dict(limits=(-5,5),stiffness=1.,damping=.002)}
+  axes={'rotX':dict(limits=(-150,150),stiffness=BEND,damping=.00002),'rotY':dict(limits=(-60,60),stiffness=TWIST,damping=.00002),'rotZ':dict(limits=(-5,5),stiffness=IN_PLANE,damping=.002)}
   JOINTS.append(joint(f'paper_{i}',CELLS[-2],name,[0,DX/2,0],[0,-DX/2,0],axes=axes,break_force=4.,break_torque=.06))
 finalize(BODIES,JOINTS)

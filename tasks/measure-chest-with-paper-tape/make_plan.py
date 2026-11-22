@@ -3,7 +3,7 @@ from pathlib import Path
 from planner import Plan
 from geometry import *
 from common import rotation
-GRIPS={'left':0,'right':59}
+GRIPS={'left':0,'right':58}
 def orient(normal,approach=None):
  x=np.asarray(normal);x=x/np.linalg.norm(x)
  z=np.array([0.,0.,-1.]) if approach is None else np.array(approach,dtype=float)
@@ -61,13 +61,13 @@ p.add(1,'settle',targets(.43,.01))
 from yam_arena import ik,station
 errors=[0.,0.];seconds=21
 for k in range(1,round(seconds*20)+1):
- u=ik.smoothstep(k/(seconds*20));y=.43+u*(.004-.43)
- h=float(np.interp(y,[.004,.025,.075,.15,.25,.34,.43],[0.,0.,.002,.004,.006,.008,.010]))
+ u=ik.smoothstep(k/(seconds*20));y=.43+u*(.0076-.43)
+ h=float(np.interp(y,[.0076,.025,.075,.15,.25,.34,.43],[0.,0.,.002,.004,.006,.008,.010]))
  for side,(pos,R,g) in targets(y,h).items():
   o=0 if side=='left' else 7
   q,pe,re=ik.solve(pos,ik.matrix_to_quat_xyzw(R),p.a[o:o+6],base_pos=station.BASES[side],iters=100,rot_weight=.02)
   p.a[o:o+6]=q;p.a[o+6]=g;errors=[max(errors[0],float(pe)),max(errors[1],float(re))]
  p.frames.append(dict(action14=p.a.tolist(),stage='wrap'))
 p.audit.append(dict(stage='wrap',position_error_m=errors[0],rotation_error_rad=errors[1]));print('wrap',errors,flush=True)
-p.add(4,'read',targets(.004))
+p.add(6,'read',targets(.0076))
 print(p.save(Path(__file__).with_name('demo-plan.json')))

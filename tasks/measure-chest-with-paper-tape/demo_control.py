@@ -3,7 +3,7 @@ import numpy as np,json
 from pathlib import Path
 from scipy.optimize import least_squares
 from geometry import *
-GRIPS={'left':0,'right':59}
+GRIPS={'left':0,'right':58}
 class DemoControl:
  def __init__(self):
   self.frames=json.loads(Path(__file__).with_name('demo-plan.json').read_text())['frames'];self.offset={s:np.zeros(3) for s in GRIPS}

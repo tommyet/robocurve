@@ -3,10 +3,19 @@ import numpy as np
 from native_model import NativeModel
 from geometry import *
 class Model(NativeModel):
- def __init__(self):super().__init__();self.attached=set();self.closed_once=False;self.opened_after=False
+ def __init__(self):super().__init__();self.attached=set();self.closed_once=False;self.opened_after=False;self.detent={'old':0.,'new':0.}
  def configure_station(self):pass
- def reset_valid(self):return not self.disabled and not self.failed
+ def reset_valid(self):return not self.disabled and not self.failed and Rotation.from_matrix(OPEN.T@self.orientation('old_visor')).magnitude()<np.radians(5)
  def material(self,hands,dt):
+  # Passive two-position hinge detents, represented by a bistable spring.
+  # Both potential wells have equal energy at the35-degree switching point.
+  from pxr import UsdPhysics
+  for tag in ['old','new']:
+   relative=Rotation.from_matrix(self.orientation(tag+'_visor')).as_rotvec()[1]+np.radians(70)
+   target=70. if relative>np.radians(35) else 0.
+   self.detent[tag]=target
+   for side in ['left','right']:
+    UsdPhysics.DriveAPI(self.joints[tag+'_hinge_'+side].GetPrim(),'rotY').GetTargetPositionAttr().Set(target)
   for side in ['left','right']:
    pressed=-float(self.joint_gap('trigger_slide_'+side)[2])
    if pressed>.0028:
@@ -32,6 +41,6 @@ class Model(NativeModel):
   if self.failed:return 0.
   if m['old_visor_detached'] and m['new_catches_seated']==2 and m['closed_once'] and m['reopened'] and m['old_visor_in_tray'] and self.release>=2.:return 1.
   return .75 if len(self.attached)==2 else .5 if len(self.attached)==1 else .25 if m['old_visor_detached'] else 0.
- def state(self):return dict(super().state(),attached=sorted(self.attached),closed_once=self.closed_once,opened_after=self.opened_after)
+ def state(self):return dict(super().state(),attached=sorted(self.attached),closed_once=self.closed_once,opened_after=self.opened_after,detent=self.detent)
  def restore(self,state):
   super().restore(state);self.attached=set(self.attached)

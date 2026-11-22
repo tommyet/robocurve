@@ -15,8 +15,12 @@ entry=GUTTER+[0,-.10,-RADIUS+.0005]
 Q=Rotation.from_euler('x',-3,degrees=True).as_matrix()
 p.add(4,'position',target(entry+[0,0,.065],Q))
 p.add(3,'enter',target(entry,Q))
+stopR=Rotation.from_euler('y',-40,degrees=True).as_matrix()@down(0)
+stopP=GUTTER+np.array([0,.16,-RADIUS+.003])
+p.add(3,'approach leaf backstop',{'left':(stopP+[0,0,.08],stopR,.01)},mode='joint')
+p.add(2,'hold leaves',{'left':(stopP,stopR,.01)})
 p.add(6,'scoop',target(entry+[0,.21,0],Q))
-p.add(3,'lift leaves',target(entry+[0,.21,.08],Rotation.from_euler('x',15,degrees=True).as_matrix()))
+p.add(3,'lift leaves',{**target(entry+[0,.21,.08],Rotation.from_euler('x',15,degrees=True).as_matrix()),'left':(stopP+[0,0,.10],stopR,.8)})
 p.add(3,'withdraw from roof',target(entry+[-.15,.21,.08],Rotation.from_euler('x',15,degrees=True).as_matrix()))
 over=BUCKET+[0,0,.10]
 carryQ=Rotation.from_euler('z',180,degrees=True).as_matrix()
