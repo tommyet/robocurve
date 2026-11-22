@@ -1,6 +1,6 @@
 {
   "schema": "runtime-evidence-v1",
-  "status": "native_demo_verified_model_pending",
+  "status": "native_demo_and_model_verified",
   "scope": "Whittling with native PhysX contacts and loaded cutting approximation.",
   "current_task_runtime_verified": true,
   "python": "3.12.16",
@@ -44,5 +44,5 @@
     "physics": "Native PhysX contacts, passive joints and the material approximations disclosed in task.json."
   },
   "reference_checked_utc_date": "2026-11-22",
-  "submission_ready": false
+  "submission_ready": true
 }

@@ -1,6 +1,6 @@
 # Whittle a wedge-shaped end
 
-**Development: the current native demo is still being checked. Do not submit yet.**
+The native demo scores **1.0** in 85 simulated seconds. Dream-1 scores **0.00** over its full 120-second allowance. Both frozen traces were replayed successfully; details are in `evidence/`.
 
 Hold the blank and shave away from the supporting hand. The useful skill is a loaded, controlled cut along the grain; touching the blank with a knife does not earn credit.
 
@@ -14,7 +14,7 @@ python run.py --mode dream --out /absolute/path/to/dream
 python rescore.py /absolute/path/to/demo
 ```
 
-The demo uses 1,700 ordinary joint controls at 20 Hz, or 85 simulated seconds. The policy limit is 2,400 controls, or 120 seconds. Runtime on the rented GPU is recorded in each `run.json`; it is longer than simulated time because all camera frames are rendered. No placement jitter or random seed is used. Dream uses the official adapter; its request/recovery log is retained. Credentials must never be added to the task folder.
+The demo uses 1,700 ordinary joint controls at 20 Hz, or 85 simulated seconds. The policy limit is 2,400 controls, or 120 seconds. On an NVIDIA L40S, the recorded demo took 20.7 minutes and the model run 36.4 minutes, including rendering; wall time varies with GPU load and model latency. No placement jitter or random seed is used. Dream uses the official adapter. Its 50 action requests required 49 expired-session recoveries (99 API attempts); all 2,400 actions ran in one physical episode, but model memory restarted. This is a limitation of this baseline, not proof that task difficulty alone caused the failure. The request/recovery log is retained. Credentials must never be added to the task folder.
 
 ## Physical setup and scoring
 

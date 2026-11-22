@@ -6263,3 +6263,11 @@ Chest018 reached0.5: reading error5 mm, level error3 mm, but maximum slack10.59 
 Gutter007 never lifted the scoop: its solid handle shifted the rest balance, leaving the handle too low for stock fingers.008 uses a moulded hollow handle with the same outer dimensions; native step180 confirms the tool is now lifted. Do not diagnose collection from score alone. Visor004 still struck the raised shield before grasping; revised side-entry reach planning is in progress.
 
 Only two GPUs are running, each$1.09/h, with bounded watchdogs. GPU1 deadline20:18 UTC; GPU2 extended to20:45 UTC for the active Dream baseline. Completed runs through chest018/gutter006/whittle005/visor002 are archived and hash-verified locally. Shut down and delete owned pods after backing up subsequent runs. No API key was sent to the GPUs; the Dream credential bridge remains on Mac loopback.
+
+### 2026-11-22 — 20:20 UTC submission and novelty checkpoint
+
+Whittling is submitted as upstream PR3812, received TK-HABJR2, media M-2933DF. Demo005 scores1.0 and Dream001 scores0.0; full uncut footage and frozen replays verified. Dream had49 expiry recoveries, disclosed. Chest020 now scores1.0 without relaxing thresholds; matching baseline003 is running. Visor and gutter remain development failures.
+
+New primary-source novelty evidence excludes sock balling as a strong submission: HAND ERC Multi-Level Hand Benchmarks v1 alpha (August2026), System entry `bundle-socks`, explicitly requires rolling two socks and tucking one cuff over the other, then retaining the bundle after release. This is closer than the older Wang2011 matching work. Source: https://hand-erc.github.io/benchmarking/benchmarks.html and public data/system.jsonc. No sock GPU run.
+
+EDJY manufacturer September16,2026 cutting-force tests give blade forces for unnamed rigid/flexible test materials and anonymized competitor tools. They do not close the exact-tool/exact-tip calibration gap for nail clipping. Do not present generic spring or blade force as verified lever force.

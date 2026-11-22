@@ -4,7 +4,9 @@ from native_model import NativeModel
 from geometry import *
 class Model(NativeModel):
  def __init__(self):super().__init__();self.attached=set();self.closed_once=False;self.opened_after=False;self.detent={'old':0.,'new':0.}
- def configure_station(self):pass
+ def configure_station(self):
+  from pad_covers import install
+  install()
  def reset_valid(self):return not self.disabled and not self.failed and Rotation.from_matrix(OPEN.T@self.orientation('old_visor')).magnitude()<np.radians(5)
  def material(self,hands,dt):
   # Passive two-position hinge detents, represented by a bistable spring.

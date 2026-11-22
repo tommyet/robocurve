@@ -72,7 +72,7 @@ def recoverable_client_class(base, expired_error, request_audit, session_audit):
     return AuditedDreamClient
 
 
-def make_policy(request_audit, session_audit, *, rows_per_request=48):
+def make_policy(request_audit, session_audit, *, rows_per_request=8):
     import os
     import dream
     from inspect_robots_dream import DreamPolicy

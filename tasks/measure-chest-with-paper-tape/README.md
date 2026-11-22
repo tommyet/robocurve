@@ -1,6 +1,6 @@
 # Measure a torso's chest with a paper tape
 
-**Development — native validation in progress. Do not submit this draft.**
+**The native demo reaches 1.0; the matching Dream baseline is in progress.**
 
 Wrap a graduated paper tape around a torso form and present the zero-over-scale reading at the front. The tape starts loose on the table. There are no slots, guides, magnets or tape-to-torso attachments.
 
@@ -16,7 +16,7 @@ The two YAM arms have 40 × 10 × 1 mm steel replacement precision fingers with 
 
 ## Material approximation
 
-The tape is a chain of 72 rigid 15 mm paper panels with passive bend and twist joints. The native solver handles gravity, torso contact, self-contact and robot contact. Joint translation is locked. Broad-face bending is compliant (0.003 N m/rad); twist is compliant (0.001 N m/rad); bending within the paper plane is much stiffer (1 N m/rad, ±5° per seam). This anisotropy prevents the strip behaving like a string when held upright. A broken joint or a seam opening above 3 mm invalidates the result. This is an approximation to a flexible, inextensible paper strip, not a calibrated model of a particular paper brand's creasing or tear strength.
+The tape is a chain of 72 rigid 15 mm paper panels with passive bend and twist joints. The native solver handles gravity, torso contact, self-contact and robot contact. Joint translation is locked. Broad-face bending is compliant (0.0016 N m/rad); torsion is compliant (0.00246 N m/rad); bending within the paper plane is much stiffer (16 N m/rad, ±5° per seam). This anisotropy prevents the strip behaving like a string when held upright. A broken joint or a seam opening above 3 mm invalidates the result. This is an approximation to a flexible, inextensible paper strip, not a calibrated model of a particular paper brand's creasing or tear strength.
 
 A force-limited native joint approximates unresolved friction only after a paper panel lies between the closing finger faces, within a 0.6 mm native collision/contact tolerance per face. It starts at the observed pose, transmits reaction forces, releases on opening and breaks at 1.2 N or 0.012 Nm. The robot does not receive tape-to-form attachments. No execution code writes tape poses or moves objects to scoring targets. Printed ticks and digits follow measured panel poses and are visual only.
 
@@ -31,7 +31,7 @@ python tasks/measure-chest-with-paper-tape/rescore.py /absolute/run-directory
 python tasks/measure-chest-with-paper-tape/score_checks.py
 ```
 
-Each run freezes its sources, records native cameras and all body states, and saves `run.json` and `trace.jsonl`. Dream uses the official Inspect Robots bridge; the normal policy cameras are unchanged. Extra judging cameras are recording-only. Sources use no random reset jitter. The completed Dream baseline used 1,600 controls and scored 0.0. Its official bridge recovered from 32 session expiries (33 sessions); the physical episode remained continuous, but this is not an uninterrupted-memory model run. Demo validation is still pending. The baseline took 32.5 minutes on an RTX 6000 Ada while another simulator instance ran.
+Each run freezes its sources, records native cameras and all body states, and saves `run.json` and `trace.jsonl`. Dream uses the official Inspect Robots bridge with eight actions per request to reduce idle expiry; run one model episode per API key. The normal policy cameras are unchanged. Extra judging cameras are recording-only. Sources use no random reset jitter. The current demo uses 780 controls (39 simulated seconds) and reaches full score. Its matching 1,600-control Dream baseline is being evaluated. Earlier development baselines used different paper or finger geometry and are not submission evidence.
 
 ## Reset
 
@@ -59,4 +59,4 @@ The closest accepted measuring tasks are [measuring a wooden bar and entering it
 
 ### Paper stiffness estimate
 
-The ribbon uses an assumed effective Young modulus of1.8 GPa and Poisson ratio0.3. Segment rotational stiffness follows EI/L for bending about each axis and GJ/L for torsion:0.0016,16.0 and0.00246 N m/rad respectively. This preserves paper’s much greater resistance to bending within its own plane. These are engineering estimates, not measurements of this160 gsm stock. Measured paper moduli of1.69–3.98 GPa are reported in [Ramasubramanian et al., 2007](https://msp.org/jomms/2007/2-2/jomms-v2-n2-p01-s.pdf); humidity and fibre direction matter.
+The ribbon uses an assumed effective Young modulus of 1.8 GPa and Poisson ratio 0.3. Segment rotational stiffness follows EI/L for bending about each axis and GJ/L for torsion: 0.0016, 16.0 and 0.00246 N m/rad respectively. This preserves paper’s much greater resistance to bending within its own plane. These are engineering estimates, not measurements of this 160 gsm stock. Measured paper moduli of 1.69–3.98 GPa are reported in [Ramasubramanian et al., 2007](https://msp.org/jomms/2007/2-2/jomms-v2-n2-p01-s.pdf); humidity and fibre direction matter.
