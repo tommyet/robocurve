@@ -1,6 +1,6 @@
 {
-  "status": "submission_ready",
-  "submission_ready": true,
+  "status": "revision_waiting_for_physical_reset_check",
+  "submission_ready": false,
   "scores": {
     "demo": 1.0,
     "dream": 0.0
@@ -42,5 +42,12 @@
   "checked_utc": "2026-11-19T06:36:40.455869+00:00",
   "metadata_note": "Descriptive metadata finalized after recording; instruction, action limit and all executed code unchanged.",
   "media_id": "M-9SJ394",
-  "full_trace_distribution": "Retained locally; SHA-256 checksums and completed audit reports published. Omitted from archive to meet 25 MB limit."
+  "full_trace_distribution": "Retained locally; SHA-256 checksums and completed audit reports published. Omitted from archive to meet 25 MB limit.",
+  "prior_submission_simulation_evidence_valid": true,
+  "review_request_url": "https://github.com/robocurve/benchmark-tasks/pull/2847#issuecomment-7067885198",
+  "remaining_gates": [
+    "Actual physical loading/reset check with recorded observations, times and close reference photographs",
+    "Reconcile any measured setup changes with native evidence before submission"
+  ],
+  "revision_note": "Numbered routes and close construction diagrams are prepared and inspected. They are not photographs or completed physical tests. Executable source and scoring are unchanged."
 }

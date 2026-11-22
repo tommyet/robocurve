@@ -74,9 +74,17 @@ native pinch forms. It releases on opening, 8 mm slip, or loads above
 18 N / 0.24 Nm. Grip reaction loads on the robot are omitted. These
 approximations apply equally to the demo and Dream.
 
-All task geometry is original procedural work under the included MIT
-license. The robot, table, runtime and cameras come from the pinned YAM /
-Isaac environment; no third-party task meshes, scans or textures are used.
+Brush, comb, hair, dish, rests and pad covers are original procedural geometry
+under the included MIT licence. The external pinned YAM runtime supplies
+I2RT robot meshes under its [MIT asset licence](https://github.com/kairosiann/yam-isaac-lab-arena/blob/0059d02a1a91bc6834c1d0846022891df0c78730/yam_arena/assets/yam/LICENSE.i2rt):
+`assets/base.stl`, `gripper.stl`, `link1.stl` through `link5.stl`, `tip_left.stl`,
+`tip_right.stl`, and their `collision/<link>/` convex decompositions. Dream-style
+`dream/link2_black.stl`, `link2_white.stl`, `link3_black.stl` and `link3_white.stl`
+carry the same MIT terms, as identified in the pinned runtime's
+[station module](https://github.com/kairosiann/yam-isaac-lab-arena/blob/0059d02a1a91bc6834c1d0846022891df0c78730/yam_arena/station.py).
+The robot USD is converted from those assets; table, floor and camera supports
+use runtime primitives. Robot meshes and runtime source are external dependencies,
+not redistributed here. Package versions and revisions are in `ENVIRONMENT.json`.
 
 ## Recorded trials
 
