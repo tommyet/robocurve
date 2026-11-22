@@ -1,8 +1,8 @@
 {
   "schema": "runtime-evidence-v1",
-  "status": "native_verified",
-  "scope": "Complete native demo and Dream baseline, with frozen trace and contact audits.",
-  "current_task_runtime_verified": true,
+  "status": "native_validation_in_progress",
+  "scope": "Pinned runtime reused from earlier tasks; this lattice task has not completed native validation.",
+  "current_task_runtime_verified": false,
   "python": "3.12.16",
   "packages": {
     "numpy": "2.5.4",
@@ -43,7 +43,6 @@
     "gpu": "NVIDIA L40S",
     "physics": "Native PhysX contacts, passive joints and the material approximations disclosed in task.json."
   },
-  "reference_checked_utc_date": "2026-11-18",
-  "verified_utc_date": "2026-11-20",
-  "submission_ready": true
+  "reference_checked_utc_date": "2026-11-22",
+  "submission_ready": false
 }

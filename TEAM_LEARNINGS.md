@@ -6207,3 +6207,29 @@ still pending; no Dream baseline or full-score demo yet. Material tear force
 remains2N. The original iCloud checkout remains untouched except ignored
 artifact backups. Temporary work is in the healthy clone; owned Pod remains
 bounded by its02:11UTC stop watchdog.
+
+Lattice004 passed the first pickup and lift and reached360controls intact.
+The003 archived trace independently confirms the false release: both actual
+face gaps were0.304/0.363mm atcontrol195, each below the0.6mm margin.004 fixes
+that inconsistency while continuously enforcing opposed contact. Matching
+Dream001 has now launched from the same immutable native-batch-005. The
+Dream key stays on the Mac through the official loopback bridge. Full native
+completion, rescoring, visual review and submission remain outstanding.
+
+Lattice004 stayed intact but laid the first row over both long strips: lifting
+its far end did not open the intended crossing. It was stopped at894 controls,
+scored0, and all38 archived files were SHAverified locally.005 changes only
+robot authoring: nearest-end lift for each outer row and a higher inward peel
+for the middle row. The2420-control reach/rate audit passes. The matching
+Dream001 continues on unchanged physics/scorer/hardware/instruction. Native
+weaving feasibility is still unproven; do not submit based on the plan alone.
+
+005/006 demonstrate why kinematic reach alone is insufficient: both true
+pinches capture, but the south-end supporting grip slips during the cross-hand
+pass (controls424/419).006 stops automatically on lost support. Both diagnostic
+archives are locally verified; no material/scoring thresholds were relaxed.
+007 uses north-end support and places both outer rows before replacing that
+longitudinal strip, then weaves the middle row with the other strip lifted.
+Its2360 controls pass the reach/rate audit, but native completion remains open.
+The copied runtime manifest's inherited earlier-task completion claim was
+corrected to development status; pinned packages/revisions are unchanged.

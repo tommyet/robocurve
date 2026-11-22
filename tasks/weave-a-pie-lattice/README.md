@@ -105,3 +105,22 @@ pastry-lattice submission. BEHAVIOR's
 combines ingredients in a food processor; it does not weave strips. These
 searches do not guarantee novelty across every external benchmark. All meshes
 are generated in this folder; no third-party geometry is used.
+
+## Run and verify
+
+Use the pinned Python 3.12 / Isaac Sim 6.1 / YAM environment in `ENVIRONMENT.json`.
+
+```sh
+python tasks/weave-a-pie-lattice/make_plan.py
+OMNI_KIT_ACCEPT_EULA=YES ACCEPT_EULA=Y python tasks/weave-a-pie-lattice/run.py --mode demo --out /tmp/lattice-demo
+OMNI_KIT_ACCEPT_EULA=YES ACCEPT_EULA=Y python tasks/weave-a-pie-lattice/run.py --mode dream --out /tmp/lattice-dream
+python tasks/weave-a-pie-lattice/rescore.py /tmp/lattice-demo
+python tasks/weave-a-pie-lattice/rescore.py /tmp/lattice-dream
+```
+
+Limit: 3,000 actions / 150 seconds at 20 Hz. Fixed layout, no reset jitter or
+random seed. The deterministic IK authoring search uses seeds 17, 31 and 43.
+Runtime saves every native frame, continuous body/action traces and frozen
+source. CPU rescoring checks source hashes, action bounds, release and the
+outcome; it is not a substitute for native simulation. Native wall times and
+full video inspection must be recorded before submission.
