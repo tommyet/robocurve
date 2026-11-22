@@ -6204,3 +6204,21 @@ and postcard writing are not strong new abilities; date-label writing2340 was
 finally rejected for overlap, without naming its exact comparator. See the dated
 appendix in docs/task-ideas-maintenance-2026-11-18.md. Searches were public-PR
 coverage, not fresh authenticated-board clearance. No GPU or Dream spending.
+
+
+### 2026-11-22 — Further household ideas, no compute
+
+See the noon appendix in docs/task-ideas-maintenance-2026-11-18.md. Worth further
+checking: real tailor-tape chest measurement, a normal compact four-wheel padlock,
+and rolling socks with cuff inversion (older sock-pairing research is relevant).
+Nail clipping2346 has no public revision since Nov16 and its visible hold elapsed,
+but needs fresh board confirmation and real cutting-force/reset evidence before
+any reclaim. A four-wheel lock is not the same mechanism as accepted single-dial
+2158; rejected359 used oversized controls, so avoid claiming blanket exclusion.
+Pillowcase fitting appears in the Household Cloth Object Set; do not shortlist it
+as novel just because public PR searches are empty. Exact accepted precedents:
+match2253, hedge1059, cards3075, frame1136, blinds2527 and food-foil2925.
+Lint876/598 and window1978 explicitly cite external-suite duplicates. Wringing
+3159/2643 has reset failures, also relevant to our wet-hair2940. No GPU/Dream
+spending or new task/PR. Research uses public PRs and primary external sources,
+not exhaustive authenticated-board clearance.

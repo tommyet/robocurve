@@ -195,3 +195,57 @@ most worth a cheap physical tool/force check and a tighter comparison with #2146
 that is not a recommendation to rent compute yet. Pool racking is already taken,
 and bin-liner fitting is strong but reserved. These findings should prevent
 repeating earlier rejected ideas near the deadline.
+
+
+## 22 November, noon UTC: household, clothing and maintenance ideas
+
+Research only, no GPU/Dream calls or implementation. All-state public PR searches
+and individual comments were checked alongside the official BEHAVIOR catalogue
+and primary cloth-manipulation papers. GitHub briefly rate-limited extra searches;
+all failed terms were retried after the window reset. This remains bounded
+public-source coverage, not authenticated board clearance or an audit of every
+external benchmark. Comparative assessments are not calibrated probabilities.
+
+| Idea | Evidence and judgment |
+|---|---|
+| Paper/twig fire lay | No direct kindling/tipi PR found. BEHAVIOR `setting_the_fire` already places wood on newspaper in a fireplace and ignites it. A self-supporting twig tipi is not literally that success condition, but must demonstrate useful fuel/air geometry rather than decorative stacking. Medium-low priority; stability alone does not prove a usable fire lay. |
+| Strike a match | Accepted #2253 lights a candle with a box-struck safety match and disposes of it. Exact ability already taken. |
+| Flint and steel | No exact flint/ferrocerium PR found. Possible distinct spark-generation and tinder-targeting movement, but specialist recognisability, reproducible ignition and realistic friction/force need evidence. True flint/steel and a ferrocerium rod are different setups; do not silently substitute one for the other. Low-medium, not quick/low-risk. |
+| Trim hedge | Exact accepted #1059, hedge shears while sparing flowers. Skip. |
+| Pair and ball socks | No direct PR match. Sock-drawer #1338 rejected for rigid blocks; that is not the same as cuff inversion. Strong physical formulation: roll two compliant socks and evert one elastic cuff over the pair so it remains bundled after release/lift. Matching alone is perception, not new manipulation. Wang et al. IROS2011 already studies sock pairing and lists pairing at the ankle; external novelty needs care, so do not claim this skill has never been studied. Candidate, not cleared. |
+| Remove stain | BEHAVIOR `treating_stains` uses stained table linen, detergent, rag and sink. Broad activity overlaps. Repeatable staining and real removal need a physical preparation recipe; don't implement magical touch-cleaning. Low. |
+| Dryer lint | #876 and #598 explicitly rejected for overlap with BEHAVIOR `removing_lint_from_dryer`, plus loose rigid lint substitutes. Skip. |
+| Wring wet item / towel-dry trunks | Sponge #3159 and mop #2643 rejected for repeatability; our wet-hair #2940 too. No exact towel-roll garment task found. Rolling flexible wet trunks inside a dry towel and pressing is a possible distinct operation, but needs measured starting wet mass, dry towel/reset and actual water transfer. A fixed twist-count proxy alone is not drying evidence. Conditional candidate with material-validation burden. |
+| Measure chest / leg / foot | No exact flexible-tape chest/inseam PR found. Accepted tape measure #810/#781 is linear rigid-object measurement, not circumferential wrapping. Prefer unlooped tailor tape around an anatomically plausible torso with actual back/underarm access, flat tape and readable overlap; no prewrapped tape or hidden circumference as answer. #2939 Brannock foot measurement rejected for repeatability. Chest is the best measurement option; inseam has full-size reach constraints. |
+| Dry stone wall | No exact direct hit. Related stone arch #1692 rejected for miniaturization and specialist jobs relevance. Real irregular stone interlock/load stability differs from block stacking, but weight/reach, supply/reset and recognisability are poor fits for a quick build. Low. |
+| Pillow into pillowcase | No exact PR found, but Household Cloth Object Set explicitly proposes pillowcase fitting and describes its bimanual difficulty. Existing published benchmark-task overlap means this is not a clear opening. |
+| Remove fridge shelves | Accepted door-bin refit #2153, pending split-shelf #3365, rejected move-shelf #2917 (meaningful overlap). A novel retention mechanism would need a genuinely different manipulation, not removal instead of insertion. Low. |
+| Change Brita filter | #1138 rejected for miniaturized reach; #3402 rejected for ordinary placement/press-fit and automatic simulated movement. Direct negative precedent. Skip. |
+| Open/close blinds | Accepted tilt-wand #2527; cord raise/lock #3383 pending. Spring shade #2618 rejected as too simple; #2225's rigidly spaced moving slats invalid. Covered. |
+| Clip nails | #2346 open, requested real cutting-force measurement and reproducible training hand/nails on Nov16 22:09:34UTC. No later public receipt/comment at check; visible 48h hold has elapsed, not proof of board availability. A corrected real clipper on replaceable practice nails is a possible reclaim, requiring explicit credit and fresh board/PR confirmation. Not a new untouched idea. |
+| Deal cards | Accepted #3075 deals top cards one at a time by fingertip friction. Poker count/layout doesn't change ability. Skip. |
+| Photo in frame | Accepted #1136 closes frame back and turns clips. Adding photo placement is unlikely to distinguish core ability. Low. |
+| Arrange bookshelf | BEHAVIOR `sorting_books_on_shelf` and accepted recessed-book retrieval #1982; packed-shelf insertion #2446 rejected. Generic sorting/shelving low. |
+| Four-digit padlock | Accepted #2158 is a single rotary dial, not four number wheels. #359 three-wheel box rejected for oversized 70mm wheels/45mm handles that removed compact manipulation, rather than an explicit ban on all wheel locks. Ordinary compact four-wheel padlock is worth checking: independently roll each wheel, avoid disturbing neighbours, open shackle using supplied code. Do not add handles or call memory of the code the skill. Moderate overlap risk; unknown native gripping feasibility. |
+| Clean window | #1978 explicitly rejected against HumanoidBench Manipulation/Window. Magnetic cleaner #2567 rejected for relatability; appeal has no visible decision. Skip. |
+| Unblock drain | Hair-wand #3433 revised/pending. Rod #1478 invalid miniaturized pipe/weak sliding plug; sink #2092 reset rejection. Reusing those formulations is poor bet. Need a specific genuinely distinct mechanism and repeatable full-size clog. |
+| Plunge toilet | #2548 rejected for overlap and a miniature diaphragm that removed the real water seal; #2092 sink-plunging repeatability failed. Low; correct hydraulic mechanism/reset is substantial work. |
+| Wrap food in foil | Exact accepted burger wrap #2925; foil-pan crimp #2045 also accepted. Changing food doesn't establish new ability. Skip. |
+
+Priority for further investigation, not build authorization: (1) tailor-tape
+chest circumference, (2) actual compact four-wheel padlock, (3) sock rolling with
+cuff inversion, subject to the older sock work; (4) a properly calibrated reclaim
+of nail clipping if the board confirms availability. Towel-roll drying is a
+reserve candidate needing a physical repeatability check. None is promised
+acceptance or validated in simulation.
+
+Primary external references:
+- https://behavior.stanford.edu/knowledgebase/tasks/setting_the_fire-0.html
+- https://behavior.stanford.edu/knowledgebase/tasks/treating_stains-0.html
+- https://behavior.stanford.edu/knowledgebase/tasks/sorting_books_on_shelf-0.html
+- https://people.eecs.berkeley.edu/~pabbeel/papers/WangMillerFritzDarrellAbbeel_IROS2011.pdf
+- https://upcommons.upc.edu/server/api/core/bitstreams/4cc2342a-c304-4039-bbba-6b50dbba3693/content
+
+PR numbers above refer to https://github.com/robocurve/benchmark-tasks/pull/NUMBER.
+Raw searches/comments are backed up under artifacts/household-ideas-2026-11-22
+in the main local workspace, outside the submission task folders.
