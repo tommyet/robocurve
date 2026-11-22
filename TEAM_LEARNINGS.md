@@ -6265,3 +6265,45 @@ of proximity-only dirt release, repeatable dirt preparation/counting, full rig
 specification/protection and asset licensing). Ownership is being checked with
 the user because Eito is active on his separate fork; do not overwrite his work.
 Dream lattice001 completed3000controls, raw score0.0; independent audits pending.
+
+Runtime asset attribution verified on the actual Pod: adapter
+0059d02a.../yam_arena/assets/yam/LICENSE.i2rt is MIT (I2RT Robotics).
+The URDF uses base,gripper,link1–5,tip_left,tip_right STL meshes and their
+collision/<link>/ convex decompositions. station.py identifies Dream-style
+link2/link3 black/white split STL visuals as MIT as well. inspect-robots-yam0.38.0
+has MIT package metadata and assets/MENAGERIE_LICENSE (MIT,I2RT2025).
+Do not say an entire native scene uses no third-party meshes: only our task
+props are generated. Lattice README now lists these actual dependencies.
+The adapter itself has no top-level licence declaration at this pinned revision;
+we import the competition runtime externally rather than redistributing it.
+
+### 2026-11-22 — Lattice feasibility result and paid-resource shutdown
+
+Dream001 completed all3,000controls at0.0. Frozen/current rescoring agrees;
+contact audit and all-frame video checks pass, and twelve sampled frames per
+native camera were inspected. Demo010 fails at1,140controls: the support hand
+retains its longitudinal strip, but the second cross-strip pickup never captures
+a valid opposed-face pinch. Ten diagnostics do not constitute a successful demo.
+The loose board has moved; inspect real finger clearance and board-relative
+pickup geometry before another test. No full-score demo, physical dough
+calibration or real preparation check exists. Do not submit this prototype.
+
+The pure scorer correction removes only the irrelevant lateral bound on loose
+strip tails; actual crossings, flatness over the pie, rim reach, intact strips
+and release remain required. Eight CPU controls cover both valid phases,
+unwoven grids, partial rows and damage. Dream still scores0.0 under both
+versions. No diagnostic failure was converted to a success by this correction.
+
+Owned Pod vnxz6z8ni2f6ae was deleted at02:12:45UTC, confirmedHTTP404, after
+414 original files across all eleven runs passed SHA256/size verification.
+Estimated GPU compute $2.2042, excluding storage, rounding and Dream charges.
+The source and archives remain in the private artifact directory. Development
+branch codex/pie-lattice-20261122 is explicitly not a competition submission.
+
+Final review recheck: swimming cap3059/TK-5J7VBC is now finally rejected and
+closed at01:50UTC. The substantive reason is inconsistent real-world
+reproducibility (the closing template also says importance). No revision is
+permitted. Plucking3572 is finally rejected on importance. Fish3289,plate3277,
+bra3255,ponytail3224 and salmon3170 remain pending. Hairbrush2847 remains
+blocked on the explicitly requested physical loading/reset check. Eito's
+floor-mat3497 revision ownership question remains unanswered.

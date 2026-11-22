@@ -1,8 +1,8 @@
 {
   "schema": "runtime-evidence-v1",
-  "status": "native_validation_in_progress",
-  "scope": "Pinned runtime reused from earlier tasks; this lattice task has not completed native validation.",
-  "current_task_runtime_verified": false,
+  "status": "native_feasibility_unproven",
+  "scope": "Pinned native runtime exercised; complete Dream baseline scores zero, but no full-score demo exists.",
+  "current_task_runtime_verified": true,
   "python": "3.12.16",
   "packages": {
     "numpy": "2.5.4",

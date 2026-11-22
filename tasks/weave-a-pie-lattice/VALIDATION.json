@@ -1,0 +1,24 @@
+{
+  "status": "not_submission_ready",
+  "submission_ready": false,
+  "dream": {
+    "status": "complete",
+    "steps": 3000,
+    "score": 0.0,
+    "frozen_and_current_rescore_agree": true
+  },
+  "latest_diagnostic_demo": {
+    "run": "lattice-demo-010",
+    "status": "failed",
+    "steps": 1140,
+    "reason": "Second cross-strip pickup did not capture a valid pinch."
+  },
+  "full_score_demo": false,
+  "physical_preparation_validated": false,
+  "media_uploaded": false,
+  "upstream_pr_created": false,
+  "gpu_deleted": true,
+  "gpu_deletion_http_status": 404,
+  "estimated_gpu_compute_usd": 2.2042,
+  "next_gate": "Complete full-score native demo without weakening contact, damage or weave criteria."
+}

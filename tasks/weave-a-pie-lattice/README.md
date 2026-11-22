@@ -1,7 +1,8 @@
 # Weave a lattice top on a pie
 
-Development prototype. No native full-score demonstration or model baseline is
-claimed yet; do not submit this folder in its current state.
+Development prototype, not submission-ready. The complete 3,000-control Dream
+baseline scores 0.0, but no full-score scripted demonstration has succeeded.
+Do not submit this folder in its current state.
 
 Weave three loose pastry strips across two strips already laid on a small pie.
 Every crossing must alternate over and under. Leave all five strips intact,
@@ -110,8 +111,8 @@ searches do not guarantee novelty across every external benchmark. Related
 braids three hair sections anchored at a head. This task weaves five loose
 strips into an orthogonal lattice on a pie; it requires under-passage and
 replacement without a shared anchored end. The broader skill of interlacing
-is not claimed to be new to robotics. All meshes
-are generated in this folder; no third-party geometry is used.
+is not claimed to be new to robotics. The pie, board, pastry and finger extensions are generated in this folder.
+The robot assets are listed below.
 
 ## Run and verify
 
@@ -134,10 +135,50 @@ full video inspection must be recorded before submission.
 
 ### Tail-alignment scoring correction
 
-The recorded simulation uses the original scorer. Its extra lateral bound on
+The Dream baseline and earlier diagnostics use the original scorer; the final
+demo candidate uses the corrected scorer. The original extra lateral bound on
 loose tails rejected a valid diagonal row, although its six crossings, rim reach
 and supported portions were correct. `rescore_current.py` verifies the frozen
 source and original audit, proves that removing this single condition is the
 only model-code change, then scores the complete trace. Both original and
 corrected scores are retained. Physics, policy, damage and release checks are
 unchanged. Tail overhang is allowed because trimming is outside the task.
+
+## Asset attribution
+
+Task props and finger extensions are procedural boxes, cylinders and rings
+from `geometry.py` and `pad_covers.py`, under this folder's MIT licence.
+No downloaded food, kitchen or fabric model is used.
+
+The external pinned YAM runtime supplies the following I2RT robot assets,
+under its [MIT asset licence](https://github.com/kairosiann/yam-isaac-lab-arena/blob/0059d02a1a91bc6834c1d0846022891df0c78730/yam_arena/assets/yam/LICENSE.i2rt):
+
+- `assets/base.stl`, `gripper.stl`, `link1.stl` through `link5.stl`,
+  `tip_left.stl` and `tip_right.stl`, plus their convex decomposition files
+  in the corresponding `collision/<link>/` directories.
+- Dream-style split visuals `dream/link2_black.stl`, `link2_white.stl`,
+  `link3_black.stl` and `link3_white.stl`. The pinned runtime's
+  [station module](https://github.com/kairosiann/yam-isaac-lab-arena/blob/0059d02a1a91bc6834c1d0846022891df0c78730/yam_arena/station.py)
+  attributes these parts to Dream's station and identifies the same MIT terms.
+
+The robot USD is converted from those assets. The table, floor, camera bodies
+and mast are primitive geometry in the external runtime. Robot meshes and
+runtime source are not redistributed in this task folder. `inspect-robots-yam`
+0.38.0 separately carries an MIT package licence and its MIT I2RT
+`assets/MENAGERIE_LICENSE`; all runtime versions are pinned in `ENVIRONMENT.json`.
+
+## Validation status — 22 November 2026
+
+The full native Dream baseline completed 3,000 controls and independently
+rescores 0.0. Its trace, measured contacts and complete native videos are
+archived. Ten diagnostic demonstrations did not complete the weave. The latest
+reached control 1,140: the support hand retained its strip, but the second
+cross-strip pickup never established a valid opposed-face pinch. The controller
+stopped rather than continuing with a missing grasp. No full-score demo,
+physical dough calibration or physical preparation trial is claimed.
+
+The next investigation should check the loose board's displacement and actual
+finger access during the second pickup, then verify that replacing the support
+strip leaves the woven rows flat. These are hypotheses, not completed fixes.
+No further GPU is running. Keep the three-row objective and the contact/damage
+checks intact; a partial weave is not sufficient submission evidence.
