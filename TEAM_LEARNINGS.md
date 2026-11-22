@@ -6237,3 +6237,13 @@ Gutter cleaning must preserve installed access; cowl leaf removal3623 is a nearb
 revising task. Visor replacement has real coupled hook/release manipulation per
 SHOEI, but niche maintenance and snap-fit overlap risks. Details/links appended
 to docs/task-ideas-maintenance-2026-11-18.md. No GPU/Dream/task build or PR.
+
+### 2026-11-22 — two deadline tasks submitted
+
+Whittling: PR3812 / TK-HABJR2 / M-2933DF. Native demo005 scores1.0 in1,700 controls; Dream001 scores0.0 in2,400 controls. Full uncut media, frozen-source replays and source hashes are retained in the task evidence. The baseline needed49 session-expiry recoveries, disclosed. Wood cutting uses finite loaded travel against an explicitly uncalibrated4 N resistance; do not describe it as measured basswood physics.
+
+Chest measurement: PR3816 / TK-E4YYK6 / M-BPFMVQ. Native demo020 scores1.0 in780 controls; matching Dream003 scores0.0 in1,600 controls. Full tapes and frame counts verified. Final demo reading is88.72 cm against88.38 cm reference, maximum surface gap9.16 mm, held6 seconds. Both use the same anisotropic paper and2 N precision fingers, with a contact-gated1.2 N/0.012 Nm grip approximation. Dream had57 expiry recoveries, disclosed. Its chunk default is8; the demo's unused Dream module had48. Neither low score isolates task difficulty from server session issues.
+
+Other deadline development remains on `codex/deadline-batch-20261122`; gutter and visor drafts have not passed full native validation. Sock balling overlaps HAND ERC's exact Bundle Socks task (roll both socks and tuck a cuff), https://hand-erc.github.io/benchmarking/benchmarks.html . Three-wheel lock manipulation overlaps held3595. Online nail-cutting data does not calibrate the named retail tool/practice-tip pair required by the elapsed review; no physical check is claimed.
+
+Submission branches are isolated from upstream/main and contain only their task folder. Keep team notes out of competition PRs. Recheck the shared20-per-24h limit before any further submissions; there were18 new team PRs before the chest PR.
