@@ -1,6 +1,6 @@
 # Measure a torso's chest with a paper tape
 
-**The native demo reaches 1.0; the matching Dream baseline is in progress.**
+The native demo scores **1.0**; Dream-1 scores **0.00**. Both full recorded episodes were rescored from their frozen sources.
 
 Wrap a graduated paper tape around a torso form and present the zero-over-scale reading at the front. The tape starts loose on the table. There are no slots, guides, magnets or tape-to-torso attachments.
 
@@ -31,7 +31,7 @@ python tasks/measure-chest-with-paper-tape/rescore.py /absolute/run-directory
 python tasks/measure-chest-with-paper-tape/score_checks.py
 ```
 
-Each run freezes its sources, records native cameras and all body states, and saves `run.json` and `trace.jsonl`. Dream uses the official Inspect Robots bridge with eight actions per request to reduce idle expiry; run one model episode per API key. The normal policy cameras are unchanged. Extra judging cameras are recording-only. Sources use no random reset jitter. The current demo uses 780 controls (39 simulated seconds) and reaches full score. Its matching 1,600-control Dream baseline is being evaluated. Earlier development baselines used different paper or finger geometry and are not submission evidence.
+Each run freezes its sources, records native cameras and all body states, and saves `run.json` and `trace.jsonl`. Dream uses the official Inspect Robots bridge with eight actions per request to reduce idle expiry; run one model episode per API key. The normal policy cameras are unchanged. Extra judging cameras are recording-only. Sources use no random reset jitter. The current demo uses 780 controls (39 simulated seconds) and reaches full score. The matching Dream baseline completed all 1,600 controls (80 simulated seconds). On an RTX 6000 Ada, the demo took 12.2 minutes and the baseline 38.7 minutes including rendering and API latency. The baseline required 57 session-expiry recoveries: physical state continued, but model memory restarted. The full request log is retained; the low score cannot be attributed solely to task difficulty. The demo's unused policy module had a 48-action chunk default; the actual model baseline used 8, with identical physics, instruction, cameras and score. Earlier development baselines used different paper or finger geometry and are not submission evidence.
 
 ## Reset
 

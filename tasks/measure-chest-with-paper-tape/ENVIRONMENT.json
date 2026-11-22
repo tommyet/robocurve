@@ -1,8 +1,8 @@
 {
   "schema": "runtime-evidence-v1",
-  "status": "validation_pending",
-  "scope": "Pinned environment for chest measurement; task run validation in progress.",
-  "current_task_runtime_verified": false,
+  "status": "native_demo_and_model_verified",
+  "scope": "Native chest measurement demo and Dream baseline on the pinned runtime.",
+  "current_task_runtime_verified": true,
   "python": "3.12.16",
   "packages": {
     "numpy": "2.5.4",
@@ -44,5 +44,5 @@
     "physics": "Native PhysX contacts, passive joints and the material approximations disclosed in task.json."
   },
   "reference_checked_utc_date": "2026-11-22",
-  "submission_ready": false
+  "submission_ready": true
 }

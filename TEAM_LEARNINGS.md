@@ -6271,3 +6271,11 @@ Whittling is submitted as upstream PR3812, received TK-HABJR2, media M-2933DF. D
 New primary-source novelty evidence excludes sock balling as a strong submission: HAND ERC Multi-Level Hand Benchmarks v1 alpha (August2026), System entry `bundle-socks`, explicitly requires rolling two socks and tucking one cuff over the other, then retaining the bundle after release. This is closer than the older Wang2011 matching work. Source: https://hand-erc.github.io/benchmarking/benchmarks.html and public data/system.jsonc. No sock GPU run.
 
 EDJY manufacturer September16,2026 cutting-force tests give blade forces for unnamed rigid/flexible test materials and anonymized competitor tools. They do not close the exact-tool/exact-tip calibration gap for nail clipping. Do not present generic spring or blade force as verified lever force.
+
+### 2026-11-22 — chest submitted; remaining contact diagnostics
+
+Chest measurement PR3816 was received as TK-E4YYK6, media M-BPFMVQ. Demo020 scores1.0/780 controls; matching Dream003 scores0.0/1,600 controls. Both frozen replays and full frame counts verified. Demo scale remains readable in the side view. Dream had57 expiry recoveries; disclosed. Paper physics, fingers and scorer match; only the unused demo Dream chunk default differs48 versus8.
+
+Visor top-edge grasp003 completed320 controls without broken parts, after adding a raised clearance waypoint. This is a diagnostic, not a full demonstration. Full009 failed at430 controls while approaching the second hold; the left release button only travelled0.88 mm rather than the2.8 mm threshold. Current development adds sufficient button travel, stops pressing after release and raises the hand before crossing the visor.
+
+Gutter rear-wall corners previously struck the curved floor. Matching the rear wall to the bowl lets the blade reach the gutter. Leaf012 collects three leaves but the tool leaves the hand during the carry. Recomputing the held tool-to-hand transform every frame made the controller chase a changing offset after slipping; current development freezes it at pickup. Connected, shallow curled leaf panels now meet exactly at their material joints, and whole-leaf scoring includes all panel corners. These changes remain unvalidated.
