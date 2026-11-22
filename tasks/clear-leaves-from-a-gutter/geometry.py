@@ -34,7 +34,7 @@ for x in np.linspace(-.0425,.0425,18):
 scoop += [box((.002,.024,.045),(x,-.055,.038)) for x in [-.008,.008]]
 # A moulded hollow handle keeps the scoop balanced on its bowl.
 handle_R=Rotation.from_euler('x',-20,degrees=True)
-for size,local in [((.001,.14,.014),(-.0085,0,0)),((.001,.14,.014),(.0085,0,0)),((.016,.14,.001),(0,0,-.0065)),((.016,.14,.001),(0,0,.0065))]:
+for size,local in [((.0015,.14,.020),(-.01325,0,0)),((.0015,.14,.020),(.01325,0,0)),((.025,.14,.0015),(0,0,-.00925)),((.025,.14,.0015),(0,0,.00925))]:
  scoop.append(box(size,HANDLE+handle_R.apply(local),quat=handle_R.as_quat()))
 BODIES.append(body('scoop',SCOOP,scoop,mass=.085,color=(.88,.42,.12),friction=.7))
 LEAVES=[];SEEDS=[]
@@ -45,8 +45,8 @@ for angle in angles:
  tangent=Rotation.from_euler('x',angle,degrees=True).apply([0,.015,0])
  vertices.append(vertices[-1]+tangent)
 vertices=np.array(vertices);vertices[:,1]-=(vertices[0,1]+vertices[-1,1])/2;vertices[:,2]-=vertices[:,2].min()
-for i in range(12):
- x=GUTTER[0]+[-.015,0,.015][i%3];y=.020+(i//3)*.040
+for i in range(3):
+ x=GUTTER[0]+[-.015,0,.015][i%3];y=.100+(i//3)*.040
  z=GUTTER[2]-np.sqrt(RADIUS**2-(x-GUTTER[0])**2)+.003+(i%3)*.001
  angle=[-20,15,40][i%3];R=Rotation.from_euler('z',angle,degrees=True);origin=np.array([x,y,z]);names=[]
  for j in range(4):

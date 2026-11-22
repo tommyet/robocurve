@@ -1,7 +1,7 @@
 {
   "schema": "runtime-evidence-v1",
   "status": "validation_pending",
-  "scope": "Pinned environment for chest measurement; task run validation in progress.",
+  "scope": "Pinned environment for clear-leaves-from-a-gutter; full task validation is pending.",
   "current_task_runtime_verified": false,
   "python": "3.12.16",
   "packages": {

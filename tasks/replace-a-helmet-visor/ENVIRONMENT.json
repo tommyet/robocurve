@@ -1,7 +1,7 @@
 {
   "schema": "runtime-evidence-v1",
   "status": "validation_pending",
-  "scope": "Pinned environment for chest measurement; task run validation in progress.",
+  "scope": "Pinned environment for replace-a-helmet-visor; full task validation is pending.",
   "current_task_runtime_verified": false,
   "python": "3.12.16",
   "packages": {
@@ -40,7 +40,7 @@
     "sha256": "991c3d0dcfc331bc4177379b538646407f78b7dbb6e21b7f6e310518c13aa33d"
   },
   "platform": {
-    "gpu": "NVIDIA RTX 6000 Ada Generation",
+    "gpu": "NVIDIA L40S",
     "physics": "Native PhysX contacts, passive joints and the material approximations disclosed in task.json."
   },
   "reference_checked_utc_date": "2026-11-22",

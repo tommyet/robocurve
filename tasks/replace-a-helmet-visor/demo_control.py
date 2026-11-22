@@ -13,7 +13,7 @@ class DemoControl:
    target,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side]);h=hands[side]
    tag=None
    if side=='right' and phase in ['clear before old','approach old','align old','insert old','grip old']:tag='old';point=np.array([.157,0,.030]);tilt=90
-   if side=='left' and phase in ['approach wing','align wing','insert wing','grip wing']:tag='old';point=np.array([.1073134409,.10,.030]);tilt=-90
+   if side=='left' and phase in ['orient above wing','approach wing','align wing','insert wing','grip wing']:tag='old';point=np.array([.1073134409,.10,.030]);tilt=-90
    if side=='right' and phase in ['align spare','grip spare']:tag='new';point=np.array([.157,0,.030]);tilt=40
    if tag:
     Q=m.orientation(tag+'_visor');actual=m.p(tag+'_visor')+Q@point
@@ -23,6 +23,8 @@ class DemoControl:
     # Jumping straight to the final grasp at the first align step would strike it.
     target+=actual-(nominalP+nominalQ@point)
     R=Q@nominalQ.T@R
+   if phase=='press trigger '+side and 'old_hinge_'+side in m.disabled:
+    out[o:o+6]=observed[o:o+6];continue
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6);p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=h['tcp']-p0;rbias=h['rotation']@R0.T
    def f(q):
     p,r=ik.tcp_pose(q,station.BASES[side]);return np.r_[p+bias-target,.15*ik._rot_error(R,rbias@r),.001*(q-seed)]

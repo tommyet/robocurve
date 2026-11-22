@@ -18,7 +18,8 @@ class Plan:
     def f(q):
      pp,rr=ik.tcp_pose(q,station.BASES[side]);return np.r_[pp-p,.3*ik._rot_error(R,rr)]
     solutions=[least_squares(f,seed,bounds=(ik.LOWER,ik.UPPER),max_nfev=200) for seed in [b[o:o+6],(ik.LOWER+ik.UPPER)/2]+[np.random.default_rng(k).uniform(ik.LOWER,ik.UPPER) for k in range(15)]]
-    sol=min(solutions,key=lambda x:np.linalg.norm(x.fun))
+    good=[x for x in solutions if np.linalg.norm(x.fun[:3])<.005 and np.linalg.norm(x.fun[3:])/.3<.02]
+    sol=min(good,key=lambda x:np.linalg.norm(x.x-b[o:o+6])) if good else min(solutions,key=lambda x:np.linalg.norm(x.fun))
     errors=[max(errors[0],float(np.linalg.norm(sol.fun[:3]))),max(errors[1],float(np.linalg.norm(sol.fun[3:])/.3))]
     if errors[0]>.015 or errors[1]>.10:raise ValueError((label,side,'unreachable',sol.fun))
     goals[side]=sol.x

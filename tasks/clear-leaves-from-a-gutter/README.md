@@ -16,13 +16,13 @@ python rescore.py /absolute/path/to/demo
 
 The allowance is 1,600 controls at 20 Hz (80 simulated seconds). The scripted plan uses 1,060 controls. Wall time and actual scores must be recorded after validation. There is one fixed layout and no random seed.
 
-Count whole leaves inside the bucket after both hands release for one second. Divide by twelve. Partial leaves and leaves outside the bucket earn nothing. The bucket must remain within 40 mm of its starting centre and 18.2 degrees of upright. A leaf falling off the table or broken equipment invalidates the trial. A photo, ruler and count suffice; no force measurement is needed.
+Count whole leaves inside the bucket after both hands release for one second. Divide by three. Partial leaves and leaves outside the bucket earn nothing. The bucket must remain within 40 mm of its starting centre and 18.2 degrees of upright. A leaf falling off the table or broken equipment invalidates the trial. A photo, ruler and count suffice; no force measurement is needed.
 
 ## Setup and approximation
 
-Dimensions, materials and table-frame coordinates are in `task.json`; `geometry.py` supplies every starting pose. Secure the full-size PVC gutter/fascia section on the bench. Use twelve loose dry leaves approximately 60 × 26 mm and 0.3 g each, with a shallow curl raising the tips about 8 mm above the centre. Avoid wet, sticky or crumbling leaves. Replace torn leaves and restore the picture between trials.
+Dimensions, materials and table-frame coordinates are in `task.json`; `geometry.py` supplies every starting pose. Secure the full-size PVC gutter/fascia section on the bench. Use three intact dried cooking bay leaves from one packet, 50–70 × 20–30 mm with a shallow natural curl of 4–10 mm. Keep them dry at room temperature. [Schwartz dried bay leaves](https://www.schwartz.co.uk/products/bay-leaves) are one ordinary source; equivalent whole dried bay leaves are suitable. Select a matching trio once, reuse intact leaves, and restore the pictured cluster between trials. Avoid wet, sticky or crumbling leaves. Replace torn leaves and restore the picture between trials.
 
-Each simulated leaf has four passive articulated panels with finite bending stiffness, gravity and contact. This approximates dry flexible leaf handling; fine veins, tearing, moisture and brittle fragments are omitted. The scoop has a hollow raised handle and a thin curved mouth. All collection and tipping use native contact; there is no attachment of leaves to the scoop or bucket. Material stiffness and friction are engineering estimates, not measurements of a particular leaf species.
+Each simulated leaf has four passive articulated panels with finite bending stiffness, gravity and contact. This approximates dry flexible leaf handling; fine veins, tearing, moisture and brittle fragments are omitted. The scoop has a hollow raised handle and a thin curved mouth. All collection and tipping use native contact; there is no attachment of leaves to the scoop or bucket. The 0.3 g simulated mass, stiffness and friction are engineering estimates, not measurements of a particular packet.
 
 ## Assets
 

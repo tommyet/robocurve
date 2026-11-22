@@ -5,6 +5,7 @@ from planner import Plan
 from common import down
 p=Plan()
 from yam_arena import ik,station
+from yam_arena.constants import READY
 readyP,readyR=ik.tcp_pose(p.a[7:13],station.BASES['right'])
 p.add(3,'raise right',{'right':(readyP+[0,0,.13],readyR,.20)})
 middle=np.array([.157,0,.030]);wing=np.array([.1073134409,.10,.030])
@@ -23,11 +24,14 @@ def trigger(side):
  pressR=Rotation.from_euler('x',-30 if side=='left' else 30,degrees=True).as_matrix()@down(0)
  point=HELMET+PINS[side]+np.array([.024,(1 if side=='left' else -1)*.010,.045])
  move(3,'approach trigger '+side,side,(point+[.04,0,.025],pressR,.01),'joint')
- move(2,'press trigger '+side,side,(point+[0,0,.0075],pressR,.01))
+ move(2,'press trigger '+side,side,(point+[0,0,-.005],pressR,.01))
  move(2,'clear trigger '+side,side,(point+[.025,0,.020],pressR,.01))
+ readySideP,readySideR=ik.tcp_pose(READY,station.BASES[side])
+ move(3,'raise after trigger '+side,side,(readySideP+[0,0,.13],readySideR,.01),'joint')
 trigger('left')
 a,R,g=shield(STARTS['old'],OPEN,g=.20,point=wing)
-move(3,'approach wing','left',(a-R[:,2]*.025,R,g),'joint')
+move(3,'orient above wing','left',(a-R[:,2]*.065,R,g))
+move(3,'approach wing','left',(a-R[:,2]*.025,R,g))
 move(3,'align wing','left',shield(STARTS['old'],OPEN,g=.20,point=wing))
 move(2,'grip wing','left',shield(STARTS['old'],OPEN,point=wing))
 move(1,'release middle','right',shield(STARTS['old'],OPEN,g=.12))
