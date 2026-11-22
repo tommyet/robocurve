@@ -26,8 +26,8 @@ for tag in ['new']:
   axes=bend_axes(3.,.03,10)
   JOINTS.append(joint(tag+'_ear_flex_'+side,tag+'_visor',tag+'_ear_'+side,ear,[0,0,0],axes=axes,break_force=40.,break_torque=.6))
   # Compliant plastic seating avoids an infinite impulse at snap engagement.
-  axes={a:dict(limits=(-.003,.003),stiffness=4000.,damping=4.,max_force=20.) for a in ['transX','transY','transZ']}
-  axes.update({a:dict(limits=(-6,6),stiffness=2.,damping=.03,max_force=.5) for a in ['rotX','rotZ']})
+  axes={a:dict(limits=(-.003,.003),stiffness=300.,damping=2.5,max_force=3.) for a in ['transX','transY','transZ']}
+  axes.update({a:dict(limits=(-6,6),stiffness=.2,damping=.03,max_force=.05) for a in ['rotX','rotZ']})
   axes['rotY']=dict(limits=(0,72),stiffness=.8,damping=.03,max_force=.7)
   JOINTS.append(joint(tag+'_hinge_'+side,'helmet',tag+'_ear_'+side,pin,pin-ear,q0=Rotation.from_matrix(OPEN).as_quat(),q1=[0,0,0,1],axes=axes,enabled=(tag=='old'),collision=False,break_force=80.,break_torque=1.))
 finalize(BODIES,JOINTS)

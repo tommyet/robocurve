@@ -1,3 +1,5 @@
+> Research checkpoint: native fitting demo005 reached 1.0 in 1,020 controls and passed frozen replay. No model baseline or submission was made. The latest review prompt and final rejection of helmet accessory PR3532 leave a weak importance case for this specialist activity.
+
 # Fit a replacement helmet visor
 
 Development: native demo validation is still in progress. Do not submit yet.
@@ -22,7 +24,7 @@ Broken parts score zero. Otherwise award the highest applicable score: 0.25 for 
 
 `task.json` gives dimensions, materials and layout. `geometry.py` supplies the entire generic assembly. It is a task proxy for a two-catch quick-release visor, not a claim of exact compatibility with a retail helmet. The inert shell is a solid ellipsoid with a dark face-opening mark; the unused face cavity and padding are omitted. The visor centre is rigid and its two end ears have passive compliance. The helmet begins bare and the replacement is unattached. Both hinge constraints start disabled. Their assembled rest frames agree at the 70-degree open position, independently of the loose visor’s starting pose.
 
-Small snap-latch flex and insertion resistance are omitted. Local seating is approximated by enabling a finite-break-force hinge only when its hook is within 2.5 mm and 6 degrees of the mating base, at less than 80 mm/s. No object position is written. Seated plastic latches have finite translational/tilt compliance (4,000 N/m; 2 Nm/rad), bounded by 3 mm and 6 degrees. This prevents an instantaneous rigid-lock impulse at engagement; the original 80 N/1 Nm break limits remain. These are engineering estimates. The hinge has two passive detents; both energy wells are equal. Ear stiffness, detent stiffness and break thresholds are engineering estimates rather than calibrated commercial-part measurements. Both policies receive identical contacts, catches and fingers.
+Small snap-latch flex and insertion resistance are omitted. Local seating is approximated by enabling a finite-break-force hinge only when its hook is within 2.5 mm and 6 degrees of the mating base, at less than 80 mm/s. No object position is written. Seated plastic latches have finite translational/tilt compliance (300 N/m; 0.2 Nm/rad), bounded by 3 mm and 6 degrees. This prevents an instantaneous rigid-lock impulse at engagement; the original 80 N/1 Nm break limits remain. These are engineering estimates. The hinge has two passive detents; both energy wells are equal. Ear stiffness, detent stiffness and break thresholds are engineering estimates rather than calibrated commercial-part measurements. Both policies receive identical contacts, catches and fingers.
 
 The replacement fingers have 40 × 10 × 1 mm steel contact faces on 100 × 10 × 2 mm stems, with silicone facing, 0.7 static/0.55 dynamic friction and 6 N jaw effort. They replace the factory finger meshes. The native link masses and inertia are retained as an approximation.
 

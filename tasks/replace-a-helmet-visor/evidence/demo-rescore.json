@@ -1,0 +1,14 @@
+{
+  "score": 1.0,
+  "rows": 1021,
+  "complete": true,
+  "final_measurements": {
+    "new_catches_seated": 2,
+    "closed_once": true,
+    "reopened": true,
+    "released_seconds": 2.5999999999999988,
+    "failed": false
+  },
+  "requires_visual_review": true,
+  "frozen_source_verified": true
+}

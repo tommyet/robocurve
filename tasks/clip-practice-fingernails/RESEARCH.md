@@ -23,3 +23,7 @@ Source: https://edjy.com/blogs/the-cutting-edge/how-much-force-does-it-take-to-c
 The user requested online research instead of a new physical test. No exact-pair
 cutting-force measurement has been found. The earlier review's calibration gap
 therefore remains; no physical test or acceptance readiness is claimed.
+
+### Further online check, 22 November 2026
+
+The 2015 Wu/Chiu/Hou ergonomics paper tests human usability and completion time, not the selected clipper/tip cutting force: https://ir.lib.cyut.edu.tw/bitstream/310901800/23243/2/IJIE_2015-HCWu-%E5%85%B8%E8%97%8F.pdf . A July 2026 hybrid-clipper paper's public abstract reports mean input forces of 6.6 N and 4.6 N, but the accessible abstract does not identify a reproducible retail clipper and practice-tip pair: https://www.earticle.net/Search/Result?q=Hybrid+nail+clipper&sf=4 . These do not justify representing the earlier review's exact-pair test as completed.

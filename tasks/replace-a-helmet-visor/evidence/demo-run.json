@@ -1,0 +1,67 @@
+{
+  "status": "complete",
+  "mode": "demo",
+  "steps": 1020,
+  "requested_steps": 1020,
+  "source_sha256": {
+    "native_contact_audit.py": "7be0ccd32cfacc01728499683678626b949f73d05c6d5f8fb2a7c6ec337c8fdf",
+    "demo_control.py": "d877826766abe11e923bbfac15fc75b0235f6cc9ef6fe394c619096d6b932071",
+    "planner.py": "75763d99396cf50aec7721d72609d7a952aaae284f17d004e12b0bbaa40c9569",
+    "task.py": "27362a63e67427da1f18b358d8c345a87b6ebf707be97c64a4b768388d640afd",
+    "run.py": "b8e40b87c83c6d8edfdac33d86ba4c34f1dd77e57b968f31f8f660f9fea39322",
+    "rescore.py": "4b173539e026ad09d3de4a01c55ca760085b32f8bf09669576cad95a66e5e4ec",
+    "LICENSE": "a71ddeb012ff1961bf252489309b565ffd0443632819aa9c88eef4377f9f9f7a",
+    "task.json": "17a6cd59f35c3384ac1990c0d0bc649c7b9872ad55ebbf7835546bdd57e14994",
+    "make_plan.py": "afbd173bbba8b86c43d89eb4ff2039cf6233b7d4524d83072083773539284c2c",
+    "model.py": "f13bd78d69f12bff591f8fe185384867f6a070bc90dbc3f1c4faed7ff999994c",
+    "README.md": "a969aa02cee284ce1af7a4f447169eeba04cf3251effa94846d9e192b77f8280",
+    "geometry_helpers.py": "16ecb0dca6663617c7e23f691e291492452ff267e8d9986417c55eb7b709ca68",
+    "bootstrap.sh": "533b722fba1ef8e064f59fb984253e200fcdffe9fe254090e42ffad90edc5c55",
+    "common.py": "75100b823d244d16c4b23eb10ae8150c3c0700797b99823691a0d899dae25f8e",
+    "native_model.py": "3e932cb35e17ef8320665d213f3a07643c89dea99d61c466fae41a6d991e56e3",
+    "joint_tracking.py": "79838b26eb6614cc751f4331866387020ddcda48d525557d438406ef59d6e79a",
+    "geometry.py": "5e5042494fc135f6ac3ae3733fa0a5656860c8d7ac10932aaa9efcae50da8d45",
+    "dream_policy.py": "c6727b995f2ec372d6e50a4d675a9b3e1dd12c0748f648708454a30f4e453091",
+    "pad_covers.py": "8eb0c2603a936328674a01b60fa1108b239c1e6233a146833825e20ce031238a",
+    "demo-plan.json": "d510c24cbd921ac0b0ce5f022680ca561ced3443594ecf86477e27cc46b22210",
+    "ENVIRONMENT.json": "9c23a187963bc11b8b93d3189f46a9ae54716ba4b4fad791df028a954df801c8",
+    "native_physics.py": "4624f7de7805857851820cd69f82d61e20dcdce59d01613b78b112f32ee85c2b",
+    "review_views.py": "b4e16bfa19edc75c908e80548f76e83ab713531b93dbaea105fbdb6e2da7cd49",
+    "trace_audit.py": "fc0c681cb860b024236eb8ede90ff894429c29916638312f9dc8fdff354d1fb2"
+  },
+  "control_hz": 20,
+  "score": 1.0,
+  "cpu_preview": false,
+  "submission_evidence": true,
+  "capture_every": 1,
+  "wall_seconds": 560.8115507639595,
+  "initial_measurements": {
+    "new_catches_seated": 0,
+    "closed_once": false,
+    "reopened": false,
+    "released_seconds": 0.0,
+    "failed": false
+  },
+  "measurements": {
+    "new_catches_seated": 2,
+    "closed_once": true,
+    "reopened": true,
+    "released_seconds": 2.5999999999999988,
+    "failed": false
+  },
+  "events": [
+    {
+      "event": "hook_seated_at_hinge",
+      "joint": "new_hinge_left",
+      "time": 25.850000000000232
+    },
+    {
+      "event": "hook_seated_at_hinge",
+      "joint": "new_hinge_right",
+      "time": 25.850000000000232
+    }
+  ],
+  "requires_visual_review": true,
+  "dream_requests": 0,
+  "dream_sessions": {}
+}

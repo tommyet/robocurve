@@ -20,9 +20,9 @@ class Model(NativeModel):
    q=(np.array(points)-self.p('bucket'))@self.orientation('bucket')
    complete+=bool(np.all(np.linalg.norm(q[:,:2],axis=1)<BUCKET_R-.004) and np.all((q[:,2]>-.074)&(q[:,2]<.075)))
   upright=bool(self.orientation('bucket')[2,2]>.95 and np.linalg.norm(self.p('bucket')[:2]-BUCKET[:2])<.04)
-  return dict(leaves_in_bucket=complete,total_leaves=len(LEAVES),bucket_upright=upright,spilled_off_surface=self.spilled,released_seconds=self.release,failed=self.failed)
+  return dict(leaves_in_bucket=complete,total_leaves=len(LEAVES),bucket_upright=upright,spilled_off_surface=self.spilled,released_seconds=self.release,failed=bool(self.failed or self.broken))
  def score(self):
   q=self.measure()
-  if self.failed or self.spilled or not q['bucket_upright'] or self.release<1.:return 0.
+  if self.failed or self.broken or self.spilled or not q['bucket_upright'] or self.release<1.:return 0.
   return q['leaves_in_bucket']/len(LEAVES)
  def state(self):return dict(super().state(),spilled=self.spilled)
