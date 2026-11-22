@@ -1,0 +1,13 @@
+{
+  "title": "Clear dry leaves from a gutter",
+  "category": "Societal relatability",
+  "instruction": "Scoop the leaves out of the gutter into the blue bucket. Leave the gutter clear and the bucket upright.",
+  "context": "A gutter scoop must pass beneath the roof overhang and work inside the curved channel without scattering the debris.",
+  "setup": "Development: full-size 600 mm long, 112 mm half-round PVC gutter on a fascia and roof-edge section; a cross-bracket restricts access. Twelve dry leaves, an ordinary plastic gutter scoop and a blue bucket. Exact layout in geometry.py.",
+  "scoring": "Final score is the fraction of the twelve whole leaves inside the upright bucket after release for one second. A leaf spilled off the work surface invalidates the trial. All other outcomes score zero.",
+  "run_limit": "1,600 controls at 20 Hz (80 seconds)",
+  "action_limit": 1600,
+  "fidelity": "Dry leaves are passive articulated strips with contact and bending. No wet adhesion or brittle fragmentation is modelled. The roof section is full size and lowered to a bench-safe height, preserving overhang and bracket access. Native contacts move the scoop and leaves.",
+  "scores": "Development only: not validated; do not submit.",
+  "media": ""
+}
