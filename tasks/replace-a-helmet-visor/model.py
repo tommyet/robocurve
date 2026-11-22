@@ -8,7 +8,7 @@ class Model(NativeModel):
  def reset_valid(self):return not self.disabled and not self.failed
  def material(self,hands,dt):
   for side in ['left','right']:
-   pressed=-float(self.joint_gap('trigger_slide_'+side)[0])
+   pressed=-float(self.joint_gap('trigger_slide_'+side)[2])
    if pressed>.0028:
     self.disable('old_hinge_'+side,'release_trigger_pressed')
     if side in self.attached:

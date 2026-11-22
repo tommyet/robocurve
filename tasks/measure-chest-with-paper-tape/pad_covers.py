@@ -87,7 +87,7 @@ def install():
                 bind_visual_material(str(shape.GetPath()),visual_path,stage=stage)
                 stem=UsdGeom.Cube.Define(stage,path+paths[name]+'/tweezer_leaf_stem')
                 stem.CreateSizeAttr(1.)
-                c=rotation.inv().apply(np.array([sign*.001,0.,.125])-origin)
+                c=rotation.inv().apply(np.array([0.,0.,.125])-origin)
                 stem.AddTranslateOp().Set(Gf.Vec3d(*c));stem.AddOrientOp().Set(Gf.Quatf(float(q[3]),Gf.Vec3f(*q[:3])))
                 stem.AddScaleOp().Set(Gf.Vec3f(.002,.010,.100))
                 UsdPhysics.CollisionAPI.Apply(stem.GetPrim())

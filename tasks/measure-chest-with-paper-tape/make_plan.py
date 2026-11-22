@@ -3,7 +3,7 @@ from pathlib import Path
 from planner import Plan
 from geometry import *
 from common import rotation
-GRIPS={'left':0,'right':63}
+GRIPS={'left':0,'right':59}
 def orient(normal,approach=None):
  x=np.asarray(normal);x=x/np.linalg.norm(x)
  z=np.array([0.,0.,-1.]) if approach is None else np.array(approach,dtype=float)
@@ -11,9 +11,9 @@ def orient(normal,approach=None):
 p=Plan();rest={s:np.array(BODIES[2+i]['pos']) for s,i in GRIPS.items()}
 Rs={s:orient((1 if s=='left' else -1)*Rotation.from_quat(BODIES[2+i]['quat']).as_matrix()[:,2]) for s,i in GRIPS.items()}
 paper_left=Rotation.from_quat(BODIES[2+GRIPS['left']]['quat']).as_matrix()
-Rs['left']=orient(paper_left[:,2],-paper_left[:,1]*np.sqrt(.5)+np.array([0.,0.,-np.sqrt(.5)]))
 paper_right=Rotation.from_quat(BODIES[2+GRIPS['right']]['quat']).as_matrix()
-Rs['right']=orient(-paper_right[:,2],paper_right[:,1]*np.sqrt(.5)+np.array([0.,0.,-np.sqrt(.5)]))
+Rs['left']=orient(paper_left[:,2],-paper_left[:,1]*np.sin(np.radians(20))+np.array([0.,0.,-np.cos(np.radians(20))]))
+Rs['right']=orient(-paper_right[:,2],paper_right[:,1]*np.sin(np.radians(20))+np.array([0.,0.,-np.cos(np.radians(20))]))
 relative={s:Rotation.from_quat(BODIES[2+GRIPS[s]]['quat']).as_matrix().T@Rs[s] for s in GRIPS}
 def flat_grip(side,normal):
  normal=np.array(normal,dtype=float);normal/=np.linalg.norm(normal)
@@ -32,8 +32,8 @@ perimeter=4*arc(np.pi/2)
 def route(y):
  # Move the thin ends past one another on separate radial paths, compensating
  # the total route length so the manoeuvre does not stretch the paper.
- w=np.clip(1-y/.06,0,1) if y>=0 else np.clip(1+y/.025,0,1)
- offset=.003*w
+ w=np.clip(1-y/.06,0,1) if y>=0 else 1.
+ offset=.002*w
  def one(x):
   a=(x-CENTER[0])/RX;b=y/RY;r=np.hypot(a,b)
   theta=np.arctan2(b,a)+np.arccos(1/r)
@@ -55,19 +55,19 @@ def targets(y,height=0.):
   width=np.array([0.,0.,1.]);paper=np.column_stack([width,tangent,np.cross(width,tangent)])
   out[side]=(target,paper@relative[side],.0215)
  return out
-p.add(4,'lift',targets(.47,.04))
-p.add(1,'settle',targets(.47,.04))
+p.add(4,'lift',targets(.43,.01))
+p.add(1,'settle',targets(.43,.01))
 # Interpolate the physical route continuously rather than cutting across it.
 from yam_arena import ik,station
 errors=[0.,0.];seconds=21
 for k in range(1,round(seconds*20)+1):
- u=ik.smoothstep(k/(seconds*20));y=.47+u*(-.03-.47)
- h=float(np.interp(y,[-.03,.025,.075,.15,.25,.34,.47],[0.,.002,.005,.010,.020,.030,.040]))
+ u=ik.smoothstep(k/(seconds*20));y=.43+u*(.004-.43)
+ h=float(np.interp(y,[.004,.025,.075,.15,.25,.34,.43],[0.,0.,.002,.004,.006,.008,.010]))
  for side,(pos,R,g) in targets(y,h).items():
   o=0 if side=='left' else 7
   q,pe,re=ik.solve(pos,ik.matrix_to_quat_xyzw(R),p.a[o:o+6],base_pos=station.BASES[side],iters=100,rot_weight=.02)
   p.a[o:o+6]=q;p.a[o+6]=g;errors=[max(errors[0],float(pe)),max(errors[1],float(re))]
  p.frames.append(dict(action14=p.a.tolist(),stage='wrap'))
 p.audit.append(dict(stage='wrap',position_error_m=errors[0],rotation_error_rad=errors[1]));print('wrap',errors,flush=True)
-p.add(4,'read',targets(-.03))
+p.add(4,'read',targets(.004))
 print(p.save(Path(__file__).with_name('demo-plan.json')))

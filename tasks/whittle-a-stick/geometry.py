@@ -2,7 +2,7 @@
 from geometry_helpers import *
 BODIES=[];JOINTS=[]
 Q0=Rotation.from_euler("z",90,degrees=True).as_matrix()
-STICK=np.array([.34,.12,TABLE+.014]);KNIFE=np.array([.34,-.17,TABLE+.018]);HANDLE=np.array([-.075,0,0.]);EDGE=np.array([0,-.017,0.])
+STICK=np.array([.34,.12,TABLE+.014]);KNIFE=np.array([.34,-.06,TABLE+.018]);HANDLE=np.array([-.075,0,0.]);EDGE=np.array([0,-.017,0.])
 # A genuinely uncut blank is partitioned into a core and five shaving volumes.
 # No slit, weakened line or pre-cut surface exists in the physical setup.
 core=[box((.012,.135,.012),(0,.0225,0))]
