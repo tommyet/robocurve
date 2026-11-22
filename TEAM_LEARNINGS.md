@@ -6233,3 +6233,35 @@ longitudinal strip, then weaves the middle row with the other strip lifted.
 Its2360 controls pass the reach/rate audit, but native completion remains open.
 The copied runtime manifest's inherited earlier-task completion claim was
 corrected to development status; pinned packages/revisions are unchanged.
+
+008 establishes a stable two-stage150mm peel (40mm first, then a slower110mm
+rise) and intact first cross-strip placement. It later loses the supporting grip
+when the other hand returns directly across the pie for row2. Its first loose
+tail also drifts during the long waiting period off the board.009 keeps that
+strip supported until needed and parks the moving hand via the front of the
+pie.2960 controls pass the unchanged3000-control limit; maxrate ratio0.845.
+The same Pod watchdog is extended to02:30UTC for this full test and verified
+backup, about$2.52 maximum GPU compute. Dream001 remains the same uninterrupted
+matching-physics baseline. No full-score demo or submission has been claimed.
+
+Novelty follow-up: full GitHub PR body search for lattice/pie-crust/weave-strips
+returns only unrelated scissor-stand3466. Pending2296 braids three hair sections
+anchored at a mannequin, revised from cotton ropes after a relatability request.
+The lattice README now explicitly acknowledges that related task; do not claim
+interlacing itself is new. Related external primary work includes RoboCook
+(OpenReview69y5fzvaAT, dough shaping/dumplings), CMU dough flattening and robotic
+bamboo weaving (Automation in ConstructionS0926580526000658). No direct pastry
+lattice benchmark match was found in these bounded searches. Native feasibility,
+not mere public novelty, remains the submission gate.
+
+01:45UTC new live decision: plucking3572/TK-YSAUBC is closed **Not accepted:
+final**, on importance. Reviewer says hand-finishing poultry is not regular work
+for>500,000US workers and is insufficiently commonly witnessed for societal
+relatability. No revision is permitted; only a human appeal within48h. Do not
+push a supposed revision or claim acceptance. The other own open submissions
+are unchanged; hairbrush still needs the actual physical reset check.
+Eito floor-mat3497/TK-CZRUSX also has a revision request (contact loading instead
+of proximity-only dirt release, repeatable dirt preparation/counting, full rig
+specification/protection and asset licensing). Ownership is being checked with
+the user because Eito is active on his separate fork; do not overwrite his work.
+Dream lattice001 completed3000controls, raw score0.0; independent audits pending.

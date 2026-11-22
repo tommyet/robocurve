@@ -11,15 +11,15 @@ class DemoControl:
   stage=self.frames[k-1]['stage'];out=wanted.copy()
   if ':' in stage:
    j=int(stage.split(':')[0]);phase=stage.split(':')[1];targets={'left':(j%2,N-1),'right':(2+j,N-1)}
-   if phase in ['lift longitudinal','feed onto pie','draw across','lower cross strip'] and len(m.pinch.held)!=2:raise RuntimeError('Both strip ends must remain physically pinched through placement')
-   if phase in ['clear right hand','replace longitudinal'] and 'left' not in m.pinch.held:raise RuntimeError('Longitudinal strip slipped before replacement')
+   if phase in ['lift longitudinal','lift longitudinal high','lift cross strip','feed onto pie','draw across','lower cross strip'] and len(m.pinch.held)!=2:raise RuntimeError('Both strip ends must remain physically pinched through placement')
+   if (phase in ['shift support','clear right hand','retreat right','park right','replace longitudinal'] or (j==2 and phase in ['approach','align','pinch'])) and 'left' not in m.pinch.held:raise RuntimeError('Longitudinal strip slipped before replacement')
   else:phase=stage;targets={}
   for side,o in [('left',0),('right',7)]:
    target,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side])
    if side in targets:
     s,i=targets[side];name=STRIPS[s][i];rest=ORIGINS[s]+ROTATIONS[s].apply([0,(i-(N-1)/2)*DX,0])
     if phase in ['align','pinch'] and side not in m.pinch.held:self.offset[side]=.8*self.offset[side]+.2*(m.p(name)-rest)
-    if phase in ['align','pinch','lift longitudinal','replace longitudinal','release longitudinal']:
+    if phase in ['align','pinch','shift support','lift longitudinal','lift longitudinal high','lift cross strip','replace longitudinal','release longitudinal']:
      target+=self.offset[side]
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6);p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=hands[side]['tcp']-p0;rbias=hands[side]['rotation']@R0.T
    def f(q):

@@ -7,6 +7,7 @@ p=Plan();L=down(0)@Rotation.from_euler('x',-25,degrees=True).as_matrix();R=down(
 # Lift one longitudinal strip once for both outer rows, then alternate for the middle.
 for j in [0,2,1]:
  i=j%2;long=ORIGINS[i]+[0,(N-1)/2*DX,0.];cross=ORIGINS[2+j]+ROTATIONS[2+j].apply([0,(N-1)/2*DX,0])
+ if j==2:p.add(2,f'{j}:shift support',{'left':(long+[0,-.160,.150],L,CLOSE)})
  targets={'right':(cross+[0,0,.08],R,OPEN)}
  if j!=2:targets['left']=(long+[0,0,.08],L,OPEN)
  p.add(3,f'{j}:approach',targets,'joint')
@@ -16,15 +17,20 @@ for j in [0,2,1]:
  targets={'right':(cross,R,CLOSE)}
  if j!=2:targets['left']=(long,L,CLOSE)
  p.add(3,f'{j}:pinch',targets)
- targets={'right':(cross+[0,0,.015],R,CLOSE)}
- if j!=2:targets['left']=(long+([0,-.060,.150] if j==0 else [0,-.050,.100]),L,CLOSE)
- p.add(5,f'{j}:lift longitudinal',targets)
+ targets={'right':(cross if j!=2 else cross+[0,0,.015],R,CLOSE)}
+ if j!=2:targets['left']=(long+[0,-.020,.040],L,CLOSE)
+ p.add(4,f'{j}:lift longitudinal',targets)
+ if j!=2:
+  p.add(8 if j==0 else 5,f'{j}:lift longitudinal high',{'left':(long+([0,-.060,.150] if j==0 else [0,-.050,.100]),L,CLOSE)})
+ if j!=2:p.add(4,f'{j}:lift cross strip',{'right':(cross+[0,0,.015],R,CLOSE)})
  entry=PIE+[-.070,CROSS_Y[j],.034];end=PIE+[.0875,CROSS_Y[j],.028]
  p.add(4,f'{j}:feed onto pie',{'right':(entry,R,CLOSE)})
  p.add(6,f'{j}:draw across',{'right':(end,R,CLOSE)})
  p.add(3,f'{j}:lower cross strip',{'right':(end+[0,0,-.006],R,CLOSE)})
  p.add(2,f'{j}:release cross strip',{'right':(end+[0,0,-.006],R,.45)})
  p.add(2,f'{j}:clear right hand',{'right':(end+[0,0,.07],R,.6)})
+ p.add(2,f'{j}:retreat right',{'right':(np.array([end[0],-.18,PIE[2]+.09]),R,.6)})
+ p.add(2,f'{j}:park right',{'right':(np.array([.20,-.18,PIE[2]+.09]),R,.6)})
  if j!=0:
   p.add(5,f'{j}:replace longitudinal',{'left':(long,L,CLOSE)})
   p.add(2,f'{j}:release longitudinal',{'left':(long,L,.45)})

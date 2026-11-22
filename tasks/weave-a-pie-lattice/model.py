@@ -43,7 +43,7 @@ class Model(NativeModel):
   for s,p in enumerate(strips):
    axis=1 if s<2 else 0;other=1-axis
    reach=np.sqrt(max(0.,.086**2-float(np.median(p[:,other]))**2));inside=np.linalg.norm(p[:,:2],axis=1)<.080
-   spans.append(bool(p[:,axis].min() < -reach and p[:,axis].max()>reach and np.max(abs(p[:,other]))<.084 and inside.any() and np.all((p[inside,2]>.012)&(p[inside,2]<.030))))
+   spans.append(bool(p[:,axis].min() < -reach and p[:,axis].max()>reach and inside.any() and np.all((p[inside,2]>.012)&(p[inside,2]<.030))))
   for j in range(3):
    row=[];ok=[]
    for i in range(2):

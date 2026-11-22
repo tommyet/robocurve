@@ -23,7 +23,8 @@ being tested. The simulator treats the pan, bottom shell and filling as one
 rigid body; there is no claim to simulate filling damage or baking.
 
 Use Pillsbury refrigerated pie-crust dough, from the same product and batch for
-all trials. Temper sealed dough as its package directs, unroll on baking
+all trials. Temper the sealed refrigerated dough for 15 minutes at room temperature, as
+[Pillsbury directs](https://www.pillsbury.com/products/pie-crust/refrigerated-pie-crust), then unroll on baking
 parchment, roll between 2 mm thickness guides, and cut five 200 × 25 mm strips
 with a ruler and pastry wheel. Keep prepared strips covered in a refrigerator
 at 2–4 °C. Take one set out five minutes before the trial, at a room temperature
@@ -57,7 +58,8 @@ add supports or stiffen the strips to make the task work.
 ## Scoring
 
 Judge after both grippers are open and at least 50 mm clear for three seconds.
-Use an overhead and oblique photograph and a ruler. A tear separating any strip,
+Use an overhead and oblique photograph and a ruler. Ends may overhang the crust;
+trimming and exact row angles are not scored. A tear separating any strip,
 a strip lost off the work area, or a tipped pie earns zero. Each cross-strip
 must reach the crust on both sides, lie on the pie rather than hang from a hand,
 and pass above one lengthwise strip and below the other. The next row reverses
@@ -103,7 +105,12 @@ A public all-state search of 3,572 Robocurve PRs on 22 November found no direct
 pastry-lattice submission. BEHAVIOR's
 [`make_pastry`](https://behavior.stanford.edu/knowledgebase/tasks/make_pastry-0.html)
 combines ingredients in a food processor; it does not weave strips. These
-searches do not guarantee novelty across every external benchmark. All meshes
+searches do not guarantee novelty across every external benchmark. Related
+[pending task #2296](https://github.com/robocurve/benchmark-tasks/pull/2296)
+braids three hair sections anchored at a head. This task weaves five loose
+strips into an orthogonal lattice on a pie; it requires under-passage and
+replacement without a shared anchored end. The broader skill of interlacing
+is not claimed to be new to robotics. All meshes
 are generated in this folder; no third-party geometry is used.
 
 ## Run and verify
@@ -114,8 +121,8 @@ Use the pinned Python 3.12 / Isaac Sim 6.1 / YAM environment in `ENVIRONMENT.jso
 python tasks/weave-a-pie-lattice/make_plan.py
 OMNI_KIT_ACCEPT_EULA=YES ACCEPT_EULA=Y python tasks/weave-a-pie-lattice/run.py --mode demo --out /tmp/lattice-demo
 OMNI_KIT_ACCEPT_EULA=YES ACCEPT_EULA=Y python tasks/weave-a-pie-lattice/run.py --mode dream --out /tmp/lattice-dream
-python tasks/weave-a-pie-lattice/rescore.py /tmp/lattice-demo
-python tasks/weave-a-pie-lattice/rescore.py /tmp/lattice-dream
+python tasks/weave-a-pie-lattice/rescore_current.py /tmp/lattice-demo
+python tasks/weave-a-pie-lattice/rescore_current.py /tmp/lattice-dream
 ```
 
 Limit: 3,000 actions / 150 seconds at 20 Hz. Fixed layout, no reset jitter or
@@ -124,3 +131,13 @@ Runtime saves every native frame, continuous body/action traces and frozen
 source. CPU rescoring checks source hashes, action bounds, release and the
 outcome; it is not a substitute for native simulation. Native wall times and
 full video inspection must be recorded before submission.
+
+### Tail-alignment scoring correction
+
+The recorded simulation uses the original scorer. Its extra lateral bound on
+loose tails rejected a valid diagonal row, although its six crossings, rim reach
+and supported portions were correct. `rescore_current.py` verifies the frozen
+source and original audit, proves that removing this single condition is the
+only model-code change, then scores the complete trace. Both original and
+corrected scores are retained. Physics, policy, damage and release checks are
+unchanged. Tail overhang is allowed because trimming is outside the task.
