@@ -20,7 +20,7 @@ Count whole leaves inside the bucket after both hands release for one second. Di
 
 ## Setup and approximation
 
-Dimensions, materials and table-frame coordinates are in `task.json`; `geometry.py` supplies every starting pose. Secure the full-size PVC gutter/fascia section on the bench. Use twelve loose dry leaves approximately 60 × 26 mm and 0.3 g each. Avoid wet, sticky or crumbling leaves. Replace torn leaves and restore the picture between trials.
+Dimensions, materials and table-frame coordinates are in `task.json`; `geometry.py` supplies every starting pose. Secure the full-size PVC gutter/fascia section on the bench. Use twelve loose dry leaves approximately 60 × 26 mm and 0.3 g each, with a shallow curl raising the tips about 8 mm above the centre. Avoid wet, sticky or crumbling leaves. Replace torn leaves and restore the picture between trials.
 
 Each simulated leaf has four passive articulated panels with finite bending stiffness, gravity and contact. This approximates dry flexible leaf handling; fine veins, tearing, moisture and brittle fragments are omitted. The scoop has a hollow raised handle and a thin curved mouth. All collection and tipping use native contact; there is no attachment of leaves to the scoop or bucket. Material stiffness and friction are engineering estimates, not measurements of a particular leaf species.
 

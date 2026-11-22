@@ -13,8 +13,10 @@ class Model(NativeModel):
   complete=0
   for row in LEAVES:
    points=[]
-   for n in row:
-    for y in [-.0075,.0075]:points.append(self.p(n,[0,y,0]))
+   for j,n in enumerate(row):
+    half=[.013,.026,.026,.013][j]/2
+    for x in [-half,half]:
+     for y in [-.0075,.0075]:points.append(self.p(n,[x,y,0]))
    q=(np.array(points)-self.p('bucket'))@self.orientation('bucket')
    complete+=bool(np.all(np.linalg.norm(q[:,:2],axis=1)<BUCKET_R-.004) and np.all((q[:,2]>-.074)&(q[:,2]<.075)))
   upright=bool(self.orientation('bucket')[2,2]>.95 and np.linalg.norm(self.p('bucket')[:2]-BUCKET[:2])<.04)

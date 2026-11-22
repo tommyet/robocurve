@@ -31,5 +31,5 @@ for tag in ['old','new']:
   JOINTS.append(joint(tag+'_ear_flex_'+side,tag+'_visor',tag+'_ear_'+side,ear,[0,0,0],axes=axes,break_force=40.,break_torque=.6))
   axes=fixed_axes();axes['rotY']=dict(limits=(0,72),stiffness=.8,damping=.03,max_force=.7)
   JOINTS.append(joint(tag+'_hinge_'+side,'helmet',tag+'_ear_'+side,pin,pin-ear,q0=Rotation.from_matrix(OPEN).as_quat(),axes=axes,enabled=(tag=='old'),collision=False,break_force=80.,break_torque=1.))
-TRAY=np.array([.33,.30,TABLE+.006]);BODIES.append(body('tray',TRAY,[box((.31,.28,.012))],mass=.5,fixed=True,color=(.45,.37,.26)))
+TRAY=np.array([.18,.30,TABLE+.006]);BODIES.append(body('tray',TRAY,[box((.31,.28,.012))],mass=.5,fixed=True,color=(.45,.37,.26)))
 finalize(BODIES,JOINTS)

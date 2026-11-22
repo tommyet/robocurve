@@ -9,3 +9,17 @@ Available replacement material: [Evergreen9015](https://evergreenscalemodels.com
 A thinner polystyrene practice tip could use the published force profile with an explicitly estimated thickness scaling. Width, thickness, lever geometry and spring resistance must enter the mechanical model; proximity or spring force alone cannot trigger cutting. Such a model would still be an approximation, not the physical force check requested on elapsed PR2346.
 
 Do not submit this folder: no native clipper, demo, baseline, scoring or media has been validated. No code from the earlier team was copied. A successful robot demo alone would not establish that the estimated cutting resistance matches the real retail tool and tip.
+
+## Further online check, 22 November 2026
+
+The manufacturer EDJY reports blade-force tests of eight clippers on two unnamed
+nail-like materials (16 September 2026). Neither material thickness/width nor
+competitor model numbers are provided. These results cannot calibrate a named
+retail clipper with the selected replaceable practice tips. They are blade forces,
+not forces applied to the operating lever. Do not substitute one for the other.
+
+Source: https://edjy.com/blogs/the-cutting-edge/how-much-force-does-it-take-to-cut-a-nail-we-tested-8-clippers
+
+The user requested online research instead of a new physical test. No exact-pair
+cutting-force measurement has been found. The earlier review's calibration gap
+therefore remains; no physical test or acceptance readiness is claimed.

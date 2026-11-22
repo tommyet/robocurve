@@ -12,9 +12,9 @@ class DemoControl:
   for side,o in [('left',0),('right',7)]:
    target,R=ik.tcp_pose(wanted[o:o+6],station.BASES[side]);h=hands[side]
    tag=None
-   if side=='right' and phase in ['clear before old','approach old','align old','grip old']:tag='old';point=np.array([.157,0,-.038]);tilt=90
-   if side=='left' and phase in ['approach wing','align wing','grip wing']:tag='old';point=np.array([.150,.040,-.038]);tilt=-90
-   if side=='right' and phase in ['align spare','grip spare']:tag='new';point=np.array([.157,0,-.038]);tilt=40
+   if side=='right' and phase in ['clear before old','approach old','align old','insert old','grip old']:tag='old';point=np.array([.157,0,.030]);tilt=90
+   if side=='left' and phase in ['approach wing','align wing','insert wing','grip wing']:tag='old';point=np.array([.1073134409,.10,.030]);tilt=-90
+   if side=='right' and phase in ['align spare','grip spare']:tag='new';point=np.array([.157,0,.030]);tilt=40
    if tag:
     Q=m.orientation(tag+'_visor');actual=m.p(tag+'_visor')+Q@point
     nominalQ=OPEN if tag=='old' else np.eye(3)

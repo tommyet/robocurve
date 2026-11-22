@@ -22,11 +22,15 @@ SCOOP=np.array([.18,.02,TABLE+.006]);HANDLE=np.array([0,-.12,.070])
 scoop=[]
 # Curved, tapered mouth follows the gutter floor; a flat shovel cannot reach it.
 for x0,x1 in zip(np.linspace(-.045,.045,19)[:-1],np.linspace(-.045,.045,19)[1:]):
- z0=RADIUS-np.sqrt(RADIUS**2-x0*x0);z1=RADIUS-np.sqrt(RADIUS**2-x1*x1)
+ z0=.052-np.sqrt(.052**2-x0*x0);z1=.052-np.sqrt(.052**2-x1*x1)
  points=[[x0,-.055,z0],[x1,-.055,z1],[x0,.055,z0],[x1,.055,z1],[x0,-.055,z0+.003],[x1,-.055,z1+.003],[x0,.055,z0+.0003],[x1,.055,z1+.0003]]
  faces=[(0,2,3,1),(4,5,7,6),(0,1,5,4),(1,3,7,5),(2,6,7,3),(0,4,6,2)]
  scoop.append(dict(kind='mesh',points=points,faces=faces))
-scoop += [box((.003,.11,.025),(-.0465,0,.035)),box((.003,.11,.025),(.0465,0,.035)),box((.093,.003,.045),(0,-.0565,.025))]
+scoop += [box((.003,.11,.025),(-.0465,0,.040)),box((.003,.11,.025),(.0465,0,.040))]
+# The rear wall follows the bowl: flat low corners would strike the gutter.
+for x in np.linspace(-.0425,.0425,18):
+ low=.052-np.sqrt(.052**2-(abs(x)+.0025)**2)+.003
+ scoop.append(box((.005,.003,.055-low),(x,-.0565,(.055+low)/2)))
 scoop += [box((.002,.024,.045),(x,-.055,.038)) for x in [-.008,.008]]
 # A moulded hollow handle keeps the scoop balanced on its bowl.
 handle_R=Rotation.from_euler('x',-20,degrees=True)
@@ -34,17 +38,24 @@ for size,local in [((.001,.14,.014),(-.0085,0,0)),((.001,.14,.014),(.0085,0,0)),
  scoop.append(box(size,HANDLE+handle_R.apply(local),quat=handle_R.as_quat()))
 BODIES.append(body('scoop',SCOOP,scoop,mass=.085,color=(.88,.42,.12),friction=.7))
 LEAVES=[];SEEDS=[]
+# Four connected panels retain a shallow dry-leaf curl, about 8 mm at the tips.
+angles=[-25.,-8.,8.,25.]
+vertices=[np.zeros(3)]
+for angle in angles:
+ tangent=Rotation.from_euler('x',angle,degrees=True).apply([0,.015,0])
+ vertices.append(vertices[-1]+tangent)
+vertices=np.array(vertices);vertices[:,1]-=(vertices[0,1]+vertices[-1,1])/2;vertices[:,2]-=vertices[:,2].min()
 for i in range(12):
  x=GUTTER[0]+[-.015,0,.015][i%3];y=.020+(i//3)*.040
  z=GUTTER[2]-np.sqrt(RADIUS**2-(x-GUTTER[0])**2)+.003+(i%3)*.001
  angle=[-20,15,40][i%3];R=Rotation.from_euler('z',angle,degrees=True);origin=np.array([x,y,z]);names=[]
  for j in range(4):
   name=f'leaf_{i}_{j}';names.append(name);width=[.013,.026,.026,.013][j]
-  pos=origin+R.apply([0,(j-1.5)*.015,abs(j-1.5)*.001])
-  BODIES.append(body(name,pos,[box((width,.015-.00002,.0004))],quat=R.as_quat(),mass=.0003/4,color=(.41+.02*(i%3),.32,.14),friction=.45,contact_offset=.00015,speculative_ccd=True))
+  local=(vertices[j]+vertices[j+1])/2;Q=R*Rotation.from_euler('x',angles[j],degrees=True)
+  BODIES.append(body(name,origin+R.apply(local),[box((width,.015-.00002,.0004))],quat=Q.as_quat(),mass=.0003/4,color=(.41+.02*(i%3),.32,.14),friction=.45,contact_offset=.00015,speculative_ccd=True))
   if j:
-   # Anchors include the shallow curl, held by passive bending stiffness.
-   a=BODIES[-2];b=BODIES[-1];mid=(np.array(a['pos'])+np.array(b['pos']))/2
-   JOINTS.append(joint(f'leaf_flex_{i}_{j}',names[-2],name,R.inv().apply(mid-a['pos']),R.inv().apply(mid-b['pos']),axes=bend_axes(.00004,.000001,120)))
+   a=BODIES[-2];b=BODIES[-1];anchor=origin+R.apply(vertices[j])
+   Ra=Rotation.from_quat(a['quat']);Rb=Rotation.from_quat(b['quat'])
+   JOINTS.append(joint(f'leaf_flex_{i}_{j}',names[-2],name,Ra.inv().apply(anchor-a['pos']),Rb.inv().apply(anchor-b['pos']),axes=bend_axes(.0002,.000003,120)))
  LEAVES.append(names)
 finalize(BODIES,JOINTS)

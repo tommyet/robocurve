@@ -11,8 +11,8 @@ p.add(3,'approach',target(SCOOP+[0,0,.10],g=.7),mode='joint')
 p.add(2,'align',target(SCOOP,g=.7))
 p.add(2,'grip',target(SCOOP))
 p.add(2,'lift',target(SCOOP+[0,0,.12]))
-entry=GUTTER+[0,-.065,-RADIUS+.0005]
-Q=Rotation.from_euler('x',-5,degrees=True).as_matrix()
+entry=GUTTER+[0,-.065,-RADIUS+.0020]
+Q=Rotation.from_euler('x',-1,degrees=True).as_matrix()
 p.add(4,'position',target(entry+[0,0,.065],Q))
 p.add(3,'enter',target(entry,Q))
 stopR=Rotation.from_euler('y',-40,degrees=True).as_matrix()@down(0)

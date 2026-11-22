@@ -6264,7 +6264,7 @@ Gutter007 never lifted the scoop: its solid handle shifted the rest balance, lea
 
 Only two GPUs are running, each$1.09/h, with bounded watchdogs. GPU1 deadline20:18 UTC; GPU2 extended to20:45 UTC for the active Dream baseline. Completed runs through chest018/gutter006/whittle005/visor002 are archived and hash-verified locally. Shut down and delete owned pods after backing up subsequent runs. No API key was sent to the GPUs; the Dream credential bridge remains on Mac loopback.
 
-### 2026-11-22 — 20:20 UTC submission and novelty checkpoint
+### 2026-11-22 — 20:19 UTC submission and novelty checkpoint
 
 Whittling is submitted as upstream PR3812, received TK-HABJR2, media M-2933DF. Demo005 scores1.0 and Dream001 scores0.0; full uncut footage and frozen replays verified. Dream had49 expiry recoveries, disclosed. Chest020 now scores1.0 without relaxing thresholds; matching baseline003 is running. Visor and gutter remain development failures.
 
