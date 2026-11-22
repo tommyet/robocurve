@@ -1,8 +1,8 @@
 {
   "schema": "runtime-evidence-v1",
-  "status": "validation_pending",
-  "scope": "Pinned environment for clear-leaves-from-a-gutter; full task validation is pending.",
-  "current_task_runtime_verified": false,
+  "status": "native_demo_and_model_verified",
+  "scope": "Pinned runtime used for the full gutter demo and Dream baseline.",
+  "current_task_runtime_verified": true,
   "python": "3.12.16",
   "packages": {
     "numpy": "2.5.4",
@@ -44,5 +44,5 @@
     "physics": "Native PhysX contacts, passive joints and the material approximations disclosed in task.json."
   },
   "reference_checked_utc_date": "2026-11-22",
-  "submission_ready": false
+  "submission_ready": true
 }

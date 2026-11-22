@@ -17,7 +17,8 @@
     "changed_files": [
       "task.json",
       "model.py",
-      "README.md"
+      "README.md",
+      "ENVIRONMENT.json"
     ],
     "scorer_sha256": "f47f976f981ed10ae6c2c43a78a86b4a87413daee2ea40dbdda2e50c38f17faa"
   },
@@ -31,5 +32,28 @@
     "equipment_broken": 0.0,
     "bucket_displaced_50mm": 0.0,
     "bucket_tilted_30degrees": 0.0
+  },
+  "gutter-dream-001": {
+    "submitted_scorer_replay": {
+      "score": 0.0,
+      "rows": 1601,
+      "complete": true,
+      "final_measurements": {
+        "leaves_in_bucket": 0,
+        "total_leaves": 3,
+        "bucket_upright": true,
+        "spilled_off_surface": false,
+        "released_seconds": 0.0,
+        "failed": false
+      },
+      "requires_visual_review": true
+    },
+    "changed_files": [
+      "task.json",
+      "model.py",
+      "README.md",
+      "ENVIRONMENT.json"
+    ],
+    "scorer_sha256": "f47f976f981ed10ae6c2c43a78a86b4a87413daee2ea40dbdda2e50c38f17faa"
   }
 }
