@@ -6289,3 +6289,8 @@ A self-contained bootstrap script is included so this task can run when copied
 alone into upstream. Runtime/source snapshots and every unsuccessful trial are
 being preserved before deleting the owned temporary GPU for the break. Check the
 private lifecycle deletion receipt before renting again; never reuse a deleted id.
+
+Pause shutdown confirmed14:01:48UTC: owned Pod deleted and GET404 verified after
+all10demo archives and Dream001 were backed up. Estimated GPU compute$1.81,
+excluding Dream, storage and billing rounding. Temporary SSH key removed; local
+bridge/tunnel stopped. Demo010 completed740controls, frozen/current scores0.0.
