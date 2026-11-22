@@ -6261,3 +6261,31 @@ show the latter exceeded the held strip length. Preserve paper's directional
 stiffness and use a hand-space lift. Demo006 retained both pinches for all720
 controls but scored0: its tape settled below the chest. Demo007 tests raising
 before a continuous tangent-route wrap. No full-score evidence or PR yet.
+
+### 2026-11-22 — Chest measurement paused, not submitted
+
+The user requested a pause by14:04UTC, with a reminder at17:04. Development is
+pushed on `codex/measure-chest-paper-tape-20261122` (checkpoint80c0220), not fork
+main or an upstream PR. Resume details and verified run archives are under
+`artifacts/chest-measurement-2026-11-22/PAUSE_HANDOFF.md` in the original workspace.
+
+Dream001 completed1,600 controls, score0.0; frozen and current rescoring agree.
+The official bridge had33 successful action requests and32 session-expiry retries
+(33 sessions). The physical trial was continuous; do not describe model memory as
+uninterrupted. The pickup failure is not a clean measure of uninterrupted Dream
+performance. Same physics, policy instruction and policy cameras are verified.
+
+Demo007–010 still lack a successful final overlap. Angling both wrists45degrees
+improved reachability but demo010 lost the left pinch around the final crossover;
+right tape063 remained held. Investigate actual contact/force and tracking at
+steps520–600 before another trial. No magic attachment or scoring relaxation was
+introduced. The scorer now uses shortest distance to the actual64-sided chest
+surface, replacing an overly conservative normalized-ellipse gap estimate.
+`rescore_current.py` allows only that measurement-method difference and recording
+camera changes; it verifies all physics/policy code and reconstructs the hold.
+Boundary tests pass. Native full-score evidence and visible reading remain required.
+
+A self-contained bootstrap script is included so this task can run when copied
+alone into upstream. Runtime/source snapshots and every unsuccessful trial are
+being preserved before deleting the owned temporary GPU for the break. Check the
+private lifecycle deletion receipt before renting again; never reuse a deleted id.
