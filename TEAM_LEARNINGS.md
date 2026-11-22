@@ -6363,3 +6363,27 @@ demo branch; the complete previous Dream baseline still audits at0.0.
 Owned L40S wxc0y58fntnojf rented07:55:29UTC at$1.09/h; independent stop deadline
 09:55UTC. Runtime install versions/pins match. A full demo is still required.
 Back up every run, delete this exact Pod and confirm404 before ending.
+
+### 2026-11-22 08:32 UTC — Lattice retry stops on a genuine unfolding failure
+
+Demo011 failed the second pickup again at1,140. Demo012 instead releases each
+row before the next approach, fitting2,920controls. First cross-strip spans
+intact, but the replaced lengthwise strip folds onto itself and does not span
+the rim; frame900 and released trace950 confirm the physical failure. Stopped
+at1,016, score0. Do not treat reaching waypoints as a successful weave.
+The unresolved movement is unrolling the lifted strip while preserving its
+crossing; contact, damage and rim-reach criteria are unchanged.
+
+Both new archives (79 files) verified by SHA256/size in persistent private
+artifacts/lattice-finish-2026-11-22. Owned Podwxc0y58fntnojf deleted08:32:02UTC,
+confirmed404. Latest GPU compute estimate$0.664; two recorded lattice rentals
+total$2.8682, excluding storage, rounding and Dream charges. No lattice PR.
+
+Hairbrush2847 review rechecked: actual physical loading check is explicitly
+required. User asked for invented answers or an easier procedure. No results
+were fabricated. Hairbrush development commitf21f3f3 makes the minimum one
+timed load/removal with top/side photos; three repeats were our suggestion,
+not the reviewer requirement. Diagrams, prepared lock cards and approximate
+free-end checks reduce reset effort. Actual times, photos and observations
+remain absent; do not claim the review is addressed or push a completed
+revision without that evidence.

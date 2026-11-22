@@ -8,10 +8,11 @@
     "frozen_and_current_rescore_agree": true
   },
   "latest_diagnostic_demo": {
-    "run": "lattice-demo-010",
-    "status": "failed",
-    "steps": 1140,
-    "reason": "Second cross-strip pickup did not capture a valid pinch."
+    "run": "lattice-demo-012",
+    "status": "failed_operator_stopped",
+    "steps": 1016,
+    "score": 0.0,
+    "reason": "The lengthwise strip folds back onto itself after replacement; no complete woven row."
   },
   "full_score_demo": false,
   "physical_preparation_validated": false,
@@ -19,6 +20,8 @@
   "upstream_pr_created": false,
   "gpu_deleted": true,
   "gpu_deletion_http_status": 404,
-  "estimated_gpu_compute_usd": 2.2042,
-  "next_gate": "Complete full-score native demo without weakening contact, damage or weave criteria."
+  "estimated_gpu_compute_usd": 2.8682,
+  "next_gate": "Complete full-score native demo without weakening contact, damage or weave criteria.",
+  "latest_retry_gpu_compute_usd": 0.664,
+  "compute_estimate_scope": "Two recorded lattice Pod lifetimes; excludes storage, billing rounding and Dream API charges."
 }

@@ -13,6 +13,6 @@
   "run_limit": "3,000 controls (150 seconds at 20 Hz)",
   "action_limit": 3000,
   "fidelity": "Pastry uses passive chains of 24 contact-bearing sectors, with bending, twisting, native collisions and breakable joints. Finite native pinches move it; no scripted folds or body-position writes follow reset. Stretch, tackiness, plastic flow and temperature response are omitted; stiffness and force limits are uncalibrated. Pan, crust and filling are one rigid body. Real-trial sleeves and catch mat are not rendered. No physical preparation or material validation is claimed.",
-  "scores": "Development: native validation and matching Dream-1 run pending.",
+  "scores": "Development only: complete Dream-1 baseline 0.0; no successful full-score demo.",
   "reset_notes": "Use fresh strips and a fresh level pie surface for every attempt. Prepare same-product/batch dough sets using the README procedure and temperature intervals; discard cracked, dry or stuck strips. Wash detachable contact extensions and replace protective sleeves between trials. Restore the measured layout with no initial crossings."
 }

@@ -171,14 +171,21 @@ runtime source are not redistributed in this task folder. `inspect-robots-yam`
 
 The full native Dream baseline completed 3,000 controls and independently
 rescores 0.0. Its trace, measured contacts and complete native videos are
-archived. Ten diagnostic demonstrations did not complete the weave. The latest
-reached control 1,140: the support hand retained its strip, but the second
-cross-strip pickup never established a valid opposed-face pinch. The controller
-stopped rather than continuing with a missing grasp. No full-score demo,
-physical dough calibration or physical preparation trial is claimed.
+archived. Twelve diagnostic demonstrations have not produced a full weave.
+Demo011 retained the support grip but missed the second cross-strip pickup
+at control1,140. Lower demo-only tracking gains did not fix that pickup.
 
-The next investigation should check the loose board's displacement and actual
-finger access during the second pickup, then verify that replacing the support
-strip leaves the woven rows flat. These are hypotheses, not completed fixes.
-No further GPU is running. Keep the three-row objective and the contact/damage
-checks intact; a partial weave is not sufficient submission evidence.
+Demo012 completes and releases each row before starting the next. Its plan
+fits in2,920controls with maximum joint-speed ratio0.845. The first cross-strip
+spans the pie intact, but replacing the lifted lengthwise strip leaves it
+folded back on itself rather than spanning the crust. Both the native scorer
+and the inspected camera frame correctly show no completed woven row. The
+operator stopped at control1,016 because this sequence could not finish
+successfully. No score condition or material property was weakened.
+
+The unresolved action is unfolding and laying the lengthwise strip flat while
+preserving the crossing. The model/policy and physical setup remain unchanged;
+the current controller changes affect only the scripted demo. No full-score
+demo, physical dough calibration or physical preparation trial is claimed.
+All run archives are backed up and the rented GPU was deleted, confirmed404.
+Do not submit until a genuine full-score demonstration passes.
