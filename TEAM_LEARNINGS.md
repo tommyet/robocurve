@@ -6149,3 +6149,42 @@ The original demo counter was0.0because an extra mesh-floor predicate flagged a 
 Owned L40S `k5qzmhc6vgfnt2` was **deleted at23:56:12UTC**, API404confirmed, after all **521files across14native/diagnostic runs** matched local backup hashes. Estimated session compute **$2.8787**, excluding storage, billing rounding and Dream charges; earlier stopped Pod compute~$0.043is separate. The bridge, tunnel and watchdog exited; four temporary Runpod/SSHcredential copies were removed, leaving original user credentials untouched. Archives, final videos, scoring reports, receipt and deletion proof are preserved in `artifacts/plucking-2026-11-21/`.
 
 Final review recheck before submission found no additional requested revisions. Hairbrush#2847/TK-8AW9EM is the sole actionable reopened review: diagrams/procedure are prepared on `codex/hairbrush-loading-review-20261121`, but the reviewer explicitly requires a physical repeatability/reset check. The user's question remains pending; no physical validation or revised submission was claimed. Fish3289,plate3277,bra3255,ponytail3224,salmon3170andcap3059 remain awaiting review. Muffin2561 and tattoo2541 appeals have no new reply.
+
+### 2026-11-22 — Hairbrush revision and minimal pastry weave ready for handover
+
+Hairbrush [PR #2847](https://github.com/robocurve/benchmark-tasks/pull/2847)
+revision `87f83f5` was received as **TK-DPW5PQ** at 09:02:46 UTC and remains
+pending. Numbered routes, close diagrams and a repeatable loading procedure
+include the user's reported check: a similar household brush, synthetic hair
+from an old wig, a few minutes estimated, retention during gentle movement and
+comb removal without pin damage. No photos, exact measurements, stopwatch
+timing or weighing check were supplied. Do not imply those were verified.
+The 21 executed demo/model source files remain unchanged.
+
+Pastry [PR #3741](https://github.com/robocurve/benchmark-tasks/pull/3741) was
+received as **TK-RSXDMX** at 10:59:59 UTC, with media **M-GDB6YY**. It tests one
+complete over/under operation with three loose strips, not a whole lattice top.
+Demo021 scores **1.0 in 1,020 controls**; matching Dream003 scores **0.0 in
+1,200**. Frozen-source rescoring, native grip checks, every-frame decoding and
+sampled visual review pass. Both policies use the same task and scorer. Audit
+reports are in the task folder; full videos and traces are backed up locally.
+
+Lessons: validate one distinctive operation before adding repeated rows. Use
+actual ends at a circular rim instead of a straight chord inferred from the
+strip's middle. Withdraw the tool through its entry opening. Release pastry
+slightly above a crossing so gravity settles it; do not weaken tear limits to
+hide a collision. Check the local Dream bridge `/health` through its tunnel
+before a model run. The old venv launcher failed imports; direct bundled Python
+with the existing pinned SDK site-packages worked. Credentials stayed on the Mac.
+
+Both owned GPUs were deleted with HTTP 404 confirmation: `bj9wizwe5w9kfp` at
+10:51:35 UTC and `pkbfvwkmhtog2o` at 10:54:31 UTC. This pair cost approximately
+**$2.7685** in GPU compute. Recorded lattice rentals, including prior attempts,
+total **$5.6367**, excluding storage, billing rounding and Dream charges. All
+435 original files were verified and backed up under private local folders
+`artifacts/lattice-local-lift-2026-11-22` and
+`artifacts/lattice-baseline-2026-11-22`. Temporary key copies were removed;
+local bridge, tunnel and watchdogs stopped or exited after deletion.
+
+These two task folders are integrated into the shared fork's main for Eito's
+agent. Leave their upstream submission branches untouched while review is pending.
