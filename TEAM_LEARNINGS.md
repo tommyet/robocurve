@@ -6237,3 +6237,27 @@ Gutter cleaning must preserve installed access; cowl leaf removal3623 is a nearb
 revising task. Visor replacement has real coupled hook/release manipulation per
 SHOEI, but niche maintenance and snap-fit overlap risks. Details/links appended
 to docs/task-ideas-maintenance-2026-11-18.md. No GPU/Dream/task build or PR.
+
+### 2026-11-22 — Chest measurement development in progress
+
+User authorized a chest-measurement PR using a paper tape. Development is in
+`tasks/measure-chest-with-paper-tape`, explicitly unvalidated until paired native
+runs pass. Public searches of chest, measuring tape, circumference, body
+measurement and waist found no exact duplicate; cuff sizing #1681 was rejected
+for rigid arches omitting wrapping, so it is not a cleared measurement precedent.
+The live review prompt was re-read. The intended outcome is a physically readable
+zero-over-scale overlap, not a guessed number.
+
+One owned RTX6000Ada Pod `f3plchj1mporpn` was started at12:22:01UTC, $1.09/hour,
+with a two-hour local stop watchdog. Private lifecycle/transport/evidence lives
+under `/private/tmp/robocurve-chest-ops-20261122`; do not delete the Pod until its
+remaining run evidence is backed up. No Dream key has been sent to it. The local
+SDK bridge is ready; no model episode has yet been started. The initial L40S
+request failed availability and created no Pod.
+
+Native pickup works for a 20mm-wide paper strip standing unsupported on its long
+edge in a shallow curve. A flat reset and a joint-space lift failed; native traces
+show the latter exceeded the held strip length. Preserve paper's directional
+stiffness and use a hand-space lift. Demo006 retained both pinches for all720
+controls but scored0: its tape settled below the chest. Demo007 tests raising
+before a continuous tangent-route wrap. No full-score evidence or PR yet.
