@@ -10,7 +10,7 @@ for a in np.linspace(np.pi,2*np.pi,25)[:-1]+np.pi/48:
 shapes += [box((.112,.003,.056),(0,y,-.028)) for y in [-.30,.30]]
 shapes += [box((.018,.62,.18),(.080,0,.015),color=(.55,.37,.22)),box((.20,.62,.014),(.14,0,.055),color=(.25,.26,.28))]
 # Bracket crosses the access opening at the far edge of this leaf-filled bay.
-shapes += [box((.118,.018,.008),(0,.22,.002),color=(.27,.28,.29)),box((.035,.018,.13),(.065,.22,-.055))]
+shapes += [box((.118,.018,.008),(0,-.22,.002),color=(.27,.28,.29)),box((.035,.018,.13),(.065,-.22,-.055))]
 BODIES.append(body('roof_edge',GUTTER,shapes,mass=6.,fixed=True,color=(.75,.77,.78),friction=.45))
 # Bench-safe timber legs, securing a local 1:1 roof section at reachable height.
 for y in [-.24,.24]:
@@ -46,7 +46,7 @@ for angle in angles:
  vertices.append(vertices[-1]+tangent)
 vertices=np.array(vertices);vertices[:,1]-=(vertices[0,1]+vertices[-1,1])/2;vertices[:,2]-=vertices[:,2].min()
 for i in range(3):
- x=GUTTER[0]+[-.015,0,.015][i%3];y=.100+(i//3)*.040
+ x=GUTTER[0]+[-.015,0,.015][i%3];y=.250+(i//3)*.040
  z=GUTTER[2]-np.sqrt(RADIUS**2-(x-GUTTER[0])**2)+.003+(i%3)*.001
  angle=[-20,15,40][i%3];R=Rotation.from_euler('z',angle,degrees=True);origin=np.array([x,y,z]);names=[]
  for j in range(4):
