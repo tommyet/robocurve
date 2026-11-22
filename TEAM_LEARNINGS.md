@@ -6307,3 +6307,38 @@ permitted. Plucking3572 is finally rejected on importance. Fish3289,plate3277,
 bra3255,ponytail3224 and salmon3170 remain pending. Hairbrush2847 remains
 blocked on the explicitly requested physical loading/reset check. Eito's
 floor-mat3497 revision ownership question remains unanswered.
+
+### 2026-11-22 07:40 UTC — Deadline status audit, research only
+
+Fresh all-state GitHub audit: Tom44PRs =10accepted,4pending,1revision,
+28finalrejections,1withdrawn. Eito37PRs =1accepted,3pending,2revisions,
+27finalrejections,4open drafts (not received submissions). Combined11accepted.
+New Tom decision: salmon3170 finally rejected06:44UTC for physical-trial
+reproducibility. Hairbrush2847 is still the only own revision owed: real
+loading/reset check required; prepared diagrams/procedure are not that evidence.
+Fish3289,plate3277,bra3255,ponytail3224 remain pending. Muffin2561 and tattoo2541
+appeals have no reply. No pending submission has reached48h since latest receipt.
+
+Eito has already revised floor-mat3497 and lawn3585; receipts05:05UTC today.
+Chain3344 revision receivedNov21 16:27UTC. Do not act on stale earlier feedback.
+Two new revisions: bin-liner3631 needs measured partial credit (fraction of12
+retained rim sectors; preserve full-credit opening/drop test); windshield3623
+needs repeatable leaves, affordable matching cowl/build details, safe load-rated
+arm mounting and explicit YAM asset licenses. They are on Eito's fork; coordinate
+ownership before editing. Nine other new Eito tasks finally rejected this
+morning, often for family duplicates or removing the defining physical action.
+
+The original supplied deadlineNov22 23:59AoE converts toNov23 11:59UTC/UK,
+about28h20min after this audit, unless organizers have changed that date.
+Current review prompt isv24, page timestampNov22 06:07:46UTC. This audit did not
+independently verify a new deadline announcement. Hairbrush/bin/windshield
+reservation expiries extend beyond the original competition deadline.
+
+Research priority: pursue concrete revision requests before new builds. Lattice
+remains an unsubmitted failed-demo prototype; plugfuse0.5 has accepted overlap
+1628; hamper lacks full folded/secured success; uncreased paperplane remains
+blocked on deformation. Bandage wrapping and one cold hair roller remain
+unbuilt reserves, not promised quick wins. Fresh GitHub title/body searches
+found no direct bandage/hair-roller/lattice match (only unrelated2054/3466);
+this is bounded public searching, not authenticated-board novelty clearance.
+No paid compute, code changes, comments or PR submissions in this status turn.
