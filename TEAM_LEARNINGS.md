@@ -6149,3 +6149,61 @@ The original demo counter was0.0because an extra mesh-floor predicate flagged a 
 Owned L40S `k5qzmhc6vgfnt2` was **deleted at23:56:12UTC**, API404confirmed, after all **521files across14native/diagnostic runs** matched local backup hashes. Estimated session compute **$2.8787**, excluding storage, billing rounding and Dream charges; earlier stopped Pod compute~$0.043is separate. The bridge, tunnel and watchdog exited; four temporary Runpod/SSHcredential copies were removed, leaving original user credentials untouched. Archives, final videos, scoring reports, receipt and deletion proof are preserved in `artifacts/plucking-2026-11-21/`.
 
 Final review recheck before submission found no additional requested revisions. Hairbrush#2847/TK-8AW9EM is the sole actionable reopened review: diagrams/procedure are prepared on `codex/hairbrush-loading-review-20261121`, but the reviewer explicitly requires a physical repeatability/reset check. The user's question remains pending; no physical validation or revised submission was claimed. Fish3289,plate3277,bra3255,ponytail3224,salmon3170andcap3059 remain awaiting review. Muffin2561 and tattoo2541 appeals have no new reply.
+
+### 2026-11-22 — New review audit and lattice feasibility candidate
+
+00:03UTC live comments: no new requested revisions. Plucking3572, fish3289,
+plate3277, bra3255, ponytail3224, salmon3170 and cap3059 remain pending.
+Hairbrush2847 still explicitly requires a real physical loading/reset check;
+the prepared diagram is not that evidence. Muffin2561 and tattoo2541 appeals
+have no new reply. Do not push any pending submission branch.
+
+Current review-prompt page reports v24 in use since21Nov23:08:43UTC. It expressly
+allows disclosed cutting/bonding/material rules if real grasp, motion and rough
+force remain. Generic screw/hold, snap-fit and upright stacking are now listed
+as covered abilities. Recent accepted examples2991,2961,2958,2943 and our
+cake1919/necktie2168 support ordinary repeatable mechanisms with visible outcomes.
+
+A fresh public index contains3,572PRs. No direct pastry-lattice or roller-bandage
+wrapping match was found; the authenticated board request failed, so these are
+bounded public novelty searches. BEHAVIOR make_pastry prepares dough in a food
+processor, not an over/under lattice. External robot bandaging research exists,
+so bandaging is not claimed new to robotics and remains a reserve.
+
+Started a **development-only** pie-lattice prototype: five flexible strips,
+two laid loose on a180mm pie and three cross-strips to weave; no initial
+crossings/attachments. Passive contact sectors and finite native pinches retain
+bending, tearing and genuine interlacing. The2360-control authored plan passes
+reach/rate checks (maxpositionerror2.20mm); this is not native feasibility.
+CPU score controls accept either checkerboard phase and reject an unwoven grid.
+Native demo/model evidence is outstanding. Do not open a placeholder PR.
+
+Owned L40S vnxz6z8ni2f6ae started00:11:25UTC at$1.09/h, with a two-hour local
+stop watchdog and caffeinate. Pinned package/asset hashes match. Source export
+contains only task code and public simulator bootstrap; no Dream credential
+has been transferred. Delete after all native evidence is backed up.
+
+Lattice001 gripped both strips, then broke a pastry joint at170controls. Native
+finger-geometry audit confirms the two capture contacts.002 with centred
+fingertips and0.6N jaw effort avoided damage but lost a marginal grip at160.
+003 uses natural10mm strip overhang on a180mm square board and grips the last
+sector; it stayed intact but released the left pinch at195controls. All three
+failed diagnostics (111files) are locally SHAverified; none is submission evidence.
+
+003 exposed an inherited contact-rule inconsistency: capture permits0.6mm
+margin at EACH finger, while release used0.6mm for the TOTAL aperture excess.
+At the lost hold the25mm strip's jaw gap was25.667mm, still inside two-face
+contact margins. The new task corrects release to1.2mm combined AND continuously
+rechecks both contact faces; finite force/torque and3mm slip failure remain.
+A CPU regression distinguishes that valid gap from26.3mm (invalid). This is a
+local new-task fix, not a retroactive change to pending submissions.
+
+Lattice004 uses that correction and a controller-only inward/upward peel path
+(-20mm along the strip,+40mm high), preserving slack as earlier crossings
+constrain it. The2420-control plan passes reach/rate checks under a3000-control
+limit. The scorer now requires actual projected centre-line intersections,
+rather than near points, and accepts either checkerboard phase. Native004 is
+still pending; no Dream baseline or full-score demo yet. Material tear force
+remains2N. The original iCloud checkout remains untouched except ignored
+artifact backups. Temporary work is in the healthy clone; owned Pod remains
+bounded by its02:11UTC stop watchdog.
