@@ -5,7 +5,7 @@ from scipy.optimize import least_squares
 from geometry import Rotation,OPEN,STARTS,NEW
 from common import down
 class DemoControl:
- def __init__(self):self.frames=json.loads(Path(__file__).with_name('demo-plan.json').read_text())['frames'];self.grip=None
+ def __init__(self):self.frames=json.loads(Path(__file__).with_name('demo-plan.json').read_text())['frames'];self.grip=None;self.seat_bias=np.zeros(3)
  def action(self,k,wanted,m,observed,hands):
   from yam_arena import ik,station
   phase=self.frames[k-1]['stage'];out=wanted.copy()
@@ -28,6 +28,13 @@ class DemoControl:
     elif self.grip is not None and phase not in ['release spare','clear','open hands','settle']:
      desiredQ=R@gripR.T;origin=target-desiredQ@point
      target=origin+desiredQ@self.grip[0];R=desiredQ@self.grip[1]
+   if side=='right' and phase in ['seat hooks','hold seated'] and self.grip is not None:
+    self.seat_bias=np.clip(self.seat_bias+.08*(STARTS['old']-m.p('new_visor')),-.012,.012)
+    target+=self.seat_bias
+    error=Rotation.from_matrix(OPEN@m.orientation('new_visor').T).as_rotvec()
+    R=Rotation.from_rotvec(np.clip(.25*error,-.05,.05)).as_matrix()@R
+    if phase=='hold seated' and k<len(self.frames) and self.frames[k]['stage']!=phase and len(m.attached)==2:
+     Q=m.orientation('new_visor');self.grip=(Q.T@(h['tcp']-m.p('new_visor')),Q.T@h['rotation'])
    seed=np.clip(observed[o:o+6],ik.LOWER+1e-6,ik.UPPER-1e-6);p0,R0=ik.tcp_pose(seed,station.BASES[side]);bias=h['tcp']-p0;rbias=h['rotation']@R0.T
    def f(q):
     p,r=ik.tcp_pose(q,station.BASES[side]);return np.r_[p+bias-target,.15*ik._rot_error(R,rbias@r),.001*(q-seed)]

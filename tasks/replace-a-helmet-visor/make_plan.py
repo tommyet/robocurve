@@ -18,6 +18,7 @@ move(3,'clear shell front','right',newshield([.43,NEW[1],STARTS['old'][2]+.015],
 move(4,'centre in front','right',newshield([.43,0,STARTS['old'][2]+.015],OPEN))
 move(4,'align hooks','right',newshield(STARTS['old']+[.015,0,.015],OPEN))
 move(3,'seat hooks','right',newshield(STARTS['old'],OPEN))
+move(2,'hold seated','right',newshield(STARTS['old'],OPEN))
 for label,angles in [('close check',np.linspace(-70,0,36)[1:]),('open check',np.linspace(0,-70,36)[1:])]:
  for angle in angles:
   Q=Rotation.from_euler('y',angle,degrees=True).as_matrix();origin=HELMET+PIVOT-Q@PIVOT

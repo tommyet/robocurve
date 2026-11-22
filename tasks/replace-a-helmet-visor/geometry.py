@@ -8,16 +8,7 @@ BODIES.append(body('stand',[.22,0,TABLE+.007],[cylinder(.11,.014)],mass=.6,fixed
 PINS={s:np.array([0,sign*.132,.025]) for s,sign in [('left',1),('right',-1)]}
 for side,sign in [('left',1),('right',-1)]:
  pin=PINS[side]
- housing=[box((.045,.012,.050))]
- # A fixed four-sided guide supports the visible spring plunger.
- centre=np.array([.024,sign*.022,.037])
- housing += [box((.0026,.020,.024),centre+[x,0,0]) for x in [-.0067,.0067]]
- housing += [box((.0108,.0026,.024),centre+[0,y,0]) for y in [-.0087,.0087]]
- BODIES.append(body('base_'+side,HELMET+pin+np.array([0,-sign*.012,0]),housing,mass=.025,fixed=True,color=(.12,.14,.16),contact_offset=.0001))
- button=pin+np.array([.024,sign*.010,.045])
- BODIES.append(body('trigger_'+side,HELMET+button,[box((.010,.014,.014))],mass=.005,color=(.75,.20,.10),friction=.7))
- axes=fixed_axes();axes['transZ']=dict(limits=(-.004,0),stiffness=650.,damping=.3)
- JOINTS.append(joint('trigger_slide_'+side,'helmet','trigger_'+side,button,[0,0,0],axes=axes,break_force=60.))
+ BODIES.append(body('base_'+side,HELMET+pin+np.array([0,-sign*.012,0]),[box((.045,.012,.050))],mass=.025,fixed=True,color=(.12,.14,.16)))
 # The shield is 2 mm polycarbonate represented by curved segments, joined to
 # two compliant ears. The shell remains solid; the unused face opening isn't
 # removed because the task only contacts the outside visor and hinge bases.
@@ -34,6 +25,9 @@ for tag in ['new']:
   BODIES.append(body(tag+'_ear_'+side,origin+Q@ear,[box((.032,.005,.026))],quat=Rotation.from_matrix(Q).as_quat(),mass=.006,color=(.32,.40,.44),friction=.8))
   axes=bend_axes(3.,.03,10)
   JOINTS.append(joint(tag+'_ear_flex_'+side,tag+'_visor',tag+'_ear_'+side,ear,[0,0,0],axes=axes,break_force=40.,break_torque=.6))
-  axes=fixed_axes();axes['rotY']=dict(limits=(0,72),stiffness=.8,damping=.03,max_force=.7)
+  # Compliant plastic seating avoids an infinite impulse at snap engagement.
+  axes={a:dict(limits=(-.003,.003),stiffness=4000.,damping=4.,max_force=20.) for a in ['transX','transY','transZ']}
+  axes.update({a:dict(limits=(-6,6),stiffness=2.,damping=.03,max_force=.5) for a in ['rotX','rotZ']})
+  axes['rotY']=dict(limits=(0,72),stiffness=.8,damping=.03,max_force=.7)
   JOINTS.append(joint(tag+'_hinge_'+side,'helmet',tag+'_ear_'+side,pin,pin-ear,q0=Rotation.from_matrix(OPEN).as_quat(),q1=[0,0,0,1],axes=axes,enabled=(tag=='old'),collision=False,break_force=80.,break_torque=1.))
 finalize(BODIES,JOINTS)

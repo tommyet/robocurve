@@ -19,12 +19,8 @@ class Model(NativeModel):
    for side in ['left','right']:
     UsdPhysics.DriveAPI(self.joints[tag+'_hinge_'+side].GetPrim(),'rotY').GetTargetPositionAttr().Set(target)
   for side in ['left','right']:
-   pressed=-float(self.joint_gap('trigger_slide_'+side)[2])
-   if pressed>.0028:
-    if side in self.attached:
-     self.disable('new_hinge_'+side,'release_trigger_pressed');self.enabled.discard('new_hinge_'+side);self.attached.discard(side)
    name='new_hinge_'+side
-   if side not in self.attached and pressed<.001:
+   if side not in self.attached:
     gap=float(np.linalg.norm(self.joint_gap(name)));Q=self.orientation('new_ear_'+side)
     angle=Rotation.from_matrix(OPEN.T@Q).magnitude()
     if gap<.0025 and angle<np.radians(6) and np.linalg.norm(self.velocities[self.index['new_ear_'+side],:3])<.08:
@@ -42,3 +38,9 @@ class Model(NativeModel):
  def state(self):return dict(super().state(),attached=sorted(self.attached),closed_once=self.closed_once,opened_after=self.opened_after,detent=self.detent)
  def restore(self,state):
   super().restore(state);self.attached=set(self.attached)
+
+ def draw(self,d):
+  # Painted face-opening region on the inert solid shell; visual only.
+  points=np.asarray(shell['points'])*1.003+HELMET
+  faces=[f for f in shell['faces'] if np.mean(np.asarray(shell['points'])[list(f)],axis=0)[0]>.035 and abs(np.mean(np.asarray(shell['points'])[list(f)],axis=0)[2])<.045]
+  d.mesh('face_opening_mark',points,faces,(.025,.028,.032))
