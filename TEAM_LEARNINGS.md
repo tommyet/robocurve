@@ -6423,3 +6423,26 @@ deadline10:56:59UTC. Archives013–016 are SHA256/size verified and copied to
 private artifacts/lattice-local-lift-2026-11-22. No new Dream or second GPU has
 been started. Finish or back up any new runs and delete the exact owned Pod
 before ending; do not interpret this interim entry as a shutdown confirmation.
+
+### 2026-11-22 — Minimal pastry weaving scope and honest scorer correction
+
+Five-strip demo018 completes a real first over/under row. Its median-X chord
+estimate wrongly rejected a curved lengthwise strip whose actual endpoints
+reach the circular crust (state880 retained). Use actual endpoints, with each
+past the opposite60mm half-plane and on/outside86mm radius. Short ends and
+U-shaped arrangements must not receive full credit. The run then failed its
+second longitudinal pickup at1060; no full five-strip success is claimed.
+
+To honor the user's minimal accepted-standard scope, the task is now explicitly
+one weaving operation: three loose strips, one cross-strip over one support
+and under the other. It does not claim to finish a whole pie top. Half credit
+requires the complete over/under pair; full credit additionally requires all
+three strips flat and spanning the crust. Final setup/scorer are frozen before
+the new demo019 and Dream002; neither older setup is reused as matching proof.
+Thirteen CPU boundary cases pass. Native validation remains pending.
+
+Primary pkbfvwkmhtog2o runs demo019. Second owned L40S bj9wizwe5w9kfp starts
+10:16:43UTC at$1.09/h for the matching1200-control Dream run; independent local
+watchdog shortened to11:16:43UTC. The Dream key remains on the Mac behind the
+loopback SSH bridge. Back up and delete both exact owned Pods before ending.
+The clean upstream submission worktree is prepared but has no PR or task yet.

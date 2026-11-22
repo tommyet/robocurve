@@ -1,28 +1,11 @@
 {
-  "status": "validating_250mm_setup",
+  "status": "validating_minimal_three_strip_task",
   "submission_ready": false,
-  "latest_diagnostic_demo": {
-    "run": "lattice-demo-016",
-    "status": "failed",
-    "steps": 484,
-    "score": 0.0,
-    "reason": "Passed the first crossing but displaced the second lengthwise strip and lost the right grip."
-  },
   "full_score_demo": false,
+  "matching_current_dream_required": true,
   "physical_preparation_validated": false,
   "media_uploaded": false,
   "upstream_pr_created": false,
-  "gpu_deleted": false,
-  "estimated_gpu_compute_usd": 2.8682,
-  "next_gate": "Complete full-score native demo without weakening contact, damage or weave criteria.",
-  "latest_retry_gpu_compute_usd": 0.664,
-  "compute_estimate_scope": "Two recorded lattice Pod lifetimes; excludes storage, billing rounding and Dream API charges.",
-  "prior_200mm_dream": {
-    "status": "complete",
-    "steps": 3000,
-    "score": 0.0,
-    "frozen_and_current_rescore_agree": true
-  },
-  "matching_current_dream_required": true,
-  "current_candidate": "lattice-demo-017: higher and flatter feed trajectory"
+  "scope": "One complete over/under weaving operation, not a whole lattice top.",
+  "prior_evidence": "Five-strip diagnostics remain archived separately; no prior full run is claimed as matching this setup."
 }

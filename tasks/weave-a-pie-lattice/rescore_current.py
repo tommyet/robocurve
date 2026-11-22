@@ -1,4 +1,4 @@
-"""Audit frozen native evidence, then remove only the irrelevant tail-alignment penalty."""
+"""Audit frozen native evidence and verify the current three-strip scorer."""
 from pathlib import Path
 import argparse,hashlib,json,subprocess,sys
 HERE=Path(__file__).resolve().parent
@@ -7,8 +7,7 @@ def main():
  p=argparse.ArgumentParser();p.add_argument('run',type=Path);a=p.parse_args();run=a.run.resolve();report=json.loads((run/'run.json').read_text())
  subprocess.run([sys.executable,str(HERE/'rescore.py'),str(run)],check=True)
  frozen=json.loads((run/'rescore.json').read_text());assert frozen['frozen_source_verified']
- old=(run/'source/model.py').read_text();new=(HERE/'model.py').read_text();penalty=' and np.max(abs(p[:,other]))<.084'
- assert old==new or (old.count(penalty)==1 and old.replace(penalty,'')==new),'Only the documented tail-alignment condition may change.'
+ assert (run/'source/model.py').read_bytes()==(HERE/'model.py').read_bytes(),'Current scorer must match the recorded three-strip run.'
  authoring={'demo-plan.json','make_plan.py','demo_control.py','planner.py'}
  for f in HERE.iterdir():
   if f.suffix!='.py' or f.name in {'model.py','rescore_current.py'}:continue
@@ -31,7 +30,7 @@ def main():
   row=json.loads(line);m.restore(row['state']);current=m.measure()
   assert current['failed']==row['measurements']['failed']
   changed+=current['rows']!=row['measurements']['rows']
- score=m.score();out=dict(frozen,score=score,measurements=m.measure(),native_recorded_score=report['score'],physics_and_policy_unchanged=True,changed_measurement_frames=changed,scoring_correction='Remove an absolute lateral tail bound that rejected an otherwise correctly woven diagonal row. Rim reach, real crossing order, flatness on the pie, damage and release checks are unchanged.',scorer_sha256={n:hashlib.sha256((HERE/n).read_bytes()).hexdigest() for n in ['model.py','rescore_current.py']})
+ score=m.score();out=dict(frozen,score=score,measurements=m.measure(),native_recorded_score=report['score'],physics_and_policy_unchanged=True,changed_measurement_frames=changed,scoring_correction='None: current three-strip scorer matches the recorded native run',scorer_sha256={n:hashlib.sha256((HERE/n).read_bytes()).hexdigest() for n in ['model.py','rescore_current.py']})
  def scalar(value):
   import numpy as np
   if isinstance(value,np.generic):return value.item()

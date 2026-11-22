@@ -1,122 +1,106 @@
-# Weave a lattice top on a pie
+# Weave a pastry strip into a pie lattice
 
-Development prototype, not submission-ready. The earlier 200 mm-strip Dream baseline scores 0.0; it cannot validate the
-current 250 mm setup. A new full-score demo and matching Dream run are required.
-Do not submit this folder in its current state.
+Development prototype, not submission-ready. The three-strip setup still needs
+its own complete native demonstration and matching Dream run.
 
-Weave three loose pastry strips across two strips already laid on a small pie.
-Every crossing must alternate over and under. Leave all five strips intact,
-spanning the crust, and release them. Cutting, filling, trimming and baking are
-outside this task.
+Weave one loose strip over one strip and under the other on a pie, then leave
+all three intact, flat and spanning the crust. This tests the basic weaving
+operation; completing a whole lattice top, trimming and baking are outside the
+task. No crossing is made in advance and no strip end is fixed.
 
-The two lengthwise strips start flat, with no crossings made and no ends fixed.
-The work is lifting soft pastry, feeding a cross-strip underneath it, and
-replacing it without undoing earlier crossings. Merely laying three strips on
-top does not earn credit.
+## Setup and reset
 
-## Physical setup and reset
+Use a loose aluminium tart pan, 180 mm inside diameter, 190 mm rim diameter and
+36 mm deep, with a bottom pastry shell and commercially canned apple pie
+filling level 1–2 mm below the rim. Prepared mass is about 550 g. The simulator
+treats pan, shell and filling as one rigid body.
 
-Use an ordinary 180 mm inside-diameter, 190 mm rim-diameter, 36 mm deep aluminium
-pie/tart pan, a bottom pastry shell and a level layer of commercially canned
-apple pie filling. The pan is loose on the worktop. Fill to 1–2 mm below its rim;
-the whole prepared pie weighs approximately 550 g. Filling preparation is not
-being tested. The simulator treats the pan, bottom shell and filling as one
-rigid body; there is no claim to simulate filling damage or baking.
+Use Pillsbury refrigerated pie-crust dough from the same product and batch for
+all trials. Temper the sealed dough for 15 minutes at room temperature, as
+[Pillsbury directs](https://www.pillsbury.com/products/pie-crust/refrigerated-pie-crust).
+Unroll on baking parchment, roll between 2 mm guides and cut three 250 × 25 mm
+strips with a ruler and pastry wheel. Keep them covered at 2–4 °C; take a set
+out five minutes before a trial in a 20–22 °C room. Do not flour, glue or
+pre-crease them. Reject cracked, stuck or dry strips. Record product, batch,
+temperature and preparation intervals. Prepare several sets together and use
+fresh strips and a fresh level surface each attempt. This preparation protocol
+has not been physically validated.
 
-Use Pillsbury refrigerated pie-crust dough, from the same product and batch for
-all trials. Temper the sealed refrigerated dough for 15 minutes at room temperature, as
-[Pillsbury directs](https://www.pillsbury.com/products/pie-crust/refrigerated-pie-crust), then unroll on baking
-parchment, roll between 2 mm thickness guides, and cut five 250 × 25 mm strips
-with a ruler and pastry wheel. Keep prepared strips covered in a refrigerator
-at 2–4 °C. Take one set out five minutes before the trial, at a room temperature
-of 20–22 °C. Do not flour, glue or pre-crease the strips. Reject visibly cracked,
-stuck or dry strips. Record the product, batch, temperature and preparation
-intervals. Prepare several sets together; use fresh strips and a fresh top
-surface for each attempt. This preparation protocol has not been physically
-validated.
+Place two strips north–south across the pie, their centrelines 64 mm apart.
+The third lies east–west on a 180 × 180 × 42 mm wooden board to the left,
+50 mm south of the pie centreline, overhanging each end by 35 mm. Nothing is
+attached. Pie centre is (350, 25) mm and board centre (130, 25) mm; worktop
+height is 747.5 mm. The board and filling surfaces are level. Exact generated
+geometry is in `geometry.py`.
 
-Lay two strips north–south on the pie, their centre lines 64 mm apart. Lay the
-other three east–west, 50 mm apart, on a 180 × 180 × 42 mm chopping board to the
-left, with 35 mm of natural strip overhang at each end for pickup. The board is level with the pie surface. None is attached, pre-threaded
-or already overlapping another strip. The fixed layout is in `geometry.py`;
-metres are relative to the robot station, with worktop height 747.5 mm. The pie
-centre is (350, 25) mm and the board centre is (130, 25) mm in plan view.
+Both arms use smooth stainless finger extensions: 40 × 6 × 1 mm working leaves
+and 100 × 8 × 1 mm stems, specified in `pad_covers.py`. Round and deburr edges.
+For physical trials, cover grippers and wrists with food-safe sleeves and use
+a washable catch mat. Sleeves must not bridge the jaws. Wash extensions and
+replace sleeves between attempts. Do not eat evaluation food. Sleeves and mat
+are physical-rig protection and are not rendered.
 
-Use removable, smooth stainless finger extensions with 40 × 6 × 1 mm working
-leaves and 100 × 8 × 1 mm stems as specified in `pad_covers.py`. Round and deburr
-the edges. The extensions are washable food-contact surfaces; cover the
-underlying grippers/wrists with disposable food-safe sleeves and put a washable
-catch mat beneath the work. Remove and wash the extensions and replace the
-sleeves between trials. Do not eat evaluation food. Sleeves and catch mat are
-physical-rig protection, not rendered task objects; they must not bridge the
-jaws or obstruct the pastry. No real rig or material test is claimed here.
-
-Before physical trials, manually check that a prepared strip can be lifted and
-laid without sticking or cracking, and that the extensions can grip it without
-cutting it. Record any rejected preparation. Do not quietly change the dough,
-add supports or stiffen the strips to make the task work.
+Before physical trials, manually check that prepared strips lift and lay
+without sticking or cracking, and that the extensions grip without cutting.
+Record rejected preparation; do not quietly stiffen dough or add supports.
+No physical rig or material calibration is claimed.
 
 ## Scoring
 
-Judge after both grippers are open and at least 50 mm clear for three seconds.
-Use an overhead and oblique photograph and a ruler. Ends may overhang the crust;
-trimming and exact row angles are not scored. A tear separating any strip,
-a strip lost off the work area, or a tipped pie earns zero. Each cross-strip
-must reach the crust on both sides, lie on the pie rather than hang from a hand,
-and pass above one lengthwise strip and below the other. The next row reverses
-that order. Either checkerboard phase is equally valid.
+Judge after both grippers are open and 50 mm clear for three seconds, using
+overhead/oblique photographs, video and a ruler.
 
-Award one third for each complete correctly woven row in the better of those
-two checkerboard phases. A row with both crossings on top or both underneath
-gets zero. No starting-placement credit is awarded. Full score needs all three
-rows, all five strips intact and spanning the crust, with the lattice resting
-on the pie. Finishing with the opposite over/under phase or handling the loose
-strips in a different order makes no difference.
+- **0.5:** the cross-strip passes over one lengthwise strip and under the other,
+  with both crossings within 80 mm of the pie centre. Either order is valid.
+- **1.0:** the above, and all three strips rest flat and reach the crust at both
+  ends. Each end reaches the 86 mm-radius inner crust and extends at least
+  60 mm to its side of the centre along its main direction (north–south for
+  the original two strips; east–west for the cross-strip). Portions over the
+  filling must be no more than 12 mm above its surface.
+- **0:** no complete over/under pair, hands not released, any strip torn through
+  or lost off the work area, or the pie tilted more than 30 degrees at any time.
 
-The scorer uses native strip poses and the loose pan's frame. It sorts strips
-by their final positions, checks each row's two crossing orders and rim reach,
-and checks release and integrity. Submillimetre tolerances in that geometric
-implementation are numerical guards for the disclosed 2 mm material model,
-not measurements a real judge must take. The visible criterion is which intact
-strip is above the other at each crossing.
+The actual ends determine crust reach. Curved strips and overhanging tails
+are allowed; straightening and trimming are not tested. A U-shaped strip with
+both ends on one side does not span the pie. The scorer checks real projected
+crossings and height order, not proximity to target poses. Its submillimetre
+crossing guards distinguish the two layers in the 2 mm model; a real judge
+only checks which strip visibly lies above the other. Partial credit separates
+a completed weave from finishing its placement.
 
-## Approximation
+## Simulation limits
 
-Each strip is 24 contact-bearing rigid sectors joined by passive bend/twist
-joints. Gravity, contact, friction and finite native grips move them. The joints
-can break; there is no scripted fold, snap-to-weave, target trajectory for dough,
-or body-position write after reset. The model omits pastry stretch, plastic
-flow, tackiness and temperature dependence. Its stiffness, 2 N tear limit and
-0.8 N grip limit are nominal, uncalibrated approximations. They are not measured
-properties of the named dough. The important retained constraints are bending,
-support, collision, possible tearing and genuine over/under passage.
+Each strip has 24 contact-bearing sectors with passive bend/twist joints,
+gravity, collision and friction. Joints can tear; finite native grips can
+slip. No scripted fold, snap-to-weave or body-position write follows reset.
+Stretch, plastic flow, tackiness and temperature dependence are omitted.
+Stiffness, the 2 N tear threshold and 0.8 N grip limit are nominal, uncalibrated
+approximations, not measurements of the named dough. Pan, filling and shell
+are one rigid body. The retained skill is lifting, under-passage and replacing
+loose flexible material without tearing or undoing the crossing.
 
-`make_plan.py` authors joint commands offline; `demo_control.py` corrects for
-observed poses but can only command the same robot joints as Dream. Both
-policies use the same scene, cameras, finger hardware, force limits and scorer.
+The scripted demo reads measured poses but outputs only ordinary robot joint
+commands. Dream and the demo use the same task, hardware and physics.
 
-## Sources and novelty
+## Novelty and sources
 
-The method follows [King Arthur's lattice technique](https://www.kingarthurbaking.com/blog/2021/07/01/how-to-make-a-lattice-pie-crust):
-lift alternating strips, add a cross-strip, replace them and alternate the next
-row. [Pillsbury](https://www.pillsbury.com/everyday-eats/desserts/pies-tarts/how-to-make-pie)
-documents using its refrigerated crust for lattice tops.
+[King Arthur's lattice method](https://www.kingarthurbaking.com/blog/2021/07/01/how-to-make-a-lattice-pie-crust)
+lifts strips, places a cross-strip and replaces them. This task isolates one
+such operation. [Pillsbury](https://www.pillsbury.com/everyday-eats/desserts/pies-tarts/how-to-make-pie)
+also describes lattice tops using refrigerated pie crust.
 
-A public all-state search of 3,572 Robocurve PRs on 22 November found no direct
-pastry-lattice submission. BEHAVIOR's
+Public searches for lattice, pastry and weave on 22 November found no direct
+Robocurve match. BEHAVIOR's
 [`make_pastry`](https://behavior.stanford.edu/knowledgebase/tasks/make_pastry-0.html)
-combines ingredients in a food processor; it does not weave strips. These
-searches do not guarantee novelty across every external benchmark. Related
-[pending task #2296](https://github.com/robocurve/benchmark-tasks/pull/2296)
-braids three hair sections anchored at a head. This task weaves five loose
-strips into an orthogonal lattice on a pie; it requires under-passage and
-replacement without a shared anchored end. The broader skill of interlacing
-is not claimed to be new to robotics. The pie, board, pastry and finger extensions are generated in this folder.
-The robot assets are listed below.
+combines ingredients in a food processor. Related
+[hair-braiding task #2296](https://github.com/robocurve/benchmark-tasks/pull/2296)
+interlaces sections anchored at a head; this task passes a loose strip through
+an orthogonal crossing and replaces its loose support. These bounded searches
+do not guarantee novelty across every benchmark.
 
 ## Run and verify
 
-Use the pinned Python 3.12 / Isaac Sim 6.1 / YAM environment in `ENVIRONMENT.json`.
+Use the pinned Python 3.12 / Isaac Sim 6.1 / YAM runtime in `ENVIRONMENT.json`.
 
 ```sh
 python tasks/weave-a-pie-lattice/make_plan.py
@@ -126,23 +110,11 @@ python tasks/weave-a-pie-lattice/rescore_current.py /tmp/lattice-demo
 python tasks/weave-a-pie-lattice/rescore_current.py /tmp/lattice-dream
 ```
 
-Limit: 3,000 actions / 150 seconds at 20 Hz. Fixed layout, no reset jitter or
-random seed. The deterministic IK authoring search uses seeds 17, 31 and 43.
-Runtime saves every native frame, continuous body/action traces and frozen
-source. CPU rescoring checks source hashes, action bounds, release and the
-outcome; it is not a substitute for native simulation. Native wall times and
-full video inspection must be recorded before submission.
-
-### Tail-alignment scoring correction
-
-The Dream baseline and earlier diagnostics use the original scorer; the final
-demo candidate uses the corrected scorer. The original extra lateral bound on
-loose tails rejected a valid diagonal row, although its six crossings, rim reach
-and supported portions were correct. `rescore_current.py` verifies the frozen
-source and original audit, proves that removing this single condition is the
-only model-code change, then scores the complete trace. Both original and
-corrected scores are retained. Physics, policy, damage and release checks are
-unchanged. Tail overhang is allowed because trimming is outside the task.
+Limit: 1,200 controls / 60 seconds at 20 Hz. Fixed layout, no reset jitter or
+random seed; offline IK search seeds are 17, 31 and 43. Runtime saves every
+native frame, actions, body traces and frozen source. Rescoring verifies that
+source before checking the outcome. CPU checks are not native evidence.
+Recorded wall times and video review will be added after validation.
 
 ## Asset attribution
 
@@ -166,19 +138,3 @@ and mast are primitive geometry in the external runtime. Robot meshes and
 runtime source are not redistributed in this task folder. `inspect-robots-yam`
 0.38.0 separately carries an MIT package licence and its MIT I2RT
 `assets/MENAGERIE_LICENSE`; all runtime versions are pinned in `ENVIRONMENT.json`.
-
-## Validation status — 22 November 2026
-
-The earlier 200 mm-strip Dream baseline completed 3,000 controls at 0.0. It is
-archived as a prior setup, not evidence for the current 250 mm strips. The
-longer strips provide ordinary overhang for lifting a local arch without
-anchoring the ends. Their dimensions and mass change together; passive
-material properties and damage checks remain unchanged. A new matching Dream
-run is required.
-
-The latest diagnostic, demo016, captured both strips and made the first
-under-passage, but its feeding tool displaced the second lengthwise strip and
-lost the right grip at control 484. It stopped with score 0.0. The next
-controller raises and flattens the feeding path to clear that crossing.
-No full-score demonstration or physical dough test is claimed. Do not submit
-until a complete native demo, matching baseline and their audits pass.
