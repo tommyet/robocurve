@@ -4,6 +4,27 @@ Last updated: 2026-11-18 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-24 00:40 UTC — live PR status; Ethernet #3950 revision requested
+
+- GitHub search (all states) found 89 team PRs: 11 merged/accepted (tommyet 10,
+  Miyamura80 1: bassinet 2232), 8 waiting for review (3255, 3277, 3812, 3816,
+  3844, 3809, 3631, 3623), 1 revisable (3950), 64 final rejections, 4 stale
+  feedback drafts (2207-2210), 1 closed undecided (2860, superseded by 3224).
+  New finals since 22 Nov notes include 3741, 2847, 3289, 3624, 3585, 3497, 3810.
+- Ethernet [#3950](https://github.com/robocurve/benchmark-tasks/pull/3950),
+  TK-PAN6NF, head `Miyamura80:submit/crowded-ethernet-latch-2210` @ `6782c26`:
+  **Not accepted, revision allowed**; hold lapses ~25 Nov 07:25 UTC. Required:
+  (a) category Impact on AI timelines with data-center context; (b) named,
+  readily available two-row RJ45 panel/switch, standard patch leads, stand/cable/
+  arm dimensions and positions; (c) replace hidden sub-mm tab/latch measurements
+  with observable real-trial checks of release, seating, retention and the six
+  neighbours; (d) final sampled demo frame shows 0.75, not 1.00. Reviewer also
+  flagged 2.33 deg / 0.122 mm joint diagnostic exceeding 0.5 deg / 0.100 mm limits.
+- Submitted source copied locally as branch `ref/ethernet-3950-submitted` (read-only
+  fetch of the public fork). This cloud session cannot push to Miyamura80's fork
+  or read upstream comments via API; Runpod MCP (https://mcp.runpod.io/) queued for
+  SealGate admin approval.
+
 ## 2026-11-17 — flour, screen protector and catching novelty screen
 
 - Research only: refreshed 626 board records and live review prompt v24; no
