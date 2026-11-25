@@ -29,6 +29,11 @@ developers and their agents, not a competition submission document.
   **M-75LVMK**, ~19:20 UTC 25 Nov, about 12 h after the hold lapsed; no competing Ethernet
   PR existed. Scripted 1.0 / 1,622 steps (audit_score.py agrees), Dream-1 0.0 / 2,400 steps.
   Pod `y12rru6t8uxhk6` stopped (disk kept). Await the bot receipt; do not push again.
+- **Not submitted (25 Nov):** the bot replied "This pull request couldn't be submitted: The
+  submission deadline has passed. A revision after the deadline is due within 48 hours of the
+  request, and that time has passed." No receipt was issued for `e44308c`; #3950 stays open
+  with the old "Not accepted" label. The overall submission deadline has also passed, so new
+  task PRs will be refused too.
 - Process failures: Runpod key needed exec permission (Restricted keys refuse exec/logs);
   this cloud session's worker restarted repeatedly and lost ~12 h, the 07:25 UTC hold lapsed,
   and the prepaid balance hit zero, which deleted the pod and all outputs. Lesson: run the whole
