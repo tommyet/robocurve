@@ -25,6 +25,10 @@ developers and their agents, not a competition submission document.
   (2.33°/0.122 mm; others ≤0.22°/0.03 mm). Solver iterations 255/64 made it worse and broke the
   demo. Clip mass 2 g fixed drift (0.35°/0.014 mm) but the frozen clock demo then failed to
   re-seat (0.25); would need a new demo. Disclosed in fidelity instead.
+- Revision pushed to the #3950 branch as commit `e44308c` (task folder only), media
+  **M-75LVMK**, ~19:20 UTC 25 Nov, about 12 h after the hold lapsed; no competing Ethernet
+  PR existed. Scripted 1.0 / 1,622 steps (audit_score.py agrees), Dream-1 0.0 / 2,400 steps.
+  Pod `y12rru6t8uxhk6` stopped (disk kept). Await the bot receipt; do not push again.
 - Process failures: Runpod key needed exec permission (Restricted keys refuse exec/logs);
   this cloud session's worker restarted repeatedly and lost ~12 h, the 07:25 UTC hold lapsed,
   and the prepaid balance hit zero, which deleted the pod and all outputs. Lesson: run the whole
