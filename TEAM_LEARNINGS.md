@@ -4,6 +4,32 @@ Last updated: 2026-11-18 UTC. Read this before starting work; update it when an
 experiment changes what we know. This is a shared operating record for both
 developers and their agents, not a competition submission document.
 
+## 2026-11-25 — Ethernet #3950 full revision: scoring rebuilt, hold lapsed during compute
+
+- Live status (24 Nov 22:02 UTC): bra **#3255** and plate **#3277** merged (13 accepted
+  total). Final rejections for 3812, 3816, 3844, 3809 (hose: "physical ability too simple",
+  importance, closed, appeal already used), 3631, 3623. Only #3950 remained revisable.
+- #3950 revision work lives on `Miyamura80/benchmark-tasks` branch
+  `wip/ethernet-3950-revision` (PR branch untouched until validated). Changes: category
+  Impact on AI timelines + data-center context; setup names a 48-port 1U two-row switch
+  (left 4×2 block), stand/lead/arm positions (bases 610 mm apart, port face 398 mm ahead,
+  rows 202/216 mm above tabletop); scoring replaced with ruler/luggage-scale checks:
+  out (≥2 mm) 0.25, home within 1.5 mm of median neighbour 0.5, 2 s hands-off 0.75,
+  scorer-applied 3 N boot tug for 1 s moving <2 mm 1.0; neighbour >2 mm out, tab past stop,
+  or drop scores 0. Episode lingers 1 s after full score so final frames show 1.00 (the
+  reviewer saw 0.75 because the old run terminated on the success step).
+- Evidence (RTX PRO 4500): original physics + new scorer, clock demo **1.00 in 1,622 steps**,
+  one tug, 1.14 mm latch play. 3 N tug always moves a latched plug ~1.1 mm, so a 1 mm limit
+  fails a correct latch; 2 mm is the honest threshold.
+- Joint diagnostic: drift is the orange slider only while the gripper squeezes its tab
+  (2.33°/0.122 mm; others ≤0.22°/0.03 mm). Solver iterations 255/64 made it worse and broke the
+  demo. Clip mass 2 g fixed drift (0.35°/0.014 mm) but the frozen clock demo then failed to
+  re-seat (0.25); would need a new demo. Disclosed in fidelity instead.
+- Process failures: Runpod key needed exec permission (Restricted keys refuse exec/logs);
+  this cloud session's worker restarted repeatedly and lost ~12 h, the 07:25 UTC hold lapsed,
+  and the prepaid balance hit zero, which deleted the pod and all outputs. Lesson: run the whole
+  GPU pipeline as one detached script on the pod, keep balance headroom, copy results off early.
+
 ## 2026-11-24 00:40 UTC — live PR status; Ethernet #3950 revision requested
 
 - GitHub search (all states) found 89 team PRs: 11 merged/accepted (tommyet 10,
